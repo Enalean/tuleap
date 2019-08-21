@@ -17,17 +17,20 @@
  */
 
 class b201203140933_add_notif_svn_per_branch extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Create a new dedicated table for svn paths and header to ease the management of notification per branchs.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = 'CREATE TABLE svn_notification (
                     group_id int(11) NOT NULL,
                     svn_events_mailing_list text NOT NULL DEFAULT "",
@@ -58,7 +61,8 @@ EOT;
 
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('svn_notification')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('svn_notification table is missing');
         }

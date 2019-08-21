@@ -177,11 +177,13 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $this->timeframe_checker            = $timeframe_checker;
     }
 
-    public function index() {
+    public function index()
+    {
         return $this->showHome();
     }
 
-    private function showHome() {
+    private function showHome()
+    {
         $user = $this->request->getCurrentUser();
         $plannings = $this->planning_factory->getNonLastLevelPlannings(
             $user,
@@ -230,7 +232,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         return $this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($this->group_id) === true;
     }
 
-    private function getKanbanSummaryPresenters() {
+    private function getKanbanSummaryPresenters()
+    {
         $kanban_presenters = array();
 
         $user = $this->request->getCurrentUser();
@@ -253,7 +256,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     /**
      * Home page for when there is nothing set-up.
      */
-    private function showEmptyHome() {
+    private function showEmptyHome()
+    {
         $presenter = new Planning_Presenter_BaseHomePresenter(
             $this->group_id,
             $this->isUserAdmin(),
@@ -265,7 +269,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     /**
      * @return Planning_Presenter_MilestoneAccessPresenter
      */
-    private function getMilestoneAccessPresenters($plannings) {
+    private function getMilestoneAccessPresenters($plannings)
+    {
         $milestone_access_presenters = array();
         foreach ($plannings as $planning) {
             $milestone_type      = $planning->getPlanningTracker();
@@ -298,7 +303,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      * @param PFUser $user
      * @return Planning_Presenter_LastLevelMilestone[]
      */
-    private function getLastLevelMilestonesPresenters($last_plannings, PFUser $user) {
+    private function getLastLevelMilestonesPresenters($last_plannings, PFUser $user)
+    {
         $presenters = array();
 
         foreach ($last_plannings as $last_planning) {
@@ -314,7 +320,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     /**
      * @return Planning_Presenter_MilestoneSummaryPresenter[]
      */
-    private function getMilestoneSummaryPresenters(Planning $last_planning, PFUser $user) {
+    private function getMilestoneSummaryPresenters(Planning $last_planning, PFUser $user)
+    {
         $presenters   = array();
         $has_cardwall = $this->hasCardwall($last_planning);
 
@@ -353,7 +360,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     /**
      * @return Planning_Milestone[]
      */
-    private function getPlanningMilestonesForTimePeriod(Planning $planning) {
+    private function getPlanningMilestonesForTimePeriod(Planning $planning)
+    {
         $user = $this->request->getCurrentUser();
 
         switch ($this->request->get('period')) {
@@ -376,7 +384,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         }
     }
 
-    private function getPlanningMilestonesByStatus(Planning $planning) {
+    private function getPlanningMilestonesByStatus(Planning $planning)
+    {
         $user = $this->request->getCurrentUser();
 
         switch ($this->request->get('period')) {
@@ -402,27 +411,31 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     /**
      * @return bool
      */
-    private function isUserAdmin() {
+    private function isUserAdmin()
+    {
         return $this->request->getProject()->userIsAdmin($this->request->getCurrentUser());
     }
 
     /**
      * Redirects a non-admin user to the agile dashboard home page
      */
-    private function redirectNonAdmin() {
+    private function redirectNonAdmin()
+    {
         if (! $this->isUserAdmin()) {
             $this->redirect(array('group_id'=>$this->group_id));
         }
     }
 
-    public function new_() {
+    public function new_()
+    {
         $planning  = $this->planning_factory->buildNewPlanning($this->group_id);
         $presenter = $this->getFormPresenter($this->request->getCurrentUser(), $planning);
 
         return $this->renderToString('new', $presenter);
     }
 
-    public function importForm() {
+    public function importForm()
+    {
         $this->redirectNonAdmin();
 
         $template_file = new Valid_File('template_file');
@@ -436,7 +449,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         return $this->renderToString('import', $presenter);
     }
 
-    private function importConfiguration() {
+    private function importConfiguration()
+    {
         $ugroup_user_dao   = new UGroupUserDao();
         $ugroup_manager    = new UGroupManager();
         $event_manager     = EventManager::instance();
@@ -552,7 +566,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     /**
      * Exports the agile dashboard configuration as an XML file
      */
-    public function exportToFile() {
+    public function exportToFile()
+    {
         try {
             $project = $this->getProjectFromRequest();
             $xml = $this->getFullConfigurationAsXML($project);
@@ -568,11 +583,13 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      * @return Project
      * @throws Project_NotFoundException
      */
-    private function getProjectFromRequest() {
+    private function getProjectFromRequest()
+    {
         return $this->project_manager->getValidProject($this->group_id);
     }
 
-    private function getFullConfigurationAsXML(Project $project) {
+    private function getFullConfigurationAsXML(Project $project)
+    {
         return $this->xml_exporter->export($project);
     }
 
@@ -613,7 +630,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         }
     }
 
-    public function edit() {
+    public function edit()
+    {
         $planning  = $this->planning_factory->getPlanning($this->request->get('planning_id'));
         $presenter = $this->getFormPresenter($this->request->getCurrentUser(), $planning);
 
@@ -664,7 +682,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         );
     }
 
-    private function hasCardwall(Planning $planning) {
+    private function hasCardwall(Planning $planning)
+    {
         $tracker = $planning->getPlanningTracker();
         $enabled = false;
 
@@ -679,7 +698,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         return $enabled;
     }
 
-    private function getCardwallConfiguration(Planning $planning) {
+    private function getCardwallConfiguration(Planning $planning)
+    {
         $tracker  = $planning->getPlanningTracker();
         $view     = null;
 
@@ -725,7 +745,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                               'action'      => 'edit'));
     }
 
-    private function updateCardwallConfig() {
+    private function updateCardwallConfig()
+    {
         $tracker = $this->getPlanning()->getPlanningTracker();
 
         EventManager::instance()->processEvent(
@@ -737,7 +758,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         );
     }
 
-    public function delete() {
+    public function delete()
+    {
         $this->checkUserIsAdmin();
         $this->planning_factory->deletePlanning($this->request->get('planning_id'));
         return $this->redirect(array('group_id' => $this->group_id, 'action' => 'admin'));
@@ -764,7 +786,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         return $breadcrumbs;
     }
 
-    private function getPlanning() {
+    private function getPlanning()
+    {
         $planning_id = $this->request->get('planning_id');
         return $this->planning_factory->getPlanning($planning_id);
     }

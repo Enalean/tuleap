@@ -42,7 +42,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      *
      * @return mixed The default value for this field, or null if no default value defined
      */
-    function getDefaultValue() {
+    function getDefaultValue()
+    {
     }
 
 
@@ -54,7 +55,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      *
      * @return bool true if success
      */
-    public function delete() {
+    public function delete()
+    {
         return true;
     }
 
@@ -83,14 +85,16 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     /**
      * @return string
      */
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    {
         return $this->fetchChangesetRegardingPermissions($artifact_id, $changeset_id);
     }
 
     /**
      * @return string
      */
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
+    {
         return $this->fetchChangesetRegardingPermissions($artifact_id, $changeset_id);
     }
 
@@ -99,7 +103,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @param mixed $value the value of the field
      * @return string
      */
-    public function fetchRawValue($value) {
+    public function fetchRawValue($value)
+    {
         return $this->values[$value]->getLabel();
     }
 
@@ -108,7 +113,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @param Tracker_Artifact_Changeset $changeset
      * @return string
      */
-    public function fetchRawValueFromChangeset($changeset) {
+    public function fetchRawValueFromChangeset($changeset)
+    {
         $value = '';
         if ($v = $changeset->getValue($this->field)) {
             if (isset($v['value_id'])) {
@@ -127,7 +133,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     *
     * @return Tracker_FormElement_Field_Value_PermissionsOnArtifactDao The dao
     */
-    protected function getValueDao() {
+    protected function getValueDao()
+    {
         return new Tracker_FormElement_Field_Value_PermissionsOnArtifactDao();
     }
 
@@ -219,7 +226,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         $is_read_only = true;
         return $this->fetchArtifactValueCommon($is_read_only, $artifact, $value, []);
     }
@@ -279,7 +287,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $html;
     }
 
-    private function getLastChangesetValues($artifact_id) {
+    private function getLastChangesetValues($artifact_id)
+    {
         $user_group_ids = array();
 
         $db_res = permission_db_authorized_ugroups(self::PERMISSION_TYPE, $artifact_id);
@@ -322,7 +331,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @param array $from the value(s) *before*
      * @param array $to   the value(s) *after*
      */
-    public function fetchFollowUp($artifact, $from, $to) {
+    public function fetchFollowUp($artifact, $from, $to)
+    {
         $html = '';
         if (!$from || !($from_value = $this->getValue($from['value_id']))) {
             $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' ';
@@ -350,35 +360,40 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     /**
      * @return the label of the field (mainly used in admin part)
      */
-    public static function getFactoryLabel() {
+    public static function getFactoryLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','permissions');
     }
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
-    public static function getFactoryDescription() {
+    public static function getFactoryDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','permissions_description');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconUseIt() {
+    public static function getFactoryIconUseIt()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/lock.png');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconCreate() {
+    public static function getFactoryIconCreate()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/lock--plus.png');
     }
 
     /**
      * @return bool say if the field is a unique one
      */
-    public static function getFactoryUniqueField() {
+    public static function getFactoryUniqueField()
+    {
         return true;
     }
 
@@ -389,7 +404,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @param Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $value The changeset value for this field
      * @return string
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         $html = '';
         if ($value && $artifact->useArtifactPermissions()) {
             $ugroup_dao = $this->getUGroupDao();
@@ -410,7 +426,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     *
     * @return UGroupDao The dao
     */
-    protected function getUGroupDao() {
+    protected function getUGroupDao()
+    {
         return new UGroupDao(CodendiDataAccess::instance());
     }
 
@@ -423,7 +440,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     *
     * @return string
     */
-    public function getCriteriaFrom($criteria) {
+    public function getCriteriaFrom($criteria)
+    {
         //Only filter query if field is used
         if($this->isUsed()) {
             $criteria_value = $this->getCriteriaValue($criteria);
@@ -468,7 +486,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @return string
      * @see getQueryFrom
      */
-    public function getQuerySelect() {
+    public function getQuerySelect()
+    {
         return '';
     }
 
@@ -477,7 +496,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @param Tracker_ReportCriteria $criteria
      * @return mixed
      */
-    public function getCriteriaValue($criteria) {
+    public function getCriteriaValue($criteria)
+    {
         if (! isset($this->criteria_value)) {
             $this->criteria_value = array();
         }
@@ -507,11 +527,13 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $this->criteria_value[$criteria->report->id];
     }
 
-    public function getCriteriaWhere($criteria) {
+    public function getCriteriaWhere($criteria)
+    {
         return '';
     }
 
-    public function fetchCriteriaValue($criteria) {
+    public function fetchCriteriaValue($criteria)
+    {
         $html           = '';
         $criteria_value = $this->getCriteriaValue($criteria);
         $multiple       = ' ';
@@ -550,7 +572,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $html;
     }
 
-    private function getOptions($user_groups, $selected_ids = array()) {
+    private function getOptions($user_groups, $selected_ids = array())
+    {
         $options = '';
         foreach($user_groups as $user_group) {
             $id = $user_group->getId();
@@ -566,7 +589,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     /**
      * @return ProjectUGroup []
      */
-    private function getAllUserGroups() {
+    private function getAllUserGroups()
+    {
         $user_groups     = array();
         $permission_type = self::PERMISSION_TYPE;
 
@@ -595,7 +619,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $user_groups;
     }
 
-    protected function getCriteriaDao() {
+    protected function getCriteriaDao()
+    {
         return new Tracker_Report_Criteria_PermissionsOnArtifact_ValueDao();
     }
 
@@ -708,7 +733,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
-    public function getChangesetValue($changeset, $value_id, $has_changed) {
+    public function getChangesetValue($changeset, $value_id, $has_changed)
+    {
 
         $changeset_value = null;
         $value_ids = $this->getValueDao()->searchById($value_id, $this->id);
@@ -747,7 +773,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @return int[]
      * @throws Tracker_FormElement_InvalidFieldException
      */
-    private function getUserGroupsFromREST($user_groups) {
+    private function getUserGroupsFromREST($user_groups)
+    {
         if (! is_array($user_groups)) {
             throw new Tracker_FormElement_InvalidFieldException("'granted_groups' must be an array. E.g. [2, '124_3']");
         }
@@ -776,7 +803,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $project_groups;
     }
 
-    public function getFieldDataFromRESTValueByField(array $value, ?Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValueByField(array $value, ?Tracker_Artifact $artifact = null)
+    {
         throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
     }
 
@@ -787,11 +815,13 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      *
      * @return mixed the field data corresponding to the value for artifact submission
      */
-    public function getFieldData($value) {
+    public function getFieldData($value)
+    {
         return $this->getFieldDataFromArray(explode(',', $value));
     }
 
-    private function getFieldDataFromArray(array $values) {
+    private function getFieldDataFromArray(array $values)
+    {
         $ugroup_ids = array_filter(array_map('intval', $values));
         if (count($ugroup_ids) == 0) {
             return array (
@@ -810,7 +840,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     /**
      * @return bool
      */
-    protected function criteriaCanBeAdvanced() {
+    protected function criteriaCanBeAdvanced()
+    {
         return true;
     }
 
@@ -822,7 +853,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      *
      * @return bool
      */
-    public function addPermissions ($ugroups, $artifact_id) {
+    public function addPermissions($ugroups, $artifact_id)
+    {
         $pm = PermissionsManager::instance();
         $permission_type = self::PERMISSION_TYPE;
         foreach ($ugroups as $ugroup) {
@@ -833,7 +865,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return true;
     }
 
-    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+    public function accept(Tracker_FormElement_FieldVisitor $visitor)
+    {
         return $visitor->visitPermissionsOnArtifact($this);
     }
     /**
@@ -844,7 +877,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      *
      * @return mixed | null if no values
      */
-    public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+    public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
+    {
         $value = $changeset->getValue($this);
         if ($value) {
             return $value->getRESTValue($user);

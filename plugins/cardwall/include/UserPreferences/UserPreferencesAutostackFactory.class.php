@@ -24,7 +24,8 @@
 
 class Cardwall_UserPreferences_UserPreferencesAutostackFactory {
 
-    public function setAutostack(Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_UserPreferences_UserPreferencesAutostack $autostack_preferences) {
+    public function setAutostack(Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_UserPreferences_UserPreferencesAutostack $autostack_preferences)
+    {
         $cardwall_has_preferences = false;
         foreach ($columns as $column) {
             $cardwall_has_preferences = $cardwall_has_preferences || $autostack_preferences->columnHasPreference($column);
@@ -36,7 +37,8 @@ class Cardwall_UserPreferences_UserPreferencesAutostackFactory {
         }
     }
 
-    private function forceAutoStackOnDone(Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_UserPreferences_UserPreferencesAutostack $autostack_preferences) {
+    private function forceAutoStackOnDone(Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_UserPreferences_UserPreferencesAutostack $autostack_preferences)
+    {
         foreach ($columns as $column) {
             if (strcasecmp($column->label, 'done') == 0) {
                 $autostack_preferences->forceColumnAutoStacked($column);

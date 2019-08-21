@@ -29,7 +29,8 @@ class Tracker_Semantic_CollectionOfFieldsDuplicator implements \Tuleap\Tracker\S
     /** @var Tracker_Semantic_IRetrieveSemanticDARByTracker */
     private $dao;
 
-    public function __construct(Tracker_Semantic_IRetrieveSemanticDARByTracker $dao) {
+    public function __construct(Tracker_Semantic_IRetrieveSemanticDARByTracker $dao)
+    {
         $this->dao = $dao;
     }
 
@@ -42,7 +43,8 @@ class Tracker_Semantic_CollectionOfFieldsDuplicator implements \Tuleap\Tracker\S
      *
      * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping) {
+    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping)
+    {
         $rank = 1;
         foreach ($this->dao->searchByTrackerId($from_tracker_id) as $row) {
             $from_field_id = $row['field_id'];

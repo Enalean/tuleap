@@ -31,7 +31,8 @@ class WebDAVAuthentication {
      *
      * @return PFUser
      */
-    function authenticate() {
+    function authenticate()
+    {
 
         // test if username field is empty
         if (!$this->issetUsername()) {
@@ -55,7 +56,8 @@ class WebDAVAuthentication {
      *
      * @return bool
      */
-    function issetUsername() {
+    function issetUsername()
+    {
 
         return isset($_SERVER['PHP_AUTH_USER']);
 
@@ -66,7 +68,8 @@ class WebDAVAuthentication {
      *
      * @return void
      */
-    function setHeader() {
+    function setHeader()
+    {
 
         header('WWW-Authenticate: Basic realm="'.$GLOBALS['sys_name'].' WebDAV Authentication"');
         header('HTTP/1.0 401 Unauthorized');
@@ -88,7 +91,8 @@ class WebDAVAuthentication {
      *
      * @return String
      */
-    function getUsername() {
+    function getUsername()
+    {
 
         return $_SERVER['PHP_AUTH_USER'];
 
@@ -99,7 +103,8 @@ class WebDAVAuthentication {
      *
      * @return String
      */
-    function getPassword() {
+    function getPassword()
+    {
 
         return $_SERVER['PHP_AUTH_PW'];
 
@@ -114,7 +119,8 @@ class WebDAVAuthentication {
      *
      * @return PFUser
      */
-    function getUser($username, $password) {
+    function getUser($username, $password)
+    {
 
         return UserManager::instance()->login($username, $password);
 

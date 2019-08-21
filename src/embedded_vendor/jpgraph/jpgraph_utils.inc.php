@@ -17,12 +17,14 @@
 class FuncGenerator {
     private $iFunc='',$iXFunc='',$iMin,$iMax,$iStepSize;
 
-    function __construct($aFunc,$aXFunc='') {
+    function __construct($aFunc,$aXFunc='')
+    {
         $this->iFunc = $aFunc;
         $this->iXFunc = $aXFunc;
     }
 
-    function E($aXMin,$aXMax,$aSteps=50) {
+    function E($aXMin,$aXMax,$aSteps=50)
+    {
         $this->iMin = $aXMin;
         $this->iMax = $aXMax;
         $this->iStepSize = ($aXMax-$aXMin)/$aSteps;
@@ -74,11 +76,13 @@ class DateScaleUtils {
     private static $tickPositions=array(),$minTickPositions=array();
     private static $iUseWeeks = true;
 
-    static function UseWeekFormat($aFlg) {
+    static function UseWeekFormat($aFlg)
+    {
         self::$iUseWeeks = $aFlg;
     }
 
-    static function doYearly($aType,$aMinor=false) {
+    static function doYearly($aType,$aMinor=false)
+    {
         $i=0; $j=0;
         $m = self::$startmonth;
         $y = self::$startyear;
@@ -132,7 +136,8 @@ class DateScaleUtils {
         }
     }
 
-    static function doDaily($aType,$aMinor=false) {
+    static function doDaily($aType,$aMinor=false)
+    {
         $m = self::$startmonth;
         $y = self::$startyear;
         $d = self::$startday;
@@ -179,7 +184,8 @@ class DateScaleUtils {
         }
     }
 
-    static function doWeekly($aType,$aMinor=false) {
+    static function doWeekly($aType,$aMinor=false)
+    {
         $hpd = 3600*24;
         $hpw = 3600*24*7;
         // Find out week number of min date
@@ -225,7 +231,8 @@ class DateScaleUtils {
         }
     }
 
-    static function doMonthly($aType,$aMinor=false) {
+    static function doMonthly($aType,$aMinor=false)
+    {
         $monthcount=0;
         $m = self::$startmonth;
         $y = self::$startyear;
@@ -316,12 +323,14 @@ class DateScaleUtils {
         return array(self::$tickPositions,self::$minTickPositions);
     }
 
-    static function GetTicks($aData,$aType=1,$aMinor=false,$aEndPoints=false) {
+    static function GetTicks($aData,$aType=1,$aMinor=false,$aEndPoints=false)
+    {
         $n = count($aData);
         return self::GetTicksFromMinMax($aData[0],$aData[$n-1],$aType,$aMinor,$aEndPoints);
     }
 
-    static function GetAutoTicks($aMin,$aMax,$aMaxTicks=10,$aMinor=false) {
+    static function GetAutoTicks($aMin,$aMax,$aMaxTicks=10,$aMinor=false)
+    {
         $diff = $aMax - $aMin;
         $spd = 3600*24;
         $spw = $spd*7;
@@ -360,7 +369,8 @@ class DateScaleUtils {
         }
     }
 
-    static function GetTicksFromMinMax($aMin,$aMax,$aType,$aMinor=false,$aEndPoints=false) {
+    static function GetTicksFromMinMax($aMin,$aMax,$aType,$aMinor=false,$aEndPoints=false)
+    {
         self::$starthour = date('G',$aMin);
         self::$startmonth = date('n',$aMin);
         self::$startday = date('j',$aMin);
@@ -416,7 +426,8 @@ Class ReadFileData {
     // Returns:
     // The number of data values read on success, FALSE on failure
     //----------------------------------------------------------------------------
-    static function FromCSV($aFile,&$aData,$aSepChar=',',$aMaxLineLength=1024) {
+    static function FromCSV($aFile,&$aData,$aSepChar=',',$aMaxLineLength=1024)
+    {
         $rh = @fopen($aFile,'r');
         if( $rh === false ) {
                 return false;
@@ -462,7 +473,8 @@ Class ReadFileData {
     // Returns:
     // The number of lines read on success, FALSE on failure
     //----------------------------------------------------------------------------
-    static function FromCSV2($aFile, &$aData, $aOptions = array()) {
+    static function FromCSV2($aFile, &$aData, $aOptions = array())
+    {
         $aDefaults = array(
             'separator'     => ',',
             'enclosure'     => chr(34),
@@ -538,7 +550,8 @@ Class ReadFileData {
     }
 
     // Read data from two columns in a plain text file
-    static function From2Col($aFile, $aCol1, $aCol2, $aSepChar=' ') {
+    static function From2Col($aFile, $aCol1, $aCol2, $aSepChar=' ')
+    {
         $lines = @file($aFile,FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
         if( $lines === false ) {
                 return false;
@@ -560,7 +573,8 @@ Class ReadFileData {
     }
 
     // Read data from one columns in a plain text file
-    static function From1Col($aFile, $aCol1) {
+    static function From1Col($aFile, $aCol1)
+    {
         $lines = @file($aFile,FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
         if( $lines === false ) {
                 return false;
@@ -572,7 +586,8 @@ Class ReadFileData {
         return count($lines);
     }
 
-    static function FromMatrix($aFile,$aSepChar=' ') {
+    static function FromMatrix($aFile,$aSepChar=' ')
+    {
         $lines = @file($aFile,FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
         if( $lines === false ) {
                 return false;
@@ -602,7 +617,8 @@ class LinearRegression {
     private $icalculated=false;
     public $iDet=0, $iCorr=0, $iStdErr=0;
 
-    public function __construct($aDataX,$aDataY) {
+    public function __construct($aDataX,$aDataY)
+    {
         if( count($aDataX) !== count($aDataY) ) {
                 JpGraph::Raise('LinearRegression: X and Y data array must be of equal length.');
         }
@@ -610,7 +626,8 @@ class LinearRegression {
             $this->iy = $aDataY;
     }
 
-    public function Calc() {
+    public function Calc()
+    {
 
             $this->icalculated = true;
 
@@ -653,19 +670,22 @@ class LinearRegression {
 
     }
 
-    public function GetAB() {
+    public function GetAB()
+    {
             if( $this->icalculated == false )
                     $this->Calc();
             return array($this->ia, $this->ib);
     }
 
-    public function GetStat() {
+    public function GetStat()
+    {
             if( $this->icalculated == false )
                     $this->Calc();
             return array($this->iStdErr, $this->iCorr, $this->iDet);
     }
 
-    public function GetY($aMinX, $aMaxX, $aStep=1) {
+    public function GetY($aMinX, $aMaxX, $aStep=1)
+    {
             if( $this->icalculated == false )
                     $this->Calc();
 

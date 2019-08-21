@@ -52,7 +52,8 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder {
         $this->projects         = $projects;
     }
 
-    public function buildNavBarItemPresentersCollection() {
+    public function buildNavBarItemPresentersCollection()
+    {
         $collection = new FlamingParrot_NavBarItemPresentersCollection();
 
         $this->addProjectsItem($collection);
@@ -72,7 +73,8 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder {
         return $collection;
     }
 
-    private function addAdminItem(FlamingParrot_NavBarItemPresentersCollection $collection) {
+    private function addAdminItem(FlamingParrot_NavBarItemPresentersCollection $collection)
+    {
         if ($this->user->isSuperUser()) {
             $collection->addItem(new FlamingParrot_NavBarItemAdminPresenter(
                 self::$NO_ID,
@@ -83,7 +85,8 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder {
         }
     }
 
-    private function addProjectsItem(FlamingParrot_NavBarItemPresentersCollection $collection) {
+    private function addProjectsItem(FlamingParrot_NavBarItemPresentersCollection $collection)
+    {
         $collection->addItem(new FlamingParrot_NavBarItemProjectsPresenter(
             'project',
             $this->isNavBarItemActive(array('/softwaremap/', '/projects/', '/project/')),
@@ -92,7 +95,8 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder {
         ));
     }
 
-    private function addMoarItem(FlamingParrot_NavBarItemPresentersCollection $collection) {
+    private function addMoarItem(FlamingParrot_NavBarItemPresentersCollection $collection)
+    {
         $items = array();
         $links = array();
         foreach ($this->extra_tabs as $tab) {
@@ -120,7 +124,8 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder {
         }
     }
 
-    private function addHelpItem(FlamingParrot_NavBarItemPresentersCollection $collection) {
+    private function addHelpItem(FlamingParrot_NavBarItemPresentersCollection $collection)
+    {
         $item = new FlamingParrot_NavBarItemDropdownPresenter(
             'help',
             $this->isNavBarItemActive(array('/help/', '/contact.php', '/help/api.php'), 'help'),
@@ -161,7 +166,8 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder {
         $collection->addItem($item);
     }
 
-    private function isNavBarItemActive($paths_to_detect, $toptab = null) {
+    private function isNavBarItemActive($paths_to_detect, $toptab = null)
+    {
         if ($toptab === $this->selected_top_tab) {
             return true;
         }

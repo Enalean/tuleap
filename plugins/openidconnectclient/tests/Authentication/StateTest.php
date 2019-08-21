@@ -24,7 +24,8 @@ require_once(__DIR__ . '/../bootstrap.php');
 
 class StateTest extends TuleapTestCase {
 
-    public function itCreatesStateFromSignedState() {
+    public function itCreatesStateFromSignedState()
+    {
         $secret_key  = 'Tuleap';
         $return_to   = '/return_to';
         $provider_id = 1234;

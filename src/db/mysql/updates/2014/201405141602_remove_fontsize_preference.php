@@ -20,15 +20,18 @@
  * Replace version date column values by timestamp
  */
 class b201405141602_remove_fontsize_preference extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return "Remove fontsize user preference";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE user DROP COLUMN fontsize";
 
         $res = $this->db->dbh->exec($sql);

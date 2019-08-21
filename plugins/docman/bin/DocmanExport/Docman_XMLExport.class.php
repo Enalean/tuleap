@@ -29,19 +29,23 @@ class Docman_XMLExport {
     protected $dataPath;
     protected $logger;
 
-    public function __construct(Logger $logger) {
+    public function __construct(Logger $logger)
+    {
         $this->logger = $logger;
     }
 
-    public function setGroupId($groupId) {
+    public function setGroupId($groupId)
+    {
         $this->groupId = $groupId;
     }
 
-    public function setDataPath($path) {
+    public function setDataPath($path)
+    {
         $this->dataPath = $path;
     }
 
-    public function getXML($doc) {
+    public function getXML($doc)
+    {
         $docman = $doc->createElement('docman');
         $docman->appendChild($this->getMetadataDef($doc));
         //$docman->appendChild($this->getGroupsDef($doc));
@@ -54,7 +58,8 @@ class Docman_XMLExport {
      * @param DOMDocument $doc
      * @return DOMNode
      */
-    public function getMetadataDef(DOMDocument $doc) {
+    public function getMetadataDef(DOMDocument $doc)
+    {
         $propdefs = $doc->createElement('propdefs');
         $mdFactory = new Docman_MetadataFactory($this->groupId);
         foreach($mdFactory->getRealMetadataList() as $metadata) {
@@ -92,7 +97,8 @@ class Docman_XMLExport {
         return $propdefs;
     }
 
-    public function getTree(DOMDocument $doc) {
+    public function getTree(DOMDocument $doc)
+    {
         // Get root item
         $itemFactory = new Docman_ItemFactory($this->groupId);
         $user = UserManager::instance()->getCurrentUser();

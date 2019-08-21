@@ -24,33 +24,40 @@ class Search_SearchResults {
     private $has_more;
     private $results_count;
 
-    public function getResultsHtml() {
+    public function getResultsHtml()
+    {
         return ($this->results_html) ? $this->results_html : '';
     }
 
-    public function getFacetsHtml() {
+    public function getFacetsHtml()
+    {
         return $this->facets_html;
     }
 
-    public function hasMore() {
+    public function hasMore()
+    {
         return $this->has_more;
     }
 
-    public function setResultsHtml($results_html) {
+    public function setResultsHtml($results_html)
+    {
         $this->results_html = $results_html;
         return $this;
     }
 
-    public function setHasMore($has_more) {
+    public function setHasMore($has_more)
+    {
         $this->has_more = $has_more;
         return $this;
     }
 
-    public function getCountResults() {
+    public function getCountResults()
+    {
         return (int) $this->results_count;
     }
 
-    public function setCountResults($count) {
+    public function setCountResults($count)
+    {
         $this->results_count = (int) $count;
         return $this;
     }

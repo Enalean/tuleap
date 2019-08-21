@@ -93,25 +93,29 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $this->planning_factory             = PlanningFactory::build();
     }
 
-    public function getIdentifier() {
+    public function getIdentifier()
+    {
         return $this->info->getIdentifier();
     }
 
     /**
      * @see AgileDashboard_Pane::getFullContent()
      */
-    public function getFullContent() {
+    public function getFullContent()
+    {
         return $this->getPaneContent('agiledashboard-fullpane');
     }
 
     /**
      * @see AgileDashboard_Pane::getMinimalContent()
      */
-    public function getMinimalContent() {
+    public function getMinimalContent()
+    {
         return $this->getPaneContent('agiledashboard-minimalpane');
     }
 
-    private function getPaneContent($template) {
+    private function getPaneContent($template)
+    {
         $columns = $this->config->getDashboardColumns();
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
         $html = $renderer->renderToString($template, $this->getPresenterUsingMappedFields($columns));
@@ -123,7 +127,8 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     /**
      * @return Cardwall_PaneContentPresenter
      */
-    private function getPresenterUsingMappedFields(Cardwall_OnTop_Config_ColumnCollection $columns) {
+    private function getPresenterUsingMappedFields(Cardwall_OnTop_Config_ColumnCollection $columns)
+    {
         $planning            = $this->milestone->getPlanning();
 
         $raw_board_builder   = new Cardwall_RawBoardBuilder();
@@ -155,7 +160,8 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      *
      * @return Cardwall_EffortProgressPresenter
      */
-    private function getProgressPresenter() {
+    private function getProgressPresenter()
+    {
         try {
             return new Cardwall_RemainingEffortProgressPresenter(
                 $this->getInitialEffort(),
@@ -171,7 +177,8 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         }
     }
 
-    private function getInitialEffort() {
+    private function getInitialEffort()
+    {
         $milestone_initial_effort = 0;
 
         foreach ($this->getMilestoneContentItems() as $content) {
@@ -191,7 +198,8 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      *
      * @throws InitialEffortNotDefinedException
      */
-    private function addInitialEffort($milestone_initial_effort, $backlog_item_initial_effort) {
+    private function addInitialEffort($milestone_initial_effort, $backlog_item_initial_effort)
+    {
         if (! is_null($backlog_item_initial_effort) && $backlog_item_initial_effort !== '' && $backlog_item_initial_effort >= 0) {
             return $milestone_initial_effort + floatval($backlog_item_initial_effort);
         }
@@ -200,7 +208,8 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     }
 
 
-    private function getMilestoneContentItems() {
+    private function getMilestoneContentItems()
+    {
         $backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->artifact_factory,
@@ -239,7 +248,8 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         );
     }
 
-    private function getSwitchDisplayAvatarsURL() {
+    private function getSwitchDisplayAvatarsURL()
+    {
         if ($this->user->isAnonymous()) {
             return false;
         }

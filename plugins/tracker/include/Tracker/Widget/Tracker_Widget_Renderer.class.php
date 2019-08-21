@@ -29,17 +29,20 @@ abstract class Tracker_Widget_Renderer extends Widget
     var $renderer_title;
     var $renderer_id;
 
-    function __construct($id, $owner_id, $owner_type) {
+    function __construct($id, $owner_id, $owner_type)
+    {
         parent::__construct($id);
         $this->setOwner($owner_id, $owner_type);
     }
 
-    function getTitle() {
+    function getTitle()
+    {
         return $this->renderer_title ?:
             dgettext('tuleap-tracker', 'Tracker renderer');
     }
 
-    function getContent() {
+    function getContent()
+    {
         $renderer = $this->getRenderer();
         if ($renderer) {
             return $renderer->fetchWidget($this->getCurrentUser());
@@ -63,7 +66,8 @@ abstract class Tracker_Widget_Renderer extends Widget
         return null;
     }
 
-    function isAjax() {
+    function isAjax()
+    {
         return true;
     }
 
@@ -150,7 +154,8 @@ abstract class Tracker_Widget_Renderer extends Widget
         return db_insertid($res);
     }
 
-    function loadContent($id) {
+    function loadContent($id)
+    {
         $sql = "SELECT * FROM tracker_widget_renderer WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
@@ -161,7 +166,8 @@ abstract class Tracker_Widget_Renderer extends Widget
         }
     }
 
-    function create(Codendi_Request $request) {
+    function create(Codendi_Request $request)
+    {
         $content_id = false;
         $vId = new Valid_UInt('renderer_id');
         $vId->setErrorMessage("Can't add empty renderer id");
@@ -204,16 +210,19 @@ abstract class Tracker_Widget_Renderer extends Widget
         return $done;
     }
 
-    function destroy($id) {
+    function destroy($id)
+    {
         $sql = 'DELETE FROM tracker_widget_renderer WHERE id = '. $id .' AND owner_id = '. $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
         db_query($sql);
     }
 
-    function isUnique() {
+    function isUnique()
+    {
         return false;
     }
 
-    function getCategory() {
+    function getCategory()
+    {
         return dgettext('tuleap-tracker', 'Trackers');
     }
 

@@ -36,7 +36,8 @@ class Tracker_XML_Exporter_ArtifactXMLExporterTest extends TuleapTestCase {
 
     private $changeset_id = 66;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->artifacts_xml      = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifacts />');
         $artifact                 = anArtifact()->withId(123)->withTrackerId(456)->build();
@@ -47,7 +48,8 @@ class Tracker_XML_Exporter_ArtifactXMLExporterTest extends TuleapTestCase {
         stub($this->changeset)->getArtifact()->returns($artifact);
     }
 
-    public function itAppendsArtifactNodeToArtifactsNode() {
+    public function itAppendsArtifactNodeToArtifactsNode()
+    {
         $this->exporter->exportSnapshotWithoutComments($this->artifacts_xml, $this->changeset);
 
         $this->assertEqual(count($this->artifacts_xml->artifact), 1);
@@ -55,13 +57,15 @@ class Tracker_XML_Exporter_ArtifactXMLExporterTest extends TuleapTestCase {
         $this->assertEqual($this->artifacts_xml->artifact['tracker_id'], 456);
     }
 
-    public function itDelegatesTheExportOfChangeset() {
+    public function itDelegatesTheExportOfChangeset()
+    {
         expect($this->changeset_exporter)->exportWithoutComments('*', $this->changeset)->once();
 
         $this->exporter->exportSnapshotWithoutComments($this->artifacts_xml, $this->changeset);
     }
 
-    public function itExportsTheFullHistory() {
+    public function itExportsTheFullHistory()
+    {
         $changeset_01 = mock('Tracker_Artifact_Changeset');
         $changeset_02 = mock('Tracker_Artifact_Changeset');
         $changeset_03 = mock('Tracker_Artifact_Changeset');

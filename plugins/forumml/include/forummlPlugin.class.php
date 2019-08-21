@@ -31,7 +31,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 class ForumMLPlugin extends Plugin {
     public const SEARCH_TYPE = 'mail';
 
-    public function __construct($id) {
+    public function __construct($id)
+    {
         parent::__construct($id);
 
         $this->addHook('browse_archives','forumml_browse_archives');
@@ -56,7 +57,8 @@ class ForumMLPlugin extends Plugin {
         $this->allowedForProject = array();
     }
 
-    function getPluginInfo() {
+    function getPluginInfo()
+    {
         if (!is_a($this->pluginInfo, 'ForumMLPluginInfo')) {
             require_once('ForumMLPluginInfo.class.php');
             $this->pluginInfo = new ForumMLPluginInfo($this);
@@ -78,7 +80,8 @@ class ForumMLPlugin extends Plugin {
         return $this->allowedForProject[$group_id];
     }
 
-    function layout_search_entry($params) {
+    function layout_search_entry($params)
+    {
         $request = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
         if($group_id && $request->exist('list')) {
@@ -103,7 +106,8 @@ class ForumMLPlugin extends Plugin {
         }
     }
 
-    function cssFile($params) {
+    function cssFile($params)
+    {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $asset = new IncludeAssets(
                 __DIR__ . '/../../../src/www/assets/forumml/themes',
@@ -113,7 +117,8 @@ class ForumMLPlugin extends Plugin {
         }
     }
 
-    function jsFile($params) {
+    function jsFile($params)
+    {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/forumml.js"></script>'."\n";
         }
@@ -122,7 +127,8 @@ class ForumMLPlugin extends Plugin {
     /**
      * @see Event::SEARCH_TYPES_PRESENTERS
      */
-    public function search_types_presenters($params) {
+    public function search_types_presenters($params)
+    {
         if ($this->isAllowed($params['project']->getId()) && ! $params['project']->isError()) {
             $lists = array();
             $dao = new MailingListDao();
@@ -146,7 +152,8 @@ class ForumMLPlugin extends Plugin {
         }
     }
 
-    public function search_type($params) {
+    public function search_type($params)
+    {
         $query = $params['query'];
 
         if ($query->getTypeOfSearch() == self::SEARCH_TYPE) {
@@ -156,7 +163,8 @@ class ForumMLPlugin extends Plugin {
         }
     }
 
-    private function getSearchUrl($group_id, $list_id, $words) {
+    private function getSearchUrl($group_id, $list_id, $words)
+    {
         return '/plugins/forumml/message.php?group_id='.$group_id.'&list='.$list_id.'&search='.urlencode($words);
     }
 
@@ -198,7 +206,8 @@ class ForumMLPlugin extends Plugin {
      *
      * @param array $params
      */
-    function plugin_statistics_disk_usage_service_label($params) {
+    function plugin_statistics_disk_usage_service_label($params)
+    {
         $params['services']['plugin_forumml'] = 'ForumML';
     }
 
@@ -207,7 +216,8 @@ class ForumMLPlugin extends Plugin {
      *
      * @param array $params
      */
-    function plugin_statistics_color($params) {
+    function plugin_statistics_color($params)
+    {
         if ($params['service'] == 'plugin_forumml') {
             $params['color'] = 'lemonchiffon3';
         }

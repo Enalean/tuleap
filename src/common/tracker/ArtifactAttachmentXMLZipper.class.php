@@ -32,14 +32,16 @@ class ArtifactAttachmentXMLZipper implements ArtifactAttachmentXMLExporter {
     /** @var ArtifactXMLExporterDao */
     private $dao;
 
-    public function __construct(ArtifactXMLNodeHelper $node_helper, ArtifactXMLExporterDao $dao, ZipArchive $archive, $skip_files) {
+    public function __construct(ArtifactXMLNodeHelper $node_helper, ArtifactXMLExporterDao $dao, ZipArchive $archive, $skip_files)
+    {
         $this->node_helper = $node_helper;
         $this->dao         = $dao;
         $this->archive     = $archive;
         $this->skip_files  = $skip_files;
     }
 
-    public function addFilesToArtifact(DOMElement $artifact_node, $artifact_type_id, $artifact_id) {
+    public function addFilesToArtifact(DOMElement $artifact_node, $artifact_type_id, $artifact_id)
+    {
         $dar = $this->dao->searchFilesForArtifact($artifact_id);
         if (count($dar)) {
             $this->archive->addEmptyDir(ArtifactXMLExporter::ARCHIVE_DATA_DIR);
@@ -66,11 +68,13 @@ class ArtifactAttachmentXMLZipper implements ArtifactAttachmentXMLExporter {
         }
     }
 
-    private function getFilePathOnServer($artifact_type_id, $attachment_id) {
+    private function getFilePathOnServer($artifact_type_id, $attachment_id)
+    {
         return ArtifactFile::getPathOnFilesystemByArtifactTypeId($artifact_type_id, $attachment_id);
     }
 
-    private function getFilePathInArchive($xml_file_id) {
+    private function getFilePathInArchive($xml_file_id)
+    {
         return ArtifactXMLExporter::ARCHIVE_DATA_DIR.DIRECTORY_SEPARATOR.'Artifact'.$xml_file_id;
     }
 }

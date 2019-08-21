@@ -22,12 +22,14 @@ require_once __DIR__.'/DatabaseInitialization.class.php';
 
 class PullRequestDataBuilder extends REST_TestDataBuilder {
 
-    public function setUp() {
+    public function setUp()
+    {
         PluginManager::instance()->installAndActivate('pullrequest');
         $this->insertPullRequest();
     }
 
-    private function insertPullRequest() {
+    private function insertPullRequest()
+    {
         $initializer = new Tuleap\PullRequest\REST\DatabaseInitialization();
         $initializer->setUp();
     }

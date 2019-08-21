@@ -81,7 +81,8 @@ class PullRequestsLabelsTest extends RestBase
     {
         $response = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
         $label_ids = array_map(
-            function ($label) { return array('id' => $label['id']); },
+            function ($label) {
+                return array('id' => $label['id']); },
             $response['labels']
         );
 

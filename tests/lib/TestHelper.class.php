@@ -32,7 +32,8 @@ class TestHelper {
      *
      * @return Object
      */
-    public static function getPartialMock($className, $methods) {
+    public static function getPartialMock($className, $methods)
+    {
         $partialName = $className.'_Partial'.uniqid();
         Mock::generatePartial($className, $partialName, $methods);
         return new $partialName();
@@ -41,19 +42,23 @@ class TestHelper {
     /**
      * Generate a DataAccessResult
      */
-    public static function arrayToDar() {
+    public static function arrayToDar()
+    {
         return self::argListToDar(func_get_args());
     }
 
-    public static function argListToDar($argList) {
+    public static function argListToDar($argList)
+    {
         return new FakeDataAccessResult($argList);
     }
 
-    public static function emptyDar() {
+    public static function emptyDar()
+    {
         return self::arrayToDar();
     }
 
-    public static function errorDar() {
+    public static function errorDar()
+    {
         return new ErrorDataAccessResult();
     }
 }
@@ -61,30 +66,36 @@ class TestHelper {
 class FakeDataAccessResult extends DataAccessResult {
     private $data;
 
-    public function __construct(array $data) {
+    public function __construct(array $data)
+    {
         $this->data = $data;
         $this->_current = -1;
         $this->_row = false;
         $this->rewind(); // in case getRow is called explicitly
     }
 
-    protected function daFetch() {
+    protected function daFetch()
+    {
         return isset($this->data[$this->_current]) ? $this->data[$this->_current] : false;
     }
 
-    protected function daSeek() {
+    protected function daSeek()
+    {
         $this->_current = -1;
     }
 
-    protected function daIsError() {
+    protected function daIsError()
+    {
         return false;
     }
 
-    public function rowCount() {
+    public function rowCount()
+    {
         return count($this->data);
     }
 
-    public function freeMemory() {
+    public function freeMemory()
+    {
     }
 }
 

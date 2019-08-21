@@ -59,7 +59,8 @@ abstract class TemplateRenderer {
      * Same as renderToString, but outputs to the page instead of returning a
      * string.
      */
-    public function renderToPage($template_name, $presenter) {
+    public function renderToPage($template_name, $presenter)
+    {
         echo $this->renderToString($template_name, $presenter);
     }
 }

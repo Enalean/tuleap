@@ -34,7 +34,8 @@ class ArtifactReportHtml extends ArtifactReport {
          *
          *      @return bool success.
          */
-    function __construct($report_id,$atid) {
+    function __construct($report_id,$atid)
+    {
         // echo 'ArtifactReportHtml('.$report_id.','.$atid.')';
             return parent::__construct($report_id,$atid);
     }
@@ -46,7 +47,8 @@ class ArtifactReportHtml extends ArtifactReport {
          *
          *      @return string
          */
-    function showPriorityColorsKey($msg,$aids,$masschange,$pv) {
+    function showPriorityColorsKey($msg,$aids,$masschange,$pv)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         global $Language,$group_id;
             $html_result = "";
@@ -93,7 +95,7 @@ class ArtifactReportHtml extends ArtifactReport {
          *      @return string
          */
     function addSortCriteria($criteria_list, $order, $msort)
-        {
+    {
         //echo "<br>DBG \$criteria_list=$criteria_list,\$order=$order";
         $found = false;
         if ($criteria_list) {
@@ -140,7 +142,8 @@ class ArtifactReportHtml extends ArtifactReport {
          *
          *      @return string
          */
-    function criteriaListToText($criteria_list, $url) {
+    function criteriaListToText($criteria_list, $url)
+    {
 
         global $art_field_fact;
         $arr_text = array();
@@ -177,7 +180,8 @@ class ArtifactReportHtml extends ArtifactReport {
          *      @return string
          *
          */
-    function displayQueryFields($prefs,$advsrch,$pv) {
+    function displayQueryFields($prefs,$advsrch,$pv)
+    {
         global $ath,$Language;
         $hp = Codendi_HTMLPurifier::instance();
         $html_select = '';
@@ -289,7 +293,8 @@ class ArtifactReportHtml extends ArtifactReport {
 
     }
 
-    function getFieldsSelectbox($name, $label, $used, $ath) {
+    function getFieldsSelectbox($name, $label, $used, $ath)
+    {
         $html_result  = '';
         $html_result .= '<select name="'. $name .'" onchange="this.form.submit();">';
         $html_result .= '<option selected="selected" value="">'. $label .'</option>';
@@ -328,7 +333,8 @@ class ArtifactReportHtml extends ArtifactReport {
          *      @return string
          *
          */
-    function showResult ($group_id,$prefs,$offset,$total_rows,$url,$nolink,$chunksz,$morder,$advsrch,$aids,$masschange=false,$pv) {
+    function showResult($group_id,$prefs,$offset,$total_rows,$url,$nolink,$chunksz,$morder,$advsrch,$aids,$masschange=false,$pv)
+    {
         global $Language,$ath;
         $hp = Codendi_HTMLPurifier::instance();
         $html_result = "";
@@ -580,7 +586,8 @@ class ArtifactReportHtml extends ArtifactReport {
          *      @return string
          *
          */
-    function displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,$order,$pref_stg,$offset,$chunksz,$pv,$masschange=false) {
+    function displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,$order,$pref_stg,$offset,$chunksz,$pv,$masschange=false)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         global $ath,$art_field_fact,$Language;
 
@@ -788,7 +795,8 @@ class ArtifactReportHtml extends ArtifactReport {
          *
          * @return string
          */
-    function getScopeLabel($scope) {
+    function getScopeLabel($scope)
+    {
         global $Language;
 
         switch ( $scope ) {
@@ -808,7 +816,8 @@ class ArtifactReportHtml extends ArtifactReport {
      * @return string
      */
 
-    function getDefaultLink($default_val,$scope,$report_id) {
+    function getDefaultLink($default_val,$scope,$report_id)
+    {
         $g = $GLOBALS['ath']->getGroup();
         $group_id = $g->getID();
         $atid = $GLOBALS['ath']->getID();
@@ -833,7 +842,8 @@ class ArtifactReportHtml extends ArtifactReport {
          *
          * @return void
          */
-    function showAvailableReports($reports) {
+    function showAvailableReports($reports)
+    {
         $hp = Codendi_HTMLPurifier::instance();
             global $ath,$Language;
 
@@ -911,7 +921,8 @@ class ArtifactReportHtml extends ArtifactReport {
          *
          *  @return void
          */
-    function createReportForm() {
+    function createReportForm()
+    {
         $hp = Codendi_HTMLPurifier::instance();
             global $ath,$Language;
 
@@ -1018,7 +1029,8 @@ class ArtifactReportHtml extends ArtifactReport {
          *
          *  @return void
          */
-    function showReportForm() {
+    function showReportForm()
+    {
         $hp = Codendi_HTMLPurifier::instance();
             global $ath, $Language;
 

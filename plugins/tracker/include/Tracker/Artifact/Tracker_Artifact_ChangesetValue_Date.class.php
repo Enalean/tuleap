@@ -29,7 +29,8 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      */
     protected $timestamp;
 
-    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $timestamp) {
+    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $timestamp)
+    {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->timestamp = $timestamp;
     }
@@ -37,7 +38,8 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
     /**
      * @return mixed
      */
-    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
+    {
         return $visitor->visitDate($this);
     }
 
@@ -46,7 +48,8 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      *
      * @return int the timestamp, or null if date is null (none)
      */
-    public function getTimestamp() {
+    public function getTimestamp()
+    {
         return $this->timestamp;
     }
 
@@ -55,7 +58,8 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      *
      * @return string the human-readable representation of the date, or '' if date is null(none)
      */
-    public function getDate() {
+    public function getDate()
+    {
         return $this->formatDate($this->timestamp);
     }
 
@@ -66,7 +70,8 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      *
      * @return string the date in the format Y-m-d with maybe hours and minutes or '' if date is null (none)
      */
-    protected function formatDate($timestamp) {
+    protected function formatDate($timestamp)
+    {
         if ($timestamp === null) {
             return '';
         } else {
@@ -74,12 +79,14 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
         }
     }
 
-    public function getRESTValue(PFUser $user) {
+    public function getRESTValue(PFUser $user)
+    {
         return $this->getFullRESTValue($user);
     }
 
 
-    public function getFullRESTValue(PFUser $user) {
+    public function getFullRESTValue(PFUser $user)
+    {
         $date = null;
         if ($this->getTimestamp()) {
             $date = date('c', $this->getTimestamp());
@@ -92,7 +99,8 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      *
      * @return string The value of this artifact changeset value for the web interface, or '' if date is null (none)
      */
-    public function getValue() {
+    public function getValue()
+    {
         return $this->getDate();
     }
 
@@ -124,7 +132,8 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      *
      * @return string The sentence to add in changeset
      */
-    public function nodiff($format = 'html') {
+    public function nodiff($format = 'html')
+    {
         if ($this->getTimestamp() != 0) {
             $next_date = $this->getDate();
             return $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$next_date;

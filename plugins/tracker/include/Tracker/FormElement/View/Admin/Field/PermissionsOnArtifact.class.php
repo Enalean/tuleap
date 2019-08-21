@@ -20,7 +20,8 @@
 
 class Tracker_FormElement_View_Admin_Field_PermissionsOnArtifact extends Tracker_FormElement_View_Admin_Field {
 
-    protected function fetchCustomHelp() {
+    protected function fetchCustomHelp()
+    {
         $html = '';
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'permissions_help');

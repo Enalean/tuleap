@@ -73,7 +73,8 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    function _testGetValue() {
+    function _testGetValue()
+    {
         $field = new MockTracker_FormElement_Field_Date();
         $value = new MockTracker_Artifact_ChangesetValue_Date();
         $dao   = new MockTracker_Artifact_Changeset_ValueDao();
@@ -100,7 +101,8 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
         $this->assertIsA($changeset->getValue($field), 'Tracker_Artifact_ChangesetValue_Date');
     }
 
-    function testDiffToPrevious() {
+    function testDiffToPrevious()
+    {
         $field1             = new MockTracker_FormElement_Field_Date();
         $value1_previous    = new MockTracker_Artifact_ChangesetValue_Date();
         $value1_current     = new MockTracker_Artifact_ChangesetValue_Date();
@@ -163,7 +165,8 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
         $this->assertNoPattern('/field2/', $result);
     }
 
-    public function testDisplayDiffShouldNotStripHtmlTagsInPlainTextFormat() {
+    public function testDisplayDiffShouldNotStripHtmlTagsInPlainTextFormat()
+    {
         $diff   = "@@ -1 +1 @@
 - Quelle est la couleur <b> du <i> cheval blanc d'Henri IV?
 + Quelle est la couleur <b> du <i> <s> cheval blanc d'Henri IV?";
@@ -184,7 +187,8 @@ class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase {
     private $changeset_id;
     private $changeset;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->tracker      = aMockTracker()->build();
         $artifact     = anArtifact()->withTracker($this->tracker)->build();
@@ -197,7 +201,8 @@ class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase {
         );
     }
 
-    public function itDeletesCommentsValuesAndChangeset() {
+    public function itDeletesCommentsValuesAndChangeset()
+    {
         stub($this->tracker)->userIsAdmin($this->user)->returns(true);
 
         $changeset_dao = mock('Tracker_Artifact_ChangesetDao');
@@ -233,7 +238,8 @@ class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase {
 
 class Tracker_Artifact_Changeset_classnamesTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->changeset_with_changes = partial_mock('Tracker_Artifact_Changeset', array('getComment'), array('*', '*', 101, '*', '*'));
         $this->changeset_with_both_changes_and_comment = partial_mock('Tracker_Artifact_Changeset', array('getComment'), array('*', '*', 101, '*', '*'));
@@ -251,7 +257,8 @@ class Tracker_Artifact_Changeset_classnamesTest extends TuleapTestCase {
         stub($this->changeset_by_anonymous)->getComment()->returns($comment);
     }
 
-    public function itContainsChanges() {
+    public function itContainsChanges()
+    {
         $pattern = '/'. preg_quote('tracker_artifact_followup-with_changes') .'/';
         $this->assertPattern($pattern, $this->changeset_with_changes->getFollowUpClassnames('The changes'));
         $this->assertPattern($pattern, $this->changeset_with_both_changes_and_comment->getFollowUpClassnames('The changes'));
@@ -261,7 +268,8 @@ class Tracker_Artifact_Changeset_classnamesTest extends TuleapTestCase {
         $this->assertNoPattern($pattern, $this->changeset_with_comment->getFollowUpClassnames(false));
     }
 
-    public function itContainsComment() {
+    public function itContainsComment()
+    {
         $pattern = '/'. preg_quote('tracker_artifact_followup-with_comment') .'/';
         $this->assertPattern($pattern, $this->changeset_with_comment->getFollowUpClassnames(false));
         $this->assertPattern($pattern, $this->changeset_with_both_changes_and_comment->getFollowUpClassnames('The changes'));
@@ -271,7 +279,8 @@ class Tracker_Artifact_Changeset_classnamesTest extends TuleapTestCase {
         $this->assertNoPattern($pattern, $this->changeset_with_changes->getFollowUpClassnames('The changes'));
     }
 
-    public function itContainsSystemUser() {
+    public function itContainsSystemUser()
+    {
         $pattern = '/'. preg_quote('tracker_artifact_followup-by_system_user') .'/';
         $this->assertNoPattern($pattern, $this->changeset_with_comment->getFollowUpClassnames(false));
         $this->assertNoPattern($pattern, $this->changeset_with_both_changes_and_comment->getFollowUpClassnames('The changes'));

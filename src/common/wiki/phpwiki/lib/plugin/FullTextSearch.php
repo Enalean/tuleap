@@ -36,20 +36,24 @@ require_once("lib/PageList.php");
 class WikiPlugin_FullTextSearch
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("FullTextSearch");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Search the content of all pages in this wiki.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.26 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array_merge
             (
              PageList::supportedArgs(), // paging and more.
@@ -63,7 +67,8 @@ extends WikiPlugin
                    'quiet'    => false));  // be less verbose
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
 
         $args = $this->getArgs($argstr, $request);
         if (empty($args['s']))
@@ -117,7 +122,8 @@ extends WikiPlugin
                     $list);
     }
 
-    function showhits($page, $hilight_re) {
+    function showhits($page, $hilight_re)
+    {
         $current = $page->getCurrentRevision();
         $matches = preg_grep("/$hilight_re/i", $current->getContent());
         $html = array();
@@ -129,7 +135,8 @@ extends WikiPlugin
         return $html;
     }
 
-    function highlight_line ($line, $hilight_re) {
+    function highlight_line($line, $hilight_re)
+    {
         while (preg_match("/^(.*?)($hilight_re)/i", $line, $m)) {
             $line = substr($line, strlen($m[0]));
             $html[] = $m[1];    // prematch

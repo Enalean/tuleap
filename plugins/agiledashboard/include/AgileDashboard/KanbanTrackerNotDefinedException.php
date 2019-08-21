@@ -17,7 +17,8 @@
  */
 
 class Kanban_TrackerNotDefinedException extends Exception {
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct("Tracker not defined");
     }
 }

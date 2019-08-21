@@ -24,30 +24,36 @@ class XML_ParseError {
     private $type;
     private $message;
 
-    public function __construct($line, $column, $type, $message) {
+    public function __construct($line, $column, $type, $message)
+    {
         $this->line    = $line;
         $this->column  = $column;
         $this->type    = $type;
         $this->message = $message;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return 'Line: '.$this->line.' Column: '.$this->column. ' '.$this->type.' '. $this->message;
     }
 
-    public function getLine() {
+    public function getLine()
+    {
         return $this->line;
     }
 
-    public function getColumn() {
+    public function getColumn()
+    {
         return $this->column;
     }
 
-    public function getType() {
+    public function getType()
+    {
         return $this->type;
     }
 
-    public function getMessage() {
+    public function getMessage()
+    {
         return $this->message;
     }
 }

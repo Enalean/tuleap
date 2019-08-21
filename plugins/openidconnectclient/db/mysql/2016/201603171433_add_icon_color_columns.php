@@ -20,15 +20,18 @@
 
 class b201603171433_add_icon_color_columns extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add icon and color columns to plugin_openidconnectclient_provider table';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_openidconnectclient_provider
                 ADD COLUMN icon VARCHAR(50) NULL,
                 ADD COLUMN color VARCHAR(20) NULL";
@@ -40,7 +43,8 @@ class b201603171433_add_icon_color_columns extends ForgeUpgrade_Bucket {
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (! $this->db->columnNameExists('plugin_openidconnectclient_provider', 'icon')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while adding icon column to the plugin_openidconnectclient_provider table');
         }

@@ -22,7 +22,8 @@ require_once __DIR__ .'/../../bootstrap.php';
 
 class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->process_manager  = mock('SystemEventProcessManager');
         $this->process          = mock('SystemEventProcess');
@@ -44,7 +45,8 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends TuleapTest
         );
     }
 
-    public function itLoadsAllCommandsInTheRightOrder() {
+    public function itLoadsAllCommandsInTheRightOrder()
+    {
         $expected_commands = array(
             'Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopper',
             'Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents',

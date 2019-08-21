@@ -63,7 +63,8 @@ class Transition_ConditionManager {
      *
      * @return Transition_PostActionFactory
      */
-    public function getConditionFactory() {
+    public function getConditionFactory()
+    {
         return Workflow_Transition_ConditionFactory::build();
     }
 }

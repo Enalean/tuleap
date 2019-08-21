@@ -46,7 +46,8 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
      * version id of the wiki page.
      * If there is no version for the given wiki page, default to 0.
      */
-    function __construct($item, $versionNumber=null) {
+    function __construct($item, $versionNumber=null)
+    {
         parent::__construct($item);
 
         $dao = $this->_getDao();
@@ -80,11 +81,13 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
         }
     }
 
-    function newTable() {
+    function newTable()
+    {
         return new Docman_ApprovalTableWiki();
     }
 
-    function _createTable($table) {
+    function _createTable($table)
+    {
         return $this->_getDao()->createTable(
             $table->getItemId(),
             $table->getWikiVersionId(),
@@ -96,17 +99,20 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
         );
     }
 
-    protected function _updateTableWithLastId($dstTable) {
+    protected function _updateTableWithLastId($dstTable)
+    {
         $wikiVersionId = $this->_getDao()->getLastWikiVersionIdByItemId($this->item->getId());
         $dstTable->setItemId($this->item->getId());
         $dstTable->setWikiVersionId($wikiVersionId);
     }
 
-    function _getTable() {
+    function _getTable()
+    {
         return $this->getTableFromVersion($this->item->getId(), $this->wikiVersionId);
     }
 
-    function getTableFromVersion($itemId, $version) {
+    function getTableFromVersion($itemId, $version)
+    {
         $table = null;
         if($version !== null) {
             $dao = $this->_getDao();
@@ -119,17 +125,20 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
         return $table;
     }
 
-    function getLastDocumentVersionNumber() {
+    function getLastDocumentVersionNumber()
+    {
         $lastVersionId = $this->_getDao()->getLastWikiVersionIdByItemId($this->item->getId());
         return $lastVersionId;
     }
 
-    function userAccessedSinceLastUpdate($user) {
+    function userAccessedSinceLastUpdate($user)
+    {
         return $this->_getDao()->userAccessedSince($user->getId(), $this->item->getPagename(), $this->item->getGroupId(), $this->wikiVersionId);
     }
 
     // Class accessor
-    function _getDao() {
+    function _getDao()
+    {
         return new Docman_ApprovalTableWikiDao(CodendiDataAccess::instance());
     }
 }

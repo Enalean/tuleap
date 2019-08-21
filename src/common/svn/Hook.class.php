@@ -46,7 +46,8 @@ abstract class SVN_Hook {
      *
      * @return Project
      */
-    protected function getProjectFromRepositoryPath($repository) {
+    protected function getProjectFromRepositoryPath($repository)
+    {
         return $this->svn_hooks->getProjectFromRepositoryPath($repository);
     }
 }

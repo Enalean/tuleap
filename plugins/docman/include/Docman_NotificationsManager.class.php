@@ -109,19 +109,24 @@ class Docman_NotificationsManager
         $this->ugroups_updater           = $ugroups_updater;
     }
 
-    function _getItemFactory() {
+    function _getItemFactory()
+    {
         return new Docman_ItemFactory();
     }
-    function _getUserManager() {
+    function _getUserManager()
+    {
         return UserManager::instance();
     }
-    function _getPermissionsManager() {
+    function _getPermissionsManager()
+    {
         return Docman_PermissionsManager::instance($this->project->getID());
     }
-    function _getDocmanPath() {
+    function _getDocmanPath()
+    {
         return new Docman_Path();
     }
-    function somethingHappen($event, $params) {
+    function somethingHappen($event, $params)
+    {
         $um             = $this->_getUserManager();
         $params['path'] = $this->_getDocmanPath();
         $users          = $this->notified_people_retriever->getNotifiedUsers(
@@ -142,11 +147,13 @@ class Docman_NotificationsManager
             }
         }
     }
-    function _getListeningUsersItemId($params) {
+    function _getListeningUsersItemId($params)
+    {
         return $params['item']->getId();
     }
 
-    function sendNotifications($event, $params) {
+    function sendNotifications($event, $params)
+    {
         $success = true;
         foreach($this->notifications as $notification) {
             $success &= $this->mail_builder->buildAndSendEmail($this->project, $notification, new MailEnhancer());
@@ -156,7 +163,8 @@ class Docman_NotificationsManager
         }
     }
 
-    /* protected */ function _getType() {
+    /* protected */ function _getType()
+    {
         return PLUGIN_DOCMAN_NOTIFICATION;
     }
 
@@ -186,7 +194,8 @@ class Docman_NotificationsManager
         return $this->ugroups_retriever->getListeningUGroups($item, $ugroups, PLUGIN_DOCMAN_NOTIFICATION);
     }
 
-    function _buildMessage($event, $params, $user) {
+    function _buildMessage($event, $params, $user)
+    {
         $type = '';
         switch($event) {
             case 'plugin_docman_event_edit':
@@ -214,7 +223,8 @@ class Docman_NotificationsManager
         );
     }
 
-    protected function _addMessage(PFUser $to, $subject, $msg, $link) {
+    protected function _addMessage(PFUser $to, $subject, $msg, $link)
+    {
         if (!isset($this->notifications[$msg])) {
             $subject = '['. util_unconvert_htmlspecialchars($this->_group_name) .' - Documents] '. $subject;
 
@@ -230,7 +240,8 @@ class Docman_NotificationsManager
         $this->notifications[$msg]->addEmail($to->getEmail());
     }
 
-    protected function getMessageLink($type, $params) {
+    protected function getMessageLink($type, $params)
+    {
         if($this->project->getTruncatedEmailsUsage()) {
             return $this->_url.'&action=details&id='. $params['item']->getId().'&section=history';
         }
@@ -259,7 +270,8 @@ class Docman_NotificationsManager
      *
      * @return Docman_Item
      */
-    function _getMonitoredItemForUser($user, $item) {
+    function _getMonitoredItemForUser($user, $item)
+    {
         $listeners = $this->getListeningUsers($item);
         foreach ($listeners as $userId => $item) {
             if ($user->getId() == $userId) {
@@ -269,7 +281,8 @@ class Docman_NotificationsManager
         return $item;
     }
 
-    function _getMessageForUser($user, $message_type, $params) {
+    function _getMessageForUser($user, $message_type, $params)
+    {
         $msg = '';
         switch($message_type) {
             case self::MESSAGE_MODIFIED:
@@ -303,7 +316,8 @@ class Docman_NotificationsManager
      *
      * @return DataAccessResult|false
      */
-    function listAllMonitoredItems($groupId, $userId = null) {
+    function listAllMonitoredItems($groupId, $userId = null)
+    {
         return $this->users_to_notify_dao->searchDocmanMonitoredItems($groupId, $userId);
     }
 

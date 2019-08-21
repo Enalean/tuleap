@@ -76,7 +76,8 @@ define('ACL_CREATOR',       '_CREATOR');
 // To provide ui helpers to view and change page permissions:
 //   <tr><th>Group</th><th>Access</th><th>Allow or Forbid</th></tr>
 //   <tr><td>$group</td><td>_($access)</td><td> [ ] </td></tr>
-function pagePermissions($pagename) {
+function pagePermissions($pagename)
+{
     global $request;
     $page = $request->getPage($pagename);
     // Page not found (new page); returned inherited permissions, to be displayed in gray
@@ -97,7 +98,8 @@ function pagePermissions($pagename) {
     }
 }
 
-function pagePermissionsSimpleFormat($perm_tree, $owner, $group=false) {
+function pagePermissionsSimpleFormat($perm_tree, $owner, $group=false)
+{
     list($type,$perm) = pagePermissionsAcl($perm_tree[0], $perm_tree);
     /*
     $type = $perm_tree[0];
@@ -122,7 +124,8 @@ function pagePermissionsSimpleFormat($perm_tree, $owner, $group=false) {
     }
 }
 
-function pagePermissionsAcl($type,$perm_tree) {
+function pagePermissionsAcl($type,$perm_tree)
+{
     $perm = $perm_tree[1];
     while (!is_object($perm)) {
         $perm_tree = pagePermissionsAcl($type, $perm);
@@ -133,7 +136,8 @@ function pagePermissionsAcl($type,$perm_tree) {
 
 // view => who
 // edit => who
-function pagePermissionsAclFormat($perm_tree, $editable=false) {
+function pagePermissionsAclFormat($perm_tree, $editable=false)
+{
     list($type,$perm) = pagePermissionsAcl($perm_tree[0], $perm_tree);
     if ($editable)
         return $perm->asEditableTable($type);
@@ -148,7 +152,8 @@ function pagePermissionsAclFormat($perm_tree, $editable=false) {
  * overruled by more specific forbid rules.
  * Todo: cache result per access and page in session?
  */
-function requiredAuthorityForPage ($action) {
+function requiredAuthorityForPage($action)
+{
     global $request;
     $auth = _requiredAuthorityForPagename(action2access($action),
                                           $request->getArg('pagename'));
@@ -160,7 +165,8 @@ function requiredAuthorityForPage ($action) {
 }
 
 // Translate action or plugin to the simplier access types:
-function action2access ($action) {
+function action2access($action)
+{
     global $request;
     switch ($action) {
         case 'browse':
@@ -206,7 +212,8 @@ function action2access ($action) {
 // Recursive helper to do the real work.
 // Using a simple perm cache for page-access pairs.
 // Maybe page-(current+edit+change?)action pairs will help
-function _requiredAuthorityForPagename($access, $pagename) {
+function _requiredAuthorityForPagename($access, $pagename)
+{
     static $permcache = array();
 
     if (array_key_exists($pagename, $permcache)
@@ -258,7 +265,8 @@ function _requiredAuthorityForPagename($access, $pagename) {
  * @param  string $pagename   page from which the parent page is searched.
  * @return string parent      pagename or the (possibly pseudo) dot-pagename.
  */
-function getParentPage($pagename) {
+function getParentPage($pagename)
+{
     if (isSubPage($pagename)) {
         return subPageSlice($pagename,0);
     } else {
@@ -269,7 +277,8 @@ function getParentPage($pagename) {
 // Read the ACL from the page
 // Done: Not existing pages should NOT be queried.
 // Check the parent page instead and don't take the default ACL's
-function getPagePermissions ($page) {
+function getPagePermissions($page)
+{
     if ($hash = $page->get('perm'))  // hash => object
         return new PagePermission(unserialize($hash));
     else
@@ -277,11 +286,13 @@ function getPagePermissions ($page) {
 }
 
 // Store the ACL in the page
-function setPagePermissions ($page,$perm) {
+function setPagePermissions($page,$perm)
+{
     $perm->store($page);
 }
 
-function getAccessDescription($access) {
+function getAccessDescription($access)
+{
     static $accessDescriptions;
     if (! $accessDescriptions) {
         $accessDescriptions = array(
@@ -301,7 +312,8 @@ function getAccessDescription($access) {
 }
 
 // from php.net docs
-function array_diff_assoc_recursive($array1, $array2) {
+function array_diff_assoc_recursive($array1, $array2)
+{
     foreach ($array1 as $key => $value) {
         if (is_array($value)) {
             if (!is_array($array2[$key])) {
@@ -332,7 +344,8 @@ function array_diff_assoc_recursive($array1, $array2) {
 class PagePermission {
     var $perm;
 
-    function __construct($hash = array()) {
+    function __construct($hash = array())
+    {
         $this->_group = &$GLOBALS['request']->getGroup();
         if (is_array($hash) and !empty($hash)) {
             $accessTypes = $this->accessTypes();
@@ -355,7 +368,8 @@ class PagePermission {
      * Must translate the various special groups to the actual users settings
      * (userid, group membership).
      */
-    function isAuthorized($access,$user) {
+    function isAuthorized($access,$user)
+    {
         if (!empty($this->perm{$access})) {
             foreach ($this->perm[$access] as $group => $bool) {
                 if ($this->isMember($user,$group)) {
@@ -370,7 +384,8 @@ class PagePermission {
      * Translate the various special groups to the actual users settings
      * (userid, group membership).
      */
-    function isMember($user, $group) {
+    function isMember($user, $group)
+    {
         global $request;
         if ($group === ACL_EVERY) return true;
         if (!isset($this->_group)) $member = $request->getGroup();
@@ -419,7 +434,8 @@ class PagePermission {
      * returns hash of default permissions.
      * check if the page '.' exists and returns this instead.
      */
-    function defaultPerms() {
+    function defaultPerms()
+    {
         //Todo: check for the existance of '.' and take this instead.
         //Todo: honor more config.ini auth settings here
         $perm = array('view'   => array(ACL_EVERY => true),
@@ -460,7 +476,8 @@ class PagePermission {
     /**
      * FIXME: check valid groups and access
      */
-    function sanify() {
+    function sanify()
+    {
         foreach ($this->perm as $access => $groups) {
             foreach ($groups as $group => $bool) {
                 $this->perm[$access][$group] = (boolean) $bool;
@@ -471,7 +488,8 @@ class PagePermission {
     /**
      * do a recursive comparison
      */
-    function equal($otherperm) {
+    function equal($otherperm)
+    {
         $diff = array_diff_assoc_recursive($this->perm, $otherperm);
         return empty($diff);
     }
@@ -479,7 +497,8 @@ class PagePermission {
     /**
      * returns list of all supported access types.
      */
-    function accessTypes() {
+    function accessTypes()
+    {
         return array_keys(PagePermission::defaultPerms());
     }
 
@@ -487,7 +506,8 @@ class PagePermission {
      * special permissions for dot-files, beginning with '.'
      * maybe also for '_' files?
      */
-    function dotPerms() {
+    function dotPerms()
+    {
         $def = array(ACL_ADMIN => true,
                      ACL_OWNER => true);
         $perm = array();
@@ -500,7 +520,8 @@ class PagePermission {
     /**
      *  dead code. not needed inside the object. see getPagePermissions($page)
      */
-    function retrieve($page) {
+    function retrieve($page)
+    {
         $hash = $page->get('perm');
         if ($hash)  // hash => object
             $perm = new PagePermission(unserialize($hash));
@@ -510,19 +531,22 @@ class PagePermission {
         return $perm;
     }
 
-    function store($page) {
+    function store($page)
+    {
         // object => hash
         $this->sanify();
         return $page->set('perm',serialize($this->perm));
     }
 
-    function groupName ($group) {
+    function groupName($group)
+    {
         if ($group[0] == '_') return constant("GROUP".$group);
         else return $group;
     }
 
     /* type: page, default, inherited */
-    function asTable($type) {
+    function asTable($type)
+    {
         $table = HTML::table();
         foreach ($this->perm as $access => $perms) {
             $td = HTML::table(array('class' => 'cal','valign' => 'top'));
@@ -543,7 +567,8 @@ class PagePermission {
     }
 
     /* type: page, default, inherited */
-    function asEditableTable($type) {
+    function asEditableTable($type)
+    {
         global $WikiTheme;
         if (!isset($this->_group)) {
             $this->_group = $GLOBALS['request']->getGroup();
@@ -658,7 +683,8 @@ class PagePermission {
     // Seperate acl's by "; " or whitespace
     // See http://opag.ca/wiki/HelpOnAccessControlLists
     // As used by WikiAdminSetAclSimple
-    function asAclLines() {
+    function asAclLines()
+    {
         $s = ''; $line = '';
         $this->sanify();
         foreach ($this->perm as $access => $groups) {
@@ -680,7 +706,8 @@ class PagePermission {
     // This is just a bad hack for testing.
     // Simplify the ACL to a unix-like "rwx------+" string
     // See getfacl(8)
-    function asRwxString($owner,$group=false) {
+    function asRwxString($owner,$group=false)
+    {
         global $request;
         // simplify object => rwxrw---x+ string as in cygwin (+ denotes additional ACLs)
         $perm = $this->perm;

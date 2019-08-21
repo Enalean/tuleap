@@ -26,7 +26,8 @@ require_once('../svn/svn_data.php');
  * If the name is not the same as the tracker's short name, a warning is displayed.
  * If the artifact does not belong to the same project as the referring page, a warning is also displayed.
  */
-function generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art_name) {
+function generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art_name)
+{
     global $Language;
     $feed = '';
     if (($group_id)&&($group_id != $art_group_id)) {

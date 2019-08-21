@@ -19,7 +19,8 @@
 
 class DocmanV1_XMLExportDao extends DataAccessObject {
 
-    public function searchAllNonEmptyGroups($group_id) {
+    public function searchAllNonEmptyGroups($group_id)
+    {
         return $this->retrieve(
             "SELECT doc_groups.* FROM doc_groups
                 JOIN doc_data ON doc_groups.doc_group = doc_data.doc_group
@@ -29,11 +30,13 @@ class DocmanV1_XMLExportDao extends DataAccessObject {
         );
     }
 
-    public function searchAllDocs($doc_group_id) {
+    public function searchAllDocs($doc_group_id)
+    {
         return $this->retrieve("SELECT * FROM doc_data WHERE doc_group = ".$this->da->escapeInt($doc_group_id).' ORDER BY rank');
     }
 
-    public function searchUGroupForObjectPermission($permission_type, $object_id) {
+    public function searchUGroupForObjectPermission($permission_type, $object_id)
+    {
         return $this->retrieve(
             "SELECT ugroup.ugroup_id AS id, ugroup.name
              FROM permissions

@@ -21,7 +21,8 @@
 require_once('user.php');
 
 
-function groups_to_soap($groups) {
+function groups_to_soap($groups)
+{
     $return = array();
     foreach ($groups as $group_id => $group) {
         if (!$group || $group->isError()) {
@@ -40,7 +41,8 @@ function groups_to_soap($groups) {
  * @param Object{Group} $group the Group object
  * @return bool true if the current session user has access to this project, false otherwise
  */
-function checkRestrictedAccess($group) {
+function checkRestrictedAccess($group)
+{
     if (ForgeConfig::areRestrictedUsersAllowed()) {
         if ($group) {
             $user = UserManager::instance()->getCurrentUser();
@@ -64,7 +66,8 @@ function checkRestrictedAccess($group) {
 /**
  * Returns true is the current user is a member of the given group
  */
-function checkGroupMemberAccess($group) {
+function checkGroupMemberAccess($group)
+{
     if ($group) {
         $user = UserManager::instance()->getCurrentUser();
         if ($user) {
@@ -77,7 +80,8 @@ function checkGroupMemberAccess($group) {
     }
 }
 
-function ugroups_to_soap($ugroups) {
+function ugroups_to_soap($ugroups)
+{
     $return = array();
 
     foreach ($ugroups as $ugroup) {
@@ -108,7 +112,8 @@ function ugroups_to_soap($ugroups) {
  * @param PFUser $current_user
  * @return array
  */
-function user_to_soap($identifier, ?PFUser $user = null, PFUser $current_user) {
+function user_to_soap($identifier, ?PFUser $user = null, PFUser $current_user)
+{
     if ($user !== null && ($user->isActive() || $user->isRestricted() || $user->isSuspended())) {
         if ($current_user->canSee($user)) {
             return array(

@@ -39,11 +39,13 @@ abstract class Git_Driver_Gerrit_MembershipCommand_User extends Git_Driver_Gerri
         $this->user                = $user;
     }
 
-    public function disableAutoFlush() {
+    public function disableAutoFlush()
+    {
         $this->autoflush = false;
     }
 
-    public function execute(Git_RemoteServer_GerritServer $server) {
+    public function execute(Git_RemoteServer_GerritServer $server)
+    {
         $driver      = $this->getDriver($server);
         $gerrit_user = $this->gerrit_user_manager->getGerritUser($this->user);
         if ($gerrit_user) {

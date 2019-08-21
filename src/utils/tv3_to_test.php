@@ -37,12 +37,14 @@ class ArtifactDebug {
     public $permissions;
     public $artifact_field_value_list = array();
 
-    public function __construct($artifact_id) {
+    public function __construct($artifact_id)
+    {
         $this->artifact_id = $artifact_id;
         $this->artifact_history[$artifact_id] = array();
     }
 
-    public function setArtifact(array $artifact_row) {
+    public function setArtifact(array $artifact_row)
+    {
         $this->artifact[self::TRACKER_ID][] = array(
             'artifact_id'   => $artifact_row['artifact_id'],
             'summary'       => $artifact_row['summary'],
@@ -54,7 +56,8 @@ class ArtifactDebug {
         );
     }
 
-    public function setHistory($histories) {
+    public function setHistory($histories)
+    {
         foreach ($histories as $history) {
             $this->artifact_history[$this->artifact_id][] = array(
                 "id"             => $history['id'],
@@ -74,7 +77,8 @@ class ArtifactDebug {
         }
     }
 
-    public function setFiles($files) {
+    public function setFiles($files)
+    {
         foreach ($files as $file) {
             $this->artifact_file[$this->artifact_id][] = array(
                 "id"          => $file['id'],
@@ -86,7 +90,8 @@ class ArtifactDebug {
         }
     }
 
-    public function setFieldValues($field_values) {
+    public function setFieldValues($field_values)
+    {
         foreach ($field_values as $values) {
             $this->artifact_field_value[$this->artifact_id][] = array(
                 "data_type"      => $values['data_type'],
@@ -101,7 +106,8 @@ class ArtifactDebug {
         }
     }
 
-    public function setPermissions($permissions) {
+    public function setPermissions($permissions)
+    {
         foreach ($permissions as $perms) {
             $this->permissions[$this->artifact_id][] = array(
                 "ugroup_id"       => $perms['ugroup_id'],
@@ -109,7 +115,8 @@ class ArtifactDebug {
         }
     }
 
-    public function setFieldValuesList($field_name, $field_values_list) {
+    public function setFieldValuesList($field_name, $field_values_list)
+    {
         if (count($field_values_list) > 0) {
             $artifact_field_value_list['parameters']['group_artifact_id'] = self::TRACKER_ID;
             $artifact_field_value_list['parameters']['field_name'] = $field_name;
@@ -127,7 +134,8 @@ class ArtifactDebug {
 
 class ArtifactXMLDebugExporterDao extends DataAccessObject {
 
-    public function searchArtifact($artifact_id) {
+    public function searchArtifact($artifact_id)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $summary = $this->unconvertHtmlspecialcharsAlias('artifact.summary', 'summary');
         $details = $this->unconvertHtmlspecialcharsAlias('details', 'details');
@@ -140,7 +148,8 @@ class ArtifactXMLDebugExporterDao extends DataAccessObject {
         return $this->retrieve($sql)->getRow();
     }
 
-    public function searchHistory($artifact_id) {
+    public function searchHistory($artifact_id)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $old_value = $this->unconvertHtmlspecialcharsAlias('h.old_value', 'old_value');
 
@@ -179,11 +188,13 @@ class ArtifactXMLDebugExporterDao extends DataAccessObject {
      *
      * @see util_unconvert_htmlspecialchars
      */
-    private function unconvertHtmlspecialcharsAlias($column_name, $alias) {
+    private function unconvertHtmlspecialcharsAlias($column_name, $alias)
+    {
         return $this->unconvertHtmlspecialchars($column_name)." AS $alias";
     }
 
-    private function unconvertHtmlspecialchars($column_name) {
+    private function unconvertHtmlspecialchars($column_name)
+    {
         return "REPLACE(
                     REPLACE(
                         REPLACE(
@@ -197,7 +208,8 @@ class ArtifactXMLDebugExporterDao extends DataAccessObject {
                 )";
     }
 
-    public function searchFilesForArtifact($artifact_id) {
+    public function searchFilesForArtifact($artifact_id)
+    {
         $artifact_id  = $this->da->escapeInt($artifact_id);
 
         $sql = "SELECT *
@@ -206,7 +218,8 @@ class ArtifactXMLDebugExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchFile($artifact_id, $filename, $submitted_by, $date) {
+    public function searchFile($artifact_id, $filename, $submitted_by, $date)
+    {
         $artifact_id  = $this->da->escapeInt($artifact_id);
         $filename     = $this->da->quoteSmart($filename);
         $submitted_by = $this->da->escapeInt($submitted_by);
@@ -221,7 +234,8 @@ class ArtifactXMLDebugExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchFileBefore($artifact_id, $filename, $date) {
+    public function searchFileBefore($artifact_id, $filename, $date)
+    {
         $artifact_id  = $this->da->escapeInt($artifact_id);
         $filename     = $this->da->quoteSmart($filename);
         $date         = $this->da->escapeInt($date);
@@ -234,7 +248,8 @@ class ArtifactXMLDebugExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchCCAt($artifact_id, $user_id, $date) {
+    public function searchCCAt($artifact_id, $user_id, $date)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $user_id     = $this->da->escapeInt($user_id);
         $date        = $this->da->escapeInt($date);
@@ -247,7 +262,8 @@ class ArtifactXMLDebugExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchPermsForArtifact($artifact_id) {
+    public function searchPermsForArtifact($artifact_id)
+    {
         $sql = "SELECT ugroup_id
                 FROM permissions
                     INNER JOIN artifact ON (CAST(artifact_id AS CHAR CHARACTER SET utf8) = object_id)
@@ -259,7 +275,8 @@ class ArtifactXMLDebugExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchFieldValues($artifact_id) {
+    public function searchFieldValues($artifact_id)
+    {
         $sql = "SELECT f.display_type, f.data_type, f.field_name, f.value_function, fv.*
                 FROM artifact_field_value fv
                     JOIN artifact         a  ON (a.artifact_id = fv.artifact_id)
@@ -268,7 +285,8 @@ class ArtifactXMLDebugExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchFieldValuesList($group_artifact_id, $field_name) {
+    public function searchFieldValuesList($group_artifact_id, $field_name)
+    {
         $sql = "SELECT fvl.value_id, fvl.value
                 FROM artifact_field_value_list fvl
                     JOIN artifact_field   f  ON (f.field_id = fvl.field_id AND f.group_artifact_id = fvl.group_artifact_id)
@@ -277,14 +295,16 @@ class ArtifactXMLDebugExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchUser($user_id) {
+    public function searchUser($user_id)
+    {
         $sql = "SELECT user_name, ldap_id, email
                 FROM user
                 WHERE user_id = $user_id";
         return $this->retrieve($sql);
     }
 
-    public function getAllUsers() {
+    public function getAllUsers()
+    {
         $sql = "SELECT DISTINCT(user_id), user_name
                 FROM user";
         return $this->retrieve($sql);

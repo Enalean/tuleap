@@ -25,13 +25,15 @@ class User_PasswordExpirationChecker {
      * @param PFUser $user
      * @throws User_PasswordExpiredException
      */
-    public function checkPasswordLifetime(PFUser $user) {
+    public function checkPasswordLifetime(PFUser $user)
+    {
         if ($this->userPasswordHasExpired($user)) {
             throw new User_PasswordExpiredException($user);
         }
     }
 
-    public function warnUserAboutPasswordExpiration(PFUser $user) {
+    public function warnUserAboutPasswordExpiration(PFUser $user)
+    {
         if ($this->getPasswordLifetimeInSeconds()) {
             $expiration_date = $this->getPasswordExpirationDate();
             $warning_date = $expiration_date + DateHelper::SECONDS_IN_A_DAY * self::DAYS_FOR_EXPIRATION_WARN;
@@ -46,7 +48,8 @@ class User_PasswordExpirationChecker {
     }
 
 
-    private function userPasswordHasExpired(PFUser $user) {
+    private function userPasswordHasExpired(PFUser $user)
+    {
         $expiration_date = $this->getPasswordExpirationDate();
         if ($expiration_date && $user->getLastPwdUpdate() < $expiration_date) {
             return true;
@@ -54,7 +57,8 @@ class User_PasswordExpirationChecker {
         return false;
     }
 
-    private function getPasswordExpirationDate() {
+    private function getPasswordExpirationDate()
+    {
         $password_lifetime = $this->getPasswordLifetimeInSeconds();
         if ($password_lifetime) {
             return $_SERVER['REQUEST_TIME'] - $password_lifetime;
@@ -62,7 +66,8 @@ class User_PasswordExpirationChecker {
         return false;
     }
 
-    private function getPasswordLifetimeInSeconds() {
+    private function getPasswordLifetimeInSeconds()
+    {
         $password_lifetime_in_days = ForgeConfig::get('sys_password_lifetime');
         if ($password_lifetime_in_days) {
             return DateHelper::SECONDS_IN_A_DAY * $password_lifetime_in_days;

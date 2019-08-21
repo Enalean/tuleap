@@ -73,7 +73,8 @@ class DirectoryParserTest extends \PHPUnit\Framework\TestCase {
         $this->parser = new DirectoryParser(realpath(dirname(__FILE__).'/_fixtures'));
     }
 
-    public function testItReturnsContentOfDirectoryInformation() {
+    public function testItReturnsContentOfDirectoryInformation()
+    {
         $path   = 'sftp_directory';
         $items  = $this->parser->parseDirectory($path, false);
 
@@ -89,7 +90,8 @@ class DirectoryParserTest extends \PHPUnit\Framework\TestCase {
         $this->assertInstanceOf('\Tuleap\ProFTPd\Directory\DirectoryItem', $files[0]);
     }
 
-    public function testItReturnsContentOfDirectoryInformationIfPathEndsBySlash() {
+    public function testItReturnsContentOfDirectoryInformationIfPathEndsBySlash()
+    {
         $path   = 'sftp_directory';
         $items  = $this->parser->parseDirectory($path, false);
 
@@ -103,7 +105,8 @@ class DirectoryParserTest extends \PHPUnit\Framework\TestCase {
         $this->assertInstanceOf('\Tuleap\ProFTPd\Directory\DirectoryItem', $files[0]);
     }
 
-    public function testItDoesNotReturnDotFoldersWhenAskedNotTo() {
+    public function testItDoesNotReturnDotFoldersWhenAskedNotTo()
+    {
         $path   = 'sftp_directory';
         $items  = $this->parser->parseDirectory($path, true);
 
@@ -113,7 +116,8 @@ class DirectoryParserTest extends \PHPUnit\Framework\TestCase {
         }
     }
 
-    public function testItDoesReturnDotDotFolder() {
+    public function testItDoesReturnDotDotFolder()
+    {
         $path   = 'sftp_directory';
         $items  = $this->parser->parseDirectory($path, false);
 
@@ -129,7 +133,8 @@ class DirectoryParserTest extends \PHPUnit\Framework\TestCase {
         $this->assertTrue($dotdot_exists);
     }
 
-    public function testItReturnsFilesAndFoldersInANaturalOrder() {
+    public function testItReturnsFilesAndFoldersInANaturalOrder()
+    {
         $path   = 'sftp_directory';
         $items  = $this->parser->parseDirectory($path, false);
 
@@ -146,7 +151,8 @@ class DirectoryParserTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals('folder10', $folder3->getName());
     }
 
-    public function testItReturnsContentOfSubDirectoryInformation() {
+    public function testItReturnsContentOfSubDirectoryInformation()
+    {
         $path   = 'sftp_directory/folder01';
         $items  = $this->parser->parseDirectory($path, false);
 

@@ -27,7 +27,8 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
     private $repository_id = 115;
     private $system_event_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->backend    = mock('Git_Backend_Gitolite');
@@ -49,32 +50,37 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
         );
     }
 
-    public function itGetsTheRepositoryFromTheFactory() {
+    public function itGetsTheRepositoryFromTheFactory()
+    {
         stub($this->repository_factory)->getRepositoryById()->returns($this->repository);
         expect($this->repository_factory)->getRepositoryById($this->repository_id)->once();
         $this->event->process();
     }
 
-    public function itDelegatesToBackendRepositoryCreation() {
+    public function itDelegatesToBackendRepositoryCreation()
+    {
         stub($this->repository_factory)->getRepositoryById()->returns($this->repository);
         expect($this->backend)->updateRepoConf()->once();
         $this->event->process();
     }
 
-    public function itMarksTheEventAsDone() {
+    public function itMarksTheEventAsDone()
+    {
         stub($this->repository_factory)->getRepositoryById()->returns($this->repository);
         expect($this->backend)->updateRepoConf()->once()->returns(true);
         expect($this->event)->done()->once();
         $this->event->process();
     }
 
-    public function itMarksTheEventAsWarningWhenTheRepoDoesNotExist() {
+    public function itMarksTheEventAsWarningWhenTheRepoDoesNotExist()
+    {
         stub($this->repository_factory)->getRepositoryById()->returns(null);
         expect($this->event)->warning('Unable to find repository, perhaps it was deleted in the mean time?')->once();
         $this->event->process();
     }
 
-    public function itMarksTheEventAsDoneWhenTheRepoIsFlaggedAsDeleted() {
+    public function itMarksTheEventAsDoneWhenTheRepoIsFlaggedAsDeleted()
+    {
         stub($this->repository_factory)->getRepositoryById()->returns(null);
         stub($this->repository_factory)->getDeletedRepository()->returns($this->repository);
 
@@ -83,7 +89,8 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
         $this->event->process();
     }
 
-    public function itAskToUpdateGrokmirrorManifestFiles() {
+    public function itAskToUpdateGrokmirrorManifestFiles()
+    {
         stub($this->repository_factory)->getRepositoryById()->returns($this->repository);
 
         expect($this->backend)->updateRepoConf()->once()->returns(true);

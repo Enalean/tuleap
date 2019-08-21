@@ -22,13 +22,15 @@ require_once __DIR__.'/../bootstrap.php';
 Mock::generate('Project');
 
 class Tracker_HomeNavPresenterTest extends TuleapTestCase {
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->project = new MockProject();
         $this->project->setReturnValue('getId', '104');
     }
 
-    public function itHasNavItemsWithLabelAndUrl() {
+    public function itHasNavItemsWithLabelAndUrl()
+    {
         $presenter = new Tracker_HomeNavPresenter($this->project);
         $nav_items = $presenter->getNavItems();
 
@@ -36,7 +38,8 @@ class Tracker_HomeNavPresenterTest extends TuleapTestCase {
         $this->assertRowsIncludeKeys($nav_items, array('label', 'url'));
     }
 
-    public function itKnowsWhichNavItemIsTheCurrentOne() {
+    public function itKnowsWhichNavItemIsTheCurrentOne()
+    {
         $presenter = new Tracker_HomeNavPresenter($this->project, '');
         $nav_items = $presenter->getNavItems();
         $this->assertCurrentItem($nav_items, 0);
@@ -48,11 +51,13 @@ class Tracker_HomeNavPresenterTest extends TuleapTestCase {
 
     /***** Assertions *********************************************************/
 
-    protected function assertNotEmpty($array) {
+    protected function assertNotEmpty($array)
+    {
         $this->assertTrue(count($array) > 0);
     }
 
-    private function assertRowsIncludeKeys($array, $expected_keys) {
+    private function assertRowsIncludeKeys($array, $expected_keys)
+    {
         foreach($array as $row) {
             foreach($expected_keys as $expected_key) {
                 $this->assertTrue(array_key_exists($expected_key, $row));
@@ -60,7 +65,8 @@ class Tracker_HomeNavPresenterTest extends TuleapTestCase {
         }
     }
 
-    private function assertCurrentItem($nav_items, $expected_current_index) {
+    private function assertCurrentItem($nav_items, $expected_current_index)
+    {
         for($index=0; $index < count($nav_items); $index++) {
             $current = $nav_items[$index]['current'];
 

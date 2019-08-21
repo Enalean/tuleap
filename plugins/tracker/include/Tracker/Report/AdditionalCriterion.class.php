@@ -29,16 +29,19 @@ class Tracker_Report_AdditionalCriterion {
     private $key;
     private $value;
 
-    public function __construct($key, $value) {
+    public function __construct($key, $value)
+    {
         $this->key   = $key;
         $this->value = $value;
     }
 
-    public function getValue() {
+    public function getValue()
+    {
         return $this->value;
     }
 
-    public function getKey() {
+    public function getKey()
+    {
         return $this->key;
     }
 }

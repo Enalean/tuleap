@@ -22,7 +22,8 @@ require_once dirname(__FILE__) .'/../../bootstrap.php';
 
 class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
 
         $this->field_122    = aSelectBoxField()->withId(122)->build();
         $this->field_123    = aSelectBoxField()->withId(123)->build();
@@ -68,7 +69,8 @@ class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TuleapTestCase {
         $this->factory = new Cardwall_OnTop_Config_TrackerMappingFactory($tracker_factory, $element_factory, $this->dao, $this->value_mapping_factory);
     }
 
-    public function itRemovesTheCurrentTrackerFromTheProjectTrackers() {
+    public function itRemovesTheCurrentTrackerFromTheProjectTrackers()
+    {
         $expected_trackers = array(
             10 => $this->tracker_10,
             20 => $this->tracker_20
@@ -77,7 +79,8 @@ class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TuleapTestCase {
         $this->assertIdentical($expected_trackers, $this->factory->getTrackers($this->tracker));
     }
 
-    public function itLoadsMappingsFromTheDatabase() {
+    public function itLoadsMappingsFromTheDatabase()
+    {
         stub($this->dao)->searchMappingFields($this->tracker->getId())->returns(TestHelper::arrayToDar(
             array('tracker_id' => 10, 'field_id' => 123),
             array('tracker_id' => 20, 'field_id' => 124)
@@ -93,7 +96,8 @@ class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TuleapTestCase {
         $this->assertEqual($this->field_124,  $mappings[20]->getField());
     }
 
-    public function itUsesStatusFieldIfNoField() {
+    public function itUsesStatusFieldIfNoField()
+    {
         stub($this->dao)->searchMappingFields($this->tracker->getId())->returns(TestHelper::arrayToDar(
             array('tracker_id' => 10, 'field_id' => null)
         ));
@@ -104,7 +108,8 @@ class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TuleapTestCase {
         $this->assertIsA($mappings[10], 'Cardwall_OnTop_Config_TrackerMappingStatus');
     }
 
-    public function itReturnsANoFieldMappingIfNothingInDBAndNoStatus() {
+    public function itReturnsANoFieldMappingIfNothingInDBAndNoStatus()
+    {
         stub($this->dao)->searchMappingFields($this->tracker->getId())->returns(TestHelper::arrayToDar(
             array('tracker_id' => 20, 'field_id' => null)
         ));
@@ -114,7 +119,8 @@ class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TuleapTestCase {
         $this->assertIsA($mappings[20], 'Cardwall_OnTop_Config_TrackerMappingNoField');
     }
 
-    public function itReturnsEmptyMappingIfNoStatus() {
+    public function itReturnsEmptyMappingIfNoStatus()
+    {
         stub($this->dao)->searchMappingFields($this->tracker->getId())->returns(TestHelper::arrayToDar(
             array('tracker_id' => 20, 'field_id' => null)
         ));
@@ -124,7 +130,8 @@ class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TuleapTestCase {
         //TDOD: check type of what is returned
     }
 
-    public function itLoadValueMappings() {
+    public function itLoadValueMappings()
+    {
         stub($this->dao)->searchMappingFields($this->tracker->getId())->returns(TestHelper::arrayToDar(
             array('tracker_id' => 20, 'field_id' => 124)
         ));
@@ -135,7 +142,8 @@ class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TuleapTestCase {
         $this->factory->getMappings($this->tracker, $this->columns);
     }
 
-    public function itLoadValueMappingsEvenForStatusField() {
+    public function itLoadValueMappingsEvenForStatusField()
+    {
         stub($this->dao)->searchMappingFields($this->tracker->getId())->returns(TestHelper::arrayToDar(
             array('tracker_id' => 10, 'field_id' => null)
         ));

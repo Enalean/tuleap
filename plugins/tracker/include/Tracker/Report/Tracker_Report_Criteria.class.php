@@ -39,7 +39,8 @@ class Tracker_Report_Criteria {
      * @param int $rank the rank
      * @param int $is_advanced use advanced search for this field
      */
-    public function __construct($id, $report, $field, $rank, $is_advanced) {
+    public function __construct($id, $report, $field, $rank, $is_advanced)
+    {
         $this->id          = $id;
         $this->report      = $report;
         $this->field       = $field;
@@ -50,31 +51,38 @@ class Tracker_Report_Criteria {
     /**
      * @param bool $is_advanced
      */
-    public function setIsAdvanced($is_advanced) {
+    public function setIsAdvanced($is_advanced)
+    {
         $this->is_advanced = $is_advanced;
     }
 
-    public function getFrom() {
+    public function getFrom()
+    {
         return $this->field->getCriteriaFrom($this);
     }
 
-    public function getWhere() {
+    public function getWhere()
+    {
         return $this->field->getCriteriaWhere($this);
     }
 
-    public function fetch() {
+    public function fetch()
+    {
         return $this->field->fetchCriteria($this);
     }
 
-    public function fetchWithoutExpandFunctionnality() {
+    public function fetchWithoutExpandFunctionnality()
+    {
         return $this->field->fetchCriteriaWithoutExpandFunctionnality($this);
     }
 
-    public function delete() {
+    public function delete()
+    {
         return $this->field->deleteCriteriaValue($this);
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
     }
 
@@ -82,7 +90,8 @@ class Tracker_Report_Criteria {
     /**
      * @param mixed $value
      */
-    public function updateValue($value) {
+    public function updateValue($value)
+    {
         $this->field->updateCriteriaValue($this, $value);
     }
 
@@ -91,7 +100,8 @@ class Tracker_Report_Criteria {
      *
      * @param SimpleXMLElement $root the node to which the Criteria is attached (passed by reference)
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    {
         $root->addAttribute('rank', $this->rank);
         if ($this->is_advanced) {
             $root->addAttribute('is_advanced', $this->is_advanced);

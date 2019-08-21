@@ -31,7 +31,8 @@ use Tuleap\Project\REST\ProjectResourceReference;
  */
 class AgileDashboard_REST_ResourcesInjector {
 
-    public function populate(Luracast\Restler\Restler $restler) {
+    public function populate(Luracast\Restler\Restler $restler)
+    {
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\MilestoneResource', MilestoneRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\PlanningResource',  PlanningRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\BacklogItemResource',  BacklogItemRepresentation::ROUTE);
@@ -40,7 +41,8 @@ class AgileDashboard_REST_ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\Kanban\\KanbanItemsResource', KanbanItemPOSTRepresentation::ROUTE);
     }
 
-    public function declareProjectPlanningResource(array &$resources, Project $project) {
+    public function declareProjectPlanningResource(array &$resources, Project $project)
+    {
         $routes = array(
             BacklogItemRepresentation::BACKLOG_ROUTE,
             MilestoneRepresentation::ROUTE,

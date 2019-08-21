@@ -62,7 +62,8 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
         $this->event_manager         = $event_manager;
     }
 
-    public function process() {
+    public function process()
+    {
         $parameters   = $this->getParametersAsArray();
         //project id
         $projectId    = 0;
@@ -90,7 +91,8 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
         return $this->deleteRepo($repository, $projectId, $parameters);
     }
 
-    private function deleteRepo(GitRepository $repository) {
+    private function deleteRepo(GitRepository $repository)
+    {
         $path = $repository->getPath();
 
         try {
@@ -108,7 +110,8 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
         return true;
     }
 
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         return $this->parameters;
     }
 

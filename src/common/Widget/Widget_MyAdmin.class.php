@@ -33,7 +33,8 @@ class Widget_MyAdmin extends Widget {
         $this->user_is_super_admin = $user_is_super_admin;
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         if ($this->user_is_super_admin) {
             return $GLOBALS['Language']->getText('my_index', 'my_admin');
         } else {
@@ -46,7 +47,8 @@ class Widget_MyAdmin extends Widget {
         return $GLOBALS['Language']->getText('my_index', 'my_admin_description');
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $html_my_admin = '<table width="100%" class="tlp-table">';
 
         if ($this->user_is_super_admin) {
@@ -61,7 +63,8 @@ class Widget_MyAdmin extends Widget {
         return $html_my_admin;
     }
 
-    private function getHTMLForSuperAdmin() {
+    private function getHTMLForSuperAdmin()
+    {
         require_once __DIR__ . '/../../www/forum/forum_utils.php';
         require_once __DIR__ . '/../../www/project/admin/ugroup_utils.php';
 
@@ -138,7 +141,8 @@ class Widget_MyAdmin extends Widget {
         return $html_my_admin;
     }
 
-    private function getHTMLForNonSuperAdmin($i) {
+    private function getHTMLForNonSuperAdmin($i)
+    {
         db_query("SELECT count(*) AS count FROM groups WHERE status='P'");
         $row = db_fetch_array();
         $pending_projects = $row['count'];
@@ -151,11 +155,13 @@ class Widget_MyAdmin extends Widget {
         );
     }
 
-    public function _get_color($nb) {
+    public function _get_color($nb)
+    {
         return $nb == 0 ? 'green' : 'orange';
     }
 
-    public function _get_admin_row($i, $text, $value, $bgcolor, $textcolor = 'white') {
+    public function _get_admin_row($i, $text, $value, $bgcolor, $textcolor = 'white')
+    {
         return '<tr class="'. util_get_alt_row_color($i++) .'"><td>'. $text .'</td><td nowrap="nowrap" style="width:20%; background:'. $bgcolor .'; color:'. $textcolor .'; padding: 2px 8px; font-weight:bold; text-align:center;">'. $value .'</td></tr>';
     }
 }

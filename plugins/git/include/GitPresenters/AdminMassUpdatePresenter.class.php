@@ -66,15 +66,18 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
         }
     }
 
-    public function title() {
+    public function title()
+    {
         return dgettext('tuleap-git', 'Mass update of repositories');
     }
 
-    public function has_more_than_one_repository() {
+    public function has_more_than_one_repository()
+    {
         return count($this->repositories) > 1;
     }
 
-    public function info_mass_update() {
+    public function info_mass_update()
+    {
         $nb_selected_repositories = count($this->repositories);
         if ($nb_selected_repositories > 1) {
             return sprintf(dgettext('tuleap-git', 'You are about to update <span>%1$s repositories</span>. For now, only mirroring settings can be updated.'), $nb_selected_repositories);
@@ -85,23 +88,28 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
         return sprintf(dgettext('tuleap-git', 'You are about to update the repository <b>%1$s</b>. For now, only mirroring settings can be updated.'), $repository->name);
     }
 
-    public function submit_mass_change() {
+    public function submit_mass_change()
+    {
         return dgettext('tuleap-git', 'Update repositories');
     }
 
-    public function previous_state_used() {
+    public function previous_state_used()
+    {
         return dgettext('tuleap-git', 'Was used');
     }
 
-    public function previous_state_unused() {
+    public function previous_state_unused()
+    {
         return dgettext('tuleap-git', 'Was unused');
     }
 
-    public function exceed_max_input_vars_message() {
+    public function exceed_max_input_vars_message()
+    {
         return sprintf(dgettext('tuleap-git', 'We cannot handle the mass update of all selected repositoies therefore we kept only %1$s repositories in your selection.'), count($this->repositories));
     }
 
-    public function form_action() {
+    public function form_action()
+    {
         return '/plugins/git/?group_id='. $this->project_id .'&action=admin-mass-update';
     }
 }

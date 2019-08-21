@@ -31,29 +31,35 @@ class Views {
   /* protected string */ var $view;
   /* protected Controler */ var $_controler;
 
-    function View(&$controler, $view = null, $params = array()) {
+    function View(&$controler, $view = null, $params = array())
+    {
         $this->_controler =& $controler;
         $this->view=$view;
     }
 
-    function getControler() {
+    function getControler()
+    {
         return $this->_controler;
     }
 
 
-    function header() {
+    function header()
+    {
         site_project_header($this->html_params);
     }
 
-    function footer() {
+    function footer()
+    {
         site_project_footer($this->html_params);
     }
 
-    function main() {
+    function main()
+    {
 
     }
 
-    function display($view='') {
+    function display($view='')
+    {
         $this->header();
         if(!empty($view)) $this->$view();
         $this->footer();

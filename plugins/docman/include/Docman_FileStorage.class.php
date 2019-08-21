@@ -25,11 +25,13 @@
 class Docman_FileStorage {
 
     var $root;
-    function __construct($root) {
+    function __construct($root)
+    {
         $this->root       = $root;
     }
 
-    function upload($file, $group_id, $item_id, $version_number) {
+    function upload($file, $group_id, $item_id, $version_number)
+    {
         $path = $this->_getPath($file['name'], $group_id, $item_id, $version_number);
         if (move_uploaded_file($file['tmp_name'], $path)) {
             return $path;
@@ -37,7 +39,8 @@ class Docman_FileStorage {
             return false;
         }
     }
-    function store($content, $group_id, $item_id, $version_number, $chunk_offset = 0, $chunk_size = 0) {
+    function store($content, $group_id, $item_id, $version_number, $chunk_offset = 0, $chunk_size = 0)
+    {
         $path = $this->_getPath('file', $group_id, $item_id, $version_number);
 
         if (is_file($path)) {
@@ -62,7 +65,8 @@ class Docman_FileStorage {
         }
     }
 
-    function getFileMD5sum($path) {
+    function getFileMD5sum($path)
+    {
         if (is_file($path)) {
             return PHP_BigFile::getMd5Sum($path);
         } else {
@@ -70,7 +74,8 @@ class Docman_FileStorage {
         }
     }
 
-    function copy($srcPath, $dst_name, $dst_group_id, $dst_item_id, $dst_version_number) {
+    function copy($srcPath, $dst_name, $dst_group_id, $dst_item_id, $dst_version_number)
+    {
         $dstPath = $this->_getPath($dst_name, $dst_group_id, $dst_item_id, $dst_version_number);
 
         if(copy($srcPath, $dstPath)) {
@@ -81,7 +86,8 @@ class Docman_FileStorage {
         }
     }
 
-    function delete($path) {
+    function delete($path)
+    {
         return unlink($path);
     }
     /**
@@ -97,7 +103,8 @@ class Docman_FileStorage {
     *                     +--------------------------------------------+
     *
     */
-    function _getPath($name, $group_id, $item_id, $version_number) {
+    function _getPath($name, $group_id, $item_id, $version_number)
+    {
         $name = preg_replace('`[^a-z0-9_-]`i', '_', $name);
         $name = preg_replace('`_{2,}`', '_', $name);
         $hash1 = $item_id % 10;
@@ -116,7 +123,8 @@ class Docman_FileStorage {
         return $path;
     }
 
-    function _getGroupName($id) {
+    function _getGroupName($id)
+    {
         $pm = ProjectManager::instance();
         $group = $pm->getProject($id);
         return $group->getUnixName();

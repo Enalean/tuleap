@@ -26,7 +26,8 @@ require_once('Docman_Document.class.php');
  */
 class Docman_File extends Docman_Document {
 
-    function __construct($data = null) {
+    function __construct($data = null)
+    {
         parent::__construct($data);
     }
 
@@ -48,7 +49,8 @@ class Docman_File extends Docman_Document {
         return $type;
     }
 
-    function toRow() {
+    function toRow()
+    {
         $row = parent::toRow();
         $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FILE;
         return $row;

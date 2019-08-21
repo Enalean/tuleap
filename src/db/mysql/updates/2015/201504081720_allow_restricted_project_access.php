@@ -20,15 +20,18 @@
  */
 
 class b201504081720_allow_restricted_project_access extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return "Add column access";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE groups
                 ADD COLUMN access VARCHAR(16) NOT NULL DEFAULT 'private' AFTER is_public";
         $res = $this->db->dbh->exec($sql);

@@ -27,7 +27,8 @@
 class DVCSDriverFactory {
     //put your code here
 
-    public static function getDriver($name) {
+    public static function getDriver($name)
+    {
 
         switch($name)  {
             case 'Git':

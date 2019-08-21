@@ -20,15 +20,18 @@
 
 class b201403181036_add_tracker_fileinfo_temporary_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add tracker_fileinfo_temporary table';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS tracker_fileinfo_temporary (
                     fileinfo_id int(11) UNSIGNED NOT NULL,
                     last_modified int(11) NOT NULL,
@@ -40,7 +43,8 @@ class b201403181036_add_tracker_fileinfo_temporary_table extends ForgeUpgrade_Bu
         $this->db->createTable('tracker_fileinfo_temporary', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (! $this->db->tableNameExists('tracker_fileinfo_temporary')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_fileinfo_temporary table is missing');
         }

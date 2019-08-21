@@ -66,23 +66,28 @@ class WillBeCreatedUser implements ReadyToBeImportedUser {
         $this->use_lame_password = $use_lame_password;
     }
 
-    public function getUserName() {
+    public function getUserName()
+    {
         return $this->username;
     }
 
-    public function getRealName() {
+    public function getRealName()
+    {
         return $this->realname;
     }
 
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->email;
     }
 
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->status;
     }
 
-    private function getPassword() {
+    private function getPassword()
+    {
         if ($this->use_lame_password) {
             return 'Correct Horse Battery Staple';
         }
@@ -90,7 +95,8 @@ class WillBeCreatedUser implements ReadyToBeImportedUser {
         return $random_generator->getNumber();
     }
 
-    public function process(UserManager $user_manager, Logger $logger) {
+    public function process(UserManager $user_manager, Logger $logger)
+    {
 
         $fake_user = new PFUser();
         $fake_user->setUserName($this->username);
@@ -116,7 +122,8 @@ class WillBeCreatedUser implements ReadyToBeImportedUser {
         }
     }
 
-    public function getRealUser(UserManager $user_manager) {
+    public function getRealUser(UserManager $user_manager)
+    {
         $user = $user_manager->getUserByUserName($this->username);
 
         if (! $user) {

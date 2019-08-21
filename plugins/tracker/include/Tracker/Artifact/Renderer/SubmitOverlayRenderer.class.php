@@ -39,13 +39,15 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
      */
     private $current_user;
 
-    public function __construct(Tracker $tracker, Tracker_Artifact $source_artifact, EventManager $event_manager, Tracker_IFetchTrackerSwitcher $tracker_switcher) {
+    public function __construct(Tracker $tracker, Tracker_Artifact $source_artifact, EventManager $event_manager, Tracker_IFetchTrackerSwitcher $tracker_switcher)
+    {
         parent::__construct($tracker, $event_manager);
         $this->source_artifact  = $source_artifact;
         $this->tracker_switcher = $tracker_switcher;
     }
 
-    public function display(Codendi_Request $request, PFUser $current_user) {
+    public function display(Codendi_Request $request, PFUser $current_user)
+    {
         $this->current_user = $current_user;
 
         parent::display($request, $current_user);
@@ -58,13 +60,15 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
         );
     }
 
-    protected function displayHeader() {
+    protected function displayHeader()
+    {
         $GLOBALS['HTML']->overlay_header();
         $this->displayTrackerSwitcher($this->current_user);
         echo $this->fetchSubmitInstructions();
     }
 
-    private function displayTrackerSwitcher(PFUser $current_user) {
+    private function displayTrackerSwitcher(PFUser $current_user)
+    {
         $project = null;
         if ($this->source_artifact) {
             $project = $this->source_artifact->getTracker()->getProject();
@@ -86,7 +90,8 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
         $GLOBALS['Response']->displayFeedback();
     }
 
-    private function fetchNewArtifactForm(Codendi_Request $request, PFUser $current_user) {
+    private function fetchNewArtifactForm(Codendi_Request $request, PFUser $current_user)
+    {
         $html = '';
 
         $html .= '<input type="hidden" name="link-artifact-id" value="'. $this->source_artifact->getId() .'" />';
@@ -101,7 +106,8 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
         return $html;
     }
 
-    protected function displayFooter() {
+    protected function displayFooter()
+    {
         $GLOBALS['HTML']->overlay_footer();
     }
 }

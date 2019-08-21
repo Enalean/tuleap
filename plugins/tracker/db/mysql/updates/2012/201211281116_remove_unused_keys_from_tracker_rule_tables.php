@@ -20,15 +20,18 @@
 
 class b201211281116_remove_unused_keys_from_tracker_rule_tables extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Remove the unused keys in the tracker rule tables';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE `tracker_rule_list`
                     DROP KEY `tracker_rule_id`;";
 

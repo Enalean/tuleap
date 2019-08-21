@@ -24,7 +24,8 @@ class LDAP_SyncNotificationManager {
     private $retentionPeriod;
     private $projectManager;
 
-    function __construct(ProjectManager $projectManager, $retentionPeriod){
+    function __construct(ProjectManager $projectManager, $retentionPeriod)
+    {
         $this->ldapSyncMail    = new LDAP_SyncMail($projectManager);
         $this->retentionPeriod = $retentionPeriod;
         $this->projectManager  = $projectManager;
@@ -37,7 +38,8 @@ class LDAP_SyncNotificationManager {
      *
      * @return void
      */
-    public function processNotification(PFUser $user) {
+    public function processNotification(PFUser $user)
+    {
         $recipients   = '';
         $adminsEmails = $this->ldapSyncMail->getNotificationRecipients($user);
         foreach ($adminsEmails as $unixProjectName => $emailList) {
@@ -56,7 +58,8 @@ class LDAP_SyncNotificationManager {
      *
      * @return String
      */
-    private function getBody($unixProjectName, $user) {
+    private function getBody($unixProjectName, $user)
+    {
         $server_url       = HTTPRequest::instance()->getServerUrl();
         $project_url      = $server_url.'/projects/'.urlencode($unixProjectName);
         $project = $this->projectManager->getProjectByUnixName($unixProjectName);
@@ -73,7 +76,8 @@ class LDAP_SyncNotificationManager {
      *
      * @return String
      */
-    private function getSubject($projectName, $user) {
+    private function getSubject($projectName, $user)
+    {
         return  $GLOBALS['Language']->getText('plugin_ldap','ldap_sync_mail_notification_subject', array($user->getRealName(), $projectName));
     }
 }

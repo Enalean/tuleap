@@ -59,7 +59,8 @@ class Tracker_Action_UpdateArtifact {
         $this->hidden_fieldsets_detector = $hidden_fieldsets_detector;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    {
          //TODO : check permissions on this action?
         $comment_format = $this->artifact->validateCommentFormat($request, 'comment_formatnew');
 
@@ -123,7 +124,8 @@ class Tracker_Action_UpdateArtifact {
         }
     }
 
-    protected function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request) {
+    protected function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request)
+    {
         $stay     = $request->get('submit_and_stay');
         $from_aid = $request->get('from_aid');
 
@@ -137,7 +139,8 @@ class Tracker_Action_UpdateArtifact {
         return $redirect;
     }
 
-    private function calculateRedirectParams($stay, $from_aid) {
+    private function calculateRedirectParams($stay, $from_aid)
+    {
         $redirect_params = array();
         if ($stay) {
             $redirect_params['aid']       = $this->artifact->getId();
@@ -150,7 +153,8 @@ class Tracker_Action_UpdateArtifact {
         return array_filter($redirect_params);
     }
 
-    private function sendAjaxCardsUpdateInfo(PFUser $current_user) {
+    private function sendAjaxCardsUpdateInfo(PFUser $current_user)
+    {
         $cards_info = $this->getCardUpdateInfo($this->artifact, $current_user);
         $parent     = $this->artifact->getParent($current_user);
         if ($parent) {
@@ -161,7 +165,8 @@ class Tracker_Action_UpdateArtifact {
     }
 
 
-    private function getCardUpdateInfo(Tracker_Artifact $artifact, PFUser $current_user) {
+    private function getCardUpdateInfo(Tracker_Artifact $artifact, PFUser $current_user)
+    {
         $card_info               = array();
         $tracker_id              = $artifact->getTracker()->getId();
         $remaining_effort_field  = $this->form_element_factory->getComputableFieldByNameForUser(

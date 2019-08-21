@@ -36,24 +36,29 @@ rcs_id('$Id: NoCache.php,v 1.3 2004/06/18 14:42:17 rurban Exp $');
 class WikiPlugin_NoCache
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("NoCache");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Don't cache this page.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.3 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array( 'nocache' => 1 );
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         // works regardless of WIKIDB_NOCACHE_MARKUP
         // if WIKIDB_NOCACHE_MARKUP is false it doesn't hurt

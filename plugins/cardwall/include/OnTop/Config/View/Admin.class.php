@@ -24,11 +24,13 @@
  */
 class Cardwall_OnTop_Config_View_Admin {
 
-    public function displayAdminOnTop(Cardwall_OnTop_Config $config) {
+    public function displayAdminOnTop(Cardwall_OnTop_Config $config)
+    {
         return $this->generateAdminForm($config);
     }
 
-    private function generateAdminForm($config) {
+    private function generateAdminForm($config)
+    {
         $column_definition_view = new Cardwall_OnTop_Config_View_ColumnDefinition($config);
         $checked                = $config->isEnabled() ? 'checked="checked"' : '';
 
@@ -53,11 +55,13 @@ class Cardwall_OnTop_Config_View_Admin {
      /**
      * @return string
      */
-    private function translate($page, $category, $args = "") {
+    private function translate($page, $category, $args = "")
+    {
         return $GLOBALS['Language']->getText($page, $category, $args);
     }
 
-    public function visitColumnFreestyleCollection($collection, Cardwall_OnTop_Config $config) {
+    public function visitColumnFreestyleCollection($collection, Cardwall_OnTop_Config $config)
+    {
         return new Cardwall_OnTop_Config_View_ColumnDefinition($config);
     }
 }

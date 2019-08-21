@@ -34,7 +34,8 @@ class JsonCast
      * @psalm-ignore-nullable-return
      * @return int|null
      */
-    public static function toInt($value) {
+    public static function toInt($value)
+    {
         if (! is_null($value) && $value !== '') {
             return (int)$value;
         }
@@ -47,7 +48,8 @@ class JsonCast
      * @psalm-ignore-nullable-return
      * @return bool|null
      */
-    public static function toBoolean($value) {
+    public static function toBoolean($value)
+    {
         if (! is_null($value) && $value !== '') {
             return (bool) $value;
         }
@@ -59,7 +61,8 @@ class JsonCast
      * Cast a value to float if it's not null
      * @return float|null
      */
-    public static function toFloat($value) {
+    public static function toFloat($value)
+    {
         if (! is_null($value) && $value !== '') {
             return floatval($value);
         }
@@ -72,7 +75,8 @@ class JsonCast
      * @psalm-ignore-nullable-return
      * @return string|null
      */
-    public static function toDate($value) {
+    public static function toDate($value)
+    {
         if (! is_null($value) && $value !== '') {
             return date('c', $value);
         }

@@ -91,7 +91,8 @@ class ProjectHistoryPresenter {
         $this->forward_sub_events = $forward_sub_events;
     }
 
-    public function start_field_date() {
+    public function start_field_date()
+    {
         return $GLOBALS['HTML']->getBootstrapDatePicker(
             'history-search-start',
             'start',
@@ -102,7 +103,8 @@ class ProjectHistoryPresenter {
         );
     }
 
-    public function end_field_date() {
+    public function end_field_date()
+    {
         return $GLOBALS['HTML']->getBootstrapDatePicker(
             'history-search-end',
             'end',
@@ -113,91 +115,113 @@ class ProjectHistoryPresenter {
         );
     }
 
-    public function title() {
+    public function title()
+    {
         return $GLOBALS['Language']->getText('project_admin_utils','g_change_history');
     }
 
-    public function toggle_search() {
+    public function toggle_search()
+    {
         return $GLOBALS['Language']->getText('project_admin_utils','toggle_search');
     }
 
-    public function toggler_class_name() {
+    public function toggler_class_name()
+    {
         return Toggler::getClassname('history_search_title');
     }
 
-    public function history_search_title() {
+    public function history_search_title()
+    {
         return $GLOBALS['Language']->getText('project_admin_utils','history_search_title');
     }
 
-    public function table_head_event() {
+    public function table_head_event()
+    {
         return $GLOBALS['Language']->getText('project_admin_utils','event');
     }
 
-    public function table_head_val() {
+    public function table_head_val()
+    {
         return $GLOBALS['Language']->getText('project_admin_utils','val');
     }
 
-    public function table_head_from() {
+    public function table_head_from()
+    {
         return $GLOBALS['Language']->getText('project_admin_utils','from');
     }
 
-    public function table_head_to() {
+    public function table_head_to()
+    {
         return $GLOBALS['Language']->getText('project_admin_utils','to');
     }
 
-    public function table_head_by() {
+    public function table_head_by()
+    {
         return $GLOBALS['Language']->getText('global','by');
     }
 
-    public function choose_event_label() {
+    public function choose_event_label()
+    {
         return $GLOBALS['Language']->getText('project_admin_utils', 'choose_event');
     }
 
-    public function has_history_rows() {
+    public function has_history_rows()
+    {
         return $this->history_rows['numrows'] > 0;
     }
 
-    public function history_results() {
+    public function history_results()
+    {
         return displayProjectHistoryResults($this->group_id, $this->history_rows, false, $this->index);
     }
 
-    public function row_color() {
+    public function row_color()
+    {
         return util_get_alt_row_color($this->index++);
     }
 
-    public function has_offset() {
+    public function has_offset()
+    {
         return $this->offset > 0;
     }
 
-    public function offset_minus_limit() {
+    public function offset_minus_limit()
+    {
         return $this->offset - $this->limit;
     }
 
-    public function offset_plus_limit() {
+    public function offset_plus_limit()
+    {
         return $this->offset + $this->limit;
     }
 
-    public function previous() {
+    public function previous()
+    {
         return $GLOBALS['Language']->getText('project_admin_utils', 'previous');
     }
 
-    public function next() {
+    public function next()
+    {
         return $GLOBALS['Language']->getText('project_admin_utils', 'next');
     }
 
-    public function max_rows_not_reached() {
+    public function max_rows_not_reached()
+    {
         return ($this->offset + $this->limit) < $this->history_rows['numrows'];
     }
 
-    public function no_change() {
+    public function no_change()
+    {
         return $GLOBALS['Language']->getText('project_admin_utils','no_g_change');
     }
 
-    public function current_on_total() {
+    public function current_on_total()
+    {
         return ($this->offset + $this->index-3) . '/' . $this->history_rows['numrows'];
     }
 
-    public function export_history() {
+    public function export_history()
+    {
         return $GLOBALS['Language']->getText('project_admin_utils', 'export_history');
     }
 }

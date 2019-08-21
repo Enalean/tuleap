@@ -25,7 +25,8 @@ class b201403061609_add_gerrit_server_version_and_http_password extends ForgeUpg
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add gerrit server version and http password, in order to use gerrit REST API.
 EOT;
@@ -36,7 +37,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -45,7 +47,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
          $sql = "ALTER TABLE plugin_git_remote_servers
                  ADD COLUMN gerrit_version VARCHAR(255) NOT NULL DEFAULT '2.5',
                  ADD COLUMN http_password VARCHAR(255)";

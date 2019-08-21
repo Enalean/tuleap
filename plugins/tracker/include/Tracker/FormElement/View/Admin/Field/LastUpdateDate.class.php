@@ -20,7 +20,8 @@
 
 class Tracker_FormElement_View_Admin_Field_LastUpdateDate extends Tracker_FormElement_View_Admin_Field {
 
-    public function fetchCustomHelp() {
+    public function fetchCustomHelp()
+    {
         $html = '';
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastupdatedate_help');
@@ -33,7 +34,8 @@ class Tracker_FormElement_View_Admin_Field_LastUpdateDate extends Tracker_FormEl
      *
      * @return string the HTML for the part of form for required checkbox
      */
-    protected function fetchRequired() {
+    protected function fetchRequired()
+    {
         return '';
     }
 }

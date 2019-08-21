@@ -35,7 +35,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase
      */
     private $trigger_rules_dao;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -55,7 +56,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase
         stub($GLOBALS['Language'])->getText()->returns('');
     }
 
-    public function testEditListsAllChildren() {
+    public function testEditListsAllChildren()
+    {
         $possible_children = array('1' => aTracker()->withId(1)->withName('Bugs')->build(),
                                    '2' => aTracker()->withId(2)->withName('Tasks')->build());
 
@@ -67,7 +69,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase
         $this->assertContainsAll(array('value="1".*Bugs', 'value="2".*Tasks'), $content);
     }
 
-    public function testEditDisplaysTheWholeHierarchy() {
+    public function testEditDisplaysTheWholeHierarchy()
+    {
         $hierarchy = array(
             array('name' => 'Sprints', 'id' => '', 'current_class' => '', 'children' => array(
                 array('name' => 'Stories', 'id' => '', 'current_class' => 'current', 'children' => array(
@@ -85,7 +88,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase
         $this->assertPattern('%div class="tree-blank" >[^<]*</div><div class="tree-last"%', $content);
     }
 
-    private function getHierarchyAsTreeNode($hierarchy) {
+    private function getHierarchyAsTreeNode($hierarchy)
+    {
         $node = new TreeNode();
         if (isset($hierarchy['children'])) {
             $node->setData(array('name' => $hierarchy['name'], 'id' => $hierarchy['id'], 'current_class' => ''));
@@ -100,7 +104,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase
         return $node;
     }
 
-    public function testEditProvidesUrlsToTheTrackersInTheHierarchy() {
+    public function testEditProvidesUrlsToTheTrackersInTheHierarchy()
+    {
         $sprints_id = 666;
         $stories_id = 999;
         $hierarchy = array(
@@ -117,7 +122,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase
         $this->assertPattern("%".TRACKER_BASE_URL."/\?tracker=$stories_id&func=admin-hierarchy%", $content);
     }
 
-    private function WhenICaptureTheOutputOfEditAction() {
+    private function WhenICaptureTheOutputOfEditAction()
+    {
         ob_start();
         $controller = new HierarchyController(
             $this->request,
@@ -132,7 +138,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase
         return $content;
     }
 
-    public function testUpdateHappyPathShouldCallDaoToSaveHierarchy() {
+    public function testUpdateHappyPathShouldCallDaoToSaveHierarchy()
+    {
         $children_ids = array('1', '2');
 
         $this->request->set('children', $children_ids);
@@ -151,7 +158,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase
         $controller->update();
     }
 
-    public function testWeCanDeleteAllChildrenByNOTprovidingAnArrayOfIds() {
+    public function testWeCanDeleteAllChildrenByNOTprovidingAnArrayOfIds()
+    {
         $this->dao->shouldReceive('updateChildren')->with($this->tracker_id, Mockery::any())->once();
 
         $this->expectRedirectTo($this->redirect_url);
@@ -168,7 +176,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase
         $controller->update();
     }
 
-    public function testUpdateWithNastyRequestShouldThrowErrors() {
+    public function testUpdateWithNastyRequestShouldThrowErrors()
+    {
         $this->request->set('children', array('DROP DATABASE http://xkcd.com/327/'));
         $this->dao->shouldReceive('updateChildren')->never();
 
@@ -186,13 +195,15 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase
         $controller->update();
     }
 
-    private function assertContainsAll($expected_strings, $actual_text) {
+    private function assertContainsAll($expected_strings, $actual_text)
+    {
         foreach($expected_strings as $string) {
             $this->assertPattern('/'.$string.'/', $actual_text);
         }
     }
 
-    public function itCreatesHierarchyFromXmlProjectImportProcess() {
+    public function itCreatesHierarchyFromXmlProjectImportProcess()
+    {
         $mapping    = array(111,222,333,444);
         $controller = new HierarchyController(
             $this->request,

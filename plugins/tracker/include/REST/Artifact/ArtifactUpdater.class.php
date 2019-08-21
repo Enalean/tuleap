@@ -23,11 +23,13 @@ class Tracker_REST_Artifact_ArtifactUpdater {
     /** @var Tracker_REST_Artifact_ArtifactValidator */
     private $artifact_validator;
 
-    public function __construct(Tracker_REST_Artifact_ArtifactValidator $artifact_validator) {
+    public function __construct(Tracker_REST_Artifact_ArtifactValidator $artifact_validator)
+    {
         $this->artifact_validator = $artifact_validator;
     }
 
-    public function update(PFUser $user, Tracker_Artifact $artifact, array $values, ?Tuleap\Tracker\REST\ChangesetCommentRepresentation $comment = null) {
+    public function update(PFUser $user, Tracker_Artifact $artifact, array $values, ?Tuleap\Tracker\REST\ChangesetCommentRepresentation $comment = null)
+    {
         $this->checkArtifact($user, $artifact);
         $fields_data = $this->artifact_validator->getFieldsDataOnUpdate($values, $artifact);
 
@@ -41,7 +43,8 @@ class Tracker_REST_Artifact_ArtifactUpdater {
         $artifact->createNewChangeset($fields_data, $comment_body, $user, true, $comment_format);
     }
 
-    private function checkArtifact(PFUser $user, Tracker_Artifact $artifact) {
+    private function checkArtifact(PFUser $user, Tracker_Artifact $artifact)
+    {
         if (! $artifact) {
             throw new \Luracast\Restler\RestException(404, 'Artifact not found');
         }
@@ -54,11 +57,13 @@ class Tracker_REST_Artifact_ArtifactUpdater {
         }
     }
 
-    private function clientWantsToUpdateLatestVersion() {
+    private function clientWantsToUpdateLatestVersion()
+    {
         return (isset($_SERVER['HTTP_IF_UNMODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_MATCH']));
     }
 
-    private function isUpdatingLatestVersion(Tracker_Artifact $artifact) {
+    private function isUpdatingLatestVersion(Tracker_Artifact $artifact)
+    {
         $valid_unmodified = true;
         $valid_match      = true;
 

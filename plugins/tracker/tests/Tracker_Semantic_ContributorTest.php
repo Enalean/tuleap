@@ -24,7 +24,8 @@ require_once('bootstrap.php');
 class Tracker_Semantic_ContributorTest extends TuleapTestCase {
     private $xml_security;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->xml_security = new XML_Security();
@@ -40,7 +41,8 @@ class Tracker_Semantic_ContributorTest extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText','Define the contributor of the artifact',array('plugin_tracker_admin_semantic','contributor_description'));
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->xml_security->disableExternalLoadOfEntities();
 
         unset($GLOBALS['Language']);
@@ -48,7 +50,8 @@ class Tracker_Semantic_ContributorTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    public function testExport() {
+    public function testExport()
+    {
         $xml           = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticContributorTest.xml');
         $root          = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_mapping = array('F13' => '102');
@@ -61,7 +64,8 @@ class Tracker_Semantic_ContributorTest extends TuleapTestCase {
         $this->assertEqual((string)$xml->field['REF'], (string)$root->semantic->field['REF']);
     }
 
-    public function itDoesNotExportIfFieldIsNotExported() {
+    public function itDoesNotExportIfFieldIsNotExported()
+    {
         $root              = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = array();
 

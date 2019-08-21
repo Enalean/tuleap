@@ -48,7 +48,8 @@ class ArtifactFieldValueArtifactLinksFullRepresentation {
      */
     public $reverse_links;
 
-    public function build($id, $type, $label, array $values, array $reverse_values) {
+    public function build($id, $type, $label, array $values, array $reverse_values)
+    {
         $this->field_id      = JsonCast::toInt($id);
         $this->type          = $type;
         $this->label         = $label;

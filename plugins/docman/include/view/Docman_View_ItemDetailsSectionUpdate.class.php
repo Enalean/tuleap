@@ -25,23 +25,27 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
     var $validate;
     var $force;
     var $token;
-    function __construct($item, $url, $controller, $force, $token) {
+    function __construct($item, $url, $controller, $force, $token)
+    {
         parent::__construct($item, $url, false, true, $controller);
         $this->force = $force;
         $this->token = $token;
     }
-    function getContent($params = []) {
+    function getContent($params = [])
+    {
         return $this->item->accept($this);
     }
 
-    function _updateHeader($enctype = '') {
+    function _updateHeader($enctype = '')
+    {
         $content = '';
         $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update') .'</dt><dd>';
         $content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post" '.$enctype.'>';
         return $content;
     }
 
-    function _updateFooter() {
+    function _updateFooter()
+    {
         $content = '';
         if ($this->token) {
             $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
@@ -57,10 +61,12 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         return $content;
     }
 
-    function visitFolder($item, $params = array()) {
+    function visitFolder($item, $params = array())
+    {
         return "";
     }
-    function visitDocument($item, $params = array()) {
+    function visitDocument($item, $params = array())
+    {
         $content = '';
 
         $content .= $this->_updateHeader();
@@ -76,20 +82,25 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
 
         return $content;
     }
-    function visitWiki($item, $params = array()) {
+    function visitWiki($item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitLink($item, $params = array()) {
+    function visitLink($item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitFile($item, $params = array()) {
+    function visitFile($item, $params = array())
+    {
         return '';
     }
-    function visitEmbeddedFile($item, $params = array()) {
+    function visitEmbeddedFile($item, $params = array())
+    {
         return $this->visitFile($item, $params);
     }
 
-    function visitEmpty($item, $params = array()) {
+    function visitEmpty($item, $params = array())
+    {
         $content = '';
 
         $enctype = ' enctype="multipart/form-data"';

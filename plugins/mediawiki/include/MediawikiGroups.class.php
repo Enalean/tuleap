@@ -31,29 +31,34 @@ class MediawikiGroups {
 
     private $original_groups = array();
 
-    public function __construct(LegacyDataAccessResultInterface $original_groups) {
+    public function __construct(LegacyDataAccessResultInterface $original_groups)
+    {
         foreach ($original_groups as $row) {
             $this->original_groups[$row['ug_group']] = true;
         }
     }
 
-    public function getOriginalGroups() {
+    public function getOriginalGroups()
+    {
         return array_keys($this->original_groups);
     }
 
-    public function add($group) {
+    public function add($group)
+    {
         if (! isset($this->added_index[$group]) && ! isset($this->original_groups[$group])) {
             $this->added_removed['added'][] = $group;
         }
         $this->added_index[$group] = true;
     }
 
-    public function getAddedRemoved() {
+    public function getAddedRemoved()
+    {
         $this->removeGroupsNotExplicitelyAdded();
         return $this->added_removed;
     }
 
-    private function removeGroupsNotExplicitelyAdded() {
+    private function removeGroupsNotExplicitelyAdded()
+    {
         foreach ($this->original_groups as $group => $nop) {
             if (! isset($this->added_index[$group])) {
                 $this->added_removed['removed'][] = $group;

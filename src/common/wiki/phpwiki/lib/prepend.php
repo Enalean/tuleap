@@ -4,7 +4,8 @@
  * Things which must be done and defined before anything else.
  */
 $RCS_IDS = '';
-function rcs_id ($id) {
+function rcs_id($id)
+{
     // Save memory
     if (defined('DEBUG') and DEBUG)
         $GLOBALS['RCS_IDS'] .= "$id\n";
@@ -43,7 +44,8 @@ if (defined('DEBUG') and (DEBUG & 8) and extension_loaded("xdebug")) {
 
 // Used for debugging purposes
 class DebugTimer {
-    function __construct() {
+    function __construct()
+    {
         $this->_start = $this->microtime();
         if (function_exists('posix_times'))
             $this->_times = posix_times();
@@ -53,7 +55,8 @@ class DebugTimer {
      * @param string $which  One of 'real', 'utime', 'stime', 'cutime', 'sutime'
      * @return float Seconds.
      */
-    function getTime($which='real', $now=false) {
+    function getTime($which='real', $now=false)
+    {
         if ($which == 'real')
             return $this->microtime() - $this->_start;
 
@@ -66,7 +69,8 @@ class DebugTimer {
         return 0.0;           // Not available.
     }
 
-    function getStats() {
+    function getStats()
+    {
         if (!isset($this->_times)) {
             // posix_times() not available.
             return sprintf("real: %.3f", $this->getTime('real'));
@@ -78,13 +82,15 @@ class DebugTimer {
                        $this->getTime('stime', $now));
     }
 
-    function _CLK_TCK() {
+    function _CLK_TCK()
+    {
         // FIXME: this is clearly not always right.
         // But how to figure out the right value?
         return 100.0;
     }
 
-    function microtime(){
+    function microtime()
+    {
         list($usec, $sec) = explode(" ", microtime());
         return ((float)$usec + (float)$sec);
     }

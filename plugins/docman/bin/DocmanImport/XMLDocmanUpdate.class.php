@@ -27,7 +27,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     private $remoteItems = array();
     private $continue = false;
 
-    public function updatePath($xmlDoc, $parentId, $path) {
+    public function updatePath($xmlDoc, $parentId, $path)
+    {
         $this->loadXML($xmlDoc);
 
         // Build the local item tree
@@ -77,7 +78,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         }
     }
 
-    private function sortChildrenArray($array) {
+    private function sortChildrenArray($array)
+    {
         if (isset($this->reorder) && ($this->reorder == true)) {
             uksort($array, 'strnatcasecmp');
 
@@ -98,7 +100,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         }
     }
 
-    public function continuePath($xmlDoc, $parentId, $path) {
+    public function continuePath($xmlDoc, $parentId, $path)
+    {
         $this->continue = true;
         $this->updatePath($xmlDoc, $parentId, $path);
     }
@@ -106,7 +109,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Count the occurences of the 3 different tags in the tree
      */
-    private function tagCount($tree) {
+    private function tagCount($tree)
+    {
         $counts = array('IN_BOTH' => 0, 'IN_FIRST' => 0, 'IN_SECOND' => 0);
         if (isset($tree['tag']) && isset($counts[$tree['tag']])) {
             $counts[$tree['tag']]++;
@@ -126,7 +130,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Recurse on the tree and do the right action for each node: create, update, or delete
      */
-    private function recurseUpdateTree($title, $tree, $parentId) {
+    private function recurseUpdateTree($title, $tree, $parentId)
+    {
         if (isset($tree['id'])) {
             $itemId = $tree['id'];
         } else {
@@ -177,7 +182,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Converts an array of items as returned by the SOAP function getDocmanTreeInfo to a tree of IDs
      */
-    private function buildDistantTreeFromSoapArray() {
+    private function buildDistantTreeFromSoapArray()
+    {
 
         $listOfNodes = array();
         foreach ($this->remoteItems as $id => $itemInfo) {
@@ -193,7 +199,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Returns a tree of titles based on a tree of IDs (recursive)
      */
-    private function getTitleTreeFromIdTree(&$tree) {
+    private function getTitleTreeFromIdTree(&$tree)
+    {
         if ($tree == null) {
             return null;
         }
@@ -226,7 +233,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Gets the title of an item using its ID
      */
-    private function getItemTitle($id) {
+    private function getItemTitle($id)
+    {
         if (isset($this->remoteItems[$id])) {
             return $this->remoteItems[$id]->title;
         } else {
@@ -237,7 +245,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Returns a tree from an XML element (recursive)
      */
-    private function getTreeFromItemElement_rec($itemElement) {
+    private function getTreeFromItemElement_rec($itemElement)
+    {
         $tree['xmlElement'] = $itemElement;
 
         foreach ($itemElement->xpath('item') as $childItem) {
@@ -257,7 +266,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Returns a tree from an XML element
      */
-    private function getTreeFromItemElement($itemElement) {
+    private function getTreeFromItemElement($itemElement)
+    {
         $title = (string)$itemElement->properties->title;
         return array($title => $this->getTreeFromItemElement_rec($itemElement));
     }
@@ -265,7 +275,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Deletes an item
      */
-    private function deleteItem($itemId, $title) {
+    private function deleteItem($itemId, $title)
+    {
         $this->initRetryCounter();
         do {
             $retry = false;
@@ -284,7 +295,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Returns the MD5 checksums of all the versions of the given item
      */
-    private function getAllVersionsMD5sum($node) {
+    private function getAllVersionsMD5sum($node)
+    {
         $md5sums = array();
 
         foreach ($node->xpath('versions/version') as $version) {
@@ -302,7 +314,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
      * @return true  if we just have to send the new versions to the server
      *         false if some versions have been created server-side (so we will need to delete and recreate the whole item)
      */
-    private function checkVersionChecksums($itemId, $node) {
+    private function checkVersionChecksums($itemId, $node)
+    {
         $localMd5sums  = $this->getAllVersionsMD5sum($node);
 
         $this->initRetryCounter();
@@ -334,7 +347,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Updates an item
      */
-    private function updateItem($itemId, $node) {
+    private function updateItem($itemId, $node)
+    {
 
         $itemInfo = $this->getItemInformation($node);
 
@@ -420,7 +434,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Updates a file
      */
-    private function updateFile($itemId, $itemInfo) {
+    private function updateFile($itemId, $itemInfo)
+    {
         // Assign variables
         list(
             $title,
@@ -452,7 +467,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Updates an embedded file
      */
-    private function updateEmbeddedFile($itemId, $itemInfo) {
+    private function updateEmbeddedFile($itemId, $itemInfo)
+    {
         // Assign variables
         list(
             $title,
@@ -484,7 +500,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Updates an empty document
      */
-    private function updateEmpty($itemId, $itemInfo) {
+    private function updateEmpty($itemId, $itemInfo)
+    {
         // Assign variables
         list(
             $title,
@@ -516,7 +533,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Updates a wiki document
      */
-    private function updateWiki($itemId, $itemInfo, $pageName) {
+    private function updateWiki($itemId, $itemInfo, $pageName)
+    {
         // Assign variables
         list(
             $title,
@@ -548,7 +566,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Updates a link
      */
-    private function updateLink($itemId, $itemInfo, $url) {
+    private function updateLink($itemId, $itemInfo, $url)
+    {
         // Assign variables
         list(
             $title,
@@ -580,7 +599,8 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Updates a folder
      */
-    private function updateFolder($itemId, $itemInfo) {
+    private function updateFolder($itemId, $itemInfo)
+    {
         // Assign variables
         list(
             $title,

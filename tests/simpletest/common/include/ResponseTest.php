@@ -20,7 +20,8 @@
 
 class ResponseTest extends TuleapTestCase {
 
-    public function itSendsJSON() {
+    public function itSendsJSON()
+    {
         $response = partial_mock('Response', array('setContentType'));
         stub($response)->setContentType('application/json')->once();
 

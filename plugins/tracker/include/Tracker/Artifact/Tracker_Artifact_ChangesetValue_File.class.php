@@ -31,7 +31,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      */
     protected $files;
 
-    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $files) {
+    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $files)
+    {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->files = $files;
     }
@@ -39,7 +40,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     /**
      * @return mixed
      */
-    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
+    {
         return $visitor->visitFile($this);
     }
 
@@ -48,7 +50,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return int the number of files
      */
-    public function count() {
+    public function count()
+    {
         return count($this->files);
     }
 
@@ -59,7 +62,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return mixed value at given offset
      */
-    public function offsetGet($offset) {
+    public function offsetGet($offset)
+    {
         return $this->files[$offset];
     }
 
@@ -71,7 +75,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return void
      */
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value)
+    {
         $this->files[$offset] = $value;
     }
 
@@ -82,7 +87,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return bool wether the offset exists
      */
-    public function offsetExists($offset) {
+    public function offsetExists($offset)
+    {
         return isset($this->files[$offset]);
     }
 
@@ -93,7 +99,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return void
      */
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset)
+    {
         unset($this->files[$offset]);
     }
 
@@ -110,7 +117,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return Tracker_FileInfo the current one
      */
-    public function current() {
+    public function current()
+    {
         return $this->files[$this->index];
     }
 
@@ -119,7 +127,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return int the current index
      */
-    public function key() {
+    public function key()
+    {
         return $this->index;
     }
 
@@ -130,7 +139,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return void
      */
-    public function next() {
+    public function next()
+    {
         $this->index++;
     }
 
@@ -141,7 +151,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return Tracker_FileInfo the current one
      */
-    public function rewind() {
+    public function rewind()
+    {
         $this->index = 0;
     }
 
@@ -150,7 +161,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return bool true if the current pointer is valid
      */
-    public function valid() {
+    public function valid()
+    {
         return isset($this->files[$this->index]);
     }
 
@@ -159,15 +171,18 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return Tracker_FileInfo[]
      */
-    public function getFiles() {
+    public function getFiles()
+    {
         return $this->files;
     }
 
-    public function getRESTValue(PFUser $user) {
+    public function getRESTValue(PFUser $user)
+    {
         return $this->getFullRESTValue($user);
     }
 
-    public function getFullRESTValue(PFUser $user) {
+    public function getFullRESTValue(PFUser $user)
+    {
         $values = array();
         foreach ($this->getFiles() as $file_info) {
             $values[] = $file_info->getRESTValue();
@@ -187,7 +202,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return mixed The value of this artifact changeset value
      */
-    public function getValue() {
+    public function getValue()
+    {
         // TODO : implement
         return false;
     }

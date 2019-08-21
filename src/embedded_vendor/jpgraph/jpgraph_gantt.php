@@ -140,52 +140,63 @@ class GanttActivityInfo {
     private $iStyle=1;
     private $iHeaderAlign='center';
 
-    function __construct() {
+    function __construct()
+    {
         $this->vgrid = new LineProperty();
     }
 
-    function Hide($aF=true) {
+    function Hide($aF=true)
+    {
         $this->iShow=!$aF;
     }
 
-    function Show($aF=true) {
+    function Show($aF=true)
+    {
         $this->iShow=$aF;
     }
 
     // Specify font
-    function SetFont($aFFamily,$aFStyle=FS_NORMAL,$aFSize=10) {
+    function SetFont($aFFamily,$aFStyle=FS_NORMAL,$aFSize=10)
+    {
         $this->iFFamily = $aFFamily;
         $this->iFStyle  = $aFStyle;
         $this->iFSize  = $aFSize;
     }
 
-    function SetStyle($aStyle) {
+    function SetStyle($aStyle)
+    {
         $this->iStyle = $aStyle;
     }
 
-    function SetColumnMargin($aLeft,$aRight) {
+    function SetColumnMargin($aLeft,$aRight)
+    {
         $this->iLeftColMargin = $aLeft;
         $this->iRightColMargin = $aRight;
     }
 
-    function SetFontColor($aFontColor) {
+    function SetFontColor($aFontColor)
+    {
         $this->iFontColor = $aFontColor;
     }
 
-    function SetColor($aColor) {
+    function SetColor($aColor)
+    {
         $this->iColor = $aColor;
     }
 
-    function SetBackgroundColor($aColor) {
+    function SetBackgroundColor($aColor)
+    {
         $this->iBackgroundColor = $aColor;
     }
 
-    function SetColTitles($aTitles,$aWidth=null) {
+    function SetColTitles($aTitles,$aWidth=null)
+    {
         $this->iTitles = $aTitles;
         $this->iWidth = $aWidth;
     }
 
-    function SetMinColWidth($aWidths) {
+    function SetMinColWidth($aWidths)
+    {
         $n = min(count($this->iTitles),count($aWidths));
         for($i=0; $i < $n; ++$i ) {
             if( !empty($aWidths[$i]) ) {
@@ -199,7 +210,8 @@ class GanttActivityInfo {
         }
     }
 
-    function GetWidth($aImg) {
+    function GetWidth($aImg)
+    {
         $txt = new TextProperty();
         $txt->SetFont($this->iFFamily,$this->iFStyle,$this->iFSize);
         $n = count($this->iTitles) ;
@@ -223,7 +235,8 @@ class GanttActivityInfo {
         return $w;
     }
 
-    function GetColStart($aImg,&$aStart,$aAddLeftMargin=false) {
+    function GetColStart($aImg,&$aStart,$aAddLeftMargin=false)
+    {
         $n = count($this->iTitles) ;
         $adj = $aAddLeftMargin ? $this->iLeftColMargin : 0;
         $aStart=array($aImg->left_margin+$adj);
@@ -233,11 +246,13 @@ class GanttActivityInfo {
     }
 
     // Adjust headers left, right or centered
-    function SetHeaderAlign($aAlign) {
+    function SetHeaderAlign($aAlign)
+    {
         $this->iHeaderAlign=$aAlign;
     }
 
-    function Stroke($aImg,$aXLeft,$aYTop,$aXRight,$aYBottom,$aUseTextHeight=false) {
+    function Stroke($aImg,$aXLeft,$aYTop,$aXRight,$aYBottom,$aUseTextHeight=false)
+    {
 
         if( !$this->iShow ) return;
 
@@ -330,7 +345,8 @@ class GanttGraph extends Graph {
     //---------------
     // CONSTRUCTOR
     // Create a new gantt graph
-    function __construct($aWidth=0,$aHeight=0,$aCachedName="",$aTimeOut=0,$aInline=true) {
+    function __construct($aWidth=0,$aHeight=0,$aCachedName="",$aTimeOut=0,$aInline=true)
+    {
 
         // Backward compatibility
         if( $aWidth == -1 ) $aWidth=0;
@@ -355,19 +371,22 @@ class GanttGraph extends Graph {
     //---------------
     // PUBLIC METHODS
 
-    function SetSimpleFont($aFont,$aSize) {
+    function SetSimpleFont($aFont,$aSize)
+    {
         $this->iSimpleFont = $aFont;
         $this->iSimpleFontSize = $aSize;
     }
 
-    function SetSimpleStyle($aBand,$aColor,$aBkgColor) {
+    function SetSimpleStyle($aBand,$aColor,$aBkgColor)
+    {
         $this->iSimpleStyle = $aBand;
         $this->iSimpleColor = $aColor;
         $this->iSimpleBkgColor = $aBkgColor;
     }
 
     // A utility function to help create basic Gantt charts
-    function CreateSimple($data,$constrains=array(),$progress=array()) {
+    function CreateSimple($data,$constrains=array(),$progress=array())
+    {
         $num = count($data);
         for( $i=0; $i < $num; ++$i) {
             switch( $data[$i][1] ) {
@@ -458,30 +477,35 @@ class GanttGraph extends Graph {
     }
 
     // Set user specified scale zoom factor when auto sizing is used
-    function SetZoomFactor($aZoom) {
+    function SetZoomFactor($aZoom)
+    {
         $this->iZoomFactor = $aZoom;
     }
 
 
     // Set what headers should be shown
-    function ShowHeaders($aFlg) {
+    function ShowHeaders($aFlg)
+    {
         $this->scale->ShowHeaders($aFlg);
     }
 
     // Specify the fraction of the font height that should be added
     // as vertical margin
-    function SetLabelVMarginFactor($aVal) {
+    function SetLabelVMarginFactor($aVal)
+    {
         $this->iLabelVMarginFactor = $aVal;
     }
 
     // Synonym to the method above
-    function SetVMarginFactor($aVal) {
+    function SetVMarginFactor($aVal)
+    {
         $this->iLabelVMarginFactor = $aVal;
     }
 
 
     // Add a new Gantt object
-    function Add($aObject) {
+    function Add($aObject)
+    {
         if( is_array($aObject) && count($aObject) > 0 ) {
             $cl = $aObject[0];
             if( class_exists('IconPlot',false) && ($cl instanceof IconPlot) ) {
@@ -509,7 +533,8 @@ class GanttGraph extends Graph {
         }
     }
 
-    function StrokeTexts() {
+    function StrokeTexts()
+    {
         // Stroke any user added text objects
         if( $this->texts != null ) {
             $n = count($this->texts);
@@ -528,14 +553,16 @@ class GanttGraph extends Graph {
     }
 
     // Override inherit method from Graph and give a warning message
-    function SetScale($aAxisType,$aYMin=1,$aYMax=1,$aXMin=1,$aXMax=1) {
+    function SetScale($aAxisType,$aYMin=1,$aYMax=1,$aXMin=1,$aXMax=1)
+    {
         JpGraphError::RaiseL(6005);
         //("SetScale() is not meaningfull with Gantt charts.");
     }
 
     // Specify the date range for Gantt graphs (if this is not set it will be
     // automtically determined from the input data)
-    function SetDateRange($aStart,$aEnd) {
+    function SetDateRange($aStart,$aEnd)
+    {
         // Adjust the start and end so that the indicate the
         // begining and end of respective start and end days
         if( strpos($aStart,':') === false )
@@ -549,7 +576,8 @@ class GanttGraph extends Graph {
     // The name is lightly misleading since we from now on can have
     // multiple columns in the label section. When this was first written
     // it only supported a single label, hence the name.
-    function GetMaxLabelWidth() {
+    function GetMaxLabelWidth()
+    {
         $m=10;
         if( $this->iObj != null ) {
             $marg = $this->scale->actinfo->iLeftColMargin+$this->scale->actinfo->iRightColMargin;
@@ -569,7 +597,8 @@ class GanttGraph extends Graph {
     }
 
     // Get the maximum height of the titles for the bars
-    function GetMaxLabelHeight() {
+    function GetMaxLabelHeight()
+    {
         $m=10;
         if( $this->iObj != null ) {
             $n = count($this->iObj);
@@ -584,7 +613,8 @@ class GanttGraph extends Graph {
         return $m;
     }
 
-    function GetMaxBarAbsHeight() {
+    function GetMaxBarAbsHeight()
+    {
         $m=0;
         if( $this->iObj != null ) {
             $m = $this->iObj[0]->GetAbsHeight($this->img);
@@ -597,7 +627,8 @@ class GanttGraph extends Graph {
     }
 
     // Get the maximum used line number (vertical position) for bars
-    function GetBarMaxLineNumber() {
+    function GetBarMaxLineNumber()
+    {
         $m=1;
         if( $this->iObj != null ) {
             $m = $this->iObj[0]->GetLineNbr();
@@ -610,7 +641,8 @@ class GanttGraph extends Graph {
     }
 
     // Get the minumum and maximum used dates for all bars
-    function GetBarMinMax() {
+    function GetBarMinMax()
+    {
         $start = 0 ;
         $n = count($this->iObj);
         while( $start < $n && $this->iObj[$start]->GetMaxDate() === false )
@@ -642,7 +674,8 @@ class GanttGraph extends Graph {
     // The size is determined by what scale the user has choosen and hence
     // the minimum width needed to display the headers. Some margins are
     // also added to make it better looking.
-    function AutoSize() {
+    function AutoSize()
+    {
 
         if( $this->img->img == null ) {
             // The predefined left, right, top, bottom margins.
@@ -914,7 +947,8 @@ class GanttGraph extends Graph {
     // column. This is used when we autosize the columns where we need
     // to find out the maximum width of each column. In order to do that we
     // must walk through all the objects, sigh...
-    function GetMaxActInfoColWidth() {
+    function GetMaxActInfoColWidth()
+    {
         $n = count($this->iObj);
         if( $n == 0 ) return;
         $w = array();
@@ -934,7 +968,8 @@ class GanttGraph extends Graph {
     }
 
     // Stroke the gantt chart
-    function Stroke($aStrokeFileName="") {
+    function Stroke($aStrokeFileName="")
+    {
 
         // If the filename is the predefined value = '_csim_special_'
         // we assume that the call to stroke only needs to do enough
@@ -1039,7 +1074,8 @@ class GanttGraph extends Graph {
         }
     }
 
-    function StrokeConstrains() {
+    function StrokeConstrains()
+    {
         $n = count($this->iObj);
 
         // Stroke all constrains
@@ -1123,7 +1159,8 @@ class GanttGraph extends Graph {
         }
     }
 
-    function GetCSIMAreas() {
+    function GetCSIMAreas()
+    {
         if( !$this->iHasStroked )
         $this->Stroke(_CSIM_SPECIALFILE);
 
@@ -1159,11 +1196,13 @@ define('GICON_TEXTIMPORTANT',12);
 class PredefIcons {
     private $iBuiltinIcon = null, $iLen = -1 ;
 
-    function GetLen() {
+    function GetLen()
+    {
         return $this->iLen ;
     }
 
-    function GetImg($aIdx) {
+    function GetImg($aIdx)
+    {
         if( $aIdx < 0 || $aIdx >= $this->iLen ) {
             JpGraphError::RaiseL(6010,$aIdx);
             //('Illegal icon index for Gantt builtin icon ['.$aIdx.']');
@@ -1171,7 +1210,8 @@ class PredefIcons {
         return Image::CreateFromString(base64_decode($this->iBuiltinIcon[$aIdx][1]));
     }
 
-    function __construct() {
+    function __construct()
+    {
         //==========================================================
         // warning.png
         //==========================================================
@@ -1467,7 +1507,8 @@ class IconImage {
     private $ixalign='left',$iyalign='center';
     private $iScale=1.0;
 
-    function __construct($aIcon,$aScale=1) {
+    function __construct($aIcon,$aScale=1)
+    {
         GLOBAL $_gPredefIcons ;
         if( is_string($aIcon) ) {
             $this->iGDImage = Graph::LoadBkgImage('',$aIcon);
@@ -1485,20 +1526,24 @@ class IconImage {
         $this->iHeight = Image::GetHeight($this->iGDImage);
     }
 
-    function GetWidth() {
+    function GetWidth()
+    {
         return round($this->iScale*$this->iWidth);
     }
 
-    function GetHeight() {
+    function GetHeight()
+    {
         return round($this->iScale*$this->iHeight);
     }
 
-    function SetAlign($aX='left',$aY='center') {
+    function SetAlign($aX='left',$aY='center')
+    {
         $this->ixalign = $aX;
         $this->iyalign = $aY;
     }
 
-    function Stroke($aImg,$x,$y) {
+    function Stroke($aImg,$x,$y)
+    {
 
         if( $this->ixalign == 'right' ) {
             $x -= $this->iWidth;
@@ -1537,17 +1582,20 @@ class TextProperty {
 
     //---------------
     // CONSTRUCTOR
-    function __construct($aTxt='') {
+    function __construct($aTxt='')
+    {
         $this->iText = $aTxt;
     }
 
     //---------------
     // PUBLIC METHODS
-    function Set($aTxt) {
+    function Set($aTxt)
+    {
         $this->iText = $aTxt;
     }
 
-    function SetCSIMTarget($aTarget,$aAltText='',$aWinTarget='') {
+    function SetCSIMTarget($aTarget,$aAltText='',$aWinTarget='')
+    {
         if( is_string($aTarget) )
         $aTarget = array($aTarget);
         $this->csimtarget=$aTarget;
@@ -1562,18 +1610,21 @@ class TextProperty {
 
     }
 
-    function SetCSIMAlt($aAltText) {
+    function SetCSIMAlt($aAltText)
+    {
         if( is_string($aAltText) )
         $aAltText = array($aAltText);
         $this->csimalt=$aAltText;
     }
 
     // Set text color
-    function SetColor($aColor) {
+    function SetColor($aColor)
+    {
         $this->iColor = $aColor;
     }
 
-    function HasTabs() {
+    function HasTabs()
+    {
         if( is_string($this->iText) ) {
             return substr_count($this->iText,"\t") > 0;
         }
@@ -1583,7 +1634,8 @@ class TextProperty {
     }
 
     // Get number of tabs in string
-    function GetNbrTabs() {
+    function GetNbrTabs()
+    {
         if( is_string($this->iText) ) {
             return substr_count($this->iText,"\t") ;
         }
@@ -1593,25 +1645,29 @@ class TextProperty {
     }
 
     // Set alignment
-    function Align($aHAlign,$aVAlign="bottom") {
+    function Align($aHAlign,$aVAlign="bottom")
+    {
         $this->iHAlign=$aHAlign;
         $this->iVAlign=$aVAlign;
     }
 
     // Synonym
-    function SetAlign($aHAlign,$aVAlign="bottom") {
+    function SetAlign($aHAlign,$aVAlign="bottom")
+    {
         $this->iHAlign=$aHAlign;
         $this->iVAlign=$aVAlign;
     }
 
     // Specify font
-    function SetFont($aFFamily,$aFStyle=FS_NORMAL,$aFSize=10) {
+    function SetFont($aFFamily,$aFStyle=FS_NORMAL,$aFSize=10)
+    {
         $this->iFFamily = $aFFamily;
         $this->iFStyle  = $aFStyle;
         $this->iFSize  = $aFSize;
     }
 
-    function SetColumnFonts($aFontArray) {
+    function SetColumnFonts($aFontArray)
+    {
         if( !is_array($aFontArray) || count($aFontArray[0]) != 3 ) {
             JpGraphError::RaiseL(6033);
             // 'Array of fonts must contain arrays with 3 elements, i.e. (Family, Style, Size)'
@@ -1620,14 +1676,16 @@ class TextProperty {
     }
 
 
-    function IsColumns() {
+    function IsColumns()
+    {
         return is_array($this->iText) ;
     }
 
     // Get width of text. If text contains several columns separated by
     // tabs then return both the total width as well as an array with a
     // width for each column.
-    function GetWidth($aImg,$aUseTabs=false,$aTabExtraMargin=1.1) {
+    function GetWidth($aImg,$aUseTabs=false,$aTabExtraMargin=1.1)
+    {
         $extra_margin=4;
         $aImg->SetFont($this->iFFamily,$this->iFStyle,$this->iFSize);
         if( is_string($this->iText) ) {
@@ -1684,7 +1742,8 @@ class TextProperty {
     // for the case where we have multiple columns this function returns the width of each
     // column individually. If there is no columns just return the width of the single
     // column as an array of one
-    function GetColWidth($aImg,$aMargin=0) {
+    function GetColWidth($aImg,$aMargin=0)
+    {
         $aImg->SetFont($this->iFFamily,$this->iFStyle,$this->iFSize);
         if( is_array($this->iText) ) {
             $n = count($this->iText);
@@ -1715,7 +1774,8 @@ class TextProperty {
     }
 
     // Get total height of text
-    function GetHeight($aImg) {
+    function GetHeight($aImg)
+    {
         $nf = count($this->iFontArray);
         $maxheight = -1;
 
@@ -1736,14 +1796,16 @@ class TextProperty {
     }
 
     // Unhide/hide the text
-    function Show($aShow=true) {
+    function Show($aShow=true)
+    {
         $this->iShow=$aShow;
     }
 
     // Stroke text at (x,y) coordinates. If the text contains tabs then the
     // x parameter should be an array of positions to be used for each successive
     // tab mark. If no array is supplied then the tabs will be ignored.
-    function Stroke($aImg,$aX,$aY) {
+    function Stroke($aImg,$aX,$aY)
+    {
         if( $this->iShow ) {
             $aImg->SetColor($this->iColor);
             $aImg->SetFont($this->iFFamily,$this->iFStyle,$this->iFSize);
@@ -1827,88 +1889,107 @@ class HeaderProperty {
 
     //---------------
     // CONSTRUCTOR
-    function __construct() {
+    function __construct()
+    {
         $this->grid = new LineProperty();
     }
 
     //---------------
     // PUBLIC METHODS
-    function Show($aShow=true) {
+    function Show($aShow=true)
+    {
         $this->iShowLabels = $aShow;
     }
 
-    function SetIntervall($aInt) {
+    function SetIntervall($aInt)
+    {
         $this->iIntervall = $aInt;
     }
 
-    function SetInterval($aInt) {
+    function SetInterval($aInt)
+    {
         $this->iIntervall = $aInt;
     }
 
-    function GetIntervall() {
+    function GetIntervall()
+    {
         return $this->iIntervall ;
     }
 
-    function SetFont($aFFamily,$aFStyle=FS_NORMAL,$aFSize=10) {
+    function SetFont($aFFamily,$aFStyle=FS_NORMAL,$aFSize=10)
+    {
         $this->iFFamily = $aFFamily;
         $this->iFStyle  = $aFStyle;
         $this->iFSize  = $aFSize;
     }
 
-    function SetFontColor($aColor) {
+    function SetFontColor($aColor)
+    {
         $this->iTextColor = $aColor;
     }
 
-    function GetFontHeight($aImg) {
+    function GetFontHeight($aImg)
+    {
         $aImg->SetFont($this->iFFamily,$this->iFStyle,$this->iFSize);
         return $aImg->GetFontHeight();
     }
 
-    function GetFontWidth($aImg) {
+    function GetFontWidth($aImg)
+    {
         $aImg->SetFont($this->iFFamily,$this->iFStyle,$this->iFSize);
         return $aImg->GetFontWidth();
     }
 
-    function GetStrWidth($aImg,$aStr) {
+    function GetStrWidth($aImg,$aStr)
+    {
         $aImg->SetFont($this->iFFamily,$this->iFStyle,$this->iFSize);
         return $aImg->GetTextWidth($aStr);
     }
 
-    function SetStyle($aStyle) {
+    function SetStyle($aStyle)
+    {
         $this->iStyle = $aStyle;
     }
 
-    function SetBackgroundColor($aColor) {
+    function SetBackgroundColor($aColor)
+    {
         $this->iBackgroundColor=$aColor;
     }
 
-    function SetFrameWeight($aWeight) {
+    function SetFrameWeight($aWeight)
+    {
         $this->iFrameWeight=$aWeight;
     }
 
-    function SetFrameColor($aColor) {
+    function SetFrameColor($aColor)
+    {
         $this->iFrameColor=$aColor;
     }
 
     // Only used by day scale
-    function SetWeekendColor($aColor) {
+    function SetWeekendColor($aColor)
+    {
         $this->iWeekendBackgroundColor=$aColor;
     }
 
     // Only used by day scale
-    function SetSundayFontColor($aColor) {
+    function SetSundayFontColor($aColor)
+    {
         $this->iSundayTextColor=$aColor;
     }
 
-    function SetTitleVertMargin($aMargin) {
+    function SetTitleVertMargin($aMargin)
+    {
         $this->iTitleVertMargin=$aMargin;
     }
 
-    function SetLabelFormatString($aStr) {
+    function SetLabelFormatString($aStr)
+    {
         $this->iLabelFormStr=$aStr;
     }
 
-    function SetFormatString($aStr) {
+    function SetFormatString($aStr)
+    {
         $this->SetLabelFormatString($aStr);
     }
 
@@ -1947,7 +2028,8 @@ class GanttScale {
 
     //---------------
     // CONSTRUCTOR
-    function __construct($aImg) {
+    function __construct($aImg)
+    {
         $this->iImg = $aImg;
         $this->iDateLocale = new DateLocale();
 
@@ -1993,7 +2075,8 @@ class GanttScale {
     //---------------
     // PUBLIC METHODS
     // Specify what headers should be visible
-    function ShowHeaders($aFlg) {
+    function ShowHeaders($aFlg)
+    {
         $this->day->Show($aFlg & GANTT_HDAY);
         $this->week->Show($aFlg & GANTT_HWEEK);
         $this->month->Show($aFlg & GANTT_HMONTH);
@@ -2012,32 +2095,38 @@ class GanttScale {
     }
 
     // Should the weekend background stretch all the way down in the plotarea
-    function UseWeekendBackground($aShow) {
+    function UseWeekendBackground($aShow)
+    {
         $this->iUsePlotWeekendBackground = $aShow;
     }
 
     // Have a range been specified?
-    function IsRangeSet() {
+    function IsRangeSet()
+    {
         return $this->iStartDate!=-1 && $this->iEndDate!=-1;
     }
 
     // Should the layout be from top or even?
-    function SetVertLayout($aLayout) {
+    function SetVertLayout($aLayout)
+    {
         $this->iVertLayout = $aLayout;
     }
 
     // Which locale should be used?
-    function SetDateLocale($aLocale) {
+    function SetDateLocale($aLocale)
+    {
         $this->iDateLocale->Set($aLocale);
     }
 
     // Number of days we are showing
-    function GetNumberOfDays() {
+    function GetNumberOfDays()
+    {
         return round(($this->iEndDate-$this->iStartDate)/SECPERDAY);
     }
 
     // The width of the actual plot area
-    function GetPlotWidth() {
+    function GetPlotWidth()
+    {
         $img=$this->iImg;
         return $img->width - $img->left_margin - $img->right_margin;
     }
@@ -2045,13 +2134,15 @@ class GanttScale {
     // Specify the width of the titles(labels) for the activities
     // (This is by default set to the minimum width enought for the
     // widest title)
-    function SetLabelWidth($aLabelWidth) {
+    function SetLabelWidth($aLabelWidth)
+    {
         $this->iLabelWidth=$aLabelWidth;
     }
 
     // Which day should the week start?
     // 0==Sun, 1==Monday, 2==Tuesday etc
-    function SetWeekStart($aStartDay) {
+    function SetWeekStart($aStartDay)
+    {
         $this->iWeekStart = $aStartDay % 7;
 
         //Recalculate the startday since this will change the week start
@@ -2059,44 +2150,52 @@ class GanttScale {
     }
 
     // Do we show min scale?
-    function IsDisplayMinute() {
+    function IsDisplayMinute()
+    {
         return $this->minute->iShowLabels;
     }
 
     // Do we show day scale?
-    function IsDisplayHour() {
+    function IsDisplayHour()
+    {
         return $this->hour->iShowLabels;
     }
 
 
     // Do we show day scale?
-    function IsDisplayDay() {
+    function IsDisplayDay()
+    {
         return $this->day->iShowLabels;
     }
 
     // Do we show week scale?
-    function IsDisplayWeek() {
+    function IsDisplayWeek()
+    {
         return $this->week->iShowLabels;
     }
 
     // Do we show month scale?
-    function IsDisplayMonth() {
+    function IsDisplayMonth()
+    {
         return $this->month->iShowLabels;
     }
 
     // Do we show year scale?
-    function IsDisplayYear() {
+    function IsDisplayYear()
+    {
         return $this->year->iShowLabels;
     }
 
     // Specify spacing (in percent of bar height) between activity bars
-    function SetVertSpacing($aSpacing) {
+    function SetVertSpacing($aSpacing)
+    {
         $this->iVertSpacing = $aSpacing;
     }
 
     // Specify scale min and max date either as timestamp or as date strings
     // Always round to the nearest week boundary
-    function SetRange($aMin,$aMax) {
+    function SetRange($aMin,$aMax)
+    {
         $this->iStartDate = $this->NormalizeDate($aMin);
         $this->iEndDate = $this->NormalizeDate($aMax);
     }
@@ -2104,7 +2203,8 @@ class GanttScale {
 
     // Adjust the start and end date so they fit to beginning/ending
     // of the week taking the specified week start day into account.
-    function AdjustStartEndDay() {
+    function AdjustStartEndDay()
+    {
 
         if( !($this->IsDisplayYear() ||$this->IsDisplayMonth() || $this->IsDisplayWeek()) ) {
             // Don't adjust
@@ -2138,7 +2238,8 @@ class GanttScale {
     }
 
     // Specify background for the table title area (upper left corner of the table)
-    function SetTableTitleBackground($aColor) {
+    function SetTableTitleBackground($aColor)
+    {
         $this->iTableHeaderBackgroundColor = $aColor;
     }
 
@@ -2146,7 +2247,8 @@ class GanttScale {
     // PRIVATE Methods
 
     // Determine the height of all the scale headers combined
-    function GetHeaderHeight() {
+    function GetHeaderHeight()
+    {
         $img=$this->iImg;
         $height=1;
         if( $this->minute->iShowLabels ) {
@@ -2177,21 +2279,25 @@ class GanttScale {
     }
 
     // Get width (in pixels) for a single day
-    function GetDayWidth() {
+    function GetDayWidth()
+    {
         return ($this->GetPlotWidth()-$this->iLabelWidth+1)/$this->GetNumberOfDays();
     }
 
     // Get width (in pixels) for a single hour
-    function GetHourWidth() {
+    function GetHourWidth()
+    {
         return $this->GetDayWidth() / 24 ;
     }
 
-    function GetMinuteWidth() {
+    function GetMinuteWidth()
+    {
         return $this->GetHourWidth() / 60 ;
     }
 
     // Nuber of days in a year
-    function GetNumDaysInYear($aYear) {
+    function GetNumDaysInYear($aYear)
+    {
         if( $this->IsLeap($aYear) )
         return 366;
         else
@@ -2199,7 +2305,8 @@ class GanttScale {
     }
 
     // Get week number
-    function GetWeekNbr($aDate,$aSunStart=true) {
+    function GetWeekNbr($aDate,$aSunStart=true)
+    {
         // We can't use the internal strftime() since it gets the weeknumber
         // wrong since it doesn't follow ISO on all systems since this is
         // system linrary dependent.
@@ -2236,7 +2343,8 @@ class GanttScale {
     }
 
     // Is year a leap year?
-    function IsLeap($aYear) {
+    function IsLeap($aYear)
+    {
         // Is the year a leap year?
         //$year = 0+date("Y",$aDate);
         if( $aYear % 4 == 0)
@@ -2246,12 +2354,14 @@ class GanttScale {
     }
 
     // Get current year
-    function GetYear($aDate) {
+    function GetYear($aDate)
+    {
         return 0+Date("Y",$aDate);
     }
 
     // Return number of days in a year
-    function GetNumDaysInMonth($aMonth,$aYear) {
+    function GetNumDaysInMonth($aMonth,$aYear)
+    {
         $days=array(31,28,31,30,31,30,31,31,30,31,30,31);
         $daysl=array(31,29,31,30,31,30,31,31,30,31,30,31);
         if( $this->IsLeap($aYear))
@@ -2261,22 +2371,26 @@ class GanttScale {
     }
 
     // Get day in month
-    function GetMonthDayNbr($aDate) {
+    function GetMonthDayNbr($aDate)
+    {
         return 0+strftime("%d",$aDate);
     }
 
     // Get day in year
-    function GetYearDayNbr($aDate) {
+    function GetYearDayNbr($aDate)
+    {
         return 0+strftime("%j",$aDate);
     }
 
     // Get month number
-    function GetMonthNbr($aDate) {
+    function GetMonthNbr($aDate)
+    {
         return 0+strftime("%m",$aDate);
     }
 
     // Translate a date to screen coordinates (horizontal scale)
-    function TranslateDate($aDate) {
+    function TranslateDate($aDate)
+    {
         // In order to handle the problem with Daylight savings time
         // the scale written with equal number of seconds per day beginning
         // with the start date. This means that we "cement" the state of
@@ -2301,7 +2415,8 @@ class GanttScale {
     }
 
     // Get screen coordinatesz for the vertical position for a bar
-    function TranslateVertPos($aPos,$atTop=false) {
+    function TranslateVertPos($aPos,$atTop=false)
+    {
         $img=$this->iImg;
         if( $aPos > $this->iVertLines )
             JpGraphError::RaiseL(6015,$aPos);
@@ -2322,12 +2437,14 @@ class GanttScale {
     }
 
     // What is the vertical spacing?
-    function GetVertSpacing() {
+    function GetVertSpacing()
+    {
         return $this->iVertSpacing;
     }
 
     // Convert a date to timestamp
-    function NormalizeDate($aDate) {
+    function NormalizeDate($aDate)
+    {
         if( $aDate === false ) return false;
         if( is_string($aDate) ) {
             $t = strtotime($aDate);
@@ -2347,7 +2464,8 @@ class GanttScale {
 
     // Convert a time string to minutes
 
-    function TimeToMinutes($aTimeString) {
+    function TimeToMinutes($aTimeString)
+    {
         // Split in hours and minutes
         $pos=strpos($aTimeString,':');
         $minint=60;
@@ -2364,7 +2482,8 @@ class GanttScale {
     }
 
     // Stroke the day scale (including gridlines)
-    function StrokeMinutes($aYCoord,$getHeight=false) {
+    function StrokeMinutes($aYCoord,$getHeight=false)
+    {
         $img=$this->iImg;
         $xt=$img->left_margin+$this->iLabelWidth;
         $yt=$aYCoord+$img->top_margin;
@@ -2458,7 +2577,8 @@ class GanttScale {
     }
 
     // Stroke the day scale (including gridlines)
-    function StrokeHours($aYCoord,$getHeight=false) {
+    function StrokeHours($aYCoord,$getHeight=false)
+    {
         $img=$this->iImg;
         $xt=$img->left_margin+$this->iLabelWidth;
         $yt=$aYCoord+$img->top_margin;
@@ -2546,7 +2666,8 @@ class GanttScale {
 
 
     // Stroke the day scale (including gridlines)
-    function StrokeDays($aYCoord,$getHeight=false) {
+    function StrokeDays($aYCoord,$getHeight=false)
+    {
         $img=$this->iImg;
         $daywidth=$this->GetDayWidth();
         $xt=$img->left_margin+$this->iLabelWidth;
@@ -2665,7 +2786,8 @@ class GanttScale {
     }
 
     // Stroke week header and grid
-    function StrokeWeeks($aYCoord,$getHeight=false) {
+    function StrokeWeeks($aYCoord,$getHeight=false)
+    {
         if( $this->week->iShowLabels ) {
             $img=$this->iImg;
             $yt=$aYCoord+$img->top_margin;
@@ -2742,7 +2864,8 @@ class GanttScale {
     }
 
     // Format the mont scale header string
-    function GetMonthLabel($aMonthNbr,$year) {
+    function GetMonthLabel($aMonthNbr,$year)
+    {
         $sn = $this->iDateLocale->GetShortMonthName($aMonthNbr);
         $ln = $this->iDateLocale->GetLongMonthName($aMonthNbr);
         switch($this->month->iStyle) {
@@ -2772,7 +2895,8 @@ class GanttScale {
     }
 
     // Stroke month scale and gridlines
-    function StrokeMonths($aYCoord,$getHeight=false) {
+    function StrokeMonths($aYCoord,$getHeight=false)
+    {
         if( $this->month->iShowLabels ) {
             $img=$this->iImg;
             $img->SetFont($this->month->iFFamily,$this->month->iFStyle,$this->month->iFSize);
@@ -2839,7 +2963,8 @@ class GanttScale {
     }
 
     // Stroke year scale and gridlines
-    function StrokeYears($aYCoord,$getHeight=false) {
+    function StrokeYears($aYCoord,$getHeight=false)
+    {
         if( $this->year->iShowLabels ) {
             $img=$this->iImg;
             $yt=$aYCoord+$img->top_margin;
@@ -2898,7 +3023,8 @@ class GanttScale {
     }
 
     // Stroke table title (upper left corner)
-    function StrokeTableHeaders($aYBottom) {
+    function StrokeTableHeaders($aYBottom)
+    {
         $img=$this->iImg;
         $xt=$img->left_margin;
         $yt=$img->top_margin;
@@ -2947,7 +3073,8 @@ class GanttScale {
     }
 
     // Main entry point to stroke scale
-    function Stroke() {
+    function Stroke()
+    {
         if( !$this->IsRangeSet() ) {
             JpGraphError::RaiseL(6022);
             //("Gantt scale has not been specified.");
@@ -3007,7 +3134,8 @@ class GanttConstraint {
 
     //---------------
     // CONSTRUCTOR
-    function __construct($aRow,$aType,$aColor,$aArrowSize,$aArrowType){
+    function __construct($aRow,$aType,$aColor,$aArrowSize,$aArrowType)
+    {
         $this->iConstrainType = $aType;
         $this->iConstrainRow = $aRow;
         $this->iConstrainColor=$aColor;
@@ -3031,17 +3159,20 @@ class GanttPlotObject {
     public $iVPos=0;     // Vertical position
     protected $iLabelLeftMargin=2; // Title margin
 
-    function __construct() {
+    function __construct()
+    {
         $this->title = new TextProperty();
         $this->title->Align('left','center');
         $this->caption = new TextProperty();
     }
 
-    function GetCSIMArea() {
+    function GetCSIMArea()
+    {
         return $this->csimarea;
     }
 
-    function SetCSIMTarget($aTarget,$aAlt='',$aWinTarget='') {
+    function SetCSIMTarget($aTarget,$aAlt='',$aWinTarget='')
+    {
         if( !is_string($aTarget) ) {
             $tv = substr(var_export($aTarget,true),0,40);
             JpGraphError::RaiseL(6024,$tv);
@@ -3058,7 +3189,8 @@ class GanttPlotObject {
         $this->csimalt=$aAlt;
     }
 
-    function SetCSIMAlt($aAlt) {
+    function SetCSIMAlt($aAlt)
+    {
         if( !is_string($aAlt) ) {
             $tv = substr(var_export($aAlt,true),0,40);
             JpGraphError::RaiseL(6025,$tv);
@@ -3067,39 +3199,48 @@ class GanttPlotObject {
         $this->csimalt=$aAlt;
     }
 
-    function SetConstrain($aRow,$aType,$aColor='black',$aArrowSize=ARROW_S2,$aArrowType=ARROWT_SOLID) {
+    function SetConstrain($aRow,$aType,$aColor='black',$aArrowSize=ARROW_S2,$aArrowType=ARROWT_SOLID)
+    {
         $this->constraints[] = new GanttConstraint($aRow, $aType, $aColor, $aArrowSize, $aArrowType);
     }
 
-    function SetConstrainPos($xt,$yt,$xb,$yb) {
+    function SetConstrainPos($xt,$yt,$xb,$yb)
+    {
         $this->iConstrainPos = array($xt,$yt,$xb,$yb);
     }
 
-    function GetMinDate() {
+    function GetMinDate()
+    {
         return $this->iStart;
     }
 
-    function GetMaxDate() {
+    function GetMaxDate()
+    {
         return $this->iStart;
     }
 
-    function SetCaptionMargin($aMarg) {
+    function SetCaptionMargin($aMarg)
+    {
         $this->iCaptionMargin=$aMarg;
     }
 
-    function GetAbsHeight($aImg) {
+    function GetAbsHeight($aImg)
+    {
         return 0;
     }
 
-    function GetLineNbr() {
+    function GetLineNbr()
+    {
         return $this->iVPos;
     }
 
-    function SetLabelLeftMargin($aOff) {
+    function SetLabelLeftMargin($aOff)
+    {
         $this->iLabelLeftMargin=$aOff;
     }
 
-    function StrokeActInfo($aImg,$aScale,$aYPos) {
+    function StrokeActInfo($aImg,$aScale,$aYPos)
+    {
         $cols=array();
         $aScale->actinfo->GetColStart($aImg,$cols,true);
         $this->title->Stroke($aImg,$cols,$aYPos);
@@ -3117,7 +3258,8 @@ class Progress {
     public $iColor="black", $iFillColor='black';
     public $iDensity=98, $iHeight=0.65;
 
-    function Set($aProg) {
+    function Set($aProg)
+    {
         if( $aProg < 0.0 || $aProg > 1.0 ) {
             JpGraphError::RaiseL(6027);
             //("Progress value must in range [0, 1]");
@@ -3125,17 +3267,20 @@ class Progress {
         $this->iProgress = $aProg;
     }
 
-    function SetPattern($aPattern,$aColor="blue",$aDensity=98) {
+    function SetPattern($aPattern,$aColor="blue",$aDensity=98)
+    {
         $this->iPattern = $aPattern;
         $this->iColor = $aColor;
         $this->iDensity = $aDensity;
     }
 
-    function SetFillColor($aColor) {
+    function SetFillColor($aColor)
+    {
         $this->iFillColor = $aColor;
     }
 
-    function SetHeight($aHeight) {
+    function SetHeight($aHeight)
+    {
         $this->iHeight = $aHeight;
     }
 }
@@ -3154,26 +3299,31 @@ class HorizontalGridLine {
     private $line=null;
     private $iStart=0; // 0=from left margin, 1=just along header
 
-    function __construct() {
+    function __construct()
+    {
         $this->line = new LineProperty();
         $this->line->SetColor('gray@0.4');
         $this->line->SetStyle('dashed');
     }
 
-    function Show($aShow=true) {
+    function Show($aShow=true)
+    {
         $this->iShow = $aShow;
     }
 
-    function SetRowFillColor($aColor1,$aColor2='') {
+    function SetRowFillColor($aColor1,$aColor2='')
+    {
         $this->iRowColor1 = $aColor1;
         $this->iRowColor2 = $aColor2;
     }
 
-    function SetStart($aStart) {
+    function SetStart($aStart)
+    {
         $this->iStart = $aStart;
     }
 
-    function Stroke($aImg,$aScale) {
+    function Stroke($aImg,$aScale)
+    {
 
         if( ! $this->iShow ) return;
 
@@ -3237,7 +3387,8 @@ class GanttBar extends GanttPlotObject {
     private $iBreakStyle=false, $iBreakLineStyle='dotted',$iBreakLineWeight=1;
     //---------------
     // CONSTRUCTOR
-    function __construct($aPos,$aLabel,$aStart,$aEnd,$aCaption="",$aHeightFactor=0.6) {
+    function __construct($aPos,$aLabel,$aStart,$aEnd,$aCaption="",$aHeightFactor=0.6)
+    {
         parent::__construct();
         $this->iStart = $aStart;
         // Is the end date given as a date or as number of days added to start date?
@@ -3268,34 +3419,41 @@ class GanttBar extends GanttPlotObject {
 
     //---------------
     // PUBLIC METHODS
-    function SetShadow($aShadow=true,$aColor="gray") {
+    function SetShadow($aShadow=true,$aColor="gray")
+    {
         $this->iShadow=$aShadow;
         $this->iShadowColor=$aColor;
     }
 
-    function SetBreakStyle($aFlg=true,$aLineStyle='dotted',$aLineWeight=1) {
+    function SetBreakStyle($aFlg=true,$aLineStyle='dotted',$aLineWeight=1)
+    {
         $this->iBreakStyle = $aFlg;
         $this->iBreakLineStyle = $aLineStyle;
         $this->iBreakLineWeight = $aLineWeight;
     }
 
-    function GetMaxDate() {
+    function GetMaxDate()
+    {
         return $this->iEnd;
     }
 
-    function SetHeight($aHeight) {
+    function SetHeight($aHeight)
+    {
         $this->iHeightFactor = $aHeight;
     }
 
-    function SetColor($aColor) {
+    function SetColor($aColor)
+    {
         $this->iFrameColor = $aColor;
     }
 
-    function SetFillColor($aColor) {
+    function SetFillColor($aColor)
+    {
         $this->iFillColor = $aColor;
     }
 
-    function GetAbsHeight($aImg) {
+    function GetAbsHeight($aImg)
+    {
         if( is_int($this->iHeightFactor) || $this->leftMark->show || $this->rightMark->show ) {
             $m=-1;
             if( is_int($this->iHeightFactor) )
@@ -3310,13 +3468,15 @@ class GanttBar extends GanttPlotObject {
             return -1;
     }
 
-    function SetPattern($aPattern,$aColor="blue",$aDensity=95) {
+    function SetPattern($aPattern,$aColor="blue",$aDensity=95)
+    {
         $this->iPattern = $aPattern;
         $this->iPatternColor = $aColor;
         $this->iPatternDensity = $aDensity;
     }
 
-    function Stroke($aImg,$aScale) {
+    function Stroke($aImg,$aScale)
+    {
         $factory = new RectPatternFactory();
         $prect = $factory->Create($this->iPattern,$this->iPatternColor);
         $prect->SetDensity($this->iPatternDensity);
@@ -3496,7 +3656,8 @@ class MileStone extends GanttPlotObject {
 
     //---------------
     // CONSTRUCTOR
-    function __construct($aVPos,$aLabel,$aDate,$aCaption="") {
+    function __construct($aVPos,$aLabel,$aDate,$aCaption="")
+    {
         GanttPlotObject::__construct();
         $this->caption->Set($aCaption);
         $this->caption->Align("left","center");
@@ -3515,11 +3676,13 @@ class MileStone extends GanttPlotObject {
     //---------------
     // PUBLIC METHODS
 
-    function GetAbsHeight($aImg) {
+    function GetAbsHeight($aImg)
+    {
         return max($this->title->GetHeight($aImg),$this->mark->GetWidth());
     }
 
-    function Stroke($aImg,$aScale) {
+    function Stroke($aImg,$aScale)
+    {
         // Put the mark in the middle at the middle of the day
         $d = $aScale->NormalizeDate($this->iStart)+SECPERDAY/2;
         $x = $aScale->TranslateDate($d);
@@ -3587,11 +3750,13 @@ class MileStone extends GanttPlotObject {
 //===================================================
 
 class TextPropertyBelow extends TextProperty {
-    function __construct($aTxt='') {
+    function __construct($aTxt='')
+    {
         parent::__construct($aTxt);
     }
 
-    function GetColWidth($aImg,$aMargin=0) {
+    function GetColWidth($aImg,$aMargin=0)
+    {
         // Since we are not stroking the title in the columns
         // but rather under the graph we want this to return 0.
         return array(0);
@@ -3605,7 +3770,8 @@ class GanttVLine extends GanttPlotObject {
 
     //---------------
     // CONSTRUCTOR
-    function __construct($aDate,$aTitle="",$aColor="darkred",$aWeight=2,$aStyle="solid") {
+    function __construct($aDate,$aTitle="",$aColor="darkred",$aWeight=2,$aStyle="solid")
+    {
         GanttPlotObject::__construct();
         $this->iLine = new LineProperty();
         $this->iLine->SetColor($aColor);
@@ -3621,12 +3787,14 @@ class GanttVLine extends GanttPlotObject {
 
     // Set start and end rows for the VLine. By default the entire heigh of the
     // Gantt chart is used
-    function SetRowSpan($aStart, $aEnd=-1) {
+    function SetRowSpan($aStart, $aEnd=-1)
+    {
         $this->iStartRow = $aStart;
         $this->iEndRow = $aEnd;
     }
 
-    function SetDayOffset($aOff=0.5) {
+    function SetDayOffset($aOff=0.5)
+    {
         if( $aOff < 0.0 || $aOff > 1.0 ) {
             JpGraphError::RaiseL(6029);
             //("Offset for vertical line must be in range [0,1]");
@@ -3634,15 +3802,18 @@ class GanttVLine extends GanttPlotObject {
         $this->iDayOffset = $aOff;
     }
 
-    function SetTitleMargin($aMarg) {
+    function SetTitleMargin($aMarg)
+    {
         $this->title_margin = $aMarg;
     }
 
-    function SetWeight($aWeight) {
+    function SetWeight($aWeight)
+    {
         $this->iLine->SetWeight($aWeight);
     }
 
-    function Stroke($aImg,$aScale) {
+    function Stroke($aImg,$aScale)
+    {
         $d = $aScale->NormalizeDate($this->iStart);
         if( $d <  $aScale->iStartDate || $d > $aScale->iEndDate )
             return;
@@ -3681,7 +3852,8 @@ class LinkArrow {
     private $iDirection=ARROW_DOWN,$iType=ARROWT_SOLID,$iSize=ARROW_S2;
     private $iColor='black';
 
-    function __construct($x,$y,$aDirection,$aType=ARROWT_SOLID,$aSize=ARROW_S2) {
+    function __construct($x,$y,$aDirection,$aType=ARROWT_SOLID,$aSize=ARROW_S2)
+    {
         $this->iDirection = $aDirection;
         $this->iType = $aType;
         $this->iSize = $aSize;
@@ -3689,19 +3861,23 @@ class LinkArrow {
         $this->iy = $y;
     }
 
-    function SetColor($aColor) {
+    function SetColor($aColor)
+    {
         $this->iColor = $aColor;
     }
 
-    function SetSize($aSize) {
+    function SetSize($aSize)
+    {
         $this->iSize = $aSize;
     }
 
-    function SetType($aType) {
+    function SetType($aType)
+    {
         $this->iType = $aType;
     }
 
-    function Stroke($aImg) {
+    function Stroke($aImg)
+    {
         list($dx,$dy) = $this->isizespec[$this->iSize];
         $x = $this->ix;
         $y = $this->iy;
@@ -3752,38 +3928,45 @@ class GanttLink {
     private $iColor='black',$iWeight=1;
     private $iArrowSize=ARROW_S2,$iArrowType=ARROWT_SOLID;
 
-    function __construct($x1=0,$y1=0,$x2=0,$y2=0) {
+    function __construct($x1=0,$y1=0,$x2=0,$y2=0)
+    {
         $this->ix1 = $x1;
         $this->ix2 = $x2;
         $this->iy1 = $y1;
         $this->iy2 = $y2;
     }
 
-    function SetPos($x1,$y1,$x2,$y2) {
+    function SetPos($x1,$y1,$x2,$y2)
+    {
         $this->ix1 = $x1;
         $this->ix2 = $x2;
         $this->iy1 = $y1;
         $this->iy2 = $y2;
     }
 
-    function SetPath($aPath) {
+    function SetPath($aPath)
+    {
         $this->iPathType = $aPath;
     }
 
-    function SetColor($aColor) {
+    function SetColor($aColor)
+    {
         $this->iColor = $aColor;
     }
 
-    function SetArrow($aSize,$aType=ARROWT_SOLID) {
+    function SetArrow($aSize,$aType=ARROWT_SOLID)
+    {
         $this->iArrowSize = $aSize;
         $this->iArrowType = $aType;
     }
 
-    function SetWeight($aWeight) {
+    function SetWeight($aWeight)
+    {
         $this->iWeight = $aWeight;
     }
 
-    function Stroke($aImg) {
+    function Stroke($aImg)
+    {
         // The way the path for the arrow is constructed is partly based
         // on some heuristics. This is not an exact science but draws the
         // path in a way that, for me, makes esthetic sence. For example

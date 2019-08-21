@@ -28,7 +28,8 @@ class WebDAVExceptionServerError extends Sabre_DAV_Exception {
      *
      * @return int
      */
-    public function getHTTPCode() {
+    public function getHTTPCode()
+    {
         return 500;
     }
 

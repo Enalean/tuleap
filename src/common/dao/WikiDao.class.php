@@ -34,7 +34,8 @@ class WikiDao extends DataAccessObject {
     * @param int $group_id
     * @return int $id id in wiki of a wiki page.
     */
-    function retrieveWikiPageId($pagename, $group_id){
+    function retrieveWikiPageId($pagename, $group_id)
+    {
         $sql = sprintf('SELECT id'.
             ' FROM wiki_page'.
             ' WHERE pagename = %s'.
@@ -64,7 +65,8 @@ class WikiDao extends DataAccessObject {
     * @param string $pagename
     * @return int version number
     */
-    function searchCurrentWikiVersion($groupId, $pagename) {
+    function searchCurrentWikiVersion($groupId, $pagename)
+    {
         $version = null;
         $sql = sprintf('SELECT MAX(version) AS version'.
                        ' FROM wiki_page '.
@@ -86,7 +88,8 @@ class WikiDao extends DataAccessObject {
      * @param int $id id of wiki page
      * @return true if there is no error
      */
-    function deleteWikiPage($id) {
+    function deleteWikiPage($id)
+    {
         $sql = sprintf('DELETE FROM wiki_page'.
                     ' WHERE id=%d', $id);
         return $this->update($sql);
@@ -98,7 +101,8 @@ class WikiDao extends DataAccessObject {
      * @param int $id id of wiki page
      * @return true if there is no error
      */
-    function deleteWikiPageVersion($id) {
+    function deleteWikiPageVersion($id)
+    {
         $sql = sprintf('DELETE FROM wiki_version'.
                     ' WHERE id=%d', $id);
         return $this->update($sql);
@@ -110,7 +114,8 @@ class WikiDao extends DataAccessObject {
      * @param int $id id of wiki page
      * @return true if there is no error
      */
-    function deleteLinksFromToWikiPage($id) {
+    function deleteLinksFromToWikiPage($id)
+    {
         $sql = sprintf('DELETE FROM wiki_link'.
                     ' WHERE linkfrom=%d'.
                     ' OR linkto=%d', $id, $id);
@@ -123,7 +128,8 @@ class WikiDao extends DataAccessObject {
      * @param int $id id of wiki page
      * @return true if there is no error
      */
-    function deleteWikiPageFromNonEmptyList($id) {
+    function deleteWikiPageFromNonEmptyList($id)
+    {
         $sql = sprintf('DELETE FROM wiki_nonempty'.
                     ' WHERE id=%d', $id);
         return $this->update($sql);
@@ -135,7 +141,8 @@ class WikiDao extends DataAccessObject {
      * @param int $id id of wiki page
      * @return true if there is no error
      */
-    function deleteWikiPageRecentInfos($id) {
+    function deleteWikiPageRecentInfos($id)
+    {
         $sql = sprintf('DELETE FROM wiki_recent'.
                     ' WHERE id=%d', $id);
         return $this->update($sql);
@@ -147,13 +154,15 @@ class WikiDao extends DataAccessObject {
      * @param String $new_name
      * @return bool
      */
-    function updatePageName($user, $new_name) {
+    function updatePageName($user, $new_name)
+    {
         $sql = 'UPDATE wiki_page SET pagename = '.$this->da->quoteSmart($new_name).
                ' WHERE pagename = '.$this->da->quoteSmart($user->getUserName());
         return $this->update($sql);
     }
 
-    public function searchLanguage($group_id) {
+    public function searchLanguage($group_id)
+    {
         $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT DISTINCT wiki_group_list.language_id
                 FROM wiki_group_list
@@ -167,7 +176,8 @@ class WikiDao extends DataAccessObject {
         return false;
     }
 
-    public function searchPaginatedUserWikiPages($project_id, $limit, $offset) {
+    public function searchPaginatedUserWikiPages($project_id, $limit, $offset)
+    {
         $admin_pages   = $this->da->quoteSmartImplode(',', WikiPage::getAdminPages());
         $default_pages = $this->da->quoteSmartImplode(',', WikiPage::getDefaultPages());
 
@@ -185,7 +195,8 @@ class WikiDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchPaginatedUserWikiPagesByPagename($project_id, $limit, $offset, $pagename) {
+    public function searchPaginatedUserWikiPagesByPagename($project_id, $limit, $offset, $pagename)
+    {
         $admin_pages   = $this->da->quoteSmartImplode(',', WikiPage::getAdminPages());
         $default_pages = $this->da->quoteSmartImplode(',', WikiPage::getDefaultPages());
 
@@ -205,7 +216,8 @@ class WikiDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function doesWikiPageExistInRESTContext($page_id) {
+    public function doesWikiPageExistInRESTContext($page_id)
+    {
         $admin_pages   = $this->da->quoteSmartImplode(',', WikiPage::getAdminPages());
         $default_pages = $this->da->quoteSmartImplode(',', WikiPage::getDefaultPages());
 

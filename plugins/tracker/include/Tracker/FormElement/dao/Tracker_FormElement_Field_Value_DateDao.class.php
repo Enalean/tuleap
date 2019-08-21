@@ -20,12 +20,14 @@
 
 class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_ValueDao {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_changeset_value_date';
     }
 
-    public function create($changeset_value_id, $value) {
+    public function create($changeset_value_id, $value)
+    {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         if ($value === false) {
             $value = "NULL";
@@ -43,7 +45,8 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
      * @param int $field_id
      * @return
      */
-    public function  createNoneValue($tracker_id, $field_id) {
+    public function createNoneValue($tracker_id, $field_id)
+    {
         $changeset_value_ids = $this->createNoneChangesetValue($tracker_id, $field_id);
         if ( $changeset_value_ids === false)  {
             return false;
@@ -54,7 +57,8 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
         return $this->update($sql);
     }
 
-    public function keep($from, $to) {
+    public function keep($from, $to)
+    {
         $from = $this->da->escapeInt($from);
         $to   = $this->da->escapeInt($to);
         $sql = "INSERT INTO $this->table_name(changeset_value_id, value)
@@ -72,7 +76,8 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
      *
      * @return
      */
-    public function getArtifactsByFieldAndValue($fieldId, $date) {
+    public function getArtifactsByFieldAndValue($fieldId, $date)
+    {
         $fieldId  = $this->da->escapeInt($fieldId);
         $date     = $this->da->escapeInt($date);
         $halfDay  = 60 * 60 * 12;

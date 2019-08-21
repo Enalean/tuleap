@@ -84,7 +84,8 @@ class NatureTablePresenter {
         );
     }
 
-    private function fetchTabLabel($nature, $is_reverse_artifact_links) {
+    private function fetchTabLabel($nature, $is_reverse_artifact_links)
+    {
         $nature_label = '';
         if($is_reverse_artifact_links) {
             $nature_label = $nature->reverse_label;

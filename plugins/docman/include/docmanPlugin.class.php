@@ -116,7 +116,8 @@ class DocmanPlugin extends Plugin
      */
     private $controller = array();
 
-    function __construct($id) {
+    function __construct($id)
+    {
         parent::__construct($id);
         bindtextdomain('tuleap-docman', __DIR__.'/../site-content');
 
@@ -198,7 +199,8 @@ class DocmanPlugin extends Plugin
         return parent::getHooksAndCallbacks();
     }
 
-    public function getServiceShortname() {
+    public function getServiceShortname()
+    {
         return self::SERVICE_SHORTNAME;
     }
 
@@ -211,20 +213,23 @@ class DocmanPlugin extends Plugin
     /**
      * @see Statistics_Event::FREQUENCE_STAT_ENTRIES
      */
-    public function plugin_statistics_frequence_stat_entries($params) {
+    public function plugin_statistics_frequence_stat_entries($params)
+    {
         $params['entries'][$this->getServiceShortname()] = 'Documents viewed';
     }
 
     /**
      * @see Statistics_Event::FREQUENCE_STAT_SAMPLE
      */
-    public function plugin_statistics_frequence_stat_sample($params) {
+    public function plugin_statistics_frequence_stat_sample($params)
+    {
         if ($params['character'] === $this->getServiceShortname()) {
             $params['sample'] = new Docman_Sample();
         }
     }
 
-    function permission_get_name($params) {
+    function permission_get_name($params)
+    {
         if (!$params['name']) {
             switch($params['permission_type']) {
                 case 'PLUGIN_DOCMAN_READ':
@@ -244,7 +249,8 @@ class DocmanPlugin extends Plugin
             }
         }
     }
-    function permission_get_object_type($params) {
+    function permission_get_object_type($params)
+    {
         if (!$params['object_type']) {
             if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                 require_once('Docman_ItemFactory.class.php');
@@ -256,7 +262,8 @@ class DocmanPlugin extends Plugin
             }
         }
     }
-    function permission_get_object_name($params) {
+    function permission_get_object_name($params)
+    {
         if (!$params['object_name']) {
             if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                 require_once('Docman_ItemFactory.class.php');
@@ -268,7 +275,8 @@ class DocmanPlugin extends Plugin
             }
         }
     }
-    function permission_get_object_fullname($params) {
+    function permission_get_object_fullname($params)
+    {
         if (!$params['object_fullname']) {
             if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                 require_once('Docman_ItemFactory.class.php');
@@ -284,7 +292,8 @@ class DocmanPlugin extends Plugin
     }
 
     var $_cached_permission_user_allowed_to_change;
-    function permission_user_allowed_to_change($params) {
+    function permission_user_allowed_to_change($params)
+    {
         if (!$params['allowed']) {
             if (!$this->_cached_permission_user_allowed_to_change) {
                 if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
@@ -304,14 +313,16 @@ class DocmanPlugin extends Plugin
             $params['allowed'] = $this->_cached_permission_user_allowed_to_change;
         }
     }
-    function &getPluginInfo() {
+    function &getPluginInfo()
+    {
         if (!is_a($this->pluginInfo, 'DocmanPluginInfo')) {
             $this->pluginInfo = new DocmanPluginInfo($this);
         }
         return $this->pluginInfo;
     }
 
-    function cssFile($params) {
+    function cssFile($params)
+    {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
         if ($this->currentRequestIsForPlugin() ||
@@ -325,7 +336,8 @@ class DocmanPlugin extends Plugin
         }
     }
 
-    function javascript_file($params) {
+    function javascript_file($params)
+    {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
         if ($this->currentRequestIsForPlugin()) {
@@ -333,7 +345,8 @@ class DocmanPlugin extends Plugin
         }
     }
 
-    function logsDaily($params) {
+    function logsDaily($params)
+    {
         $project = $this->getProject($params['group_id']);
         if ($project->usesService($this->getServiceShortname())) {
             $controler = $this->getHTTPController();
@@ -341,7 +354,8 @@ class DocmanPlugin extends Plugin
         }
     }
 
-    public function service_public_areas(GetPublicAreas $event) {
+    public function service_public_areas(GetPublicAreas $event)
+    {
         $project = $event->getProject();
         $service = $project->getService($this->getServiceShortname());
         if ($service !== null) {
@@ -354,11 +368,13 @@ class DocmanPlugin extends Plugin
             );
         }
     }
-    function installNewDocman($params) {
+    function installNewDocman($params)
+    {
         $controler = $this->getHTTPController();
         $controler->installDocman($params['ugroupsMapping'], $params['group_id']);
     }
-    function service_is_used($params) {
+    function service_is_used($params)
+    {
         if (isset($params['shortname']) && $params['shortname'] == $this->getServiceShortname()) {
             if (isset($params['is_used']) && $params['is_used']) {
                 $this->installNewDocman(
@@ -367,11 +383,13 @@ class DocmanPlugin extends Plugin
             }
         }
     }
-    function soap($arams) {
+    function soap($arams)
+    {
         require_once('soap.php');
     }
 
-    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event) {
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
+    {
         switch ($get_widget_event->getName()) {
             case 'plugin_docman_mydocman':
                 require_once('Docman_Widget_MyDocman.class.php');
@@ -419,7 +437,8 @@ class DocmanPlugin extends Plugin
     /**
      * Hook: called by daily codendi script.
      */
-    function codendiDaily() {
+    function codendiDaily()
+    {
         $controler = $this->getHTTPController();
         $controler->notifyFuturObsoleteDocuments();
         $reminder = new Docman_ApprovalTableReminder();
@@ -442,11 +461,13 @@ class DocmanPlugin extends Plugin
     }
 
 
-    public function processSOAP($request) {
+    public function processSOAP($request)
+    {
         return $this->getSOAPController($request)->process();
     }
 
-    function wiki_page_updated($params) {
+    function wiki_page_updated($params)
+    {
         require_once('Docman_WikiRequest.class.php');
         $request = new Docman_WikiRequest(array('action' => 'wiki_page_updated',
                                                 'wiki_page' => $params['wiki_page'],
@@ -457,41 +478,47 @@ class DocmanPlugin extends Plugin
         $this->getWikiController($request)->process();
     }
 
-    function wiki_before_content($params) {
+    function wiki_before_content($params)
+    {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'wiki_before_content';
         $request = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
-    function wiki_display_remove_button($params) {
+    function wiki_display_remove_button($params)
+    {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'wiki_display_remove_button';
         $request = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
-    function isWikiPageReferenced($params) {
+    function isWikiPageReferenced($params)
+    {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'check_whether_wiki_page_is_referenced';
         $request = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
-    function isWikiPageEditable($params) {
+    function isWikiPageEditable($params)
+    {
         require_once('Docman_WikiRequest.class.php');
         $request = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
-    function userCanAccessWikiDocument($params) {
+    function userCanAccessWikiDocument($params)
+    {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'check_whether_user_can_access';
         $request = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
-    function getPermsLabelForWiki($params) {
+    function getPermsLabelForWiki($params)
+    {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'getPermsLabelForWiki';
         $request = new Docman_WikiRequest($params);
@@ -518,7 +545,8 @@ class DocmanPlugin extends Plugin
      *  @param void
      *  @return void
      */
-    function project_export_entry($params) {
+    function project_export_entry($params)
+    {
         // Docman perms
         $url  = '?group_id='.$params['group_id'].'&export=plugin_docman_perms';
         $params['labels']['plugin_eac_docman']                           = $GLOBALS['Language']->getText('plugin_docman','Project_access_permission');
@@ -535,7 +563,8 @@ class DocmanPlugin extends Plugin
      *  @param void
      *  @return void
      */
-    function project_export($params) {
+    function project_export($params)
+    {
         if($params['export'] == 'plugin_docman_perms') {
             include_once('Docman_PermissionsExport.class.php');
             $request = HTTPRequest::instance();
@@ -554,7 +583,8 @@ class DocmanPlugin extends Plugin
      * @param Array $params
      * @return bool
      */
-    function renameProject($params) {
+    function renameProject($params)
+    {
         $docmanPath = $this->getPluginInfo()->getPropertyValueForName('docman_root').'/';
         //Is this project using docman
         if (is_dir($docmanPath.$params['project']->getUnixName())){
@@ -570,7 +600,8 @@ class DocmanPlugin extends Plugin
      * Hook called before renaming project to check the name validity
      * @param Array $params
      */
-    function file_exists_in_data_dir($params) {
+    function file_exists_in_data_dir($params)
+    {
         $docmanPath = $this->getPluginInfo()->getPropertyValueForName('docman_root').'/';
         $path = $docmanPath.$params['new_name'];
 
@@ -586,7 +617,8 @@ class DocmanPlugin extends Plugin
      *
      * @param Array $params
      */
-    function webdav_root_for_service($params) {
+    function webdav_root_for_service($params)
+    {
         $groupId = $params['project']->getId();
         if ($params['project']->usesService('docman')) {
             if (!isset($this->rootItems[$groupId])) {
@@ -626,7 +658,8 @@ class DocmanPlugin extends Plugin
      *
      * @param array $params
      */
-    function plugin_statistics_disk_usage_service_label($params) {
+    function plugin_statistics_disk_usage_service_label($params)
+    {
         $params['services']['plugin_docman'] = 'Docman';
     }
 
@@ -635,7 +668,8 @@ class DocmanPlugin extends Plugin
      *
      * @param array $params
      */
-    function plugin_statistics_color($params) {
+    function plugin_statistics_color($params)
+    {
         if ($params['service'] == 'plugin_docman') {
             $params['color'] = 'royalblue';
         }
@@ -646,7 +680,8 @@ class DocmanPlugin extends Plugin
      *
      * @param array $params
      */
-    function show_pending_documents($params) {
+    function show_pending_documents($params)
+    {
         $request = HTTPRequest::instance();
         $limit = 25;
 
@@ -736,7 +771,8 @@ class DocmanPlugin extends Plugin
         $params['html'][]= $html;
     }
 
-    function showPendingVersions(CSRFSynchronizerToken $csrf_token, $versions, $groupId, $nbVersions, $offset, $limit) {
+    function showPendingVersions(CSRFSynchronizerToken $csrf_token, $versions, $groupId, $nbVersions, $offset, $limit)
+    {
         $hp = Codendi_HTMLPurifier::instance();
 
         $html ='';
@@ -814,7 +850,8 @@ class DocmanPlugin extends Plugin
         return $html;
     }
 
-    function showPendingItems(CSRFSynchronizerToken $csrf_token, $res, $groupId, $nbItems, $offset, $limit) {
+    function showPendingItems(CSRFSynchronizerToken $csrf_token, $res, $groupId, $nbItems, $offset, $limit)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         require_once('Docman_ItemFactory.class.php');
         $itemFactory = new Docman_ItemFactory($groupId);
@@ -902,7 +939,8 @@ class DocmanPlugin extends Plugin
      *
      * @return void
      */
-    function purgeFiles(array $params) {
+    function purgeFiles(array $params)
+    {
         require_once('Docman_ItemFactory.class.php');
         $itemFactory = new Docman_ItemFactory();
         $itemFactory->purgeDeletedItems($params['time']);
@@ -922,7 +960,8 @@ class DocmanPlugin extends Plugin
      *
      * @return void
      */
-    function project_is_deleted($params) {
+    function project_is_deleted($params)
+    {
         $groupId = $params['group_id'];
         if ($groupId) {
             require_once('Docman_ItemFactory.class.php');
@@ -957,7 +996,8 @@ class DocmanPlugin extends Plugin
      *
      * @return void
      */
-    function permissionRequestInformation($params) {
+    function permissionRequestInformation($params)
+    {
         $params['notices'][] = $GLOBALS['Language']->getText('plugin_docman', 'permission_requests_information');
     }
 
@@ -965,7 +1005,8 @@ class DocmanPlugin extends Plugin
      * Fill the list of subEvents related to docman in the project history interface
      *
      */
-    function fillProjectHistorySubEvents($params) {
+    function fillProjectHistorySubEvents($params)
+    {
         array_push($params['subEvents']['event_permission'], 'perm_reset_for_document',
                                                              'perm_granted_for_document',
                                                              'perm_reset_for_folder',
@@ -973,22 +1014,26 @@ class DocmanPlugin extends Plugin
         );
     }
 
-    protected function getWikiController($request) {
+    protected function getWikiController($request)
+    {
         return $this->getController('Docman_WikiController', $request);
     }
 
-    protected function getHTTPController($request=null) {
+    protected function getHTTPController($request=null)
+    {
         if ($request == null) {
             $request = HTTPRequest::instance();
         }
         return $this->getController('Docman_HTTPController', $request);
     }
 
-    protected function getSOAPController($request) {
+    protected function getSOAPController($request)
+    {
         return $this->getController('Docman_SOAPController', $request);
     }
 
-    protected function getController($controller, $request) {
+    protected function getController($controller, $request)
+    {
         if (!isset($this->controller[$controller])) {
             include_once $controller.'.class.php';
             $this->controller[$controller] = new $controller($this, $this->getPluginPath(), $this->getThemePath(), $request);
@@ -998,7 +1043,8 @@ class DocmanPlugin extends Plugin
         return $this->controller[$controller];
     }
 
-    public function proccess_system_check($params) {
+    public function proccess_system_check($params)
+    {
         $docman_system_check = new Docman_SystemCheck(
             $this,
             new Docman_SystemCheckProjectRetriever(new Docman_SystemCheckDao()),
@@ -1010,7 +1056,8 @@ class DocmanPlugin extends Plugin
         $docman_system_check->process();
     }
 
-    public function services_truncated_emails($params) {
+    public function services_truncated_emails($params)
+    {
         $project = $params['project'];
         if ($project->usesService('docman')) {
             $params['services'][] = $GLOBALS['Language']->getText('plugin_docman', 'service_lbl_key');
@@ -1020,7 +1067,8 @@ class DocmanPlugin extends Plugin
     /**
      * @return Project
      */
-    private function getProject($group_id) {
+    private function getProject($group_id)
+    {
         return ProjectManager::instance()->getProject($group_id);
     }
 
@@ -1043,7 +1091,8 @@ class DocmanPlugin extends Plugin
         );
     }
 
-    public function get_reference($params) {
+    public function get_reference($params)
+    {
         $keyword       = $params['keyword'];
         $reference_row = $this->getSystemDocmanReferenceByKeyword($keyword);
 
@@ -1065,7 +1114,8 @@ class DocmanPlugin extends Plugin
         }
     }
 
-    private function getSystemDocmanReferenceByKeyword($keyword) {
+    private function getSystemDocmanReferenceByKeyword($keyword)
+    {
         $dao    = new ReferenceDao();
         $result = $dao->searchSystemReferenceByNatureAndKeyword($keyword, self::SYSTEM_NATURE_NAME);
 
@@ -1392,7 +1442,7 @@ class DocmanPlugin extends Plugin
         $route_collector->addRoute(['GET'], self::ADMIN_BASE_URL . "/files-upload-limits", $this->getRouteHandler('routeGetDocumentSettings'));
         $route_collector->addRoute(['POST'], self::ADMIN_BASE_URL . "/files-upload-limits", $this->getRouteHandler('routePostDocumentSettings'));
 
-        $route_collector->addGroup('/plugins/docman', function(FastRoute\RouteCollector $r) {
+        $route_collector->addGroup('/plugins/docman', function (FastRoute\RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '/restore_documents.php', $this->getRouteHandler('routeLegacyRestoreDocumentsController'));
             $r->post('/sendmessage.php', $this->getRouteHandler('routeLegacySendMessageController'));
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));

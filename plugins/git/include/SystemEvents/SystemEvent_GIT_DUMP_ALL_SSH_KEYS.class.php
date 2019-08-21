@@ -50,7 +50,8 @@ class SystemEvent_GIT_DUMP_ALL_SSH_KEYS extends SystemEvent {
         $this->done();
     }
 
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         return '';
     }
 }

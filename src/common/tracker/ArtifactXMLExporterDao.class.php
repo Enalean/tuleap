@@ -20,7 +20,8 @@
 
 class ArtifactXMLExporterDao extends DataAccessObject {
 
-    public function searchArtifacts($tracker_id) {
+    public function searchArtifacts($tracker_id)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $summary = $this->unconvertHtmlspecialcharsAlias('artifact.summary', 'summary');
         $details = $this->unconvertHtmlspecialcharsAlias('details', 'details');
@@ -33,7 +34,8 @@ class ArtifactXMLExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchHistory($artifact_id) {
+    public function searchHistory($artifact_id)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $old_value = $this->unconvertHtmlspecialcharsAlias('h.old_value', 'old_value');
 
@@ -72,11 +74,13 @@ class ArtifactXMLExporterDao extends DataAccessObject {
      *
      * @see util_unconvert_htmlspecialchars
      */
-    private function unconvertHtmlspecialcharsAlias($column_name, $alias) {
+    private function unconvertHtmlspecialcharsAlias($column_name, $alias)
+    {
         return $this->unconvertHtmlspecialchars($column_name)." AS $alias";
     }
 
-    private function unconvertHtmlspecialchars($column_name) {
+    private function unconvertHtmlspecialchars($column_name)
+    {
         return "REPLACE(
                     REPLACE(
                         REPLACE(
@@ -90,7 +94,8 @@ class ArtifactXMLExporterDao extends DataAccessObject {
                 )";
     }
 
-    public function searchFilesForArtifact($artifact_id) {
+    public function searchFilesForArtifact($artifact_id)
+    {
         $artifact_id  = $this->da->escapeInt($artifact_id);
 
         $sql = "SELECT *
@@ -99,7 +104,8 @@ class ArtifactXMLExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchFile($artifact_id, $filename, $submitted_by, $date) {
+    public function searchFile($artifact_id, $filename, $submitted_by, $date)
+    {
         $artifact_id  = $this->da->escapeInt($artifact_id);
         $filename     = $this->da->quoteSmart($filename);
         $submitted_by = $this->da->escapeInt($submitted_by);
@@ -114,7 +120,8 @@ class ArtifactXMLExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchFileBefore($artifact_id, $filename, $date) {
+    public function searchFileBefore($artifact_id, $filename, $date)
+    {
         $artifact_id  = $this->da->escapeInt($artifact_id);
         $filename     = $this->da->quoteSmart($filename);
         $date         = $this->da->escapeInt($date);
@@ -127,7 +134,8 @@ class ArtifactXMLExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchCCAt($artifact_id, $user_id, $date) {
+    public function searchCCAt($artifact_id, $user_id, $date)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $user_id     = $this->da->escapeInt($user_id);
         $date        = $this->da->escapeInt($date);
@@ -140,7 +148,8 @@ class ArtifactXMLExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchPermsForArtifact($artifact_id) {
+    public function searchPermsForArtifact($artifact_id)
+    {
         $sql = "SELECT ugroup_id
                 FROM permissions
                     INNER JOIN artifact ON (CAST(artifact_id AS CHAR CHARACTER SET utf8) = object_id)
@@ -152,7 +161,8 @@ class ArtifactXMLExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchFieldValues($artifact_id) {
+    public function searchFieldValues($artifact_id)
+    {
         $sql = "SELECT f.display_type, f.data_type, f.field_name, f.value_function, fv.*
                 FROM artifact_field_value fv
                     JOIN artifact         a  ON (a.artifact_id = fv.artifact_id)
@@ -161,7 +171,8 @@ class ArtifactXMLExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchFieldValuesList($group_artifact_id, $field_name) {
+    public function searchFieldValuesList($group_artifact_id, $field_name)
+    {
         $sql = "SELECT fvl.value_id, fvl.value
                 FROM artifact_field_value_list fvl
                     JOIN artifact_field   f  ON (f.field_id = fvl.field_id AND f.group_artifact_id = fvl.group_artifact_id)
@@ -170,7 +181,8 @@ class ArtifactXMLExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchUser($user_id) {
+    public function searchUser($user_id)
+    {
         if (! is_numeric($user_id)) {
             throw new Exception_TV3XMLInvalidFieldTypeException($user_id);
         }
@@ -181,7 +193,8 @@ class ArtifactXMLExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getAllUsers() {
+    public function getAllUsers()
+    {
         $sql = "SELECT DISTINCT(user_id), user_name
                 FROM user";
         return $this->retrieve($sql);

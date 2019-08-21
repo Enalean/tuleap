@@ -27,7 +27,8 @@ class b201403130910_update_apache_config extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Update Apache config to allow Rewrite rules
 EOT;
@@ -38,7 +39,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         if (file_exists(self::BACKUP_FILE)) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Backup file '.self::BACKUP_FILE.' already exists please save it or remove it first');
         }
@@ -48,7 +50,8 @@ EOT;
         $this->patchConfig();
     }
 
-    private function patchConfig() {
+    private function patchConfig()
+    {
         $in_block    = false;
         $first_match = false;
         $had_match   = false;

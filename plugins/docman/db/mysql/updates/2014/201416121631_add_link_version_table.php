@@ -20,17 +20,20 @@
 
 class b201416121631_add_link_version_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Creating table plugin_docman_link_version
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS plugin_docman_link_version (
                     id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                     item_id INT(11) UNSIGNED NOT NULL,
@@ -53,7 +56,8 @@ EOT;
         $this->db->dbh->exec($populate);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (! $this->db->tableNameExists('plugin_docman_link_version')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_docman_link_version table is missing');
         }

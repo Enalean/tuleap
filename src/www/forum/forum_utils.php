@@ -31,7 +31,8 @@
 
 require_once __DIR__ . '/../news/news_utils.php';
 
-function forum_header($params) {
+function forum_header($params)
+{
     global $HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$et,$et_cookie,$Language;
 
     \Tuleap\Project\ServiceInstrumentation::increment('forums');
@@ -154,7 +155,8 @@ function forum_header($params) {
     }
 }
 
-function forum_footer($params) {
+function forum_footer($params)
+{
     global $group_id,$HTML;
     /*
         if general news, show general site footer
@@ -170,7 +172,8 @@ function forum_footer($params) {
     }
 }
 
-function user_monitor_forum ($forum_id, $user_id) {
+function user_monitor_forum($forum_id, $user_id)
+{
 
     $sql = sprintf('SELECT NULL'.
                     ' FROM forum_monitored_forums'.
@@ -181,7 +184,8 @@ function user_monitor_forum ($forum_id, $user_id) {
     return ($result && db_numrows($result) >= 1);
 }
 
-function forum_is_monitored($forum_id) {
+function forum_is_monitored($forum_id)
+{
     $sql = sprintf('SELECT NULL'.
                     ' FROM forum_monitored_forums'.
                     ' WHERE forum_id = %d',
@@ -190,7 +194,8 @@ function forum_is_monitored($forum_id) {
     return ($res && db_numrows($res) >= 1);
 }
 
-function forum_add_monitor ($forum_id, $user_id) {
+function forum_add_monitor($forum_id, $user_id)
+{
     global $feedback,$Language;
 
     if (user_monitor_forum($forum_id, $user_id)) {
@@ -208,7 +213,8 @@ function forum_add_monitor ($forum_id, $user_id) {
     return true;
 }
 
-function forum_delete_monitor ($forum_id, $user_id) {
+function forum_delete_monitor($forum_id, $user_id)
+{
     global $feedback;
     $sql="DELETE FROM forum_monitored_forums WHERE user_id=".db_ei($user_id)." AND forum_id=".db_ei($forum_id);
     $result = db_query($sql);
@@ -218,7 +224,8 @@ function forum_delete_monitor ($forum_id, $user_id) {
 /**
  * @return forum_id = -1 if error
  */
-function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_message=1,$description='', $need_feedback = true) {
+function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_message=1,$description='', $need_feedback = true)
+{
     global $feedback;
     /*
         Adding forums to this group
@@ -258,7 +265,8 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_m
     }
 }
 
-function get_forum_name($id) {
+function get_forum_name($id)
+{
     global $Language;
     /*
         Takes an ID and returns the corresponding forum name
@@ -273,7 +281,8 @@ function get_forum_name($id) {
 
 }
 
-function get_forum_group_id($id) {
+function get_forum_group_id($id)
+{
     /*
         Takes an ID and returns the corresponding forum group_id
     */
@@ -287,7 +296,8 @@ function get_forum_group_id($id) {
 
 }
 
-function show_thread($thread_id,$et=0) {
+function show_thread($thread_id,$et=0)
+{
     global $Language;
     /*
         Takes a thread_id and fetches it, then invokes show_submessages to nest the threads
@@ -358,7 +368,8 @@ function show_thread($thread_id,$et=0) {
     return $ret_val;
 }
 
-function show_submessages($thread_id, $msg_id, $level,$et=0) {
+function show_submessages($thread_id, $msg_id, $level,$et=0)
+{
     /*
         Recursive. Selects this message's id in this thread,
         then checks if any messages are nested underneath it.
@@ -426,7 +437,8 @@ function show_submessages($thread_id, $msg_id, $level,$et=0) {
     return $ret_val;
 }
 
-function get_next_thread_id() {
+function get_next_thread_id()
+{
     global $Language;
     /*
         Get around limitation in MySQL - Must use a separate table with an auto-increment
@@ -442,7 +454,8 @@ function get_next_thread_id() {
     }
 }
 
-function get_forum_saved_date($forum_id) {
+function get_forum_saved_date($forum_id)
+{
     /*
         return the save_date for this user
     */
@@ -465,7 +478,8 @@ function get_forum_saved_date($forum_id) {
     }
 }
 
-function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum_id) {
+function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum_id)
+{
     global $feedback,$Language;
     if (user_isloggedin()) {
 
@@ -554,7 +568,8 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 
 }
 
-function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="") {
+function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
+{
     global $Language;
 
     if (user_isloggedin()) {
@@ -628,7 +643,8 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 
 }
 
-function handle_monitoring($forum_id,$thread_id,$msg_id) {
+function handle_monitoring($forum_id,$thread_id,$msg_id)
+{
     global $feedback,$sys_lf,$Language;
     /*
         Checks to see if anyone is monitoring this forum
@@ -712,7 +728,8 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
     }
 }
 
-function recursive_delete($msg_id,$forum_id) {
+function recursive_delete($msg_id,$forum_id)
+{
     /*
         Take a message id and recurse, deleting all followups
     */
@@ -735,7 +752,8 @@ function recursive_delete($msg_id,$forum_id) {
     return $count;
 }
 
-function forum_utils_access_allowed($forum_id) {
+function forum_utils_access_allowed($forum_id)
+{
 
     $result=db_query("SELECT group_id,is_public FROM forum_group_list WHERE group_forum_id=".db_ei($forum_id));
 
@@ -749,7 +767,8 @@ function forum_utils_access_allowed($forum_id) {
     return true;
 }
 
-function forum_utils_news_access($forum_id) {
+function forum_utils_news_access($forum_id)
+{
     /*
     Takes a forum_id (associated to a news) and checks if the user is allowed to access the corresponding forum
          */
@@ -768,11 +787,13 @@ function forum_utils_news_access($forum_id) {
     return true;
 }
 
-function forum_utils_get_styles() {
+function forum_utils_get_styles()
+{
     return array('nested','flat','threaded','nocomments');
 }
 
-function forum_thread_monitor($mthread, $user_id, $forum_id) {
+function forum_thread_monitor($mthread, $user_id, $forum_id)
+{
     /*
     Set user-specific thread monitoring settings
          */
@@ -821,7 +842,8 @@ function forum_thread_monitor($mthread, $user_id, $forum_id) {
 
 }
 
-function user_monitor_forum_thread($thread_id, $user_id) {
+function user_monitor_forum_thread($thread_id, $user_id)
+{
     /*
         Check if thread (thread_id) is monitored by user (user_id)
          */
@@ -835,7 +857,8 @@ function user_monitor_forum_thread($thread_id, $user_id) {
 
 }
 
-function forum_thread_is_monitored($thread_id) {
+function forum_thread_is_monitored($thread_id)
+{
 
     $sql = sprintf('SELECT NULL'.
                     ' FROM forum_monitored_threads'.
@@ -845,7 +868,8 @@ function forum_thread_is_monitored($thread_id) {
     return ($res && db_numrows($res) >= 1);
 }
 
-function forum_thread_add_monitor($forum_id, $thread_id, $user_id) {
+function forum_thread_add_monitor($forum_id, $thread_id, $user_id)
+{
     /*
         Add thread monitor settings for user (user_id)
          */
@@ -864,7 +888,8 @@ function forum_thread_add_monitor($forum_id, $thread_id, $user_id) {
 
 }
 
-function forum_thread_delete_monitor_by_user($forum_id,$msg_id, $user_id) {
+function forum_thread_delete_monitor_by_user($forum_id,$msg_id, $user_id)
+{
     /*
     Delete thread monitor settings for user (user_id)
         */
@@ -884,7 +909,8 @@ function forum_thread_delete_monitor_by_user($forum_id,$msg_id, $user_id) {
     return true;
 }
 
-function forum_thread_delete_monitor($forum_id,$msg_id) {
+function forum_thread_delete_monitor($forum_id,$msg_id)
+{
          /*
            Delete a thread monitor settings.
          */

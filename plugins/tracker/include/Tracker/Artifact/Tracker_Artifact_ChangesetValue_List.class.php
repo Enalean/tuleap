@@ -31,7 +31,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      */
     protected $list_values;
 
-    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, array $list_values) {
+    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, array $list_values)
+    {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->list_values = $list_values;
     }
@@ -39,7 +40,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     /**
      * @return mixed
      */
-    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
+    {
         return $visitor->visitList($this);
     }
 
@@ -48,7 +50,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return int the number of files
      */
-    public function count() {
+    public function count()
+    {
         return count($this->list_values);
     }
 
@@ -59,7 +62,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return mixed value at given offset
      */
-    public function offsetGet($offset) {
+    public function offsetGet($offset)
+    {
         return $this->list_values[$offset];
     }
 
@@ -71,7 +75,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return void
      */
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value)
+    {
         $this->list_values[$offset] = $value;
     }
 
@@ -82,7 +87,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return bool wether the offset exists
      */
-    public function offsetExists($offset) {
+    public function offsetExists($offset)
+    {
         return isset($this->list_values[$offset]);
     }
 
@@ -93,7 +99,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return void
      */
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset)
+    {
         unset($this->files[$offset]);
     }
 
@@ -110,7 +117,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return Tracker_FileInfo the current one
      */
-    public function current() {
+    public function current()
+    {
         return $this->list_values[$this->index];
     }
 
@@ -119,7 +127,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return int the current index
      */
-    public function key() {
+    public function key()
+    {
         return $this->index;
     }
 
@@ -130,7 +139,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return void
      */
-    public function next() {
+    public function next()
+    {
         $this->index++;
     }
 
@@ -141,7 +151,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return Tracker_FileInfo the current one
      */
-    public function rewind() {
+    public function rewind()
+    {
         $this->index = 0;
     }
 
@@ -150,7 +161,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return bool true if the current pointer is valid
      */
-    public function valid() {
+    public function valid()
+    {
         return isset($this->list_values[$this->index]);
     }
 
@@ -159,7 +171,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return Tracker_FormElement_Field_List_BindValue[]
      */
-    public function getListValues() {
+    public function getListValues()
+    {
         return $this->list_values;
     }
 
@@ -168,7 +181,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return array of int The values of this artifact changeset value
      */
-    public function getValue() {
+    public function getValue()
+    {
         $values = $this->getListValues();
         $array = array();
         foreach ($values as $value) {
@@ -183,7 +197,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @return string The value of this artifact changeset value in Json Format
      */
-    public function getJsonValue() {
+    public function getJsonValue()
+    {
         $values = $this->getListValues();
         $returned_values = array();
         foreach ($values as $value) {
@@ -195,15 +210,18 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         return $returned_values;
     }
 
-    public function getRESTValue(PFUser $user) {
+    public function getRESTValue(PFUser $user)
+    {
         return $this->getFullRESTValue($user);
     }
 
-    protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
+    protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value)
+    {
         return $value->getRESTId();
     }
 
-    public function getFullRESTValue(PFUser $user) {
+    public function getFullRESTValue(PFUser $user)
+    {
         $artifact_field_value_list_representation = new ArtifactFieldValueListFullRepresentation();
         $artifact_field_value_list_representation->build(
             $this->field->getId(),
@@ -215,7 +233,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         return $artifact_field_value_list_representation;
     }
 
-    protected function getFullRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
+    protected function getFullRESTBindValue(Tracker_FormElement_Field_List_Value $value)
+    {
         return $value->getFullRESTValue($this->field);
     }
 
@@ -239,7 +258,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         return $this->getChangesSentence($previous, $next, $added, $removed);
     }
 
-    private function getAdded(array $previous, array $next, $format) {
+    private function getAdded(array $previous, array $next, $format)
+    {
         $added_elements = array_diff($next, $previous);
         $added_arr = array();
         foreach ($added_elements as $added_element) {
@@ -250,7 +270,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         return $this->format(implode(', ', $added_arr), $format);
     }
 
-    private function getRemoved(array $previous, array $next, $format) {
+    private function getRemoved(array $previous, array $next, $format)
+    {
         $removed_elements = array_diff($previous, $next);
         $removed_arr = array();
         foreach ($removed_elements as $removed_element) {
@@ -261,7 +282,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         return $this->format(implode(', ', $removed_arr), $format);
     }
 
-    private function format($value, $format) {
+    private function format($value, $format)
+    {
         if ($format === 'text') {
             return $value;
         }
@@ -269,7 +291,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         return Codendi_HTMLPurifier::instance()->purify($value);
     }
 
-    private function getChangesSentence(array $previous, array $next, $added, $removed) {
+    private function getChangesSentence(array $previous, array $next, $added, $removed)
+    {
         if (empty($next)) {
             return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','cleared');
         }

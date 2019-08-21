@@ -11,7 +11,8 @@ require_once('Docman_View_View.class.php');
 
 class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements Visitor*/ {
 
-    /* protected */ function _content($params) {
+    /* protected */ function _content($params)
+    {
         echo '<select name="ordering">';
         echo '<option value="beginning" '. ($params['force_ordering'] === 'beginning' ? 'selected="selected"' : '') .'>'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_beginning') .'</option>';
         echo '<option value="end"'. ($params['force_ordering'] === 'end' ? 'selected="selected"' : '') .'>'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_end') .'</option>';
@@ -23,13 +24,15 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
 
         echo '</select>';
     }
-    function _displayItem($item, $params) {
+    function _displayItem($item, $params)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         if (!$params['exclude'] || $params['exclude'] != $item->getId()) {
             echo '<option value="'. ($item->getRank()+1) .'" '. ($params['force_ordering'] === ("".($item->getRank()+1)) ? 'selected="selected"' : '') .'>After '.  $hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)  .'</option>';
         }
     }
-    function visitFolder(&$item, $params = array()) {
+    function visitFolder(&$item, $params = array())
+    {
         if ($item->getParentId() == $params['parent_id']) {
             $this->_displayItem($item, $params);
         } else {
@@ -43,25 +46,31 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
         }
     }
 
-    function visitDocument(&$item, $params = array()) {
+    function visitDocument(&$item, $params = array())
+    {
         if ($item->getParentId() == $params['parent_id']) {
             $this->_displayItem($item, $params);
         }
     }
-    function visitWiki(&$item, $params = array()) {
+    function visitWiki(&$item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitLink(&$item, $params = array()) {
+    function visitLink(&$item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitFile(&$item, $params = array()) {
+    function visitFile(&$item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitEmbeddedFile(&$item, $params = array()) {
+    function visitEmbeddedFile(&$item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 
-    function visitEmpty(&$item, $params = array()) {
+    function visitEmpty(&$item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 }

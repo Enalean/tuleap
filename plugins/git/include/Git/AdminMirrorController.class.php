@@ -62,7 +62,8 @@ class Git_AdminMirrorController {
         $this->admin_page_renderer            = $admin_page_renderer;
     }
 
-    public function process(Codendi_Request $request) {
+    public function process(Codendi_Request $request)
+    {
         if ($request->get('action') == 'add-mirror') {
             $this->createMirror($request);
         } elseif ($request->get('action') == 'modify-mirror') {
@@ -78,7 +79,8 @@ class Git_AdminMirrorController {
         }
     }
 
-    public function display(Codendi_Request $request) {
+    public function display(Codendi_Request $request)
+    {
         $title         = dgettext('tuleap-git', 'Git');
         $template_path = dirname(GIT_BASE_DIR).'/templates';
         $presenter     = null;
@@ -121,7 +123,8 @@ class Git_AdminMirrorController {
         );
     }
 
-    private function getAllMirrorsPresenter($title) {
+    private function getAllMirrorsPresenter($title)
+    {
         return new Git_AdminMirrorListPresenter(
             $title,
             $this->csrf,
@@ -133,7 +136,8 @@ class Git_AdminMirrorController {
      * @param Git_Mirror_Mirror[] $mirrors
      * @return array
      */
-    private function getMirrorPresenters(array $mirrors) {
+    private function getMirrorPresenters(array $mirrors)
+    {
         $mirror_presenters = array();
         foreach($mirrors as $mirror) {
             $mirror_presenters[] = new MirrorPresenter(
@@ -155,7 +159,8 @@ class Git_AdminMirrorController {
         }
     }
 
-    private function getManageAllowedProjectsPresenter(Codendi_Request $request) {
+    private function getManageAllowedProjectsPresenter(Codendi_Request $request)
+    {
         $mirror = $this->getMirrorFromRequest($request);
 
         return new Git_AdminMAllowedProjectsPresenter(
@@ -165,7 +170,8 @@ class Git_AdminMirrorController {
         );
     }
 
-    private function setMirrorRestriction($request) {
+    private function setMirrorRestriction($request)
+    {
         $mirror      =  $mirror = $this->getMirrorFromRequest($request);
         $all_allowed = $request->get('all-allowed');
 
@@ -191,7 +197,8 @@ class Git_AdminMirrorController {
         $GLOBALS['Response']->redirect(GIT_SITE_ADMIN_BASE_URL . '?view=mirrors_restriction&action=manage-allowed-projects&mirror_id=' . $mirror->id);
     }
 
-    private function askForAGitoliteDumpConf() {
+    private function askForAGitoliteDumpConf()
+    {
         $this->csrf->check();
 
         $this->git_system_event_manager->queueDumpOfAllMirroredRepositories();
@@ -199,11 +206,13 @@ class Git_AdminMirrorController {
         $GLOBALS['Response']->redirect(GIT_SITE_ADMIN_BASE_URL . '?pane=mirrors_admin');
     }
 
-    private function getGitSystemEventsQueueURL() {
+    private function getGitSystemEventsQueueURL()
+    {
         return "/admin/system_events/?queue=git";
     }
 
-    private function updateAllowedProjectList($request) {
+    private function updateAllowedProjectList($request)
+    {
         $mirror                = $this->getMirrorFromRequest($request);
         $project_to_add        = $request->get('project-to-allow');
         $project_ids_to_remove = $request->get('project-ids-to-revoke');
@@ -218,7 +227,8 @@ class Git_AdminMirrorController {
         }
     }
 
-    private function allowProjectOnMirror(Git_Mirror_Mirror $mirror, $project_to_add) {
+    private function allowProjectOnMirror(Git_Mirror_Mirror $mirror, $project_to_add)
+    {
         $project = $this->project_manager->getProjectFromAutocompleter($project_to_add);
 
         if ($project && $this->git_mirror_resource_restrictor->allowProjectOnMirror($mirror, $project)) {
@@ -230,7 +240,8 @@ class Git_AdminMirrorController {
         $GLOBALS['Response']->redirect(GIT_SITE_ADMIN_BASE_URL . '?view=mirrors_restriction&action=manage-allowed-projects&mirror_id=' . $mirror->id);
     }
 
-    private function revokeProjectsFromMirror(Git_Mirror_Mirror $mirror, $project_ids) {
+    private function revokeProjectsFromMirror(Git_Mirror_Mirror $mirror, $project_ids)
+    {
         if (count($project_ids) > 0 &&
             $this->git_mirror_resource_restrictor->revokeProjectsFromMirror($mirror, $project_ids) &&
             $this->git_mirror_mapper->deleteFromDefaultMirrorsInProjects($mirror, $project_ids)
@@ -243,12 +254,14 @@ class Git_AdminMirrorController {
         $GLOBALS['Response']->redirect(GIT_SITE_ADMIN_BASE_URL . '?view=mirrors_restriction&action=manage-allowed-projects&mirror_id=' . $mirror->id);
     }
 
-    private function checkSynchronizerToken($url) {
+    private function checkSynchronizerToken($url)
+    {
         $token = new CSRFSynchronizerToken($url);
         $token->check();
     }
 
-    private function createMirror(Codendi_Request $request) {
+    private function createMirror(Codendi_Request $request)
+    {
         $url      = $request->get('new_mirror_url');
         $hostname = $request->get('new_mirror_hostname');
         $ssh_key  = $request->get('new_mirror_key');
@@ -270,12 +283,14 @@ class Git_AdminMirrorController {
         }
     }
 
-    private function redirectToCreateWithError($message) {
+    private function redirectToCreateWithError($message)
+    {
         $GLOBALS['Response']->addFeedback('error', $message);
         $GLOBALS['Response']->redirect("?pane=mirrors_admin&action=show-add-mirror");
     }
 
-    private function modifyMirror(Codendi_Request $request) {
+    private function modifyMirror(Codendi_Request $request)
+    {
         try {
             $this->csrf->check();
 
@@ -306,12 +321,14 @@ class Git_AdminMirrorController {
         }
     }
 
-    private function redirectToEditFormWithError($mirror_id, $message) {
+    private function redirectToEditFormWithError($mirror_id, $message)
+    {
         $GLOBALS['Response']->addFeedback('error', $message);
         $GLOBALS['Response']->redirect("?pane=mirrors_admin&action=show-edit-mirror&mirror_id=".$mirror_id);
     }
 
-    private function deleteMirror(Codendi_Request $request) {
+    private function deleteMirror(Codendi_Request $request)
+    {
         try {
             $this->csrf->check();
 

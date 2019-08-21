@@ -20,15 +20,18 @@
 
 class b201301021153_add_postaction_cibuild_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add post actions ci build table.';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_cibuild (
                     id int(11) UNSIGNED NOT NULL auto_increment  PRIMARY KEY,
                     transition_id int(11) NOT NULL,
@@ -39,7 +42,8 @@ class b201301021153_add_postaction_cibuild_table extends ForgeUpgrade_Bucket {
         $this->db->createTable('tracker_workflow_transition_postactions_cibuild', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('tracker_workflow_transition_postactions_cibuild')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_workflow_transition_postactions_cibuild table is missing');
         }

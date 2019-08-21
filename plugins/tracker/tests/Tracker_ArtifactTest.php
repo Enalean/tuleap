@@ -25,7 +25,8 @@ require_once __DIR__ . '/bootstrap.php';
 
 class Tracker_ArtifactTest extends TuleapTestCase
 {
-    function setUp() {
+    function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         $this->response = $GLOBALS['Response'];
@@ -61,13 +62,15 @@ class Tracker_ArtifactTest extends TuleapTestCase
         $this->artifact_update->shouldReceive('getLastChangeset')->andReturns($this->changeset); // changeset => artifact modification
     }
 
-    function tearDown() {
+    function tearDown()
+    {
         unset($this->field);
         unset($this->artifact);
         parent::tearDown();
     }
 
-    function testGetValue() {
+    function testGetValue()
+    {
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $field     = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
         $value     = \Mockery::spy(\Tracker_Artifact_ChangesetValue_Date::class);
@@ -80,7 +83,8 @@ class Tracker_ArtifactTest extends TuleapTestCase
         $this->assertEqual($artifact->getValue($field, $changeset), $value);
     }
 
-    function testGetValue_without_changeset() {
+    function testGetValue_without_changeset()
+    {
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $field     = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
         $value     = \Mockery::spy(\Tracker_Artifact_ChangesetValue_Date::class);
@@ -96,7 +100,8 @@ class Tracker_ArtifactTest extends TuleapTestCase
 
 class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactTest
 {
-    function testCreateNewChangesetWithWorkflowAndNoPermsOnPostActionField() {
+    function testCreateNewChangesetWithWorkflowAndNoPermsOnPostActionField()
+    {
         $email   = null; //not anonymous user
         $comment = '';
 
@@ -216,7 +221,8 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         );
     }
 
-    function testDontCreateNewChangesetIfNoCommentOrNoChanges() {
+    function testDontCreateNewChangesetIfNoCommentOrNoChanges()
+    {
         $this->language->shouldReceive('getText')->with('plugin_tracker_artifact', 'no_changes', Mockery::any())->andReturns('no changes');
         $this->response->shouldReceive('addFeedback')->never();
 
@@ -302,7 +308,8 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
 class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
 {
 
-    function testCreateNewChangeset() {
+    function testCreateNewChangeset()
+    {
         $email   = null; //not annonymous user
         $comment = 'It did solve my problem, I let you close the artifact.';
 
@@ -422,7 +429,8 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
 
     }
 
-    public function itCheckThatGlobalRulesAreValid() {
+    public function itCheckThatGlobalRulesAreValid()
+    {
         $email   = null; //not annonymous user
         $comment = 'It did solve my problem, I let you close the artifact.';
 
@@ -549,7 +557,8 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
         $artifact->createNewChangeset($fields_data, $comment, $user);
     }
 
-    function testCreateNewChangesetWithoutNotification() {
+    function testCreateNewChangesetWithoutNotification()
+    {
         $email   = null; //not anonymous user
         $comment = '';
 
@@ -666,7 +675,8 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
         $artifact->createNewChangeset($fields_data, $comment, $user);
     }
 
-    function testGetCommentators() {
+    function testGetCommentators()
+    {
         $c1 = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $c2 = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $c3 = \Mockery::spy(\Tracker_Artifact_Changeset::class);
@@ -701,7 +711,8 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
 
 class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -713,7 +724,8 @@ class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase {
         $this->user = aUser()->build();
     }
 
-    public function itReturnsTheParentArtifactFromAncestors() {
+    public function itReturnsTheParentArtifactFromAncestors()
+    {
         $release = anArtifact()->withId(1)->build();
 
         stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->sprint)->returns($release);
@@ -721,7 +733,8 @@ class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase {
         $this->assertEqual($release, $this->sprint->getParent($this->user));
     }
 
-    public function itReturnsNullWhenNoAncestors() {
+    public function itReturnsNullWhenNoAncestors()
+    {
         stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->sprint)->returns(null);
 
         $this->assertEqual(null, $this->sprint->getParent($this->user));
@@ -733,7 +746,8 @@ class Tracker_Artifact_getWorkflowTest extends TuleapTestCase {
     private $workflow;
     private $artifact;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         $tracker_id = 123;
@@ -744,12 +758,14 @@ class Tracker_Artifact_getWorkflowTest extends TuleapTestCase {
         $this->artifact->setTracker($tracker);
     }
 
-    public function itGetsTheWorkflowFromTheTracker() {
+    public function itGetsTheWorkflowFromTheTracker()
+    {
         $workflow = $this->artifact->getWorkflow();
         $this->assertEqual($workflow, $this->workflow);
     }
 
-    public function itInjectsItselfInTheWorkflow() {
+    public function itInjectsItselfInTheWorkflow()
+    {
         $workflow = $this->artifact->getWorkflow();
         $this->assertEqual($workflow->getArtifact(), $this->artifact);
     }
@@ -762,7 +778,8 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
      */
     private $creator;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         $this->fields_data = array();
@@ -811,7 +828,8 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         );
     }
 
-    public function itCallsTheAfterMethodOnWorkflowWhenCreateNewChangeset() {
+    public function itCallsTheAfterMethodOnWorkflowWhenCreateNewChangeset()
+    {
         stub($this->changeset_dao)->create()->returns(true);
         stub($this->artifact_factory)->save()->returns(true);
         expect($this->workflow)->after(
@@ -834,7 +852,8 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         );
     }
 
-    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFailsOnNewChangeset() {
+    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFailsOnNewChangeset()
+    {
         stub($this->changeset_dao)->create()->returns(true);
         stub($this->artifact_factory)->save()->returns(false);
         expect($this->workflow)->after()->never();
@@ -858,7 +877,8 @@ class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
 
     private $user_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         $this->user_manager = \Mockery::spy(\UserManager::class);
@@ -868,14 +888,16 @@ class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
         Tracker_FormElementFactory::setInstance($this->formelement_factory);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         UserManager::clearInstance();
         Tracker_FormElementFactory::clearInstance();
 
         parent::tearDown();
     }
 
-    public function itExportsTheArtifactToXML() {
+    public function itExportsTheArtifactToXML()
+    {
         $user = aUser()->withId(101)->withLdapId('ldap_O1')->withUserName('user_01')->build();
         stub($this->user_manager)->getUserById(101)->returns($user);
         stub($this->formelement_factory)->getUsedFileFields()->returns(array());

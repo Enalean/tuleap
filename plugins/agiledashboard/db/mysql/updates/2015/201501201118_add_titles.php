@@ -24,17 +24,20 @@
 
 class b201501201118_add_titles extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add kanban and scrum titles.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_agiledashboard_configuration
                 ADD COLUMN scrum_title VARCHAR(255) NOT NULL DEFAULT 'Scrum',
                 ADD COLUMN kanban_title VARCHAR(255) NOT NULL DEFAULT 'Kanban'";

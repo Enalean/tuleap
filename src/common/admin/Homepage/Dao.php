@@ -21,14 +21,16 @@
 class Admin_Homepage_Dao extends DataAccessObject {
 
     /** @return DataAccessResult */
-    public function searchHeadlines() {
+    public function searchHeadlines()
+    {
         $sql = "SELECT * FROM homepage_headline";
 
         return $this->retrieve($sql);
     }
 
     /** @return string|null */
-    public function getHeadlineByLanguage($language_id) {
+    public function getHeadlineByLanguage($language_id)
+    {
         $language_id = $this->da->quoteSmart($language_id);
 
         $sql = "SELECT * FROM homepage_headline WHERE language_id = $language_id";
@@ -39,7 +41,8 @@ class Admin_Homepage_Dao extends DataAccessObject {
     }
 
     /** @return bool */
-    public function save(array $headlines) {
+    public function save(array $headlines)
+    {
         $values = array();
 
         foreach ($headlines as $language_id => $headline) {

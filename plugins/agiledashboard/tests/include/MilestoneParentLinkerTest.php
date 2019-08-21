@@ -52,7 +52,8 @@ class MilestoneParentLinkerTest extends TuleapTestCase {
      */
     private $backlog;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->milestone_factory       = mock('Planning_MilestoneFactory');
@@ -69,7 +70,8 @@ class MilestoneParentLinkerTest extends TuleapTestCase {
         stub($this->backlog_factory)->getBacklog()->returns($this->backlog);
     }
 
-    public function itDoesNothingIfTheMilestoneHasNoParent() {
+    public function itDoesNothingIfTheMilestoneHasNoParent()
+    {
         $artifact_added            = anArtifact()->withId(101)->build();
         $parent_milestone_artifact = mock('Tracker_Artifact');
 
@@ -84,7 +86,8 @@ class MilestoneParentLinkerTest extends TuleapTestCase {
         );
     }
 
-    public function itDoesNothingIfTheArtifactTrackerIsNotInParentMilestoneBacklogTrackers() {
+    public function itDoesNothingIfTheArtifactTrackerIsNotInParentMilestoneBacklogTrackers()
+    {
         $artifact_added            = anArtifact()->withId(101)->withTrackerId(201)->build();
         $parent_milestone_artifact = mock('Tracker_Artifact');
         $parent_milestone          = stub('Planning_Milestone')->getArtifact()->returns($parent_milestone_artifact);
@@ -102,7 +105,8 @@ class MilestoneParentLinkerTest extends TuleapTestCase {
         );
     }
 
-    public function itDoesNothingIfTheParentIsLinkedToParentMilestone() {
+    public function itDoesNothingIfTheParentIsLinkedToParentMilestone()
+    {
         $artifact_added            = stub('Tracker_Artifact')->getTrackerId()->returns(201);
         $parent_milestone_artifact = mock('Tracker_Artifact');
         $parent_milestone          = stub('Planning_Milestone')->getArtifact()->returns($parent_milestone_artifact);
@@ -123,7 +127,8 @@ class MilestoneParentLinkerTest extends TuleapTestCase {
         );
     }
 
-    public function itLinksTheItemToParentMilestone() {
+    public function itLinksTheItemToParentMilestone()
+    {
         $added_artifact            = stub('Tracker_Artifact')->getTrackerId()->returns(201);
         $parent_milestone_artifact = mock('Tracker_Artifact');
         $parent_milestone          = stub('Planning_Milestone')->getArtifact()->returns($parent_milestone_artifact);
@@ -147,7 +152,8 @@ class MilestoneParentLinkerTest extends TuleapTestCase {
         );
     }
 
-    public function itLinksTheItemToParentMilestoneIfTheItemHasNoParent() {
+    public function itLinksTheItemToParentMilestoneIfTheItemHasNoParent()
+    {
         $added_artifact            = stub('Tracker_Artifact')->getTrackerId()->returns(201);
         $parent_milestone_artifact = mock('Tracker_Artifact');
         $parent_milestone          = stub('Planning_Milestone')->getArtifact()->returns($parent_milestone_artifact);

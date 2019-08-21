@@ -19,24 +19,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function html_feedback_top($feedback) {
+function html_feedback_top($feedback)
+{
     echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);
 }
 
-function html_feedback_bottom($feedback) {
+function html_feedback_bottom($feedback)
+{
     echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);
 }
 
-function html_a_group($grp) {
+function html_a_group($grp)
+{
     $pm = ProjectManager::instance();
     print '<A /project/?group_id='.$grp.'>' . $pm->getProject($grp)->getPublicName() . '</A>';
 }
 
-function html_blankimage($height,$width) {
+function html_blankimage($height,$width)
+{
     return html_image('blank.png',array('height'=>$height,'width'=>$width,'alt'=>' '));
 }
 
-function html_image($src,$args,$display=1) {
+function html_image($src,$args,$display=1)
+{
     GLOBAL $img_size;
     $return   = ('<IMG src="'.util_get_dir_image_theme().$src.'"');
     $purifier = Codendi_HTMLPurifier::instance();
@@ -74,7 +79,8 @@ function html_image($src,$args,$display=1) {
     }
 }
 
-function html_get_timezone_popup($selected = 0) {
+function html_get_timezone_popup($selected = 0)
+{
     $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/jstimezonedetect/jstz.min.js');
     $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
     $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/account/');
@@ -88,7 +94,8 @@ function html_get_timezone_popup($selected = 0) {
  * @param        string    The title of the popup box
  * @param        string    Which element of the box is to be selected
  */
-function html_get_language_popup ($Language,$title='language_id',$selected='xzxzxz') {
+function html_get_language_popup($Language,$title='language_id',$selected='xzxzxz')
+{
     $hp   = Codendi_HTMLPurifier::instance();
     $language_factory = new BaseLanguageFactory();
 
@@ -104,7 +111,8 @@ function html_get_language_popup ($Language,$title='language_id',$selected='xzxz
 }
 
 
-function html_build_list_table_top ($title_arr,$links_arr=false,$mass_change=false,$full_width=true, $id=null, $class=null, $cellspacing=1, $cellpadding=2) {
+function html_build_list_table_top($title_arr,$links_arr=false,$mass_change=false,$full_width=true, $id=null, $class=null, $cellspacing=1, $cellpadding=2)
+{
 
     /*
         Takes an array of titles and builds
@@ -142,12 +150,14 @@ function html_build_list_table_top ($title_arr,$links_arr=false,$mass_change=fal
 }
 
 //deprecated
-function util_get_alt_row_color ($i) {
+function util_get_alt_row_color($i)
+{
     return html_get_alt_row_color ($i);
 }
 
 //function util_get_alt_row_color ($i) {
-function html_get_alt_row_color ($i) {
+function html_get_alt_row_color($i)
+{
     GLOBAL $HTML;
     if ($i % 2 == 0) {
         return 'boxitem';
@@ -156,7 +166,8 @@ function html_get_alt_row_color ($i) {
     }
 }
 
-function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz',$samevals = 0) {
+function html_build_select_box_from_array($vals,$select_name,$checked_val='xzxz',$samevals = 0)
+{
     /*
         Takes one array, with the first array being the "id" or value
         and the array being the text you want displayed
@@ -193,7 +204,7 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 /**
  * @deprecated This function miss some purifications voluntary. Please, DO NOT USE it anymore !
  */
-function html_build_select_box_from_arrays (
+function html_build_select_box_from_arrays(
     $vals,
     $texts,
     $select_name,
@@ -334,7 +345,7 @@ function html_build_select_box_from_arrays (
     return $return;
 }
 
-function html_build_select_box (
+function html_build_select_box(
     $result,
     $name,
     $checked_val="xzxz",
@@ -383,7 +394,8 @@ function html_build_select_box (
         );
 }
 
-function html_build_multiple_select_box($result,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true, $purify_level=CODENDI_PURIFIER_CONVERT_HTML, $disabled = false) {
+function html_build_multiple_select_box($result,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true, $purify_level=CODENDI_PURIFIER_CONVERT_HTML, $disabled = false)
+{
     if (is_array($result)) {
         $array =& $result;
     } else {
@@ -394,7 +406,8 @@ function html_build_multiple_select_box($result,$name,$checked_array,$size='8',$
     }
     return html_build_multiple_select_box_from_array($array,$name,$checked_array,$size,$show_100,$text_100, $show_any,$text_any,$show_unchanged,$text_unchanged,$show_value, $purify_level, $disabled);
 }
-function html_build_multiple_select_box_from_array($array,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true, $purify_level=CODENDI_PURIFIER_CONVERT_HTML, $disabled = false) {
+function html_build_multiple_select_box_from_array($array,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true, $purify_level=CODENDI_PURIFIER_CONVERT_HTML, $disabled = false)
+{
         global $Language;
     /*
         Takes a result set, with the first column being the "id" or value
@@ -480,7 +493,8 @@ function html_build_multiple_select_box_from_array($array,$name,$checked_array,$
     return $return;
 }
 
-function html_buildpriority_select_box ($name='priority', $checked_val='5') {
+function html_buildpriority_select_box($name='priority', $checked_val='5')
+{
     /*
         Return a select box of standard priorities.
         The name of this select box is optional and so is the default checked value
@@ -503,7 +517,8 @@ function html_buildpriority_select_box ($name='priority', $checked_val='5') {
 
 }
 
-function html_buildcheckboxarray($options,$name,$checked_array) {
+function html_buildcheckboxarray($options,$name,$checked_array)
+{
     $option_count  = count($options);
     $checked_count = count($checked_array);
     $purifier      = Codendi_HTMLPurifier::instance();
@@ -526,7 +541,8 @@ function html_buildcheckboxarray($options,$name,$checked_array) {
         @param params array() must contain $user_id
         @result text - echos HTML to the screen directly
 */
-function site_header($params) {
+function site_header($params)
+{
     GLOBAL $HTML;
     /*
                 Check to see if active user
@@ -544,7 +560,8 @@ function site_header($params) {
     echo html_feedback_top($GLOBALS['feedback']);
 }
 
-function site_footer($params) {
+function site_footer($params)
+{
     GLOBAL $HTML;
     echo html_feedback_bottom($GLOBALS['feedback']);
     $HTML->footer($params);
@@ -556,7 +573,8 @@ function site_footer($params) {
     @param params array() must contain $toptab and $group
     @result text - echos HTML to the screen directly
 */
-function site_project_header($params) {
+function site_project_header($params)
+{
     GLOBAL $HTML, $Language;
 
     /*
@@ -600,7 +618,8 @@ function site_project_header($params) {
     @param params array() empty
     @result text - echos HTML to the screen directly
 */
-function site_project_footer($params) {
+function site_project_footer($params)
+{
     GLOBAL $HTML;
 
     if (isset($params['pv']) && $params['pv'] != 0) {
@@ -613,7 +632,8 @@ function site_project_footer($params) {
 }
 
 
-function html_display_boolean($value,$true_value='Yes',$false_value='No') {
+function html_display_boolean($value,$true_value='Yes',$false_value='No')
+{
     global $Language;
 
     // Position default values for special menu items
@@ -626,13 +646,15 @@ function html_display_boolean($value,$true_value='Yes',$false_value='No') {
     }
 }
 
-function html_trash_image($alt) {
+function html_trash_image($alt)
+{
     $purifier = Codendi_HTMLPurifier::instance();
     return '<img src="'.util_get_image_theme("ic/trash.png").'" '.
         'height="16" width="16" border="0" alt="'.$purifier->purify($alt).'" title="'.$purifier->purify($alt).'">';
 }
 
-function html_trash_link($link, $warn, $alt) {
+function html_trash_link($link, $warn, $alt)
+{
     $purifier = Codendi_HTMLPurifier::instance();
     return '<a href="'.$link.'" onClick="return confirm(\''.$purifier->purify($warn, CODENDI_PURIFIER_JS_QUOTE).'\')">'.html_trash_image($alt).'</a>';
 }
@@ -655,7 +677,8 @@ function html_trash_link_fontawesome($link, $warn)
  *
  *    @return    string
  */
-function html_select_operator($name='', $value='', $ro=false) {
+function html_select_operator($name='', $value='', $ro=false)
+{
     if ($ro) {
         $html = htmlspecialchars($value);
     } else {
@@ -678,13 +701,15 @@ function html_select_operator($name='', $value='', $ro=false) {
  *
  *    @return    string
  */
-function html_field_date($field_name='',
-                         $value='',
-                         $ro=false,
-                         $size='10',
-                         $maxlength='10',
-                         $form_name='artifact_form',
-                         $today=false) {
+function html_field_date(
+    $field_name='',
+    $value='',
+    $ro=false,
+    $size='10',
+    $maxlength='10',
+    $form_name='artifact_form',
+    $today=false
+) {
     if ($ro) {
         $html = $value;
     }
@@ -694,7 +719,8 @@ function html_field_date($field_name='',
     return($html);
 }
 
-function html_time_ago($time, $include_seconds = false) {
+function html_time_ago($time, $include_seconds = false)
+{
     return DateHelper::timeAgoInWords($time, $include_seconds, true);
 }
 

@@ -70,7 +70,8 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter {
         $this->user_accessibility_mode                 = json_encode((bool) $current_user->getPreference(PFUser::ACCESSIBILITY_MODE));
     }
 
-    private function getLanguageAbbreviation(PFUser $current_user) {
+    private function getLanguageAbbreviation(PFUser $current_user)
+    {
         list($lang, $country) = explode('_', $current_user->getLocale());
 
         return $lang;

@@ -17,17 +17,20 @@
  */
 
 class b201305071724_add_svn_change_log_option extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add svn change log option
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE groups ADD COLUMN svn_can_change_log TINYINT(1) NOT NULL default '0' AFTER svn_mandatory_ref";
         if ($this->db->tableNameExists('groups')) {
             $res = $this->db->dbh->exec($sql);
@@ -37,7 +40,8 @@ EOT;
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->columnNameExists('groups', 'svn_can_change_log')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column owner not created in system_event');
         }

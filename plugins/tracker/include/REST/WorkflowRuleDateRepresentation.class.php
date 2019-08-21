@@ -39,7 +39,8 @@ class WorkflowRuleDateRepresentation {
      */
     public $comparator;
 
-    public function build($source_field_id, $target_field_id, $comparator) {
+    public function build($source_field_id, $target_field_id, $comparator)
+    {
         $this->source_field_id = JsonCast::toInt($source_field_id);
         $this->target_field_id = JsonCast::toInt($target_field_id);
         $this->comparator      = $comparator;

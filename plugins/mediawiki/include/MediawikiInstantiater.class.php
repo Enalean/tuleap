@@ -91,13 +91,15 @@ class MediaWikiInstantiater {
     /**
      * Creates a mediawiki plugin instance for the project
      */
-    public function instantiate() {
+    public function instantiate()
+    {
         if ($this->initMediawiki()) {
             $this->seedUGroupMapping();
         }
     }
 
-    public function instantiateFromTemplate(array $ugroup_mapping) {
+    public function instantiateFromTemplate(array $ugroup_mapping)
+    {
         if ($this->initMediawiki()) {
             $this->seedUGroupMappingFromTemplate($ugroup_mapping);
             $this->setReadWritePermissionsFromTemplate($ugroup_mapping);
@@ -105,7 +107,8 @@ class MediaWikiInstantiater {
         }
     }
 
-    private function setLanguageFromTemplate() {
+    private function setLanguageFromTemplate()
+    {
         $template_project = ProjectManager::instance()->getProject($this->project->getTemplate());
 
         if (! $template_project) {
@@ -118,7 +121,8 @@ class MediaWikiInstantiater {
         );
     }
 
-    private function initMediawiki() {
+    private function initMediawiki()
+    {
         try {
             $exists = $this->checkForExistingProject();
         } catch (MediawikiInstantiaterException $e) {
@@ -143,7 +147,8 @@ class MediaWikiInstantiater {
      * @return bool
      * @throws MediawikiInstantiaterException
      */
-    private function checkForExistingProject() {
+    private function checkForExistingProject()
+    {
         $this->logger->info('Checking project dir for: ' . $this->project_name);
 
         $dir_exists = $this->doesDirectoryExist();
@@ -166,14 +171,16 @@ class MediaWikiInstantiater {
 
     }
 
-    private function ensureDatabaseIsCorrect($db_name) {
+    private function ensureDatabaseIsCorrect($db_name)
+    {
         $this->dao->updateDatabaseName($this->project_id, $db_name);
     }
 
     /**
      * @return bool
      */
-    private function doesDirectoryExist() {
+    private function doesDirectoryExist()
+    {
         $data_dir = new \Tuleap\Mediawiki\MediawikiDataDir();
         $this->project_name_dir = $data_dir->getMediawikiDir($this->project);
 
@@ -183,7 +190,8 @@ class MediaWikiInstantiater {
         return false;
     }
 
-    private function createDirectory() {
+    private function createDirectory()
+    {
         $this->logger->info('Creating project dir ' . $this->project_name_dir);
         mkdir($this->project_name_dir, 0775, true);
         $owner = ForgeConfig::get('sys_http_user');
@@ -191,7 +199,8 @@ class MediaWikiInstantiater {
         $this->backend->chgrp($this->project_name_dir, $owner);
     }
 
-    private function createDatabase($mediawiki_path) {
+    private function createDatabase($mediawiki_path)
+    {
         $this->logger->info('Creating database ');
         try {
             $database = $this->dao->getDatabaseNameForCreation($this->project);
@@ -304,7 +313,8 @@ class MediaWikiInstantiater {
         return true;
     }
 
-    private function seedUGroupMappingFromTemplate(array $ugroup_mapping) {
+    private function seedUGroupMappingFromTemplate(array $ugroup_mapping)
+    {
         $template         = ProjectManager::instance()->getProject($this->project->getTemplate());
         $mapper           = new MediawikiUserGroupsMapper($this->dao, new User_ForgeUserGroupPermissionsDao());
         $template_mapping = $mapper->getCurrentUserGroupMapping($template);
@@ -321,7 +331,8 @@ class MediaWikiInstantiater {
         db_query($this->seedProjectUGroupMappings($this->project->getID(), $new_mapping));
     }
 
-    private function seedUGroupMapping() {
+    private function seedUGroupMapping()
+    {
         if ($this->project->isPublic()) {
             db_query($this->seedProjectUGroupMappings($this->project->getID(), MediawikiUserGroupsMapper::$DEFAULT_MAPPING_PUBLIC_PROJECT));
         } else {
@@ -329,13 +340,15 @@ class MediaWikiInstantiater {
         }
     }
 
-    private function seedProjectUGroupMappings($group_id, array $mappings) {
+    private function seedProjectUGroupMappings($group_id, array $mappings)
+    {
         $query  = "INSERT INTO plugin_mediawiki_ugroup_mapping(group_id, ugroup_id, mw_group_name) VALUES ";
 
         return $query . implode(",", $this->getFormattedDefaultValues($group_id, $mappings));
     }
 
-    private function getFormattedDefaultValues($group_id, array $mappings) {
+    private function getFormattedDefaultValues($group_id, array $mappings)
+    {
         $values = array();
 
         foreach ($mappings as $group_name => $mapping) {
@@ -347,7 +360,8 @@ class MediaWikiInstantiater {
         return $values;
     }
 
-    private function setReadWritePermissionsFromTemplate(array $ugroup_mapping) {
+    private function setReadWritePermissionsFromTemplate(array $ugroup_mapping)
+    {
         $template                = ProjectManager::instance()->getProject($this->project->getTemplate());
         $template_read_accesses  = $this->mediawiki_manager->getReadAccessControl($template);
         $template_write_accesses = $this->mediawiki_manager->getWriteAccessControl($template);
@@ -356,7 +370,8 @@ class MediaWikiInstantiater {
         $this->mediawiki_manager->saveWriteAccessControl($this->project, $this->getUgroupsForProjectFromMapping($template_write_accesses, $ugroup_mapping));
     }
 
-    private function getUgroupsForProjectFromMapping(array $original_ugroups, array $ugroup_mapping) {
+    private function getUgroupsForProjectFromMapping(array $original_ugroups, array $ugroup_mapping)
+    {
         $ugroups = array();
 
         foreach ($original_ugroups as $upgroup) {

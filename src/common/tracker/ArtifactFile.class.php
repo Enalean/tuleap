@@ -44,7 +44,8 @@ class ArtifactFile {
      *  @param    array    (all fields from artifact_file_user_vw) OR id from database.
      *  @return bool success.
      */
-    function __construct(&$Artifact, $data=false) {
+    function __construct(&$Artifact, $data=false)
+    {
         global $Language;
 
      //was Artifact legit?
@@ -82,7 +83,8 @@ class ArtifactFile {
      *    @param    string    Item description.
      *  @return id on success / false on failure.
      */
-    function create($filename, $filetype, $filesize, $bin_data, $description=false,&$changes) {
+    function create($filename, $filetype, $filesize, $bin_data, $description=false,&$changes)
+    {
         global $Language;
 
         if (!$description) $description=$Language->getText('global','none');
@@ -140,7 +142,8 @@ class ArtifactFile {
         }
     }
 
-    private function createOnFileSystem($id, $bin_data) {
+    private function createOnFileSystem($id, $bin_data)
+    {
         $parent_directory = $this->getParentDirectory();
         if (! is_dir($parent_directory)) {
             mkdir($parent_directory, 0750, true);
@@ -148,23 +151,28 @@ class ArtifactFile {
         file_put_contents($parent_directory . DIRECTORY_SEPARATOR . $id, $bin_data);
     }
 
-    public function getParentDirectory() {
+    public function getParentDirectory()
+    {
         return self::getParentDirectoryForArtifact($this->Artifact->getArtifactType());
     }
 
-    public static function getParentDirectoryForArtifact(ArtifactType $artifact_type) {
+    public static function getParentDirectoryForArtifact(ArtifactType $artifact_type)
+    {
         return self::getParentDirectoryForArtifactTypeId($artifact_type->getID());
     }
 
-    public static function getParentDirectoryForArtifactTypeId($artifact_type_id) {
+    public static function getParentDirectoryForArtifactTypeId($artifact_type_id)
+    {
         return ForgeConfig::get('sys_data_dir') . DIRECTORY_SEPARATOR . self::ROOT_DIRNAME . DIRECTORY_SEPARATOR . $artifact_type_id;
     }
 
-    public static function getPathOnFilesystem(Artifact $artifact, $attachment_id) {
+    public static function getPathOnFilesystem(Artifact $artifact, $attachment_id)
+    {
         return self::getParentDirectoryForArtifact($artifact->getArtifactType()) . DIRECTORY_SEPARATOR . $attachment_id;
     }
 
-    public static function getPathOnFilesystemByArtifactTypeId($artifact_type_id, $attachment_id) {
+    public static function getPathOnFilesystemByArtifactTypeId($artifact_type_id, $attachment_id)
+    {
         return self::getParentDirectoryForArtifactTypeId($artifact_type_id) . DIRECTORY_SEPARATOR . $attachment_id;
     }
 
@@ -173,7 +181,8 @@ class ArtifactFile {
      *
      *    @return bool success.
      */
-    function delete() {
+    function delete()
+    {
         global $Language;
 
         $old_value = $this->Artifact->getAttachedFileNames();
@@ -191,14 +200,16 @@ class ArtifactFile {
         }
     }
 
-    private function deleteOnFileSystem() {
+    private function deleteOnFileSystem()
+    {
         $attachement_path = self::getPathOnFilesystem($this->Artifact, $this->getID());
         if (is_file($attachement_path)) {
             unlink($attachement_path);
         }
     }
 
-    public static function deleteAllByArtifactType($artifact_type_id) {
+    public static function deleteAllByArtifactType($artifact_type_id)
+    {
         $parent_path = self::getParentDirectoryForArtifactTypeId($artifact_type_id);
         if (is_dir($parent_path)) {
             try {
@@ -220,7 +231,8 @@ class ArtifactFile {
      *    @param    int    The file_id.
      *    @return bool success.
      */
-    function fetchData($id) {
+    function fetchData($id)
+    {
         global $Language;
 
         $sql = "SELECT af.id, af.artifact_id, af.description, af.bin_data, af.filename, af.filesize, af.filetype, af.adddate, af.submitted_by, user.user_name, user.realname 
@@ -242,7 +254,8 @@ class ArtifactFile {
      *
      *    @return object    Artifact.
      */
-    function getArtifact() {
+    function getArtifact()
+    {
         return $this->Artifact;
     }
 
@@ -251,7 +264,8 @@ class ArtifactFile {
      *
      *    @return    int    The id #.
      */
-    function getID() {
+    function getID()
+    {
         return $this->data_array['id'];
     }
 
@@ -260,7 +274,8 @@ class ArtifactFile {
      *
      *    @return string filename.
      */
-    function getName() {
+    function getName()
+    {
         return $this->data_array['filename'];
     }
 
@@ -269,7 +284,8 @@ class ArtifactFile {
      *
      *    @return string type.
      */
-    function getType() {
+    function getType()
+    {
         return $this->data_array['filetype'];
     }
 
@@ -278,7 +294,8 @@ class ArtifactFile {
      *
      *    @return binary.
      */
-    function getData() {
+    function getData()
+    {
         return base64_decode($this->data_array['bin_data']);
     }
 
@@ -287,7 +304,8 @@ class ArtifactFile {
      *
      *    @return int size.
      */
-    function getSize() {
+    function getSize()
+    {
         return $this->data_array['filesize'];
     }
 
@@ -296,7 +314,8 @@ class ArtifactFile {
      *
      *    @return string description.
      */
-    function getDescription() {
+    function getDescription()
+    {
         return $this->data_array['description'];
     }
 
@@ -305,7 +324,8 @@ class ArtifactFile {
      *
      *    @return int unix time.
      */
-    function getDate() {
+    function getDate()
+    {
         return $this->data_array['adddate'];
     }
 
@@ -314,7 +334,8 @@ class ArtifactFile {
      *
      *    @return int user_id.
      */
-    function getSubmittedBy() {
+    function getSubmittedBy()
+    {
         return $this->data_array['submitted_by'];
     }
 
@@ -323,7 +344,8 @@ class ArtifactFile {
      *
      *    @return    string    name.
      */
-    function getSubmittedRealName() {
+    function getSubmittedRealName()
+    {
         return $this->data_array['realname'];
     }
 
@@ -332,19 +354,22 @@ class ArtifactFile {
      *
      *    @return    string    unixname.
      */
-    function getSubmittedUnixName() {
+    function getSubmittedUnixName()
+    {
         return $this->data_array['user_name'];
     }
 
     /**
      * @param $string
      */
-    public function setError($string) {
+    public function setError($string)
+    {
         $this->error_state = true;
         $this->error_message = $string;
     }
 
-    public function clearError() {
+    public function clearError()
+    {
         $this->error_state = false;
         $this->error_message = '';
     }
@@ -352,7 +377,8 @@ class ArtifactFile {
     /**
      * @return string
      */
-    public function getErrorMessage() {
+    public function getErrorMessage()
+    {
         if ($this->error_state) {
             return $this->error_message;
         } else {
@@ -363,7 +389,8 @@ class ArtifactFile {
     /**
      * @return bool
      */
-    public function isError() {
+    public function isError()
+    {
         return $this->error_state;
     }
 

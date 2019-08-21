@@ -28,13 +28,15 @@ class Tracker_SharedFormElementFactory {
      */
     private $boundValuesFactory;
 
-    function __construct(Tracker_FormElementFactory $factory, Tracker_FormElement_Field_List_BindFactory $boundValuesFactory) {
+    function __construct(Tracker_FormElementFactory $factory, Tracker_FormElement_Field_List_BindFactory $boundValuesFactory)
+    {
         $this->boundValuesFactory = $boundValuesFactory;
         $this->factory = $factory;
     }
 
 
-    public function createFormElement(Tracker $tracker, array $formElement_data, PFUser $user, $tracker_is_empty, $force_absolute_ranking) {
+    public function createFormElement(Tracker $tracker, array $formElement_data, PFUser $user, $tracker_is_empty, $force_absolute_ranking)
+    {
         $formElement = $this->factory->getFormElementById($formElement_data['field_id']);
         if (!$formElement) {
             $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'wrong_field_id', $formElement_data['field_id']);
@@ -50,7 +52,8 @@ class Tracker_SharedFormElementFactory {
         return $id;
     }
 
-    private function getRootOriginalField(Tracker_FormElement $field) {
+    private function getRootOriginalField(Tracker_FormElement $field)
+    {
         $originalField = $field->getOriginalField();
         if ($originalField === null) {
             return $field;
@@ -71,7 +74,8 @@ class Tracker_SharedFormElementFactory {
         $this->assertFieldIsStaticSelectbox($field);
     }
 
-    private function assertFieldIsReadable(Tracker_FormElement $field, PFUser $user) {
+    private function assertFieldIsReadable(Tracker_FormElement $field, PFUser $user)
+    {
         if ( ! ($field->userCanRead($user)
               && $field->getTracker()->userCanView($user))) {
             $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'permission_denied');
@@ -79,7 +83,8 @@ class Tracker_SharedFormElementFactory {
         }
     }
 
-    private function assertFieldIsStaticSelectbox(Tracker_FormElement $field) {
+    private function assertFieldIsStaticSelectbox(Tracker_FormElement $field)
+    {
         if ( ! ($field instanceof Tracker_FormElement_Field_Selectbox
                 && $field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static)) {
             $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'field_must_be_static');
@@ -87,7 +92,8 @@ class Tracker_SharedFormElementFactory {
         }
     }
 
-    private function populateFormElementDataForASharedField($originField) {
+    private function populateFormElementDataForASharedField($originField)
+    {
         return array(
             'type'              => $this->factory->getType($originField),
             'label'             => $originField->getLabel(),

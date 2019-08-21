@@ -41,7 +41,8 @@ class PatchAddContentValidator implements IValidateElementsToAdd {
      */
     private $milestone_validator;
 
-    public function __construct(MilestoneResourceValidator $milestone_validator, Planning_Milestone $milestone, PFUser $user) {
+    public function __construct(MilestoneResourceValidator $milestone_validator, Planning_Milestone $milestone, PFUser $user)
+    {
         $this->milestone_validator = $milestone_validator;
         $this->milestone           = $milestone;
         $this->user                = $user;
@@ -53,7 +54,8 @@ class PatchAddContentValidator implements IValidateElementsToAdd {
      * @throws ArtifactIsNotInBacklogTrackerException
      * @throws ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone
      */
-    public function validate(array $to_add) {
+    public function validate(array $to_add)
+    {
         $this->milestone_validator->validateArtifactsFromBodyContentWithClosedItems($to_add, $this->milestone, $this->user);
     }
 }

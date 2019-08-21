@@ -20,7 +20,8 @@
 
 class XML_Security {
 
-    public function enableExternalLoadOfEntities() {
+    public function enableExternalLoadOfEntities()
+    {
         return $this->setExternalLoadOfEntities(false);
     }
 
@@ -36,11 +37,13 @@ class XML_Security {
      *
      * @return The previous value
      */
-    public function disableExternalLoadOfEntities() {
+    public function disableExternalLoadOfEntities()
+    {
         return $this->setExternalLoadOfEntities(true);
     }
 
-    private function setExternalLoadOfEntities($value) {
+    private function setExternalLoadOfEntities($value)
+    {
         return libxml_disable_entity_loader($value);
     }
 
@@ -49,7 +52,8 @@ class XML_Security {
      *
      * @return SimpleXMLElement
      */
-    public function loadFile($filename) {
+    public function loadFile($filename)
+    {
         $xml_string  = file_get_contents($filename);
 
         return $this->loadString($xml_string);
@@ -60,7 +64,8 @@ class XML_Security {
      *
      * @return SimpleXMLElement
      */
-    public function loadString($xml_string) {
+    public function loadString($xml_string)
+    {
         $previous_setting = $this->disableExternalLoadOfEntities();
 
         $xml_element = simplexml_load_string($xml_string);

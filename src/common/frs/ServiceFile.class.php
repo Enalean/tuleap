@@ -119,7 +119,8 @@ class ServiceFile extends Service
         return $ret;
     }
 
-    private function getFRSPackageFactory() {
+    private function getFRSPackageFactory()
+    {
         require_once('FRSPackageFactory.class.php');
         return new FRSPackageFactory();
     }
@@ -131,7 +132,8 @@ class ServiceFile extends Service
     *
     * @param  user_id
     */
-    function _getPackagesForUser($user_id) {
+    function _getPackagesForUser($user_id)
+    {
         $frspf = $this->getFRSPackageFactory();
         $packages = array();
         $sql="SELECT frs_package.package_id,frs_package.name AS package_name,frs_release.name AS release_name,frs_release.release_id AS release_id,frs_release.release_date AS release_date ".

@@ -205,7 +205,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @param array the row corresponding to the user. default is null (anonymous)
      */
-    public function __construct($row = null) {
+    public function __construct($row = null)
+    {
 
         $this->is_super_user = null;
         $this->locale        = '';
@@ -260,7 +261,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return array
      */
-    function toRow() {
+    function toRow()
+    {
         return array(
             'user_id'            => $this->user_id,
             'user_name'          => $this->user_name,
@@ -293,14 +295,16 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * clear: clear the cached group data
      */
-    function clearGroupData() {
+    function clearGroupData()
+    {
         unset($this->_group_data);
         $this->_group_data = null;
     }
     /**
      * clear: clear the cached tracker data
      */
-    function clearTrackerData() {
+    function clearTrackerData()
+    {
         unset($this->_tracker_data);
         $this->_tracker_data = null;
     }
@@ -310,7 +314,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * For each group_id (the user is part of) one array from the user_group table
      */
     protected $_group_data;
-    public function getUserGroupData() {
+    public function getUserGroupData()
+    {
         if (!is_array($this->_group_data)) {
             if ($this->user_id) {
                 $this->setUserGroupData($this->getUserGroupDao()->searchByUserId($this->user_id));
@@ -324,7 +329,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @param array $data
      */
-    public function setUserGroupData($data) {
+    public function setUserGroupData($data)
+    {
         $this->_group_data = array();
         foreach ($data as $row) {
             $this->_group_data[$row['group_id']] = $row;
@@ -334,7 +340,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * is this user member of group $group_id ??
      */
-    public function isMember($group_id,$type = 0) {
+    public function isMember($group_id,$type = 0)
+    {
         $group_data = $this->getUserGroupData();
 
         $is_member = false;
@@ -382,7 +389,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * @param int $group_id
      * @return bool
      */
-    public function isAdmin($group_id) {
+    public function isAdmin($group_id)
+    {
         return $this->isMember($group_id, 'A');
     }
 
@@ -397,7 +405,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return bool true if user is member of the ugroup, false otherwise.
      */
-    public function isMemberOfUGroup($ugroup_id, $group_id, $tracker_id = 0) {
+    public function isMemberOfUGroup($ugroup_id, $group_id, $tracker_id = 0)
+    {
         if (! isset($this->cache_ugroup_membership[$ugroup_id][$group_id][$tracker_id])) {
             $is_member = ugroup_user_is_member($this->getId(), $ugroup_id, $group_id, $tracker_id);
 
@@ -407,15 +416,18 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         return $this->cache_ugroup_membership[$ugroup_id][$group_id][$tracker_id];
     }
 
-    public function isNone() {
+    public function isNone()
+    {
         return $this->getId() == 100;
     }
 
-    public function isAnonymous() {
+    public function isAnonymous()
+    {
         return $this->getId() == 0;
     }
 
-    public function isLoggedIn() {
+    public function isLoggedIn()
+    {
         return $this->getSessionHash() !== false;
     }
 
@@ -423,7 +435,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * is this user admin of the tracker group_artifact_id
      * @return bool
      */
-    public function isTrackerAdmin($group_id,$group_artifact_id) {
+    public function isTrackerAdmin($group_id,$group_artifact_id)
+    {
         return ($this->getTrackerPerm($group_artifact_id) >= 2 || $this->isMember($group_id,'A'));
     }
 
@@ -432,7 +445,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * for each group_artifact_id (the user is part of) one array from the artifact-perm table
      */
     protected $_tracker_data;
-    protected function getTrackerData() {
+    protected function getTrackerData()
+    {
         if (!$this->_tracker_data) {
             $this->_tracker_data = array();
             $id = (int)$this->user_id;
@@ -449,7 +463,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         return $this->_tracker_data;
     }
 
-    function getTrackerPerm($group_artifact_id) {
+    function getTrackerPerm($group_artifact_id)
+    {
         $tracker_data = $this->getTrackerData();
         return isset($tracker_data[$group_artifact_id]) ? $tracker_data[$group_artifact_id]['perm_level'] : 0;
     }
@@ -466,7 +481,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         return $this->is_super_user;
     }
 
-    public function getAllUgroups() {
+    public function getAllUgroups()
+    {
         return $this->getUGroupDao()->searchByUserIdTakingAccountUserProjectMembership($this->user_id);
     }
 
@@ -475,7 +491,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * @return ProjectUGroup[]
      */
-    public function getUgroups($group_id, $instances) {
+    public function getUgroups($group_id, $instances)
+    {
         $hash = md5(serialize($instances));
         if (!isset($this->_ugroups)) {
             $this->_ugroups = array();
@@ -508,7 +525,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     }
 
     var $_dynamics_ugroups;
-    function getDynamicUgroups($group_id, $instances) {
+    function getDynamicUgroups($group_id, $instances)
+    {
         $hash = md5(serialize($instances));
         if (!isset($this->_dynamics_ugroups)) {
             $this->_dynamics_ugroups = array();
@@ -531,7 +549,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return bool
      */
-    public function canSee($user) {
+    public function canSee($user)
+    {
         if ($this->isRestricted()) {
             $myGroupData   = $this->getUserGroupData();
             $userGroupData = $user->getUserGroupData();
@@ -547,7 +566,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return BaseLanguage
      */
-    public function getLanguage() {
+    public function getLanguage()
+    {
         if (!$this->language) {
             $this->language = $this->getLanguageFactory()->getBaseLanguage($this->getLocale());
         }
@@ -563,43 +583,50 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * @return int the ID of the user
      */
-    function getId() {
+    function getId()
+    {
         return $this->id;
     }
     /**
      * alias of getUserName()
      * @return string the name of the user (aka login)
      */
-    function getName() {
+    function getName()
+    {
         return $this->getUserName();
     }
     /**
      * @return string the name of the user (aka login)
      */
-    function getUserName() {
+    function getUserName()
+    {
         return $this->user_name;
     }
     /**
      * alias of getUserName()
      * @return string the name of the user (aka login)
      */
-    function getUnixName() {
+    function getUnixName()
+    {
         return $this->getUserName();
     }
     /**
      * @return string the real name of the user
      */
-    function getRealName() {
+    function getRealName()
+    {
         return $this->realname;
     }
     /**
      * @return string the email adress of the user
      */
-    function getEmail() {
+    function getEmail()
+    {
         return $this->email;
     }
 
-    public function getEmailNew() {
+    public function getEmailNew()
+    {
         return $this->email_new;
     }
 
@@ -610,56 +637,65 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * 'D' = Deleted
      * 'S' = Suspended
      */
-    function getStatus() {
+    function getStatus()
+    {
         return $this->status;
     }
     /**
      * @return string ldap identifier of the user
      */
-    function getLdapId() {
+    function getLdapId()
+    {
         return $this->ldap_id;
     }
 
     /**
      * @return bool
      */
-    public function isLDAP() {
+    public function isLDAP()
+    {
         return $this->getLdapId() != null;
     }
     /**
      * @return string the registration date of the user (timestamp format)
      */
-    function getAddDate() {
+    function getAddDate()
+    {
         return $this->add_date;
     }
     /**
      * @return string the last time the user has changed her password
      */
-    function getLastPwdUpdate() {
+    function getLastPwdUpdate()
+    {
         return $this->last_pwd_update;
     }
     /**
      * @return string the timezone of the user (GMT, Europe/Paris, etc ...)
      */
-    function getTimezone() {
+    function getTimezone()
+    {
         return $this->timezone;
     }
     /**
      * @return int 1 if the user accept to receive site mail updates, 0 if he does'nt
      */
-    function getMailSiteUpdates() {
+    function getMailSiteUpdates()
+    {
         return $this->mail_siteupdates;
     }
     /**
      * @return int 1 if the user accept to receive additional mails from the community, 0 if he does'nt
      */
-    function getMailVA() {
+    function getMailVA()
+    {
         return $this->mail_va;
     }
     /**
      * @return int 0 or 1
      */
-    function getStickyLogin() {
+    function getStickyLogin()
+    {
         return $this->sticky_login;
     }
     /**
@@ -670,7 +706,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * 'S' = Suspended
      * 'D' = Deleted
      */
-    function getUnixStatus() {
+    function getUnixStatus()
+    {
         return $this->unix_status;
     }
 
@@ -679,11 +716,13 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         return $this->getUnixStatus() !== self::UNIX_STATUS_NO_UNIX_ACCOUNT;
     }
 
-    function getUnixUid() {
+    function getUnixUid()
+    {
         return $this->unix_uid;
     }
 
-    function getUnixHomeDir() {
+    function getUnixHomeDir()
+    {
         return ForgeConfig::get('homedir_prefix')."/".$this->getUserName();
     }
 
@@ -691,7 +730,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * Return user unix uid as it is on the unix system (with ID shift)
      * @return int
      */
-    public function getSystemUnixUid() {
+    public function getSystemUnixUid()
+    {
         return $this->getUnixUid() + ForgeConfig::get('unix_uid_add');
     }
 
@@ -699,29 +739,34 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * Return user unix gid as it is on the unix system (with ID shift)
      * @return int
      */
-    public function getSystemUnixGid() {
+    public function getSystemUnixGid()
+    {
         return $this->getSystemUnixUid();
     }
 
     /**
      * @return string unix box of the user
      */
-    function getUnixBox() {
+    function getUnixBox()
+    {
         return $this->unix_box;
     }
     /**
      * @return real unix ID of the user (not the one in the DB!)
      */
-    function getRealUnixUID() {
+    function getRealUnixUID()
+    {
         $unix_id = $this->unix_uid + $GLOBALS['unix_uid_add'];
         return $unix_id;
     }
 
-    public function getAuthorizedKeysRaw() {
+    public function getAuthorizedKeysRaw()
+    {
         return $this->getAuthorizedKeys();
     }
 
-    public function getAuthorizedKeysArray() {
+    public function getAuthorizedKeysArray()
+    {
         return $this->getAuthorizedKeys(true);
     }
 
@@ -733,7 +778,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return string authorized keys of the user
      */
-    function getAuthorizedKeys($split=false) {
+    function getAuthorizedKeys($split=false)
+    {
         if ($split) {
             return array_filter(explode(self::SSH_KEY_SEPARATOR, $this->authorized_keys));
         } else {
@@ -744,24 +790,28 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * @return int ID of the language of the user
      */
-    function getLanguageID() {
+    function getLanguageID()
+    {
         return $this->language_id;
     }
     /**
      * @return hash of user pwd
      */
-    function getUserPw() {
+    function getUserPw()
+    {
         return $this->user_pw;
     }
 
-    public function getLegacyUserPw() {
+    public function getLegacyUserPw()
+    {
         return $this->user_pw_legacy;
     }
 
     /**
      * @return String User shell
      */
-    function getShell() {
+    function getShell()
+    {
         return $this->shell;
     }
 
@@ -770,7 +820,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return string
      */
-    function getLocale() {
+    function getLocale()
+    {
         return $this->locale;
     }
 
@@ -779,42 +830,48 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return string
      */
-    function getShortLocale() {
+    function getShortLocale()
+    {
         return substr($this->locale, 0, 2);
     }
 
     /**
      * @return String Clear user password
      */
-    function getPassword() {
+    function getPassword()
+    {
         return $this->clear_password;
     }
 
    /**
      * @return String Register purpose
      */
-    function getRegisterPurpose() {
+    function getRegisterPurpose()
+    {
         return $this->register_purpose;
     }
 
     /**
      * @return String new email
      */
-    function getNewMail() {
+    function getNewMail()
+    {
          return $this->email_new;
     }
 
     /**
      * @return String expiry date
      */
-    function getExpiryDate() {
+    function getExpiryDate()
+    {
          return $this->expiry_date;
     }
 
     /**
      * @return String Confirm Hash
      */
-    function getConfirmHash() {
+    function getConfirmHash()
+    {
          return $this->confirm_hash;
     }
 
@@ -823,7 +880,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return bool
      */
-    public function isAlive() {
+    public function isAlive()
+    {
         return ! $this->isAnonymous() && ($this->isActive() || $this->isRestricted());
     }
 
@@ -833,7 +891,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * @see PFUser::isAlive()
      * @return bool true if the user is active, false otherwise
      */
-    function isActive() {
+    function isActive()
+    {
         return ($this->getStatus() == 'A');
     }
 
@@ -842,7 +901,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return bool true if the user is restricted, false otherwise
      */
-    function isRestricted() {
+    function isRestricted()
+    {
         return (!$this->isAnonymous() && $this->getStatus() == 'R');
     }
 
@@ -851,7 +911,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return bool true if the user is deleted, false otherwise
      */
-    function isDeleted() {
+    function isDeleted()
+    {
         return ($this->getStatus() == 'D');
     }
 
@@ -860,7 +921,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return bool true if the user is suspended, false otherwise
      */
-    function isSuspended() {
+    function isSuspended()
+    {
         return ($this->getStatus() == 'S');
     }
 
@@ -869,7 +931,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return bool true if the unix account of the user is active, false otherwise
      */
-    function hasActiveUnixAccount() {
+    function hasActiveUnixAccount()
+    {
         return ($this->getUnixStatus() == 'A');
     }
 
@@ -878,7 +941,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return bool true if the unix account of the user is suspended, false otherwise
      */
-    function hasSuspendedUnixAccount() {
+    function hasSuspendedUnixAccount()
+    {
         return ($this->getUnixStatus() == 'S');
     }
 
@@ -887,7 +951,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return bool true if the unix account of the user is deleted, false otherwise
      */
-    function hasDeletedUnixAccount() {
+    function hasDeletedUnixAccount()
+    {
         return ($this->getUnixStatus() == 'D');
     }
 
@@ -896,7 +961,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return bool true if the user doesn't have a unix account, false otherwise
      */
-    function hasNoUnixAccount() {
+    function hasNoUnixAccount()
+    {
         return ($this->getUnixStatus() == 'N');
     }
 
@@ -933,7 +999,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return Project[]
      */
-    public function getGroups() {
+    public function getGroups()
+    {
         $projects = array();
         foreach ($this->getProjects() as $group_id) {
             $projects[] = ProjectManager::instance()->getProject($group_id);
@@ -947,7 +1014,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return Array of Integer
      */
-    public function getAllProjects() {
+    public function getAllProjects()
+    {
         $projects = array();
         $dar      = $this->getUGroupDao()->searchGroupByUserId($this->user_id);
         foreach ($dar as $row) {
@@ -962,7 +1030,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return UGroupDao
      */
-    protected function getUGroupDao() {
+    protected function getUGroupDao()
+    {
         return new UGroupDao();
     }
 
@@ -970,7 +1039,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * @param int the ID of the user
      */
-    function setId($id) {
+    function setId($id)
+    {
         $this->id = $id;
         $this->user_id = $id;
     }
@@ -978,23 +1048,27 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * @param string the name of the user (aka login)
      */
-    function setUserName($name) {
+    function setUserName($name)
+    {
         $this->user_name = $name;
     }
     /**
      * @param string the real name of the user
      */
-    function setRealName($name) {
+    function setRealName($name)
+    {
         $this->realname = $name;
     }
     /**
      * @param string the email adress of the user
      */
-    function setEmail($email) {
+    function setEmail($email)
+    {
         $this->email = $email;
     }
 
-    public function setEmailNew($email) {
+    public function setEmailNew($email)
+    {
         $this->email_new = $email;
     }
 
@@ -1006,7 +1080,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * 'S' = Suspended
      * 'P' = Pending
      */
-    function setStatus($status) {
+    function setStatus($status)
+    {
         $allowedStatus = array('A' => true,
                                'R' => true,
                                'D' => true,
@@ -1019,37 +1094,43 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * @param string ldap identifier of the user
      */
-    function setLdapId($ldapId) {
+    function setLdapId($ldapId)
+    {
         $this->ldap_id = $ldapId;
     }
     /**
      * @param string the registration date of the user (timestamp format)
      */
-    function setAddDate($addDate) {
+    function setAddDate($addDate)
+    {
         $this->add_date = $addDate;
     }
     /**
      * @param string the timezone of the user (GMT, Europe/Paris, etc ...)
      */
-    function setTimezone($timezone) {
+    function setTimezone($timezone)
+    {
         $this->timezone = $timezone;
     }
     /**
      * @param int 1 if the user accept to receive site mail updates, 0 if he does'nt
      */
-    function setMailSiteUpdates($mailSiteUpdate) {
+    function setMailSiteUpdates($mailSiteUpdate)
+    {
         $this->mail_siteupdates = $mailSiteUpdate;
     }
     /**
      * @param int 1 if the user accept to receive additional mails from the community, 0 if he does'nt
      */
-    function setMailVA($mailVa) {
+    function setMailVA($mailVa)
+    {
         $this->mail_va = $mailVa;
     }
     /**
      * @param int 0 or 1
      */
-    function setStickyLogin($stickyLogin) {
+    function setStickyLogin($stickyLogin)
+    {
         $this->sticky_login = $stickyLogin;
     }
     /**
@@ -1060,7 +1141,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * 'S' = Suspended
      * 'D' = Deleted
      */
-    function setUnixStatus($unixStatus) {
+    function setUnixStatus($unixStatus)
+    {
         $allowedStatus = array(0 => true,
                                '0' => true,
                                'N' => true,
@@ -1075,49 +1157,57 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * @param int $unixUid Unix uid
      */
-    function setUnixUid($unixUid) {
+    function setUnixUid($unixUid)
+    {
         $this->unix_uid = $unixUid;
     }
 
     /**
      * @param string unix box of the user
      */
-    function setUnixBox($unixBox) {
+    function setUnixBox($unixBox)
+    {
         $this->unix_box = $unixBox;
     }
     /**
      * @param string authorized keys of the user
      */
-    function setAuthorizedKeys($authorizedKeys) {
+    function setAuthorizedKeys($authorizedKeys)
+    {
         $this->authorized_keys = $authorizedKeys;
     }
 
     /**
      * @param hash of user pwd
      */
-    function setUserPw($userPw) {
+    function setUserPw($userPw)
+    {
         $this->user_pw = $userPw;
     }
 
     /**
      * @param String User shell
      */
-    function setShell($shell) {
+    function setShell($shell)
+    {
         $this->shell = $shell;
     }
 
     /**
      * @param int ID of the language of the user
      */
-    function setLanguageID($languageID) {
+    function setLanguageID($languageID)
+    {
         $this->language_id = $languageID;
     }
 
-    function setLocale($locale) {
+    function setLocale($locale)
+    {
         $this->locale = $locale;
     }
 
-    function setLanguage(BaseLanguage $language) {
+    function setLanguage(BaseLanguage $language)
+    {
         $this->language = $language;
     }
 
@@ -1126,7 +1216,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @param  String $password
      */
-    function setPassword($password) {
+    function setPassword($password)
+    {
         $this->clear_password = $password;
     }
 
@@ -1135,7 +1226,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @param  String $new_email
      */
-    function setNewMail($newEmail) {
+    function setNewMail($newEmail)
+    {
         $this->email_new = $newEmail;
     }
 
@@ -1144,7 +1236,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @param  String $regiter_purpose
      */
-    function setRegisterPurpose($registerPurpose) {
+    function setRegisterPurpose($registerPurpose)
+    {
         $this->register_purpose = $registerPurpose;
     }
 
@@ -1153,11 +1246,13 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @param  String $confirm_hash
      */
-    public function setConfirmHash($confirmHash) {
+    public function setConfirmHash($confirmHash)
+    {
         $this->confirm_hash = $confirmHash;
     }
 
-    public function clearConfirmHash() {
+    public function clearConfirmHash()
+    {
         $this->confirm_hash = '';
     }
 
@@ -1166,18 +1261,21 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @param  String $expiry date
      */
-    function setExpiryDate($expiryDate) {
+    function setExpiryDate($expiryDate)
+    {
         $this->expiry_date = $expiryDate;
     }
     // Preferences
-    protected function getPreferencesDao() {
+    protected function getPreferencesDao()
+    {
         if (!$this->_preferencesdao) {
             $this->_preferencesdao = new UserPreferencesDao();
         }
         return $this->_preferencesdao;
     }
 
-    protected function getUserGroupDao() {
+    protected function getUserGroupDao()
+    {
         if (!$this->_usergroupdao) {
             $this->_usergroupdao = new UserGroupDao();
         }
@@ -1190,7 +1288,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * @param string $preference_name
      * @return string preference value or false if not set
      */
-    function getPreference($preference_name) {
+    function getPreference($preference_name)
+    {
         if (!isset($this->_preferences[$preference_name])) {
             $this->_preferences[$preference_name] = false;
             if (!$this->isAnonymous()) {
@@ -1211,7 +1310,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * @param  string $preference_value
      * @return bool
      */
-    function setPreference($preference_name, $preference_value) {
+    function setPreference($preference_name, $preference_value)
+    {
         $this->_preferences[$preference_name] = false;
         if (!$this->isAnonymous()) {
             $dao = $this->getPreferencesDao();
@@ -1235,7 +1335,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * @param mixed  $default_value
      * @param mixed  $alternate_value
      */
-    public function togglePreference($pref_name, $default_value, $alternate_value) {
+    public function togglePreference($pref_name, $default_value, $alternate_value)
+    {
         $current_preference = $this->getPreference($pref_name);
         $new_preference     = $default_value;
 
@@ -1245,16 +1346,19 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         $this->setPreference($pref_name, $new_preference);
     }
 
-    private function shouldUseAlternatePreferenceValue($current_preference, $new_preference) {
+    private function shouldUseAlternatePreferenceValue($current_preference, $new_preference)
+    {
         return ($this->hasUserSetAPreference($current_preference)
             && $this->arePreferencesTheSame($current_preference, $new_preference));
     }
 
-    private function hasUserSetAPreference($current_preference) {
+    private function hasUserSetAPreference($current_preference)
+    {
         return $current_preference !== false;
     }
 
-    private function arePreferencesTheSame($current_preference, $new_preference) {
+    private function arePreferencesTheSame($current_preference, $new_preference)
+    {
         return $new_preference == $current_preference;
     }
 
@@ -1264,7 +1368,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * @param  string $preference_name
      * @return bool
      */
-    function delPreference($preference_name) {
+    function delPreference($preference_name)
+    {
         $this->_preferences[$preference_name] = false;
         if (!$this->isAnonymous()) {
             $dao = $this->getPreferencesDao();
@@ -1279,7 +1384,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * setSessionHash
      * @param $session_hash string
      */
-    public function setSessionHash($session_hash) {
+    public function setSessionHash($session_hash)
+    {
         $this->session_hash = $session_hash;
     }
 
@@ -1287,12 +1393,13 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       * getSessionHash
       * @return string
       */
-    function getSessionHash() {
+    function getSessionHash()
+    {
         return $this->session_hash;
     }
 
     public function setSessionId($session_id)
-     {
+    {
         $this->session_id = $session_id;
     }
 
@@ -1300,7 +1407,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * @return int|false
      */
     public function getSessionId()
-     {
+    {
         return $this->session_id;
     }
 
@@ -1309,7 +1416,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       *
       * @return Array
       */
-    public static function getAllUnixStatus() {
+    public static function getAllUnixStatus()
+    {
         return array('N', 'A', 'S', 'D');
     }
 
@@ -1318,7 +1426,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       *
       * @return Array
       */
-    public static function getAllUnixShells() {
+    public static function getAllUnixShells()
+    {
         return file('/etc/shells', FILE_IGNORE_NEW_LINES);
     }
 
@@ -1327,7 +1436,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       *
       * @return Array
       */
-    public static function getAllWorkingStatus() {
+    public static function getAllWorkingStatus()
+    {
         return array(self::STATUS_ACTIVE, self::STATUS_RESTRICTED, self::STATUS_SUSPENDED, self::STATUS_DELETED);
     }
 
@@ -1336,7 +1446,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       *
       * @return bool
       */
-    public function hasAvatar() {
+    public function hasAvatar()
+    {
         return $this->has_avatar;
     }
 
@@ -1347,7 +1458,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       *
       * @return PFUser for chaining methods
       */
-    public function setHasAvatar($has_avatar = 1) {
+    public function setHasAvatar($has_avatar = 1)
+    {
         $this->has_avatar = ($has_avatar ? 1 : 0);
         return $this;
     }
@@ -1357,7 +1469,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       *
       * @return string html
       */
-    public function fetchHtmlAvatar() {
+    public function fetchHtmlAvatar()
+    {
         $purifier    = Codendi_HTMLPurifier::instance();
         $user_helper = new UserHelper();
 
@@ -1385,7 +1498,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       * @return string url
       */
     public function getAvatarUrl()
-     {
+    {
         $request    = HTTPRequest::instance();
         $avatar_url = self::DEFAULT_AVATAR_URL;
 
@@ -1400,7 +1513,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * @return string
      */
     public function getAvatarFilePath()
-     {
+    {
         return ForgeConfig::get('sys_avatar_path') .
             DIRECTORY_SEPARATOR .
             substr($this->user_id, -2, 1) .
@@ -1417,7 +1530,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       *
       * @return bool true if the user want lab features
       */
-    public function useLabFeatures() {
+    public function useLabFeatures()
+    {
         return $this->getPreference(self::PREF_NAME_LAB_FEATURE);
     }
 
@@ -1428,7 +1542,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       *
       * @return void
       */
-    public function setLabFeatures($toggle) {
+    public function setLabFeatures($toggle)
+    {
         $this->setPreference(self::PREF_NAME_LAB_FEATURE, $toggle ? 1 : 0);
     }
 
@@ -1443,7 +1558,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       *
       * @return bool
       */
-    public function hasPermission($permissionType, $objectId, $groupId) {
+    public function hasPermission($permissionType, $objectId, $groupId)
+    {
         return permission_is_authorized($permissionType, $objectId, $this->getId(), $groupId);
     }
 
@@ -1452,7 +1568,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return BaseLanguageFactory
      */
-    protected function getLanguageFactory() {
+    protected function getLanguageFactory()
+    {
         if (!isset($this->languageFactory)) {
             $this->languageFactory = new BaseLanguageFactory();
         }
@@ -1464,11 +1581,13 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @param BaseLanguageFactory $languageFactory
      */
-    public function setLanguageFactory(BaseLanguageFactory $languageFactory) {
+    public function setLanguageFactory(BaseLanguageFactory $languageFactory)
+    {
         $this->languageFactory = $languageFactory;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return "User #". $this->getId();
     }
 

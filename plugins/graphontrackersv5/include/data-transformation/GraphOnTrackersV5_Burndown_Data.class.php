@@ -46,19 +46,23 @@ class GraphOnTrackersV5_Burndown_Data
         $this->time_period = $time_period;
     }
 
-    public function getRemainingEffort() {
+    public function getRemainingEffort()
+    {
         return $this->remaining_effort;
     }
 
-    public function getMinDay() {
+    public function getMinDay()
+    {
         return $this->min_day;
     }
 
-    public function getMaxDay() {
+    public function getMaxDay()
+    {
         return $this->max_day;
     }
 
-    public function getArtifactIds() {
+    public function getArtifactIds()
+    {
         return $this->artifact_ids;
     }
 

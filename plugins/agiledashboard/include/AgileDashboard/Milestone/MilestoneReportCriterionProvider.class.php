@@ -43,7 +43,8 @@ class AgileDashboard_Milestone_MilestoneReportCriterionProvider {
     /**
      * @return string
      */
-    public function getCriterion(Tracker $backlog_tracker, PFUser $user) {
+    public function getCriterion(Tracker $backlog_tracker, PFUser $user)
+    {
         $options = $this->options_provider->getSelectboxOptions(
             $backlog_tracker,
             $this->milestone_provider->getMilestoneId(),

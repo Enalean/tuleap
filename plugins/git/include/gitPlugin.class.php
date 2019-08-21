@@ -344,7 +344,8 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function getServiceShortname() {
+    public function getServiceShortname()
+    {
         return self::SERVICE_SHORTNAME;
     }
 
@@ -356,7 +357,8 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function getPluginInfo() {
+    public function getPluginInfo()
+    {
         if (!is_a($this->pluginInfo, 'GitPluginInfo')) {
             $this->pluginInfo = new GitPluginInfo($this);
         }
@@ -388,11 +390,13 @@ class GitPlugin extends Plugin
      *
      * @return Mixed
      */
-    public function getConfigurationParameter($key) {
+    public function getConfigurationParameter($key)
+    {
         return $this->getPluginInfo()->getPropertyValueForName($key);
     }
 
-    public function cssFile($params) {
+    public function cssFile($params)
+    {
         // Only show the stylesheet if we're actually in the Git pages.
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
@@ -401,7 +405,8 @@ class GitPlugin extends Plugin
         }
     }
 
-    public function jsFile($params) {
+    public function jsFile($params)
+    {
         // Only show the javascript if we're actually in the Git pages.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/git.js"></script>';
@@ -416,22 +421,26 @@ class GitPlugin extends Plugin
         $event->addJavascript($this->getIncludeAssets()->getFileURL('permission-per-group.js'));
     }
 
-    public function javascript($params) {
+    public function javascript($params)
+    {
         include $GLOBALS['Language']->getContent('script_locale', null, 'git');
     }
 
-    public function system_event_get_types_for_default_queue(array &$params) {
+    public function system_event_get_types_for_default_queue(array &$params)
+    {
         $params['types'] = array_merge($params['types'], $this->getGitSystemEventManager()->getTypesForDefaultQueue());
     }
 
     /** @see Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES */
-    public function system_event_get_custom_queues(array &$params) {
+    public function system_event_get_custom_queues(array &$params)
+    {
         $params['queues'][Git_SystemEventQueue::NAME] = new Git_SystemEventQueue($this->getLogger());
         $params['queues'][Git_Mirror_MirrorSystemEventQueue::NAME] = new Git_Mirror_MirrorSystemEventQueue($this->getLogger());
     }
 
     /** @see Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE */
-    public function system_event_get_types_for_custom_queue(array &$params) {
+    public function system_event_get_types_for_custom_queue(array &$params)
+    {
         if ($params['queue'] == Git_SystemEventQueue::NAME) {
             $params['types'] = array_merge(
                 $params['types'],
@@ -451,7 +460,8 @@ class GitPlugin extends Plugin
      *This callback make SystemEvent manager knows about git plugin System Events
      * @param <type> $params
      */
-    public function getSystemEventClass($params) {
+    public function getSystemEventClass($params)
+    {
         switch($params['type']) {
             case SystemEvent_GIT_REPO_UPDATE::NAME:
                 $params['class'] = 'SystemEvent_GIT_REPO_UPDATE';
@@ -654,19 +664,23 @@ class GitPlugin extends Plugin
         }
     }
 
-    private function getTemplateFactory() {
+    private function getTemplateFactory()
+    {
         return new Git_Driver_Gerrit_Template_TemplateFactory(new Git_Driver_Gerrit_Template_TemplateDao());
     }
 
-    private function getSystemEventDao() {
+    private function getSystemEventDao()
+    {
         return new SystemEventDao();
     }
 
-    public function getReferenceKeywords($params) {
+    public function getReferenceKeywords($params)
+    {
         $params['keywords'][] = Git::REFERENCE_KEYWORD;
     }
 
-    public function getReferenceNatures($params) {
+    public function getReferenceNatures($params)
+    {
         $params['natures'] = array_merge(
             $params['natures'],
             array(
@@ -678,7 +692,8 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function get_reference($params) {
+    public function get_reference($params)
+    {
         if ($params['keyword'] == Git::REFERENCE_KEYWORD) {
             $reference = false;
             if ($params['project']) {
@@ -696,7 +711,8 @@ class GitPlugin extends Plugin
         }
     }
 
-    public function changeProjectRepositoriesAccess($params) {
+    public function changeProjectRepositoriesAccess($params)
+    {
         $groupId   = $params[0];
         $isPrivate = $params[1];
         $dao       = new GitDao();
@@ -704,15 +720,18 @@ class GitPlugin extends Plugin
         GitActions::changeProjectRepositoriesAccess($groupId, $isPrivate, $dao, $factory);
     }
 
-    public function systemEventProjectRename($params) {
+    public function systemEventProjectRename($params)
+    {
         GitActions::renameProject($params['project'], $params['new_name']);
     }
 
-    public function file_exists_in_data_dir($params) {
+    public function file_exists_in_data_dir($params)
+    {
         $params['result'] = $this->isNameAvailable($params['new_name'], $params['error']);
     }
 
-    private function isNameAvailable($newName, &$error) {
+    private function isNameAvailable($newName, &$error)
+    {
         $backend_gitolite = $this->getBackendGitolite();
         $backend_gitshell = Backend::instance('Git','GitBackend', array($this->getGitRepositoryUrlManager()));
 
@@ -796,7 +815,8 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function getAdminRouter() {
+    public function getAdminRouter()
+    {
         $project_manager             = ProjectManager::instance();
         $gerrit_ressource_restrictor = new GerritServerResourceRestrictor(new RestrictedGerritServerDao());
 
@@ -863,7 +883,8 @@ class GitPlugin extends Plugin
         return new RegexpRepositoryDao();
     }
 
-    protected function getMirrorDataMapper() {
+    protected function getMirrorDataMapper()
+    {
         return new Git_Mirror_MirrorDataMapper(
             new Git_Mirror_MirrorDao(),
             UserManager::instance(),
@@ -919,7 +940,8 @@ class GitPlugin extends Plugin
      *
      * @param array $params
      */
-    function plugin_statistics_disk_usage_service_label($params) {
+    function plugin_statistics_disk_usage_service_label($params)
+    {
         $params['services'][self::SERVICE_SHORTNAME] = 'Git';
     }
 
@@ -928,7 +950,8 @@ class GitPlugin extends Plugin
      *
      * @param array $params
      */
-    function plugin_statistics_color($params) {
+    function plugin_statistics_color($params)
+    {
         if ($params['service'] == self::SERVICE_SHORTNAME) {
             $params['color'] = 'palegreen';
         }
@@ -943,7 +966,8 @@ class GitPlugin extends Plugin
      *
      * @return void
      */
-    private function projectRemoveUserFromNotification($params) {
+    private function projectRemoveUserFromNotification($params)
+    {
         $project_id = $params['group_id'];
         $user_id = $params['user_id'];
 
@@ -966,7 +990,8 @@ class GitPlugin extends Plugin
      * @see Event::EDIT_SSH_KEYS
      * @param array $params
      */
-    public function edit_ssh_keys(array $params) {
+    public function edit_ssh_keys(array $params)
+    {
         $this->getGitSystemEventManager()->queueEditSSHKey($params['user_id'], $params['original_keys']);
     }
 
@@ -977,7 +1002,8 @@ class GitPlugin extends Plugin
      *     'user' => PFUser,
      *     'original_keys' => string of concatenated ssh keys
      */
-    public function dump_ssh_keys(array $params) {
+    public function dump_ssh_keys(array $params)
+    {
         $this->getGitSystemEventManager()->queueDumpAllSSHKeys();
     }
 
@@ -986,7 +1012,8 @@ class GitPlugin extends Plugin
      * @param PFUser $user
      * @return Git_UserAccountManager
      */
-    private function getUserAccountManager() {
+    private function getUserAccountManager()
+    {
         if (! $this->user_account_manager) {
             $this->user_account_manager = new Git_UserAccountManager(
                 $this->getGerritDriverFactory(),
@@ -1001,7 +1028,8 @@ class GitPlugin extends Plugin
      *
      * @param Git_UserAccountManager $manager
      */
-    public function setUserAccountManager(Git_UserAccountManager $manager) {
+    public function setUserAccountManager(Git_UserAccountManager $manager)
+    {
         $this->user_account_manager = $manager;
     }
 
@@ -1012,7 +1040,8 @@ class GitPlugin extends Plugin
      *     'user' => PFUser,
      *     'html' => string An emty string of html output- passed by reference
      */
-    public function getRemoteServersForUser(array $params) {
+    public function getRemoteServersForUser(array $params)
+    {
         if (! $user = $this->getUserFromParameters($params)) {
             return;
         }
@@ -1061,7 +1090,8 @@ class GitPlugin extends Plugin
      * Copies all SSH Keys to Remote Git Servers
      * @param PFUser $user
      */
-    private function pushUserSSHKeysToRemoteServers(PFUser $user) {
+    private function pushUserSSHKeysToRemoteServers(PFUser $user)
+    {
         $this->getLogger()->info('Trying to push ssh keys for user: '.$user->getUnixName());
         $git_user_account_manager = $this->getUserAccountManager();
 
@@ -1080,7 +1110,8 @@ class GitPlugin extends Plugin
         $this->getLogger()->info('Successfully pushed ssh keys for user: '.$user->getUnixName());
     }
 
-    private function getUserFromParameters($params) {
+    private function getUserFromParameters($params)
+    {
         if (! isset($params['user']) || ! $params['user'] instanceof PFUser) {
             $this->getLogger()->error('Invalid user passed in params: ' . print_r($params, true));
             return false;
@@ -1089,7 +1120,8 @@ class GitPlugin extends Plugin
         return $params['user'];
     }
 
-    function permission_get_name($params) {
+    function permission_get_name($params)
+    {
         if (!$params['name']) {
             switch($params['permission_type']) {
                 case 'PLUGIN_GIT_READ':
@@ -1106,14 +1138,16 @@ class GitPlugin extends Plugin
             }
         }
     }
-    function permission_get_object_type($params) {
+    function permission_get_object_type($params)
+    {
         if (!$params['object_type']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
                 $params['object_type'] = 'git_repository';
             }
         }
     }
-    function permission_get_object_name($params) {
+    function permission_get_object_name($params)
+    {
         if (!$params['object_name']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
                 $repository = new GitRepository();
@@ -1127,7 +1161,8 @@ class GitPlugin extends Plugin
             }
         }
     }
-    function permission_get_object_fullname($params) {
+    function permission_get_object_fullname($params)
+    {
         if (!$params['object_fullname']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
                 $repository = new GitRepository();
@@ -1143,7 +1178,8 @@ class GitPlugin extends Plugin
     }
 
     var $_cached_permission_user_allowed_to_change;
-    function permission_user_allowed_to_change($params) {
+    function permission_user_allowed_to_change($params)
+    {
         if (!$params['allowed']) {
             $user = $this->getCurrentUser();
             $project = $this->getProjectManager()->getProject($params['group_id']);
@@ -1170,7 +1206,8 @@ class GitPlugin extends Plugin
         }
     }
 
-    public function proccess_system_check($params) {
+    public function proccess_system_check($params)
+    {
         $gitgc = new Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc(
             new Git_GitoliteHousekeeping_GitoliteHousekeepingDao(),
             $params['logger'],
@@ -1189,7 +1226,8 @@ class GitPlugin extends Plugin
         $system_check->process();
     }
 
-    public function getGitoliteDriver() {
+    public function getGitoliteDriver()
+    {
         return new Git_GitoliteDriver(
             $this->getLogger(),
             $this->getGitSystemEventManager(),
@@ -1215,7 +1253,8 @@ class GitPlugin extends Plugin
      *
      * @return void
      */
-    public function project_is_deleted($params) {
+    public function project_is_deleted($params)
+    {
         if (!empty($params['group_id'])) {
             $project = ProjectManager::instance()->getProject($params['group_id']);
             if ($project) {
@@ -1246,7 +1285,8 @@ class GitPlugin extends Plugin
      *
      * @return void
      */
-    public function statistics_collector($params) {
+    public function statistics_collector($params)
+    {
         if (!empty($params['formatter'])) {
             include_once('GitBackend.class.php');
             $formatter  = $params['formatter'];
@@ -1262,7 +1302,8 @@ class GitPlugin extends Plugin
      *
      * @return Void
      */
-    public function collect_ci_triggers($params) {
+    public function collect_ci_triggers($params)
+    {
         $ci = new Git_Ci();
         $triggers = $ci->retrieveTriggers($params);
         if ($triggers) {
@@ -1277,7 +1318,8 @@ class GitPlugin extends Plugin
      *
      * @return Void
      */
-    public function save_ci_triggers($params) {
+    public function save_ci_triggers($params)
+    {
         if (isset($params['job_id']) && !empty($params['job_id']) && isset($params['request']) && !empty($params['request'])) {
             if ($params['request']->get('hudson_use_plugin_git_trigger_checkbox')) {
                 $repositoryId = $params['request']->get('hudson_use_plugin_git_trigger');
@@ -1304,7 +1346,8 @@ class GitPlugin extends Plugin
      *
      * @return Void
      */
-    public function update_ci_triggers($params) {
+    public function update_ci_triggers($params)
+    {
         if (isset($params['request']) && !empty($params['request'])) {
             $jobId        = $params['request']->get('job_id');
             $repositoryId = $params['request']->get('hudson_use_plugin_git_trigger');
@@ -1338,7 +1381,8 @@ class GitPlugin extends Plugin
      *
      * @return Void
      */
-    public function delete_ci_triggers($params) {
+    public function delete_ci_triggers($params)
+    {
         if (isset($params['job_id']) && !empty($params['job_id'])) {
             $ci = new Git_Ci();
             if (!$ci->deleteTrigger($params['job_id'])) {
@@ -1354,7 +1398,8 @@ class GitPlugin extends Plugin
      *
      * @return Void
      */
-    function logsDaily($params) {
+    function logsDaily($params)
+    {
         $pm      = ProjectManager::instance();
         $project = $pm->getProject($params['group_id']);
         if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
@@ -1370,7 +1415,8 @@ class GitPlugin extends Plugin
      *
      * @return Void
      */
-    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event) {
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
+    {
         switch ($get_widget_event->getName()) {
             case 'plugin_git_user_pushes':
                 $get_widget_event->setWidget(new Git_Widget_UserPushes($this->getPluginPath()));
@@ -1383,7 +1429,8 @@ class GitPlugin extends Plugin
         }
     }
 
-    public function project_admin_remove_user_from_project_ugroups($params) {
+    public function project_admin_remove_user_from_project_ugroups($params)
+    {
         foreach ($params['ugroups'] as $ugroup_id) {
             $this->project_admin_ugroup_remove_user(
                 array(
@@ -1417,7 +1464,8 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function project_admin_ugroup_deletion($params) {
+    public function project_admin_ugroup_deletion($params)
+    {
         $ugroup     = $params['ugroup'];
         $users      = $ugroup->getMembers();
         $project_id = $params['group_id'];
@@ -1437,38 +1485,44 @@ class GitPlugin extends Plugin
         $this->getGitSystemEventManager()->queueProjectsConfigurationUpdate(array($project_id));
     }
 
-    public function project_admin_add_user($params) {
+    public function project_admin_add_user($params)
+    {
         $params['ugroup_id'] = ProjectUGroup::PROJECT_MEMBERS;
         $this->project_admin_ugroup_add_user($params);
     }
 
-    public function project_admin_remove_user($params) {
+    public function project_admin_remove_user($params)
+    {
         $params['ugroup_id'] = ProjectUGroup::PROJECT_MEMBERS;
         $this->project_admin_ugroup_remove_user($params);
         $this->projectRemoveUserFromNotification($params);
     }
 
-    public function project_admin_ugroup_add_user($params) {
+    public function project_admin_ugroup_add_user($params)
+    {
         $this->getGerritMembershipManager()->addUserToGroup(
             $this->getUserFromParams($params),
             $this->getUGroupFromParams($params)
         );
     }
 
-    public function project_admin_ugroup_remove_user($params) {
+    public function project_admin_ugroup_remove_user($params)
+    {
         $this->getGerritMembershipManager()->removeUserFromGroup(
             $this->getUserFromParams($params),
             $this->getUGroupFromParams($params)
         );
     }
 
-    public function project_admin_ugroup_creation($params) {
+    public function project_admin_ugroup_creation($params)
+    {
         $this->getGerritMembershipManager()->createGroupOnProjectsServers(
             $this->getUGroupFromParams($params)
         );
     }
 
-    public function project_admin_parent_project_modification($params) {
+    public function project_admin_parent_project_modification($params)
+    {
         try {
             $project        = ProjectManager::instance()->getProject($params['group_id']);
             $gerrit_servers = $this->getGerritServerFactory()->getServersForProject($project);
@@ -1481,25 +1535,29 @@ class GitPlugin extends Plugin
         }
     }
 
-    public function ugroup_manager_update_ugroup_binding_add($params) {
+    public function ugroup_manager_update_ugroup_binding_add($params)
+    {
         $this->getGerritMembershipManager()->addUGroupBinding(
             $params['ugroup'],
             $params['source']
         );
     }
 
-    public function ugroup_manager_update_ugroup_binding_remove($params) {
+    public function ugroup_manager_update_ugroup_binding_remove($params)
+    {
         $this->getGerritMembershipManager()->removeUGroupBinding(
             $params['ugroup']
         );
     }
 
-    private function getUserFromParams(array $params) {
+    private function getUserFromParams(array $params)
+    {
         return UserManager::instance()->getUserById($params['user_id']);
     }
 
 
-    private function getUGroupFromParams(array $params) {
+    private function getUGroupFromParams(array $params)
+    {
         if (isset($params['ugroup'])) {
             return $params['ugroup'];
         } else {
@@ -1529,7 +1587,8 @@ class GitPlugin extends Plugin
         $this->removeOrphanWidgets(array('plugin_git_user_pushes', 'plugin_git_project_pushes'));
     }
 
-    private function getProjectCreator() {
+    private function getProjectCreator()
+    {
         $tmp_dir = ForgeConfig::get('tmp_dir') .'/gerrit_'. uniqid();
         return new Git_Driver_Gerrit_ProjectCreator(
             $tmp_dir,
@@ -1544,11 +1603,13 @@ class GitPlugin extends Plugin
         );
     }
 
-    private function getTemplateProcessor() {
+    private function getTemplateProcessor()
+    {
         return new Git_Driver_Gerrit_Template_TemplateProcessor();
     }
 
-    private function getGerritUmbrellaProjectManager() {
+    private function getGerritUmbrellaProjectManager()
+    {
         return new Git_Driver_Gerrit_UmbrellaProjectManager(
             $this->getUGroupManager(),
             $this->getProjectManager(),
@@ -1557,15 +1618,18 @@ class GitPlugin extends Plugin
         );
     }
 
-    private function getProjectManager() {
+    private function getProjectManager()
+    {
         return ProjectManager::instance();
     }
 
-    private function getGerritUserFinder() {
+    private function getGerritUserFinder()
+    {
         return new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), $this->getUGroupManager());
     }
 
-    private function getProjectCreatorStatus() {
+    private function getProjectCreatorStatus()
+    {
         $dao = new Git_Driver_Gerrit_ProjectCreatorStatusDao();
 
         return new Git_Driver_Gerrit_ProjectCreatorStatus($dao);
@@ -1842,14 +1906,16 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function getGitSystemEventManager() {
+    public function getGitSystemEventManager()
+    {
         return new Git_SystemEventManager(SystemEventManager::instance(), $this->getRepositoryFactory());
     }
 
     /**
      * @return GitRepositoryManager
      */
-    private function getRepositoryManager() {
+    private function getRepositoryManager()
+    {
         return new GitRepositoryManager(
             $this->getRepositoryFactory(),
             $this->getGitSystemEventManager(),
@@ -1864,7 +1930,8 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function getRepositoryFactory() {
+    public function getRepositoryFactory()
+    {
         return new GitRepositoryFactory($this->getGitDao(), ProjectManager::instance());
     }
 
@@ -1872,22 +1939,26 @@ class GitPlugin extends Plugin
      * @protected for testing purpose
      * @return GitDao
      */
-    protected function getGitDao() {
+    protected function getGitDao()
+    {
         return new GitDao();
     }
 
     /**
      * @return Git_Driver_Gerrit_GerritDriverFactory
      */
-    private function getGerritDriverFactory() {
+    private function getGerritDriverFactory()
+    {
         return new Git_Driver_Gerrit_GerritDriverFactory($this->getLogger());
     }
 
-    protected function getPermissionsManager() {
+    protected function getPermissionsManager()
+    {
         return PermissionsManager::instance();
     }
 
-    protected function getGitPermissionsManager() {
+    protected function getGitPermissionsManager()
+    {
         return new GitPermissionsManager(
             new Git_PermissionsDao(),
             $this->getGitSystemEventManager(),
@@ -1900,7 +1971,8 @@ class GitPlugin extends Plugin
      *
      * @return Logger
      */
-    public function getLogger() {
+    public function getLogger()
+    {
         if (!$this->logger) {
             $this->logger = new GitBackendLogger();
         }
@@ -1912,11 +1984,13 @@ class GitPlugin extends Plugin
      *
      * @param Logger $logger
      */
-    public function setLogger(Logger $logger) {
+    public function setLogger(Logger $logger)
+    {
         $this->logger = $logger;
     }
 
-    private function getGerritMembershipManager() {
+    private function getGerritMembershipManager()
+    {
         return new Git_Driver_Gerrit_MembershipManager(
             new Git_Driver_Gerrit_MembershipDao(),
             $this->getGerritDriverFactory(),
@@ -1928,7 +2002,8 @@ class GitPlugin extends Plugin
         );
     }
 
-    protected function getGerritServerFactory() {
+    protected function getGerritServerFactory()
+    {
         return new Git_RemoteServer_GerritServerFactory(
             new Git_RemoteServer_Dao(),
             $this->getGitDao(),
@@ -1937,11 +2012,13 @@ class GitPlugin extends Plugin
         );
     }
 
-    private function getGitoliteAdminPath() {
+    private function getGitoliteAdminPath()
+    {
         return $GLOBALS['sys_data_dir'] . '/gitolite/admin';
     }
 
-    private function getUGroupManager() {
+    private function getUGroupManager()
+    {
         return new UGroupManager();
     }
 
@@ -1951,7 +2028,8 @@ class GitPlugin extends Plugin
      *     'user' => PFUser
      *     'html' => string
      */
-    public function manage_third_party_apps($params) {
+    public function manage_third_party_apps($params)
+    {
         $this->resynch_gerrit_groups_with_user($params);
     }
 
@@ -1961,7 +2039,8 @@ class GitPlugin extends Plugin
      *     'user' => PFUser
      *     'html' => string
      */
-    private function resynch_gerrit_groups_with_user($params) {
+    private function resynch_gerrit_groups_with_user($params)
+    {
         if (! $this->getGerritServerFactory()->hasRemotesSetUp()) {
             return;
         }
@@ -1977,14 +2056,16 @@ class GitPlugin extends Plugin
         }
     }
 
-    private function addMissingGerritAccess($user) {
+    private function addMissingGerritAccess($user)
+    {
         $this->getGerritMembershipManager()->addUserToAllTheirGroups($user);
     }
 
     /**
      * @see Event::USER_RENAME
      */
-    public function systemevent_user_rename($params) {
+    public function systemevent_user_rename($params)
+    {
         $this->getGitSystemEventManager()->queueUserRenameUpdate($params['old_user_name'], $params['user']);
     }
 
@@ -2021,21 +2102,24 @@ class GitPlugin extends Plugin
     /**
      * @return bool true if friendly URLs have been activated
      */
-    public function areFriendlyUrlsActivated() {
+    public function areFriendlyUrlsActivated()
+    {
         return (bool) $this->getConfigurationParameter('git_use_friendly_urls');
     }
 
     /**
      * @return Git_GitRepositoryUrlManager
      */
-    private function getGitRepositoryUrlManager() {
+    private function getGitRepositoryUrlManager()
+    {
         return new Git_GitRepositoryUrlManager($this);
     }
 
     /**
      * @return Git_Mirror_ManifestManager
      */
-    public function getManifestManager() {
+    public function getManifestManager()
+    {
         return new Git_Mirror_ManifestManager(
             $this->getMirrorDataMapper(),
             new Git_Mirror_ManifestFileGenerator(
@@ -2104,7 +2188,8 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function fill_project_history_sub_events($params) {
+    public function fill_project_history_sub_events($params)
+    {
         array_push(
             $params['subEvents']['event_others'],
             'git_repo_create',
@@ -2124,7 +2209,8 @@ class GitPlugin extends Plugin
     /**
      * @see Event::POST_EVENTS_ACTIONS
      */
-    public function post_system_events_actions($params) {
+    public function post_system_events_actions($params)
+    {
         if (! $this->pluginIsConcerned($params)) {
             return;
         }
@@ -2137,13 +2223,15 @@ class GitPlugin extends Plugin
         $this->getGitoliteDriver()->push();
     }
 
-    private function pluginIsConcerned($params) {
+    private function pluginIsConcerned($params)
+    {
         return $params['queue_name'] == "git"
             && is_array($params['executed_events_ids'])
             && count($params['executed_events_ids']) > 0;
     }
 
-    public function getRESTRepositoryRepresentationBuilder($version) {
+    public function getRESTRepositoryRepresentationBuilder($version)
+    {
         $class  = "Tuleap\\Git\\REST\\".$version."\\RepositoryRepresentationBuilder";
         return new $class(
             $this->getGitPermissionsManager(),
@@ -2154,7 +2242,8 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function rest_project_get_git($params) {
+    public function rest_project_get_git($params)
+    {
         $class            = "Tuleap\\Git\\REST\\".$params['version']."\\ProjectResource";
         $project          = $params['project'];
         $project_resource = new $class(
@@ -2175,14 +2264,16 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function rest_project_options_git($params) {
+    public function rest_project_options_git($params)
+    {
         $params['activated'] = true;
     }
 
     /**
      * @see Event::REST_PROJECT_RESOURCES
      */
-    public function rest_project_resources(array $params) {
+    public function rest_project_resources(array $params)
+    {
         $injector = new Git_REST_ResourcesInjector();
         $injector->declareProjectPlanningResource($params['resources'], $params['project']);
     }
@@ -2190,7 +2281,8 @@ class GitPlugin extends Plugin
     /**
      * @see REST_RESOURCES
      */
-    public function rest_resources($params) {
+    public function rest_resources($params)
+    {
         $injector = new Git_REST_ResourcesInjector();
         $injector->populate($params['restler']);
     }
@@ -2198,7 +2290,8 @@ class GitPlugin extends Plugin
     /**
      * @return PFUser
      */
-    private function getCurrentUser() {
+    private function getCurrentUser()
+    {
         return UserManager::instance()->getCurrentUser();
     }
 
@@ -2207,7 +2300,8 @@ class GitPlugin extends Plugin
      *
      * @param array $params
      */
-    public function showArchivedRepositories($params) {
+    public function showArchivedRepositories($params)
+    {
         $group_id              = $params['group_id'];
         $archived_repositories = $this->getRepositoryManager()->getRepositoriesForRestoreByProjectId($group_id);
         $tab_content           = '';
@@ -2273,7 +2367,8 @@ class GitPlugin extends Plugin
         }
     }
 
-    public function get_services_allowed_for_restricted($params) {
+    public function get_services_allowed_for_restricted($params)
+    {
         $params['allowed_services'][] = $this->getServiceShortname();
     }
 
@@ -2313,7 +2408,8 @@ class GitPlugin extends Plugin
     /**
      * @param PFUser user
      */
-    public function ldap_daily_synchro_update_user(PFUser $user) {
+    public function ldap_daily_synchro_update_user(PFUser $user)
+    {
         if ($user->getStatus() == PFUser::STATUS_SUSPENDED) {
             $factory = $this->getGerritServerFactory();
             $gerrit_servers = $factory->getServers();
@@ -2326,7 +2422,8 @@ class GitPlugin extends Plugin
     }
 
     /** @see Event::SERVICES_TRUNCATED_EMAILS */
-    public function services_truncated_emails(array $params) {
+    public function services_truncated_emails(array $params)
+    {
         $project = $params['project'];
         if ($project->usesService($this->getServiceShortname())) {
             $params['services'][] = dgettext('tuleap-git', 'Git');
@@ -2339,7 +2436,8 @@ class GitPlugin extends Plugin
      * @param array $params
      * @see Event::IMPORT_XML_PROJECT
      */
-    public function importXmlProject($params) {
+    public function importXmlProject($params)
+    {
         $logger = new WrapperLogger($params['logger'], "GitXmlImporter");
 
         $importer = new GitXmlImporter(
@@ -2658,7 +2756,8 @@ class GitPlugin extends Plugin
      * protected for testing purpose
      * @return GitRepositoryHeaderDisplayer
      */
-    protected function getGitRepositoryHeaderDisplayer() {
+    protected function getGitRepositoryHeaderDisplayer()
+    {
         $selected_tab = RepositoryHeaderPresenterBuilder::TAB_FILES;
 
         $gitphp_actions_displayed_in_commits_tab = ['shortlog', 'commit', 'commitdiff', 'blobdiff', 'search'];
@@ -2791,7 +2890,7 @@ class GitPlugin extends Plugin
     {
         $commands_collector->addCommand(
             RegenerateConfigurationCommand::NAME,
-            function() : RegenerateConfigurationCommand {
+            function () : RegenerateConfigurationCommand {
                 return new RegenerateConfigurationCommand(
                     ProjectManager::instance(),
                     $this->getGitSystemEventManager()
@@ -2800,7 +2899,7 @@ class GitPlugin extends Plugin
         );
         $commands_collector->addCommand(
             RepositoriesWithObjectsOverTheLimitCommand::NAME,
-            function() : RepositoriesWithObjectsOverTheLimitCommand {
+            function () : RepositoriesWithObjectsOverTheLimitCommand {
                 return new RepositoriesWithObjectsOverTheLimitCommand(
                     $this->getRepositoryFactory(),
                     new GitRepositoryObjectsSizeRetriever()

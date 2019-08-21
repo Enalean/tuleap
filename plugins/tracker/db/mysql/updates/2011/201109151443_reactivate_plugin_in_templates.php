@@ -21,17 +21,20 @@
 
 class b201109151443_reactivate_plugin_in_templates extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Makes tracker plugin active in template projects.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "UPDATE service SET is_active = 1 WHERE short_name = 'plugin_tracker'";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

@@ -18,18 +18,21 @@
 
 class b201508271443_add_index_on_system_event_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add index on system_event table in order to speed-up
 queries on this table.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->log->warn('Following operations might take a while, please be patient...');
         $sql = "ALTER TABLE system_event
                 ADD INDEX type_idx (type(20))";

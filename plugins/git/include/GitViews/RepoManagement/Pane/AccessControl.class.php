@@ -76,7 +76,7 @@ class AccessControl extends Pane
         DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
         GitPermissionsManager $git_permission_manager,
         RegexpFineGrainedRetriever $regexp_retriever
-    ){
+    ) {
         parent::__construct($repository, $request);
 
         $this->fine_grained_permission_factory = $fine_grained_permission_factory;

@@ -28,20 +28,24 @@ rcs_id('$Id: WantedPagesOld.php,v 1.1 2004/11/20 11:28:49 rurban Exp $');
 class WikiPlugin_WantedPagesOld
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("WantedPages");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("Lists referenced page names which do not exist yet.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.1 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('noheader' => false,
                      'exclude'  => _("PgsrcTranslation"),
                      'page'     => '[pagename]',
@@ -54,7 +58,8 @@ extends WikiPlugin
     // info=mtime,hits,summary,version,author,locked,minor,markup or all
     // exclude arg allows multiple pagenames exclude=HomePage,RecentChanges
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         extract($this->getArgs($argstr, $request));
 
         if ($exclude) {
@@ -155,7 +160,8 @@ extends WikiPlugin
         }
     }
 
-    function _generateTable($caption) {
+    function _generateTable($caption)
+    {
 
         if (count($this->pagelist) > 0) {
             $table = HTML::table(array('cellpadding' => 0,
@@ -189,7 +195,8 @@ extends WikiPlugin
         return $table;
     }
 
-    function _generateList($caption) {
+    function _generateList($caption)
+    {
         $list = HTML();
         $c = count($this->pagelist);
         if ($caption)
@@ -203,7 +210,8 @@ extends WikiPlugin
         return $list;
     }
 
-    function _iterateLinks($page_handle, $dbi) {
+    function _iterateLinks($page_handle, $dbi)
+    {
         $links_iter = $page_handle->getLinks($reversed = false);
         while ($link_handle = $links_iter->next())
         {

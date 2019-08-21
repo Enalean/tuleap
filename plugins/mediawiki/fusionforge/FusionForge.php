@@ -20,7 +20,8 @@ if( !defined( 'MEDIAWIKI' ) )
  */
 class SkinFusionForge extends SkinTemplate {
     /** Using fusionforge. */
-    function initPage( OutputPage $out ) {
+    function initPage( OutputPage $out )
+    {
         parent::initPage( $out );
         $this->skinname  = 'fusionforge';
         $this->stylename = 'fusionforge';
@@ -28,7 +29,8 @@ class SkinFusionForge extends SkinTemplate {
 
     }
 
-    function setupSkinUserCss( OutputPage $out ) {
+    function setupSkinUserCss( OutputPage $out )
+    {
         global $wgHandheldStyle;
 
         parent::setupSkinUserCss( $out );
@@ -64,7 +66,8 @@ class FusionForgeTemplate extends QuickTemplate {
      *
      * @access private
      */
-    function execute() {
+    function execute()
+    {
         global $wgRequest, $sysDTDs;
         $this->skin = $skin = $this->data['skin'];
         $action = $wgRequest->getText( 'action' );
@@ -269,7 +272,8 @@ echo htmlspecialchars($item['class']) ?>"<?php } ?>><?php
         wfRestoreWarnings();
     } // end of execute() method
 
-    function searchBox() {
+    function searchBox()
+    {
         global $wgUseTwoButtonsSearchForm;
         ?>
     <div id="p-search" class="portlet">
@@ -291,7 +295,8 @@ echo htmlspecialchars($item['class']) ?>"<?php } ?>><?php
         <?php
     }
 
-    function toolbox() {
+    function toolbox()
+    {
         ?>
     <div class="portlet" id="p-tb">
         <h5><?php $this->msg('toolbox') ?></h5>
@@ -350,7 +355,8 @@ echo htmlspecialchars($item['class']) ?>"<?php } ?>><?php
         <?php
     }
 
-    function languageBox() {
+    function languageBox()
+    {
         if( $this->data['language_urls'] ) {
             ?>
     <div id="p-lang" class="portlet">
@@ -368,7 +374,8 @@ echo htmlspecialchars($item['class']) ?>"<?php } ?>><?php
         }
     }
 
-    function customBox( $bar, $cont ) {
+    function customBox( $bar, $cont )
+    {
         ?>
     <div class='generated-sidebar portlet' id='<?php echo Sanitizer::escapeId( "p-$bar" ) ?>'<?php echo $this->skin->tooltip('p-'.$bar) ?>>
         <h5><?php $out = wfMsg( $bar ); if (wfEmptyMsg($bar, $out)) echo $bar; else echo $out; ?></h5>

@@ -54,7 +54,8 @@ class Tracker_Rule_Date extends Tracker_Rule {
      * @param string $comparator
      * @throws Tracker_Rule_Date_InvalidComparatorException
      */
-    public function setComparator($comparator) {
+    public function setComparator($comparator)
+    {
         if(! in_array($comparator, self::$allowed_comparators)) {
             throw new Tracker_Rule_Date_InvalidComparatorException();
         }
@@ -67,7 +68,8 @@ class Tracker_Rule_Date extends Tracker_Rule {
      *
      * @return string
      */
-    public function getComparator() {
+    public function getComparator()
+    {
         return $this->comparator;
     }
 
@@ -79,7 +81,8 @@ class Tracker_Rule_Date extends Tracker_Rule {
      * @param string $target_value
      * @return bool
      */
-    public function validate($source_value, $target_value) {
+    public function validate($source_value, $target_value)
+    {
         //if one of the value is empty then return true
         if ($source_value == null || $target_value == null) {
             return true;
@@ -108,11 +111,13 @@ class Tracker_Rule_Date extends Tracker_Rule {
         }
     }
 
-    private function isOneValueDateOnly($source_value, $target_value) {
+    private function isOneValueDateOnly($source_value, $target_value)
+    {
         return (preg_match(Rule_Date::DAY_REGEX, $source_value) || preg_match(Rule_Date::DAY_REGEX, $target_value));
     }
 
-    private function getTimestamp($date, $date_only) {
+    private function getTimestamp($date, $date_only)
+    {
         if (preg_match(Rule_Timestamp::TIMESTAMP_REGEX, $date) && $date_only) {
             //transform timestamps for "submitted on" and "last updated date"
             $date = date(Tracker_FormElement_DateFormatter::DATE_FORMAT, $date);

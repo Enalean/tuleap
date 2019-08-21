@@ -28,7 +28,8 @@ class Rest_TokenManagerTest extends TuleapTestCase {
     /** @var  Rest_TokenFactory */
     private $token_factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->user_manager  = mock('UserManager');
@@ -42,14 +43,16 @@ class Rest_TokenManagerTest extends TuleapTestCase {
         $this->user        = aUser()->withId($this->user_id)->build();
     }
 
-    public function itReturnsTheUserIfTokenIsValid() {
+    public function itReturnsTheUserIfTokenIsValid()
+    {
         stub($this->user_manager)->getUserById($this->user_id)->returns($this->user);
 
         stub($this->token_dao)->checkTokenExistenceForUserId($this->user_id, $this->token_value)->returnsDar(array());
         $this->assertEqual($this->user, $this->token_manager->checkToken($this->token));
     }
 
-    public function itThrowsAnExceptionIfTokenIsInvalid() {
+    public function itThrowsAnExceptionIfTokenIsInvalid()
+    {
         stub($this->token_dao)->checkTokenExistenceForUserId($this->user_id, $this->token_value)->returnsEmptyDar();
         $this->expectException("Rest_Exception_InvalidTokenException");
 
@@ -57,7 +60,8 @@ class Rest_TokenManagerTest extends TuleapTestCase {
 
     }
 
-    public function itExpiresATokenIfItBelongsToUser() {
+    public function itExpiresATokenIfItBelongsToUser()
+    {
         stub($this->user_manager)->getUserById($this->user_id)->returns($this->user);
 
         stub($this->token_dao)->checkTokenExistenceForUserId($this->user_id, $this->token_value)->returnsDar(array());
@@ -68,13 +72,15 @@ class Rest_TokenManagerTest extends TuleapTestCase {
         $this->token_manager->expireToken($this->token);
     }
 
-    public function itExpiresAllTokensForAUser() {
+    public function itExpiresAllTokensForAUser()
+    {
         expect($this->token_dao)->deleteAllTokensForUser($this->user_id)->once();
 
         $this->token_manager->expireAllTokensForUser($this->user);
     }
 
-    public function itDoesNotExpireATokenIfItDoesNotBelongToUser() {
+    public function itDoesNotExpireATokenIfItDoesNotBelongToUser()
+    {
         stub($this->token_dao)->checkTokenExistenceForUserId($this->user_id, $this->token_value)->returnsEmptyDar();
 
         expect($this->token_dao)->deleteToken($this->token_value)->never();
@@ -83,7 +89,8 @@ class Rest_TokenManagerTest extends TuleapTestCase {
         $this->token_manager->expireToken($this->token);
     }
 
-    public function itAddsATokenToDatabase() {
+    public function itAddsATokenToDatabase()
+    {
         stub($this->token_dao)->addTokenForUserId()->returns(true);
 
         expect($this->token_dao)->addTokenForUserId($this->user_id, '*', '*')->once();
@@ -91,7 +98,8 @@ class Rest_TokenManagerTest extends TuleapTestCase {
         $this->token_manager->generateTokenForUser($this->user);
     }
 
-    public function _itGeneratesAProperToken() {
+    public function _itGeneratesAProperToken()
+    {
         stub($this->token_dao)->addTokenForUserId()->returns(true);
         $result = $this->token_manager->generateTokenForUser($this->user);
         var_dump($result);

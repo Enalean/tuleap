@@ -40,7 +40,8 @@ if ($sys_user !== 'root' && $sys_user !== ForgeConfig::get('sys_http_user')) {
     return false;
 }
 
-function usage() {
+function usage()
+{
     $consoleLogger = new Log_ConsoleLogger();
     $consoleLogger->error("Usage: export.php groupId targetname");
 }

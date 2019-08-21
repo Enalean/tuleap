@@ -42,7 +42,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @return void
      */
-    function __construct($user, $project, $package, $maxFileSize) {
+    function __construct($user, $project, $package, $maxFileSize)
+    {
 
         $this->user = $user;
         $this->project = $project;
@@ -58,7 +59,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_IDirectory#getChildren()
      */
-    function getChildren() {
+    function getChildren()
+    {
 
         $children = array();
 
@@ -84,7 +86,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Directory#getChild($name)
      */
-    function getChild($releaseName) {
+    function getChild($releaseName)
+    {
 
         $releaseName = $this->getUtils()->retrieveName($releaseName);
         $release = $this->getWebDAVRelease($this->getFRSReleaseFromName($releaseName));
@@ -113,7 +116,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_INode#getName()
      */
-    function getName() {
+    function getName()
+    {
 
         /* To keep the Url correct the slashes "/" in the name
          *  of the package were replaced by its ascii code "%2F"
@@ -131,7 +135,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#getLastModified()
      */
-    function getLastModified() {
+    function getLastModified()
+    {
 
         return;
 
@@ -142,7 +147,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @return FRSPackage
      */
-    function getPackage() {
+    function getPackage()
+    {
 
         return $this->package;
 
@@ -153,7 +159,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @return int
      */
-    function getPackageId() {
+    function getPackageId()
+    {
 
         return $this->getPackage()->getPackageID();
 
@@ -164,7 +171,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @return FRSProject
      */
-    function getProject() {
+    function getProject()
+    {
 
         return $this->project;
 
@@ -175,7 +183,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @return PFUser
      */
-    function getUser() {
+    function getUser()
+    {
 
         return $this->user;
 
@@ -186,7 +195,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @return WebDAVUtils
      */
-    function getUtils() {
+    function getUtils()
+    {
 
         return WebDAVUtils::getInstance();
 
@@ -197,7 +207,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @return int
      */
-    function getMaxFileSize() {
+    function getMaxFileSize()
+    {
         return $this->maxFileSize;
     }
 
@@ -208,7 +219,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @return FRSRelease
      */
-    function getFRSReleaseFromName($releaseName) {
+    function getFRSReleaseFromName($releaseName)
+    {
 
         $utils = $this->getUtils();
         return $utils->getReleaseFactory()->getFRSReleaseFromDb($utils->getReleaseFactory()->getReleaseIdByName($releaseName, $this->getPackageId()), $this->getProject()->getGroupId(), $this->getPackageId());
@@ -222,7 +234,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @return WebDAVFRSRelease
      */
-    function getWebDAVRelease($release) {
+    function getWebDAVRelease($release)
+    {
 
         return new WebDAVFRSRelease($this->getUser(), $this->getProject(), $this->getPackage(), $release, $this->getMaxFileSize());
 
@@ -235,7 +248,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @return Array
      */
-    function getReleaseList($package) {
+    function getReleaseList($package)
+    {
 
         $utils = $this->getUtils();
         return $utils->getReleaseFactory()->getFRSReleasesFromDb($package->getPackageId());
@@ -247,7 +261,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @return bool
      */
-    function exist() {
+    function exist()
+    {
 
         return($this->getPackage() && !$this->getPackage()->isDeleted());
 
@@ -260,7 +275,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @return bool
      */
-    function userCanRead($user) {
+    function userCanRead($user)
+    {
         return (($this->getPackage()->isActive() && $this->getPackage()->userCanRead($user->getId()))
             || ($this->getPackage()->isHidden() && $this->userIsAdmin()));
 
@@ -271,7 +287,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @return bool
      */
-    function userIsAdmin() {
+    function userIsAdmin()
+    {
 
         $utils = $this->getUtils();
         return $utils->userIsAdmin($this->getUser(), $this->getProject()->getGroupId());
@@ -283,7 +300,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @return bool
      */
-    function userCanWrite() {
+    function userCanWrite()
+    {
         $utils = $this->getUtils();
         return $utils->userCanWrite($this->getUser(), $this->getProject()->getGroupId());
     }
@@ -295,7 +313,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#delete()
      */
-    function delete() {
+    function delete()
+    {
 
         if ($this->userCanWrite()) {
             // don't delete a package if it is not empty
@@ -323,7 +342,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#setName($name)
      */
-    function setName($name) {
+    function setName($name)
+    {
 
         $utils = $this->getUtils();
         if ($this->userCanWrite()) {
@@ -373,7 +393,8 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Directory#createDirectory($name)
      */
-    function createDirectory($name) {
+    function createDirectory($name)
+    {
 
         if ($this->userCanWrite()) {
             $utils = $this->getUtils();

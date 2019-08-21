@@ -29,7 +29,8 @@ class NatureCreator {
     /** @var NatureValidator */
     private $validator;
 
-    public function __construct(NatureDao $dao, NatureValidator $validator) {
+    public function __construct(NatureDao $dao, NatureValidator $validator)
+    {
         $this->dao       = $dao;
         $this->validator = $validator;
     }
@@ -38,7 +39,8 @@ class NatureCreator {
      * @throws InvalidNatureParameterException
      * @throws UnableToCreateNatureException
      */
-    public function create($shortname, $forward_label, $reverse_label) {
+    public function create($shortname, $forward_label, $reverse_label)
+    {
         $this->validator->checkShortname($shortname);
         $this->validator->checkForwardLabel($forward_label);
         $this->validator->checkReverseLabel($reverse_label);

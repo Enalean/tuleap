@@ -25,7 +25,8 @@ class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECKTest extends TuleapTestCase {
     /** @var SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK */
     private $event;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->manifest_manager = mock('Git_Mirror_ManifestManager');
@@ -36,7 +37,8 @@ class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECKTest extends TuleapTestCase {
         );
     }
 
-    public function itChecksTheManifest() {
+    public function itChecksTheManifest()
+    {
         expect($this->manifest_manager)->checkManifestFiles()->once();
 
         $this->event->process();

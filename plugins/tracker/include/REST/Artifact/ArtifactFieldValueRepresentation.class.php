@@ -38,7 +38,8 @@ class ArtifactFieldValueRepresentation {
      */
     public $value;
 
-    public function build($id, $label, $value) {
+    public function build($id, $label, $value)
+    {
         $this->field_id = JsonCast::toInt($id);
         $this->label    = $label;
         $this->value    = $value;

@@ -63,7 +63,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when The release have no files
      */
-    function testGetChildrenNoFiles() {
+    function testGetChildrenNoFiles()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $webDAVFRSRelease->setReturnValue('getFileList', array());
@@ -75,7 +76,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when the release contains files
      */
-    function testGetChildrenContainFiles() {
+    function testGetChildrenContainFiles()
+    {
 
         $file = new MockWebDAVFRSFile();
 
@@ -93,7 +95,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when the file is null
      */
-    function testGetChildFailureWithFileNull() {
+    function testGetChildFailureWithFileNull()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
         $webDAVFile = new MockWebDAVFRSFile();
@@ -110,7 +113,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when the file returns isActive == false
      */
-    function testGetChildFailureWithNotActive() {
+    function testGetChildFailureWithNotActive()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
         $webDAVFile = new MockWebDAVFRSFile();
@@ -130,7 +134,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when the user don't have the right to download
      */
-    function testGetChildFailureWithUserCanNotDownload() {
+    function testGetChildFailureWithUserCanNotDownload()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
         $webDAVFile = new MockWebDAVFRSFile();
@@ -152,7 +157,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when the file doesn't exist
      */
-    function testGetChildFailureWithNotExist() {
+    function testGetChildFailureWithNotExist()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
         $webDAVFile = new MockWebDAVFRSFile();
@@ -176,7 +182,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when the file don't belong to the given package
      */
-    function testGetChildFailureWithNotBelongToPackage() {
+    function testGetChildFailureWithNotBelongToPackage()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
         $webDAVFile = new MockWebDAVFRSFile();
@@ -207,7 +214,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when the file don't belong to the given relaese
      */
-    function testGetChildFailureWithNotBelongToRelease() {
+    function testGetChildFailureWithNotBelongToRelease()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
         $webDAVFile = new MockWebDAVFRSFile();
@@ -237,7 +245,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when the file size exceed max file size
      */
-    function testGetChildFailureWithBigFile() {
+    function testGetChildFailureWithBigFile()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
         $webDAVFile = new MockWebDAVFRSFile();
@@ -270,7 +279,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when GetChild succeede
      */
-    function testGetChildSucceede() {
+    function testGetChildSucceede()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
         $webDAVFile = new MockWebDAVFRSFile();
@@ -301,7 +311,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when the release is deleted and the user have no permissions
      */
-    function testUserCanReadFailureReleaseDeletedUserHaveNoPermissions() {
+    function testUserCanReadFailureReleaseDeletedUserHaveNoPermissions()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $release = \Mockery::spy(FRSRelease::class);
@@ -320,7 +331,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when the release is active and user can not read
      */
-    function testUserCanReadFailureActiveUserCanNotRead() {
+    function testUserCanReadFailureActiveUserCanNotRead()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $release = \Mockery::spy(FRSRelease::class);
@@ -339,7 +351,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when the release is not active and the user can read
      */
-    function testUserCanReadFailureDeletedUserCanRead() {
+    function testUserCanReadFailureDeletedUserCanRead()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $release = \Mockery::spy(FRSRelease::class);
@@ -358,7 +371,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when the release is active and the user can read
      */
-    function testUserCanReadSucceedActiveUserCanRead() {
+    function testUserCanReadSucceedActiveUserCanRead()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $release = \Mockery::spy(FRSRelease::class);
@@ -377,7 +391,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when the release is hidden and the user is not admin an can not read
      */
-    function testUserCanReadFailureHiddenNotAdmin() {
+    function testUserCanReadFailureHiddenNotAdmin()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $release = \Mockery::spy(FRSRelease::class);
@@ -395,7 +410,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when the release is hidden and the user can read and is not admin
      */
-    function testUserCanReadFailureHiddenNotAdminUserCanRead() {
+    function testUserCanReadFailureHiddenNotAdminUserCanRead()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $release = \Mockery::spy(FRSRelease::class);
@@ -414,7 +430,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when release is deleted and the user is admin
      */
-    function testUserCanReadFailureDeletedUserIsAdmin() {
+    function testUserCanReadFailureDeletedUserIsAdmin()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $release = \Mockery::spy(FRSRelease::class);
@@ -434,7 +451,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
      * Testing when the release is active but the admin can not read ????
      * TODO: verify this in a real case
      */
-    function testUserCanReadFailureAdminHaveNoPermission() {
+    function testUserCanReadFailureAdminHaveNoPermission()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $release = \Mockery::spy(FRSRelease::class);
@@ -453,7 +471,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when release is deleted and user is admin and can read
      */
-    function testUserCanReadFailureDeletedCanReadIsAdmin() {
+    function testUserCanReadFailureDeletedCanReadIsAdmin()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $release = \Mockery::spy(FRSRelease::class);
@@ -472,7 +491,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when release is active and user can read and is admin
      */
-    function testUserCanReadSucceedActiveUserCanReadIsAdmin() {
+    function testUserCanReadSucceedActiveUserCanReadIsAdmin()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $release = \Mockery::spy(FRSRelease::class);
@@ -491,7 +511,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when release is hidden and user is admin
      */
-    function testUserCanReadSucceedHiddenUserIsAdmin() {
+    function testUserCanReadSucceedHiddenUserIsAdmin()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $release = \Mockery::spy(FRSRelease::class);
@@ -510,7 +531,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing when release is hidden and user is admin and can read
      */
-    function testUserCanReadSucceedHiddenUserIsAdminCanRead() {
+    function testUserCanReadSucceedHiddenUserIsAdminCanRead()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $release = \Mockery::spy(FRSRelease::class);
@@ -529,7 +551,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing delete when user is not admin
      */
-    function testDeleteFailWithUserNotAdmin() {
+    function testDeleteFailWithUserNotAdmin()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $webDAVFRSRelease->setReturnValue('userCanWrite', false);
@@ -542,7 +565,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing delete when release doesn't exist
      */
-    function testDeleteReleaseNotExist() {
+    function testDeleteReleaseNotExist()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $webDAVFRSRelease->setReturnValue('userCanWrite', true);
@@ -563,7 +587,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing succeeded delete
      */
-    function testDeleteSucceede() {
+    function testDeleteSucceede()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $webDAVFRSRelease->setReturnValue('userCanWrite', true);
@@ -582,7 +607,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing setName when user is not admin
      */
-    function testSetNameFailWithUserNotAdmin() {
+    function testSetNameFailWithUserNotAdmin()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $webDAVFRSRelease->setReturnValue('userCanWrite', false);
@@ -603,7 +629,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing setName when name already exist
      */
-    function testSetNameFailWithNameExist() {
+    function testSetNameFailWithNameExist()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $webDAVFRSRelease->setReturnValue('userCanWrite', true);
@@ -625,7 +652,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing setName succeede
      */
-    function testSetNameSucceede() {
+    function testSetNameSucceede()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
         $webDAVFRSRelease->setReturnValue('userCanWrite', true);
@@ -645,7 +673,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
 
     }
 
-    function testMoveFailNotAdminOnSource() {
+    function testMoveFailNotAdminOnSource()
+    {
         $source = new WebDAVFRSReleaseTestVersion($this);
         $frsrf = new MockFRSReleaseFactory();
         $frsrf->setReturnValue('userCanUpdate', false);
@@ -666,7 +695,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $source->move($destination);
     }
 
-    function testMoveFailNotAdminOnDestination() {
+    function testMoveFailNotAdminOnDestination()
+    {
         $source = new WebDAVFRSReleaseTestVersion($this);
         $frsrf = new MockFRSReleaseFactory();
         $frsrf->setReturnValue('userCanUpdate', true);
@@ -687,7 +717,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $source->move($destination);
     }
 
-    function testMoveFailNotAdminOnBoth() {
+    function testMoveFailNotAdminOnBoth()
+    {
         $source = new WebDAVFRSReleaseTestVersion($this);
         $frsrf = new MockFRSReleaseFactory();
         $frsrf->setReturnValue('userCanUpdate', false);
@@ -708,7 +739,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $source->move($destination);
     }
 
-    function testMoveFailNameExist() {
+    function testMoveFailNameExist()
+    {
         $source = new WebDAVFRSReleaseTestVersion($this);
         $frsrf = new MockFRSReleaseFactory();
         $frsrf->setReturnValue('userCanUpdate', true);
@@ -730,7 +762,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $source->move($destination);
     }
 
-    function testMoveFailPackageHiddenReleaseNotHidden() {
+    function testMoveFailPackageHiddenReleaseNotHidden()
+    {
         $source = new WebDAVFRSReleaseTestVersion($this);
         $frsrf = new MockFRSReleaseFactory();
         $frsrf->setReturnValue('userCanUpdate', true);
@@ -754,7 +787,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $source->move($destination);
     }
 
-    function testMoveSucceedPackageAndReleaseHidden() {
+    function testMoveSucceedPackageAndReleaseHidden()
+    {
         $source = new WebDAVFRSReleaseTestVersion($this);
         $frsrf = new MockFRSReleaseFactory();
         $frsrf->setReturnValue('userCanUpdate', true);
@@ -776,7 +810,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $source->move($destination);
     }
 
-    function testMoveSucceedReleaseHidden() {
+    function testMoveSucceedReleaseHidden()
+    {
         $source = new WebDAVFRSReleaseTestVersion($this);
         $frsrf = new MockFRSReleaseFactory();
         $frsrf->setReturnValue('userCanUpdate', true);
@@ -798,7 +833,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $source->move($destination);
     }
 
-    function testMoveSucceed() {
+    function testMoveSucceed()
+    {
         $source = new WebDAVFRSReleaseTestVersion($this);
         $frsrf = new MockFRSReleaseFactory();
         $frsrf->setReturnValue('userCanUpdate', true);
@@ -823,7 +859,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing creation of file when user is not admin
      */
-    function testCreateFileFailWithUserNotAdmin() {
+    function testCreateFileFailWithUserNotAdmin()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
 
@@ -837,7 +874,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing creation of file when the file size is bigger than permitted
      */
-    function testCreateFileFailWithFileSizeLimitExceeded() {
+    function testCreateFileFailWithFileSizeLimitExceeded()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
 
@@ -861,7 +899,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     /**
      * Testing creation of file succeed
      */
-    function testCreateFilesucceed() {
+    function testCreateFilesucceed()
+    {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
 
@@ -895,7 +934,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
 
     }
 
-    function testcreateFileIntoIncomingUnlinkFail() {
+    function testcreateFileIntoIncomingUnlinkFail()
+    {
         $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__).'/_fixtures';
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
@@ -910,7 +950,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease->createFileIntoIncoming('test.txt', 'text');
     }
 
-    function testcreateFileIntoIncomingCreateFail() {
+    function testcreateFileIntoIncomingCreateFail()
+    {
         $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__).'/_fixtures';
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
@@ -926,7 +967,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease->createFileIntoIncoming('toto.txt', 'text');
     }
 
-    function testcreateFileIntoIncomingCloseFail() {
+    function testcreateFileIntoIncomingCloseFail()
+    {
         $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__).'/_fixtures';
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
@@ -944,7 +986,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease->createFileIntoIncoming('toto.txt', 'text');
     }
 
-    function testcreateFileIntoIncomingSucceed() {
+    function testcreateFileIntoIncomingSucceed()
+    {
         $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__).'/_fixtures';
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
@@ -959,7 +1002,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease->createFileIntoIncoming('toto.txt', 'text');
     }
 
-    function testcreateFileIntoIncomingSucceedWithFileExist() {
+    function testcreateFileIntoIncomingSucceedWithFileExist()
+    {
         $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__).'/_fixtures';
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);

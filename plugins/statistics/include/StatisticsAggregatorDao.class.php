@@ -20,7 +20,8 @@
 
 class StatisticsAggregatorDao extends DataAccessObject {
 
-    public function addStatistic($project_id, $statistic_name) {
+    public function addStatistic($project_id, $statistic_name)
+    {
         $project_id     = $this->getDa()->escapeInt($project_id);
         $statistic_name = $this->getDa()->quoteSmart($statistic_name);
         $current_date   = $this->getDa()->quoteSmart(date('Y-m-d'));
@@ -32,7 +33,8 @@ class StatisticsAggregatorDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    public function getStatistics($statistic_name, $date_start, $date_end) {
+    public function getStatistics($statistic_name, $date_start, $date_end)
+    {
         $statistic_name = $this->getDa()->quoteSmart($statistic_name);
         $date_start     = $this->getDa()->quoteSmart($date_start);
         $date_end       = $this->getDa()->quoteSmart($date_end);

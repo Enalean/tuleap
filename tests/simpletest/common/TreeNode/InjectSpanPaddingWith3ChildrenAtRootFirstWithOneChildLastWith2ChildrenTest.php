@@ -40,7 +40,8 @@ class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest
      *   '-Child 6 (id:16)
      *
      */
-    protected function given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children() {
+    protected function given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children()
+    {
         $parent = $this->buildBaseTree();
 
         $child3 = $this->getTreeNode(10, 'Child 3');
@@ -56,7 +57,8 @@ class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest
         return $parent;
     }
 
-    public function itShouldSetDataToChild1ThatMatches_IndentPipeTreeIndentMinus_treeAndChild() {
+    public function itShouldSetDataToChild1ThatMatches_IndentPipeTreeIndentMinus_treeAndChild()
+    {
         $given = $this->given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
 
@@ -67,7 +69,8 @@ class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest
         $this->then_GivenTreeNodeData_ContentTemplate_AssertPattern($givenChild, $this->getPatternSuite(" content child"));
     }
 
-    public function itShouldSetDataToChild2ThatMatches_IndentPipeBlankIndentLastLeftIndentLastRight() {
+    public function itShouldSetDataToChild2ThatMatches_IndentPipeBlankIndentLastLeftIndentLastRight()
+    {
         $given      = $this->given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
 
@@ -77,7 +80,8 @@ class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest
         $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
     }
 
-    public function itShouldSetDataToChild3ThatMatches_IndentPipeIndentMinus() {
+    public function itShouldSetDataToChild3ThatMatches_IndentPipeIndentMinus()
+    {
         $given      = $this->given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
 
@@ -87,7 +91,8 @@ class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest
         $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
     }
 
-    public function itShouldSetDataToChild4ThatMatches_IndentLast_LeftTreeIndentMinus_Tree() {
+    public function itShouldSetDataToChild4ThatMatches_IndentLast_LeftTreeIndentMinus_Tree()
+    {
         $given      = $this->given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
 
@@ -97,7 +102,8 @@ class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest
         $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
     }
 
-    public function itShouldSetDataToChild5ThatMatches_BlankBlankIndentPipeIndentMinus() {
+    public function itShouldSetDataToChild5ThatMatches_BlankBlankIndentPipeIndentMinus()
+    {
         $given      = $this->given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
 
@@ -107,7 +113,8 @@ class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest
         $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
     }
 
-    public function itShouldSetDataToChild6ThatMatches_BlankBlankIndentLast_leftIdentLast_right() {
+    public function itShouldSetDataToChild6ThatMatches_BlankBlankIndentLast_leftIdentLast_right()
+    {
         $given      = $this->given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
 

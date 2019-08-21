@@ -34,7 +34,8 @@ class ProjectLinksDao extends DataAccessObject
      * @param int $linkTypeId
      * @return DataAccessResult
      */
-    function searchLinksByType($linkTypeId) {
+    function searchLinksByType($linkTypeId)
+    {
         $sql = 'SELECT rel.*, g.group_name'.
                ' FROM plugin_projectlinks_relationship rel'.
                '  JOIN groups g ON (g.group_id = rel.target_group_id)'.
@@ -49,7 +50,8 @@ class ProjectLinksDao extends DataAccessObject
      * @param int $groupId Group id
      * @return DataAccessResult
      */
-    function searchForwardLinks($groupId) {
+    function searchForwardLinks($groupId)
+    {
         $sql = 'SELECT name AS link_name, type, groups.group_id,
                   group_name, unix_group_name, uri_plus, link_id, creation_date,
                   master_group_id, target_group_id, link_type.link_type_id
@@ -70,7 +72,8 @@ class ProjectLinksDao extends DataAccessObject
      * @param int $groupId Group id
      * @return DataAccessResult
      */
-    function searchBackLinks($groupId) {
+    function searchBackLinks($groupId)
+    {
         $sql = 'SELECT reverse_name AS link_name, type, groups.group_id,
                   group_name, unix_group_name, uri_plus, link_id, creation_date,
                   master_group_id, target_group_id,  link_type.link_type_id
@@ -93,7 +96,8 @@ class ProjectLinksDao extends DataAccessObject
      *
      * @return bool
      */
-    function projectUsesProjectLinks($groupId) {
+    function projectUsesProjectLinks($groupId)
+    {
         $sql = 'SELECT NULL'.
                ' FROM plugin_projectlinks_link_type'.
                ' WHERE group_id = '.$groupId.

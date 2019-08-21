@@ -22,14 +22,16 @@
 class PermissionsNormalizerOverrideCollection {
     private $override_by = array();
 
-    public function addOverrideBy($override_id, $catch_all_id) {
+    public function addOverrideBy($override_id, $catch_all_id)
+    {
         if (! isset($this->override_by[$catch_all_id])) {
             $this->override_by[$catch_all_id] = array();
         }
         $this->override_by[$catch_all_id][] = $override_id;
     }
 
-    public function addArrayOverrideBy(array $override_ids, $catch_all_id) {
+    public function addArrayOverrideBy(array $override_ids, $catch_all_id)
+    {
         foreach ($override_ids as $override_id) {
             if ($override_id != $catch_all_id) {
                 $this->addOverrideBy($override_id, $catch_all_id);
@@ -37,11 +39,13 @@ class PermissionsNormalizerOverrideCollection {
         }
     }
 
-    public function getOverrideBy($catch_all) {
+    public function getOverrideBy($catch_all)
+    {
         return $this->override_by[$catch_all];
     }
 
-    public function emitFeedback($permission_type) {
+    public function emitFeedback($permission_type)
+    {
         foreach($this->override_by as $catch_all_ugroup_id => $override_ids) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
@@ -58,11 +62,13 @@ class PermissionsNormalizerOverrideCollection {
         }
     }
 
-    private function getUGroupNameImplode(array $ugroup_ids) {
+    private function getUGroupNameImplode(array $ugroup_ids)
+    {
         return implode(', ', array_map(array($this, 'getUGroupNameById'), $ugroup_ids));
     }
 
-    private function getUGroupNameById($ugroup_id) {
+    private function getUGroupNameById($ugroup_id)
+    {
         $crap = new User_ForgeUGroup($ugroup_id, ugroup_get_name_from_id($ugroup_id), '');
         return $crap->getName();
     }

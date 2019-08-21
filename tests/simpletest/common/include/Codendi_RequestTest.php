@@ -23,18 +23,21 @@ class Codendi_RequestTest extends TuleapTestCase {
     private $project_manager;
     private $project;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->project         = mock('Project');
         $this->project_manager = stub('ProjectManager')->getProject(123)->returns($this->project);
     }
 
-    public function itReturnsTheProject() {
+    public function itReturnsTheProject()
+    {
         $request = new Codendi_Request(array('group_id' => '123'), $this->project_manager);
         $this->assertEqual($this->project, $request->getProject());
     }
 
-    public function itReturnsNullIfInvalidRequestedGroupId() {
+    public function itReturnsNullIfInvalidRequestedGroupId()
+    {
         $request = new Codendi_Request(array('group_id' => 'stuff'), $this->project_manager);
         $this->assertNull($request->getProject());
     }

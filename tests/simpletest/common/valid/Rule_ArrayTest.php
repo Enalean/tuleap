@@ -21,7 +21,8 @@
 
 class Rule_ArrayTest extends TuleapTestCase {
 
-    function testTestsWetherTheArgumentIsAnArray() {
+    function testTestsWetherTheArgumentIsAnArray()
+    {
         $r = new Rule_Array();
         $this->assertTrue($r->isValid(array()));
         $this->assertTrue($r->isValid(array(1, 2)));

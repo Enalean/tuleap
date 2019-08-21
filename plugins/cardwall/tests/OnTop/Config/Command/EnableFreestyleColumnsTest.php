@@ -23,7 +23,8 @@ require_once dirname(__FILE__) .'/../../../../../../tests/simpletest/common/incl
 
 class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->tracker_id = 666;
@@ -34,7 +35,8 @@ class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends TuleapTes
         $this->command = new Cardwall_OnTop_Config_Command_EnableFreestyleColumns($tracker, $this->dao);
     }
 
-    public function itEnablesIfItIsNotAlreadyTheCase() {
+    public function itEnablesIfItIsNotAlreadyTheCase()
+    {
         $request = aRequest()->with('use_freestyle_columns', '1')->build();
         stub($this->dao)->isFreestyleEnabled($this->tracker_id)->returns(false);
         stub($this->dao)->enableFreestyleColumns()->once($this->tracker_id);
@@ -42,7 +44,8 @@ class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends TuleapTes
         $this->command->execute($request);
     }
 
-    public function itDoesNotEnableIfItIsNotAlreadyTheCase() {
+    public function itDoesNotEnableIfItIsNotAlreadyTheCase()
+    {
         $request = aRequest()->with('use_freestyle_columns', '1')->build();
         stub($this->dao)->isFreestyleEnabled($this->tracker_id)->returns(true);
         stub($this->dao)->enableFreestyleColumns()->never();
@@ -50,7 +53,8 @@ class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends TuleapTes
         $this->command->execute($request);
     }
 
-    public function itDisablesIfItIsNotAlreadyTheCase() {
+    public function itDisablesIfItIsNotAlreadyTheCase()
+    {
         $request = aRequest()->with('use_freestyle_columns', '0')->build();
         stub($this->dao)->isFreestyleEnabled($this->tracker_id)->returns(true);
         stub($this->dao)->disableFreestyleColumns()->once($this->tracker_id);
@@ -58,7 +62,8 @@ class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends TuleapTes
         $this->command->execute($request);
     }
 
-    public function itDoesNotDisableIfItIsNotAlreadyTheCase() {
+    public function itDoesNotDisableIfItIsNotAlreadyTheCase()
+    {
         $request = aRequest()->with('use_freestyle_columns', '0')->build();
         stub($this->dao)->isFreestyleEnabled($this->tracker_id)->returns(false);
         stub($this->dao)->disableFreestyleColumns()->never();

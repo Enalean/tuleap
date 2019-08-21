@@ -21,17 +21,20 @@
 
 class b201203191812_add_planning_tables extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add tables to store planning
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS plugin_agiledashboard_planning (
                   id int(11) NOT NULL auto_increment,
                   name varchar(255) NOT NULL,
@@ -48,7 +51,8 @@ EOT;
         $this->db->createTable('plugin_agiledashboard_planning_backlog_tracker', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('plugin_agiledashboard_planning')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_agiledashboard_planning table is missing');
         }

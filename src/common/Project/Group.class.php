@@ -35,7 +35,8 @@
 
 */
 
-function group_get_object_by_name($groupname) {
+function group_get_object_by_name($groupname)
+{
     $pm = ProjectManager::instance();
 
     return $pm->getProjectByUnixName($groupname);
@@ -68,7 +69,8 @@ class Group {
      */
     private $error_state = false;
 
-    function __construct($param) {
+    function __construct($param)
+    {
             //$param can be:
             // - a row from the groups table -> use it
             // - a group_id -> retrieve row from table
@@ -99,7 +101,8 @@ class Group {
 
         Generall should NOT be used - here for supporting deprecated group.php
     */
-    function getData() {
+    function getData()
+    {
         return $this->db_result;
     }
 
@@ -107,7 +110,8 @@ class Group {
     /*
         Simply return the group_id for this object
     */
-    function getGroupId() {
+    function getGroupId()
+    {
         return $this->group_id;
     }
 
@@ -115,19 +119,22 @@ class Group {
     /*
         Project, template, test, etc
     */
-    function getType() {
+    function getType()
+    {
         return $this->data_array['type'];
     }
 
 
-    function getUnixBox() {
+    function getUnixBox()
+    {
         return $this->data_array['unix_box'];
     }
 
     /*
         Statuses include H,A,D
     */
-    function getStatus() {
+    function getStatus()
+    {
         return $this->data_array['status'];
     }
 
@@ -136,32 +143,39 @@ class Group {
      *
      * @return bool
      */
-    function isProject() {
+    function isProject()
+    {
         $template = $this->_getTemplateSingleton();
         return $template->isProject($this->data_array['type']);
     }
 
-    public function isActive() {
+    public function isActive()
+    {
         return $this->getStatus() == 'A';
     }
 
-    public function isDeleted() {
+    public function isDeleted()
+    {
         return $this->getStatus() == 'D';
     }
 
-    public function isSystem() {
+    public function isSystem()
+    {
         return $this->getStatus() == 's' || $this->getStatus() == 'S';
     }
 
-    function getUnixName($tolower = true) {
+    function getUnixName($tolower = true)
+    {
         return $tolower ? $this->getUnixNameLowerCase() : $this->getUnixNameMixedCase();
     }
 
-    public function getUnixNameLowerCase() {
+    public function getUnixNameLowerCase()
+    {
         return strtolower($this->getUnixNameMixedCase());
     }
 
-    public function getUnixNameMixedCase() {
+    public function getUnixNameMixedCase()
+    {
         return $this->data_array['unix_group_name'];
     }
 
@@ -171,33 +185,39 @@ class Group {
     }
 
     /** @deprecated */
-    public function getPublicName() {
+    public function getPublicName()
+    {
         return $this->data_array['group_name'];
     }
 
-    public function getUnconvertedPublicName() {
+    public function getUnconvertedPublicName()
+    {
         return util_unconvert_htmlspecialchars($this->data_array['group_name']);
     }
 
     //short description as entered on the group admin page
-    function getDescription() {
+    function getDescription()
+    {
         return $this->data_array['short_description'];
     }
 
 
     //date the group was registered
-    function getStartDate() {
+    function getStartDate()
+    {
         return $this->data_array['register_time'];
     }
 
-    function getHTTPDomain() {
+    function getHTTPDomain()
+    {
         return $this->data_array['http_domain'];
     }
 
     /**
      * @return int group_id | null.
      */
-    public function getID() {
+    public function getID()
+    {
         if (isset($this->data_array['group_id'])) {
             return $this->data_array['group_id'];
         }
@@ -210,7 +230,8 @@ class Group {
      *
      *    @return int GID.
      */
-    function getUnixGID() {
+    function getUnixGID()
+    {
         return $this->data_array['group_id']+$GLOBALS['unix_gid_add'];
     }
 
@@ -219,7 +240,8 @@ class Group {
      *
      *    @return int group_id.
      */
-    function getMembersId() {
+    function getMembersId()
+    {
         if ($this->members_data_array) {
      //list of members already built
         } else {
@@ -243,7 +265,8 @@ class Group {
     /**
      * getMembersUserNames - Return an array of user names of group members
      */
-    function getMembersUserNames(?ProjectManager $pm = null) {
+    function getMembersUserNames(?ProjectManager $pm = null)
+    {
         if (!$this->members_usernames_data_array) {
             if(is_null($pm)) {
                 $pm = ProjectManager::instance();
@@ -264,7 +287,8 @@ class Group {
     /*
         Simple test to see if the current user is a member of this project
     */
-    function userIsMember($field='user_id',$value=0) {
+    function userIsMember($field='user_id',$value=0)
+    {
         if ($this->userIsAdmin()) {
      //admins are tested first so that super-users can return true
      //and admins of a project should always have full privileges
@@ -324,7 +348,8 @@ class Group {
     /*
         Return an associative array of permissions for this group/user
     */
-    function getPermData(){
+    function getPermData()
+    {
         if ($this->perm_data_array) {
      //have already been through here and set up perms data
         } else {
@@ -351,17 +376,20 @@ class Group {
      *
      * @return bool
      */
-    function isTemplate() {
+    function isTemplate()
+    {
         return $this->_getTemplateSingleton()->isTemplate($this->data_array['type']);
     }
 
 
     /** return the template id from which this group was built */
-    function getTemplate() {
+    function getTemplate()
+    {
         return $this->data_array['built_from_template'];
     }
 
-    function setType($type) {
+    function setType($type)
+    {
         db_query("UPDATE groups SET type='$type' WHERE group_id='".$this->group_id."'");
     }
 
@@ -370,14 +398,16 @@ class Group {
      *
      * @return TemplateSingleton
      */
-    private function _getTemplateSingleton() {
+    private function _getTemplateSingleton()
+    {
         return TemplateSingleton::instance();
     }
 
     /**
      * @param $string
      */
-    public function setError($string) {
+    public function setError($string)
+    {
         $this->error_state = true;
         $this->error_message = $string;
     }
@@ -385,7 +415,8 @@ class Group {
     /**
      * @return string
      */
-    public function getErrorMessage() {
+    public function getErrorMessage()
+    {
         if ($this->error_state) {
             return $this->error_message;
         } else {
@@ -396,7 +427,8 @@ class Group {
     /**
      * @return bool
      */
-    public function isError() {
+    public function isError()
+    {
         return $this->error_state;
     }
 

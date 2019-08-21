@@ -23,7 +23,8 @@ class b201310111459_drop_remote_server_deleted_column extends ForgeUpgrade_Bucke
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 drop column remote_project_deleted from table plugin_git
 EOT;
@@ -34,7 +35,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -43,13 +45,15 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_git
                 DROP COLUMN remote_project_deleted";
         $this->execDB($sql, 'An error occured while droppin remote_project_deleted column from plugin_git table, ');
     }
 
-    private function execDB($sql, $message) {
+    private function execDB($sql, $message)
+    {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message.implode(', ', $this->db->dbh->errorInfo()));

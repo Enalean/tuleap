@@ -68,13 +68,13 @@ $CLI_command_collector = new CLICommandsCollector();
 
 $CLI_command_collector->addCommand(
     ConfigGetCommand::NAME,
-    static function(): ConfigGetCommand {
+    static function (): ConfigGetCommand {
         return new ConfigGetCommand();
     }
 );
 $CLI_command_collector->addCommand(
     ConfigSetCommand::NAME,
-    static function() use ($event_manager) : ConfigSetCommand  {
+    static function () use ($event_manager) : ConfigSetCommand {
         return new ConfigSetCommand(
             new ConfigDao(),
             $event_manager
@@ -83,7 +83,7 @@ $CLI_command_collector->addCommand(
 );
 $CLI_command_collector->addCommand(
     UserPasswordCommand::NAME,
-    static function() use ($user_manager): UserPasswordCommand  {
+    static function () use ($user_manager): UserPasswordCommand {
         return new UserPasswordCommand(
             $user_manager,
             PasswordSanityChecker::build()
@@ -92,13 +92,13 @@ $CLI_command_collector->addCommand(
 );
 $CLI_command_collector->addCommand(
     ImportProjectXMLCommand::NAME,
-    static function() : ImportProjectXMLCommand  {
+    static function () : ImportProjectXMLCommand {
         return new ImportProjectXMLCommand();
     }
 );
 $CLI_command_collector->addCommand(
     ProcessSystemEventsCommand::NAME,
-    static function() use ($backend_logger, $event_manager) : ProcessSystemEventsCommand  {
+    static function () use ($backend_logger, $event_manager) : ProcessSystemEventsCommand {
         $store   = new SemaphoreStore();
         $factory = new LockFactory($store);
 
@@ -111,7 +111,7 @@ $CLI_command_collector->addCommand(
 );
 $CLI_command_collector->addCommand(
     QueueSystemCheckCommand::NAME,
-    static function() use ($event_manager) : QueueSystemCheckCommand  {
+    static function () use ($event_manager) : QueueSystemCheckCommand {
         return new QueueSystemCheckCommand(
             $event_manager,
             DBFactory::getMainTuleapDBConnection(),
@@ -126,7 +126,7 @@ $CLI_command_collector->addCommand(
 
 $CLI_command_collector->addCommand(
     LaunchEveryMinuteJobCommand::NAME,
-    static function() use ($event_manager, $backend_logger) : LaunchEveryMinuteJobCommand  {
+    static function () use ($event_manager, $backend_logger) : LaunchEveryMinuteJobCommand {
         return new LaunchEveryMinuteJobCommand(
             $event_manager,
             $backend_logger,
@@ -137,7 +137,7 @@ $CLI_command_collector->addCommand(
 
 $CLI_command_collector->addCommand(
     DailyJobCommand::NAME,
-    static function() use ($event_manager, $user_manager) : DailyJobCommand  {
+    static function () use ($event_manager, $user_manager) : DailyJobCommand {
         return new DailyJobCommand(
             $event_manager,
             $user_manager,
@@ -156,7 +156,7 @@ $CLI_command_collector->addCommand(
 
 $CLI_command_collector->addCommand(
     TaskWorkerProcessCommand::NAME,
-    static function() use ($event_manager) : TaskWorkerProcessCommand  {
+    static function () use ($event_manager) : TaskWorkerProcessCommand {
         return new TaskWorkerProcessCommand(
             $event_manager,
             new TruncateLevelLogger(

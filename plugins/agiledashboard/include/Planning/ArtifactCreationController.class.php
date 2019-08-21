@@ -32,13 +32,15 @@ class Planning_ArtifactCreationController extends MVC2_PluginController {
      */
     private $planning_factory;
 
-    public function __construct(PlanningFactory $planning_factory, Codendi_Request $request) {
+    public function __construct(PlanningFactory $planning_factory, Codendi_Request $request)
+    {
         parent::__construct('agiledashboard', $request);
 
         $this->planning_factory = $planning_factory;
     }
 
-    public function createArtifact() {
+    public function createArtifact()
+    {
         $planning_id = $this->request->get('planning_id');
         $planning    = $this->planning_factory->getPlanning($planning_id);
         $tracker_id  = $planning->getPlanningTrackerId();

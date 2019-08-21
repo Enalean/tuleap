@@ -27,14 +27,16 @@ class Tracker_FormElement_Field_ComputedDaoCache {
     private $dao;
     private $field_values_at_timestamp = array();
 
-    public function __construct(Tracker_FormElement_Field_ComputedDao $dao) {
+    public function __construct(Tracker_FormElement_Field_ComputedDao $dao)
+    {
         $this->dao = $dao;
     }
 
     /**
      * @return Tracker_FormElement_Field_ComputedDaoCache
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (! self::$instance) {
             $class = self::class;
             self::$instance = new $class(new Tracker_FormElement_Field_ComputedDao());
@@ -45,7 +47,8 @@ class Tracker_FormElement_Field_ComputedDaoCache {
     /**
      * @return false | int
      */
-    public function getCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp) {
+    public function getCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp)
+    {
         $row = $this->dao->getCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp);
 
         return ($row) ? $row['value'] : false;
@@ -54,7 +57,8 @@ class Tracker_FormElement_Field_ComputedDaoCache {
     /**
      * @return bool
      */
-    public function saveCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp, $value) {
+    public function saveCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp, $value)
+    {
         return $this->dao->saveCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp, $value);
     }
 

@@ -33,7 +33,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return array
      */
-    public function getFormElementDataForCreation($parent_id) {
+    public function getFormElementDataForCreation($parent_id)
+    {
         $form_element_data = parent::getFormElementDataForCreation($parent_id);
 
         if ($this->getBind()) {
@@ -51,7 +52,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return Tracker_FormElement_Field_List_Bind
      */
-    public function getBind() {
+    public function getBind()
+    {
         if (!$this->bind) {
             $this->bind = null;
             //retrieve the type of the bind first...
@@ -76,11 +78,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return array of Tracker_FormElement_Field_List_BindDecorator
      */
-    public function getDecorators() {
+    public function getDecorators()
+    {
         return $this->getBind()->getDecorators();
     }
 
-    public function setBind($bind) {
+    public function setBind($bind)
+    {
         $this->bind = $bind;
     }
 
@@ -90,7 +94,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param int $from_field_id
      * @return array the mapping between old values and new ones
      */
-    public function duplicate($from_field_id) {
+    public function duplicate($from_field_id)
+    {
         $dao = new Tracker_FormElement_Field_ListDao();
         if ($dao->duplicate($from_field_id, $this->id)) {
             $bf = new Tracker_FormElement_Field_List_BindFactory();
@@ -102,7 +107,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return bool
      */
-    public function isMultiple() {
+    public function isMultiple()
+    {
         return false;
     }
 
@@ -120,7 +126,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string
      */
-    public function getCriteriaFrom($criteria) {
+    public function getCriteriaFrom($criteria)
+    {
         //Only filter query if field is used
         if($this->isUsed()) {
             return $this->getBind()->getCriteriaFrom($this->getCriteriaValue($criteria));
@@ -136,7 +143,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string
      */
-    public function getCriteriaWhere($criteria) {
+    public function getCriteriaWhere($criteria)
+    {
         return $this->getBind()->getCriteriaWhere($this->getCriteriaValue($criteria));
     }
 
@@ -147,7 +155,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string
      */
-    public function getQuerySelect() {
+    public function getQuerySelect()
+    {
         return $this->getBind()->getQuerySelect();
     }
 
@@ -157,7 +166,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return string
      * @see getQueryFrom
      */
-    public function getQuerySelectWithDecorator() {
+    public function getQuerySelectWithDecorator()
+    {
         return $this->getBind()->getQuerySelectWithDecorator();
     }
 
@@ -167,7 +177,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * which tables used to retrieve the last changeset of matching artifacts.
      * @return string
      */
-    public function getQueryFrom() {
+    public function getQueryFrom()
+    {
         return $this->getBind()->getQueryFrom();
     }
 
@@ -177,21 +188,24 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * which tables used to retrieve the last changeset of matching artifacts.
      * @return string
      */
-    public function getQueryFromWithDecorator() {
+    public function getQueryFromWithDecorator()
+    {
         return $this->getBind()->getQueryFromWithDecorator();
     }
 
     /**
      * Get the "order by" statement to retrieve field values
      */
-    public function getQueryOrderby() {
+    public function getQueryOrderby()
+    {
         return $this->getBind()->getQueryOrderby();
     }
 
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public function getQueryGroupby() {
+    public function getQueryGroupby()
+    {
         return $this->getBind()->getQueryGroupby();
     }
 
@@ -222,14 +236,16 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *               - selectbox: count group by
      *               - multiselectbox: all (else it breaks other computations)
      */
-    public function getQuerySelectAggregate($functions) {
+    public function getQuerySelectAggregate($functions)
+    {
         return $this->getBind()->getQuerySelectAggregate($functions);
     }
 
     /**
      * @return array the available aggreagate functions for this field. empty array if none or irrelevant.
      */
-    public function getAggregateFunctions() {
+    public function getAggregateFunctions()
+    {
         return array('COUNT', 'COUNT_GRBY');
     }
 
@@ -237,7 +253,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * Return the dao of the criteria value used with this field.
      * @return Tracker_Report_Criteria_List_ValueDao
      */
-    protected function getCriteriaDao() {
+    protected function getCriteriaDao()
+    {
         return new Tracker_Report_Criteria_List_ValueDao();
     }
 
@@ -282,7 +299,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string
      */
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
+    {
         $values = array();
         foreach($this->getBind()->getChangesetValues($changeset_id) as $v) {
             $values[] = $this->getBind()->formatChangesetValueForCSV($v);
@@ -295,7 +313,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param Tracker_ReportCriteria $criteria
      * @return mixed
      */
-    public function getCriteriaValue($criteria) {
+    public function getCriteriaValue($criteria)
+    {
         if (empty($this->criteria_value) || empty($this->criteria_value[$criteria->report->id])) {
             $this->criteria_value = array();
 
@@ -319,7 +338,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @throws Tracker_Report_InvalidRESTCriterionException
      */
-    public function setCriteriaValueFromREST(Tracker_Report_Criteria $criteria, array $rest_criteria_value) {
+    public function setCriteriaValueFromREST(Tracker_Report_Criteria $criteria, array $rest_criteria_value)
+    {
         $searched_field_values = $rest_criteria_value[Tracker_Report_REST::VALUE_PROPERTY_NAME];
         $operator              = $rest_criteria_value[Tracker_Report_REST::OPERATOR_PROPERTY_NAME];
 
@@ -371,7 +391,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return mixed
      */
-    public function getFormattedCriteriaValue($value) {
+    public function getFormattedCriteriaValue($value)
+    {
         if ( empty($value['values']) ) {
             $value['values'] = array('');
         }
@@ -384,7 +405,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return string
      * @see fetchCriteria
      */
-    public function fetchCriteriaValue($criteria) {
+    public function fetchCriteriaValue($criteria)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $criteria_value = $this->getCriteriaValue($criteria);
@@ -434,7 +456,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * to enhance the user experience
      * @return string
      */
-    public function fetchCriteriaAdditionnalInfo($criteria) {
+    public function fetchCriteriaAdditionnalInfo($criteria)
+    {
         return ''; //$this->getBind()->fetchDecoratorsAsJavascript();
     }
     /**
@@ -462,7 +485,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return bool
      */
-    protected function criteriaCanBeAdvanced() {
+    protected function criteriaCanBeAdvanced()
+    {
         return true;
     }
 
@@ -471,7 +495,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param mixed $value the value of the field
      * @return string
      */
-    public function fetchRawValue($value) {
+    public function fetchRawValue($value)
+    {
         return $this->getBind()->fetchRawValue($value);
     }
 
@@ -480,14 +505,16 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param Tracker_Artifact_Changeset $changeset
      * @return string
      */
-    public function fetchRawValueFromChangeset($changeset) {
+    public function fetchRawValueFromChangeset($changeset)
+    {
         return $this->getBind()->fetchRawValueFromChangeset($changeset);
     }
 
     /**
      * @return Tracker_FormElement_Field_Value_ListDao
      */
-    protected function getValueDao() {
+    protected function getValueDao()
+    {
         return new Tracker_FormElement_Field_Value_ListDao();
     }
 
@@ -496,7 +523,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string html
      */
-    protected function fetchSubmitValue(array $submitted_values) {
+    protected function fetchSubmitValue(array $submitted_values)
+    {
         $selected_values = isset($submitted_values[$this->id]) ? $submitted_values[$this->id] : array();
         $default_values  = $this->getSubmitDefaultValues();
 
@@ -508,7 +536,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         );
     }
 
-    private function getSubmitDefaultValues() {
+    private function getSubmitDefaultValues()
+    {
         if ($this->fieldHasEnableWorkflow()) {
             return array();
         }
@@ -521,7 +550,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string html
      */
-    protected function fetchSubmitValueMasschange() {
+    protected function fetchSubmitValueMasschange()
+    {
         return $this->_fetchFieldMasschange('tracker_field_'. $this->id, 'artifact['. $this->id .']', $this->getBind()->getDefaultValues());
     }
     /**
@@ -592,7 +622,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         $html = '';
         $selected_values = $value ? $value->getListValues() : array();
         $tablo = array();
@@ -625,7 +656,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param $id the field_id
      * @return bool , true if a workflow is defined and enabled on the field_id
      */
-    public function fieldHasEnableWorkflow(){
+    public function fieldHasEnableWorkflow()
+    {
         $workflow = $this->getWorkflow();
         if(!empty($workflow) && $workflow->is_used){
             return $workflow->field_id===$this->id;
@@ -638,7 +670,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param $id the field_id
      * @return bool , true if a workflow is defined on the field_id
      */
-    public function fieldHasDefineWorkflow(){
+    public function fieldHasDefineWorkflow()
+    {
         $workflow = $this->getWorkflow();
         if(!empty($workflow)){
             return $workflow->field_id===$this->id;
@@ -650,7 +683,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * Get the workflow of the tracker.
      * @return Workflow Object
      */
-    public function getWorkflow(){
+    public function getWorkflow()
+    {
         return $this->getTracker()->getWorkflow();
     }
 
@@ -661,7 +695,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return bool true if the value is considered ok
      */
-    protected function validate(Tracker_Artifact $artifact, $value) {
+    protected function validate(Tracker_Artifact $artifact, $value)
+    {
         $valid          = true;
         $field_value_to = null;
 
@@ -723,7 +758,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
 
-    protected function isTransitionValid($field_value_from, $field_value_to){
+    protected function isTransitionValid($field_value_from, $field_value_to)
+    {
         if (!$this->fieldHasEnableWorkflow()) {
             return true;
         }else {
@@ -734,7 +770,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
     }
 
-    protected function getSelectedValue($selected_values) {
+    protected function getSelectedValue($selected_values)
+    {
         if ($this->getBind()) {
             foreach($this->getBind()->getAllValues() as $id => $value) {
                 if(isset($selected_values[$id])) {
@@ -754,7 +791,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return Tracker_FormElement_Field_List_BindValue[]
      */
-    public function getAllValues() {
+    public function getAllValues()
+    {
         return $this->getBind()->getAllValues();
     }
 
@@ -786,7 +824,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return Tracker_FormElement_Field_List_Value or null if not found
      */
-    public function getListValueById($value_id) {
+    public function getListValueById($value_id)
+    {
         foreach ($this->getVisibleValuesPlusNoneIfAny() as $value) {
             if ($value->getId() == $value_id) {
                 return $value;
@@ -799,7 +838,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param Tracker_Artifact_Changeset $changeset
      * @return string
      */
-    public function getFirstValueFor(Tracker_Artifact_Changeset $changeset) {
+    public function getFirstValueFor(Tracker_Artifact_Changeset $changeset)
+    {
         if ($this->userCanRead()) {
             $value = $changeset->getValue($this);
             if ($value && ($last_values = $value->getListValues())) {
@@ -819,7 +859,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string
      */
-    protected function _fetchField(string $id, string $name, $selected_values, $submitted_values_for_this_list = array()) {
+    protected function _fetchField(string $id, string $name, $selected_values, $submitted_values_for_this_list = array())
+    {
         $html     = '';
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -874,7 +915,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $html;
     }
 
-    protected function fetchFieldContainerStart($id, $name) {
+    protected function fetchFieldContainerStart($id, $name)
+    {
         $html     = '';
         $multiple = '';
         $size     = '';
@@ -890,7 +932,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $html;
     }
 
-    protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected) {
+    protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected)
+    {
         $id = $value->getId();
         if ($id == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
             $label = $value->getLabel();
@@ -905,12 +948,14 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return '<option value="'. $id .'" '. $selected .' title="'. $label .'" style="'. $styles['inline-styles'] . '" class="' .  $styles['classes'] .' ">'. $label .'</option>';
     }
 
-    protected function fetchFieldContainerEnd() {
+    protected function fetchFieldContainerEnd()
+    {
         return '</select>';
     }
 
 
-    protected function _fetchFieldMasschange($id, $name, $selected_values) {
+    protected function _fetchFieldMasschange($id, $name, $selected_values)
+    {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
         $multiple = ' ';
@@ -950,7 +995,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
 
-    protected function getMaxSize() {
+    protected function getMaxSize()
+    {
         return 7;
     }
 
@@ -960,7 +1006,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param array $from the value(s) *before*
      * @param array $to   the value(s) *after*
      */
-    public function fetchFollowUp($artifact, $from, $to) {
+    public function fetchFollowUp($artifact, $from, $to)
+    {
         $html = '';
         $values = array();
         if ($from && isset($from['changeset_id'])) {
@@ -990,7 +1037,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * Display the html field in the admin ui
      * @return string html
      */
-    protected function fetchAdminFormElement() {
+    protected function fetchAdminFormElement()
+    {
         $html = '';
         $html .= $this->_fetchField('', '', $this->getBind()->getDefaultValues());
         return $html;
@@ -1002,7 +1050,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param Tracker_Artifact_ChangesetValue_List $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         $html = '';
         if ($value) {
             $html .= $this->fetchChangesetValue($artifact->id, $artifact->getLastChangeset()->id, $value);
@@ -1088,7 +1137,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return bool
      */
-    public function shouldBeBindXML() {
+    public function shouldBeBindXML()
+    {
         return true;
     }
 
@@ -1101,10 +1151,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param User\XML\Import\IFindUserFromXMLReference $user_finder
      */
     public function continueGetInstanceFromXML(
-         $xml,
-         &$xmlMapping,
-         User\XML\Import\IFindUserFromXMLReference $user_finder
-     ) {
+        $xml,
+        &$xmlMapping,
+        User\XML\Import\IFindUserFromXMLReference $user_finder
+    ) {
         parent::continueGetInstanceFromXML($xml, $xmlMapping, $user_finder);
         // if field is a list add bind
         if ($xml->bind) {
@@ -1131,7 +1181,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return Tracker_FormElement_Field_ListDao
      */
-    public function getListDao() {
+    public function getListDao()
+    {
         return new Tracker_FormElement_Field_ListDao();
     }
 
@@ -1140,7 +1191,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return Tracker_FormElement_Field_List_BindFactory
      */
-    function getBindFactory() {
+    function getBindFactory()
+    {
         return new Tracker_FormElement_Field_List_BindFactory();
     }
 
@@ -1163,7 +1215,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
-    public function getChangesetValue($changeset, $value_id, $has_changed) {
+    public function getChangesetValue($changeset, $value_id, $has_changed)
+    {
         $changeset_value = null;
         $value_ids = $this->getValueDao()->searchById($value_id, $this->id);
         $bindvalue_ids = array();
@@ -1178,12 +1231,14 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $changeset_value;
     }
 
-    public function getRESTBindingProperties() {
+    public function getRESTBindingProperties()
+    {
         $bind = $this->getBind();
         return $bind->getRESTBindingProperties();
     }
 
-    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null)
+    {
         if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
             return array_map('intval', $value['bind_value_ids']);
         }
@@ -1191,7 +1246,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
            . ' Example: {"field_id": 1548, "bind_value_ids": [457]}');
     }
 
-    public function getFieldDataFromRESTValueByField(array $value, ?Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValueByField(array $value, ?Tracker_Artifact $artifact = null)
+    {
         throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
     }
 
@@ -1202,7 +1258,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return mixed the field data corresponding to the rest_value for artifact submision
      */
-    public function getFieldData($value) {
+    public function getFieldData($value)
+    {
         if ($value === $GLOBALS['Language']->getText('global','none')) {
             return Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID;
         }
@@ -1223,7 +1280,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changesetvalue, $new_value) {
+    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changesetvalue, $new_value)
+    {
         if (!is_array($new_value)) {
             $new_value = array($new_value);
         }
@@ -1246,14 +1304,16 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return bool
      */
-    public function isNotificationsSupported() {
+    public function isNotificationsSupported()
+    {
         if ($b = $this->getBind()) {
             return $b->isNotificationsSupported();
         }
         return false;
     }
 
-    protected function permission_is_authorized($type, $transition_id, $user_id, $group_id) {
+    protected function permission_is_authorized($type, $transition_id, $user_id, $group_id)
+    {
         include_once __DIR__ . '/../../../../../src/www/project/admin/permissions.php';
 
         return permission_is_authorized($type, $transition_id, $user_id, $group_id);
@@ -1267,7 +1327,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      *@return bool true if user has permission on this field
      */
-    public function userCanMakeTransition($transition_id, ?PFUser $user = null) {
+    public function userCanMakeTransition($transition_id, ?PFUser $user = null)
+    {
         if ($transition_id) {
             $group_id = $this->getTracker()->getGroupId();
 
@@ -1286,15 +1347,18 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string[]
      */
-    public function getRecipients(Tracker_Artifact_ChangesetValue $changeset_value) {
+    public function getRecipients(Tracker_Artifact_ChangesetValue $changeset_value)
+    {
         return $this->getBind()->getRecipients($changeset_value);
     }
 
-    protected function getTransitionId($from, $to) {
+    protected function getTransitionId($from, $to)
+    {
         return TransitionFactory::instance()->getTransitionId($this->getTracker(), $from, $to);
     }
 
-    public function getDefaultValue() {
+    public function getDefaultValue()
+    {
         $default_array = $this->getBind()->getDefaultValues();
         if (! $default_array) {
             return array(Tracker_FormElement_Field_List_Bind::NONE_VALUE);
@@ -1303,7 +1367,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
 
-    public function getDefaultRESTValue() {
+    public function getDefaultRESTValue()
+    {
         return $this->getBind()->getDefaultRESTValues();
     }
 
@@ -1315,7 +1380,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return bool true if the value is considered ok
      */
-    public function isValid(Tracker_Artifact $artifact, $value) {
+    public function isValid(Tracker_Artifact $artifact, $value)
+    {
         $this->has_errors = ! ($this->isPossibleValue($value) && $this->validate($artifact, $value));
 
         return ! $this->has_errors;
@@ -1324,7 +1390,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return bool
      */
-    protected function isPossibleValue($value) {
+    protected function isPossibleValue($value)
+    {
         $is_possible_value   = true;
 
         if (is_array($value)) {
@@ -1356,7 +1423,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return bool true on success or false on failure
      */
-    public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $value) {
+    public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $value)
+    {
         $this->has_errors = false;
 
         if ($this->isEmpty($value, $artifact) && $this->isRequired()) {
@@ -1366,34 +1434,39 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return ! $this->has_errors;
     }
 
-    public function isEmpty($value, Tracker_Artifact $artifact) {
+    public function isEmpty($value, Tracker_Artifact $artifact)
+    {
         return $this->isNone($value);
     }
 
     /**
      * @see Tracker_FormElement_Field_Shareable
      */
-    public function fixOriginalValueIds(array $value_mapping) {
+    public function fixOriginalValueIds(array $value_mapping)
+    {
         $this->getBind()->fixOriginalValueIds($value_mapping);
     }
 
     /**
      * @see Tracker_FormElement::process()
      */
-    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
+    {
         parent::process($layout, $request, $current_user);
         if ($request->get('func') == 'get-values') {
             $GLOBALS['Response']->sendJSON($this->getBind()->fetchFormattedForJson());
         }
     }
 
-    public function fetchFormattedForJson() {
+    public function fetchFormattedForJson()
+    {
         $json = parent::fetchFormattedForJson();
         $json['values'] = $this->getBind()->fetchFormattedForJson();
         return $json;
     }
 
-    public function getRESTAvailableValues() {
+    public function getRESTAvailableValues()
+    {
         $values = null;
         $bind = $this->getBind();
         if ($bind != null) {
@@ -1407,7 +1480,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return int | null
      */
-    public function addBindValue($new_value) {
+    public function addBindValue($new_value)
+    {
         return $this->getBind()->addValue($new_value);
     }
 

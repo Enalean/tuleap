@@ -29,7 +29,8 @@ class BacklogItemReference {
      */
     public $artifact;
 
-    public function getArtifactId() {
+    public function getArtifactId()
+    {
         return isset($this->artifact['id']) ? $this->artifact['id'] : null;
     }
 }

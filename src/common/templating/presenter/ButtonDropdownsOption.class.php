@@ -27,14 +27,16 @@ class Templating_Presenter_ButtonDropdownsOption {
     protected $id;
     protected $li_parameters = array();
 
-    public function __construct($id, $label, $selected, $url) {
+    public function __construct($id, $label, $selected, $url)
+    {
         $this->id       = $id;
         $this->label    = $label;
         $this->selected = $selected;
         $this->url      = $url;
     }
 
-    public function addLiParameter($parameter, $value) {
+    public function addLiParameter($parameter, $value)
+    {
         $this->li_parameters[] = array(
             'parameter' => $parameter,
             'value'     => $value,
@@ -42,50 +44,61 @@ class Templating_Presenter_ButtonDropdownsOption {
         return $this;
     }
 
-    public function setLiParameters(array $parameters) {
+    public function setLiParameters(array $parameters)
+    {
         foreach ($parameters as $key => $value) {
             $this->addLiParameter($key, $value);
         }
         return $this;
     }
 
-    public function simple() {
+    public function simple()
+    {
         return true;
     }
 
-    public function submenu() {
+    public function submenu()
+    {
         return false;
     }
 
-    public function divider() {
+    public function divider()
+    {
         return false;
     }
 
-    public function title() {
+    public function title()
+    {
         return false;
     }
 
-    public function id() {
+    public function id()
+    {
         return $this->id;
     }
 
-    public function label() {
+    public function label()
+    {
         return $this->label;
     }
 
-    public function selected() {
+    public function selected()
+    {
         return $this->selected;
     }
 
-    public function url() {
+    public function url()
+    {
         return $this->url;
     }
 
-    public function data_toggle() {
+    public function data_toggle()
+    {
 
     }
 
-    public function li_parameters() {
+    public function li_parameters()
+    {
         return $this->li_parameters;
     }
 }

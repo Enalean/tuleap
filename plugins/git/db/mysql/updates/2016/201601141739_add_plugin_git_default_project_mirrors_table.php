@@ -20,17 +20,20 @@
 
 class b201601141739_add_plugin_git_default_project_mirrors_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add plugin_git_default_project_mirrors table to store emails.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS plugin_git_default_project_mirrors (
                 project_id INT(11) NOT NULL,
                 mirror_id INT(11) unsigned NOT NULL,
@@ -40,7 +43,8 @@ EOT;
         $this->db->createTable('plugin_git_default_project_mirrors', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('plugin_git_default_project_mirrors')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_git_default_project_mirrors table is missing');
         }

@@ -22,24 +22,28 @@
 
 class GraphOnTrackersV5_Chart_BarDao extends DataAccessObject {
 
-    function __construct($da = null) {
+    function __construct($da = null)
+    {
         parent::__construct($da);
         $this->table_name = 'plugin_graphontrackersv5_bar_chart';
     }
 
-    public function searchById($id) {
+    public function searchById($id)
+    {
         $id = $this->da->escapeInt($id);
         $sql = "SELECT * FROM $this->table_name WHERE id = $id";
         return $this->retrieve($sql);
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $id = $this->da->escapeInt($id);
         $sql = "DELETE FROM $this->table_name WHERE id = $id";
         return $this->update($sql);
     }
 
-    public function save($id, $field_base, $field_group) {
+    public function save($id, $field_base, $field_group)
+    {
         $id          = $this->da->escapeInt($id);
         $field_base  = $this->da->escapeInt($field_base);
         $field_group = $this->da->escapeInt($field_group);
@@ -48,7 +52,8 @@ class GraphOnTrackersV5_Chart_BarDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function duplicate($from_chart_id, $to_chart_id, $field_mapping) {
+    public function duplicate($from_chart_id, $to_chart_id, $field_mapping)
+    {
         $from_chart_id = $this->da->escapeInt($from_chart_id);
         $to_chart_id   = $this->da->escapeInt($to_chart_id);
         $sql = "INSERT INTO $this->table_name (id, field_base, field_group)

@@ -34,7 +34,8 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
     /** @var Docman_ApprovalTableLinkDao */
     private $dao;
 
-    public function __construct(Docman_Link $item, $versionNumber=null) {
+    public function __construct(Docman_Link $item, $versionNumber=null)
+    {
         parent::__construct($item);
 
         $this->dao = new Docman_ApprovalTableLinkDao();
@@ -61,7 +62,8 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
     /**
      * Create a new Docman_ApprovalTable object.
      */
-    public function newTable() {
+    public function newTable()
+    {
         return new Docman_ApprovalTableLink();
     }
 
@@ -71,7 +73,8 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
      * @param $table ApprovalTable
      * @return int new table id
      */
-    public function _createTable($table) {
+    public function _createTable($table)
+    {
         return $this->dao->createTable(
             'link_version_id',
             $table->getVersionId(),
@@ -83,16 +86,19 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
         );
     }
 
-    public function _updateTableWithLastId($dstTable) {
+    public function _updateTableWithLastId($dstTable)
+    {
         $currentVersion = $this->item->getCurrentVersion();
         $dstTable->setVersionId($currentVersion->getId());
     }
 
-    public function _getTable() {
+    public function _getTable()
+    {
         return $this->getTableFromVersion($this->itemVersion);
     }
 
-    public function getTableFromVersion($version) {
+    public function getTableFromVersion($version)
+    {
         $table = null;
         if($version !== null) {
             $dar = $this->dao->getTableById($version->getId());
@@ -105,17 +111,20 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
         return $table;
     }
 
-    public function getLastDocumentVersionNumber() {
+    public function getLastDocumentVersionNumber()
+    {
         $currentItemVersion = $this->item->getCurrentVersion();
         return $currentItemVersion->getNumber();
     }
 
-    public function userAccessedSinceLastUpdate($user) {
+    public function userAccessedSinceLastUpdate($user)
+    {
         $log = new Docman_Log();
         return $log->userAccessedSince($user->getId(), $this->item->getId(), $this->itemVersion->getDate());
     }
 
-    public function _getDao() {
+    public function _getDao()
+    {
         return $this->dao;
     }
 }

@@ -23,31 +23,37 @@ class MediawikiAdminLanguagePanePresenter extends MediawikiAdminPanePresenter {
     /** @var array */
     private $supported_languages;
 
-    public function __construct(Project $project, array $supported_languages) {
+    public function __construct(Project $project, array $supported_languages)
+    {
         parent::__construct($project);
         $this->supported_languages = $supported_languages;
     }
 
-    public function available_languages_title() {
+    public function available_languages_title()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'available_languages_title');
     }
 
-    public function available_languages_intro() {
+    public function available_languages_intro()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'available_languages_intro');
     }
 
-    public function route() {
+    public function route()
+    {
         return MEDIAWIKI_BASE_URL . '/forge_admin.php?' . http_build_query(array(
             'group_id' => $this->project->getID(),
             'action'   => 'save_language'
         ));
     }
 
-    public function available_languages() {
+    public function available_languages()
+    {
         return $this->supported_languages;
     }
 
-    public function save_changes() {
+    public function save_changes()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'save_label');
     }
 }

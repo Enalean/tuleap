@@ -33,7 +33,8 @@ class Cardwall_SwimlineFactory {
     /** @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact */
     private $field_provider;
 
-    public function __construct(Cardwall_OnTop_Config $config, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
+    public function __construct(Cardwall_OnTop_Config $config, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider)
+    {
         $this->config = $config;
         $this->field_provider = $field_provider;
     }
@@ -45,7 +46,8 @@ class Cardwall_SwimlineFactory {
      * @param array of Cardwall_CardInCellPresenter $potential_presenters
      * @return array
      */
-    public function getCells(Cardwall_OnTop_Config_ColumnCollection $columns, array $potential_presenters) {
+    public function getCells(Cardwall_OnTop_Config_ColumnCollection $columns, array $potential_presenters)
+    {
         $cells = array();
         foreach ($columns as $column) {
             $cells[] = $this->getCell($column, $potential_presenters);
@@ -53,7 +55,8 @@ class Cardwall_SwimlineFactory {
         return $cells;
     }
 
-    private function getCell(Cardwall_Column $column, array $potential_presenters) {
+    private function getCell(Cardwall_Column $column, array $potential_presenters)
+    {
         $retained_presenters = array();
         foreach ($potential_presenters as $p) {
             $this->addNodeToCell($p, $column, $retained_presenters);
@@ -66,7 +69,8 @@ class Cardwall_SwimlineFactory {
         );
     }
 
-    private function addNodeToCell(Cardwall_CardInCellPresenter $presenter, Cardwall_Column $column, array &$presenters) {
+    private function addNodeToCell(Cardwall_CardInCellPresenter $presenter, Cardwall_Column $column, array &$presenters)
+    {
         $artifact        = $presenter->getArtifact();
         if ($this->config->isInColumn($artifact, $this->field_provider, $column)) {
             $presenters[] = $presenter;

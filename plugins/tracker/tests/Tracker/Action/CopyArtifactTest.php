@@ -84,7 +84,8 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
     /** @var TrackerFactory */
     private $tracker_factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -148,7 +149,8 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
         stub($this->xml_importer)->createFieldsDataBuilder()->returns(\Mockery::spy(Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder::class));
     }
 
-    public function itExportsTheRequiredSnapshotArtifact() {
+    public function itExportsTheRequiredSnapshotArtifact()
+    {
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
         stub($this->xml_importer)->importBareArtifact('*', '*')->returns(\Mockery::spy(\Tracker_Artifact::class));
         expect($this->xml_exporter)->exportSnapshotWithoutComments('*', $this->from_changeset)->once()->returns($this->default_xml);
@@ -156,7 +158,8 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itRedirectsToTheNewArtifact() {
+    public function itRedirectsToTheNewArtifact()
+    {
         $xml_content = <<<XML
             <artifacts>
                 <artifact id="456" tracker_id="1">
@@ -183,7 +186,8 @@ XML;
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itDoesNothingAndRedirectsToTheTrackerIfCannotSubmit() {
+    public function itDoesNothingAndRedirectsToTheTrackerIfCannotSubmit()
+    {
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(false);
 
         expect($this->xml_exporter)->exportSnapshotWithoutComments()->never();
@@ -193,7 +197,8 @@ XML;
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itRedirectsToTheTrackerIfXMLImportFailed() {
+    public function itRedirectsToTheTrackerIfXMLImportFailed()
+    {
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
 
         expect($GLOBALS['Response'])->redirect(TRACKER_BASE_URL .'/?tracker=1')->once();
@@ -201,7 +206,8 @@ XML;
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itUpdatesTheXMLWithIncomingValues() {
+    public function itUpdatesTheXMLWithIncomingValues()
+    {
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
 
         expect($this->xml_updater)->update(
@@ -215,7 +221,8 @@ XML;
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itUpdateTheXMLToNotMoveTheOriginalAttachementButToDoACopyInstead() {
+    public function itUpdateTheXMLToNotMoveTheOriginalAttachementButToDoACopyInstead()
+    {
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
 
         expect($this->file_updater)->update()->once();
@@ -223,7 +230,8 @@ XML;
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itErrorsIfNoArtifactIdInTheRequest() {
+    public function itErrorsIfNoArtifactIdInTheRequest()
+    {
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
 
         $this->request = aRequest()
@@ -240,7 +248,8 @@ XML;
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itErrorsIfNoChangesetIdInTheRequest() {
+    public function itErrorsIfNoChangesetIdInTheRequest()
+    {
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
 
         $this->request = aRequest()
@@ -257,7 +266,8 @@ XML;
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itErrorsIfNoSubmittedValuesInTheRequest() {
+    public function itErrorsIfNoSubmittedValuesInTheRequest()
+    {
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
 
         $this->request = aRequest()
@@ -274,7 +284,8 @@ XML;
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itErrorsIfArtifactDoesNotBelongToTracker() {
+    public function itErrorsIfArtifactDoesNotBelongToTracker()
+    {
         $another_tracker = aTracker()->withId(111)->build();
         $artifact_in_another_tracker = anArtifact()->withTracker($another_tracker)->build();
         stub($this->artifact_factory)
@@ -296,7 +307,8 @@ XML;
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itCreatesACommentChangesetContainingAllTheErrorRaisedDuringTheMigrationProcess() {
+    public function itCreatesACommentChangesetContainingAllTheErrorRaisedDuringTheMigrationProcess()
+    {
         $xml_content = <<<XML
             <artifacts>
                 <artifact id="123" tracker_id="1">
@@ -320,7 +332,8 @@ XML;
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itImportsTheArtifactsUsingTheXmlImporter() {
+    public function itImportsTheArtifactsUsingTheXmlImporter()
+    {
         $xml_content = <<<XML
             <artifacts>
                 <artifact id="123" tracker_id="1">
@@ -362,47 +375,59 @@ XML;
         $this->xml_importer->shouldReceive('importBareArtifact')
             ->with(
                 $tracker1,
-                \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 123;}),
-                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); })
+                \Mockery::on(function (SimpleXMLElement $val) {
+                    return (int)$val['id'] === 123;}),
+                Mockery::on(function ($element) {
+                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); })
             )
             ->andReturn($artifact123)->once();
         $this->xml_importer->shouldReceive('importBareArtifact')
             ->with(
                 $tracker1,
-                \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 456;}),
-                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); })
+                \Mockery::on(function (SimpleXMLElement $val) {
+                    return (int)$val['id'] === 456;}),
+                Mockery::on(function ($element) {
+                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); })
             )
             ->andReturn($artifact456)->once();
         $this->xml_importer->shouldReceive('importBareArtifact')
             ->with(
                 $tracker2,
-                \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 789;}),
-                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); })
+                \Mockery::on(function (SimpleXMLElement $val) {
+                    return (int)$val['id'] === 789;}),
+                Mockery::on(function ($element) {
+                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); })
             )
             ->andReturn($artifact789)->once();
 
         $this->xml_importer->shouldReceive('importChangesets')
             ->with(
                 $artifact123,
-                \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 123;}),
+                \Mockery::on(function (SimpleXMLElement $val) {
+                    return (int)$val['id'] === 123;}),
                 \Mockery::any(),
-                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); }),
+                Mockery::on(function ($element) {
+                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); }),
                 Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
             )->once();
         $this->xml_importer->shouldReceive('importChangesets')
             ->with(
                 $artifact456,
-                \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 456;}),
+                \Mockery::on(function (SimpleXMLElement $val) {
+                    return (int)$val['id'] === 456;}),
                 \Mockery::any(),
-                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); }),
+                Mockery::on(function ($element) {
+                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); }),
                 Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
             )->once();
         $this->xml_importer->shouldReceive('importChangesets')
             ->with(
                 $artifact789,
-                \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 789;}),
+                \Mockery::on(function (SimpleXMLElement $val) {
+                    return (int)$val['id'] === 789;}),
                 \Mockery::any(),
-                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); }),
+                Mockery::on(function ($element) {
+                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); }),
                 Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
             )->once();
 

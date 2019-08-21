@@ -40,7 +40,8 @@ class Widget_ProjectSvnStats_Layout {
      *
      * @return Void
      */
-    public function __construct($nb_committer) {
+    public function __construct($nb_committer)
+    {
         $this->nb_committer = $nb_committer;
         $this->legend_ratio = $nb_committer / 10;
     }
@@ -50,7 +51,8 @@ class Widget_ProjectSvnStats_Layout {
      *
      * @return bool
      */
-    public function getChartWidth() {
+    public function getChartWidth()
+    {
         return $this->hasOnlyOneColumn() ? 400 : 550;
     }
 
@@ -59,7 +61,8 @@ class Widget_ProjectSvnStats_Layout {
      *
      * @return bool
      */
-    public function getChartHeigh() {
+    public function getChartHeigh()
+    {
         return $this->hasOnlyOneColumn() ? 300+16*$this->nb_committer*(1/$this->legend_ratio) : 300+(16+$this->legend_ratio)*$this->nb_committer;
     }
 
@@ -69,7 +72,8 @@ class Widget_ProjectSvnStats_Layout {
      *
      * @return int
      */
-    private function getCustomImageMargin() {
+    private function getCustomImageMargin()
+    {
         return $this->hasMoreThanTwoColumns() ? 80+(16-$this->legend_ratio)*$this->nb_committer : 125+15*(1/$this->legend_ratio)*$this->nb_committer;
     }
 
@@ -78,7 +82,8 @@ class Widget_ProjectSvnStats_Layout {
      *
      * @return bool
      */
-    private function hasOnlyOneColumn() {
+    private function hasOnlyOneColumn()
+    {
         return $this->legend_ratio < 1;
     }
 
@@ -87,7 +92,8 @@ class Widget_ProjectSvnStats_Layout {
      *
      * @return Float
      */
-    public function getLegendXPosition() {
+    public function getLegendXPosition()
+    {
         return $this->hasOnlyOneColumn() ? 0.1 : 0.05;
     }
 
@@ -96,7 +102,8 @@ class Widget_ProjectSvnStats_Layout {
      *
      * @return Float
      */
-    public function getLegendYPosition() {
+    public function getLegendYPosition()
+    {
         if ($this->hasMoreThanTwoColumns()) {
             $legend_y_position = 0.6;
         } else if ($this->hasOnlyOneColumn()) {
@@ -112,7 +119,8 @@ class Widget_ProjectSvnStats_Layout {
      *
      * @return Float
      */
-    public function getImageBottomMargin() {
+    public function getImageBottomMargin()
+    {
         $customImageMargin = $this->getCustomImageMargin();
         return $this->hasOnlyOneColumn() ? 100+18*$this->nb_committer : $customImageMargin;
     }
@@ -122,7 +130,8 @@ class Widget_ProjectSvnStats_Layout {
      *
      * @return String
      */
-    public function getLegendAlign() {
+    public function getLegendAlign()
+    {
         return $this->hasOnlyOneColumn() ? 'bottom' : 'top';
     }
 
@@ -131,7 +140,8 @@ class Widget_ProjectSvnStats_Layout {
      *
      * @return bool
      */
-    private function hasMoreThanTwoColumns() {
+    private function hasMoreThanTwoColumns()
+    {
         return $this->legend_ratio > 2;
     }
 

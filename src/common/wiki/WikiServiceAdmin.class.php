@@ -24,7 +24,8 @@
 class WikiServiceAdmin extends Controler {
   /* private Wiki*/ var $wiki;
 
-    function __construct($id) {
+    function __construct($id)
+    {
         global $LANG, $is_wiki_page;
 
       //used so the search box will add the necessary element to the pop-up box
@@ -54,7 +55,8 @@ class WikiServiceAdmin extends Controler {
 
     }
 
-    function request() {
+    function request()
+    {
       // Default behaviour: display default view:
         $this->view = 'main';
 

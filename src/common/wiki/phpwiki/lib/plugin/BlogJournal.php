@@ -19,20 +19,24 @@ require_once('lib/plugin/WikiBlog.php');
 class WikiPlugin_BlogJournal
 extends WikiPlugin_WikiBlog
 {
-    function getName() {
+    function getName()
+    {
         return _("BlogJournal");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Include latest blog entries for the current or ADMIN user");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.4 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('count'    => 7,
                      'user'     => '',
                      'order'    => 'reverse',        // latest first
@@ -41,7 +45,8 @@ extends WikiPlugin_WikiBlog
                      );
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         if (is_array($argstr)) { // can do with array also.
             $args = $argstr;
             if (!isset($args['order'])) $args['order'] = 'reverse';

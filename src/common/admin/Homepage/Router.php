@@ -38,7 +38,8 @@ class Admin_Homepage_Router {
         $this->request    = $request;
     }
 
-    public function route() {
+    public function route()
+    {
         if (! $this->request->getCurrentUser()->isSuperUser()) {
             $this->controller->notSiteAdmin($this->request);
         } elseif ($this->request->get('update')) {

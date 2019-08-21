@@ -30,12 +30,14 @@ class Tracker_Workflow_Action_Triggers_DeleteTrigger {
      */
     private $rule_manager;
 
-    public function __construct(Tracker $tracker, Tracker_Workflow_Trigger_RulesManager $rule_manager) {
+    public function __construct(Tracker $tracker, Tracker_Workflow_Trigger_RulesManager $rule_manager)
+    {
         $this->tracker             = $tracker;
         $this->rule_manager        = $rule_manager;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    {
         try {
             if (! $request->isPost()) {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'Method must be post');

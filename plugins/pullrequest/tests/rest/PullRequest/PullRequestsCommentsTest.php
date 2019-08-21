@@ -30,17 +30,20 @@ require_once dirname(__FILE__).'/../bootstrap.php';
  */
 class PullRequestsCommentsTest extends RestBase {
 
-    protected function getResponseForNonMember($request) {
+    protected function getResponseForNonMember($request)
+    {
         return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
     }
 
-    public function testOptions() {
+    public function testOptions()
+    {
         $response = $this->getResponse($this->client->options('pull_requests/1/comments'));
 
         $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGetPullRequestComments() {
+    public function testGetPullRequestComments()
+    {
         $response  = $this->getResponse($this->client->get('pull_requests/1/comments'));
 
         $pull_request_comments = $response->json();
@@ -54,13 +57,15 @@ class PullRequestsCommentsTest extends RestBase {
         $this->assertEquals('I am never at home on Sundays.', $pull_request_comments[2]['content']);
     }
 
-    public function testGetPullRequestCommentsThrows403IfUserCantSeeGitRepository() {
+    public function testGetPullRequestCommentsThrows403IfUserCantSeeGitRepository()
+    {
         $response = $this->getResponseForNonMember($this->client->get('pull_requests/1/comments'));
 
         $this->assertEquals($response->getStatusCode(), 403);
     }
 
-    public function testPostPullRequestComment() {
+    public function testPostPullRequestComment()
+    {
         $response  = $this->getResponse($this->client->post('pull_requests/1/comments', null, json_encode(
             array(
                 'content' => 'Shot down in flames'

@@ -88,7 +88,8 @@ class Git_AdminGitoliteConfig {
         $this->version_detector                 = $version_detector;
     }
 
-    public function process(Codendi_Request $request) {
+    public function process(Codendi_Request $request)
+    {
         $action = $request->get('action');
 
         if ($action === false) {
@@ -141,7 +142,8 @@ class Git_AdminGitoliteConfig {
     /**
      * @return Project
      */
-    private function getProject($project_name_from_autocomplete) {
+    private function getProject($project_name_from_autocomplete)
+    {
         return $this->project_manager->getProjectFromAutocompleter($project_name_from_autocomplete);
     }
 
@@ -212,7 +214,8 @@ class Git_AdminGitoliteConfig {
         );
     }
 
-    public function display(Codendi_Request $request) {
+    public function display(Codendi_Request $request)
+    {
         $title    = dgettext('tuleap-git', 'Git');
         $template_path = dirname(GIT_BASE_DIR).'/templates';
 

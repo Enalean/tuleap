@@ -31,14 +31,16 @@ class Tracker_ArtifactFactoryTest extends TuleapTestCase {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->dao = mock('Tracker_ArtifactDao');
         $this->artifact_factory = partial_mock('Tracker_ArtifactFactory', array('getDao'));
         stub($this->artifact_factory)->getDao()->returns($this->dao);
     }
 
-    public function itFetchArtifactsTitlesFromDb() {
+    public function itFetchArtifactsTitlesFromDb()
+    {
         $artifacts = array(anArtifact()->withId(12)->build(), anArtifact()->withId(30)->build());
 
         expect($this->dao)->getTitles(array(12, 30))->once();
@@ -47,7 +49,8 @@ class Tracker_ArtifactFactoryTest extends TuleapTestCase {
         $this->artifact_factory->setTitles($artifacts);
     }
 
-    public function itSetTheTitlesToTheArtifact() {
+    public function itSetTheTitlesToTheArtifact()
+    {
         $art24 = anArtifact()->withId(24)->build();
         $artifacts = array($art24);
 
@@ -58,7 +61,8 @@ class Tracker_ArtifactFactoryTest extends TuleapTestCase {
         $this->assertEqual('Zoum', $art24->getTitle());
     }
 
-    public function itSetTheTitlesWhenThereAreSeveralArtifacts() {
+    public function itSetTheTitlesWhenThereAreSeveralArtifacts()
+    {
         $art24 = anArtifact()->withId(24)->build();
         $art32   = anArtifact()->withId(32)->build();
         $artifacts = array($art24, $art32);
@@ -71,7 +75,8 @@ class Tracker_ArtifactFactoryTest extends TuleapTestCase {
         $this->assertEqual('Zen', $art32->getTitle());
     }
 
-    public function itSetTheTitlesWhenThereAreSeveralTimeTheSameArtifact() {
+    public function itSetTheTitlesWhenThereAreSeveralTimeTheSameArtifact()
+    {
         $art24_1 = anArtifact()->withId(24)->build();
         $art24_2 = anArtifact()->withId(24)->build();
         $artifacts = array($art24_1, $art24_2);
@@ -95,7 +100,8 @@ class Tracker_ArtifactFactory_GetChildrenTest extends TuleapTestCase {
     /** @var PFUser */
     private $user;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->dao = mock('Tracker_ArtifactDao');
         $this->artifact_factory = partial_mock('Tracker_ArtifactFactory', array('getDao', 'getInstanceFromRow'));
@@ -107,7 +113,8 @@ class Tracker_ArtifactFactory_GetChildrenTest extends TuleapTestCase {
         stub($this->user)->isSuperUser()->returns(true);
     }
 
-    public function itFetchAllChildren() {
+    public function itFetchAllChildren()
+    {
         $project = \Mockery::mock(\Project::class);
 
         $tracker = \Mockery::mock(Tracker::class);

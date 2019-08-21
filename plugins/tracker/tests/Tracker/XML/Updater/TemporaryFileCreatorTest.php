@@ -28,7 +28,8 @@ class Tracker_XML_Updater_TemporaryFileCreatorTest extends TuleapTestCase {
      */
     private $initial;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
         ForgeConfig::set('tmp_dir', sys_get_temp_dir());
@@ -37,22 +38,26 @@ class Tracker_XML_Updater_TemporaryFileCreatorTest extends TuleapTestCase {
         $this->initial = __DIR__ .'/_fixtures/toto.txt';
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         parent::tearDown();
     }
 
-    public function itCreatesTemporaryFile() {
+    public function itCreatesTemporaryFile()
+    {
         $copy = $this->creator->createTemporaryFile($this->initial);
         $this->assertEqual(file_get_contents($this->initial), file_get_contents($copy));
     }
 
-    public function itCreatesFileInPlateformDefinedTmpDir() {
+    public function itCreatesFileInPlateformDefinedTmpDir()
+    {
         $copy = $this->creator->createTemporaryFile($this->initial);
         $this->assertTrue(strpos($copy, ForgeConfig::get('tmp_dir')) === 0);
     }
 
-    public function itCreatesFileInATemporaryDirectoryThatIsDifferentFromOtherCreators() {
+    public function itCreatesFileInATemporaryDirectoryThatIsDifferentFromOtherCreators()
+    {
         $another_creator = new Tracker_XML_Updater_TemporaryFileCreator();
         $this->assertNotEqual(
             $this->creator->getTemporaryDirectory(),
@@ -60,7 +65,8 @@ class Tracker_XML_Updater_TemporaryFileCreatorTest extends TuleapTestCase {
         );
     }
 
-    public function itCleanUpEverythingAtTheVeryEnd() {
+    public function itCleanUpEverythingAtTheVeryEnd()
+    {
         $temporary_directory = $this->creator->getTemporaryDirectory();
 
         unset($this->creator);

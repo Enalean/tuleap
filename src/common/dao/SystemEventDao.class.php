@@ -26,7 +26,8 @@ class SystemEventDao extends DataAccessObject {
      * Create new SystemEvent and store it in the DB
      * @return true if there is no error
      */
-    function store($type, $parameters, $priority,$status, $create_date, $owner) {
+    function store($type, $parameters, $priority,$status, $create_date, $owner)
+    {
         $sql = sprintf("INSERT INTO system_event (type, parameters, priority, status, create_date, owner) VALUES (%s, %s, %d, %s, FROM_UNIXTIME(%d), %s)",
                        $this->da->quoteSmart($type),
                        $this->da->quoteSmart($parameters),
@@ -43,7 +44,8 @@ class SystemEventDao extends DataAccessObject {
      * @param $sysevent : SystemEvent object
      * @return true if there is no error
      */
-    function close($sysevent) {
+    function close($sysevent)
+    {
         $now = time();
         $sql = sprintf("UPDATE system_event SET status=%s, log=%s, end_date=FROM_UNIXTIME(%d) WHERE id=%d",
                        $this->da->quoteSmart($sysevent->getStatus()),
@@ -62,7 +64,8 @@ class SystemEventDao extends DataAccessObject {
      * And set the event status to 'RUNNING'
      * @return DataAccessResult
     */
-    function checkOutNextEvent($owner, $types) {
+    function checkOutNextEvent($owner, $types)
+    {
         $owner    = $this->da->quoteSmart($owner);
         $types    = $this->da->quoteSmartImplode(',', $types);
 
@@ -88,7 +91,8 @@ class SystemEventDao extends DataAccessObject {
     }
 
     /** @return bool */
-    public function hasThereAnyEventsRunning() {
+    public function hasThereAnyEventsRunning()
+    {
         $status = $this->da->quoteSmart(SystemEvent::STATUS_RUNNING);
 
         $sql = "SELECT NULL
@@ -102,7 +106,8 @@ class SystemEventDao extends DataAccessObject {
     /**
      * Search n last status
      */
-    public function searchLastEvents($offset, $limit, $filters_status, $filters_type) {
+    public function searchLastEvents($offset, $limit, $filters_status, $filters_type)
+    {
         $offset         = $this->da->escapeInt($offset);
         $limit          = $this->da->escapeInt($limit);
         $filters_status = $this->da->quoteSmartImplode(", ", $filters_status);
@@ -116,7 +121,8 @@ class SystemEventDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchQueueStatsForLastDay($types) {
+    public function searchQueueStatsForLastDay($types)
+    {
         $types = $this->da->quoteSmartImplode(',', $types);
 
         $sql = "SELECT status, count(*) as nb
@@ -183,7 +189,8 @@ class SystemEventDao extends DataAccessObject {
     /**
      * @return DataAccessResult
      */
-    public function resetStatus($id, $status) {
+    public function resetStatus($id, $status)
+    {
         $id     = $this->da->escapeInt($id);
         $status = $this->da->quoteSmart($status);
         $sql = "UPDATE system_event
@@ -195,7 +202,8 @@ class SystemEventDao extends DataAccessObject {
     /**
      * @return array of event id and parameters
      */
-    public function searchNewGitRepoUpdateEvents() {
+    public function searchNewGitRepoUpdateEvents()
+    {
         $sql = "SELECT id, parameters FROM system_event
             WHERE status = 'NEW'
             AND type = 'GIT_REPO_UPDATE'";
@@ -207,7 +215,8 @@ class SystemEventDao extends DataAccessObject {
      * @param array $event_ids
      * @return bool
      */
-    public function markAsDone($event_ids) {
+    public function markAsDone($event_ids)
+    {
         $event_ids = $this->da->escapeIntImplode($event_ids);
 
         $sql = "UPDATE system_event
@@ -223,7 +232,8 @@ class SystemEventDao extends DataAccessObject {
      * @param array $event_ids
      * @return bool
      */
-    public function markAsRunning($event_ids) {
+    public function markAsRunning($event_ids)
+    {
         $event_ids = $this->da->escapeIntImplode($event_ids);
 
         $sql = "UPDATE system_event
@@ -234,7 +244,8 @@ class SystemEventDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function purgeDataOlderThanOneYear() {
+    public function purgeDataOlderThanOneYear()
+    {
         $one_year_ago_date = date('Y-m-d 00:00:00', strtotime('-1 year', time()));
 
         $sql = "DELETE FROM system_event
@@ -245,7 +256,8 @@ class SystemEventDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function searchAllMatchingEvents($status, $limit, $offset) {
+    public function searchAllMatchingEvents($status, $limit, $offset)
+    {
         $limit  = $this->da->escapeInt($limit);
         $offset = $this->da->escapeInt($offset);
 

@@ -20,17 +20,20 @@
  * Add rest_authentication_token table
  */
 class b201310171433_add_rest_authentication_token_table extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 add rest_authentication_token table
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS rest_authentication_token (
                     token VARCHAR(255) NOT NULL,
                     user_id INT(11) NOT NULL,
@@ -47,7 +50,8 @@ EOT;
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (! $this->db->tableNameExists('rest_authentication_token')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Table rest_authentication_token not created');
         }

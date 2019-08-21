@@ -42,29 +42,34 @@ extends WikiPlugin
     // Four required functions in a WikiPlugin.
     var $def_numberlinks = 5;
 
-    function getName () {
+    function getName()
+    {
         return _("PageTrail");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("PageTrail Plugin");
 
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.8 $");
     }
 
     // default values
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('numberlinks' => $this->def_numberlinks,
                      'invisible'   => false,
                      'duplicates'  => false,
                      );
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         extract($this->getArgs($argstr, $request));
 
         if ($numberlinks > 10 || $numberlinks < 0) {

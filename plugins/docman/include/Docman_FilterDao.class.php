@@ -23,7 +23,8 @@
 class Docman_FilterDao
 extends DataAccessObject {
 
-    function searchByReportId($id) {
+    function searchByReportId($id)
+    {
         $sql = sprintf('SELECT *'.
                        ' FROM plugin_docman_report_filter'.
                        ' WHERE report_id = %d'.
@@ -32,7 +33,8 @@ extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function createFilterList($reportId, $label, $love) {
+    function createFilterList($reportId, $label, $love)
+    {
         $sql = sprintf('INSERT INTO plugin_docman_report_filter'.
                        ' (report_id, label, value_love)'.
                        ' VALUES'.
@@ -43,7 +45,8 @@ extends DataAccessObject {
         return $this->update($sql);
     }
 
-    function createFilterText($reportId, $label, $string) {
+    function createFilterText($reportId, $label, $string)
+    {
         $sql = sprintf('INSERT INTO plugin_docman_report_filter'.
                        ' (report_id, label, value_string)'.
                        ' VALUES'.
@@ -54,7 +57,8 @@ extends DataAccessObject {
         return $this->update($sql);
     }
 
-    function createFilterDate($reportId, $label, $date, $op) {
+    function createFilterDate($reportId, $label, $date, $op)
+    {
         $sql = sprintf('INSERT INTO plugin_docman_report_filter'.
                        ' (report_id, label, value_date1, value_date_op)'.
                        ' VALUES'.
@@ -66,7 +70,8 @@ extends DataAccessObject {
         return $this->update($sql);
     }
 
-    function createFilterDateAdvanced($reportId, $label, $date1, $date2) {
+    function createFilterDateAdvanced($reportId, $label, $date1, $date2)
+    {
         $sql = sprintf('INSERT INTO plugin_docman_report_filter'.
                        ' (report_id, label, value_date1, value_date2)'.
                        ' VALUES'.
@@ -78,7 +83,8 @@ extends DataAccessObject {
         return $this->update($sql);
     }
 
-    function truncateFilters($reportId) {
+    function truncateFilters($reportId)
+    {
         $sql = sprintf('DELETE FROM plugin_docman_report_filter'.
                        ' WHERE report_id = %d',
                        $reportId);

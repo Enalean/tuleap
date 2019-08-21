@@ -18,15 +18,18 @@
 
 class b201511231728_add_trovecat_mandatory_column extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return "Add mandatory attribute for trovecat";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE trove_cat
                 ADD COLUMN mandatory TINYINT(1) NOT NULL DEFAULT 0";
 

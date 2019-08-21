@@ -20,15 +20,18 @@
 
 class b201305101622_remove_orphan_decorators extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Remove orphan decorators from the DB';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "
             DELETE td
             FROM tracker_field_list_bind_decorator AS td

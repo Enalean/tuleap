@@ -29,7 +29,8 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
      *
      * @param Pie_Engine $engine object
      */
-    function buildProperties($engine) {
+    function buildProperties($engine)
+    {
         parent::buildProperties($engine);
         $engine->data   = array();
         $engine->xaxis  = null;

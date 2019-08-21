@@ -24,7 +24,8 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
 
     private $template_id = 100;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $GLOBALS['ftp_frs_dir_prefix']  = 'whatever';
         $GLOBALS['ftp_anon_dir_prefix'] = 'whatever';
@@ -48,7 +49,8 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
         stub($system_event_manager)->isProjectNameAvailable()->returns(true);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         UserManager::clearInstance();
         ProjectManager::clearInstance();
         SystemEventManager::clearInstance();
@@ -62,7 +64,8 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    protected function aCreationValidator($request_data, $required_custom_descriptions, $trove_cats) {
+    protected function aCreationValidator($request_data, $required_custom_descriptions, $trove_cats)
+    {
         $request          = aRequest()->withParams($request_data)->build();
         $creation_request = new Project_OneStepCreation_OneStepCreationRequest(
             $request,
@@ -78,7 +81,8 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
         return $validator;
     }
 
-    public function testValidateAndGenerateErrorsValidatesFullname() {
+    public function testValidateAndGenerateErrorsValidatesFullname()
+    {
         $request_data = array();
         $trove_cats   = array();
         $validator    = $this->aCreationValidator($request_data, array(), $trove_cats);
@@ -86,7 +90,8 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
         $validator->validateAndGenerateErrors();
     }
 
-    public function itReturnsFalseIfARequiredCustomDescriptionIsNotSet() {
+    public function itReturnsFalseIfARequiredCustomDescriptionIsNotSet()
+    {
         $required_custom_descriptions = array(
             101 => new Project_CustomDescription_CustomDescription(101, "A REQUIRED description field", "desc", Project_CustomDescription_CustomDescription::REQUIRED, Project_CustomDescription_CustomDescription::TYPE_TEXT, 1),
         );
@@ -107,7 +112,8 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
         $this->assertFalse($validator->validateAndGenerateErrors());
     }
 
-    public function itReturnsFalseIfAMandatoryTroveCatIsNotSet() {
+    public function itReturnsFalseIfAMandatoryTroveCatIsNotSet()
+    {
         $required_custom_descriptions = array(
             101 => new Project_CustomDescription_CustomDescription(101, "A REQUIRED description field", "desc", Project_CustomDescription_CustomDescription::REQUIRED, Project_CustomDescription_CustomDescription::TYPE_TEXT, 1),
         );

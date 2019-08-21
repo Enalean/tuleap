@@ -28,7 +28,8 @@ class SystemEventDao_SearchWithParamTest extends TuleapTestCase {
     private $event_type  = array('MY_IMAGINARY_EVENT');
     private $status      = array('ONGOING');
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->da = \Mockery::mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);

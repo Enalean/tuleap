@@ -25,7 +25,8 @@ class Project_CustomDescription_CustomDescriptionDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function getCustomDescriptions() {
+    public function getCustomDescriptions()
+    {
         $sql = 'SELECT *
                 FROM group_desc
                 ORDER BY desc_rank';
@@ -38,7 +39,8 @@ class Project_CustomDescription_CustomDescriptionDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function getCustomDescription($id) {
+    public function getCustomDescription($id)
+    {
         $id = $this->da->escapeInt($id);
 
         $sql = "SELECT *
@@ -52,7 +54,8 @@ class Project_CustomDescription_CustomDescriptionDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function getRequiredCustomDescriptions() {
+    public function getRequiredCustomDescriptions()
+    {
         $sql = 'SELECT *
                 FROM group_desc
                 WHERE desc_required = 1

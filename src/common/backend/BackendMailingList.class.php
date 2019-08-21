@@ -28,7 +28,8 @@ class BackendMailingList extends Backend {
     /**
      * @return MailingListDao
      */
-    protected function _getMailingListDao() {
+    protected function _getMailingListDao()
+    {
         if (!$this->_mailinglistdao) {
             $this->_mailinglistdao = new MailingListDao(CodendiDataAccess::instance());
         }
@@ -41,7 +42,8 @@ class BackendMailingList extends Backend {
      * Write configuration in temporary file, and load it with mailman config_list tool
      * @return true on success, false otherwise
      */
-    protected function updateListConfig($list) {
+    protected function updateListConfig($list)
+    {
         // write configuration in temporary file
         $config_file=$GLOBALS['tmp_dir']."/mailman_config_".$list->getId().".in";
 
@@ -84,7 +86,8 @@ class BackendMailingList extends Backend {
      * then update the list configuration according to list settings
      * @return true on success, false otherwise
      */
-    public function createList($group_list_id) {
+    public function createList($group_list_id)
+    {
 
         $dar = $this->_getMailingListDao()->searchByGroupListId($group_list_id);
 
@@ -114,7 +117,8 @@ class BackendMailingList extends Backend {
      * - backup first in temp directory
      * @return true on success, false otherwise
      */
-    public function deleteList($group_list_id) {
+    public function deleteList($group_list_id)
+    {
         $dar = $this->_getMailingListDao()->searchByGroupListId($group_list_id);
 
         if ($row = $dar->getRow()) {
@@ -140,7 +144,8 @@ class BackendMailingList extends Backend {
      * Check if the list exists on the file system
      * @return true if list exists, false otherwise
      */
-    public function listExists($list) {
+    public function listExists($list)
+    {
         // Is this the best test?
         $list_dir = $GLOBALS['mailman_list_dir']."/".$list->getListName();
         if (! is_dir($list_dir)) return false;
@@ -154,7 +159,8 @@ class BackendMailingList extends Backend {
      *
      * @return bool
      */
-    public function deleteProjectMailingLists($projectId) {
+    public function deleteProjectMailingLists($projectId)
+    {
         $deleteStatus = true;
         $res = $this->_getMailingListDao()->searchByProject($projectId);
         if ($res && !$res->isError()) {

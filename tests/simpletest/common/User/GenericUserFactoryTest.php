@@ -19,7 +19,8 @@
 
 class GenericUserFactoryTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->user_manager = mock('UserManager');
         $this->project_manager = mock('ProjectManager');
@@ -33,12 +34,14 @@ class GenericUserFactoryTest extends TuleapTestCase {
         $this->factory = new GenericUserFactory($this->user_manager, $this->project_manager, $dao);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         parent::tearDown();
     }
 
-    public function testCreateReturnsGenericUserWithCorrectId() {
+    public function testCreateReturnsGenericUserWithCorrectId()
+    {
 
         $group_id = '120';
         $password = 'my_password';
@@ -50,7 +53,8 @@ class GenericUserFactoryTest extends TuleapTestCase {
         $this->assertEqual($generic_user->getProject(), $this->project);
     }
 
-    public function itCreatesUserWithNoSuffixByDefault() {
+    public function itCreatesUserWithNoSuffixByDefault()
+    {
         $project_name = 'vla';
         stub($this->project)->getUnixName()->returns($project_name);
 
@@ -58,7 +62,8 @@ class GenericUserFactoryTest extends TuleapTestCase {
         $this->assertEqual(substr($generic_user->getUnixName(), -strlen($project_name)), $project_name);
     }
 
-    public function itCreatesUserWithPrefixSetFromConfig() {
+    public function itCreatesUserWithPrefixSetFromConfig()
+    {
         $suffix = '-team';
         ForgeConfig::set(GenericUserFactory::CONFIG_KEY_SUFFIX, $suffix);
 

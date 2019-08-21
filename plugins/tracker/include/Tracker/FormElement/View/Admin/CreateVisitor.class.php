@@ -25,7 +25,8 @@ class Tracker_FormElement_View_Admin_CreateVisitor extends Tracker_FormElement_V
     private $type;
     private $label;
 
-    protected function fetchForm() {
+    protected function fetchForm()
+    {
         $html = '';
         $html .= $this->adminElement->fetchTypeNotModifiable();
         $html .= $this->adminElement->fetchLabelForUpdate();
@@ -37,11 +38,13 @@ class Tracker_FormElement_View_Admin_CreateVisitor extends Tracker_FormElement_V
         return $html;
     }
 
-    public function setType($type) {
+    public function setType($type)
+    {
         $this->type = $type;
     }
 
-    public function setLabel($label) {
+    public function setLabel($label)
+    {
         $this->label = $label;
     }
 
@@ -56,7 +59,8 @@ class Tracker_FormElement_View_Admin_CreateVisitor extends Tracker_FormElement_V
      *
      * @return void
      */
-    public function display(TrackerManager $tracker_manager, HTTPRequest $request) {
+    public function display(TrackerManager $tracker_manager, HTTPRequest $request)
+    {
         $hp               = Codendi_HTMLPurifier::instance();
         $title            = 'Create a new '. $this->label;
         $url              = TRACKER_BASE_URL.'/?tracker='. (int)$this->element->getTracker()->getId() .'&amp;func=admin-formElements&amp;create-formElement['.  $hp->purify($this->type, CODENDI_PURIFIER_CONVERT_HTML) .']=1';

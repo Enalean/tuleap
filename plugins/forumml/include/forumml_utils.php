@@ -28,7 +28,8 @@ define('FORUMML_CONTENT_TYPE', 12);
 define('FORUMML_CC', 34);
 
 // Get message headers
-function plugin_forumml_get_message_headers($id_message) {
+function plugin_forumml_get_message_headers($id_message)
+{
 
     $sql = sprintf('SELECT value'.
                     ' FROM plugin_forumml_messageheader'.
@@ -120,7 +121,8 @@ function plugin_forumml_show_search_results($p, \Tuleap\DB\Compat\Legacy2018\Leg
 }
 
 // List all threads
-function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
+function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset)
+{
 
     $chunks = 30;
     $request = HTTPRequest::instance();
@@ -277,7 +279,8 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
 
 }
 
-function plugin_forumml_nb_children($parents, $list_id) {
+function plugin_forumml_nb_children($parents, $list_id)
+{
     if (count($parents) == 0) {
         return 0;
     } else {
@@ -305,7 +308,8 @@ function plugin_forumml_nb_children($parents, $list_id) {
  *
  * @see plugin_forumml_build_flattened_thread
  */
-function plugin_forumml_new_attach($row) {
+function plugin_forumml_new_attach($row)
+{
     if (isset($row['id_attachment']) && $row['id_attachment']) {
         return array('id_attachment' => $row['id_attachment'],
                      'file_name' => $row['file_name'],
@@ -323,7 +327,8 @@ function plugin_forumml_new_attach($row) {
  *
  * @see plugin_forumml_build_flattened_thread
  */
-function plugin_forumml_insert_in_thread(&$thread, $row) {
+function plugin_forumml_insert_in_thread(&$thread, $row)
+{
     $date = strtotime($row['date']);
     while (isset($thread[$date])) {
         $date++;
@@ -338,7 +343,8 @@ function plugin_forumml_insert_in_thread(&$thread, $row) {
  *
  * @see plugin_forumml_build_flattened_thread
  */
-function plugin_forumml_insert_msg_attach(&$thread, $result) {
+function plugin_forumml_insert_msg_attach(&$thread, $result)
+{
     $parents = array();
     $prev    = -1;
     while (($row = db_fetch_array($result))) {
@@ -363,7 +369,8 @@ function plugin_forumml_insert_msg_attach(&$thread, $result) {
  *
  * @see plugin_forumml_build_flattened_thread
  */
-function plugin_forumml_build_flattened_thread_children(&$thread, $parents, $list_id) {
+function plugin_forumml_build_flattened_thread_children(&$thread, $parents, $list_id)
+{
     if (count($parents) > 0) {
         $sql = 'SELECT m.*, mh_d.value as date, mh_f.value as sender, mh_s.value as subject, mh_ct.value as content_type, mh_cc.value as cc, a.id_attachment, a.file_name, a.file_type, a.file_size, a.file_path, a.content_id'.
             ' FROM plugin_forumml_message m'.
@@ -411,7 +418,8 @@ function plugin_forumml_build_flattened_thread_children(&$thread, $parents, $lis
  * );
  *
  */
-function plugin_forumml_build_flattened_thread($topic, $list_id) {
+function plugin_forumml_build_flattened_thread($topic, $list_id)
+{
     $thread = array();
     $sql = 'SELECT 
                 m.*,
@@ -451,7 +459,8 @@ function plugin_forumml_build_flattened_thread($topic, $list_id) {
 }
 
 // List all messages inside a thread
-function plugin_forumml_show_thread($p, $list_id, $parentId, $purgeCache, PFUser $current_user) {
+function plugin_forumml_show_thread($p, $list_id, $parentId, $purgeCache, PFUser $current_user)
+{
     $hp     = ForumML_HTMLPurifier::instance();
     $thread = plugin_forumml_build_flattened_thread($parentId, $list_id);
     foreach ($thread as $message) {
@@ -461,7 +470,8 @@ function plugin_forumml_show_thread($p, $list_id, $parentId, $purgeCache, PFUser
 
 
 // Display a message
-function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFUser $current_user) {
+function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFUser $current_user)
+{
     $body    = $msg['body'];
     $request = HTTPRequest::instance();
 
@@ -652,12 +662,14 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
     echo '</div>';
 }
 
-function getAnonymousForumMLReplyURL($link) {
+function getAnonymousForumMLReplyURL($link)
+{
         return '/account/login.php?return_to='.urlencode($link);
 }
 
 // Display the post form under the current post
-function plugin_forumml_reply($hp,$subject,$in_reply_to,$id_parent,$body,$author) {
+function plugin_forumml_reply($hp,$subject,$in_reply_to,$id_parent,$body,$author)
+{
 
     $request = HTTPRequest::instance();
     $tab_tmp = explode("\n",$body);
@@ -697,7 +709,8 @@ function plugin_forumml_reply($hp,$subject,$in_reply_to,$id_parent,$body,$author
 
 // Search & replace reference to attached content
 // This happens for images attached to html messages (multipart/related)
-function plugin_forumml_replace_attachment($id_message, $group_id, $list, $id_parent, $body) {
+function plugin_forumml_replace_attachment($id_message, $group_id, $list, $id_parent, $body)
+{
     if (preg_match_all('/"cid:([^"]*)"/m', $body, $matches)) {
         $search_parts  = array();
         $replace_parts = array();
@@ -719,7 +732,8 @@ function plugin_forumml_replace_attachment($id_message, $group_id, $list, $id_pa
 }
 
 // Build Mail headers, and send the mail
-function plugin_forumml_process_mail($reply=false) {
+function plugin_forumml_process_mail($reply=false)
+{
 
     $request = HTTPRequest::instance();
     $hp = ForumML_HTMLPurifier::instance();

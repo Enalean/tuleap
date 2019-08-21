@@ -63,7 +63,8 @@ class FileInfoRepresentation {
      */
     public $html_preview_url;
 
-    public function build($id, $submitted_by, $description, $name, $filesize, $filetype, $html_url, $html_preview_url) {
+    public function build($id, $submitted_by, $description, $name, $filesize, $filetype, $html_url, $html_preview_url)
+    {
         $this->id               = JsonCast::toInt($id);
         $this->submitted_by     = JsonCast::toInt($submitted_by);
         $this->description      = $description;

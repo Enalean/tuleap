@@ -26,13 +26,15 @@ class GitDataBuilder extends REST_TestDataBuilder {
     public const PROJECT_TEST_GIT_SHORTNAME = 'test-git';
     public const REPOSITORY_GIT_ID          = 1;
 
-    public function setUp() {
+    public function setUp()
+    {
         $project = $this->project_manager->getProjectByUnixName(self::PROJECT_TEST_GIT_SHORTNAME);
 
         $this->addGerritServers($project);
     }
 
-    private function addGerritServers(Project $project) {
+    private function addGerritServers(Project $project)
+    {
         echo "Creating Gerrit servers\n";
 
         $server_01 = new Git_RemoteServer_GerritServer(

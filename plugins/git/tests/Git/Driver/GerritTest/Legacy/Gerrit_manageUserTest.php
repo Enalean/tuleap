@@ -27,7 +27,8 @@ class Git_Driver_GerritLegacy_manageUserTest extends Git_Driver_GerritLegacy_bas
     private $account_id;
     private $group_id;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->group                       = 'contributors';
         $this->groupname                   = $this->project_name.'/'.$this->namespace.'/'.$this->repository_name.'-'.$this->group;
@@ -39,7 +40,8 @@ class Git_Driver_GerritLegacy_manageUserTest extends Git_Driver_GerritLegacy_bas
         $this->set_account_query   = 'gerrit set-account '.$this->ldap_uid;
     }
 
-    public function itExecutesTheDeletionCommand() {
+    public function itExecutesTheDeletionCommand()
+    {
         $remove_member_query = 'gerrit gsql --format json -c "DELETE\ FROM\ account_group_members\ WHERE\ account_id=(SELECT\ account_id\ FROM\ account_external_ids\ WHERE\ external_id=\\\'username:'. $this->ldap_uid .'\\\')\ AND\ group_id=(SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $this->groupname .'\\\')"';
 
         expect($this->ssh)->execute($this->gerrit_server, $remove_member_query)->once();
@@ -47,7 +49,8 @@ class Git_Driver_GerritLegacy_manageUserTest extends Git_Driver_GerritLegacy_bas
         $this->driver->removeUserFromGroup($this->gerrit_server, $this->user, $this->groupname);
     }
 
-    public function itRemovesAllMembers() {
+    public function itRemovesAllMembers()
+    {
         $remove_all_query = 'gerrit gsql --format json -c "DELETE\ FROM\ account_group_members\ WHERE\ group_id=(SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $this->groupname .'\\\')"';
         expect($this->ssh)->execute()->count(2);
         expect($this->ssh)->execute($this->gerrit_server, $remove_all_query)->at(0);
@@ -55,13 +58,15 @@ class Git_Driver_GerritLegacy_manageUserTest extends Git_Driver_GerritLegacy_bas
 
         $this->driver->removeAllGroupMembers($this->gerrit_server, $this->groupname);
     }
-    public function itInitializeUserAccountInGerritWhenUserNeverLoggedToGerritUI() {
+    public function itInitializeUserAccountInGerritWhenUserNeverLoggedToGerritUI()
+    {
         expect($this->ssh)->execute($this->gerrit_server, $this->set_account_query)->at(0);
 
         $this->driver->addUserToGroup($this->gerrit_server, $this->user, $this->groupname);
     }
 
-    public function itExecutesTheInsertCommand() {
+    public function itExecutesTheInsertCommand()
+    {
         expect($this->ssh)->execute()->count(2);
         expect($this->ssh)->execute($this->gerrit_server, $this->insert_member_query)->at(1);
 

@@ -24,17 +24,20 @@ class URL {
     /**
     * @see http://www.ietf.org/rfc/rfc2396.txt Annex B
     */
-    /* static */ function parse($url) {
+    /* static */ function parse($url)
+    {
         $components = array();
         preg_match('`^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?`i',$url, $components);
         return $components;
     }
-    /* static */ function getHost($url) {
+    /* static */ function getHost($url)
+    {
         $components = URL::parse($url);
         return $components[4];
     }
 
-    static function getScheme($url) {
+    static function getScheme($url)
+    {
         $components = URL::parse($url);
         return $components[2];
     }
@@ -45,7 +48,8 @@ class URL {
      *
      * @return String
      */
-    function getGroupNameFromSVNUrl($uri) {
+    function getGroupNameFromSVNUrl($uri)
+    {
         $pieces = explode('&', $uri);
         foreach($pieces as $piece) {
             if(strpos($piece, 'root=') !== false) {
@@ -63,7 +67,8 @@ class URL {
     /**
      * Wrapper for Rule_ProjectName
      */
-    function getProjectNameRule() {
+    function getProjectNameRule()
+    {
         return new Rule_ProjectName();
     }
 
@@ -159,19 +164,23 @@ class URL {
         return $group_id['group_id'];
     }
 
-    function getProjectDao() {
+    function getProjectDao()
+    {
         return new ProjectDao(CodendiDataAccess::instance());
     }
 
-    function getForumDao() {
+    function getForumDao()
+    {
         return new ForumDao(CodendiDataAccess::instance());
     }
 
-    function getNewsBytesDao() {
+    function getNewsBytesDao()
+    {
         return new NewsBytesDao(CodendiDataAccess::instance());
     }
 
-    function getArtifactDao() {
+    function getArtifactDao()
+    {
         return new ArtifactDao(CodendiDataAccess::instance());
     }
 }

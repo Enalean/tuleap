@@ -23,7 +23,8 @@ class Tracker_REST_Artifact_ArtifactValidator {
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 
-    public function __construct(Tracker_FormElementFactory $formelement_factory) {
+    public function __construct(Tracker_FormElementFactory $formelement_factory)
+    {
         $this->formelement_factory = $formelement_factory;
     }
 
@@ -31,7 +32,8 @@ class Tracker_REST_Artifact_ArtifactValidator {
      * @param ArtifactValuesRepresentation[] $values
      * @param Tracker                        $tracker
      */
-    public function getFieldsDataOnCreate(array $values, Tracker $tracker) {
+    public function getFieldsDataOnCreate(array $values, Tracker $tracker)
+    {
         $new_values     = array();
         $indexed_fields = $this->getIndexedFields($tracker);
         foreach ($values as $value) {
@@ -43,7 +45,8 @@ class Tracker_REST_Artifact_ArtifactValidator {
         return $new_values;
     }
 
-    public function getFieldsDataOnCreateFromValuesByField(array $values, Tracker $tracker) {
+    public function getFieldsDataOnCreateFromValuesByField(array $values, Tracker $tracker)
+    {
         $new_values = array();
         foreach ($values as $field_name => $value) {
             $field = $this->getFieldByName($tracker, $field_name);
@@ -54,7 +57,8 @@ class Tracker_REST_Artifact_ArtifactValidator {
         return $new_values;
     }
 
-    private function getFieldByName(Tracker $tracker, $field_name) {
+    private function getFieldByName(Tracker $tracker, $field_name)
+    {
         $field = $this->formelement_factory->getUsedFieldByName($tracker->getId(), $field_name);
         if (! $field) {
             throw new Tracker_FormElement_InvalidFieldException("Field $field_name does not exist in the tracker");
@@ -67,7 +71,8 @@ class Tracker_REST_Artifact_ArtifactValidator {
      * @param ArtifactValuesRepresentation[] $values
      * @param Tracker_Artifact               $artifact
      */
-    public function getFieldsDataOnUpdate(array $values, Tracker_Artifact $artifact) {
+    public function getFieldsDataOnUpdate(array $values, Tracker_Artifact $artifact)
+    {
         $new_values     = array();
         $indexed_fields = $this->getIndexedFields($artifact->getTracker());
         foreach ($values as $value) {
@@ -79,12 +84,14 @@ class Tracker_REST_Artifact_ArtifactValidator {
         return $new_values;
     }
 
-    public function getUsedFieldsWithDefaultValue(Tracker $tracker, array $fields_data, PFUser $user) {
+    public function getUsedFieldsWithDefaultValue(Tracker $tracker, array $fields_data, PFUser $user)
+    {
         $fields_data = $this->formelement_factory->getUsedFieldsWithDefaultValue($tracker, $fields_data, $user);
         return $fields_data;
     }
 
-    private function getField(array $indexed_fields, array $value) {
+    private function getField(array $indexed_fields, array $value)
+    {
         if (! isset($value['field_id']) || (isset($value['field_id']) && ! is_int($value['field_id']))) {
             throw new Tracker_FormElement_InvalidFieldException('No \'field_id\' or invalid id in submitted value. Field IDs must be integers');
         }
@@ -94,7 +101,8 @@ class Tracker_REST_Artifact_ArtifactValidator {
         return $indexed_fields[$value['field_id']];
     }
 
-    private function getIndexedFields(Tracker $tracker) {
+    private function getIndexedFields(Tracker $tracker)
+    {
         $indexed_fields = array();
         foreach ($this->formelement_factory->getUsedFields($tracker) as $field) {
             $indexed_fields[$field->getId()] = $field;

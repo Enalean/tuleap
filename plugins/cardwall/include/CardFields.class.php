@@ -28,7 +28,8 @@ class Cardwall_CardFields {
      */
     private $user_manager;
 
-    public function __construct(UserManager $user_manager, Tracker_FormElementFactory $factory) {
+    public function __construct(UserManager $user_manager, Tracker_FormElementFactory $factory)
+    {
         $this->user_manager         = $user_manager;
         $this->form_element_factory = $factory;
     }
@@ -39,7 +40,8 @@ class Cardwall_CardFields {
      *
      * @return Tracker_FormElement_Field[]
      */
-    public function getFields(Tracker_Artifact $artifact) {
+    public function getFields(Tracker_Artifact $artifact)
+    {
         $diplayed_fields = array();
         $tracker         = $artifact->getTracker();
 
@@ -50,7 +52,8 @@ class Cardwall_CardFields {
         return $diplayed_fields;
     }
 
-    private function getDisplayedFields(Tracker $tracker) {
+    private function getDisplayedFields(Tracker $tracker)
+    {
         $semantic = Cardwall_Semantic_CardFields::load($tracker);
         return $semantic->getFields();
     }

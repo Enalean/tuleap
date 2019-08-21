@@ -29,7 +29,8 @@ class Cardwall_OnTop_Config_Command_EnableCardwallOnTop extends Cardwall_OnTop_C
      */
     private $dao;
 
-    public function __construct(Tracker $tracker, Cardwall_OnTop_Dao $dao) {
+    public function __construct(Tracker $tracker, Cardwall_OnTop_Dao $dao)
+    {
         parent::__construct($tracker);
         $this->dao = $dao;
     }
@@ -37,7 +38,8 @@ class Cardwall_OnTop_Config_Command_EnableCardwallOnTop extends Cardwall_OnTop_C
     /**
      * @see Cardwall_OnTop_Config_Command::execute()
      */
-    public function execute(Codendi_Request $request) {
+    public function execute(Codendi_Request $request)
+    {
         $please_enable = $request->get('cardwall_on_top');
         $tracker_id    = $this->tracker->getId();
         $is_enabled    = $this->dao->isEnabled($tracker_id);

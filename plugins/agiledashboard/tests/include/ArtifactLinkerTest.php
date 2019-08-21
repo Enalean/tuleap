@@ -33,7 +33,8 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
     protected $theme_id   = 750;
     protected $epic_id    = 2;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         // group
@@ -77,7 +78,8 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
         $this->linker = new Planning_ArtifactLinker($this->artifact_factory, $planning_factory);
     }
 
-    private function getArtifact($id, Tracker $tracker, array $ancestors) {
+    private function getArtifact($id, Tracker $tracker, array $ancestors)
+    {
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($id);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
@@ -89,7 +91,8 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
 
 class Planning_ArtifactLinker_linkWithParentsTest extends Planning_ArtifactLinkerTest {
 
-    public function itDoesntLinkWhenItWasLinkedToAParent() {
+    public function itDoesntLinkWhenItWasLinkedToAParent()
+    {
         $story_id = 5698;
         $story = Mockery::mock(Tracker_Artifact::class);
         $task = aMockArtifact()->withId(2)->build();
@@ -102,7 +105,8 @@ class Planning_ArtifactLinker_linkWithParentsTest extends Planning_ArtifactLinke
         $this->linker->linkBacklogWithPlanningItems($this->request, $task);
     }
 
-    public function itLinksWithAllHierarchyWhenItWasLinkedToAnAssociatedTracker() {
+    public function itLinksWithAllHierarchyWhenItWasLinkedToAnAssociatedTracker()
+    {
         $this->epic->shouldReceive('linkArtifact')->never();
         $this->release->shouldReceive('linkArtifact')->never();
         $this->product->shouldReceive('linkArtifact')->with($this->epic_id, $this->user)->once();
@@ -115,20 +119,23 @@ class Planning_ArtifactLinker_linkWithParentsTest extends Planning_ArtifactLinke
 
 class Planning_ArtifactLinker_LinkWithPlanningTest extends Planning_ArtifactLinkerTest {
 
-    public function itLinksTheThemeWithCorpWhenCorpIsParentOfProduct() {
+    public function itLinksTheThemeWithCorpWhenCorpIsParentOfProduct()
+    {
         $this->corp->shouldReceive('linkArtifact')->with($this->theme_id, $this->user)->once();
         $this->request = aRequest()->with('child_milestone', "$this->product_id")->withUser($this->user)->build();
         $this->linker->linkBacklogWithPlanningItems($this->request, $this->theme);
     }
 
-    public function itLinksTheEpicWithAllMilestonesParentOfSprintThatCanPlanEpics() {
+    public function itLinksTheEpicWithAllMilestonesParentOfSprintThatCanPlanEpics()
+    {
         $this->product->shouldReceive('linkArtifact')->with($this->epic_id, $this->user)->once();
         $this->release->shouldReceive('linkArtifact')->with($this->epic_id, $this->user)->once();
         $this->request = aRequest()->with('child_milestone', "$this->sprint_id")->withUser($this->user)->build();
         $this->linker->linkBacklogWithPlanningItems($this->request, $this->epic);
     }
 
-    public function itDoesntLinkTheEpicWithCorpPlanningWhenCorpPlanningDoesntManageEpics() {
+    public function itDoesntLinkTheEpicWithCorpPlanningWhenCorpPlanningDoesntManageEpics()
+    {
         $this->corp->shouldReceive('linkArtifact')->never();
         $this->product->shouldReceive('linkArtifact')->with($this->epic_id, $this->user)->once();
         $this->request = aRequest()->with('child_milestone', "$this->release_id")->withUser($this->user)->build();
@@ -138,14 +145,16 @@ class Planning_ArtifactLinker_LinkWithPlanningTest extends Planning_ArtifactLink
 
 class Planning_ArtifactLinker_linkBacklogWithPlanningItemsTest extends Planning_ArtifactLinkerTest {
 
-    public function itReturnsNullWhenNotLinkedToAnyArtifacts() {
+    public function itReturnsNullWhenNotLinkedToAnyArtifacts()
+    {
         $this->request = aRequest()->withUser($this->user)->build();
 
         $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($this->request, $this->theme);
         $this->assertEqual(null, $latest_milestone_artifact);
     }
 
-    public function itReturnsTheAlreadyLinkedMilestoneByDefault() {
+    public function itReturnsTheAlreadyLinkedMilestoneByDefault()
+    {
         $this->request = aRequest()->with('link-artifact-id', "$this->corp_id")->withUser($this->user)->build();
 
         $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($this->request, $this->theme);

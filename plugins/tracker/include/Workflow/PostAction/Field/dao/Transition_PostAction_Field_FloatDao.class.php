@@ -24,7 +24,8 @@
  */
 class Transition_PostAction_Field_FloatDao extends Transition_PostAction_FieldDao {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_workflow_transition_postactions_field_float';
     }
@@ -32,7 +33,8 @@ class Transition_PostAction_Field_FloatDao extends Transition_PostAction_FieldDa
     /**
      * @see Transition_PostAction_FieldDao
      */
-    protected function escapeValue($value) {
+    protected function escapeValue($value)
+    {
         return floatval($value);
     }
 }

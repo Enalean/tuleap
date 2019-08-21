@@ -25,7 +25,8 @@ class Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter implements Tracker_X
      *
      * @return string
      */
-    public function getPath(Tracker_FileInfo $file_info) {
+    public function getPath(Tracker_FileInfo $file_info)
+    {
         return $file_info->getPath();
     }
 }

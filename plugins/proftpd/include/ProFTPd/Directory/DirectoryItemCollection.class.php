@@ -43,7 +43,8 @@ class DirectoryItemCollection {
      * @param DirectoryItem[] $folders
      * @param DirectoryItem[] $files
      */
-    public function __construct($folders, $files) {
+    public function __construct($folders, $files)
+    {
         $this->folders = $folders;
         $this->files = $files;
     }
@@ -51,22 +52,26 @@ class DirectoryItemCollection {
     /**
      * @return DirectoryItem[]
      */
-    public function getFolders() {
+    public function getFolders()
+    {
         return $this->folders;
     }
 
     /**
      * @return DirectoryItem[]
      */
-    public function getFiles() {
+    public function getFiles()
+    {
         return $this->files;
     }
 
-    public function setAsForbidden() {
+    public function setAsForbidden()
+    {
         $this->is_forbidden = true;
     }
 
-    public function isForbidden() {
+    public function isForbidden()
+    {
         return $this->is_forbidden;
     }
 }

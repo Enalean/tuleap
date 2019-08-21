@@ -25,7 +25,8 @@ use Tracker_FormElement_Field_ArtifactLink;
 
 class NatureIsChildPresenter extends NaturePresenter {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct(
             Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
             $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', '_is_child_forward'),

@@ -50,7 +50,8 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
 
     protected $project_admins_gerrit_name  = 'mozilla/project_admins';
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->server  = mock('Git_RemoteServer_GerritServer');
@@ -85,7 +86,8 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
         );
     }
 
-    public function itOnlyCallsCreateParentProjectOnceIfTheProjectHasNoParents() {
+    public function itOnlyCallsCreateParentProjectOnceIfTheProjectHasNoParents()
+    {
         stub($this->project_manager)->getParentProject($this->project->getID())->returns(null);
 
         expect($this->driver)->createProjectWithPermissionsOnly($this->server, $this->project, $this->project_admins_gerrit_name)->once();
@@ -93,7 +95,8 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
         $this->umbrella_manager->recursivelyCreateUmbrellaProjects(array($this->server), $this->project);
     }
 
-    public function itOnlyCallsCreateParentProjectTwiceIfTheProjectHasOneParent() {
+    public function itOnlyCallsCreateParentProjectTwiceIfTheProjectHasOneParent()
+    {
         stub($this->project_manager)->getParentProject($this->project->getID())->returns($this->parent_project);
         stub($this->project_manager)->getParentProject($this->parent_project->getID())->returns(null);
         expect($this->driver)->createProjectWithPermissionsOnly()->count(2);
@@ -101,7 +104,8 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
         $this->umbrella_manager->recursivelyCreateUmbrellaProjects(array($this->server), $this->project);
     }
 
-    public function itCallsCreateParentProjectWithTheCorrectParameters() {
+    public function itCallsCreateParentProjectWithTheCorrectParameters()
+    {
         stub($this->project_manager)->getParentProject($this->project->getID())->returns($this->parent_project);
         stub($this->project_manager)->getParentProject($this->parent_project->getID())->returns(null);
 
@@ -111,7 +115,8 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
         $this->umbrella_manager->recursivelyCreateUmbrellaProjects(array($this->server), $this->project);
     }
 
-    public function itMigratesTheUserGroupsAlsoForParentUmbrellaProjects() {
+    public function itMigratesTheUserGroupsAlsoForParentUmbrellaProjects()
+    {
         stub($this->project_manager)->getParentProject($this->project->getID())->returns($this->parent_project);
         stub($this->project_manager)->getParentProject($this->parent_project->getID())->returns(null);
 
@@ -120,7 +125,8 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
         $this->umbrella_manager->recursivelyCreateUmbrellaProjects(array($this->server), $this->project);
     }
 
-    public function itCallsTheDriverToSetTheParentProjectIfAny() {
+    public function itCallsTheDriverToSetTheParentProjectIfAny()
+    {
         stub($this->project_manager)->getParentProject($this->project->getID())->returns($this->parent_project);
         stub($this->project_manager)->getParentProject($this->parent_project->getID())->returns(null);
 
@@ -129,7 +135,8 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
         $this->umbrella_manager->recursivelyCreateUmbrellaProjects(array($this->server), $this->project);
     }
 
-    public function itDoesntCallTheDriverToSetTheParentProjectIfNone() {
+    public function itDoesntCallTheDriverToSetTheParentProjectIfNone()
+    {
         stub($this->project_manager)->getParentProject($this->project->getID())->returns(null);
 
         expect($this->driver)->setProjectInheritance($this->server, $this->project->getUnixName(), $this->parent_project->getUnixName())->never();

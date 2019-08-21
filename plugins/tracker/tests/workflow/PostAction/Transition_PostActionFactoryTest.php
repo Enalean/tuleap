@@ -29,7 +29,8 @@ class Transition_PostActionFactory_BaseTest extends TuleapTestCase {
     protected $cibuild_factory;
     protected $frozen_fields_actory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -50,14 +51,16 @@ class Transition_PostActionFactory_BaseTest extends TuleapTestCase {
 
 class Transition_PostActionFactory_AddPostActionTest extends Transition_PostActionFactory_BaseTest {
 
-    public function itCanAddAPostActionToAnIntField() {
+    public function itCanAddAPostActionToAnIntField()
+    {
         stub($this->field_factory)->addPostAction()->once();
         stub($this->cibuild_factory)->addPostAction()->never();
 
         $this->factory->addPostAction($this->transition, Transition_PostAction_Field_Int::SHORT_NAME);
     }
 
-    public function itCanAddAPostActionToAFloatField() {
+    public function itCanAddAPostActionToAFloatField()
+    {
         stub($this->field_factory)->addPostAction()->once();
         stub($this->cibuild_factory)->addPostAction()->never();
 
@@ -68,7 +71,8 @@ class Transition_PostActionFactory_AddPostActionTest extends Transition_PostActi
 
 class Transition_PostActionFactory_DuplicateTest extends Transition_PostActionFactory_BaseTest {
 
-    public function itDelegatesDuplicationToTheOtherPostActionFactories() {
+    public function itDelegatesDuplicationToTheOtherPostActionFactories()
+    {
         $field_mapping = array(
             1 => array('from'=>2066, 'to'=>3066),
             2 => array('from'=>2067, 'to'=>3067),
@@ -84,7 +88,8 @@ class Transition_PostActionFactory_DuplicateTest extends Transition_PostActionFa
 
 class Transition_PostActionFactory_GetInstanceFromXmlTest extends Transition_PostActionFactory_BaseTest {
 
-    public function itreturnsAFieldDatePostActionIfXmlCorrespondsToADate() {
+    public function itreturnsAFieldDatePostActionIfXmlCorrespondsToADate()
+    {
         $xml = new SimpleXMLElement('
             <postactions>
                 <postaction_field_date valuetype="1">
@@ -110,7 +115,8 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends Transition_Pos
         $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Date');
     }
 
-    public function itreturnsAFieldIntPostActionIfXmlCorrespondsToAInt() {
+    public function itreturnsAFieldIntPostActionIfXmlCorrespondsToAInt()
+    {
         $xml = new SimpleXMLElement('
             <postactions>
                 <postaction_field_int valuetype="1">
@@ -136,7 +142,8 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends Transition_Pos
         $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Int');
     }
 
-    public function itreturnsAFieldFloatPostActionIfXmlCorrespondsToAFloat() {
+    public function itreturnsAFieldFloatPostActionIfXmlCorrespondsToAFloat()
+    {
         $xml = new SimpleXMLElement('
             <postactions>
                 <postaction_field_float valuetype="3.14">
@@ -162,7 +169,8 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends Transition_Pos
         $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Float');
     }
 
-    public function itreturnsACIBuildPostActionIfXmlCorrespondsToACIBuild() {
+    public function itreturnsACIBuildPostActionIfXmlCorrespondsToACIBuild()
+    {
         $xml = new SimpleXMLElement('
             <postactions>
                 <postaction_ci_build job_url="http://www">
@@ -186,7 +194,8 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends Transition_Pos
         $this->assertIsA($post_actions[0], 'Transition_PostAction_CIBuild');
     }
 
-    public function itLoadsAllPostActionsFromXML() {
+    public function itLoadsAllPostActionsFromXML()
+    {
         $xml = new SimpleXMLElement('
             <postactions>
                 <postaction_field_date valuetype="1">
@@ -214,7 +223,8 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends Transition_Pos
 }
 class Transition_PostActionFactory_SaveObjectTest extends Transition_PostActionFactory_BaseTest {
 
-    public function itSavesDateFieldPostActions() {
+    public function itSavesDateFieldPostActions()
+    {
         $post_action = \Mockery::spy(\Transition_PostAction_Field_Date::class);
         stub($this->cibuild_factory)->saveObject()->never();
         stub($this->field_factory)->saveObject($post_action)->once();
@@ -222,7 +232,8 @@ class Transition_PostActionFactory_SaveObjectTest extends Transition_PostActionF
         $this->factory->saveObject($post_action);
     }
 
-    public function itSavesIntFieldPostActions() {
+    public function itSavesIntFieldPostActions()
+    {
         $post_action = \Mockery::spy(\Transition_PostAction_Field_Int::class);
         stub($this->cibuild_factory)->saveObject()->never();
         stub($this->field_factory)->saveObject($post_action)->once();
@@ -230,7 +241,8 @@ class Transition_PostActionFactory_SaveObjectTest extends Transition_PostActionF
         $this->factory->saveObject($post_action);
     }
 
-    public function itSavesFloatFieldPostActions() {
+    public function itSavesFloatFieldPostActions()
+    {
         $post_action = \Mockery::spy(\Transition_PostAction_Field_Float::class);
         stub($this->cibuild_factory)->saveObject()->never();
         stub($this->field_factory)->saveObject($post_action)->once();
@@ -238,7 +250,8 @@ class Transition_PostActionFactory_SaveObjectTest extends Transition_PostActionF
         $this->factory->saveObject($post_action);
     }
 
-    public function itSavesCIBuildPostActions() {
+    public function itSavesCIBuildPostActions()
+    {
         $post_action = \Mockery::spy(\Transition_PostAction_CIBuild::class);
         stub($this->field_factory)->saveObject()->never();
         stub($this->cibuild_factory)->saveObject($post_action)->once();
@@ -250,7 +263,8 @@ class Transition_PostActionFactory_SaveObjectTest extends Transition_PostActionF
 
 class Transition_PostActionFactory_DeleteWorkflowTest extends Transition_PostActionFactory_BaseTest {
 
-    public function itDeletesAllPostActions() {
+    public function itDeletesAllPostActions()
+    {
         $workflow_id = 10;
         stub($this->field_factory)->deleteWorkflow($workflow_id)->once()->returns(true);
         stub($this->cibuild_factory)->deleteWorkflow($workflow_id)->once()->returns(true);
@@ -262,7 +276,8 @@ class Transition_PostActionFactory_DeleteWorkflowTest extends Transition_PostAct
 
 class Transition_PostActionFactory_IsFieldUsedInPostActionsTest extends Transition_PostActionFactory_BaseTest {
 
-    public function itChecksFieldIsUsedInEachTypeOfPostAction() {
+    public function itChecksFieldIsUsedInEachTypeOfPostAction()
+    {
         $field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
         stub($this->cibuild_factory)->isFieldUsedInPostActions($field)->once()->returns(false);
         stub($this->field_factory)->isFieldUsedInPostActions($field)->once()->returns(false);
@@ -270,7 +285,8 @@ class Transition_PostActionFactory_IsFieldUsedInPostActionsTest extends Transiti
         $this->assertFalse($this->factory->isFieldUsedInPostActions($field));
     }
 
-    public function itReturnsTrueIfAtLeastOneOfTheSubFactoryReturnsTrue() {
+    public function itReturnsTrueIfAtLeastOneOfTheSubFactoryReturnsTrue()
+    {
         $field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
 
         stub($this->field_factory)->isFieldUsedInPostActions($field)->returns(true);
@@ -281,21 +297,24 @@ class Transition_PostActionFactory_IsFieldUsedInPostActionsTest extends Transiti
 
 class Transition_PostActionFactory_loadPostActionsTest extends Transition_PostActionFactory_BaseTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         $this->post_action_1 = \Mockery::spy(\Transition_PostAction::class);
         $this->post_action_2 = \Mockery::spy(\Transition_PostAction::class);
     }
 
-    public function itLoadsPostActionFromAllSubFactories() {
+    public function itLoadsPostActionFromAllSubFactories()
+    {
         stub($this->cibuild_factory)->loadPostActions($this->transition)->returns(array($this->post_action_1))->once();
         stub($this->field_factory)->loadPostActions($this->transition)->returns(array($this->post_action_2))->once();
 
         $this->factory->loadPostActions($this->transition);
     }
 
-    public function itInjectsPostActionsIntoTheTransition() {
+    public function itInjectsPostActionsIntoTheTransition()
+    {
         stub($this->cibuild_factory)->loadPostActions($this->transition)->returns(array($this->post_action_1));
         stub($this->field_factory)->loadPostActions($this->transition)->returns(array($this->post_action_2));
 

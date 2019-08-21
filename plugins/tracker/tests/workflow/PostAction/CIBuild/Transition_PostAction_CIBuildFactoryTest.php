@@ -26,7 +26,8 @@ class Transition_PostAction_CIBuildFactory_BaseTest extends TuleapTestCase {
     protected $factory;
     protected $dao;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->transition_id  = 123;
@@ -40,7 +41,8 @@ class Transition_PostAction_CIBuildFactory_BaseTest extends TuleapTestCase {
 
 class Transition_PostAction_CIBuildFactory_LoadPostActionsTest extends Transition_PostAction_CIBuildFactory_BaseTest {
 
-    public function itLoadsCIBuildPostActions() {
+    public function itLoadsCIBuildPostActions()
+    {
         $post_action_value = 'http://ww.myjenks.com/job';
         $post_action_rows  = array(
             'id'         => $this->post_action_id,
@@ -62,7 +64,8 @@ class Transition_PostAction_CIBuildFactory_LoadPostActionsTest extends Transitio
 
 class Transition_PostAction_CIBuildFactory_DuplicateTest extends Transition_PostAction_CIBuildFactory_BaseTest {
 
-    public function itDelegatesTheDuplicationToTheDao() {
+    public function itDelegatesTheDuplicationToTheDao()
+    {
         $to_transition_id   = 2;
         $field_mapping      = array();
 
@@ -73,7 +76,8 @@ class Transition_PostAction_CIBuildFactory_DuplicateTest extends Transition_Post
 
 class Transition_CIBuildFactory_GetInstanceFromXmlTest extends Transition_PostAction_CIBuildFactory_BaseTest {
 
-    public function itReconstitutesCIBuildPostActionsFromXML() {
+    public function itReconstitutesCIBuildPostActionsFromXML()
+    {
         $xml = new SimpleXMLElement('
             <postaction_ci_build job_url="http://www"/>
         ');
@@ -88,7 +92,8 @@ class Transition_CIBuildFactory_GetInstanceFromXmlTest extends Transition_PostAc
 
 class Transition_CIBuildFactory_isFieldUsedInPostActionsTest extends Transition_PostAction_CIBuildFactory_BaseTest {
 
-    public function itReturnsAlwaysFalseSinceThereIsNoFieldUsedInThisPostAction() {
+    public function itReturnsAlwaysFalseSinceThereIsNoFieldUsedInThisPostAction()
+    {
         $this->assertFalse($this->factory->isFieldUsedInPostActions(mock('Tracker_FormElement_Field_Selectbox')));
     }
 }

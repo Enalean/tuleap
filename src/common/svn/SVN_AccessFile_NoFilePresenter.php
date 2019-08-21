@@ -21,11 +21,13 @@
 
 class SVN_AccessFile_NoFilePresenter {
 
-    public function access_form_title() {
+    public function access_form_title()
+    {
         return $GLOBALS['Language']->getText('svn_admin_access_control','access_ctrl');
     }
 
-    public function repo_not_created_label() {
+    public function repo_not_created_label()
+    {
         return $GLOBALS['Language']->getText('svn_admin_access_control','not_created');
     }
 }

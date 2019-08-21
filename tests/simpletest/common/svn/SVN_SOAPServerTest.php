@@ -21,7 +21,8 @@ use Tuleap\SOAP\SOAPRequestValidator;
 
 class SVN_SOAPServerBaseTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->session_key = 'whatever';
         $this->group_id    = 123;
         $this->svn_path    = '/tags';
@@ -36,7 +37,8 @@ class SVN_SOAPServerBaseTest extends TuleapTestCase {
 }
 
 class SVN_SOAPServer_GetSvnPath_Test extends SVN_SOAPServerBaseTest {
-    public function itCheckUserSessionAndGroupValidity() {
+    public function itCheckUserSessionAndGroupValidity()
+    {
         $svn_repository_listing = mock('SVN_RepositoryListing');
         $svn_repository_listing->expectOnce('getSvnPaths', array($this->user, $this->project, $this->svn_path));
 
@@ -47,7 +49,8 @@ class SVN_SOAPServer_GetSvnPath_Test extends SVN_SOAPServerBaseTest {
 }
 
 class SVN_SOAPServer_GetSvnPathWithLogDetails_Test extends SVN_SOAPServerBaseTest {
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->svn_repository_listing = mock('SVN_RepositoryListing');
@@ -55,12 +58,14 @@ class SVN_SOAPServer_GetSvnPathWithLogDetails_Test extends SVN_SOAPServerBaseTes
         $this->order = 'ASC';
     }
 
-    public function itCheckUserSessionAndGroupValidity() {
+    public function itCheckUserSessionAndGroupValidity()
+    {
         $svn_soap = new SVN_SOAPServer($this->soap_request_valid, $this->svn_repository_listing);
         $svn_soap->getSvnPathsWithLogDetails($this->session_key, $this->group_id, $this->svn_path, $this->order);
     }
 
-    public function itThrowsSoapFaultIfUserHasWrongPermissions() {
+    public function itThrowsSoapFaultIfUserHasWrongPermissions()
+    {
         $soap_request_valid     = Mockery::mock(SOAPRequestValidator::class);
         stub($soap_request_valid)->getProjectById($this->group_id, '*')->returns($this->project);
         stub($soap_request_valid)->continueSession($this->session_key)->returns($this->user);
@@ -70,7 +75,8 @@ class SVN_SOAPServer_GetSvnPathWithLogDetails_Test extends SVN_SOAPServerBaseTes
         $svn_soap->getSvnPathsWithLogDetails($this->session_key, $this->group_id, $this->svn_path, $this->order);
     }
 
-    public function itDoesNotThrowSoapFaultIfRepositoryIsEmpty() {
+    public function itDoesNotThrowSoapFaultIfRepositoryIsEmpty()
+    {
         $svn_soap = new SVN_SOAPServer($this->soap_request_valid, $this->svn_repository_listing);
         $svn_soap->getSvnPathsWithLogDetails($this->session_key, $this->group_id, $this->svn_path, $this->order);
     }

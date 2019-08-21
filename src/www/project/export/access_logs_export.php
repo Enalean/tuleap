@@ -26,7 +26,8 @@ require_once __DIR__ . '/project_export_utils.php';
 
 
 // Export files access logs for this group
-function export_file_logs($project, $span, $who) {
+function export_file_logs($project, $span, $who)
+{
 
     $eol = "\n";
 
@@ -86,7 +87,8 @@ function export_file_logs($project, $span, $who) {
 }
 
 // Export cvs access logs for this group
-function export_cvs_logs($project, $span, $who) {
+function export_cvs_logs($project, $span, $who)
+{
 
     $eol = "\n";
 
@@ -119,7 +121,8 @@ function export_cvs_logs($project, $span, $who) {
 }
 
 // Export svn access logs for this group
-function export_svn_logs($project,$span,$who) {
+function export_svn_logs($project,$span,$who)
+{
 
     $eol = "\n";
 
@@ -152,7 +155,8 @@ function export_svn_logs($project,$span,$who) {
 }
 
 // Export wiki pages access logs for this group
-function export_wiki_pg_logs($project, $span, $who, $sf) {
+function export_wiki_pg_logs($project, $span, $who, $sf)
+{
 
     $eol = "\n";
 
@@ -198,7 +202,8 @@ function export_wiki_pg_logs($project, $span, $who, $sf) {
 }
 
 // Export wiki pages attachments access logs for this group
-function export_wiki_att_logs($project, $span, $who) {
+function export_wiki_att_logs($project, $span, $who)
+{
 
     $eol = "\n";
 
@@ -234,7 +239,8 @@ function export_wiki_att_logs($project, $span, $who) {
  * @param $span    Integer
  * @param $who     Integer
  */
-function export_all_plugins_logs($project, $span, $who) {
+function export_all_plugins_logs($project, $span, $who)
+{
     $logs = plugins_log_extract($project, $span, $who);
     foreach($logs as $log) {
         export_plugin_logs($log, $project);
@@ -245,7 +251,8 @@ function export_all_plugins_logs($project, $span, $who) {
  * @param $log     Array
  * @param $project Project
  */
-function export_plugin_logs($log ,$project) {
+function export_plugin_logs($log ,$project)
+{
     $eol = "\n";
     $result=db_query($log['sql']);
     $rows = db_numrows($result);

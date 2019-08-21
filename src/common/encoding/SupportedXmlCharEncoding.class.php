@@ -30,7 +30,8 @@ class Encoding_SupportedXmlCharEncoding {
    /**
     * @see http://www.w3.org/TR/REC-xml/#charsets
     */
-    public static function getXMLCompatibleString($string) {
+    public static function getXMLCompatibleString($string)
+    {
         $clean   = "";
         $current = null;
 
@@ -72,7 +73,8 @@ class Encoding_SupportedXmlCharEncoding {
    /**
     * @return UTF-8 string. All unrecognized characters are stripped-out
     */
-    private static function convertToUTF8($string) {
+    private static function convertToUTF8($string)
+    {
         $encoding = mb_detect_encoding($string, implode(',', self::$php_supported_encoding_types));
 
         if ($encoding == 'UTF-8') {

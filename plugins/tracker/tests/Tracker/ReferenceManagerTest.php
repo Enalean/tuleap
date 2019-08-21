@@ -22,7 +22,8 @@ require_once __DIR__.'/../bootstrap.php';
 
 class Tracker_ReferenceManagerTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->reference_manager = mock('ReferenceManager');
         $this->artifact_factory  = mock('Tracker_ArtifactFactory');
 
@@ -39,13 +40,15 @@ class Tracker_ReferenceManagerTest extends TuleapTestCase {
         $GLOBALS['Language'] = mock('BaseLanguage');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         unset($GLOBALS['Language']);
 
         parent::tearDown();
     }
 
-    public function itReturnsNullIfThereIsNoArtifactMatching() {
+    public function itReturnsNullIfThereIsNoArtifactMatching()
+    {
         stub($this->artifact_factory)->getArtifactById(101)->returns(null);
 
         $reference = $this->tracker_reference_manager->getReference(
@@ -56,7 +59,8 @@ class Tracker_ReferenceManagerTest extends TuleapTestCase {
         $this->assertNull($reference);
     }
 
-    public function itReturnsTheTV5LinkIfIdIsMatching() {
+    public function itReturnsTheTV5LinkIfIdIsMatching()
+    {
         stub($this->artifact_factory)->getArtifactById(101)->returns($this->artifact);
 
         $reference = $this->tracker_reference_manager->getReference(

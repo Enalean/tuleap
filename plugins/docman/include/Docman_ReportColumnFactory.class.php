@@ -27,11 +27,13 @@ require_once('Docman_MetadataFactory.class.php');
 class Docman_ReportColumnFactory {
     var $groupId;
 
-    function __construct($groupId) {
+    function __construct($groupId)
+    {
         $this->groupId = $groupId;
     }
 
-    function getColumnFromLabel($colLabel) {
+    function getColumnFromLabel($colLabel)
+    {
         $col = null;
         $mdFactory = $this->_getMetadataFactory();
         switch($colLabel) {
@@ -57,7 +59,8 @@ class Docman_ReportColumnFactory {
         return $col;
     }
 
-    function &_getMetadataFactory() {
+    function &_getMetadataFactory()
+    {
         $mdf = new Docman_MetadataFactory($this->groupId);
         return $mdf;
     }

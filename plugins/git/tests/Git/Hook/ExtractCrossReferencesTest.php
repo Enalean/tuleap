@@ -33,7 +33,8 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
     private $post_receive;
     private $push_details;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $project = stub('Project')->getID()->returns(101);
@@ -57,13 +58,15 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
     }
 
 
-    public function itGetsEachRevisionContent() {
+    public function itGetsEachRevisionContent()
+    {
         expect($this->git_exec_repo)->catFile('469eaa9')->once();
 
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function itExtractCrossReferencesForGivenUser() {
+    public function itExtractCrossReferencesForGivenUser()
+    {
         stub($this->git_exec_repo)->catFile()->returns('whatever');
 
         expect($this->reference_manager)->extractCrossRef('*', '*', '*', '*', 350)->once();
@@ -71,7 +74,8 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function itExtractCrossReferencesOnGitCommit() {
+    public function itExtractCrossReferencesOnGitCommit()
+    {
         stub($this->git_exec_repo)->catFile()->returns('whatever');
 
         expect($this->reference_manager)->extractCrossRef('*', '*', Git::REFERENCE_NATURE, '*', '*')->once();
@@ -79,7 +83,8 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function itExtractCrossReferencesOnCommitMessage() {
+    public function itExtractCrossReferencesOnCommitMessage()
+    {
         stub($this->git_exec_repo)->catFile()->returns('bla bla bla');
 
         expect($this->reference_manager)->extractCrossRef('bla bla bla', '*', '*', '*', '*')->once();
@@ -87,7 +92,8 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function itExtractCrossReferencesForProject() {
+    public function itExtractCrossReferencesForProject()
+    {
         stub($this->git_exec_repo)->catFile()->returns('');
 
         expect($this->reference_manager)->extractCrossRef('*', '*', '*', 101, '*')->once();
@@ -95,7 +101,8 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function itSetTheReferenceToTheRepository() {
+    public function itSetTheReferenceToTheRepository()
+    {
         stub($this->git_exec_repo)->catFile()->returns('');
 
         expect($this->reference_manager)->extractCrossRef('*', 'dev/469eaa9', '*', '*', '*')->once();
@@ -103,7 +110,8 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function itSetTheReferenceToTheRepositoryWithSubRepo() {
+    public function itSetTheReferenceToTheRepositoryWithSubRepo()
+    {
         stub($this->git_exec_repo)->catFile()->returns('');
 
         expect($this->reference_manager)->extractCrossRef('*', 'arch/x86_64/dev/469eaa9', '*', '*', '*')->once();

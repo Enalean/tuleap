@@ -25,7 +25,8 @@
 class Cardwall_OnTop_Config_ColumnStatusCollection extends Cardwall_OnTop_Config_ColumnCollection
                                                    implements Cardwall_OnTop_Config_ColumnsVisitor {
 
-    public function accept($visitor, $parameter = '') {
+    public function accept($visitor, $parameter = '')
+    {
         return $visitor->visitColumnStatusCollection($this, $parameter);
     }
 }

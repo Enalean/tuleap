@@ -102,55 +102,68 @@ class FlamingParrot_ContainerPresenter
         }
     }
 
-    public function hasBreadcrumbs() {
+    public function hasBreadcrumbs()
+    {
         return count($this->breadcrumbs) > 0;
     }
 
-    public function breadcrumbs() {
+    public function breadcrumbs()
+    {
         return $this->breadcrumbs;
     }
 
-    public function hasToolbar() {
+    public function hasToolbar()
+    {
         return (count($this->toolbar) > 0);
     }
 
-    public function toolbar() {
+    public function toolbar()
+    {
         return implode('</li><li>', $this->toolbar);
     }
 
-    public function hasSidebar() {
+    public function hasSidebar()
+    {
         return isset($this->project_tabs);
     }
 
-    public function is_sidebar_collapsable() {
+    public function is_sidebar_collapsable()
+    {
         return $this->sidebar_collapsable;
     }
 
-    public function sidebar() {
+    public function sidebar()
+    {
         return $this->project_tabs;
     }
 
-    public function powered_by() {
+    public function powered_by()
+    {
         return $GLOBALS['Language']->getText('global','powered_by').' '.$this->forge_version;
     }
 
-    public function copyright() {
+    public function copyright()
+    {
         return $GLOBALS['Language']->getText('global','copyright');
     }
 
-    public function projectName() {
+    public function projectName()
+    {
         return util_unconvert_htmlspecialchars($this->project_name);
     }
 
-    public function projectLink() {
+    public function projectLink()
+    {
         return $this->project_link;
     }
 
-    public function project_privacy() {
+    public function project_privacy()
+    {
         return $this->project_privacy;
     }
 
-    public function feedback() {
+    public function feedback()
+    {
         $html  = $this->feedback->htmlContent();
         $html .= $this->feedback_content;
 

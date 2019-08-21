@@ -68,27 +68,33 @@ class GraphOnTrackersV5_GraphActionsPresenter
         $this->has_one_project_dashboard = count($project_dashboards) === 1;
     }
 
-    public function confirm_label() {
+    public function confirm_label()
+    {
         return $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','confirm_del');
     }
 
-    public function delete_title() {
+    public function delete_title()
+    {
         return $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'tooltip_del');
     }
 
-    public function edit_title() {
+    public function edit_title()
+    {
         return $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'tooltip_edit');
     }
 
-    public function add_to_my_dashboard_label() {
+    public function add_to_my_dashboard_label()
+    {
         return $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'add_chart_dashboard');
     }
 
-    public function add_to_project_dashboard_label() {
+    public function add_to_project_dashboard_label()
+    {
         return $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'add_chart_project_dashboard');
     }
 
-    public function report_is_created() {
+    public function report_is_created()
+    {
         return $this->chart->getId() > 0;
     }
 }

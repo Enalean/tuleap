@@ -20,17 +20,20 @@
  * Add generic_user table
  */
 class b201306171145_add_generic_user_table extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 add generic_user table
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE generic_user (
                     group_id INT(11) PRIMARY KEY,
                     user_id INT(11) NOT NULL
@@ -43,7 +46,8 @@ EOT;
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (! $this->db->tableNameExists('generic_user')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Table generic_user not created');
         }

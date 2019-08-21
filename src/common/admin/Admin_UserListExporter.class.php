@@ -110,7 +110,8 @@ class Admin_UserListExporter {
      * @param string $status_code
      *
      */
-    private function getUserStatus($status_code) {
+    private function getUserStatus($status_code)
+    {
         global $Language;
         switch ($status_code) {
             case PFUser::STATUS_ACTIVE:

@@ -33,7 +33,8 @@ class RuleNameTest extends TuleapTestCase {
     private $project;
     private $rule;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->dao = mock('Tuleap\SVN\Dao');
@@ -43,14 +44,16 @@ class RuleNameTest extends TuleapTestCase {
         $this->rule = new RuleName($this->project, $this->dao);
     }
 
-    public function itVerifyRepositoryNameNotAlreadyUsedInProject(){
+    public function itVerifyRepositoryNameNotAlreadyUsedInProject()
+    {
         stub($this->dao)->doesRepositoryAlreadyExist("repository1", $this->project)->returns(true);
 
         $this->assertFalse($this->rule->isValid("repository1"));
         $this->assertTrue($this->rule->isValid("repository2"));
     }
 
-    public function itForbidsSpecialsChars() {
+    public function itForbidsSpecialsChars()
+    {
         // Special chars
         $this->assertFalse($this->rule->isValid("user\n"));
         $this->assertFalse($this->rule->isValid("\nuser"));
@@ -104,7 +107,8 @@ class RuleNameTest extends TuleapTestCase {
         $this->assertFalse($this->rule->isValid("userç"));
     }
 
-    public function itForbidsSpaces() {
+    public function itForbidsSpaces()
+    {
         $this->assertFalse($this->rule->isValid("user test"));
         $this->assertFalse($this->rule->isValid(" usertest"));
         $this->assertFalse($this->rule->isValid("usertest "));
@@ -112,7 +116,8 @@ class RuleNameTest extends TuleapTestCase {
         $this->assertTrue($this->rule->isValid("user"));
     }
 
-    public function itForbidsBeginnigByAChar() {
+    public function itForbidsBeginnigByAChar()
+    {
         $this->assertFalse($this->rule->isValid("1"));
         $this->assertFalse($this->rule->isValid("1deux"));
         $this->assertTrue($this->rule->isValid("a1b"));

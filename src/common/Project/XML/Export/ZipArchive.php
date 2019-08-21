@@ -29,7 +29,8 @@ class ZipArchive implements ArchiveInterface {
     private $archive;
     private $archive_path;
 
-    public function __construct($archive_path) {
+    public function __construct($archive_path)
+    {
         $this->archive      = new \ZipArchive();
         $this->archive_path = $archive_path;
 
@@ -38,23 +39,27 @@ class ZipArchive implements ArchiveInterface {
         }
     }
 
-    public function close() {
+    public function close()
+    {
         if (! $this->archive->close()) {
             throw new ArchiveException("Unable to close zip archive: ".$this->archive->getStatusString());
         }
     }
 
-    public function addEmptyDir($dirname) {
+    public function addEmptyDir($dirname)
+    {
         $this->archive->addEmptyDir($dirname);
     }
 
-    public function addFile($localname, $path_to_filesystem) {
+    public function addFile($localname, $path_to_filesystem)
+    {
         if (! $this->archive->addFile($path_to_filesystem, $localname)) {
             throw new ArchiveException("Unable to add $localname into archive: ".$this->archive->getStatusString());
         }
     }
 
-    public function addFromString($localname, $contents) {
+    public function addFromString($localname, $contents)
+    {
         if (! $this->archive->addFromString($localname, $contents)) {
             throw new ArchiveException("Unable to add $localname into archive: ".$this->archive->getStatusString());
         }

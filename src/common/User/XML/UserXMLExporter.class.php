@@ -30,12 +30,14 @@ class UserXMLExporter {
      */
     private $collection;
 
-    public function __construct(UserManager $user_manager, UserXMLExportedCollection $collection) {
+    public function __construct(UserManager $user_manager, UserXMLExportedCollection $collection)
+    {
         $this->user_manager = $user_manager;
         $this->collection   = $collection;
     }
 
-    public function exportUser(PFUser $user, SimpleXMLElement $members_node, $child_name) {
+    public function exportUser(PFUser $user, SimpleXMLElement $members_node, $child_name)
+    {
         if ($user->getLdapId()) {
             $member_node = $members_node->addChild($child_name, $user->getLdapId());
             $member_node->addAttribute('format', 'ldap');
@@ -46,13 +48,15 @@ class UserXMLExporter {
         $this->collection->add($user);
     }
 
-    public function exportUserByUserId($user_id, SimpleXMLElement $members_node, $child_name) {
+    public function exportUserByUserId($user_id, SimpleXMLElement $members_node, $child_name)
+    {
         $user = $this->user_manager->getUserById($user_id);
 
         $this->exportUser($user, $members_node, $child_name);
     }
 
-    public function exportUserByMail($email, SimpleXMLElement $members_node, $child_name) {
+    public function exportUserByMail($email, SimpleXMLElement $members_node, $child_name)
+    {
         $member_node = $members_node->addChild($child_name, $email);
         $member_node->addAttribute('format', 'email');
     }

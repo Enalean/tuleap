@@ -24,7 +24,8 @@ Mock::generate('SOAP_RequestLimitatorDao');
  */
 class AboutOneHourAgoExpectation extends SimpleExpectation {
 
-    public function test($input) {
+    public function test($input)
+    {
         $oneHourAgo = $_SERVER['REQUEST_TIME'] - 3600;
         $delta = abs($input - $oneHourAgo);
         if ($delta <= 10) {
@@ -33,7 +34,8 @@ class AboutOneHourAgoExpectation extends SimpleExpectation {
         return false;
     }
 
-    public function testMessage($input) {
+    public function testMessage($input)
+    {
         $now = $_SERVER['REQUEST_TIME'];
         return 'The given value is not ~1 hour ago (Input: '.$input.' => '.date('c', $input).' <=> Now: '.$now.' => '.date('c', $now).')';
     }
@@ -41,7 +43,8 @@ class AboutOneHourAgoExpectation extends SimpleExpectation {
 
 class SOAP_RequestLimitatorTest extends TuleapTestCase {
 
-    private function GivenThereWasAlreadyOneCallTheLastHour() {
+    private function GivenThereWasAlreadyOneCallTheLastHour()
+    {
         $dao = new MockSOAP_RequestLimitatorDao();
         $requestTime = $_SERVER['REQUEST_TIME'];
         $time30minutesAgo = $requestTime - 30 * 60;
@@ -57,13 +60,15 @@ class SOAP_RequestLimitatorTest extends TuleapTestCase {
         return $dao;
     }
 
-    public function testTwoRequestsShouldBeAllowedByConfiguration() {
+    public function testTwoRequestsShouldBeAllowedByConfiguration()
+    {
         $dao = $this->GivenThereWasAlreadyOneCallTheLastHour();
         $limitator = new SOAP_RequestLimitator($nb_call = 10, $timeframe = 3600, $dao);
         $limitator->logCallTo('addProject');
     }
 
-    private function GivenThereIsNoPreviousCallStoredInDB() {
+    private function GivenThereIsNoPreviousCallStoredInDB()
+    {
         $dao = new MockSOAP_RequestLimitatorDao();
 
         $dar = new MockDataAccessResult();
@@ -76,14 +81,16 @@ class SOAP_RequestLimitatorTest extends TuleapTestCase {
         return $dao;
     }
 
-    public function testOneRequestIsAllowed() {
+    public function testOneRequestIsAllowed()
+    {
         $dao = $this->GivenThereIsNoPreviousCallStoredInDB();
 
         $limitator = new SOAP_RequestLimitator($nb_call = 10, $timeframe = 3600, $dao);
         $limitator->logCallTo('addProject');
     }
 
-    private function GivenThereWasAlreadyTenCallToAddProject() {
+    private function GivenThereWasAlreadyTenCallToAddProject()
+    {
         $dao = new MockSOAP_RequestLimitatorDao();
 
         $time30minutesAgo = $_SERVER['REQUEST_TIME'] - 30 * 60;
@@ -96,7 +103,8 @@ class SOAP_RequestLimitatorTest extends TuleapTestCase {
         return $dao;
     }
 
-    public function testTwoRequestsShouldThrowAnException() {
+    public function testTwoRequestsShouldThrowAnException()
+    {
         $dao = $this->GivenThereWasAlreadyTenCallToAddProject();
 
         $this->expectException('SOAP_NbRequestsExceedLimit_Exception');

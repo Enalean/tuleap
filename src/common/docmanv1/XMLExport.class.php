@@ -25,7 +25,8 @@ class DocmanV1_XMLExport {
     private $admin_user;
     private $user_manager;
 
-    public function __construct(Project $project, $archive_name, $admin_name) {
+    public function __construct(Project $project, $archive_name, $admin_name)
+    {
         $this->project      = $project;
         $this->archive_name = basename($archive_name);
         $this->package_path = $archive_name;
@@ -34,7 +35,8 @@ class DocmanV1_XMLExport {
         $this->admin_user   = $this->user_manager->getUserByUserName($admin_name);
     }
 
-    public function createDomDocument() {
+    public function createDomDocument()
+    {
         $implementation    = new DOMImplementation();
         $dtd               = $implementation->createDocumentType('docman', '', HTTPRequest::instance()->getServerUrl().'/plugins/docman/docman-1.0.dtd');
         $doc               = $implementation->createDocument('', '', $dtd);
@@ -45,20 +47,23 @@ class DocmanV1_XMLExport {
         return $doc;
     }
 
-    public function dumpPackage() {
+    public function dumpPackage()
+    {
         $this->createDirectories();
         $doc = $this->dump();
         $doc->save($this->package_path.'/'.$this->archive_name.'.xml');
     }
 
-    public function dump() {
+    public function dump()
+    {
         $doc = $this->createDomDocument();
         $this->appendDocman($doc);
         $doc->validate();
         return $doc;
     }
 
-    public function appendDocman(DOMDocument $doc) {
+    public function appendDocman(DOMDocument $doc)
+    {
         $export = new DocmanV1_XMLExportData(
             new DocmanV1_XMLExportDao(),
             $this->user_manager,
@@ -77,7 +82,8 @@ class DocmanV1_XMLExport {
         $export->appendUGroups($ugroups, $this->project);
     }
 
-    public function createDirectories() {
+    public function createDirectories()
+    {
         mkdir($this->data_path, 0755, true);
     }
 }

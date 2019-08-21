@@ -108,7 +108,8 @@ class BacklogItemResource extends AuthenticatedResource
      *
      * @param int $id Id of the BacklogItem
      */
-    public function options($id) {
+    public function options($id)
+    {
         $this->sendAllowHeader();
     }
 
@@ -171,7 +172,8 @@ class BacklogItemResource extends AuthenticatedResource
         return $backlog_item;
     }
 
-    private function updateArtifactTitleSemantic(PFUser $current_user, Tracker_Artifact $artifact, Tracker_SemanticCollection $semantics) {
+    private function updateArtifactTitleSemantic(PFUser $current_user, Tracker_Artifact $artifact, Tracker_SemanticCollection $semantics)
+    {
         $semantic_title = $semantics[Tracker_Semantic_Title::NAME];
         $title_field    = $semantic_title->getField();
 
@@ -305,7 +307,8 @@ class BacklogItemResource extends AuthenticatedResource
      * @throws RestException 404
      * @throws RestException 409
      */
-    protected function patch($id, ?OrderRepresentation $order = null, ?array $add = null) {
+    protected function patch($id, ?OrderRepresentation $order = null, ?array $add = null)
+    {
 
         $artifact = $this->getArtifact($id);
         $user     = $this->getCurrentUser();
@@ -363,7 +366,8 @@ class BacklogItemResource extends AuthenticatedResource
         }
     }
 
-    private function getArtifact($id) {
+    private function getArtifact($id)
+    {
         $artifact     = $this->artifact_factory->getArtifactById($id);
         $current_user = $this->getCurrentUser();
 
@@ -376,7 +380,8 @@ class BacklogItemResource extends AuthenticatedResource
         return $artifact;
     }
 
-    private function getChildrenArtifactIds(PFUser $user, Tracker_Artifact $artifact) {
+    private function getChildrenArtifactIds(PFUser $user, Tracker_Artifact $artifact)
+    {
         $linked_artifacts_index = array();
         foreach ($artifact->getChildrenForUser($user) as $artifact) {
             $linked_artifacts_index[$artifact->getId()] = true;
@@ -391,37 +396,45 @@ class BacklogItemResource extends AuthenticatedResource
      *
      * @throws RestException 404
      */
-    public function optionsChildren($id) {
+    public function optionsChildren($id)
+    {
         $this->sendAllowHeaderForChildren();
     }
 
-    private function getSlicedArtifactsBuilder() {
+    private function getSlicedArtifactsBuilder()
+    {
         return new Tracker_SlicedArtifactsBuilder(new Tracker_ArtifactDao());
     }
 
-    private function checkContentLimit($limit) {
+    private function checkContentLimit($limit)
+    {
         if (! $this->limitValueIsAcceptable($limit)) {
             throw new RestException(406, 'Maximum value for limit exceeded');
         }
     }
 
-    private function limitValueIsAcceptable($limit) {
+    private function limitValueIsAcceptable($limit)
+    {
         return $limit <= self::MAX_LIMIT;
     }
 
-    private function sendAllowHeader() {
+    private function sendAllowHeader()
+    {
         Header::allowOptionsGet();
     }
 
-    private function sendAllowHeaderForChildren() {
+    private function sendAllowHeaderForChildren()
+    {
         Header::allowOptionsGetPatch();
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size) {
+    private function sendPaginationHeaders($limit, $offset, $size)
+    {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
-    private function getCurrentUser() {
+    private function getCurrentUser()
+    {
         return $this->user_manager->getCurrentUser();
     }
 

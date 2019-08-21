@@ -25,7 +25,8 @@
  */
 class HTML_Element_Selectbox_TrackerFields_SelectboxesV5 extends HTML_Element_Selectbox {
 
-    public function __construct($tracker, $label, $name, $value, $with_none = false, $onchange = "", $with_user = true, $desc="") {
+    public function __construct($tracker, $label, $name, $value, $with_none = false, $onchange = "", $with_user = true, $desc="")
+    {
         parent::__construct($label, $name, $value, $with_none, $onchange, $desc);
 
         require_once(TRACKER_BASE_DIR. '/Tracker/FormElement/Tracker_FormElementFactory.class.php');

@@ -36,7 +36,8 @@ class ErrorChart extends Chart {
      * @param int    $aHeight The height of the image
      *                        /!\ A too small width may lead to a jpgraph error
      */
-    public function __construct($title, $msg, $aWidth = 600, $aHeight = 400) {
+    public function __construct($title, $msg, $aWidth = 600, $aHeight = 400)
+    {
         parent::__construct($aWidth, $aHeight);
         $this->img_width = $aWidth;
         $this->jpgraph_instance->InitFrame();
@@ -52,7 +53,8 @@ class ErrorChart extends Chart {
     /**
      * @return Text
      */
-    private function addTextToGraph($msg, $padding_left, $padding_top, $font_weight, $font_size, $img_width) {
+    private function addTextToGraph($msg, $padding_left, $padding_top, $font_weight, $font_size, $img_width)
+    {
         $text = new Text($msg, $padding_left, $padding_top);
         $text->SetFont($this->getFont(), $font_weight, $font_size);
         $text->SetColor($this->getMainColor());
@@ -70,7 +72,8 @@ class ErrorChart extends Chart {
      *
      * @return string
      */
-    protected function getGraphClass() {
+    protected function getGraphClass()
+    {
         return 'CanvasGraph';
     }
 }

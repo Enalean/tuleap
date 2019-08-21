@@ -23,7 +23,8 @@ class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTest
 
     private $field_id = 3;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->field            = stub('Tracker_FormElement_Field_String')->getId()->returns($this->field_id);
         $element_factory        = mock('Tracker_FormElementFactory');
@@ -40,12 +41,14 @@ class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTest
         );
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         Tracker_FormElementFactory::clearInstance();
         parent::tearDown();
     }
 
-    public function itReconstitutesANotEmptyCondition() {
+    public function itReconstitutesANotEmptyCondition()
+    {
         $xml = new SimpleXMLElement('
             <condition type="notempty">
                 <field REF="F14"/>
@@ -61,7 +64,8 @@ class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTest
         $this->assertEqual($condition, $expected);
     }
 
-    public function itDoesNotReconstitutesAnythingIfThereIsNoRefToField() {
+    public function itDoesNotReconstitutesAnythingIfThereIsNoRefToField()
+    {
         $xml = new SimpleXMLElement('
             <condition type="notempty" />
         ');
@@ -70,7 +74,8 @@ class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTest
         $this->assertNull($condition);
     }
 
-    public function itDuplicateConditionInDatabase() {
+    public function itDuplicateConditionInDatabase()
+    {
         $new_transition_id = 2;
         $field_mapping     = array('some fields mapping');
         $ugroup_mapping    = array('some ugroups mapping');
@@ -80,7 +85,8 @@ class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTest
         $this->factory->duplicate($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
     }
 
-    public function itChecksThatFieldIsNotUsed() {
+    public function itChecksThatFieldIsNotUsed()
+    {
         stub($this->dao)->isFieldUsed($this->field_id)->once()->returns(true);
         $this->assertTrue($this->factory->isFieldUsedInConditions($this->field));
     }

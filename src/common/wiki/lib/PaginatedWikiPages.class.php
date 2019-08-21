@@ -35,19 +35,22 @@ class PaginatedWikiPages {
      * @param WikiPage[] $pages
      * @param int $total_size
      */
-    public function __construct(array $pages, $total_size) {
+    public function __construct(array $pages, $total_size)
+    {
         $this->pages      = $pages;
         $this->total_size = $total_size;
     }
 
-    public function getTotalSize() {
+    public function getTotalSize()
+    {
         return $this->total_size;
     }
 
     /**
      * @return WikiPage[]
      */
-    public function getPages() {
+    public function getPages()
+    {
         return $this->pages;
     }
 }

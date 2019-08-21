@@ -32,7 +32,8 @@ class SystemEventProcessRootDefaultQueue implements SystemEventProcess {
         return 'tuleap_process_system_events';
     }
 
-    public function getQueue() {
+    public function getQueue()
+    {
         return SystemEvent::DEFAULT_QUEUE;
     }
 

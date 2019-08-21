@@ -177,7 +177,8 @@ class AgileDashboardRouter
      *
      * @param Codendi_Request $request
      */
-    public function route(Codendi_Request $request) {
+    public function route(Codendi_Request $request)
+    {
         $planning_controller            = $this->buildPlanningController($request);
         $agile_dashboard_xml_controller = new AgileDashboard_XMLController(
             $request,
@@ -301,7 +302,8 @@ class AgileDashboardRouter
      *
      * @return string
      */
-    private function getHeaderTitle(Codendi_Request $request, $action_name) {
+    private function getHeaderTitle(Codendi_Request $request, $action_name)
+    {
         $header_title = array(
             'index'               => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
             'exportToFile'        => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
@@ -332,7 +334,8 @@ class AgileDashboardRouter
      *
      * @return Service
      */
-    private function getService(Codendi_Request $request) {
+    private function getService(Codendi_Request $request)
+    {
         if ($this->service == null) {
             $project = $request->getProject();
             $this->service = $project->getService('plugin_agiledashboard');
@@ -368,7 +371,8 @@ class AgileDashboardRouter
         $service->displayHeader($title, $controller->getBreadcrumbs(), [], $header_options);
     }
 
-    private function userIsAdmin(Codendi_Request $request) {
+    private function userIsAdmin(Codendi_Request $request)
+    {
         return $request->getProject()->userIsAdmin($request->getCurrentUser());
     }
 
@@ -377,7 +381,8 @@ class AgileDashboardRouter
      *
      * @param Codendi_Request $request
      */
-    private function displayFooter(Codendi_Request $request) {
+    private function displayFooter(Codendi_Request $request)
+    {
         $this->getService($request)->displayFooter();
     }
 
@@ -449,11 +454,13 @@ class AgileDashboardRouter
      * @param Codendi_Request $request     The request
      * @param array           $args        Arguments to pass to the controller action method.
      */
-    protected function renderAction(MVC2_Controller $controller,
-                                                    $action_name,
-                                    Codendi_Request $request,
-                                    array           $args = array(),
-                                    array           $header_options = array()) {
+    protected function renderAction(
+        MVC2_Controller $controller,
+        $action_name,
+        Codendi_Request $request,
+        array           $args = array(),
+        array           $header_options = array()
+    ) {
         $content = $this->executeAction($controller, $action_name, $args);
         $header_options = array_merge($header_options, $controller->getHeaderOptions());
 
@@ -470,9 +477,11 @@ class AgileDashboardRouter
      * @param string          $action_name The controller action name (e.g. index, show...).
      * @param array           $args        Arguments to pass to the controller action method.
      */
-    protected function executeAction(MVC2_Controller $controller,
-                                                     $action_name,
-                                     array           $args = array()) {
+    protected function executeAction(
+        MVC2_Controller $controller,
+        $action_name,
+        array           $args = array()
+    ) {
 
         return call_user_func_array(array($controller, $action_name), $args);
     }
@@ -485,7 +494,8 @@ class AgileDashboardRouter
      *
      * @param Codendi_Request $request
      */
-    public function routeShowPlanning(Codendi_Request $request) {
+    public function routeShowPlanning(Codendi_Request $request)
+    {
         $aid = $request->getValidated('aid', 'int', 0);
         switch ($aid) {
             case -1:
@@ -503,7 +513,8 @@ class AgileDashboardRouter
         }
     }
 
-    public function routeShowTopPlanning(Codendi_Request $request, $default_controller) {
+    public function routeShowTopPlanning(Codendi_Request $request, $default_controller)
+    {
         $user = $request->getCurrentUser();
         if (! $user) {
             $this->renderAction($default_controller, 'index', $request);

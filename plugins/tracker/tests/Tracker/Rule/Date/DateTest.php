@@ -28,7 +28,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
 
 
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->date_rule = new Tracker_Rule_Date();
     }
@@ -36,12 +37,14 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
     /*
      * Source Field tests
      */
-    public function testSetSourceFieldIdReturnsModelObject() {
+    public function testSetSourceFieldIdReturnsModelObject()
+    {
         $set = $this->date_rule->setSourceFieldId(123);
         $this->assertEqual($this->date_rule, $set);
     }
 
-    public function testGetSourceFieldIdReturnsFieldIdSet() {
+    public function testGetSourceFieldIdReturnsFieldIdSet()
+    {
         $this->date_rule->setSourceFieldId(45);
         $this->assertEqual(45, $this->date_rule->getSourceFieldId());
     }
@@ -49,12 +52,14 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
     /*
      * Target Field tests
      */
-    public function testSetTargetFieldIdReturnsModelObject() {
+    public function testSetTargetFieldIdReturnsModelObject()
+    {
         $set = $this->date_rule->setSourceFieldId(123);
         $this->assertEqual($this->date_rule, $set);
     }
 
-    public function testGetTargetFieldIdReturnsTargetIdSet() {
+    public function testGetTargetFieldIdReturnsTargetIdSet()
+    {
         $this->date_rule->setTargetFieldId(45);
         $this->assertEqual(45, $this->date_rule->getTargetFieldId());
     }
@@ -62,12 +67,14 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
     /*
      * Tracker Field tests
      */
-    public function testSetTrackerFieldIdReturnsModelObject() {
+    public function testSetTrackerFieldIdReturnsModelObject()
+    {
         $set = $this->date_rule->setTrackerId(123);
         $this->assertEqual($this->date_rule, $set);
     }
 
-    public function testGetTrackerFieldIdReturnsTrackerIdSet() {
+    public function testGetTrackerFieldIdReturnsTrackerIdSet()
+    {
         $this->date_rule->setTrackerId(45);
         $this->assertEqual(45, $this->date_rule->getTrackerId());
     }
@@ -75,22 +82,26 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
     /*
      * Comparator Field tests
      */
-    public function testSetComparatorReturnsModelObject() {
+    public function testSetComparatorReturnsModelObject()
+    {
         $set = $this->date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_EQUALS);
         $this->assertEqual($this->date_rule, $set);
     }
 
-    public function testGetComparatorReturnsComparatorSet() {
+    public function testGetComparatorReturnsComparatorSet()
+    {
         $this->date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_EQUALS);
         $this->assertEqual(Tracker_Rule_Date::COMPARATOR_EQUALS, $this->date_rule->getComparator());
     }
 
-    public function testSetComparatorWillNotAllowRandomComparators() {
+    public function testSetComparatorWillNotAllowRandomComparators()
+    {
         $this->expectException('Tracker_Rule_Date_InvalidComparatorException');
         $this->date_rule->setComparator('not a comparator');
     }
 
-    public function testValidateReturnsTrueForTwoEqualDates() {
+    public function testValidateReturnsTrueForTwoEqualDates()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_EQUALS);
 
@@ -100,7 +111,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForTwoUnequalDatesWithEquals() {
+    public function testValidateReturnsFalseForTwoUnequalDatesWithEquals()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_EQUALS);
 
@@ -110,7 +122,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForTwoUnequalDates() {
+    public function testValidateReturnsTrueForTwoUnequalDates()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS);
 
@@ -120,7 +133,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsfalseForTwoUnequalDates() {
+    public function testValidateReturnsfalseForTwoUnequalDates()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS);
 
@@ -130,7 +144,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForGreaterDates() {
+    public function testValidateReturnsTrueForGreaterDates()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN);
 
@@ -140,7 +155,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForGreaterDates() {
+    public function testValidateReturnsFalseForGreaterDates()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN);
 
@@ -150,7 +166,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForGreaterOrEqualDates() {
+    public function testValidateReturnsTrueForGreaterOrEqualDates()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN_OR_EQUALS);
 
@@ -160,7 +177,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForGreaterOrEqualDates() {
+    public function testValidateReturnsFalseForGreaterOrEqualDates()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN_OR_EQUALS);
 
@@ -170,7 +188,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForLessDates() {
+    public function testValidateReturnsTrueForLessDates()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN);
 
@@ -180,7 +199,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForLessDates() {
+    public function testValidateReturnsFalseForLessDates()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN);
 
@@ -190,7 +210,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForLessOrEqualDates() {
+    public function testValidateReturnsTrueForLessOrEqualDates()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS);
 
@@ -200,7 +221,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForLessOrEqualDates() {
+    public function testValidateReturnsFalseForLessOrEqualDates()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS);
 
@@ -210,7 +232,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateThrowsAnExceptionWhenNoComparatorIsSet() {
+    public function testValidateThrowsAnExceptionWhenNoComparatorIsSet()
+    {
         $this->expectException('Tracker_Rule_Date_MissingComparatorException');
         $date_rule = new Tracker_Rule_Date();
 
@@ -220,7 +243,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForTwoEqualDateTimes() {
+    public function testValidateReturnsTrueForTwoEqualDateTimes()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_EQUALS);
 
@@ -230,7 +254,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForDateAndDateTime() {
+    public function testValidateReturnsTrueForDateAndDateTime()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_EQUALS);
 
@@ -240,7 +265,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForTwoUnequalDateTimesWithEquals() {
+    public function testValidateReturnsFalseForTwoUnequalDateTimesWithEquals()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_EQUALS);
 
@@ -250,7 +276,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForUnequalDateTimeAndDateWithEquals() {
+    public function testValidateReturnsFalseForUnequalDateTimeAndDateWithEquals()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_EQUALS);
 
@@ -260,7 +287,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForTwoUnequalDateTimes() {
+    public function testValidateReturnsTrueForTwoUnequalDateTimes()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS);
 
@@ -270,7 +298,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsfalseForTwoUnequalDateTimes() {
+    public function testValidateReturnsfalseForTwoUnequalDateTimes()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS);
 
@@ -280,7 +309,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForDateTimeAndDateWithSameDay() {
+    public function testValidateReturnsFalseForDateTimeAndDateWithSameDay()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS);
 
@@ -290,7 +320,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForGreaterDateTimes() {
+    public function testValidateReturnsTrueForGreaterDateTimes()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN);
 
@@ -300,7 +331,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForGreaterDateTimes() {
+    public function testValidateReturnsFalseForGreaterDateTimes()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN);
 
@@ -310,7 +342,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForGreaterDateThanDateTime() {
+    public function testValidateReturnsFalseForGreaterDateThanDateTime()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN);
 
@@ -320,7 +353,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForGreaterDateTimeThanDate() {
+    public function testValidateReturnsFalseForGreaterDateTimeThanDate()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN);
 
@@ -330,7 +364,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForGreaterDateTimeThanDateSameDay() {
+    public function testValidateReturnsFalseForGreaterDateTimeThanDateSameDay()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN);
 
@@ -340,7 +375,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForGreaterOrEqualDateTimes() {
+    public function testValidateReturnsTrueForGreaterOrEqualDateTimes()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN_OR_EQUALS);
 
@@ -350,7 +386,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForGreaterOrEqualDateTimes() {
+    public function testValidateReturnsFalseForGreaterOrEqualDateTimes()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN_OR_EQUALS);
 
@@ -360,7 +397,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForGreaterOrEqualDateTimesSameDay() {
+    public function testValidateReturnsFalseForGreaterOrEqualDateTimesSameDay()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN_OR_EQUALS);
 
@@ -370,7 +408,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForGreaterOrEqualDateTimesSameDay() {
+    public function testValidateReturnsTrueForGreaterOrEqualDateTimesSameDay()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN_OR_EQUALS);
 
@@ -380,7 +419,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForGreaterOrEqualDateTimesSameTime() {
+    public function testValidateReturnsTrueForGreaterOrEqualDateTimesSameTime()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN_OR_EQUALS);
 
@@ -390,7 +430,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForLessDateTimes() {
+    public function testValidateReturnsTrueForLessDateTimes()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN);
 
@@ -400,7 +441,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForLessDateTimes() {
+    public function testValidateReturnsFalseForLessDateTimes()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN);
 
@@ -410,7 +452,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForLessDateTimeSameDay() {
+    public function testValidateReturnsFalseForLessDateTimeSameDay()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN);
 
@@ -420,7 +463,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForLessDateTimeSameDay() {
+    public function testValidateReturnsTrueForLessDateTimeSameDay()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN);
 
@@ -430,7 +474,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForEqualDateTimeSameDay() {
+    public function testValidateReturnsTrueForEqualDateTimeSameDay()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN);
 
@@ -440,7 +485,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForLessOrEqualDateTimes() {
+    public function testValidateReturnsTrueForLessOrEqualDateTimes()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS);
 
@@ -450,7 +496,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForLessOrEqualDateTimes() {
+    public function testValidateReturnsFalseForLessOrEqualDateTimes()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS);
 
@@ -460,7 +507,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForLessOrEqualDateTimeAndDateSameday() {
+    public function testValidateReturnsTrueForLessOrEqualDateTimeAndDateSameday()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS);
 
@@ -470,7 +518,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForLessOrEqualDateTimeAndDatePreviousDay() {
+    public function testValidateReturnsTrueForLessOrEqualDateTimeAndDatePreviousDay()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS);
 
@@ -482,7 +531,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
 
     //timestamp tests
 
-    public function testValidateReturnsTrueForEqualDateTimeAndTimestamp() {
+    public function testValidateReturnsTrueForEqualDateTimeAndTimestamp()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_EQUALS);
 
@@ -492,7 +542,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsTrueForEqualDateAndTimestamp() {
+    public function testValidateReturnsTrueForEqualDateAndTimestamp()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_EQUALS);
 
@@ -502,7 +553,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertTrue($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForDifferentDateAndTimestamp() {
+    public function testValidateReturnsFalseForDifferentDateAndTimestamp()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_EQUALS);
 
@@ -512,7 +564,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForDifferentDateTimeAndTimestamp() {
+    public function testValidateReturnsFalseForDifferentDateTimeAndTimestamp()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_EQUALS);
 
@@ -522,7 +575,8 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->assertFalse($date_rule->validate($source_value, $target_value));
     }
 
-    public function testValidateReturnsFalseForSameDateAndTimestamp() {
+    public function testValidateReturnsFalseForSameDateAndTimestamp()
+    {
         $date_rule = new Tracker_Rule_Date();
         $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS);
 

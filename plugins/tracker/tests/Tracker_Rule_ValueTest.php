@@ -9,7 +9,8 @@
 require_once('bootstrap.php');
 class Tracker_Rule_ListTest extends TuleapTestCase {
 
-    function testApplyTo() {
+    function testApplyTo()
+    {
         $trv  = new Tracker_Rule_List();
         $trv->setSourceValue('source_value')
                 ->setTargetValue('target_value')
@@ -29,7 +30,8 @@ class Tracker_Rule_ListTest extends TuleapTestCase {
         $this->assertFalse($trv->applyTo('tracker_id',       'source_field',        'source_value',       'false_target_field', 'false_target_value'));
     }
 
-    function testCanApplyTo() {
+    function testCanApplyTo()
+    {
         $trv  = new Tracker_Rule_List();
         $trv->setSourceValue('source_value')
                 ->setTargetValue('target_value')

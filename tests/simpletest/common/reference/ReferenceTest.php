@@ -21,14 +21,16 @@
 
 class ReferenceTest extends TuleapTestCase {
 
-    function testScope() {
+    function testScope()
+    {
         $ref = new Reference(1,"art","Goto artifact",'/tracker/?func=detail&aid=$1&group_id=$group_id','S','tracker','artifact',1,101);
         $this->assertTrue($ref->isSystemReference());
         $ref2 = new Reference(1,"art","Goto artifact",'/tracker/?func=detail&aid=$1&group_id=$group_id','P','tracker','artifact',1,101);
         $this->assertFalse($ref2->isSystemReference());
     }
 
-    function testComputeNumParams() {
+    function testComputeNumParams()
+    {
         $ref = new Reference(1,"art","Goto artifact",'/tracker/?func=detail&aid=$1&group_id=$group_id','S','tracker','artifact',1,101);
         $this->assertIdentical($ref->getNumParam(),1);
         $ref = new Reference(1,"art","Goto artifact",'/tracker/?func=detail&aid=$5&group_id=$group_id','S','tracker','artifact',1,101);
@@ -40,7 +42,8 @@ class ReferenceTest extends TuleapTestCase {
     }
 
 
-    function testReplace() {
+    function testReplace()
+    {
         // Test with full list
         $ref = new Reference(1,"test","Goto test",'/test/?proj=$projname&param1=$1&param5=$5&param3=$3&param4=$4&param2=$2&testname=$0&group_id=$group_id','P','tracker','artifact',1,101);
         $args=array('arg1','arg2','arg3','arg4','arg5');

@@ -78,28 +78,32 @@ class ResourcesInjector {
         $resources[] = $resource_reference;
     }
 
-    private function declareHeartbeatResource(array &$resources, Project $project) {
+    private function declareHeartbeatResource(array &$resources, Project $project)
+    {
         $resource_reference = new ProjectResourceReference();
         $resource_reference->build($project, 'heartbeats');
 
         $resources[] = $resource_reference;
     }
 
-    private function declareProjectUserGroupResource(array &$resources, Project $project) {
+    private function declareProjectUserGroupResource(array &$resources, Project $project)
+    {
         $resource_reference = new ProjectResourceReference();
         $resource_reference->build($project, UserGroupRepresentation::ROUTE);
 
         $resources[] = $resource_reference;
     }
 
-    private function declarePhpWikiResource(array &$resources, Project $project) {
+    private function declarePhpWikiResource(array &$resources, Project $project)
+    {
         $resource_reference = new ProjectResourceReference();
         $resource_reference->build($project, PhpWikiPageRepresentation::ROUTE);
 
         $resources[] = $resource_reference;
     }
 
-    private function declareLabelsResource(array &$resources, Project $project) {
+    private function declareLabelsResource(array &$resources, Project $project)
+    {
         $resource_reference = new ProjectResourceReference();
         $resource_reference->build($project, LabelRepresentation::ROUTE);
 

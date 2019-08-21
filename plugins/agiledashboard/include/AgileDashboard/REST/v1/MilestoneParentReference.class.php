@@ -26,7 +26,8 @@ use Tuleap\REST\JsonCast;
 
 class MilestoneParentReference extends MilestoneParentReferenceBase {
 
-    public function build(Planning_Milestone $milestone) {
+    public function build(Planning_Milestone $milestone)
+    {
         $this->id  = JsonCast::toInt($milestone->getArtifactId());
         $this->uri = MilestoneRepresentation::ROUTE . '/' . $this->id;
 

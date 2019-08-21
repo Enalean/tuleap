@@ -39,7 +39,8 @@ class Git_RemoteServer_GerritServerFactory {
      * @param Git_SystemEventManager $system_event_manager
      * @param ProjectManager $project_manager
      */
-    public function __construct(Git_RemoteServer_Dao $dao, GitDao $git_dao, Git_SystemEventManager $system_event_manager, ProjectManager $project_manager) {
+    public function __construct(Git_RemoteServer_Dao $dao, GitDao $git_dao, Git_SystemEventManager $system_event_manager, ProjectManager $project_manager)
+    {
         $this->dao     = $dao;
         $this->git_dao = $git_dao;
         $this->system_event_manager = $system_event_manager;
@@ -51,7 +52,8 @@ class Git_RemoteServer_GerritServerFactory {
      * @param GitRepository $repository
      * @return Git_RemoteServer_GerritServer
      */
-    public function getServer(GitRepository $repository) {
+    public function getServer(GitRepository $repository)
+    {
         $id  = $repository->getRemoteServerId();
         return $this->getServerById($id);
     }
@@ -62,7 +64,8 @@ class Git_RemoteServer_GerritServerFactory {
      * @return Git_RemoteServer_GerritServer
      * @throws Git_RemoteServer_NotFoundException
      */
-    public function getServerById($id) {
+    public function getServerById($id)
+    {
         $row = $this->dao->getById($id);
         if ($row) {
             return $this->instantiateFromRow($row);
@@ -73,7 +76,8 @@ class Git_RemoteServer_GerritServerFactory {
     /**
      * @return Git_RemoteServer_GerritServer[]
      */
-    public function getServers() {
+    public function getServers()
+    {
         $servers = array();
         foreach ($this->dao->searchAll() as $row) {
             $servers[$row['id']] = $this->instantiateFromRow($row);
@@ -124,7 +128,8 @@ class Git_RemoteServer_GerritServerFactory {
     /**
      * @return Git_RemoteServer_GerritServer[]
      */
-    public function getServersForProject(Project $project) {
+    public function getServersForProject(Project $project)
+    {
         $servers = array();
         foreach ($this->dao->searchAllByProjectId($project->getID()) as $row) {
             $servers[$row['id']] = $this->instantiateFromRow($row);
@@ -136,7 +141,8 @@ class Git_RemoteServer_GerritServerFactory {
         return $servers;
     }
 
-    public function getServersForUGroup(ProjectUGroup $ugroup) {
+    public function getServersForUGroup(ProjectUGroup $ugroup)
+    {
         $servers = array();
         foreach ($this->dao->searchAllByUGroupId($ugroup->getProjectId(), $ugroup->getId()) as $row) {
             $servers[$row['id']] = $this->instantiateFromRow($row);
@@ -182,7 +188,8 @@ class Git_RemoteServer_GerritServerFactory {
      *
      * @param Git_RemoteServer_GerritServer $server
      */
-    public function delete(Git_RemoteServer_GerritServer $server) {
+    public function delete(Git_RemoteServer_GerritServer $server)
+    {
         if (! $this->isServerUsed($server)) {
             $this->dao->delete($server->getId());
             $this->system_event_manager->queueGerritReplicationKeyUpdate($server);
@@ -194,14 +201,16 @@ class Git_RemoteServer_GerritServerFactory {
      * @param Git_RemoteServer_GerritServer $server
      * @return bool
      */
-    public function isServerUsed(Git_RemoteServer_GerritServer $server) {
+    public function isServerUsed(Git_RemoteServer_GerritServer $server)
+    {
         return $this->git_dao->isRemoteServerUsed($server->getId());
     }
 
     /**
      * @return bool
      */
-    public function isServerUsedInProject(Git_RemoteServer_GerritServer $server, $project_id) {
+    public function isServerUsedInProject(Git_RemoteServer_GerritServer $server, $project_id)
+    {
         return $this->git_dao->isRemoteServerUsedInProject($server->getId(), $project_id);
     }
 
@@ -248,7 +257,8 @@ class Git_RemoteServer_GerritServerFactory {
      * Check if gerrit is enabled and has remotes set up.
      * @return bool
      */
-    public function hasRemotesSetUp() {
+    public function hasRemotesSetUp()
+    {
         return count($this->dao->searchAll()) > 0;
     }
 }

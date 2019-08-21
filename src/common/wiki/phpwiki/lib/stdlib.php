@@ -121,7 +121,8 @@ define('MAX_PAGENAME_LENGTH', 100);
  * @param string $str
  * @return string
  */
-function MangleXmlIdentifier($str) {
+function MangleXmlIdentifier($str)
+{
     if (!$str)
         return 'empty.';
 
@@ -142,7 +143,8 @@ function MangleXmlIdentifier($str) {
  * @param bool $get_abs_url Default value is false.
  * @return string The absolute URL to the page passed as $pagename.
  */
-function WikiURL($pagename, $args = '', $get_abs_url = false) {
+function WikiURL($pagename, $args = '', $get_abs_url = false)
+{
     $anchor = false;
 
     if (is_object($pagename)) {
@@ -216,7 +218,8 @@ function WikiURL($pagename, $args = '', $get_abs_url = false) {
  * @param string $url
  * @return string Absolute URL
  */
-function AbsoluteURL ($url) {
+function AbsoluteURL($url)
+{
     if (preg_match('/^https?:/', $url))
         return $url;
     if ($url[0] != '/') {
@@ -232,7 +235,8 @@ function AbsoluteURL ($url) {
     return SERVER_URL . $url;
 }
 
-function DataURL ($url) {
+function DataURL($url)
+{
     if (preg_match('/^https?:/', $url))
         return $url;
     $url = NormalizeWebFileName($url);
@@ -250,7 +254,8 @@ function DataURL ($url) {
  * icon for use with url or protocol passed to the function. False if no img to be
  * displayed.
  */
-function IconForLink($protocol_or_url) {
+function IconForLink($protocol_or_url)
+{
     global $WikiTheme;
     if (0 and $filename_suffix == false) {
         // display apache style icon for file type instead of protocol icon
@@ -282,7 +287,8 @@ function IconForLink($protocol_or_url) {
  * @param string $text The text.
  * @return XmlContent.
  */
-function PossiblyGlueIconToText($proto_or_url, $text) {
+function PossiblyGlueIconToText($proto_or_url, $text)
+{
     global $request, $WikiTheme;
     if ($request->getPref('noLinkIcons'))
         return $text;
@@ -337,7 +343,8 @@ function PossiblyGlueIconToText($proto_or_url, $text) {
  * @param string $url URL to check for unsafe characters.
  * @return bool True if same, false else.
  */
-function IsSafeURL($url) {
+function IsSafeURL($url)
+{
     $valid_local_uri  = new Valid_LocalURI();
     $valid_ftp_uri    = new Valid_FTPURI();
     $valid_mailto_uri = new Valid_MailtoURI();
@@ -354,7 +361,8 @@ function IsSafeURL($url) {
  * @param string $linktext Text to be displayed as link.
  * @return HtmlElement HtmlElement object that contains data to construct an html link.
  */
-function LinkURL($url, $linktext = '') {
+function LinkURL($url, $linktext = '')
+{
     // FIXME: Is this needed (or sufficient?)
     if(! IsSafeURL($url)) {
         $link = HTML::strong(HTML::u(array('class' => 'baduri'),
@@ -381,7 +389,8 @@ function LinkURL($url, $linktext = '') {
  *
  * Handle embeddable objects, like svg, class, vrml, swf, svgz, pdf, avi, wmv especially.
  */
-function LinkImage($url, $alt = false) {
+function LinkImage($url, $alt = false)
+{
     $force_img = "png|jpg|gif|jpeg|bmp|pl|cgi";
     // Disallow tags in img src urls. Typical CSS attacks.
     // FIXME: Is this needed (or sufficient?)
@@ -468,7 +477,8 @@ function LinkImage($url, $alt = false) {
  * Note that Safari 1.0 will crash with <object>, so use only <embed>
  *   http://www.alleged.org.uk/pdc/2002/svg-object.html
  */
-function ImgObject($img, $url) {
+function ImgObject($img, $url)
+{
     // get the url args: data="sample.svgz" type="image/svg+xml" width="400" height="300"
     $args = preg_split('/ /D', $url);
     if (count($args) >= 1) {
@@ -499,17 +509,20 @@ function ImgObject($img, $url) {
 class Stack {
 
     // var in php5 deprecated
-    function __construct() {
+    function __construct()
+    {
         $this->items = array();
         $this->size = 0;
     }
-    function push($item) {
+    function push($item)
+    {
         $this->items[$this->size] = $item;
         $this->size++;
         return true;
     }
 
-    function pop() {
+    function pop()
+    {
         if ($this->size == 0) {
             return false; // stack is empty
         }
@@ -517,11 +530,13 @@ class Stack {
         return $this->items[$this->size];
     }
 
-    function cnt() {
+    function cnt()
+    {
         return $this->size;
     }
 
-    function top() {
+    function top()
+    {
         if($this->size)
             return $this->items[$this->size - 1];
         else
@@ -531,7 +546,7 @@ class Stack {
 }
 // end class definition
 
-function SplitQueryArgs ($query_args = '')
+function SplitQueryArgs($query_args = '')
 {
     // FIXME: use the arg-seperator which might not be &
     $split_args = preg_split('/&/D', $query_args);
@@ -544,7 +559,8 @@ function SplitQueryArgs ($query_args = '')
     return $args;
 }
 
-function LinkPhpwikiURL($url, $text = '', $basepage = false) {
+function LinkPhpwikiURL($url, $text = '', $basepage = false)
+{
     $args = array();
 
     if (!preg_match('/^ phpwiki: ([^?]*) [?]? (.*) $/x', $url, $m)) {
@@ -645,7 +661,8 @@ class WikiPageName
      * @param mixed $basename Page name from which to interpret
      * relative or other non-fully-specified page names.
      */
-    function __construct($name, $basename=false, $anchor=false) {
+    function __construct($name, $basename=false, $anchor=false)
+    {
         if (is_string($name)) {
             $this->shortName = $name;
             if (strstr($name, ':')) {
@@ -689,24 +706,28 @@ class WikiPageName
         $this->anchor = (string)$anchor;
     }
 
-    function getName() {
+    function getName()
+    {
         return $this->name;
     }
 
-    function getParent() {
+    function getParent()
+    {
         $name = $this->name;
         if (!($tail = strrchr($name, SUBPAGE_SEPARATOR)))
             return false;
         return substr($name, 0, -strlen($tail));
     }
 
-    function isValid($strict = false) {
+    function isValid($strict = false)
+    {
         if ($strict)
             return !isset($this->_errors);
         return (is_string($this->name) and $this->name != '');
     }
 
-    function getWarnings() {
+    function getWarnings()
+    {
         $warnings = array();
         if (isset($this->_warnings))
             $warnings = array_merge($warnings, $this->_warnings);
@@ -719,7 +740,8 @@ class WikiPageName
                        $this->shortName, join(', ', $warnings));
     }
 
-    function _pagename($page) {
+    function _pagename($page)
+    {
         if (isa($page, 'WikiDB_Page'))
         return $page->getName();
         elseif (isa($page, 'WikiDB_PageRevision'))
@@ -736,7 +758,8 @@ class WikiPageName
         return $page;
     }
 
-    function _normalize_bad_pagename($name) {
+    function _normalize_bad_pagename($name)
+    {
         trigger_error("Bad pagename: " . $name, E_USER_WARNING);
 
         // Punt...  You really shouldn't get here.
@@ -750,7 +773,8 @@ class WikiPageName
     }
 
 
-    function _check($pagename) {
+    function _check($pagename)
+    {
         // Compress internal white-space to single space character.
          //WARNING : MODIFICATIONS FOR CODENDI
         //change for utf-8 encoding
@@ -822,7 +846,8 @@ class WikiPageName
  *   It only crashes with CreateToc so far, but other pages (not in pgsrc) are
  *   also known to crash, even with Apache1.
  */
-function ConvertOldMarkup ($text, $markup_type = "block") {
+function ConvertOldMarkup($text, $markup_type = "block")
+{
 
     static $subs;
     static $block_re;
@@ -1023,7 +1048,8 @@ function ConvertOldMarkup ($text, $markup_type = "block") {
  * @param int $tab_width
  * @return string
  */
-function expand_tabs($str, $tab_width = 8) {
+function expand_tabs($str, $tab_width = 8)
+{
     $split = preg_split("/\t/D", $str);
     $tail = array_pop($split);
     $expanded = "\n";
@@ -1046,7 +1072,8 @@ function expand_tabs($str, $tab_width = 8) {
  *
  * @return string The split name.
  */
-function SplitPagename ($page) {
+function SplitPagename($page)
+{
 
     if (preg_match("/\s/", $page))
         return $page;           // Already split --- don't split any more.
@@ -1096,7 +1123,8 @@ function SplitPagename ($page) {
     return $page;
 }
 
-function NoSuchRevision (&$request, $page, $version) {
+function NoSuchRevision(&$request, $page, $version)
+{
     $html = HTML(HTML::h2(_("Revision Not Found")),
                  HTML::p(fmt("I'm sorry.  Version %d of %s is not in the database.",
                              $version, WikiLink($page, 'auto'))));
@@ -1113,7 +1141,8 @@ function NoSuchRevision (&$request, $page, $version) {
  * @param $no_colon boolean Don't put colon between hours and minutes.
  * @return string Offset as a string in the format +HH:MM.
  */
-function TimezoneOffset ($time = false, $no_colon = false) {
+function TimezoneOffset($time = false, $no_colon = false)
+{
     if ($time === false)
         $time = time();
     $secs = date('Z', $time);
@@ -1138,7 +1167,8 @@ function TimezoneOffset ($time = false, $no_colon = false) {
  * @param $time time_t Time.  Default: now.
  * @return string Date and time in ISO-8601 format.
  */
-function Iso8601DateTime ($time = false) {
+function Iso8601DateTime($time = false)
+{
     if ($time === false)
         $time = time();
     $tzoff = TimezoneOffset($time);
@@ -1153,7 +1183,8 @@ function Iso8601DateTime ($time = false) {
  * @param $time time_t Time.  Default: now.
  * @return string Date and time in RFC-2822 format.
  */
-function Rfc2822DateTime ($time = false) {
+function Rfc2822DateTime($time = false)
+{
     if ($time === false)
         $time = time();
     return date('D, j M Y H:i:s ', $time) . TimezoneOffset($time, 'no colon');
@@ -1165,7 +1196,8 @@ function Rfc2822DateTime ($time = false) {
  * @param $time time_t Time.  Default: now.
  * @return string Date and time in RFC-1123 format.
  */
-function Rfc1123DateTime ($time = false) {
+function Rfc1123DateTime($time = false)
+{
     if ($time === false)
         $time = time();
     return gmdate('D, d M Y H:i:s \G\M\T', $time);
@@ -1182,7 +1214,8 @@ function Rfc1123DateTime ($time = false) {
  *
  * (Though we're only allowed to generate dates in the first format.)
  */
-function ParseRfc1123DateTime ($timestr) {
+function ParseRfc1123DateTime($timestr)
+{
     $timestr = trim($timestr);
     if (preg_match('/^ \w{3},\s* (\d{1,2}) \s* (\w{3}) \s* (\d{4}) \s*'
                    .'(\d\d):(\d\d):(\d\d) \s* GMT $/ix',
@@ -1218,7 +1251,7 @@ function ParseRfc1123DateTime ($timestr) {
  * @param $time time_t Time.  Default: now.
  * @return string Date and time.
  */
-function CTime ($time = false)
+function CTime($time = false)
 {
     if ($time === false)
         $time = time();
@@ -1235,7 +1268,8 @@ function CTime ($time = false)
  * @param $longformat  bool. Default: false.
  * @return class FormattedText (XmlElement.php).
  */
-function ByteFormatter ($bytes = 0, $longformat = false) {
+function ByteFormatter($bytes = 0, $longformat = false)
+{
     if ($bytes < 0)
         return fmt("-???");
     if ($bytes < 1024) {
@@ -1287,7 +1321,8 @@ function ByteFormatter ($bytes = 0, $longformat = false) {
  * Backslashes in the default string would be necessary to escape the
  * '$'s, and they'll cause all kinds of trouble....
  */
-function PHPWikiPrintf ($fmt) {
+function PHPWikiPrintf($fmt)
+{
     $args = func_get_args();
     array_shift($args);
     echo PHPWikiVsprintf($fmt, $args);
@@ -1306,7 +1341,8 @@ function PHPWikiPrintf ($fmt) {
  *
  * @see PHPWikiPrintf
  */
-function PHPWikiSprintf ($fmt) {
+function PHPWikiSprintf($fmt)
+{
     $args = func_get_args();
     array_shift($args);
     return PHPWikiVsprintf($fmt, $args);
@@ -1325,7 +1361,8 @@ function PHPWikiSprintf ($fmt) {
  *
  * @see PHPWikiPrintf
  */
-function PHPWikiVsprintf ($fmt, $args) {
+function PHPWikiVsprintf($fmt, $args)
+{
     $fmt = gettext($fmt);
     // PHP's sprintf doesn't support variable with specifiers,
     // like sprintf("%*s", 10, "x"); --- so we won't either.
@@ -1357,14 +1394,16 @@ function PHPWikiVsprintf ($fmt, $args) {
     return call_user_func_array('sprintf', $args);
 }
 
-function file_mtime ($filename) {
+function file_mtime($filename)
+{
     if ($stat = @stat($filename))
         return $stat[9];
     else
         return false;
 }
 
-function sort_file_mtime ($a, $b) {
+function sort_file_mtime($a, $b)
+{
     $ma = file_mtime($a);
     $mb = file_mtime($b);
     if (!$ma or !$mb or $ma == $mb) return 0;
@@ -1379,7 +1418,8 @@ class fileSet {
      * (This was a function LoadDir in lib/loadsave.php)
      * See also http://www.php.net/manual/en/function.readdir.php
      */
-    function getFiles($exclude=false, $sortby=false, $limit=false) {
+    function getFiles($exclude=false, $sortby=false, $limit=false)
+    {
         $list = $this->_fileList;
 
         if ($sortby) {
@@ -1403,7 +1443,8 @@ class fileSet {
         return $list;
     }
 
-    function _filenameSelector($filename) {
+    function _filenameSelector($filename)
+    {
         if (! $this->_pattern )
             return true;
         else {
@@ -1414,7 +1455,8 @@ class fileSet {
         }
     }
 
-    function __construct($directory, $filepattern = false) {
+    function __construct($directory, $filepattern = false)
+    {
         $this->_fileList = array();
         $this->_pattern = $filepattern;
         if ($filepattern)
@@ -1453,13 +1495,15 @@ class fileSet {
 // expands a list containing regex's to its matching entries
 class ListRegexExpand {
     //var $match, $list, $index, $case_sensitive;
-    function __construct (&$list, $match, $case_sensitive = true) {
+    function __construct(&$list, $match, $case_sensitive = true)
+    {
         $this->match = $match;
         $this->list = &$list;
         $this->case_sensitive = $case_sensitive;
         //$this->index = false;
     }
-    function listMatchCallback ($item, $key) {
+    function listMatchCallback($item, $key)
+    {
         $quoted = str_replace('/','\/',$item);
         if (preg_match('/' . $this->match . ($this->case_sensitive ? '/' : '/i'),
                        $quoted)) {
@@ -1467,7 +1511,8 @@ class ListRegexExpand {
             $this->list[] = $item;
         }
     }
-    function expandRegex ($index, &$pages) {
+    function expandRegex($index, &$pages)
+    {
         $this->index = $index;
         array_walk($pages, array($this, 'listMatchCallback'));
         return $this->list;
@@ -1478,7 +1523,8 @@ class ListRegexExpand {
 // Convert some wildcards to pcre style, escape the rest
 // Escape . \\ + * ? [ ^ ] $ ( ) { } = ! < > | : /
 // Fixed bug #994994: "/" in $glob.
-function glob_to_pcre ($glob) {
+function glob_to_pcre($glob)
+{
     // check simple case: no need to escape
     $escape = '\[](){}=!<>|:/';
     if (strcspn($glob, $escape . ".+*?^$") == strlen($glob))
@@ -1506,12 +1552,14 @@ function glob_to_pcre ($glob) {
     return strtr($re, "\xff", "\\");
 }
 
-function glob_match ($glob, $against, $case_sensitive = true) {
+function glob_match($glob, $against, $case_sensitive = true)
+{
     return preg_match('/' . glob_to_pcre($glob) . ($case_sensitive ? '/' : '/i'),
                       $against);
 }
 
-function explodeList($input, $allnames, $glob_style = true, $case_sensitive = true) {
+function explodeList($input, $allnames, $glob_style = true, $case_sensitive = true)
+{
     $list = explode(',',$input);
     // expand wildcards from list of $allnames
     if (preg_match('/[\?\*]/',$input)) {
@@ -1531,8 +1579,13 @@ function explodeList($input, $allnames, $glob_style = true, $case_sensitive = tr
 }
 
 // echo implode(":",explodeList("Test*",array("xx","Test1","Test2")));
-function explodePageList($input, $include_empty=false, $sortby='pagename',
-             $limit=false, $exclude=false) {
+function explodePageList(
+    $input,
+    $include_empty=false,
+    $sortby='pagename',
+    $limit=false,
+    $exclude=false
+) {
     include_once("lib/PageList.php");
     return PageList::explodePageList($input, $include_empty, $sortby, $limit, $exclude);
 }
@@ -1549,7 +1602,8 @@ function explodePageList($input, $include_empty=false, $sortby='pagename',
  * @return bool True iff $object is a $class
  * or a sub-type of $class.
  */
-function isa ($object, $class) {
+function isa($object, $class)
+{
     return is_object($object)
         && ( strtolower(get_class($object)) == strtolower($class)
              || is_subclass_of($object, $class) );
@@ -1561,7 +1615,8 @@ function isa ($object, $class) {
  * @param $method string Method name
  * @return bool True iff $object is an object with has method $method.
  */
-function can ($object, $method) {
+function can($object, $method)
+{
     return is_object($object) && method_exists($object, strtolower($method));
 }
 
@@ -1578,7 +1633,8 @@ function can ($object, $method) {
  * @param string $function_name  Function name
  * @return bool  True iff function can be used.
  */
-function function_usable($function_name) {
+function function_usable($function_name)
+{
     static $disabled;
     if (!is_array($disabled)) {
         $disabled = array();
@@ -1599,7 +1655,8 @@ function function_usable($function_name) {
  *
  * This is used for generating ETags.
  */
-function wikihash ($x) {
+function wikihash($x)
+{
     if (is_scalar($x)) {
         return $x;
     }
@@ -1623,7 +1680,8 @@ function wikihash ($x) {
  * http://www.php.net/manual/en/function.srand.php
  * http://www.php.net/manual/en/function.mt-srand.php
  */
-function better_srand($seed = '') {
+function better_srand($seed = '')
+{
     static $wascalled = FALSE;
     if (!$wascalled) {
         $seed = $seed === '' ? (double) microtime() * 1000000 : $seed;
@@ -1633,7 +1691,8 @@ function better_srand($seed = '') {
     }
 }
 
-function rand_ascii($length = 1) {
+function rand_ascii($length = 1)
+{
     better_srand();
     $s = "";
     for ($i = 1; $i <= $length; $i++) {
@@ -1649,7 +1708,8 @@ function rand_ascii($length = 1) {
  * array('1' => 2, '2' => array('1' => 3, '2' => 4))
  * See http://www.php.net/manual/en/function.count.php
  */
-function count_all($arg) {
+function count_all($arg)
+{
     // skip if argument is empty
     if ($arg) {
         //print_r($arg); //debugging
@@ -1664,11 +1724,13 @@ function count_all($arg) {
     }
 }
 
-function isSubPage($pagename) {
+function isSubPage($pagename)
+{
     return (strstr($pagename, SUBPAGE_SEPARATOR));
 }
 
-function subPageSlice($pagename, $pos) {
+function subPageSlice($pagename, $pos)
+{
     $pages = explode(SUBPAGE_SEPARATOR,$pagename);
     $pages = array_slice($pages,$pos,1);
     return $pages[0];
@@ -1694,7 +1756,8 @@ class Alert {
      * @param hash $buttons  An array mapping button labels to URLs.
      *    The default is a single "Okay" button pointing to $request->getURLtoSelf().
      */
-    function __construct($head, $body, $buttons=false) {
+    function __construct($head, $body, $buttons=false)
+    {
         if ($buttons === false)
             $buttons = array();
 
@@ -1705,7 +1768,8 @@ class Alert {
     /**
      * Show the alert box.
      */
-    function show() {
+    function show()
+    {
         global $request;
 
         $tokens = $this->_tokens;
@@ -1718,7 +1782,8 @@ class Alert {
     }
 
 
-    function _getButtons() {
+    function _getButtons()
+    {
         global $request;
 
         $buttons = $this->_buttons;
@@ -1738,7 +1803,8 @@ class Alert {
 // 1.3.10pre => 1030.099
 // 1.3.11pre-20041120 => 1030.1120041120
 // 1.3.12-rc1 => 1030.119
-function phpwiki_version() {
+function phpwiki_version()
+{
     static $PHPWIKI_VERSION;
     if (!isset($PHPWIKI_VERSION)) {
         $arr = explode('.',preg_replace('/\D+$/','', PHPWIKI_VERSION)); // remove the pre
@@ -1750,7 +1816,8 @@ function phpwiki_version() {
     return $PHPWIKI_VERSION;
 }
 
-function phpwiki_gzhandler($ob) {
+function phpwiki_gzhandler($ob)
+{
     if (function_exists('gzencode'))
         $ob = gzencode($ob);
         $GLOBALS['request']->_ob_get_length = strlen($ob);
@@ -1760,14 +1827,16 @@ function phpwiki_gzhandler($ob) {
     return $ob;
 }
 
-function isWikiWord($word) {
+function isWikiWord($word)
+{
     global $WikiNameRegexp;
     //or preg_match('/\A' . $WikiNameRegexp . '\z/', $word) ??
     return preg_match("/^$WikiNameRegexp\$/",$word);
 }
 
 // needed to store serialized objects-values only (perm, pref)
-function obj2hash ($obj, $exclude = false, $fields = false) {
+function obj2hash($obj, $exclude = false, $fields = false)
+{
     $a = array();
     if (! $fields ) $fields = get_object_vars($obj);
     foreach ($fields as $key => $val) {
@@ -1786,7 +1855,8 @@ function obj2hash ($obj, $exclude = false, $fields = false) {
  * Use http://www.phpdiscuss.com/article.php?id=565&group=php.i18n or
  * checkTitleEncoding() at http://cvs.sourceforge.net/viewcvs.py/wikipedia/phase3/languages/Language.php
  */
-function isUtf8String( $s ) {
+function isUtf8String( $s )
+{
     $ptrASCII  = '[\x00-\x7F]';
     $ptr2Octet = '[\xC2-\xDF][\x80-\xBF]';
     $ptr3Octet = '[\xE0-\xEF][\x80-\xBF]{2}';
@@ -1804,7 +1874,8 @@ function isUtf8String( $s ) {
  *
  * src: languages/Language.php:checkTitleEncoding() from mediawiki
  */
-function fixTitleEncoding( $s ) {
+function fixTitleEncoding( $s )
+{
     global $charset;
 
     $s = trim($s);
@@ -1856,7 +1927,8 @@ function stripForSearch( $string ) {
  * It returns the contents in one slurp. Parsers might want to check for allow_url_fopen
  * and use fopen, fread chunkwise. (see lib/XmlParser.php)
  */
-function url_get_contents( $uri ) {
+function url_get_contents( $uri )
+{
     if (get_cfg_var('allow_url_fopen')) { // was ini_get('allow_url_fopen'))
         return @file_get_contents($uri);
     } else {
@@ -1882,7 +1954,8 @@ function url_get_contents( $uri ) {
  * Generate consecutively named strings:
  *   Name, Name2, Name3, ...
  */
-function GenerateId($name) {
+function GenerateId($name)
+{
     static $ids = array();
     if (empty($ids[$name])) {
         $ids[$name] = 1;
@@ -1895,7 +1968,8 @@ function GenerateId($name) {
 
 // from IncludePage. To be of general use.
 // content: string or array of strings
-function firstNWordsOfContent( $n, $content ) {
+function firstNWordsOfContent( $n, $content )
+{
     if ($content and $n > 0) {
         if (is_array($content)) {
             // fixme: return a list of lines then?
@@ -1930,7 +2004,8 @@ function firstNWordsOfContent( $n, $content ) {
 }
 
 // moved from lib/plugin/IncludePage.php
-function extractSection ($section, $content, $page, $quiet = false, $sectionhead = false) {
+function extractSection($section, $content, $page, $quiet = false, $sectionhead = false)
+{
     $qsection = preg_replace('/\s+/', '\s+', preg_quote($section, '/'));
 
     if (preg_match("/ ^(!{1,})\\s*$qsection" // section header
@@ -1953,7 +2028,8 @@ function extractSection ($section, $content, $page, $quiet = false, $sectionhead
 }
 
 // use this faster version: only load ExternalReferrer if we came from an external referrer
-function isExternalReferrer(&$request) {
+function isExternalReferrer(&$request)
+{
     if ($referrer = $request->get('HTTP_REFERER')) {
         $home = SERVER_URL; // SERVER_URL or SCRIPT_NAME, if we want to check sister wiki's also
         if (string_starts_with(strtolower($referrer), strtolower($home))) return false;
@@ -1967,14 +2043,17 @@ function isExternalReferrer(&$request) {
 /**
  * Useful for PECL overrides: cvsclient, ldap, soap, xmlrpc, pdo, pdo_<driver>
  */
-function loadPhpExtension($extension) {
+function loadPhpExtension($extension)
+{
     return extension_loaded($extension);
 }
 
-function string_starts_with($string, $prefix) {
+function string_starts_with($string, $prefix)
+{
     return (substr($string, 0, strlen($prefix)) == $prefix);
 }
-function string_ends_with($string, $suffix) {
+function string_ends_with($string, $suffix)
+{
     return (substr($string, -strlen($suffix)) == $suffix);
 }
 
@@ -1984,14 +2063,16 @@ function string_ends_with($string, $suffix) {
  * For example not to timeout on waiting socket connections.
  *   Use the socket timeout as arg.
  */
-function longer_timeout($secs = 30) {
+function longer_timeout($secs = 30)
+{
     $timeout = @ini_get("max_execution_time") ? ini_get("max_execution_time") : 30;
     $timeleft = $timeout - $GLOBALS['RUNTIMER']->getTime();
     if ($timeleft < $secs)
         @set_time_limit(max($timeout,(integer)($secs + $timeleft)));
 }
 
-function printSimpleTrace($bt) {
+function printSimpleTrace($bt)
+{
     //print_r($bt);
     echo "Traceback:\n";
     foreach ($bt as $i => $elem) {
@@ -2008,7 +2089,8 @@ function printSimpleTrace($bt) {
  * Enable the section which will work for you. (They are very slow)
  * Special quirks for Windows: Requires cygwin.
  */
-function getMemoryUsage() {
+function getMemoryUsage()
+{
     return memory_get_usage();
 }
 

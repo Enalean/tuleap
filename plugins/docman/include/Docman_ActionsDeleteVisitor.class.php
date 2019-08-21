@@ -31,7 +31,8 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     protected $user;
     protected $response;
 
-    public function __construct() {
+    public function __construct()
+    {
         //More coherent to have only one delete date for a whole hierarchy.
         $this->deleteDate = time();
     }
@@ -45,7 +46,8 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      *
      * @throws DeleteFailedException
      */
-    public function visitFolder(Docman_Folder $item, $params = array()) {
+    public function visitFolder(Docman_Folder $item, $params = array())
+    {
         //delete all sub items before
         $items = $item->getAllItems();
         if (isset($params['parent'])) {
@@ -78,7 +80,8 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     /**
      * @throws DeleteFailedException
      */
-    public function visitDocument($item, $params = array()) {
+    public function visitDocument($item, $params = array())
+    {
         //Mark the document as deleted
         return $this->_deleteItem($item, $params);
     }
@@ -96,7 +99,8 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      * @return bool $deleted. True if there is no error.  False otherwise.
      * @throws DeleteFailedException
      */
-    public function visitWiki(Docman_Wiki $wiki, array $params = []) {
+    public function visitWiki(Docman_Wiki $wiki, array $params = [])
+    {
         $should_propagate_deletion = $params['cascadeWikiPageDeletion'];
         $user                      = $params['user'];
 
@@ -109,14 +113,16 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         ))->deleteWiki($wiki, $user, $should_propagate_deletion);
     }
 
-    public function visitLink(Docman_Link $item, $params = array()) {
+    public function visitLink(Docman_Link $item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 
     /**
      * @throws DeleteFailedException
      */
-    public function visitFile(Docman_File $item, $params = array()) {
+    public function visitFile(Docman_File $item, $params = array())
+    {
         if ($this->getPermissionManager($item->getGroupId())->userCanDelete($params['user'], $item)) {
             if (isset($params['version']) && $params['version'] !== false) {
                 return $this->_deleteVersion($item, $params['version'], $params['user']);
@@ -131,14 +137,16 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     /**
      * @throws DeleteFailedException
      */
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array()) {
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array())
+    {
         return $this->visitFile($item, $params);
     }
 
     /**
      * @throws DeleteFailedException
      */
-    public function visitEmpty(Docman_Empty $item, $params = array()) {
+    public function visitEmpty(Docman_Empty $item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 
@@ -150,7 +158,8 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     /**
      * @throws DeleteFailedException
      */
-    function _deleteItem($item, $params) {
+    function _deleteItem($item, $params)
+    {
         if ($this->getPermissionManager($item->getGroupId())->userCanDelete($params['user'], $item)) {
             $dIF = $this->_getItemFactory();
             $dIF->delete($item);
@@ -169,7 +178,8 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      * @return bool
      * @throws DeleteFailedException
      */
-    function _deleteFile(Docman_File $item, $params) {
+    function _deleteFile(Docman_File $item, $params)
+    {
         // Delete all versions before
         $version_factory = $this->_getVersionFactory();
         if ($versions = $version_factory->getAllVersionForItem($item)) {
@@ -193,18 +203,21 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      *
      * @return bool
      */
-    function _deleteVersion(Docman_File $item, Docman_Version $version, PFUser $user) {
+    function _deleteVersion(Docman_File $item, Docman_Version $version, PFUser $user)
+    {
         // Proceed to deletion
         $version_factory = $this->_getVersionFactory();
         return $version_factory->deleteSpecificVersion($item, $version->getNumber());
     }
 
-    function _getEventManager() {
+    function _getEventManager()
+    {
         return EventManager::instance();
     }
 
     var $version_factory;
-    function _getVersionFactory() {
+    function _getVersionFactory()
+    {
         if (!$this->version_factory) {
             $this->version_factory = new Docman_VersionFactory();
         }
@@ -212,7 +225,8 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     }
 
     var $item_factory;
-    function _getItemFactory() {
+    function _getItemFactory()
+    {
         if (!$this->item_factory) {
             $this->item_factory = new Docman_ItemFactory();
         }
@@ -220,22 +234,26 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     }
 
     var $lock_factory;
-    function _getLockFactory() {
+    function _getLockFactory()
+    {
         if (!$this->lock_factory) {
             $this->lock_factory = new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log());
         }
         return $this->lock_factory;
     }
 
-    function _getFileStorage() {
+    function _getFileStorage()
+    {
         return new Docman_FileStorage();
     }
 
-    function _getItemDao() {
+    function _getItemDao()
+    {
         return new Docman_ItemDao(CodendiDataAccess::instance());
     }
 
-    function getPermissionManager($groupId) {
+    function getPermissionManager($groupId)
+    {
         return Docman_PermissionsManager::instance($groupId);
     }
 }

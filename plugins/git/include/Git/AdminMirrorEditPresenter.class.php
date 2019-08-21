@@ -38,7 +38,8 @@ class Git_AdminMirrorEditPresenter extends Git_AdminMirrorPresenter{
 
     private $owner;
 
-    public function __construct($title, CSRFSynchronizerToken $csrf, Git_Mirror_Mirror $mirror) {
+    public function __construct($title, CSRFSynchronizerToken $csrf, Git_Mirror_Mirror $mirror)
+    {
         parent::__construct($title, $csrf);
 
         $this->id         = $mirror->id;
@@ -51,7 +52,8 @@ class Git_AdminMirrorEditPresenter extends Git_AdminMirrorPresenter{
         $this->owner_id   = $mirror->owner_id;
     }
 
-    public function hostname() {
+    public function hostname()
+    {
         if ($this->hostname) {
             return $this->hostname;
         }
@@ -59,23 +61,28 @@ class Git_AdminMirrorEditPresenter extends Git_AdminMirrorPresenter{
         return "";
     }
 
-    public function update_button() {
+    public function update_button()
+    {
         return dgettext('tuleap-git', 'Update');
     }
 
-    public function delete_button() {
+    public function delete_button()
+    {
         return dgettext('tuleap-git', 'Delete');
     }
 
-    public function or_action() {
+    public function or_action()
+    {
         return dgettext('tuleap-git', 'or');
     }
 
-    public function ssh_key() {
+    public function ssh_key()
+    {
         return ($this->owner->getAuthorizedKeysRaw()) ? $this->owner->getAuthorizedKeysRaw() : '';
     }
 
-    public function change() {
+    public function change()
+    {
         return dgettext('tuleap-git', 'click here to change');
     }
 }

@@ -22,14 +22,16 @@ require_once 'bootstrap.php';
 
 class Docman_MIMETypeDetectorTest extends TuleapTestCase {
 
-    public function itReturnsTheRightOfficeMimeType() {
+    public function itReturnsTheRightOfficeMimeType()
+    {
         $filename = 'test.docm';
         $detector = new Docman_MIMETypeDetector();
 
         $this->assertEqual($detector->getRightOfficeType($filename), 'application/vnd.ms-word.document.macroEnabled.12');
     }
 
-    public function itReturnsNullIfTheFileIsNotAnOfficeOne() {
+    public function itReturnsNullIfTheFileIsNotAnOfficeOne()
+    {
         $filename = 'image.jpg';
         $detector = new Docman_MIMETypeDetector();
 

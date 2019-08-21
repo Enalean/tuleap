@@ -20,15 +20,18 @@
 
 class b201510131648_add_emailgateway_column_to_tracker extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add enable_emailgateway column to tracker table';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE tracker ADD COLUMN enable_emailgateway TINYINT(1) NOT NULL DEFAULT '0'";
 
         $result = $this->db->dbh->exec($sql);

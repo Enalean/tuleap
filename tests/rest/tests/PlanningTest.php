@@ -23,12 +23,14 @@
  */
 class PlanningTest extends RestBase {
 
-    public function testOptionsPlannings() {
+    public function testOptionsPlannings()
+    {
         $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/plannings'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGetPlanningsContainsAReleasePlanning() {
+    public function testGetPlanningsContainsAReleasePlanning()
+    {
         $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/plannings'));
 
         $plannings = $response->json();
@@ -52,7 +54,8 @@ class PlanningTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testReleasePlanningHasNoMilestone() {
+    public function testReleasePlanningHasNoMilestone()
+    {
         $response = $this->getResponse($this->client->get($this->getMilestonesUri()));
 
         $this->assertCount(1, $response->json());
@@ -74,7 +77,8 @@ class PlanningTest extends RestBase {
         $this->assertGreaterThanOrEqual(1, $pagination_size);
     }
 
-    private function getMilestonesUri() {
+    private function getMilestonesUri()
+    {
         $response_plannings = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/plannings'))->json();
         return $response_plannings[0]['milestones_uri'];
     }

@@ -25,7 +25,8 @@
  */
 class Tracker_Permission_ChainOfResponsibility_PermissionsOfAnonymous extends Tracker_Permission_Command {
 
-    public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter) {
+    public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter)
+    {
         switch ($request->getPermissionType(ProjectUGroup::ANONYMOUS)) {
             case Tracker_Permission_Command::PERMISSION_FULL:
                 $permission_setter->grantAccess(Tracker::PERMISSION_FULL, ProjectUGroup::ANONYMOUS);
@@ -44,7 +45,8 @@ class Tracker_Permission_ChainOfResponsibility_PermissionsOfAnonymous extends Tr
         $this->applyNextCommand($request, $permission_setter);
     }
 
-    protected function warnAlreadyHaveFullAccess(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id) {
+    protected function warnAlreadyHaveFullAccess(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id)
+    {
         $GLOBALS['Response']->addFeedback(
             Feedback::WARN,
             $GLOBALS['Language']->getText(

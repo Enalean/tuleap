@@ -25,43 +25,51 @@ class PriorityDaoTest extends TuleapDbTestCase {
     /** @var Tracker_Artifact_PriorityDao */
     private $dao;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->dao = new Tracker_Artifact_PriorityDao();
         $this->truncateTable('tracker_artifact_priority_rank');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->truncateTable('tracker_artifact_priority_rank');
         parent::tearDown();
     }
 
-    public function itStartsWithEmptyTable() {
+    public function itStartsWithEmptyTable()
+    {
         $this->assertOrder();
     }
 
-    public function itInsertOneElement() {
+    public function itInsertOneElement()
+    {
         $this->dao->putArtifactAtTheEndWithoutTransaction(1);
         $this->assertOrder(1);
     }
 
-    public function itInsertAnElementAtTheEnd() {
+    public function itInsertAnElementAtTheEnd()
+    {
         $this->setInitialOrder(1);
         $this->dao->putArtifactAtTheEndWithoutTransaction(42);
         $this->assertOrder(1, 42);
     }
 
-    public function test42HasAnHigherPriorityThan1() {
+    public function test42HasAnHigherPriorityThan1()
+    {
         $this->setInitialOrder(1, 42);
         $this->dao->moveListOfArtifactsBefore(array(42),1);
         $this->assertOrder(42, 1);
     }
 
-    public function itHasThreeMoreElementsAddedAtTheEnd() {
+    public function itHasThreeMoreElementsAddedAtTheEnd()
+    {
         $this->setInitialOrder(42, 1);
         $this->dao->putArtifactAtTheEndWithoutTransaction(66);
         $this->dao->putArtifactAtTheEndWithoutTransaction(123);
@@ -69,85 +77,99 @@ class PriorityDaoTest extends TuleapDbTestCase {
         $this->assertOrder(42, 1, 66, 123, 101);
     }
 
-    public function test1HasAGreaterPriorityThan101() {
+    public function test1HasAGreaterPriorityThan101()
+    {
         $this->setInitialOrder(42, 1, 66, 123, 101);
         $this->dao->moveListOfArtifactsBefore(array(1), 101);
         $this->assertOrder(42, 66, 123, 1, 101);
     }
 
-    public function test42HasALowerPriorityThan1() {
+    public function test42HasALowerPriorityThan1()
+    {
         $this->setInitialOrder(42, 66, 123, 1, 101);
         $this->dao->moveArtifactAfter(42, 1);
         $this->assertOrder(66, 123, 1, 42, 101);
     }
 
-    public function test42HasAnHigherPriorityThan101() {
+    public function test42HasAnHigherPriorityThan101()
+    {
         $this->setInitialOrder(66, 123, 1, 42, 101);
         $this->dao->moveListOfArtifactsBefore(array(42), 101);
         $this->assertOrder(66, 123, 1, 42, 101);
     }
 
-    public function test1HasAnHigherPriorityThan123() {
+    public function test1HasAnHigherPriorityThan123()
+    {
         $this->setInitialOrder(66, 123, 1, 42, 101);
         $this->dao->moveArtifactAfter(1, 123);
         $this->assertOrder(66, 123, 1, 42, 101);
     }
 
-    public function itDeletes123() {
+    public function itDeletes123()
+    {
         $this->setInitialOrder(66, 123, 1, 42, 101);
         $this->dao->remove(123);
         $this->assertOrder(66, 1, 42, 101);
     }
 
-    public function itMovesManyArtifactsAtOnceBefore42() {
+    public function itMovesManyArtifactsAtOnceBefore42()
+    {
         $this->setInitialOrder(66, 1, 42, 101);
         $this->dao->moveListOfArtifactsBefore(array(42, 101), 1);
         $this->assertOrder(66, 42, 101, 1);
     }
 
-    public function itMovesManyArtifactsAtOnceAtTheBeginning() {
+    public function itMovesManyArtifactsAtOnceAtTheBeginning()
+    {
         $this->setInitialOrder(66, 42, 101, 1);
         $this->dao->moveListOfArtifactsBefore(array(1, 42), 66);
         $this->assertOrder(1, 42, 66, 101);
     }
 
-    public function itMovesManyArtifactsAtOnceAfter66() {
+    public function itMovesManyArtifactsAtOnceAfter66()
+    {
         $this->setInitialOrder(1, 42, 66, 101, 123);
         $this->dao->moveListOfArtifactsAfter(array(123, 42), 66);
         $this->assertOrder(1, 66, 123, 42, 101);
     }
 
-    public function itMovesManyArtifactsAtOnceAtTheSecondPosition() {
+    public function itMovesManyArtifactsAtOnceAtTheSecondPosition()
+    {
         $this->setInitialOrder(1, 66, 123, 42, 101);
         $this->dao->moveListOfArtifactsAfter(array(101, 42, 66), 1);
         $this->assertOrder(1, 101, 42, 66, 123);
     }
 
-    public function itMovesManyArtifactsAtOnceAtTheSamePosition() {
+    public function itMovesManyArtifactsAtOnceAtTheSamePosition()
+    {
         $this->setInitialOrder(1, 101, 42, 66, 123);
         $this->dao->moveListOfArtifactsBefore(array(66), 123);
         $this->assertOrder(1, 101, 42, 66, 123);
     }
 
-    public function itMovesManyArtifactsAtOnceAtTheVeryEnd() {
+    public function itMovesManyArtifactsAtOnceAtTheVeryEnd()
+    {
         $this->setInitialOrder(1, 101, 42, 66, 123);
         $this->dao->moveListOfArtifactsAfter(array(1, 42, 66), 123);
         $this->assertOrder(101, 123, 1, 42, 66);
     }
 
-    public function itMovesManyArtifactsAtOnceAtTheBeforeLastPosition() {
+    public function itMovesManyArtifactsAtOnceAtTheBeforeLastPosition()
+    {
         $this->setInitialOrder(1, 101, 42, 66, 123);
         $this->dao->moveListOfArtifactsBefore(array(1, 42, 66), 123);
         $this->assertOrder(101, 1, 42, 66, 123);
     }
 
-    public function itMovesExtremitiesAtTheMiddle() {
+    public function itMovesExtremitiesAtTheMiddle()
+    {
         $this->setInitialOrder(1, 101, 42, 66, 123);
         $this->dao->moveListOfArtifactsBefore(array(1, 123), 42);
         $this->assertOrder(101, 1, 123, 42, 66);
     }
 
-    public function itRaisesAnExceptionIfWeWantToMove1Before1() {
+    public function itRaisesAnExceptionIfWeWantToMove1Before1()
+    {
         $this->setInitialOrder(1, 101, 42, 66, 123);
 
         $this->expectException();
@@ -155,14 +177,16 @@ class PriorityDaoTest extends TuleapDbTestCase {
         $this->dao->moveListOfArtifactsBefore(array(1, 101), 1);
     }
 
-    public function itDoesntRelyOnMysqlInsertOrder() {
+    public function itDoesntRelyOnMysqlInsertOrder()
+    {
         $this->setInitialOrder(16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 28);
 
         $this->dao->moveListOfArtifactsAfter(array(28, 19, 17), 18);
         $this->assertOrder(16, 18, 28, 19, 17, 20, 21, 22, 23, 24, 25);
     }
 
-    private function assertOrder() {
+    private function assertOrder()
+    {
         $expected_order = func_get_args();
         $this->assertEqual(
             $this->getArtifactIdsOrderedByRank(),
@@ -170,7 +194,8 @@ class PriorityDaoTest extends TuleapDbTestCase {
         );
     }
 
-    private function setInitialOrder() {
+    private function setInitialOrder()
+    {
         foreach (func_get_args() as $id) {
             $this->dao->putArtifactAtTheEndWithoutTransaction($id);
         }

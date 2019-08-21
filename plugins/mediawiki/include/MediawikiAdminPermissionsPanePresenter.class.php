@@ -45,75 +45,92 @@ class MediawikiAdminPermissionsPanePresenter extends MediawikiAdminPanePresenter
         $this->write_ugroups                 = $write_ugroups;
     }
 
-    public function can_show_options() {
+    public function can_show_options()
+    {
         return forge_get_config('enable_compatibility_view', 'mediawiki');
     }
 
-    public function is_compatibility_enabled_value() {
+    public function is_compatibility_enabled_value()
+    {
         return $this->is_compatibility_view_enabled;
     }
 
-    public function compatibility_view_text() {
+    public function compatibility_view_text()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'compatibility_view_text');
     }
 
-    public function title() {
+    public function title()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_mapping_title');
     }
 
-    public function help_intro() {
+    public function help_intro()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_mapping_help_intro', ForgeConfig::get('sys_name'));
     }
 
-    public function help_link() {
+    public function help_link()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_mapping_help_link', $this->getMWUrl('Special:ListGroupRights'));
     }
 
-    public function help_project() {
+    public function help_project()
+    {
         $type = $this->project->isPublic() ? 'public' : 'private';
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_mapping_help_project_'.$type);
     }
 
-    private function getMWUrl($page) {
+    private function getMWUrl($page)
+    {
         return MEDIAWIKI_BASE_URL . '/wiki/' . $this->project->getUnixName(). '/index.php/' . $page;
     }
 
-    public function route() {
+    public function route()
+    {
         return MEDIAWIKI_BASE_URL . '/forge_admin.php?' . http_build_query(array(
             'group_id' => $this->project->getID(),
             'action'   => 'save_permissions'
         ));
     }
 
-    public function submit_label() {
+    public function submit_label()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'save_changes');
     }
 
-    public function or_string() {
+    public function or_string()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'or_string');
     }
 
-    public function restore_label() {
+    public function restore_label()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'restore_defaults');
     }
 
-    public function options_title() {
+    public function options_title()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'options_title');
     }
 
-    public function access_control_title() {
+    public function access_control_title()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'access_control_title');
     }
 
-    public function access_control_intro() {
+    public function access_control_intro()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'access_control_intro');
     }
 
-    public function read() {
+    public function read()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'read');
     }
 
-    public function write() {
+    public function write()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'write');
     }
 }

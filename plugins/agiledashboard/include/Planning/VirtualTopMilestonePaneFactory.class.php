@@ -90,12 +90,14 @@ class Planning_VirtualTopMilestonePaneFactory
      * @param Planning_Milestone $milestone
      * @return int
      */
-    private function getMilestoneArtifactId() {
+    private function getMilestoneArtifactId()
+    {
          return self::TOP_MILESTONE_DUMMY_ARTIFACT_ID;
     }
 
     /** @return AgileDashboard_Pane */
-    public function getActivePane(Planning_Milestone $milestone) {
+    public function getActivePane(Planning_Milestone $milestone)
+    {
         $milestone_artifact_id = $this->getMilestoneArtifactId();
 
         if (! isset($this->list_of_pane_info[$milestone_artifact_id])) {
@@ -106,7 +108,8 @@ class Planning_VirtualTopMilestonePaneFactory
     }
 
     /** @return AgileDashboard_PaneInfo[] */
-    public function getListOfPaneInfo(Planning_Milestone $milestone) {
+    public function getListOfPaneInfo(Planning_Milestone $milestone)
+    {
         $milestone_artifact_id = $this->getMilestoneArtifactId();
 
         if (! isset($this->list_of_pane_info[$milestone_artifact_id])) {
@@ -117,11 +120,13 @@ class Planning_VirtualTopMilestonePaneFactory
     }
 
     /** @return string */
-    public function getDefaultPaneIdentifier() {
+    public function getDefaultPaneIdentifier()
+    {
         return DetailsPaneInfo::IDENTIFIER;
     }
 
-    private function buildListOfPaneInfo(Planning_Milestone $milestone) {
+    private function buildListOfPaneInfo(Planning_Milestone $milestone)
+    {
         $milestone_artifact_id = $this->getMilestoneArtifactId();
 
         $this->active_pane[$milestone_artifact_id] = null;
@@ -132,7 +137,8 @@ class Planning_VirtualTopMilestonePaneFactory
     /**
      * @return \AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo
      */
-    private function getTopPlanningV2PaneInfo(Planning_Milestone $milestone) {
+    private function getTopPlanningV2PaneInfo(Planning_Milestone $milestone)
+    {
         $milestone_artifact_id = $this->getMilestoneArtifactId();
 
         $milestone_tracker = $milestone->getPlanning()->getPlanningTracker();
@@ -157,7 +163,8 @@ class Planning_VirtualTopMilestonePaneFactory
         return $pane_info;
     }
 
-    private function getPaginatedBacklogItemsRepresentationsForTopMilestone(Planning_Milestone $milestone, PFUser $user) {
+    private function getPaginatedBacklogItemsRepresentationsForTopMilestone(Planning_Milestone $milestone, PFUser $user)
+    {
         if (! self::PRELOAD_ENABLED) {
             return null;
         }
@@ -170,7 +177,8 @@ class Planning_VirtualTopMilestonePaneFactory
         );
     }
 
-    private function getPaginatedTopMilestonesRepresentations(Project $project, PFUser $user) {
+    private function getPaginatedTopMilestonesRepresentations(Project $project, PFUser $user)
+    {
         if (! self::PRELOAD_ENABLED) {
             return null;
         }

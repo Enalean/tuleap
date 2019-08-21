@@ -21,7 +21,8 @@ require_once __DIR__ . '/../../www/include/proj_email.php';
 
 class User_PendingUserNotifier {
 
-    public function notifyAdministrator(PFUser $user) {
+    public function notifyAdministrator(PFUser $user)
+    {
         $user_name  = $user->getUserName();
         $to         = ForgeConfig::get('sys_email_admin');
         if (!send_new_user_email_notification($to, $user_name)) {

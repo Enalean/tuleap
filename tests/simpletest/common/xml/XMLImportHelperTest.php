@@ -20,7 +20,8 @@
 
 class XMLImportHelperTest extends TuleapTestCase {
 
-    public function testItImportsAnonymousUser() {
+    public function testItImportsAnonymousUser()
+    {
         $user_manager  = mock('UserManager');
         $import_helper = new XMLImportHelper($user_manager);
         stub($user_manager)->getUserByIdentifier()->returns(null);

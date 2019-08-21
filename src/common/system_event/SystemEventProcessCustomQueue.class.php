@@ -27,7 +27,8 @@ class SystemEventProcessCustomQueue implements SystemEventProcess {
     /** @var string */
     private $queue;
 
-    public function __construct($queue) {
+    public function __construct($queue)
+    {
         $this->queue = $queue;
     }
     /**
@@ -38,7 +39,8 @@ class SystemEventProcessCustomQueue implements SystemEventProcess {
         return 'tuleap_process_system_events_'. $this->queue;
     }
 
-    public function getQueue() {
+    public function getQueue()
+    {
         return $this->queue;
     }
 

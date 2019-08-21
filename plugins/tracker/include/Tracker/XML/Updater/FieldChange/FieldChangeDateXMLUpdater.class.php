@@ -24,7 +24,8 @@ class Tracker_XML_Updater_FieldChange_FieldChangeDateXMLUpdater implements Track
      * @param SimpleXMLElement $field_change_xml
      * @param mixed            $submitted_value
      */
-    public function update(SimpleXMLElement $field_change_xml, $submitted_value) {
+    public function update(SimpleXMLElement $field_change_xml, $submitted_value)
+    {
         $field_change_xml->value = date('c', strtotime($submitted_value));
     }
 }

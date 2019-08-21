@@ -21,7 +21,8 @@
 
 // Sort functions - Must be outside the classes
 // Sort by place query
-function cmp_place_query($field1, $field2) {
+function cmp_place_query($field1, $field2)
+{
     if ($field1->getPlaceQuery() <> NULL || $field2->getPlaceQuery() <> NULL) {
         if ($field1->getPlaceQuery() < $field2->getPlaceQuery())
         return -1;
@@ -39,7 +40,8 @@ function cmp_place_query($field1, $field2) {
 }
 
 // Sort by place result
-function cmp_place_result($field1, $field2) {
+function cmp_place_result($field1, $field2)
+{
     if ($field1->getPlaceResult() <> NULL || $field2->getPlaceResult() <> NULL) {
         if ($field1->getPlaceResult() < $field2->getPlaceResult())
         return -1;
@@ -96,7 +98,8 @@ class ArtifactReport {
      *
      *    @return bool success.
      */
-    function __construct($report_id,$atid) {
+    function __construct($report_id,$atid)
+    {
         $this->group_artifact_id = $atid;
         $this->fields = array();
 
@@ -107,7 +110,8 @@ class ArtifactReport {
         return true;
     }
 
-    function getReportId() {
+    function getReportId()
+    {
         return $this->report_id;
     }
 
@@ -118,7 +122,8 @@ class ArtifactReport {
      *    @param    string    The report description.
      *    @return true on success, false on failure.
      */
-    function recreate($user_id,$name,$description,$scope,$is_default) {
+    function recreate($user_id,$name,$description,$scope,$is_default)
+    {
         global $ath,$Language;
      /*
      $perm = $ath->Group->getPermissionFromId( $user_id);
@@ -162,7 +167,8 @@ class ArtifactReport {
      *
      *    @return true on success, false on failure.
      */
-    function delete() {
+    function delete()
+    {
         global $ath;
 
      // first delete any report field entries for this report
@@ -184,7 +190,8 @@ class ArtifactReport {
      *  @return true on success false on failure
      */
 
-    function updateDefaultReport() {
+    function updateDefaultReport()
+    {
         if ($GLOBALS['ath']->userIsAdmin()) {
             db_query("UPDATE artifact_report SET is_default=1 WHERE report_id =".db_ei($this->report_id)." AND group_artifact_id=".db_ei($this->group_artifact_id));
             db_query("UPDATE artifact_report SET is_default=0 WHERE report_id <>".db_ei($this->report_id)." AND group_artifact_id=".db_ei($this->group_artifact_id));
@@ -200,7 +207,8 @@ class ArtifactReport {
      *    @param    string    The report description.
      *    @return id on success, false on failure.
      */
-    function create($user_id,$name,$description,$scope,$is_default) {
+    function create($user_id,$name,$description,$scope,$is_default)
+    {
         global $ath,$Language;
      /*$perm = $ath->Group->getPermissionFromId( $user_id);
 
@@ -243,7 +251,8 @@ class ArtifactReport {
         }
     }
 
-    function add_report_field($field_name,$show_on_query,$show_on_result,$place_query,$place_result,$col_width) {
+    function add_report_field($field_name,$show_on_query,$show_on_result,$place_query,$place_result,$col_width)
+    {
         $sql = 'INSERT INTO artifact_report_field (report_id, field_name,'.
         'show_on_query,show_on_result,place_query,place_result,col_width) VALUES ';
 
@@ -258,14 +267,16 @@ class ArtifactReport {
         }
     }
 
-    function toggleFieldColumnUsage($field_name) {
+    function toggleFieldColumnUsage($field_name)
+    {
         $sql = "UPDATE artifact_report_field
                 SET show_on_result = 1 - show_on_result
                 WHERE report_id  = ".  db_ei($this->report_id) ."
                   AND field_name = '". db_es($field_name) ."'";
         db_query($sql);
     }
-    function toggleFieldQueryUsage($field_name) {
+    function toggleFieldQueryUsage($field_name)
+    {
         $sql = "UPDATE artifact_report_field
                 SET show_on_query = 1 - show_on_query
                 WHERE report_id  = ".  db_ei($this->report_id) ."
@@ -278,7 +289,8 @@ class ArtifactReport {
      *    @param    int        The report ID.
      *    @return bool success.
      */
-    function fetchData($report_id) {
+    function fetchData($report_id)
+    {
         global $Language;
 
      // Read the report infos
@@ -328,7 +340,8 @@ class ArtifactReport {
      *
      *    @return    array
      */
-    function getReports($group_artifact_id, $user_id) {
+    function getReports($group_artifact_id, $user_id)
+    {
 
         // If user is unknown then get only project-wide and system wide reports
         // else get personal reports in addition  project-wide and system wide.
@@ -349,7 +362,8 @@ class ArtifactReport {
      *
      * @return array
      */
-    function getQueryFields() {
+    function getQueryFields()
+    {
         $query_fields = array();
 
         if ( count($this->fields) == 0 ) return $query_fields;
@@ -371,7 +385,8 @@ class ArtifactReport {
      *
      * @return array
      */
-    function getResultFields() {
+    function getResultFields()
+    {
         $result_fields = array();
 
         if ( count($this->fields) == 0 ) return $result_fields;
@@ -393,7 +408,8 @@ class ArtifactReport {
      *
      * @return array
      */
-    function getSortedFields() {
+    function getSortedFields()
+    {
         global $group;
         $result_fields = array();
 
@@ -414,7 +430,8 @@ class ArtifactReport {
      *
      * @return array
      */
-    function getSingleMultiBoxFields() {
+    function getSingleMultiBoxFields()
+    {
         $result_fields = array();
 
         if ( count($this->fields) == 0 ) return $result_fields;
@@ -436,7 +453,8 @@ class ArtifactReport {
      *
      * @return int
      */
-    function selectReportItems($prefs,$morder,$advsrch,&$aids) {
+    function selectReportItems($prefs,$morder,$advsrch,&$aids)
+    {
             global $ath;
             $this->getQueryElements($prefs,$advsrch,$from,$where);
 
@@ -613,7 +631,8 @@ class ArtifactReport {
             return count($aids);
     }
 
-    function _ExecuteQueryForSelectReportItems($sql) {
+    function _ExecuteQueryForSelectReportItems($sql)
+    {
         $ret = array();
         $res = db_query($sql);
         while ($arr = db_fetch_array($res)) {
@@ -658,7 +677,8 @@ class ArtifactReport {
      *
      * @return bool
      */
-    function isvarany($var) {
+    function isvarany($var)
+    {
 
         if (is_array($var)) {
             foreach ($var as $v) {
@@ -683,7 +703,8 @@ class ArtifactReport {
      *
      * @return string
      */
-    function getValuesWhereClause($field,$prefs,$field_name,$advsrch,&$notany) {
+    function getValuesWhereClause($field,$prefs,$field_name,$advsrch,&$notany)
+    {
         $notany=true;
          $where = '';
 
@@ -756,7 +777,8 @@ class ArtifactReport {
      *
      * @return array
      */
-    function getFieldsOrder($morder) {
+    function getFieldsOrder($morder)
+    {
 
         global $art_field_fact;
 
@@ -799,7 +821,8 @@ class ArtifactReport {
      *
      * @return void
      */
-    function getQueryElements($prefs,$advsrch,&$from,&$where) {
+    function getQueryElements($prefs,$advsrch,&$from,&$where)
+    {
         global $art_field_fact;
       // NOTICE
       //
@@ -911,7 +934,8 @@ class ArtifactReport {
      *
      * @return void
      */
-    function getResultQueryElements($prefs,$morder,$advsrch,$aids=false,&$select,&$from,&$where,&$order_by) {
+    function getResultQueryElements($prefs,$morder,$advsrch,$aids=false,&$select,&$from,&$where,&$order_by)
+    {
 
       // NOTICE
       //
@@ -1097,7 +1121,8 @@ class ArtifactReport {
      *
      * @return array
      */
-    function getResultQueryReport($query) {
+    function getResultQueryReport($query)
+    {
 
         $fields_sb = $this->getSingleMultiBoxFields();
 
@@ -1132,7 +1157,8 @@ class ArtifactReport {
      *      @return    int    The report_id #.
      */
 
-    function getID() {
+    function getID()
+    {
         return $this->report_id;
     }
 
@@ -1142,7 +1168,8 @@ class ArtifactReport {
      *      @return    int    The group_artifact_id #.
      */
 
-    function getArtifactTypeID() {
+    function getArtifactTypeID()
+    {
         return $this->group_artifact_id;
     }
 
@@ -1152,7 +1179,8 @@ class ArtifactReport {
      *      @return    string    The report name.
      */
 
-    function getName() {
+    function getName()
+    {
         return $this->name;
     }
 
@@ -1161,7 +1189,8 @@ class ArtifactReport {
      *
      *      @return    string    The report description.
      */
-    function getDescription() {
+    function getDescription()
+    {
         return $this->description;
     }
 
@@ -1170,7 +1199,8 @@ class ArtifactReport {
      *
      *      @return    string    The report scope ('S': system, 'P': project).
      */
-    function getScope() {
+    function getScope()
+    {
         return $this->scope;
     }
 
@@ -1179,14 +1209,16 @@ class ArtifactReport {
      *
      * @return string  The default report value.
      */
-    function isDefault() {
+    function isDefault()
+    {
         return $this->is_default;
     }
 
     /**
      * @param $string
      */
-    public function setError($string) {
+    public function setError($string)
+    {
         $this->error_state = true;
         $this->error_message = $string;
     }
@@ -1194,7 +1226,8 @@ class ArtifactReport {
     /**
      * @return string
      */
-    public function getErrorMessage() {
+    public function getErrorMessage()
+    {
         if ($this->error_state) {
             return $this->error_message;
         } else {
@@ -1205,7 +1238,8 @@ class ArtifactReport {
     /**
      * @return bool
      */
-    public function isError() {
+    public function isError()
+    {
         return $this->error_state;
     }
 }

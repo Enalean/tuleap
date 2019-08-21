@@ -25,24 +25,29 @@
 class WikiPlugin__GroupInfo
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("DebugGroupInfo");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return sprintf(_("Show Group Information"));
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.1 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array();
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         extract($args);
 

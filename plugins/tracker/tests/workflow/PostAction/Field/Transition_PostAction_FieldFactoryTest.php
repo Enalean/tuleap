@@ -23,7 +23,8 @@ require_once __DIR__.'/../../../bootstrap.php';
 
 class Transition_PostAction_FieldFactory_BaseTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->transition_id = 123;
@@ -39,7 +40,8 @@ class Transition_PostAction_FieldFactory_BaseTest extends TuleapTestCase {
 
 class Transition_PostAction_FieldFactoryTest extends Transition_PostAction_FieldFactory_BaseTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->field_id          = 456;
@@ -52,7 +54,8 @@ class Transition_PostAction_FieldFactoryTest extends Transition_PostAction_Field
         );
     }
 
-    public function itLoadsIntFieldPostActions() {
+    public function itLoadsIntFieldPostActions()
+    {
         stub($this->int_dao)
             ->searchByTransitionId($this->transition_id)
             ->returnsDar($this->post_action_rows);
@@ -72,7 +75,8 @@ class Transition_PostAction_FieldFactoryTest extends Transition_PostAction_Field
         $this->assertEqual($first_pa->getValue(), $this->post_action_value);
     }
 
-    public function itLoadsFloatFieldPostActions() {
+    public function itLoadsFloatFieldPostActions()
+    {
         stub($this->int_dao)
             ->searchByTransitionId($this->transition_id)
             ->returnsEmptyDar();
@@ -92,7 +96,8 @@ class Transition_PostAction_FieldFactoryTest extends Transition_PostAction_Field
         $this->assertEqual($first_pa->getValue(), $this->post_action_value);
     }
 
-    public function itLoadsDateFieldPostActions() {
+    public function itLoadsDateFieldPostActions()
+    {
         $post_action_rows  = array(
             'id'         => $this->post_action_id,
             'field_id'   => $this->field_id,
@@ -121,17 +126,20 @@ class Transition_PostAction_FieldFactoryTest extends Transition_PostAction_Field
 
 class Transition_PostActionFieldFactory_AddPostActionTest extends Transition_PostAction_FieldFactory_BaseTest {
 
-    public function itCanAddAPostActionToAnIntField() {
+    public function itCanAddAPostActionToAnIntField()
+    {
         $this->int_dao->expectOnce('create', array($this->transition_id));
         $this->factory->addPostAction($this->transition, 'field_int');
     }
 
-    public function itCanAddAPostActionToAFloatField() {
+    public function itCanAddAPostActionToAFloatField()
+    {
         $this->float_dao->expectOnce('create', array($this->transition_id));
         $this->factory->addPostAction($this->transition, 'field_float');
     }
 
-    public function itCanAddAPostActionToADateField() {
+    public function itCanAddAPostActionToADateField()
+    {
         $this->date_dao->expectOnce('create', array($this->transition_id));
         $this->factory->addPostAction($this->transition, 'field_date');
     }
@@ -140,7 +148,8 @@ class Transition_PostActionFieldFactory_AddPostActionTest extends Transition_Pos
 
 class Transition_PostActionFieldFactory_DuplicateTest extends Transition_PostAction_FieldFactory_BaseTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         stub($this->element_factory)->getFormElementById(2065)->returns(aSelectBoxField()->withId(2065)->build());
@@ -169,7 +178,8 @@ class Transition_PostActionFieldFactory_DuplicateTest extends Transition_PostAct
         );
     }
 
-    public function itDelegatesDuplicationToTheCorrespondingDao() {
+    public function itDelegatesDuplicationToTheCorrespondingDao()
+    {
         $field_mapping = array(1 => array('from'=>2066, 'to'=>3066),
                                2 => array('from'=>2067, 'to'=>3067),
                                3 => array('from'=>2065, 'to'=>3065),);
@@ -182,13 +192,15 @@ class Transition_PostActionFieldFactory_DuplicateTest extends Transition_PostAct
 
 class Transition_PostActionFieldFactory_GetInstanceFromXmlTest extends Transition_PostAction_FieldFactory_BaseTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->mapping = array('F1' => 62334);
     }
 
-    public function itReconstitutesDateFieldPostActionsFromXML() {
+    public function itReconstitutesDateFieldPostActionsFromXML()
+    {
         $xml = new SimpleXMLElement('
             <postaction_field_date valuetype="1">
                 <field_id REF="F1"/>
@@ -201,7 +213,8 @@ class Transition_PostActionFieldFactory_GetInstanceFromXmlTest extends Transitio
         $this->assertEqual($post_action->getValueType(), 1);
     }
 
-    public function itReconstitutesIntFieldPostActionsFromXML() {
+    public function itReconstitutesIntFieldPostActionsFromXML()
+    {
         $xml = new SimpleXMLElement('
             <postaction_field_int value="440">
                 <field_id REF="F1"/>
@@ -214,7 +227,8 @@ class Transition_PostActionFieldFactory_GetInstanceFromXmlTest extends Transitio
         $this->assertEqual($post_action->getValue(), 440);
     }
 
-    public function itReconstitutesFloatFieldPostActionsFromXML() {
+    public function itReconstitutesFloatFieldPostActionsFromXML()
+    {
         $xml = new SimpleXMLElement('
             <postaction_field_float value="64.42">
                 <field_id REF="F1"/>
@@ -227,7 +241,8 @@ class Transition_PostActionFieldFactory_GetInstanceFromXmlTest extends Transitio
         $this->assertEqual($post_action->getValue(), 64.42);
     }
 
-    public function itThrowsAnErrorWhenPostActionIsInvalid() {
+    public function itThrowsAnErrorWhenPostActionIsInvalid()
+    {
         $xml = new SimpleXMLElement('
             <postaction_field_invalid foo="bar">
                 <field_id REF="F1"/>
@@ -242,7 +257,8 @@ class Transition_PostActionFieldFactory_GetInstanceFromXmlTest extends Transitio
 
 class Transition_PostActionFieldFactory_SaveObjectTest extends Transition_PostAction_FieldFactory_BaseTest {
 
-    public function itSavesDateFieldPostActions() {
+    public function itSavesDateFieldPostActions()
+    {
         $post_action = aDateFieldPostAction()->withTransitionId(123)
                                              ->withFieldId(456)
                                              ->withValueType(1)
@@ -251,7 +267,8 @@ class Transition_PostActionFieldFactory_SaveObjectTest extends Transition_PostAc
         $this->factory->saveObject($post_action);
     }
 
-    public function itSavesIntFieldPostActions() {
+    public function itSavesIntFieldPostActions()
+    {
         $post_action = anIntFieldPostAction()->withTransitionId(123)
                                              ->withFieldId(456)
                                              ->withValue(0)
@@ -260,7 +277,8 @@ class Transition_PostActionFieldFactory_SaveObjectTest extends Transition_PostAc
         $this->factory->saveObject($post_action);
     }
 
-    public function itSavesFloatFieldPostActions() {
+    public function itSavesFloatFieldPostActions()
+    {
         $post_action = aFloatFieldPostAction()->withTransitionId(123)
                                                ->withFieldId(456)
                                                ->withValue(0)
@@ -274,7 +292,8 @@ class Transition_PostActionFieldFactory_DeleteWorkflowTest extends Transition_Po
 
     private $workflow_id = 1;
 
-    public function itDeletesAllFieldsPostActions() {
+    public function itDeletesAllFieldsPostActions()
+    {
         $this->date_dao->expectOnce('deletePostActionsByWorkflowId', array($this->workflow_id));
         $this->int_dao->expectOnce('deletePostActionsByWorkflowId', array($this->workflow_id));
         $this->float_dao->expectOnce('deletePostActionsByWorkflowId', array($this->workflow_id));
@@ -282,7 +301,8 @@ class Transition_PostActionFieldFactory_DeleteWorkflowTest extends Transition_Po
         $this->factory->deleteWorkflow($this->workflow_id);
     }
 
-    public function itReturnsTrueWhenAllDeletionsSucceed() {
+    public function itReturnsTrueWhenAllDeletionsSucceed()
+    {
         stub($this->date_dao)->deletePostActionsByWorkflowId('*')->returns(true);
         stub($this->int_dao)->deletePostActionsByWorkflowId('*')->returns(true);
         stub($this->float_dao)->deletePostActionsByWorkflowId('*')->returns(true);
@@ -290,7 +310,8 @@ class Transition_PostActionFieldFactory_DeleteWorkflowTest extends Transition_Po
         $this->assertTrue($this->factory->deleteWorkflow($this->workflow_id));
     }
 
-    public function itReturnsFalseWhenAnyDeletionFails() {
+    public function itReturnsFalseWhenAnyDeletionFails()
+    {
         stub($this->date_dao)->deletePostActionsByWorkflowId('*')->returns(true);
         stub($this->int_dao)->deletePostActionsByWorkflowId('*')->returns(false);
         stub($this->float_dao)->deletePostActionsByWorkflowId('*')->returns(true);
@@ -301,14 +322,16 @@ class Transition_PostActionFieldFactory_DeleteWorkflowTest extends Transition_Po
 
 class Transition_PostActionFieldFactory_IsFieldUsedInPostActionsTest extends Transition_PostAction_FieldFactory_BaseTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->field_id = 45617;
         $this->field    = aMockField()->withId($this->field_id)->build();
     }
 
-    public function itIsTrueWhenFieldIsUsedInADatePostAction() {
+    public function itIsTrueWhenFieldIsUsedInADatePostAction()
+    {
         stub($this->date_dao)->countByFieldId($this->field_id)->returns(1);
         stub($this->int_dao)->countByFieldId($this->field_id)->returns(0);
         stub($this->float_dao)->countByFieldId($this->field_id)->returns(0);
@@ -316,7 +339,8 @@ class Transition_PostActionFieldFactory_IsFieldUsedInPostActionsTest extends Tra
         $this->assertTrue($this->factory->isFieldUsedInPostActions($this->field));
     }
 
-    public function itIsTrueWhenFieldIsUsedInAnIntPostAction() {
+    public function itIsTrueWhenFieldIsUsedInAnIntPostAction()
+    {
         stub($this->date_dao)->countByFieldId($this->field_id)->returns(0);
         stub($this->int_dao)->countByFieldId($this->field_id)->returns(2);
         stub($this->float_dao)->countByFieldId($this->field_id)->returns(0);
@@ -324,7 +348,8 @@ class Transition_PostActionFieldFactory_IsFieldUsedInPostActionsTest extends Tra
         $this->assertTrue($this->factory->isFieldUsedInPostActions($this->field));
     }
 
-    public function itIsTrueWhenFieldIsUsedInAFloatPostAction() {
+    public function itIsTrueWhenFieldIsUsedInAFloatPostAction()
+    {
         stub($this->date_dao)->countByFieldId($this->field_id)->returns(0);
         stub($this->int_dao)->countByFieldId($this->field_id)->returns(0);
         stub($this->float_dao)->countByFieldId($this->field_id)->returns(3);
@@ -332,14 +357,16 @@ class Transition_PostActionFieldFactory_IsFieldUsedInPostActionsTest extends Tra
         $this->assertTrue($this->factory->isFieldUsedInPostActions($this->field));
     }
 
-    public function itIsTrueWhenFieldIsUsedInMultiplePostActions() {
+    public function itIsTrueWhenFieldIsUsedInMultiplePostActions()
+    {
         stub($this->date_dao)->countByFieldId($this->field_id)->returns(1);
         stub($this->int_dao)->countByFieldId($this->field_id)->returns(2);
         stub($this->float_dao)->countByFieldId($this->field_id)->returns(3);
 
         $this->assertTrue($this->factory->isFieldUsedInPostActions($this->field));
     }
-    public function itIsFalseWhenFieldIsNotUsedInAnyPostAction() {
+    public function itIsFalseWhenFieldIsNotUsedInAnyPostAction()
+    {
         stub($this->date_dao)->countByFieldId($this->field_id)->returns(0);
         stub($this->int_dao)->countByFieldId($this->field_id)->returns(0);
         stub($this->float_dao)->countByFieldId($this->field_id)->returns(0);

@@ -48,7 +48,8 @@ abstract class Tracker_Artifact_ChangesetValue
      */
     protected $has_changed;
 
-    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed) {
+    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed)
+    {
         $this->id          = $id;
         $this->field       = $field;
         $this->has_changed = $has_changed;
@@ -60,7 +61,8 @@ abstract class Tracker_Artifact_ChangesetValue
      *
      * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
@@ -69,7 +71,8 @@ abstract class Tracker_Artifact_ChangesetValue
      *
      * @return Tracker_FormElement_Field
      */
-    public function getField() {
+    public function getField()
+    {
         return $this->field;
     }
 
@@ -78,7 +81,8 @@ abstract class Tracker_Artifact_ChangesetValue
      *
      * @return bool true if the changeset value has changed, false otherwise
      */
-    public function hasChanged() {
+    public function hasChanged()
+    {
         return $this->has_changed;
     }
 
@@ -121,7 +125,8 @@ abstract class Tracker_Artifact_ChangesetValue
      *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public function modalDiff($changeset_value, $format = 'html', ?PFUser $user = null) {
+    public function modalDiff($changeset_value, $format = 'html', ?PFUser $user = null)
+    {
         return $this->diff($changeset_value, $format, $user);
     }
 
@@ -153,7 +158,8 @@ abstract class Tracker_Artifact_ChangesetValue
      *
      * @return string The value of this artifact changeset value for Json format
      */
-    public function getJsonValue() {
+    public function getJsonValue()
+    {
         return $this->getValue();
     }
 
@@ -172,7 +178,8 @@ abstract class Tracker_Artifact_ChangesetValue
         return $this->changeset;
     }
 
-    protected function getRESTRepresentation($value) {
+    protected function getRESTRepresentation($value)
+    {
         $artifact_field_value_representation = new ArtifactFieldValueRepresentation();
         $artifact_field_value_representation->build(
             $this->field->getId(),
@@ -183,7 +190,8 @@ abstract class Tracker_Artifact_ChangesetValue
         return $artifact_field_value_representation;
     }
 
-    protected function getFullRESTRepresentation($value) {
+    protected function getFullRESTRepresentation($value)
+    {
         $artifact_field_value_full_representation = new ArtifactFieldValueFullRepresentation();
         $artifact_field_value_full_representation->build(
             $this->field->getId(),

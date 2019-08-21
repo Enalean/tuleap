@@ -25,7 +25,8 @@
 class _CodendiPassUser
 extends _PassUser
 {
-    function __construct($UserName='',$prefs=false) {
+    function __construct($UserName='',$prefs=false)
+    {
         if ($prefs) $this->_prefs = $prefs;
 
         /* Actually, we cannot set preferences here because PhpWiki instanciate
@@ -60,13 +61,16 @@ extends _PassUser
         $this->_authmethod = 'Codendi';
     }
 
-    function userExists() {
+    function userExists()
+    {
         return !empty($this->_userid);
     }
-    function checkPass($submitted_password) {
+    function checkPass($submitted_password)
+    {
         return $this->userExists() and $this->_level > -1;
     }
-    function mayChangePass() {
+    function mayChangePass()
+    {
         return false;
     }
 }
@@ -74,13 +78,15 @@ extends _PassUser
 class CodendiUserPreferences
 extends UserPreferences {
 
-    function __construct($saved_prefs = false) {
+    function __construct($saved_prefs = false)
+    {
         parent::__construct($saved_prefs);
         //        $this->set('emailVerified', 1);
         //$this->set('email', user_getemail(user_getid()));
     }
 
-    function get($name) {
+    function get($name)
+    {
         if ($name == 'emailVerified') {
             return 1;
         }

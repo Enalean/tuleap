@@ -25,11 +25,13 @@
 
 class Rule_StringTest extends TuleapTestCase {
 
-    function UnitTestCase($name = 'Rule_String test') {
+    function UnitTestCase($name = 'Rule_String test')
+    {
         $this->UnitTestCase($name);
     }
 
-    function testCr() {
+    function testCr()
+    {
         $r = new Rule_NoCr();
         $this->assertTrue($r->isValid('1'));
         $this->assertTrue($r->isValid('abcd'));
@@ -54,7 +56,8 @@ class Rule_StringTest extends TuleapTestCase {
         $this->assertFalse($r->isValid($array));
     }
 
-    function testNull() {
+    function testNull()
+    {
         $r = new Rule_NoCr();
         $this->assertIdentical("\0", chr(0));
         $this->assertFalse($r->isValid("abcd\0fg"));

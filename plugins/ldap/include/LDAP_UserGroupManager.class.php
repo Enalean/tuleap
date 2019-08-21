@@ -61,7 +61,8 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
         $this->dao             = $dao;
     }
 
-    public function setProjectId($project_id) {
+    public function setProjectId($project_id)
+    {
         $this->project_id = $project_id;
     }
 
@@ -124,7 +125,8 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
      *
      * @return DataAccessResult
      */
-    public function getSynchronizedUgroups() {
+    public function getSynchronizedUgroups()
+    {
         return $this->getDao()->getSynchronizedUgroups();
     }
 
@@ -135,7 +137,8 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
      *
      * @return bool
      */
-    public function isSynchronizedUgroup($ugroup_id) {
+    public function isSynchronizedUgroup($ugroup_id)
+    {
         return $this->getDao()->isSynchronizedUgroup($ugroup_id);
     }
 
@@ -146,7 +149,8 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
      *
      * @return bool
      */
-    public function isMembersPreserving($ugroup_id) {
+    public function isMembersPreserving($ugroup_id)
+    {
         return $this->getDao()->isMembersPreserving($ugroup_id);
     }
 
@@ -157,7 +161,8 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
      *
      * @return bool
      */
-    public function isMembersUpdateAllowed($ugroup_id) {
+    public function isMembersUpdateAllowed($ugroup_id)
+    {
         return $this->getDao()->isMembersUpdateAllowed($ugroup_id);
     }
 

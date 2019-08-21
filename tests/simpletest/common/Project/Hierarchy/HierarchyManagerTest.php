@@ -25,7 +25,8 @@ class Project_HierarchyManagerTest extends TuleapTestCase
     /** @var Project_HierarchyManager */
     private $hierarchy_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->dao = mock('ProjectHierarchyDao');
@@ -35,7 +36,8 @@ class Project_HierarchyManagerTest extends TuleapTestCase
         stub($this->hierarchy_manager)->getAllParents()->returns(array());
     }
 
-    public function testSetParentProjectReturnsTrueIfItAddsParent() {
+    public function testSetParentProjectReturnsTrueIfItAddsParent()
+    {
         stub($this->dao)->addParentProject()->returns(true);
 
         stub($this->hierarchy_manager)->getParentProject()->returns(null);
@@ -48,7 +50,8 @@ class Project_HierarchyManagerTest extends TuleapTestCase
         $this->assertTrue($set);
     }
 
-    public function testSetParentProjectReturnsTrueIfItUpdatesParent() {
+    public function testSetParentProjectReturnsTrueIfItUpdatesParent()
+    {
         stub($this->dao)->updateParentProject()->returns(true);
 
         $parent_project_already_saved = stub('Project')->getId()->returns(52);
@@ -63,7 +66,8 @@ class Project_HierarchyManagerTest extends TuleapTestCase
         $this->assertTrue($set);
     }
 
-    public function testSetParentProjectReturnsTrueIfItDeletesParent() {
+    public function testSetParentProjectReturnsTrueIfItDeletesParent()
+    {
         stub($this->dao)->removeParentProject()->returns(true);
 
         $parent_project_already_saved = stub('Project')->getId()->returns(52);
@@ -78,7 +82,8 @@ class Project_HierarchyManagerTest extends TuleapTestCase
         $this->assertTrue($set);
     }
 
-    public function testSetParentProjectThrowsExceptionIfProjectIsAncestorOfParent() {
+    public function testSetParentProjectThrowsExceptionIfProjectIsAncestorOfParent()
+    {
         $project_manager   = mock('ProjectManager');
         $hierarchy_manager = partial_mock('Project_HierarchyManager', array('getParentProject', 'getAllParents'), array($project_manager, $this->dao));
 
@@ -91,7 +96,8 @@ class Project_HierarchyManagerTest extends TuleapTestCase
         $hierarchy_manager->setParentProject(135, 185);
     }
 
-    public function testSetParentProjectReturnsFalseIfProjectAddsItselfAsParent() {
+    public function testSetParentProjectReturnsFalseIfProjectAddsItselfAsParent()
+    {
         stub($this->dao)->addParentProject()->returns(true);
 
         $this->expectException('Project_HierarchyManagerAncestorIsSelfException');
@@ -108,7 +114,8 @@ class Project_HierarchyManagerAllParentsTest extends TuleapTestCase {
     /** @var Project_HierarchyManager */
     private $hierarchy_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->dao = mock('ProjectHierarchyDao');
@@ -117,7 +124,8 @@ class Project_HierarchyManagerAllParentsTest extends TuleapTestCase {
     }
 
 
-    public function testGetAllParentsReturnsAnEmptyArrayIfTheProjectIsOrphan() {
+    public function testGetAllParentsReturnsAnEmptyArrayIfTheProjectIsOrphan()
+    {
         $project_id = 145;
         stub($this->hierarchy_manager)->getParentProject(145)->returns(false);
 
@@ -125,7 +133,8 @@ class Project_HierarchyManagerAllParentsTest extends TuleapTestCase {
         $this->assertArrayEmpty($result);
     }
 
-    public function testGetAllParentsReturnsOneElementInArrayIfTheProjectHasOneParentWhichIsOrphan() {
+    public function testGetAllParentsReturnsOneElementInArrayIfTheProjectHasOneParentWhichIsOrphan()
+    {
         $father_project = stub('Project')->getId()->returns(247);
         $project_id     = 145;
 
@@ -139,7 +148,8 @@ class Project_HierarchyManagerAllParentsTest extends TuleapTestCase {
         $this->assertEqual($expected, $result);
     }
 
-    public function testGetAllParentsReturnsAsManyElmementsInArrayAsTheProjectHasAncestors() {
+    public function testGetAllParentsReturnsAsManyElmementsInArrayAsTheProjectHasAncestors()
+    {
         $great_grand_mother_project = stub('Project')->getId()->returns(444);
         $grand_mother_project       = stub('Project')->getId()->returns(333);
         $mother_project             = stub('Project')->getId()->returns(222);

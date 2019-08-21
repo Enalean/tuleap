@@ -23,7 +23,8 @@ require_once(dirname(__FILE__).'/../../include/system_event/SystemEvent_PLUGIN_L
 
 class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->um = mock('UserManager');
         $this->project_manager = mock('ProjectManager');
@@ -49,7 +50,8 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends TuleapTestCase {
         $this->project_manager->setReturnValue('getProject', $this->prj3, array(203));
     }
 
-    function testUpdateShouldUpdateAllProjects() {
+    function testUpdateShouldUpdateAllProjects()
+    {
         $this->backend->expectCallCount('updateProjectSVNAccessFile', 3);
         expect($this->backend)->updateProjectSVNAccessFile($this->prj1)->at(0);
         expect($this->backend)->updateProjectSVNAccessFile($this->prj2)->at(1);
@@ -60,13 +62,15 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends TuleapTestCase {
         $this->system_event->process();
     }
 
-    function itSkipsProjectsThatAreNotManagedByLdap() {
+    function itSkipsProjectsThatAreNotManagedByLdap()
+    {
         expect($this->backend)->updateProjectSVNAccessFile()->never();
         stub($this->ldap_project_manager)->hasSVNLDAPAuth()->returns(false);
         $this->system_event->process();
     }
 
-    function itSkipsProjectsBasedOnProjectId() {
+    function itSkipsProjectsBasedOnProjectId()
+    {
         expect($this->ldap_project_manager)->hasSVNLDAPAuth()->count(3);
         expect($this->ldap_project_manager)->hasSVNLDAPAuth(201)->at(0);
         expect($this->ldap_project_manager)->hasSVNLDAPAuth(202)->at(1);

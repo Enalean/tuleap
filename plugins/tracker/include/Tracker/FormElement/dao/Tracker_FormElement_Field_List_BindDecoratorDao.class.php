@@ -21,11 +21,13 @@
 
 class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
 {
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_field_list_bind_decorator';
     }
-    public function searchByFieldId($field_id) {
+    public function searchByFieldId($field_id)
+    {
         $field_id  = $this->da->escapeInt($field_id);
         $sql = "SELECT *
                 FROM $this->table_name
@@ -108,7 +110,8 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function delete($field_id, $value_id) {
+    public function delete($field_id, $value_id)
+    {
         $field_id  = $this->da->escapeInt($field_id);
         $value_id  = $this->da->escapeInt($value_id);
         $sql = "DELETE FROM $this->table_name 

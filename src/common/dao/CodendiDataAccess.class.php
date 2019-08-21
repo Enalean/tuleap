@@ -58,11 +58,13 @@ class CodendiDataAccess
     /**
      * @param LegacyDataAccessInterface $instance
      */
-    public static function setInstance(LegacyDataAccessInterface $instance) {
+    public static function setInstance(LegacyDataAccessInterface $instance)
+    {
         self::$_instance = $instance;
     }
 
-    public static function clearInstance() {
+    public static function clearInstance()
+    {
         self::$_instance = null;
     }
 }

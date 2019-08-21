@@ -51,7 +51,8 @@ class MailBuilder {
      *
      * @return bool
      */
-    public function buildAndSendEmail(Project $project, Notification $notification, MailEnhancer $mail_enhancer) {
+    public function buildAndSendEmail(Project $project, Notification $notification, MailEnhancer $mail_enhancer)
+    {
         $sent_status = true;
         $filtered_emails = $this->mail_filter->filter($project, $notification->getEmails());
         foreach ($filtered_emails as $email) {
@@ -63,7 +64,8 @@ class MailBuilder {
         return $sent_status;
     }
 
-    private function buildEmail(Project $project, Notification $notification, MailEnhancer $mail_enhancer, $email) {
+    private function buildEmail(Project $project, Notification $notification, MailEnhancer $mail_enhancer, $email)
+    {
         $mail = $this->getMailSender();
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setTo($email);
@@ -102,7 +104,8 @@ class MailBuilder {
         return $mail->getTo() !== null || $mail->getCc() !== null || $mail->getBcc() !== null;
     }
 
-    protected function getMailSender() {
+    protected function getMailSender()
+    {
         return new Codendi_Mail();
     }
 }

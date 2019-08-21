@@ -20,15 +20,18 @@
 
 class b201309201623_add_cross_references_indexes extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'add cross references indexes.';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE `cross_references`
                     ADD INDEX `target_index` (`target_id`(10) ASC, `target_type`(32) ASC),
                     ADD INDEX `source_index` (`source_id`(10) ASC, `source_type`(32) ASC)";

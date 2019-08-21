@@ -26,7 +26,8 @@ require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_List_Bind_JsonFormatTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->bind = partial_mock('Tracker_FormElement_Field_List_Bind4Tests', array('getAllValues'));
 
@@ -34,7 +35,8 @@ class Tracker_FormElement_Field_List_Bind_JsonFormatTest extends TuleapTestCase 
         $this->v2 = mock('Tracker_FormElement_Field_List_BindValue');
     }
 
-    public function itDelegatesFormattingToValues() {
+    public function itDelegatesFormattingToValues()
+    {
         expect($this->v1)->fetchFormattedForJson()->once();
         expect($this->v2)->fetchFormattedForJson()->once();
 
@@ -58,7 +60,8 @@ class Tracker_FormElement_Field_List_Bind_JsonFormatTest extends TuleapTestCase 
         );
     }
 
-    public function itSendsAnEmptyArrayInJSONFormatWhenNoValues() {
+    public function itSendsAnEmptyArrayInJSONFormatWhenNoValues()
+    {
         stub($this->bind)->getAllValues()->returns(array());
         $this->assertIdentical(
             $this->bind->fetchFormattedForJson(),
@@ -92,7 +95,8 @@ class Tracker_FormElement_Field_List_Bind_ValuesTest extends TuleapTestCase
 }
 
 class Tracker_FormElement_Field_List_Bind4Tests extends Tracker_FormElement_Field_List_Bind {
-    protected function getRESTBindingList() {
+    protected function getRESTBindingList()
+    {
 
     }
 
@@ -105,47 +109,58 @@ class Tracker_FormElement_Field_List_Bind4Tests extends Tracker_FormElement_Fiel
 
     }
 
-    public function fetchAdminEditForm() {
+    public function fetchAdminEditForm()
+    {
 
     }
 
-    public function fetchRawValue($value) {
+    public function fetchRawValue($value)
+    {
 
     }
 
-    public function fetchRawValueFromChangeset($changeset) {
+    public function fetchRawValueFromChangeset($changeset)
+    {
 
     }
 
-    public function fixOriginalValueIds(array $value_mapping) {
+    public function fixOriginalValueIds(array $value_mapping)
+    {
 
     }
 
-    public function formatChangesetValue($value) {
+    public function formatChangesetValue($value)
+    {
 
     }
 
-    public function formatChangesetValueForCSV($value) {
+    public function formatChangesetValueForCSV($value)
+    {
 
     }
 
-    public function formatChangesetValueWithoutLink($value) {
+    public function formatChangesetValueWithoutLink($value)
+    {
 
     }
 
-    public function formatCriteriaValue($value_id) {
+    public function formatCriteriaValue($value_id)
+    {
 
     }
 
-    public function formatMailCriteriaValue($value_id) {
+    public function formatMailCriteriaValue($value_id)
+    {
 
     }
 
-    public function getAllValues() {
+    public function getAllValues()
+    {
 
     }
 
-    public function getBindValues($bindvalue_ids = null) {
+    public function getBindValues($bindvalue_ids = null)
+    {
 
     }
 
@@ -153,78 +168,97 @@ class Tracker_FormElement_Field_List_Bind4Tests extends Tracker_FormElement_Fiel
     {
     }
 
-    public function getBindtableSqlFragment() {
+    public function getBindtableSqlFragment()
+    {
 
     }
 
-    public function getChangesetValues($changeset_id) {
+    public function getChangesetValues($changeset_id)
+    {
 
     }
 
-    public function getCriteriaFrom($criteria_value) {
+    public function getCriteriaFrom($criteria_value)
+    {
 
     }
 
-    public function getCriteriaWhere($criteria) {
+    public function getCriteriaWhere($criteria)
+    {
 
     }
 
-    public function getDao() {
+    public function getDao()
+    {
 
     }
 
-    public function getFieldData($rest_value, $is_multiple) {
+    public function getFieldData($rest_value, $is_multiple)
+    {
 
     }
 
-    public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value) {
+    public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value)
+    {
 
     }
 
-    public function getQueryFrom($changesetvalue_table = ''){
+    public function getQueryFrom($changesetvalue_table = '')
+    {
 
     }
 
-    public function getQueryGroupby() {
+    public function getQueryGroupby()
+    {
 
     }
 
-    public function getQueryOrderby() {
+    public function getQueryOrderby()
+    {
 
     }
 
-    public function getQuerySelect() {
+    public function getQuerySelect()
+    {
 
     }
 
-    public function getQuerySelectAggregate($functions) {
+    public function getQuerySelectAggregate($functions)
+    {
 
     }
 
-    public function getValue($value_id) {
+    public function getValue($value_id)
+    {
 
     }
 
-    public function getValueDao() {
+    public function getValueDao()
+    {
 
     }
 
-    public function getValueFromRow($row) {
+    public function getValueFromRow($row)
+    {
 
     }
 
-    public static function fetchAdminCreateForm($field) {
+    public static function fetchAdminCreateForm($field)
+    {
 
     }
 
-    public function getType() {
+    public function getType()
+    {
 
     }
 
-    public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field) {
+    public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field)
+    {
     }
 
-    public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value) {
+    public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value)
+    {
     }
 
     public function accept(BindVisitor $visitor, BindParameters $parameters)

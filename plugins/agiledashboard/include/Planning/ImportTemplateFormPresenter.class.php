@@ -26,27 +26,33 @@ class Planning_ImportTemplateFormPresenter
     public $group_id;
 
 
-    public function __construct($group_id) {
+    public function __construct($group_id)
+    {
         $this->group_id = $group_id;
     }
 
-    public function adminTitle() {
+    public function adminTitle()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin');
     }
 
-    public function importTemplateHeader() {
+    public function importTemplateHeader()
+    {
         return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_template');
     }
 
-    public function btnSubmit() {
+    public function btnSubmit()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'btn_import');
     }
 
-    public function importInstructions() {
+    public function importInstructions()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_instructions', array(self::TULEAP_TEMPLATE_URL));
     }
 
-    public function importNotes() {
+    public function importNotes()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_notes');
     }
 }

@@ -64,7 +64,8 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
         }
     }
 
-    function &getPluginInfo() {
+    function &getPluginInfo()
+    {
         if (!is_a($this->pluginInfo, 'UserLogPluginInfo')) {
             require_once('UserLogPluginInfo.class.php');
             $this->pluginInfo = new UserLogPluginInfo($this);
@@ -72,7 +73,8 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
         return $this->pluginInfo;
     }
 
-    function cssFile($params) {
+    function cssFile($params)
+    {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {

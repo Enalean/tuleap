@@ -33,7 +33,8 @@ class Chart_Pie extends Chart{
      *
      * @return string
      */
-    protected function getGraphClass() {
+    protected function getGraphClass()
+    {
         return 'PieGraph';
     }
 

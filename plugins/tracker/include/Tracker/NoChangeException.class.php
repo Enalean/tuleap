@@ -27,7 +27,8 @@ class Tracker_NoChangeException extends Tracker_Exception {
      * @param int $code
      * @param Exception $previous
      */
-    public function __construct($artifact_id, $artifact_xref, $message = null, $code = null) {
+    public function __construct($artifact_id, $artifact_xref, $message = null, $code = null)
+    {
         if($message === null) {
             $art_link = '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid=' . $artifact_id . '">' .
                      $artifact_xref . '</a>';

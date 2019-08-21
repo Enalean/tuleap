@@ -21,7 +21,8 @@ require_once __DIR__ .'/../bootstrap.php';
 
 class Cardwall_OnTop_MappedFieldProviderTest extends TuleapTestCase {
 
-    public function itProvidesTheStatusFieldIfNoMapping() {
+    public function itProvidesTheStatusFieldIfNoMapping()
+    {
         $tracker  = \Mockery::spy(\Tracker::class);
 
         $status_field = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class);
@@ -31,7 +32,8 @@ class Cardwall_OnTop_MappedFieldProviderTest extends TuleapTestCase {
         $this->assertEqual($status_field, $provider->getField($tracker));
     }
 
-    public function itProvidesTheMappedFieldIfThereIsAMapping() {
+    public function itProvidesTheMappedFieldIfThereIsAMapping()
+    {
         $tracker  = aTracker()->build();
 
         $mapped_field = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class);
@@ -43,7 +45,8 @@ class Cardwall_OnTop_MappedFieldProviderTest extends TuleapTestCase {
         $this->assertEqual($mapped_field, $provider->getField($tracker));
     }
 
-    public function itReturnsNullIfThereIsACustomMappingButNoFieldChoosenYet() {
+    public function itReturnsNullIfThereIsACustomMappingButNoFieldChoosenYet()
+    {
         $tracker  = aTracker()->build();
 
         $status_field = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class);

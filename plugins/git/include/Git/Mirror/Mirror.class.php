@@ -37,7 +37,8 @@ class Git_Mirror_Mirror {
 
     public $ssh_key;
 
-    public function __construct(PFUser $owner, $id, $url, $hostname, $name) {
+    public function __construct(PFUser $owner, $id, $url, $hostname, $name)
+    {
         $this->id       = $id;
         $this->url      = $url;
         $this->hostname = $hostname;
@@ -49,7 +50,8 @@ class Git_Mirror_Mirror {
         $this->owner_id   = $owner->getId();
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return self::class .' '. $this->id;
     }
 }

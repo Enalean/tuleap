@@ -27,7 +27,8 @@
 
 */
 
-function uniformat_date($format, $date) {
+function uniformat_date($format, $date)
+{
 
     if (preg_match("/([0-9]{4})-?([0-9]{2})-?([0-9]{2}) ?([0-9]{2}):?([0-9]{2}):?([0-9]{2})/", $date, $gp)) {
         list(,$y, $m, $d, $h, $min, $s) = $gp;
@@ -37,7 +38,8 @@ function uniformat_date($format, $date) {
     return $date;
 }
 
-function commits_header($params) {
+function commits_header($params)
+{
     \Tuleap\Project\ServiceInstrumentation::increment('cvs');
 
     $params['toptab']='cvs';
@@ -98,11 +100,13 @@ function commits_header($params) {
     );
 }
 
-function commits_footer($params) {
+function commits_footer($params)
+{
     site_project_footer($params);
 }
 
-function commits_branches_box($group_id,$name='branch',$checked='xzxz', $text_100='None') {
+function commits_branches_box($group_id,$name='branch',$checked='xzxz', $text_100='None')
+{
     if (!$group_id) {
         return $GLOBALS['Language']->getText('cvs_commit_utils', 'error_nogid');
     } else {
@@ -123,7 +127,8 @@ function commits_branches_box($group_id,$name='branch',$checked='xzxz', $text_10
     }
 }
 
-function commits_data_get_technicians($projectname) {
+function commits_data_get_technicians($projectname)
+{
 
     // Get list of all people who once committed something in the CVS
     // including those who may have been removed from the project since then.
@@ -135,7 +140,8 @@ function commits_data_get_technicians($projectname) {
     return db_query($sql);
 }
 
-function commits_technician_box($projectname,$name='_commiter',$checked='xzxz',$text_100='None') {
+function commits_technician_box($projectname,$name='_commiter',$checked='xzxz',$text_100='None')
+{
     if (!$projectname) {
         return $GLOBALS['Language']->getText('cvs_commit_utils', 'error_nogid');
     } else {
@@ -148,7 +154,8 @@ function commits_technician_box($projectname,$name='_commiter',$checked='xzxz',$
     }
 }
 
-function commits_tags_box($group_id, $name='_tag',$checked='xzxz',$text_100='None' ) {
+function commits_tags_box($group_id, $name='_tag',$checked='xzxz',$text_100='None' )
+{
     $sql = "SELECT unix_group_name from groups where group_id=" . db_ei($group_id);
 
     $result = db_query($sql);
@@ -326,7 +333,8 @@ function show_commitslist(
     echo $nav_bar;
 }
 
-function makeCvsLink($group_id, $filename='', $text, $rev='', $displayfunc='') {
+function makeCvsLink($group_id, $filename='', $text, $rev='', $displayfunc='')
+{
     $res_grp = db_query("SELECT * FROM groups WHERE group_id=" . db_ei($group_id));
 
     $view_str=$displayfunc;
@@ -339,7 +347,8 @@ function makeCvsLink($group_id, $filename='', $text, $rev='', $displayfunc='') {
     return '<A HREF="/cvs/viewvc.php/'.$filename.'?root='.$group_name.'&roottype=cvs'.$view_str.'"><B>'.$text."</B></A>";
 }
 
-function makeCvsDirLink($group_id, $filename='', $text, $dir='') {
+function makeCvsDirLink($group_id, $filename='', $text, $dir='')
+{
     $res_grp = db_query("SELECT * FROM groups WHERE group_id=" . db_ei($group_id));
     $row_grp = db_fetch_array($res_grp);
     $group_name = $row_grp['unix_group_name'];
@@ -416,7 +425,8 @@ function commit_criteria_list_to_text($criteria_list, $url)
     return join(' > ',$arr_text);
 }
 
-function commit_field_get_label($sortField) {
+function commit_field_get_label($sortField)
+{
     if ($sortField == "id") {
         return $GLOBALS['Language']->getText('cvs_commit_utils', 'id');
     }
@@ -427,7 +437,7 @@ function commit_field_get_label($sortField) {
 }
 
 
-function show_commit_details ($group_id, $commit_id, $result)
+function show_commit_details($group_id, $commit_id, $result)
 {
     /*
         Accepts a result set from the commits table. Should include all columns from
@@ -584,7 +594,8 @@ function show_commit_details ($group_id, $commit_id, $result)
 
 
 // Are there any commits in the cvs history ?
-function format_cvs_history($group_id) {
+function format_cvs_history($group_id)
+{
     $res_cvsfullhist = get_cvs_history($group_id);
 
     if (!$res_cvsfullhist || db_numrows($res_cvsfullhist) < 1) {
@@ -618,7 +629,8 @@ function format_cvs_history($group_id) {
 // history if the period argument is not given or if it is given then
 // over the last "period" of time.
 // period is expressed in seconds
-function get_cvs_history($group_id, $period=false) {
+function get_cvs_history($group_id, $period=false)
+{
 
     $pm = ProjectManager::instance();
     $group = $pm->getProject($group_id);
@@ -641,14 +653,16 @@ function get_cvs_history($group_id, $period=false) {
     return($result);
 }
 
-function get_user_shell($user_id) {
+function get_user_shell($user_id)
+{
     $user_id  = db_ei($user_id);
     $res_user = db_query("SELECT shell FROM user WHERE user_id=$user_id");
     $row_user = db_fetch_array($res_user);
     return $row_user['shell'];
 }
 
-function check_cvs_access($username, $group_name, $cvspath) {
+function check_cvs_access($username, $group_name, $cvspath)
+{
     $pm = ProjectManager::instance();
     $project = $pm->getProjectByUnixName($group_name);
 
@@ -680,7 +694,8 @@ function check_cvs_access($username, $group_name, $cvspath) {
 
 // Return the group ID from a repository name
 // Repository names look like '/cvsroot/groupname', without trailing slash!
-function get_group_id_from_repository($repository) {
+function get_group_id_from_repository($repository)
+{
     $pm = ProjectManager::instance();
     $project = $pm->getProjectByUnixName(basename($repository));
     if (! $project) {
@@ -690,7 +705,8 @@ function get_group_id_from_repository($repository) {
     return $project->getID();
 }
 
-function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch = 100, $_commit_id = '', $_commiter = 100, $_srch = '', $order_by = '', $pv = 0) {
+function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch = 100, $_commit_id = '', $_commiter = 100, $_srch = '', $order_by = '', $pv = 0)
+{
     //if status selected, and more to where clause
     if ($_branch != 100) {
         //for open tasks, add status=100 to make sure we show all
@@ -780,7 +796,8 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
     return array($result, $totalrows);
 }
 
-function cvs_get_revision_detail($commit_id) {
+function cvs_get_revision_detail($commit_id)
+{
     $commit_id = db_ei($commit_id);
     $sql = "SELECT repository, cvs_commits.comm_when as c_when, repositoryid, description, file, fileid, dir, dirid, type, branch, revision, addedlines, removedlines ".
                     "FROM cvs_dirs, cvs_descs, cvs_files, cvs_checkins, cvs_branches, cvs_repositories, cvs_commits ".

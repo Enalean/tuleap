@@ -48,7 +48,8 @@ class ArtifactFieldValueListFullRepresentation {
      */
     public $bind_value_ids;
 
-    public function build($id, $type, $label, array $values, array $bind_value_ids) {
+    public function build($id, $type, $label, array $values, array $bind_value_ids)
+    {
         $this->field_id       = JsonCast::toInt($id);
         $this->type           = $type;
         $this->label          = $label;

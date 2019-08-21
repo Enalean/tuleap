@@ -26,21 +26,24 @@ class Tracker_TooltipFactoryTest extends TuleapTestCase {
     /** @var XML_Security */
     protected $xml_security;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->xml_security = new XML_Security();
         $this->xml_security->enableExternalLoadOfEntities();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->xml_security->disableExternalLoadOfEntities();
 
         parent::tearDown();
     }
 
     //testing Tooltip import
-    public function testImport() {
+    public function testImport()
+    {
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticTooltipTest.xml');
 
         $tracker = new MockTracker();

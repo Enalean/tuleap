@@ -42,7 +42,8 @@ class Chart_GanttMileStone {
     *
     * @return void
     */
-    public function __construct($aVPos, $aLabel, $aDate, $aCaption="") {
+    public function __construct($aVPos, $aLabel, $aDate, $aCaption="")
+    {
         $this->jpgraph_instance = new MileStone($aVPos, $aLabel, $aDate, $aCaption);
 
         $colors_for_charts = new ColorsForCharts();
@@ -65,7 +66,8 @@ class Chart_GanttMileStone {
      *
      * @return int
      */
-    public function getFont() {
+    public function getFont()
+    {
         return FF_USERFONT;
     }
 
@@ -77,7 +79,8 @@ class Chart_GanttMileStone {
      *
      * @return mixed
      */
-    public function __get($name) {
+    public function __get($name)
+    {
         return $this->jpgraph_instance->$name;
     }
 
@@ -90,7 +93,8 @@ class Chart_GanttMileStone {
      *
      * @return mixed the $value
      */
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         return $this->jpgraph_instance->$name = $value;
     }
 
@@ -102,7 +106,8 @@ class Chart_GanttMileStone {
      *
      * @return bool
      */
-    public function __isset($name) {
+    public function __isset($name)
+    {
         return isset($this->jpgraph_instance->$name);
     }
 
@@ -114,7 +119,8 @@ class Chart_GanttMileStone {
      *
      * @return bool
      */
-    public function __unset($name) {
+    public function __unset($name)
+    {
         unset($this->jpgraph_instance->$name);
     }
 
@@ -127,7 +133,8 @@ class Chart_GanttMileStone {
      *
      * @return mixed
      */
-    public function __call($method, $args) {
+    public function __call($method, $args)
+    {
         $result = call_user_func_array(array($this->jpgraph_instance, $method), $args);
         return $result;
     }
@@ -140,7 +147,8 @@ class Chart_GanttMileStone {
      *
      * @return void
      */
-    public function setCSIM($link, $alt) {
+    public function setCSIM($link, $alt)
+    {
         $this->jpgraph_instance->SetCSIMTarget($link);
         $this->jpgraph_instance->SetCSIMAlt($alt);
         $this->jpgraph_instance->title->SetCSIMTarget($link);

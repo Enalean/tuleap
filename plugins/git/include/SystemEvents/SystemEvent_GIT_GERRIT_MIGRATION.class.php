@@ -46,7 +46,8 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
     /** @var MailBuilder */
     private $mail_builder;
 
-    public function process() {
+    public function process()
+    {
         $repo_id           = (int)$this->getParameter(0);
         $remote_server_id  = (int)$this->getParameter(1);
         $this->dao->switchToGerrit($repo_id, $remote_server_id);
@@ -80,14 +81,16 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         }
     }
 
-    private function logError(GitRepository $repository, $sysevent_prefix, $log_prefix, Exception $e) {
+    private function logError(GitRepository $repository, $sysevent_prefix, $log_prefix, Exception $e)
+    {
         $this->dao->setGerritMigrationError($repository->getId());
         $this->error($sysevent_prefix . $e->getMessage());
         $this->logger->error($log_prefix . $this->verbalizeParameters(null), $e);
         $this->sendErrorNotification($repository);
     }
 
-    private function sendErrorNotification(GitRepository $repository) {
+    private function sendErrorNotification(GitRepository $repository)
+    {
         $user = $this->getRequester();
         if (! $user->isAnonymous()) {
             $factory = new BaseLanguageFactory();
@@ -109,7 +112,8 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
     /**
      * @return string a human readable representation of parameters
      */
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         $txt = '';
 
         $repo_id          = (int)$this->getParameter(0);
@@ -128,19 +132,22 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         return $txt;
     }
 
-    private function getRequester() {
+    private function getRequester()
+    {
         $user_id = (int)$this->getParameter(3);
         return $this->user_manager->getUserById($user_id);
     }
 
-    private function verbalizeAccessRightMigration() {
+    private function verbalizeAccessRightMigration()
+    {
         $migrate_access_rights = $this->getParameter(2);
         if (!$migrate_access_rights) {
             return ', without access rights';
         }
     }
 
-    private function verbalizeRepoId($repo_id, $with_link) {
+    private function verbalizeRepoId($repo_id, $with_link)
+    {
         $txt = '#'. $repo_id;
         if ($with_link) {
             $hp = Codendi_HTMLPurifier::instance();
@@ -152,7 +159,8 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         return $txt;
     }
 
-    private function verbalizeRemoteServerId($remote_server_id, $with_link) {
+    private function verbalizeRemoteServerId($remote_server_id, $with_link)
+    {
         $txt = '#'. $remote_server_id;
         if ($with_link) {
             try {

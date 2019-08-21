@@ -85,7 +85,8 @@ class NotificationsManager_MoveTest extends TuleapTestCase
         parent::tearDown();
     }
 
-    function testNotifications() {
+    function testNotifications()
+    {
         // {{{ Listener cannot read moved item
         // We expect no notification
         $dr = 0;
@@ -205,7 +206,8 @@ class NotificationsManager_MoveTest extends TuleapTestCase
     * @param res  expected result: item | from | from_wo_c | to | to_wo_b | none
     * @param msg  message to display if the test fail
     */
-    function _runTest($dr, $br, $cr, $lb, $lc, $ld, $res, $msg = "%s") {
+    function _runTest($dr, $br, $cr, $lb, $lc, $ld, $res, $msg = "%s")
+    {
         $msg = "[$dr, $br, $cr, $lb, $lc, $ld, $res] ". $msg;
 
         $a = new MockDocman_Item();

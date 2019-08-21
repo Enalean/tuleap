@@ -9,7 +9,8 @@ class OrangeTheme extends Theme
     private $axis_color       = '#CC6600';
     private $grid_color       = '#CC6633';
 
-    function GetColorList() {
+    function GetColorList()
+    {
         return array(
             '#FF9900',
             '#FFCC00',
@@ -32,7 +33,8 @@ class OrangeTheme extends Theme
         );
     }
 
-    function SetupGraph($graph) {
+    function SetupGraph($graph)
+    {
 
         // graph
         /*
@@ -81,7 +83,8 @@ class OrangeTheme extends Theme
     }
 
 
-    function SetupPieGraph($graph) {
+    function SetupPieGraph($graph)
+    {
 
         // graph
         $graph->SetFrame(false);
@@ -106,7 +109,8 @@ class OrangeTheme extends Theme
     }
 
 
-    function PreStrokeApply($graph) {
+    function PreStrokeApply($graph)
+    {
         if ($graph->legend->HasItems()) {
             $img = $graph->img;
             $graph->SetMargin(
@@ -118,7 +122,8 @@ class OrangeTheme extends Theme
         }
     }
 
-    function ApplyPlot($plot) {
+    function ApplyPlot($plot)
+    {
 
         switch (get_class($plot))
         {

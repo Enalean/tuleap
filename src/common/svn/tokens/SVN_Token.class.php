@@ -57,31 +57,38 @@ class SVN_Token {
         $this->comment        = $comment;
     }
 
-    public function getUser() {
+    public function getUser()
+    {
         return $this->user;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getToken() {
+    public function getToken()
+    {
         return $this->token;
     }
 
-    public function getGeneratedDate() {
+    public function getGeneratedDate()
+    {
         return $this->generated_date;
     }
 
-    public function getLastUsage() {
+    public function getLastUsage()
+    {
         return $this->last_usage;
     }
 
-    public function getLastIp() {
+    public function getLastIp()
+    {
         return $this->last_ip;
     }
 
-    public function getComment() {
+    public function getComment()
+    {
         return $this->comment;
     }
 

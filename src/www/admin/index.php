@@ -120,7 +120,8 @@ if (ForgeConfig::areRestrictedUsersAllowed() && $restricted_users > 0) {
     $statistics_users_graph[] = array( 'key'=> 'restricted', 'label' => $Language->getText('admin_main', 'statusrestricted_user'), 'count' => $restricted_users);
 }
 
-function stats_getactiveusers($since) {
+function stats_getactiveusers($since)
+{
     $time_totest=time()-$since;
 
     $res_count = db_query("SELECT count(*) AS count FROM user_access WHERE last_access_date> $time_totest ");

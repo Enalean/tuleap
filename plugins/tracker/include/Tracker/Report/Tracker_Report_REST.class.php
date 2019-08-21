@@ -44,11 +44,11 @@ class Tracker_Report_REST extends Tracker_Report {
     protected $rest_criteria = array();
 
     public function __construct(
-            PFUser $current_user,
-            Tracker $tracker,
-            PermissionsManager $permissions_manager,
-            Tracker_ReportDao $dao,
-            Tracker_FormElementFactory $formelement_factory
+        PFUser $current_user,
+        Tracker $tracker,
+        PermissionsManager $permissions_manager,
+        Tracker_ReportDao $dao,
+        Tracker_FormElementFactory $formelement_factory
     ) {
         $id = $name = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $tracker_id = $is_query_displayed = $is_in_expert_mode = $expert_query = $updated_by = $updated_at = 0;
         parent::__construct(
@@ -79,7 +79,8 @@ class Tracker_Report_REST extends Tracker_Report {
      * @param sting $criteria
      * @throws Tracker_Report_InvalidRESTCriterionException
      */
-    public function setRESTCriteria($criteria) {
+    public function setRESTCriteria($criteria)
+    {
         $criteria = json_decode(stripslashes($criteria), true);
         $this->checkForJsonErrors();
         $this->harmoniseCriteria($criteria);
@@ -87,7 +88,8 @@ class Tracker_Report_REST extends Tracker_Report {
         $this->rest_criteria = $criteria;
     }
 
-    private function checkForJsonErrors() {
+    private function checkForJsonErrors()
+    {
         $error = '';
         switch (json_last_error()) {
             case JSON_ERROR_NONE :
@@ -114,7 +116,8 @@ class Tracker_Report_REST extends Tracker_Report {
      *
      * @throws Tracker_Report_InvalidRESTCriterionException
      */
-    private function harmoniseCriteria(&$criteria) {
+    private function harmoniseCriteria(&$criteria)
+    {
         if (! is_array($criteria)) {
             $criteria = array();
         }
@@ -143,7 +146,8 @@ class Tracker_Report_REST extends Tracker_Report {
      *  )
      * @return bool
      */
-    private function isCriterionBasic($criterion) {
+    private function isCriterionBasic($criterion)
+    {
         if (is_array($criterion)) {
             if (isset($criterion[self::OPERATOR_PROPERTY_NAME]) || isset($criterion[self::VALUE_PROPERTY_NAME])) {
                 return false;
@@ -153,7 +157,8 @@ class Tracker_Report_REST extends Tracker_Report {
         return true;
     }
 
-    private function checkCriterionProperties($criterion, $field) {
+    private function checkCriterionProperties($criterion, $field)
+    {
         if (! isset($criterion[self::OPERATOR_PROPERTY_NAME]) || ! isset($criterion[self::VALUE_PROPERTY_NAME])) {
             throw new Tracker_Report_InvalidRESTCriterionException('Criterion for field '. $field . ' is malformed');
         }
@@ -162,7 +167,8 @@ class Tracker_Report_REST extends Tracker_Report {
         }
     }
 
-    public function getCriteria() {
+    public function getCriteria()
+    {
         $rank       = 0;
         $tracker_id = $this->getTracker()->getId();
 
@@ -182,7 +188,8 @@ class Tracker_Report_REST extends Tracker_Report {
         return $this->criteria;
     }
 
-    private function addCriterionToFormElement($formelement, $criterion, $rank) {
+    private function addCriterionToFormElement($formelement, $criterion, $rank)
+    {
         $is_advanced = false;
 
         $criteria = new Tracker_Report_Criteria(

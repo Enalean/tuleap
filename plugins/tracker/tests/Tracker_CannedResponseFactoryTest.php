@@ -42,21 +42,24 @@ class Tracker_CannedResponseFactoryTest extends TuleapTestCase {
     /** @var XML_Security */
     protected $xml_security;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->xml_security = new XML_Security();
         $this->xml_security->enableExternalLoadOfEntities();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->xml_security->disableExternalLoadOfEntities();
 
         parent::tearDown();
     }
 
     //testing CannedResponse import
-    public function testImport() {
+    public function testImport()
+    {
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/TestTracker-1.xml');
         $responses = array();
         foreach ($xml->cannedResponses->cannedResponse as $index => $response) {
@@ -68,7 +71,8 @@ class Tracker_CannedResponseFactoryTest extends TuleapTestCase {
 
     }
 
-    public function testDuplicateWithNoCannedResponses() {
+    public function testDuplicateWithNoCannedResponses()
+    {
         $from_tracker = new MockTracker();
         $tf = new MockTrackerFactory();
         $tf->setReturnReference('getTrackerById', $from_tracker, array(102));
@@ -81,7 +85,8 @@ class Tracker_CannedResponseFactoryTest extends TuleapTestCase {
         $crf->duplicate(102, 502);
     }
 
-    public function testDuplicateWithCannedResponses() {
+    public function testDuplicateWithCannedResponses()
+    {
         $from_tracker = new MockTracker();
         $to_tracker = new MockTracker();
         $tf = new MockTrackerFactory();

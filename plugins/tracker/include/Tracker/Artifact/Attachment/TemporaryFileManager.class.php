@@ -59,7 +59,8 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
         $this->user_manager            = $user_manager;
     }
 
-    public function purgeOldTemporaryFiles() {
+    public function purgeOldTemporaryFiles()
+    {
         $timestamp = $_SERVER['REQUEST_TIME'] - $this->retention_delay_in_days * 3600 * 24;
 
         $old_files = $this->dao
@@ -76,7 +77,8 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      *
      * @return bool
      */
-    public function exists(PFUser $user, $attachment_name) {
+    public function exists(PFUser $user, $attachment_name)
+    {
         return file_exists($this->getPath($user, $attachment_name));
     }
 
@@ -85,7 +87,8 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      *
      * @return String
      */
-    public function getPath(PFUser $user, $attachment_name) {
+    public function getPath(PFUser $user, $attachment_name)
+    {
         return ForgeConfig::get('codendi_cache_dir') . DIRECTORY_SEPARATOR . $this->getUserTemporaryFilePrefix($user) . $attachment_name;
     }
 
@@ -94,7 +97,8 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      *
      * @return String
      */
-    private function getUniqueFileName(PFUser $user) {
+    private function getUniqueFileName(PFUser $user)
+    {
         $prefix = $this->getUserTemporaryFilePrefix($user);
         $file_path = tempnam(ForgeConfig::get('codendi_cache_dir'), $prefix);
         return substr(basename($file_path), strlen($prefix));
@@ -106,7 +110,8 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      *
      * @return \Tracker_Artifact_Attachment_TemporaryFile
      */
-    public function save(PFUser $user, $name, $description, $mimetype) {
+    public function save(PFUser $user, $name, $description, $mimetype)
+    {
         $chunk_size = 0;
         $this->checkThatChunkSizeIsNotOverTheQuota($user, $chunk_size);
 
@@ -147,7 +152,8 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      *
      * @throws Tracker_Artifact_Attachment_FileNotFoundException
      */
-    public function getTemporaryFileChunk(Tracker_Artifact_Attachment_TemporaryFile $file, $offset, $size) {
+    public function getTemporaryFileChunk(Tracker_Artifact_Attachment_TemporaryFile $file, $offset, $size)
+    {
         $temporary_name = $file->getTemporaryName();
 
         $user = $this->user_manager->getUserById($file->getCreatorId());
@@ -169,7 +175,8 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      * @throws Tracker_Artifact_Attachment_InvalidPathException
      * @throws Tracker_Artifact_Attachment_InvalidOffsetException
      */
-    public function appendChunk($content, Tracker_Artifact_Attachment_TemporaryFile $file, $offset) {
+    public function appendChunk($content, Tracker_Artifact_Attachment_TemporaryFile $file, $offset)
+    {
         $current_offset = $file->getCurrentChunkOffset();
 
         if ($current_offset + 1 !== (int) $offset) {
@@ -194,7 +201,8 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     /**
      * @return Tracker_Artifact_Attachment_TemporaryFile[]
      */
-    public function getPaginatedUserTemporaryFiles(PFUser $user, $offset, $limit) {
+    public function getPaginatedUserTemporaryFiles(PFUser $user, $offset, $limit)
+    {
         $files = $this->dao
             ->searchPaginatedUserTemporaryFiles($user->getId(), $offset, $limit)
             ->instanciateWith(array($this, 'getInstanceFromRow'));
@@ -205,7 +213,8 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     /**
      * @return int
      */
-    public function getDiskUsage(PFUser $user) {
+    public function getDiskUsage(PFUser $user)
+    {
         $size = 0;
         foreach (glob($this->getPath($user, '*')) as $file) {
             $size += (int) implode('', $this->system->exec('stat -c %s ' . escapeshellarg($file)));
@@ -217,21 +226,24 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     /**
      * @throws Tuleap\Tracker\Artifact\Attachment\QuotaExceededException
      */
-    private function checkThatChunkSizeIsNotOverTheQuota(PFUser $user, $content) {
+    private function checkThatChunkSizeIsNotOverTheQuota(PFUser $user, $content)
+    {
         $chunk_size = strlen(base64_decode($content));
         if ($this->getDiskUsage($user) + $chunk_size > $this->getQuota()) {
             throw new QuotaExceededException();
         }
     }
 
-    private function getUserTemporaryFilePrefix(PFUser $user) {
+    private function getUserTemporaryFilePrefix(PFUser $user)
+    {
         return self::TEMP_FILE_PREFIX . $user->getId() . '_';
     }
 
     /**
      * @throws Tracker_Artifact_Attachment_ChunkTooBigException
      */
-    public function validateChunkSize(PFUser $user, $content) {
+    public function validateChunkSize(PFUser $user, $content)
+    {
         $chunk_size = strlen(base64_decode($content));
 
         if ($chunk_size > $this->getMaximumChunkSize()) {
@@ -244,14 +256,16 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     /**
      * Max chunk size : 1 Mo = 1048576 bytes
      */
-    public function getMaximumChunkSize() {
+    public function getMaximumChunkSize()
+    {
         return 1048576;
     }
 
     /**
      * Max chunk size : 64 Mo = 67108864 bytes
      */
-    public function getQuota() {
+    public function getQuota()
+    {
         return ForgeConfig::get('sys_max_size_upload');
     }
 
@@ -259,7 +273,8 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      * @return \Tracker_Artifact_Attachment_TemporaryFile
      * @throws Tracker_Artifact_Attachment_FileNotFoundException
      */
-    public function getFile($id) {
+    public function getFile($id)
+    {
         $row = $this->dao->getTemporaryFile($id);
 
         if (! $row) {
@@ -269,7 +284,8 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
         return $this->getInstanceFromRow($row);
     }
 
-    public function getFileByTemporaryName($temporary_name) {
+    public function getFileByTemporaryName($temporary_name)
+    {
         $row = $this->dao->getTemporaryFileByTemporaryName($temporary_name);
 
         if (! $row) {
@@ -279,24 +295,29 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
         return $this->getInstanceFromRow($row);
     }
 
-    public function isFileIdTemporary($id) {
+    public function isFileIdTemporary($id)
+    {
         return $this->dao->doesFileExist($id);
     }
 
-    public function removeTemporaryFile(Tracker_Artifact_Attachment_TemporaryFile $file) {
+    public function removeTemporaryFile(Tracker_Artifact_Attachment_TemporaryFile $file)
+    {
         $this->removeTemporaryFileInDB($file->getId());
         $this->removeTemporaryFileFomFileSystem($file);
     }
 
-    private function removeTemporaryFileInDB($id) {
+    private function removeTemporaryFileInDB($id)
+    {
         $this->dao->delete($id);
     }
 
-    public function removeTemporaryFileInDBByTemporaryName($temporary_name) {
+    public function removeTemporaryFileInDBByTemporaryName($temporary_name)
+    {
         $this->dao->deleteByTemporaryName($temporary_name);
     }
 
-    private function removeTemporaryFileFomFileSystem(Tracker_Artifact_Attachment_TemporaryFile $temporary_file) {
+    private function removeTemporaryFileFomFileSystem(Tracker_Artifact_Attachment_TemporaryFile $temporary_file)
+    {
         $user = $this->user_manager->getUserById($temporary_file->getCreatorId());
 
         $temporary_file_name = $temporary_file->getTemporaryName();
@@ -307,7 +328,8 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
         }
     }
 
-    public function getInstanceFromRow($row) {
+    public function getInstanceFromRow($row)
+    {
         return new Tracker_Artifact_Attachment_TemporaryFile(
             $row['id'],
             $row['filename'],

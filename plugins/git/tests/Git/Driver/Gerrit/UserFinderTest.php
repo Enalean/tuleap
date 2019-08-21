@@ -34,7 +34,8 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
     /** @var GitRepository **/
     protected $repository;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->permissions_manager = mock('PermissionsManager');
         $this->ugroup_manager      = mock('UGroupManager');
@@ -48,12 +49,14 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
 
 class Git_Driver_Gerrit_UserFinder_areRegisteredUsersAllowedToTest extends Git_Driver_Gerrit_UserFinderTest {
 
-    public function itReturnsFalseForSpecialAdminPerms() {
+    public function itReturnsFalseForSpecialAdminPerms()
+    {
         $allowed = $this->user_finder->areRegisteredUsersAllowedTo(Git::SPECIAL_PERM_ADMIN, $this->repository);
         $this->assertFalse($allowed);
     }
 
-    public function itReturnsFalseIfRegisteredUsersGroupIsNotContainedInTheAllowedOnes() {
+    public function itReturnsFalseIfRegisteredUsersGroupIsNotContainedInTheAllowedOnes()
+    {
         stub($this->permissions_manager)->getAuthorizedUgroups()->returns(array(
             array('ugroup_id' => ProjectUGroup::PROJECT_MEMBERS),
             array('ugroup_id' => ProjectUGroup::PROJECT_ADMIN),
@@ -62,7 +65,8 @@ class Git_Driver_Gerrit_UserFinder_areRegisteredUsersAllowedToTest extends Git_D
         $this->assertFalse($allowed);
     }
 
-    public function itReturnsTrueIfRegisteredUsersGroupIsContainedInTheAllowedOnes() {
+    public function itReturnsTrueIfRegisteredUsersGroupIsContainedInTheAllowedOnes()
+    {
         stub($this->permissions_manager)->getAuthorizedUgroups()->returns(array(
             array('ugroup_id' => ProjectUGroup::PROJECT_MEMBERS),
             array('ugroup_id' => ProjectUGroup::REGISTERED),
@@ -71,7 +75,8 @@ class Git_Driver_Gerrit_UserFinder_areRegisteredUsersAllowedToTest extends Git_D
         $this->assertTrue($allowed);
     }
 
-    public function itReturnsTrueIfAllUsersAreContainedInTheAllowedOnes() {
+    public function itReturnsTrueIfAllUsersAreContainedInTheAllowedOnes()
+    {
         stub($this->permissions_manager)->getAuthorizedUgroups()->returns(array(
             array('ugroup_id' => ProjectUGroup::ANONYMOUS),
         ));
@@ -86,7 +91,8 @@ class Git_Driver_Gerrit_UserFinder_getUGroupsTest extends TuleapTestCase {
     private $ugroup_manager;
     private $user_finder;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->permissions_manager = mock('PermissionsManager');
         $this->ugroup_manager      = mock('UGroupManager');
@@ -94,7 +100,8 @@ class Git_Driver_Gerrit_UserFinder_getUGroupsTest extends TuleapTestCase {
 
     }
 
-    public function itAsksPermissionsToPermissionsManager() {
+    public function itAsksPermissionsToPermissionsManager()
+    {
         $repository_id   = 12;
         $permission_type = GIT::PERM_READ;
 
@@ -104,7 +111,8 @@ class Git_Driver_Gerrit_UserFinder_getUGroupsTest extends TuleapTestCase {
         $this->user_finder->getUgroups($repository_id, $permission_type);
     }
 
-    public function itReturnsUGroupIdsFromPermissionsManager() {
+    public function itReturnsUGroupIdsFromPermissionsManager()
+    {
         $ugroup_id_120 = 120;
         $ugroup_id_115 = 115;
         stub($this->permissions_manager)->getAuthorizedUgroups()->returnsDar(array('ugroup_id' => $ugroup_id_115), array('ugroup_id' => $ugroup_id_120));
@@ -119,7 +127,8 @@ class Git_Driver_Gerrit_UserFinder_getUGroupsTest extends TuleapTestCase {
         );
     }
 
-    public function itAlwaysReturnsTheProjectAdminGroupWhenGitAdministratorsAreRequested() {
+    public function itAlwaysReturnsTheProjectAdminGroupWhenGitAdministratorsAreRequested()
+    {
         $project_admin_group_id = ProjectUGroup::PROJECT_ADMIN;
 
         $expected_ugroups = array($project_admin_group_id);
@@ -128,7 +137,8 @@ class Git_Driver_Gerrit_UserFinder_getUGroupsTest extends TuleapTestCase {
         $this->assertEqual($ugroups, $expected_ugroups);
     }
 
-    public function itDoesntJoinWithUGroupTableWhenItFetchesGroupPermissionsInOrderToReturnSomethingWhenWeAreDeletingTheGroup() {
+    public function itDoesntJoinWithUGroupTableWhenItFetchesGroupPermissionsInOrderToReturnSomethingWhenWeAreDeletingTheGroup()
+    {
         stub($this->permissions_manager)->getAuthorizedUgroups()->returnsEmptyDar();
 
         expect($this->permissions_manager)->getAuthorizedUgroups('*', '*', false)->once();

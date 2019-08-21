@@ -48,7 +48,8 @@ class FileImporterTest extends \PHPUnit\Framework\TestCase {
         );
     }
 
-    public function testParseAndImportLines() {
+    public function testParseAndImportLines()
+    {
         $this->parser
             ->expects($this->exactly(5))
             ->method('extract')
@@ -63,7 +64,8 @@ class FileImporterTest extends \PHPUnit\Framework\TestCase {
         $this->file_importer->import(__DIR__.'/_fixtures/xferlog');
     }
 
-    public function testItIgnoreOldLogs() {
+    public function testItIgnoreOldLogs()
+    {
         $this->dao
             ->expects($this->once())
             ->method('searchLatestEntryTimestamp')

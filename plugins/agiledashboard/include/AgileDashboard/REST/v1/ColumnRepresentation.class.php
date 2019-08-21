@@ -31,7 +31,8 @@ class AgileDashboard_ColumnRepresentation {
     /** @var String */
     public $color;
 
-    public function build(Cardwall_Column $column) {
+    public function build(Cardwall_Column $column)
+    {
         $this->id    = JsonCast::toInt($column->getId());
         $this->label = $column->getLabel();
         $this->color = ($column->isHeaderATLPColor())

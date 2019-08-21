@@ -20,11 +20,13 @@
 /**
  * @returns array the permissions for the ugroups
  */
-function plugin_tracker_permission_get_tracker_ugroups_permissions($group_id, $object_id) {
+function plugin_tracker_permission_get_tracker_ugroups_permissions($group_id, $object_id)
+{
     return permission_get_ugroups_permissions($group_id, $object_id, array(Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_FULL, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_SUBMITTER_ONLY), false);
 }
 
-function plugin_tracker_permission_process_update_fields_permissions($group_id, $atid, $fields, $permissions_wanted_by_user) {
+function plugin_tracker_permission_process_update_fields_permissions($group_id, $atid, $fields, $permissions_wanted_by_user)
+{
     //The actual permissions
 
     $stored_ugroups_permissions = plugin_tracker_permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fields);
@@ -403,7 +405,8 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
 
 }
 
-function plugin_tracker_permission_get_input_value_from_permission($perm) {
+function plugin_tracker_permission_get_input_value_from_permission($perm)
+{
     $ret = false;
     switch($perm) {
         case 'PLUGIN_TRACKER_FIELD_SUBMIT':
@@ -425,7 +428,8 @@ function plugin_tracker_permission_get_input_value_from_permission($perm) {
 /**
  * @returns array the permissions for the ugroups
  */
-function plugin_tracker_permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fields) {
+function plugin_tracker_permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fields)
+{
     $tracker_permissions = plugin_tracker_permission_get_tracker_ugroups_permissions($group_id, $atid);
     //Anonymous can access ?
     if (isset($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']])
@@ -500,7 +504,8 @@ function plugin_tracker_permission_get_field_tracker_ugroups_permissions($group_
     return $ugroups_permissions;
 }
 
-function plugin_tracker_permission_fetch_selection_field($permission_type, $object_id, $group_id, $html_name = "ugroups[]", $html_disabled = false, $selected = array()) {
+function plugin_tracker_permission_fetch_selection_field($permission_type, $object_id, $group_id, $html_name = "ugroups[]", $html_disabled = false, $selected = array())
+{
 
     $html = '';
     // Get ugroups already defined for this permission_type

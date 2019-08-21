@@ -28,42 +28,51 @@ class PluginInfo {
     var $pluginDescriptor;
     var $propertyDescriptors;
 
-    public function __construct($plugin) {
+    public function __construct($plugin)
+    {
         $this->plugin              = $plugin;
         $this->propertyDescriptors = new Map();
     }
 
-    function setPluginDescriptor($descriptor) {
+    function setPluginDescriptor($descriptor)
+    {
         $this->pluginDescriptor = $descriptor;
     }
 
     /** @return PluginDescriptor */
-    public function getPluginDescriptor() {
+    public function getPluginDescriptor()
+    {
         if (!is_a($this->pluginDescriptor, 'PluginDescriptor')) {
             $this->setPluginDescriptor(new PluginDescriptor('', '', ''));
         }
         return $this->pluginDescriptor;
     }
-    function getPropertyDescriptors() {
+    function getPropertyDescriptors()
+    {
         return $this->propertyDescriptors;
     }
 
-    function _addPropertyDescriptor($descriptor) {
+    function _addPropertyDescriptor($descriptor)
+    {
         $name = $descriptor->getName();
         $this->propertyDescriptors->put($name, $descriptor);
     }
-    function _removePropertyDescriptor($descriptor) {
+    function _removePropertyDescriptor($descriptor)
+    {
         $name = $descriptor->getName();
         return $this->propertyDescriptors->remove($name, $descriptor);
     }
 
-    function loadProperties() {
+    function loadProperties()
+    {
     }
 
-    function saveProperties() {
+    function saveProperties()
+    {
     }
 
-    function getPropertyDescriptorForName($name) {
+    function getPropertyDescriptorForName($name)
+    {
         $n =  $name;
         return $this->propertyDescriptors->get($n);
     }

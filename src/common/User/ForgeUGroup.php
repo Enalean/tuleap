@@ -28,21 +28,25 @@ class User_ForgeUGroup implements User_UGroup {
 
     private $description;
 
-    public function __construct($id, $name, $description) {
+    public function __construct($id, $name, $description)
+    {
         $this->id          = $id;
         $this->name        = NameTranslator::getUserGroupDisplayName($name);
         $this->description = $description;
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->description;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 

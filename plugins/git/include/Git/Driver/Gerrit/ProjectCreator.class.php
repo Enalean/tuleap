@@ -147,7 +147,8 @@ class Git_Driver_Gerrit_ProjectCreator {
      * @throws Git_Driver_Gerrit_Exception
      * @throws Git_Command_Exception
      */
-    public function createGerritProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository, $template_id) {
+    public function createGerritProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository, $template_id)
+    {
         $project      = $repository->getProject();
         $project_name = $project->getUnixName();
         $ugroups      = $this->ugroup_manager->getUGroups($project);
@@ -178,7 +179,8 @@ class Git_Driver_Gerrit_ProjectCreator {
         return $gerrit_project_name;
     }
 
-    public function finalizeGerritProjectCreation(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository, $template_id) {
+    public function finalizeGerritProjectCreation(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository, $template_id)
+    {
         $gerrit_project_url = $this->getGerritProjectUrl($gerrit_server, $repository);
 
         $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
@@ -188,7 +190,8 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
 
-    public function checkTemplateIsAvailableForProject($template_id, GitRepository $repository) {
+    public function checkTemplateIsAvailableForProject($template_id, GitRepository $repository)
+    {
         $available_templates = $this->template_factory->getTemplatesAvailableForRepository($repository);
 
         foreach ($available_templates as $template) {
@@ -200,7 +203,8 @@ class Git_Driver_Gerrit_ProjectCreator {
         return false;
     }
 
-    private function applyTemplateIfAnySelected($template_id, GitRepository $repository) {
+    private function applyTemplateIfAnySelected($template_id, GitRepository $repository)
+    {
         if ($this->noFurtherPermissionsToApply($template_id)) {
             return;
         }
@@ -208,39 +212,47 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->applyTemplate($this->template_factory->getTemplate($template_id, $repository), $repository);
     }
 
-    private function noFurtherPermissionsToApply($template_id) {
+    private function noFurtherPermissionsToApply($template_id)
+    {
         return $this->noAccessRightsMigrationRequested($template_id) || $this->defaultPermissionsMigrationRequested($template_id);
     }
 
-    private function applyTemplate(Git_Driver_Gerrit_Template_Template $template, GitRepository $repository) {
+    private function applyTemplate(Git_Driver_Gerrit_Template_Template $template, GitRepository $repository)
+    {
         $this->removeProjectConfig();
         $this->dumpTemplateContent($this->template_processor->processTemplate($template, $repository->getProject()));
     }
 
-    private function removeProjectConfig() {
+    private function removeProjectConfig()
+    {
         `cd $this->dir; rm project.config`;
     }
 
-    private function dumpTemplateContent($template_content) {
+    private function dumpTemplateContent($template_content)
+    {
         file_put_contents($this->dir.'/project.config', $template_content);
     }
 
-    private function noAccessRightsMigrationRequested($template_id) {
+    private function noAccessRightsMigrationRequested($template_id)
+    {
         return $template_id == self::NO_PERMISSIONS_MIGRATION;
     }
 
-    private function getGerritProjectUrl(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
+    private function getGerritProjectUrl(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository)
+    {
         return $gerrit_server->getCloneSSHUrl($this->driver_factory->getDriver($gerrit_server)->getGerritProjectName($repository));
     }
 
-    protected function exportGitBranches(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project, GitRepository $repository) {
+    protected function exportGitBranches(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project, GitRepository $repository)
+    {
         $gerrit_project_url = $gerrit_server->getCloneSSHUrl($gerrit_project);
 
         $this->git_exec->setWorkTreeAndGitDir($repository->getFullPath(), $repository->getFullPath());
         $this->git_exec->exportBranchesAndTags($gerrit_project_url);
     }
 
-    private function pushFullTuleapAccessRightsToGerrit(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, array $ugroups, $replication_group, $template_id) {
+    private function pushFullTuleapAccessRightsToGerrit(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, array $ugroups, $replication_group, $template_id)
+    {
         foreach ($ugroups as $ugroup) {
             $this->addGroupToGroupFile($gerrit_server, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName());
         }
@@ -254,11 +266,13 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->pushToServer();
     }
 
-    private function defaultPermissionsMigrationRequested($template_id) {
+    private function defaultPermissionsMigrationRequested($template_id)
+    {
         return $template_id == self::DEFAULT_PERMISSIONS_MIGRATION;
     }
 
-    private function cloneGerritProjectConfig(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url) {
+    private function cloneGerritProjectConfig(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url)
+    {
         $this->git_exec->setWorkTree($this->dir);
         if (! is_dir($this->dir)) {
             mkdir($this->dir);
@@ -278,14 +292,16 @@ class Git_Driver_Gerrit_ProjectCreator {
      *
      * @throw Git_Driver_Gerrit_RemoteSSHCommandFailure
      */
-    public function getGerritConfig(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url) {
+    public function getGerritConfig(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url)
+    {
         $this->driver_factory->getDriver($gerrit_server)->ping($gerrit_server);
         $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
 
         return file_get_contents($this->dir . '/project.config');
     }
 
-    private function addGroupToGroupFile(Git_RemoteServer_GerritServer $gerrit_server, $group) {
+    private function addGroupToGroupFile(Git_RemoteServer_GerritServer $gerrit_server, $group)
+    {
         try {
             $group_uuid = $this->membership_manager->getGroupUUIDByNameOnServer($gerrit_server, $group);
             $this->addGroupDefinitionToGroupFile($group_uuid, $group);
@@ -295,15 +311,18 @@ class Git_Driver_Gerrit_ProjectCreator {
         }
     }
 
-    private function addRegisteredUsersGroupToGroupFile() {
+    private function addRegisteredUsersGroupToGroupFile()
+    {
         $this->addGroupDefinitionToGroupFile('global:Registered-Users', self::GROUP_REGISTERED_USERS);
     }
 
-    private function addGroupDefinitionToGroupFile($uuid, $group_name) {
+    private function addGroupDefinitionToGroupFile($uuid, $group_name)
+    {
         file_put_contents("$this->dir/groups", "$uuid\t$group_name\n", FILE_APPEND);
     }
 
-    private function addPermissionsToProjectConf(GitRepository $repository, array $ugroups, $replication_group) {
+    private function addPermissionsToProjectConf(GitRepository $repository, array $ugroups, $replication_group)
+    {
         // https://groups.google.com/d/msg/repo-discuss/jTAY2ApcTGU/DPZz8k0ZoUMJ
         // Project owners are those who own refs/* within that project... which
         // means they can modify the permissions for any reference in the
@@ -378,13 +397,15 @@ class Git_Driver_Gerrit_ProjectCreator {
         }
     }
 
-    private function removeMinimalPermissions() {
+    private function removeMinimalPermissions()
+    {
         foreach (self::$MIGRATION_MINIMAL_PERMISSIONS as $permission) {
             $this->removeFromSection($permission['reference'], $permission['permission'], $permission['group']);
         }
     }
 
-    private function pushMinimalPermissionsToMigrateTuleapRepoOnGerrit(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
+    private function pushMinimalPermissionsToMigrateTuleapRepoOnGerrit(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository)
+    {
         $this->cloneGerritProjectConfig($gerrit_server, $this->getGerritProjectUrl($gerrit_server, $repository));
 
         foreach (self::$MIGRATION_MINIMAL_PERMISSIONS as $permission) {
@@ -395,22 +416,26 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->pushToServer();
     }
 
-    private function shouldAddRegisteredUsersToGroup(GitRepository $repository, $permission, $group) {
+    private function shouldAddRegisteredUsersToGroup(GitRepository $repository, $permission, $group)
+    {
         return array_intersect(array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED), $group) &&
             $repository->getProject()->isPublic() &&
             $this->user_finder->areRegisteredUsersAllowedTo($permission, $repository);
     }
 
-    private function removeFromSection($section, $permission, $value) {
+    private function removeFromSection($section, $permission, $value)
+    {
         $this->git_exec->setWorkTree($this->dir);
         $this->git_exec->configFile($this->dir.'/project.config', "--unset access.$section/*.$permission '$value'");
     }
 
-    private function addToSection($section, $permission, $value) {
+    private function addToSection($section, $permission, $value)
+    {
         $this->git_exec->setWorkTree($this->dir);
         $this->git_exec->configFile($this->dir.'/project.config', "--add access.$section/*.$permission '$value'");
     }
-    private function pushToServer() {
+    private function pushToServer()
+    {
         $this->git_exec->setWorkTree($this->dir);
         $this->git_exec->add($this->dir.'/project.config');
         $this->git_exec->add($this->dir.'/groups');
@@ -418,7 +443,8 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->git_exec->push('origin HEAD:refs/meta/config');
     }
 
-    public function removeTemporaryDirectory() {
+    public function removeTemporaryDirectory()
+    {
         $backend = Backend::instance('System');
         if (is_dir($this->dir)) {
             $backend->recurseDeleteInDir($this->dir);

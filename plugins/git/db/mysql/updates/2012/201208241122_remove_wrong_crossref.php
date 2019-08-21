@@ -23,7 +23,8 @@ class b201208241122_remove_wrong_crossref extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Remove all wrong cross ref where git is the source
 EOT;
@@ -34,7 +35,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -43,7 +45,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = 'DELETE FROM cross_references
                 WHERE source_type = "git_commit"
                   AND source_id LIKE "/%"';

@@ -18,13 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function getSystemOutput($cmd) {
+function getSystemOutput($cmd)
+{
     $result;
     exec($cmd, $result);
     return $result;
 }
 
-function getCandidatePaths() {
+function getCandidatePaths()
+{
     $plugins     = getSystemOutput('find plugins -mindepth 1 -maxdepth 1 -type d');
     $themes      = getSystemOutput('find src/www/themes -mindepth 1 -maxdepth 1 -type d ! -path *common');
     $other_paths = array('src/www/soap');

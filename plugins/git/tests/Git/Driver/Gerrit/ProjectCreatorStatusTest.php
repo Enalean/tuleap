@@ -26,7 +26,8 @@ class ProjectCreatorStatusTest extends TuleapTestCase {
     private $repository;
     private $gerrit_status;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->dao        = \Mockery::spy(Git_Driver_Gerrit_ProjectCreatorStatusDao::class);
@@ -35,7 +36,8 @@ class ProjectCreatorStatusTest extends TuleapTestCase {
         $this->gerrit_status = new Git_Driver_Gerrit_ProjectCreatorStatus($this->dao);
     }
 
-    public function itIsStatusErrorWhenGitRepositoryIsError() {
+    public function itIsStatusErrorWhenGitRepositoryIsError()
+    {
         stub($this->repository)->isMigratedToGerrit()->returns(true);
         stub($this->repository)->getMigrationStatus()->returns(Git_Driver_Gerrit_ProjectCreatorStatus::ERROR);
 
@@ -44,7 +46,8 @@ class ProjectCreatorStatusTest extends TuleapTestCase {
 
     // We don't know what project did with their repo until this change
     // So we assume everything is OK.
-    public function itHasStatusDoneWhenOnlySystemEventIsErrorForLegacy() {
+    public function itHasStatusDoneWhenOnlySystemEventIsErrorForLegacy()
+    {
         stub($this->repository)->isMigratedToGerrit()->returns(true);
         stub($this->repository)->getMigrationStatus()->returns(null);
 
@@ -61,7 +64,8 @@ class ProjectCreatorStatusTest extends TuleapTestCase {
 
     // We don't know what project did with their repo until this change
     // So we assume everything is OK.
-    public function itHasStatusDoneWhenSystemEventIsNoLongerPartOfTheDB() {
+    public function itHasStatusDoneWhenSystemEventIsNoLongerPartOfTheDB()
+    {
         stub($this->repository)->isMigratedToGerrit()->returns(true);
         stub($this->repository)->getMigrationStatus()->returns(null);
 
@@ -72,7 +76,8 @@ class ProjectCreatorStatusTest extends TuleapTestCase {
 
     // We don't know what project did with their repo until this change
     // So we assume everything is OK.
-    public function itHasStatusDoneWhenOnlySystemEventIsWarningForLegacy() {
+    public function itHasStatusDoneWhenOnlySystemEventIsWarningForLegacy()
+    {
         stub($this->repository)->isMigratedToGerrit()->returns(true);
         stub($this->repository)->getMigrationStatus()->returns(null);
 
@@ -87,7 +92,8 @@ class ProjectCreatorStatusTest extends TuleapTestCase {
         $this->assertEqual(Git_Driver_Gerrit_ProjectCreatorStatus::DONE, $this->gerrit_status->getStatus($this->repository));
     }
 
-    public function itHasStatusDoneWhenSystemEventIsDone() {
+    public function itHasStatusDoneWhenSystemEventIsDone()
+    {
         stub($this->repository)->isMigratedToGerrit()->returns(true);
         stub($this->repository)->getMigrationStatus()->returns(null);
 
@@ -102,7 +108,8 @@ class ProjectCreatorStatusTest extends TuleapTestCase {
         $this->assertEqual(Git_Driver_Gerrit_ProjectCreatorStatus::DONE, $this->gerrit_status->getStatus($this->repository));
     }
 
-    public function itHasStatusDoneWhenRepositoryIsExplicitlyMarkedAsDone() {
+    public function itHasStatusDoneWhenRepositoryIsExplicitlyMarkedAsDone()
+    {
         stub($this->repository)->isMigratedToGerrit()->returns(true);
         stub($this->repository)->getMigrationStatus()->returns(Git_Driver_Gerrit_ProjectCreatorStatus::DONE);
 
@@ -111,7 +118,8 @@ class ProjectCreatorStatusTest extends TuleapTestCase {
         $this->assertEqual(Git_Driver_Gerrit_ProjectCreatorStatus::DONE, $this->gerrit_status->getStatus($this->repository));
     }
 
-    public function itHasStatusQueueWhenSystemEventIsNew() {
+    public function itHasStatusQueueWhenSystemEventIsNew()
+    {
         stub($this->repository)->isMigratedToGerrit()->returns(false);
         stub($this->repository)->getMigrationStatus()->returns(null);
 
@@ -126,7 +134,8 @@ class ProjectCreatorStatusTest extends TuleapTestCase {
         $this->assertEqual(Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE, $this->gerrit_status->getStatus($this->repository));
     }
 
-    public function itHasStatusQueueWhenSystemEventIsRunning() {
+    public function itHasStatusQueueWhenSystemEventIsRunning()
+    {
         stub($this->repository)->isMigratedToGerrit()->returns(true);
         stub($this->repository)->getMigrationStatus()->returns(null);
 
@@ -141,7 +150,8 @@ class ProjectCreatorStatusTest extends TuleapTestCase {
         $this->assertEqual(Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE, $this->gerrit_status->getStatus($this->repository));
     }
 
-    public function itHasStatusNullWhenRepositoryIsNotMigrated() {
+    public function itHasStatusNullWhenRepositoryIsNotMigrated()
+    {
         stub($this->repository)->isMigratedToGerrit()->returns(false);
         stub($this->repository)->getMigrationStatus()->returns(Git_Driver_Gerrit_ProjectCreatorStatus::DONE);
 

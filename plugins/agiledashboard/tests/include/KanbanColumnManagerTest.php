@@ -24,7 +24,8 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class AgileDashboard_KanbanColumnManagerTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->project_id = 101;
@@ -52,13 +53,15 @@ class AgileDashboard_KanbanColumnManagerTest extends TuleapTestCase {
         $this->kanban_patch_representation->wip_limit = $this->wip_limit;
     }
 
-    public function itUpdatesTheWIPLimit() {
+    public function itUpdatesTheWIPLimit()
+    {
         expect($this->column_dao)->setColumnWipLimit($this->kanban_id, $this->column_id, $this->wip_limit)->once();
 
         $this->kanban_column_manager->updateWipLimit($this->user, $this->kanban, $this->column, $this->wip_limit);
     }
 
-    public function itThrowsAnExceptionIfUserNotAdmin() {
+    public function itThrowsAnExceptionIfUserNotAdmin()
+    {
         stub($this->kanban_actions_checker)->checkUserCanAdministrate($this->user, $this->kanban)->throws(new AgileDashboard_UserNotAdminException($this->user));
 
         expect($this->column_dao)->setColumnWipLimit($this->kanban_id, $this->column_id, $this->wip_limit)->never();

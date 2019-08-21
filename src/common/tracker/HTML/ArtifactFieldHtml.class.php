@@ -35,7 +35,8 @@ class ArtifactFieldHtml extends ArtifactField {
      *  Copy constructor
      *
      */
-    function __construct($art_field) {
+    function __construct($art_field)
+    {
         $this->field_id = $art_field->field_id;
         $this->field_name = $art_field->field_name;
         $this->data_type = $art_field->data_type;
@@ -59,7 +60,8 @@ class ArtifactFieldHtml extends ArtifactField {
      *
      * Usefull in HTML Mail context when we need (read) HTML but no Javascript
      */
-    function disableJavascript() {
+    function disableJavascript()
+    {
         $this->isJavascriptEnabled = false;
     }
 
@@ -72,7 +74,8 @@ class ArtifactFieldHtml extends ArtifactField {
      *
      *    @return    string
      */
-    function labelDisplay($break=false,$ascii=false,$tooltip=false) {
+    function labelDisplay($break=false,$ascii=false,$tooltip=false)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $output = SimpleSanitizer::unsanitize($this->getLabel()).': ';
         if (!$ascii) {
@@ -101,7 +104,8 @@ class ArtifactFieldHtml extends ArtifactField {
      *  @param display: define whether the MB will be displayed or not: In case of RO, it will not be displayed
      *    @return    string
      */
-    function multipleFieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none=0,$show_any=false, $text_any=0,$show_unchanged=false,$text_unchanged=0,$show_value=false, $display=true) {
+    function multipleFieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none=0,$show_any=false, $text_any=0,$show_unchanged=false,$text_unchanged=0,$show_value=false, $display=true)
+    {
         global $Language;
          $hp = Codendi_HTMLPurifier::instance();
         if (!$text_none) $text_none=$Language->getText('global','none');
@@ -146,7 +150,8 @@ class ArtifactFieldHtml extends ArtifactField {
         }
     }
 
-    function _isValueDefaultValue($value, $default_value) {
+    function _isValueDefaultValue($value, $default_value)
+    {
         return (is_array($default_value) && in_array($value, $default_value)) || $value == $default_value;
     }
     /**
@@ -161,7 +166,8 @@ class ArtifactFieldHtml extends ArtifactField {
      * @param $default_value
      * @param $text_unchanged
      */
-    function _getValuesAsJavascript($values, $default_value, $text_unchanged=false) {
+    function _getValuesAsJavascript($values, $default_value, $text_unchanged=false)
+    {
         global $Language;
         $hp = Codendi_HTMLPurifier::instance();
             $output  = "";
@@ -196,7 +202,8 @@ class ArtifactFieldHtml extends ArtifactField {
      *
      *    @return    string
      */
-    function fieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none=0,$show_any=false,$text_any=0,$show_unchanged=false,$text_unchanged=0, $display = true) {
+    function fieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none=0,$show_any=false,$text_any=0,$show_unchanged=false,$text_unchanged=0, $display = true)
+    {
         global $Language;
          $hp = Codendi_HTMLPurifier::instance();
         if (!$text_none) $text_none=$Language->getText('global','none');
@@ -268,7 +275,8 @@ class ArtifactFieldHtml extends ArtifactField {
      *
      *    @return    string
      */
-    function multipleFieldDate($date_begin='',$date_end='',$size=10,$maxlength=10,$ro=false) {
+    function multipleFieldDate($date_begin='',$date_end='',$size=10,$maxlength=10,$ro=false)
+    {
         global $Language;
 
         // CAUTION!!!! The Javascript below assumes that the date always appear
@@ -303,7 +311,8 @@ class ArtifactFieldHtml extends ArtifactField {
      *
      *    @return    string
      */
-    function fieldDateOperator($value='',$ro=false) {
+    function fieldDateOperator($value='',$ro=false)
+    {
         global $Language;
          $hp = Codendi_HTMLPurifier::instance();
         if ($ro) {
@@ -330,7 +339,8 @@ class ArtifactFieldHtml extends ArtifactField {
      *
      *    @return    string
      */
-    function fieldDate($value='',$ro=false,$size='10',$maxlength='10',$form_name='artifact_form',$today=false) {
+    function fieldDate($value='',$ro=false,$size='10',$maxlength='10',$form_name='artifact_form',$today=false)
+    {
         global $Language;
          $hp = Codendi_HTMLPurifier::instance();
         if ($ro)
@@ -352,7 +362,8 @@ class ArtifactFieldHtml extends ArtifactField {
      *
      *    @return    string
      */
-    function fieldText($value='',$size=0,$maxlength=0) {
+    function fieldText($value='',$size=0,$maxlength=0)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         if (!$size || !$maxlength)
         list($size, $maxlength) = $this->getGlobalDisplaySize();
@@ -388,7 +399,8 @@ class ArtifactFieldHtml extends ArtifactField {
      *
      *    @return    string
      */
-    function fieldTextarea($value='',$cols=0,$rows=0) {
+    function fieldTextarea($value='',$cols=0,$rows=0)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         if (!$cols || !$rows)
         list($cols, $rows) = $this->getGlobalDisplaySize();
@@ -423,13 +435,21 @@ class ArtifactFieldHtml extends ArtifactField {
      *
      *    @return    string
      */
-    function display($group_artifact_id, $value='xyxy',
-                   $break=false, $label=true, $ro=false, $ascii=false,
-                   $show_none=false, $text_none=0,
-                   $show_any=false, $text_any=0,
-                   $show_unchanged=false,$text_unchanged=0,
-                   $htmlEmail = true,
-                   $project_id = 0
+    function display(
+        $group_artifact_id,
+        $value='xyxy',
+        $break=false,
+        $label=true,
+        $ro=false,
+        $ascii=false,
+        $show_none=false,
+        $text_none=0,
+        $show_any=false,
+        $text_any=0,
+        $show_unchanged=false,
+        $text_unchanged=0,
+        $htmlEmail = true,
+        $project_id = 0
     ) {
         global $Language;
         $hp = Codendi_HTMLPurifier::instance();

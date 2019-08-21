@@ -31,7 +31,8 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
     private $planning1;
     private $planning2;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->planning1 = mock('Planning');
@@ -72,7 +73,8 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         $this->planning_permissions_manager = mock('PlanningPermissionsManager');
     }
 
-    public function itUpdatesASimpleXMlElement() {
+    public function itUpdatesASimpleXMlElement()
+    {
         $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
 
         $xml = $this->xml_tree;
@@ -81,7 +83,8 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         $this->assertEqual($xml, $this->xml_tree);
     }
 
-    public function itCreatesAnXMLEntryForEachPlanningShortAccess() {
+    public function itCreatesAnXMLEntryForEachPlanningShortAccess()
+    {
         $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
         $exporter->export($this->xml_tree, $this->plannings);
 
@@ -101,7 +104,8 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         }
     }
 
-    public function itAddsAttributesForEachPlanningShortAccess() {
+    public function itAddsAttributesForEachPlanningShortAccess()
+    {
         $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
         $exporter->export($this->xml_tree, $this->plannings);
 
@@ -125,7 +129,8 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         }
     }
 
-    public function itThrowsAnExceptionIfPlanningNameIsEmpty() {
+    public function itThrowsAnExceptionIfPlanningNameIsEmpty()
+    {
         $planning = mock('Planning');
 
         $plannings = array(
@@ -147,7 +152,8 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         $exporter->export($this->xml_tree, $plannings);
     }
 
-    public function itThrowsAnExceptionIfPlanningTitleIsEmpty() {
+    public function itThrowsAnExceptionIfPlanningTitleIsEmpty()
+    {
         $planning = mock('Planning');
 
         $plannings = array(
@@ -169,7 +175,8 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         $exporter->export($this->xml_tree, $plannings);
     }
 
-    public function itThrowsAnExceptionIfBacklogTitleIsEmpty() {
+    public function itThrowsAnExceptionIfBacklogTitleIsEmpty()
+    {
         $planning = mock('Planning');
 
         $plannings = array(
@@ -191,7 +198,8 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         $exporter->export($this->xml_tree, $plannings);
     }
 
-    public function itThrowsAnExceptionIfPlanningTrackerIdIsEmpty() {
+    public function itThrowsAnExceptionIfPlanningTrackerIdIsEmpty()
+    {
         $planning = mock('Planning');
 
         $plannings = array(
@@ -213,7 +221,8 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         $exporter->export($this->xml_tree, $plannings);
     }
 
-    public function itThrowsAnExceptionIfBacklogTrackerIdIsEmpty() {
+    public function itThrowsAnExceptionIfBacklogTrackerIdIsEmpty()
+    {
         $planning = mock('Planning');
 
         $plannings = array(
@@ -235,7 +244,8 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         $exporter->export($this->xml_tree, $plannings);
     }
 
-    public function itThrowsAnExceptionIfXmlGeneratedIsNotValid() {
+    public function itThrowsAnExceptionIfXmlGeneratedIsNotValid()
+    {
         $xml_validator = stub('XML_RNGValidator')->validate()->throws(new XML_ParseException('', array(), array()));
         $exporter = new AgileDashboard_XMLExporter($xml_validator, $this->planning_permissions_manager);
         $this->expectException('XML_ParseException');

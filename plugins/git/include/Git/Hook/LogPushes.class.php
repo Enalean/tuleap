@@ -29,11 +29,13 @@ class Git_Hook_LogPushes {
     /** @var GitDao */
     private $dao;
 
-    public function __construct(GitDao $dao) {
+    public function __construct(GitDao $dao)
+    {
         $this->dao = $dao;
     }
 
-    public function executeForRepository(Git_Hook_PushDetails $push_details) {
+    public function executeForRepository(Git_Hook_PushDetails $push_details)
+    {
         $this->dao->logGitPush(
             $push_details->getRepository()->getId(),
             $push_details->getUser()->getId(),

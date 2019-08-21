@@ -21,10 +21,12 @@
 Mock::generate('Plugin');
 Mock::generate('PropertyDescriptor');
 class TestPluginInfo extends PluginInfo {
-    function addPropertyDescriptor(&$desc) {
+    function addPropertyDescriptor(&$desc)
+    {
         $this->_addPropertyDescriptor($desc);
     }
-    function removePropertyDescriptor(&$desc) {
+    function removePropertyDescriptor(&$desc)
+    {
         $this->_removePropertyDescriptor($desc);
     }
 }
@@ -37,7 +39,8 @@ class TestPluginInfo extends PluginInfo {
  */
 class PluginInfoTest extends TuleapTestCase {
 
-    function testPluginDescriptor() {
+    function testPluginDescriptor()
+    {
         $p  = new MockPlugin($this);
         $pi = new PluginInfo($p);
         $pd = $pi->getPluginDescriptor();
@@ -54,7 +57,8 @@ class PluginInfoTest extends TuleapTestCase {
 
     }
 
-    function testPropertyDescriptor() {
+    function testPropertyDescriptor()
+    {
         $name_d1 = 'd1';
         $name_d2 = 'd2';
         $p  = new MockPlugin($this);

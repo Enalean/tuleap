@@ -20,11 +20,13 @@
  */
 
 class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject {
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_field_openlist_value';
     }
-    public function searchById($field_id, $id) {
+    public function searchById($field_id, $id)
+    {
         $field_id  = $this->da->escapeInt($field_id);
         $id        = $this->da->escapeInt($id);
         $sql = "SELECT *
@@ -34,7 +36,8 @@ class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchByFieldId($field_id) {
+    public function searchByFieldId($field_id)
+    {
         $field_id  = $this->da->escapeInt($field_id);
 
         $sql = "SELECT *
@@ -43,7 +46,8 @@ class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function save($id, $field_id, $label) {
+    public function save($id, $field_id, $label)
+    {
         $id       = $this->da->escapeInt($id);
         $field_id = $this->da->escapeInt($field_id);
         $label    = $this->da->quoteSmart($label);
@@ -54,7 +58,8 @@ class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function create($field_id, $label) {
+    public function create($field_id, $label)
+    {
         $field_id = $this->da->escapeInt($field_id);
         $label    = $this->da->quoteSmart($label);
         $sql = "INSERT INTO $this->table_name (field_id, label)
@@ -62,7 +67,8 @@ class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
 
-    public function searchByKeyword($field_id, $keyword, $limit = 10) {
+    public function searchByKeyword($field_id, $keyword, $limit = 10)
+    {
         $field_id = $this->da->escapeInt($field_id);
         $limit = $this->da->escapeInt($limit);
         $keyword = $this->da->quoteLikeValueSurround($keyword);
@@ -74,7 +80,8 @@ class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchByExactLabel($field_id, $label) {
+    public function searchByExactLabel($field_id, $label)
+    {
         $field_id = $this->da->escapeInt($field_id);
         $label    = $this->da->quoteSmart($label);
         $sql = "SELECT *

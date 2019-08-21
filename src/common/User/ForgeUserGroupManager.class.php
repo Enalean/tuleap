@@ -42,7 +42,8 @@ class User_ForgeUserGroupManager
     /**
      * @return bool
      */
-    public function deleteForgeUserGroup(User_ForgeUGroup $user_group) {
+    public function deleteForgeUserGroup(User_ForgeUGroup $user_group)
+    {
         if ($this->permission_checker->checkUGroupIsNotTheOnlyOneWithPlatformAdministrationPermission($user_group)) {
             throw new GroupCannotRemoveLastAdministrationPermission();
         }
@@ -54,7 +55,8 @@ class User_ForgeUserGroupManager
      * @throws User_UserGroupNotFoundException
      * @throws User_UserGroupNameInvalidException
      */
-    public function updateUserGroup(User_ForgeUGroup $user_group) {
+    public function updateUserGroup(User_ForgeUGroup $user_group)
+    {
         $row = $this->dao->getForgeUGroup($user_group->getId());
         if (! $row) {
             throw new User_UserGroupNotFoundException($user_group->getId());
@@ -71,7 +73,8 @@ class User_ForgeUserGroupManager
         );
     }
 
-    private function userGroupHasModifications(User_ForgeUGroup $user_group, $row) {
+    private function userGroupHasModifications(User_ForgeUGroup $user_group, $row)
+    {
         return $user_group->getName() != $row['name'] ||
             $user_group->getDescription() != $row['description'];
     }

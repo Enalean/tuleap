@@ -20,7 +20,8 @@
 
 class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest  extends TuleapTestCase {
 
-    public function itStripsVerticalSpaces() {
+    public function itStripsVerticalSpaces()
+    {
         $bad_text = 'blockingment visiblesLe guidage de';
 
         $returned = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($bad_text);
@@ -28,7 +29,8 @@ class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest  extends Tule
         $this->assertEqual($returned, 'blockingment visibles Le guidage de');
     }
 
-    public function itReplacesOtherBadCharacters() {
+    public function itReplacesOtherBadCharacters()
+    {
         $bad_chars =  array(
            "\x01" => ' ',
            "\x02" => ' ',
@@ -55,19 +57,22 @@ class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest  extends Tule
         }
     }
 
-    public function itDoesntRemoveGoodChars() {
+    public function itDoesntRemoveGoodChars()
+    {
         $str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789¶²&é"\'(-è_çà)=~#{[|`\^@]}£$ù%*µ,;:!?./§\'<>œÇêÊàÀÉ`È¡';
         $this->assertEqual($str, Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($str));
     }
 
-    public function itDoesntRemoveGoodCharsInAnotherEncoding() {
+    public function itDoesntRemoveGoodCharsInAnotherEncoding()
+    {
         $str = 'REPLACEabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789¶²&é"\'(-è_çà)=~#{[|`\^@]}£$ù%*µ,;:!?./§\'<>œÇêÊàÀÉ`È¡';
         $str = mb_convert_encoding($str, 'ISO-8859-1', 'ISO-8859-1');
 
         $this->assertEqual($str, Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($str));
     }
 
-    public function itReplacesBadCharacters() {
+    public function itReplacesBadCharacters()
+    {
         $bad_chars =  array(
             "\x01" => ' ',
             "\x02" => ' ',

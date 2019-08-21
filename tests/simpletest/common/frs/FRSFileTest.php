@@ -20,7 +20,8 @@
 
 class FRSFileTest extends TuleapTestCase {
 
-    function testGetContentWholeFile() {
+    function testGetContentWholeFile()
+    {
         $file = new FRSFile();
         $file->file_location = dirname(__FILE__).'/_fixtures/file_sample';
         $file->file_size     = filesize(dirname(__FILE__).'/_fixtures/file_sample');
@@ -28,28 +29,32 @@ class FRSFileTest extends TuleapTestCase {
         $this->assertIdentical(file_get_contents(dirname(__FILE__).'/_fixtures/file_sample'), $file->getContent());
     }
 
-    function testGetContentWithStartOffset() {
+    function testGetContentWithStartOffset()
+    {
         $file = new FRSFile();
         $file->file_location = dirname(__FILE__).'/_fixtures/file_sample';
 
         $this->assertIdentical('"The quick', $file->getContent(0, 10));
     }
 
-    function testGetContentWithOffsetAndSize() {
+    function testGetContentWithOffsetAndSize()
+    {
         $file = new FRSFile();
         $file->file_location = dirname(__FILE__).'/_fixtures/file_sample';
 
         $this->assertIdentical(' brown fox', $file->getContent(10, 10));
     }
 
-    function testGetContentWithOffsetAndEof() {
+    function testGetContentWithOffsetAndEof()
+    {
         $file = new FRSFile();
         $file->file_location = dirname(__FILE__).'/_fixtures/file_sample';
 
         $this->assertIdentical("arts.\n", $file->getContent(380, 10));
     }
 
-    function testGetContentWholeByOffset() {
+    function testGetContentWholeByOffset()
+    {
         $file = new FRSFile();
         $file->file_location = dirname(__FILE__).'/_fixtures/file_sample';
 
@@ -60,7 +65,8 @@ class FRSFileTest extends TuleapTestCase {
         $this->assertIdentical(file_get_contents(dirname(__FILE__).'/_fixtures/file_sample'), $content);
     }
 
-    function testGetfilePath() {
+    function testGetfilePath()
+    {
         $file = new FRSFile();
         $filepath = 'path';
         $file->setFilePath($filepath);

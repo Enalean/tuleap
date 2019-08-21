@@ -35,7 +35,8 @@ class LinePlot extends Plot{
 
     //---------------
     // CONSTRUCTOR
-    function __construct($datay,$datax=false) {
+    function __construct($datay,$datax=false)
+    {
         parent::__construct($datay,$datax);
         $this->mark = new PlotMark() ;
         $this->color = ColorFactory::getColor();
@@ -44,41 +45,50 @@ class LinePlot extends Plot{
     //---------------
     // PUBLIC METHODS
 
-    function SetFilled($aFlg=true) {
+    function SetFilled($aFlg=true)
+    {
         $this->filled = $aFlg;
     }
 
-    function SetBarCenter($aFlag=true) {
+    function SetBarCenter($aFlag=true)
+    {
         $this->barcenter=$aFlag;
     }
 
-    function SetStyle($aStyle) {
+    function SetStyle($aStyle)
+    {
         $this->line_style=$aStyle;
     }
 
-    function SetStepStyle($aFlag=true) {
+    function SetStepStyle($aFlag=true)
+    {
         $this->step_style = $aFlag;
     }
 
-    function SetColor($aColor) {
+    function SetColor($aColor)
+    {
         parent::SetColor($aColor);
     }
 
-    function SetFillFromYMin($f=true) {
+    function SetFillFromYMin($f=true)
+    {
         $this->fillFromMin = $f ;
     }
 
-    function SetFillFromYMax($f=true) {
+    function SetFillFromYMax($f=true)
+    {
         $this->fillFromMax = $f ;
     }
 
-    function SetFillColor($aColor,$aFilled=true) {
+    function SetFillColor($aColor,$aFilled=true)
+    {
         //$this->color = $aColor;
         $this->fill_color=$aColor;
         $this->filled=$aFilled;
     }
 
-    function SetFillGradient($aFromColor,$aToColor,$aNumColors=100,$aFilled=true) {
+    function SetFillGradient($aFromColor,$aToColor,$aNumColors=100,$aFilled=true)
+    {
         $this->fillgrad_fromcolor = $aFromColor;
         $this->fillgrad_tocolor   = $aToColor;
         $this->fillgrad_numcolors = $aNumColors;
@@ -86,7 +96,8 @@ class LinePlot extends Plot{
         $this->fillgrad = true;
     }
 
-    function Legend($graph) {
+    function Legend($graph)
+    {
         if( $this->legend!="" ) {
             if( $this->filled && !$this->fillgrad ) {
                 $graph->legend->Add($this->legend,
@@ -106,7 +117,8 @@ class LinePlot extends Plot{
         }
     }
 
-    function AddArea($aMin=0,$aMax=0,$aFilled=LP_AREA_NOT_FILLED,$aColor="gray9",$aBorder=LP_AREA_BORDER) {
+    function AddArea($aMin=0,$aMax=0,$aFilled=LP_AREA_NOT_FILLED,$aColor="gray9",$aBorder=LP_AREA_BORDER)
+    {
         if($aMin > $aMax) {
             // swap
             $tmp = $aMin;
@@ -117,7 +129,8 @@ class LinePlot extends Plot{
     }
 
     // Gets called before any axis are stroked
-    function PreStrokeAdjust($graph) {
+    function PreStrokeAdjust($graph)
+    {
 
         // If another plot type have already adjusted the
         // offset we don't touch it.
@@ -136,11 +149,13 @@ class LinePlot extends Plot{
         }
     }
 
-    function SetFastStroke($aFlg=true) {
+    function SetFastStroke($aFlg=true)
+    {
         $this->iFastStroke = $aFlg;
     }
 
-    function FastStroke($img,$xscale,$yscale,$aStartPoint=0,$exist_x=true) {
+    function FastStroke($img,$xscale,$yscale,$aStartPoint=0,$exist_x=true)
+    {
         // An optimized stroke for many data points with no extra
         // features but 60% faster. You can't have values or line styles, or null
         // values in plots.
@@ -181,7 +196,8 @@ class LinePlot extends Plot{
         $img->Polygon($cord,false,true);
     }
 
-    function Stroke($img,$xscale,$yscale) {
+    function Stroke($img,$xscale,$yscale)
+    {
         $idx=0;
         $numpoints=count($this->coords[0]);
         if( isset($this->coords[1]) ) {
@@ -471,7 +487,8 @@ class AccLinePlot extends Plot {
     private $iStartEndZero=true;
     //---------------
     // CONSTRUCTOR
-    function __construct($plots) {
+    function __construct($plots)
+    {
         $this->plots = $plots;
         $this->nbrplots = count($plots);
         $this->numpoints = $plots[0]->numpoints;
@@ -490,13 +507,15 @@ class AccLinePlot extends Plot {
 
     //---------------
     // PUBLIC METHODS
-    function Legend($graph) {
+    function Legend($graph)
+    {
         foreach( $this->plots as $p ) {
             $p->DoLegend($graph);
         }
     }
 
-    function Max() {
+    function Max()
+    {
         list($xmax) = $this->plots[0]->Max();
         $nmax=0;
         $n = count($this->plots);
@@ -522,7 +541,8 @@ class AccLinePlot extends Plot {
         return array($xmax,$ymax);
     }
 
-    function Min() {
+    function Min()
+    {
         $nmax=0;
         list($xmin,$ysetmin) = $this->plots[0]->Min();
         $n = count($this->plots);
@@ -550,7 +570,8 @@ class AccLinePlot extends Plot {
     }
 
     // Gets called before any axis are stroked
-    function PreStrokeAdjust($graph) {
+    function PreStrokeAdjust($graph)
+    {
 
         // If another plot type have already adjusted the
         // offset we don't touch it.
@@ -572,14 +593,16 @@ class AccLinePlot extends Plot {
 
     }
 
-    function SetInterpolateMode($aIntMode) {
+    function SetInterpolateMode($aIntMode)
+    {
         $this->iStartEndZero=$aIntMode;
     }
 
     // Replace all '-' with an interpolated value. We use straightforward
     // linear interpolation. If the data starts with one or several '-' they
     // will be replaced by the the first valid data point
-    function LineInterpolate(&$aData) {
+    function LineInterpolate(&$aData)
+    {
 
         $n=count($aData);
         $i=0;
@@ -648,7 +671,8 @@ class AccLinePlot extends Plot {
     // it wouldn't be possible to create an acc line plot
     // with the same graphs, i.e AccLinePlot(array($pl,$pl,$pl));
     // since this method would have a side effect.
-    function Stroke($img,$xscale,$yscale) {
+    function Stroke($img,$xscale,$yscale)
+    {
         $img->SetLineWeight($this->weight);
         $this->numpoints = count($this->plots[0]->coords[0]);
         // Allocate array

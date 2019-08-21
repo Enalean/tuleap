@@ -35,16 +35,19 @@ class RequestWrapper {
      */
     private $cache;
 
-    public function __construct(Client $client, Cache $cache) {
+    public function __construct(Client $client, Cache $cache)
+    {
         $this->client = $client;
         $this->cache  = $cache;
     }
 
-    public function getResponseWithoutAuth($request) {
+    public function getResponseWithoutAuth($request)
+    {
         return $request->send();
     }
 
-    public function getResponseByName($name, $request) {
+    public function getResponseByName($name, $request)
+    {
         $token = $this->cache->getTokenForUser($name);
         if (! $token) {
             $token = $this->getTokenForUser($name, 'welcome0');
@@ -57,7 +60,8 @@ class RequestWrapper {
             ->send();
     }
 
-    public function getResponseByBasicAuth($username, $password, $request) {
+    public function getResponseByBasicAuth($username, $password, $request)
+    {
         $request->setAuth($username, $password);
         return $request->send();
     }

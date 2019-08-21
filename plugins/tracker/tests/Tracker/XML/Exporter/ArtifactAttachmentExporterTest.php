@@ -34,7 +34,8 @@ class ArtifactAttachmentExporterTest extends TuleapTestCase {
     /** @var string */
     private $extraction_path;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -46,14 +47,16 @@ class ArtifactAttachmentExporterTest extends TuleapTestCase {
         $this->initArchive();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         exec('rm -rf ' . $this->extraction_path);
         unlink($this->archive_path);
 
         parent::tearDown();
     }
 
-    public function itAddsFileIntoArchive() {
+    public function itAddsFileIntoArchive()
+    {
         $tracker    = aTracker()->build();
         $file_field = \Mockery::spy(\Tracker_FormElement_Field_File::class);
         $file_info  = mockery_stub(\Tracker_FileInfo::class)->getPath()->returns($this->file01_path);
@@ -80,11 +83,13 @@ class ArtifactAttachmentExporterTest extends TuleapTestCase {
         $this->assertEqual(file_get_contents($this->extraction_path . '/data/Artifact1'), 'file01');
     }
 
-    private function initArchive() {
+    private function initArchive()
+    {
         $this->archive = new Tuleap\Project\XML\Export\ZipArchive($this->archive_path);
     }
 
-    private function extractArchive() {
+    private function extractArchive()
+    {
         $this->archive->close();
 
         $zip = new ZipArchive();

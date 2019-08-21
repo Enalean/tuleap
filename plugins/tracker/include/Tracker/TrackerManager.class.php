@@ -39,7 +39,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      *
      * @return bool true if success. Otherwise the process terminates.
      */
-    public function checkServiceEnabled(Project $project, Codendi_Request $request) {
+    public function checkServiceEnabled(Project $project, Codendi_Request $request)
+    {
         if ($project->usesService('plugin_tracker')) {
             return true;
         }
@@ -90,7 +91,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * @param Tracker_Dispatchable_Interface $object
      * @param PFUser                           $user
      */
-    protected function processSubElement(Tracker_Dispatchable_Interface $object, HTTPRequest $request, PFUser $user) {
+    protected function processSubElement(Tracker_Dispatchable_Interface $object, HTTPRequest $request, PFUser $user)
+    {
         // Tracker related check
         $this->checkUserCanAccessTracker($object->getTracker(), $user, $request);
         $GLOBALS['group_id'] = $object->getTracker()->getGroupId();
@@ -152,7 +154,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      *
      * @return void
      */
-    public function process($request, $user) {
+    public function process($request, $user)
+    {
         $url = $this->getUrl();
 
         try {
@@ -295,11 +298,13 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      *
      * @return bool
      */
-    private function restoreDeletedTracker($tracker_id) {
+    private function restoreDeletedTracker($tracker_id)
+    {
         return $this->getTrackerFactory()->restoreDeletedTracker($tracker_id);
     }
 
-    public function displayHeader($project, $title, $breadcrumbs, $toolbar, array $params) {
+    public function displayHeader($project, $title, $breadcrumbs, $toolbar, array $params)
+    {
         $breadcrumbs = array_merge(
             [
                 $this->getServiceTrackerBreadcrumb($project)
@@ -338,13 +343,15 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         return UserManager::instance()->getCurrentUser();
     }
 
-    public function displayFooter($project) {
+    public function displayFooter($project)
+    {
         if ($service = $project->getService('plugin_tracker')) {
             $service->displayFooter();
         }
     }
 
-    public function doCreateTracker(Project $project, Codendi_Request $request) {
+    public function doCreateTracker(Project $project, Codendi_Request $request)
+    {
         $is_error    = false;
         $new_tracker = null;
 
@@ -407,12 +414,14 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * @param String $itemname
      * @param Tracker      $tracker_template
      */
-    public function displayCreateTracker(Project $project,
-                                         Codendi_Request $request,
-                                         $name = '',
-                                         $description = '',
-                                         $itemname = '',
-                                         ?Tracker $tracker_template = null) {
+    public function displayCreateTracker(
+        Project $project,
+        Codendi_Request $request,
+        $name = '',
+        $description = '',
+        $itemname = '',
+        ?Tracker $tracker_template = null
+    ) {
         global $Language;
         $breadcrumbs = array(
             array(
@@ -468,7 +477,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $this->displayFooter($project);
     }
 
-    function displayCreateTrackerFromTemplate($requested_create_mode, Project $project, ?Tracker $tracker_template = null) {
+    function displayCreateTrackerFromTemplate($requested_create_mode, Project $project, ?Tracker $tracker_template = null)
+    {
         $hp = Codendi_HTMLPurifier::instance();
 
         $GLOBALS['Response']->includeFooterJavascriptFile(TRACKER_BASE_URL.'/scripts/TrackerTemplateSelector.js');
@@ -569,7 +579,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         echo '</div>';
     }
 
-    function displayCreateTrackerFromXML($requested_create_mode, Project $project) {
+    function displayCreateTrackerFromXML($requested_create_mode, Project $project)
+    {
         $radio = $this->getCreateTrackerRadio('xml', $requested_create_mode);
         echo '<h3><label>'. $radio . $GLOBALS['Language']->getText('plugin_tracker_include_type','from_xml').'</label></h3>
               <div class="tracker_create_mode">
@@ -585,7 +596,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * @param XML_ParseError[] $parse_errors
      * @param array            $xml_file
      */
-    private function displayCreateTrackerFromXMLErrors(Project $project, array $parse_errors, $xml_file) {
+    private function displayCreateTrackerFromXMLErrors(Project $project, array $parse_errors, $xml_file)
+    {
         $breadcrumbs = array(
             array(
                 'title' => 'Create a new tracker',
@@ -642,7 +654,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     }
 
 
-    private function getTrackersV3ForProject(Project $project) {
+    private function getTrackersV3ForProject(Project $project)
+    {
         if ($project->usesService('tracker')) {
             $atf         = new ArtifactTypeFactory($project);
             return $atf->getArtifactTypes();
@@ -651,7 +664,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         return null;
     }
 
-    private function displayCreateTrackerFromTV3($requested_create_mode, Project $project, $requested_template_id) {
+    private function displayCreateTrackerFromTV3($requested_create_mode, Project $project, $requested_template_id)
+    {
         $trackers_v3 = $this->getTrackersV3ForProject($project);
 
         if ($trackers_v3) {
@@ -661,7 +675,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         }
     }
 
-    private function getSelectBoxForTV3($requested_template_id, $radio, array $trackers_v3, $label) {
+    private function getSelectBoxForTV3($requested_template_id, $radio, array $trackers_v3, $label)
+    {
         $html    = '';
         $hp      = Codendi_HTMLPurifier::instance();
         $html   .= '<h3><label>'. $radio . $label .'</label></h3>';
@@ -685,7 +700,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         return $html;
     }
 
-    public function getCreateTrackerRadio($create_mode, $requested_create_mode) {
+    public function getCreateTrackerRadio($create_mode, $requested_create_mode)
+    {
         $checked = '';
         if (! $requested_create_mode) {
             $requested_create_mode = 'gallery';
@@ -696,7 +712,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         return '<input type="radio" name="create_mode" value="'. $create_mode .'" '. $checked .' />';
     }
 
-    public function displayTrackerHomeNav(Project $project) {
+    public function displayTrackerHomeNav(Project $project)
+    {
         $presenter = new Tracker_HomeNavPresenter($project);
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../templates');
 
@@ -863,28 +880,33 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         );
     }
 
-    private function trackerCanBeDisplayed(Tracker $tracker, PFUser $user) {
+    private function trackerCanBeDisplayed(Tracker $tracker, PFUser $user)
+    {
         return $tracker->userCanView($user) && ! $this->getTV3MigrationManager()->isTrackerUnderMigration($tracker);
     }
 
-    private function userIsTrackerAdmin(Project $project, PFUser $user) {
+    private function userIsTrackerAdmin(Project $project, PFUser $user)
+    {
         return $this->userCanCreateTracker($project->getGroupId(), $user) || $this->userCanAdminAllProjectTrackers($user);
     }
 
-    private function informUserOfOngoingMigrations(Project $project) {
+    private function informUserOfOngoingMigrations(Project $project)
+    {
         if ($this->getTV3MigrationManager()->thereAreMigrationsOngoingForProject($project)) {
             $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('plugin_tracker_include_type','tv3_being_migrated'));
             $this->informUntruncatedEmailWillBeSent($project);
         }
     }
 
-    private function informUntruncatedEmailWillBeSent(Project $project) {
+    private function informUntruncatedEmailWillBeSent(Project $project)
+    {
         if ($project->getTruncatedEmailsUsage()) {
             $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('plugin_tracker_include_type','untruncated_migration_email'));
         }
     }
 
-    protected function displayCSVImportOverview($project, $group_id, $user) {
+    protected function displayCSVImportOverview($project, $group_id, $user)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $breadcrumbs = array();
         $toolbar     = array();
@@ -924,7 +946,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $this->displayFooter($project);
     }
 
-    public function fetchTrackerSwitcher(PFUser $user, $separator, ?Project $include_project = null, ?Tracker $current_tracker = null) {
+    public function fetchTrackerSwitcher(PFUser $user, $separator, ?Project $include_project = null, ?Tracker $current_tracker = null)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
 
@@ -988,7 +1011,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      *
      * @return void
      */
-    protected function displayTrackerPreview($filename) {
+    protected function displayTrackerPreview($filename)
+    {
         // inject xsl reference to the xml file
         $xml = DOMDocument::load($filename);
         $xslt = $xml->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="resources/tracker_preview.xsl"');
@@ -1004,7 +1028,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * @param int $to_project_id
      * @param Array   $ugroup_mapping
      */
-    public function duplicate($from_project_id, $to_project_id, $ugroup_mapping) {
+    public function duplicate($from_project_id, $to_project_id, $ugroup_mapping)
+    {
         $this->getTrackerFactory()->duplicate($from_project_id, $to_project_id, $ugroup_mapping);
         $this->duplicateReferences($from_project_id);
     }
@@ -1014,7 +1039,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      *
      * @param int $from_project_id
      */
-    protected function duplicateReferences($from_project_id) {
+    protected function duplicateReferences($from_project_id)
+    {
         // Index by shortname
         foreach ($this->getTrackerFactory()->getTrackersByGroupId($from_project_id) as $tracker) {
             $trackers[$tracker->getItemName()] = $tracker;
@@ -1033,33 +1059,39 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     /**
      * @return Tracker_URL
      */
-    protected function getUrl() {
+    protected function getUrl()
+    {
         return new Tracker_URL();
     }
 
     /**
      * @return TrackerFactory
      */
-    protected function getTrackerFactory() {
+    protected function getTrackerFactory()
+    {
         return TrackerFactory::instance();
     }
 
-    protected function getArtifactFactory() {
+    protected function getArtifactFactory()
+    {
         return Tracker_ArtifactFactory::instance();
     }
 
-    protected function getArtifactReportFactory() {
+    protected function getArtifactReportFactory()
+    {
         return Tracker_ReportFactory::instance();
     }
 
-    protected function getProject($group_id) {
+    protected function getProject($group_id)
+    {
         return ProjectManager::instance()->getProject($group_id);
     }
 
     /**
      * @return ReferenceManager
      */
-    protected function getReferenceManager() {
+    protected function getReferenceManager()
+    {
         return ReferenceManager::instance();
     }
 
@@ -1071,7 +1103,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      *
      * @return bool true if user has persission to create trackers, false otherwise
      */
-    public function userCanCreateTracker($group_id, $user = false) {
+    public function userCanCreateTracker($group_id, $user = false)
+    {
         if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
@@ -1079,7 +1112,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         return $user->isMember($group_id, 'A');
     }
 
-    public function userCanAdminAllProjectTrackers($user = null) {
+    public function userCanAdminAllProjectTrackers($user = null)
+    {
         if (! $user instanceof PFUser) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
@@ -1093,7 +1127,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         return $forge_ugroup_permissions_manager->doesUserHavePermission($user, $permission);
     }
 
-    public function search($request, $current_user) {
+    public function search($request, $current_user)
+    {
         if ($request->exist('tracker')) {
             $tracker_id = $request->get('tracker');
             $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
@@ -1115,7 +1150,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      *
      * @return bool
      */
-    public function deleteProjectTrackers($group_id) {
+    public function deleteProjectTrackers($group_id)
+    {
         $delete_status = true;
         $trackers = $this->getTrackerFactory()->getTrackersByGroupId($group_id);
         if (!empty($trackers)) {
@@ -1133,7 +1169,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      *
      * @return Array
      */
-    protected function getTrackersHavingDateReminders() {
+    protected function getTrackersHavingDateReminders()
+    {
         $trackers = array();
         $dao = new Tracker_DateReminderDao();
         $dar = $dao->getTrackersHavingDateReminders();
@@ -1150,7 +1187,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      *
      * @return Void
      */
-    public function sendDateReminder() {
+    public function sendDateReminder()
+    {
         $logger = new BackendLogger();
         $logger->debug("[TDR] Start processing date reminders");
         $trackers       = $this->getTrackersHavingDateReminders();
@@ -1162,7 +1200,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $logger->debug("[TDR] End processing date reminders");
     }
 
-    private function displayMigrateFromTV3Option($requested_create_mode, Project $project, $requested_template_id) {
+    private function displayMigrateFromTV3Option($requested_create_mode, Project $project, $requested_template_id)
+    {
         $html        = '';
         $trackers_v3 = $this->getTrackersV3ForProject($project);
         if ($trackers_v3) {
@@ -1175,7 +1214,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         echo $html;
     }
 
-    private function getTV3MigrationManager() {
+    private function getTV3MigrationManager()
+    {
         return new Tracker_Migration_MigrationManager(
             new Tracker_SystemEventManager(SystemEventManager::instance()),
             $this->getTrackerFactory(),
@@ -1186,7 +1226,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         );
     }
 
-    private function getTrackerFormElementFactory() {
+    private function getTrackerFormElementFactory()
+    {
         return Tracker_FormElementFactory::instance();
     }
 }

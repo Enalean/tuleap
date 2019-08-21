@@ -21,7 +21,8 @@
 
 class FileModuleMonitorDao extends DataAccessObject {
 
-    function whoIsMonitoringPackageByID($group_id, $package_id) {
+    function whoIsMonitoringPackageByID($group_id, $package_id)
+    {
         $_package_id = (int) $package_id;
         $_group_id = (int) $group_id;
 
@@ -45,7 +46,8 @@ class FileModuleMonitorDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function whoIsPubliclyMonitoringPackage($packageId) {
+    function whoIsPubliclyMonitoringPackage($packageId)
+    {
         $packageId = $this->da->quoteSmart($packageId);
 
         $sql = "SELECT u.user_id
@@ -57,7 +59,8 @@ class FileModuleMonitorDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchById($id) {
+    function searchById($id)
+    {
         $_id = (int) $id;
         return $this->_search(' fm.filemodule_id = '.$this->da->escapeInt($_id), '', ' ORDER BY filemodule_id DESC');
     }
@@ -72,7 +75,8 @@ class FileModuleMonitorDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function searchMonitoringFileByUserAndPackageId($package_id, PFUser $user, $publicly = false) {
+    function searchMonitoringFileByUserAndPackageId($package_id, PFUser $user, $publicly = false)
+    {
         $option = "";
         if ($publicly) {
             $option = "AND anonymous = 0";
@@ -83,7 +87,8 @@ class FileModuleMonitorDao extends DataAccessObject {
         return $this->_search(' fm.filemodule_id = '.$this->da->escapeInt($_package_id).' AND fm.user_id ='.$this->da->escapeInt($_user_id).' '.$option, '', ' ORDER BY filemodule_id DESC');
     }
 
-    function _search($where, $group = '', $order = '', $from = array()) {
+    function _search($where, $group = '', $order = '', $from = array())
+    {
         $sql = 'SELECT fm.* '
             .' FROM filemodule_monitor AS fm '
             .(count($from) > 0 ? ', '.implode(', ', $from) : '')
@@ -102,7 +107,8 @@ class FileModuleMonitorDao extends DataAccessObject {
      *
      * @return true or id(auto_increment) if there is no error
      */
-    function create($filemodule_id, PFUser $user, $anonymous = true) {
+    function create($filemodule_id, PFUser $user, $anonymous = true)
+    {
 
         $arg      = array();
         $values   = array();
@@ -132,7 +138,8 @@ class FileModuleMonitorDao extends DataAccessObject {
      *
      * @return true if there is no error
      */
-    function delete($filemodule_id, PFUser $user, $onlyPublic = false) {
+    function delete($filemodule_id, PFUser $user, $onlyPublic = false)
+    {
         $option = "";
         if ($onlyPublic) {
             $option = "AND anonymous = 0";

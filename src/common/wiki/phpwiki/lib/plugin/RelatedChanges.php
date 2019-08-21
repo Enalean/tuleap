@@ -14,7 +14,8 @@ require_once("lib/plugin/RecentChanges.php");
 class _RelatedChanges_HtmlFormatter
 extends _RecentChanges_HtmlFormatter
 {
-    function description() {
+    function description()
+    {
         return HTML::p(false, $this->pre_description(),
          fmt(" (to pages linked from \"%s\")",$this->_args['page']));
     }
@@ -24,16 +25,19 @@ extends _RecentChanges_HtmlFormatter
 class WikiPlugin_RelatedChanges
 extends WikiPlugin_RecentChanges
 {
-    function getName () {
+    function getName()
+    {
         return _("RecentEdits");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.5 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         $args = WikiPlugin_RecentChanges::getDefaultArguments();
         $args['page'] = '[pagename]';
         $args['show_minor'] = true;
@@ -42,7 +46,8 @@ extends WikiPlugin_RecentChanges
         return $args;
     }
 
-    function getChanges ($dbi, $args) {
+    function getChanges($dbi, $args)
+    {
         $changes = $dbi->mostRecent($this->getMostRecentParams($args));
 
         $show_deleted = $args['show_deleted'];
@@ -58,7 +63,8 @@ extends WikiPlugin_RecentChanges
 
     // box is used to display a fixed-width, narrow version with common header.
     // just a numbered list of limit pagenames, without date.
-    function box($args = false, $request = false, $basepage = false) {
+    function box($args = false, $request = false, $basepage = false)
+    {
         if (!$request) $request = $GLOBALS['request'];
         if (!isset($args['limit'])) $args['limit'] = 15;
         $args['format'] = 'box';
@@ -71,7 +77,8 @@ extends WikiPlugin_RecentChanges
                               $this->format($this->getChanges($request->_dbi, $args), $args));
     }
 
-    function format ($changes, $args) {
+    function format($changes, $args)
+    {
         global $WikiTheme;
         $format = $args['format'];
 
@@ -104,7 +111,8 @@ extends WikiPlugin_RecentChanges
  */
 class RelatedChangesRevisionIterator extends WikiDB_PageRevisionIterator
 {
-    function __construct ($revisions, &$dbi, $pagename) {
+    function __construct($revisions, &$dbi, $pagename)
+    {
         $this->_revisions = $revisions;
         $this->_wikidb = $dbi;
         $page = $dbi->getPage($pagename);
@@ -116,7 +124,8 @@ class RelatedChangesRevisionIterator extends WikiDB_PageRevisionIterator
         $links->free();
     }
 
-    function next () {
+    function next()
+    {
         while (($rev = $this->_revisions->next())) {
             if (isset($this->_links[$rev->_pagename]))
                 return $rev;

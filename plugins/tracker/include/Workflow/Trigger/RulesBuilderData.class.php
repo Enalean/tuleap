@@ -35,7 +35,8 @@ class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonF
      */
     private $triggering_fields;
 
-    public function __construct(Iterator $targets, array $triggering_fields) {
+    public function __construct(Iterator $targets, array $triggering_fields)
+    {
         $this->targets           = $targets;
         $this->triggering_fields = $triggering_fields;
     }
@@ -93,7 +94,8 @@ class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonF
      *
      * @return Array
      */
-    public function fetchFormattedForJson() {
+    public function fetchFormattedForJson()
+    {
         return array(
             'targets'        => $this->getTargets(),
             'conditions'     => $this->getConditions(),
@@ -101,11 +103,13 @@ class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonF
         );
     }
 
-    private function getTargets() {
+    private function getTargets()
+    {
         return $this->getFields($this->targets);
     }
 
-    private function getConditions() {
+    private function getConditions()
+    {
         return array(
             array(
                 'name'     => self::CONDITION_AT_LEAST_ONE,
@@ -118,7 +122,8 @@ class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonF
         );
     }
 
-    private function getTriggers() {
+    private function getTriggers()
+    {
         $json = array();
         foreach ($this->triggering_fields as $triggering_fields) {
             $json[$triggering_fields->getTracker()->getId()] = $this->getChildTracker($triggering_fields);
@@ -126,7 +131,8 @@ class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonF
         return $json;
     }
 
-    private function getChildTracker(Tracker_Workflow_Trigger_RulesBuilderTriggeringFields $triggering_fields) {
+    private function getChildTracker(Tracker_Workflow_Trigger_RulesBuilderTriggeringFields $triggering_fields)
+    {
         return array(
             'id'     => $triggering_fields->getTracker()->getId(),
             'name'   => $triggering_fields->getTracker()->getName(),
@@ -134,7 +140,8 @@ class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonF
         );
     }
 
-    private function getFields($fields) {
+    private function getFields($fields)
+    {
         $json = array();
         foreach ($fields as $field) {
             $json[$field->getId()] = $field->fetchFormattedForJson();

@@ -22,11 +22,13 @@
 class WorkflowManager {
     protected $tracker;
 
-    public function __construct($tracker) {
+    public function __construct($tracker)
+    {
         $this->tracker = $tracker;
     }
 
-    public function process(TrackerManager $engine, HTTPRequest $request, PFUser $current_user) {
+    public function process(TrackerManager $engine, HTTPRequest $request, PFUser $current_user)
+    {
         $workflow_factory = WorkflowFactory::instance();
         if ($request->get('func') == Workflow::FUNC_ADMIN_RULES) {
             $token = new CSRFSynchronizerToken(TRACKER_BASE_URL. '/?'. http_build_query(

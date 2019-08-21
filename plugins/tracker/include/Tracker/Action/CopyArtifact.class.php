@@ -179,7 +179,8 @@ class Tracker_Action_CopyArtifact {
     /**
      * @return Tracker_Artifact[] or null in case of error
      */
-    private function importBareArtifacts(SimpleXMLElement $xml_artifacts) {
+    private function importBareArtifacts(SimpleXMLElement $xml_artifacts)
+    {
         $new_artifacts = array();
         foreach ($xml_artifacts->children() as $xml_artifact) {
             $tracker = $this->tracker_factory->getTrackerById((int) $xml_artifact['tracker_id']);
@@ -195,7 +196,8 @@ class Tracker_Action_CopyArtifact {
         return $new_artifacts;
     }
 
-    private function importChangesets(SimpleXMLElement $xml_artifacts, array $new_artifacts, TrackerXmlFieldsMapping_InSamePlatform $xml_field_mapping) {
+    private function importChangesets(SimpleXMLElement $xml_artifacts, array $new_artifacts, TrackerXmlFieldsMapping_InSamePlatform $xml_field_mapping)
+    {
         $extraction_path   = '';
         foreach (iterator_to_array($xml_artifacts->artifact, false) as $i => $xml_artifact) {
             $tracker = $this->tracker_factory->getTrackerById((int) $xml_artifact['tracker_id']);
@@ -241,7 +243,8 @@ class Tracker_Action_CopyArtifact {
         );
     }
 
-    private function removeArtLinksValueNodeFromXML(SimpleXMLElement &$xml_artifacts) {
+    private function removeArtLinksValueNodeFromXML(SimpleXMLElement &$xml_artifacts)
+    {
         $xml_artifact = $xml_artifacts->artifact[0];
         foreach ($xml_artifact->changeset as $xml_changeset) {
             foreach ($xml_changeset->field_change as $xml_field_change) {
@@ -255,17 +258,20 @@ class Tracker_Action_CopyArtifact {
         }
     }
 
-    private function redirectToTracker() {
+    private function redirectToTracker()
+    {
         $url = TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId();
         $GLOBALS['Response']->redirect($url);
     }
 
-    private function redirectToArtifact(Tracker_Artifact $artifact) {
+    private function redirectToArtifact(Tracker_Artifact $artifact)
+    {
         $url = TRACKER_BASE_URL . '/?aid=' . $artifact->getId();
         $GLOBALS['Response']->redirect($url);
     }
 
-    private function getXMLRootNode() {
+    private function getXMLRootNode()
+    {
         $xml = '<?xml version="1.0" encoding="UTF-8"?><artifacts />';
 
         return new SimpleXMLElement($xml);

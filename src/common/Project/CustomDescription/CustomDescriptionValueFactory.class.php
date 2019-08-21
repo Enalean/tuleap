@@ -29,11 +29,13 @@ class Project_CustomDescription_CustomDescriptionValueFactory {
     /** @var Project_CustomDescription_CustomDescriptionValueDao */
     private $dao;
 
-    public function __construct(Project_CustomDescription_CustomDescriptionValueDao $dao) {
+    public function __construct(Project_CustomDescription_CustomDescriptionValueDao $dao)
+    {
         $this->dao = $dao;
     }
 
-    public function getDescriptionFieldsValue(Project $project) {
+    public function getDescriptionFieldsValue(Project $project)
+    {
         $project_id                = $project->getID();
         $description_fields_values = array();
         $results                   = $this->dao->getDescriptionFieldsValue($project_id);

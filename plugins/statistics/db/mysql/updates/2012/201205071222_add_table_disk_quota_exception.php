@@ -18,17 +18,20 @@
 
 class b201205071222_add_table_disk_quota_exception extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add table to store disk quota exception requests
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS plugin_statistics_disk_quota_exception (
                    group_id int(11) NOT NULL,
                    requester_id int(11) NOT NULL default '0',
@@ -40,7 +43,8 @@ EOT;
         $this->db->createTable('plugin_statistics_disk_quota_exception', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('plugin_statistics_disk_quota_exception')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_statistics_disk_quota_exception table is missing');
         }

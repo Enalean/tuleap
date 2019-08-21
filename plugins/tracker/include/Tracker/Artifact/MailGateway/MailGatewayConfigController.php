@@ -59,7 +59,8 @@ class MailGatewayConfigController {
         $this->admin_page_rendered = $admin_page_rendered;
     }
 
-    public function index(CSRFSynchronizerToken $csrf, Response $response) {
+    public function index(CSRFSynchronizerToken $csrf, Response $response)
+    {
         $title = $GLOBALS['Language']->getText('plugin_tracker_config', 'title');
 
         $this->admin_page_rendered->renderANoFramedPresenter(
@@ -75,13 +76,15 @@ class MailGatewayConfigController {
         );
     }
 
-    public function update(Codendi_Request $request, Response $response) {
+    public function update(Codendi_Request $request, Response $response)
+    {
         $this->updateEmailGatewayMode($request, $response);
 
         $response->redirect($_SERVER['REQUEST_URI']);
     }
 
-    private function updateEmailGatewayMode(Codendi_Request $request, Response $response) {
+    private function updateEmailGatewayMode(Codendi_Request $request, Response $response)
+    {
         $emailgateway_mode = $request->get('emailgateway_mode');
         if ($emailgateway_mode && $this->config->setEmailgatewayMode($emailgateway_mode)) {
             $response->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_tracker_config', 'successfully_updated'));

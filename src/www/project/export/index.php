@@ -182,7 +182,8 @@ switch ($export) {
                         'dependencies_export_format_links' => &$dependencies_data_export_format_links);
         $em->processEvent('project_export_entry', $exportable_items);
 
-        function key_exists_and_value_not_null($key, array $array) {
+        function key_exists_and_value_not_null($key, array $array)
+        {
             return (isset($array[$key]) && $array[$key] != null);
         }
 

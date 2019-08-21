@@ -23,7 +23,8 @@ Mock::generatePartial('Transition_PostAction_Field_Float', 'Transition_PostActio
 
 class Transition_PostAction_Field_FloatTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->post_action_id = 9348;
@@ -38,7 +39,8 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase {
         stub($this->post_action)->isDefined()->returns($this->field);
     }
 
-    public function itHandlesUpdateRequests() {
+    public function itHandlesUpdateRequests()
+    {
         $new_field_id = 4572;
         $new_value    = 1.5;
         $request      = aRequest()->with('workflow_postaction_field_float',       array($this->post_action_id => $new_field_id))
@@ -57,7 +59,8 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase {
         $this->post_action->process($request);
     }
 
-    public function itHandlesDeleteRequests() {
+    public function itHandlesDeleteRequests()
+    {
         $request = aRequest()->with('remove_postaction', array($this->post_action_id => 1))
                              ->build();
 
@@ -65,7 +68,8 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase {
         $this->post_action->process($request);
     }
 
-    public function testBeforeShouldSetTheFloatField() {
+    public function testBeforeShouldSetTheFloatField()
+    {
         $user = mock('PFUser');
 
         stub($this->field)->getLabel()->returns('Remaining Effort');
@@ -83,7 +87,8 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase {
         $this->assertEqual($expected, $fields_data[$this->field->getId()]);
     }
 
-    public function testBeforeShouldBypassAndSetTheFloatField() {
+    public function testBeforeShouldBypassAndSetTheFloatField()
+    {
         $user = mock('PFUser');
 
         $label           = stub($this->field)->getLabel()->returns('Remaining Effort');
@@ -100,7 +105,8 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase {
         $this->assertEqual($expected, $fields_data[$this->field->getId()]);
     }
 
-    public function testBeforeShouldNOTDisplayFeedback() {
+    public function testBeforeShouldNOTDisplayFeedback()
+    {
         $user = mock('PFUser');
 
         $label           = stub($this->field)->getLabel()->returns('Remaining Effort');
@@ -116,7 +122,8 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase {
         $this->assertEqual($expected, $fields_data[$this->field->getId()]);
     }
 
-    public function itAcceptsValue0() {
+    public function itAcceptsValue0()
+    {
         $post_action = aFloatFieldPostAction()->withValue(0.0)->build();
         $this->assertTrue($post_action->isDefined());
     }

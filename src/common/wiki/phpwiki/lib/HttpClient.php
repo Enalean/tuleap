@@ -46,11 +46,13 @@ class HttpClient {
     var $redirect_count = 0;
     var $cookie_host = '';
 
-    function __construct($host, $port=80) {
+    function __construct($host, $port=80)
+    {
         $this->host = $host;
         $this->port = $port;
     }
-    function get($path, $data = false) {
+    function get($path, $data = false)
+    {
         $this->path = $path;
         $this->method = 'GET';
         if ($data) {
@@ -58,13 +60,15 @@ class HttpClient {
         }
         return $this->doRequest();
     }
-    function post($path, $data) {
+    function post($path, $data)
+    {
         $this->path = $path;
         $this->method = 'POST';
         $this->postdata = $this->buildQueryString($data);
         return $this->doRequest();
     }
-    function buildQueryString($data) {
+    function buildQueryString($data)
+    {
         $querystring = '';
         if (is_array($data)) {
             // Change data in to postable data
@@ -83,7 +87,8 @@ class HttpClient {
         }
         return $querystring;
     }
-    function doRequest() {
+    function doRequest()
+    {
         // Performs the actual HTTP request, returning true or false depending on outcome
         // Ensure that the PHP timeout is longer than the socket timeout
         longer_timeout($this->timeout);
@@ -205,7 +210,8 @@ class HttpClient {
         }
         return true;
     }
-    function buildRequest() {
+    function buildRequest()
+    {
         $headers = array();
         $headers[] = "{$this->method} {$this->path} HTTP/1.0"; // Using 1.1 leads to all manner of problems, such as "chunked" encoding
         $headers[] = "Host: {$this->host}";
@@ -238,16 +244,20 @@ class HttpClient {
         $request = implode("\r\n", $headers)."\r\n\r\n".$this->postdata;
         return $request;
     }
-    function getStatus() {
+    function getStatus()
+    {
         return $this->status;
     }
-    function getContent() {
+    function getContent()
+    {
         return $this->content;
     }
-    function getHeaders() {
+    function getHeaders()
+    {
         return $this->headers;
     }
-    function getHeader($header) {
+    function getHeader($header)
+    {
         $header = strtolower($header);
         if (isset($this->headers[$header])) {
             return $this->headers[$header];
@@ -255,13 +265,16 @@ class HttpClient {
             return false;
         }
     }
-    function getError() {
+    function getError()
+    {
         return $this->errormsg;
     }
-    function getCookies() {
+    function getCookies()
+    {
         return $this->cookies;
     }
-    function getRequestURL() {
+    function getRequestURL()
+    {
         $url = 'http://'.$this->host;
         if ($this->port != 80) {
             $url .= ':'.$this->port;
@@ -270,40 +283,51 @@ class HttpClient {
         return $url;
     }
     // Setter methods
-    function setUserAgent($string) {
+    function setUserAgent($string)
+    {
         $this->user_agent = $string;
     }
-    function setAuthorization($username, $password) {
+    function setAuthorization($username, $password)
+    {
         $this->username = $username;
         $this->password = $password;
     }
-    function setCookies($array) {
+    function setCookies($array)
+    {
         $this->cookies = $array;
     }
     // Option setting methods
-    function useGzip($boolean) {
+    function useGzip($boolean)
+    {
         $this->use_gzip = $boolean;
     }
-    function setPersistCookies($boolean) {
+    function setPersistCookies($boolean)
+    {
         $this->persist_cookies = $boolean;
     }
-    function setPersistReferers($boolean) {
+    function setPersistReferers($boolean)
+    {
         $this->persist_referers = $boolean;
     }
-    function setHandleRedirects($boolean) {
+    function setHandleRedirects($boolean)
+    {
         $this->handle_redirects = $boolean;
     }
-    function setMaxRedirects($num) {
+    function setMaxRedirects($num)
+    {
         $this->max_redirects = $num;
     }
-    function setHeadersOnly($boolean) {
+    function setHeadersOnly($boolean)
+    {
         $this->headers_only = $boolean;
     }
-    function setDebug($boolean) {
+    function setDebug($boolean)
+    {
         $this->debug = $boolean;
     }
     // "Quick" static methods
-    function quickGet($url) {
+    function quickGet($url)
+    {
         $bits = parse_url($url);
         $host = $bits['host'];
         $port = isset($bits['port']) ? $bits['port'] : 80;
@@ -318,7 +342,8 @@ class HttpClient {
             return $client->getContent();
         }
     }
-    function quickPost($url, $data) {
+    function quickPost($url, $data)
+    {
         $bits = parse_url($url);
         $host = $bits['host'];
         $port = isset($bits['port']) ? $bits['port'] : 80;
@@ -330,7 +355,8 @@ class HttpClient {
             return $client->getContent();
         }
     }
-    function debug($msg, $object = false) {
+    function debug($msg, $object = false)
+    {
         if ($this->debug) {
             print '<div style="border: 1px solid red; padding: 0.5em; margin: 0.5em;"><strong>HttpClient Debug:</strong> '.$msg;
             if ($object) {

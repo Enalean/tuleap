@@ -25,14 +25,16 @@ class TroveCatFactory {
      */
     private $dao;
 
-    public function __construct(TroveCatDao $dao) {
+    public function __construct(TroveCatDao $dao)
+    {
         $this->dao = $dao;
     }
 
     /**
      * @return TroveCat[]
      */
-    public function getMandatoryParentCategoriesUnderRoot() {
+    public function getMandatoryParentCategoriesUnderRoot()
+    {
         $results    = $this->dao->getMandatoryParentCategoriesUnderRoot();
         $trove_cats = array();
 
@@ -47,7 +49,8 @@ class TroveCatFactory {
     /**
      * @return TroveCat[]
      */
-    public function getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren() {
+    public function getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren()
+    {
         $results    = $this->dao->getMandatoryParentCategoriesUnderRoot();
         $trove_cats = array();
 
@@ -64,7 +67,8 @@ class TroveCatFactory {
     /**
      * @return TroveCat
      */
-    private function getTroveCatWithChildrens(array $row) {
+    private function getTroveCatWithChildrens(array $row)
+    {
         $trove_cat_id = $row['trove_cat_id'];
         $trove_cat    = $this->getInstanceFromRow($row);
 
@@ -78,7 +82,8 @@ class TroveCatFactory {
     /**
      * @return TroveCat
      */
-    private function getInstanceFromRow(array $row) {
+    private function getInstanceFromRow(array $row)
+    {
         return new TroveCat(
            $row['trove_cat_id'],
            $row['shortname'],

@@ -34,7 +34,8 @@ class FlamingParrot_NavBarItemProjectsPresenter extends FlamingParrot_NavBarItem
     public $register_new_proj;
     public $browse_projects_text;
 
-    public function __construct($id, $is_active, PFUser $user, array $projects) {
+    public function __construct($id, $is_active, PFUser $user, array $projects)
+    {
         parent::__construct($id, $is_active);
 
         $this->projects     = $projects;

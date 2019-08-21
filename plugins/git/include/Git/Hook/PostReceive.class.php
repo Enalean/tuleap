@@ -85,14 +85,16 @@ class Git_Hook_PostReceive
         $this->mail_sender            = $mail_sender;
     }
 
-    public function beforeParsingReferences($repository_path) {
+    public function beforeParsingReferences($repository_path)
+    {
         $repository = $this->repository_factory->getFromFullPath($repository_path);
         if ($repository !== null) {
             $this->system_event_manager->queueGrokMirrorManifestFollowingAGitPush($repository);
         }
     }
 
-    public function execute($repository_path, $user_name, $oldrev, $newrev, $refname) {
+    public function execute($repository_path, $user_name, $oldrev, $newrev, $refname)
+    {
         $repository = $this->repository_factory->getFromFullPath($repository_path);
         if ($repository !== null) {
             $user = $this->user_manager->getUserByUserName($user_name);
@@ -119,7 +121,8 @@ class Git_Hook_PostReceive
         }
     }
 
-    private function executeForRepositoryAndUser(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname) {
+    private function executeForRepositoryAndUser(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
+    {
         $this->ci_launcher->executeForRepository($repository);
 
         $push_details = $this->log_analyzer->getPushDetails($repository, $user, $oldrev, $newrev, $refname);

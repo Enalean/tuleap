@@ -33,7 +33,8 @@ abstract class PlanningFactoryTest extends TuleapTestCase {
      */
     protected $user;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->user = aUser()->build();
@@ -42,7 +43,8 @@ abstract class PlanningFactoryTest extends TuleapTestCase {
 
 class PlanningFactoryTest_getPlanningTest extends PlanningFactoryTest {
 
-    public function itCanRetrieveBothAPlanningAndItsTrackers() {
+    public function itCanRetrieveBothAPlanningAndItsTrackers()
+    {
         $group_id            = 42;
         $planning_id         = 17;
         $planning_tracker_id = 54;
@@ -84,7 +86,8 @@ class PlanningFactoryTest_getPlanningTest extends PlanningFactoryTest {
 
 class PlanningFactory_duplicationTest extends PlanningFactoryTest {
 
-    public function itDuplicatesPlannings() {
+    public function itDuplicatesPlannings()
+    {
         $dao     = new MockPlanningDao();
         $factory = partial_mock('PlanningFactory', array('getPlanning'), array(
             $dao,
@@ -154,7 +157,8 @@ class PlanningFactory_duplicationTest extends PlanningFactoryTest {
         $factory->duplicatePlannings($group_id, $tracker_mapping, array());
     }
 
-    public function itDoesNothingIfThereAreNoTrackerMappings() {
+    public function itDoesNothingIfThereAreNoTrackerMappings()
+    {
         $dao     = new MockPlanningDao();
         $factory = aPlanningFactory()->withDao($dao)->build();
         $group_id = 123;
@@ -165,7 +169,8 @@ class PlanningFactory_duplicationTest extends PlanningFactoryTest {
         $factory->duplicatePlannings($group_id, $empty_tracker_mapping, array());
     }
 
-    public function itTranslatesUgroupsIdsFromUgroupsMapping() {
+    public function itTranslatesUgroupsIdsFromUgroupsMapping()
+    {
         $dao                          = new MockPlanningDao();
         $planning_permissions_manager = stub('PlanningPermissionsManager')->getGroupIdsWhoHasPermissionOnPlanning()->returns(array(4,103,104));
         $factory                      = partial_mock('PlanningFactory', array('getPlanning'), array(
@@ -245,7 +250,8 @@ class PlanningFactory_duplicationTest extends PlanningFactoryTest {
 
 class PlanningFactoryTest_getPlanningByPlanningTrackerTest extends PlanningFactoryTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->tracker   = aMockTracker()->withId(99)->build();
         $dao             = stub('PlanningDao')->searchByPlanningTrackerId()->returnsDar(
@@ -274,7 +280,8 @@ class PlanningFactoryTest_getPlanningByPlanningTrackerTest extends PlanningFacto
         $this->factory   = aPlanningFactory()->withDao($dao)->withTrackerFactory($tracker_factory)->build();
     }
 
-    public function itReturnsNothingIfThereIsNoAssociatedPlanning() {
+    public function itReturnsNothingIfThereIsNoAssociatedPlanning()
+    {
         $tracker   = aMockTracker()->withId(99)->build();
         $empty_dar = TestHelper::arrayToDar();
         $dao       = stub('PlanningDao')->searchByPlanningTrackerId()->returns($empty_dar);
@@ -282,7 +289,8 @@ class PlanningFactoryTest_getPlanningByPlanningTrackerTest extends PlanningFacto
         $this->assertNull($factory->getPlanningByPlanningTracker($tracker));
     }
 
-    public function itReturnsAPlanning() {
+    public function itReturnsAPlanning()
+    {
         $planning  = new Planning(1, 'Release Planning', 102, 'Release Backlog', 'Sprint Plan', array());
         $planning->setPlanningTracker($this->planning_tracker);
         $planning->setBacklogTrackers(array($this->backlog_tracker));
@@ -290,7 +298,8 @@ class PlanningFactoryTest_getPlanningByPlanningTrackerTest extends PlanningFacto
         $this->assertEqual($planning, $this->factory->getPlanningByPlanningTracker($this->tracker));
     }
 
-    public function itAddsThePlanningAndTheBacklogTrackers() {
+    public function itAddsThePlanningAndTheBacklogTrackers()
+    {
         $actual_planning = $this->factory->getPlanningByPlanningTracker($this->tracker);
         $this->assertEqual($this->planning_tracker, $actual_planning->getPlanningTracker());
         $this->assertEqual(array($this->backlog_tracker), $actual_planning->getBacklogTrackers());
@@ -322,12 +331,14 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
         $this->setUpPlannings($tracker_factory);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         TrackerFactory::clearInstance();
         parent::tearDown();
     }
 
-    private function setUpTrackers(TrackerFactory $tracker_factory, HierarchyDAO $hierarchy_dao) {
+    private function setUpTrackers(TrackerFactory $tracker_factory, HierarchyDAO $hierarchy_dao)
+    {
         $this->epic_tracker  = aMockTracker()->withId(104)->build();
         $this->story_tracker = aMockTracker()->withId(103)->build();
         $this->release_tracker  = aMockTracker()->withId(107)->build();
@@ -349,7 +360,8 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
         stub($hierarchy_dao)->searchTrackerHierarchy()->returns([]);
     }
 
-    private function setUpPlannings(TrackerFactory $tracker_factory) {
+    private function setUpPlannings(TrackerFactory $tracker_factory)
+    {
         $dao = mock('PlanningDao');
         stub($dao)->searchPlannings($this->project_id)->returnsDar(
             array(
@@ -387,11 +399,13 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
         $this->sprint_planning->setPlanningTracker($this->sprint_tracker);
     }
 
-    public function itReturnsAnEmptyArrayIfThereIsNoPlanningDefinedForAProject() {
+    public function itReturnsAnEmptyArrayIfThereIsNoPlanningDefinedForAProject()
+    {
         $this->assertEqual(array(), $this->factory->getPlannings($this->user, $this->project_id_without_planning));
     }
 
-    public function itReturnsAllDefinedPlanningsForAProjectInTheOrderDefinedByTheHierarchy() {
+    public function itReturnsAllDefinedPlanningsForAProjectInTheOrderDefinedByTheHierarchy()
+    {
         stub($this->release_tracker)->userCanView($this->user)->returns(true);
         stub($this->sprint_tracker)->userCanView($this->user)->returns(true);
 
@@ -401,7 +415,8 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
         );
     }
 
-    public function itReturnsOnlyPlanningsWhereTheUserCanViewTrackers() {
+    public function itReturnsOnlyPlanningsWhereTheUserCanViewTrackers()
+    {
         stub($this->release_tracker)->userCanView($this->user)->returns(true);
         stub($this->sprint_tracker)->userCanView($this->user)->returns(false);
 
@@ -414,7 +429,8 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
 
 class PlanningFactoryTest_getPlanningTrackerIdsByGroupIdTest extends PlanningFactoryTest {
 
-    public function itDelegatesRetrievalOfPlanningTrackerIdsByGroupIdToDao() {
+    public function itDelegatesRetrievalOfPlanningTrackerIdsByGroupIdToDao()
+    {
         $group_id     = 456;
         $expected_ids = array(1, 2, 3);
         $dao          = mock('PlanningDao');
@@ -429,7 +445,8 @@ class PlanningFactoryTest_getPlanningTrackerIdsByGroupIdTest extends PlanningFac
 
 class PlanningFactoryTest_getAvailablePlanningTrackersTest extends PlanningFactoryTest {
 
-    public function itRetrievesAvailablePlanningTrackersIncludingTheCurrentPlanningTracker() {
+    public function itRetrievesAvailablePlanningTrackersIncludingTheCurrentPlanningTracker()
+    {
         $group_id                     = 789;
         $planning_dao                 = mock('PlanningDao');
         $tracker_factory              = mock('TrackerFactory');
@@ -467,7 +484,8 @@ class PlanningFactoryTest_getVirtualTopPlanningTest extends TuleapTestCase {
     /** @var PlanningDao */
     private $planning_dao;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->user                         = mock('PFUser');
         $this->planning_dao                 = mock('PlanningDao');
@@ -480,13 +498,15 @@ class PlanningFactoryTest_getVirtualTopPlanningTest extends TuleapTestCase {
             array($this->planning_dao, $this->tracker_factory, $this->planning_permissions_manager)
         );
     }
-    public function itThrowsAnExceptionIfNoPlanningsExistForProject() {
+    public function itThrowsAnExceptionIfNoPlanningsExistForProject()
+    {
         $this->expectException('Planning_NoPlanningsException');
 
         $this->planning_factory->getVirtualTopPlanning($this->user, 112);
     }
 
-    public function itCreatesNewPlanningWithValidBacklogAndPlanningTrackers() {
+    public function itCreatesNewPlanningWithValidBacklogAndPlanningTrackers()
+    {
         $backlog_tracker  = mock('Tracker');
         $planning_tracker = mock('Tracker');
         $form_element_factory = mock('Tracker_FormElementFactory');
@@ -523,7 +543,8 @@ class PlanningFactory_getNonLastLevelPlanningsTest extends PlanningFactoryTest {
      */
     private $tracker_factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->planning_dao                 = mock('PlanningDao');
@@ -531,7 +552,8 @@ class PlanningFactory_getNonLastLevelPlanningsTest extends PlanningFactoryTest {
         $this->planning_permissions_manager = mock('PlanningPermissionsManager');
     }
 
-    public function itReturnsAnEmptyArrayIfNoPlanningsExist() {
+    public function itReturnsAnEmptyArrayIfNoPlanningsExist()
+    {
         $factory = partial_mock('PlanningFactory', array('getPlannings'));
         stub($factory)->getPlannings()->returns(array());
 
@@ -540,7 +562,8 @@ class PlanningFactory_getNonLastLevelPlanningsTest extends PlanningFactoryTest {
         $this->assertCount($plannings, 0);
     }
 
-    public function itDoesNotReturnLastLevelPlannings() {
+    public function itDoesNotReturnLastLevelPlannings()
+    {
         $factory = partial_mock(
             'PlanningFactory',
             array('getPlannings'),

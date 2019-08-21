@@ -44,14 +44,16 @@ Mock::generate('FakeRecent');
 class UserTestVersion_MockPreferences extends UserTestVersion {
     protected $UserTestVersion_MockPreferences_hash = array();
 
-    public function getPreference($key) {
+    public function getPreference($key)
+    {
         if (isset($this->UserTestVersion_MockPreferences_hash[$key])) {
             return $this->UserTestVersion_MockPreferences_hash[$key];
         }
         return false;
     }
 
-    public function setPreference($key, $value) {
+    public function setPreference($key, $value)
+    {
         $this->UserTestVersion_MockPreferences_hash[$key] = $value;
     }
 
@@ -73,7 +75,8 @@ class UserTestVersion_MockPreferences extends UserTestVersion {
  */
 class UserTest extends TuleapTestCase {
 
-    function testStatus() {
+    function testStatus()
+    {
         $u1 = new UserTestVersion($this);
         $u1->setReturnValue('getStatus', 'A');
         $u2 = new UserTestVersion($this);
@@ -108,7 +111,8 @@ class UserTest extends TuleapTestCase {
         $this->assertFalse($u4->isRestricted());
     }
 
-    function testUnixStatus() {
+    function testUnixStatus()
+    {
         $u1 = new UserTestVersion($this);
         $u1->setReturnValue('getUnixStatus', 'A');
         $u2 = new UserTestVersion($this);
@@ -139,7 +143,8 @@ class UserTest extends TuleapTestCase {
         $this->assertTrue($u4->hasNoUnixAccount());
     }
 
-    function testPreferences() {
+    function testPreferences()
+    {
         $dao = new MockUserPreferencesDao($this);
         $dar = new MockDataAccessResult($this);
 
@@ -169,7 +174,8 @@ class UserTest extends TuleapTestCase {
         $this->assertFalse($user->getPreference('existing_preference'), 'Preferences has been deleted. No call to dao since cached during delete');
     }
 
-    function testNone() {
+    function testNone()
+    {
         $user_none = new UserTestVersion($this);
         $user_none->setReturnValue('getId', 100);
         $this->assertTrue($user_none->isNone());
@@ -179,7 +185,8 @@ class UserTest extends TuleapTestCase {
         $this->assertFalse($user->isNone());
     }
 
-    function testIsMemberSiteAdmin() {
+    function testIsMemberSiteAdmin()
+    {
         $siteadmin = new UserTestVersion2($this);
         $ug_siteadmin = array(
             '1' => array(
@@ -291,7 +298,8 @@ class UserTest extends TuleapTestCase {
         $this->assertEqual($res[0], $k1);
     }
 
-    function testGetAuthorizedKeysSplitedWith2Keys() {
+    function testGetAuthorizedKeysSplitedWith2Keys()
+    {
         $k1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtfKHvNobjjB+cYGue/c/SXUL9Htay'
             .'lfQJWnLiV3AuqnbrWm6l9WGnv6+44/6e38Jwk0ywuvCdM5xi9gtWPN9Cw2S8qLbhVr'
             .'qH9DAhwVR3LRYwr8jMm6enqUEh8pjHuIpcqkTJQJ9pY5D/GCqeOsO3tVF2M+RJuX9Z'
@@ -313,7 +321,8 @@ class UserTest extends TuleapTestCase {
         $this->assertEqual($res[1], $k2);
     }
 
-    function testGetAuthorizedKeysSplitedWithEmptyKey() {
+    function testGetAuthorizedKeysSplitedWithEmptyKey()
+    {
         $k1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtfKHvNobjjB+cYGue/c/SXUL9Htay'
             .'lfQJWnLiV3AuqnbrWm6l9WGnv6+44/6e38Jwk0ywuvCdM5xi9gtWPN9Cw2S8qLbhVr'
             .'qH9DAhwVR3LRYwr8jMm6enqUEh8pjHuIpcqkTJQJ9pY5D/GCqeOsO3tVF2M+RJuX9Z'
@@ -334,7 +343,8 @@ class UserTest extends TuleapTestCase {
         $this->assertEqual($res[2], $k2);
     }
 
-    function testActiveUserCanSeePeopleNotInHisProjects() {
+    function testActiveUserCanSeePeopleNotInHisProjects()
+    {
         $activeUser = new UserTestVersion2($this);
         $activeUser->setId(123);
         $activeUser->setReturnValue('getUserGroupData', array(101 => array(),
@@ -347,7 +357,8 @@ class UserTest extends TuleapTestCase {
         $this->assertTrue($activeUser->canSee($notProjectMember));
     }
 
-    function testRestrictedUserCanSeePeopleInHisProjects() {
+    function testRestrictedUserCanSeePeopleInHisProjects()
+    {
         $restrictedUser = new UserTestVersion2($this);
         $restrictedUser->setId(123);
         $restrictedUser->setReturnValue('getUserGroupData', array(101 => array(),
@@ -360,7 +371,8 @@ class UserTest extends TuleapTestCase {
         $this->assertTrue($restrictedUser->canSee($otherProjectMember));
     }
 
-    function testRestrictedUserCannotSeePeopleNotInHisProjects() {
+    function testRestrictedUserCannotSeePeopleNotInHisProjects()
+    {
         $restrictedUser = new UserTestVersion2($this);
         $restrictedUser->setId(123);
         $restrictedUser->setReturnValue('getUserGroupData', array(101 => array(),
@@ -373,14 +385,16 @@ class UserTest extends TuleapTestCase {
         $this->assertFalse($restrictedUser->canSee($notProjectMember));
     }
 
-    function testGetAuthorizedKeysSplitedWithoutKey() {
+    function testGetAuthorizedKeysSplitedWithoutKey()
+    {
         $user = new PFUser(array('language_id'     => 'en_US',
                                'authorized_keys' => ''));
         $res = $user->getAuthorizedKeys(true);
         $this->assertEqual(count($res), 0);
     }
 
-    function testGetAllProjectShouldListOnlyOneOccurenceOfEachProject() {
+    function testGetAllProjectShouldListOnlyOneOccurenceOfEachProject()
+    {
         $user = partial_mock('PFUser', array('getProjects', 'getUGroupDao'));
 
         $user->setReturnValue('getProjects', array(101, 103));
@@ -393,7 +407,8 @@ class UserTest extends TuleapTestCase {
         $this->assertEqual(array(102, 103, 104, 101), $user->getAllProjects());
     }
 
-    function testGetLanguageShouldUserLanguageFactoryIfNotDefined() {
+    function testGetLanguageShouldUserLanguageFactoryIfNotDefined()
+    {
         $langFactory = new MockBaseLanguageFactory();
         $langFactory->expectOnce('getBaseLanguage', array('fr_BE'));
 
@@ -402,7 +417,8 @@ class UserTest extends TuleapTestCase {
         $user->getLanguage();
     }
 
-    public function itStringifiesTheUser() {
+    public function itStringifiesTheUser()
+    {
         $this->assertEqual("User #123", aUser()->withId(123)->build()->__toString());
     }
 
@@ -441,7 +457,8 @@ class UserTogglePreference_Test extends TuleapTestCase {
     private $default_value   = 'display_avatars';
     private $alternate_value = 'display_usernames';
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->user = partial_mock(
             'PFUser',
             array('getPreferencesDao'),
@@ -456,7 +473,8 @@ class UserTogglePreference_Test extends TuleapTestCase {
         stub($this->user)->getPreferencesDao()->returns($this->dao);
     }
 
-    public function itSetTheAlternateValueWhenPreferenceIsTheDefaultOne() {
+    public function itSetTheAlternateValueWhenPreferenceIsTheDefaultOne()
+    {
         stub($this->dao)->search($this->user_id, $this->preference_name)->returnsDar(array(
             'user_id'          => $this->user_id,
             'preference_name'  => $this->preference_name,
@@ -468,7 +486,8 @@ class UserTogglePreference_Test extends TuleapTestCase {
         $this->user->togglePreference($this->preference_name, $this->default_value, $this->alternate_value);
     }
 
-    public function itSetTheDefaultValueWhenPreferenceIsTheAlternateOne() {
+    public function itSetTheDefaultValueWhenPreferenceIsTheAlternateOne()
+    {
         stub($this->dao)->search($this->user_id, $this->preference_name)->returnsDar(array(
             'user_id'          => $this->user_id,
             'preference_name'  => $this->preference_name,
@@ -480,7 +499,8 @@ class UserTogglePreference_Test extends TuleapTestCase {
         $this->user->togglePreference($this->preference_name, $this->default_value, $this->alternate_value);
     }
 
-    public function itSetTheDefaultValueWhenNoPreference() {
+    public function itSetTheDefaultValueWhenNoPreference()
+    {
         stub($this->dao)->search($this->user_id, $this->preference_name)->returnsEmptyDar();
 
         expect($this->dao)->set($this->user_id, $this->preference_name, $this->default_value)->once();

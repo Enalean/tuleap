@@ -27,7 +27,8 @@ class PermissionsUGroupMapper {
         ProjectUGroup::REGISTERED    => ProjectUGroup::REGISTERED,
     );
 
-    public function __construct(Project $project) {
+    public function __construct(Project $project)
+    {
         if (! $project->isPublic()) {
             $this->mapping = array(
                 ProjectUGroup::ANONYMOUS     => ProjectUGroup::PROJECT_MEMBERS,
@@ -49,7 +50,8 @@ class PermissionsUGroupMapper {
         }
     }
 
-    public function getUGroupIdAccordingToMapping($ugroup_id) {
+    public function getUGroupIdAccordingToMapping($ugroup_id)
+    {
         if (isset($this->mapping[$ugroup_id])) {
             return $this->mapping[$ugroup_id];
         }

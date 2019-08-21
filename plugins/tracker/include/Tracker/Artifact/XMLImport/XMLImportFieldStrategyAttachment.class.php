@@ -34,7 +34,8 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
     /** @var Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact */
     private $files_importer;
 
-    public function __construct($extraction_path, Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer, Logger $logger) {
+    public function __construct($extraction_path, Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer, Logger $logger)
+    {
         $this->extraction_path = $extraction_path;
         $this->files_importer  = $files_importer;
         $this->logger          = $logger;
@@ -91,7 +92,8 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         return $files_infos;
     }
 
-    private function isFieldChangeEmpty(SimpleXMLElement $values) {
+    private function isFieldChangeEmpty(SimpleXMLElement $values)
+    {
         if (count($values) === 1) {
             $value      = $values[0];
             $attributes = $value->attributes();
@@ -102,11 +104,13 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         return false;
     }
 
-    private function itCannotImportAnyFiles($values, $files_infos) {
+    private function itCannotImportAnyFiles($values, $files_infos)
+    {
         return count($values) > 0 && count($files_infos) === 0;
     }
 
-    private function getFileInfoForAttachment(SimpleXMLElement $file_xml, PFUser $submitted_by) {
+    private function getFileInfoForAttachment(SimpleXMLElement $file_xml, PFUser $submitted_by)
+    {
         $file_path =  $this->extraction_path .'/'. (string) $file_xml->path;
         if (! is_file($file_path)) {
             throw new Tracker_Artifact_XMLImport_Exception_FileNotFoundException($file_path);

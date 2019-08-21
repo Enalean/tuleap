@@ -20,7 +20,8 @@
 
 class Tracker_Migration_V3_ColumnsDao extends DataAccessObject {
 
-    public function create($tv5_id) {
+    public function create($tv5_id)
+    {
         $tv5_id = $this->da->escapeInt($tv5_id);
         $this->createTemporaryTable($tv5_id);
         $this->sayIfAFieldNeedTwoColumnsOrIsOnTheLeftOrOnTheRight($tv5_id);
@@ -28,7 +29,8 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject {
         $this->dropTemporaryTable($tv5_id);
     }
 
-    private function sayIfAFieldNeedTwoColumnsOrIsOnTheLeftOrOnTheRight($tv5_id) {
+    private function sayIfAFieldNeedTwoColumnsOrIsOnTheLeftOrOnTheRight($tv5_id)
+    {
         $this->update("SET @counter  = 0");
         $this->update("SET @previous = NULL");
         $this->update("SET @two_cols = 0");
@@ -58,7 +60,8 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function moveFieldsInTheirColumns($tv5_id) {
+    private function moveFieldsInTheirColumns($tv5_id)
+    {
         $parent_id = $left = $right = $left_rank = $right_rank = $rank = null;
         $sql = "SELECT *
                 FROM temp_tracker_field_$tv5_id
@@ -110,11 +113,13 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject {
         }
     }
 
-    private function trace($msg) {
+    private function trace($msg)
+    {
         //var_dump($msg);
     }
 
-    private function createColumn($index, $parent_id, $rank) {
+    private function createColumn($index, $parent_id, $rank)
+    {
         $sql = "INSERT INTO tracker_field(parent_id, formElement_type, name, label, rank, tracker_id, use_it)
                 SELECT $parent_id, 'column', 'column_$index', 'c$index', $rank, tracker_id, use_it
                 FROM tracker_field
@@ -124,7 +129,8 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject {
         return $id;
     }
 
-    private function createTemporaryTable($tv5_id) {
+    private function createTemporaryTable($tv5_id)
+    {
         $sql = "CREATE TABLE temp_tracker_field_$tv5_id (
                     id  INT(11) UNSIGNED NOT NULL PRIMARY KEY,
                     parent_id INT(11) UNSIGNED NOT NULL,
@@ -134,7 +140,8 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function dropTemporaryTable($tv5_id) {
+    private function dropTemporaryTable($tv5_id)
+    {
         $this->update("DROP TABLE temp_tracker_field_$tv5_id");
     }
 }

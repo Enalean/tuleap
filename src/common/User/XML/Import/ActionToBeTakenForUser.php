@@ -50,23 +50,28 @@ abstract class ActionToBeTakenForUser implements User {
         $this->original_ldap_id = $original_ldap_id;
     }
 
-    public function getUserName() {
+    public function getUserName()
+    {
         return $this->username;
     }
 
-    public function getRealName() {
+    public function getRealName()
+    {
         return $this->realname;
     }
 
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->email;
     }
 
-    public function getOriginalUserId() {
+    public function getOriginalUserId()
+    {
         return $this->original_user_id;
     }
 
-    public function getOriginalLdapId() {
+    public function getOriginalLdapId()
+    {
         return $this->original_ldap_id;
     }
 

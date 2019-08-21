@@ -60,7 +60,8 @@ class NaturePresenterFactory
     }
 
     /** @return NaturePresenter[] */
-    public function getAllNatures() {
+    public function getAllNatures()
+    {
         $natures = $this->getDefaultNatures();
         $natures = array_merge($natures, $this->getPluginsNatures());
         $natures = array_merge($natures, $this->getCustomNatures());
@@ -142,7 +143,8 @@ class NaturePresenterFactory
     }
 
     /** @return NaturePresenter[] */
-    public function getAllUsedNaturesByProject(Project $project) {
+    public function getAllUsedNaturesByProject(Project $project)
+    {
         $natures = array();
 
         foreach ( $this->dao->searchAllUsedNatureByProject($project->getGroupId()) as $row) {
@@ -153,7 +155,8 @@ class NaturePresenterFactory
     }
 
     /** @return NaturePresenter | null */
-    public function getFromShortname($shortname) {
+    public function getFromShortname($shortname)
+    {
         if($shortname == \Tracker_FormElement_Field_ArtifactLink::NO_NATURE) {
             return new NaturePresenter('', '', '', true);
         }
@@ -191,7 +194,8 @@ class NaturePresenterFactory
         return $presenter;
     }
 
-    public function instantiateFromRow($row) {
+    public function instantiateFromRow($row)
+    {
         return new NaturePresenter(
             $row['shortname'],
             $row['forward_label'],

@@ -31,7 +31,8 @@ class Tuleap_CustomToursFactory {
     /** @var Url */
     private $url_processor;
 
-    public function __construct(ProjectManager $project_manager, URL $url_processor) {
+    public function __construct(ProjectManager $project_manager, URL $url_processor)
+    {
         $this->project_manager = $project_manager;
         $this->url_processor   = $url_processor;
     }
@@ -39,7 +40,8 @@ class Tuleap_CustomToursFactory {
     /**
      * @return Tuleap_Tour[]
      */
-    public function getToursForPage(PFUser $user, $current_location) {
+    public function getToursForPage(PFUser $user, $current_location)
+    {
         $json = $this->getTourListJson($user);
 
         $tour_list = json_decode($json, true);
@@ -57,7 +59,8 @@ class Tuleap_CustomToursFactory {
         return $this->createToursFromList($tour_list, $current_location, $tour_folder);
     }
 
-    protected function getTourListJson(PFUser $user) {
+    protected function getTourListJson(PFUser $user)
+    {
         $tour_folder = $this->getToursFolder($user);
         $config_file = $tour_folder.self::CUSTOM_TOURS_LIST_FILE;
         if (! is_dir($tour_folder) || ! file_exists($config_file)) {
@@ -67,12 +70,14 @@ class Tuleap_CustomToursFactory {
         return file_get_contents($config_file);
     }
 
-    private function getToursFolder(PFUser $user) {
+    private function getToursFolder(PFUser $user)
+    {
         $user_lang = $user->getLocale();
         return ForgeConfig::get('sys_custom_incdir').'/'.$user_lang.'/tour/';
     }
 
-    private function extractWellFormedTourList(array &$tour_list, $tour_folder) {
+    private function extractWellFormedTourList(array &$tour_list, $tour_folder)
+    {
         foreach ($tour_list as $key => $tour_data) {
             if (! $this->isTourDataWellFormed($tour_data) ||
                 ! $this->doesTourStepsFileExist($tour_folder, $tour_data['tour_name'])
@@ -83,7 +88,8 @@ class Tuleap_CustomToursFactory {
         }
     }
 
-    private function isTourDataWellFormed($tour_data) {
+    private function isTourDataWellFormed($tour_data)
+    {
         return (
             is_array($tour_data)
             && isset($tour_data['tour_name'])
@@ -93,12 +99,14 @@ class Tuleap_CustomToursFactory {
          );
     }
 
-    private function doesTourStepsFileExist($tour_folder, $tour_name) {
+    private function doesTourStepsFileExist($tour_folder, $tour_name)
+    {
         $file_name = $tour_folder . $tour_name.'.json';
         return file_exists($file_name);
     }
 
-    private function createToursFromList($tour_list, $current_location, $tour_folder) {
+    private function createToursFromList($tour_list, $current_location, $tour_folder)
+    {
         $tours = array();
         foreach ($tour_list as $listed_tour) {
             if (! $this->doesUrlMatchLocation($listed_tour['url'], $current_location)) {
@@ -117,7 +125,8 @@ class Tuleap_CustomToursFactory {
         return $tours;
     }
 
-    private function doesUrlMatchLocation($url, $current_location) {
+    private function doesUrlMatchLocation($url, $current_location)
+    {
         $current_location = strtolower(trim($current_location, '/'));
         $url              = strtolower(trim($url, '/'));
 
@@ -139,7 +148,8 @@ class Tuleap_CustomToursFactory {
      * @see URL::getGroupIdFromUrl  It constructs the project_id by searching the url
      *                              for a project ID or shortname or other.
      */
-    private function replaceProjectPlaceHoldersInUrl(&$url, $current_location) {
+    private function replaceProjectPlaceHoldersInUrl(&$url, $current_location)
+    {
         $project_id  = $this->url_processor->getGroupIdFromUrl($current_location);
         try {
             $project = $this->project_manager->getValidProject($project_id);
@@ -159,7 +169,8 @@ class Tuleap_CustomToursFactory {
         }
     }
 
-    private function replaceAttributeValuesInUrl(&$url, $current_location) {
+    private function replaceAttributeValuesInUrl(&$url, $current_location)
+    {
         $placeholder = self::PLACEHOLDER_ATTRIBUTE_VALUE;
 
         if (strstr($url, $placeholder)) {
@@ -173,7 +184,8 @@ class Tuleap_CustomToursFactory {
         }
     }
 
-    private function stepsAreValid(array $json_tour) {
+    private function stepsAreValid(array $json_tour)
+    {
         if (! isset($json_tour['steps']) || ! is_array($json_tour['steps'])) {
             return false;
         }
@@ -186,7 +198,8 @@ class Tuleap_CustomToursFactory {
      * @throws Tuleap_UnknownTourException
      * @throws Tuleap_InvalidTourException
      */
-    public function getTour(PFUser $user, $tour_name) {
+    public function getTour(PFUser $user, $tour_name)
+    {
         $tour_folder = $this->getToursFolder($user);
 
         $json      = $this->getTourListJson($user);
@@ -215,7 +228,8 @@ class Tuleap_CustomToursFactory {
      * @throws Tuleap_UnknownTourException
      * @throws Tuleap_InvalidTourException
      */
-    private function getValidTour($tour_name, $tour_folder) {
+    private function getValidTour($tour_name, $tour_folder)
+    {
         $file = $tour_folder . $tour_name . '.json';
 
         if (! file_exists($file)) {

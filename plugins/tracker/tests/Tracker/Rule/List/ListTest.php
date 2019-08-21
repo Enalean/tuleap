@@ -28,7 +28,8 @@ class Tracker_Rule_List_ListTest extends TuleapTestCase {
 
 
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->list_rule = new Tracker_Rule_List();
     }
@@ -36,12 +37,14 @@ class Tracker_Rule_List_ListTest extends TuleapTestCase {
     /*
      * Source Field tests
      */
-    public function testSetSourceFieldIdReturnsModelObject() {
+    public function testSetSourceFieldIdReturnsModelObject()
+    {
         $set = $this->list_rule->setSourceFieldId(123);
         $this->assertEqual($this->list_rule, $set);
     }
 
-    public function testGetSourceFieldIdReturnsFieldIdSet() {
+    public function testGetSourceFieldIdReturnsFieldIdSet()
+    {
         $this->list_rule->setSourceFieldId(45);
         $this->assertEqual(45, $this->list_rule->getSourceFieldId());
     }
@@ -49,12 +52,14 @@ class Tracker_Rule_List_ListTest extends TuleapTestCase {
     /*
      * Target Field tests
      */
-    public function testSetTargetFieldIdReturnsModelObject() {
+    public function testSetTargetFieldIdReturnsModelObject()
+    {
         $set = $this->list_rule->setSourceFieldId(123);
         $this->assertEqual($this->list_rule, $set);
     }
 
-    public function testGetTargetFieldIdReturnsTargetIdSet() {
+    public function testGetTargetFieldIdReturnsTargetIdSet()
+    {
         $this->list_rule->setTargetFieldId(45);
         $this->assertEqual(45, $this->list_rule->getTargetFieldId());
     }
@@ -62,12 +67,14 @@ class Tracker_Rule_List_ListTest extends TuleapTestCase {
     /*
      * Tracker Field tests
      */
-    public function testSetTrackerFieldIdReturnsModelObject() {
+    public function testSetTrackerFieldIdReturnsModelObject()
+    {
         $set = $this->list_rule->setTrackerId(123);
         $this->assertEqual($this->list_rule, $set);
     }
 
-    public function testGetTrackerFieldIdReturnsTrackerIdSet() {
+    public function testGetTrackerFieldIdReturnsTrackerIdSet()
+    {
         $this->list_rule->setTrackerId(45);
         $this->assertEqual(45, $this->list_rule->getTrackerId());
     }
@@ -75,12 +82,14 @@ class Tracker_Rule_List_ListTest extends TuleapTestCase {
     /*
      * Source Field value tests
      */
-    public function testSetSourceValueReturnsModelObject() {
+    public function testSetSourceValueReturnsModelObject()
+    {
         $set = $this->list_rule->setSourceValue(123);
         $this->assertEqual($this->list_rule, $set);
     }
 
-    public function testGetSourceValueReturnsFieldIdSet() {
+    public function testGetSourceValueReturnsFieldIdSet()
+    {
         $this->list_rule->setSourceValue(45);
         $this->assertEqual(45, $this->list_rule->getSourceValue());
     }
@@ -88,12 +97,14 @@ class Tracker_Rule_List_ListTest extends TuleapTestCase {
     /*
      * Target Field value tests
      */
-    public function testSetTargetValueReturnsModelObject() {
+    public function testSetTargetValueReturnsModelObject()
+    {
         $set = $this->list_rule->setSourceValue(123);
         $this->assertEqual($this->list_rule, $set);
     }
 
-    public function testGetTargetValueReturnsTargetIdSet() {
+    public function testGetTargetValueReturnsTargetIdSet()
+    {
         $this->list_rule->setTargetValue(45);
         $this->assertEqual(45, $this->list_rule->getTargetValue());
     }

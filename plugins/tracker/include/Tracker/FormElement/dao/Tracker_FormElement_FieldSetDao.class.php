@@ -22,12 +22,14 @@
  *  Data Access Object for Tracker_FormElement_Field
  */
 class Tracker_FormElement_FieldSetDao extends DataAccessObject {
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_fieldset';
     }
 
-    function searchById($id) {
+    function searchById($id)
+    {
         $id  = $this->da->escapeInt($id);
         $sql = "SELECT *
                 FROM $this->table_name
@@ -35,7 +37,8 @@ class Tracker_FormElement_FieldSetDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchByTrackerId($tracker_id) {
+    function searchByTrackerId($tracker_id)
+    {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
                 FROM $this->table_name
@@ -44,7 +47,8 @@ class Tracker_FormElement_FieldSetDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function duplicate($from_fieldset_id, $to_tracker_id) {
+    public function duplicate($from_fieldset_id, $to_tracker_id)
+    {
         $from_fieldset_id = $this->da->escapeInt($from_fieldset_id);
         $to_tracker_id    = $this->da->escapeInt($to_tracker_id);
         $sql = "INSERT INTO $this->table_name (tracker_id, name, description, rank)
@@ -54,7 +58,8 @@ class Tracker_FormElement_FieldSetDao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
 
-    public function create($tracker_id, $name, $description, $rank) {
+    public function create($tracker_id, $name, $description, $rank)
+    {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $name        = $this->da->quoteSmart($name);
         $description = $this->da->quoteSmart($description);
@@ -65,7 +70,8 @@ class Tracker_FormElement_FieldSetDao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
 
-    public function save($fieldset_id, $tracker_id, $name, $description, $rank) {
+    public function save($fieldset_id, $tracker_id, $name, $description, $rank)
+    {
         $fieldset_id = $this->da->escapeInt($fieldset_id);
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $name        = $this->da->quoteSmart($name);
@@ -78,7 +84,8 @@ class Tracker_FormElement_FieldSetDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function delete($fieldset_id) {
+    public function delete($fieldset_id)
+    {
         $fieldset_id = $this->da->escapeInt($fieldset_id);
         $sql = "DELETE FROM $this->table_name 
                 WHERE id = $fieldset_id";

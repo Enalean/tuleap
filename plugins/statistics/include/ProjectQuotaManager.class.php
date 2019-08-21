@@ -50,7 +50,8 @@ class ProjectQuotaManager {
     /**
      * ProjectQuotaManager constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->dao = $this->getDao();
         $this->pm  = ProjectManager::instance();
 
@@ -77,7 +78,8 @@ class ProjectQuotaManager {
      *
      * @return int
      */
-    public function getProjectAuthorizedQuota($group_id) {
+    public function getProjectAuthorizedQuota($group_id)
+    {
         $quota = $this->getProjectCustomQuota($group_id);
         if (empty($quota)) {
             $quota = $this->getDefaultQuota();
@@ -92,7 +94,8 @@ class ProjectQuotaManager {
      *
      * @return Float
      */
-    private function convertQuotaToGiB($size) {
+    private function convertQuotaToGiB($size)
+    {
         return $size * 1024 * 1024 * 1024;
     }
 
@@ -104,7 +107,8 @@ class ProjectQuotaManager {
      *
      * @return bool
      */
-    private function isProjectOverQuota($current_size, $allowed_size) {
+    private function isProjectOverQuota($current_size, $allowed_size)
+    {
         if (!empty($current_size) && ($current_size > $allowed_size)) {
             return True;
         }
@@ -150,7 +154,8 @@ class ProjectQuotaManager {
         return $exceeding_projects;
     }
 
-    private function fetchProjects() {
+    private function fetchProjects()
+    {
         return $this->diskUsageManager->_getDao()->searchAllGroups();
     }
 
@@ -161,7 +166,8 @@ class ProjectQuotaManager {
      *
      * @return int
      */
-    public function getProjectCustomQuota($groupId) {
+    public function getProjectCustomQuota($groupId)
+    {
         $allowedQuota = null;
         $res = $this->dao->getProjectCustomQuota($groupId);
         if ($res && !$res->isError() && $res->rowCount() == 1) {
@@ -181,7 +187,8 @@ class ProjectQuotaManager {
      *
      * @return Void
      */
-    public function addQuota($project, $requester, $quota, $motivation) {
+    public function addQuota($project, $requester, $quota, $motivation)
+    {
         $maxQuota = $this->getMaximumQuota();
         if (empty($project)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_project'));
@@ -221,7 +228,8 @@ class ProjectQuotaManager {
      *
      * @return int
      */
-    public function getDefaultQuota() {
+    public function getDefaultQuota()
+    {
         $quota = intval($this->diskUsageManager->getProperty('allowed_quota'));
         if (!$quota) {
             $quota = 5;
@@ -234,7 +242,8 @@ class ProjectQuotaManager {
      *
      * @return int
      */
-    public function getMaximumQuota() {
+    public function getMaximumQuota()
+    {
         $maxQuota = intval($this->diskUsageManager->getProperty('maximum_quota'));
         if (!$maxQuota) {
             $maxQuota = 50;
@@ -242,7 +251,8 @@ class ProjectQuotaManager {
         return $maxQuota;
     }
 
-    public function deleteCustomQuota(Project $project) {
+    public function deleteCustomQuota(Project $project)
+    {
         $defaultQuota = $this->diskUsageManager->getProperty('allowed_quota');
         $historyDao   = new ProjectHistoryDao(CodendiDataAccess::instance());
         if ($this->dao->deleteCustomQuota($project->getId())) {
@@ -256,7 +266,8 @@ class ProjectQuotaManager {
     /**
      * @return Statistics_ProjectQuotaDao
      */
-    public function getDao() {
+    public function getDao()
+    {
         if (!isset($this->dao)) {
             $this->dao = new Statistics_ProjectQuotaDao();
         }

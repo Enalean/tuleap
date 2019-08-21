@@ -26,18 +26,21 @@ require_once __DIR__ .'/../../../../bootstrap.php';
 
 class BacklogItemPresenterCollectionTest extends TuleapTestCase {
 
-    public function itReturnsFalseWhenCollectionIsEmpty() {
+    public function itReturnsFalseWhenCollectionIsEmpty()
+    {
         $collection = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
         $this->assertFalse($collection->containsId(5));
     }
 
-    public function itReturnsTrueWhenItemBelongsToCollection() {
+    public function itReturnsTrueWhenItemBelongsToCollection()
+    {
         $collection = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
         $collection->push(stub('AgileDashboard_Milestone_Backlog_IBacklogItem')->id()->returns(5));
         $this->assertTrue($collection->containsId(5));
     }
 
-    public function itReturnsFalseWhenItemDoesntBelongToCollection() {
+    public function itReturnsFalseWhenItemDoesntBelongToCollection()
+    {
         $collection = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
         $collection->push(stub('AgileDashboard_Milestone_Backlog_IBacklogItem')->id()->returns(5));
         $this->assertFalse($collection->containsId(2));

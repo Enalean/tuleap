@@ -44,7 +44,8 @@ class PluginsAdministrationViews extends Views {
      */
     private $plugin_disabler_verifier;
 
-    function __construct(&$controler, $view=null) {
+    function __construct(&$controler, $view=null)
+    {
         $this->View($controler, $view);
         $this->plugin_manager           = PluginManager::instance();
         $this->dependency_solver        = new PluginDependencySolver($this->plugin_manager);
@@ -58,16 +59,19 @@ class PluginsAdministrationViews extends Views {
         );
     }
 
-    public function header() {
+    public function header()
+    {
         $title = dgettext('tuleap-pluginsadministration', 'Plugins');
         $GLOBALS['HTML']->header(array('title'=>$title, 'selected_top_tab' => 'admin', 'main_classes' => array('tlp-framed')));
     }
 
-    function footer() {
+    function footer()
+    {
         $GLOBALS['HTML']->footer(array());
     }
 
-    public function display($view='') {
+    public function display($view='')
+    {
         $renderer       = new AdminPageRenderer();
         $request        = HTTPRequest::instance();
         $plugin_factory = PluginFactory::instance();
@@ -140,14 +144,16 @@ class PluginsAdministrationViews extends Views {
     }
 
     // {{{ Views
-    function browse() {
+    function browse()
+    {
         $output = '';
         $output .= $this->getInstalledPluginsPresenter();
         $output .= $this->getAvailablePluginsPresenter();
         echo $output;
     }
 
-    private function getFormattedReadme($name) {
+    private function getFormattedReadme($name)
+    {
         $readme_file    = $this->plugin_manager->getInstallReadme($name);
         $readme_content = $this->plugin_manager->fetchFormattedReadme($readme_file);
         return $readme_content;
@@ -236,7 +242,8 @@ class PluginsAdministrationViews extends Views {
         );
     }
 
-    private function getPluginResourceRestrictor() {
+    private function getPluginResourceRestrictor()
+    {
         return new PluginResourceRestrictor(
             new RestrictedPluginDao()
         );
@@ -244,14 +251,16 @@ class PluginsAdministrationViews extends Views {
 
     var $_plugins;
 
-    function _emphasis($name, $enable) {
+    function _emphasis($name, $enable)
+    {
         if (!$enable) {
             $name = '<span class="pluginsadministration_unavailable">'.$name.'</span>';
         }
         return $name;
     }
 
-    function _searchPlugins() {
+    function _searchPlugins()
+    {
         if (!$this->_plugins) {
             $this->_plugins    = array();
 

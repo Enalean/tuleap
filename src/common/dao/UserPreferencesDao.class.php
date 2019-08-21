@@ -24,7 +24,8 @@ require_once('include/DataAccessObject.class.php');
  */
 class UserPreferencesDao extends DataAccessObject {
 
-    function __construct($da = null) {
+    function __construct($da = null)
+    {
         parent::__construct($da);
     }
 
@@ -34,7 +35,8 @@ class UserPreferencesDao extends DataAccessObject {
      * @param string $preference_name
      * @return DataAccessResult
      */
-    function search($user_id, $preference_name) {
+    function search($user_id, $preference_name)
+    {
         $sql = sprintf("SELECT * FROM user_preferences WHERE user_id = %d AND preference_name = %s",
             $this->da->escapeInt($user_id),
             $this->da->quoteSmart($preference_name));
@@ -49,7 +51,8 @@ class UserPreferencesDao extends DataAccessObject {
      * @param string $preference_value
      * @return bool
      */
-    function set($user_id, $preference_name, $preference_value) {
+    function set($user_id, $preference_name, $preference_value)
+    {
         $sql = sprintf("INSERT INTO user_preferences (user_id, preference_name, preference_value) VALUES (%d, %s, %s)
                         ON DUPLICATE KEY UPDATE preference_value = %s",
             $this->da->escapeInt($user_id),
@@ -62,14 +65,16 @@ class UserPreferencesDao extends DataAccessObject {
     /**
      * Delete a preference
      */
-    function delete($user_id, $preference_name) {
+    function delete($user_id, $preference_name)
+    {
         $sql = sprintf("DELETE FROM user_preferences WHERE user_id = %d AND preference_name = %s",
             $this->da->escapeInt($user_id),
             $this->da->quoteSmart($preference_name));
         return $this->update($sql);
     }
 
-    function deleteByPreferenceNameAndValue($preference_name, $preference_value) {
+    function deleteByPreferenceNameAndValue($preference_name, $preference_value)
+    {
         $preference_name  = $this->da->quoteSmart($preference_name);
         $preference_value = $this->da->quoteSmart($preference_value);
         $sql = "DELETE FROM user_preferences

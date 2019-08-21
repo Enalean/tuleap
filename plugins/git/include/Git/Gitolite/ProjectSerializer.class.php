@@ -55,12 +55,12 @@ class Git_Gitolite_ProjectSerializer {
     private $version_detector;
 
     public function __construct(
-            Logger $logger,
-            GitRepositoryFactory $repository_factory,
-            Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer,
-            Git_GitRepositoryUrlManager $url_manager,
-            BigObjectAuthorizationManager $big_object_authorization_manager,
-            VersionDetector $version_detector
+        Logger $logger,
+        GitRepositoryFactory $repository_factory,
+        Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer,
+        Git_GitRepositoryUrlManager $url_manager,
+        BigObjectAuthorizationManager $big_object_authorization_manager,
+        VersionDetector $version_detector
     ) {
         $this->logger                           = $logger;
         $this->repository_factory               = $repository_factory;
@@ -75,7 +75,8 @@ class Git_Gitolite_ProjectSerializer {
      *
      * @param Project $project
      */
-    public function dumpProjectRepoConf(Project $project) {
+    public function dumpProjectRepoConf(Project $project)
+    {
         $this->logger->debug("Dumping project repo conf for: " . $project->getUnixName());
 
         $project_config = '';
@@ -89,7 +90,8 @@ class Git_Gitolite_ProjectSerializer {
         return $project_config;
     }
 
-    public function dumpPartialProjectRepoConf(Project $project, array $repositories) {
+    public function dumpPartialProjectRepoConf(Project $project, array $repositories)
+    {
         $this->logger->debug("Dumping partial project repo conf for: " . $project->getUnixName());
         $project_config = '';
         foreach ($repositories as $repository) {
@@ -140,7 +142,8 @@ class Git_Gitolite_ProjectSerializer {
         return $repo_config. PHP_EOL;
     }
 
-    protected function fetchReposConfig(Project $project, GitRepository $repository) {
+    protected function fetchReposConfig(Project $project, GitRepository $repository)
+    {
         $repo_full_name   = $this->repoFullName($repository, $project->getUnixName());
         $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
         $repo_config .= $this->fetchMailHookConfig($project, $repository);
@@ -150,7 +153,8 @@ class Git_Gitolite_ProjectSerializer {
         return $repo_config. PHP_EOL;
     }
 
-    public function repoFullName(GitRepository $repo, $unix_name) {
+    public function repoFullName(GitRepository $repo, $unix_name)
+    {
         return PathJoinUtil::unixPathJoin(array($unix_name, $repo->getFullName()));
     }
 
@@ -160,7 +164,8 @@ class Git_Gitolite_ProjectSerializer {
      * @param Project $project
      * @param GitRepository $repository
      */
-    public function fetchMailHookConfig($project, $repository) {
+    public function fetchMailHookConfig($project, $repository)
+    {
         $conf  = '';
         $conf .= ' config hooks.showrev = "';
         $conf .= $repository->getPostReceiveShowRev($this->url_manager);

@@ -25,7 +25,8 @@ class b201207271519_add_ldap_ugroup_synchro_policy_and_bind_option_columns exten
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add synchro_policy & bind_option columns to plugin_ldap_ugroup table
 EOT;
@@ -36,7 +37,8 @@ EOT;
      *
      * @retun Void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -45,7 +47,8 @@ EOT;
      *
      * @return Void
      */
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_ldap_ugroup ADD COLUMN synchro_policy VARCHAR(255) NOT NULL default 'never' AFTER ldap_group_dn";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
@@ -64,7 +67,8 @@ EOT;
      *
      * @return Void
      */
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->columnNameExists('plugin_ldap_ugroup', 'synchro_policy')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('The column synchro_policy in table plugin_ldap_ugroup still not created');
         }

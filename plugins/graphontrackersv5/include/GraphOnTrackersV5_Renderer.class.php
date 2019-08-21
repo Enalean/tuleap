@@ -32,7 +32,8 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
     protected $chart_to_edit;
     protected $plugin;
 
-    public function __construct($id, $report, $name, $description, $rank, $plugin, UserManager $user_manager) {
+    public function __construct($id, $report, $name, $description, $rank, $plugin, UserManager $user_manager)
+    {
         parent::__construct($id, $report, $name, $description, $rank);
         $this->charts        = null;
         $this->chart_to_edit = null;
@@ -40,23 +41,27 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         $this->user_manager  = $user_manager;
     }
 
-    public function initiateSession() {
+    public function initiateSession()
+    {
         $this->report_session = new Tracker_Report_Session($this->report->id);
         $this->report_session->changeSessionNamespace('renderers');
     }
 
-    public function setCharts($charts) {
+    public function setCharts($charts)
+    {
         $this->charts = $charts;
     }
 
-    public function getCharts() {
+    public function getCharts()
+    {
         return $this->charts;
     }
 
     /**
      * Delete the renderer
      */
-    public function delete() {
+    public function delete()
+    {
         foreach($this->getChartFactory()->getCharts($this) as $chart) {
             $this->getChartFactory()->deleteChart(
                 $this->id,
@@ -72,7 +77,8 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
      * @param Request $request
      * @return string
      */
-    public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user) {
+    public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user)
+    {
         $html = '';
         $this->initiateSession();
         $readonly = !$report_can_be_modified || $user->isAnonymous();
@@ -135,7 +141,8 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         return $html;
     }
 
-    protected function fetchCharts(PFUser $current_user, $in_dashboard = false, $readonly = null, $store_in_session = true) {
+    protected function fetchCharts(PFUser $current_user, $in_dashboard = false, $readonly = null, $store_in_session = true)
+    {
         $html = '';
 
         if (!$readonly) {
@@ -211,7 +218,8 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
      * Process the request
      * @param Request $request
      */
-    public function processRequest(TrackerManager $tracker_manager, $request, $current_user) {
+    public function processRequest(TrackerManager $tracker_manager, $request, $current_user)
+    {
         $renderer_parameters = $request->get('renderer_plugin_graphontrackersv5');
         if ($renderer_parameters && is_array($renderer_parameters)) {
             if (isset($renderer_parameters['add_chart'])) {
@@ -267,21 +275,25 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
     /**
      * Duplicate the renderer
      */
-    public function duplicate($from_renderer, $field_mapping) {
+    public function duplicate($from_renderer, $field_mapping)
+    {
         $this->getChartFactory()->duplicate($from_renderer, $this, $field_mapping);
     }
 
-    public function afterProcessRequest($engine, $request, $current_user) {
+    public function afterProcessRequest($engine, $request, $current_user)
+    {
         if (!$this->chart_to_edit) {
             parent::afterProcessRequest($engine, $request, $current_user);
         }
     }
 
-    protected function getChartFactory() {
+    protected function getChartFactory()
+    {
         return GraphOnTrackersV5_ChartFactory::instance();
     }
 
-    public function getType(){
+    public function getType()
+    {
         return 'plugin_graphontrackersv5';
     }
 
@@ -290,7 +302,8 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
      *
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      */
-    public function exportToXml(SimpleXMLElement $root, array $formsMapping) {
+    public function exportToXml(SimpleXMLElement $root, array $formsMapping)
+    {
         parent::exportToXml($root, $formsMapping);
         $child = $root->addChild('charts');
         foreach($this->getChartFactory()->getCharts($this) as $chart) {
@@ -304,7 +317,8 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
      *
      * @param Tracker_Report_Renderer $renderer containing the charts
      */
-    public function afterSaveObject(Tracker_Report_Renderer $renderer) {
+    public function afterSaveObject(Tracker_Report_Renderer $renderer)
+    {
         $cf = $this->getChartFactory();
         foreach ($renderer->getCharts() as $chart) {
             $chartDB = $cf->createDb($this->id, $chart);
@@ -315,7 +329,8 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
     * Set the session
     *
     */
-    public function setSession($renderer_id = null) {
+    public function setSession($renderer_id = null)
+    {
         if(!$renderer_id) {
             $renderer_id = $this->id;
         }
@@ -330,7 +345,8 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
      *
      * @return bool true if success, false if failure
      */
-    public function update() {
+    public function update()
+    {
         $success = true;
         //Save charts
         $charts = $this->getChartFactory()->getCharts($this);
@@ -362,7 +378,8 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
      *
      * @return bool true if success, false if failure
      */
-    public function create() {
+    public function create()
+    {
         $success = true;
         $rrf = Tracker_Report_RendererFactory::instance();
 
@@ -382,7 +399,8 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         return $success;
     }
 
-    public function getIcon() {
+    public function getIcon()
+    {
         return 'fa fa-bar-chart-o';
     }
 

@@ -98,7 +98,8 @@ class ArtifactImport {
    *
    *      @return bool success.
    */
-    function __construct($ath,$art_field_fact,$group) {
+    function __construct($ath,$art_field_fact,$group)
+    {
         $this->ath = $ath;
         $this->art_field_fact = $art_field_fact;
         $this->group = $group;
@@ -113,7 +114,8 @@ class ArtifactImport {
         $this->parsed_labels = array();
     }
 
-    function localizeLabels() {
+    function localizeLabels()
+    {
         // TODO: Localize this properly by adding those 4 fields to the artifact table
         // (standard fields) and the artifact field table with a special flag and make sure
         // all tracker scripts handle them properly
@@ -131,7 +133,8 @@ class ArtifactImport {
     }
 
 
-    function getUsedFields() {
+    function getUsedFields()
+    {
         $fields =  $this->art_field_fact->getAllUsedFields();
         foreach ($fields as $field) {
             if ( $field->getName() != "comment_type_id" ) {
@@ -178,7 +181,8 @@ class ArtifactImport {
    * @param $data (IN): array containing the field labels
    * @return true if parse ok, false if errors occurred
    */
-    function parseFieldNames($data) {
+    function parseFieldNames($data)
+    {
 
         $this->num_columns = count($data);
 
@@ -208,7 +212,8 @@ class ArtifactImport {
         return true;
     }
 
-    function checkMandatoryFields() {
+    function checkMandatoryFields()
+    {
       // verify if we have all mandatory fields in the case we have to create an artifact
         if ($this->aid_column == -1) {
             foreach ($this->used_fields as $label => $field) {
@@ -244,7 +249,8 @@ class ArtifactImport {
    * @param row: row number in csv file (for error reporting)
    * @param data: array containing the parsed csv file (for error reporting)
    */
-    function checkPredefinedValues($field,$field_name,$label,$val,$predef_vals,$row,$data) {
+    function checkPredefinedValues($field,$field_name,$label,$val,$predef_vals,$row,$data)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         if ($field->getDisplayType() == "MB") {
             $val_arr = explode(",",$val);
@@ -293,7 +299,8 @@ class ArtifactImport {
    * @param from_update: take into account special case where column artifact_id is specified but
    *                      for this concrete artifact no aid is given
    */
-    function checkValues($row,&$data,$insert,$from_update=false) {
+    function checkValues($row,&$data,$insert,$from_update=false)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         for ($c=0; $c < count($this->parsed_labels); $c++) {
             $label = $this->parsed_labels[$c];
@@ -402,7 +409,8 @@ class ArtifactImport {
    * @param $from_update: take into account special case where column artifact_id is specified but
    *                      for this concrete artifact no aid is given
    */
-    function checkInsertArtifact($row,&$data,$from_update=false) {
+    function checkInsertArtifact($row,&$data,$from_update=false)
+    {
         global $Language;
         $hp = Codendi_HTMLPurifier::instance();
       // first make sure this isn't double-submitted
@@ -443,7 +451,8 @@ class ArtifactImport {
 
 
   /** check if all the values correspond to predefined values of the corresponding fields */
-    function checkUpdateArtifact($row,&$data,$aid) {
+    function checkUpdateArtifact($row,&$data,$aid)
+    {
         global $Language;
         $hp = Codendi_HTMLPurifier::instance();
         $sql = "SELECT artifact_id FROM artifact WHERE artifact_id = $aid and group_artifact_id = ".$this->ath->getID();
@@ -469,9 +478,13 @@ class ArtifactImport {
    * @param $artifacts (OUT): the artifacts with their field values parsed from the csv file
    * @return true if parse ok, false if errors occurred
    */
-    function parse($csv_filename,$is_tmp,
-    &$artifacts_data,
-    &$number_inserts,&$number_updates) {
+    function parse(
+        $csv_filename,
+        $is_tmp,
+        &$artifacts_data,
+        &$number_inserts,
+        &$number_updates
+    ) {
         global $Language;
         $hp = Codendi_HTMLPurifier::instance();
 
@@ -557,7 +570,8 @@ class ArtifactImport {
 
 
 
-    function mandatoryFields() {
+    function mandatoryFields()
+    {
         $fields =  $this->art_field_fact->getAllUsedFields();
         foreach ($fields as $field) {
             if ( $field->getName() != "comment_type_id" && !$field->isEmptyOk()) {
@@ -569,7 +583,8 @@ class ArtifactImport {
 
 
 
-    function getImportUser(&$sub_user_id,&$sub_user_name) {
+    function getImportUser(&$sub_user_id,&$sub_user_name)
+    {
         global $user_id;
 
         $sub_user_id = $user_id;
@@ -582,7 +597,8 @@ class ArtifactImport {
     }
 
 
-    function getPredefinedValues() {
+    function getPredefinedValues()
+    {
         for ($c=0; $c < sizeof($this->parsed_labels); $c++) {
             $field_label = $this->parsed_labels[$c];
             $field = $this->used_fields[$field_label];
@@ -595,7 +611,8 @@ class ArtifactImport {
   /**
    * set the predefined values of the field parsed at column column_number
    */
-    function setPredefinedValue($field,$column_number) {
+    function setPredefinedValue($field,$column_number)
+    {
 
         if ($field &&
         ($field->getDisplayType() == "SB" || $field->getDisplayType() == "MB")) {
@@ -646,7 +663,8 @@ class ArtifactImport {
    *
    * @return bool
    */
-    function canApplyHtmlSpecialChars($str) {
+    function canApplyHtmlSpecialChars($str)
+    {
         if (strpos($str, '"') !== false) {
             return true;
         }
@@ -664,7 +682,8 @@ class ArtifactImport {
         return false;
     }
 
-    function checkCommentExist($arr,$art_id) {
+    function checkCommentExist($arr,$art_id)
+    {
         if (!$art_id || $art_id == 0 || $art_id == '0') return false;
 
       /*
@@ -701,7 +720,8 @@ class ArtifactImport {
      *
      * @return bool
      */
-    function checkCommentExistInLegacyFormat($arr,$artifact_id) {
+    function checkCommentExistInLegacyFormat($arr,$artifact_id)
+    {
         if (!$artifact_id || $artifact_id == 0 || $artifact_id == '0') return false;
 
         $comment = htmlspecialchars($arr['comment']);
@@ -717,7 +737,8 @@ class ArtifactImport {
         return false;
     }
 
-    function getUserManager() {
+    function getUserManager()
+    {
         return UserManager::instance();
     }
   /** assume that the
@@ -728,7 +749,8 @@ class ArtifactImport {
    * @param for_parse_report (IN): if we parse the follow-up comments to show them in the parse report then we keep the labels
    *                               for users and comment-types
    */
-    function parseFollowUpComments($followup_comments,&$parsed_comments,$art_id,$for_parse_report=false) {
+    function parseFollowUpComments($followup_comments,&$parsed_comments,$art_id,$for_parse_report=false)
+    {
         global $sys_lf, $user_id;
 
       //echo "<br>\n";
@@ -852,7 +874,8 @@ class ArtifactImport {
    * @param string $followup_comment the string containing the follow-up comments
    * @return array of string the follow-up comments extracted from the string $followup_comments or false if an error occured
    */
-    function splitFollowUpComments($followup_comments) {
+    function splitFollowUpComments($followup_comments)
+    {
         // A follow-up comment is delimited by:
         // A carriage return, 66 "-", a carriage return
         $comments = preg_split("/(\n|\r|\r\n)[-]{66}(\n|\r|\r\n)/D",$followup_comments);
@@ -862,7 +885,8 @@ class ArtifactImport {
   /** check whether this is really a valid comment_type
    * and if it is the case return its id else return false
    */
-    function checkCommentType($comment_type) {
+    function checkCommentType($comment_type)
+    {
 
         $comment_type_id = false;
 
@@ -893,7 +917,8 @@ class ArtifactImport {
    * @param for_parse_report (IN): if we parse the details to show them in the parse report then we keep the labels
    *                               for users and comment-types
    */
-    function parseLegacyDetails($details,&$parsed_details,$for_parse_report=false) {
+    function parseLegacyDetails($details,&$parsed_details,$for_parse_report=false)
+    {
         global $sys_lf, $user_id;
 
         $comments = preg_split("/==================================================/D",$details);
@@ -972,7 +997,8 @@ class ArtifactImport {
    * prepare our $data record so that we can use standard artifact methods to create, update, ...
    * the imported artifact
    */
-    function prepareVfl($data,&$artifact_depend_id,&$add_cc,&$cc_comment,&$comments) {
+    function prepareVfl($data,&$artifact_depend_id,&$add_cc,&$cc_comment,&$comments)
+    {
         global $Language;
         for ($c=0; $c < count($data); $c++) {
             $label = $this->parsed_labels[$c];
@@ -1071,7 +1097,8 @@ class ArtifactImport {
 
 
   /** check if all the values correspond to predefined values of the corresponding fields */
-    function insertArtifact($row,$data,&$errors,$notify=false) {
+    function insertArtifact($row,$data,&$errors,$notify=false)
+    {
         global $Language;
 
     //prepare everything to be able to call the artifacts create method
@@ -1133,7 +1160,8 @@ class ArtifactImport {
 
 
 
-    function updateArtifact($row,$data,$aid,&$errors,$notify=false) {
+    function updateArtifact($row,$data,$aid,&$errors,$notify=false)
+    {
         global $Language;
 
         $ah=new ArtifactHtml($this->ath,$aid);
@@ -1200,7 +1228,8 @@ class ArtifactImport {
    * @param $notify (IN): If true users notfication will be throw
    * @return true if parse ok, false if errors occurred
    */
-    function updateDB($parsed_labels,$artifacts_data,$aid_column,&$errors, $notify=false) {
+    function updateDB($parsed_labels,$artifacts_data,$aid_column,&$errors, $notify=false)
+    {
 
         $this->aid_column = $aid_column;
         $this->parsed_labels = $parsed_labels;
@@ -1234,12 +1263,14 @@ class ArtifactImport {
     /**
      * @param $string
      */
-    public function setError($string) {
+    public function setError($string)
+    {
         $this->error_state = true;
         $this->error_message = $string;
     }
 
-    public function clearError() {
+    public function clearError()
+    {
         $this->error_state = false;
         $this->error_message = '';
     }
@@ -1247,7 +1278,8 @@ class ArtifactImport {
     /**
      * @return string
      */
-    public function getErrorMessage() {
+    public function getErrorMessage()
+    {
         if ($this->error_state) {
             return $this->error_message;
         } else {
@@ -1258,7 +1290,8 @@ class ArtifactImport {
     /**
      * @return bool
      */
-    public function isError() {
+    public function isError()
+    {
         return $this->error_state;
     }
 

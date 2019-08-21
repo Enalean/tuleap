@@ -35,29 +35,34 @@ class Git_Driver_Gerrit_User {
     /**
      * @param LDAP_User $ldap_user
      */
-    public function __construct(/*no type*/$ldap_user) {
+    public function __construct(/*no type*/$ldap_user)
+    {
         $this->ldap_user = $ldap_user;
     }
 
     /**
      * @return String
      */
-    public function getSSHUserName() {
+    public function getSSHUserName()
+    {
         return $this->ldap_user->getUid();
     }
 
     /**
      * @return String
      */
-    public function getWebUserName() {
+    public function getWebUserName()
+    {
         return $this->ldap_user->getUid();
     }
 
-    public function getRealName() {
+    public function getRealName()
+    {
         return $this->ldap_user->getRealName();
     }
 
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->ldap_user->getEmail();
     }
 }

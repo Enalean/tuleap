@@ -29,23 +29,29 @@ class MockArchive implements ArchiveInterface {
     /** @var SimpleXMLElement */
     private $user_xml;
 
-    public function __construct($user_xml) {
+    public function __construct($user_xml)
+    {
         $this->user_xml = $user_xml;
     }
 
-    public function cleanUp() {
+    public function cleanUp()
+    {
     }
 
-    public function extractFiles() {
+    public function extractFiles()
+    {
     }
 
-    public function getExtractionPath() {
+    public function getExtractionPath()
+    {
     }
 
-    public function getProjectXML() {
+    public function getProjectXML()
+    {
     }
 
-    public function getUsersXML() {
+    public function getUsersXML()
+    {
         return $this->user_xml;
     }
 
@@ -56,7 +62,8 @@ class UsersToBeImportedCollectionBuilderTestBase  extends TuleapTestCase {
     protected $builder;
     protected $user_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->user_manager = mock('UserManager');
         $this->builder = new UsersToBeImportedCollectionBuilder(
@@ -67,7 +74,8 @@ class UsersToBeImportedCollectionBuilderTestBase  extends TuleapTestCase {
         );
     }
 
-    protected function createUser($id, $username, $realname, $email, $ldapid, $status) {
+    protected function createUser($id, $username, $realname, $email, $ldapid, $status)
+    {
         return aUser()
             ->withId($id)
             ->withUserName($username)
@@ -87,7 +95,8 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
     private $active_user_in_db;
     private $suspended_user_in_db;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->active_user_in_ldap = $this->createUser(
@@ -138,7 +147,8 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
 
     }
 
-    public function itReturnsACollection() {
+    public function itReturnsACollection()
+    {
         $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?><users />');
 
         $collection = $this->builder->build($xml);
@@ -146,7 +156,8 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
         $this->assertIsA($collection, 'User\\XML\\Import\\UsersToBeImportedCollection');
     }
 
-    public function itReturnsACollectionWithAliveUserInLDAP() {
+    public function itReturnsACollectionWithAliveUserInLDAP()
+    {
         $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
             <users>
                 <user>
@@ -170,7 +181,8 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
         );
     }
 
-    public function itReturnsACollectionWithToBeActivatedWhenUserInLDAPIsNotAlive() {
+    public function itReturnsACollectionWithToBeActivatedWhenUserInLDAPIsNotAlive()
+    {
         $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
             <users>
                 <user>
@@ -194,7 +206,8 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
         );
     }
 
-    public function itReturnsACollectionWithAliveUserNotInLDAP() {
+    public function itReturnsACollectionWithAliveUserNotInLDAP()
+    {
         $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
             <users>
                 <user>
@@ -218,7 +231,8 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
         );
     }
 
-    public function itReturnsACollectionWithUserNotInLDAPToBeActivated() {
+    public function itReturnsACollectionWithUserNotInLDAPToBeActivated()
+    {
         $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
             <users>
                 <user>
@@ -242,7 +256,8 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
         );
     }
 
-    public function itReturnsACollectionWithUserNotInLDAPWhenLdapIdDoesNotMatch() {
+    public function itReturnsACollectionWithUserNotInLDAPWhenLdapIdDoesNotMatch()
+    {
         $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
             <users>
                 <user>
@@ -266,7 +281,8 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
         );
     }
 
-    public function itReturnsACollectionWithUserToBeMappedWhenEmailDoesNotMatch() {
+    public function itReturnsACollectionWithUserToBeMappedWhenEmailDoesNotMatch()
+    {
         $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
             <users>
                 <user>
@@ -290,7 +306,8 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
         );
     }
 
-    public function itTrustsLDAPEvenIfEmailDoesNotMatch() {
+    public function itTrustsLDAPEvenIfEmailDoesNotMatch()
+    {
         $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
             <users>
                 <user>
@@ -314,7 +331,8 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
         );
     }
 
-    public function itReturnsACollectionWithUserToBeCreatedWhenNotFoundInLDAPByUsernameOrByEmail() {
+    public function itReturnsACollectionWithUserToBeCreatedWhenNotFoundInLDAPByUsernameOrByEmail()
+    {
         $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
             <users>
                 <user>
@@ -344,7 +362,8 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
         );
     }
 
-    public function itReturnsACollectionWithUserToBeMappedWhenUserIsFoundByMail() {
+    public function itReturnsACollectionWithUserToBeMappedWhenUserIsFoundByMail()
+    {
         $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
             <users>
                 <user>
@@ -383,7 +402,8 @@ class UsersToBeImportedCollectionBuilder_AutomapTest extends UsersToBeImportedCo
     private $john_doe;
     private $cat_steven;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->john_doe = $this->createUser(
@@ -410,7 +430,8 @@ class UsersToBeImportedCollectionBuilder_AutomapTest extends UsersToBeImportedCo
         stub($this->user_manager)->getAllUsersByEmail('cstevens@example.com')->returns(array($this->john_doe));
     }
 
-    public function itReturnsAlreadyActiveUserWhenUserIsValidInLdap() {
+    public function itReturnsAlreadyActiveUserWhenUserIsValidInLdap()
+    {
         $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
             <users>
                 <user>
@@ -434,7 +455,8 @@ class UsersToBeImportedCollectionBuilder_AutomapTest extends UsersToBeImportedCo
         );
     }
 
-    public function itReturnsAnAlreadyExistingUserWhenUsernameAreEqualsAndEmailAreDifferent() {
+    public function itReturnsAnAlreadyExistingUserWhenUsernameAreEqualsAndEmailAreDifferent()
+    {
          $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
             <users>
                 <user>
@@ -459,7 +481,8 @@ class UsersToBeImportedCollectionBuilder_AutomapTest extends UsersToBeImportedCo
         );
     }
 
-    public function itCreatesUserWhenNeitherLdapNorUserNameMatchEvenIfEmailExists() {
+    public function itCreatesUserWhenNeitherLdapNorUserNameMatchEvenIfEmailExists()
+    {
          $xml = new MockArchive('<?xml version="1.0" encoding="UTF-8"?>
             <users>
                 <user>

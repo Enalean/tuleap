@@ -23,18 +23,23 @@
  */
 class Log_NoopLogger implements Logger {
 
-    public function debug($message) {
+    public function debug($message)
+    {
     }
 
-    public function error($message, ?Exception $e = null) {
+    public function error($message, ?Exception $e = null)
+    {
     }
 
-    public function info($message) {
+    public function info($message)
+    {
     }
 
-    public function log($message, $level = null) {
+    public function log($message, $level = null)
+    {
     }
 
-    public function warn($message, ?Exception $e = null) {
+    public function warn($message, ?Exception $e = null)
+    {
     }
 }

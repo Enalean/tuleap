@@ -30,11 +30,13 @@ class Docman_PermissionsExport {
     protected $ugroups;
     protected $parentTitles = array();
 
-    public function __construct(Project $group) {
+    public function __construct(Project $group)
+    {
         $this->group = $group;
     }
 
-    public function fetchPerms($parentIds, &$output) {
+    public function fetchPerms($parentIds, &$output)
+    {
         if(count($parentIds) == 0) {
             return;
         }
@@ -67,7 +69,8 @@ class Docman_PermissionsExport {
         $this->fetchPerms($newParentIds, $output);
     }
 
-    public function getUgroups() {
+    public function getUgroups()
+    {
         if ($this->ugroups === null) {
             /** @psalm-suppress DeprecatedFunction */
             $result = ugroup_db_get_existing_ugroups($this->group->getId(), array($GLOBALS['UGROUP_ANONYMOUS'], $GLOBALS['UGROUP_REGISTERED'], $GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
@@ -78,7 +81,8 @@ class Docman_PermissionsExport {
         return $this->ugroups;
     }
 
-    public function gatherPermissions() {
+    public function gatherPermissions()
+    {
         // Collect data
         $itemFactory    = new Docman_ItemFactory($this->group->getId());
         $rootItem       = $itemFactory->getRoot($this->group->getId());
@@ -90,7 +94,8 @@ class Docman_PermissionsExport {
         return $output;
     }
 
-    public function toCSV() {
+    public function toCSV()
+    {
         $output   = $this->gatherPermissions();
         $sep      = get_csv_separator();
         $date     = DateHelper::formatForLanguage($GLOBALS['Language'], $_SERVER['REQUEST_TIME'], true);
@@ -124,7 +129,8 @@ class Docman_PermissionsExport {
         }
     }
 
-    public function itemTypeToString($type) {
+    public function itemTypeToString($type)
+    {
         switch($type) {
             case PLUGIN_DOCMAN_ITEM_TYPE_FOLDER:
                 $str = 'Folder';
@@ -150,7 +156,8 @@ class Docman_PermissionsExport {
         return $str;
     }
 
-    public function itemPermToString($perm) {
+    public function itemPermToString($perm)
+    {
         switch($perm) {
             case 'PLUGIN_DOCMAN_READ':
                 echo 'READ';
@@ -164,7 +171,8 @@ class Docman_PermissionsExport {
         }
     }
 
-    public function renderDefinitionFormat() {
+    public function renderDefinitionFormat()
+    {
         project_admin_header(
             array('title'=>$GLOBALS['Language']->getText('plugin_docman','export_format')),
             'data'

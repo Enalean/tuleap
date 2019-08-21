@@ -18,15 +18,18 @@
 
 class b201602161822_add_accessfile_reference_in_svn_repository extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add accessfile reference to svn repository';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_svn_repositories ADD COLUMN accessfile_id INT(11) UNSIGNED NOT NULL";
 
         $res = $this->db->dbh->exec($sql);

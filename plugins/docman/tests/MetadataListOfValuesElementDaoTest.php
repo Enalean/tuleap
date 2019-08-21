@@ -28,7 +28,8 @@ require_once 'bootstrap.php';
 
 class MetadataListOfValuesElementDaoTest extends TuleapTestCase {
 
-    function testUpdate() {
+    function testUpdate()
+    {
         // Data
         $metadataId = 1444;
         $valueId = 1125;
@@ -58,7 +59,8 @@ class MetadataListOfValuesElementDaoTest extends TuleapTestCase {
 
     }
 
-    function testDeleteByMetadataId() {
+    function testDeleteByMetadataId()
+    {
         // Data
         $metadataId = 1444;
 

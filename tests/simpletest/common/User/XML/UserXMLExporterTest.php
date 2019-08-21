@@ -25,7 +25,8 @@ class UserXMLExporterTest extends TuleapTestCase {
     private $user_manager;
     private $base_xml;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->user_manager      = mock('UserManager');
@@ -37,7 +38,8 @@ class UserXMLExporterTest extends TuleapTestCase {
         );
     }
 
-    public function itExportsUserInXML() {
+    public function itExportsUserInXML()
+    {
         $user = aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
 
         $this->user_xml_exporter->exportUser($user, $this->base_xml, 'user');
@@ -46,7 +48,8 @@ class UserXMLExporterTest extends TuleapTestCase {
         $this->assertEqual((string) $this->base_xml->user, 'ldap_01');
     }
 
-    public function itExportsUserInXMLWithTheDefinedChildName() {
+    public function itExportsUserInXMLWithTheDefinedChildName()
+    {
         $user = aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
 
         $this->user_xml_exporter->exportUser($user, $this->base_xml, 'mychildname');
@@ -55,7 +58,8 @@ class UserXMLExporterTest extends TuleapTestCase {
         $this->assertEqual((string) $this->base_xml->mychildname, 'ldap_01');
     }
 
-    public function itExportsUserInXMLWithUserNameIfNoLdapId() {
+    public function itExportsUserInXMLWithUserNameIfNoLdapId()
+    {
         $user = aUser()->withId(101)->withUserName('user_01')->build();
 
         $this->user_xml_exporter->exportUser($user, $this->base_xml, 'user');
@@ -64,7 +68,8 @@ class UserXMLExporterTest extends TuleapTestCase {
         $this->assertEqual((string) $this->base_xml->user, 'user_01');
     }
 
-    public function itExportsUserInXMLByItsId() {
+    public function itExportsUserInXMLByItsId()
+    {
         $user = aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
         stub($this->user_manager)->getUserById(101)->returns($user);
 
@@ -74,14 +79,16 @@ class UserXMLExporterTest extends TuleapTestCase {
         $this->assertEqual((string) $this->base_xml->user, 'ldap_01');
     }
 
-    public function itExportsEmailInXML() {
+    public function itExportsEmailInXML()
+    {
         $this->user_xml_exporter->exportUserByMail('email@example.com', $this->base_xml, 'user');
 
         $this->assertEqual((string) $this->base_xml->user['format'], 'email');
         $this->assertEqual((string) $this->base_xml->user, 'email@example.com');
     }
 
-    public function itCollectsUser() {
+    public function itCollectsUser()
+    {
         $user = aUser()->withId(101)->withUserName('user_01')->build();
 
         expect($this->collection)->add($user)->once();
@@ -89,7 +96,8 @@ class UserXMLExporterTest extends TuleapTestCase {
         $this->user_xml_exporter->exportUser($user, $this->base_xml, 'user');
     }
 
-    public function itCollectsUserById() {
+    public function itCollectsUserById()
+    {
         $user = aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
         stub($this->user_manager)->getUserById(101)->returns($user);
 
@@ -98,7 +106,8 @@ class UserXMLExporterTest extends TuleapTestCase {
         $this->user_xml_exporter->exportUserByUserId(101, $this->base_xml, 'user');
     }
 
-    public function itDoesNotCollectUserByMail() {
+    public function itDoesNotCollectUserByMail()
+    {
         expect($this->collection)->add()->never();
 
         $this->user_xml_exporter->exportUserByMail('email@example.com', $this->base_xml, 'user');

@@ -46,7 +46,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
     private $artlink_info_copy_of_999;
     private $user;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->field_class          = 'MockTracker_FormElement_Field_ArtifactLink';
 
@@ -151,12 +152,14 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
         );
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
         UserManager::clearInstance();
     }
 
-    private function getChangesetValueArtifactLink(array $artifact_links, array $reverse_artifact_links) {
+    private function getChangesetValueArtifactLink(array $artifact_links, array $reverse_artifact_links)
+    {
         $field  = new $this->field_class();
         stub($field)->getTracker()->returns(mock('Tracker'));
 
@@ -172,7 +175,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
         return $value;
     }
 
-    public function testNoDiff() {
+    public function testNoDiff()
+    {
         $art_links_1 = array('123' => $this->artlink_info_123, '321' => $this->artlink_info_321, '999' => $this->artlink_info_999);
         $art_links_2 = array('999' => $this->artlink_info_999, '123' => $this->artlink_info_123, '321' => $this->artlink_info_321);
         $list_1 = $this->getChangesetValueArtifactLink($art_links_1, array());
@@ -184,14 +188,16 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
 
 class Tracker_Artifact_ChangesetValue_ArtifactLink_HasChangesTest extends TuleapTestCase {
 
-    public function itHasNoChangesWhenNoNewValues() {
+    public function itHasNoChangesWhenNoNewValues()
+    {
         $old_values      = array();
         $changeset_value = aChangesetValueArtifactLink()->withArtifactLinks($old_values)->build();
         $new_value       = array('list_of_artifactlinkinfo' => '');
         $this->assertFalse($changeset_value->hasChanges($new_value));
     }
 
-    public function itHasNoChangesWhenSameValues() {
+    public function itHasNoChangesWhenSameValues()
+    {
         $old_values = array(
             1 => Mockery::spy(Tracker_ArtifactLinkInfo::class),
             2 => Mockery::spy(Tracker_ArtifactLinkInfo::class)
@@ -208,7 +214,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink_HasChangesTest extends Tuleap
         $this->assertFalse($changeset_value->hasChanges($new_value));
     }
 
-    public function itHasChangesWhenLinksAreAdded() {
+    public function itHasChangesWhenLinksAreAdded()
+    {
         $old_values = array(
             1 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
             2 => Mockery::mock(Tracker_ArtifactLinkInfo::class)
@@ -226,7 +233,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink_HasChangesTest extends Tuleap
         $this->assertTrue($changeset_value->hasChanges($new_value));
     }
 
-    public function itHasChangesWhenLinksAreRemoved() {
+    public function itHasChangesWhenLinksAreRemoved()
+    {
         $old_values = array(
             1 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
             2 => Mockery::mock(Tracker_ArtifactLinkInfo::class)
@@ -242,7 +250,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink_HasChangesTest extends Tuleap
         $this->assertTrue($changeset_value->hasChanges($new_value));
     }
 
-    public function itHasChangesWhenNatureIsChanged() {
+    public function itHasChangesWhenNatureIsChanged()
+    {
         $old_values = array(
             1 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getNature' => '_is_child']),
             2 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getNature' => ''])

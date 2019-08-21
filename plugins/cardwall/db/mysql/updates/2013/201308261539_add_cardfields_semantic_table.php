@@ -20,17 +20,20 @@
 
 class b201308261539_add_cardfields_semantic_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add CardFields semantic table to the Tuleap database
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS plugin_cardwall_semantic_cardfields(
             tracker_id int(11) NOT NULL,
             field_id int(11) NOT NULL,
@@ -41,7 +44,8 @@ EOT;
         $this->db->createTable('plugin_cardwall_semantic_cardfields', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('plugin_cardwall_semantic_cardfields')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_cardwall_semantic_cardfields is missing');
         }

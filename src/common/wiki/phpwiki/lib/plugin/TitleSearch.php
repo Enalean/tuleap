@@ -40,20 +40,24 @@ require_once('lib/PageList.php');
 class WikiPlugin_TitleSearch
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("TitleSearch");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("Search the titles of all pages in this wiki.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.28 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array_merge
             (
              PageList::supportedArgs(), // paging and more.
@@ -71,7 +75,8 @@ extends WikiPlugin
     // info=mtime,hits,summary,version,author,locked,minor
     // exclude arg allows multiple pagenames exclude=Php*,RecentChanges
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         if (empty($args['s']))
             return '';

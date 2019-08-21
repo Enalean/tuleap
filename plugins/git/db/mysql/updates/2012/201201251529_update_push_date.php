@@ -23,7 +23,8 @@ class b201201251529_update_push_date extends ForgeUpgrade_Bucket {
      *
      * @return String;
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Replace the column push_date in the table plugin_git_log which type is date by another one with type int(11)
 EOT;
@@ -34,7 +35,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -43,7 +45,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_git_log DROP COLUMN push_date";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
@@ -61,7 +64,8 @@ EOT;
      *
      * @return void
      */
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->columnNameExists('plugin_git_log', 'push_date')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Type of the column push_date in table plugin_git_log still not updated');
         }

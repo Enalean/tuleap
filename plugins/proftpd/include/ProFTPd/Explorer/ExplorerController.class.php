@@ -47,17 +47,20 @@ class ExplorerController {
     /** @var Dao */
     private $xferlog_dao;
 
-    public function __construct(DirectoryParser $parser, PermissionsManager $permissions_manager, Dao $xferlog_dao) {
+    public function __construct(DirectoryParser $parser, PermissionsManager $permissions_manager, Dao $xferlog_dao)
+    {
         $this->parser              = $parser;
         $this->permissions_manager = $permissions_manager;
         $this->xferlog_dao         = $xferlog_dao;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return self::NAME;
     }
 
-    public function index(ServiceProFTPd $service, HTTPRequest $request) {
+    public function index(ServiceProFTPd $service, HTTPRequest $request)
+    {
         if ($this->userHasPermissionToExploreSFTP($request->getCurrentUser(), $request->getProject())) {
             $this->renderIndex($service, $request);
         } else {
@@ -74,7 +77,8 @@ class ExplorerController {
         }
     }
 
-    private function renderIndex(ServiceProFTPd $service, HTTPRequest $request) {
+    private function renderIndex(ServiceProFTPd $service, HTTPRequest $request)
+    {
         $project = $request->getProject();
         if (! $project ) {
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-proftpd', 'Cannot open project'));
@@ -90,7 +94,8 @@ class ExplorerController {
         }
     }
 
-    private function renderFileContent(HTTPRequest $request, Project $project, $project_path) {
+    private function renderFileContent(HTTPRequest $request, Project $project, $project_path)
+    {
         $full_path = $this->parser->getFullPath($project_path);
         $this->xferlog_dao->storeWebDownload(
             $request->getCurrentUser()->getId(),
@@ -105,7 +110,8 @@ class ExplorerController {
         exit();
     }
 
-    private function renderDirectoryContent(ServiceProFTPd $service, HTTPRequest $request, DirectoryPathParser $path_parser, Project $project, $path) {
+    private function renderDirectoryContent(ServiceProFTPd $service, HTTPRequest $request, DirectoryPathParser $path_parser, Project $project, $path)
+    {
         $remove_parent_directory_listing = ($path == '') ? true : false;
         $items = $this->parser->parseDirectory($project->getUnixName() . DIRECTORY_SEPARATOR . $path, $remove_parent_directory_listing);
 
@@ -122,7 +128,8 @@ class ExplorerController {
         );
     }
 
-    private function userHasPermissionToExploreSFTP(PFUser $user, Project $project) {
+    private function userHasPermissionToExploreSFTP(PFUser $user, Project $project)
+    {
         return $this->permissions_manager->userCanBrowseSFTP($user, $project);
     }
 

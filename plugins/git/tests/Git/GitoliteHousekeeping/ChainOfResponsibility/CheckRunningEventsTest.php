@@ -22,7 +22,8 @@ require_once dirname(__FILE__).'/../../../bootstrap.php';
 
 class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->process_manager = mock('SystemEventProcessManager');
         $this->process         = mock('SystemEventProcess');
@@ -33,7 +34,8 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTest exte
         $this->command->setNextCommand($this->next);
     }
 
-    public function itExecuteTheNextCommandIfThereIsNoRunningEvents() {
+    public function itExecuteTheNextCommandIfThereIsNoRunningEvents()
+    {
         stub($this->process_manager)->isAlreadyRunning($this->process)->returns(false);
 
         expect($this->next)->execute()->once();
@@ -41,7 +43,8 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTest exte
         $this->command->execute();
     }
 
-    public function itDoesNotExectuteTheNextCommandIfThereIsARunningEvent() {
+    public function itDoesNotExectuteTheNextCommandIfThereIsARunningEvent()
+    {
         stub($this->process_manager)->isAlreadyRunning($this->process)->returns(true);
 
         expect($this->next)->execute()->never();
@@ -49,7 +52,8 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTest exte
         $this->command->execute();
     }
 
-    public function itStopsTheExecutionWhenThereIsARemainingSystemEventRunning() {
+    public function itStopsTheExecutionWhenThereIsARemainingSystemEventRunning()
+    {
         stub($this->process_manager)->isAlreadyRunning($this->process)->returns(true);
 
         expect($this->response)->error('There is still an event marked as running. Start again when all events marked as running are done.')->once();

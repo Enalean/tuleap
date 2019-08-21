@@ -32,7 +32,8 @@ class GitPlugin_GetRemoteServersForUserTest extends TuleapTestCase {
     private $logger;
     private $user;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $id = 456;
@@ -55,7 +56,8 @@ class GitPlugin_GetRemoteServersForUserTest extends TuleapTestCase {
         $_POST['ssh_key_push'] = true;
     }
 
-    public function testItDoesNotPushKeysIfNoUserIsPassed() {
+    public function testItDoesNotPushKeysIfNoUserIsPassed()
+    {
         $params = array(
             'html' => '',
         );
@@ -64,7 +66,8 @@ class GitPlugin_GetRemoteServersForUserTest extends TuleapTestCase {
         $this->plugin->getRemoteServersForUser($params);
     }
 
-    public function tesItDoesNotPushKeysIfUserIsInvalid() {
+    public function tesItDoesNotPushKeysIfUserIsInvalid()
+    {
         $params = array(
             'user' => 'me',
             'html' => '',
@@ -74,7 +77,8 @@ class GitPlugin_GetRemoteServersForUserTest extends TuleapTestCase {
         $this->plugin->getRemoteServersForUser($params);
     }
 
-    public function itLogsAnErrorIfSSHKeyPushFails() {
+    public function itLogsAnErrorIfSSHKeyPushFails()
+    {
         $params = array(
             'user' => $this->user,
             'html' => '',
@@ -89,7 +93,8 @@ class GitPlugin_GetRemoteServersForUserTest extends TuleapTestCase {
         $this->plugin->getRemoteServersForUser($params);
     }
 
-    public function itAddsResponseFeedbackIfSSHKeyPushFails() {
+    public function itAddsResponseFeedbackIfSSHKeyPushFails()
+    {
         $params = array(
             'user' => $this->user,
             'html' => '',
@@ -109,7 +114,8 @@ class GitPlugin_GetRemoteServersForUserTest extends TuleapTestCase {
 
 class GitPlugin_Post_System_Events extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $id = 456;
@@ -127,7 +133,8 @@ class GitPlugin_Post_System_Events extends TuleapTestCase {
         stub($this->plugin)->getLogger()->returns(mock('TruncateLevelLogger'));
     }
 
-    public function itProcessGrokmirrorManifestUpdateInPostSystemEventsActions() {
+    public function itProcessGrokmirrorManifestUpdateInPostSystemEventsActions()
+    {
         expect($this->gitolite_driver)
             ->commit()
             ->once();
@@ -144,7 +151,8 @@ class GitPlugin_Post_System_Events extends TuleapTestCase {
         $this->plugin->post_system_events_actions($params);
     }
 
-    public function itDoesNotProcessPostSystemEventsActionsIfNotGitRelated() {
+    public function itDoesNotProcessPostSystemEventsActionsIfNotGitRelated()
+    {
         expect($this->gitolite_driver)
         ->commit()
         ->never();

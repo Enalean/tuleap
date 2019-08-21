@@ -27,7 +27,8 @@ class Docman_MetadataComparator {
     var $srcGo;
     var $dstGo;
 
-    function __construct($srcGroupId, $dstGroupId, $themePath) {
+    function __construct($srcGroupId, $dstGroupId, $themePath)
+    {
         $this->docmanIcons = new Docman_Icons($themePath.'/images/ic/');
         $pm = ProjectManager::instance();
         $this->srcGo = $pm->getProject($srcGroupId);
@@ -38,7 +39,8 @@ class Docman_MetadataComparator {
      * For a five object iterator, return an array of object indexed by
      * $func applied on object.
      */
-    function getArrayFromIterator($iter, $func) {
+    function getArrayFromIterator($iter, $func)
+    {
         $a = array();
         while($iter->valid()) {
             $e = $iter->current();
@@ -48,7 +50,8 @@ class Docman_MetadataComparator {
         return $a;
     }
 
-    function checkMdDifferences($srcMd, $dstMd, $loveMap) {
+    function checkMdDifferences($srcMd, $dstMd, $loveMap)
+    {
         $diffArray = array();
         if(!$dstMd->sameDescription($srcMd)) {
             $diffArray[] = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_desc');
@@ -69,7 +72,8 @@ class Docman_MetadataComparator {
      *
      * Same algo used in Docman_View_ItemDetailsSectionPaste::_checkLoveToImport
      */
-    function getLoveCompareTable($srcMd, $dstMd, $mdMap, &$sthToImport) {
+    function getLoveCompareTable($srcMd, $dstMd, $mdMap, &$sthToImport)
+    {
         $html = '';
 
         if($srcMd->getLabel() == 'status') {
@@ -166,7 +170,8 @@ class Docman_MetadataComparator {
         return $html;
     }
 
-    function getMetadataCompareTable(&$sthToImport) {
+    function getMetadataCompareTable(&$sthToImport)
+    {
         $html = '';
 
         // True if there is sth to import in dst project.

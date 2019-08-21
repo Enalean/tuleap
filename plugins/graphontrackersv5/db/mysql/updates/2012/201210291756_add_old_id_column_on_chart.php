@@ -22,17 +22,20 @@
 
 class b201210291756_add_old_id_column_on_chart extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add new column to plugin_graphontrackersv5_chart to manage v3->v5 migration.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         if (!$this->db->columnNameExists('plugin_graphontrackersv5_chart', 'old_id')) {
             $sql = "ALTER TABLE plugin_graphontrackersv5_chart 
                     ADD old_id INT NULL AFTER id";
@@ -43,7 +46,8 @@ EOT;
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->columnNameExists('plugin_graphontrackersv5_chart', 'old_id')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('An error occured while adding column old_id to plugin_graphontrackersv5_chart');
         }

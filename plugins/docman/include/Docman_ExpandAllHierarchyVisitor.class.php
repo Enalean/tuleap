@@ -20,7 +20,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 class Docman_ExpandAllHierarchyVisitor /* implements Visitor */ {
-    function visitFolder(&$item, $params = array()) {
+    function visitFolder(&$item, $params = array())
+    {
         if ($item->getParentId()) {
             //No need to expand root
             $params['folderFactory']->expand($item);
@@ -35,23 +36,29 @@ class Docman_ExpandAllHierarchyVisitor /* implements Visitor */ {
             }
         }
     }
-    function visitDocument(&$item, $params = array()) {
+    function visitDocument(&$item, $params = array())
+    {
         //Do nothing
     }
-    function visitWiki(&$item, $params = array()) {
+    function visitWiki(&$item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitLink(&$item, $params = array()) {
+    function visitLink(&$item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitFile(&$item, $params = array()) {
+    function visitFile(&$item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitEmbeddedFile(&$item, $params = array()) {
+    function visitEmbeddedFile(&$item, $params = array())
+    {
         return $this->visitFile($item, $params);
     }
 
-    function visitEmpty(&$item, $params = array()) {
+    function visitEmpty(&$item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 

@@ -24,7 +24,8 @@ class AgileDashboard_Milestone_SelectedMilestoneProviderTest extends TuleapTestC
     public const FIELD_NAME = AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME;
     public const ANY        = AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->artifact_id = 123;
@@ -37,7 +38,8 @@ class AgileDashboard_Milestone_SelectedMilestoneProviderTest extends TuleapTestC
         $this->milestone_factory = stub('Planning_MilestoneFactory')->getBareMilestoneByArtifactId($this->user, $this->artifact_id)->returns($this->milestone);
     }
 
-    public function itReturnsTheIdOfTheMilestone() {
+    public function itReturnsTheIdOfTheMilestone()
+    {
         $additional_criteria = array(
             self::FIELD_NAME => new Tracker_Report_AdditionalCriterion(self::FIELD_NAME, 123)
         );
@@ -47,7 +49,8 @@ class AgileDashboard_Milestone_SelectedMilestoneProviderTest extends TuleapTestC
         $this->assertEqual($provider->getMilestoneId(), 123);
     }
 
-    public function itReturnsAnyWhenNoCriterion() {
+    public function itReturnsAnyWhenNoCriterion()
+    {
         $additional_criteria = array();
 
         $provider = new AgileDashboard_Milestone_SelectedMilestoneProvider($additional_criteria, $this->milestone_factory, $this->user, $this->project);

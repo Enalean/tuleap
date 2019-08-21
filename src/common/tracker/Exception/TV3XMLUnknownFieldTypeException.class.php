@@ -19,7 +19,8 @@
  */
 
 class Exception_TV3XMLUnknownFieldTypeException extends Exception_TV3XMLException {
-    public function __construct($name) {
+    public function __construct($name)
+    {
         parent::__construct("Unkown field $name");
     }
 }

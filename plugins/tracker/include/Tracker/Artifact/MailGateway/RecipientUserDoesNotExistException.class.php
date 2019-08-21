@@ -20,7 +20,8 @@
 
 class Tracker_Artifact_MailGateway_RecipientUserDoesNotExistException extends Tracker_Exception {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct("User does not exist");
     }
 }

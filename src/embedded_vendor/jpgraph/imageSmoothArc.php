@@ -34,7 +34,7 @@
 
 */
 
-function imageSmoothArcDrawSegment (&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY, $color, $start, $stop, $seg)
+function imageSmoothArcDrawSegment(&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY, $color, $start, $stop, $seg)
 {
     // Originally written from scratch by Ulrich Mierendorff, 06/2006
     // Rewritten and improved, 04/2007, 07/2007
@@ -250,7 +250,7 @@ function imageSmoothArcDrawSegment (&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngle
 }
 
 
-function imageSmoothArc ( &$img, $cx, $cy, $w, $h, $color, $start, $stop)
+function imageSmoothArc( &$img, $cx, $cy, $w, $h, $color, $start, $stop)
 {
     // Originally written from scratch by Ulrich Mierendorff, 06/2006
     // Rewritten and improved, 04/2007, 07/2007

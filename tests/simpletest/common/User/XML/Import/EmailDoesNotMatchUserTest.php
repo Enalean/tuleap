@@ -26,7 +26,8 @@ class EmailDoesNotMatchUser_isActionAllowedTest extends TuleapTestCase {
     /** @var EmailDoesNotMatchUser */
     protected $user;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->user = new EmailDoesNotMatchUser(
@@ -37,15 +38,18 @@ class EmailDoesNotMatchUser_isActionAllowedTest extends TuleapTestCase {
         );
     }
 
-    public function itReturnsFalseWhenActionIsCreate() {
+    public function itReturnsFalseWhenActionIsCreate()
+    {
         $this->assertFalse($this->user->isActionAllowed('create'));
     }
 
-    public function itReturnsFalseWhenActionIsActivate() {
+    public function itReturnsFalseWhenActionIsActivate()
+    {
         $this->assertFalse($this->user->isActionAllowed('activate'));
     }
 
-    public function itReturnsFalseWhenActionIsMap() {
+    public function itReturnsFalseWhenActionIsMap()
+    {
         $this->assertTrue($this->user->isActionAllowed('map'));
     }
 }

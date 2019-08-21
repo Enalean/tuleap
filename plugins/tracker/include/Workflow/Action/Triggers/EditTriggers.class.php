@@ -47,11 +47,13 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
         $this->rule_manager      = $rule_manager;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    {
         $this->displayPane($layout);
     }
 
-    private function displayPane(Tracker_IDisplayTrackerLayout $layout) {
+    private function displayPane(Tracker_IDisplayTrackerLayout $layout)
+    {
         $this->displayHeader($layout);
 
         $presenter = new Tracker_Workflow_Action_Triggers_TriggersPresenter(

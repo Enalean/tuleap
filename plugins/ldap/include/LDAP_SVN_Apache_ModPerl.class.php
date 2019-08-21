@@ -34,7 +34,8 @@ class LDAP_SVN_Apache_ModPerl extends SVN_Apache_ModPerl {
     /**
      * @return String
      */
-    public function getProjectAuthentication($row) {
+    public function getProjectAuthentication($row)
+    {
         $conf        = parent::getProjectAuthentication($row);
         $server_list = $this->escapeStringForApacheConf($this->ldap->getLDAPParam('server'));
         $ldap_dn     = $this->escapeStringForApacheConf($this->ldap->getLDAPParam('dn'));

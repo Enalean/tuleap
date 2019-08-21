@@ -28,7 +28,8 @@ class Job {
     private $repository_id;
     private $id;
 
-    public function __construct($id, $repository_id, $path, $url, $token) {
+    public function __construct($id, $repository_id, $path, $url, $token)
+    {
         $this->id            = $id;
         $this->repository_id = $repository_id;
         $this->path          = $path;
@@ -36,23 +37,28 @@ class Job {
         $this->token         = $token;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getRepositoryId() {
+    public function getRepositoryId()
+    {
         return $this->repository_id;
     }
 
-    public function getPath() {
+    public function getPath()
+    {
         return $this->path;
     }
 
-    public function getUrl() {
+    public function getUrl()
+    {
         return $this->url;
     }
 
-    public function getToken() {
+    public function getToken()
+    {
         return $this->token;
     }
 

@@ -26,11 +26,13 @@ require_once('Docman_ItemFactory.class.php');
  */
 class Docman_Log { /* implements EventListener */
 
-    function __construct() {
+    function __construct()
+    {
         $this->_getDao();
     }
 
-    function log($event, $params) {
+    function log($event, $params)
+    {
         $event = constant(strtoupper($event));
         switch ($event) {
             case PLUGIN_DOCMAN_EVENT_EDIT:
@@ -67,7 +69,8 @@ class Docman_Log { /* implements EventListener */
         }
     }
 
-    function logsDaily($params) {
+    function logsDaily($params)
+    {
         $params['logs'][] = array(
             'sql'   => $this->dao->getSqlStatementForLogsDaily($params['group_id'], $params['logs_cond']),
             'field' => $GLOBALS['Language']->getText('plugin_docman','logsdaily_field'),
@@ -77,7 +80,8 @@ class Docman_Log { /* implements EventListener */
     }
 
     var $dao;
-    function _getDao() {
+    function _getDao()
+    {
         if (!$this->dao) {
             $this->dao = new Docman_LogDao(CodendiDataAccess::instance());
         }
@@ -85,12 +89,14 @@ class Docman_Log { /* implements EventListener */
     }
 
     var $dif;
-    function _getItemFactory($group_id) {
+    function _getItemFactory($group_id)
+    {
         $this->dif = new Docman_ItemFactory($group_id);
         return $this->dif;
     }
 
-    function fetchLogsForItem($item_id, $display_access_logs) {
+    function fetchLogsForItem($item_id, $display_access_logs)
+    {
         $html = '';
         $uh   = UserHelper::instance();
         $hp   = Codendi_HTMLPurifier::instance();
@@ -195,7 +201,8 @@ class Docman_Log { /* implements EventListener */
         return $html;
     }
 
-    function getText($type) {
+    function getText($type)
+    {
         $txt = '';
         switch($type) {
             case PLUGIN_DOCMAN_EVENT_ADD:
@@ -252,7 +259,8 @@ class Docman_Log { /* implements EventListener */
     /**
      * Search if user accessed the given item after the given date.
      */
-    function userAccessedSince($userId, $itemId, $date) {
+    function userAccessedSince($userId, $itemId, $date)
+    {
         return $this->dao->searchUserAccessSince($userId, $itemId, $date);
     }
 

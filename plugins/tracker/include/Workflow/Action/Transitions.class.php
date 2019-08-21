@@ -25,7 +25,8 @@
 abstract class Tracker_Workflow_Action_Transitions extends Tracker_Workflow_Action {
 
     /** @see Tracker_Workflow_Action_Abstract::getIdentifier() */
-    protected function getPaneIdentifier() {
+    protected function getPaneIdentifier()
+    {
         return 'transitions';
     }
 }

@@ -38,7 +38,8 @@ class Notification {
     /** @var string */
     private $service_name;
 
-    public function __construct(array $emails, $subject, $body_html, $body_text, $goto_link, $service_name) {
+    public function __construct(array $emails, $subject, $body_html, $body_text, $goto_link, $service_name)
+    {
         $this->emails       = $emails;
         $this->subject      = $subject;
         $this->body_html    = $body_html;
@@ -47,39 +48,48 @@ class Notification {
         $this->service_name = $service_name;
     }
 
-    public function getEmails() {
+    public function getEmails()
+    {
         return $this->emails;
     }
 
-    public function addEmail($email) {
+    public function addEmail($email)
+    {
         $this->emails[] = $email;
     }
 
-    public function getSubject() {
+    public function getSubject()
+    {
         return $this->subject;
     }
 
-    public function getHTMLBody() {
+    public function getHTMLBody()
+    {
         return $this->body_html;
     }
 
-    public function getTextBody() {
+    public function getTextBody()
+    {
         return $this->body_text;
     }
 
-    public function hasTextBody() {
+    public function hasTextBody()
+    {
         return $this->body_text != '';
     }
 
-    public function hasHTMLBody() {
+    public function hasHTMLBody()
+    {
         return $this->body_html != '';
     }
 
-    public function getGotoLink() {
+    public function getGotoLink()
+    {
         return $this->goto_link;
     }
 
-    public function getServiceName() {
+    public function getServiceName()
+    {
         return $this->service_name;
     }
 }

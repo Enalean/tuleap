@@ -24,7 +24,8 @@ class Collection {
 
     /* protected */ var $elements;
 
-    function __construct($initial_array = '') {
+    function __construct($initial_array = '')
+    {
         if (is_array($initial_array)) {
             $this->elements = $initial_array;
         } else {
@@ -35,14 +36,16 @@ class Collection {
     /**
      * add the element to the collection
      */
-    function add($element) {
+    function add($element)
+    {
         $this->elements[] = $element;
     }
 
     /**
      * @return true if this collection contains the specified element
      */
-    function contains($wanted) {
+    function contains($wanted)
+    {
         $compare_with_equals = method_exists($wanted, 'equals');
         $found = false;
         if (!$compare_with_equals) {
@@ -62,7 +65,8 @@ class Collection {
     /**
      * @return Iterator to iterate through the elements
      */
-    function iterator() {
+    function iterator()
+    {
         $it = new ArrayIterator($this->elements);
         return $it;
     }
@@ -72,7 +76,8 @@ class Collection {
      * @param obj the reference object with which to compare.
      * @return true if this object is the same as the obj argument; false otherwise.
      */
-    function equals($obj) {
+    function equals($obj)
+    {
         if (is_a($obj, "Collection") && $this->size() === $obj->size()) {
             //We walk through the first collection to see if the second
             //contains each value. Remember that there is no order, and
@@ -108,14 +113,16 @@ class Collection {
     /**
      * @return the number of elements in this collection
      */
-    function size() {
+    function size()
+    {
         return count($this->elements);
     }
 
     /**
      * @return true if the collection is empty
      */
-    function isEmpty() {
+    function isEmpty()
+    {
          return $this->size() === 0;
     }
 
@@ -125,7 +132,8 @@ class Collection {
      * @param element element to be removed from this collection, if present.
      * @return true if this collection changed as a result of the call
      */
-    function remove($wanted) {
+    function remove($wanted)
+    {
         $compare_with_equals = method_exists($wanted, 'equals');
         //function in_array doesn't work with object ?!
         foreach ($this->elements as $key => $value) {
@@ -139,7 +147,8 @@ class Collection {
     }
 
 
-    function toArray() {
+    function toArray()
+    {
         return $this->elements;
     }
 }

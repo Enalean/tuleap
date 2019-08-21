@@ -37,45 +37,53 @@ rcs_id('$Id: FuzzyPages.php,v 1.12 2004/11/23 15:17:19 rurban Exp $');
 class WikiPlugin_FuzzyPages
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("FuzzyPages");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return sprintf(_("Search for page titles similar to %s."),
                        '[pagename]');
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.12 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('s'     => false,
                      'debug' => false);
     }
 
-    function spelling_similarity($subject) {
+    function spelling_similarity($subject)
+    {
         $spelling_similarity_score = 0;
         similar_text($subject, $this->_searchterm,
                      $spelling_similarity_score);
         return $spelling_similarity_score;
     }
 
-    function sound_similarity($subject) {
+    function sound_similarity($subject)
+    {
         $sound_similarity_score = 0;
         similar_text(metaphone($subject), $this->_searchterm_metaphone,
                      $sound_similarity_score);
         return $sound_similarity_score;
     }
 
-    function averageSimilarities($subject) {
+    function averageSimilarities($subject)
+    {
         return ($this->spelling_similarity($subject)
                 + $this->sound_similarity($subject)) / 2;
     }
 
-    function collectSimilarPages(&$list, &$dbi) {
+    function collectSimilarPages(&$list, &$dbi)
+    {
         if (! defined('MIN_SCORE_CUTOFF'))
             define('MIN_SCORE_CUTOFF', 33);
 
@@ -91,11 +99,13 @@ extends WikiPlugin
         }
     }
 
-    function sortCollectedPages(&$list) {
+    function sortCollectedPages(&$list)
+    {
         arsort($list, SORT_NUMERIC);
     }
 
-    function addTableCaption(&$table, &$dbi) {
+    function addTableCaption(&$table, &$dbi)
+    {
         if ($dbi->isWikiPage($this->_searchterm))
             $link = WikiLink($this->_searchterm, 'auto');
         else
@@ -104,7 +114,8 @@ extends WikiPlugin
         $table->pushContent(HTML::caption(array('align'=>'top'), $caption));
     }
 
-    function addTableHead(&$table) {
+    function addTableHead(&$table)
+    {
         $row = HTML::tr(HTML::th(_("Name")),
                         HTML::th(array('align' => 'right'), _("Score")));
         if ($this->debug)
@@ -113,7 +124,8 @@ extends WikiPlugin
         $table->pushContent(HTML::thead($row));
     }
 
-    function addTableBody(&$list, &$table) {
+    function addTableBody(&$list, &$table)
+    {
         if (! defined('HIGHLIGHT_ROWS_CUTOFF_SCORE'))
             define('HIGHLIGHT_ROWS_CUTOFF_SCORE', 60);
 
@@ -134,7 +146,8 @@ extends WikiPlugin
         $table->pushContent($tbody);
     }
 
-    function formatTable(&$list, &$dbi) {
+    function formatTable(&$list, &$dbi)
+    {
 
         $table = HTML::table(array('cellpadding' => 2,
                                    'cellspacing' => 1,
@@ -147,7 +160,8 @@ extends WikiPlugin
     }
 
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         extract($args);
         if (empty($s))
@@ -164,13 +178,15 @@ extends WikiPlugin
 
 
 
-    function _pushDebugHeadingTDinto(&$row) {
+    function _pushDebugHeadingTDinto(&$row)
+    {
         $row->pushContent(HTML::td(_("Spelling Score")),
                           HTML::td(_("Sound Score")),
                           HTML::td('Metaphones'));
     }
 
-    function _pushDebugTDinto(&$row, $pagename) {
+    function _pushDebugTDinto(&$row, $pagename)
+    {
         // This actually calculates everything a second time for each pagename
         // so the individual scores can be displayed separately for debugging.
         $debug_spelling = round($this->spelling_similarity($pagename), 1);

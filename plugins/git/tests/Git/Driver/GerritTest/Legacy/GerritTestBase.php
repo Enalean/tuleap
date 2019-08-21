@@ -41,7 +41,8 @@ abstract class Git_Driver_GerritLegacy_baseTest extends TuleapTestCase {
     /** @var Git_Driver_GerritLegacy */
     protected $driver;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->project_name    = 'firefox';

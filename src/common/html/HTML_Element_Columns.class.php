@@ -41,11 +41,13 @@ class HTML_Element_Columns extends HTML_Element {
      * );
      * </code>
      */
-    function __construct() {
+    function __construct()
+    {
         parent::__construct(null, null, null);
         $this->components = func_get_args();
     }
-    function render() {
+    function render()
+    {
         $html = '<table id="'. $this->id .'" ><tr>';
         foreach($this->components as $c) {
             $html .= '<td>'. $c->render() .'</td>';

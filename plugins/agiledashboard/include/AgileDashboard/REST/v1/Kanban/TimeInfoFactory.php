@@ -30,12 +30,14 @@ class TimeInfoFactory {
      */
     private $dao;
 
-    public function __construct(AgileDashboard_KanbanItemDao $dao) {
+    public function __construct(AgileDashboard_KanbanItemDao $dao)
+    {
         $this->dao = $dao;
     }
 
     /** @return array */
-    public function getTimeInfo(Tracker_Artifact $artifact) {
+    public function getTimeInfo(Tracker_Artifact $artifact)
+    {
         $timeinfo = array();
         foreach ($this->dao->searchTimeInfoForItem($artifact->getTrackerId(), $artifact->getId()) as $row) {
             $timeinfo[$row['column_id']] = JsonCast::toDate($row['submitted_on']);

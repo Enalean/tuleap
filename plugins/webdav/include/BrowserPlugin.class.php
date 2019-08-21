@@ -39,7 +39,8 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
      *
      * @return void
      */
-    function deleteForm($file) {
+    function deleteForm($file)
+    {
         echo '<form name="deleteform" method="post" action="">
         <input type="hidden" name="action" value="delete" />
         <input type="hidden" name="node" value="'. $this->purifier->purify($file['href']). '" />
@@ -54,7 +55,8 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
      *
      * @return void
      */
-    function renameForm($file) {
+    function renameForm($file)
+    {
         echo '<form method="post" action="">
         <input type="hidden" name="action" value="rename" />
         <input type="hidden" name="node" value="'. $this->purifier->purify($file['href']) .'" />
@@ -71,7 +73,8 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
      *
      * @return void
      */
-    function moveForm($file, $destinations) {
+    function moveForm($file, $destinations)
+    {
         echo '<form method="post" action="">
         <input type="hidden" name="action" value="move" />
         <td><select name="select">
@@ -93,7 +96,8 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
      *
      * @return void
      */
-    function mkcolForm() {
+    function mkcolForm()
+    {
         echo '<form method="post" action="">
         <input type="hidden" name="action" value="mkcol" />
         '. $this->purifier->purify($GLOBALS["Language"]->getText("plugin_webdav_html", "name")) .' : <input type="text" name="name" />
@@ -108,7 +112,8 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
      *
      * @return Array
      */
-    function getReleaseDestinations($release) {
+    function getReleaseDestinations($release)
+    {
         $project = $this->server->tree->getNodeForPath(dirname(dirname($release['href'])));
         $packages = $project->getChildren();
         $destinations = array();
@@ -128,7 +133,8 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
      *
      * @return Array
      */
-    function getFileDestinations($file) {
+    function getFileDestinations($file)
+    {
         $project = $this->server->tree->getNodeForPath(dirname(dirname(dirname($file['href']))));
         $packages = $project->getChildren();
         $destinations = array();
@@ -222,7 +228,8 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
      *
      * @see plugins/webdav/lib/Sabre/DAV/Browser/Sabre_DAV_Browser_Plugin#generateDirectoryIndex($path)
      */
-    public function generateDirectoryIndex($path) {
+    public function generateDirectoryIndex($path)
+    {
 
         $node = $this->server->tree->getNodeForPath($path);
         $class = get_class($node);

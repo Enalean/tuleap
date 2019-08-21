@@ -34,7 +34,8 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
      *
      * @return string
      */
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         $txt             = '';
         $ugroup_name     = '';
         $ugroup_old_name = '';
@@ -57,7 +58,8 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
      *
      * @return bool
      */
-    function process() {
+    function process()
+    {
         $ugroup_name = null;
         $ugroup_old_name = null;
         // Check parameters
@@ -93,7 +95,8 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
     /**
      * @return bool
      */
-    private function processSVNAccessFile($project_id, $ugroup_name, $ugroup_old_name) {
+    private function processSVNAccessFile($project_id, $ugroup_name, $ugroup_old_name)
+    {
         if ($project = $this->getProject($project_id)) {
             if ($project->usesSVN()) {
                 $backendSVN = $this->getBackend('SVN');
@@ -115,7 +118,8 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
      *
      * @return bool
      */
-    protected function processUgroupBinding($ugroup_id, $group_id) {
+    protected function processUgroupBinding($ugroup_id, $group_id)
+    {
         $ugroup_binding               = $this->getUgroupBinding();
         $ugroups_successfully_updated = true;
         if (!$ugroup_binding->checkUGroupValidity($group_id, $ugroup_id)) {
@@ -154,7 +158,8 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
      *
      * @return UGroupBinding
      */
-    protected function getUgroupBinding() {
+    protected function getUgroupBinding()
+    {
         $ugroupUserDao = new UGroupUserDao();
         $ugroupManager = new UGroupManager(new UGroupDao());
         $uGroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);

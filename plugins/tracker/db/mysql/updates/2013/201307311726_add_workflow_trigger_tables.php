@@ -20,15 +20,18 @@
 
 class b201307311726_add_workflow_trigger_tables extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add tables for workflow trigger';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE tracker_workflow_trigger_rule_static_value (
                     id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                     value_id INT(11) NOT NULL,
@@ -46,7 +49,8 @@ class b201307311726_add_workflow_trigger_tables extends ForgeUpgrade_Bucket {
         $this->db->createTable('tracker_workflow_trigger_rule_trg_field_static_value', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('tracker_workflow_trigger_rule_static_value')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_workflow_trigger_rule_static_value');
         }

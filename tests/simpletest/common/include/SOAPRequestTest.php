@@ -20,7 +20,8 @@
 
 class SOAPRequestTest extends TuleapTestCase {
 
-    function testInit() {
+    function testInit()
+    {
         $request = new SOAPRequest(array(
            'param_1' => 'value_1',
            'param_2' => 'value_2')

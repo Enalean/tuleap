@@ -30,7 +30,8 @@ class GroupFactory {
      *
      *    @return bool success.
      */
-    function __construct() {
+    function __construct()
+    {
             return true;
     }
 
@@ -39,7 +40,8 @@ class GroupFactory {
      *
      *    @return    resultset
      */
-    function getAllGroups() {
+    function getAllGroups()
+    {
         global $Language;
         if (user_isloggedin()) {
             // For  surperuser), we can see all the trackers (both public and non public)
@@ -82,7 +84,8 @@ class GroupFactory {
      *
      *    @return    resultset
      */
-    function getMemberGroups() {
+    function getMemberGroups()
+    {
                 global $Language;
         if (!user_isloggedin()) {
             $this->setError();
@@ -115,7 +118,8 @@ class GroupFactory {
      *
      *    @return    array of {Group}
      */
-    function getMyGroups() {
+    function getMyGroups()
+    {
         global $Language;
         $result_my_groups = $this->getMemberGroups();
         if ($this->isError() || !$result_my_groups) {
@@ -136,14 +140,16 @@ class GroupFactory {
     /**
      * @internal param $string
      */
-    public function setError() {
+    public function setError()
+    {
         $this->error_state = true;
     }
 
     /**
      * @return bool
      */
-    public function isError() {
+    public function isError()
+    {
         return $this->error_state;
     }
 }

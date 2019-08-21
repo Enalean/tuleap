@@ -38,7 +38,8 @@ class Planning_ArtifactLinker {
     private $artifact_factory;
     private $planning_factory;
 
-    public function __construct(Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory) {
+    public function __construct(Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory)
+    {
         $this->artifact_factory = $artifact_factory;
         $this->planning_factory = $planning_factory;
     }
@@ -53,13 +54,15 @@ class Planning_ArtifactLinker {
      *
      * @return Tracker_Artifact
      */
-    public function linkBacklogWithPlanningItems(Codendi_Request $request, Tracker_Artifact $artifact) {
+    public function linkBacklogWithPlanningItems(Codendi_Request $request, Tracker_Artifact $artifact)
+    {
         $user               = $request->getCurrentUser();
         $milestone_artifact = $this->getMilestoneArtifact($user, $request, $artifact);
         return $this->linkWithMilestoneArtifact($user, $artifact, $milestone_artifact);
     }
 
-    private function getMilestoneArtifact(PFUser $user, Codendi_Request $request, Tracker_Artifact $artifact) {
+    private function getMilestoneArtifact(PFUser $user, Codendi_Request $request, Tracker_Artifact $artifact)
+    {
         $source_artifact = null;
         if ($request->exist('link-artifact-id')) {
             $ancestors = $artifact->getAllAncestors($user);
@@ -72,12 +75,14 @@ class Planning_ArtifactLinker {
         return $source_artifact;
     }
 
-    private function getSourceArtifact(Codendi_Request $request, $key) {
+    private function getSourceArtifact(Codendi_Request $request, $key)
+    {
         $artifact_id = (int) $request->getValidated($key, 'uint', 0);
         return $this->artifact_factory->getArtifactById($artifact_id);
     }
 
-    private function linkWithMilestoneArtifact(PFUser $user, Tracker_Artifact $artifact, ?Tracker_Artifact $source_artifact = null) {
+    private function linkWithMilestoneArtifact(PFUser $user, Tracker_Artifact $artifact, ?Tracker_Artifact $source_artifact = null)
+    {
         $last_ancestor = $source_artifact;
         if ($source_artifact) {
             foreach ($source_artifact->getAllAncestors($user) as $ancestor) {

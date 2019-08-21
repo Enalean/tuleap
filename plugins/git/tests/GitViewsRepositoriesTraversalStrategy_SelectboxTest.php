@@ -26,11 +26,13 @@ Mock::generate('PFUser');
 
 class GitViewsRepositoriesTraversalStrategy_SelectboxTest extends GitViewsRepositoriesTraversalStrategyTest {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('GitViewsRepositoriesTraversalStrategy_Selectbox');
     }
 
-    public function getExpectedPattern($repositories) {
+    public function getExpectedPattern($repositories)
+    {
         $nb_repositories = count($repositories);
         foreach ($repositories as $r) {
             if ($r['repository_backend_type'] == 'gitshell') {
@@ -44,7 +46,8 @@ class GitViewsRepositoriesTraversalStrategy_SelectboxTest extends GitViewsReposi
     }
 
 
-    public function testRepoIDShouldBeTheValue() {
+    public function testRepoIDShouldBeTheValue()
+    {
         $view = new MockGitViews();
         $user = mock('PFUser');
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));

@@ -48,7 +48,8 @@ class ReportRepresentation {
      */
     public $resources;
 
-    public function build(Tracker_Report $report) {
+    public function build(Tracker_Report $report)
+    {
         $this->id        = JsonCast::toInt($report->getId());
         $this->uri       = self::ROUTE . '/' . $this->id;
         $this->label     = $report->getName();

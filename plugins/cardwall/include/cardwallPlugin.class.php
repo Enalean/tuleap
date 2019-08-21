@@ -52,7 +52,8 @@ class cardwallPlugin extends Plugin
         bindTextDomain('tuleap-cardwall', CARDWALL_BASE_DIR . '/../site-content');
     }
 
-    public function getConfigFactory() {
+    public function getConfigFactory()
+    {
         if (!$this->config_factory) {
             $tracker_factory  = TrackerFactory::instance();
             $element_factory  = Tracker_FormElementFactory::instance();
@@ -64,7 +65,8 @@ class cardwallPlugin extends Plugin
     public const RENDERER_TYPE = 'plugin_cardwall';
 
 
-    public function getHooksAndCallbacks() {
+    public function getHooksAndCallbacks()
+    {
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook('cssfile');
             $this->addHook('javascript_file');
@@ -103,7 +105,8 @@ class cardwallPlugin extends Plugin
     /**
      * @see Plugin::getDependencies()
      */
-    public function getDependencies() {
+    public function getDependencies()
+    {
         return array('tracker');
     }
 
@@ -131,7 +134,8 @@ class cardwallPlugin extends Plugin
     }
 
     // TODO : transform into a OnTop_Config_Command, and move code to ConfigFactory
-    public function tracker_event_trackers_duplicated($params) {
+    public function tracker_event_trackers_duplicated($params)
+    {
         foreach ($params['tracker_mapping'] as $from_tracker_id => $to_tracker_id) {
             if ($this->getOnTopDao()->duplicate($from_tracker_id, $to_tracker_id)) {
                 $this->getOnTopColumnDao()->duplicate($from_tracker_id, $to_tracker_id, $params);
@@ -146,7 +150,8 @@ class cardwallPlugin extends Plugin
      *
      * @param array types Input/Output parameter. Expected format: $types['my_type'] => 'Label of the type'
      */
-    public function tracker_report_renderer_types($params) {
+    public function tracker_report_renderer_types($params)
+    {
         $params['types'][self::RENDERER_TYPE] = $GLOBALS['Language']->getText('plugin_cardwall', 'title');
     }
 
@@ -161,7 +166,8 @@ class cardwallPlugin extends Plugin
      *
      * @return void
      */
-    public function tracker_report_renderer_instance($params) {
+    public function tracker_report_renderer_instance($params)
+    {
         if ($params['type'] == self::RENDERER_TYPE) {
             $report = $params['report'];
             $config = new Cardwall_OnTop_ConfigEmpty();
@@ -237,7 +243,8 @@ class cardwallPlugin extends Plugin
         }
     }
 
-    public function getPluginInfo() {
+    public function getPluginInfo()
+    {
         if (!is_a($this->pluginInfo, 'CardwallPluginInfo')) {
             $this->pluginInfo = new CardwallPluginInfo($this);
         }
@@ -266,7 +273,8 @@ class cardwallPlugin extends Plugin
             || strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0;
     }
 
-    public function javascript_file($params) {
+    public function javascript_file($params)
+    {
         // Only show the js if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
         if ($this->isAgileDashboardOrTrackerUrl() && $this->canUseStandardJavsacript()) {
@@ -282,7 +290,8 @@ class cardwallPlugin extends Plugin
     /**
      * @see Event::TRACKER_EVENT_MANAGE_SEMANTICS
      */
-    public function tracker_event_manage_semantics($parameters) {
+    public function tracker_event_manage_semantics($parameters)
+    {
         $tracker   = $parameters['tracker'];
         /** @var Tracker_SemanticCollection $semantics */
         $semantics = $parameters['semantics'];
@@ -304,7 +313,8 @@ class cardwallPlugin extends Plugin
     /**
      * @see TRACKER_EVENT_SEMANTIC_FROM_XML
      */
-    public function tracker_event_semantic_from_xml($params) {
+    public function tracker_event_semantic_from_xml($params)
+    {
         $tracker     = $params['tracker'];
         $xml         = $params['xml'];
         $xml_mapping = $params['xml_mapping'];
@@ -324,13 +334,15 @@ class cardwallPlugin extends Plugin
         $params['duplicators'][] = new BackgroundColorSemanticFactory(new BackgroundColorDao());
     }
 
-    private function isAgileDashboardOrTrackerUrl() {
+    private function isAgileDashboardOrTrackerUrl()
+    {
         return (defined('AGILEDASHBOARD_BASE_DIR') &&
                 strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL.'/') === 0 ||
                 strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0);
     }
 
-    private function canUseStandardJavsacript() {
+    private function canUseStandardJavsacript()
+    {
         $use_standard = true;
 
         $em = EventManager::instance();
@@ -344,7 +356,8 @@ class cardwallPlugin extends Plugin
         return $use_standard;
     }
 
-    public function javascript($params) {
+    public function javascript($params)
+    {
         include $GLOBALS['Language']->getContent('script_locale', null, 'cardwall', '.js');
         echo "var tuleap = tuleap || { };".PHP_EOL;
         echo "tuleap.cardwall = tuleap.cardwall || { };".PHP_EOL;
@@ -352,7 +365,8 @@ class cardwallPlugin extends Plugin
         echo PHP_EOL;
     }
 
-    private function denyAccess($tracker_id) {
+    private function denyAccess($tracker_id)
+    {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
         $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id);
     }
@@ -360,11 +374,13 @@ class cardwallPlugin extends Plugin
     /**
      * @see Event::AGILEDASHBOARD_EVENT_GET_CARD_FIELDS
      */
-    public function agiledashboard_event_get_card_fields($parameters) {
+    public function agiledashboard_event_get_card_fields($parameters)
+    {
         $parameters['card_fields_semantic'] = Cardwall_Semantic_CardFields::load($parameters['tracker']);
     }
 
-    public function agiledashboard_event_additional_panes_on_milestone($params) {
+    public function agiledashboard_event_additional_panes_on_milestone($params)
+    {
         $pane_info = $this->getPaneInfo($params['milestone']);
 
         if (! $pane_info) {
@@ -378,7 +394,8 @@ class cardwallPlugin extends Plugin
         $params['panes'][] = $pane_info;
     }
 
-    private function getPaneInfo($milestone) {
+    private function getPaneInfo($milestone)
+    {
         $tracker  = $milestone->getArtifact()->getTracker();
 
         if (! $this->getOnTopDao()->isEnabled($tracker->getId())) {
@@ -388,7 +405,8 @@ class cardwallPlugin extends Plugin
         return new CardwallPaneInfo($milestone, $this->getThemePath());
     }
 
-    public function agiledashboard_event_index_page($params) {
+    public function agiledashboard_event_index_page($params)
+    {
         // Only display a cardwall if there is something to display
         if ($params['milestone'] && $params['milestone']->getPlannedArtifacts() && count($params['milestone']->getPlannedArtifacts()->getChildren()) > 0) {
             $pane_info = new CardwallPaneInfo($params['milestone'], $this->getThemePath());
@@ -396,7 +414,8 @@ class cardwallPlugin extends Plugin
         }
     }
 
-    protected function getCardwallPane(CardwallPaneInfo $info, Planning_Milestone $milestone, PFUser $user, Planning_MilestoneFactory $milestone_factory) {
+    protected function getCardwallPane(CardwallPaneInfo $info, Planning_Milestone $milestone, PFUser $user, Planning_MilestoneFactory $milestone_factory)
+    {
         $config = $this->getConfigFactory()->getOnTopConfigByPlanning($milestone->getPlanning());
         if ($config) {
             return new Cardwall_Pane(
@@ -410,7 +429,8 @@ class cardwallPlugin extends Plugin
         return null;
     }
 
-    public function agiledashboard_event_milestone_selector_redirect($params) {
+    public function agiledashboard_event_milestone_selector_redirect($params)
+    {
         if ($params['milestone']->getArtifact()) {
             $tracker  = $params['milestone']->getArtifact()->getTracker();
             if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
@@ -419,7 +439,8 @@ class cardwallPlugin extends Plugin
         }
     }
 
-    public function tracker_event_redirect_after_artifact_creation_or_update($params) {
+    public function tracker_event_redirect_after_artifact_creation_or_update($params)
+    {
         $cardwall = $params['request']->get('cardwall');
         $redirect = $params['redirect'];
         if ($cardwall) {
@@ -468,14 +489,16 @@ class cardwallPlugin extends Plugin
         );
     }
 
-    public function tracker_event_build_artifact_form_action($params) {
+    public function tracker_event_build_artifact_form_action($params)
+    {
         $cardwall = $params['request']->get('cardwall');
         if ($cardwall) {
             $this->appendCardwallParameter($params['redirect'], $cardwall);
         }
     }
 
-    private function appendCardwallParameter(Tracker_Artifact_Redirect $redirect, $cardwall) {
+    private function appendCardwallParameter(Tracker_Artifact_Redirect $redirect, $cardwall)
+    {
         list($key, $value) = explode('=', urldecode(http_build_query(array('cardwall' => $cardwall))));
         $redirect->query_parameters[$key] = $value;
     }
@@ -486,7 +509,8 @@ class cardwallPlugin extends Plugin
      *  'project'  => The given project
      *  'into_xml' => The SimpleXMLElement to fill in
      */
-    public function agiledashboard_export_xml ($params) {
+    public function agiledashboard_export_xml($params)
+    {
         $tracker_factory = TrackerFactory::instance();
 
         $cardwall_xml_export = new CardwallConfigXmlExport(
@@ -504,7 +528,8 @@ class cardwallPlugin extends Plugin
      * @param array $params
      * @see Event::IMPORT_XML_PROJECT_TRACKER_DONE
      */
-    public function import_xml_project_tracker_done($params) {
+    public function import_xml_project_tracker_done($params)
+    {
         $cardwall_ontop_import = new CardwallConfigXmlImport(
             $params['project']->getId(),
             $params['mapping'],
@@ -519,19 +544,22 @@ class cardwallPlugin extends Plugin
         $cardwall_ontop_import->import($params['xml_content']);
     }
 
-    public function agiledashboard_event_rest_get_milestone($params) {
+    public function agiledashboard_event_rest_get_milestone($params)
+    {
         $config = $this->getConfigFactory()->getOnTopConfig($params['milestone']->getPlanning()->getPlanningTracker());
         if ($config && $config->isEnabled()) {
             $params['milestone_representation']->enableCardwall();
         }
     }
 
-    private function buildRightVersionOfMilestonesCardwallResource($version) {
+    private function buildRightVersionOfMilestonesCardwallResource($version)
+    {
         $class_with_right_namespace = '\\Tuleap\\Cardwall\\REST\\'.$version.'\\MilestonesCardwallResource';
         return new $class_with_right_namespace($this->getConfigFactory());
     }
 
-    public function agiledashboard_event_rest_get_cardwall($params) {
+    public function agiledashboard_event_rest_get_cardwall($params)
+    {
         $milestones_cardwall = $this->buildRightVersionOfMilestonesCardwallResource($params['version']);
 
         $params['cardwall'] = $milestones_cardwall->get($params['milestone']);
@@ -547,7 +575,8 @@ class cardwallPlugin extends Plugin
      *  'tracker' => The planning tracker
      *  'view'    => A string of HTML
      */
-    public function agiledashboard_event_planning_config($params) {
+    public function agiledashboard_event_planning_config($params)
+    {
         $tracker = $params['tracker'];
         $config  = $this->getConfigFactory()->getOnTopConfig($tracker);
 
@@ -555,7 +584,8 @@ class cardwallPlugin extends Plugin
         $params['view'] = $admin_view->displayAdminOnTop($config);
     }
 
-    public function agiledashboard_event_is_cardwall_enabled($params) {
+    public function agiledashboard_event_is_cardwall_enabled($params)
+    {
         $tracker = $params['tracker'];
         $params['enabled'] = $this->getConfigFactory()
             ->isOnTopConfigEnabledForPlanning($tracker);
@@ -568,7 +598,8 @@ class cardwallPlugin extends Plugin
      *  'tracker' => The planning tracker
      *  'request' => The Request
      */
-    public function agiledashboard_event_planning_config_update($params) {
+    public function agiledashboard_event_planning_config_update($params)
+    {
         $request = $params['request'];
         $request->set('use_freestyle_columns', 1);
 
@@ -579,32 +610,37 @@ class cardwallPlugin extends Plugin
     /**
      * @return Cardwall_OnTop_Dao
      */
-    private function getOnTopDao() {
+    private function getOnTopDao()
+    {
         return new Cardwall_OnTop_Dao();
     }
 
     /**
      * @return Cardwall_OnTop_ColumnDao
      */
-    private function getOnTopColumnDao() {
+    private function getOnTopColumnDao()
+    {
         return new Cardwall_OnTop_ColumnDao();
     }
 
     /**
      * @return Cardwall_OnTop_ColumnMappingFieldDao
      */
-    private function getOnTopColumnMappingFieldDao() {
+    private function getOnTopColumnMappingFieldDao()
+    {
         return new Cardwall_OnTop_ColumnMappingFieldDao();
     }
 
     /**
      * @return Cardwall_OnTop_ColumnMappingFieldValueDao
      */
-    private function getOnTopColumnMappingFieldValueDao() {
+    private function getOnTopColumnMappingFieldValueDao()
+    {
         return new Cardwall_OnTop_ColumnMappingFieldValueDao();
     }
 
-    public function agiledashboard_event_rest_resources($params) {
+    public function agiledashboard_event_rest_resources($params)
+    {
         $injector = new Cardwall_REST_ResourcesInjector();
         $injector->populate($params['restler']);
     }
@@ -622,7 +658,7 @@ class cardwallPlugin extends Plugin
 
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event) : void
     {
-        $event->getRouteCollector()->addGroup('/plugins/cardwall', function(FastRoute\RouteCollector $r) {
+        $event->getRouteCollector()->addGroup('/plugins/cardwall', function (FastRoute\RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
         });
     }

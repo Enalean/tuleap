@@ -30,7 +30,8 @@ require_once(__DIR__.'/../DVCS/DVCSDriver.class.php');
 
 class GitDriver implements DVCSDriver {
 
-    protected function execGitAction($cmd, $action_name) {
+    protected function execGitAction($cmd, $action_name)
+    {
         $out = array();
         $ret = -1;
         exec($cmd,$out,$ret);
@@ -41,7 +42,8 @@ class GitDriver implements DVCSDriver {
         return implode(PHP_EOL, $out);
     }
 
-    private function checkFileExist($file) {
+    private function checkFileExist($file)
+    {
         if ( !file_exists($file) ) {
             throw new GitDriverSourceNotFoundException($file);
         }
@@ -54,7 +56,8 @@ class GitDriver implements DVCSDriver {
      * @param <String> $option     String of options.
      * @return <boolean>
      */
-    private function cloneRepo($source, $destination, $option) {
+    private function cloneRepo($source, $destination, $option)
+    {
         $this->checkFileExist($source);
 
         //WARNING : never use --shared/--reference options
@@ -63,7 +66,8 @@ class GitDriver implements DVCSDriver {
         return $this->execGitAction($cmd, "clone");
     }
 
-    public function fork($source, $destination) {
+    public function fork($source, $destination)
+    {
         $this->checkFileExist($source);
 
         $this->cloneRepo($source, $destination, '--bare');
@@ -71,48 +75,55 @@ class GitDriver implements DVCSDriver {
         return $this->setUpFreshRepository($destination);
     }
 
-    public function cloneAtSpecifiqBranch($source, $destination, $branch) {
+    public function cloneAtSpecifiqBranch($source, $destination, $branch)
+    {
         $this->checkFileExist($source);
 
         return $this->cloneRepo($source, $destination, '--branch '.$branch);
     }
 
-    public function add($repositoryPath, $filePathFromRepository) {
+    public function add($repositoryPath, $filePathFromRepository)
+    {
         $this->checkFileExist($repositoryPath);
         $cmd = 'cd '.escapeshellarg($repositoryPath).' && git add '.escapeshellarg($filePathFromRepository).' 2>&1';
 
         return $this->execGitAction($cmd, 'add');
     }
 
-    public function commit($repositoryPath, $message) {
+    public function commit($repositoryPath, $message)
+    {
         $this->checkFileExist($repositoryPath);
         $cmd = 'cd '.escapeshellarg($repositoryPath).' && git commit --allow-empty -m '.escapeshellarg($message).' 2>&1';
 
         return $this->execGitAction($cmd, 'commit');
     }
 
-    public function mergeAndPush($repositoryPath, $bareURL) {
+    public function mergeAndPush($repositoryPath, $bareURL)
+    {
         $this->checkFileExist($repositoryPath);
         $cmd = 'cd '.escapeshellarg($repositoryPath).' && git pull --quiet --rebase && git push '. $bareURL .' 2>&1';
 
         return $this->execGitAction($cmd, 'merge and push');
     }
 
-    public function getInformationsAboutFile($repositoryPath, $filePathFromRepository) {
+    public function getInformationsAboutFile($repositoryPath, $filePathFromRepository)
+    {
         $this->checkFileExist($repositoryPath);
         $cmd = 'cd '.escapeshellarg($repositoryPath).' && git ls-files --stage '.escapeshellarg($filePathFromRepository).' 2>&1';
 
         return $this->execGitAction($cmd, 'get informations');
     }
 
-    public function removeRepository($repositoryPath) {
+    public function removeRepository($repositoryPath)
+    {
         $this->checkFileExist($repositoryPath);
         $cmd = 'rm --recursive --dir --force '.escapeshellarg($repositoryPath).' 2>&1';
 
         return $this->execGitAction($cmd, 'rm');
     }
 
-    public function getGitVersion() {
+    public function getGitVersion()
+    {
         $cmd        = 'git --version';
         $cmd_result = $this->execGitAction($cmd, 'version');
         $version    = explode(" ", $cmd_result);
@@ -125,7 +136,8 @@ class GitDriver implements DVCSDriver {
      * @param bool $bare is a bare a repository
      * @return bool
      */
-    public function init($bare=false) {
+    public function init($bare=false)
+    {
         if ( $bare === false ) {
             $cmd = 'git init';
             $out = array();
@@ -155,7 +167,8 @@ class GitDriver implements DVCSDriver {
      *
      * @return bool
      */
-    protected function setUpFreshRepository($path) {
+    protected function setUpFreshRepository($path)
+    {
         $cwd = getcwd();
         chdir($path);
 
@@ -175,7 +188,8 @@ class GitDriver implements DVCSDriver {
         return $this->setPermissions($path);
     }
 
-    public function delete($path) {
+    public function delete($path)
+    {
         if ( empty($path) || !is_writable($path) ) {
             throw new GitDriverErrorException('Empty path or permission denied '.$path);
         }
@@ -187,7 +201,8 @@ class GitDriver implements DVCSDriver {
         return true;
     }
 
-    public function activateHook($hookName, $repoPath, $uid=false, $gid=false) {
+    public function activateHook($hookName, $repoPath, $uid=false, $gid=false)
+    {
         //newer version of git
         $hook = $repoPath.'/hooks/'.$hookName;
         if ( file_exists($hook.'.sample') ) {
@@ -213,7 +228,8 @@ class GitDriver implements DVCSDriver {
         return true;
     }
 
-    public function masterExists($repoPath) {
+    public function masterExists($repoPath)
+    {
         if ( file_exists($repoPath.'/refs/heads/master') ) {
             return true;
         }
@@ -225,18 +241,21 @@ class GitDriver implements DVCSDriver {
      * @param string $repoPath
      * @return bool
      */
-    public function isRepositoryCreated($repoPath) {
+    public function isRepositoryCreated($repoPath)
+    {
         return is_dir($repoPath.'/refs/heads');
     }
 
-    public function setDescription($repoPath, $description) {
+    public function setDescription($repoPath, $description)
+    {
         if( ! file_put_contents($repoPath.'/description', $description) ) {
             throw new GitDriverErrorException('Unable to set description');
         }
         return true;
     }
 
-    public function getDescription($repoPath) {
+    public function getDescription($repoPath)
+    {
         return file_get_contents($repoPath.'/description');
     }
 
@@ -247,7 +266,8 @@ class GitDriver implements DVCSDriver {
      * @param String $key      Key to modify
      * @param String $value    Value to set
      */
-    public function setConfig($repoPath, $key, $value) {
+    public function setConfig($repoPath, $key, $value)
+    {
         if ($value === '') {
             $value = "''";
         } else {
@@ -271,7 +291,8 @@ class GitDriver implements DVCSDriver {
      *
      * @return bool
      */
-    public function setRepositoryAccess($repoPath, $access) {
+    public function setRepositoryAccess($repoPath, $access)
+    {
         if ($access == GitRepository::PUBLIC_ACCESS) {
             return chmod($repoPath, 042775);
         } else {
@@ -289,7 +310,8 @@ class GitDriver implements DVCSDriver {
      *
      * @return bool
      */
-    protected function setPermissions($path) {
+    protected function setPermissions($path)
+    {
         $rcode  = 0;
         $cmd    = 'find '.$path.' -type d | xargs chmod u+rwx,g+rwxs '.$path;
         $output = system($cmd, $rcode);

@@ -61,71 +61,88 @@ class Admin_PermissionDelegationGroupPresenter
         return $this->group;
     }
 
-    public function description_label() {
+    public function description_label()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_description');
     }
 
-    public function group_action_edit() {
+    public function group_action_edit()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_action_edit');
     }
 
-    public function group_action_delete() {
+    public function group_action_delete()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_action_delete');
     }
 
-    public function permissions_title() {
+    public function permissions_title()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_title');
     }
 
-    public function users_title() {
+    public function users_title()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'users_title');
     }
 
-    public function permissions_list_title() {
+    public function permissions_list_title()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_list_title');
     }
 
-    public function users_list_title() {
+    public function users_list_title()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'users_list_title');
     }
 
-    public function permissions_action_add() {
+    public function permissions_action_add()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_action_add');
     }
 
-    public function permissions_action_delete() {
+    public function permissions_action_delete()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_action_delete');
     }
 
-    public function users_action_add() {
+    public function users_action_add()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'users_action_add');
     }
 
-    public function users_action_delete() {
+    public function users_action_delete()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'users_action_delete');
     }
 
-    public function has_permissions() {
+    public function has_permissions()
+    {
         return count($this->permissions) > 0;
     }
 
-    public function no_permission() {
+    public function no_permission()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'no_permission');
     }
 
-    public function permissions() {
+    public function permissions()
+    {
         return $this->permissions;
     }
 
-    public function has_users() {
+    public function has_users()
+    {
         return count($this->users) > 0;
     }
 
-    public function no_user() {
+    public function no_user()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'no_user');
     }
 
-    public function users() {
+    public function users()
+    {
         return $this->users;
     }
 }

@@ -33,30 +33,36 @@ class MailGatewayConfig {
     /** @var string */
     private $cache_emailgateway_mode;
 
-    public function __construct(MailGatewayConfigDao $dao) {
+    public function __construct(MailGatewayConfigDao $dao)
+    {
         $this->dao = $dao;
     }
 
-    public function setEmailgatewayMode($emailgateway_mode) {
+    public function setEmailgatewayMode($emailgateway_mode)
+    {
         if ($this->isAllowedEmailgatewayMode($emailgateway_mode)) {
             $this->cache_emailgateway_mode = $emailgateway_mode;
             return $this->dao->save($emailgateway_mode);
         }
     }
 
-    public function isEmailgatewayDisabled() {
+    public function isEmailgatewayDisabled()
+    {
         return $this->getEmailgatewayMode() === self::$DISABLED;
     }
 
-    public function isInsecureEmailgatewayEnabled() {
+    public function isInsecureEmailgatewayEnabled()
+    {
         return $this->getEmailgatewayMode() === self::$INSECURE;
     }
 
-    public function isTokenBasedEmailgatewayEnabled() {
+    public function isTokenBasedEmailgatewayEnabled()
+    {
         return $this->getEmailgatewayMode() === self::$TOKEN;
     }
 
-    private function getEmailgatewayMode() {
+    private function getEmailgatewayMode()
+    {
         if (! isset($this->cache_emailgateway_mode)) {
             $this->cache_emailgateway_mode = self::$DISABLED;
             $row = $this->dao->searchEmailgatewayConfiguration()->getRow();
@@ -68,7 +74,8 @@ class MailGatewayConfig {
         return $this->cache_emailgateway_mode;
     }
 
-    private function isAllowedEmailgatewayMode($emailgateway_mode) {
+    private function isAllowedEmailgatewayMode($emailgateway_mode)
+    {
         return in_array($emailgateway_mode, array(self::$DISABLED, self::$TOKEN, self::$INSECURE));
     }
 }

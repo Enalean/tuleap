@@ -24,7 +24,8 @@ class ArtifactUserListFieldXMLExporter extends ArtifactStaticListFieldXMLExporte
     public const TV5_TYPE         = 'list';
     public const TV5_BIND         = 'users';
 
-    public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row) {
+    public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)
+    {
         $field_node = $this->getNode(self::TV5_TYPE, $row);
         $field_node->setAttribute('bind', self::TV5_BIND);
         $user_node = $this->getNodeValue($this->getValueLabel($row['new_value']));
@@ -33,7 +34,8 @@ class ArtifactUserListFieldXMLExporter extends ArtifactStaticListFieldXMLExporte
         $changeset_node->appendChild($field_node);
     }
 
-    private function getValueLabel($value) {
+    private function getValueLabel($value)
+    {
         if ($value == 100) {
             return '';
         }
@@ -45,7 +47,8 @@ class ArtifactUserListFieldXMLExporter extends ArtifactStaticListFieldXMLExporte
         throw new Exception_TV3XMLException('Unknown user '.$value);
     }
 
-    public function getFieldValueIndex() {
+    public function getFieldValueIndex()
+    {
         return self::TV3_VALUE_INDEX;
     }
 

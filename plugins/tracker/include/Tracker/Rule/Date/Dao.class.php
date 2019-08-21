@@ -23,7 +23,8 @@
  */
 class Tracker_Rule_Date_Dao extends DataAccessObject {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_rule_date';
     }
@@ -32,7 +33,8 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
      * Searches Tracker_Rule by Id
      * @return DataAccessResult
      */
-    public function searchById($tracker_id, $id) {
+    public function searchById($tracker_id, $id)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $id         = $this->da->escapeInt($id);
         $sql = "SELECT *
@@ -48,7 +50,8 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
      * Searches Tracker_Rule by TrackerId
      * @return DataAccessResult
      */
-    public function searchByTrackerId($tracker_id) {
+    public function searchByTrackerId($tracker_id)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
                 FROM tracker_rule
@@ -67,7 +70,8 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
      * @return int The ID of the saved tracker_rule
      * @throws Exception
      */
-    public function insert($tracker_id, $source_field_id, $target_field_id, $comparator) {
+    public function insert($tracker_id, $source_field_id, $target_field_id, $comparator)
+    {
         $tracker_id      = $this->da->escapeInt($tracker_id);
         $source_field_id = $this->da->escapeInt($source_field_id);
         $target_field_id = $this->da->escapeInt($target_field_id);
@@ -91,7 +95,8 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
         return $id;
     }
 
-    public function deleteById($tracker_id, $rule_id) {
+    public function deleteById($tracker_id, $rule_id)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $rule_id    = $this->da->escapeInt($rule_id);
         $sql = "DELETE tracker_rule_date.*
@@ -108,7 +113,8 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
         }
     }
 
-    public function save($id, $source_field_id, $target_field_id, $comparator) {
+    public function save($id, $source_field_id, $target_field_id, $comparator)
+    {
         $id              = $this->da->escapeInt($id);
         $source_field_id = $this->da->escapeInt($source_field_id);
         $target_field_id = $this->da->escapeInt($target_field_id);

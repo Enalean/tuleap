@@ -49,7 +49,8 @@ require_once __DIR__ . '/project_admin_utils.php';
 /**
  * Return a printable name for a given permission type
  */
-function permission_get_name($permission_type) {
+function permission_get_name($permission_type)
+{
     global $Language;
     if ($permission_type=='NEWS_READ') {
         return $Language->getText('project_admin_permissions','news_access');
@@ -88,7 +89,8 @@ function permission_get_name($permission_type) {
 /**
  * Return the type of a given object
  */
-function permission_get_object_type($permission_type,$object_id) {
+function permission_get_object_type($permission_type,$object_id)
+{
     if ($permission_type=='NEWS_READ') {
         return 'news';
     } else if ($permission_type=='PACKAGE_READ') {
@@ -130,7 +132,8 @@ function permission_get_object_type($permission_type,$object_id) {
 /**
  * Return the name of a given object
  */
-function permission_get_object_name($permission_type,$object_id) {
+function permission_get_object_name($permission_type,$object_id)
+{
     global $Language,$group_id;
 
     $pm = ProjectManager::instance();
@@ -205,7 +208,8 @@ function permission_get_object_name($permission_type,$object_id) {
 /**
  * Return the full name for a given object
  */
-function permission_get_object_fullname($permission_type,$object_id) {
+function permission_get_object_fullname($permission_type,$object_id)
+{
     $em = EventManager::instance();
     $object_fullname = false;
     $em->processEvent('permission_get_object_fullname', array(
@@ -230,7 +234,8 @@ function permission_get_object_fullname($permission_type,$object_id) {
  *
  * @return bool
  */
-function permission_user_allowed_to_change($project_id, $permission_type, $object_id=0) {
+function permission_user_allowed_to_change($project_id, $permission_type, $object_id=0)
+{
 
     $project_manager = ProjectManager::instance();
     $project         = $project_manager->getProject($project_id);
@@ -292,7 +297,8 @@ function permission_user_allowed_to_change($project_id, $permission_type, $objec
 /**
  * Return a DB list of ugroup_ids authorized to access the given object
  */
-function permission_db_authorized_ugroups($permission_type, $object_id) {
+function permission_db_authorized_ugroups($permission_type, $object_id)
+{
     $sql="SELECT ugroup_id FROM permissions WHERE permission_type='".db_es($permission_type)."' AND object_id='".db_es($object_id)."' ORDER BY ugroup_id";
     // note that 'order by' is needed for comparing ugroup_lists (see permission_equals_to_default)
     return db_query($sql);
@@ -304,7 +310,8 @@ function permission_db_authorized_ugroups($permission_type, $object_id) {
  * @deprecated
  * @see PermissionManager::getDefaults
  */
-function permission_db_get_defaults($permission_type) {
+function permission_db_get_defaults($permission_type)
+{
     $sql="SELECT ugroup_id FROM permissions_values WHERE permission_type='".db_es($permission_type)."' AND is_default='1' ORDER BY ugroup_id";
     return db_query($sql);
 }
@@ -315,7 +322,8 @@ function permission_db_get_defaults($permission_type) {
  *
  * @return bool true if permissions are defined, false otherwise.
  */
-function permission_exist($permission_type, $object_id) {
+function permission_exist($permission_type, $object_id)
+{
     $res=permission_db_authorized_ugroups($permission_type, $object_id);
     if (db_numrows($res) < 1) {
         // No group defined => no permissions set
@@ -338,7 +346,8 @@ function permission_exist($permission_type, $object_id) {
  * @param $group_id is the group_id the object belongs to; useful for project-specific authorized ugroups (e.g. 'project admins')
  * @return bool true if user is authorized, false otherwise.
  */
-function permission_is_authorized($permission_type, $object_id, $user_id, $group_id) {
+function permission_is_authorized($permission_type, $object_id, $user_id, $group_id)
+{
 
     // Super-user has all rights...
     $u = UserManager::instance()->getUserById($user_id);
@@ -362,7 +371,8 @@ function permission_is_authorized($permission_type, $object_id, $user_id, $group
 
 
 
-function permission_extract_field_id($special_id) {
+function permission_extract_field_id($special_id)
+{
     $pos = strpos($special_id, '#');
     if ($pos === false) {
         return $special_id;
@@ -371,7 +381,8 @@ function permission_extract_field_id($special_id) {
     }
 }
 
-function permission_extract_atid($special_id) {
+function permission_extract_atid($special_id)
+{
     $pos = strpos($special_id, '#');
     if ($pos === false) {
         return $special_id;
@@ -380,14 +391,16 @@ function permission_extract_atid($special_id) {
     }
 }
 
-function permission_build_field_id($object_id, $field_id) {
+function permission_build_field_id($object_id, $field_id)
+{
     return $object_id."#".$field_id;
 }
 
 /**
  * @returns array the permissions for the ugroups
  */
-function permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fields) {
+function permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fields)
+{
     $tracker_permissions = permission_get_tracker_ugroups_permissions($group_id, $atid);
     //Anonymous can access ?
     if (isset($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']])
@@ -464,14 +477,16 @@ function permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fie
 /**
  * @returns array the permissions for the ugroups
  */
-function permission_get_tracker_ugroups_permissions($group_id, $object_id) {
+function permission_get_tracker_ugroups_permissions($group_id, $object_id)
+{
     return permission_get_ugroups_permissions($group_id, $object_id, array('TRACKER_ACCESS_FULL','TRACKER_ACCESS_ASSIGNEE','TRACKER_ACCESS_SUBMITTER'), false);
 }
 
 /**
  * @returns array the permissions for the ugroups
  */
-function permission_get_ugroups_permissions($group_id, $object_id, $permission_types, $use_default_permissions = true) {
+function permission_get_ugroups_permissions($group_id, $object_id, $permission_types, $use_default_permissions = true)
+{
     $cache = Tuleap\Project\UgroupsPermissionsCache::instance();
     $cached_value = $cache->get($group_id, $object_id, $permission_types, $use_default_permissions);
     if ($cached_value !== null) {
@@ -600,7 +615,8 @@ function permission_get_ugroups_permissions($group_id, $object_id, $permission_t
  *
  * For the list of supported permission_type and id, see above in file header.
  */
-function permission_fetch_selection_form($permission_type, $object_id, $group_id, $post_url) {
+function permission_fetch_selection_form($permission_type, $object_id, $group_id, $post_url)
+{
     $html = '';
     if (!$post_url) $post_url='?';
 
@@ -627,7 +643,8 @@ function permission_fetch_selection_form($permission_type, $object_id, $group_id
     return $html;
 }
 
-function permission_fetch_selected_ugroups($permission_type, $object_id, $group_id) {
+function permission_fetch_selected_ugroups($permission_type, $object_id, $group_id)
+{
     $ugroups = array();
     $res_ugroups = permission_db_authorized_ugroups($permission_type, $object_id);
     while ( $row = db_fetch_array($res_ugroups) ) {
@@ -637,7 +654,8 @@ function permission_fetch_selected_ugroups($permission_type, $object_id, $group_
     return $ugroups;
 }
 
-function permission_fetch_selected_ugroups_ids($permission_type, $object_id, $group_id) {
+function permission_fetch_selected_ugroups_ids($permission_type, $object_id, $group_id)
+{
     $ugroups = array();
     $res_ugroups = permission_db_authorized_ugroups($permission_type, $object_id);
     while ( $row = db_fetch_array($res_ugroups) ) {
@@ -657,13 +675,13 @@ function permission_fetch_selection_field_without_project_admins_and_nobody(
 }
 
 function permission_fetch_selection_field(
-        $permission_type,
-        $object_id,
-        $group_id,
-        $htmlname = 'ugroups',
-        $disabled = false,
-        $show_admins = true,
-        $show_nobody = true
+    $permission_type,
+    $object_id,
+    $group_id,
+    $htmlname = 'ugroups',
+    $disabled = false,
+    $show_admins = true,
+    $show_nobody = true
 ) {
     $html = '';
 
@@ -735,7 +753,8 @@ function permission_fetch_selection_field(
     return $html;
 }
 
-function permission_display_selection_form($permission_type, $object_id, $group_id, $post_url) {
+function permission_display_selection_form($permission_type, $object_id, $group_id, $post_url)
+{
     echo permission_fetch_selection_form($permission_type, $object_id, $group_id, $post_url);
 }
 
@@ -745,7 +764,8 @@ function permission_display_selection_form($permission_type, $object_id, $group_
  * @return false if error, true otherwise
 */
 
-function permission_clear_all($group_id, $permission_type, $object_id, $log_permission_history=true) {
+function permission_clear_all($group_id, $permission_type, $object_id, $log_permission_history=true)
+{
     if (!permission_user_allowed_to_change($group_id, $permission_type, $object_id)) { return false;}
     $sql = "DELETE FROM permissions WHERE permission_type='".db_es($permission_type)."' AND object_id='".db_es($object_id)."'";
     $res=db_query($sql);
@@ -758,7 +778,8 @@ function permission_clear_all($group_id, $permission_type, $object_id, $log_perm
     }
 }
 
-function permission_copy_tracker_and_field_permissions($from, $to, $group_id_from, $group_id_to, $ugroup_mapping=false) {
+function permission_copy_tracker_and_field_permissions($from, $to, $group_id_from, $group_id_to, $ugroup_mapping=false)
+{
     $result = true;
 
     //We remove ugroups if 'from' and 'to' are not part of the same project
@@ -840,13 +861,15 @@ EOS;
 }
 
 
-function permission_clear_all_tracker($group_id, $object_id) {
+function permission_clear_all_tracker($group_id, $object_id)
+{
     permission_clear_all($group_id, 'TRACKER_ACCESS_FULL', $object_id, false);
     permission_clear_all($group_id, 'TRACKER_ACCESS_ASSIGNEE', $object_id, false);
     permission_clear_all($group_id, 'TRACKER_ACCESS_SUBMITTER', $object_id, false);
 }
 
-function permission_clear_all_fields_tracker($group_id, $tracker_id, $field_id) {
+function permission_clear_all_fields_tracker($group_id, $tracker_id, $field_id)
+{
     $object_id = permission_build_field_id($tracker_id, $field_id);
     permission_clear_all($group_id, 'TRACKER_FIELD_SUBMIT', $object_id, false);
     permission_clear_all($group_id, 'TRACKER_FIELD_READ', $object_id, false);
@@ -861,7 +884,8 @@ function permission_clear_all_fields_tracker($group_id, $tracker_id, $field_id) 
  *  so '0' means error, and 1 means no error but no permission)
  */
 
-function permission_clear_ugroup($group_id, $ugroup_id) {
+function permission_clear_ugroup($group_id, $ugroup_id)
+{
     if (!user_ismember($group_id,'A')) { return false;}
     $sql = "DELETE FROM permissions WHERE ugroup_id='".db_ei($ugroup_id)."'";
     $res=db_query($sql);
@@ -878,7 +902,8 @@ function permission_clear_ugroup($group_id, $ugroup_id) {
  * (why +1? because there might be no permission, but no error either,
  *  so '0' means error, and 1 means no error but no permission)
  */
-function permission_clear_ugroup_object($group_id, $permission_type, $ugroup_id, $object_id) {
+function permission_clear_ugroup_object($group_id, $permission_type, $ugroup_id, $object_id)
+{
     if (!permission_user_allowed_to_change($group_id, $permission_type,$object_id)) { return false;}
     $sql = "DELETE FROM permissions WHERE ugroup_id='".db_ei($ugroup_id)."' AND object_id='".db_es($object_id)."' AND permission_type='".db_es($permission_type)."'";
     $res=db_query($sql);
@@ -889,7 +914,8 @@ function permission_clear_ugroup_object($group_id, $permission_type, $ugroup_id,
     }
 }
 
-function permission_clear_ugroup_tracker($group_id, $ugroup_id, $object_id) {
+function permission_clear_ugroup_tracker($group_id, $ugroup_id, $object_id)
+{
     permission_clear_ugroup_object($group_id, 'TRACKER_ACCESS_FULL',      $ugroup_id, $object_id);//TODO: traitements des erreurs
     permission_clear_ugroup_object($group_id, 'TRACKER_ACCESS_SUBMITTER', $ugroup_id, $object_id);//TODO: traitements des erreurs
     permission_clear_ugroup_object($group_id, 'TRACKER_ACCESS_ASSIGNEE',  $ugroup_id, $object_id);//TODO: traitements des erreurs
@@ -900,7 +926,8 @@ function permission_clear_ugroup_tracker($group_id, $ugroup_id, $object_id) {
  * Effectively update permissions for the given object.
  * Access rights to this function are checked.
  */
-function permission_add_ugroup($group_id, $permission_type, $object_id, $ugroup_id, $force = false) {
+function permission_add_ugroup($group_id, $permission_type, $object_id, $ugroup_id, $force = false)
+{
     if (!$force && !permission_user_allowed_to_change($group_id, $permission_type, $object_id)) { return false;}
     $sql = "INSERT INTO permissions (permission_type, object_id, ugroup_id) VALUES ('".db_es($permission_type)."', '".db_es($object_id)."', ".db_ei($ugroup_id).")";
     $res=db_query($sql);
@@ -916,7 +943,8 @@ function permission_add_ugroup($group_id, $permission_type, $object_id, $ugroup_
  * Return true if the permissions set for the given object are the same as the default values
  * Return false if they are different
  */
-function permission_equals_to_default($permission_type, $object_id) {
+function permission_equals_to_default($permission_type, $object_id)
+{
     $res1=permission_db_authorized_ugroups($permission_type, $object_id);
     if (db_numrows($res1)==0) {
         // No ugroup defined means default values
@@ -936,7 +964,8 @@ function permission_equals_to_default($permission_type, $object_id) {
 /**
  * Log permission change in project history
  */
-function permission_add_history($group_id, $permission_type, $object_id){
+function permission_add_history($group_id, $permission_type, $object_id)
+{
     global $Language;
     $res=permission_db_authorized_ugroups($permission_type, $object_id);
     $type = permission_get_object_type($permission_type, $object_id);
@@ -971,7 +1000,8 @@ function permission_add_history($group_id, $permission_type, $object_id){
  * Exemples: (false,"Cannot combine 'any registered user' with another group)
  *           (true,"Removed 'nobody' from the list")
  */
-function permission_process_selection_form($group_id, $permission_type, $object_id, $ugroups) {
+function permission_process_selection_form($group_id, $permission_type, $object_id, $ugroups)
+{
     global $Language;
     // Check that we have all parameters
     if (!$object_id) {
@@ -1041,7 +1071,8 @@ function permission_process_selection_form($group_id, $permission_type, $object_
     return array(true, $Language->getText('project_admin_permissions','perm_update_success',$msg));
 }
 
-function permission_get_input_value_from_permission($perm) {
+function permission_get_input_value_from_permission($perm)
+{
     $ret = false;
     switch($perm) {
         case 'TRACKER_FIELD_SUBMIT':
@@ -1060,7 +1091,8 @@ function permission_get_input_value_from_permission($perm) {
     return $ret;
 }
 
-function permission_process_update_fields_permissions($group_id, $atid, $fields, $permissions_wanted_by_user) {
+function permission_process_update_fields_permissions($group_id, $atid, $fields, $permissions_wanted_by_user)
+{
     //The actual permissions
     $stored_ugroups_permissions = permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fields);;
     $permissions_updated = false;
@@ -1436,7 +1468,8 @@ function permission_process_update_fields_permissions($group_id, $atid, $fields,
 
 }
 
-function permission_process_update_tracker_permissions($group_id, $atid, $permissions_wanted_by_user) {
+function permission_process_update_tracker_permissions($group_id, $atid, $permissions_wanted_by_user)
+{
     //The user want to update permissions for the tracker.
     //We look into the request for specials variable
     $prefixe_expected     = 'permissions_';
@@ -1894,7 +1927,8 @@ function permission_process_update_tracker_permissions($group_id, $atid, $permis
     /** returns true if the perms array contains
      * TRACKER_FIELD_READ or TRACKER_FIELD_UPDATE permission
      */
-function permission_can_read_field($perms) {
+function permission_can_read_field($perms)
+{
     if (!$perms) return false;
     return (in_array('TRACKER_FIELD_READ',$perms) || in_array('TRACKER_FIELD_UPDATE',$perms));
 }
@@ -1902,7 +1936,8 @@ function permission_can_read_field($perms) {
     /** returns true if the perms array contains
      * TRACKER_FIELD_UPDATE permission
      */
-function permission_can_update_field($perms) {
+function permission_can_update_field($perms)
+{
     if (!$perms) return false;
     return (in_array('TRACKER_FIELD_UPDATE',$perms));
 }
@@ -1910,7 +1945,8 @@ function permission_can_update_field($perms) {
     /** returns true if the perms array contains
      * TRACKER_FIELD_SUBMIT permission
      */
-function permission_can_submit_field($perms) {
+function permission_can_submit_field($perms)
+{
     if (!$perms) return false;
     return (in_array('TRACKER_FIELD_SUBMIT',$perms));
 }

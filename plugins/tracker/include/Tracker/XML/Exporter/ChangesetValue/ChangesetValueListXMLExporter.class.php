@@ -25,11 +25,13 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter extends 
      */
     private $user_xml_exporter;
 
-    public function __construct(UserXMLExporter $user_xml_exporter) {
+    public function __construct(UserXMLExporter $user_xml_exporter)
+    {
         $this->user_xml_exporter = $user_xml_exporter;
     }
 
-    protected function getFieldChangeType() {
+    protected function getFieldChangeType()
+    {
         return 'list';
     }
 

@@ -22,24 +22,28 @@ require_once 'builders/aSystemEvent.php';
 
 class SystemEventTest extends TuleapTestCase {
 
-    public function itRetrievesAParameterByItsIndex() {
+    public function itRetrievesAParameterByItsIndex()
+    {
         $event = aSystemEvent()->withParameters('B::A')->build();
         $this->assertEqual('A', $event->getParameter(1));
         $this->assertEqual('B', $event->getRequiredParameter(0));
     }
 
-    public function itReturnsNullIfIndexNotFound() {
+    public function itReturnsNullIfIndexNotFound()
+    {
         $event = aSystemEvent()->withParameters('')->build();
         $this->assertNull($event->getParameter(0));
     }
 
-    public function itRaisesAnExceptionWhenParameterIsRequiredAndNotFound() {
+    public function itRaisesAnExceptionWhenParameterIsRequiredAndNotFound()
+    {
         $event = aSystemEvent()->withParameters('')->build();
         $this->expectException('SystemEventMissingParameterException');
         $event->getRequiredParameter(0);
     }
 
-    public function itProperlyEncodesAndDecodesData() {
+    public function itProperlyEncodesAndDecodesData()
+    {
         $data = array('coin' => 'String that contains :: (the param separator)');
         $this->assertEqual($data, SystemEvent::decode(SystemEvent::encode($data)));
     }

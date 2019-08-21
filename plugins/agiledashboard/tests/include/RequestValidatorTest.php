@@ -34,17 +34,20 @@ class RequestValidatorTest extends TuleapTestCase
 
 class RequestValidator_MissingParameterTest extends RequestValidatorTest {
 
-    public function itRejectsTheRequestWhenNameIsMissing() {
+    public function itRejectsTheRequestWhenNameIsMissing()
+    {
         $request = aPlanningCreationRequest()->withPlanningName(null)->build();
         $this->assertFalse($this->validator->isValid($request));
     }
 
-    public function itRejectsTheRequestWhenBacklogTrackerIdsAreMissing() {
+    public function itRejectsTheRequestWhenBacklogTrackerIdsAreMissing()
+    {
         $request = aPlanningCreationRequest()->withBacklogTrackerId(null)->build();
         $this->assertFalse($this->validator->isValid($request));
     }
 
-    public function itRejectsTheRequestWhenPlanningTrackerIdIsMissing() {
+    public function itRejectsTheRequestWhenPlanningTrackerIdIsMissing()
+    {
         $request = aPlanningCreationRequest()->withPlanningTrackerId(null)->build();
         $this->assertFalse($this->validator->isValid($request));
     }
@@ -52,7 +55,8 @@ class RequestValidator_MissingParameterTest extends RequestValidatorTest {
 
 class RequestValidator_NoMissingParameterTest extends RequestValidatorTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->group_id            = 12;
@@ -72,24 +76,28 @@ class RequestValidator_NoMissingParameterTest extends RequestValidatorTest {
                                             $this->sprints_tracker_id));
     }
 
-    private function aRequest() {
+    private function aRequest()
+    {
         return aPlanningCreationRequest()->withGroupId($this->group_id)
                                          ->withPlanningId($this->release_planning_id);
     }
 
-    public function itValidatesTheRequestWhenPlanningTrackerIsNotUsedInAPlanningOfTheSameProject() {
+    public function itValidatesTheRequestWhenPlanningTrackerIsNotUsedInAPlanningOfTheSameProject()
+    {
         $request = $this->aRequest()->withPlanningTrackerId($this->holidays_tracker_id)->build();
 
         $this->assertTrue($this->validator->isValid($request));
     }
 
-    public function itValidatesTheRequestWhenPlanningTrackerIsTheCurrentOne() {
+    public function itValidatesTheRequestWhenPlanningTrackerIsTheCurrentOne()
+    {
         $request = $this->aRequest()->withPlanningTrackerId($this->releases_tracker_id)->build();
 
         $this->assertTrue($this->validator->isValid($request));
     }
 
-    public function itRejectsTheRequestWhenPlanningTrackerIsUsedInAPlanningOfTheSameProject() {
+    public function itRejectsTheRequestWhenPlanningTrackerIsUsedInAPlanningOfTheSameProject()
+    {
         $request = $this->aRequest()->withPlanningTrackerId($this->sprints_tracker_id)->build();
 
         $this->assertFalse($this->validator->isValid($request));

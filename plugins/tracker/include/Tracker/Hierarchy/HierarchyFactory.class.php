@@ -95,11 +95,13 @@ class Tracker_HierarchyFactory
         return self::$_instance;
     }
 
-    public static function setInstance(Tracker_HierarchyFactory $instance) {
+    public static function setInstance(Tracker_HierarchyFactory $instance)
+    {
         self::$_instance = $instance;
     }
 
-    public static function clearInstance() {
+    public static function clearInstance()
+    {
         self::$_instance = null;
     }
 
@@ -108,7 +110,8 @@ class Tracker_HierarchyFactory
      * @param int $tracker_id
      * @return Tracker[]
      */
-    public function getChildren($tracker_id) {
+    public function getChildren($tracker_id)
+    {
         if (!isset($this->cache_children_of_tracker[$tracker_id])) {
             $this->cache_children_of_tracker[$tracker_id] = array();
             foreach($this->hierarchy_dao->searchChildTrackerIds($tracker_id) as $row) {
@@ -125,7 +128,8 @@ class Tracker_HierarchyFactory
      *
      * @return \Tracker_Hierarchy
      */
-    public function getHierarchy($tracker_ids = array()) {
+    public function getHierarchy($tracker_ids = array())
+    {
         $hierarchy             = new Tracker_Hierarchy();
         $search_tracker_ids    = $tracker_ids;
         $processed_tracker_ids = array();
@@ -143,7 +147,8 @@ class Tracker_HierarchyFactory
      *
      * @return \Tracker_Hierarchy
      */
-    private function fixSingleHierarchy(array $tracker_ids, Tracker_Hierarchy $hierarchy) {
+    private function fixSingleHierarchy(array $tracker_ids, Tracker_Hierarchy $hierarchy)
+    {
         if (count($tracker_ids) == 1 && !$hierarchy->flatten()) {
             $hierarchy->addRelationship($tracker_ids[0], 0);
         }
@@ -153,7 +158,8 @@ class Tracker_HierarchyFactory
     /**
      * @return Tracker
      */
-    public function getParent(Tracker $tracker) {
+    public function getParent(Tracker $tracker)
+    {
         $hierarchy         = $this->getHierarchy(array($tracker->getId()));
         $parent_tracker_id = $hierarchy->getParent($tracker->getId());
         return $this->tracker_factory->getTrackerById($parent_tracker_id);
@@ -167,7 +173,8 @@ class Tracker_HierarchyFactory
      *
      * @return Tracker[]
      */
-    public function getAllParents(Tracker $tracker) {
+    public function getAllParents(Tracker $tracker)
+    {
         $hierarchy         = $this->getHierarchy(array($tracker->getId()));
         $parent_tracker_id = $hierarchy->getParent($tracker->getId());
         $stack = array();
@@ -186,7 +193,8 @@ class Tracker_HierarchyFactory
      *
      * @return Int[] array of IDs
      */
-    public function getUpwardsHierarchyForTracker($tracker_id) {
+    public function getUpwardsHierarchyForTracker($tracker_id)
+    {
         $hierarchy         = $this->getHierarchy(array($tracker_id));
         $parent_tracker_id = $hierarchy->getParent($tracker_id);
         $stack = array($tracker_id);
@@ -205,7 +213,8 @@ class Tracker_HierarchyFactory
      *
      * @return null| Tracker_Artifact
      */
-    public function getParentArtifact(PFUser $user, Tracker_Artifact $child) {
+    public function getParentArtifact(PFUser $user, Tracker_Artifact $child)
+    {
         $parents = array();
         if ($child->getTracker()->isProjectAllowedToUseNature() === true) {
             $parents = $this->child_link_retriever->getDirectParents($child);
@@ -233,11 +242,13 @@ class Tracker_HierarchyFactory
         return null;
     }
 
-    private function getParentsList(array $parents) {
+    private function getParentsList(array $parents)
+    {
         return implode(', ', array_map(array($this, 'getParentTitle'), $parents));
     }
 
-    private function getParentTitle(Tracker_Artifact $artifact) {
+    private function getParentTitle(Tracker_Artifact $artifact)
+    {
         return '"'. $artifact->getTitle() .' ('. $artifact->fetchXRefLink() .')"';
     }
 
@@ -255,7 +266,8 @@ class Tracker_HierarchyFactory
      *
      * @return Array of Tracker_Artifact
      */
-    public function getAllAncestors(PFUser $user, Tracker_Artifact $child, array &$stack = array()) {
+    public function getAllAncestors(PFUser $user, Tracker_Artifact $child, array &$stack = array())
+    {
         if (!isset($this->cache_ancestors[$user->getId()][$child->getId()])) {
             $parent = $this->getParentArtifact($user, $child);
             if ($parent === null || $parent->getId() == $child->getId() || isset($stack[$parent->getId()])) {
@@ -273,7 +285,8 @@ class Tracker_HierarchyFactory
      *
      * @param Array   $tracker_mapping the trackers mapping during project creation based on a template
      */
-    public function duplicate($tracker_mapping) {
+    public function duplicate($tracker_mapping)
+    {
         $search_tracker_ids = array_keys($tracker_mapping);
         $hierarchy_dar     = $this->hierarchy_dao->searchTrackerHierarchy($search_tracker_ids);
 
@@ -282,13 +295,15 @@ class Tracker_HierarchyFactory
         }
     }
 
-    private function getHierarchyFromTrackers(Tracker_Hierarchy $hierarchy, &$search_tracker_ids, &$processed_tracker_ids) {
+    private function getHierarchyFromTrackers(Tracker_Hierarchy $hierarchy, &$search_tracker_ids, &$processed_tracker_ids)
+    {
         $processed_tracker_ids   = array_merge($processed_tracker_ids, $search_tracker_ids);
         $added_relationships_ids = $this->addRelationships($hierarchy, $search_tracker_ids);
         $search_tracker_ids      = array_values(array_diff($added_relationships_ids, $processed_tracker_ids));
     }
 
-    private function addRelationships(Tracker_Hierarchy $hierarchy, $search_tracker_ids) {
+    private function addRelationships(Tracker_Hierarchy $hierarchy, $search_tracker_ids)
+    {
         $hierarchy_dar     = $this->hierarchy_dao->searchTrackerHierarchy($search_tracker_ids);
 
         $relationships_ids = array();
@@ -299,7 +314,8 @@ class Tracker_HierarchyFactory
         return $relationships_ids;
     }
 
-    private function addRelationshipAndStack($hierarchy, $parent_id, $child_id, &$stack) {
+    private function addRelationshipAndStack($hierarchy, $parent_id, $child_id, &$stack)
+    {
         $hierarchy->addRelationship($parent_id, $child_id);
 
         $stack[] = $parent_id;

@@ -17,17 +17,20 @@
  */
 
 class b201410301650_add_commit_to_tag_denied_in_groups extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add svn commit to tag denied option
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE groups ADD COLUMN svn_commit_to_tag_denied TINYINT(1) NOT NULL default '0' AFTER svn_accessfile_version_id";
         if ($this->db->tableNameExists('groups')) {
             $res = $this->db->dbh->exec($sql);
@@ -37,7 +40,8 @@ EOT;
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->columnNameExists('groups', 'svn_commit_to_tag_denied')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column svn_commit_to_tag_denied not created in system_event');
         }

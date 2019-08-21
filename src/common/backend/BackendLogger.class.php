@@ -23,7 +23,8 @@ class BackendLogger implements Logger {
 
     private $filepath;
 
-    public function __construct($filename = null) {
+    public function __construct($filename = null)
+    {
         $this->filepath = empty($filename) ? ForgeConfig::get('codendi_log').'/'.self::FILENAME : $filename;
     }
 
@@ -38,7 +39,8 @@ class BackendLogger implements Logger {
         );
     }
 
-    public function getFilepath() {
+    public function getFilepath()
+    {
         return $this->filepath;
     }
 
@@ -59,24 +61,29 @@ class BackendLogger implements Logger {
         return error_log(date('c')." [$pid] [$level] $message\n", 3, $this->filepath);
     }
 
-    public function debug($message) {
+    public function debug($message)
+    {
         $this->log($message, Feedback::DEBUG);
     }
 
-    public function info($message) {
+    public function info($message)
+    {
         $this->log($message, Feedback::INFO);
     }
 
-    public function error($message, ?Exception $e = null) {
+    public function error($message, ?Exception $e = null)
+    {
         $this->log($this->generateLogWithException($message, $e), Feedback::ERROR);
     }
 
-    public function warn($message, ?Exception $e = null) {
+    public function warn($message, ?Exception $e = null)
+    {
         $this->log($this->generateLogWithException($message, $e), Feedback::WARN);
 
     }
 
-    public function generateLogWithException($message, ?Exception $e = null) {
+    public function generateLogWithException($message, ?Exception $e = null)
+    {
         $log_string = $message;
         if (!empty($e)) {
             $error_message  = $e->getMessage();

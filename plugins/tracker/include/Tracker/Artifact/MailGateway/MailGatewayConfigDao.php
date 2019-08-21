@@ -23,13 +23,15 @@ namespace Tuleap\Tracker\Artifact\MailGateway;
 
 class MailGatewayConfigDao extends \DataAccessObject {
 
-    public function searchEmailgatewayConfiguration() {
+    public function searchEmailgatewayConfiguration()
+    {
         $sql = "SELECT * FROM plugin_tracker_config WHERE name = 'emailgateway_mode'";
 
         return $this->retrieve($sql);
     }
 
-    public function save($emailgateway_mode) {
+    public function save($emailgateway_mode)
+    {
         $emailgateway_mode = $this->da->quoteSmart($emailgateway_mode);
 
         $sql = "REPLACE INTO plugin_tracker_config (name, value)

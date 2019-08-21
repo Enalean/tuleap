@@ -20,7 +20,8 @@
 
 class Tracker_Migration_V3_FieldPermsDao extends DataAccessObject {
 
-    public function create($tv3_id, $tv5_id) {
+    public function create($tv3_id, $tv5_id)
+    {
         $tv3_id = $this->da->escapeInt($tv3_id);
         $tv5_id = $this->da->escapeInt($tv5_id);
 

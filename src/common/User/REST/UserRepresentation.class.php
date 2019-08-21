@@ -34,7 +34,8 @@ class UserRepresentation extends MinimalUserRepresentation {
     public $status;
 
 
-    public function build(PFUser $user) {
+    public function build(PFUser $user)
+    {
         parent::build($user);
 
         $this->email  = $user->getEmail();

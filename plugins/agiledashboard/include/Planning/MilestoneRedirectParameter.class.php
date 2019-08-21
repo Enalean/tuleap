@@ -24,7 +24,8 @@
 class Planning_MilestoneRedirectParameter {
 
     /** @return string */
-    public function getPlanningRedirectToSelf(Planning_Milestone $milestone, $pane_identifier) {
+    public function getPlanningRedirectToSelf(Planning_Milestone $milestone, $pane_identifier)
+    {
         $planning_id = (int) $milestone->getPlanningId();
 
         $artifact_id = $milestone->getArtifactId();
@@ -33,7 +34,8 @@ class Planning_MilestoneRedirectParameter {
     }
 
     /** @return string */
-    public function getPlanningRedirectToNew(Planning_Milestone $milestone, $pane_identifier) {
+    public function getPlanningRedirectToNew(Planning_Milestone $milestone, $pane_identifier)
+    {
         $planning_id = (int) $milestone->getPlanningId();
 
         return "planning[$pane_identifier][$planning_id]=-1";

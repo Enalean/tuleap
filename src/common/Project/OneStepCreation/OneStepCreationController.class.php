@@ -99,7 +99,8 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
     /**
      * Display the create project form
      */
-    public function index() {
+    public function index()
+    {
         $GLOBALS['HTML']->header(array('title'=> $GLOBALS['Language']->getText('register_index','project_registration')));
         if ($this->project_manager->userCanCreateProject($this->request->getCurrentUser())) {
             $this->render('register', $this->presenter);
@@ -113,7 +114,8 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
     /**
      * Create the project if request is valid
      */
-    public function create() {
+    public function create()
+    {
         if ($this->project_manager->userCanCreateProject($this->request->getCurrentUser())) {
             $this->csrf_token->check();
             $this->validate();
@@ -127,7 +129,8 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         }
     }
 
-    private function validate() {
+    private function validate()
+    {
         $validator = new Project_OneStepCreation_OneStepCreationValidator(
             $this->creation_request,
             $this->required_custom_descriptions,
@@ -139,7 +142,8 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         }
     }
 
-    private function doCreate() {
+    private function doCreate()
+    {
         $send_notifications = true;
         $ugroup_user_dao    = new UGroupUserDao();
         $ugroup_manager     = new UGroupManager();
@@ -203,7 +207,8 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         }
     }
 
-    private function notifySiteAdmin(Project $project) {
+    private function notifySiteAdmin(Project $project)
+    {
         $subject = $GLOBALS['Language']->getText('register_project_one_step', 'complete_mail_subject', array($project->getPublicName()));
         $presenter = new MailPresenterFactory();
         $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');
@@ -215,7 +220,8 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         }
     }
 
-    private function postCreate(Project $project) {
+    private function postCreate(Project $project)
+    {
         $one_step_registration_factory = new Project_OneStepRegistration_OneStepRegistrationPresenterFactory($project);
         $GLOBALS['HTML']->header(array('title'=> $GLOBALS['Language']->getText('register_confirmation', 'registration_complete')));
         $this->render('confirmation', $one_step_registration_factory->create());

@@ -22,19 +22,23 @@ class PlanningPermissionsManager {
 
     public const PERM_PRIORITY_CHANGE = 'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE';
 
-    public function getPlanningPermissionForm($planning_id, $group_id, $permission, $html_element_name) {
+    public function getPlanningPermissionForm($planning_id, $group_id, $permission, $html_element_name)
+    {
         return permission_fetch_selection_field($permission, $planning_id, $group_id, $html_element_name);
     }
 
-    public function getGroupIdsWhoHasPermissionOnPlanning($planning_id, $group_id, $permission) {
+    public function getGroupIdsWhoHasPermissionOnPlanning($planning_id, $group_id, $permission)
+    {
         return permission_fetch_selected_ugroups_ids($permission, $planning_id, $group_id);
     }
 
-    public function userHasPermissionOnPlanning($planning_id, $group_id, PFUser $user, $permission) {
+    public function userHasPermissionOnPlanning($planning_id, $group_id, PFUser $user, $permission)
+    {
         return $user->isMember($group_id) && $user->hasPermission($permission, $planning_id, $group_id);
     }
 
-    public function savePlanningPermissionForUgroups($planning_id, $group_id, $permission, $ugroup_ids) {
+    public function savePlanningPermissionForUgroups($planning_id, $group_id, $permission, $ugroup_ids)
+    {
         if (empty($ugroup_ids)) {
             $ugroup_ids = array();
         }

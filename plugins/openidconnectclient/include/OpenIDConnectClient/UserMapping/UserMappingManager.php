@@ -30,14 +30,16 @@ class UserMappingManager {
      */
     private $dao;
 
-    public function __construct(UserMappingDao $dao) {
+    public function __construct(UserMappingDao $dao)
+    {
         $this->dao = $dao;
     }
 
     /**
      * @throws UserMappingDataAccessException
      */
-    public function create($user_id, $provider_id, $identifier, $last_used) {
+    public function create($user_id, $provider_id, $identifier, $last_used)
+    {
         $is_saved  = $this->dao->save($user_id, $provider_id, $identifier, $last_used);
         if (! $is_saved) {
             throw new UserMappingDataAccessException();
@@ -65,7 +67,8 @@ class UserMappingManager {
      * @return UserMapping
      * @throws UserMappingNotFoundException
      */
-    public function getByProviderAndIdentifier(Provider $provider, $identifier) {
+    public function getByProviderAndIdentifier(Provider $provider, $identifier)
+    {
         $row = $this->dao->searchByIdentifierAndProviderId($identifier, $provider->getId());
         if ($row === false) {
             throw new UserMappingNotFoundException();
@@ -89,7 +92,8 @@ class UserMappingManager {
     /**
      * @return UserMappingUsage[]
      */
-    public function getUsageByUser(PFUser $user) {
+    public function getUsageByUser(PFUser $user)
+    {
         $user_mappings_usage = array();
         $rows                = $this->dao->searchUsageByUserId($user->getId());
 
@@ -146,7 +150,8 @@ class UserMappingManager {
     /**
      * @return UserMappingUsage
      */
-    private function instantiateUserMappingUsageFromRow(array $row) {
+    private function instantiateUserMappingUsageFromRow(array $row)
+    {
         return new UserMappingUsage(
             $row['user_mapping_id'],
             $row['provider_id'],

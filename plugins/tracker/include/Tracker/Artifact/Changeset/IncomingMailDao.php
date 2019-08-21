@@ -20,7 +20,8 @@
 
 class Tracker_Artifact_Changeset_IncomingMailDao extends DataAccessObject {
 
-    public function save($changeset_id, $raw_mail) {
+    public function save($changeset_id, $raw_mail)
+    {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $raw_mail     = $this->da->quoteSmart($raw_mail);
 
@@ -30,7 +31,8 @@ class Tracker_Artifact_Changeset_IncomingMailDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function searchByArtifactId($artifact_id) {
+    public function searchByArtifactId($artifact_id)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
 
         $sql = "SELECT M.*

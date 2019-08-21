@@ -21,7 +21,8 @@
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
 class Tracker_Artifact_MailGateway_Notifier {
-    private function sendErrorMail($to, $subject, $message) {
+    private function sendErrorMail($to, $subject, $message)
+    {
         $mail = new Codendi_Mail();
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setTo($to);
@@ -43,7 +44,8 @@ class Tracker_Artifact_MailGateway_Notifier {
         $this->sendErrorMail($to, $subject, $message);
     }
 
-    public function sendErrorMailNoUserMatch(IncomingMail $incoming_mail) {
+    public function sendErrorMailNoUserMatch(IncomingMail $incoming_mail)
+    {
         $to      = $this->getTo($incoming_mail);
         $subject = $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'creation_error');
         $message = $GLOBALS['Language']->getText(
@@ -55,7 +57,8 @@ class Tracker_Artifact_MailGateway_Notifier {
         $this->sendErrorMail($to, $subject, $message);
     }
 
-    public function sendErrorMailInsufficientPermissionCreation($to, $artifact_title) {
+    public function sendErrorMailInsufficientPermissionCreation($to, $artifact_title)
+    {
         $subject = $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'creation_error');
         $message = $GLOBALS['Language']->getText(
             'plugin_tracker_emailgateway',
@@ -66,7 +69,8 @@ class Tracker_Artifact_MailGateway_Notifier {
         $this->sendErrorMail($to, $subject, $message);
     }
 
-    public function sendErrorMailInsufficientPermissionUpdate($to, $artifact_id) {
+    public function sendErrorMailInsufficientPermissionUpdate($to, $artifact_id)
+    {
         $subject = $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'update_error');
         $message = $GLOBALS['Language']->getText(
             'plugin_tracker_emailgateway',

@@ -27,15 +27,18 @@ class ArtifactCommentXMLExporter {
 
     private $all_comments = array();
 
-    public function __construct(ArtifactXMLNodeHelper $node_helper) {
+    public function __construct(ArtifactXMLNodeHelper $node_helper)
+    {
         $this->node_helper = $node_helper;
     }
 
-    public function createRootNode(DOMElement $changeset) {
+    public function createRootNode(DOMElement $changeset)
+    {
         $changeset->appendChild($this->node_helper->createElement('comments'));
     }
 
-    public function appendComment(DOMElement $changeset, array $row) {
+    public function appendComment(DOMElement $changeset, array $row)
+    {
         $dom_node_list = $changeset->getElementsByTagName('comments');
         $comments_node = $dom_node_list->item(0);
 
@@ -44,7 +47,8 @@ class ArtifactCommentXMLExporter {
         $comments_node->appendChild($this->createCommentNode($row));
     }
 
-    private function createCommentNode(array $row) {
+    private function createCommentNode(array $row)
+    {
         $comment_node = $this->node_helper->createElement('comment');
         $this->node_helper->appendSubmittedBy($comment_node, $row['submitted_by'], $row['is_anonymous']);
         $this->node_helper->appendSubmittedOn($comment_node, $row['date']);
@@ -55,7 +59,8 @@ class ArtifactCommentXMLExporter {
         return $comment_node;
     }
 
-    public function updateComment(array $row) {
+    public function updateComment(array $row)
+    {
         $matches = array();
         if (preg_match('/^lbl_(?P<history_id>\d+)_comment$/', $row['field_name'], $matches)) {
             $this->updateCommentNode($matches['history_id'], $row);
@@ -64,11 +69,13 @@ class ArtifactCommentXMLExporter {
         return false;
     }
 
-    private function updateCommentNode($reference_id, array $row) {
+    private function updateCommentNode($reference_id, array $row)
+    {
         $this->all_comments[$reference_id]->appendChild($this->createCommentNode($row));
     }
 
-    private function getFormat($format) {
+    private function getFormat($format)
+    {
         return $format == 0 ? self::TEXT : self::HTML;
     }
 }

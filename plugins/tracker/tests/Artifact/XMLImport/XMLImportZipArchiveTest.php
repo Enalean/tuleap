@@ -38,7 +38,8 @@ class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends TuleapTestCase 
     /** @var Tracker_Artifact_XMLImport_XMLImportZipArchive */
     private $archive;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->tmp_dir      = '/var/tmp';
         $this->fixtures_dir = dirname(__FILE__) .'/_fixtures';
@@ -59,18 +60,21 @@ class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends TuleapTestCase 
         );
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
         $this->zip->close();
         `rm -rf $this->tmp_dir/import_tv5_*`;
     }
 
-    public function itGivesTheXMLFile() {
+    public function itGivesTheXMLFile()
+    {
         $expected = file_get_contents($this->fixtures_dir .'/artifacts.xml');
         $this->assertEqual($expected, $this->archive->getXML());
     }
 
-    public function itExtractAttachmentsIntoARandomTemporaryDirectory() {
+    public function itExtractAttachmentsIntoARandomTemporaryDirectory()
+    {
         $extraction_path = $this->archive->getExtractionPath();
         $this->assertTrue(is_dir($extraction_path));
 
@@ -83,13 +87,15 @@ class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends TuleapTestCase 
         $this->assertEqual($extracted, $expected);
     }
 
-    public function itEnsuresThatTemporaryDirectoryIsNotReadableByEveryone() {
+    public function itEnsuresThatTemporaryDirectoryIsNotReadableByEveryone()
+    {
         $extraction_path = $this->archive->getExtractionPath();
         $perms = fileperms($extraction_path) & 0777;
         $this->assertEqual(0700, $perms);
     }
 
-    public function itCleansUp() {
+    public function itCleansUp()
+    {
         $extraction_path = $this->archive->getExtractionPath();
         $this->archive->extractFiles();
         $this->archive->cleanUp();

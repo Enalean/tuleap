@@ -52,7 +52,8 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent {
         $this->resource_restrictor = $resource_restrictor;
     }
 
-    public function process() {
+    public function process()
+    {
         try {
             $projects    = $this->getProjectsFromParameters();
             $nb_projects = count($projects);
@@ -85,7 +86,8 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent {
         }
     }
 
-    private function getProjectsFromParameters() {
+    private function getProjectsFromParameters()
+    {
         if ($this->areAllProjectsMigrated()) {
             $projects = array();
             foreach ($this->version_manager->getAllProjectsToMigrateTo123() as $project_id) {
@@ -103,12 +105,14 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent {
         return isset($parameters[0]) && $parameters[0] === self::ALL;
     }
 
-    private function getProjectIdFromParameters() {
+    private function getProjectIdFromParameters()
+    {
         $parameters = $this->getParametersAsArray();
         return (int) $parameters[0];
     }
 
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         if ($this->areAllProjectsMigrated()) {
             return 'All projects';
         }

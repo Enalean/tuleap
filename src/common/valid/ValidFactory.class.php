@@ -26,7 +26,8 @@
  */
 class Valid_Int
 extends Valid {
-    function validate($value) {
+    function validate($value)
+    {
         $this->addRule(new Rule_Int());
         return parent::validate($value);
     }
@@ -36,7 +37,8 @@ extends Valid {
  * Check that value is a decimal integer greater or equal to zero.
  */
 class Valid_UInt extends Valid_Int {
-    function validate($value) {
+    function validate($value)
+    {
         $this->addRule(new Rule_GreaterOrEqual(0));
         return parent::validate($value);
     }
@@ -47,7 +49,8 @@ class Valid_UInt extends Valid_Int {
  */
 class Valid_Numeric extends Valid {
 
-    function validate($value) {
+    function validate($value)
+    {
         $this->addRule(new Rule_GreaterOrEqual(0));
         return parent::validate($value);
     }
@@ -58,12 +61,14 @@ class Valid_Numeric extends Valid {
  */
 class Valid_GroupId
 extends Valid {
-    function __construct() {
+    function __construct()
+    {
         parent::__construct('group_id');
         //$this->setErrorMessage($GLOBALS['Language']->getText('include_exit','no_gid_err'));
     }
 
-    function validate($value) {
+    function validate($value)
+    {
         $this->addRule(new Rule_Int());
         $this->addRule(new Rule_GreaterThan(0));
         return parent::validate($value);
@@ -75,11 +80,13 @@ extends Valid {
  */
 class Valid_Pv
 extends Valid {
-    function __construct() {
+    function __construct()
+    {
         parent::__construct('pv');
     }
 
-    function validate($value) {
+    function validate($value)
+    {
         $this->addRule(new Rule_WhiteList(array(0,1,2)));
         return parent::validate($value);
     }
@@ -90,7 +97,8 @@ extends Valid {
  */
 class Valid_Text
 extends Valid {
-    function validate($value) {
+    function validate($value)
+    {
         $this->addRule(new Rule_String());
         return parent::validate($value);
     }
@@ -101,7 +109,8 @@ extends Valid {
  */
 class Valid_String
 extends Valid_Text {
-    function validate($value) {
+    function validate($value)
+    {
         $this->addRule(new Rule_NoCr());
         return parent::validate($value);
     }
@@ -111,7 +120,8 @@ extends Valid_Text {
  * Check that value is a possible HTTP(S) URI
  */
 class Valid_HTTPURI extends Valid_String {
-    public function validate($value) {
+    public function validate($value)
+    {
         $this->addRule(new Rule_Regexp('/^(http:\/\/|https:\/\/)/i'));
         return parent::validate($value);
     }
@@ -121,7 +131,8 @@ class Valid_HTTPURI extends Valid_String {
  * Check that value is a possible HTTPS URI
  */
 class Valid_HTTPSURI extends Valid_String {
-    public function validate($value) {
+    public function validate($value)
+    {
         $this->addRule(new Rule_Regexp('/^https:\/\//i'));
         return parent::validate($value);
     }
@@ -173,7 +184,8 @@ class Valid_MailtoURI extends Valid_String {
  */
 class Valid_Array
 extends Valid {
-    function validate($value) {
+    function validate($value)
+    {
         $this->addRule(new Rule_Array());
         return parent::validate($value);
     }
@@ -185,7 +197,8 @@ extends Valid {
  */
 class Valid_WhiteList
 extends Valid {
-    function __construct($key, $whitelist) {
+    function __construct($key, $whitelist)
+    {
         parent::__construct($key);
         $this->addRule(new Rule_WhiteList($whitelist));
     }
@@ -198,7 +211,8 @@ extends Valid {
  */
 class Valid_UserNameFormat
 extends Valid_String {
-    function validate($value) {
+    function validate($value)
+    {
         $this->addRule(new Rule_String());
         $this->addRule(new Rule_UserName());
         return parent::validate($value);
@@ -217,7 +231,8 @@ class Valid_GenericUserNameSuffix extends Valid_UserNameFormat {
      */
     public const FAKE_PREFIX = 'aaa';
 
-    function validate($value) {
+    function validate($value)
+    {
         return parent::validate(self::FAKE_PREFIX.$value);
     }
 }
@@ -226,7 +241,8 @@ class Valid_GenericUserNameSuffix extends Valid_UserNameFormat {
  * Check that value match user real name format.
  */
 class Valid_RealNameFormat extends Valid_String {
-    public function validate($value) {
+    public function validate($value)
+    {
         $this->addRule(new Rule_String());
         $this->addRule(new Rule_RealName());
         return parent::validate($value);
@@ -241,7 +257,8 @@ class Valid_Email
 extends Valid_String {
     var $separator;
 
-    function __construct($key=null, $separator=null) {
+    function __construct($key=null, $separator=null)
+    {
         if(is_string($separator)) {
             $this->separator = $separator;
         } else {
@@ -250,7 +267,8 @@ extends Valid_String {
         parent::__construct($key);
     }
 
-    function validate($value) {
+    function validate($value)
+    {
         $this->addRule(new Rule_Email($this->separator));
         return parent::validate($value);
     }
@@ -267,7 +285,8 @@ extends Valid {
      *
      * @param Array One entry of $_FILES
      */
-    function isEmptyValue($file) {
+    function isEmptyValue($file)
+    {
         if(!is_array($file)) {
             return false;
         } elseif(parent::isEmptyValue($file['name'])) {
@@ -284,7 +303,8 @@ extends Valid {
      * @param  String Index of file to check in $_FILES array.
      * @return bool
      */
-    function validate($files, $index = '') {
+    function validate($files, $index = '')
+    {
         if(is_array($files) && isset($files[$index])) {
             $this->addRule(new Rule_File());
             return parent::validate($files[$index]);
@@ -303,7 +323,8 @@ class ValidFactory {
      * If $validator is a string and a validator exists (Valid_String for 'string', Valid_UInt for 'uint', ...) then creates an instance and returns it
      * Else returns null
      */
-    /* public static */ function getInstance($validator, $key = null) {
+    /* public static */ function getInstance($validator, $key = null)
+    {
         if (is_a($validator, 'Valid')) {
             return $validator;
         } else if(is_string($validator) && class_exists('Valid_'.$validator)) {

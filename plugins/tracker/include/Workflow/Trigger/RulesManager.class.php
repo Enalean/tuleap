@@ -67,7 +67,8 @@ class Tracker_Workflow_Trigger_RulesManager {
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping, Tracker $tracker) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping, Tracker $tracker)
+    {
         $trigger_rule_collection = $this->getForTargetTracker($tracker);
 
         foreach ($trigger_rule_collection as $trigger_rule) {
@@ -93,7 +94,8 @@ class Tracker_Workflow_Trigger_RulesManager {
         }
     }
 
-    public function createFromXML(SimpleXMLElement $xml_element, array $xmlMapping) {
+    public function createFromXML(SimpleXMLElement $xml_element, array $xmlMapping)
+    {
         foreach($xml_element->trigger_rule as $trigger_rule_xml) {
             $triggers = array();
             foreach ($trigger_rule_xml->triggers->trigger as $trigger_xml) {
@@ -122,7 +124,8 @@ class Tracker_Workflow_Trigger_RulesManager {
      *
      * @param Tracker_Workflow_Trigger_TriggerRule $rule
      */
-    public function add(Tracker_Workflow_Trigger_TriggerRule $rule) {
+    public function add(Tracker_Workflow_Trigger_TriggerRule $rule)
+    {
         try {
             $this->dao->enableExceptionsOnError();
             $this->dao->startTransaction();
@@ -147,7 +150,8 @@ class Tracker_Workflow_Trigger_RulesManager {
      * @param Tracker_Workflow_Trigger_TriggerRule $rule
      * @throws Tracker_Workflow_Trigger_Exception_RuleException
      */
-    public function delete(Tracker $tracker, Tracker_Workflow_Trigger_TriggerRule $rule) {
+    public function delete(Tracker $tracker, Tracker_Workflow_Trigger_TriggerRule $rule)
+    {
         if ($rule->getTargetTracker() != $tracker) {
             throw new Tracker_Workflow_Trigger_Exception_RuleException('Cannot delete rules from another tracker');
         }
@@ -167,7 +171,8 @@ class Tracker_Workflow_Trigger_RulesManager {
      *
      * @return Tracker_Workflow_Trigger_TriggerRule
      */
-    public function getRuleById($rule_id) {
+    public function getRuleById($rule_id)
+    {
         $dar = $this->dao->searchForTargetByRuleId($rule_id);
         if ($dar && count($dar) == 1) {
             return $this->getInstanceFromRow($dar->current());
@@ -182,7 +187,8 @@ class Tracker_Workflow_Trigger_RulesManager {
      *
      * @return Tracker_Workflow_Trigger_TriggerRuleCollection
      */
-    public function getForTargetTracker(Tracker $tracker) {
+    public function getForTargetTracker(Tracker $tracker)
+    {
         $rules = new Tracker_Workflow_Trigger_TriggerRuleCollection();
         foreach ($this->dao->searchForTargetTracker($tracker->getId()) as $row) {
             $rules->push($this->getInstanceFromRow($row));
@@ -195,7 +201,8 @@ class Tracker_Workflow_Trigger_RulesManager {
         return $this->dao->searchTriggersByFieldId($field->getId());
     }
 
-    private function getInstanceFromRow(array $row) {
+    private function getInstanceFromRow(array $row)
+    {
         return new Tracker_Workflow_Trigger_TriggerRule(
             $row['id'],
             $this->getTarget($row['field_id'], $row['value_id']),
@@ -204,11 +211,13 @@ class Tracker_Workflow_Trigger_RulesManager {
         );
     }
 
-    private function getTarget($field_id, $value_id) {
+    private function getTarget($field_id, $value_id)
+    {
         return $this->getFieldValue($field_id, $value_id);
     }
 
-    private function getTriggers($rule_id) {
+    private function getTriggers($rule_id)
+    {
         $triggers = array();
         foreach ($this->dao->searchForTriggeringFieldByRuleId($rule_id) as $row) {
             $triggers[] = $this->getFieldValue($row['field_id'], $row['value_id']);
@@ -216,7 +225,8 @@ class Tracker_Workflow_Trigger_RulesManager {
         return $triggers;
     }
 
-    private function getFieldValue($field_id, $value_id) {
+    private function getFieldValue($field_id, $value_id)
+    {
         $field = $this->formelement_factory->getUsedFormElementFieldById($field_id);
         return new Tracker_Workflow_Trigger_FieldValue(
             $field,
@@ -224,7 +234,8 @@ class Tracker_Workflow_Trigger_RulesManager {
         );
     }
 
-    private function getValue(array $all_values, $value_id) {
+    private function getValue(array $all_values, $value_id)
+    {
         foreach ($all_values as $value) {
             if ($value->getId() == $value_id) {
                 return $value;
@@ -257,7 +268,8 @@ class Tracker_Workflow_Trigger_RulesManager {
         $this->logger->end(__METHOD__, $parent->getId());
     }
 
-    public function processTriggers(Tracker_Artifact_Changeset $changeset) {
+    public function processTriggers(Tracker_Artifact_Changeset $changeset)
+    {
         $this->logger->start(__METHOD__, $changeset->getId());
 
         $dar_rules = $this->dao->searchForInvolvedRulesIdsByChangesetId($changeset->getId());
@@ -276,13 +288,15 @@ class Tracker_Workflow_Trigger_RulesManager {
      * @param array $template_trackers
      * @param array $field_mapping
      */
-    public function duplicate(array $template_trackers, array $field_mapping) {
+    public function duplicate(array $template_trackers, array $field_mapping)
+    {
         foreach ($template_trackers as $template_tracker) {
             $this->duplicateFromTemplateTracker($template_tracker, $field_mapping);
         }
     }
 
-    private function duplicateFromTemplateTracker(Tracker $template_tracker, array $field_mapping) {
+    private function duplicateFromTemplateTracker(Tracker $template_tracker, array $field_mapping)
+    {
         $trigger_rule_collection = $this->getForTargetTracker($template_tracker);
 
         foreach ($trigger_rule_collection as $template_trigger_rule) {
@@ -322,7 +336,8 @@ class Tracker_Workflow_Trigger_RulesManager {
         );
     }
 
-    private function buildRuleTriggersFromTemplateTriggerRule(array $template_triggers, array $field_mapping) {
+    private function buildRuleTriggersFromTemplateTriggerRule(array $template_triggers, array $field_mapping)
+    {
         $new_triggers = array();
 
         foreach ($template_triggers as $template_trigger) {

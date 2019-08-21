@@ -30,14 +30,16 @@ require_once('Docman_PermissionsManager.class.php');
 class Docman_ReportFactory {
     var $groupId;
 
-    function __construct($groupId) {
+    function __construct($groupId)
+    {
         $this->groupId = $groupId;
     }
 
     /**
      * Create a report for table view based on URL
      */
-    function &get($reportId, $request, $item, &$feedback) {
+    function &get($reportId, $request, $item, &$feedback)
+    {
         $report = null;
 
         $report = new Docman_Report();
@@ -140,7 +142,8 @@ class Docman_ReportFactory {
         return $report;
     }
 
-    function initReport(&$report, $request, $item) {
+    function initReport(&$report, $request, $item)
+    {
         if($request->exist('advsearch')
            && $request->get('advsearch') == 1) {
             $report->setAdvancedSearch(true);
@@ -149,7 +152,8 @@ class Docman_ReportFactory {
         $report->setGroupId($this->groupId);
     }
 
-    function initFilters(&$report, $request, &$feedback) {
+    function initFilters(&$report, $request, &$feedback)
+    {
         $filterFactory = new Docman_FilterFactory($this->groupId);
 
         $mdFactory = new Docman_MetadataFactory($this->groupId);
@@ -169,7 +173,8 @@ class Docman_ReportFactory {
         $this->_validateFilterAndCreate($report, $filter, $feedback);
     }
 
-    function _validateFilterAndCreate(&$report, $filter, &$feedback) {
+    function _validateFilterAndCreate(&$report, $filter, &$feedback)
+    {
         if($filter !== null) {
             // Validate submitted paramters
             $validateFilterFactory = new Docman_ValidateFilterFactory();
@@ -198,7 +203,8 @@ class Docman_ReportFactory {
      * develop the feature. We only provide static metadata to display on table
      * report.
      */
-    function initColumns(&$report, $request) {
+    function initColumns(&$report, $request)
+    {
         $settingsBo =  Docman_SettingsBo::instance($this->groupId);
         $useStatus = $settingsBo->getMetadataUsage('status');
 
@@ -236,7 +242,8 @@ class Docman_ReportFactory {
         }
     }
 
-    function getReportById($id) {
+    function getReportById($id)
+    {
         $report = null;
         $dao = $this->getDao();
         $dar = $dao->searchById($id);
@@ -247,7 +254,8 @@ class Docman_ReportFactory {
         return $report;
     }
 
-    function getProjectReportsForGroup() {
+    function getProjectReportsForGroup()
+    {
         $ra = array();
         $dao = $this->getDao();
         $dar = $dao->searchProjectReportByGroupId($this->groupId);
@@ -262,7 +270,8 @@ class Docman_ReportFactory {
         return $rai;
     }
 
-    function getPersonalReportsForUser($user) {
+    function getPersonalReportsForUser($user)
+    {
         $ra = array();
         $dao = $this->getDao();
         $dar = $dao->searchPersonalReportByUserId($this->groupId, $user->getId());
@@ -283,7 +292,8 @@ class Docman_ReportFactory {
      * @param $reportId If null, consider all reports for the project.
      * @return Array of Docma_Item
      */
-    function getReportsItems($reportId=null) {
+    function getReportsItems($reportId=null)
+    {
         $itemArray = array();
         $itemFactory = new Docman_ItemFactory($this->groupId);
         $dao = $this->getDao();
@@ -295,7 +305,8 @@ class Docman_ReportFactory {
         return $itemArray;
     }
 
-    function saveReport($report) {
+    function saveReport($report)
+    {
         if($report->getId() !== null) {
             $this->updateReport($report);
         } else {
@@ -303,7 +314,8 @@ class Docman_ReportFactory {
         }
     }
 
-    function updateReport($report) {
+    function updateReport($report)
+    {
         $success = $this->updateReportSettings($report);
         if($success) {
             $filterFactory = new Docman_FilterFactory($this->groupId);
@@ -312,12 +324,14 @@ class Docman_ReportFactory {
         }
     }
 
-    function updateReportSettings($report) {
+    function updateReportSettings($report)
+    {
         $dao = $this->getDao();
         return $dao->updateReport($report->getId(), $report->getName(), $report->getTitle(), $report->getItemId(), $report->getAdvancedSearch(), $report->getScope(), $report->getDescription(), $report->getImage());
     }
 
-    function createReport($report) {
+    function createReport($report)
+    {
         $dao = $this->getDao();
         $res= $dao->verifyQueryUnicity($report->getName(), $report->getGroupId(), $report->getUserId(), $report->getScope());
         if ($res){
@@ -335,7 +349,8 @@ class Docman_ReportFactory {
         return false;
     }
 
-    function deleteReport($report) {
+    function deleteReport($report)
+    {
         $dao = $this->getDao();
         $filterFactory = new Docman_FilterFactory($this->groupId);
         if($filterFactory->truncateFilters($report)) {
@@ -355,7 +370,8 @@ class Docman_ReportFactory {
      * @param $forceScopeToI   Force scope of the new reports to I (individual).
      * @param $itemMapping     Mapping between $srcReport project items and $dstGroupId items (for folders associated to report).
      */
-    function cloneReport($srcReport, $dstGroupId, $metadataMapping, $user, $forceScopeToI = false, $itemMapping=array()) {
+    function cloneReport($srcReport, $dstGroupId, $metadataMapping, $user, $forceScopeToI = false, $itemMapping=array())
+    {
         $dstReportFactory = new Docman_ReportFactory($dstGroupId);
         $srcFilterFactory = new Docman_FilterFactory($this->groupId);
 
@@ -395,7 +411,8 @@ class Docman_ReportFactory {
     /**
      * Clone reports from a project to another one
      */
-    function copy($dstGroupId, $metadataMapping, $user, $forceScope = false, $itemMapping=array()) {
+    function copy($dstGroupId, $metadataMapping, $user, $forceScope = false, $itemMapping=array())
+    {
         $ri = $this->getProjectReportsForGroup();
         $ri->rewind();
         while($ri->valid()) {
@@ -406,7 +423,8 @@ class Docman_ReportFactory {
     }
 
     // Object accessor
-    function &getDao() {
+    function &getDao()
+    {
         $dao = new Docman_ReportDao(CodendiDataAccess::instance());
         return $dao;
     }

@@ -93,7 +93,8 @@ class PlanningResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getMilestones($id, $limit = 10, $offset = 0) {
+    public function getMilestones($id, $limit = 10, $offset = 0)
+    {
         $this->checkAccess();
         if (! $this->limitValueIsAcceptable($limit)) {
              throw new RestException(406, 'Maximum value for limit exceeded');
@@ -105,14 +106,16 @@ class PlanningResource extends AuthenticatedResource {
     /**
      * @url OPTIONS
      */
-    public function options() {
+    public function options()
+    {
         $this->sendAllowHeaders();
     }
 
     /**
      * @url OPTIONS {id}/milestones
      */
-    public function optionsForMilestones($id) {
+    public function optionsForMilestones($id)
+    {
         $this->sendAllowHeadersForMilestones();
     }
 
@@ -123,7 +126,8 @@ class PlanningResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    private function getPlanning($id) {
+    private function getPlanning($id)
+    {
         $planning = PlanningFactory::build()->getPlanning($id);
         $user     = $this->getCurrentUser();
 
@@ -147,15 +151,18 @@ class PlanningResource extends AuthenticatedResource {
         return $planning;
     }
 
-    private function limitValueIsAcceptable($limit) {
+    private function limitValueIsAcceptable($limit)
+    {
         return $limit <= self::MAX_LIMIT;
     }
 
-    private function getCurrentUser() {
+    private function getCurrentUser()
+    {
         return UserManager::instance()->getCurrentUser();
     }
 
-    private function getMilestonesByPlanning(Planning $planning, $limit, $offset) {
+    private function getMilestonesByPlanning(Planning $planning, $limit, $offset)
+    {
         $all_milestones = array();
         $milestones = $this->milestone_factory->getAllBareMilestones($this->getCurrentUser(), $planning);
         foreach ($milestones as $milestone) {
@@ -167,15 +174,18 @@ class PlanningResource extends AuthenticatedResource {
         return $milestones_representations;
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size) {
+    private function sendPaginationHeaders($limit, $offset, $size)
+    {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
-    private function sendAllowHeaders() {
+    private function sendAllowHeaders()
+    {
         Header::allowOptions();
     }
 
-    private function sendAllowHeadersForMilestones() {
+    private function sendAllowHeadersForMilestones()
+    {
         Header::allowOptionsGet();
     }
 }

@@ -46,7 +46,8 @@ class Tuleap_Template {
      *
      * @param $file string the file name you want to load
      */
-    public function __construct($file = null) {
+    public function __construct($file = null)
+    {
         $this->file = $file;
         $this->vars = array();
     }
@@ -54,7 +55,8 @@ class Tuleap_Template {
     /**
      * Set a template variable.
      */
-    public function set($name, $value) {
+    public function set($name, $value)
+    {
         $this->vars[$name] = is_object($value) ? $value->fetch() : $value;
     }
 
@@ -67,7 +69,8 @@ class Tuleap_Template {
      *
      * @return string
      */
-    public function fetch($file = null) {
+    public function fetch($file = null)
+    {
         if (!$file) {
             $file = $this->file;
         }

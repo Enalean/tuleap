@@ -23,11 +23,13 @@ class Tracker_Artifact_PossibleParentsRetriever {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    public function __construct(Tracker_ArtifactFactory $artifact_factory) {
+    public function __construct(Tracker_ArtifactFactory $artifact_factory)
+    {
         $this->artifact_factory = $artifact_factory;
     }
 
-    public function getPossibleArtifactParents(Tracker $parent_tracker, PFUser $user, $limit, $offset) {
+    public function getPossibleArtifactParents(Tracker $parent_tracker, PFUser $user, $limit, $offset)
+    {
         $label            = '';
         $possible_parents = array();
         $display_selector = true;

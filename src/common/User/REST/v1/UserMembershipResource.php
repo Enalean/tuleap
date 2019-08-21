@@ -55,7 +55,8 @@ class UserMembershipResource extends AuthenticatedResource {
     /** @var User_ForgeUserGroupPermissionsManager */
     private $forge_ugroup_permissions_manager;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->user_manager       = UserManager::instance();
         $this->json_decoder       = new JsonDecoder();
         $this->ugroup_literalizer = new UGroupLiteralizer();
@@ -83,7 +84,8 @@ class UserMembershipResource extends AuthenticatedResource {
      *
      * @return array {@type Tuleap\User\REST\v1\UserMembershipRepresentation}
      */
-    public function get($query, $offset = 0, $limit = 10) {
+    public function get($query, $offset = 0, $limit = 10)
+    {
         if ($limit > self::MAX_LIMIT) {
             throw new RestException(406, 'Maximum value for limit exceeded');
         }
@@ -110,7 +112,8 @@ class UserMembershipResource extends AuthenticatedResource {
         return $users_memberships;
     }
 
-    private function checkUserCanSeeOtherUsers(PFUser $user) {
+    private function checkUserCanSeeOtherUsers(PFUser $user)
+    {
         if ($user->isSuperUser()) {
             return;
         }
@@ -140,11 +143,13 @@ class UserMembershipResource extends AuthenticatedResource {
      * @throws RestException 400
      * @throws RestException 404
      */
-    public function options() {
+    public function options()
+    {
         $this->sendAllowHeaders();
     }
 
-    private function sendAllowHeaders() {
+    private function sendAllowHeaders()
+    {
         Header::allowOptionsGet();
     }
 }

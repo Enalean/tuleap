@@ -22,7 +22,8 @@ namespace Tuleap\HudsonGit\Plugin;
 
 class PluginDescriptor extends \PluginDescriptor {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct(
             $GLOBALS['Language']->getText('plugin_hudson_git', 'descriptor_name'),
             false,

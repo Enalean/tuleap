@@ -67,7 +67,8 @@ class Tracker_Artifact_XMLExport
         $this->exportBunchOfArtifacts($all_artifacts, $xml_content, $user, $archive, $is_in_archive_context);
     }
 
-    private function checkThreshold($nb_artifacts) {
+    private function checkThreshold($nb_artifacts)
+    {
         if ($this->can_bypass_threshold) {
             return;
         }

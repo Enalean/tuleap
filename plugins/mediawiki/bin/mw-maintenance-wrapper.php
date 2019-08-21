@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function usage() {
+function usage()
+{
     echo "Usage: .../mw-maintenance-wrapper.php <projectname> <script> [ arguments... ]
 For instance: .../mw-maintenance-wrapper.php projectname importDump.php /tmp/wikidump.xml
               .../mw-maintenance-wrapper.php projectname rebuildrecentchanges.php

@@ -26,7 +26,8 @@ Mock::generate('Tracker_FormElement_Field_List_Bind_Static_ValueDao');
 
 class Tracker_FormElement_Field_List_Bind_StaticTest extends TuleapTestCase {
 
-    public function testGetBindValues() {
+    public function testGetBindValues()
+    {
         $bv1 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
         $bv2 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
         $field = $is_rank_alpha = $default_values = $decorators = '';
@@ -38,7 +39,8 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends TuleapTestCase {
         $this->assertEqual($static->getBindValues(array(666)), array(), 'What do we have to do with unknown value?');
     }
 
-    function testGetFieldData() {
+    function testGetFieldData()
+    {
         $bv1 = aFieldListStaticValue()->withLabel('1 - Ordinary')->build();
         $bv2 = aFieldListStaticValue()->withLabel('9 - Critical')->build();
         $values = array(13564 => $bv1, 13987 => $bv2);
@@ -46,7 +48,8 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends TuleapTestCase {
         $this->assertEqual('13564', $f->getFieldData('1 - Ordinary', false));
     }
 
-    function testGetFieldDataMultiple() {
+    function testGetFieldDataMultiple()
+    {
         $bv1 = aFieldListStaticValue()->withLabel('Admin')->build();
         $bv2 = aFieldListStaticValue()->withLabel('Tracker')->build();
         $bv3 = aFieldListStaticValue()->withLabel('User Interface')->build();
@@ -61,7 +64,8 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends TuleapTestCase {
 
 class Tracker_FormElement_Field_List_Bind_Static_AddBindValue extends TuleapTestCase {
 
-    public function itAddsANewValue() {
+    public function itAddsANewValue()
+    {
         $field         = aSelectBoxField()->withId(101)->build();
         $is_rank_alpha = $values = $default_values = $decorators = '';
         $value_dao     = new MockTracker_FormElement_Field_List_Bind_Static_ValueDao();
@@ -89,7 +93,8 @@ class Tracker_FormElement_Field_List_Bind_Static_AddBindValue extends TuleapTest
 
 class Tracker_FormElement_Field_List_Bind_Static_ImportInvalidValue extends TuleapTestCase {
 
-    public function itDoesntCrashWhenInvalidValueShouldBePrinted() {
+    public function itDoesntCrashWhenInvalidValueShouldBePrinted()
+    {
         $field         = aSelectBoxField()->withId(101)->build();
         $bind = new Tracker_FormElement_Field_List_Bind_Static($field, 0, array(), null, null);
         $this->assertEqual('-', $bind->formatArtifactValue(0));

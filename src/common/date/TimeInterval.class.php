@@ -30,7 +30,8 @@ class TimeInterval {
      * @param int $end
      * @return \ITimeInterval
      */
-    public static function fromUnixTimestamps($start, $end) {
+    public static function fromUnixTimestamps($start, $end)
+    {
         return new TimeInterval($start, $end);
     }
 
@@ -47,18 +48,21 @@ class TimeInterval {
     /**
      * @return int
      */
-    public function getStartTimestamp() {
+    public function getStartTimestamp()
+    {
         return $this->start;
     }
 
     /**
      * @return int
      */
-    public function getEndTimestamp() {
+    public function getEndTimestamp()
+    {
         return $this->end;
     }
 
-    public function __construct($start, $end) {
+    public function __construct($start, $end)
+    {
         $this->assertTimestampIsPositive($start, 'Start');
         $this->assertTimestampIsPositive($end, 'End');
         $this->assertStartIsStrictlyBeforeEnd($start, $end);
@@ -67,13 +71,15 @@ class TimeInterval {
         $this->end   = $end;
     }
 
-    private function assertTimestampIsPositive($timestamp, $name) {
+    private function assertTimestampIsPositive($timestamp, $name)
+    {
         if ($timestamp <= 0) {
             throw new Exception("$name timestamp must be a positive number");
         }
     }
 
-    private function assertStartIsStrictlyBeforeEnd($start, $end) {
+    private function assertStartIsStrictlyBeforeEnd($start, $end)
+    {
         if ($start >= $end) {
             throw new Exception('Start must be strictly before end');
         }

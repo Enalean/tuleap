@@ -40,16 +40,19 @@ class ForgeConfig {
      *
      * @param ConfigValueProvider $value_provider
      */
-    protected static function load(ConfigValueProvider $value_provider) {
+    protected static function load(ConfigValueProvider $value_provider)
+    {
         // Store in the stack the local scope...
         self::$conf_stack[0] = array_merge(self::$conf_stack[0], $value_provider->getVariables());
     }
 
-    public static function loadFromFile($file) {
+    public static function loadFromFile($file)
+    {
         self::load(new ConfigValueFileProvider($file));
     }
 
-    public static function loadFromDatabase() {
+    public static function loadFromDatabase()
+    {
         self::load(new ConfigValueDatabaseProvider(new ConfigDao()));
     }
 
@@ -61,7 +64,8 @@ class ForgeConfig {
      *
      * @return mixed
      */
-    public static function get($name, $default = false) {
+    public static function get($name, $default = false)
+    {
         if (self::exists($name)) {
             return self::$conf_stack[0][$name];
         }
@@ -73,7 +77,8 @@ class ForgeConfig {
         return isset(self::$conf_stack[0][$name]);
     }
 
-    public static function getSuperPublicProjectsFromRestrictedFile() {
+    public static function getSuperPublicProjectsFromRestrictedFile()
+    {
         $filename = $GLOBALS['Language']->getContent('include/restricted_user_permissions', 'en_US');
         if (! $filename) {
             return array();
@@ -90,7 +95,8 @@ class ForgeConfig {
      *
      * @return void
      */
-    public static function dump() {
+    public static function dump()
+    {
         var_export(self::$conf_stack[0]);
     }
 
@@ -100,7 +106,8 @@ class ForgeConfig {
      *
      * @return void
      */
-    public static function store() {
+    public static function store()
+    {
         array_unshift(self::$conf_stack, array());
         if (!count(self::$conf_stack)) {
             trigger_error('Config registry lost');
@@ -113,7 +120,8 @@ class ForgeConfig {
      *
      * @return void
      */
-    public static function restore() {
+    public static function restore()
+    {
         if (count(self::$conf_stack) > 1) {
             array_shift(self::$conf_stack);
         }
@@ -125,16 +133,19 @@ class ForgeConfig {
      * @param $name String Variable name
      * @param $value Mixed Variable value
      */
-    public static function set($name, $value) {
+    public static function set($name, $value)
+    {
         self::$conf_stack[0][$name] = $value;
     }
 
-    public static function areAnonymousAllowed() {
+    public static function areAnonymousAllowed()
+    {
         return self::get(ForgeAccess::CONFIG) === ForgeAccess::ANONYMOUS ||
                 PermissionsOverrider_PermissionsOverriderManager::instance()->doesOverriderForceUsageOfAnonymous();
     }
 
-    public static function areRestrictedUsersAllowed() {
+    public static function areRestrictedUsersAllowed()
+    {
         return self::get(ForgeAccess::CONFIG) === ForgeAccess::RESTRICTED;
     }
 

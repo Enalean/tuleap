@@ -44,7 +44,8 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      *
      * @return void
      */
-    function __construct($plugin, $user, $maxFileSize) {
+    function __construct($plugin, $user, $maxFileSize)
+    {
 
         $this->user = $user;
         $this->plugin = $plugin;
@@ -61,7 +62,8 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      *
      * @see lib/Sabre/DAV/Sabre_DAV_IDirectory#getChildren()
      */
-    function getChildren() {
+    function getChildren()
+    {
 
         if ($this->getUser()->isAnonymous()) {
             // Generate public project list
@@ -82,7 +84,8 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      *
      * @see lib/Sabre/DAV/Sabre_DAV_Directory#getChild($name)
      */
-    function getChild($projectName) {
+    function getChild($projectName)
+    {
 
         $projectId = $this->getProjectIdByName($projectName);
 
@@ -130,7 +133,8 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      *
      * @return String
      */
-    function getName() {
+    function getName()
+    {
 
         return ' WebDAV Root';
 
@@ -143,7 +147,8 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      *
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#getLastModified()
      */
-    function getLastModified() {
+    function getLastModified()
+    {
 
         return;
 
@@ -154,7 +159,8 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      *
      * @return PFUser
      */
-    function getUser() {
+    function getUser()
+    {
 
         return $this->user;
 
@@ -165,7 +171,8 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      *
      * @return int
      */
-    function getMaxFileSize() {
+    function getMaxFileSize()
+    {
         return $this->maxFileSize;
     }
 
@@ -176,7 +183,8 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      *
      * @return int
      */
-    function getProjectIdByName($projectName) {
+    function getProjectIdByName($projectName)
+    {
 
         $dao = new ProjectDao(CodendiDataAccess::instance());
         $res=$dao->searchByUnixGroupName($projectName);
@@ -213,7 +221,8 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      *
      * @return Array
      */
-    function getUserProjectList($user) {
+    function getUserProjectList($user)
+    {
 
         $res = $user->getProjects();
         $projects = array();
@@ -234,7 +243,8 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      *
      * @return Array
      */
-    function getPublicProjectList() {
+    function getPublicProjectList()
+    {
 
         $dao = new ProjectDao(CodendiDataAccess::instance());
         $res = $dao->searchByPublicStatus(true);
@@ -258,7 +268,8 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      *
      * @return bool
      */
-    function isWebDAVAllowedForProject($groupId) {
+    function isWebDAVAllowedForProject($groupId)
+    {
 
         return PluginManager::instance()->isPluginAllowedForProject($this->plugin, $groupId);
 

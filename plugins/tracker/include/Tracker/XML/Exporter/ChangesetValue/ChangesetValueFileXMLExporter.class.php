@@ -27,11 +27,13 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends 
      */
     private $path_exporter;
 
-    public function __construct(Tracker_XML_Exporter_FilePathXMLExporter $path_exporter) {
+    public function __construct(Tracker_XML_Exporter_FilePathXMLExporter $path_exporter)
+    {
         $this->path_exporter = $path_exporter;
     }
 
-    protected function getFieldChangeType() {
+    protected function getFieldChangeType()
+    {
         return 'file';
     }
 
@@ -80,7 +82,8 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends 
         $node->addAttribute('ref', $this->getFileInfoIdForXML($file_info));
     }
 
-    private function appendEmptyValueToFieldChangeNode(SimpleXMLElement $field_xml) {
+    private function appendEmptyValueToFieldChangeNode(SimpleXMLElement $field_xml)
+    {
         $field_xml->addChild('value');
     }
 
@@ -101,7 +104,8 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends 
         $cdata_factory->insert($node, 'description', $file_info->getDescription());
     }
 
-    private function getFileInfoIdForXML(Tracker_FileInfo $file_info) {
+    private function getFileInfoIdForXML(Tracker_FileInfo $file_info)
+    {
         return IdForXMLImportExportConvertor::convertFileInfoIdToXMLId((int) $file_info->getId());
     }
 }

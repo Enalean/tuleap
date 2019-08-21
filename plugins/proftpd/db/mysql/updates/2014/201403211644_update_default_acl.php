@@ -28,7 +28,8 @@ class b201403211644_update_default_acl extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Update default ACL for the secure FTPs
 EOT;
@@ -39,7 +40,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $proftpd_base_directory = $this->getProftpdBaseDirectoryPath();
         $iterator               = new DirectoryIterator($proftpd_base_directory);
 
@@ -50,7 +52,8 @@ EOT;
         }
     }
 
-    private function getProftpdBaseDirectoryPath() {
+    private function getProftpdBaseDirectoryPath()
+    {
         if (is_file(self::TULEAP_SECURE_FTP_CONFIG_FILE_CENTOS5)) {
             include(self::TULEAP_SECURE_FTP_CONFIG_FILE_CENTOS5);
             return $proftpd_base_directory;

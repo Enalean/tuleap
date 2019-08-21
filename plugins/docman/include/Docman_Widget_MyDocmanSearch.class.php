@@ -27,12 +27,14 @@ class Docman_Widget_MyDocmanSearch extends Widget
 
     var $pluginPath;
 
-    function __construct($pluginPath) {
+    function __construct($pluginPath)
+    {
         parent::__construct('plugin_docman_mydocman_search');
         $this->_pluginPath = $pluginPath;
     }
 
-    function getTitle() {
+    function getTitle()
+    {
         return $GLOBALS['Language']->getText('plugin_docman', 'my_docman_search');
     }
 
@@ -109,7 +111,8 @@ class Docman_Widget_MyDocmanSearch extends Widget
      * @return array|0
      * @psalm-return array{group_id: int, title:string}|0
      **/
-    function returnAllowedGroupId($docman_id, $user){
+    function returnAllowedGroupId($docman_id, $user)
+    {
         $sql_group = 'SELECT group_id,title FROM  plugin_docman_item WHERE'.
                          ' item_id = '. db_ei($docman_id);
 
@@ -135,11 +138,13 @@ class Docman_Widget_MyDocmanSearch extends Widget
         return 0;
     }
 
-    function getCategory() {
+    function getCategory()
+    {
         return dgettext('tuleap-docman', 'Document manager');
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_docman','widget_description_my_docman_search');
     }
 }

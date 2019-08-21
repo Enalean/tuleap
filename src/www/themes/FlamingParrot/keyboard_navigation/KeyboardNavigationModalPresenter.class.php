@@ -20,119 +20,148 @@
  */
 class KeyboardNavigationModalPresenter {
 
-    public function navbar() {
+    public function navbar()
+    {
         return _('Navebar');
     }
 
-    public function homepage() {
+    public function homepage()
+    {
         return _('Homepage');
     }
 
-    public function personnal_page() {
+    public function personnal_page()
+    {
         return _('My personnal page');
     }
 
-    public function projects() {
+    public function projects()
+    {
         return _('Open "Projects" dropdown');
     }
 
-    public function more() {
+    public function more()
+    {
         return _('Open "More" dropdown');
     }
 
-    public function help() {
+    public function help()
+    {
         return _('Open "Help" dropdown');
     }
 
-    public function account() {
+    public function account()
+    {
         return _('Open the account management dropdown (need to be connected)');
     }
 
-    public function sidebar_move() {
+    public function sidebar_move()
+    {
         return _('Open/Collapse the sidebar');
     }
 
-    public function sidebar_dashboard() {
+    public function sidebar_dashboard()
+    {
         return _('Dashboard of the project');
     }
 
-    public function sidebar_agiledashboard() {
+    public function sidebar_agiledashboard()
+    {
         return _('Agile Dashboard');
     }
 
-    public function sidebar_git() {
+    public function sidebar_git()
+    {
         return _('Git');
     }
 
-    public function sidebar_wiki() {
+    public function sidebar_wiki()
+    {
         return _('Wiki');
     }
 
-    public function sidebar_homepage() {
+    public function sidebar_homepage()
+    {
         return _('Project web site');
     }
 
-    public function sidebar_svn() {
+    public function sidebar_svn()
+    {
         return _('SVN');
     }
 
-    public function sidebar_tracker() {
+    public function sidebar_tracker()
+    {
         return _('Tracker');
     }
 
-    public function sidebar_docman() {
+    public function sidebar_docman()
+    {
         return _('Documents');
     }
 
-    public function sidebar_cvs() {
+    public function sidebar_cvs()
+    {
         return _('CVS');
     }
 
-    public function sidebar_file() {
+    public function sidebar_file()
+    {
         return _('Files');
     }
 
-    public function sidebar_mediawiki() {
+    public function sidebar_mediawiki()
+    {
         return _('Mediawiki');
     }
 
-    public function sidebar_forum() {
+    public function sidebar_forum()
+    {
         return _('Forums');
     }
 
-    public function sidebar_mail() {
+    public function sidebar_mail()
+    {
         return _('Lists');
     }
 
-    public function sidebar_news() {
+    public function sidebar_news()
+    {
         return _('News');
     }
 
-    public function and_more() {
+    public function and_more()
+    {
         return _('And more...');
     }
 
-    public function blur() {
+    public function blur()
+    {
         return _('Escape from input/textarea, close dropdown or modal');
     }
 
-    public function shortcut_helper() {
+    public function shortcut_helper()
+    {
         return _('Open/Close the shortcut window');
     }
 
-    public function tips() {
+    public function tips()
+    {
         return _("Don't forget to use tab/shift+tab to navigate in dropdown");
     }
 
-    public function close() {
+    public function close()
+    {
         return _("Close");
     }
 
-    public function sidebar_title() {
+    public function sidebar_title()
+    {
         return _('Sidebar (project)');
     }
 
-    public function shortcut_list() {
+    public function shortcut_list()
+    {
         return _('Shortcut list');
     }
 }

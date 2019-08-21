@@ -32,22 +32,26 @@ class FRSPackageFactory {
     var $STATUS_HIDDEN  = FRSPackage::STATUS_HIDDEN;
     private static $instance;
 
-    public static function instance(){
+    public static function instance()
+    {
         if(empty(self::$instance)) {
             self::$instance = new FRSPackageFactory();
         }
         return self::$instance;
     }
 
-    public static function setInstance(FRSPackageFactory $instance){
+    public static function setInstance(FRSPackageFactory $instance)
+    {
         self::$instance = $instance;
     }
 
-    public static function clearInstance(){
+    public static function clearInstance()
+    {
         self::$instance = null;
     }
 
-    function getFRSPackageFromArray(&$array) {
+    function getFRSPackageFromArray(&$array)
+    {
         $frs_package = new FRSPackage($array);
 
         return $frs_package;
@@ -56,7 +60,8 @@ class FRSPackageFactory {
     /**
      * @return FRSPackage|void
      */
-    public function getFRSPackageFromDb($package_id = null, $group_id=null, $extraFlags = 0) {
+    public function getFRSPackageFromDb($package_id = null, $group_id=null, $extraFlags = 0)
+    {
         $_id = (int) $package_id;
         $dao = $this->_getFRSPackageDao();
         if($group_id){
@@ -78,7 +83,8 @@ class FRSPackageFactory {
         return($this->getFRSPackageFromArray($data_array));
     }
 
-    function getFRSPackageByFileIdFromDb($file_id){
+    function getFRSPackageByFileIdFromDb($file_id)
+    {
         $_id = (int) $file_id;
         $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchByFileId($_id);
@@ -96,7 +102,8 @@ class FRSPackageFactory {
         return($this->getFRSPackageFromArray($data_array));
     }
 
-    function getFRSPackageByReleaseIDFromDb($release_id, $group_id) {
+    function getFRSPackageByReleaseIDFromDb($release_id, $group_id)
+    {
         $_id = (int) $release_id;
         $_group_id = (int) $group_id;
         $dao = $this->_getFRSPackageDao();
@@ -192,7 +199,8 @@ class FRSPackageFactory {
         return new FRSPackagePaginatedCollection($packages, $total_size);
     }
 
-    function getPackageIdByName($package_name, $group_id){
+    function getPackageIdByName($package_name, $group_id)
+    {
         $_id = (int) $group_id;
         $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchPackageByName($package_name, $_id);
@@ -209,7 +217,8 @@ class FRSPackageFactory {
         }
     }
 
-    function isPackageNameExist($package_name, $group_id){
+    function isPackageNameExist($package_name, $group_id)
+    {
         $_id = (int) $group_id;
         $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchPackageByName($package_name, $_id);
@@ -221,7 +230,8 @@ class FRSPackageFactory {
         return $dar->valid();
     }
 
-    function update($data) {
+    function update($data)
+    {
         if (is_a($data, 'FRSPackage')) {
             $data = $data->toArray();
         }
@@ -236,7 +246,8 @@ class FRSPackageFactory {
     }
 
 
-    function create($data_array) {
+    function create($data_array)
+    {
         $dao = $this->_getFRSPackageDao();
         $id = $dao->createFromArray($data_array);
         if ($id) {
@@ -250,7 +261,8 @@ class FRSPackageFactory {
         return $id;
     }
 
-    function _delete($package_id){
+    function _delete($package_id)
+    {
         $_id = (int) $package_id;
         $package = $this->getFRSPackageFromDb($_id);
         $dao = $this->_getFRSPackageDao();
@@ -274,7 +286,8 @@ class FRSPackageFactory {
      *
      * @return bool
      */
-    function delete_package($group_id, $package_id) {
+    function delete_package($group_id, $package_id)
+    {
         $package = $this->getFRSPackageFromDb($package_id, $group_id);
 
         if (!$package_id) {
@@ -294,7 +307,8 @@ class FRSPackageFactory {
      *
      * @return bool
      */
-    function deleteProjectPackages($groupId) {
+    function deleteProjectPackages($groupId)
+    {
         $deleteState = true;
         $resPackages = $this->getFRSPackagesFromDb($groupId);
         if (!empty($resPackages)) {
@@ -377,7 +391,8 @@ class FRSPackageFactory {
      *
      * @return bool true of user can update the package $package_id, false otherwise
      */
-    function userCanUpdate($group_id, $package_id, $user_id=false) {
+    function userCanUpdate($group_id, $package_id, $user_id=false)
+    {
         return $this->userCanCreate($group_id, $user_id);
     }
 
@@ -403,7 +418,8 @@ class FRSPackageFactory {
      *
      * @param FRSPackage $package Permissions will apply on this Package
      */
-    function setDefaultPermissions(FRSPackage $package) {
+    function setDefaultPermissions(FRSPackage $package)
+    {
         $this->getPermissionsManager()->addPermission(FRSPackage::PERM_READ, $package->getPackageID(), ProjectUGroup::REGISTERED);
         permission_add_history($package->getGroupID(), FRSPackage::PERM_READ, $package->getPackageID());
     }
@@ -413,7 +429,8 @@ class FRSPackageFactory {
      *
      * @return EventManager
      */
-    function getEventManager() {
+    function getEventManager()
+    {
          $em = EventManager::instance();
          FRSLog::instance();
          return $em;
@@ -424,19 +441,22 @@ class FRSPackageFactory {
      *
      * @return PermissionsManager
      */
-    function getPermissionsManager() {
+    function getPermissionsManager()
+    {
         return PermissionsManager::instance();
     }
 
     /**
      * @return UserManager
      */
-    function getUserManager() {
+    function getUserManager()
+    {
         return UserManager::instance();
     }
 
     var $dao;
-    function _getFRSPackageDao() {
+    function _getFRSPackageDao()
+    {
         if (!$this->dao) {
             $this->dao = new FRSPackageDao(CodendiDataAccess::instance(), $this->STATUS_DELETED);
         }

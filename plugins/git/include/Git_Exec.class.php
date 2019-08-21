@@ -37,7 +37,8 @@ class Git_Exec
     /**
      * @param String $work_tree The git repository path where we should operate
      */
-    public function __construct($work_tree, $git_dir = null) {
+    public function __construct($work_tree, $git_dir = null)
+    {
         if ( ! $git_dir) {
             $this->setWorkTree($work_tree);
         } else {
@@ -93,28 +94,34 @@ class Git_Exec
         $this->allowedTransports []= self::TRANSPORT_FILE;
     }
 
-    public function init() {
+    public function init()
+    {
         $this->gitCmd('init');
     }
 
-    public function setLocalCommiter($name, $email) {
+    public function setLocalCommiter($name, $email)
+    {
         $this->gitCmd('config --add user.name '.escapeshellarg($name));
         $this->gitCmd('config --add user.email '.escapeshellarg($email));
     }
 
-    public function remoteAdd($remote) {
+    public function remoteAdd($remote)
+    {
         $this->gitCmd('remote add origin '.escapeshellarg($remote));
     }
 
-    public function pullBranch($remote, $branch) {
+    public function pullBranch($remote, $branch)
+    {
         $this->gitCmd('pull --quiet '.$remote.' '.$branch);
     }
 
-    public function checkoutBranch($branch) {
+    public function checkoutBranch($branch)
+    {
         $this->gitCmd('checkout --quiet '.$branch);
     }
 
-    public function configFile($file, $config) {
+    public function configFile($file, $config)
+    {
         $this->gitCmd('config -f '. escapeshellarg($file) .' '. $config);
     }
 
@@ -127,7 +134,8 @@ class Git_Exec
      * @return bool
      * @throw Git_Command_Exception
      */
-    public function mv($from, $to) {
+    public function mv($from, $to)
+    {
         $to_name = basename($to);
         $to_path = realpath(dirname($to)).'/'.$to_name;
         $cmd     = 'mv '.escapeshellarg(realpath($from)) .' '. escapeshellarg($to_path);
@@ -142,7 +150,8 @@ class Git_Exec
      * @return bool
      * @throw Git_Command_Exception
      */
-    public function add($file) {
+    public function add($file)
+    {
         $cmd = 'add '.escapeshellarg(realpath($file));
         return $this->gitCmd($cmd);
     }
@@ -155,7 +164,8 @@ class Git_Exec
      * @return bool
      * @throw Git_Command_Exception
      */
-    public function rm($file) {
+    public function rm($file)
+    {
         if ($this->canRemove($file)) {
             $cmd = 'rm '.escapeshellarg(realpath($file));
             return $this->gitCmd($cmd);
@@ -163,7 +173,8 @@ class Git_Exec
         return true;
     }
 
-    public function recursiveRm($file) {
+    public function recursiveRm($file)
+    {
         if ($this->canRemove($file)) {
             $cmd = 'rm -r '.escapeshellarg(realpath($file));
             return $this->gitCmd($cmd);
@@ -171,7 +182,8 @@ class Git_Exec
         return true;
     }
 
-    private function canRemove($file) {
+    private function canRemove($file)
+    {
         $output = array();
         $this->gitCmdWithOutput('status --porcelain '.escapeshellarg(realpath($file)), $output);
         return count($output) == 0;
@@ -185,7 +197,8 @@ class Git_Exec
      *
      * @return array of String sha1 of each commit
      */
-    public function revList($oldrev, $newrev) {
+    public function revList($oldrev, $newrev)
+    {
         $output = array();
         $this->gitCmdWithOutput('rev-list '.escapeshellarg($oldrev).'..'.escapeshellarg($newrev), $output);
         return $output;
@@ -199,14 +212,16 @@ class Git_Exec
      *
      * @return array of String sha1 of each commit
      */
-    public function revListSinceStart($refname, $newrev) {
+    public function revListSinceStart($refname, $newrev)
+    {
         $output = array();
         $other_branches = implode(' ', array_map('escapeshellarg', $this->getOtherBranches($refname)));
         $this->gitCmdWithOutput('rev-parse --not '.$other_branches.' | git rev-list --stdin '.escapeshellarg($newrev), $output);
         return $output;
     }
 
-    private function getOtherBranches($refname) {
+    private function getOtherBranches($refname)
+    {
         $branches = $this->getAllBranches();
         foreach($branches as $key => $branch) {
             if ($branch == $refname) {
@@ -230,7 +245,8 @@ class Git_Exec
      *
      * @return String
      */
-    public function catFile($rev) {
+    public function catFile($rev)
+    {
         $output = array();
         $this->gitCmdWithOutput('cat-file -p '.escapeshellarg($rev), $output);
         return implode(PHP_EOL, $output);
@@ -243,7 +259,8 @@ class Git_Exec
      * @throws Git_Command_UnknownObjectTypeException
      * @return String
      */
-    public function getObjectType($rev) {
+    public function getObjectType($rev)
+    {
         $output = array();
         $this->gitCmdWithOutput('cat-file -t '.escapeshellarg($rev), $output);
         if (count($output) == 1) {
@@ -290,7 +307,8 @@ class Git_Exec
      * @return bool
      * @throw Git_Command_Exception
      */
-    public function commit($message) {
+    public function commit($message)
+    {
         if ($this->isThereAnythingToCommit()) {
             $cmd = 'commit -m '.escapeshellarg($message);
             return $this->gitCmd($cmd);
@@ -304,7 +322,8 @@ class Git_Exec
      * @return bool
      * @throw Git_Command_Exception
      */
-    public function push($origin='origin master') {
+    public function push($origin='origin master')
+    {
         $cmd = 'push --porcelain '.$origin;
         return $this->gitCmd($cmd);
     }
@@ -312,7 +331,8 @@ class Git_Exec
     /**
      * @throws Git_Command_Exception
      */
-    public function exportBranchesAndTags($destination_url) {
+    public function exportBranchesAndTags($destination_url)
+    {
         $destination_url = escapeshellarg($destination_url);
 
         $push_heads = "push $destination_url refs/heads/*:refs/heads/*";
@@ -328,7 +348,8 @@ class Git_Exec
      * @return bool
      * @throw Git_Command_Exception
      */
-    public function isThereAnythingToCommit() {
+    public function isThereAnythingToCommit()
+    {
         $output = array();
         $this->gitCmdWithOutput('status --porcelain', $output);
         foreach ($output as $status_line) {
@@ -343,7 +364,8 @@ class Git_Exec
      *
      * @return string The git repository path where we operate
      */
-    public function getPath() {
+    public function getPath()
+    {
         return $this->work_tree;
     }
 
@@ -355,11 +377,13 @@ class Git_Exec
         return 'git';
     }
 
-    public function getGitDir() {
+    public function getGitDir()
+    {
         return $this->git_dir;
     }
 
-    protected function gitCmd($cmd) {
+    protected function gitCmd($cmd)
+    {
         $output = array();
         return $this->gitCmdWithOutput($cmd, $output);
     }
@@ -368,7 +392,8 @@ class Git_Exec
      * @return bool
      * @throws Git_Command_Exception
      */
-    protected function gitCmdWithOutput($cmd, &$output) {
+    protected function gitCmdWithOutput($cmd, &$output)
+    {
         return $this->execInPath($cmd, $output);
     }
 

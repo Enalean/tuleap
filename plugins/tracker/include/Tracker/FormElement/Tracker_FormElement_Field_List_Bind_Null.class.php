@@ -24,21 +24,26 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
 
     public const TYPE = 'null';
 
-    public function __construct($field) {
+    public function __construct($field)
+    {
         parent::__construct($field, array(), array());
     }
 
     /**
      * @return array all values of the field
      */
-    public function getAllValues() { return array(); }
+    public function getAllValues()
+    {
+        return array(); }
     /**
      * Get available values of this field for REST usage
      * Fields like int, float, date, string don't have available values
      *
      * @return mixed The values or null if there are no specific available values
      */
-    public function getRESTAvailableValues() { return array(); }
+    public function getRESTAvailableValues()
+    {
+        return array(); }
     /**
      * Get the field data for artifact submission
      *
@@ -47,49 +52,67 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      *
      * @return mixed the field data corresponding to the alue for artifact submision
      */
-    public function getFieldData($submitted_value, $is_multiple) { return array(); }
+    public function getFieldData($submitted_value, $is_multiple)
+    {
+        return array(); }
     /**
      * @return array
      */
-    public function getValue($value_id) { return array(); }
+    public function getValue($value_id)
+    {
+        return array(); }
     /**
      * @return array
      */
-    public function getChangesetValues($changeset_id) { return array(); }
+    public function getChangesetValues($changeset_id)
+    {
+        return array(); }
 
     /**
      * Fetch the value
      * @param mixed $value the value of the field
      * @return string
      */
-    public function fetchRawValue($value)  { return ''; }
+    public function fetchRawValue($value)
+    {
+        return ''; }
 
     /**
      * Fetch the value in a specific changeset
      * @param Tracker_Artifact_Changeset $changeset
      * @return string
      */
-    public function fetchRawValueFromChangeset($changeset)  { return ''; }
+    public function fetchRawValueFromChangeset($changeset)
+    {
+        return ''; }
 
     /**
      * @return string
      */
-    public function formatCriteriaValue($value_id) { return ''; }
+    public function formatCriteriaValue($value_id)
+    {
+        return ''; }
 
     /**
      * @return string
      */
-    public function formatMailCriteriaValue($value_id) { return ''; }
+    public function formatMailCriteriaValue($value_id)
+    {
+        return ''; }
 
     /**
      * @return string
      */
-    public function formatChangesetValue($value) { return ''; }
+    public function formatChangesetValue($value)
+    {
+        return ''; }
 
     /**
      * @return string
      */
-    public function formatChangesetValueForCSV($value) { return ''; }
+    public function formatChangesetValueForCSV($value)
+    {
+        return ''; }
 
     /**
      * Get the "from" statement to allow search with this field
@@ -98,7 +121,9 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      * @param array $criteria_value array of criteria_value (which are array)
      * @return string
      */
-    public function getCriteriaFrom($criteria_value) { return ''; }
+    public function getCriteriaFrom($criteria_value)
+    {
+        return ''; }
 
     /**
      * Get the "where" statement to allow search with this field
@@ -106,14 +131,18 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      * @return string
      * @see getCriteriaFrom
      */
-    public function getCriteriaWhere($criteria)  { return ''; }
+    public function getCriteriaWhere($criteria)
+    {
+        return ''; }
 
     /**
      * Get the "select" statement to retrieve field values
      * @return string
      * @see getQueryFrom
      */
-    public function getQuerySelect() { return ''; }
+    public function getQuerySelect()
+    {
+        return ''; }
 
 
     /**
@@ -125,7 +154,9 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      *
      * @return string
      */
-    public function getQueryFrom($changesetvalue_table = 'tracker_changeset_value_list') { return ''; }
+    public function getQueryFrom($changesetvalue_table = 'tracker_changeset_value_list')
+    {
+        return ''; }
 
 
     /**
@@ -135,7 +166,9 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      *
      * @return Tracker_FormElement_Field_List_BindValue
      */
-    public function getValueFromRow($row) { return null; }
+    public function getValueFromRow($row)
+    {
+        return null; }
 
     /**
      * Get the sql fragment used to retrieve value for a changeset to display the bindvalue in table rows for example.
@@ -148,28 +181,40 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      *                  'bindtable_join_on_id' => 'user.user_id',
      *              }
      */
-    public function getBindtableSqlFragment() { return array(); }
+    public function getBindtableSqlFragment()
+    {
+        return array(); }
 
     /**
      * Get the "order by" statement to retrieve field values
      */
-    public function getQueryOrderby() { return ''; }
+    public function getQueryOrderby()
+    {
+        return ''; }
 
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public function getQueryGroupby() { return ''; }
+    public function getQueryGroupby()
+    {
+        return ''; }
 
 
-    public function getDao() { return null; }
-    public function getValueDao() { return null; }
+    public function getDao()
+    {
+        return null; }
+    public function getValueDao()
+    {
+        return null; }
 
     /**
      * Fetch the form to edit the formElement
      *
      * @return string html
      */
-    public function fetchAdminEditForm() { return ''; }
+    public function fetchAdminEditForm()
+    {
+        return ''; }
 
 
     /**
@@ -179,7 +224,9 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      *
      * @return string html
      */
-    public static function fetchAdminCreateForm($field) { return ''; }
+    public static function fetchAdminCreateForm($field)
+    {
+        return ''; }
 
     /**
      * Transforms Bind into a SimpleXMLElement
@@ -201,32 +248,47 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      *
      * @Return array the BindValue(s)
      */
-    public function getBindValues($bindvalue_ids = null) { return array(); }
+    public function getBindValues($bindvalue_ids = null)
+    {
+        return array(); }
 
-    public function getBindValuesForIds(array $bindvalue_ids) { return array(); }
+    public function getBindValuesForIds(array $bindvalue_ids)
+    {
+        return array(); }
 
     /**
      * Fixes original value ids after field duplication.
      *
      * @param array $value_mapping An array associating old value ids to new value ids.
      */
-    public function fixOriginalValueIds(array $value_mapping) { return array(); }
+    public function fixOriginalValueIds(array $value_mapping)
+    {
+        return array(); }
 
-    public function getQuerySelectAggregate($functions) { return array(); }
+    public function getQuerySelectAggregate($functions)
+    {
+        return array(); }
 
-    protected function getRESTBindingList() { return array(); }
+    protected function getRESTBindingList()
+    {
+        return array(); }
 
-    public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value) { return array(); }
+    public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value)
+    {
+        return array(); }
 
-    public function getType() {
+    public function getType()
+    {
         return self::TYPE;
     }
 
-    public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field) {
+    public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field)
+    {
         return;
     }
 
-    public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value) {
+    public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value)
+    {
         return;
     }
 

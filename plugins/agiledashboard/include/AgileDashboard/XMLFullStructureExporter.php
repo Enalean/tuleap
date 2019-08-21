@@ -39,7 +39,8 @@ class AgileDashboard_XMLFullStructureExporter {
      *
      * @return string A full XML document string
      */
-    public function export(Project $project) {
+    public function export(Project $project)
+    {
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
                                              <project />');
 
@@ -55,7 +56,8 @@ class AgileDashboard_XMLFullStructureExporter {
     /**
      * @return Codendi_Request
      */
-    private function buildRequest(Project $project, SimpleXMLElement $xml_element) {
+    private function buildRequest(Project $project, SimpleXMLElement $xml_element)
+    {
         $params['action']     = 'export';
         $params['project_id'] = $project->getID();
         $params['into_xml']   = $xml_element;
@@ -66,7 +68,8 @@ class AgileDashboard_XMLFullStructureExporter {
     /**
      * @return SimpleXMLElement
      */
-    private function exportOtherPlugins(Project $project, SimpleXMLElement $into_xml) {
+    private function exportOtherPlugins(Project $project, SimpleXMLElement $into_xml)
+    {
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EXPORT_XML,
             array(
@@ -81,7 +84,8 @@ class AgileDashboard_XMLFullStructureExporter {
      *
      * @return String
      */
-    private function convertToXml(SimpleXMLElement $xml_element) {
+    private function convertToXml(SimpleXMLElement $xml_element)
+    {
         $dom = dom_import_simplexml($xml_element)->ownerDocument;
         $dom->formatOutput = true;
 

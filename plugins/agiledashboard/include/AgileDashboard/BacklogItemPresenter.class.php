@@ -73,7 +73,8 @@ class AgileDashboard_BacklogItemPresenter implements
      */
     private $is_inconsistent;
 
-    public function __construct(Tracker_Artifact $artifact, $redirect_to_self, $is_inconsistent) {
+    public function __construct(Tracker_Artifact $artifact, $redirect_to_self, $is_inconsistent)
+    {
         $this->id               = $artifact->getId();
         $this->title            = $artifact->getTitle();
         $this->url              = $artifact->getUri();
@@ -84,22 +85,26 @@ class AgileDashboard_BacklogItemPresenter implements
         $this->is_inconsistent  = $is_inconsistent;
     }
 
-    public function setParent(Tracker_Artifact $parent) {
+    public function setParent(Tracker_Artifact $parent)
+    {
         $this->parent = $parent;
     }
 
     /**
      * @return Tracker_Artifact
      */
-    public function getParent() {
+    public function getParent()
+    {
         return $this->parent;
     }
 
-    public function setInitialEffort($value) {
+    public function setInitialEffort($value)
+    {
         $this->initial_effort = $value;
     }
 
-    public function getInitialEffort() {
+    public function getInitialEffort()
+    {
         return $this->initial_effort;
     }
 
@@ -109,39 +114,47 @@ class AgileDashboard_BacklogItemPresenter implements
         $this->normalized_status_label = $status_semantic;
     }
 
-    public function id() {
+    public function id()
+    {
         return $this->id;
     }
 
-    public function title() {
+    public function title()
+    {
         return $this->title;
     }
 
-    public function type() {
+    public function type()
+    {
         return $this->type;
     }
 
-    public function url() {
+    public function url()
+    {
         return $this->getUrlWithRedirect($this->url);
     }
 
-    public function points() {
+    public function points()
+    {
         return $this->initial_effort;
     }
 
-    public function parent_title() {
+    public function parent_title()
+    {
         if ($this->parent) {
             return $this->parent->getTitle();
         }
     }
 
-    public function parent_url() {
+    public function parent_url()
+    {
         if ($this->parent) {
             return $this->getUrlWithRedirect($this->parent->getUri());
         }
     }
 
-    public function parent_id() {
+    public function parent_id()
+    {
         if ($this->parent) {
             return $this->parent->getId();
         }
@@ -152,7 +165,8 @@ class AgileDashboard_BacklogItemPresenter implements
         return $this->status;
     }
 
-    private function getUrlWithRedirect($url) {
+    private function getUrlWithRedirect($url)
+    {
         if ($this->redirect_to_self) {
             return $url.'&'.$this->redirect_to_self;
         }
@@ -162,19 +176,23 @@ class AgileDashboard_BacklogItemPresenter implements
     /**
      * @return Tracker_Artifact
      */
-    public function getArtifact() {
+    public function getArtifact()
+    {
         return $this->artifact;
     }
 
-    public function color() {
+    public function color()
+    {
         return $this->color;
     }
 
-    public function setHasChildren($has_children) {
+    public function setHasChildren($has_children)
+    {
         $this->has_children = $has_children;
     }
 
-    public function hasChildren() {
+    public function hasChildren()
+    {
         if ($this->has_children === null) {
             return $this->artifact->hasChildren();
         }

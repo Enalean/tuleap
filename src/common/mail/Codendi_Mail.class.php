@@ -112,7 +112,8 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      *
      * @return Array of user_name and mail
      */
-    private function validateArrayOfUsers(array $users) {
+    private function validateArrayOfUsers(array $users)
+    {
         return $this->recipient_list_builder->getValidRecipientsFromUsers($users);
     }
 
@@ -126,7 +127,8 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      *
      * @return Array
      */
-    function _cleanupMailFormat($mail) {
+    function _cleanupMailFormat($mail)
+    {
         $pattern = '/(.*)<(.*)>/';
         if (preg_match ($pattern, $mail, $matches)) {
             // Remove extra spaces and quotes
@@ -144,7 +146,8 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      *
      * @return string[] of real_name and mail
      */
-    private function validateCommaSeparatedListOfAddresses($comma_separeted_addresses) {
+    private function validateCommaSeparatedListOfAddresses($comma_separeted_addresses)
+    {
         return $this->recipient_list_builder->getValidRecipientsFromAddresses(preg_split('/[;,]/D', $comma_separeted_addresses));
     }
 
@@ -304,7 +307,8 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      *
      * @return String
      */
-    function getCc() {
+    function getCc()
+    {
         return $this->getRecipientsFromHeader('Cc');
     }
 
@@ -349,7 +353,8 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      *
      * @return void
      */
-    public function setLookAndFeelTemplate(Tuleap_Template_Mail $tpl) {
+    public function setLookAndFeelTemplate(Tuleap_Template_Mail $tpl)
+    {
         $this->look_and_feel_template = $tpl;
     }
 
@@ -358,7 +363,8 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      *
      * @return Tuleap_Template_Mail
      */
-    public function getLookAndFeelTemplate() {
+    public function getLookAndFeelTemplate()
+    {
         if (!$this->look_and_feel_template) {
             $this->look_and_feel_template = new Tuleap_Template_Mail();
         }
@@ -430,7 +436,8 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     /**
      * @param String $message
      */
-    function setBody($message) {
+    function setBody($message)
+    {
         $this->setBodyHtml($message);
     }
 
@@ -439,7 +446,8 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      *
      * @return String
      */
-    function getBody() {
+    function getBody()
+    {
         return $this->getBodyHtml();
     }
 

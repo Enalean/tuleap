@@ -68,7 +68,8 @@ class ArtifactTypeFactory {
      *
      *    @return    object    The Group object.
      */
-    function getGroup() {
+    function getGroup()
+    {
         return $this->Group;
     }
 
@@ -79,7 +80,8 @@ class ArtifactTypeFactory {
      *
      *    @return    array of counts
      */
-    function getStatusIdCount($group_artifact_id) {
+    function getStatusIdCount($group_artifact_id)
+    {
         $count_array=array();
         $sql="select status_id,count(*) from artifact where group_artifact_id = ". db_ei($group_artifact_id).
         " group by status_id";
@@ -109,7 +111,8 @@ class ArtifactTypeFactory {
      *
      *    @return    array    The array of ArtifactType objects.
      */
-    function getArtifactTypes($includeDeleted = false) {
+    function getArtifactTypes($includeDeleted = false)
+    {
         global $Language;
 
         if ($this->ArtifactTypes) {
@@ -190,7 +193,8 @@ class ArtifactTypeFactory {
      *
      *    @return    resultSet
      */
-    function getPendingArtifactTypes() {
+    function getPendingArtifactTypes()
+    {
         global $Language;
 
         $sql="SELECT group_artifact_id,name, deletion_date, groups.group_name as project_name, groups.group_id FROM artifact_group_list, groups
@@ -215,7 +219,8 @@ class ArtifactTypeFactory {
      *
      * @return bool
      */
-    function preDeleteAllProjectArtifactTypes() {
+    function preDeleteAllProjectArtifactTypes()
+    {
         $deleteStatus = true;
         $artifactTypes = $this->getArtifactTypes();
         if ($artifactTypes) {
@@ -236,7 +241,8 @@ class ArtifactTypeFactory {
      *
      * @return bool
      */
-    function preDeleteArtifactType(ArtifactType $artifactType) {
+    function preDeleteArtifactType(ArtifactType $artifactType)
+    {
         if ($artifactType->preDelete(true)) {
             $arm = new ArtifactRulesManager();
             $arm->deleteRulesByArtifactType($artifactType->getID());
@@ -257,7 +263,8 @@ class ArtifactTypeFactory {
      *
      *    @return bool
      */
-    function deleteArtifactType($atid) {
+    function deleteArtifactType($atid)
+    {
 
      // Delete artifact_canned_responses
         $sql = "DELETE FROM artifact_canned_responses 
@@ -384,7 +391,8 @@ class ArtifactTypeFactory {
      *  @param view: 1 means assigned, 2 means Submitted, 3 means Both
      *    @return    db_result
      */
-    function getMyArtifacts($user_id, $view='AS') {
+    function getMyArtifacts($user_id, $view='AS')
+    {
         $assignee = false;
         $submitter = false;
 
@@ -451,7 +459,8 @@ class ArtifactTypeFactory {
      * @param string $tracker_name the name of the tracker we are lokking for
      * @return the ArtifactType named $tracker_name in the project of ID $gropup_id, or false if such a tracker does not exist or if the user can not view this tracker
      */
-    function getArtifactTypeFromName($group_id, $tracker_name) {
+    function getArtifactTypeFromName($group_id, $tracker_name)
+    {
         global $Language;
 
         $sql = "SELECT group_artifact_id 
@@ -484,7 +493,8 @@ class ArtifactTypeFactory {
      *
      *  @return query result.
      */
-    function getTrackerTemplatesForNewProjects() {
+    function getTrackerTemplatesForNewProjects()
+    {
         $group_id = db_ei($this->Group->getGroupId());
 
         $sql = "SELECT agl.group_artifact_id
@@ -508,7 +518,8 @@ class ArtifactTypeFactory {
      * @param int $group_id th ID of the group
      * @return bool
      */
-    function isNameExists($name, $group_id) {
+    function isNameExists($name, $group_id)
+    {
         $reference_dao = $this->getArtifactGroupListDao();
         $dar=$reference_dao->searchNameByGroupId($group_id);
         while ($row = $dar->getRow()) {
@@ -530,7 +541,8 @@ class ArtifactTypeFactory {
      *    @param    itemname: the itemname of the new tracker
      *    @return id on success, false on failure.
      */
-    function create($group_id,$group_id_template,$atid_template,$name,$description,$itemname,$ugroup_mapping=false,&$report_mapping=array()) {
+    function create($group_id,$group_id_template,$atid_template,$name,$description,$itemname,$ugroup_mapping=false,&$report_mapping=array())
+    {
         global $Language;
 
         if (!$name || !$description || !$itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == ""  ) {
@@ -682,14 +694,16 @@ class ArtifactTypeFactory {
         return $id;
     }
 
-    public function getArtifactGroupListDao() {
+    public function getArtifactGroupListDao()
+    {
         return new ArtifactGroupListDao(CodendiDataAccess::instance());
     }
 
     /**
      * @param $string
      */
-    public function setError($string) {
+    public function setError($string)
+    {
         $this->error_state = true;
         $this->error_message = $string;
     }
@@ -697,7 +711,8 @@ class ArtifactTypeFactory {
     /**
      * @return string
      */
-    public function getErrorMessage() {
+    public function getErrorMessage()
+    {
         if ($this->error_state) {
             return $this->error_message;
         } else {
@@ -708,7 +723,8 @@ class ArtifactTypeFactory {
     /**
      * @return bool
      */
-    public function isError() {
+    public function isError()
+    {
         return $this->error_state;
     }
 

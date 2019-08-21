@@ -25,7 +25,8 @@ class Git_DriverREST_Gerrit_DeletePluginTest extends Git_Driver_GerritREST_base 
     private $response_with_plugin;
     private $response_without_plugin;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->response_with_plugin = <<<EOS
 )]}'
@@ -53,7 +54,8 @@ EOS;
 }
 EOS;
     }
-    public function itReturnsFalseIfPluginIsNotInstalled(){
+    public function itReturnsFalseIfPluginIsNotInstalled()
+    {
         $response = stub('Guzzle\Http\Message\Response')->getBody(true)->returns($this->response_without_plugin);
         stub($this->guzzle_request)->send()->returns($response);
         stub($this->guzzle_client)->get()->returns($this->guzzle_request);
@@ -63,7 +65,8 @@ EOS;
         $this->assertFalse($enabled);
     }
 
-    public function itReturnsFalseIfPluginIsInstalledAndNotEnabled(){
+    public function itReturnsFalseIfPluginIsInstalledAndNotEnabled()
+    {
         $response = stub('Guzzle\Http\Message\Response')->getBody(true)->returns($this->response_without_plugin);
         stub($this->guzzle_request)->send()->returns($response);
         stub($this->guzzle_client)->get()->returns($this->guzzle_request);
@@ -73,7 +76,8 @@ EOS;
         $this->assertFalse($enabled);
     }
 
-    public function itReturnsTrueIfPluginIsInstalledAndEnabled(){
+    public function itReturnsTrueIfPluginIsInstalledAndEnabled()
+    {
         $response = stub('Guzzle\Http\Message\Response')->getBody(true)->returns($this->response_with_plugin);
         stub($this->guzzle_request)->send()->returns($response);
         stub($this->guzzle_client)->get()->returns($this->guzzle_request);
@@ -83,7 +87,8 @@ EOS;
         $this->assertTrue($enabled);
     }
 
-    public function itCallsGerritServerWithOptions() {
+    public function itCallsGerritServerWithOptions()
+    {
         $url = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
             .'/a/plugins/';
@@ -102,7 +107,8 @@ EOS;
         $this->driver->isDeletePluginEnabled($this->gerrit_server);
     }
 
-    public function itThrowsAProjectDeletionExceptionIfThereAreOpenChanges() {
+    public function itThrowsAProjectDeletionExceptionIfThereAreOpenChanges()
+    {
         $exception = new Guzzle\Http\Exception\ClientErrorResponseException();
         stub($this->guzzle_client)->delete()->throws($exception);
 

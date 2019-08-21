@@ -27,7 +27,8 @@ require_once 'bootstrap.php';
 
 class TokenTest extends TuleapTestCase {
 
-    function testGenerateRandomToken() {
+    function testGenerateRandomToken()
+    {
         $dao  = \Mockery::spy(Docman_TokenDao::class);
         $http = \Mockery::spy(HTTPRequest::class);
         $http->allows()->get('bc')->andReturns(false);
@@ -64,7 +65,8 @@ class TokenTest extends TuleapTestCase {
         $this->assertNotEqual($t1->getToken(), $t3->getToken(), 'Different referers, different tokens');
         $this->assertNotEqual($t1->getToken(), $t4->getToken(), 'Different users, different tokens');
     }
-    function testNullToken() {
+    function testNullToken()
+    {
         $dao  = \Mockery::spy(Docman_TokenDao::class);
         $http = \Mockery::spy(HTTPRequest::class);
         $http->allows()->get('bc')->andReturns(false);
@@ -97,7 +99,8 @@ class TokenTest extends TuleapTestCase {
         $this->assertNull($t3->getToken(), 'With anonymous user, we should have a null token');
     }
 
-    function testStorage() {
+    function testStorage()
+    {
         $user_id = 123;
         $referer = 'http://codendi.com/?id=1&action=show';
 
@@ -114,7 +117,8 @@ class TokenTest extends TuleapTestCase {
         $t1->__construct();
     }
 
-    function testInvalidReferer() {
+    function testInvalidReferer()
+    {
         $dao  = \Mockery::spy(Docman_TokenDao::class);
         $http = \Mockery::spy(HTTPRequest::class);
         $http->allows()->get('bc')->andReturns(false);

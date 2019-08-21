@@ -50,7 +50,8 @@ EOT;
         $this->execDB($sql, 'An error occured while inserting new entries in permission_values for git default permissions');
     }
 
-    protected function execDB($sql, $message) {
+    protected function execDB($sql, $message)
+    {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message.implode(', ', $this->db->dbh->errorInfo()));

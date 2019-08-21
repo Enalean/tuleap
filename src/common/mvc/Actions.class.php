@@ -40,15 +40,18 @@ class Actions {
         $this->_controler = $controler;
     }
 
-    function getControler() {
+    function getControler()
+    {
         return $this->_controler;
     }
 
-    function check() {
+    function check()
+    {
         return true;
     }
 
-    function process($action, $params = array()) {
+    function process($action, $params = array())
+    {
         if($this->check()) {
             $this->$action($params);
         }

@@ -27,11 +27,13 @@
  */
 class AgileDashboard_Milestone_Backlog_BacklogItemBuilder implements AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection {
 
-    public function getCollection() {
+    public function getCollection()
+    {
         return new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
     }
 
-    public function getItem(Tracker_Artifact $artifact, $redirect_to_self, $is_inconsistent) {
+    public function getItem(Tracker_Artifact $artifact, $redirect_to_self, $is_inconsistent)
+    {
         return new AgileDashboard_Milestone_Backlog_BacklogItem($artifact, $is_inconsistent);
     }
 }

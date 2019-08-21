@@ -53,7 +53,8 @@ class ExplorerPresenter {
         $this->project_name    = $project->getPublicName();
     }
 
-    public function current_directory() {
+    public function current_directory()
+    {
         $last = $this->path_parts->last();
         if ($last) {
             return $last->path_part_name;
@@ -61,15 +62,18 @@ class ExplorerPresenter {
         return '';
     }
 
-    public function current_directory_url() {
+    public function current_directory_url()
+    {
         return PROFTPD_BASE_URL.'/explorer.php?group_id='.$this->group_id.'&path='.$this->getPathUrlParameter();
     }
 
-    public function nav_url() {
+    public function nav_url()
+    {
         return PROFTPD_BASE_URL.'/explorer.php?group_id='.$this->group_id.'&path=';
     }
 
-    private function getPathUrlParameter() {
+    private function getPathUrlParameter()
+    {
         if ($this->path_parts->count() > 0) {
             return urlencode($this->path.'/');
         }
@@ -77,31 +81,38 @@ class ExplorerPresenter {
         return urlencode($this->path);
     }
 
-    public function parent_directories() {
+    public function parent_directories()
+    {
         return $this->path_parts->parent_directory_parts();
     }
 
-    public function is_in_subdirectory() {
+    public function is_in_subdirectory()
+    {
         return $this->path_parts->count() > 0;
     }
 
-    public function file_column_name() {
+    public function file_column_name()
+    {
         return dgettext('tuleap-proftpd', 'File');
     }
 
-    public function size_column_name() {
+    public function size_column_name()
+    {
         return dgettext('tuleap-proftpd', 'Size (Bytes)');
     }
 
-    public function date_added_column_name() {
+    public function date_added_column_name()
+    {
         return dgettext('tuleap-proftpd', 'Date Added');
     }
 
-    public function folder_list() {
+    public function folder_list()
+    {
         return $this->directory_items->getFolders();
     }
 
-    public function file_list() {
+    public function file_list()
+    {
         return $this->directory_items->getFiles();
     }
 }

@@ -37,6 +37,8 @@
     <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
     <!-- Forbid superfluous whitespaces -->
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+    <!-- Methods - May be split across lines, opening and closing brace positions, indents, spacing… -->
+    <rule ref="Squiz.Functions.MultiLineFunctionDeclaration"/>
 
     <!-- Forbid use of short open tags <? -->
     <rule ref="Generic.PHP.DisallowShortOpenTag" />

@@ -28,7 +28,8 @@ use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\FRS\UploadedLinkUpdateTablePresenter;
 
-function file_utils_header($params) {
+function file_utils_header($params)
+{
     global $group_id,$Language;
 
     $params['toptab']='file';
@@ -47,7 +48,8 @@ function file_utils_header($params) {
 }
 
 // Workaround for the 2GB limitation
-function file_utils_get_size($file) {
+function file_utils_get_size($file)
+{
     //Uncomment when limitation is fixed
     //return filesize($file);
 
@@ -65,7 +67,8 @@ function file_utils_get_size($file) {
     return $size;
 }
 
-function file_utils_footer($params) {
+function file_utils_footer($params)
+{
     site_project_footer($params);
 }
 
@@ -84,7 +87,8 @@ function file_utils_footer($params) {
 
 */
 
-function frs_show_status_popup ($name='status_id', $checked_val="xzxz") {
+function frs_show_status_popup($name='status_id', $checked_val="xzxz")
+{
     global $Language;
 
     $package_factory = new FRSPackageFactory();
@@ -104,7 +108,8 @@ function frs_show_status_popup ($name='status_id', $checked_val="xzxz") {
 
 */
 
-function frs_show_filetype_popup ($name='type_id', $checked_val="xzxz") {
+function frs_show_filetype_popup($name='type_id', $checked_val="xzxz")
+{
     /*
         return a pop-up select box of the available filetypes
     */
@@ -123,7 +128,8 @@ function frs_show_filetype_popup ($name='type_id', $checked_val="xzxz") {
 
 */
 
-function frs_show_processor_popup ($group_id, $name='processor_id', $checked_val="xzxz") {
+function frs_show_processor_popup($group_id, $name='processor_id', $checked_val="xzxz")
+{
     /*
         return a pop-up select box of the available processors
     */
@@ -142,7 +148,8 @@ function frs_show_processor_popup ($group_id, $name='processor_id', $checked_val
 */
 
 
-function frs_show_release_popup ($group_id, $name='release_id', $checked_val="xzxz") {
+function frs_show_release_popup($group_id, $name='release_id', $checked_val="xzxz")
+{
     /*
         return a pop-up select box of releases for the project
     */
@@ -163,7 +170,8 @@ function frs_show_release_popup ($group_id, $name='release_id', $checked_val="xz
         return html_build_select_box_from_arrays ($FRS_RELEASE_ID_RES, $FRS_RELEASE_NAME_RES,$name,$checked_val,false);
     }
 }
-function frs_show_release_popup2($group_id, $name='release_id', $checked_val="xzxz") {
+function frs_show_release_popup2($group_id, $name='release_id', $checked_val="xzxz")
+{
     /*
         return a pop-up select box of releases for the project
     */
@@ -191,7 +199,8 @@ function frs_show_release_popup2($group_id, $name='release_id', $checked_val="xz
     }
 }
 
-function file_utils_show_processors ($result) {
+function file_utils_show_processors($result)
+{
     global $group_id,$Language;
     $hp = Codendi_HTMLPurifier::instance();
     $rows  =  db_numrows($result);
@@ -236,7 +245,8 @@ function file_utils_show_processors ($result) {
     echo "</table>";
 }
 
-function file_utils_add_proc ($pname,$prank) {
+function file_utils_add_proc($pname,$prank)
+{
 
     global $group_id,$Language;
 
@@ -255,7 +265,8 @@ function file_utils_add_proc ($pname,$prank) {
 
 }
 
-function file_utils_update_proc ($pid,$pname,$prank) {
+function file_utils_update_proc($pid,$pname,$prank)
+{
 
     global $group_id,$Language;
 
@@ -274,7 +285,8 @@ function file_utils_update_proc ($pid,$pname,$prank) {
 
 }
 
-function file_utils_delete_proc ($pid) {
+function file_utils_delete_proc($pid)
+{
 
     global $group_id,$Language;
 
@@ -292,7 +304,8 @@ function file_utils_delete_proc ($pid) {
 
 }
 
-function frs_display_package_form(FRSPackage $package, $title, $url, $siblings) {
+function frs_display_package_form(FRSPackage $package, $title, $url, $siblings)
+{
     $hp = Codendi_HTMLPurifier::instance();
 
     file_utils_header(array('title'=>$title, 'help' => 'frs.html#delivery-manager-administration'));
@@ -352,7 +365,8 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings) 
      file_utils_footer(array());
 }
 
-function frs_display_release_form($is_update, &$release, $group_id, $title, $url) {
+function frs_display_release_form($is_update, &$release, $group_id, $title, $url)
+{
     global $package_factory, $release_factory, $files_factory;
     $hp = Codendi_HTMLPurifier::instance();
     if (is_array($release)) {
@@ -814,7 +828,8 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     file_utils_footer(array ());
 }
 
-function frs_process_release_form($is_update, $request, $group_id, $title, $url) {
+function frs_process_release_form($is_update, $request, $group_id, $title, $url)
+{
     global $package_factory, $release_factory, $files_factory;
     $pm = ProjectManager::instance();
     //get and filter all inputs from $request
@@ -1411,7 +1426,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     }
 }
 
-function detectSpecialCharactersInName($name, $type) {
+function detectSpecialCharactersInName($name, $type)
+{
     if (preg_match('/\+/', $name)) {
         $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('file_showfiles', 'warn_chars', array($type, $name)));
     }

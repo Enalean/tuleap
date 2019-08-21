@@ -52,7 +52,8 @@ class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase {
     /** @var TransitionFactory */
     private $transition_factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $tracker = stub('Tracker')->getId()->returns(123);
 
@@ -84,24 +85,28 @@ class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase {
         stub($this->workflow_factory)->getWorkflowByTrackerId($tracker->getId())->returns($workflow);
     }
 
-    private function setUpField(Tracker $tracker, $id) {
+    private function setUpField(Tracker $tracker, $id)
+    {
         $field = mock('Tracker_FormElement_Field_List');
         stub($field)->getTracker()->returns($tracker);
         stub($field)->getId()->returns($id);
         return $field;
     }
 
-    public function itReturnsTrueIfTheFieldIsUsedToDescribeTheStatesOfTheWorkflow() {
+    public function itReturnsTrueIfTheFieldIsUsedToDescribeTheStatesOfTheWorkflow()
+    {
         expect($this->transition_factory)->isFieldUsedInTransitions()->never();
         $this->assertTrue($this->workflow_factory->isFieldUsedInWorkflow($this->field_status));
     }
 
-    public function itReturnsTrueIfTheFieldIsUsedInAPostAction() {
+    public function itReturnsTrueIfTheFieldIsUsedInAPostAction()
+    {
         expect($this->transition_factory)->isFieldUsedInTransitions()->once();
         $this->assertTrue($this->workflow_factory->isFieldUsedInWorkflow($this->field_close_date));
     }
 
-    public function itReturnsFalseIfTheFieldIsNotUsedByTheWorkflow() {
+    public function itReturnsFalseIfTheFieldIsNotUsedByTheWorkflow()
+    {
         expect($this->transition_factory)->isFieldUsedInTransitions()->once();
         $this->assertFalse($this->workflow_factory->isFieldUsedInWorkflow($this->field_start_date));
     }
@@ -112,7 +117,8 @@ class WorkflowFactory_CacheTest extends TuleapTestCase {
     /** @var WorkflowFactory */
     private $workflow_factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->tracker_rules_manager = Mockery::mock(Tracker_RulesManager::class);
         $this->workflow_factory = partial_mock(
@@ -133,7 +139,8 @@ class WorkflowFactory_CacheTest extends TuleapTestCase {
         stub($this->workflow_factory)->getGlobalRulesManager()->returns($this->tracker_rules_manager);
     }
 
-    public function itReturnsSameObjectWhenUsingSameTrackerId() {
+    public function itReturnsSameObjectWhenUsingSameTrackerId()
+    {
         stub($this->dao)->searchByTrackerId(112)->returnsDar(
             array('tracker_id' => 112, 'workflow_id' => 34, 'field_id' => 56, 'is_used' => 1, 'is_legacy' => 0, 'is_advanced' => 1)
         );

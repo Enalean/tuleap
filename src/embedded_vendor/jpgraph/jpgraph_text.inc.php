@@ -36,7 +36,8 @@ class Text {
     // CONSTRUCTOR
 
     // Create new text at absolute pixel coordinates
-    function __construct($aTxt="",$aXAbsPos=0,$aYAbsPos=0) {
+    function __construct($aTxt="",$aXAbsPos=0,$aYAbsPos=0)
+    {
         if( ! is_string($aTxt) ) {
             JpGraphError::RaiseL(25050);//('First argument to Text::Text() must be s atring.');
         }
@@ -48,12 +49,14 @@ class Text {
     //---------------
     // PUBLIC METHODS
     // Set the string in the text object
-    function Set($aTxt) {
+    function Set($aTxt)
+    {
         $this->t = $aTxt;
     }
 
     // Alias for Pos()
-    function SetPos($aXAbsPos=0,$aYAbsPos=0,$aHAlign="left",$aVAlign="top") {
+    function SetPos($aXAbsPos=0,$aYAbsPos=0,$aHAlign="left",$aVAlign="top")
+    {
     //$this->Pos($aXAbsPos,$aYAbsPos,$aHAlign,$aVAlign);
         $this->x = $aXAbsPos;
         $this->y = $aYAbsPos;
@@ -61,13 +64,15 @@ class Text {
         $this->valign = $aVAlign;
     }
 
-    function SetScalePos($aX,$aY) {
+    function SetScalePos($aX,$aY)
+    {
         $this->iScalePosX = $aX;
         $this->iScalePosY = $aY;
     }
 
     // Specify alignment for the text
-    function Align($aHAlign,$aVAlign="top",$aParagraphAlign="") {
+    function Align($aHAlign,$aVAlign="top",$aParagraphAlign="")
+    {
         $this->halign = $aHAlign;
         $this->valign = $aVAlign;
         if( $aParagraphAlign != "" )
@@ -75,33 +80,39 @@ class Text {
     }
 
     // Alias
-    function SetAlign($aHAlign,$aVAlign="top",$aParagraphAlign="") {
+    function SetAlign($aHAlign,$aVAlign="top",$aParagraphAlign="")
+    {
         $this->Align($aHAlign,$aVAlign,$aParagraphAlign);
     }
 
     // Specifies the alignment for a multi line text
-    function ParagraphAlign($aAlign) {
+    function ParagraphAlign($aAlign)
+    {
         $this->paragraph_align = $aAlign;
     }
 
     // Specifies the alignment for a multi line text
-    function SetParagraphAlign($aAlign) {
+    function SetParagraphAlign($aAlign)
+    {
         $this->paragraph_align = $aAlign;
     }
 
-    function SetShadow($aShadowColor='gray',$aShadowWidth=3) {
+    function SetShadow($aShadowColor='gray',$aShadowWidth=3)
+    {
         $this->ishadowwidth=$aShadowWidth;
         $this->shadow=$aShadowColor;
         $this->boxed=true;
     }
 
-    function SetWordWrap($aCol) {
+    function SetWordWrap($aCol)
+    {
         $this->iWordwrap = $aCol ;
     }
 
     // Specify that the text should be boxed. fcolor=frame color, bcolor=border color,
     // $shadow=drop shadow should be added around the text.
-    function SetBox($aFrameColor=array(255,255,255),$aBorderColor=array(0,0,0),$aShadowColor=false,$aCornerRadius=4,$aShadowWidth=3) {
+    function SetBox($aFrameColor=array(255,255,255),$aBorderColor=array(0,0,0),$aShadowColor=false,$aCornerRadius=4,$aShadowWidth=3)
+    {
         if( $aFrameColor === false ) {
             $this->boxed=false;
         }
@@ -119,13 +130,15 @@ class Text {
         $this->ishadowwidth=$aShadowWidth;
     }
 
-    function SetBox2($aFrameColor=array(255,255,255),$aBorderColor=array(0,0,0),$aShadowColor=false,$aCornerRadius=4,$aShadowWidth=3) {
+    function SetBox2($aFrameColor=array(255,255,255),$aBorderColor=array(0,0,0),$aShadowColor=false,$aCornerRadius=4,$aShadowWidth=3)
+    {
         $this->iBoxType=2;
         $this->SetBox($aFrameColor,$aBorderColor,$aShadowColor,$aCornerRadius,$aShadowWidth);
     }
 
     // Hide the text
-    function Hide($aHide=true) {
+    function Hide($aHide=true)
+    {
         $this->hide=$aHide;
     }
 
@@ -133,19 +146,22 @@ class Text {
     // but I added this "inverse" of Hide() to harmonize
     // with some classes which I designed more recently (especially)
     // jpgraph_gantt
-    function Show($aShow=true) {
+    function Show($aShow=true)
+    {
         $this->hide=!$aShow;
     }
 
     // Specify font
-    function SetFont($aFamily,$aStyle=FS_NORMAL,$aSize=10) {
+    function SetFont($aFamily,$aStyle=FS_NORMAL,$aSize=10)
+    {
         $this->font_family=$aFamily;
         $this->font_style=$aStyle;
         $this->font_size=$aSize;
     }
 
     // Center the text between $left and $right coordinates
-    function Center($aLeft,$aRight,$aYAbsPos=false) {
+    function Center($aLeft,$aRight,$aYAbsPos=false)
+    {
         $this->x = $aLeft + ($aRight-$aLeft )/2;
         $this->halign = "center";
         if( is_numeric($aYAbsPos) )
@@ -153,16 +169,19 @@ class Text {
     }
 
     // Set text color
-    function SetColor($aColor) {
+    function SetColor($aColor)
+    {
         $this->color = $aColor;
     }
 
-    function SetAngle($aAngle) {
+    function SetAngle($aAngle)
+    {
         $this->SetOrientation($aAngle);
     }
 
     // Orientation of text. Note only TTF fonts can have an arbitrary angle
-    function SetOrientation($aDirection=0) {
+    function SetOrientation($aDirection=0)
+    {
         if( is_numeric($aDirection) )
             $this->dir=$aDirection;
         elseif( $aDirection=="h" )
@@ -174,27 +193,31 @@ class Text {
     }
 
     // Total width of text
-    function GetWidth($aImg) {
+    function GetWidth($aImg)
+    {
         $aImg->SetFont($this->font_family,$this->font_style,$this->raw_font_size);
         $w = $aImg->GetTextWidth($this->t,$this->dir);
         return $w;
     }
 
     // Hight of font
-    function GetFontHeight($aImg) {
+    function GetFontHeight($aImg)
+    {
         $aImg->SetFont($this->font_family,$this->font_style,$this->raw_font_size);
         $h = $aImg->GetFontHeight();
         return $h;
 
     }
 
-    function GetTextHeight($aImg) {
+    function GetTextHeight($aImg)
+    {
         $aImg->SetFont($this->font_family,$this->font_style,$this->raw_font_size);
         $h = $aImg->GetTextHeight($this->t,$this->dir);
         return $h;
     }
 
-    function GetHeight($aImg) {
+    function GetHeight($aImg)
+    {
     // Synonym for GetTextHeight()
         $aImg->SetFont($this->font_family,$this->font_style,$this->raw_font_size);
         $h = $aImg->GetTextHeight($this->t,$this->dir);
@@ -203,11 +226,13 @@ class Text {
 
     // Set the margin which will be interpretated differently depending
     // on the context.
-    function SetMargin($aMarg) {
+    function SetMargin($aMarg)
+    {
         $this->margin = $aMarg;
     }
 
-    function StrokeWithScale($aImg,$axscale,$ayscale) {
+    function StrokeWithScale($aImg,$axscale,$ayscale)
+    {
         if( $this->iScalePosX === null || $this->iScalePosY === null ) {
             $this->Stroke($aImg);
         }
@@ -218,13 +243,15 @@ class Text {
         }
     }
 
-    function SetCSIMTarget($aURITarget,$aAlt='',$aWinTarget='') {
+    function SetCSIMTarget($aURITarget,$aAlt='',$aWinTarget='')
+    {
         $this->iCSIMtarget = $aURITarget;
         $this->iCSIMalt = $aAlt;
         $this->iCSIMWinTarget = $aWinTarget;
     }
 
-    function GetCSIMareas() {
+    function GetCSIMareas()
+    {
         if( $this->iCSIMtarget !== '' ) {
             return $this->iCSIMarea;
         }
@@ -234,7 +261,8 @@ class Text {
     }
 
     // Display text in image
-    function Stroke($aImg,$x=null,$y=null) {
+    function Stroke($aImg,$x=null,$y=null)
+    {
 
         if( $x !== null ) $this->x = round($x);
         if( $y !== null ) $this->y = round($y);
@@ -301,7 +329,8 @@ class Text {
         $aImg->PopColor($this->color);
     }
 
-    function __get($name) {
+    function __get($name)
+    {
 
         if (strpos($name, 'raw_') !== false) {
             // if $name == 'raw_left_margin' , return $this->_left_margin;
@@ -318,7 +347,8 @@ class Text {
         }
     }
 
-    function __set($name, $value) {
+    function __set($name, $value)
+    {
         $this->{'_'.$name} = $value;
     }
 } // Class

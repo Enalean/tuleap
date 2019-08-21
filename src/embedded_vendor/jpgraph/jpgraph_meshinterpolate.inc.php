@@ -14,7 +14,8 @@
 * @param $aDat Matrix to interpolate
 * @param $aFactor Interpolation factor
 */
-function doMeshInterpolate( &$aData, $aFactor ) {
+function doMeshInterpolate( &$aData, $aFactor )
+{
     $m = new MeshInterpolate();
     $aData = $m->Linear($aData,$aFactor);
 }
@@ -35,7 +36,8 @@ class MeshInterpolate {
     * @param $col Top left corner of square to work with
     * $param $aFactor In how many subsquare should we split this square. A value of 1 indicates that no action
     */
-    function IntSquare( $aRow, $aCol, $aFactor ) {
+    function IntSquare( $aRow, $aCol, $aFactor )
+    {
         if ( $aFactor <= 1 )
             return;
 
@@ -69,7 +71,8 @@ class MeshInterpolate {
      * @param  $aInNbr Interpolation factor
      * @return the interpolated matrice
      */
-    function Linear( &$aData, $aIntFactor ) {
+    function Linear( &$aData, $aIntFactor )
+    {
         $step = pow( 2, $aIntFactor-1 );
 
         $orig_cols = count( $aData[0] );

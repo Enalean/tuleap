@@ -25,7 +25,8 @@ use Tuleap\REST\MilestoneBase;
  */
 class MilestonesContentTest extends MilestoneBase
 {
-    public function testOPTIONSContent() {
+    public function testOPTIONSContent()
+    {
         $response = $this->getResponse($this->client->options('milestones/'.$this->release_artifact_ids[1].'/content'));
         $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
@@ -111,14 +112,16 @@ class MilestonesContentTest extends MilestoneBase
     /**
      * @depends testPUTContent
      */
-    public function testPUTContentWithSameValueAsPreviouslyReturns200() {
+    public function testPUTContentWithSameValueAsPreviouslyReturns200()
+    {
         $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/content', null, '['.$this->epic_artifact_ids[1].','.$this->epic_artifact_ids[4].']'));
 
         $this->assertEquals($response_put->getStatusCode(), 200);
         $this->assertEquals($response_put->getBody(true), '');
     }
 
-    public function testPUTContentWithoutPermission() {
+    public function testPUTContentWithoutPermission()
+    {
         $response_put = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->put('milestones/'.$this->release_artifact_ids[1].'/content', null, '['.$this->epic_artifact_ids[4].','.$this->epic_artifact_ids[1].']'));
 
         $this->assertEquals($response_put->getStatusCode(), 403);

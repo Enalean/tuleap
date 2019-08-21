@@ -29,7 +29,8 @@ class ZipArchive implements ArchiveInterface {
     private $archive_path;
     private $extraction_path;
 
-    public function __construct($archive_path, $tmpdir) {
+    public function __construct($archive_path, $tmpdir)
+    {
         $this->archive_path    = $archive_path;
         $this->extraction_path = $this->tempdir($tmpdir);
         $this->archive         = new \ZipArchive();
@@ -38,15 +39,18 @@ class ZipArchive implements ArchiveInterface {
         }
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         $this->archive->close();
     }
 
-    public function extractFiles() {
+    public function extractFiles()
+    {
         $this->archive->extractTo($this->extraction_path);
     }
 
-    public function getExtractionPath() {
+    public function getExtractionPath()
+    {
         return $this->extraction_path;
     }
 
@@ -57,21 +61,25 @@ class ZipArchive implements ArchiveInterface {
      *
      * @return string Path to the new directory
      */
-    private function tempdir($tmp_dir) {
+    private function tempdir($tmp_dir)
+    {
         $template = 'import_project_XXXXXX';
 
         return trim(`mktemp -d -p $tmp_dir $template`);
     }
 
-    public function cleanUp() {
+    public function cleanUp()
+    {
         exec("rm -rf $this->extraction_path");
     }
 
-    public function getProjectXML() {
+    public function getProjectXML()
+    {
         return $this->archive->getFromName(self::PROJECT_FILE);
     }
 
-    public function getUsersXML() {
+    public function getUsersXML()
+    {
         return $this->archive->getFromName(self::USER_FILE);
     }
 }

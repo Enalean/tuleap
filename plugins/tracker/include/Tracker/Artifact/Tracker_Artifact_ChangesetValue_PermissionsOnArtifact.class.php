@@ -34,7 +34,8 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     protected $perms;
     protected $used;
 
-    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $used, $perms) {
+    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $used, $perms)
+    {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->perms = $perms;
         $this->used = $used;
@@ -43,7 +44,8 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     /**
      * @return mixed
      */
-    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
+    {
         return $visitor->visitPermissionsOnArtifact($this);
     }
 
@@ -52,14 +54,16 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
      *
      * @return Array the permissions
      */
-    public function getPerms() {
+    public function getPerms()
+    {
         return $this->perms;
     }
 
     /**
      * @return array
      */
-    public function getUgroupNamesFromPerms() {
+    public function getUgroupNamesFromPerms()
+    {
         $ugroup_names = array();
 
         foreach ($this->perms as $ugroup_id) {
@@ -74,11 +78,13 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
      *
      * @return bool true if the permissions are used
      */
-    public function getUsed() {
+    public function getUsed()
+    {
         return $this->used;
     }
 
-    public function getRESTValue(PFUser $user) {
+    public function getRESTValue(PFUser $user)
+    {
         $representation = new ArtifactFieldValuePermissionsOnArtifactRepresentation();
         $representation->build(
             $this->field->getId(),
@@ -95,13 +101,15 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         return $representation;
     }
 
-    protected function getUserGroupRESTId($user_group_id) {
+    protected function getUserGroupRESTId($user_group_id)
+    {
         $project_id = $this->getField()->getTracker()->getProject()->getID();
 
         return UserGroupRepresentation::getRESTIdForProject($project_id, $user_group_id);
     }
 
-    public function getFullRESTValue(PFUser $user) {
+    public function getFullRESTValue(PFUser $user)
+    {
         $representation = new ArtifactFieldValuePermissionsOnArtifactFullRepresentation();
         $representation->build(
             $this->field->getId(),
@@ -120,7 +128,8 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
      *
      * @return string The value of this artifact changeset value for the web interface
      */
-    public function getValue() {
+    public function getValue()
+    {
         return '';
     }
 
@@ -169,7 +178,8 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         return $changes;
     }
 
-    public function nodiff($format = 'html') {
+    public function nodiff($format = 'html')
+    {
         $next = $this->getPerms();
         $added_arr = array();
         foreach ($next as $element) {
@@ -187,20 +197,24 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         return Codendi_HTMLPurifier::instance()->purify($value);
     }
 
-    protected function getDao() {
+    protected function getDao()
+    {
         return new UGroupDao(CodendiDataAccess::instance());
     }
 
-    private function getUgroupName($ugroup_id) {
+    private function getUgroupName($ugroup_id)
+    {
         $row = $this->getDao()->searchByUGroupId($ugroup_id)->getRow();
         return $row['name'];
     }
 
-    protected function getUgroupLabel($ugroup_id) {
+    protected function getUgroupLabel($ugroup_id)
+    {
         return util_translate_name_ugroup($this->getUgroupName($ugroup_id));
     }
 
-    protected function getUgroupRESTRepresentation($u_group_id) {
+    protected function getUgroupRESTRepresentation($u_group_id)
+    {
         $ugroup_manager = new UGroupManager($this->getDao());
         $u_group        = $ugroup_manager->getById($u_group_id);
 

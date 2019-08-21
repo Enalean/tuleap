@@ -105,12 +105,14 @@ class ArtifactTest extends RestBase {
         }
     }
 
-    private function getTracker() {
+    private function getTracker()
+    {
         $response = $this->getResponse($this->client->get('projects/'. $this->project_id . '/trackers'))->json();
         return $response[0];
     }
 
-    public function testGetArtifact() {
+    public function testGetArtifact()
+    {
         $response = $this->getResponse($this->xml_client->get('artifacts/'.$this->release_artifact_ids[1]));
         $this->assertEquals($response->getStatusCode(), 200);
 
@@ -155,7 +157,8 @@ class ArtifactTest extends RestBase {
         $this->assertEquals($new_value, (string) $artifact_xml->values->item[0]->value);
     }
 
-    public function testPOSTArtifactInXMLTracker() {
+    public function testPOSTArtifactInXMLTracker()
+    {
         $xml = "<request><tracker><id>".$this->tracker_id."</id></tracker><values><item><field_id>".$this->slogan_field_id."</field_id><value>slogan</value></item><item><field_id>".$this->desc_field_id."</field_id><value>desc</value></item><item><field_id>".$this->status_field_id."</field_id><bind_value_ids><item>".$this->status_value_id."</item></bind_value_ids></item></values></request>";
 
         $response = $this->getResponse($this->xml_client->post('artifacts', null, $xml));
@@ -172,7 +175,8 @@ class ArtifactTest extends RestBase {
     /**
      * @depends testPOSTArtifactInXMLTracker
      */
-    public function testGetArtifactInXMLTracker($artifact_id) {
+    public function testGetArtifactInXMLTracker($artifact_id)
+    {
         $response = $this->getResponse($this->xml_client->get('artifacts/'.$artifact_id));
         $this->assertEquals($response->getStatusCode(), 200);
 
@@ -190,7 +194,8 @@ class ArtifactTest extends RestBase {
     /**
      * @depends testPOSTArtifactInXMLTracker
      */
-    public function testGetArtifactInXMLTrackerWithValuesByField($artifact_id) {
+    public function testGetArtifactInXMLTrackerWithValuesByField($artifact_id)
+    {
         $response = $this->getResponse($this->xml_client->get('artifacts/'.$artifact_id.'?values_format=by_field'));
         $this->assertEquals($response->getStatusCode(), 200);
 
@@ -208,7 +213,8 @@ class ArtifactTest extends RestBase {
     /**
      * @depends testPOSTArtifactInXMLTracker
      */
-    public function testGetArtifactInXMLTrackerInBothFormat($artifact_id) {
+    public function testGetArtifactInXMLTrackerInBothFormat($artifact_id)
+    {
         $response = $this->getResponse($this->xml_client->get('artifacts/'.$artifact_id.'?values_format=all'));
         $this->assertEquals($response->getStatusCode(), 200);
 
@@ -256,7 +262,8 @@ class ArtifactTest extends RestBase {
     /**
      * @depends testGetArtifactInXMLTrackerInBothFormat
      */
-    public function testPOSTArtifactInXMLTrackerWithValuesByField() {
+    public function testPOSTArtifactInXMLTrackerWithValuesByField()
+    {
         $xml = "<request><tracker><id>".$this->tracker_id."</id></tracker><values_by_field><slogan><value>Sloganv2</value></slogan><epic_desc><value><content>Descv2</content><format>html</format></value></epic_desc></values_by_field></request>";
 
         $response = $this->getResponse($this->xml_client->post('artifacts', null, $xml));
@@ -273,7 +280,8 @@ class ArtifactTest extends RestBase {
     /**
      * @depends testPOSTArtifactInXMLTrackerWithValuesByField
      */
-    public function testGetArtifactCreatedWithValueByFieldInXMLTracker($artifact_id) {
+    public function testGetArtifactCreatedWithValueByFieldInXMLTracker($artifact_id)
+    {
         $response = $this->getResponse($this->xml_client->get('artifacts/'.$artifact_id.'?values_format=by_field'));
         $this->assertEquals($response->getStatusCode(), 200);
 

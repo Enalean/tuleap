@@ -58,7 +58,8 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
     }
 
     /** @see Tracker_Artifact_View_View::getURL() */
-    public function getURL() {
+    public function getURL()
+    {
         return TRACKER_BASE_URL .'/?'. http_build_query(
             array(
                 'aid' => $this->artifact->getId(),
@@ -67,17 +68,20 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
     }
 
     /** @see Tracker_Artifact_View_View::getTitle() */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_title');
     }
 
     /** @see Tracker_Artifact_View_View::getIdentifier() */
-    public function getIdentifier() {
+    public function getIdentifier()
+    {
         return 'edit';
     }
 
     /** @see Tracker_Artifact_View_View::fetch() */
-    public function fetch() {
+    public function fetch()
+    {
         $html  = '';
         $html .= '<div class="tracker_artifact">';
 
@@ -101,7 +105,8 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
      *
      * @return string The HTML code for artifact follow-up comments
      */
-    private function fetchFollowUps($submitted_comment = '') {
+    private function fetchFollowUps($submitted_comment = '')
+    {
         $html = '';
         $html .= $this->fetchSubmitButton();
 
@@ -266,7 +271,8 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         return $html;
     }
 
-    private function fetchReplyByMailHelp() {
+    private function fetchReplyByMailHelp()
+    {
         $html = '';
         if ($this->canUpdateArtifactByMail()) {
             $email = Codendi_HTMLPurifier::instance()->purify($this->artifact->getInsecureEmailAddress());
@@ -281,7 +287,8 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
     /**
      * @return Tracker_ArtifactByEmailStatus
      */
-    private function canUpdateArtifactByMail() {
+    private function canUpdateArtifactByMail()
+    {
         $config = new MailGatewayConfig(
             new MailGatewayConfigDao()
         );
@@ -291,7 +298,8 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         return $status->canUpdateArtifactInInsecureMode($this->artifact->getTracker());
     }
 
-    private function fetchSubmitButton() {
+    private function fetchSubmitButton()
+    {
         if ($this->artifact->userCanUpdate($this->user)) {
             return $this->renderer->fetchSubmitButton($this->user);
         }

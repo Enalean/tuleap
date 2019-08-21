@@ -49,14 +49,16 @@ class Launcher {
 
     private $launched_jobs = array();
 
-    public function __construct(Factory $factory, Logger $logger, Jenkins_Client $ci_client, BuildParams $build_params) {
+    public function __construct(Factory $factory, Logger $logger, Jenkins_Client $ci_client, BuildParams $build_params)
+    {
         $this->factory      = $factory;
         $this->logger       = $logger;
         $this->ci_client    = $ci_client;
         $this->build_params = $build_params;
     }
 
-    public function launch(Repository $repository, CommitInfo $commit_info) {
+    public function launch(Repository $repository, CommitInfo $commit_info)
+    {
         if (! $repository->getProject()->usesService('hudson')) {
             return;
         }
@@ -93,11 +95,13 @@ class Launcher {
         }
     }
 
-    private function isJobAlreadyLaunched(Job $job) {
+    private function isJobAlreadyLaunched(Job $job)
+    {
         return in_array($job->getUrl(), $this->launched_jobs);
     }
 
-    private function doesCommitTriggerjob(CommitInfo $commit_info, Job $job) {
+    private function doesCommitTriggerjob(CommitInfo $commit_info, Job $job)
+    {
         $job_paths                       = explode(PHP_EOL, $job->getPath());
         $well_formed_changed_directories = $this->getWellFormedChangedDirectories($commit_info);
 
@@ -114,7 +118,8 @@ class Launcher {
         return false;
     }
 
-    private function getRegExpFromPath($path) {
+    private function getRegExpFromPath($path)
+    {
         $path = preg_quote($path);
         $path = str_replace('\*', '[^/]+', $path);
         $path = '#^' . $path . '#';
@@ -125,7 +130,8 @@ class Launcher {
     /**
      * @return array
      */
-    private function getWellFormedChangedDirectories(CommitInfo $commit_info) {
+    private function getWellFormedChangedDirectories(CommitInfo $commit_info)
+    {
         $well_formed_directories = array();
         foreach ($commit_info->getChangedDirectories() as $changed_directory) {
             if ($changed_directory !== self::ROOT_DIRECTORY) {
@@ -138,7 +144,8 @@ class Launcher {
         return $well_formed_directories;
     }
 
-    private function getJobsForRepository(Repository $repository) {
+    private function getJobsForRepository(Repository $repository)
+    {
         return $this->factory->getJobsByRepository($repository);
     }
 

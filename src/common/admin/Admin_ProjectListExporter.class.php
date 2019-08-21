@@ -37,7 +37,8 @@ class Admin_ProjectListExporter {
      * @param String  $var_return
      *
      */
-    public function exportProjectList($group_name_search, $status) {
+    public function exportProjectList($group_name_search, $status)
+    {
         $dao             = new ProjectDao();
         $result          = $dao->returnAllProjects(0, 0, $status, $group_name_search);
         $projects        = $result['projects'];
@@ -49,7 +50,8 @@ class Admin_ProjectListExporter {
      *
      * @return String
      */
-    private function buildCsvHeader() {
+    private function buildCsvHeader()
+    {
         $csv_header = "";
         $documents_title = array ('group_id'     => $GLOBALS['Language']->getText('admin_grouplist', 'id_group'),
                                   'project_name' => $GLOBALS['Language']->getText('admin_groupedit','grp_name'),
@@ -69,7 +71,8 @@ class Admin_ProjectListExporter {
      *
      * @return String
      */
-    private function buildCsvBody($projects) {
+    private function buildCsvBody($projects)
+    {
         $csv_body = "";
         $daoUsers = new UserGroupDao();
         foreach ($projects as $project) {
@@ -93,7 +96,8 @@ class Admin_ProjectListExporter {
      *
      * @return String
      */
-    private function exportCsv($body) {
+    private function exportCsv($body)
+    {
         $eol = "\n";
         return $this->buildCsvHeader().$eol.$this->buildCsvBody($body);
     }
@@ -105,7 +109,8 @@ class Admin_ProjectListExporter {
      *
      * @return String
      */
-    private function getProjectStatus($status_code) {
+    private function getProjectStatus($status_code)
+    {
         $status="";
         switch ($status_code) {
             case Project::STATUS_ACTIVE:

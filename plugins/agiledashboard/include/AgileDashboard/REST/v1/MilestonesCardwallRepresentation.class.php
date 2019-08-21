@@ -27,7 +27,8 @@ class AgileDashboard_MilestonesCardwallRepresentation {
     /** @var array */
     public $swimlanes;
 
-    public function build(Cardwall_Board $board, $planning_id, PFUser $user) {
+    public function build(Cardwall_Board $board, $planning_id, PFUser $user)
+    {
         $this->columns = $board->getColumns()->getRestValue();
         $this->swimlanes = array();
         foreach($board->getSwimlines() as $swimline) {

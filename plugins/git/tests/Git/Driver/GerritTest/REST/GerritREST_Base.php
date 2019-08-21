@@ -55,7 +55,8 @@ abstract class Git_Driver_GerritREST_base extends TuleapTestCase {
 
     protected $logger;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
         $this->logger        = mock('BackendLogger');
@@ -79,7 +80,8 @@ abstract class Git_Driver_GerritREST_base extends TuleapTestCase {
         $this->driver = new Git_Driver_GerritREST($this->guzzle_client, $this->logger, 'Digest');
     }
 
-    protected function getGuzzleRequestWithTextResponse($text) {
+    protected function getGuzzleRequestWithTextResponse($text)
+    {
         $response     = stub('Guzzle\Http\Message\Response')->getBody(true)->returns($text);
         return stub('Guzzle\Http\Message\EntityEnclosingRequest')->send()->returns($response);
     }

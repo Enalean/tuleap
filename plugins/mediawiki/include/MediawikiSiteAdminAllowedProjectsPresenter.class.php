@@ -29,32 +29,39 @@ class MediawikiSiteAdminAllowedProjectsPresenter {
 
     private $count_project_to_migrate;
 
-    public function __construct($allowed_projects, $count_projects_to_migrate) {
+    public function __construct($allowed_projects, $count_projects_to_migrate)
+    {
         $this->allowed_projects       = $allowed_projects;
         $this->count_project_to_migrate = $count_projects_to_migrate;
     }
 
-    public function there_is_no_project() {
+    public function there_is_no_project()
+    {
         return count($this->allowed_projects) === 0;
     }
 
-    public function update_allowed_projects_action() {
+    public function update_allowed_projects_action()
+    {
         return '/plugins/mediawiki/forge_admin.php?action=site_update_allowed_project_list';
     }
 
-    public function update_allowed_projects_action_csrf() {
+    public function update_allowed_projects_action_csrf()
+    {
         return new CSRFSynchronizerToken($this->update_allowed_projects_action());
     }
 
-    public function resource_allowed_project_title() {
+    public function resource_allowed_project_title()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_title');
     }
 
-    public function resource_allowed_project_subtitle() {
+    public function resource_allowed_project_subtitle()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_subtitle');
     }
 
-    public function information() {
+    public function information()
+    {
         if ($this->is_resource_restricted()) {
             return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_information');
         } else {
@@ -62,28 +69,34 @@ class MediawikiSiteAdminAllowedProjectsPresenter {
         }
     }
 
-    public function resource_allowed_project_list_allow_placeholder() {
+    public function resource_allowed_project_list_allow_placeholder()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_list_allow_placeholder');
     }
 
-    public function resource_allowed_project_list_filter_placeholder() {
+    public function resource_allowed_project_list_filter_placeholder()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_list_filter_placeholder');
     }
 
-    public function resource_allowed_project_list_allow_project() {
+    public function resource_allowed_project_list_allow_project()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_list_allow_project');
     }
 
 
-    public function resource_allowed_project_list_id() {
+    public function resource_allowed_project_list_id()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_list_id');
     }
 
-    public function resource_allowed_project_list_name() {
+    public function resource_allowed_project_list_name()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_list_name');
     }
 
-    public function resource_allowed_project_list_empty() {
+    public function resource_allowed_project_list_empty()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_list_empty');
     }
 

@@ -31,7 +31,8 @@ class WikiNotification {
     /** @var MailEnhancer */
     private $mail_enhancer;
 
-    public function __construct(array $emails, $wiki_name, $subject, $body, $goto_link, $project_id) {
+    public function __construct(array $emails, $wiki_name, $subject, $body, $goto_link, $project_id)
+    {
         $project_manager     = ProjectManager::instance();
         $this->project       = $project_manager->getProject($project_id);
         $this->mail_enhancer = new MailEnhancer();

@@ -31,11 +31,13 @@ class Git_HTTP_Wrapper {
 
     public const CHUNK_LENGTH = 8192;
 
-    public function __construct(Logger $logger) {
+    public function __construct(Logger $logger)
+    {
         $this->logger = $logger;
     }
 
-    public function stream(Git_HTTP_Command $command) {
+    public function stream(Git_HTTP_Command $command)
+    {
         $cwd = '/tmp';
         $descriptorspec = array(
            0 => array("pipe", "r"),  // stdin is a pipe that the child will read from

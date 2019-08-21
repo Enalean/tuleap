@@ -9,7 +9,8 @@ class PastelTheme extends Theme
     private $axis_color       = '#0066CC';
     private $grid_color       = '#3366CC';
 
-    function GetColorList() {
+    function GetColorList()
+    {
         return array(
             '#FFAACC',
             '#AAEECC',
@@ -26,7 +27,8 @@ class PastelTheme extends Theme
         );
     }
 
-    function SetupGraph($graph) {
+    function SetupGraph($graph)
+    {
 
         // graph
         /*
@@ -75,7 +77,8 @@ class PastelTheme extends Theme
     }
 
 
-    function SetupPieGraph($graph) {
+    function SetupPieGraph($graph)
+    {
 
         // graph
         $graph->SetFrame(false);
@@ -100,7 +103,8 @@ class PastelTheme extends Theme
     }
 
 
-    function PreStrokeApply($graph) {
+    function PreStrokeApply($graph)
+    {
         if ($graph->legend->HasItems()) {
             $img = $graph->img;
             $graph->SetMargin(
@@ -112,7 +116,8 @@ class PastelTheme extends Theme
         }
     }
 
-    function ApplyPlot($plot) {
+    function ApplyPlot($plot)
+    {
 
         switch (get_class($plot))
         {

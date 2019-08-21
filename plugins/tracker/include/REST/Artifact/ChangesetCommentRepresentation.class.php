@@ -38,7 +38,8 @@ class ChangesetCommentRepresentation {
      */
     public $format;
 
-    public function build(Tracker_Artifact_Changeset_Comment $comment) {
+    public function build(Tracker_Artifact_Changeset_Comment $comment)
+    {
         $this->body                = $comment->body;
         $this->post_processed_body = $comment->getPurifiedBodyForHTML();
         $this->format              = $comment->bodyFormat;

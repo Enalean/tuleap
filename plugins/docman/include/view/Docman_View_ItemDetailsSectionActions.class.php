@@ -27,13 +27,15 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
     var $is_moveable;
     var $is_deleteable;
     var $_controller;
-    function __construct($item, $url, $is_moveable, $is_deleteable, $controller) {
+    function __construct($item, $url, $is_moveable, $is_deleteable, $controller)
+    {
         $this->is_moveable   = $is_moveable;
         $this->is_deleteable = $is_deleteable;
         $this->_controller   = $controller;
         parent::__construct($item, $url, 'actions', $GLOBALS['Language']->getText('plugin_docman','details_actions'));
     }
-    function getContent($params = []) {
+    function getContent($params = [])
+    {
         $folder_or_document = is_a($this->item, 'Docman_Folder') ? 'folder' : 'document';
         $user               = $this->_controller->getUser();
 
@@ -109,7 +111,8 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $content;
     }
 
-    function visitFolder($item, $params = array()) {
+    function visitFolder($item, $params = array())
+    {
         $content = '';
         if ($this->_controller->userCanWrite($this->item->getid())) {
             $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newdocument') .'</dt><dd>';
@@ -145,7 +148,8 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         $content .= '</dd>';
         return $content;
     }
-    function visitDocument($item, $params = array()) {
+    function visitDocument($item, $params = array())
+    {
         $content = '';
         $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update') .'</dt><dd>';
 
@@ -161,17 +165,21 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         $content .= '</dd>';
         return $content;
     }
-    function visitWiki($item, $params = array()) {
+    function visitWiki($item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitLink($item, $params = array()) {
+    function visitLink($item, $params = array())
+    {
         return $this->getSectionForNewVersion();
     }
-    function visitFile($item, $params = array()) {
+    function visitFile($item, $params = array())
+    {
         return $this->getSectionForNewVersion();
     }
 
-    private function getSectionForNewVersion() {
+    private function getSectionForNewVersion()
+    {
         $content = '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion') .'</dt><dd>';
         if (!$this->_controller->userCanWrite($this->item->getid())) {
             $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_cannotcreate');
@@ -186,7 +194,8 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $content;
     }
 
-    function visitEmbeddedFile($item, $params = array()) {
+    function visitEmbeddedFile($item, $params = array())
+    {
         $content = '<textarea name="content" rows="15" cols="50">';
         $version = $item->getCurrentVersion();
         if (is_file($version->getPath())) {
@@ -196,7 +205,8 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $this->visitFile($item, array_merge($params, array('input_content' => $content)));
     }
 
-    function visitEmpty($item, $params = array()) {
+    function visitEmpty($item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 }

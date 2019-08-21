@@ -23,7 +23,8 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_Icons extends Docman_View_Browse {
 
-    /* protected */ function _content($params) {
+    /* protected */ function _content($params)
+    {
 
         $html = '';
 
@@ -80,29 +81,37 @@ class Docman_View_Icons extends Docman_View_Browse {
         echo $html;
     }
 
-    function visitFolder(&$item, $params) {
+    function visitFolder(&$item, $params)
+    {
         $this->is_folder = true;
     }
-    function visitDocument(&$item, $params) {
+    function visitDocument(&$item, $params)
+    {
     }
-    function visitWiki(&$item, $params = array()) {
+    function visitWiki(&$item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitLink(&$item, $params = array()) {
+    function visitLink(&$item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitFile(&$item, $params = array()) {
+    function visitFile(&$item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitEmbeddedFile(&$item, $params = array()) {
+    function visitEmbeddedFile(&$item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 
-    function visitEmpty(&$item, $params = array()) {
+    function visitEmpty(&$item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 
-    function _displayItem(&$item, $params) {
+    function _displayItem(&$item, $params)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '<div id="item_'.$item->getId().'" class="'. Docman_View_Browse::getItemClasses($params) .'" style="position:relative;">';
 

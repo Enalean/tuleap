@@ -25,7 +25,8 @@ class TreeNode_GetStateVisitorVisitorTest extends TuleapTestCase {
     public const STATE_BLANK = TreeNode_GetStateVisitor::STATE_BLANK;
     public const STATE_PIPE  = TreeNode_GetStateVisitor::STATE_PIPE;
 
-    public function testOneNodeShouldHaveStateLast() {
+    public function testOneNodeShouldHaveStateLast()
+    {
         $root    = new TreeNode();
         $node    = $this->GivenANodeInAparent($root);
         $visitor = $this->GivenAVisitor($root);
@@ -33,7 +34,8 @@ class TreeNode_GetStateVisitorVisitorTest extends TuleapTestCase {
         $this->assertNodeHasState($visitor, $node, array(self::STATE_LAST));
     }
 
-    public function testTwoNodesOnSameHierarchyShouldHaveStatesNodeThenLast() {
+    public function testTwoNodesOnSameHierarchyShouldHaveStatesNodeThenLast()
+    {
         $root   = new TreeNode();
         $node1  = $this->GivenANodeInAparent($root);
         $node2  = $this->GivenANodeInAparent($root);
@@ -44,7 +46,8 @@ class TreeNode_GetStateVisitorVisitorTest extends TuleapTestCase {
         $this->assertNodeHasState($visitor, $node2, array(self::STATE_LAST));
     }
 
-    public function testDeeperHierarchyShouldReturnLastThenEmptyLast() {
+    public function testDeeperHierarchyShouldReturnLastThenEmptyLast()
+    {
         $root   = new TreeNode();
         $node1  = $this->GivenANodeInAparent($root);
         $node2  = $this->GivenANodeInAparent($node1);
@@ -55,7 +58,8 @@ class TreeNode_GetStateVisitorVisitorTest extends TuleapTestCase {
         $this->assertNodeHasState($visitor, $node2, array(self::STATE_BLANK, self::STATE_LAST));
     }
 
-    public function testComplexHierarchy() {
+    public function testComplexHierarchy()
+    {
         /*
 
         +- story 7
@@ -78,19 +82,22 @@ class TreeNode_GetStateVisitorVisitorTest extends TuleapTestCase {
         $this->assertNodeHasState($visitor, $story_6, array(self::STATE_LAST));
     }
 
-    private function GivenAVisitor($node) {
+    private function GivenAVisitor($node)
+    {
         $visitor = new TreeNode_GetStateVisitor();
         $node->accept($visitor);
         return $visitor;
     }
 
-    private function GivenANodeInAparent(TreeNode $parent) {
+    private function GivenANodeInAparent(TreeNode $parent)
+    {
         $node = new TreeNode();
         $parent->addChild($node);
         return $node;
     }
 
-    private function assertNodeHasState($visitor, TreeNode $node, array $expected_state) {
+    private function assertNodeHasState($visitor, TreeNode $node, array $expected_state)
+    {
         $state = $visitor->getState($node);
         //var_dump($state);
         $this->assertEqual($expected_state, $state);

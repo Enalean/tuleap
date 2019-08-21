@@ -27,12 +27,14 @@ class Docman_View_LoveDetails {
     var $md;
     var $hp;
 
-    function __construct($md) {
+    function __construct($md)
+    {
         $this->md = $md;
         $this->hp = Codendi_HTMLPurifier::instance();
     }
 
-    function getNameField($value='') {
+    function getNameField($value='')
+    {
         $html = '';
 
         $html .=  '<tr>';
@@ -45,7 +47,8 @@ class Docman_View_LoveDetails {
         return $html;
     }
 
-    function getDescriptionField($value='') {
+    function getDescriptionField($value='')
+    {
         $html = '';
 
         $html .=  '<tr>';
@@ -58,7 +61,8 @@ class Docman_View_LoveDetails {
         return $html;
     }
 
-    function getRankField($value='end') {
+    function getRankField($value='end')
+    {
         $html = '';
 
         $html .=  '<tr>';
@@ -93,7 +97,8 @@ class Docman_View_LoveDetails {
         return $html;
     }
 
-    function getHiddenFields($loveId=null) {
+    function getHiddenFields($loveId=null)
+    {
         $html = '';
 
         $html .= '<input type="hidden" name="md" value="'.$this->md->getLabel().'" />';

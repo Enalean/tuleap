@@ -32,7 +32,8 @@ class LDAP_DirectoryCleanUpDao extends DataAccessObject
      *
      * @return bool
      */
-    public function createForecastDeletionDate ($userId, $deletionDate) {
+    public function createForecastDeletionDate($userId, $deletionDate)
+    {
         $sql = 'INSERT INTO plugin_ldap_suspended_user (user_id, deletion_date)'.
                ' VALUES ('.$this->da->escapeInt($userId).','.$this->da->escapeInt($deletionDate).')';
         return $this->update($sql);
@@ -47,7 +48,8 @@ class LDAP_DirectoryCleanUpDao extends DataAccessObject
      *
      * @return bool
      */
-    public function resetForecastDeletionDate ($userId) {
+    public function resetForecastDeletionDate($userId)
+    {
         $sql = 'UPDATE plugin_ldap_suspended_user'.
                ' SET deletion_date = 0'.
                ' WHERE user_id='.$this->da->escapeInt($userId);
@@ -61,7 +63,8 @@ class LDAP_DirectoryCleanUpDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    public function getAllSuspendedUsers ($deletionDate) {
+    public function getAllSuspendedUsers($deletionDate)
+    {
         $sql = 'SELECT user_id'.
                ' FROM plugin_ldap_suspended_user'.
                ' WHERE deletion_date <= '.$this->da->escapeInt($deletionDate).
@@ -74,7 +77,8 @@ class LDAP_DirectoryCleanUpDao extends DataAccessObject
      *
      * @return DataAccessResult
      */
-    public function getUsersDeletedTomorrow () {
+    public function getUsersDeletedTomorrow()
+    {
         $today      = strtotime('tomorrow midnight');
         $tomorrow   = strtotime('+1 day', $today);
         $sql        = 'SELECT user_id'.

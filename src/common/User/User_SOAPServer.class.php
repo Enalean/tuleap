@@ -28,7 +28,8 @@ class User_SOAPServer {
      */
     private $userManager;
 
-    public function __construct(UserManager $userManager) {
+    public function __construct(UserManager $userManager)
+    {
         $this->userManager = $userManager;
     }
 
@@ -40,7 +41,8 @@ class User_SOAPServer {
     *
     * @return string a session hash
     */
-    public function loginAs($admin_session_hash, $username) {
+    public function loginAs($admin_session_hash, $username)
+    {
         try {
             $this->continueSession($admin_session_hash);
             return $this->userManager->loginAs($username);
@@ -63,7 +65,8 @@ class User_SOAPServer {
      *
      * @return PFUser
      */
-    private function continueSession($sessionKey) {
+    private function continueSession($sessionKey)
+    {
         $user = $this->userManager->getCurrentUser($sessionKey);
         if ($user->isLoggedIn()) {
             return $user;

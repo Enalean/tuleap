@@ -18,15 +18,18 @@
 
 class b201602091428_create_plugin_svn_notification extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Create table plugin_svn_notification for SVN plugin';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE plugin_svn_notification (
                   repository_id INT(11) UNSIGNED NOT NULL,
                   mailing_list text,

@@ -87,7 +87,8 @@ class GitXmlImporterTest extends TuleapTestCase {
      */
     private $last_saved_repository;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->old_cwd = getcwd();
         $this->system_command = new System_Command();
         parent::setUp();
@@ -215,7 +216,8 @@ class GitXmlImporterTest extends TuleapTestCase {
         );
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         try {
             $sys_data_dir_arg = escapeshellarg($GLOBALS['sys_data_dir']);
             $this->system_command->exec("sudo -u gitolite /usr/share/tuleap/plugins/git/bin/gl-delete-test-repository.sh $sys_data_dir_arg/gitolite/repositories/test_project");
@@ -258,7 +260,8 @@ XML;
         $this->assertFalse($empty_is_here);
     }
 
-    public function itShouldImportOneRepositoryWithOneCommit() {
+    public function itShouldImportOneRepositoryWithOneCommit()
+    {
         $xml = <<<XML
             <project>
                 <git>
@@ -280,7 +283,8 @@ XML;
         $this->assertEqual(1, intval($nb_commit));
     }
 
-    public function itShouldImportTwoRepositoriesWithOneCommit() {
+    public function itShouldImportTwoRepositoriesWithOneCommit()
+    {
         $xml = <<<XML
             <project>
                 <git>
@@ -298,7 +302,8 @@ XML;
         $this->assertEqual(1, intval($nb_commit_stable2));
     }
 
-    public function itShouldImportStaticUgroups() {
+    public function itShouldImportStaticUgroups()
+    {
         //allow anonymous to avoid overriding of the ugroups by PermissionsUGroupMapper when adding/updating permissions
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
@@ -330,7 +335,8 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itShouldImportLegacyPermissions() {
+    public function itShouldImportLegacyPermissions()
+    {
         //allow anonymous to avoid overriding of the ugroups by PermissionsUGroupMapper when adding/updating permissions
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
@@ -360,7 +366,8 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itShouldUpdateConfViaSystemEvents()  {
+    public function itShouldUpdateConfViaSystemEvents()
+    {
         $xml = <<<XML
             <project>
                 <git>
@@ -372,7 +379,8 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itShouldImportDescription() {
+    public function itShouldImportDescription()
+    {
         $xml = <<<XML
             <project>
                 <git>
@@ -384,7 +392,8 @@ XML;
         $this->assertEqual('description stable', $this->last_saved_repository->getDescription());
     }
 
-    public function itShouldImportDefaultDescription() {
+    public function itShouldImportDefaultDescription()
+    {
         $xml = <<<XML
             <project>
                 <git>
@@ -396,7 +405,8 @@ XML;
         $this->assertEqual(GitRepository::DEFAULT_DESCRIPTION, $this->last_saved_repository->getDescription());
     }
 
-    public function itShouldAtLeastSetProjectsAdminAsGitAdmins() {
+    public function itShouldAtLeastSetProjectsAdminAsGitAdmins()
+    {
         $xml = <<<XML
             <project>
                 <git>
@@ -408,7 +418,8 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itShouldImportGitAdmins() {
+    public function itShouldImportGitAdmins()
+    {
         $xml = <<<XML
             <project>
                 <git>
@@ -428,7 +439,8 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function itShouldImportReferences() {
+    public function itShouldImportReferences()
+    {
         $xml = <<<XML
             <project>
                 <git>
@@ -671,7 +683,8 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    private function import($xml) {
+    private function import($xml)
+    {
         return $this->importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $this->project, mock('PFUSer'), $xml, parent::getTmpDir());
     }
 

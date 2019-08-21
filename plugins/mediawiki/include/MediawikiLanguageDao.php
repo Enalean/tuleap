@@ -21,7 +21,8 @@
 
 class MediawikiLanguageDao extends DataAccessObject {
 
-    public function getUsedLanguageForProject($project_id) {
+    public function getUsedLanguageForProject($project_id)
+    {
         $project_id = $this->da->escapeInt($project_id);
 
         $sql = "SELECT language
@@ -31,7 +32,8 @@ class MediawikiLanguageDao extends DataAccessObject {
         return $this->retrieveFirstRow($sql);
     }
 
-    public function updateLanguageOption($project_id, $language) {
+    public function updateLanguageOption($project_id, $language)
+    {
         $project_id = $this->da->escapeInt($project_id);
         $language   = $this->da->quoteSmart($language);
 

@@ -39,7 +39,8 @@ class DataBuilderV5 {
     *  @return null
     */
 
-    function __construct($field_X,$field_Y,$atid,$artifacts) {
+    function __construct($field_X,$field_Y,$atid,$artifacts)
+    {
         $this->field_X = $field_X;
         $this->field_Y = $field_Y;
         $this->atid = $atid;
@@ -54,7 +55,8 @@ class DataBuilderV5 {
     *  @return array : data array
     */
 
-    function generateData() {
+    function generateData()
+    {
         $ff = Tracker_FormElementFactory::instance();
         $af_x = $ff->getFormElementById($this->field_X);
         // is_null($this->field_Y))

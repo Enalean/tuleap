@@ -30,19 +30,22 @@ require_once dirname(__FILE__).'/../bootstrap.php';
  */
 class GerritTest extends TestBase {
 
-    protected function getResponseForNonMember($request) {
+    protected function getResponseForNonMember($request)
+    {
         return $this->getResponse(
             $request,
             REST_TestDataBuilder::TEST_USER_2_NAME
         );
     }
 
-    public function testOPTIONS() {
+    public function testOPTIONS()
+    {
         $response = $this->getResponse($this->client->options('gerrit'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGetServers() {
+    public function testGetServers()
+    {
         $response  = $this->getResponse($this->client->get('gerrit'));
 
         $response_servers = $response->json();
@@ -56,7 +59,8 @@ class GerritTest extends TestBase {
         $this->assertEquals($servers[1]['html_url'], 'http://otherhost:8080');
     }
 
-    public function testGetServersForProject() {
+    public function testGetServersForProject()
+    {
         $url = 'gerrit?for_project=' . $this->git_project_id;
         $response  = $this->getResponse($this->client->get($url));
 
@@ -73,7 +77,8 @@ class GerritTest extends TestBase {
         $this->assertEquals($servers[2]['html_url'], 'http://restricted:8080');
     }
 
-    public function testGetGitRepositoryThrows403IfUserCantSeeRepository() {
+    public function testGetGitRepositoryThrows403IfUserCantSeeRepository()
+    {
         $response  = $this->getResponseForNonMember($this->client->get('gerrit'));
 
         $this->assertEquals($response->getStatusCode(), 403);

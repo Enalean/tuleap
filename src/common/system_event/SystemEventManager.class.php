@@ -39,7 +39,8 @@ class SystemEventManager {
     var $followers_dao;
 
     // Constructor
-    private function __construct(?SystemEventDao $dao = null, ?SystemEventsFollowersDao $followers_dao = null) {
+    private function __construct(?SystemEventDao $dao = null, ?SystemEventsFollowersDao $followers_dao = null)
+    {
         $this->dao = $dao;
         $this->followers_dao = $followers_dao;
         $this->_getDao();
@@ -91,7 +92,8 @@ class SystemEventManager {
      *
      * @return void
      */
-    private function __clone() {
+    private function __clone()
+    {
         throw new Exception('Cannot clone singleton');
     }
 
@@ -102,7 +104,8 @@ class SystemEventManager {
      *
      * @return SystemEventManager
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$_instance)) {
             $c = self::class;
             self::$_instance = new $c;
@@ -110,44 +113,52 @@ class SystemEventManager {
         return self::$_instance;
     }
 
-    public static function setInstance(SystemEventManager $instance) {
+    public static function setInstance(SystemEventManager $instance)
+    {
         self::$_instance = $instance;
     }
 
-    public static function clearInstance() {
+    public static function clearInstance()
+    {
         self::$_instance = null;
     }
 
-    public function testInstance(SystemEventDao $dao, SystemEventsFollowersDao $followers_dao) {
+    public function testInstance(SystemEventDao $dao, SystemEventsFollowersDao $followers_dao)
+    {
         return new SystemEventManager($dao, $followers_dao);
     }
 
-    function _getEventManager() {
+    function _getEventManager()
+    {
         return EventManager::instance();
     }
 
-    function _getDao() {
+    function _getDao()
+    {
         if (!$this->dao) {
             $this->dao = new SystemEventDao(CodendiDataAccess::instance());
         }
         return $this->dao;
     }
 
-    function _getFollowersDao() {
+    function _getFollowersDao()
+    {
         if(!$this->followers_dao){
             $this->followers_dao = new SystemEventsFollowersDao(CodendiDataAccess::instance());
         }
         return $this->followers_dao;
     }
 
-    function _getBackend() {
+    function _getBackend()
+    {
         return Backend::instance('Backend');
     }
 
     /*
      * Convert selected event into a system event, and store it accordingly
      */
-    function addSystemEvent($event, $params) {
+    function addSystemEvent($event, $params)
+    {
         //$event = constant(strtoupper($event));
         switch ($event) {
             case Event::SYSTEM_CHECK:
@@ -359,7 +370,8 @@ class SystemEventManager {
         return $this->instanciateSystemEventByType($id, $type, $owner, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'], null, null, null);
     }
 
-    private function instanciateSystemEventByType($id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log) {
+    private function instanciateSystemEventByType($id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log)
+    {
         $system_event = $this->instanciateSystemEvent($type, $id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log);
         if ($system_event === null) {
             $klass        = $this->getClassForType($type);
@@ -384,7 +396,8 @@ class SystemEventManager {
         }
     }
 
-    private function instanciateSystemEvent($klass, $id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log) {
+    private function instanciateSystemEvent($klass, $id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log)
+    {
         if (class_exists($klass)) {
             return new $klass(
                 $id,
@@ -407,7 +420,8 @@ class SystemEventManager {
      * @param array $params
      * @param array $keys array('key1', 'key3')
      */
-    public function concatParameters($params, $keys) {
+    public function concatParameters($params, $keys)
+    {
         $concat = array();
         foreach($keys as $key) {
             $concat[] = $params[$key];
@@ -533,7 +547,8 @@ class SystemEventManager {
     /**
      * @return array
      */
-    public function getTypes() {
+    public function getTypes()
+    {
         $reflect = new ReflectionClass(SystemEvent::class);
         $consts  = $reflect->getConstants();
         array_walk($consts, array($this, 'filterConstants'));
@@ -543,7 +558,8 @@ class SystemEventManager {
         return $types;
     }
 
-    public function getTypesForQueue($queue) {
+    public function getTypesForQueue($queue)
+    {
         switch ($queue) {
             case SystemEvent::DEFAULT_QUEUE:
             case SystemEvent::APP_OWNER_QUEUE:
@@ -562,7 +578,8 @@ class SystemEventManager {
         }
     }
 
-    protected function filterConstants(&$item, $key) {
+    protected function filterConstants(&$item, $key)
+    {
         if (strpos($key, 'TYPE_') !== 0) {
             $item = null;
         }
@@ -640,7 +657,8 @@ class SystemEventManager {
      * @param string|number|bool $parameter
      * @return bool
      */
-    public function isThereAnEventAlreadyOnGoingMatchingFirstParameter($event_type, $parameter) {
+    public function isThereAnEventAlreadyOnGoingMatchingFirstParameter($event_type, $parameter)
+    {
         $dar = $this->_getDao()->searchWithParam(
             'head',
              $parameter,
@@ -653,7 +671,8 @@ class SystemEventManager {
         return false;
     }
 
-    public function areThereMultipleEventsQueuedMatchingFirstParameter($event_type, $parameter) {
+    public function areThereMultipleEventsQueuedMatchingFirstParameter($event_type, $parameter)
+    {
         $dar = $this->_getDao()->searchWithParam(
             'all',
              $parameter,
@@ -674,7 +693,8 @@ class SystemEventManager {
      * @param type $parameter
      * @return bool
      */
-    public function isThereAnEventAlreadyOnGoingMatchingParameter($event_type, $parameter) {
+    public function isThereAnEventAlreadyOnGoingMatchingParameter($event_type, $parameter)
+    {
         $dar = $this->_getDao()->searchWithParam(
             null,
             $parameter,
@@ -706,7 +726,8 @@ class SystemEventManager {
      * @param PFUser $user
      * @return bool
      */
-    public function canRenameUser($user) {
+    public function canRenameUser($user)
+    {
         return ! $this->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent::TYPE_USER_RENAME, $user->getId());
     }
 
@@ -716,7 +737,8 @@ class SystemEventManager {
      * @param PFUser $user
      * @return bool
      */
-    public function canRenameProject($project) {
+    public function canRenameProject($project)
+    {
         return ! $this->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent::TYPE_PROJECT_RENAME, $project->getId());
     }
 
@@ -726,7 +748,8 @@ class SystemEventManager {
      * @param String $new_name
      * @return bool
      */
-    public function isUserNameAvailable($newName) {
+    public function isUserNameAvailable($newName)
+    {
         $dar = $this->_getDao()->searchWithParam('tail', $newName, array(SystemEvent::TYPE_USER_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
         if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
             return true;
@@ -740,7 +763,8 @@ class SystemEventManager {
      * @param String $new_name
      * @return bool
      */
-    public function isProjectNameAvailable($newName) {
+    public function isProjectNameAvailable($newName)
+    {
         $dar = $this->_getDao()->searchWithParam('tail', $newName, array(SystemEvent::TYPE_PROJECT_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
         if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
             return true;
@@ -755,7 +779,8 @@ class SystemEventManager {
      *
      * @return bool true if success
      */
-    public function replay($id) {
+    public function replay($id)
+    {
         return $this->_getDao()->resetStatus($id, SystemEvent::STATUS_NEW);
     }
 }

@@ -24,13 +24,15 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
     private $start_date;
     private $time_period;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->start_date  = mktime(0, 0, 0, 7, 4, 2011);
         $this->time_period = TimePeriodWithoutWeekEnd::buildFromDuration($this->start_date, 5);
     }
 
-    public function itAddsRemainingEffort() {
+    public function itAddsRemainingEffort()
+    {
         $time_period   = TimePeriodWithoutWeekEnd::buildFromDuration($this->start_date, 2);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
         $burndown_data->addEffortAt(0, 14);
@@ -40,28 +42,32 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
         $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 13, 12));
     }
 
-    public function itCompletesMissingRemainingEffortWithLastValue() {
+    public function itCompletesMissingRemainingEffortWithLastValue()
+    {
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
         $burndown_data->addEffortAt(0, 14);
 
         $this->assertEqual($burndown_data->getRemainingEffort(), array(14, null, null, null, null, null));
     }
 
-    public function itComputesIdealBurndownWhenAddingRemainingEffort() {
+    public function itComputesIdealBurndownWhenAddingRemainingEffort()
+    {
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
         $burndown_data->addEffortAt(0, 5);
 
         $this->assertEqual($burndown_data->getIdealEffort(), array(5, 4, 3, 2, 1, 0));
     }
 
-    public function testBurndownWillUseCapacityIfSet() {
+    public function testBurndownWillUseCapacityIfSet()
+    {
         $capacity = 100;
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
 
         $this->assertEqual($burndown_data->getIdealEffort(), array(100, 80, 60, 40, 20, 0));
     }
 
-    public function testBurndownWillGivePriorityToCapacity() {
+    public function testBurndownWillGivePriorityToCapacity()
+    {
         $capacity = 100;
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
         $burndown_data->addEffortAt(0, 5);
@@ -69,7 +75,8 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
         $this->assertEqual($burndown_data->getIdealEffort(), array(100, 80, 60, 40, 20, 0));
     }
 
-    public function testBurndownWillIgnoreNullCapacity() {
+    public function testBurndownWillIgnoreNullCapacity()
+    {
         $capacity = null;
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
         $burndown_data->addEffortAt(0, 5);
@@ -77,7 +84,8 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
         $this->assertEqual($burndown_data->getIdealEffort(), array(5, 4, 3, 2, 1, 0));
     }
 
-    public function testBurndownWillIgnoreZeroCapacity() {
+    public function testBurndownWillIgnoreZeroCapacity()
+    {
         $capacity = 0;
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
         $burndown_data->addEffortAt(0, 5);
@@ -85,7 +93,8 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
         $this->assertEqual($burndown_data->getIdealEffort(), array(5, 4, 3, 2, 1, 0));
     }
 
-    public function itReturnsAnEmptyArrayWhenBurndownIsUnderCalculation() {
+    public function itReturnsAnEmptyArrayWhenBurndownIsUnderCalculation()
+    {
         $capacity = 7;
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
         $burndown_data->addEffortAt(0, 5);
@@ -104,7 +113,8 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
         $this->assertEqual($results->points, $expected_points);
     }
 
-    public function itReturnsBurndownDataInJson() {
+    public function itReturnsBurndownDataInJson()
+    {
         $capacity = 7;
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
         $burndown_data->addEffortAt(0, 5);
@@ -121,7 +131,8 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
         $this->assertEqual($results->points, $expected_points);
     }
 
-    public function itReturnsBurndownDataInJsonAndDealWithNullValues() {
+    public function itReturnsBurndownDataInJsonAndDealWithNullValues()
+    {
         $capacity = 7;
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
         $burndown_data->addEffortAt(0, 5);
@@ -143,18 +154,21 @@ class Tracker_Chart_Data_EmptyBurndownTest extends TuleapTestCase {
     private $start_date;
     private $time_period;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->start_date  = mktime(0, 0, 0, 7, 4, 2011);
         $this->time_period = TimePeriodWithoutWeekEnd::buildFromDuration($this->start_date, 2);
     }
 
-    public function itHasNoRemainingEffort() {
+    public function itHasNoRemainingEffort()
+    {
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
         $this->assertIdentical($burndown_data->getRemainingEffort(), array(null, null, null));
     }
 
-    public function itReturnsValidRemainingEffortWhenOnlyAddingNull() {
+    public function itReturnsValidRemainingEffortWhenOnlyAddingNull()
+    {
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
         $burndown_data->addEffortAt(0, null);
         $burndown_data->addEffortAt(1, null);
@@ -162,7 +176,8 @@ class Tracker_Chart_Data_EmptyBurndownTest extends TuleapTestCase {
         $this->assertIdentical($burndown_data->getRemainingEffort(), array(null, null, null));
     }
 
-    public function itHasNoIdealBurndown() {
+    public function itHasNoIdealBurndown()
+    {
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
         $this->assertIdentical($burndown_data->getIdealEffort(), array(0, 0, 0));
     }

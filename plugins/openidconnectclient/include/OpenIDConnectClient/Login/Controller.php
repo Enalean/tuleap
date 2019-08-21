@@ -112,14 +112,16 @@ class Controller {
         }
     }
 
-    private function checkIfUserAlreadyLogged($return_to) {
+    private function checkIfUserAlreadyLogged($return_to)
+    {
         $user = $this->user_manager->getCurrentUser();
         if($user->isLoggedIn()) {
             \account_redirect_after_login($return_to);
         }
     }
 
-    private function openSession(UserMapping $user_mapping, $return_to, $login_time) {
+    private function openSession(UserMapping $user_mapping, $return_to, $login_time)
+    {
         $user = $this->user_manager->getUserById($user_mapping->getUserId());
         try {
             $this->user_manager->openSessionForUser($user);
@@ -141,7 +143,8 @@ class Controller {
         \account_redirect_after_login($return_to);
     }
 
-    private function redirectAfterFailure($message) {
+    private function redirectAfterFailure($message)
+    {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
             $message
@@ -185,7 +188,8 @@ class Controller {
         $GLOBALS['Response']->redirect('/');
     }
 
-    private function redirectToLinkAnUnknowAccount(FlowResponse $flow_response) {
+    private function redirectToLinkAnUnknowAccount(FlowResponse $flow_response)
+    {
         $provider          = $flow_response->getProvider();
         $user_identifier   = $flow_response->getUserIdentifier();
         try {

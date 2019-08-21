@@ -23,7 +23,8 @@ class b201402211651_remove_confirmed_mapping extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Remove autoconfirmed and emailconfirmed special groups
 EOT;
@@ -34,7 +35,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -43,12 +45,14 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = "DELETE FROM plugin_mediawiki_tuleap_mwgroups WHERE real_name IN ('autoconfirmed', 'emailconfirmed')";
         $this->execDB($sql, "Cannot clean table");
     }
 
-    private function execDB($sql, $message) {
+    private function execDB($sql, $message)
+    {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message.implode(', ', $this->db->dbh->errorInfo()));

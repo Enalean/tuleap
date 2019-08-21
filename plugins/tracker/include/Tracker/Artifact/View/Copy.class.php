@@ -21,7 +21,8 @@
 class Tracker_Artifact_View_Copy extends Tracker_Artifact_View_Edit {
 
     /** @see Tracker_Artifact_View_Edit::getURL() */
-    public function getURL() {
+    public function getURL()
+    {
         return TRACKER_BASE_URL .'/?'. http_build_query(
             array(
                 'aid' => $this->artifact->getId(),
@@ -31,12 +32,14 @@ class Tracker_Artifact_View_Copy extends Tracker_Artifact_View_Edit {
     }
 
     /** @see Tracker_Artifact_View_Edit::getTitle() */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_title');
     }
 
     /** @see Tracker_Artifact_View_Edit::fetch() */
-    public function fetch() {
+    public function fetch()
+    {
         $html  = '';
         $html .= '<div class="tracker_artifact">';
         $html .= $this->renderer->fetchFieldsForCopy($this->artifact, $this->request->get('artifact'));

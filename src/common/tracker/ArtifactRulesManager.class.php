@@ -31,11 +31,13 @@ require_once('ArtifactRuleFactory.class.php');
 class ArtifactRulesManager {
 
 
-    function __construct() {
+    function __construct()
+    {
     }
 
     protected $rules_by_tracker_id;
-    function getAllRulesByArtifactTypeWithOrder($artifact_type_id) {
+    function getAllRulesByArtifactTypeWithOrder($artifact_type_id)
+    {
         if (!isset($this->rules_by_tracker_id[$artifact_type_id])) {
             $fact = $this->_getArtifactRuleFactory();
             $this->rules_by_tracker_id[$artifact_type_id] = $fact->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
@@ -43,44 +45,53 @@ class ArtifactRulesManager {
         return $this->rules_by_tracker_id[$artifact_type_id];
     }
 
-    function saveRuleValue($artifact_type_id, $source, $source_value, $target, $target_value) {
+    function saveRuleValue($artifact_type_id, $source, $source_value, $target, $target_value)
+    {
         $fact = $this->_getArtifactRuleFactory();
         return $fact->saveRuleValue($artifact_type_id, $source, $source_value, $target, $target_value);
     }
 
-    function deleteRule($rule_id) {
+    function deleteRule($rule_id)
+    {
         $fact = $this->_getArtifactRuleFactory();
         return $fact->deleteRule($rule_id);
     }
 
-    function deleteRuleValueBySource($artifact_type_id, $source, $source_value, $target) {
+    function deleteRuleValueBySource($artifact_type_id, $source, $source_value, $target)
+    {
         $fact = $this->_getArtifactRuleFactory();
         return $fact->deleteRuleValueBySource($artifact_type_id, $source, $source_value, $target);
     }
 
-    function deleteRuleValueByTarget($artifact_type_id, $source, $target, $target_value) {
+    function deleteRuleValueByTarget($artifact_type_id, $source, $target, $target_value)
+    {
         $fact = $this->_getArtifactRuleFactory();
         return $fact->deleteRuleValueByTarget($artifact_type_id, $source, $target, $target_value);
     }
 
-    function _getArtifactRuleFactory() {
+    function _getArtifactRuleFactory()
+    {
         return ArtifactRuleFactory::instance();
     }
 
-    function deleteRulesByArtifactType($artifact_type_id) {
+    function deleteRulesByArtifactType($artifact_type_id)
+    {
         $fact = $this->_getArtifactRuleFactory();
         return $fact->deleteRulesByArtifactType($artifact_type_id);
     }
-    function deleteRulesByFieldId($artifact_type_id, $field_id) {
+    function deleteRulesByFieldId($artifact_type_id, $field_id)
+    {
         $fact = $this->_getArtifactRuleFactory();
         return $fact->deleteRulesByFieldId($artifact_type_id, $field_id);
     }
-    function deleteRulesByValueId($artifact_type_id, $field_id, $value_id) {
+    function deleteRulesByValueId($artifact_type_id, $field_id, $value_id)
+    {
         $fact = $this->_getArtifactRuleFactory();
         return $fact->deleteRulesByValueId($artifact_type_id, $field_id, $value_id);
     }
 
-    function copyRules($from_artifact_type_id, $to_artifact_type_id) {
+    function copyRules($from_artifact_type_id, $to_artifact_type_id)
+    {
         $fact = $this->_getArtifactRuleFactory();
         return $fact->copyRules($from_artifact_type_id, $to_artifact_type_id);
     }
@@ -93,7 +104,8 @@ class ArtifactRulesManager {
      * @param {ArtifactFieldFactory Object} $art_field_fact reference to the artifact field factory of this artifact
      * @return bool true if the submitted values are coherent regarding the dependencies, false otherwise
      */
-    function validate($artifact_type_id, $value_field_list, $art_field_fact) {
+    function validate($artifact_type_id, $value_field_list, $art_field_fact)
+    {
 
         // construction of $values array : selected values in the form
         // $values[$field_id]['field'] = artifactfield Object
@@ -196,7 +208,8 @@ class ArtifactRulesManager {
      *
      * @access protected
      */
-    function _getSelectedValuesForField($db_result, $field_id, $field_values) {
+    function _getSelectedValuesForField($db_result, $field_id, $field_values)
+    {
         if (!is_array($field_values)) {
             $field_values = array($field_values);
         }
@@ -215,7 +228,8 @@ class ArtifactRulesManager {
         return $selected_values;
     }
 
-    function fieldIsAForbiddenSource($artifact_type_id, $field_id, $target_id) {
+    function fieldIsAForbiddenSource($artifact_type_id, $field_id, $target_id)
+    {
         return !$this->ruleExists($artifact_type_id, $field_id, $target_id) &&
                 (
                     $field_id == $target_id ||
@@ -224,7 +238,8 @@ class ArtifactRulesManager {
                );
     }
 
-    function isCyclic($artifact_type_id, $source_id, $target_id) {
+    function isCyclic($artifact_type_id, $source_id, $target_id)
+    {
         if ($source_id == $target_id) {
             return true;
         } else {
@@ -242,7 +257,8 @@ class ArtifactRulesManager {
         }
     }
 
-    function fieldIsAForbiddenTarget($artifact_type_id, $field_id, $source_id) {
+    function fieldIsAForbiddenTarget($artifact_type_id, $field_id, $source_id)
+    {
         return !$this->ruleExists($artifact_type_id, $source_id, $field_id) &&
                 (
                     $field_id == $source_id ||
@@ -251,7 +267,8 @@ class ArtifactRulesManager {
                );
     }
 
-    function fieldHasTarget($artifact_type_id, $field_id) {
+    function fieldHasTarget($artifact_type_id, $field_id)
+    {
         $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
         $found = false;
         foreach ($rules as $rule) {
@@ -263,7 +280,8 @@ class ArtifactRulesManager {
         return $found;
     }
 
-    function fieldHasSource($artifact_type_id, $field_id) {
+    function fieldHasSource($artifact_type_id, $field_id)
+    {
         $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
         $found = false;
         foreach ($rules as $rule) {
@@ -275,7 +293,8 @@ class ArtifactRulesManager {
         return $found;
     }
 
-    function valueHasTarget($artifact_type_id, $field_id, $value_id, $target_id) {
+    function valueHasTarget($artifact_type_id, $field_id, $value_id, $target_id)
+    {
         $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
         $found = false;
         foreach ($rules as $rule) {
@@ -287,7 +306,8 @@ class ArtifactRulesManager {
         return $found;
     }
 
-    function valueHasSource($artifact_type_id, $field_id, $value_id, $source_id) {
+    function valueHasSource($artifact_type_id, $field_id, $value_id, $source_id)
+    {
         $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
         $found = false;
         foreach ($rules as $rule) {
@@ -299,7 +319,8 @@ class ArtifactRulesManager {
         return $found;
     }
 
-    function ruleExists($artifact_type_id, $source_id, $target_id) {
+    function ruleExists($artifact_type_id, $source_id, $target_id)
+    {
         $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
         $found = false;
         foreach ($rules as $rule) {

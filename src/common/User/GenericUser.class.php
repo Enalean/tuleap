@@ -26,7 +26,8 @@ class GenericUser extends PFUser {
      */
     private $project;
 
-    public function __construct(Project $project, PFUser $pfuser, $suffix) {
+    public function __construct(Project $project, PFUser $pfuser, $suffix)
+    {
         parent::__construct($pfuser->toRow());
         $this->setStatus(PFUser::STATUS_RESTRICTED);
         $this->setRealName(self::REAL_NAME);
@@ -37,7 +38,8 @@ class GenericUser extends PFUser {
     /**
      * @return Project
      */
-    public function getProject() {
+    public function getProject()
+    {
         return $this->project;
     }
 }

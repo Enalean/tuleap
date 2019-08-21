@@ -31,32 +31,39 @@ abstract class GitPresenters_AdminPresenter {
     public $manage_default_settings                = false;
     public $manage_default_access_rights           = false;
 
-    public function __construct($project_id, $are_mirrors_defined) {
+    public function __construct($project_id, $are_mirrors_defined)
+    {
         $this->project_id          = $project_id;
         $this->are_mirrors_defined = $are_mirrors_defined;
     }
 
-    public function git_admin() {
+    public function git_admin()
+    {
         return dgettext('tuleap-git', 'Git Administration');
     }
 
-    public function tab_gerrit_templates() {
+    public function tab_gerrit_templates()
+    {
         return dgettext('tuleap-git', 'Gerrit Templates');
     }
 
-    public function tab_git_admins() {
+    public function tab_git_admins()
+    {
         return dgettext('tuleap-git', 'Git administrators');
     }
 
-    public function tab_mass_update() {
+    public function tab_mass_update()
+    {
         return dgettext('tuleap-git', 'Mass update of repositories');
     }
 
-    public function tab_template_settings() {
+    public function tab_template_settings()
+    {
         return dgettext('tuleap-git', 'Git settings template');
     }
 
-    public function manage_mass_update_active() {
+    public function manage_mass_update_active()
+    {
         return $this->manage_mass_update_select_repositories || $this->manage_mass_update;
     }
 }

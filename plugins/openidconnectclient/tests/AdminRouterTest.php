@@ -24,7 +24,8 @@ use Tuleap\OpenIDConnectClient\AdminRouter;
 
 class AdminRouterTest extends TuleapTestCase
 {
-    public function itIsOnlyAccessibleBySuperUser() {
+    public function itIsOnlyAccessibleBySuperUser()
+    {
         $controller = mock('Tuleap\OpenIDConnectClient\Administration\Controller');
         $csrf_token = mock('CSRFSynchronizerToken');
         $user       = mock('PFUser');

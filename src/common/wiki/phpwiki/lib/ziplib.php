@@ -27,14 +27,16 @@
  * checksum, and since not all PHP's have gzcompress(), we'll just
  * stick with gzopen().
  */
-function gzip_cleanup () {
+function gzip_cleanup()
+{
     global $gzip_tmpfile;
 
     if ($gzip_tmpfile)
         @unlink($gzip_tmpfile);
 }
 
-function gzip_tempnam () {
+function gzip_tempnam()
+{
     global $gzip_tmpfile;
 
     if (!$gzip_tmpfile) {
@@ -48,7 +50,8 @@ function gzip_tempnam () {
     return $gzip_tmpfile;
 }
 
-function gzip_compress ($data) {
+function gzip_compress($data)
+{
     $filename = gzip_tempnam();
     if (!($fp = gzopen($filename, "wb")))
         trigger_error(sprintf("%s failed", 'gzopen'), E_USER_ERROR);
@@ -69,7 +72,8 @@ function gzip_compress ($data) {
     return $z;
 }
 
-function gzip_uncompress ($data) {
+function gzip_uncompress($data)
+{
     $filename = gzip_tempnam();
     if (!($fp = fopen($filename, "wb")))
         trigger_error(sprintf("%s failed", 'fopen'), E_USER_ERROR);
@@ -93,7 +97,7 @@ function gzip_uncompress ($data) {
  * CRC32 computation.  Hacked from Info-zip's zip-2.3 source code.
  */
 
-function zip_crc32 ($str, $crc = 0)
+function zip_crc32($str, $crc = 0)
 {
     static $zip_crc_table;
 
@@ -167,7 +171,7 @@ function zip_crc32 ($str, $crc = 0)
 define('GZIP_MAGIC', "\037\213");
 define('GZIP_DEFLATE', 010);
 
-function zip_deflate ($content)
+function zip_deflate($content)
 {
     // Compress content, and suck information from gzip header.
     if (function_exists('gzencode'))
@@ -200,7 +204,7 @@ function zip_deflate ($content)
                  );
 }
 
-function zip_inflate ($data, $crc32, $uncomp_size)
+function zip_inflate($data, $crc32, $uncomp_size)
 {
     if (function_exists('gzinflate')) {
         $data = gzinflate($data);
@@ -224,7 +228,8 @@ function zip_inflate ($data, $crc32, $uncomp_size)
                             . pack("VV", $crc32, $uncomp_size) );
 }
 
-function unixtime2dostime ($unix_time) {
+function unixtime2dostime($unix_time)
+{
     if ($unix_time % 1)
         $unix_time++;        // Round up to even seconds.
 
@@ -240,7 +245,8 @@ function unixtime2dostime ($unix_time) {
     return array($dosdate, $dostime);
 }
 
-function dostime2unixtime ($dosdate, $dostime) {
+function dostime2unixtime($dosdate, $dostime)
+{
     $mday  = $dosdate & 0x1f;
     $month = ($dosdate >> 5) & 0x0f;
     $year  = 1980 + (($dosdate >> 9) & 0x7f);
@@ -264,7 +270,8 @@ define('ZIP_ENDDIR_MAGIC',   "PK\005\006");
 
 class ZipWriter
 {
-    function __construct ($comment = "", $zipname = "archive.zip") {
+    function __construct($comment = "", $zipname = "archive.zip")
+    {
         $this->comment = $comment;
         $this->nfiles = 0;
         $this->dir = "";        // "Central directory block"
@@ -275,7 +282,8 @@ class ZipWriter
         header("Content-Disposition: attachment; filename=\"$zipname\"");
     }
 
-    function addRegularFile ($filename, $content, $attrib = false) {
+    function addRegularFile($filename, $content, $attrib = false)
+    {
         if (!$attrib)
           $attrib = array();
 
@@ -358,7 +366,8 @@ class ZipWriter
         $this->nfiles++;
     }
 
-    function finish () {
+    function finish()
+    {
         // Output the central directory
         echo $this->dir;
 
@@ -395,7 +404,8 @@ class ZipWriter
  */
 class ZipReader
 {
-    function __construct ($zipfile) {
+    function __construct($zipfile)
+    {
         if (!is_string($zipfile)) { // filepointer: File already open
             $this->fp = $zipfile;
             $zipfile = NULL;
@@ -415,7 +425,8 @@ class ZipReader
         }
     }
 
-    function _read ($nbytes) {
+    function _read($nbytes)
+    {
         if ($this->fp) {
             $chunk = fread($this->fp, $nbytes);
             if (strlen($chunk) != $nbytes)
@@ -430,7 +441,8 @@ class ZipReader
         }
     }
 
-    function done () {
+    function done()
+    {
         if ($this->fp)
             fclose($this->fp);
         else
@@ -438,7 +450,8 @@ class ZipReader
         return false;
     }
 
-    function readFile () {
+    function readFile()
+    {
         $head = $this->_read(30); // FIXME: This is bad for gzip compressed buffers
 
         extract(unpack("a4magic/vreq_version/vflags/vcomp_type"
@@ -511,7 +524,7 @@ class ZipReader
 /**
  * Routines for quoted-printable en/decoding.
  */
-function QuotedPrintableEncode ($string)
+function QuotedPrintableEncode($string)
 {
     // Quote special characters in line.
     $quoted = "";
@@ -531,7 +544,7 @@ function QuotedPrintableEncode ($string)
                         "\\1=\r\n", $quoted);
 }
 
-function QuotedPrintableDecode ($string)
+function QuotedPrintableDecode($string)
 {
     // Eliminate soft line-breaks.
     $string = preg_replace('/=[ \t\r]*\n/', '', $string);
@@ -540,7 +553,7 @@ function QuotedPrintableDecode ($string)
 
 define('MIME_TOKEN_REGEXP', "[-!#-'*+.0-9A-Z^-~]+");
 
-function MimeContentTypeHeader ($type, $subtype, $params)
+function MimeContentTypeHeader($type, $subtype, $params)
 {
     $header = "Content-Type: $type/$subtype";
     foreach ($params as $key => $val) {
@@ -552,7 +565,7 @@ function MimeContentTypeHeader ($type, $subtype, $params)
     return "$header\r\n";
 }
 
-function MimeMultipart ($parts)
+function MimeMultipart($parts)
 {
     global $mime_multipart_count;
 
@@ -588,7 +601,8 @@ function MimeMultipart ($parts)
  * automatically convert encodings to a safe type if they receive
  * mail encoded in '8bit' and/or 'binary' encodings.
  */
-function MimeifyPageRevision (&$page, &$revision) {
+function MimeifyPageRevision(&$page, &$revision)
+{
     // $wikidb =& $revision->_wikidb;
     // $page = $wikidb->getPage($revision->getName());
     // FIXME: add 'hits' to $params
@@ -648,7 +662,7 @@ function MimeifyPageRevision (&$page, &$revision) {
 /**
  * Routines for parsing Mime-ified phpwiki pages.
  */
-function ParseRFC822Headers (&$string)
+function ParseRFC822Headers(&$string)
 {
     if (preg_match("/^From (.*)\r?\n/", $string, $match)) {
         $headers['from '] = preg_replace('/^\s+|\s+$/', '', $match[1]);
@@ -679,7 +693,7 @@ function ParseRFC822Headers (&$string)
 }
 
 
-function ParseMimeContentType ($string)
+function ParseMimeContentType($string)
 {
     // FIXME: Remove (RFC822 style comments).
 
@@ -758,7 +772,8 @@ function GenerateFootnotesFromRefs($params)
 // counterpart to $acl->asAclLines() and rawurl undecode
 // default: "view:_EVERY; edit:_AUTHENTICATED; create:_AUTHENTICATED,_BOGOUSER; ".
 //          "list:_EVERY; remove:_ADMIN,_OWNER; change:_ADMIN,_OWNER; dump:_EVERY; "
-function ParseMimeifiedPerm($string) {
+function ParseMimeifiedPerm($string)
+{
     if (!class_exists('PagePermission')) {
         return '';
     }
@@ -783,7 +798,7 @@ function ParseMimeifiedPerm($string) {
 // Convert references in meta-data to footnotes.
 // Only zip archives generated by phpwiki 1.2.x or earlier should have
 // references.
-function ParseMimeifiedPages ($data)
+function ParseMimeifiedPages($data)
 {
     if (!($headers = ParseRFC822Headers($data))
         || empty($headers['content-type'])) {

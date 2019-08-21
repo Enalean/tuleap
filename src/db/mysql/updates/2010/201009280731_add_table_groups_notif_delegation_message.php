@@ -20,17 +20,20 @@
 
 class b201009280731_add_table_groups_notif_delegation_message extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add the table  message_notif_delegation to manage the message that should be displayed to requester.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = 'CREATE TABLE groups_notif_delegation_message ('.
                ' group_id int(11) NOT NULL default 0,'.
                ' msg_to_requester text NOT NULL default "",'.
@@ -41,7 +44,8 @@ EOT;
         $this->db->dbh->query($sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('groups_notif_delegation_message')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('groups_notif_delegation_message table is missing');
         }

@@ -41,13 +41,16 @@ class Widget_ProjectLatestFileReleases extends Widget {
         }
     }
 
-    function getTitle() {
+    function getTitle()
+    {
         return $this->content['title'];
     }
-    function getContent() {
+    function getContent()
+    {
         return $this->content['content'];
     }
-    function isAvailable() {
+    function isAvailable()
+    {
         return isset($this->content['title']);
     }
 
@@ -56,10 +59,12 @@ class Widget_ProjectLatestFileReleases extends Widget {
         return $project->usesFile();
     }
 
-    function getCategory() {
+    function getCategory()
+    {
         return _('Files');
     }
-    function getDescription() {
+    function getDescription()
+    {
         return $GLOBALS['Language']->getText('widget_description_project_latest_file_releases','description');
     }
 }

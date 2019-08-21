@@ -23,11 +23,13 @@ class XMLImportHelper implements User\XML\Import\IFindUserFromXMLReference {
     /** @var UserManager */
     private $user_manager;
 
-    public function __construct(UserManager $user_manager) {
+    public function __construct(UserManager $user_manager)
+    {
         $this->user_manager = $user_manager;
     }
 
-    public function getUserFormat(SimpleXMLElement $xml_element) {
+    public function getUserFormat(SimpleXMLElement $xml_element)
+    {
         $format       = (string) $xml_element['format'];
         $submitted_by = (string) $xml_element;
         switch($format) {
@@ -47,7 +49,8 @@ class XMLImportHelper implements User\XML\Import\IFindUserFromXMLReference {
      * @param SimpleXMLElement $xml_element
      * @return PFUser
      */
-    public function getUser(SimpleXMLElement $xml_element) {
+    public function getUser(SimpleXMLElement $xml_element)
+    {
         $submitter = $this->user_manager->getUserByIdentifier($this->getUserFormat($xml_element));
         if (! $submitter) {
             $submitter = $this->user_manager->getUserAnonymous();

@@ -20,7 +20,8 @@
 
 class SVN_LogDao extends DataAccessObject {
 
-    public function searchCommiters($group_id, TimeInterval $interval) {
+    public function searchCommiters($group_id, TimeInterval $interval)
+    {
         $group_id  = $this->da->escapeInt($group_id);
         $date_stmt = $this->inIntervalStatement($interval);
         $sql = "SELECT whoid, count(1) as commit_count
@@ -31,7 +32,8 @@ class SVN_LogDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchTopModifiedFiles($group_id, TimeInterval $interval, $limit, $where_forbidden) {
+    public function searchTopModifiedFiles($group_id, TimeInterval $interval, $limit, $where_forbidden)
+    {
         $group_id   = $this->da->escapeInt($group_id);
         $limit      = $this->da->escapeInt($limit);
         $date_stmt  = $this->inIntervalStatement($interval);
@@ -49,7 +51,8 @@ class SVN_LogDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    private function inIntervalStatement(TimeInterval $interval) {
+    private function inIntervalStatement(TimeInterval $interval)
+    {
         $start_date = $this->da->escapeInt($interval->getStartTimestamp());
         $end_date   = $this->da->escapeInt($interval->getEndTimestamp());
         $sql = "AND date >= $start_date

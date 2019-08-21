@@ -36,7 +36,8 @@ class Admin_PermissionDelegationPermissionsModalPresenter {
     private $permissions;
 
 
-    public function __construct($group, array $permissions) {
+    public function __construct($group, array $permissions)
+    {
         $this->id          = $group->id;
         $this->name        = $group->name;
         $this->permissions = $permissions;
@@ -44,38 +45,46 @@ class Admin_PermissionDelegationPermissionsModalPresenter {
         $this->sortPermissionsAlphabetically();
     }
 
-    public function id() {
+    public function id()
+    {
         return $this->id;
     }
 
-    public function permissions_modal_title() {
+    public function permissions_modal_title()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_modal_title', array($this->name));
     }
 
-    public function purified_permissions_modal_description() {
+    public function purified_permissions_modal_description()
+    {
         return Codendi_HTMLPurifier::instance()->purify(
             $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_modal_description', $this->name),
             CODENDI_PURIFIER_LIGHT
         );
     }
 
-    public function has_permissions() {
+    public function has_permissions()
+    {
         return count($this->permissions) > 0;
     }
 
-    public function no_permission_to_add() {
+    public function no_permission_to_add()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'no_permission_to_add');
     }
 
-    public function permissions() {
+    public function permissions()
+    {
         return $this->permissions;
     }
 
-    public function permissions_modal_submit() {
+    public function permissions_modal_submit()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_modal_submit');
     }
 
-    public function permissions_modal_cancel() {
+    public function permissions_modal_cancel()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_modal_cancel');
     }
 

@@ -34,7 +34,8 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
      *
      * @return String
      */
-    public function getTable() {
+    public function getTable()
+    {
         return $this->tableName;
     }
 
@@ -48,7 +49,8 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
      *
      * @return bool
      */
-    public function addException($groupId, $requesterId, $requestedSize, $exceptionMotivation) {
+    public function addException($groupId, $requesterId, $requestedSize, $exceptionMotivation)
+    {
         $groupId             = $this->da->escapeInt($groupId);
         $requesterId         = $this->da->escapeInt($requesterId);
         $requestedSize       = $this->da->escapeInt($requestedSize);
@@ -72,7 +74,8 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function getAllCustomQuota($list, $offset, $count, $sort, $sortOrder) {
+    public function getAllCustomQuota($list, $offset, $count, $sort, $sortOrder)
+    {
         $condition = '';
         $order     = '';
         $limit     = '';
@@ -116,7 +119,8 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function getProjectCustomQuota($groupId) {
+    public function getProjectCustomQuota($groupId)
+    {
         $groupId = $this->da->escapeInt($groupId);
         $sql = "SELECT *
                 FROM ".$this->getTable()."
@@ -124,7 +128,8 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function deleteCustomQuota($project_id) {
+    public function deleteCustomQuota($project_id)
+    {
         $project_id = $this->da->escapeInt($project_id);
         $sql = "DELETE FROM ".$this->getTable()."
                 WHERE ".self::GROUP_ID." = $project_id";

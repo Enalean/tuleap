@@ -22,7 +22,8 @@ require_once 'GerritREST_Base.php';
 
 class Git_DriverREST_Gerrit_manageGroupsTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_manageGroupsTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->gerrit_driver = partial_mock(
             'Git_Driver_GerritREST',
@@ -31,7 +32,8 @@ class Git_DriverREST_Gerrit_manageGroupsTest extends Git_Driver_GerritREST_base 
         );
     }
 
-    public function itCreatesGroupsIfItNotExistsOnGerrit(){
+    public function itCreatesGroupsIfItNotExistsOnGerrit()
+    {
         stub($this->gerrit_driver)->doesTheGroupExist()->returns(false);
         stub($this->gerrit_driver)->getGroupUUID($this->gerrit_server, 'firefox/project_admins')->returns('aabbccdd');
 
@@ -58,7 +60,8 @@ class Git_DriverREST_Gerrit_manageGroupsTest extends Git_Driver_GerritREST_base 
         $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', 'firefox/project_admins');
     }
 
-    public function itDoesNotCreateGroupIfItAlreadyExistsOnGerrit(){
+    public function itDoesNotCreateGroupIfItAlreadyExistsOnGerrit()
+    {
         stub($this->gerrit_driver)->doesTheGroupExist()->returns(true);
         stub($this->gerrit_driver)->getGroupUUID()->returns('aabbccdd');
 
@@ -66,7 +69,8 @@ class Git_DriverREST_Gerrit_manageGroupsTest extends Git_Driver_GerritREST_base 
 
         $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', 'firefox/project_admins');
     }
-    public function itInformsAboutGroupCreation(){
+    public function itInformsAboutGroupCreation()
+    {
         stub($this->gerrit_driver)->doesTheGroupExist()->returns(false);
         stub($this->gerrit_driver)->getGroupUUID()->returns('aabbccdd');
 
@@ -77,9 +81,11 @@ class Git_DriverREST_Gerrit_manageGroupsTest extends Git_Driver_GerritREST_base 
 
         $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', 'firefox/project_admins');
     }
-    public function itRaisesAGerritDriverExceptionOnGroupsCreation(){}
+    public function itRaisesAGerritDriverExceptionOnGroupsCreation()
+    {}
 
-    public function itCreatesGroupWithoutOwnerWhenSelfOwnedToAvoidChickenEggIssue(){
+    public function itCreatesGroupWithoutOwnerWhenSelfOwnedToAvoidChickenEggIssue()
+    {
         stub($this->gerrit_driver)->doesTheGroupExist()->returns(false);
         stub($this->gerrit_driver)->getGroupUUID($this->gerrit_server, Git_Driver_GerritREST::DEFAULT_GROUP_OWNER)->returns('aabbccddee');
 
@@ -106,7 +112,8 @@ class Git_DriverREST_Gerrit_manageGroupsTest extends Git_Driver_GerritREST_base 
         $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_admins', 'firefox/project_admins');
     }
 
-    public function itAsksGerritForTheGroupUUID(){
+    public function itAsksGerritForTheGroupUUID()
+    {
         $get_group_response = <<<EOS
 )]}'
 {
@@ -142,7 +149,8 @@ EOS;
         );
     }
 
-    public function itAsksGerritForTheGroupId(){
+    public function itAsksGerritForTheGroupId()
+    {
         $get_group_response = <<<EOS
 )]}'
 {
@@ -178,19 +186,22 @@ EOS;
         );
     }
 
-    public function itReturnsNullIdIfNotFound() {
+    public function itReturnsNullIdIfNotFound()
+    {
         stub($this->guzzle_client)->get()->throws(new Guzzle\Http\Exception\ClientErrorResponseException());
 
         $this->assertNull($this->driver->getGroupId($this->gerrit_server, 'enalean'));
     }
 
-    public function itReturnsNullUUIDIfNotFound() {
+    public function itReturnsNullUUIDIfNotFound()
+    {
         stub($this->guzzle_client)->get()->throws(new Guzzle\Http\Exception\ClientErrorResponseException());
 
         $this->assertNull($this->driver->getGroupUUID($this->gerrit_server, 'enalean'));
     }
 
-    public function itReturnsAllGroups() {
+    public function itReturnsAllGroups()
+    {
         $raiponce = <<<EOS
 )]}'
 {

@@ -47,7 +47,8 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents extends 
         $this->response        = $response;
     }
 
-    public function execute() {
+    public function execute()
+    {
         if ($this->process_manager->isAlreadyRunning($this->process)) {
             $this->response->error('There is still an event marked as running. Start again when all events marked as running are done.');
             $this->response->abort();

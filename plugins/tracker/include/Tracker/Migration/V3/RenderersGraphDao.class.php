@@ -19,7 +19,8 @@
  */
 
 class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
-    public function create($tv3_id, $tv5_id) {
+    public function create($tv3_id, $tv5_id)
+    {
         if (! $this->pluginIsInstalled()) {
             return;
         }
@@ -36,13 +37,15 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
         $this->updateChartsWithFieldId($tv5_id);
     }
 
-    private function pluginIsInstalled() {
+    private function pluginIsInstalled()
+    {
         $sql_v5 = "SHOW TABLES LIKE 'plugin_graphontrackersv5_chart'";
         $sql_v3 = "SHOW TABLES LIKE 'plugin_graphontrackers_chart'";
         return count($this->retrieve($sql_v5)) > 0 && count($this->retrieve($sql_v3)) > 0;
     }
 
-    private function insertRendererTable($tv3_id, $tv5_id) {
+    private function insertRendererTable($tv3_id, $tv5_id)
+    {
         $tv3_id = $this->da->escapeInt($tv3_id);
         $tv5_id = $this->da->escapeInt($tv5_id);
 
@@ -53,7 +56,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function createReportForGraphWithoutReport($tv3_id, $tv5_id) {
+    private function createReportForGraphWithoutReport($tv3_id, $tv5_id)
+    {
         $tv3_id = $this->da->escapeInt($tv3_id);
         $tv5_id = $this->da->escapeInt($tv5_id);
 
@@ -73,7 +77,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function createReportCriteriaForGraphWithoutReport($tv3_id, $tv5_id) {
+    private function createReportCriteriaForGraphWithoutReport($tv3_id, $tv5_id)
+    {
         $tv3_id = $this->da->escapeInt($tv3_id);
         $tv5_id = $this->da->escapeInt($tv5_id);
 
@@ -89,7 +94,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function insertRendererGraph($tv3_id, $tv5_id) {
+    private function insertRendererGraph($tv3_id, $tv5_id)
+    {
         $tv3_id = $this->da->escapeInt($tv3_id);
         $tv5_id = $this->da->escapeInt($tv5_id);
 
@@ -106,7 +112,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function reorderRenderer($tv5_id) {
+    private function reorderRenderer($tv5_id)
+    {
         $this->update("SET @counter = 0");
         $this->update("SET @previous = NULL");
 
@@ -123,7 +130,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function updateGraphChartsWithFirstReport($tv5_id) {
+    private function updateGraphChartsWithFirstReport($tv5_id)
+    {
         $tv5_id = $this->da->escapeInt($tv5_id);
         $sql = "INSERT INTO plugin_graphontrackersv5_chart(report_graphic_id, old_id, rank, chart_type, title,description, width, height)
                 SELECT Re.id, C.id, C.rank, C.chart_type, C.title, C.description, C.width, C.height
@@ -135,7 +143,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function createPieCharts($tv5_id) {
+    private function createPieCharts($tv5_id)
+    {
         $tv5_id = $this->da->escapeInt($tv5_id);
         $sql = "INSERT INTO plugin_graphontrackersv5_pie_chart(id, field_base)
                 SELECT C.id, P.field_base
@@ -147,7 +156,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function createBarCharts($tv5_id) {
+    private function createBarCharts($tv5_id)
+    {
         $tv5_id = $this->da->escapeInt($tv5_id);
         $sql = "INSERT INTO plugin_graphontrackersv5_bar_chart(id, field_base, field_group)
                 SELECT C.id, B.field_base, B.field_group
@@ -159,7 +169,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function createGanttCharts($tv5_id) {
+    private function createGanttCharts($tv5_id)
+    {
         $tv5_id = $this->da->escapeInt($tv5_id);
         $sql = "INSERT INTO plugin_graphontrackersv5_gantt_chart(id, field_start, field_due, field_finish, field_percentage, field_righttext, scale, as_of_date, summary)
                 SELECT C.id, G.field_start, G.field_due, G.field_finish, G.field_percentage, G.field_righttext, G.scale, G.as_of_date, G.summary
@@ -171,7 +182,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function updateChartsWithFieldId($tv5_id) {
+    private function updateChartsWithFieldId($tv5_id)
+    {
         $sql = "UPDATE plugin_graphontrackersv5_pie_chart AS A
                        INNER JOIN plugin_graphontrackersv5_chart AS C ON(A.id = C.id)
                        INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )

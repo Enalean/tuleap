@@ -23,7 +23,8 @@ use Exception;
 
 class ItemListedTwiceException extends Exception {
 
-    public function __construct($artifact_id) {
+    public function __construct($artifact_id)
+    {
         parent::__construct('You cannot put the same submilestone twice (sumilestone ' . $artifact_id . ').');
     }
 }

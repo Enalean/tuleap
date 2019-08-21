@@ -21,20 +21,24 @@ require_once('lib/plugin/WikiBlog.php');
 class WikiPlugin_BlogArchives
 extends WikiPlugin_WikiBlog
 {
-    function getName() {
+    function getName()
+    {
         return _("Archives");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("List blog months links for the current or ADMIN user");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.5 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return //array_merge
                //(
                //PageList::supportedArgs(),
@@ -46,7 +50,8 @@ extends WikiPlugin_WikiBlog
                    );
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         if (is_array($argstr)) { // can do with array also.
             $args = $argstr;
             if (!isset($args['order'])) $args['order'] = 'reverse';
@@ -128,7 +133,8 @@ extends WikiPlugin_WikiBlog
     }
 
     // box is used to display a fixed-width, narrow version with common header
-    function box($args=false, $request=false, $basepage=false) {
+    function box($args=false, $request=false, $basepage=false)
+    {
         if (!$request) $request = $GLOBALS['request'];
         if (!$args or empty($args['limit'])) $args['limit'] = 10;
         $args['noheader'] = 1;

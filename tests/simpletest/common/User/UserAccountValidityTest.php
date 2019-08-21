@@ -45,21 +45,25 @@ Mock::generate('DataAccessResult');
 class UserAccountValidityTest extends TuleapTestCase
 {
 
-    function __construct($name = 'User Account Validity test') {
+    function __construct($name = 'User Account Validity test')
+    {
         parent::__construct($name);
     }
 
-    function setUp() {
+    function setUp()
+    {
         $GLOBALS['sys_suspend_inactive_accounts_delay']  = 60;
         $GLOBALS['sys_suspend_non_project_member_delay'] = 15;
     }
 
-    function tearDown() {
+    function tearDown()
+    {
         unset($GLOBALS['sys_suspend_inactive_accounts_delay']);
         unset($GLOBALS['sys_suspend_non_project_member_delay']);
     }
 
-    function testSuspendAccountDao() {
+    function testSuspendAccountDao()
+    {
         $dar = new MockDataAccessResult($this);
         $dar->setReturnValue('isError', false);
 
@@ -71,7 +75,8 @@ class UserAccountValidityTest extends TuleapTestCase
         $d2 = $dao->suspendAccount('toto');
     }
 
-    function testSuspendInactiveAccounts() {
+    function testSuspendInactiveAccounts()
+    {
         $currentDate = 1257757729;
         // 60 days in the past
         $lastValidAccess = 1252573729;
@@ -85,7 +90,8 @@ class UserAccountValidityTest extends TuleapTestCase
         $um->suspendInactiveAccounts($currentDate);
     }
 
-    function testSuspendExpiredAccountsDao() {
+    function testSuspendExpiredAccountsDao()
+    {
         $da = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         $da->setReturnValue('escapeInt', 1257671329, array(1257671329));
 
@@ -95,7 +101,8 @@ class UserAccountValidityTest extends TuleapTestCase
         $dao->suspendExpiredAccounts(1257671329);
     }
 
-    function testSuspendUserNotProjectMembers() {
+    function testSuspendUserNotProjectMembers()
+    {
         $currentDate = 1257757729;
         // 15 days in the past
         $lastValidAccess = 1256461729;
@@ -109,7 +116,8 @@ class UserAccountValidityTest extends TuleapTestCase
         $um->suspendUserNotProjectMembers($currentDate);
     }
 
-    function testSuspendUserRemovedFromAllProjects(){
+    function testSuspendUserRemovedFromAllProjects()
+    {
         $darUser = new MockDataAccessResult($this);
         //$darUser->setReturnValue('rewind', true);
         $darUser->setReturnValueAt(0, 'valid', true);
@@ -140,7 +148,8 @@ class UserAccountValidityTest extends TuleapTestCase
         $dao->suspendUserNotProjectMembers(1258307747);
     }
 
-    function testRemovedFromAllProjectsDelayNotExpired(){
+    function testRemovedFromAllProjectsDelayNotExpired()
+    {
         $darUser = new MockDataAccessResult($this);
         $darUser->setReturnValueAt(0, 'valid', true);
         $darUser->setReturnValueAt(1, 'valid', false);
@@ -165,7 +174,8 @@ class UserAccountValidityTest extends TuleapTestCase
         $dao->suspendUserNotProjectMembers(1258307747);
     }
 
-    function testSuspendUserNotAddedToAnyProject(){
+    function testSuspendUserNotAddedToAnyProject()
+    {
         $darUser = new MockDataAccessResult($this);
         $darUser->setReturnValueAt(0, 'valid', true);
         $darUser->setReturnValueAt(1, 'valid', false);
@@ -202,7 +212,8 @@ class UserAccountValidityTest extends TuleapTestCase
         $dao->suspendUserNotProjectMembers(1258307747);
     }
 
-    function testNotAddedToAnyProjectDelayNotExpired(){
+    function testNotAddedToAnyProjectDelayNotExpired()
+    {
         $darUser = new MockDataAccessResult($this);
         $darUser->setReturnValueAt(0, 'valid', true);
         $darUser->setReturnValueAt(1, 'valid', false);

@@ -26,39 +26,48 @@ class PluginResourceRestrictor {
     private $restricted_plugin_dao;
 
 
-    public function __construct(RestrictedPluginDao $restricted_plugin_dao) {
+    public function __construct(RestrictedPluginDao $restricted_plugin_dao)
+    {
         $this->restricted_plugin_dao = $restricted_plugin_dao;
     }
 
-    public function isPluginRestricted(Plugin $plugin) {
+    public function isPluginRestricted(Plugin $plugin)
+    {
         return $this->restricted_plugin_dao->isResourceRestricted($plugin->getId());
     }
 
-    public function isPluginAllowedForProject(Plugin $plugin, $project_id) {
+    public function isPluginAllowedForProject(Plugin $plugin, $project_id)
+    {
         return $this->restricted_plugin_dao->isPluginAllowedForProject($plugin->getId(), $project_id);
     }
 
-    public function setPluginRestricted(Plugin $plugin) {
+    public function setPluginRestricted(Plugin $plugin)
+    {
         return $this->restricted_plugin_dao->setResourceRestricted($plugin->getId());
     }
 
-    public function unsetPluginRestricted(Plugin $plugin) {
+    public function unsetPluginRestricted(Plugin $plugin)
+    {
         return $this->restricted_plugin_dao->unsetResourceRestricted($plugin->getId());
     }
 
-    public function allowProjectOnPlugin(Plugin $plugin, Project $project) {
+    public function allowProjectOnPlugin(Plugin $plugin, Project $project)
+    {
         return $this->restricted_plugin_dao->allowProjectOnResource($plugin->getId(), $project->getId());
     }
 
-    public function revokeProjectsFromPlugin(Plugin $plugin, array $project_ids) {
+    public function revokeProjectsFromPlugin(Plugin $plugin, array $project_ids)
+    {
         return $this->restricted_plugin_dao->revokeProjectsFromResource($plugin->getId(), $project_ids);
     }
 
-    public function revokeAllProjectsFromPlugin(Plugin $plugin) {
+    public function revokeAllProjectsFromPlugin(Plugin $plugin)
+    {
         return $this->restricted_plugin_dao->revokeAllProjectsFromResource($plugin->getId());
     }
 
-    public function searchAllowedProjectsOnPlugin(Plugin $plugin) {
+    public function searchAllowedProjectsOnPlugin(Plugin $plugin)
+    {
         $rows     = $this->restricted_plugin_dao->searchAllowedProjectsOnResource($plugin->getId());
         $projects = array();
 

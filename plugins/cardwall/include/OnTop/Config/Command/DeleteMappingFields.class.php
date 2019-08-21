@@ -61,7 +61,8 @@ class Cardwall_OnTop_Config_Command_DeleteMappingFields extends Cardwall_OnTop_C
     /**
      * @see Cardwall_OnTop_Config_Command::execute()
      */
-    public function execute(Codendi_Request $request) {
+    public function execute(Codendi_Request $request)
+    {
         if (is_array($request->get('custom_mapping'))) {
             foreach ($request->get('custom_mapping') as $mapping_tracker_id => $is_custom) {
                 $mapping_tracker = $this->tracker_factory->getTrackerById($mapping_tracker_id);
@@ -72,18 +73,21 @@ class Cardwall_OnTop_Config_Command_DeleteMappingFields extends Cardwall_OnTop_C
         }
     }
 
-    private function canDelete($is_custom, ?Tracker $mapping_tracker = null) {
+    private function canDelete($is_custom, ?Tracker $mapping_tracker = null)
+    {
         return !$is_custom
             && $mapping_tracker
             && $this->mappingExists($mapping_tracker->getId());
     }
 
-    private function mappingExists($mapping_tracker_id) {
+    private function mappingExists($mapping_tracker_id)
+    {
         return isset($this->existing_mappings[$mapping_tracker_id])
             && $this->existing_mappings[$mapping_tracker_id] instanceof Cardwall_OnTop_Config_TrackerMappingFreestyle;
     }
 
-    private function delete(Tracker $mapping_tracker) {
+    private function delete(Tracker $mapping_tracker)
+    {
         return $this->dao->delete($this->tracker->getId(), $mapping_tracker->getId())
             && $this->value_dao->delete($this->tracker->getId(), $mapping_tracker->getId());
     }

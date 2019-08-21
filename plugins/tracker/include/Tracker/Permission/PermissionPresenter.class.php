@@ -22,43 +22,52 @@ class Tracker_Permission_PermissionPresenter {
     private $tracker;
     private $ugroup_permissions;
 
-    public function __construct(Tracker $tracker, array $ugroup_permissions) {
+    public function __construct(Tracker $tracker, array $ugroup_permissions)
+    {
         $this->tracker            = $tracker;
         $this->ugroup_permissions = $ugroup_permissions;
     }
 
-    public function title() {
+    public function title()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'manage_tracker_permissions');
     }
 
-    public function intro() {
+    public function intro()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'fields_tracker_intro');
     }
 
-    public function form_url() {
+    public function form_url()
+    {
         return '?'.http_build_query(array(
             'tracker' => $this->tracker->getId(),
             'func'    => 'admin-perms-tracker'
         ));
     }
 
-    public function ugroup_title() {
+    public function ugroup_title()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'ugroup');
     }
 
-    public function permissions_title() {
+    public function permissions_title()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'permissions');
     }
 
-    public function submit_permissions() {
+    public function submit_permissions()
+    {
         return $GLOBALS['Language']->getText('project_admin_permissions', 'submit_perm');
     }
 
-    public function ugroup_permissions() {
+    public function ugroup_permissions()
+    {
         return $this->ugroup_permissions;
     }
 
-    public function create_modify_ugroups() {
+    public function create_modify_ugroups()
+    {
         return $GLOBALS['Language']->getText(
             'project_admin_permissions',
             'admins_create_modify_ug',

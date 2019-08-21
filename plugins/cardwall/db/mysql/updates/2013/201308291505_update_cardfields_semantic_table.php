@@ -20,17 +20,20 @@
 
 class b201308291505_update_cardfields_semantic_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Adds a unique id field and update the primary key.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_cardwall_semantic_cardfields
                 DROP KEY `PRIMARY`,
                 ADD id int(11) AUTO_INCREMENT NOT NULL FIRST,
@@ -39,7 +42,8 @@ EOT;
         $this->executeSql($sql);
     }
 
-    public function executeSql($sql) {
+    public function executeSql($sql)
+    {
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());

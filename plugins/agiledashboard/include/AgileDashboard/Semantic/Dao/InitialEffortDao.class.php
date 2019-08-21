@@ -24,14 +24,16 @@
 
 class AgileDashboard_Semantic_Dao_InitialEffortDao extends DataAccessObject {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
     /**
      * @return mixed either false if error or object DataAccessResult
      */
-    public function searchByTrackerId($tracker_id) {
+    public function searchByTrackerId($tracker_id)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
 
         $sql = "SELECT *
@@ -44,7 +46,8 @@ class AgileDashboard_Semantic_Dao_InitialEffortDao extends DataAccessObject {
     /**
      * @return bool true if success
      */
-    public function save($tracker_id, $field_id) {
+    public function save($tracker_id, $field_id)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $field_id   = $this->da->escapeInt($field_id);
 

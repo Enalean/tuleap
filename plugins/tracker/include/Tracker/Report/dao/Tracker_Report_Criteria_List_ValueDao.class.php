@@ -19,12 +19,14 @@
  */
 
 class Tracker_Report_Criteria_List_ValueDao extends Tracker_Report_Criteria_ValueDao {
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_report_criteria_list_value';
     }
 
-    public function save($id, $values) {
+    public function save($id, $values)
+    {
         if ( is_array($values) ) {
             $id = $this->da->escapeInt($id);
             //First clear the list

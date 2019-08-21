@@ -34,7 +34,8 @@ class AgileDashboard_FieldPriorityAugmenter {
         $this->milestone_factory   = $milestone_factory;
     }
 
-    public function getAugmentedDataForFieldPriority(PFUser $user, Project $project, $additional_criteria, $artifact_id) {
+    public function getAugmentedDataForFieldPriority(PFUser $user, Project $project, $additional_criteria, $artifact_id)
+    {
         $sequence_id = $this->getSequenceIdForFieldPriority($user, $project, $additional_criteria, $artifact_id);
 
         if (! $sequence_id) {
@@ -44,7 +45,8 @@ class AgileDashboard_FieldPriorityAugmenter {
         return $sequence_id;
     }
 
-    private function getSequenceIdForFieldPriority(PFUser $user, Project $project, $additional_criteria, $artifact_id) {
+    private function getSequenceIdForFieldPriority(PFUser $user, Project $project, $additional_criteria, $artifact_id)
+    {
         $milestone = $this->getMilestoneFromCriteria($user, $project, $additional_criteria);
 
         if ($milestone) {
@@ -52,7 +54,8 @@ class AgileDashboard_FieldPriorityAugmenter {
         }
     }
 
-    private function getMilestoneFromCriteria(PFUser $user, Project $project, $additional_criteria) {
+    private function getMilestoneFromCriteria(PFUser $user, Project $project, $additional_criteria)
+    {
         $milestone_provider = new AgileDashboard_Milestone_SelectedMilestoneProvider($additional_criteria, $this->milestone_factory, $user, $project);
         return $milestone_provider->getMilestone();
     }

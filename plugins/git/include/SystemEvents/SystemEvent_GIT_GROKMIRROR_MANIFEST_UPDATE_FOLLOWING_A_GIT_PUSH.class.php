@@ -22,7 +22,8 @@ class SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH extends Sy
 
     public const NAME = 'GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH';
 
-    public function process() {
+    public function process()
+    {
         $repository = $this->getRepositoryFromParameters();
         if (! $repository) {
             $this->warning('Unable to find repository, perhaps it was deleted in the mean time?');

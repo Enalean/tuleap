@@ -29,7 +29,8 @@ class ProjectHistoryDao extends DataAccessObject {
      *
      * @return void
      */
-    public function __construct($da = null) {
+    public function __construct($da = null)
+    {
         parent::__construct($da);
         $this->table_name = 'group_history';
     }
@@ -44,7 +45,8 @@ class ProjectHistoryDao extends DataAccessObject {
      *
      * @return Array
      */
-    public function groupGetHistory ($offset, $limit, $groupId = false, $historyFilter = null) {
+    public function groupGetHistory($offset, $limit, $groupId = false, $historyFilter = null)
+    {
         $sql='select SQL_CALC_FOUND_ROWS group_history.field_name,
               group_history.old_value,
               group_history.date,
@@ -76,7 +78,8 @@ class ProjectHistoryDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function groupAddHistory ($fieldName,$oldValue,$groupId, $args = false) {
+    public function groupAddHistory($fieldName,$oldValue,$groupId, $args = false)
+    {
         if ($args) {
             $fieldName .= " %% ".implode("||", $args);
         }

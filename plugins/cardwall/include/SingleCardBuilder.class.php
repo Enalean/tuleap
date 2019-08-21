@@ -162,7 +162,8 @@ class Cardwall_SingleCardBuilder
         );
     }
 
-    private function getColumnId(Tracker_Artifact $artifact, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_OnTop_Config $config, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
+    private function getColumnId(Tracker_Artifact $artifact, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_OnTop_Config $config, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider)
+    {
         foreach ($columns as $column) {
             if ($config->isInColumn($artifact, $field_provider, $column)) {
                 return $column->getId();
@@ -171,7 +172,8 @@ class Cardwall_SingleCardBuilder
         return -1;
     }
 
-    private function getArtifact($artifact_id) {
+    private function getArtifact($artifact_id)
+    {
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
         if ($artifact) {
             return $artifact;
@@ -179,7 +181,8 @@ class Cardwall_SingleCardBuilder
         throw new CardControllerBuilderRequestIdException();
     }
 
-    private function getConfig($planning_id) {
+    private function getConfig($planning_id)
+    {
         $config = $this->config_factory->getOnTopConfigByPlanning($this->getPlanning($planning_id));
         if ($config && $config->isEnabled()) {
             return $config;
@@ -187,7 +190,8 @@ class Cardwall_SingleCardBuilder
         throw new CardControllerBuilderRequestDataException();
     }
 
-    private function getPlanning($planning_id) {
+    private function getPlanning($planning_id)
+    {
         $planning = $this->planning_factory->getPlanning($planning_id);
         if ($planning) {
             return $planning;
@@ -195,7 +199,8 @@ class Cardwall_SingleCardBuilder
         throw new CardControllerBuilderRequestPlanningIdException();
     }
 
-    private function getFieldRetriever(Cardwall_OnTop_Config $config) {
+    private function getFieldRetriever(Cardwall_OnTop_Config $config)
+    {
         return new Cardwall_OnTop_Config_MappedFieldProvider(
             $config,
             new Cardwall_FieldProviders_SemanticStatusFieldRetriever()
@@ -210,7 +215,8 @@ class Cardwall_SingleCardBuilder
      *
      * @return Cardwall_CardInCellPresenterFactory
      */
-    private function getCardInCellPresenterFactory(Cardwall_OnTop_Config $config, Tracker_Artifact $artifact, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, Cardwall_OnTop_Config_ColumnCollection $columns) {
+    private function getCardInCellPresenterFactory(Cardwall_OnTop_Config $config, Tracker_Artifact $artifact, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, Cardwall_OnTop_Config_ColumnCollection $columns)
+    {
         $field = $field_provider->getField($artifact->getTracker());
         $status_fields[$field->getId()] = $field;
         return new Cardwall_CardInCellPresenterFactory(

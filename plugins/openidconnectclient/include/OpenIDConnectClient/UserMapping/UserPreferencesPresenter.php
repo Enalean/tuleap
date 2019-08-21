@@ -34,12 +34,14 @@ class UserPreferencesPresenter {
      */
     private $csrf_token;
 
-    public function __construct(array $user_mappings_usage, CSRFSynchronizerToken $csrf_token) {
+    public function __construct(array $user_mappings_usage, CSRFSynchronizerToken $csrf_token)
+    {
         $this->user_mappings_usage = $user_mappings_usage;
         $this->csrf_token          = $csrf_token;
     }
 
-    public function user_mappings() {
+    public function user_mappings()
+    {
         $mappings_presenter = array();
 
         foreach ($this->user_mappings_usage as $user_mapping_usage) {
@@ -58,23 +60,28 @@ class UserPreferencesPresenter {
         return $mappings_presenter;
     }
 
-    public function title() {
+    public function title()
+    {
         return dgettext('tuleap-openidconnectclient', 'OpenID Connect providers');
     }
 
-    public function unlink() {
+    public function unlink()
+    {
         return dgettext('tuleap-openidconnectclient', 'Unlink');
     }
 
-    public function last_login() {
+    public function last_login()
+    {
         return dgettext('tuleap-openidconnectclient', 'Last login date:');
     }
 
-    public function form_action() {
+    public function form_action()
+    {
         return OPENIDCONNECTCLIENT_BASE_URL . '/?action=remove-user-mapping';
     }
 
-    public function csrf_token() {
+    public function csrf_token()
+    {
         return $this->csrf_token->fetchHTMLInput();
     }
 

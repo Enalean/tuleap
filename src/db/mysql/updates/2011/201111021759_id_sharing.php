@@ -20,17 +20,20 @@
 
 class b201111021759_id_sharing extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add tables to store shared ids between trackers v3 and v5
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $aid = 0;
         $tid = 0;
 
@@ -86,7 +89,8 @@ EOT;
         $this->db->createTable('tracker_idsharing_tracker', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('tracker_idsharing_tracker')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_idsharing_tracker table is missing');
         }

@@ -43,25 +43,28 @@ require_once('lib/PageList.php');
  */
 class _PageList_Column_numbacklinks extends _PageList_Column_custom
 {
-    function _getValue ($page_handle, &$revision_handle) {
+    function _getValue($page_handle, &$revision_handle)
+    {
         $theIter = $page_handle->getBackLinks();
         return $theIter->count();
     }
 
-    function _getSortableValue ($page_handle, &$revision_handle) {
+    function _getSortableValue($page_handle, &$revision_handle)
+    {
         return $this->_getValue($page_handle, $revision_handle);
     }
 };
 
 class _PageList_Column_coagreement extends _PageList_Column_custom
 {
-    function __construct ($params) {
+    function __construct($params)
+    {
         $this->_pagelist = $params[3];
         $this->_PageList_Column($params[0], $params[1], $params[2]);
         $this->_selectedBuddies = $this->_pagelist->getOption('selectedBuddies');
     }
 
-    function _getValue ($page_handle, &$revision_handle)
+    function _getValue($page_handle, &$revision_handle)
     {
         global $request;
 
@@ -87,13 +90,14 @@ class _PageList_Column_coagreement extends _PageList_Column_custom
 
 class _PageList_Column_minmisery extends _PageList_Column_custom
 {
-    function __construct ($params) {
+    function __construct($params)
+    {
         $this->_pagelist = $params[3];
         $this->_PageList_Column($params[0], $params[1], $params[2]);
         $this->_selectedBuddies = $this->_pagelist->getOption('selectedBuddies');
     }
 
-    function _getValue ($page_handle, &$revision_handle)
+    function _getValue($page_handle, &$revision_handle)
     {
         global $request;
 

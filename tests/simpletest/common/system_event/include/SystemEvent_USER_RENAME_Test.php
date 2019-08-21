@@ -47,7 +47,8 @@ class SystemEvent_USER_RENAME_Test extends TuleapTestCase {
     /**
      * Rename user 142 'mickey' in 'tazmani'
      */
-    public function testRenameOps() {
+    public function testRenameOps()
+    {
         $evt = new SystemEvent_USER_RENAME_TestVersion($this);
         $evt->__construct('1', SystemEvent::TYPE_USER_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'tazmani', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
@@ -84,7 +85,8 @@ class SystemEvent_USER_RENAME_Test extends TuleapTestCase {
         $this->assertTrue($evt->process());
     }
 
-    public function testRenameUserRepositoryFailure() {
+    public function testRenameUserRepositoryFailure()
+    {
         $evt = new SystemEvent_USER_RENAME_TestVersion($this);
         $evt->__construct('1', SystemEvent::TYPE_USER_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'tazmani', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
@@ -126,7 +128,8 @@ class SystemEvent_USER_RENAME_Test extends TuleapTestCase {
     }
 
 
-    public function testUpdateCVSWritersFailure() {
+    public function testUpdateCVSWritersFailure()
+    {
         $evt = new SystemEvent_USER_RENAME_TestVersion($this);
         $evt->__construct('1', SystemEvent::TYPE_USER_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'tazmani', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
@@ -167,7 +170,8 @@ class SystemEvent_USER_RENAME_Test extends TuleapTestCase {
 
     }
 
-    public function testUpdateSVNAccessFailure() {
+    public function testUpdateSVNAccessFailure()
+    {
         $evt = new SystemEvent_USER_RENAME_TestVersion($this);
         $evt->__construct('1', SystemEvent::TYPE_USER_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'tazmani', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 

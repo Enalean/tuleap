@@ -28,7 +28,8 @@ class SemanticRepresentation {
      */
     public $field_id;
 
-    public function build($id) {
+    public function build($id)
+    {
         $this->field_id = JsonCast::toInt($id);
     }
 }

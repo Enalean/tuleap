@@ -23,45 +23,55 @@ require_once('Docman_Controller.class.php');
 require_once('Docman_SOAPActions.class.php');
 class Docman_SOAPController extends Docman_Controller {
 
-    function __construct(&$plugin, $pluginPath, $themePath, &$request) {
+    function __construct(&$plugin, $pluginPath, $themePath, &$request)
+    {
         parent::__construct($plugin, $pluginPath, $themePath, $request);
     }
 
-    /* protected */ function _includeView() {
+    /* protected */ function _includeView()
+    {
         $className = 'Docman_View_SOAP_'. $this->view;
         require_once('view/soap/'. $className .'.class.php');
         return $className;
     }
 
-    /* protected */ function _set_deleteView_errorPerms() {
+    /* protected */ function _set_deleteView_errorPerms()
+    {
         $this->_setView('SOAP');
     }
-    /* protected */ function _set_redirectView() {
+    /* protected */ function _set_redirectView()
+    {
         $this->_setView('SOAP');
     }
 
-    /* protected */ function _setView($view) {
+    /* protected */ function _setView($view)
+    {
         switch($view) {
             default:
                 $this->view = 'SOAP';
                break;
         }
     }
-    /* protected */ function _set_moveView_errorPerms() {
+    /* protected */ function _set_moveView_errorPerms()
+    {
         $this->_setView('SOAP');
     }
-    /* protected */ function _set_createItemView_errorParentDoesNotExist(&$item, $get_show_view) {
+    /* protected */ function _set_createItemView_errorParentDoesNotExist(&$item, $get_show_view)
+    {
         $this->_setView('SOAP');
     }
-    /* protected */ function _set_createItemView_afterCreate($view) {
+    /* protected */ function _set_createItemView_afterCreate($view)
+    {
         $this->_setView('SOAP');
     }
-    /* protected */ function _set_doesnot_belong_to_project_error($item, $group) {
+    /* protected */ function _set_doesnot_belong_to_project_error($item, $group)
+    {
         $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getId(), util_unconvert_htmlspecialchars($group->getPublicName()))));
         $this->_setView('SOAP');
     }
 
-    function _dispatch($view, $item, $root, $get_show_view) {
+    function _dispatch($view, $item, $root, $get_show_view)
+    {
 
         switch ($view) {
             case 'permissions':

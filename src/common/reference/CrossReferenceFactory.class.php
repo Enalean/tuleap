@@ -33,7 +33,8 @@ class CrossReferenceFactory {
      * Constructor
      * Note that we need a valid reference parameter
      */
-    function __construct($entity_id,$entity_type,$entity_group_id) {
+    function __construct($entity_id,$entity_type,$entity_group_id)
+    {
         $this->entity_id=$entity_id;
         $this->entity_type=$entity_type;
         $this->entity_gid=$entity_group_id;
@@ -43,7 +44,8 @@ class CrossReferenceFactory {
      * Fill the arrays $this->source_refs_datas and $this->target_refs_datas
      * for the current CrossReferenceFactory
      */
-    function fetchDatas() {
+    function fetchDatas()
+    {
         $sql = "SELECT * 
                 FROM cross_references 
                 WHERE  (target_gid=" . db_ei($this->entity_gid) . " AND target_id='" . db_es($this->entity_id) . "' AND target_type='" . db_es($this->entity_type) . "' )
@@ -93,15 +95,21 @@ class CrossReferenceFactory {
     }
 
     /** Accessors */
-    function getRefSource() { return $this->source_refs_datas;}
-    function getRefTarget() { return $this->target_refs_datas;}
+    function getRefSource()
+    {
+        return $this->source_refs_datas;}
+    function getRefTarget()
+    {
+        return $this->target_refs_datas;}
 
     /**Display function */
-    function DisplayCrossRefs() {
+    function DisplayCrossRefs()
+    {
         echo $this->getHTMLDisplayCrossRefs();
     }
 
-    function getParams($currRef){
+    function getParams($currRef)
+    {
         $params = "?target_id=".$currRef->getRefTargetId();
         $params.= "&target_gid=".$currRef->getRefTargetGid();
         $params.= "&target_type=".$currRef->getRefTargetType();
@@ -118,7 +126,8 @@ class CrossReferenceFactory {
      * 'both' types with their URLs and tags.
      * @return array The formatted cross references
      */
-    public function getFormattedCrossReferences() {
+    public function getFormattedCrossReferences()
+    {
         $crossRefArray = $this->getCrossReferences();
         $refs = array();
         foreach ($crossRefArray as $nature => $refArraySourceTarget) {
@@ -140,7 +149,8 @@ class CrossReferenceFactory {
         return $refs;
     }
 
-    function getHTMLDisplayCrossRefs($with_links = true, $condensed = false, $isBrowser = true) {
+    function getHTMLDisplayCrossRefs($with_links = true, $condensed = false, $isBrowser = true)
+    {
         global $Language;
 
         /**
@@ -284,7 +294,8 @@ class CrossReferenceFactory {
         return $display;
     }
 
-    public function getHTMLCrossRefsForMail() {
+    public function getHTMLCrossRefsForMail()
+    {
         $html              = '';
         $cross_refs        = $this->getCrossReferences();
         $reference_manager = ReferenceManager::instance();
@@ -313,7 +324,8 @@ class CrossReferenceFactory {
         return $html;
     }
 
-    public function getHTMLCrossRefsForCSVExport() {
+    public function getHTMLCrossRefsForCSVExport()
+    {
         $html              = '';
         $cross_refs        = $this->getCrossReferences();
 
@@ -341,7 +353,8 @@ class CrossReferenceFactory {
      * This function retrieves all cross references for given entity id, a group id, and a type
      * @return array cross references data
      */
-    protected function getCrossReferences() {
+    protected function getCrossReferences()
+    {
         $crossRefArray = array();
 
         // Walk the target ref array in order to fill the crossRefArray array

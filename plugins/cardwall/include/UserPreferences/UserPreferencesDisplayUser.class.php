@@ -28,11 +28,13 @@ class Cardwall_UserPreferences_UserPreferencesDisplayUser implements Tracker_Car
     /** @var bool */
     private $should_display_avatars;
 
-    public function __construct($should_display_avatars) {
+    public function __construct($should_display_avatars)
+    {
         $this->should_display_avatars = $should_display_avatars;
     }
 
-    public function shouldDisplayAvatars() {
+    public function shouldDisplayAvatars()
+    {
         return $this->should_display_avatars;
     }
 }

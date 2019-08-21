@@ -25,7 +25,8 @@ use Tuleap\REST\MilestoneBase;
  */
 class MilestonesMilestonesTest extends MilestoneBase
 {
-    public function testPUTRemoveSubMilestones() {
+    public function testPUTRemoveSubMilestones()
+    {
         $this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.$this->sprint_artifact_ids[1].']');
         $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '[]'));
         $this->assertEquals($response_put->getStatusCode(), 200);
@@ -35,7 +36,8 @@ class MilestonesMilestonesTest extends MilestoneBase
         $this->assertCount(0, $submilestones);
     }
 
-    public function testPUTOnlyOneSubMilestone() {
+    public function testPUTOnlyOneSubMilestone()
+    {
         $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.$this->sprint_artifact_ids[1].']'));
         $this->assertEquals($response_put->getStatusCode(), 200);
         $response_get = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1].'/milestones', null));
@@ -45,7 +47,8 @@ class MilestonesMilestonesTest extends MilestoneBase
         $this->assertEquals($this->sprint_artifact_ids[1], $submilestones[0]['id']);
     }
 
-    public function testPUTOnlyOneSubMilestoneAlreadyAdded() {
+    public function testPUTOnlyOneSubMilestoneAlreadyAdded()
+    {
         $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.$this->sprint_artifact_ids[1].']'));
         $this->assertEquals($response_put->getStatusCode(), 200);
         $this->assertEquals($response_put->json(), array());
@@ -54,7 +57,8 @@ class MilestonesMilestonesTest extends MilestoneBase
     /**
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function testPUTOnlyOneSubMilestoneTwice() {
+    public function testPUTOnlyOneSubMilestoneTwice()
+    {
         $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.$this->sprint_artifact_ids[1].','.$this->sprint_artifact_ids[1].']'));
         $this->assertEquals($response_put->getStatusCode(), 400);
         $response_get = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1].'/milestones', null));

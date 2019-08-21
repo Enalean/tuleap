@@ -46,7 +46,8 @@ class BarPlot extends Plot {
 
     //---------------
     // CONSTRUCTOR
-    function __construct($datay,$datax=false) {
+    function __construct($datay,$datax=false)
+    {
         parent::__construct($datay,$datax);
         ++$this->numpoints;
     }
@@ -55,7 +56,8 @@ class BarPlot extends Plot {
     // PUBLIC METHODS
 
     // Set a drop shadow for the bar (or rather an "up-right" shadow)
-    function SetShadow($aColor="black",$aHSize=3,$aVSize=3,$aShow=true) {
+    function SetShadow($aColor="black",$aHSize=3,$aVSize=3,$aShow=true)
+    {
         $this->bar_shadow=$aShow;
         $this->bar_shadow_color=$aColor;
         $this->bar_shadow_vsize=$aVSize;
@@ -65,7 +67,8 @@ class BarPlot extends Plot {
         $this->value->margin += $aVSize;
     }
 
-    function Set3D($aHSize=3,$aVSize=3,$aShow=true) {
+    function Set3D($aHSize=3,$aVSize=3,$aShow=true)
+    {
         $this->bar_3d=$aShow;
         $this->bar_3d_vsize=$aVSize;
         $this->bar_3d_hsize=$aHSize;
@@ -74,13 +77,15 @@ class BarPlot extends Plot {
     }
 
     // DEPRECATED use SetYBase instead
-    function SetYMin($aYStartValue) {
+    function SetYMin($aYStartValue)
+    {
         //die("JpGraph Error: Deprecated function SetYMin. Use SetYBase() instead.");
         $this->ybase=$aYStartValue;
     }
 
     // Specify the base value for the bars
-    function SetYBase($aYStartValue) {
+    function SetYBase($aYStartValue)
+    {
         $this->ybase=$aYStartValue;
     }
 
@@ -88,7 +93,8 @@ class BarPlot extends Plot {
     // return a pattern index that corresponds to the original
     // patterm being rotated 90 degreees. This is needed when plottin
     // Horizontal bars
-    function RotatePattern($aPat,$aRotate=true) {
+    function RotatePattern($aPat,$aRotate=true)
+    {
         $rotate = array(1 => 2, 2 => 1, 3 => 3, 4 => 5, 5 => 4, 6 => 6, 7 => 7, 8 => 8);
         if( $aRotate ) {
             return $rotate[$aPat];
@@ -98,7 +104,8 @@ class BarPlot extends Plot {
         }
     }
 
-    function Legend($graph) {
+    function Legend($graph)
+    {
         if( $this->grad && $this->legend!="" && !$this->fill ) {
             $color=array($this->grad_fromcolor,$this->grad_tocolor);
             // In order to differentiate between gradients and cooors specified as an RGB triple
@@ -135,7 +142,8 @@ class BarPlot extends Plot {
     }
 
     // Gets called before any axis are stroked
-    function PreStrokeAdjust($graph) {
+    function PreStrokeAdjust($graph)
+    {
         parent::PreStrokeAdjust($graph);
 
         // If we are using a log Y-scale we want the base to be at the
@@ -173,20 +181,23 @@ class BarPlot extends Plot {
         }
     }
 
-    function Min() {
+    function Min()
+    {
         $m = parent::Min();
         if( $m[1] >= $this->ybase ) $m[1] = $this->ybase;
         return $m;
     }
 
-    function Max() {
+    function Max()
+    {
         $m = parent::Max();
         if( $m[1] <= $this->ybase ) $m[1] = $this->ybase;
         return $m;
     }
 
     // Specify width as fractions of the major stepo size
-    function SetWidth($aWidth) {
+    function SetWidth($aWidth)
+    {
         if( $aWidth > 1 ) {
             // Interpret this as absolute width
             $this->abswidth=$aWidth;
@@ -198,21 +209,25 @@ class BarPlot extends Plot {
 
     // Specify width in absolute pixels. If specified this
     // overrides SetWidth()
-    function SetAbsWidth($aWidth) {
+    function SetAbsWidth($aWidth)
+    {
         $this->abswidth=$aWidth;
     }
 
-    function SetAlign($aAlign) {
+    function SetAlign($aAlign)
+    {
         $this->align=$aAlign;
     }
 
-    function SetNoFill() {
+    function SetNoFill()
+    {
         $this->grad = false;
         $this->fill_color=false;
         $this->fill=false;
     }
 
-    function SetFillColor($aColor) {
+    function SetFillColor($aColor)
+    {
         // Do an extra error check if the color is specified as an RGB array triple
         // In that case convert it to a hex string since it will otherwise be
         // interpretated as an array of colors for each individual bar.
@@ -223,18 +238,21 @@ class BarPlot extends Plot {
 
     }
 
-    function SetFillGradient($aFromColor,$aToColor=null,$aStyle=null) {
+    function SetFillGradient($aFromColor,$aToColor=null,$aStyle=null)
+    {
         $this->grad = true;
         $this->grad_fromcolor = $aFromColor;
         $this->grad_tocolor   = $aToColor;
         $this->grad_style     = $aStyle;
     }
 
-    function SetValuePos($aPos) {
+    function SetValuePos($aPos)
+    {
         $this->valuepos = $aPos;
     }
 
-    function SetPattern($aPattern, $aColor='black'){
+    function SetPattern($aPattern, $aColor='black')
+    {
         if( is_array($aPattern) ) {
             $n = count($aPattern);
             $this->iPattern = array();
@@ -261,7 +279,8 @@ class BarPlot extends Plot {
         }
     }
 
-    function _SetPatternHelper($aPattern, &$aPatternValue, &$aDensity){
+    function _SetPatternHelper($aPattern, &$aPatternValue, &$aDensity)
+    {
         switch( $aPattern ) {
             case PATTERN_DIAG1:
                 $aPatternValue= 1;
@@ -309,7 +328,8 @@ class BarPlot extends Plot {
         }
     }
 
-    function Stroke($img,$xscale,$yscale) {
+    function Stroke($img,$xscale,$yscale)
+    {
 
         $numpoints = count($this->coords[0]);
         if( isset($this->coords[1]) ) {
@@ -680,7 +700,8 @@ class GroupBarPlot extends BarPlot {
     private $nbrplots=0;
     //---------------
     // CONSTRUCTOR
-    function __construct($plots) {
+    function __construct($plots)
+    {
         $this->width=0.7;
         $this->plots = $plots;
         $this->nbrplots = count($plots);
@@ -698,7 +719,8 @@ class GroupBarPlot extends BarPlot {
 
     //---------------
     // PUBLIC METHODS
-    function Legend($graph) {
+    function Legend($graph)
+    {
         $n = count($this->plots);
         for($i=0; $i < $n; ++$i) {
             $c = get_class($this->plots[$i]);
@@ -710,7 +732,8 @@ class GroupBarPlot extends BarPlot {
         }
     }
 
-    function Min() {
+    function Min()
+    {
         list($xmin,$ymin) = $this->plots[0]->Min();
         $n = count($this->plots);
         for($i=0; $i < $n; ++$i) {
@@ -721,7 +744,8 @@ class GroupBarPlot extends BarPlot {
         return array($xmin,$ymin);
     }
 
-    function Max() {
+    function Max()
+    {
         list($xmax,$ymax) = $this->plots[0]->Max();
         $n = count($this->plots);
         for($i=0; $i < $n; ++$i) {
@@ -732,7 +756,8 @@ class GroupBarPlot extends BarPlot {
         return array($xmax,$ymax);
     }
 
-    function GetCSIMareas() {
+    function GetCSIMareas()
+    {
         $n = count($this->plots);
         $csimareas='';
         for($i=0; $i < $n; ++$i) {
@@ -742,7 +767,8 @@ class GroupBarPlot extends BarPlot {
     }
 
     // Stroke all the bars next to each other
-    function Stroke($img,$xscale,$yscale) {
+    function Stroke($img,$xscale,$yscale)
+    {
         $tmp=$xscale->off;
         $n = count($this->plots);
         $subwidth = $this->width/$this->nbrplots ;
@@ -772,7 +798,8 @@ class AccBarPlot extends BarPlot {
     private $nbrplots=0;
     //---------------
     // CONSTRUCTOR
-    function __construct($plots) {
+    function __construct($plots)
+    {
         $this->plots = $plots;
         $this->nbrplots = count($plots);
         if( $this->nbrplots < 1 ) {
@@ -802,7 +829,8 @@ class AccBarPlot extends BarPlot {
 
     //---------------
     // PUBLIC METHODS
-    function Legend($graph) {
+    function Legend($graph)
+    {
         $n = count($this->plots);
         for( $i=$n-1; $i >= 0; --$i ) {
             $c = get_class($this->plots[$i]);
@@ -814,7 +842,8 @@ class AccBarPlot extends BarPlot {
         }
     }
 
-    function Max() {
+    function Max()
+    {
         list($xmax) = $this->plots[0]->Max();
         $nmax=0;
         for($i=0; $i < count($this->plots); ++$i) {
@@ -852,7 +881,8 @@ class AccBarPlot extends BarPlot {
         return array($xmax,$ymax);
     }
 
-    function Min() {
+    function Min()
+    {
         $nmax=0;
         list($xmin,$ysetmin) = $this->plots[0]->Min();
         for($i=0; $i < count($this->plots); ++$i) {
@@ -885,7 +915,8 @@ class AccBarPlot extends BarPlot {
     }
 
     // Stroke acc bar plot
-    function Stroke($img,$xscale,$yscale) {
+    function Stroke($img,$xscale,$yscale)
+    {
         $pattern=NULL;
         $img->SetLineWeight($this->weight);
         $grad=null;

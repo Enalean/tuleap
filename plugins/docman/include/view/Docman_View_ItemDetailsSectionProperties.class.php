@@ -29,7 +29,8 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
     var $formName;
     var $inheritableMetadataArray;
 
-    function __construct($item, $url, $theme_path, $user_can_write = false, $force = null) {
+    function __construct($item, $url, $theme_path, $user_can_write = false, $force = null)
+    {
         $this->user_can_write = $user_can_write;
         $this->force = $force;
         $this->theme_path = $theme_path;
@@ -40,7 +41,8 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         parent::__construct($item, $url, $id, $title);
     }
 
-    function _getPropertyRow($label, $value) {
+    function _getPropertyRow($label, $value)
+    {
         $html = '';
         $html .= '<tr style="vertical-align:top;">';
         $html .= '<td class="label">'.$label.'</td>';
@@ -49,23 +51,27 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         return $html;
     }
 
-    function _getPropertyField($field) {
+    function _getPropertyField($field)
+    {
         return $this->_getPropertyRow($this->_getFieldLabel($field),
                                       $this->_showField($field));
     }
 
-    function _getDefaultValuePropertyField($field) {
+    function _getDefaultValuePropertyField($field)
+    {
         return $this->_getPropertyRow($this->_getFieldLabel($field),
                                       $this->_showField($field));
     }
 
-    function _getItemIdField() {
+    function _getItemIdField()
+    {
         return "<input type='hidden' value='".$this->item->getId()."' data-test='docman_root_id'>" .
             $this->_getPropertyRow('Id:',
                                       $this->item->getId());
     }
 
-    function _getDirectLinkField() {
+    function _getDirectLinkField()
+    {
         $html = '';
         $itemFactory = new Docman_ItemFactory();
         if($itemFactory->getItemTypeForItem($this->item) != PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
@@ -87,7 +93,8 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         return $html;
     }
 
-    function _getPropertiesFields($params) {
+    function _getPropertiesFields($params)
+    {
         $html = '';
 
         // Lock details
@@ -114,7 +121,8 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         return $html;
     }
 
-    function getContent($params = []) {
+    function getContent($params = [])
+    {
         $html  = '';
 
         $defaultValuesToManage = false;
@@ -134,15 +142,18 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         return $html;
     }
 
-    function _getFieldLabel($field) {
+    function _getFieldLabel($field)
+    {
         return $field->getLabel(false);
     }
 
-    function _showField($field) {
+    function _showField($field)
+    {
         return $field->getValue();
     }
 
-    function _getAdditionalRows() {
+    function _getAdditionalRows()
+    {
         $html = '';
 
         if ($this->user_can_write) {
@@ -151,7 +162,8 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         return $html;
     }
 
-    function _getInheritableMetadata() {
+    function _getInheritableMetadata()
+    {
         if($this->inheritableMetadataArray === null) {
             $mdFactory = new Docman_MetadataFactory($this->item->getGroupId());
             $inheritableMda = $mdFactory->getInheritableMdLabelArray(true);
@@ -164,11 +176,13 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         return $this->inheritableMetadataArray;
     }
 
-    function _getDefaultValuesTableHeader() {
+    function _getDefaultValuesTableHeader()
+    {
         return '';
     }
 
-    function _getDefaultValues() {
+    function _getDefaultValues()
+    {
         $html = '';
         $fields = $this->_getInheritableMetadata();
         $html .= '<table class="docman_item_details_properties">';
@@ -180,7 +194,8 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         return $html;
     }
 
-    function _getDefaultValuesFields() {
+    function _getDefaultValuesFields()
+    {
         $html = '';
         $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv').'</h3>';
         $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_desc').'</p>';
@@ -188,7 +203,8 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         return $html;
     }
 
-    function _getlockInfo() {
+    function _getlockInfo()
+    {
         $html = '';
         $dpm = Docman_PermissionsManager::instance($this->item->getGroupId());
         if($dpm->getLockFactory()->itemIsLocked($this->item)) {

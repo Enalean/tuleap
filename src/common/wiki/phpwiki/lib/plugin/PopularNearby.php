@@ -41,20 +41,24 @@ require_once('lib/PageList.php');
 class WikiPlugin_PopularNearby
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("PopularNearby");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("List the most popular pages nearby.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.5 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('pagename' => '[pagename]',
                      'mode'     => 'nearby', // or 'incoming' or 'outgoing'
                      //'exclude'  => false,  // not yet
@@ -63,7 +67,8 @@ extends WikiPlugin
                     );
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         extract($args);
         $header = '';
@@ -110,7 +115,8 @@ extends WikiPlugin
      *
      * @return Array of sorted links
      */
-    function sortedLinks($pages, $direction=false, $limit=5) {
+    function sortedLinks($pages, $direction=false, $limit=5)
+    {
         $links = array();
         if (is_array($pages)) {
             $already = array(); // need special duplicate check
@@ -143,7 +149,8 @@ extends WikiPlugin
         return $this->sortByHits($links);
     }
 
-    function sortByHits($links) {
+    function sortByHits($links)
+    {
         if (!$links) return array();
         usort($links,'cmp_by_hits'); // php-4.0.6 cannot use methods
         reset($links);
@@ -151,7 +158,8 @@ extends WikiPlugin
     }
 };
 
-function cmp_by_hits($a, $b) {
+function cmp_by_hits($a, $b)
+{
      if ($a['hits'] == $b['hits']) return 0;
      return $a['hits'] < $b['hits'] ? 1 : -1;
 }

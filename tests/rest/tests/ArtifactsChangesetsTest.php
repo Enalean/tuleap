@@ -38,7 +38,8 @@ class ArtifactsChangesetsTest extends RestBase {
     /**
      * @see https://tuleap.net/plugins/tracker/?aid=6371
      */
-    public function testOptionsArtifactId() {
+    public function testOptionsArtifactId()
+    {
         $response = $this->getResponse($this->client->options($this->artifact_resource['uri'].'/changesets'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
@@ -46,7 +47,8 @@ class ArtifactsChangesetsTest extends RestBase {
     /**
      * @see https://tuleap.net/plugins/tracker/?aid=6371
      */
-    public function testGetChangesetsHasPagination() {
+    public function testGetChangesetsHasPagination()
+    {
         $response = $this->getResponse($this->client->get($this->artifact_resource['uri'].'/changesets?offset=2&limit=10'));
         $this->assertEquals($response->getStatusCode(), 200);
 

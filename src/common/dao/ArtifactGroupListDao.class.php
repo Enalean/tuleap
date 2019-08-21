@@ -21,11 +21,13 @@
 require_once('include/DataAccessObject.class.php');
 
 class ArtifactGroupListDao extends DataAccessObject {
-    public function __construct($da) {
+    public function __construct($da)
+    {
         parent::__construct($da);
         $this->table_name = 'artifact_group_list';
     }
-    public function updateArtifactGroupList($artifact_id, $group_id, $name, $description, $itemname, $allow_copy, $submit_instructions, $browse_instructions, $instantiate_for_new_projects) {
+    public function updateArtifactGroupList($artifact_id, $group_id, $name, $description, $itemname, $allow_copy, $submit_instructions, $browse_instructions, $instantiate_for_new_projects)
+    {
         $artifact_id = $this->da->quoteSmart($artifact_id);
         $group_id = $this->da->quoteSmart($group_id);
         $name = $this->da->quoteSmart($name);
@@ -50,7 +52,8 @@ class ArtifactGroupListDao extends DataAccessObject {
 
     }
 
-    public function updateItemName ($group_id, $oldItemname, $itemname) {
+    public function updateItemName($group_id, $oldItemname, $itemname)
+    {
         $group_id = $this->da->quoteSmart($group_id);
         $itemname= $this->da->quoteSmart($itemname);
         $oldItemname= $this->da->quoteSmart($oldItemname);
@@ -61,7 +64,8 @@ class ArtifactGroupListDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function searchNameByGroupId($group_id) {
+    public function searchNameByGroupId($group_id)
+    {
         $group_id = $this->da->quoteSmart($group_id);
         $sql = "SELECT * FROM $this->table_name WHERE group_id=$group_id";
         return $this->retrieve($sql);

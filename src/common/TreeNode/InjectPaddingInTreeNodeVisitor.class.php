@@ -34,18 +34,21 @@ class TreeNode_InjectPaddingInTreeNodeVisitor extends TreeNode_GetStateVisitor {
      */
     private $collapsable;
 
-    public function __construct($collapsable = false) {
+    public function __construct($collapsable = false)
+    {
         $this->collapsable = $collapsable;
     }
 
-    protected function setChildState(TreeNode $child, $state) {
+    protected function setChildState(TreeNode $child, $state)
+    {
         parent::setChildState($child, $state);
         $data = $child->getData();
         $data['tree-padding'] = $this->convertStateToDivs($child, $state);
         $child->setData($data);
     }
 
-    private function convertStateToDivs(TreeNode $node, $state) {
+    private function convertStateToDivs(TreeNode $node, $state)
+    {
         $html = '';
         $template = '<div class="%s" %s>&nbsp;</div>';
         foreach ($state as $state_id) {

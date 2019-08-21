@@ -33,7 +33,8 @@ class LDAP_UserSync {
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
     }
 
     /**
@@ -43,7 +44,8 @@ class LDAP_UserSync {
      *
      * @return LDAP_UserSync
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$instance)) {
             $syncClass = self::class;
             // Allows site defined user update
@@ -58,7 +60,8 @@ class LDAP_UserSync {
      *
      * @return array
      */
-    public function getSyncAttributes($ldap) {
+    public function getSyncAttributes($ldap)
+    {
         //Define the default sync attributes
         $this->attributes = array($ldap->getLDAPParam('cn'), $ldap->getLDAPParam('mail'), $ldap->getLDAPParam('uid'));
         return $this->attributes;
@@ -69,7 +72,8 @@ class LDAP_UserSync {
      *
      * @param Array $values
      */
-    public function setSyncAttributes($values) {
+    public function setSyncAttributes($values)
+    {
         $this->attributes = $values;
     }
 
@@ -84,7 +88,8 @@ class LDAP_UserSync {
      *
      * @return bool True if the method modified the user object
      */
-    public function sync(PFUser $user, LDAPResult $lr) {
+    public function sync(PFUser $user, LDAPResult $lr)
+    {
         $modified = false;
 
         if (($lr->getCommonName() !== null) && ($user->getRealName() != substr($lr->getCommonName(), 0, 32))) {
@@ -100,7 +105,8 @@ class LDAP_UserSync {
         return $modified;
     }
 
-    public function getCommonName(LDAPResult $lr) {
+    public function getCommonName(LDAPResult $lr)
+    {
         return $lr->getCommonName();;
     }
 }

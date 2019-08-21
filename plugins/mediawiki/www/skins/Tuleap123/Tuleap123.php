@@ -33,7 +33,8 @@ class SkinTuleap123 extends SkinTemplate {
     var $skinname = 'tuleap123', $stylename = 'tuleap123',
             $template = 'Tuleap123Template', $useHeadElement = true;
 
-    function setupTemplate( $classname, $repository = false, $cache_dir = false ) {
+    function setupTemplate( $classname, $repository = false, $cache_dir = false )
+    {
             $tc = new $classname();
             $tc->params = array();
         if (($tc->project = $project =
@@ -52,7 +53,8 @@ class SkinTuleap123 extends SkinTemplate {
     /**
      * @param $out OutputPage
      */
-    function setupSkinUserCss( OutputPage $out ) {
+    function setupSkinUserCss( OutputPage $out )
+    {
             /* add Tuleap styles */
         foreach ($GLOBALS['HTML']->getAllStyleSheets() as $sheet) {
                 $out->addStyle($sheet['css'], $sheet['media']);
@@ -69,7 +71,8 @@ class SkinTuleap123 extends SkinTemplate {
             $out->addStyle( 'Tuleap123/IE70Fixes.css', 'screen', 'IE 7' );
     }
 
-    function addToBodyAttributes( $out, &$bodyAttrs ) {
+    function addToBodyAttributes( $out, &$bodyAttrs )
+    {
         parent::addToBodyAttributes( $out, $bodyAttrs );
         $current_user  = UserManager::instance()->getCurrentUser();
         $sidebar_state = $current_user->getPreference('sidebar_state');
@@ -101,7 +104,8 @@ class Tuleap123Template extends BaseTemplate {
      * outputs a formatted page.
      *
      */
-    public function execute() {
+    public function execute()
+    {
             global $wgHtml5;
             // Suppress warnings to prevent notices about missing indexes in $this->data
             wfSuppressWarnings();
@@ -228,7 +232,8 @@ class Tuleap123Template extends BaseTemplate {
         wfRestoreWarnings();
     } // end of execute() method
 
-    private function IsUserAdmin() {
+    private function IsUserAdmin()
+    {
         $pfuser             = UserManager::instance()->getCurrentUser();
         $forge_user_manager = new User_ForgeUserGroupPermissionsManager(
            new User_ForgeUserGroupPermissionsDao()
@@ -241,11 +246,13 @@ class Tuleap123Template extends BaseTemplate {
         return $pfuser->isMember($GLOBALS['group']->getId(), 'A') || $has_special_permission;
     }
 
-    private function isUserAnonymous() {
+    private function isUserAnonymous()
+    {
         return UserManager::instance()->getCurrentUser()->isAnonymous();
     }
 
-    private function isCompatibilityViewEnabled() {
+    private function isCompatibilityViewEnabled()
+    {
         $project = $GLOBALS['group'];
 
         return $this->getMediawikiManager()->isCompatibilityViewEnabled($project);
@@ -261,7 +268,8 @@ class Tuleap123Template extends BaseTemplate {
         throw new Exception('Mediawiki plugin not available');
     }
 
-    private function addForgeBackLinksToSidebar() {
+    private function addForgeBackLinksToSidebar()
+    {
         $forge_name    = forge_get_config('sys_fullname');
         $added_toolbox = array();
 
@@ -289,7 +297,8 @@ class Tuleap123Template extends BaseTemplate {
         $this->data['sidebar'][$forge_name] = $added_toolbox;
     }
 
-    protected function renderPortals( $sidebar ) {
+    protected function renderPortals( $sidebar )
+    {
         if ( !isset( $sidebar['SEARCH'] ) ) {
             $sidebar['SEARCH'] = true;
         }
@@ -323,7 +332,8 @@ class Tuleap123Template extends BaseTemplate {
                echo '</div>';
     }
 
-    function searchBox() {
+    function searchBox()
+    {
         global $wgUseTwoButtonsSearchForm;
         ?>
     <div id="p-search" class="portlet">
@@ -351,7 +361,8 @@ class Tuleap123Template extends BaseTemplate {
      * Prints the cactions bar.
      * Shared between MonoBook and Modern
      */
-    function cactions() {
+    function cactions()
+    {
         ?>
     <div id="p-cactions" class="portlet" role="navigation">
         <h5><?php $this->msg('views') ?></h5>
@@ -368,7 +379,8 @@ class Tuleap123Template extends BaseTemplate {
     </div>
         <?php
     }
-    function toolbox() {
+    function toolbox()
+    {
         ?>
     <div class="portlet" id="p-tb" role="navigation">
         <h5><?php $this->msg('toolbox') ?></h5>
@@ -390,7 +402,8 @@ class Tuleap123Template extends BaseTemplate {
         <?php
     }
 
-    function languageBox() {
+    function languageBox()
+    {
         if( $this->data['language_urls'] !== false ) {
             ?>
     <div id="p-lang" class="portlet" role="navigation">
@@ -413,7 +426,8 @@ class Tuleap123Template extends BaseTemplate {
      * @param $bar string
      * @param $cont array|string
      */
-    function customBox( $bar, $cont ) {
+    function customBox( $bar, $cont )
+    {
         $portletAttribs = array( 'class' => 'generated-sidebar portlet', 'id' => Sanitizer::escapeId( "p-$bar" ), 'role' => 'navigation' );
         $tooltip = Linker::titleAttrib( "p-$bar" );
         if ( $tooltip !== false ) {

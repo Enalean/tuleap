@@ -78,7 +78,8 @@ class StatisticsPlugin extends Plugin
     }
 
     /** @see Event::GET_SYSTEM_EVENT_CLASS */
-    public function get_system_event_class($params) {
+    public function get_system_event_class($params)
+    {
         switch($params['type']) {
             case SystemEvent_STATISTICS_DAILY::NAME:
                 $queue = new SystemEventQueueStatistics();
@@ -96,12 +97,14 @@ class StatisticsPlugin extends Plugin
     }
 
     /** @see Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES */
-    public function system_event_get_custom_queues(array $params) {
+    public function system_event_get_custom_queues(array $params)
+    {
         $params['queues'][SystemEventQueueStatistics::NAME] = new SystemEventQueueStatistics();
     }
 
     /** @see Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE */
-    public function system_event_get_types_for_custom_queue($params) {
+    public function system_event_get_types_for_custom_queue($params)
+    {
         if ($params['queue'] === SystemEventQueueStatistics::NAME) {
             $params['types'][] = SystemEvent_STATISTICS_DAILY::NAME;
         }
@@ -116,7 +119,8 @@ class StatisticsPlugin extends Plugin
         }
     }
 
-    function getPluginInfo() {
+    function getPluginInfo()
+    {
         if (!$this->pluginInfo instanceof StatisticsPluginInfo) {
             include_once('StatisticsPluginInfo.class.php');
             $this->pluginInfo = new StatisticsPluginInfo($this);
@@ -141,13 +145,15 @@ class StatisticsPlugin extends Plugin
         }
     }
 
-    private function getConfigurationManager() {
+    private function getConfigurationManager()
+    {
         return new Statistics_ConfigurationManager(
             new Statistics_ConfigurationDao()
         );
     }
 
-    private function getDiskUsagePurger(Logger $logger) {
+    private function getDiskUsagePurger(Logger $logger)
+    {
         return new Statistics_DiskUsagePurger(
             new Statistics_DiskUsageDao(),
             $logger
@@ -198,7 +204,8 @@ class StatisticsPlugin extends Plugin
     }
 
     /** @see ProjectDetailsPresenter::GET_MORE_INFO_LINKS */
-    function get_more_info_links($params) {
+    function get_more_info_links($params)
+    {
         if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
             return;
         }
@@ -220,7 +227,8 @@ class StatisticsPlugin extends Plugin
      *
      * @return void
      */
-    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_wiget_event) {
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_wiget_event)
+    {
         if ($get_wiget_event->getName() === 'plugin_statistics_projectstatistics') {
             include_once 'Statistics_Widget_ProjectStatistics.class.php';
             $get_wiget_event->setWidget(new Statistics_Widget_ProjectStatistics());
@@ -237,7 +245,8 @@ class StatisticsPlugin extends Plugin
         $this->removeOrphanWidgets(array('plugin_statistics_projectstatistics'));
     }
 
-    function cssFile($params) {
+    function cssFile($params)
+    {
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
@@ -246,7 +255,8 @@ class StatisticsPlugin extends Plugin
         }
     }
 
-    public function processSOAP(Codendi_Request $request) {
+    public function processSOAP(Codendi_Request $request)
+    {
         $uri           = $this->getSoapUri();
         $service_class = 'Statistics_SOAPServer';
         require_once $service_class .'.class.php';
@@ -258,12 +268,14 @@ class StatisticsPlugin extends Plugin
         }
     }
 
-    private function dumpWSDL($uri, $service_class) {
+    private function dumpWSDL($uri, $service_class)
+    {
         $wsdlGen = new SOAP_NusoapWSDL($service_class, 'TuleapStatisticsAPI', $uri);
         $wsdlGen->dumpWSDL();
     }
 
-    private function instantiateSOAPServer($uri, $service_class) {
+    private function instantiateSOAPServer($uri, $service_class)
+    {
         require_once 'Statistics_DiskUsageManager.class.php';
         $user_manager           = UserManager::instance();
         $project_manager        = ProjectManager::instance();
@@ -308,28 +320,33 @@ class StatisticsPlugin extends Plugin
         );
     }
 
-    private function getSoapUri() {
+    private function getSoapUri()
+    {
         return HTTPRequest::instance()->getServerUrl().'/plugins/statistics/soap';
     }
 
-    public function renderWSDL() {
+    public function renderWSDL()
+    {
         $uri = $this->getSoapUri();
         $wsdl_renderer = new SOAP_WSDLRenderer();
         $wsdl_renderer->render($uri .'/?wsdl');
     }
 
-    public function wsdl_doc2soap_types($params) {
+    public function wsdl_doc2soap_types($params)
+    {
         $params['doc2soap_types'] = array_merge($params['doc2soap_types'], array(
             'arrayofstatistics' => 'tns:ArrayOfStatistics',
         ));
     }
 
-    public function aggregate_statistics($params) {
+    public function aggregate_statistics($params)
+    {
         $statistics_aggregator = new StatisticsAggregatorDao();
         $statistics_aggregator->addStatistic($params['project_id'], $params['statistic_name']);
     }
 
-    public function get_statistics_aggregation($params) {
+    public function get_statistics_aggregation($params)
+    {
         $statistics_aggregator = new StatisticsAggregatorDao();
         $params['result'] = $statistics_aggregator->getStatistics(
             $params['statistic_name'],

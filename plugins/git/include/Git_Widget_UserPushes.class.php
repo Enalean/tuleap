@@ -36,7 +36,8 @@ class Git_Widget_UserPushes extends Widget {
      *
      * @return Void
      */
-    public function __construct($pluginPath) {
+    public function __construct($pluginPath)
+    {
         $this->pluginPath = $pluginPath;
         parent::__construct('plugin_git_user_pushes');
         $this->offset = user_get_preference('plugin_git_user_pushes_offset');
@@ -54,7 +55,8 @@ class Git_Widget_UserPushes extends Widget {
      *
      * @return String
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return dgettext('tuleap-git', 'My last Git pushes');
     }
 
@@ -145,7 +147,8 @@ class Git_Widget_UserPushes extends Widget {
      *
      * @return String
      */
-    function getCategory() {
+    function getCategory()
+    {
         return _('Source code management');
     }
 
@@ -154,7 +157,8 @@ class Git_Widget_UserPushes extends Widget {
      *
      * @return String
      */
-    function getDescription() {
+    function getDescription()
+    {
         return dgettext('tuleap-git', 'Display last Git pushes performed by the user');
     }
 
@@ -165,7 +169,8 @@ class Git_Widget_UserPushes extends Widget {
      *
      * @return bool
      */
-    function updatePreferences(Codendi_Request $request) {
+    function updatePreferences(Codendi_Request $request)
+    {
         $request->valid(new Valid_String('cancel'));
         $vOffset = new Valid_UInt('plugin_git_user_pushes_offset');
         $vOffset->required();

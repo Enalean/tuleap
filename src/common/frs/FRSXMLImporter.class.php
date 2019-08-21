@@ -94,28 +94,32 @@ class FRSXMLImporter {
         $this->links_updater      = $links_updater;
     }
 
-    private function getFileTypeDao(){
+    private function getFileTypeDao()
+    {
         if(empty($this->filetype_dao)) {
             $this->filetype_dao = new FRSFileTypeDao();
         }
         return $this->filetype_dao;
     }
 
-    private function getProcessorDao() {
+    private function getProcessorDao()
+    {
         if(empty($this->processor_dao)) {
             $this->processor_dao = new FRSProcessorDao();
         }
         return $this->processor_dao;
     }
 
-    private function getUGroupManager() {
+    private function getUGroupManager()
+    {
         if(empty($this->ugroup_manager)) {
             $this->ugroup_manager = UGroupManager::instance();
         }
         return $this->ugroup_manager;
     }
 
-    private function getPermissionsManager() {
+    private function getPermissionsManager()
+    {
         if(empty($this->permission_manager)) {
             $this->permission_manager = PermissionsManager::instance();
         }
@@ -295,7 +299,8 @@ class FRSXMLImporter {
         $this->logger->debug('Import of release '.$release->getName().' completed');
     }
 
-    private function importFile(Project $project, FRSRelease $release, PFUser $user, SimpleXMLElement $xml_file, $extraction_path) {
+    private function importFile(Project $project, FRSRelease $release, PFUser $user, SimpleXMLElement $xml_file, $extraction_path)
+    {
         $this->logger->debug('Start import of file');
 
         $user  = empty($xml_file->user) ? $user : $this->user_finder->getUser($xml_file->user);

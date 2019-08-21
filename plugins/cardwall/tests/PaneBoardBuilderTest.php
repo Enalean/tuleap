@@ -32,7 +32,8 @@ class Cardwall_PaneBuilderTest extends TuleapTestCase {
     private $mapping_collection;
     private $columns;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->card_in_cell_presenter_builder = Mockery::spy(Cardwall_CardInCellPresenterBuilder::class);
         $this->artifact_factory               = mock('Tracker_ArtifactFactory');
@@ -45,7 +46,8 @@ class Cardwall_PaneBuilderTest extends TuleapTestCase {
 
     }
 
-    public function itReturnsAnEmptyBoard() {
+    public function itReturnsAnEmptyBoard()
+    {
         stub($this->dao)->getBacklogArtifacts()->returnsEmptyDar();
 
         $pane_builder = new Cardwall_PaneBoardBuilder($this->card_in_cell_presenter_builder, $this->artifact_factory, $this->dao, $this->swimline_factory);
@@ -53,7 +55,8 @@ class Cardwall_PaneBuilderTest extends TuleapTestCase {
         $this->assertIsA($pane_builder->getBoard($this->user, $this->milestone_artifact, $this->columns, $this->mapping_collection), 'Cardwall_Board');
     }
 
-    public function itReturnsABoardWithaSoloSwimline() {
+    public function itReturnsABoardWithaSoloSwimline()
+    {
         $swimline_artifact = aMockArtifact()->withId('the id')->allUsersCanView()->build();
         stub($swimline_artifact)->getChildrenForUser()->returns(array());
 
@@ -70,7 +73,8 @@ class Cardwall_PaneBuilderTest extends TuleapTestCase {
         $this->assertIsA($board->swimlines[0], 'Cardwall_SwimlineSolo');
     }
 
-    public function itReturnsABoardWithaSwimline() {
+    public function itReturnsABoardWithaSwimline()
+    {
         $child_artifact = aMockArtifact()->withId('child')->allUsersCanView()->build();
 
         $swimline_artifact = aMockArtifact()->withId('whatever')->allUsersCanView()->build();

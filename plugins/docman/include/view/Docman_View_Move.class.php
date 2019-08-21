@@ -24,12 +24,14 @@ require_once('Docman_View_ItemDetailsSectionMove.class.php');
 
 class Docman_View_Move extends Docman_View_Details {
 
-    function _getTitle($params) {
+    function _getTitle($params)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         return $GLOBALS['Language']->getText('plugin_docman', 'move',  $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) );
     }
 
-    function _content($params, $view = null, $section = null) {
+    function _content($params, $view = null, $section = null)
+    {
         $token = isset($params['token']) ? $params['token'] : null;
         parent::_content(
             $params,

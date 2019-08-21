@@ -33,32 +33,37 @@ rcs_id('$Id: CreateToc.php,v 1.20 2004/05/11 13:57:46 rurban Exp $');
 class WikiPlugin_CreateBib
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("CreateBib");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Automatically create a Bibtex file from linked pages");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 0.01 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array( 'pagename'  => '[pagename]', // The page from which the BibTex file is generated
                       );
     }
 
-    function preg_quote ($heading) {
+    function preg_quote($heading)
+    {
         return str_replace(array("/",".","?","*"),
                        array('\/','\.','\?','\*'), $heading);
     }
 
 
     // Have to include the $starttag and $endtag to the regexps...
-    function extractBibTeX (&$content, $starttag, $endtag)
+    function extractBibTeX(&$content, $starttag, $endtag)
     {
         $bib = array();
 
@@ -84,7 +89,8 @@ extends WikiPlugin
 
     // Extract article links. Current markup is by * characters...
     // Assume straight list
-    function extractArticles (&$content) {
+    function extractArticles(&$content)
+    {
         $articles = array();
         for ($i=0; $i<count($content); $i++) {
             // Should match "* [WikiPageName] whatever"
@@ -98,7 +104,8 @@ extends WikiPlugin
     }
 
 
-    function dumpFile(&$thispage, $filename) {
+    function dumpFile(&$thispage, $filename)
+    {
         include_once("lib/loadsave.php");
         $mailified = MailifyPage($thispage);
 
@@ -111,7 +118,8 @@ extends WikiPlugin
 
     }
 
-    function run($dbi, $argstr, $request, $basepage) {
+    function run($dbi, $argstr, $request, $basepage)
+    {
         extract($this->getArgs($argstr, $request));
         if ($pagename) {
             // Expand relative page names.

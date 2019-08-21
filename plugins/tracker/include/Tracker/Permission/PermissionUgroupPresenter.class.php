@@ -25,30 +25,36 @@ class Tracker_Permission_PermissionUgroupPresenter {
     private $url;
     private $permissions_list = array();
 
-    public function __construct($id, $name, $url, array $permissions_list) {
+    public function __construct($id, $name, $url, array $permissions_list)
+    {
         $this->id               = $id;
         $this->name             = $name;
         $this->url              = $url;
         $this->permissions_list = $permissions_list;
     }
 
-    public function has_link() {
+    public function has_link()
+    {
         return $this->url != '';
     }
 
-    public function name() {
+    public function name()
+    {
         return $this->name;
     }
 
-    public function url() {
+    public function url()
+    {
         return $this->url;
     }
 
-    public function permission_name() {
+    public function permission_name()
+    {
         return Tracker_Permission_Command::PERMISSION_PREFIX.$this->id;
     }
 
-    public function permissions_list() {
+    public function permissions_list()
+    {
         return $this->permissions_list;
     }
 }

@@ -22,19 +22,23 @@ class SystemEventQueue {
 
     public const NAME = 'default';
 
-    public function getName() {
+    public function getName()
+    {
         return self::NAME;
     }
 
-    public function getLabel() {
+    public function getLabel()
+    {
         return $GLOBALS['Language']->getText('admin_system_events', 'default_queue');
     }
 
-    public function getOwner() {
+    public function getOwner()
+    {
         return SystemEvent::OWNER_APP;
     }
 
-    public function getLogger() {
+    public function getLogger()
+    {
         return new TruncateLevelLogger(
             new BackendLogger(ForgeConfig::get('codendi_log') .'/'. $this->getName() .'_syslog'),
             ForgeConfig::get('sys_logger_level')

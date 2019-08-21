@@ -23,11 +23,13 @@ class MediawikiLanguageManager {
     /** @var MediawikiLanguageDao */
     private $dao;
 
-    public function __construct(MediawikiLanguageDao $dao) {
+    public function __construct(MediawikiLanguageDao $dao)
+    {
         $this->dao = $dao;
     }
 
-    public function saveLanguageOption(Project $project, $language) {
+    public function saveLanguageOption(Project $project, $language)
+    {
         if (! $language) {
             return;
         }
@@ -44,7 +46,8 @@ class MediawikiLanguageManager {
      *
      * @return string
      */
-    public function getUsedLanguageForProject(Project $project) {
+    public function getUsedLanguageForProject(Project $project)
+    {
         $language = null;
         $result   = $this->dao->getUsedLanguageForProject($project->getID());
 
@@ -61,14 +64,16 @@ class MediawikiLanguageManager {
         return $language;
     }
 
-    public function getAvailableLanguagesWithUsage(Project $project) {
+    public function getAvailableLanguagesWithUsage(Project $project)
+    {
         $available_languages = $this->getAvailableLanguages();
         $project_language    = $this->getUsedLanguageForProject($project);
 
         return $this->formatAvailableLanguagesWithUsage($available_languages, $project_language);
     }
 
-    private function formatAvailableLanguagesWithUsage(array $available_languages, $project_language) {
+    private function formatAvailableLanguagesWithUsage(array $available_languages, $project_language)
+    {
         $formatted_available_languages = array();
 
         foreach ($available_languages as $available_language) {
@@ -81,11 +86,13 @@ class MediawikiLanguageManager {
         return $formatted_available_languages;
     }
 
-    private function getAvailableLanguages() {
+    private function getAvailableLanguages()
+    {
         return explode(',', ForgeConfig::get('sys_supported_languages'));
     }
 
-    private function isLanguageSupported($language) {
+    private function isLanguageSupported($language)
+    {
         $supported_languages = $this->getAvailableLanguages();
 
         return in_array($language, $supported_languages);

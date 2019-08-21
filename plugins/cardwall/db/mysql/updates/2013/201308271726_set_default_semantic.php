@@ -20,23 +20,27 @@
 
 class b201308271726_set_default_semantic extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add the default field for the semantic card_fields
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->addCardField('remaining_effort', 0);
         $this->addCardField('assigned_to', 1);
         $this->addCardField('impediment', 2);
     }
 
-    private function addCardField($name, $rank) {
+    private function addCardField($name, $rank)
+    {
         $sql = "INSERT INTO plugin_cardwall_semantic_cardfields(tracker_id, field_id, rank)
                 SELECT tracker_id, id, $rank
                 FROM tracker_field
@@ -45,7 +49,8 @@ EOT;
         $this->executeSql($sql);
     }
 
-    private function executeSql($sql) {
+    private function executeSql($sql)
+    {
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());

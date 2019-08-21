@@ -22,27 +22,31 @@ require_once dirname(__FILE__) .'/bootstrap.php';
 
 class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->config     = mock('Cardwall_OnTop_Config');
         $this->factory    = new Cardwall_SwimlineFactory($this->config, mock('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact'));
     }
 
-    public function itReturnsAnEmptyArrayIfThereAreNoColumnsAndNoPresenters() {
+    public function itReturnsAnEmptyArrayIfThereAreNoColumnsAndNoPresenters()
+    {
         $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
         $presenters = array();
         $swimlines  = $this->factory->getCells($columns, $presenters);
         $this->assertIdentical(array(), $swimlines);
     }
 
-    public function itReturnsAnEmptyArrayIfThereAreNoColumnsButSomePresenters() {
+    public function itReturnsAnEmptyArrayIfThereAreNoColumnsButSomePresenters()
+    {
         $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
         $presenters = array(mock('Cardwall_CardInCellPresenter'));
         $swimlines  = $this->factory->getCells($columns, $presenters);
         $this->assertIdentical(array(), $swimlines);
     }
 
-    public function itReturnsANestedArrayOfPresenterPresentersIfThereAreColumnsButNoPresenters() {
+    public function itReturnsANestedArrayOfPresenterPresentersIfThereAreColumnsButNoPresenters()
+    {
         $mocked_column = mock('Cardwall_Column');
         stub($mocked_column)->getId()->returns(44);
         stub($mocked_column)->isAutostacked()->returns(true);
@@ -55,7 +59,8 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         $this->assertIdentical($expected, $swimlines);
     }
 
-    public function itAsksTheColumnIfItGoesInThere() {
+    public function itAsksTheColumnIfItGoesInThere()
+    {
         $artifact1 = anArtifact()->withId(1)->build();
         $artifact2 = anArtifact()->withId(2)->build();
         $label = $bgcolor = null;
@@ -75,7 +80,8 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         $this->assertIdentical($expected, $swimlines);
     }
 
-    public function itIgnoresPresentersIfThereIsNoMatchingColumn() {
+    public function itIgnoresPresentersIfThereIsNoMatchingColumn()
+    {
         $artifact = anArtifact()->build();
         $column = new Cardwall_Column(55, null, null, null);
         $columns  = new Cardwall_OnTop_Config_ColumnCollection();

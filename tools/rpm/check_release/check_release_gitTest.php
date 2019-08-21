@@ -25,14 +25,16 @@ Mock::generate('GitExec');
 Mock::generate('ChangeDetector');
 class GitTagFinderTest extends TuleapTestCase {
 
-    public function itFindsTheGreatestVersionNumberFromTheTags() {
+    public function itFindsTheGreatestVersionNumberFromTheTags()
+    {
         $gitExec = new MockGitExec();
         $checkReleaseGit = new LastReleaseFinder($gitExec);
         $this->assertEqual('4.01.0', $checkReleaseGit->maxVersion(array('4.0.2', '4.01.0')));
         $this->assertEqual('4.10', $checkReleaseGit->maxVersion(array('4.10', '4.9')));
     }
 
-    public function itListsAllTags() {
+    public function itListsAllTags()
+    {
          $version_list = array(
             'cef75eb766883a62700306de0e57a14b54aa72ec	refs/tags/4.0.2',
             'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.01.0',
@@ -45,7 +47,8 @@ class GitTagFinderTest extends TuleapTestCase {
          $this->assertEqual(array('4.0.2', '4.01.0', '4.1', '4.9', '4.10'), $git_tag_finder->getReleaseList('origin'));
     }
 
-    public function itListsOnlyTagsThatAreNumeric() {
+    public function itListsOnlyTagsThatAreNumeric()
+    {
          $version_list = array(
             'cef75eb766883a62700306de0e57a14b54aa72ec	refs/branches/4.0.2',
             'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/textualTag',
@@ -57,7 +60,8 @@ class GitTagFinderTest extends TuleapTestCase {
          $this->assertEqual(array('4.1'), $git_tag_finder->getReleaseList('origin'));
     }
 
-    public function itGetsTheMaxVersionDirectlyFromTheRemote() {
+    public function itGetsTheMaxVersionDirectlyFromTheRemote()
+    {
          $version_list = array(
             'cef75eb766883a62700306de0e57a14b54aa72ec	refs/tags/4.0.2',
             'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.01.0',
@@ -73,7 +77,8 @@ class GitTagFinderTest extends TuleapTestCase {
 
 class GitChangeDetectorTest extends TuleapTestCase {
 
-    public function itFindsOnlyChangedPaths() {
+    public function itFindsOnlyChangedPaths()
+    {
         $revision = 'refs/tags/4.0.29';
         $gitExec = new MockGitExec();
         $gitExec->setReturnValue('hasChangedSince', true, array('plugins/docman', $revision));
@@ -88,7 +93,8 @@ class GitChangeDetectorTest extends TuleapTestCase {
 
 class NonIncrementedPathFinderTest extends TuleapTestCase {
 
-    public function itFiltersPathsThatHaveBeenIncremented() {
+    public function itFiltersPathsThatHaveBeenIncremented()
+    {
 
         $last_release_tag = 'refs/tags/4.0.29';
         $current_version  = 'HEAD';

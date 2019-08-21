@@ -34,10 +34,12 @@ class Controler {
   /* protected */ var $_viewParams   = array();
   /* protected */ var $_actionParams = array();
 
-    function request() {
+    function request()
+    {
     }
 
-    function viewsManagement() {
+    function viewsManagement()
+    {
         $className = static::class.'Views';
         if (! class_exists($className)) {
             throw new LogicException(sprintf('View class %s does not exist, nothing can be displayed', $className));
@@ -46,7 +48,8 @@ class Controler {
         return $wv->display($this->view);
     }
 
-    function actionsManagement() {
+    function actionsManagement()
+    {
         $className = static::class.'Actions';
         if (! class_exists($className)) {
             throw new LogicException(sprintf('Action class %s does not exist, nothing can be processed', $className));
@@ -55,7 +58,8 @@ class Controler {
         $wa->process($this->action, $this->_actionParams);
     }
 
-    function process() {
+    function process()
+    {
         $this->request();
 
         if($this->action)

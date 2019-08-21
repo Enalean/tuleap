@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 class SvnPluginInfo extends PluginFileInfo {
-    public function __construct($plugin) {
+    public function __construct($plugin)
+    {
         parent::__construct($plugin, 'svn');
         $this->setPluginDescriptor(new SvnPluginDescriptor());
     }

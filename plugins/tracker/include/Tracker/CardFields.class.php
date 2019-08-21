@@ -31,7 +31,8 @@ class Tracker_CardFields {
     private $user_manager;
 
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->displayed_fields     = array(Tracker::REMAINING_EFFORT_FIELD_NAME,
                                             Tracker::ASSIGNED_TO_FIELD_NAME,
                                             Tracker::IMPEDIMENT_FIELD_NAME);
@@ -45,7 +46,8 @@ class Tracker_CardFields {
      *
      * @return Tracker_FormElement_Field[]
      */
-    public function getFields(Tracker_Artifact $artifact) {
+    public function getFields(Tracker_Artifact $artifact)
+    {
         $diplayed_fields = array();
         $tracker_id      = $artifact->getTrackerId();
 

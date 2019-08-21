@@ -26,18 +26,21 @@ class HTML_Element_SelectboxTest extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText', 'none');
     }
 
-    function testWithNone() {
+    function testWithNone()
+    {
         $selectbox = new HTML_Element_Selectbox('label', 'name', 'value', true);
         $this->assertEqual('<select id="customfield_0" name="name" ><option value="" >none</option></select>', $selectbox->renderValue());
     }
 
-    function testSetId() {
+    function testSetId()
+    {
         $selectbox = new HTML_Element_Selectbox('label', 'name', 'value', false);
         $selectbox->setId('id');
         $this->assertEqual('<select id="id" name="name" ></select>', $selectbox->renderValue());
     }
 
-    function testAddMultipleOptions() {
+    function testAddMultipleOptions()
+    {
         $selectbox = new HTML_Element_Selectbox('label', 'name', 'value', false);
         $selectbox->addMultipleOptions(array('one' => '1', 'two' => '2'), 'two');
          $this->assertEqual('<select id="customfield_3" name="name" ><option value="one" >1</option><option value="two" selected="selected">2</option></select>', $selectbox->renderValue());

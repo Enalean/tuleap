@@ -30,14 +30,16 @@ class Tracker {
     private $rest_request;
     private $tracker;
 
-    public function __construct(Client $client, RequestWrapper $rest_request, array $tracker, $default_user_name) {
+    public function __construct(Client $client, RequestWrapper $rest_request, array $tracker, $default_user_name)
+    {
         $this->client       = $client;
         $this->rest_request = $rest_request;
         $this->user_name    = $default_user_name;
         $this->tracker      = $tracker;
     }
 
-    public function addCommentToArtifact(array $artifact_reference, $comment) {
+    public function addCommentToArtifact(array $artifact_reference, $comment)
+    {
         return $this->getResponse(
             $this->client->put(
                 $artifact_reference['uri'],
@@ -55,7 +57,8 @@ class Tracker {
         );
     }
 
-    public function countArtifacts() {
+    public function countArtifacts()
+    {
         $request  = $this->client->get('trackers/'. $this->tracker['id'] .'/artifacts');
         $response = $this->getResponse($request);
         $header   = $response->getHeader('X-PAGINATION-SIZE')->normalize()->toArray();
@@ -64,7 +67,8 @@ class Tracker {
         return $size;
     }
 
-    public function createArtifact(array $values) {
+    public function createArtifact(array $values)
+    {
         $post = json_encode(array(
             'tracker' => array(
                 'id'  => $this->tracker['id'],
@@ -75,7 +79,8 @@ class Tracker {
         return $this->getResponse($this->client->post('artifacts', null, $post))->json();
     }
 
-    public function getSubmitTextValue($field_label, $field_value) {
+    public function getSubmitTextValue($field_label, $field_value)
+    {
         $field_def = $this->getFieldByLabel($field_label);
         return array(
             'field_id' => $field_def['field_id'],
@@ -83,7 +88,8 @@ class Tracker {
         );
     }
 
-    public function getSubmitListValue($field_label, $field_value_label) {
+    public function getSubmitListValue($field_label, $field_value_label)
+    {
         $field_def = $this->getFieldByLabel($field_label);
         return array(
             'field_id'       => $field_def['field_id'],
@@ -93,14 +99,17 @@ class Tracker {
         );
     }
 
-    public function getSubmitArtifactLinkValue(array $ids) {
+    public function getSubmitArtifactLinkValue(array $ids)
+    {
         return array(
             'field_id' => $this->getArtifactLinkFieldId(),
-            'links' => array_map(function ($id) { return array('id' => $id); }, $ids)
+            'links' => array_map(function ($id) {
+                return array('id' => $id); }, $ids)
         );
     }
 
-    private function getArtifactLinkFieldId() {
+    private function getArtifactLinkFieldId()
+    {
         foreach ($this->tracker['fields'] as $field) {
             if ($field['type'] == 'art_link') {
                 return $field['field_id'];
@@ -109,7 +118,8 @@ class Tracker {
         throw new \Exception('No artifact link field for tracker');
     }
 
-    private function getListValueIdByLabel(array $field, $field_value_label) {
+    private function getListValueIdByLabel(array $field, $field_value_label)
+    {
         foreach ($field['values'] as $value) {
             if ($value['label'] == $field_value_label) {
                 return $value['id'];
@@ -117,7 +127,8 @@ class Tracker {
         }
     }
 
-    private function getFieldByLabel($field_label) {
+    private function getFieldByLabel($field_label)
+    {
         foreach ($this->tracker['fields'] as $field) {
             if ($field['label'] == $field_label) {
                 return $field;
@@ -125,7 +136,8 @@ class Tracker {
         }
     }
 
-    private function getResponse($request) {
+    private function getResponse($request)
+    {
         return $this->rest_request->getResponseByName(
             $this->user_name,
             $request

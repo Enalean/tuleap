@@ -35,24 +35,29 @@ class Git_AdminPresenter {
     public $gerrit_active           = '';
     public $gitolite_config_active  = '';
 
-    public function __construct($title, CSRFSynchronizerToken $csrf_token) {
+    public function __construct($title, CSRFSynchronizerToken $csrf_token)
+    {
         $this->title      = $title;
         $this->csrf_token = $csrf_token;
     }
 
-    public function gerrit_tab_name() {
+    public function gerrit_tab_name()
+    {
         return dgettext('tuleap-git', 'Gerrit');
     }
 
-    public function general_settings_tab_name() {
+    public function general_settings_tab_name()
+    {
         return dgettext('tuleap-git', 'General settings');
     }
 
-    public function mirror_tab_name() {
+    public function mirror_tab_name()
+    {
         return dgettext('tuleap-git', 'Mirrors');
     }
 
-    public function gitolite_config_tab_name() {
+    public function gitolite_config_tab_name()
+    {
         return dgettext('tuleap-git', 'Gitolite');
     }
 }

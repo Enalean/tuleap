@@ -35,7 +35,8 @@ class PermissionsManagerLockTest extends TuleapTestCase {
         $this->docmanPm = \Mockery::mock(Docman_PermissionsManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
     }
 
-    function testItemIsNotLocked() {
+    function testItemIsNotLocked()
+    {
         // user is not docman admin
         $this->docmanPm->allows(['_isUserDocmanAdmin' => false]);
         // user is not super admin
@@ -50,7 +51,8 @@ class PermissionsManagerLockTest extends TuleapTestCase {
         $this->assertFalse($this->docmanPm->_itemIsLockedForUser($this->user, $this->itemId));
     }
 
-    function testItemIsLockedBySomeoneelse() {
+    function testItemIsLockedBySomeoneelse()
+    {
         // user is not docman admin
         $this->docmanPm->allows(['_isUserDocmanAdmin' => false]);
         // user is not super admin
@@ -66,7 +68,8 @@ class PermissionsManagerLockTest extends TuleapTestCase {
         $this->assertTrue($this->docmanPm->_itemIsLockedForUser($this->user, $this->itemId));
     }
 
-    function testItemIsLockedBySomeoneelseButUserCanManage() {
+    function testItemIsLockedBySomeoneelseButUserCanManage()
+    {
         // user is not docman admin
         $this->docmanPm->allows(['_isUserDocmanAdmin' => false]);
         // user is not super admin
@@ -82,7 +85,8 @@ class PermissionsManagerLockTest extends TuleapTestCase {
         $this->assertFalse($this->docmanPm->_itemIsLockedForUser($this->user, $this->itemId));
     }
 
-    function testItemIsLockedByOwner() {
+    function testItemIsLockedByOwner()
+    {
         // user is not docman admin
         $this->docmanPm->allows(['_isUserDocmanAdmin' => false]);
         // user is not super admin

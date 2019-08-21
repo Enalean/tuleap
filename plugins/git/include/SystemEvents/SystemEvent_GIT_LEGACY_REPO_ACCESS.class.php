@@ -22,7 +22,8 @@
 class SystemEvent_GIT_LEGACY_REPO_ACCESS  extends SystemEvent {
     public const NAME = 'GIT_LEGACY_REPO_ACCESS';
 
-    public function process() {
+    public function process()
+    {
         $parameters  = $this->getParametersAsArray();
         //repo id
         $repositoryId = '';
@@ -57,7 +58,8 @@ class SystemEvent_GIT_LEGACY_REPO_ACCESS  extends SystemEvent {
         $this->done();
     }
 
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         return  $this->parameters;
     }
 

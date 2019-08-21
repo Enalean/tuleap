@@ -37,7 +37,8 @@ class Tracker_UgroupMappingBuilderTest extends TuleapTestCase {
 
     protected $tracker_id                 = 101;
 
-    public function itBuildsAMappingBasedOnTheNames() {
+    public function itBuildsAMappingBasedOnTheNames()
+    {
         $this->template_ugroup_dev     = mockery_stub(\ProjectUGroup::class)->getName()->returns('dev');
         $this->template_ugroup_support = mockery_stub(\ProjectUGroup::class)->getName()->returns('support');
         $this->template_ugroup_staff   = mockery_stub(\ProjectUGroup::class)->getName()->returns('staff');

@@ -20,7 +20,8 @@
 class SOAP_UserManager {
     private $user_manager;
 
-    public function __construct(UserManager $user_manager) {
+    public function __construct(UserManager $user_manager)
+    {
         $this->user_manager = $user_manager;
     }
 
@@ -32,7 +33,8 @@ class SOAP_UserManager {
      *
      * @return PFUser
      */
-    public function continueSession($sessionKey) {
+    public function continueSession($sessionKey)
+    {
         $user = $this->user_manager->getCurrentUser($sessionKey);
         if ($user->isLoggedIn()) {
             return $user;

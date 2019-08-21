@@ -55,7 +55,8 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer {
         return $this->fetchArtifactForm($html);
     }
 
-    protected function displayHeader() {
+    protected function displayHeader()
+    {
         $title       = $GLOBALS['Language']->getText('plugin_tracker', 'copy_of', $this->artifact->getXRef());
         $breadcrumbs = array(
             array(
@@ -66,14 +67,16 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer {
         $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, null, array('body_class' => array('widgetable')));
     }
 
-    public function display(Codendi_Request $request, PFUser $current_user) {
+    public function display(Codendi_Request $request, PFUser $current_user)
+    {
         parent::display($request, $current_user);
     }
 
     /**
      * @see Tracker_Artifact_ArtifactRenderer::fetchSubmitButton()
      */
-    public function fetchSubmitButton(PFUser $current_user) {
+    public function fetchSubmitButton(PFUser $current_user)
+    {
         $purifier            = Codendi_HTMLPurifier::instance();
         $copy_label          = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_submit_button');
         $copy_children_label = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_submit_button_children');
@@ -105,14 +108,16 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer {
                 </div>';
     }
 
-    protected function fetchView(Codendi_Request $request, PFUser $user) {
+    protected function fetchView(Codendi_Request $request, PFUser $user)
+    {
         $view_collection = new Tracker_Artifact_View_ViewCollection();
         $view_collection->add(new Tracker_Artifact_View_Copy($this->artifact, $request, $user, $this, $this->event_manager));
 
         return $view_collection->fetchRequestedView($request);
     }
 
-    protected function fetchTitle() {
+    protected function fetchTitle()
+    {
         $hp    = Codendi_HTMLPurifier::instance();
         $html  = '';
         $html .= '<div class="tracker_artifact_title">';
@@ -122,11 +127,13 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer {
         return $html;
     }
 
-    private function fetchLastChangesetId() {
+    private function fetchLastChangesetId()
+    {
         return '<input type="hidden" name="from_changeset_id" value="'.$this->artifact->getLastChangeset()->getId().'"/>';
     }
 
-    private function fetchFromArtifactId() {
+    private function fetchFromArtifactId()
+    {
         return '<input type="hidden" name="from_artifact_id" value="'.$this->artifact->getId().'"/>';
     }
 }

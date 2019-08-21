@@ -141,7 +141,8 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         $this->version_detector                 = $version_detector;
     }
 
-    public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables) {
+    public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)
+    {
         \Tuleap\Project\ServiceInstrumentation::increment('git');
 
         if (! $request->getCurrentUser()->isSuperUser()) {
@@ -164,7 +165,8 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         $controller->display($request);
     }
 
-    private function getControllerFromRequest(Codendi_Request $request) {
+    private function getControllerFromRequest(Codendi_Request $request)
+    {
         if ($request->get('pane') == 'gerrit_servers_admin'  || $request->get('view') === 'gerrit_servers_restriction' ) {
             return new Git_AdminGerritController(
                 $this->csrf,

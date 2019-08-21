@@ -19,12 +19,14 @@
  */
 
 class SysteEvent_For_Testing_Purpose extends SystemEvent {
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         return $this->parameters;
     }
 }
 
-function aSystemEvent($name = 'SysteEvent_For_Testing_Purpose') {
+function aSystemEvent($name = 'SysteEvent_For_Testing_Purpose')
+{
     return new Test_SystemEvent_Builder($name);
 }
 
@@ -32,16 +34,19 @@ class Test_SystemEvent_Builder {
     private $name;
     private $parameters;
 
-    public function __construct($name) {
+    public function __construct($name)
+    {
         $this->name = $name;
     }
 
-    public function withParameters($parameters) {
+    public function withParameters($parameters)
+    {
         $this->parameters = $parameters;
         return $this;
     }
 
-    public function build() {
+    public function build()
+    {
         $id = $type = $owner = $priority = $status = $create_date = $process_date = $end_date = $log = null;
         $klass = $this->name;
         return new $klass($id, $type, $owner, $this->parameters, $priority, $status, $create_date, $process_date, $end_date, $log);

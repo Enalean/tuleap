@@ -81,22 +81,26 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
         $this->is_inconsistent = $is_inconsistent;
     }
 
-    public function setParent(Tracker_Artifact $parent) {
+    public function setParent(Tracker_Artifact $parent)
+    {
         $this->parent = $parent;
     }
 
     /**
      * @return Tracker_Artifact
      */
-    public function getParent() {
+    public function getParent()
+    {
         return $this->parent;
     }
 
-    public function setInitialEffort($value) {
+    public function setInitialEffort($value)
+    {
         $this->initial_effort = $value;
     }
 
-    public function getInitialEffort() {
+    public function getInitialEffort()
+    {
         return $this->initial_effort;
     }
 
@@ -106,27 +110,33 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
         $this->normalized_status_label = $status_semantic;
     }
 
-    public function id() {
+    public function id()
+    {
         return $this->id;
     }
 
-    public function title() {
+    public function title()
+    {
         return $this->title;
     }
 
-    public function type() {
+    public function type()
+    {
         return $this->type;
     }
 
-    public function short_type() {
+    public function short_type()
+    {
         return $this->short_type;
     }
 
-    public function points() {
+    public function points()
+    {
         return $this->initial_effort;
     }
 
-    public function parent_title() {
+    public function parent_title()
+    {
         if ($this->parent) {
             return $this->parent->getTitle();
         }
@@ -137,15 +147,18 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
         return $this->status;
     }
 
-    public function color() {
+    public function color()
+    {
         return $this->color;
     }
 
-    public function setHasChildren($has_children) {
+    public function setHasChildren($has_children)
+    {
         $this->has_children = $has_children;
     }
 
-    public function hasChildren() {
+    public function hasChildren()
+    {
         if ($this->has_children === null) {
             return $this->artifact->hasChildren();
         }
@@ -154,7 +167,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
     /**
      * @return Tracker_Artifact
      */
-    public function getArtifact() {
+    public function getArtifact()
+    {
         return $this->artifact;
     }
 

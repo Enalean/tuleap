@@ -25,16 +25,19 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
      */
     protected $ugroup;
 
-    public function __construct($id, ProjectUGroup $ugroup, $is_hidden) {
+    public function __construct($id, ProjectUGroup $ugroup, $is_hidden)
+    {
         parent::__construct($id, $is_hidden);
         $this->ugroup = $ugroup;
     }
 
-    public function getLabel() {
+    public function getLabel()
+    {
         return $this->ugroup->getTranslatedName();
     }
 
-    public function getUGroupName() {
+    public function getUGroupName()
+    {
         return $this->ugroup->getName();
     }
 
@@ -42,11 +45,13 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
      *
      * @return int
      */
-    public function getUgroupId() {
+    public function getUgroupId()
+    {
         return $this->ugroup->getId();
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return self::class .' #'. $this->getId();
     }
 
@@ -54,27 +59,33 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
      *
      * @return array An array of user names
      */
-    public function getMembersName() {
+    public function getMembersName()
+    {
         return  $this->ugroup->getUsers()->getNames();
     }
 
-    public function getAPIValue() {
+    public function getAPIValue()
+    {
         return $this->getUGroupName();
     }
 
-    public function getXMLExportLabel() {
+    public function getXMLExportLabel()
+    {
         return $this->getUGroupName();
     }
 
-    public function getProject() {
+    public function getProject()
+    {
         return $this->ugroup->getProject();
     }
 
-    public function getUgroup() {
+    public function getUgroup()
+    {
         return $this->ugroup;
     }
 
-    public function getFullRESTValue(Tracker_FormElement_Field $field) {
+    public function getFullRESTValue(Tracker_FormElement_Field $field)
+    {
         $class_user_representation = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
         $ugroup_representation     = new $class_user_representation;
 
@@ -85,7 +96,8 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
         return $ugroup_representation;
     }
 
-    public function getRESTId() {
+    public function getRESTId()
+    {
         $project_id           = $this->getProject()->getID();
         $representation_class = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
         $user_group_id        = call_user_func_array($representation_class.'::getRESTIdForProject', array($project_id, $this->getUgroupId()));

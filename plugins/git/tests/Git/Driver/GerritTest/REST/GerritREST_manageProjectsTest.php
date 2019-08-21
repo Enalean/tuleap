@@ -22,7 +22,8 @@ require_once 'GerritREST_Base.php';
 
 class Git_DriverREST_Gerrit_manageProjectsTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_manageProjectsTest {
 
-    public function itExecutesTheCreateCommandForProjectOnTheGerritServer(){
+    public function itExecutesTheCreateCommandForProjectOnTheGerritServer()
+    {
         $url_create_project = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
             .'/a/projects/'. urlencode($this->gerrit_project_name);
@@ -47,7 +48,8 @@ class Git_DriverREST_Gerrit_manageProjectsTest extends Git_Driver_GerritREST_bas
         $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
     }
 
-    public function itExecutesTheCreateCommandForParentProjectOnTheGerritServer(){
+    public function itExecutesTheCreateCommandForParentProjectOnTheGerritServer()
+    {
         $url_create_project = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
             .'/a/projects/'. urlencode($this->project_name);
@@ -75,14 +77,16 @@ class Git_DriverREST_Gerrit_manageProjectsTest extends Git_Driver_GerritREST_bas
         $this->driver->createProjectWithPermissionsOnly($this->gerrit_server, $this->project, 'firefox/project_admins');
     }
 
-    public function itReturnsTheNameOfTheCreatedProject(){
+    public function itReturnsTheNameOfTheCreatedProject()
+    {
         stub($this->guzzle_client)->put()->returns($this->guzzle_request);
 
         $project_name = $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
         $this->assertEqual($project_name, $this->gerrit_project_name);
     }
 
-    public function itRaisesAGerritDriverExceptionOnProjectCreation(){
+    public function itRaisesAGerritDriverExceptionOnProjectCreation()
+    {
         stub($this->guzzle_client)->put()->throws(new Guzzle\Http\Exception\ClientErrorResponseException());
 
         $this->expectException('Git_Driver_Gerrit_Exception');
@@ -92,10 +96,13 @@ class Git_DriverREST_Gerrit_manageProjectsTest extends Git_Driver_GerritREST_bas
         $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
     }
 
-    public function itDoesntTransformExceptionsThatArentRelatedToGerrit(){}
-    public function itInformsAboutProjectInitialization(){}
+    public function itDoesntTransformExceptionsThatArentRelatedToGerrit()
+    {}
+    public function itInformsAboutProjectInitialization()
+    {}
 
-    public function itPutsThneProjectInReadOnly() {
+    public function itPutsThneProjectInReadOnly()
+    {
         $url = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
             .'/a/projects/'. urlencode($this->project_name) .'/config';
@@ -119,7 +126,8 @@ class Git_DriverREST_Gerrit_manageProjectsTest extends Git_Driver_GerritREST_bas
         $this->driver->makeGerritProjectReadOnly($this->gerrit_server, $this->project_name);
     }
 
-    public function itAddsTheProjectInheritance() {
+    public function itAddsTheProjectInheritance()
+    {
         $url = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
             .'/a/projects/'. urlencode($this->project_name) .'/parent';
@@ -143,7 +151,8 @@ class Git_DriverREST_Gerrit_manageProjectsTest extends Git_Driver_GerritREST_bas
         $this->driver->setProjectInheritance($this->gerrit_server, $this->project_name, 'prj');
     }
 
-    public function itResetsTheProjectInheritance() {
+    public function itResetsTheProjectInheritance()
+    {
         $url = $this->gerrit_server_host
            .':'. $this->gerrit_server_port
            .'/a/projects/'. urlencode($this->project_name) .'/parent';
@@ -167,7 +176,8 @@ class Git_DriverREST_Gerrit_manageProjectsTest extends Git_Driver_GerritREST_bas
         $this->driver->resetProjectInheritance($this->gerrit_server, $this->project_name);
     }
 
-    public function itDeletesProject() {
+    public function itDeletesProject()
+    {
         $url = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
             .'/a/projects/'. urlencode($this->project_name);

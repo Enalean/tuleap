@@ -20,15 +20,18 @@
 
 class b201211211457_refactor_tracker_rule_tables extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Refactor the tracker_rule tables';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS tracker_rule_list(
             tracker_rule_id int(11) unsigned NOT NULL PRIMARY KEY,
             source_field_id int(11) unsigned NOT NULL default '0',
@@ -72,7 +75,8 @@ class b201211211457_refactor_tracker_rule_tables extends ForgeUpgrade_Bucket {
         }
     }
 
-    private function createTable($name, $sql) {
+    private function createTable($name, $sql)
+    {
         $result = $this->db->createTable($name, $sql);
 
         if ($result === false) {

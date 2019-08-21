@@ -30,11 +30,13 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 class Docman_View_ItemDetailsSectionApprovalCreate
 extends Docman_View_ItemDetailsSectionApproval {
 
-    function __construct($item, $url, $themePath) {
+    function __construct($item, $url, $themePath)
+    {
         parent::__construct($item, $url, $themePath, null);
     }
 
-    function displayConfirmDelete() {
+    function displayConfirmDelete()
+    {
         $html = '';
         $html .= '<form action="'.$this->url.'" method="POST" class="docman_confirm_delete">';
         $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_delete_txt');
@@ -51,7 +53,8 @@ extends Docman_View_ItemDetailsSectionApproval {
         return $html;
     }
 
-    function displayNotificationEmail() {
+    function displayNotificationEmail()
+    {
         $html = '';
         $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_email_title').'</h3>';
 
@@ -96,7 +99,8 @@ extends Docman_View_ItemDetailsSectionApproval {
         return $html;
     }
 
-    function _getNewTable() {
+    function _getNewTable()
+    {
         $html = '';
         if(is_a($this->table, 'Docman_ApprovalTableVersionned')) {
             $lastDocumentVersion = $this->atf->getLastDocumentVersionNumber();
@@ -109,7 +113,8 @@ extends Docman_View_ItemDetailsSectionApproval {
         return $html;
     }
 
-    function _getGlobalSettings() {
+    function _getGlobalSettings()
+    {
         $html = '';
 
         $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_create_settings').'</h3>';
@@ -166,7 +171,8 @@ extends Docman_View_ItemDetailsSectionApproval {
         return $html;
     }
 
-    function _getNotificationSettings() {
+    function _getNotificationSettings()
+    {
         $html = '';
 
         $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_title').'</h3>';
@@ -219,7 +225,8 @@ extends Docman_View_ItemDetailsSectionApproval {
         return $html;
     }
 
-    function _displayNotificationOccurence() {
+    function _displayNotificationOccurence()
+    {
         $html = '<tr>';
         $html .= '<td>';
         $html .= '<h4>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_occurence_title').'</h4>';
@@ -249,7 +256,8 @@ extends Docman_View_ItemDetailsSectionApproval {
         return $html;
     }
 
-    function _getReviewerTable() {
+    function _getReviewerTable()
+    {
         $html  = '';
         $uh    = UserHelper::instance();
         $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_title').'</h3>';
@@ -343,7 +351,8 @@ extends Docman_View_ItemDetailsSectionApproval {
         return $html;
     }
 
-    function _getAddReviewers() {
+    function _getAddReviewers()
+    {
         $html = '';
 
         if(($this->table !== null && !$this->table->isClosed())
@@ -371,7 +380,8 @@ extends Docman_View_ItemDetailsSectionApproval {
         return $html;
     }
 
-    /*static*/function displayImportLastTable($onTableUpdate=false) {
+    /*static*/function displayImportLastTable($onTableUpdate=false)
+    {
         $html = '';
 
         if($onTableUpdate) {
@@ -390,7 +400,8 @@ extends Docman_View_ItemDetailsSectionApproval {
         return $html;
     }
 
-    function displayUpdateForm() {
+    function displayUpdateForm()
+    {
         $html = '';
         $html .= '<form name="docman_approval_settings" method="post" action="?" class="docman_form">';
         $html .= '<input type="hidden" name="group_id" value="'.$this->item->getGroupId().'" />';
@@ -417,7 +428,8 @@ extends Docman_View_ItemDetailsSectionApproval {
         return $html;
     }
 
-    function displayCreateTable() {
+    function displayCreateTable()
+    {
         $html = '';
 
         $html .= '<form name="docman_approval_settings" method="post" action="?" class="docman_form">';
@@ -454,7 +466,8 @@ extends Docman_View_ItemDetailsSectionApproval {
     }
 
 
-    function getContent($params = []) {
+    function getContent($params = [])
+    {
         $html = '';
 
         $user = $this->_getCurrentUser();

@@ -22,7 +22,8 @@ require_once __DIR__ . '/../../../../src/www/file/file_utils.php';
 
 class FileUtils extends TuleapTestCase {
 
-    function testFileUtilsGetSize_1_Mo_File() {
+    function testFileUtilsGetSize_1_Mo_File()
+    {
         $file = $this->getTmpDir() . '/File_1_Mo';
         copy(dirname(__FILE__) . '/_fixtures/File_1_Mo_sample', $file);
         $this->assertNotNull(file_utils_get_size($file));
@@ -31,7 +32,8 @@ class FileUtils extends TuleapTestCase {
         $this->assertTrue(file_utils_get_size($file) < 2000000);
     }
 
-    function testFileUtilsGetSize_1_Mo_File_with_spaces() {
+    function testFileUtilsGetSize_1_Mo_File_with_spaces()
+    {
         $file = $this->getTmpDir() . '/File 1 Mo';
         copy(dirname(__FILE__) . '/_fixtures/File_1_Mo_sample', $file);
         $this->assertNotNull(file_utils_get_size($file));
@@ -40,7 +42,8 @@ class FileUtils extends TuleapTestCase {
         $this->assertTrue(file_utils_get_size($file) < 2000000);
     }
 
-    function testFileUtilsGetSize_1_Mo_File_with_spaces_and_quotes() {
+    function testFileUtilsGetSize_1_Mo_File_with_spaces_and_quotes()
+    {
         $file = $this->getTmpDir() . '/File "1" Mo';
         copy(dirname(__FILE__) . '/_fixtures/File_1_Mo_sample', $file);
         $this->assertNotNull(file_utils_get_size($file));
@@ -49,7 +52,8 @@ class FileUtils extends TuleapTestCase {
         $this->assertTrue(file_utils_get_size($file) < 2000000);
     }
 
-    function testFileUtilsGetSize_1_Mo_File_with_spaces_and_quote() {
+    function testFileUtilsGetSize_1_Mo_File_with_spaces_and_quote()
+    {
         $file = $this->getTmpDir() . '/File "1 Mo';
         copy(dirname(__FILE__) . '/_fixtures/File_1_Mo_sample', $file);
         $this->assertNotNull(file_utils_get_size($file));
@@ -58,7 +62,8 @@ class FileUtils extends TuleapTestCase {
         $this->assertTrue(file_utils_get_size($file) < 2000000);
     }
 
-    function testFileUtilsGetSize_1_Mo_File_with_spaces_and_simple_quote() {
+    function testFileUtilsGetSize_1_Mo_File_with_spaces_and_simple_quote()
+    {
         $file = $this->getTmpDir() . "/File '1 Mo";
         copy(dirname(__FILE__) . '/_fixtures/File_1_Mo_sample', $file);
         $this->assertNotNull(file_utils_get_size($file));

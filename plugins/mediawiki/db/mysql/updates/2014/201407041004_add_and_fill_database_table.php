@@ -23,7 +23,8 @@ class b201407041004_add_and_fill_database_table extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add plugin_mediawiki_database table
 EOT;
@@ -34,7 +35,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -43,7 +45,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS plugin_mediawiki_database (
             project_id INT(11) UNSIGNED NOT NULL,
             database_name VARCHAR(255) NULL,
@@ -69,7 +72,8 @@ EOT;
         $this->execDB($sql, 'An error occured while filling plugin_mediawiki_database table  (db with id): ');
     }
 
-    private function execDB($sql, $message) {
+    private function execDB($sql, $message)
+    {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message.implode(', ', $this->db->dbh->errorInfo()));

@@ -23,13 +23,15 @@ require_once dirname(__FILE__).'/../../../../tests/simpletest/common/TreeNode/No
 
 class Tracker_TreeNode_CardPresenterNodeTest extends NodeDuplicatorContractTest {
 
-    public function itHoldsTheGivenPresenter() {
+    public function itHoldsTheGivenPresenter()
+    {
         $presenter      = mock('Tracker_CardPresenter');
         $presenter_node = new Tracker_TreeNode_CardPresenterNode(new TreeNode(), $presenter);
         $this->assertEqual($presenter, $presenter_node->getCardPresenter());
     }
 
-    protected function newNode(TreeNode $tree_node) {
+    protected function newNode(TreeNode $tree_node)
+    {
         return new Tracker_TreeNode_CardPresenterNode($tree_node, mock('Tracker_CardPresenter'));
     }
 }

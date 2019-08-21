@@ -39,7 +39,8 @@ class WikiService extends Controler {
   /**
    * Constructor
    */
-    function __construct($id) {
+    function __construct($id)
+    {
         global $LANG, $is_wiki_page;
 
         //used so the search box will add the necessary element to the pop-up box
@@ -85,7 +86,8 @@ class WikiService extends Controler {
    *  wiki: whole wiki can be restricted.
    *  wikipage: each page of the wiki can be restricted.
    */
-    function checkPermissions() {
+    function checkPermissions()
+    {
       // Check if user can access to whole wiki
         if(!$this->wiki->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
             $GLOBALS['Response']->addFeedback(
@@ -121,7 +123,8 @@ class WikiService extends Controler {
   /**
    * Bind http request with views and actions
    */
-    function request() {
+    function request()
+    {
         if (!isset($this->view))
         $this->view = 'browse';
 

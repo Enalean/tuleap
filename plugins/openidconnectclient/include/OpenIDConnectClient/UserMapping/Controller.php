@@ -99,7 +99,8 @@ class Controller {
         }
     }
 
-    private function redirectToAccountPage($message, $feedback_type) {
+    private function redirectToAccountPage($message, $feedback_type)
+    {
         $GLOBALS['Response']->addFeedback(
             $feedback_type,
             $message

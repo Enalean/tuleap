@@ -19,7 +19,8 @@
  */
 
 class Tracker_Artifact_XMLImport_Exception_FileNotFoundException extends Tracker_Exception {
-    public function __construct($file) {
+    public function __construct($file)
+    {
         parent::__construct('File not found: '.$file);
     }
 }

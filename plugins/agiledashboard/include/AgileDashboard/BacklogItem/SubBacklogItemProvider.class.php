@@ -70,7 +70,8 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider {
      * @param PFUser $user
      * @return array
      */
-    public function getMatchingIds(Planning_Milestone $milestone, Tracker $backlog_tracker, PFUser $user) {
+    public function getMatchingIds(Planning_Milestone $milestone, Tracker $backlog_tracker, PFUser $user)
+    {
         if (! $milestone->getArtifactId()) {
             return $this->getMatchingIdsForTopBacklog($milestone, $backlog_tracker, $user);
         }
@@ -89,7 +90,8 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider {
         return $this->backlog_ids;
     }
 
-    private function getMatchingIdsForTopBacklog(Planning_VirtualTopMilestone $milestone, Tracker $backlog_tracker, PFUser $user) {
+    private function getMatchingIdsForTopBacklog(Planning_VirtualTopMilestone $milestone, Tracker $backlog_tracker, PFUser $user)
+    {
         $backlog_unassigned = $this->backlog_factory->getSelfBacklog($milestone);
         $backlog_items      = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $milestone, $backlog_unassigned, false);
 

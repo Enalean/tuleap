@@ -39,7 +39,9 @@ Mock::generatePartial(
 );
 
 class Tracker_FormElement_Field_IntegerTestVersion_Expose_ProtectedMethod extends Tracker_FormElement_Field_IntegerTestVersion {
-    public function buildMatchExpression($a, $b) { return parent::buildMatchExpression($a, $b); }
+    public function buildMatchExpression($a, $b)
+    {
+        return parent::buildMatchExpression($a, $b); }
 }
 
 
@@ -51,19 +53,22 @@ class Tracker_FormElement_Field_IntegerTest extends TuleapTestCase {
         $GLOBALS['Response'] = new MockResponse();
     }
 
-    function testNoDefaultValue() {
+    function testNoDefaultValue()
+    {
         $int_field = new Tracker_FormElement_Field_IntegerTestVersion();
         $this->assertFalse($int_field->hasDefaultValue());
     }
 
-    function testDefaultValue() {
+    function testDefaultValue()
+    {
         $int_field = new Tracker_FormElement_Field_IntegerTestVersion();
         $int_field->setReturnValue('getProperty', '12', array('default_value'));
         $this->assertTrue($int_field->hasDefaultValue());
         $this->assertEqual($int_field->getDefaultValue(), 12);
     }
 
-    function testGetChangesetValue() {
+    function testGetChangesetValue()
+    {
         $value_dao = new MockTracker_FormElement_Field_Value_IntegerDao();
         $dar = new MockDataAccessResult();
         $dar->setReturnValueAt(0, 'getRow', array('id' => 123, 'field_id' => 1, 'value' => '42'));
@@ -76,7 +81,8 @@ class Tracker_FormElement_Field_IntegerTest extends TuleapTestCase {
         $this->assertIsA($integer_field->getChangesetValue(mock('Tracker_Artifact_Changeset'), 123, false), 'Tracker_Artifact_ChangesetValue_Integer');
     }
 
-    function testGetChangesetValue_doesnt_exist() {
+    function testGetChangesetValue_doesnt_exist()
+    {
         $value_dao = new MockTracker_FormElement_Field_Value_IntegerDao();
         $dar = new MockDataAccessResult();
         $dar->setReturnValue('getRow', false);
@@ -88,7 +94,8 @@ class Tracker_FormElement_Field_IntegerTest extends TuleapTestCase {
         $this->assertNull($integer_field->getChangesetValue(null, 123, false));
     }
 
-    function testIsValidRequiredField() {
+    function testIsValidRequiredField()
+    {
         $f = new Tracker_FormElement_Field_IntegerTestVersion();
         $f->setReturnValue('isRequired', true);
         $a = new MockTracker_Artifact();
@@ -106,7 +113,8 @@ class Tracker_FormElement_Field_IntegerTest extends TuleapTestCase {
         $this->assertFalse($f->isValidRegardingRequiredProperty($a, null));
     }
 
-    function testIsValidNotRequiredField() {
+    function testIsValidNotRequiredField()
+    {
         $f = new Tracker_FormElement_Field_IntegerTestVersion();
         $f->setReturnValue('isRequired', false);
         $a = new MockTracker_Artifact();
@@ -114,12 +122,14 @@ class Tracker_FormElement_Field_IntegerTest extends TuleapTestCase {
         $this->assertTrue($f->isValid($a, null));
     }
 
-    function testGetFieldData() {
+    function testGetFieldData()
+    {
         $f = new Tracker_FormElement_Field_IntegerTestVersion();
         $this->assertEqual('42', $f->getFieldData('42'));
     }
 
-    function test_buildMatchExpression() {
+    function test_buildMatchExpression()
+    {
         $f = new Tracker_FormElement_Field_IntegerTestVersion_Expose_ProtectedMethod();
         $this->assertEqual($f->buildMatchExpression('field', '12'), 'field = 12');
         $this->assertEqual($f->buildMatchExpression('field', '<12'), 'field < 12');
@@ -195,7 +205,8 @@ class Tracker_FormElement_Field_IntegerTest extends TuleapTestCase {
 
 class Tracker_FormElement_Field_Integer_RESTTests extends TuleapTestCase {
 
-    public function itReturnsTheValueIndexedByFieldName() {
+    public function itReturnsTheValueIndexedByFieldName()
+    {
         $field = new Tracker_FormElement_Field_IntegerTestVersion();
         $value = array(
             "field_id" => 873,

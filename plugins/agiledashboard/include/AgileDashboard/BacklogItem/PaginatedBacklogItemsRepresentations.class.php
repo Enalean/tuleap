@@ -28,16 +28,19 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations {
     public $total_size;
 
 
-    public function __construct(array $backlog_items_representations, $total_size) {
+    public function __construct(array $backlog_items_representations, $total_size)
+    {
         $this->backlog_items_representations = $backlog_items_representations;
         $this->total_size                    = $total_size;
     }
 
-    public function getBacklogItemsRepresentations() {
+    public function getBacklogItemsRepresentations()
+    {
         return $this->backlog_items_representations;
     }
 
-    public function getTotalSize() {
+    public function getTotalSize()
+    {
         return $this->total_size;
     }
 

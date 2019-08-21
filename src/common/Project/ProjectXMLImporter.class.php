@@ -183,7 +183,8 @@ class ProjectXMLImporter
         return $project;
     }
 
-    public function importFromArchive(ImportConfig $configuration, $project_id, ArchiveInterface $archive) {
+    public function importFromArchive(ImportConfig $configuration, $project_id, ArchiveInterface $archive)
+    {
         $this->logger->info('Start importing into existing project from archive ' . $archive->getExtractionPath());
 
         $xml_element = $this->getProjectXMLFromArchive($archive);
@@ -203,7 +204,8 @@ class ProjectXMLImporter
         $this->importFromXMLIntoExistingProject($configuration, $project_id, $xml_element, $archive->getExtractionPath());
     }
 
-    public function import(ImportConfig $configuration, $project_id, $xml_file_path) {
+    public function import(ImportConfig $configuration, $project_id, $xml_file_path)
+    {
         $this->logger->info('Start importing from file ' . $xml_file_path);
 
         $xml_element = $this->getSimpleXMLElementFromFilePath($xml_file_path);
@@ -211,14 +213,16 @@ class ProjectXMLImporter
         $this->importFromXMLIntoExistingProject($configuration, $project_id, $xml_element, '');
     }
 
-    private function importFromXMLIntoExistingProject(ImportConfig $configuration, $project_id, SimpleXMLElement $xml_element, $extraction_path) {
+    private function importFromXMLIntoExistingProject(ImportConfig $configuration, $project_id, SimpleXMLElement $xml_element, $extraction_path)
+    {
         $project = $this->project_manager->getValidProjectByShortNameOrId($project_id);
         $this->activateServices($project, $xml_element);
 
         $this->importContent($configuration, $project, $xml_element, $extraction_path);
     }
 
-    private function activateServices(Project $project, SimpleXMLElement $xml_element) {
+    private function activateServices(Project $project, SimpleXMLElement $xml_element)
+    {
         if ($xml_element->services) {
             foreach ($xml_element->services->service as $service) {
                 $short_name = (string) $service['shortname'];
@@ -241,7 +245,8 @@ class ProjectXMLImporter
         return $this->collectBlockingErrorsWithoutImportingContent($project, $xml_element);
     }
 
-    private function importContent(ImportConfig $configuration, Project $project, SimpleXMLElement $xml_element, $extraction_path) {
+    private function importContent(ImportConfig $configuration, Project $project, SimpleXMLElement $xml_element, $extraction_path)
+    {
         $this->logger->info("Importing project in project ".$project->getUnixName());
 
         $user_creator = $this->user_manager->getCurrentUser();
@@ -307,7 +312,8 @@ class ProjectXMLImporter
         return $errors;
     }
 
-    private function importUgroups(Project $project, SimpleXMLElement $xml_element, PFUser $user_creator) {
+    private function importUgroups(Project $project, SimpleXMLElement $xml_element, PFUser $user_creator)
+    {
         $this->logger->info("Check if there are ugroups to add");
 
         if ($xml_element->ugroups) {
@@ -390,7 +396,8 @@ class ProjectXMLImporter
      *
      * @return array
      */
-    private function getUgroupsFromXMLToAdd(Project $project, SimpleXMLElement $xml_element_ugroups) {
+    private function getUgroupsFromXMLToAdd(Project $project, SimpleXMLElement $xml_element_ugroups)
+    {
         $ugroups = array();
         $project_members = array();
 
@@ -427,7 +434,8 @@ class ProjectXMLImporter
      *
      * @return PFUser[]
      */
-    private function getListOfUgroupMember(SimpleXMLElement $ugroup) {
+    private function getListOfUgroupMember(SimpleXMLElement $ugroup)
+    {
         $ugroup_members = array();
 
         foreach ($ugroup->members->member as $xml_member) {
@@ -437,7 +445,8 @@ class ProjectXMLImporter
         return $ugroup_members;
     }
 
-    private function getProjectXMLFromArchive(ArchiveInterface $archive) {
+    private function getProjectXMLFromArchive(ArchiveInterface $archive)
+    {
         $xml_contents = $archive->getProjectXML();
 
         if (! $xml_contents) {
@@ -456,13 +465,15 @@ class ProjectXMLImporter
         return $this->getSimpleXMLElementFromString($xml_contents);
     }
 
-    private function getSimpleXMLElementFromString($file_contents) {
+    private function getSimpleXMLElementFromString($file_contents)
+    {
         $this->checkFileIsValidXML($file_contents);
 
         return simplexml_load_string($file_contents, 'SimpleXMLElement', $this->getLibXMLOptions());
     }
 
-    private function checkFileIsValidXML($file_contents) {
+    private function checkFileIsValidXML($file_contents)
+    {
         libxml_use_internal_errors(true);
         libxml_clear_errors();
         $xml = new DOMDocument();
@@ -474,7 +485,8 @@ class ProjectXMLImporter
         }
     }
 
-    private function getLibXMLOptions() {
+    private function getLibXMLOptions()
+    {
         if ($this->isAllowedToLoadHugeFiles()) {
             return LIBXML_PARSEHUGE;
         }
@@ -482,7 +494,8 @@ class ProjectXMLImporter
         return 0;
     }
 
-    private function isAllowedToLoadHugeFiles() {
+    private function isAllowedToLoadHugeFiles()
+    {
         return defined('IS_SCRIPT') && IS_SCRIPT;
     }
 

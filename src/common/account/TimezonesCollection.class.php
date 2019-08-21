@@ -479,15 +479,18 @@ class Account_TimezonesCollection {
         'Zulu',
     );
 
-    public function getTimezones() {
+    public function getTimezones()
+    {
         return $this->timezones;
     }
 
-    public function isValidTimezone($timezone) {
+    public function isValidTimezone($timezone)
+    {
         return in_array($timezone, $this->timezones);
     }
 
-    public function getTimezonePresenters($current_timezone) {
+    public function getTimezonePresenters($current_timezone)
+    {
         $list_of_presenters = array();
         foreach ($this->timezones as $timezone) {
             $presenter = new stdClass;

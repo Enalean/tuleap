@@ -33,7 +33,8 @@ class Transition_PostAction_Field_DateTest extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText', Tracker_FormElement_DateFormatter::DATE_FORMAT, array('system', 'datefmt_short'));
     }
 
-    public function testBeforeShouldSetTheDate() {
+    public function testBeforeShouldSetTheDate()
+    {
         $current_user = mock('PFUser');
 
         $field = new MockTracker_FormElement_Field_Date();
@@ -63,7 +64,8 @@ class Transition_PostAction_Field_DateTest extends TuleapTestCase {
         $this->assertEqual($expected, $fields_data[$field_id]);
     }
 
-    public function testBeforeShouldClearTheDate() {
+    public function testBeforeShouldClearTheDate()
+    {
         $current_user = mock('PFUser');
 
         $field = new MockTracker_FormElement_Field_Date();
@@ -93,7 +95,8 @@ class Transition_PostAction_Field_DateTest extends TuleapTestCase {
         $this->assertEqual('', $fields_data[$field_id]);
     }
 
-    public function testBeforeShouldBypassAndSetTheDate() {
+    public function testBeforeShouldBypassAndSetTheDate()
+    {
         $current_user = mock('PFUser');
 
         $field = new MockTracker_FormElement_Field_Date();
@@ -121,7 +124,8 @@ class Transition_PostAction_Field_DateTest extends TuleapTestCase {
         $this->assertEqual($expected, $fields_data[$field_id]);
     }
 
-    public function testBeforeShouldBypassAndClearTheDate() {
+    public function testBeforeShouldBypassAndClearTheDate()
+    {
         $current_user = mock('PFUser');
 
         $field = new MockTracker_FormElement_Field_Date();
@@ -152,7 +156,8 @@ class Transition_PostAction_Field_DateTest extends TuleapTestCase {
         $this->assertEqual('', $fields_data[$field_id]);
     }
 
-    public function testBeforeShouldNOTDisplayFeedback() {
+    public function testBeforeShouldNOTDisplayFeedback()
+    {
         $current_user = mock('PFUser');
 
         $field = new MockTracker_FormElement_Field_Date();

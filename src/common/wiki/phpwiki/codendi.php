@@ -10,7 +10,8 @@ define('PHPWIKI_NOMAIN', true);
  *
  * @return bool
  */
-function display_remove_button($pagename) {
+function display_remove_button($pagename)
+{
     $display_remove_button = true;
     $em = EventManager::instance();
     $em->processEvent(
@@ -24,7 +25,8 @@ function display_remove_button($pagename) {
     return $display_remove_button;
 }
 
-function codendi_main () {
+function codendi_main()
+{
     validateSessionPath();
 
     global $request;

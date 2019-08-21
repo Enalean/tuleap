@@ -148,7 +148,8 @@ class GitViews_RepoManagement {
     /**
      * @return array
      */
-    private function buildPanes(GitRepository $repository) {
+    private function buildPanes(GitRepository $repository)
+    {
         $collection = new PanesCollection($repository, $this->request);
         $collection->add(new Pane\GeneralSettings($repository, $this->request));
 
@@ -215,7 +216,8 @@ class GitViews_RepoManagement {
     /**
      * Output repo management sub screen to the browser
      */
-    public function display() {
+    public function display()
+    {
         echo '<div class="tabbable">';
         echo '<ul class="nav nav-tabs">';
         foreach ($this->panes as $pane) {
@@ -229,7 +231,8 @@ class GitViews_RepoManagement {
         echo '</div>';
     }
 
-    private function displayTab(Pane\Pane $pane) {
+    private function displayTab(Pane\Pane $pane)
+    {
         echo '<li class="'. ($this->current_pane == $pane->getIdentifier() ? 'active' : '') .'">';
         $url = GIT_BASE_URL .'/?'. http_build_query(
             array(

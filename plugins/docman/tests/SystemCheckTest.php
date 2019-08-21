@@ -31,7 +31,8 @@ class Docman_SystemCheckTest extends TuleapTestCase {
     /** @var Docman_SystemCheckProjectRetriever */
     private $retriever;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         ForgeConfig::store();
@@ -58,13 +59,15 @@ class Docman_SystemCheckTest extends TuleapTestCase {
         );
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
 
         parent::tearDown();
     }
 
-    public function itCreatesFolderForActiveProject() {
+    public function itCreatesFolderForActiveProject()
+    {
         stub($this->retriever)->getActiveProjectUnixNamesThatUseDocman()->returns(array(
             'project_01'
         ));

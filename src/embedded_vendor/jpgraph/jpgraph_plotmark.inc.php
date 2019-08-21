@@ -32,7 +32,8 @@ class PlotMark {
 
     //--------------
     // CONSTRUCTOR
-    function __construct() {
+    function __construct()
+    {
         $this->title = new Text();
         $this->title->Hide();
         $this->csimareas = '';
@@ -40,7 +41,8 @@ class PlotMark {
     }
     //---------------
     // PUBLIC METHODS
-    function SetType($aType,$aFileName='',$aScale=1.0) {
+    function SetType($aType,$aFileName='',$aScale=1.0)
+    {
         $this->type = $aType;
         if( $aType == MARK_IMG && $aFileName=='' ) {
             JpGraphError::RaiseL(23003);//('A filename must be specified if you set the mark type to MARK_IMG.');
@@ -49,40 +51,49 @@ class PlotMark {
         $this->iScale = $aScale;
     }
 
-    function SetCallback($aFunc) {
+    function SetCallback($aFunc)
+    {
         $this->iFormatCallback = $aFunc;
     }
 
-    function SetCallbackYX($aFunc) {
+    function SetCallbackYX($aFunc)
+    {
         $this->iFormatCallback2 = $aFunc;
     }
 
-    function GetType() {
+    function GetType()
+    {
         return $this->type;
     }
 
-    function SetColor($aColor) {
+    function SetColor($aColor)
+    {
         $this->color=$aColor;
     }
 
-    function SetFillColor($aFillColor) {
+    function SetFillColor($aFillColor)
+    {
         $this->fill_color = $aFillColor;
     }
 
-    function SetWeight($aWeight) {
+    function SetWeight($aWeight)
+    {
         $this->weight = $aWeight;
     }
 
     // Synonym for SetWidth()
-    function SetSize($aWidth) {
+    function SetSize($aWidth)
+    {
         $this->width=$aWidth;
     }
 
-    function SetWidth($aWidth) {
+    function SetWidth($aWidth)
+    {
         $this->width=$aWidth;
     }
 
-    function SetDefaultWidth() {
+    function SetDefaultWidth()
+    {
         switch( $this->type ) {
             case MARK_CIRCLE:
             case MARK_FILLEDCIRCLE:
@@ -93,37 +104,45 @@ class PlotMark {
         }
     }
 
-    function GetWidth() {
+    function GetWidth()
+    {
         return $this->width;
     }
 
-    function Hide($aHide=true) {
+    function Hide($aHide=true)
+    {
         $this->show = !$aHide;
     }
 
-    function Show($aShow=true) {
+    function Show($aShow=true)
+    {
         $this->show = $aShow;
     }
 
-    function SetCSIMAltVal($aY,$aX='') {
+    function SetCSIMAltVal($aY,$aX='')
+    {
         $this->yvalue=$aY;
         $this->xvalue=$aX;
     }
 
-    function SetCSIMTarget($aTarget,$aWinTarget='') {
+    function SetCSIMTarget($aTarget,$aWinTarget='')
+    {
         $this->csimtarget=$aTarget;
         $this->csimwintarget=$aWinTarget;
     }
 
-    function SetCSIMAlt($aAlt) {
+    function SetCSIMAlt($aAlt)
+    {
         $this->csimalt=$aAlt;
     }
 
-    function GetCSIMAreas(){
+    function GetCSIMAreas()
+    {
         return $this->csimareas;
     }
 
-    function AddCSIMPoly($aPts) {
+    function AddCSIMPoly($aPts)
+    {
         $coords = round($aPts[0]).", ".round($aPts[1]);
         $n = count($aPts)/2;
         for( $i=1; $i < $n; ++$i){
@@ -145,7 +164,8 @@ class PlotMark {
         }
     }
 
-    function AddCSIMCircle($x,$y,$r) {
+    function AddCSIMCircle($x,$y,$r)
+    {
         $x = round($x); $y=round($y); $r=round($r);
         $this->csimareas="";
         if( !empty($this->csimtarget) ) {
@@ -163,7 +183,8 @@ class PlotMark {
         }
     }
 
-    function Stroke($img,$x,$y) {
+    function Stroke($img,$x,$y)
+    {
         if( !$this->show ) return;
 
         if( $this->iFormatCallback != '' || $this->iFormatCallback2 != '' ) {
@@ -451,12 +472,14 @@ class ImgData {
     protected $maxidx = 0 ;  // Max color index
     protected $anchor_x=0.5, $anchor_y=0.5 ;    // Where is the center of the image
 
-    function __construct() {
+    function __construct()
+    {
         // Empty
     }
 
     // Create a GD image from the data and return a GD handle
-    function GetImg($aMark,$aIdx) {
+    function GetImg($aMark,$aIdx)
+    {
         $n = $this->an[$aMark];
         if( is_string($aIdx) ) {
             if( !in_array($aIdx,$this->colors) ) {
@@ -473,7 +496,8 @@ class ImgData {
         return Image::CreateFromString(base64_decode($this->{$n}[$idx][1]));
     }
 
-    function GetAnchor() {
+    function GetAnchor()
+    {
         return array($this->anchor_x,$this->anchor_y);
     }
 }
@@ -489,7 +513,8 @@ $_gFlagCache=array(
 // Only supposed to b called as statics
 class FlagCache {
 
-    static function GetFlagImgByName($aSize,$aName) {
+    static function GetFlagImgByName($aSize,$aName)
+    {
         global $_gFlagCache;
         require_once('jpgraph_flags.php');
         if( $_gFlagCache[$aSize] === null ) {

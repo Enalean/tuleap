@@ -49,7 +49,8 @@ class SubmittedValueConvertorTest extends TuleapTestCase {
     /** @var Tracker_Artifact */
     private $art_124;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -86,12 +87,14 @@ class SubmittedValueConvertorTest extends TuleapTestCase {
         Tracker_ArtifactFactory::setInstance($this->artifact_factory);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         Tracker_ArtifactFactory::clearInstance();
         parent::tearDown();
     }
 
-    public function itRemovesFromSubmittedValuesArtifactsThatWereUpdatedByDirectionChecking() {
+    public function itRemovesFromSubmittedValuesArtifactsThatWereUpdatedByDirectionChecking()
+    {
         $submitted_value = array('new_values' => '123, 124');
 
         stub($this->source_of_association_detector)->isChild($this->art_123, $this->artifact)->returns(false);
@@ -113,7 +116,8 @@ class SubmittedValueConvertorTest extends TuleapTestCase {
         );
     }
 
-    public function itChangesTheNatureOfAnExistingLink() {
+    public function itChangesTheNatureOfAnExistingLink()
+    {
         $submitted_value = array(
             'new_values' => '',
             'natures' => array(
@@ -131,7 +135,8 @@ class SubmittedValueConvertorTest extends TuleapTestCase {
         $this->assertEqual($updated_submitted_value['list_of_artifactlinkinfo'][201]->getNature(), 'fixed_in');
     }
 
-    public function itChangesTheNatureToNullOfAnExistingLink() {
+    public function itChangesTheNatureToNullOfAnExistingLink()
+    {
         $submitted_value = array(
             'new_values' => '',
             'natures' => array(
@@ -149,7 +154,8 @@ class SubmittedValueConvertorTest extends TuleapTestCase {
         $this->assertEqual($updated_submitted_value['list_of_artifactlinkinfo'][201]->getNature(), null);
     }
 
-    public function itDoesNotMutateTheExistingArtifactLinkInfo() {
+    public function itDoesNotMutateTheExistingArtifactLinkInfo()
+    {
         $submitted_value = array(
             'new_values' => '',
             'natures' => array(
@@ -172,7 +178,8 @@ class SubmittedValueConvertorTest extends TuleapTestCase {
         );
     }
 
-    public function itConvertsWhenThereIsNoNature() {
+    public function itConvertsWhenThereIsNoNature()
+    {
         $submitted_value = array('new_values' => '123, 124');
 
         stub($this->source_of_association_detector)->isChild($this->art_123, $this->artifact)->returns(false);
@@ -189,7 +196,8 @@ class SubmittedValueConvertorTest extends TuleapTestCase {
 
     }
 
-    public function itConvertsWhenThereIsOnlyOneNature() {
+    public function itConvertsWhenThereIsOnlyOneNature()
+    {
         $submitted_value = array('new_values' => '123, 124', 'natures' => array('123' => '_is_child', '124' => '_is_child'));
 
         stub($this->source_of_association_detector)->isChild($this->art_123, $this->artifact)->returns(false);
@@ -206,7 +214,8 @@ class SubmittedValueConvertorTest extends TuleapTestCase {
 
     }
 
-    public function itConvertsWhenEachArtifactLinkHasItsOwnNature() {
+    public function itConvertsWhenEachArtifactLinkHasItsOwnNature()
+    {
         $submitted_value = array('new_values' => '123, 124', 'natures' => array('123' => '_is_child', '124' => '_is_foo'));
 
         stub($this->source_of_association_detector)->isChild($this->art_123, $this->artifact)->returns(false);

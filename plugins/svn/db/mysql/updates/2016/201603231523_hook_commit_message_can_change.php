@@ -18,15 +18,18 @@
 
 class b201603231523_hook_commit_message_can_change extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add hook configuration commit_message_can_change in plugin_svn_hook_config table';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_svn_hook_config ADD COLUMN
                 commit_message_can_change BOOL DEFAULT false NOT NULL;";
 

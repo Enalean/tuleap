@@ -42,35 +42,43 @@ class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
         $this->selected_ugroups  = $selected_ugroups;
     }
 
-    public function git_admins_section() {
+    public function git_admins_section()
+    {
         return dgettext('tuleap-git', 'Git administrators');
     }
 
-    public function git_admins_description() {
+    public function git_admins_description()
+    {
         return dgettext('tuleap-git', 'This section allows you to select Git service administrators, in addition to project administrators.');
     }
 
-    public function git_admins_submit_button() {
+    public function git_admins_submit_button()
+    {
         return dgettext('tuleap-git', 'Submit');
     }
 
-    public function git_admins_form_action() {
+    public function git_admins_form_action()
+    {
         return '/plugins/git/?group_id='. $this->project_id .'&action=admin-git-admins';
     }
 
-    public function git_admins_selectbox_name() {
+    public function git_admins_selectbox_name()
+    {
         return self::GIT_ADMIN_SELECTBOX_NAME . '[]';
     }
 
-    public function git_admins_selectbox_id() {
+    public function git_admins_selectbox_id()
+    {
         return self::GIT_ADMIN_SELECTBOX_NAME;
     }
 
-    public function git_admins_options() {
+    public function git_admins_options()
+    {
         return $this->getSelectorOptions();
     }
 
-    private function getSelectorOptions() {
+    private function getSelectorOptions()
+    {
         $options = array($this->getProjectMembersOption());
         foreach ($this->static_ugroups as $group) {
             $options[] = array(
@@ -82,7 +90,8 @@ class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
         return $options;
     }
 
-    private function getProjectMembersOption() {
+    private function getProjectMembersOption()
+    {
         return array(
             'value'    => ProjectUGroup::PROJECT_MEMBERS,
             'label'    => $GLOBALS['Language']->getText('project_admin_editugroup', 'proj_members'),

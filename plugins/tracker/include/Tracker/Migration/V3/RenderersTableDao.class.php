@@ -19,12 +19,14 @@
  */
 
 class Tracker_Migration_V3_RenderersTableDao extends DataAccessObject {
-    public function create($tv3_id, $tv5_id) {
+    public function create($tv3_id, $tv5_id)
+    {
         $this->insertRendererTable($tv3_id, $tv5_id);
 
     }
 
-    private function insertRendererTable($tv3_id, $tv5_id) {
+    private function insertRendererTable($tv3_id, $tv5_id)
+    {
         $sql = "INSERT INTO tracker_report_renderer(report_id, renderer_type, name, description, rank)
                 SELECT id, 'table', 'Results', '', 1
                 FROM tracker_report

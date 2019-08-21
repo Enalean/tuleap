@@ -34,7 +34,8 @@ class Docman_ApprovalTableReminder {
      *
      * @return Void
      */
-    public function remindApprovers() {
+    public function remindApprovers()
+    {
         $dao = new Docman_ApprovalTableItemDao();
         $dar = $dao->getTablesForReminder();
         $tables = array();
@@ -63,7 +64,8 @@ class Docman_ApprovalTableReminder {
      *
      * @return Void
      */
-    private function sendNotificationToPendingApprovers(Docman_ApprovalTable $table) {
+    private function sendNotificationToPendingApprovers(Docman_ApprovalTable $table)
+    {
         if($table->isEnabled()) {
             switch ($table->getNotification()) {
                 case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
@@ -85,7 +87,8 @@ class Docman_ApprovalTableReminder {
      *
      * @return bool
      */
-    private function notifyAllAtOnce(Docman_ApprovalTable $table) {
+    private function notifyAllAtOnce(Docman_ApprovalTable $table)
+    {
         $nbNotif = 0;
         $this->populateReviewersList($table);
         $reviewers   = $table->getReviewerArray();
@@ -108,7 +111,8 @@ class Docman_ApprovalTableReminder {
      *
      * @return bool
      */
-    private function notifyNextReviewer(Docman_ApprovalTable $table) {
+    private function notifyNextReviewer(Docman_ApprovalTable $table)
+    {
         $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
         $dar = $dao->getFirstReviewerByStatus($table->getId(), PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
         if($dar && !$dar->isError() && $dar->rowCount() > 0) {
@@ -131,7 +135,8 @@ class Docman_ApprovalTableReminder {
      *
      * @return bool
      */
-    private function notifyIndividual(Docman_ApprovalTable $table, $reviewerId) {
+    private function notifyIndividual(Docman_ApprovalTable $table, $reviewerId)
+    {
         $hp       = Codendi_HTMLPurifier::instance();
         $um       = UserManager::instance();
         $reviewer = $um->getUserById($reviewerId);
@@ -209,7 +214,8 @@ class Docman_ApprovalTableReminder {
      *
      * @return String
      */
-    private function getReviewUrl(Docman_Item $docmanItem) {
+    private function getReviewUrl(Docman_Item $docmanItem)
+    {
         $baseUrl   = HTTPRequest::instance()->getServerUrl().'/plugins/docman/?group_id='.$docmanItem->getGroupId();
         $reviewUrl = $baseUrl.'&action=details&section=approval&id='.$docmanItem->getId().'&review=1';
         return $reviewUrl;
@@ -222,7 +228,8 @@ class Docman_ApprovalTableReminder {
      *
      * @return String
      */
-    private function getItemUrl(Docman_Item $docmanItem) {
+    private function getItemUrl(Docman_Item $docmanItem)
+    {
         $baseUrl   = HTTPRequest::instance()->getServerUrl().'/plugins/docman/?group_id='.$docmanItem->getGroupId();
         $itemUrl   = $baseUrl.'&action=show&id='.$docmanItem->getId();
         return $itemUrl;
@@ -235,7 +242,8 @@ class Docman_ApprovalTableReminder {
      *
      * @return PFUser
      */
-    private function getNotificationStyle(Docman_ApprovalTable $table) {
+    private function getNotificationStyle(Docman_ApprovalTable $table)
+    {
         $notifStyle = '';
         switch($table->getNotification()) {
             case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
@@ -256,7 +264,8 @@ class Docman_ApprovalTableReminder {
      *
      * @return PFUser
      */
-    private function getTableDescriptionAsMessage(Docman_ApprovalTable $table, $format) {
+    private function getTableDescriptionAsMessage(Docman_ApprovalTable $table, $format)
+    {
         $comment     = '';
         $userComment = $table->getDescription();
         if($userComment != '') {
@@ -285,7 +294,8 @@ class Docman_ApprovalTableReminder {
      *
      * @return PFUser
      */
-    private function getApprovalTableOwner(Docman_ApprovalTable $table) {
+    private function getApprovalTableOwner(Docman_ApprovalTable $table)
+    {
         $um    = UserManager::instance();
         return $um->getUserById($table->owner);
     }
@@ -297,7 +307,8 @@ class Docman_ApprovalTableReminder {
      *
      * @return Project
      */
-    private function getItemProject(Docman_Item $docmanItem) {
+    private function getItemProject(Docman_Item $docmanItem)
+    {
         $pm    = ProjectManager::instance();
         return $pm->getProject($docmanItem->getGroupId());
     }
@@ -310,7 +321,8 @@ class Docman_ApprovalTableReminder {
      *
      * @return String
      */
-    private function getBodyText(Docman_ApprovalTable $table, Docman_Item $docmanItem) {
+    private function getBodyText(Docman_ApprovalTable $table, Docman_Item $docmanItem)
+    {
         $group = $this->getItemProject($docmanItem);
         $owner = $this->getApprovalTableOwner($table);
 
@@ -334,7 +346,8 @@ class Docman_ApprovalTableReminder {
      *
      * @return String
      */
-    private function getBodyHtml(Docman_ApprovalTable $table, Docman_Item $docmanItem) {
+    private function getBodyHtml(Docman_ApprovalTable $table, Docman_Item $docmanItem)
+    {
         $group = $this->getItemProject($docmanItem);
         $owner = $this->getApprovalTableOwner($table);
         $body  = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body_header').'<br><br><b>';
@@ -356,7 +369,8 @@ class Docman_ApprovalTableReminder {
      *
      * @return Void
      */
-    private function populateReviewersList(Docman_ApprovalTable $table) {
+    private function populateReviewersList(Docman_ApprovalTable $table)
+    {
         $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
         $dar = $dao->getReviewerList($table->getId());
         if ($dar && !$dar->isError()) {

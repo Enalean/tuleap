@@ -22,7 +22,8 @@ rcs_id('$Id: Utils.php,v 1.2 2004/11/15 16:00:02 rurban Exp $');
  */
 
 
-function addPageTextData($user, $dbi, $new_data, $START_DELIM, $DELIM) {
+function addPageTextData($user, $dbi, $new_data, $START_DELIM, $DELIM)
+{
     // This is largely lifted from the TranslateText plugin, which performs a
     // similar set of functions (retrieves a user's homepage, modifies it
     // progmatically, and saves the changes)
@@ -54,12 +55,14 @@ function addPageTextData($user, $dbi, $new_data, $START_DELIM, $DELIM) {
     $page->save($text, $version + 1, $meta);
 }
 
-function getMembers($groupName, $dbi, $START_DELIM = false) {
+function getMembers($groupName, $dbi, $START_DELIM = false)
+{
     if (!$START_DELIM) $START_DELIM = _("Members:");
     return getPageTextData($groupName, $dbi, $START_DELIM);
 }
 
-function getPageTextData($fromUser, $dbi, $START_DELIM) {
+function getPageTextData($fromUser, $dbi, $START_DELIM)
+{
     if (is_object($fromUser))
         $fromUser = $fromUser->getId();
     if ($fromUser == "")
@@ -92,7 +95,8 @@ function getPageTextData($fromUser, $dbi, $START_DELIM) {
     return $retArray;
 }
 
-function notEmptyName($var) {
+function notEmptyName($var)
+{
     return $var != "";
 }
 

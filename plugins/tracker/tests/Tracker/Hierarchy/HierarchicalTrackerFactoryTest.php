@@ -27,7 +27,8 @@ Mock::generate('TrackerFactory');
 
 class HierarchicalTrackerFactoryTest extends TuleapTestCase {
 
-    function testGetWithChildren() {
+    function testGetWithChildren()
+    {
         $tracker = aTracker()->withId(1)->build();
 
         $dao          = Mockery::mock(HierarchyDAO::class);
@@ -49,13 +50,15 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
         $this->assertEqual(count($children), 0);
     }
 
-    private function assertChildEquals($children, $tracker) {
+    private function assertChildEquals($children, $tracker)
+    {
         $child = array_shift($children);
         $this->assertEqual($child, $tracker);
         return $children;
     }
 
-    public function testGetPossibleChildren() {
+    public function testGetPossibleChildren()
+    {
         $dao = Mockery::mock(HierarchyDAO::class);
         $dao->shouldReceive('searchAncestorIds')->with(1)->andReturn([4])->once();
 
@@ -89,7 +92,8 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
         $this->assertEqual(count($actual_possible_children), 0);
     }
 
-    private function getHierarchyAsTreeNode($hierarchy) {
+    private function getHierarchyAsTreeNode($hierarchy)
+    {
         $node = new TreeNode();
         if (isset($hierarchy['children'])) {
             $node->setData(array('name' => $hierarchy['name'], 'id' => $hierarchy['id']));
@@ -104,7 +108,8 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
         return $node;
     }
 
-    public function testGetDeepHierarchy() {
+    public function testGetDeepHierarchy()
+    {
         $project_id = 110;
         $project    = new MockProject();
         $project->setReturnValue('getID', $project_id);
@@ -145,7 +150,8 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
         $this->assertEqual($expected_hierarchy->__toString(), $factory->getHierarchy($tracker)->__toString());
     }
 
-    public function itCanReturnTheListOfTrackersInHierarchyByParentId() {
+    public function itCanReturnTheListOfTrackersInHierarchyByParentId()
+    {
         $hierarchy_dar = array(
              array('child_id' => 2, 'parent_id' => 1),
              array('child_id' => 3, 'parent_id' => 2),
@@ -176,7 +182,8 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
         $this->assertEqual($expected, $factory->getChildrenMapFromDar($hierarchy_dar, $project_trackers));
     }
 
-    public function itCanMoveATrackerAndSonsToAnothersTrackerNotInTheSameBranchAtTheSameTime() {
+    public function itCanMoveATrackerAndSonsToAnothersTrackerNotInTheSameBranchAtTheSameTime()
+    {
         $project_id = 110;
         $project    = new MockProject();
         $project->setReturnValue('getID', $project_id);
@@ -216,7 +223,8 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
         $this->assertEqual($expected_hierarchy->__toString(), $factory->getHierarchy($tracker)->__toString());
     }
 
-    public function testGetRootTrackerIdFromHierarchyWithNoChildren() {
+    public function testGetRootTrackerIdFromHierarchyWithNoChildren()
+    {
         $hierarchy_dar = array();
 
         $expected_root_tracker_id = 3;
@@ -226,7 +234,8 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
         $this->assertEqual($expected_root_tracker_id, $actual_root_tracker_id);
     }
 
-    public function testGetRootTrackerIdFromHierarchyWithOneChild() {
+    public function testGetRootTrackerIdFromHierarchyWithOneChild()
+    {
         $expected_root_tracker_id = 1;
         $current_tracker_id = 2;
 
@@ -237,7 +246,8 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
         $this->assertEqual($expected_root_tracker_id, $actual_root_tracker_id);
     }
 
-    public function testGetRootTrackerIdFromHierarchyWithMultipleChildren() {
+    public function testGetRootTrackerIdFromHierarchyWithMultipleChildren()
+    {
         $expected_root_tracker_id = 1;
         $current_tracker_id = 3;
 
@@ -249,7 +259,8 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
         $this->assertEqual($expected_root_tracker_id, $actual_root_tracker_id);
     }
 
-    public function testGetRootTrackerIdFromHierarchyWithDeepHierarchy() {
+    public function testGetRootTrackerIdFromHierarchyWithDeepHierarchy()
+    {
         $expected_root_tracker_id = 1;
         $current_tracker_id = 5;
 
@@ -263,20 +274,23 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
         $this->assertEqual($expected_root_tracker_id, $actual_root_tracker_id);
     }
 
-    private function getRootTrackerId($hierarchy_dar, $current_tracker_id) {
+    private function getRootTrackerId($hierarchy_dar, $current_tracker_id)
+    {
         $dao = Mockery::spy(HierarchyDAO::class);
         $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory(new MockTrackerFactory(), $dao);
         return $factory->getRootTrackerId($hierarchy_dar, $current_tracker_id);
     }
 
-    private function aMockTrackerFactoryWith($project_id, $project_trackers) {
+    private function aMockTrackerFactoryWith($project_id, $project_trackers)
+    {
         $tracker_factory = new MockTrackerFactory();
         $tracker_factory->expectOnce('getTrackersByGroupId', array($project_id));
         $tracker_factory->setReturnValue('getTrackersByGroupId', $project_trackers);
         return $tracker_factory;
     }
 
-    private function aMockDaoWith($project_id, $hierarchy_dar) {
+    private function aMockDaoWith($project_id, $hierarchy_dar)
+    {
         $dao = Mockery::spy(HierarchyDAO::class);
         $dao->shouldReceive('searchParentChildAssociations')->with($project_id)->andReturn($hierarchy_dar);
         return $dao;

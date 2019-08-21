@@ -134,7 +134,8 @@ class Project_SOAPServer {
      *
      * @return int The ID of newly created project
      */
-    public function addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId) {
+    public function addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId)
+    {
         $requester          = $this->continueSession($sessionKey);
         $has_special_access = $this->doesUserHavePermission(
             $requester,
@@ -157,7 +158,8 @@ class Project_SOAPServer {
     /**
      * @return bool
      */
-    private function doesUserHavePermission(PFUser $user, User_ForgeUserGroupPermission $permission) {
+    private function doesUserHavePermission(PFUser $user, User_ForgeUserGroupPermission $permission)
+    {
         return $this->forge_ugroup_permissions_manager->doesUserHavePermission(
             $user, $permission
         );
@@ -171,7 +173,8 @@ class Project_SOAPServer {
      *
      * @return Project
      */
-    private function getTemplateById($id, PFUser $requester) {
+    private function getTemplateById($id, PFUser $requester)
+    {
         $project = $this->projectManager->getProject($id);
         if ($project && !$project->isError()) {
             if ($project->isTemplate() || $requester->isMember($project->getID(), 'A')) {
@@ -189,7 +192,8 @@ class Project_SOAPServer {
      *
      * @return PFUser
      */
-    private function checkAdminSessionIsValid($adminSessionKey, $sessionKey) {
+    private function checkAdminSessionIsValid($adminSessionKey, $sessionKey)
+    {
         $admin = $this->userManager->getCurrentUser($adminSessionKey);
         if ($admin && $admin->isLoggedIn() && $admin->isSuperUser()) {
             $this->continueSession($sessionKey);
@@ -247,7 +251,8 @@ class Project_SOAPServer {
      *
      * @return bool
      */
-    public function addProjectMember($sessionKey, $groupId, $userLogin) {
+    public function addProjectMember($sessionKey, $groupId, $userLogin)
+    {
         $project = $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
         $result  = account_add_user_to_group($project->getID(), $userLogin);
         return $this->returnFeedbackToSoapFault($result);
@@ -303,7 +308,8 @@ class Project_SOAPServer {
      *
      * @return bool
      */
-    public function addUserToUGroup($sessionKey, $groupId, $ugroupId, $userId) {
+    public function addUserToUGroup($sessionKey, $groupId, $ugroupId, $userId)
+    {
         $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
         if ($user = $this->userManager->getUserById($userId)) {
             try {
@@ -335,7 +341,8 @@ class Project_SOAPServer {
      *
      * @return bool
      */
-    public function removeUserFromUGroup($sessionKey, $groupId, $ugroupId, $userId) {
+    public function removeUserFromUGroup($sessionKey, $groupId, $ugroupId, $userId)
+    {
         $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
         if ($user = $this->userManager->getUserById($userId)) {
             try {
@@ -360,7 +367,8 @@ class Project_SOAPServer {
      *
      * @return UserInfo
      */
-    public function setProjectGenericUser($session_key, $group_id, $password) {
+    public function setProjectGenericUser($session_key, $group_id, $password)
+    {
         if (! $this->isRequesterAdmin($session_key, $group_id)) {
             throw new SoapFault('3201', 'Permission denied: need to be project admin.');
         }
@@ -381,7 +389,8 @@ class Project_SOAPServer {
         return user_to_soap($user->getId(), $user, $this->userManager->getCurrentUser());
     }
 
-    private function addGenericUserInProject(PFUser $user, $session_key, $group_id) {
+    private function addGenericUserInProject(PFUser $user, $session_key, $group_id)
+    {
         if (! $user->isMember($group_id)) {
             $this->addProjectMember($session_key, $group_id, $user->getUnixName());
         }
@@ -391,7 +400,8 @@ class Project_SOAPServer {
      * @param String  $session_key  The project admin session hash
      * @param int $groupId The Project id where the Generic user is
      */
-    public function unsetGenericUser($session_key, $group_id) {
+    public function unsetGenericUser($session_key, $group_id)
+    {
         if (! $this->isRequesterAdmin($session_key, $group_id)) {
             throw new SoapFault('3201', 'Permission denied: need to be project admin.');
         }
@@ -411,7 +421,8 @@ class Project_SOAPServer {
      *
      * @return UserInfo
      */
-    public function getProjectGenericUser($sessionKey, $groupId) {
+    public function getProjectGenericUser($sessionKey, $groupId)
+    {
         if (! $this->isRequesterAdmin($sessionKey, $groupId)) {
             throw new SoapFault('3201', 'Permission denied: need to be project admin.');
         }
@@ -434,7 +445,8 @@ class Project_SOAPServer {
      *
      * @return ArrayOfDescFields
      */
-    public function getPlateformProjectDescriptionFields($sessionKey) {
+    public function getPlateformProjectDescriptionFields($sessionKey)
+    {
 
         $this->continueSession($sessionKey);
         $project_desc_fields = $this->description_factory->getCustomDescriptions();
@@ -448,7 +460,8 @@ class Project_SOAPServer {
         return $soap_return;
     }
 
-    private function extractDescFieldSOAPDatas(Project_CustomDescription_CustomDescription $desc_field) {
+    private function extractDescFieldSOAPDatas(Project_CustomDescription_CustomDescription $desc_field)
+    {
         $field_datas = array();
         $field_datas['id']           = $desc_field->getId();
         $field_datas['name']         = $desc_field->getName();
@@ -470,7 +483,8 @@ class Project_SOAPServer {
      * @param String  $field_value        The new value to set
      *
      */
-    public function setProjectDescriptionFieldValue($session_key, $group_id, $field_id_to_update, $field_value) {
+    public function setProjectDescriptionFieldValue($session_key, $group_id, $field_id_to_update, $field_value)
+    {
         $project = $this->getProjectIfUserIsAdmin($group_id, $session_key);
 
         if (! $this->descriptionFieldExists($field_id_to_update)) {
@@ -480,7 +494,8 @@ class Project_SOAPServer {
         $this->description_manager->setCustomDescription($project, $field_id_to_update,$field_value);
     }
 
-    private function descriptionFieldExists($field_id_to_update) {
+    private function descriptionFieldExists($field_id_to_update)
+    {
         $project_desc_fields = $this->description_factory->getCustomDescription($field_id_to_update);
         if ($project_desc_fields) {
             return true;
@@ -502,7 +517,8 @@ class Project_SOAPServer {
      *
      * @return ArrayOfDescFieldsValues
      */
-    public function getProjectDescriptionFieldsValue($session_key, $group_id) {
+    public function getProjectDescriptionFieldsValue($session_key, $group_id)
+    {
         $project = $this->projectManager->getProject($group_id);
 
         if (! $project || $project->isError()) {
@@ -532,7 +548,8 @@ class Project_SOAPServer {
      *
      * @return ArrayOfServicesValues
      */
-    public function getProjectServicesUsage($session_key, $group_id) {
+    public function getProjectServicesUsage($session_key, $group_id)
+    {
         $project         = $this->getProjectIfUserIsAdmin($group_id, $session_key);
         $soap_return     = array();
         $services_usages = $this->service_usage_factory->getAllServicesUsage($project);
@@ -543,7 +560,8 @@ class Project_SOAPServer {
         return $soap_return;
     }
 
-    private function extractServicesUsageSOAPDatas(Project_Service_ServiceUsage $service_usage) {
+    private function extractServicesUsageSOAPDatas(Project_Service_ServiceUsage $service_usage)
+    {
         $field_datas = array();
         $field_datas['id']         = $service_usage->getId();
         $field_datas['short_name'] = $service_usage->getShortName();
@@ -565,7 +583,8 @@ class Project_SOAPServer {
      *
      * @return bool
      */
-    public function activateService($session_key, $group_id, $service_id) {
+    public function activateService($session_key, $group_id, $service_id)
+    {
         $project = $this->getProjectIfUserIsAdmin($group_id, $session_key);
         $service = $this->service_usage_factory->getServiceUsage($project, $service_id);
 
@@ -590,7 +609,8 @@ class Project_SOAPServer {
      *
      * @return bool
      */
-    public function deactivateService($session_key, $group_id, $service_id) {
+    public function deactivateService($session_key, $group_id, $service_id)
+    {
         $project = $this->getProjectIfUserIsAdmin($group_id, $session_key);
         $service = $this->service_usage_factory->getServiceUsage($project, $service_id);
 
@@ -609,7 +629,8 @@ class Project_SOAPServer {
      *
      * @return PFUser
      */
-    private function getProjectMember(Project $project, $userLogin) {
+    private function getProjectMember(Project $project, $userLogin)
+    {
         $user = $this->userManager->getUserByUserName($userLogin);
         if (!$user) {
             throw new SoapFault('3202', "Invalid user login");
@@ -628,7 +649,8 @@ class Project_SOAPServer {
      *
      * @return Project
      */
-    private function getProjectIfUserIsAdmin($groupId, $sessionKey) {
+    private function getProjectIfUserIsAdmin($groupId, $sessionKey)
+    {
         $project   = $this->projectManager->getProject($groupId);
         if ($project && !$project->isError()) {
             if ($this->isRequesterAdmin($sessionKey, $project->getID())) {
@@ -639,7 +661,8 @@ class Project_SOAPServer {
         throw new SoapFault('3000', "Invalid project id");
     }
 
-    protected function isRequesterAdmin($sessionKey, $project_id) {
+    protected function isRequesterAdmin($sessionKey, $project_id)
+    {
         $requester = $this->continueSession($sessionKey);
 
         return $requester->isMember($project_id, 'A');
@@ -653,7 +676,8 @@ class Project_SOAPServer {
      *
      * @return bool
      */
-    private function returnFeedbackToSoapFault($result) {
+    private function returnFeedbackToSoapFault($result)
+    {
         if (!$result) {
             $this->feedbackToSoapFault();
         }
@@ -665,7 +689,8 @@ class Project_SOAPServer {
      *
      * @throws SoapFault
      */
-    private function feedbackToSoapFault() {
+    private function feedbackToSoapFault()
+    {
         if ($GLOBALS['Response']->feedbackHasErrors()) {
             foreach ($GLOBALS['Response']->_feedback->logs as $log) {
                 if ($log['level'] == 'error') {
@@ -683,7 +708,8 @@ class Project_SOAPServer {
      *
      * @return PFUser
      */
-    private function continueSession($sessionKey) {
+    private function continueSession($sessionKey)
+    {
         $user = $this->userManager->getCurrentUser($sessionKey);
         if ($user->isLoggedIn()) {
             return $user;

@@ -24,7 +24,8 @@ use DataAccessObject;
 
 class ProviderDao  extends DataAccessObject {
 
-    public function searchById($provider_id) {
+    public function searchById($provider_id)
+    {
         $provider_id = $this->getDa()->escapeInt($provider_id);
         $sql         = "SELECT * FROM plugin_openidconnectclient_provider WHERE id = $provider_id";
         return $this->retrieveFirstRow($sql);
@@ -117,7 +118,8 @@ class ProviderDao  extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function deleteById($id) {
+    public function deleteById($id)
+    {
         $id  = $this->getDa()->escapeInt($id);
         $sql = "DELETE FROM plugin_openidconnectclient_provider WHERE id = $id";
         return $this->update($sql);

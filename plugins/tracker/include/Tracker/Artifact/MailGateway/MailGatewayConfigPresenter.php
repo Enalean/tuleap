@@ -78,7 +78,8 @@ class MailGatewayConfigPresenter {
         );
     }
 
-    private function isLocalIncObsolete($localinc_path) {
+    private function isLocalIncObsolete($localinc_path)
+    {
         include($localinc_path);
         $variables_in_local_inc = get_defined_vars();
 

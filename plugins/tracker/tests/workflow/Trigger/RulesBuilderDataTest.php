@@ -22,7 +22,8 @@ require_once __DIR__.'/../../bootstrap.php';
 
 class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
 
-    public function itHasNoData() {
+    public function itHasNoData()
+    {
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(), array());
         $this->assertEqual(
             $rules_builder_data->fetchFormattedForJson(),
@@ -43,7 +44,8 @@ class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
         );
     }
 
-    public function itHasATargetFieldOfTheTrackerOnWhichRulesWillApply() {
+    public function itHasATargetFieldOfTheTrackerOnWhichRulesWillApply()
+    {
         $field_id = 269;
         $target_field = aMockField()->withId($field_id)->build();
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(array($target_field)), array());
@@ -55,7 +57,8 @@ class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
         $this->assertEqual($result['targets'][$field_id], 'whatever');
     }
 
-    public function itHasATriggerTracker() {
+    public function itHasATriggerTracker()
+    {
         $tracker_id = 90;
         $triggering_field = new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
             aTracker()->withId($tracker_id)->withName('Tasks')->build(),
@@ -70,7 +73,8 @@ class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
         $this->assertEqual($result['triggers'][$tracker_id]['fields'], array());
     }
 
-    public function itHasATriggerTrackerWithAField() {
+    public function itHasATriggerTrackerWithAField()
+    {
         $field_id = 693;
         $field = aMockField()->withId($field_id)->build();
         stub($field)->fetchFormattedForJson()->returns('whatever')->once();

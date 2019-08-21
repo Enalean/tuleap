@@ -25,7 +25,8 @@ require_once('Docman_Document.class.php');
 
 class Docman_Empty extends Docman_Document {
 
-    function __construct($data = null) {
+    function __construct($data = null)
+    {
         parent::__construct($data);
     }
 
@@ -34,7 +35,8 @@ class Docman_Empty extends Docman_Document {
         return $visitor->visitEmpty($this, $params);
     }
 
-    function toRow() {
+    function toRow()
+    {
         $row = parent::toRow();
         $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_EMPTY;
         return $row;

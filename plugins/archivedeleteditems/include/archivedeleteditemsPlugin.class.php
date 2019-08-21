@@ -52,7 +52,8 @@ class ArchivedeleteditemsPlugin extends Plugin
      *
      * @return ArchiveDeletedItemsPluginInfo
      */
-    public function getPluginInfo() {
+    public function getPluginInfo()
+    {
         if (!is_a($this->pluginInfo, 'ArchiveDeletedItemsPluginInfo')) {
             require_once('ArchiveDeletedItemsPluginInfo.class.php');
             $this->pluginInfo = new ArchiveDeletedItemsPluginInfo($this);
@@ -67,7 +68,8 @@ class ArchivedeleteditemsPlugin extends Plugin
      *
      * @return String
      */
-    public function getConfigurationParameter($key) {
+    public function getConfigurationParameter($key)
+    {
         return $this->getPluginInfo()->getPropertyValueForName($key);
     }
 
@@ -112,7 +114,8 @@ class ArchivedeleteditemsPlugin extends Plugin
         }
     }
 
-    private function getWellFormattedArchivePath() {
+    private function getWellFormattedArchivePath()
+    {
         $archive_path = $this->getConfigurationParameter('archive_path');
 
         if ($archive_path) {

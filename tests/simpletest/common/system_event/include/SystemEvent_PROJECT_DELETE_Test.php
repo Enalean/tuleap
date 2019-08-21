@@ -68,7 +68,8 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
      *
      * @return Void
      */
-    public function testProjectDeleteUsersFail() {
+    public function testProjectDeleteUsersFail()
+    {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, SystemEvent::OWNER_ROOT, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
@@ -148,7 +149,8 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
      *
      * @return Void
      */
-    public function testProjectDeleteMembershipRequestNotificationUGroupFail() {
+    public function testProjectDeleteMembershipRequestNotificationUGroupFail()
+    {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, SystemEvent::OWNER_ROOT, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
@@ -228,7 +230,8 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
      *
      * @return Void
      */
-    public function testProjectDeleteFRSFail() {
+    public function testProjectDeleteFRSFail()
+    {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, SystemEvent::OWNER_ROOT, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
@@ -307,7 +310,8 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
      *
      * @return Void
      */
-    public function testProjectDeleteTrackersFail() {
+    public function testProjectDeleteTrackersFail()
+    {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE,SystemEvent::OWNER_ROOT, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
@@ -387,7 +391,8 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
      *
      * @return Void
      */
-    public function testProjectDeleteProjectHomeFail() {
+    public function testProjectDeleteProjectHomeFail()
+    {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, SystemEvent::OWNER_ROOT, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
@@ -467,7 +472,8 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
      *
      * @return Void
      */
-    public function testProjectDeletePublicFtpFail() {
+    public function testProjectDeletePublicFtpFail()
+    {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, SystemEvent::OWNER_ROOT, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
@@ -547,7 +553,8 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
      *
      * @return Void
      */
-    public function testProjectDeleteWikiAttacmentsFail() {
+    public function testProjectDeleteWikiAttacmentsFail()
+    {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, SystemEvent::OWNER_ROOT, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
@@ -627,7 +634,8 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
      *
      * @return Void
      */
-    public function testProjectDeleteCVSFail() {
+    public function testProjectDeleteCVSFail()
+    {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, SystemEvent::OWNER_ROOT, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
@@ -707,7 +715,8 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
      *
      * @return Void
      */
-    public function testProjectDeleteSVNFail() {
+    public function testProjectDeleteSVNFail()
+    {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, SystemEvent::OWNER_ROOT, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
@@ -787,7 +796,8 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
      *
      * @return Void
      */
-    public function testProjectDeleteMailingListFail() {
+    public function testProjectDeleteMailingListFail()
+    {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, SystemEvent::OWNER_ROOT, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
@@ -867,7 +877,8 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
      *
      * @return Void
      */
-    public function testProjectDeleteUgroupBindingFail() {
+    public function testProjectDeleteUgroupBindingFail()
+    {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, SystemEvent::OWNER_ROOT, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
@@ -947,7 +958,8 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
      *
      * @return Void
      */
-    public function testProjectDeleteSucceed() {
+    public function testProjectDeleteSucceed()
+    {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, SystemEvent::OWNER_ROOT, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));

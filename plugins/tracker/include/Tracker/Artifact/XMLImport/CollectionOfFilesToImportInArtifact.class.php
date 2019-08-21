@@ -27,12 +27,14 @@ class Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact {
     private $files;
 
 
-    public function __construct(SimpleXMLElement $artifact_xml) {
+    public function __construct(SimpleXMLElement $artifact_xml)
+    {
         $this->history = array();
         $this->files   = $this->extractFilesFromXML($artifact_xml);
     }
 
-    public function extractFilesFromXML(SimpleXMLElement $artifact_xml) {
+    public function extractFilesFromXML(SimpleXMLElement $artifact_xml)
+    {
         $files     = array();
         $files_xml = $artifact_xml->file;
 
@@ -45,11 +47,13 @@ class Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact {
         return $files;
     }
 
-    public function getFileXML($file_id) {
+    public function getFileXML($file_id)
+    {
         return $this->files[$file_id];
     }
 
-    public function markAsImported($file_id) {
+    public function markAsImported($file_id)
+    {
         if ($this->fileIsAlreadyImported($file_id)) {
             return;
         }
@@ -57,7 +61,8 @@ class Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact {
         $this->history[] = $file_id;
     }
 
-    public function fileIsAlreadyImported($file_id) {
+    public function fileIsAlreadyImported($file_id)
+    {
         return in_array($file_id, $this->history);
     }
 }

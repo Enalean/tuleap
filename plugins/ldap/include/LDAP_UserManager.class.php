@@ -57,7 +57,8 @@ class LDAP_UserManager {
      *
      * @param LDAP $ldap Ldap access object
      */
-    function __construct(LDAP $ldap, LDAP_UserSync $user_sync) {
+    function __construct(LDAP $ldap, LDAP_UserSync $user_sync)
+    {
         $this->ldap      = $ldap;
         $this->user_sync = $user_sync;
     }
@@ -70,7 +71,8 @@ class LDAP_UserManager {
      *
      * @return LDAP_User|null
      */
-    public function getLDAPUserFromUser(PFUser $user) {
+    public function getLDAPUserFromUser(PFUser $user)
+    {
         $ldap_result = $this->getLdapFromUser($user);
         if ($ldap_result) {
             return new LDAP_User($user, $ldap_result);
@@ -84,7 +86,8 @@ class LDAP_UserManager {
      * @param  $ldapId    The LDAP identifier
      * @return LDAPResult
      */
-    function getLdapFromLdapId($ldapId) {
+    function getLdapFromLdapId($ldapId)
+    {
         if (!isset($this->ldapResultCache[$ldapId])) {
             $lri = $this->getLdap()->searchEdUid($ldapId);
             if ($lri && $lri->count() == 1) {
@@ -102,7 +105,8 @@ class LDAP_UserManager {
      * @param  PFUser $user
      * @return LDAPResult|false
      */
-    function getLdapFromUser($user) {
+    function getLdapFromUser($user)
+    {
         if ($user && !$user->isAnonymous()) {
             return $this->getLdapFromLdapId($user->getLdapId());
         } else {
@@ -116,7 +120,8 @@ class LDAP_UserManager {
      * @param  string $userName  The user name
      * @return LDAPResult|false
      */
-    function getLdapFromUserName($userName) {
+    function getLdapFromUserName($userName)
+    {
         $user = $this->getUserManager()->getUserByUserName($userName);
         return $this->getLdapFromUser($user);
     }
@@ -127,7 +132,8 @@ class LDAP_UserManager {
      * @param  int $userId    The user id
      * @return LDAPResult|false
      */
-    function getLdapFromUserId($userId) {
+    function getLdapFromUserId($userId)
+    {
         $user = $this->getUserManager()->getUserById($userId);
         return $this->getLdapFromUser($user);
     }
@@ -139,7 +145,8 @@ class LDAP_UserManager {
      *
      * @return PFUser|false
      */
-    function getUserFromLdap(LDAPResult $lr) {
+    function getUserFromLdap(LDAPResult $lr)
+    {
         $user = $this->getUserManager()->getUserByLdapId($lr->getEdUid());
         if(!$user) {
             $user = $this->createAccountFromLdap($lr);
@@ -155,7 +162,8 @@ class LDAP_UserManager {
      * @param Array $ldapIds
      * @return Array
      */
-    function getUserIdsForLdapUser($ldapIds) {
+    function getUserIdsForLdapUser($ldapIds)
+    {
         $userIds = array();
         $dao = $this->getDao();
         foreach($ldapIds as $lr) {
@@ -179,7 +187,8 @@ class LDAP_UserManager {
      *
      * @return Array
      */
-    function getUserIdsFromUserList($userList) {
+    function getUserIdsFromUserList($userList)
+    {
         $userIds = array();
         $userList = array_map('trim', preg_split('/[,;]/', $userList));
         foreach($userList as $u) {
@@ -199,7 +208,8 @@ class LDAP_UserManager {
      * @param array $userIds Array of user ids
      * @return DataAccessResult ldap logins
      */
-    function getLdapLoginFromUserIds(array $userIds) {
+    function getLdapLoginFromUserIds(array $userIds)
+    {
         $dao = $this->getDao();
         return $dao->searchLdapLoginFromUserIds($userIds);
     }
@@ -210,7 +220,8 @@ class LDAP_UserManager {
      * @param String $uid User identifier
      * @return String
      */
-    function generateLogin($uid) {
+    function generateLogin($uid)
+    {
         $account_name = $this->getLoginFromString($uid);
         $uid = $account_name;
         $i=2;
@@ -229,7 +240,8 @@ class LDAP_UserManager {
      * @param String $name Name to test
      * @return bool
      */
-    function userNameIsAvailable($name) {
+    function userNameIsAvailable($name)
+    {
         $dao = $this->getDao();
         return $dao->userNameIsAvailable($name);
     }
@@ -240,7 +252,8 @@ class LDAP_UserManager {
      * @param String $uid Identifier to convert
      * @return String
      */
-    function getLoginFromString($uid) {
+    function getLoginFromString($uid)
+    {
         $name = utf8_decode($uid);
         $name = strtr($name, utf8_decode(' .:;,?%^*(){}[]<>+=$àâéèêùûç'), '____________________aaeeeuuc');
         $name = str_replace("'", "", $name);
@@ -256,7 +269,8 @@ class LDAP_UserManager {
      * @param  LDAPResult $lr
      * @return PFUser|false
      */
-    function createAccountFromLdap(LDAPResult $lr) {
+    function createAccountFromLdap(LDAPResult $lr)
+    {
         $user = $this->createAccount($lr->getEdUid(), $lr->getLogin(), $lr->getCommonName(), $lr->getEmail());
         return $user;
     }
@@ -270,7 +284,8 @@ class LDAP_UserManager {
      * @param  String $email
      * @return PFUser|false
      */
-    function createAccount($eduid, $uid, $cn, $email) {
+    function createAccount($eduid, $uid, $cn, $email)
+    {
         if(trim($uid) == '' || trim($eduid) == '') {
             return false;
         }
@@ -311,7 +326,8 @@ class LDAP_UserManager {
      * @throws LDAP_AuthenticationFailedException
      * @throws LDAP_UserNotFoundException
      */
-    public function authenticate($username, $password) {
+    public function authenticate($username, $password)
+    {
         if (! $this->ldap->authenticate($username, $password)) {
             throw new LDAP_AuthenticationFailedException();
         }
@@ -331,7 +347,8 @@ class LDAP_UserManager {
         return false;
     }
 
-    private function mergeDefaultAttributesAndSiteAttributes() {
+    private function mergeDefaultAttributesAndSiteAttributes()
+    {
         return
         array_values(
             array_unique(
@@ -343,7 +360,8 @@ class LDAP_UserManager {
         );
     }
 
-    private function getUserFromServer($username) {
+    private function getUserFromServer($username)
+    {
         $ldap_results_iterator = $this->ldap->searchLogin(
             $username,
             $this->mergeDefaultAttributesAndSiteAttributes()
@@ -364,7 +382,8 @@ class LDAP_UserManager {
      * @param  String     $password
      * @return bool
      */
-    function synchronizeUser(PFUser $user, LDAPResult $lr, $password) {
+    function synchronizeUser(PFUser $user, LDAPResult $lr, $password)
+    {
         $user->setPassword($password);
 
         $sync = LDAP_UserSync::instance();
@@ -394,7 +413,8 @@ class LDAP_UserManager {
      *
      * @return bool
      */
-    function updateLdapUid(PFUser $user, $ldapUid) {
+    function updateLdapUid(PFUser $user, $ldapUid)
+    {
         if ($this->getDao()->updateLdapUid($user->getId(), $ldapUid)) {
             $this->addUserToRename($user);
             return true;
@@ -407,7 +427,8 @@ class LDAP_UserManager {
      *
      * @return Array of User
      */
-    public function getUsersToRename() {
+    public function getUsersToRename()
+    {
         return $this->usersLoginChanged;
     }
 
@@ -416,14 +437,16 @@ class LDAP_UserManager {
      *
      * @param PFUser $user A user to rename
      */
-    public function addUserToRename(PFUser $user) {
+    public function addUserToRename(PFUser $user)
+    {
         $this->usersLoginChanged[] = $user;
     }
 
     /**
      * Create PLUGIN_LDAP_UPDATE_LOGIN event if there are user login updates pending
      */
-    public function triggerRenameOfUsers() {
+    public function triggerRenameOfUsers()
+    {
         if (count($this->usersLoginChanged)) {
             $userIds = array();
             foreach ($this->usersLoginChanged as $user) {
@@ -440,7 +463,8 @@ class LDAP_UserManager {
      * @return array of PFUser
      *
      */
-    public function getUsersToBeSuspended() {
+    public function getUsersToBeSuspended()
+    {
         $users_to_be_suspended = array();
         $active_users          = $this->getDao()->getActiveUsers();
         foreach ($active_users as $active_user) {
@@ -458,7 +482,8 @@ class LDAP_UserManager {
      * @return int
      *
      */
-    public function getNbrActiveUsers() {
+    public function getNbrActiveUsers()
+    {
         $row = $this->getDao()->getNbrActiveUsers()->getRow();
         return $row["count"];
     }
@@ -471,7 +496,8 @@ class LDAP_UserManager {
      * @return bool
      *
      */
-    public function areUsersSupendable($nbr_all_users) {
+    public function areUsersSupendable($nbr_all_users)
+    {
         $nbr_users_to_suspend = count($this->getUsersToBeSuspended());
         if ((!$threshold_users_suspension = $this->ldap->getLDAPParam('threshold_users_suspension')) || $nbr_users_to_suspend == 0) {
             return true;
@@ -488,7 +514,8 @@ class LDAP_UserManager {
      * @return bool
      *
      */
-    public function checkThreshold($nbr_users_to_suspend, $nbr_all_users) {
+    public function checkThreshold($nbr_users_to_suspend, $nbr_all_users)
+    {
         if($nbr_users_to_suspend == 0 || $nbr_all_users == 0) {
             return true;
         }
@@ -515,7 +542,8 @@ class LDAP_UserManager {
      * @return bool
      *
      */
-    public function isUserDeletedFromLdap ($row) {
+    public function isUserDeletedFromLdap($row)
+    {
         $ldap_query = $this->ldap->getLDAPParam('eduid').'='.$row['ldap_id'];
         $attributes = $this->user_sync->getSyncAttributes($this->ldap);
         $ldapSearch = false;

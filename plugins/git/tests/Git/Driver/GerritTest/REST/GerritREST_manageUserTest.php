@@ -26,7 +26,8 @@ class Git_DriverREST_Gerrit_manageUserTest extends Git_Driver_GerritREST_base im
     /** @var Git_Driver_Gerrit_User */
     private $user;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->user      = mock('Git_Driver_Gerrit_User');
@@ -38,7 +39,8 @@ class Git_DriverREST_Gerrit_manageUserTest extends Git_Driver_GerritREST_base im
         stub($this->user)->getSSHUserName()->returns($this->username);
     }
 
-    public function itExecutesTheInsertCommand(){
+    public function itExecutesTheInsertCommand()
+    {
         $url = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
             .'/a/groups/'. urlencode($this->groupname)
@@ -50,7 +52,8 @@ class Git_DriverREST_Gerrit_manageUserTest extends Git_Driver_GerritREST_base im
         $this->driver->addUserToGroup($this->gerrit_server, $this->user, $this->groupname);
     }
 
-    public function itExecutesTheDeletionCommand(){
+    public function itExecutesTheDeletionCommand()
+    {
         $url = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
             .'/a/groups/'. urlencode($this->groupname)
@@ -62,7 +65,8 @@ class Git_DriverREST_Gerrit_manageUserTest extends Git_Driver_GerritREST_base im
         $this->driver->removeUserFromGroup($this->gerrit_server, $this->user, $this->groupname);
     }
 
-    public function itRemovesAllMembers(){
+    public function itRemovesAllMembers()
+    {
         $response_with_group_members = <<<EOS
 )]}'
 [
@@ -120,7 +124,8 @@ EOS;
         $this->driver->removeAllGroupMembers($this->gerrit_server, $this->groupname);
     }
 
-    public function itAddsAnSSHKeyforUser() {
+    public function itAddsAnSSHKeyforUser()
+    {
         $url = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
             .'/a/accounts/'. urlencode($this->user->getSSHUserName()) .'/sshkeys';
@@ -143,7 +148,8 @@ EOS;
         $this->driver->addSSHKeyToAccount($this->gerrit_server, $this->user, $ssh_key);
     }
 
-    public function itRemovesAnSSHKeyforUser() {
+    public function itRemovesAnSSHKeyforUser()
+    {
         $url_list_keys = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
             .'/a/accounts/'. urlencode($this->user->getSSHUserName()) .'/sshkeys';
@@ -191,7 +197,8 @@ EOS;
         $this->driver->removeSSHKeyFromAccount($this->gerrit_server, $this->user, $ssh_key);
     }
 
-    public function itRemovesMultipleTimeTheSSHKeyforUserIfFoundMultipleTimes() {
+    public function itRemovesMultipleTimeTheSSHKeyforUserIfFoundMultipleTimes()
+    {
         $url_list_keys = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
             .'/a/accounts/'. urlencode($this->user->getSSHUserName()) .'/sshkeys';

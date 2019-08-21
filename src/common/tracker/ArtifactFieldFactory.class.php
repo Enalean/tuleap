@@ -20,7 +20,8 @@
  */
 
 // Sort by place result
-function art_field_factory_cmp_place($field1, $field2) {
+function art_field_factory_cmp_place($field1, $field2)
+{
     if ($field1->getPlace() < $field2->getPlace())
     return -1;
     else if ($field1->getPlace() > $field2->getPlace())
@@ -53,7 +54,8 @@ class ArtifactFieldFactory {
      *  @param ArtifactType: the artifact type object
      *    @return bool success.
      */
-    function __construct(&$ArtifactType) {
+    function __construct(&$ArtifactType)
+    {
         global $Language;
 
         if (!$ArtifactType || !is_object($ArtifactType)) {
@@ -81,7 +83,8 @@ class ArtifactFieldFactory {
      *  @param group_artifact_id: the artifact type id
      *    @return bool success.
      */
-    function fetchData($group_artifact_id) {
+    function fetchData($group_artifact_id)
+    {
 
         $sql='SELECT af.field_id, field_name, display_type, data_type, '.
         'display_size,label, description,scope,required,empty_ok,keep_history,special, '.
@@ -121,7 +124,8 @@ class ArtifactFieldFactory {
      *  @param field_name: the field name
      *    @return    ArtifactField object
      */
-    function getFieldFromName($field_name) {
+    function getFieldFromName($field_name)
+    {
         $field = isset($this->USAGE_BY_NAME[$field_name])?$this->USAGE_BY_NAME[$field_name]:false;
         return $field;
     }
@@ -132,7 +136,8 @@ class ArtifactFieldFactory {
      *  @param field_id: the field id
      *    @return    ArtifactField object
      */
-    function getFieldFromId($field_id) {
+    function getFieldFromId($field_id)
+    {
             return isset($this->USAGE_BY_ID[$field_id])?$this->USAGE_BY_ID[$field_id]:null;
     }
 
@@ -141,7 +146,8 @@ class ArtifactFieldFactory {
      *
      *    @return    array
      */
-    function getAllUsedFields() {
+    function getAllUsedFields()
+    {
 
         $result_fields = array();
         foreach ($this->USAGE_BY_NAME as $key => $field) {
@@ -160,7 +166,8 @@ class ArtifactFieldFactory {
      *
      *    @return    array
      */
-    function getAllUnusedFields() {
+    function getAllUnusedFields()
+    {
 
         $result_fields = array();
         foreach ($this->USAGE_BY_NAME as $key => $field) {
@@ -182,7 +189,8 @@ class ArtifactFieldFactory {
      *
      *    @return    array
      */
-    function extractFieldList($post_method=true,$prefix=null) {
+    function extractFieldList($post_method=true,$prefix=null)
+    {
 
         $request = HTTPRequest::instance();
 
@@ -280,7 +288,8 @@ class ArtifactFieldFactory {
      *
      *    @return bool
      */
-    function checkEmptyFields($field_array, $showFeedback = true) {
+    function checkEmptyFields($field_array, $showFeedback = true)
+    {
         global $Language;
 
         $bad_fields = array();
@@ -324,7 +333,8 @@ class ArtifactFieldFactory {
      * of this tracker that have not been showed to the user
      * during the artifact creation
      */
-    function getAllFieldsNotShownOnAdd() {
+    function getAllFieldsNotShownOnAdd()
+    {
         $result_fields = array();
         foreach ($this->USAGE_BY_NAME as $key => $field) {
             if ( $field->getUseIt() == 1 &&
@@ -342,7 +352,8 @@ class ArtifactFieldFactory {
      * @param int $fieldset_id the id of the field set
      * @return array{ArtifactField} the array of the ArtifactField objects contained in the fieldset
      */
-    function getFieldsContainedInFieldSet($fieldset_id) {
+    function getFieldsContainedInFieldSet($fieldset_id)
+    {
         $fields_contained_in_fieldset = array();
         $sql = "SELECT af.field_id 
                 FROM artifact_field af, artifact_field_usage afu 
@@ -365,7 +376,8 @@ class ArtifactFieldFactory {
      * param $atid_dest: all groups that do not have this tracker are foreign groups
      * return name of $ug if it is a foreign group else return false
      */
-    function _getForeignUgroupName($ug,$atid_dest) {
+    function _getForeignUgroupName($ug,$atid_dest)
+    {
         $db_res = db_query("SELECT ugroup.name FROM ugroup,artifact_group_list agl ".
         "WHERE ugroup.ugroup_id='". db_ei($ug) ."' ".
         "AND agl.group_artifact_id='".  db_ei($atid_dest)  ."' ".
@@ -388,7 +400,8 @@ class ArtifactFieldFactory {
      *
      *    @return bool
      */
-    function copyFields($atid_dest, $mapping_fieldset_array,$ugroup_mapping=false) {
+    function copyFields($atid_dest, $mapping_fieldset_array,$ugroup_mapping=false)
+    {
         global $Language;
 
         foreach ($this->USAGE_BY_NAME as $field) {
@@ -503,7 +516,8 @@ class ArtifactFieldFactory {
      *
      *    @return bool
      */
-    function deleteFields($atid) {
+    function deleteFields($atid)
+    {
 
         // Remove fields permissions
         foreach($this->USAGE_BY_ID as $field_id => $field) {
@@ -548,7 +562,8 @@ class ArtifactFieldFactory {
      *
      *  @return bool - exist or not
      */
-    function existFieldId($field_id) {
+    function existFieldId($field_id)
+    {
         $sql = "SELECT * FROM artifact_field WHERE group_artifact_id=". db_ei($this->ArtifactType->getID()) .
          " AND field_id=". db_ei($field_id) ;
 
@@ -569,7 +584,8 @@ class ArtifactFieldFactory {
      *
      *  @return string
      */
-    function getDefaultValue($data_type,$display_type) {
+    function getDefaultValue($data_type,$display_type)
+    {
 
         $af = new ArtifactField();
 
@@ -622,9 +638,19 @@ class ArtifactFieldFactory {
      *
      *  @return bool - succeed or failed
      */
-    function createField($description,$label,$data_type,$display_type,
-                         $display_size,$rank_on_screen,
-                         $empty_ok,$keep_history,$special,$use_it,$field_set_id) {
+    function createField(
+        $description,
+        $label,
+        $data_type,
+        $display_type,
+        $display_size,
+        $rank_on_screen,
+        $empty_ok,
+        $keep_history,
+        $special,
+        $use_it,
+        $field_set_id
+    ) {
 
         global $Language;
 
@@ -742,7 +768,8 @@ class ArtifactFieldFactory {
     /**
      * @param $string
      */
-    public function setError($string) {
+    public function setError($string)
+    {
         $this->error_state = true;
         $this->error_message = $string;
     }
@@ -750,7 +777,8 @@ class ArtifactFieldFactory {
     /**
      * @return string
      */
-    public function getErrorMessage() {
+    public function getErrorMessage()
+    {
         if ($this->error_state) {
             return $this->error_message;
         } else {
@@ -761,7 +789,8 @@ class ArtifactFieldFactory {
     /**
      * @return bool
      */
-    public function isError() {
+    public function isError()
+    {
         return $this->error_state;
     }
 

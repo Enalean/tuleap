@@ -28,7 +28,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
 
     private $filepath = null;
 
-    public function __construct(Logger $logger) {
+    public function __construct(Logger $logger)
+    {
         $this->logger = $logger;
     }
 
@@ -39,7 +40,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
      * @return string
      * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
      */
-    public function execute(Git_Driver_Gerrit_RemoteSSHConfig $config, $cmd) {
+    public function execute(Git_Driver_Gerrit_RemoteSSHConfig $config, $cmd)
+    {
         $port          = $config->getSSHPort();
         $host          = $config->getHost();
         $login         = $config->getLogin();
@@ -58,7 +60,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
         }
     }
 
-    protected function sshExec($cmd) {
+    protected function sshExec($cmd)
+    {
         $filename = $this->getStdErrFilePath();
         exec("ssh $cmd 2>$filename", $output, $exit_code);
         $stderr = file_get_contents($filename);
@@ -75,7 +78,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
      *
      * @return String
      */
-    public function getStdErrFilePath() {
+    public function getStdErrFilePath()
+    {
         if (!$this->filepath) {
             $this->filepath = tempnam(ForgeConfig::get('tmp_dir'), 'stderr_');
         }

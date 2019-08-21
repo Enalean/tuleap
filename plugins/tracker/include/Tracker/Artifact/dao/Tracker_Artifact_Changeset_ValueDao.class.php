@@ -20,19 +20,22 @@
  */
 
 class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject {
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_changeset_value';
     }
 
-    public function searchById($id) {
+    public function searchById($id)
+    {
         $id = $this->da->escapeInt($id);
         $sql = "SELECT * FROM $this->table_name
                 WHERE changeset_id = $id";
         return $this->retrieve($sql);
     }
 
-    public function searchByFieldId($changeset_id, $field_id) {
+    public function searchByFieldId($changeset_id, $field_id)
+    {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $field_id = $this->da->escapeInt($field_id);
         $sql = "SELECT * FROM $this->table_name
@@ -55,7 +58,8 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject {
         return $results;
     }
 
-    public function save($changeset_id, $field_id, $has_changed) {
+    public function save($changeset_id, $field_id, $has_changed)
+    {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $field_id = $this->da->escapeInt($field_id);
         $has_changed = $has_changed ? 1 : 0;
@@ -64,7 +68,8 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
 
-    public function createFromLastChangesetByTrackerId($tracker_id, $field_id, $has_changed) {
+    public function createFromLastChangesetByTrackerId($tracker_id, $field_id, $has_changed)
+    {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $field_id    = $this->da->escapeInt($field_id);
         $has_changed = $has_changed ? 1 : 0;
@@ -97,7 +102,8 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject {
         return $changesetValueIds;
     }
 
-    public function delete($changeset_id) {
+    public function delete($changeset_id)
+    {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $sql = "DELETE
                 FROM $this->table_name

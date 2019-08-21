@@ -35,13 +35,15 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
     /** @var HiddenFieldsetsDetector */
     private $hidden_fieldsets_detector;
 
-    public function __construct(Tracker_Artifact $artifact, MustacheRenderer $renderer, HiddenFieldsetsDetector $hidden_fieldsets_detector) {
+    public function __construct(Tracker_Artifact $artifact, MustacheRenderer $renderer, HiddenFieldsetsDetector $hidden_fieldsets_detector)
+    {
         $this->renderer                  = $renderer;
         $this->artifact                  = $artifact;
         $this->hidden_fieldsets_detector = $hidden_fieldsets_detector;
     }
 
-    public function display(PFUser $current_user, Codendi_Request $request) {
+    public function display(PFUser $current_user, Codendi_Request $request)
+    {
         $submitted_values = $this->getSubmittedValues($request);
 
         $presenter = new Tracker_Artifact_Presenter_EditArtifactInPlacePresenter(
@@ -69,7 +71,8 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
      * @param PFUser $current_user
      * @return Tracker_Artifact_Presenter_ArtifactLinkPresenter[]
      */
-    private function fetchArtifactLinks(PFUser $current_user) {
+    private function fetchArtifactLinks(PFUser $current_user)
+    {
         $linked_artifacts = $this->artifact->getLinkedArtifacts($current_user);
         $links = array();
 
@@ -88,14 +91,16 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
         return $links;
     }
 
-    private function fetchFollowUps() {
+    private function fetchFollowUps()
+    {
         $changesets = $this->getFollowupsContent($this->artifact);
         $presenter  = new Tracker_Artifact_Presenter_FollowUpCommentsPresenter($changesets);
 
         return $this->renderer->renderToString('follow-ups', $presenter);
     }
 
-    private function getFollowupsContent(Tracker_Artifact $artifact) {
+    private function getFollowupsContent(Tracker_Artifact $artifact)
+    {
         $followups_content = $artifact->getChangesets();
         array_shift($followups_content);
 
@@ -106,15 +111,18 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
         return array_reverse($followups_content);
     }
 
-    public function compareFollowupsByDate($first_followup, $second_followup) {
+    public function compareFollowupsByDate($first_followup, $second_followup)
+    {
         return ($first_followup->getFollowUpDate() < $second_followup->getFollowUpDate()) ? -1 : 1;
     }
 
-    private function getPriorityHistory(Tracker_Artifact $artifact) {
+    private function getPriorityHistory(Tracker_Artifact $artifact)
+    {
         return $this->getPriorityManager()->getArtifactPriorityHistory($artifact);
     }
 
-    private function getPriorityManager() {
+    private function getPriorityManager()
+    {
         return new Tracker_Artifact_PriorityManager(
             new Tracker_Artifact_PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
@@ -123,7 +131,8 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
         );
     }
 
-    public function updateArtifact(Codendi_Request $request, PFUser $current_user) {
+    public function updateArtifact(Codendi_Request $request, PFUser $current_user)
+    {
         $comment_format = $this->artifact->validateCommentFormat($request, 'comment_formatnew');
         $fields_data    =  $this->getAugmentedDataFromRequest($request);
 
@@ -141,7 +150,8 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
         }
     }
 
-    private function getAugmentedDataFromRequest(Codendi_Request $request) {
+    private function getAugmentedDataFromRequest(Codendi_Request $request)
+    {
         //this handles the 100 value on multi-select boxes
         $fields_data = $request->get('artifact');
         $fields_data['request_method_called'] = 'artifact-update';
@@ -151,7 +161,8 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
         return $fields_data;
     }
 
-    private function sendErrorsAsJson($exception_message) {
+    private function sendErrorsAsJson($exception_message)
+    {
         $feedback            = array();
         $feedback['message'] = $exception_message;
 

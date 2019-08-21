@@ -26,12 +26,14 @@ class PaginatedWikiPagesFactory {
     /** @var WikiDao */
     private $dao;
 
-    public function __construct(WikiDao $dao) {
+    public function __construct(WikiDao $dao)
+    {
         $this->dao = $dao;
     }
 
     /** @return PaginatedWikiPages */
-    public function getPaginatedUserPages(PFUser $user, $project_id, $limit, $offset, $pagename) {
+    public function getPaginatedUserPages(PFUser $user, $project_id, $limit, $offset, $pagename)
+    {
         $pages = array();
 
         if ($pagename !== '') {

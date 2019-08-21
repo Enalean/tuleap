@@ -26,7 +26,8 @@ class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
     private $user;
     private $changeset;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->field = stub('Tracker_FormElement_Field_Date')->getName()->returns('field_date');
@@ -35,13 +36,15 @@ class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
         $this->changeset = mock('Tracker_Artifact_Changeset');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         unset($GLOBALS['Language']);
 
         parent::tearDown();
     }
 
-    public function testDates() {
+    public function testDates()
+    {
         stub($this->field)->formatDateForDisplay(1221221466)->returns("12/09/2008");
         $date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221466);
         $this->assertEqual($date->getTimestamp(), 1221221466);
@@ -68,7 +71,8 @@ class Tracker_Artifact_ChangesetValue_DateDiffTest extends TuleapTestCase {
     private $changeset;
     private $tz;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->base_language = mock('BaseLanguage');
@@ -91,45 +95,52 @@ class Tracker_Artifact_ChangesetValue_DateDiffTest extends TuleapTestCase {
         date_default_timezone_set('Europe/Paris');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         date_default_timezone_set($this->tz);
         unset($GLOBALS['Language']);
         parent::tearDown();
     }
 
-    public function testNoDiff() {
+    public function testNoDiff()
+    {
         $date_1 = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221466);
         $date_2 = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221466);
         $this->assertFalse($date_1->diff($date_2));
         $this->assertFalse($date_2->diff($date_1));
     }
 
-    public function testDiffBetween2dates() {
+    public function testDiffBetween2dates()
+    {
         $date_1 = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221466);
         $date_2 = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1234567890);
         $this->assertEqual($date_1->diff($date_2), 'changed from 2009-02-14 to 2008-09-12');
         $this->assertEqual($date_2->diff($date_1), 'changed from 2008-09-12 to 2009-02-14');
     }
 
-    public function testDiffDateSet() {
+    public function testDiffDateSet()
+    {
         $previous_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 0);
         $new_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1234567890);
         $this->assertEqual($new_date->diff($previous_date), 'set_to 2009-02-14');
     }
 
-    public function testDiffDateCleared() {
+    public function testDiffDateCleared()
+    {
         $previous_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1234567890);
         $new_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, null);
         $this->assertEqual($new_date->diff($previous_date), 'cleared');
     }
 
-    public function testDiffDateDidNotChanged() {
+    public function testDiffDateDidNotChanged()
+    {
         $previous_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1234567890);
         $new_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1234567890);
         $this->assertEqual($new_date->diff($previous_date), '');
     }
 
-    public function testDiffNoValueSubmittedYetBothDatesAreNull() {
+    public function testDiffNoValueSubmittedYetBothDatesAreNull()
+    {
         $previous_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, null);
         $new_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, null);
         $this->assertEqual($new_date->diff($previous_date), '');

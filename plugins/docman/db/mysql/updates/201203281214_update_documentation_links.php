@@ -20,17 +20,20 @@
  */
 
 class b201203281214_update_documentation_links extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Update Tuleap Documentation url and remove documentation in pdf
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "UPDATE plugin_docman_item 
                 SET link_url = '/documentation/user_guide/html/fr_FR/User_Guide.html'
                 WHERE link_url = '/documentation/user_guide/html/fr_FR/Codendi_User_Guide.html'";

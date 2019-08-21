@@ -57,7 +57,8 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
         $this->parent_tracker_retriever     = $parent_tracker_retriever;
     }
 
-    public function getMilestoneRepresentation(Planning_Milestone $milestone, PFUser $user, $representation_type) {
+    public function getMilestoneRepresentation(Planning_Milestone $milestone, PFUser $user, $representation_type)
+    {
         $status_count = array();
         if ($representation_type === MilestoneRepresentation::ALL_FIELDS) {
             $status_count = $this->milestone_factory->getMilestoneStatusCount($user, $milestone);
@@ -166,7 +167,8 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
         );
     }
 
-    private function getBacklogTrackers(Planning_Milestone $milestone) {
+    private function getBacklogTrackers(Planning_Milestone $milestone)
+    {
         return $this->backlog_factory->getBacklog($milestone)->getDescendantTrackers();
     }
 }

@@ -19,7 +19,8 @@
  */
 
 class LDAP_UserNotFoundException extends Exception {
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct($GLOBALS['Language']->getText('include_session','invalid_ldap_name'));
     }
 }

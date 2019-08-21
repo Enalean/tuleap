@@ -68,7 +68,8 @@ class WikiGroup{
      * $group = &WikiGroup::getGroup();
      * @param object $request The global WikiRequest object -- ignored.
      */
-    function __construct($not_current = false) {
+    function __construct($not_current = false)
+    {
         $this->not_current = $not_current;
     }
 
@@ -78,7 +79,8 @@ class WikiGroup{
      * the stored $this->username
      * @return string Current username.
      */
-    function _getUserName(){
+    function _getUserName()
+    {
         global $request;
         $user = (!empty($this->user)) ? $this->user : $request->getUser();
         $username = $user->getID();
@@ -97,22 +99,26 @@ class WikiGroup{
      * @param object $request The global WikiRequest object.
      * @return object Subclass of WikiGroup selected via GROUP_METHOD.
      */
-    function getGroup($not_current = false){
+    function getGroup($not_current = false)
+    {
         return new GroupNone($not_current);
     }
 
     /** ACL PagePermissions will need those special groups based on the User status only.
      *  translated
      */
-    function specialGroup($group){
+    function specialGroup($group)
+    {
         return in_array($group,$this->specialGroups());
     }
     /** untranslated */
-    function _specialGroup($group){
+    function _specialGroup($group)
+    {
         return in_array($group,$this->_specialGroups());
     }
     /** translated */
-    function specialGroups(){
+    function specialGroups()
+    {
         return array(
                      GROUP_EVERY,
                      GROUP_ANONYMOUS,
@@ -124,7 +130,8 @@ class WikiGroup{
                      GROUP_CREATOR);
     }
     /** untranslated */
-    function _specialGroups(){
+    function _specialGroups()
+    {
         return array(
                      "_EVERY",
                      "_ANONYMOUS",
@@ -144,7 +151,8 @@ class WikiGroup{
      * @param string $group Name of the group to check for membership (ignored).
      * @return bool True if user is a member, else false (always false).
      */
-    function isMember($group){
+    function isMember($group)
+    {
         if (isset($this->membership[$group]))
             return $this->membership[$group];
         if ($this->specialGroup($group)) {
@@ -157,7 +165,8 @@ class WikiGroup{
         return false;
     }
 
-    function isSpecialMember($group){
+    function isSpecialMember($group)
+    {
         global $request;
 
         if (isset($this->membership[$group]))
@@ -196,14 +205,16 @@ class WikiGroup{
      * array is returned.
      * @return array Array of groups to which the user belongs (always empty).
      */
-    function getAllGroupsIn(){
+    function getAllGroupsIn()
+    {
         trigger_error(PHPWikiSprintf("Method '%s' not implemented in this GROUP_METHOD %s",
                                 'getAllGroupsIn', GROUP_METHOD),
                       E_USER_WARNING);
         return array();
     }
 
-    function _allUsers() {
+    function _allUsers()
+    {
         static $result = array();
         if (!empty($result))
         return $result;
@@ -275,7 +286,8 @@ class WikiGroup{
      * @param string $group Name of the group to get the full membership list of.
      * @return array Array of usernames that have joined the group (always empty).
      */
-    function getMembersOf($group){
+    function getMembersOf($group)
+    {
         if ($this->specialGroup($group)) {
             return $this->getSpecialMembersOf($group);
         }
@@ -285,7 +297,8 @@ class WikiGroup{
         return array();
     }
 
-    function getSpecialMembersOf($group) {
+    function getSpecialMembersOf($group)
+    {
         //$request = &$this->request;
         $all = $this->_allUsers();
         $users = array();
@@ -337,7 +350,8 @@ class WikiGroup{
      * @param string $user Username to add to the group (default = current user).
      * @return bool On true user was added, false if not.
      */
-    function setMemberOf($group, $user = false){
+    function setMemberOf($group, $user = false)
+    {
         trigger_error(PHPWikiSprintf("Method '%s' not implemented in this GROUP_METHOD %s",
                                 'setMemberOf', GROUP_METHOD),
                       E_USER_WARNING);
@@ -353,7 +367,8 @@ class WikiGroup{
      * @param string $user Username to remove from the group (default = current user).
      * @return bool On true user was removed, false if not.
      */
-    function removeMemberOf($group, $user = false){
+    function removeMemberOf($group, $user = false)
+    {
         trigger_error(PHPWikiSprintf("Method '%s' not implemented in this GROUP_METHOD %s",
                                 'removeMemberOf', GROUP_METHOD),
                       E_USER_WARNING);
@@ -375,7 +390,8 @@ class GroupNone extends WikiGroup{
      * Ignores the parameter provided.
      * @param object $request The global WikiRequest object - ignored.
      */
-    function __construct() {
+    function __construct()
+    {
         //$this->request = &$GLOBALS['request'];
         return;
     }
@@ -387,7 +403,8 @@ class GroupNone extends WikiGroup{
      * @param string $group Name of the group to check for membership (ignored).
      * @return bool True if user is a member, else false (always false).
      */
-    function isMember($group){
+    function isMember($group)
+    {
         if ($this->specialGroup($group)) {
             return $this->isSpecialMember($group);
         } else {
@@ -402,7 +419,8 @@ class GroupNone extends WikiGroup{
      * @param string $group Name of the group to check for membership (ignored).
      * @return array Array of groups to which the user belongs (always empty).
      */
-    function getAllGroupsIn(){
+    function getAllGroupsIn()
+    {
         return array();
     }
 
@@ -413,7 +431,8 @@ class GroupNone extends WikiGroup{
      * @param string $group Name of the group to check for membership (ignored).
      * @return array Array of groups user belongs to (always empty).
      */
-    function getMembersOf($group){
+    function getMembersOf($group)
+    {
         return array();
     }
 

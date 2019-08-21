@@ -27,28 +27,32 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
     /**
      * @return the label of the field (mainly used in admin part)
      */
-    public static function getFactoryLabel() {
+    public static function getFactoryLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','selectbox');
     }
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
-    public static function getFactoryDescription() {
+    public static function getFactoryDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','selectbox_description');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconUseIt() {
+    public static function getFactoryIconUseIt()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/ui-combo-box.png');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconCreate() {
+    public static function getFactoryIconCreate()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/ui-combo-box--plus.png');
     }
 
@@ -85,7 +89,8 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return $html;
     }
 
-    private function isJavascriptIncludedInValue(array $submitted_values) {
+    private function isJavascriptIncludedInValue(array $submitted_values)
+    {
         return ! isset($submitted_values['render_with_javascript'])
             || $submitted_values['render_with_javascript'] === true;
     }
@@ -96,7 +101,8 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      * to enhance the user experience
      * @return string
      */
-    public function fetchSubmitAdditionnalInfo(array $submitted_values) {
+    public function fetchSubmitAdditionnalInfo(array $submitted_values)
+    {
         $html = parent::fetchSubmitAdditionnalInfo($submitted_values);
         if ($this->isJavascriptIncludedInValue($submitted_values)) {
             $html .= $this->displaySubmitJavascript();
@@ -104,7 +110,8 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return $html;
     }
 
-    protected function displayArtifactJavascript($changeset_values) {
+    protected function displayArtifactJavascript($changeset_values)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '<script type="text/javascript">';
         $html .= "tuleap.tracker.fields.add('".(int)$this->getID()."', '".$this->getName()."', '". $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) ."')";
@@ -121,7 +128,8 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return $html;
     }
 
-    protected function displaySubmitJavascript() {
+    protected function displaySubmitJavascript()
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '<script type="text/javascript">';
         $html .= "tuleap.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '". $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) ."')";
@@ -145,7 +153,8 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      *
      * @return bool true if the change is allowed and successful
      */
-    public function changeType($type) {
+    public function changeType($type)
+    {
         if (in_array($type, array('msb', 'cb'))) {
             //do not change from SB to MSB if the field is used to define the workflow
             $wf = WorkflowFactory::instance();
@@ -241,7 +250,8 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
     /**
      * @return bool true if the value corresponds to none
      */
-    public function isNone($value) {
+    public function isNone($value)
+    {
         return $value === null ||
                $value === '' ||
                $value === '100' ||
@@ -249,7 +259,8 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
                (is_array($value) && $this->arrayContainsNone($value));
     }
 
-    protected function arrayContainsNone(array $value) {
+    protected function arrayContainsNone(array $value)
+    {
         return count($value) === 1 && array_pop($value) == '100';
     }
 
@@ -264,11 +275,13 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return null;
     }
 
-    public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null) {
+    public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null)
+    {
         return $this->getComputedValue($user, $artifact, $timestamp);
     }
 
-    private function getCurrentValue(Tracker_Artifact $artifact) {
+    private function getCurrentValue(Tracker_Artifact $artifact)
+    {
         $changeset_value = $artifact->getValue($this);
 
         if ($changeset_value) {
@@ -280,7 +293,8 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return null;
     }
 
-    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null)
+    {
         if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
             if (count($value['bind_value_ids']) > 1) {
                 throw new Tracker_FormElement_InvalidFieldValueException('Selectbox fields can only have one value');
@@ -301,11 +315,13 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return $this->getFieldData($csv_value);
     }
 
-    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+    public function accept(Tracker_FormElement_FieldVisitor $visitor)
+    {
         return $visitor->visitSelectbox($this);
     }
 
-    public function getDefaultValue() {
+    public function getDefaultValue()
+    {
         $default_array = $this->getBind()->getDefaultValues();
 
         if ($default_array && is_array($default_array) && count($default_array) === 1) {

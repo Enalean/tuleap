@@ -42,7 +42,8 @@ class PluginManagerTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    function testGetAllPlugins() {
+    function testGetAllPlugins()
+    {
         //The plugins
         $plugins        = new MockCollection($this);
 
@@ -61,7 +62,8 @@ class PluginManagerTest extends TuleapTestCase {
         $this->assertEqual($pm->getAllPlugins(), $plugins);
     }
 
-    function testIsPluginAvailable() {
+    function testIsPluginAvailable()
+    {
         //The plugins
         $plugin = new MockPlugin($this);
 
@@ -82,7 +84,8 @@ class PluginManagerTest extends TuleapTestCase {
         $this->assertFalse($pm->isPluginAvailable($plugin));
     }
 
-    function testEnablePlugin() {
+    function testEnablePlugin()
+    {
         //The plugins
         $plugin = new MockPlugin($this);
         $plugin->setReturnValue('canBeMadeAvailable', true);
@@ -104,7 +107,8 @@ class PluginManagerTest extends TuleapTestCase {
 
         $pm->availablePlugin($plugin);
     }
-    function testDisablePlugin() {
+    function testDisablePlugin()
+    {
         //The plugins
         $plugin = new MockPlugin($this);
 
@@ -126,7 +130,8 @@ class PluginManagerTest extends TuleapTestCase {
         $pm->unavailablePlugin($plugin);
     }
 
-    function testInstallPlugin() {
+    function testInstallPlugin()
+    {
         $GLOBALS['sys_pluginsroot'] = $this->getTmpDir().'/test/custom/';
         $GLOBALS['sys_custompluginsroot'] = $this->getTmpDir().'/test/custom/';
         $GLOBALS['sys_pluginsroot'] = $this->getTmpDir().'/test/custom/';
@@ -167,7 +172,8 @@ class PluginManagerTest extends TuleapTestCase {
         $this->assertTrue(is_dir($this->getTmpDir().'/test/custom/New_Plugin'));
     }
 
-    function testIsNameValide() {
+    function testIsNameValide()
+    {
         $pm = new PluginManager(
             mock('PluginFactory'),
             mock('SiteCache'),
@@ -184,7 +190,8 @@ class PluginManagerTest extends TuleapTestCase {
         $this->assertFalse($pm->isNameValid('.'));
     }
 
-    function testGetPluginByname() {
+    function testGetPluginByname()
+    {
         //The plugin factory
         $plugin_factory = new MockPluginFactory($this);
         $plugin_factory->expectOnce('getPluginByName');

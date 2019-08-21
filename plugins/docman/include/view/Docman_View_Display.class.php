@@ -51,7 +51,8 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         parent::_footer($params);
     }
 
-    function _breadCrumbs($params) {
+    function _breadCrumbs($params)
+    {
         $hp                 = Codendi_HTMLPurifier::instance();
         $item               = $params['item'];
         $current_item       = $item;
@@ -99,13 +100,15 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         echo $html;
     }
 
-    function _javascript($params) {
+    function _javascript($params)
+    {
         // force docman object to watch click on pen icon
         $this->javascript .= "docman.initShowOptions();\n";
         parent::_javascript($params);
     }
 
-    function  _mode($params) {
+    function _mode($params)
+    {
         $html = '';
          // Close table opened in method 'breadCrumbs'.
         $html .= '</tr>';

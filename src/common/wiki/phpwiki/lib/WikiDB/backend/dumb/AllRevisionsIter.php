@@ -18,7 +18,8 @@ extends WikiDB_backend_iterator
      * @param $backend object A WikiDB_backend.
      * @param $pagename string Page whose revisions to get.
      */
-    function __construct(&$backend, $pagename) {
+    function __construct(&$backend, $pagename)
+    {
         $this->_backend = &$backend;
         $this->_pagename = $pagename;
         $this->_lastversion = -1;
@@ -29,7 +30,8 @@ extends WikiDB_backend_iterator
      *
      * @see WikiDB_backend_iterator_next;
      */
-    function next () {
+    function next()
+    {
         $backend = &$this->_backend;
         $pagename = &$this->_pagename;
         $version = &$this->_lastversion;

@@ -27,11 +27,13 @@ class Search_SearchTrackerV3 {
     private $dao;
 
 
-    public function __construct(ArtifactDao $dao) {
+    public function __construct(ArtifactDao $dao)
+    {
         $this->dao = $dao;
     }
 
-    public function search(Search_SearchQuery $query, Search_SearchResults $search_results) {
+    public function search(Search_SearchQuery $query, Search_SearchResults $search_results)
+    {
         $project = $query->getProject();
         if ($project->isError()) {
             return;
@@ -126,7 +128,8 @@ class Search_SearchTrackerV3 {
         return new Search_SearchTrackerV3ResultPresenter(ob_get_clean());
     }
 
-    public function getFacets(Project $project) {
+    public function getFacets(Project $project)
+    {
         $trackers_v3 = $this->getTrackersV3ForProject($project);
         $facets      = array();
 
@@ -147,7 +150,8 @@ class Search_SearchTrackerV3 {
         );
     }
 
-    private function getTrackersv3ForProject(Project $project) {
+    private function getTrackersv3ForProject(Project $project)
+    {
         $artifact_type_factory = new ArtifactTypeFactory($project);
 
         return $artifact_type_factory->getArtifactTypes();

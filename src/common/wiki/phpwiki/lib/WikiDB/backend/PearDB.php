@@ -13,7 +13,8 @@ extends WikiDB_backend
 
     var $_dbh;
 
-    function __construct () {
+    function __construct()
+    {
         // Find and include PEAR's DB.php. maybe we should force our private version again...
         // if DB would have exported its version number, it would be easier.
         @require_once('DB/common.php'); // Either our local pear copy or the system one
@@ -79,7 +80,8 @@ extends WikiDB_backend
     /**
      * Close database connection.
      */
-    function close () {
+    function close()
+    {
         if (!$this->_dbh)
             return;
         if ($this->_lock_count) {
@@ -100,7 +102,8 @@ extends WikiDB_backend
     /*
      * Test fast wikipage.
      */
-    function is_wiki_page($pagename) {
+    function is_wiki_page($pagename)
+    {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
         return $dbh->getOne(sprintf("SELECT $page_tbl.id as id"
@@ -112,7 +115,8 @@ extends WikiDB_backend
                                     GROUP_ID));
     }
 
-    function get_all_pagenames() {
+    function get_all_pagenames()
+    {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
         return $dbh->getCol("SELECT pagename"
@@ -121,7 +125,8 @@ extends WikiDB_backend
                             . "   AND $page_tbl.group_id=".GROUP_ID);
     }
 
-    function numPages($filter=false, $exclude='') {
+    function numPages($filter=false, $exclude='')
+    {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
         return $dbh->getOne("SELECT count(*)"
@@ -130,7 +135,8 @@ extends WikiDB_backend
                             . "   AND $page_tbl.group_id=".GROUP_ID);
     }
 
-    function increaseHitCount($pagename) {
+    function increaseHitCount($pagename)
+    {
         $dbh = &$this->_dbh;
         // Hits is the only thing we can update in a fast manner.
         // Note that this will fail silently if the page does not
@@ -146,7 +152,8 @@ extends WikiDB_backend
     /**
      * Read page information from database.
      */
-    function get_pagedata($pagename) {
+    function get_pagedata($pagename)
+    {
         $dbh = &$this->_dbh;
         //trigger_error("GET_PAGEDATA $pagename", E_USER_NOTICE);
         $result = $dbh->getRow(sprintf("SELECT hits,pagedata FROM %s WHERE pagename='%s' AND group_id=%d",
@@ -157,7 +164,8 @@ extends WikiDB_backend
         return $result ? $this->_extract_page_data($result) : false;
     }
 
-    function  _extract_page_data($data) {
+    function _extract_page_data($data)
+    {
         if (empty($data)) return array();
         elseif (empty($data['pagedata'])) return $data;
         else {
@@ -167,7 +175,8 @@ extends WikiDB_backend
         }
     }
 
-    function update_pagedata($pagename, $newdata) {
+    function update_pagedata($pagename, $newdata)
+    {
         $dbh = &$this->_dbh;
         $page_tbl = $this->_table_names['page_tbl'];
 
@@ -218,14 +227,16 @@ extends WikiDB_backend
         $this->unlock(array($page_tbl));
     }
 
-    function get_cached_html($pagename) {
+    function get_cached_html($pagename)
+    {
         $dbh = &$this->_dbh;
         $page_tbl = $this->_table_names['page_tbl'];
         return $dbh->GetOne(sprintf("SELECT cached_html FROM $page_tbl WHERE pagename='%s' AND group_id=%d",
                                     $dbh->escapeSimple($pagename), GROUP_ID));
     }
 
-    function set_cached_html($pagename, $data) {
+    function set_cached_html($pagename, $data)
+    {
         $dbh = &$this->_dbh;
         $page_tbl = $this->_table_names['page_tbl'];
         $sth = $dbh->query("UPDATE $page_tbl"
@@ -235,7 +246,8 @@ extends WikiDB_backend
                            array($data, $pagename, GROUP_ID));
     }
 
-    function _get_pageid($pagename, $create_if_missing = false) {
+    function _get_pageid($pagename, $create_if_missing = false)
+    {
 
         // check id_cache
         global $request;
@@ -269,7 +281,8 @@ extends WikiDB_backend
         return $id;
     }
 
-    function get_latest_version($pagename) {
+    function get_latest_version($pagename)
+    {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
         return
@@ -282,7 +295,8 @@ extends WikiDB_backend
                                       GROUP_ID));
     }
 
-    function get_previous_version($pagename, $version) {
+    function get_previous_version($pagename, $version)
+    {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
 
@@ -310,7 +324,8 @@ extends WikiDB_backend
      * @return hash The version data, or false if specified version does not
      *              exist.
      */
-    function get_versiondata($pagename, $version, $want_content = false) {
+    function get_versiondata($pagename, $version, $want_content = false)
+    {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
         extract($this->_expressions);
@@ -343,7 +358,8 @@ extends WikiDB_backend
         return $this->_extract_version_data($result);
     }
 
-    function _extract_version_data($query_result) {
+    function _extract_version_data($query_result)
+    {
         if (!$query_result)
             return false;
 
@@ -374,7 +390,8 @@ extends WikiDB_backend
     /**
      * Create a new revision of a page.
      */
-    function set_versiondata($pagename, $version, $data) {
+    function set_versiondata($pagename, $version, $data)
+    {
         $dbh = &$this->_dbh;
         $version_tbl = $this->_table_names['version_tbl'];
 
@@ -422,7 +439,8 @@ extends WikiDB_backend
     /**
      * Delete an old revision of a page.
      */
-    function delete_versiondata($pagename, $version) {
+    function delete_versiondata($pagename, $version)
+    {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
 
@@ -442,7 +460,8 @@ extends WikiDB_backend
      * Delete page completely from the database.
      * I'm not sure if this is what we want. Maybe just delete the revisions
      */
-    function purge_page($pagename) {
+    function purge_page($pagename)
+    {
         $dbh = $this->_dbh;
         extract($this->_table_names);
 
@@ -478,7 +497,8 @@ extends WikiDB_backend
     //function update_versiondata($pagename, $version, $data) {
     //}
 
-    function set_links($pagename, $links) {
+    function set_links($pagename, $links)
+    {
         // Update link table.
         // FIXME: optimize: mysql can do this all in one big INSERT.
 
@@ -508,8 +528,14 @@ extends WikiDB_backend
     /**
      * Find pages which link to or are linked from a page.
      */
-    function get_links($pagename, $reversed=true, $include_empty=false,
-                       $sortby=false, $limit=false, $exclude='') {
+    function get_links(
+        $pagename,
+        $reversed=true,
+        $include_empty=false,
+        $sortby=false,
+        $limit=false,
+        $exclude=''
+    ) {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
 
@@ -550,7 +576,8 @@ extends WikiDB_backend
     /**
      * Find if a page links to another page
      */
-    function exists_link($pagename, $link, $reversed=false) {
+    function exists_link($pagename, $link, $reversed=false)
+    {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
 
@@ -572,7 +599,8 @@ extends WikiDB_backend
         return $row['result'];
     }
 
-    function get_all_pages($include_empty=false, $sortby=false, $limit=false, $exclude='') {
+    function get_all_pages($include_empty=false, $sortby=false, $limit=false, $exclude='')
+    {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
         $orderby = $this->sortby($sortby, 'db');
@@ -633,7 +661,8 @@ extends WikiDB_backend
     /**
      * Title search.
      */
-    function text_search($search, $fulltext=false, $sortby=false, $limit=false, $exclude=false) {
+    function text_search($search, $fulltext=false, $sortby=false, $limit=false, $exclude=false)
+    {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
         $orderby = $this->sortby($sortby, 'db');
@@ -683,7 +712,8 @@ extends WikiDB_backend
 
     //Todo: check if the better Mysql MATCH operator is supported,
     // (ranked search) and also google like expressions.
-    function _sql_match_clause($word) {
+    function _sql_match_clause($word)
+    {
         $word = preg_replace('/(?=[%_\\\\])/', "\\", $word);
         $word = $this->_dbh->escapeSimple($word);
         //$page_tbl = $this->_table_names['page_tbl'];
@@ -692,19 +722,22 @@ extends WikiDB_backend
         // http://bugs.mysql.com/bug.php?id=1491
         return "LOWER(pagename) LIKE '%$word%'";
     }
-    function _sql_casematch_clause($word) {
+    function _sql_casematch_clause($word)
+    {
         $word = preg_replace('/(?=[%_\\\\])/', "\\", $word);
         $word = $this->_dbh->escapeSimple($word);
         return "pagename LIKE '%$word%'";
     }
-    function _fullsearch_sql_match_clause($word) {
+    function _fullsearch_sql_match_clause($word)
+    {
         $word = preg_replace('/(?=[%_\\\\])/', "\\", $word);
         $word = $this->_dbh->escapeSimple($word);
         //$page_tbl = $this->_table_names['page_tbl'];
         //Mysql 4.1.1 has a bug which fails here if word is lowercased.
         return "LOWER(pagename) LIKE '%$word%' OR content LIKE '%$word%'";
     }
-    function _fullsearch_sql_casematch_clause($word) {
+    function _fullsearch_sql_casematch_clause($word)
+    {
         $word = preg_replace('/(?=[%_\\\\])/', "\\", $word);
         $word = $this->_dbh->escapeSimple($word);
         return "pagename LIKE '%$word%' OR content LIKE '%$word%'";
@@ -713,7 +746,8 @@ extends WikiDB_backend
     /**
      * Find highest or lowest hit counts.
      */
-    function most_popular($limit=20, $sortby='-hits') {
+    function most_popular($limit=20, $sortby='-hits')
+    {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
         if ($limit < 0){
@@ -752,7 +786,8 @@ extends WikiDB_backend
     /**
      * Find recent changes.
      */
-    function most_recent($params) {
+    function most_recent($params)
+    {
         $limit = 0;
         $since = 0;
         $include_minor_revisions = false;
@@ -829,7 +864,8 @@ extends WikiDB_backend
     /**
      * Find referenced empty pages.
      */
-    function wanted_pages($exclude_from='', $exclude='', $sortby=false, $limit=false) {
+    function wanted_pages($exclude_from='', $exclude='', $sortby=false, $limit=false)
+    {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
         if ($orderby = $this->sortby($sortby, 'db', array('pagename','wantedfrom')))
@@ -858,7 +894,8 @@ extends WikiDB_backend
         return new WikiDB_backend_PearDB_generic_iter($this, $result);
     }
 
-    function _sql_set(&$pagenames) {
+    function _sql_set(&$pagenames)
+    {
         $s = '(';
         foreach ($pagenames as $p) {
             $s .= ("'".$this->_dbh->escapeSimple($p)."',");
@@ -869,7 +906,8 @@ extends WikiDB_backend
     /**
      * Rename page in the database.
      */
-    function rename_page ($pagename, $to) {
+    function rename_page($pagename, $to)
+    {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
 
@@ -894,7 +932,8 @@ extends WikiDB_backend
         return $id;
     }
 
-    function _update_recent_table($pageid = false) {
+    function _update_recent_table($pageid = false)
+    {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
         extract($this->_expressions);
@@ -913,7 +952,8 @@ extends WikiDB_backend
         $this->unlock();
     }
 
-    function _update_nonempty_table($pageid = false) {
+    function _update_nonempty_table($pageid = false)
+    {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
 
@@ -946,7 +986,8 @@ extends WikiDB_backend
      *
      * @access protected
      */
-    function lock($tables = false, $write_lock = true) {
+    function lock($tables = false, $write_lock = true)
+    {
         if ($this->_lock_count++ == 0)
             $this->_lock_tables($write_lock);
     }
@@ -954,7 +995,8 @@ extends WikiDB_backend
     /**
      * Actually lock the required tables.
      */
-    function _lock_tables($write_lock) {
+    function _lock_tables($write_lock)
+    {
         trigger_error("virtual", E_USER_ERROR);
     }
 
@@ -968,7 +1010,8 @@ extends WikiDB_backend
      *
      * @see _lock_database
      */
-    function unlock($tables = false, $force = false) {
+    function unlock($tables = false, $force = false)
+    {
         if ($this->_lock_count == 0)
             return;
         if (--$this->_lock_count <= 0 || $force) {
@@ -980,7 +1023,8 @@ extends WikiDB_backend
     /**
      * Actually unlock the required tables.
      */
-    function _unlock_tables($write_lock) {
+    function _unlock_tables($write_lock)
+    {
         trigger_error("virtual", E_USER_ERROR);
     }
 
@@ -988,7 +1032,8 @@ extends WikiDB_backend
     /**
      * Serialize data
      */
-    function _serialize($data) {
+    function _serialize($data)
+    {
         if (empty($data))
             return '';
         assert(is_array($data));
@@ -998,7 +1043,8 @@ extends WikiDB_backend
     /**
      * Unserialize data
      */
-    function _unserialize($data) {
+    function _unserialize($data)
+    {
         $s = empty($data) ? array() : @unserialize($data);
         if ($s === false) {
             //Fix errors due to utf8 . See http://php.net/unserialize comments
@@ -1023,7 +1069,8 @@ extends WikiDB_backend
      *
      * @param A PEAR_error object.
      */
-    function _pear_error_callback($error) {
+    function _pear_error_callback($error)
+    {
         if ($this->_is_false_error($error))
             return;
 
@@ -1043,7 +1090,8 @@ extends WikiDB_backend
      * @access private
      * @return bool True iff error is not really an error.
      */
-    function _is_false_error($error) {
+    function _is_false_error($error)
+    {
         if ($error->getCode() != DB_ERROR)
             return false;
 
@@ -1071,7 +1119,8 @@ extends WikiDB_backend
         return true;
     }
 
-    function _pear_error_message($error) {
+    function _pear_error_message($error)
+    {
         $class = static::class;
         $message = "$class: fatal database error\n"
              . "\t" . $error->getMessage() . "\n"
@@ -1092,7 +1141,8 @@ extends WikiDB_backend
      * @see _is_false_error, ErrorManager
      * @access private
      */
-    function _pear_notice_filter($err) {
+    function _pear_notice_filter($err)
+    {
         return ( $err->isNotice()
                  && preg_match('|DB[/\\\\]common.php$|', $err->errfile)
                  && $err->errline == 126
@@ -1100,20 +1150,25 @@ extends WikiDB_backend
     }
 
     /* some variables and functions for DB backend abstraction (action=upgrade) */
-    function database () {
+    function database()
+    {
         return $this->_dbh->dsn['database'];
     }
-    function backendType() {
+    function backendType()
+    {
         return $this->_dbh->phptype;
     }
-    function connection() {
+    function connection()
+    {
         return $this->_dbh->connection;
     }
-    function getRow($query) {
+    function getRow($query)
+    {
         return $this->_dbh->getRow($query);
     }
 
-    function listOfTables() {
+    function listOfTables()
+    {
         return $this->_dbh->getListOf('tables');
     }
 };
@@ -1133,9 +1188,11 @@ extends WikiDB_backend
 class WikiDB_backend_PearDB_generic_iter
 extends WikiDB_backend_iterator
 {
-    function __construct($backend, $query_result,
-                                                $field_list = NULL)
-    {
+    function __construct(
+        $backend,
+        $query_result,
+        $field_list = NULL
+    ) {
         if (DB::isError($query_result)) {
             // This shouldn't happen, I thought.
             $backend->_pear_error_callback($query_result);
@@ -1145,13 +1202,15 @@ extends WikiDB_backend_iterator
         $this->_result = $query_result;
     }
 
-    function count() {
+    function count()
+    {
         if (!$this->_result)
             return false;
         return $this->_result->numRows();
     }
 
-    function next() {
+    function next()
+    {
         $backend = &$this->_backend;
         if (!$this->_result)
             return false;
@@ -1165,7 +1224,8 @@ extends WikiDB_backend_iterator
         return $record;
     }
 
-    function free () {
+    function free()
+    {
         if ($this->_result) {
             $this->_result->free();
             $this->_result = false;
@@ -1177,7 +1237,8 @@ class WikiDB_backend_PearDB_iter
 extends WikiDB_backend_PearDB_generic_iter
 {
 
-    function next() {
+    function next()
+    {
         $backend = &$this->_backend;
         if (!$this->_result)
             return false;

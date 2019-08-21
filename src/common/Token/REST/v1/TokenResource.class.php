@@ -40,7 +40,8 @@ class TokenResource {
     /** @var UserManager */
     private $user_manager;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->user_manager = UserManager::instance();
     }
 
@@ -63,7 +64,8 @@ class TokenResource {
      *
      * @return Tuleap\Token\REST\TokenRepresentation
      */
-    public function post($username, $password) {
+    public function post($username, $password)
+    {
         try {
             $password_handler = PasswordHandlerFactory::getPasswordHandler();
             $user_login = new User_LoginManager(
@@ -107,7 +109,8 @@ class TokenResource {
      *
      * @param string $id Id of the token
      */
-    protected function delete($id) {
+    protected function delete($id)
+    {
         $this->sendAllowHeadersForToken();
         try {
             $this->getTokenManager()->expireToken(
@@ -133,7 +136,8 @@ class TokenResource {
      *
      * @url DELETE
      */
-    protected function deleteAll() {
+    protected function deleteAll()
+    {
         $this->sendAllowHeaders();
         $this->getTokenManager()->expireAllTokensForUser(
             $this->user_manager->getCurrentUser()
@@ -143,7 +147,8 @@ class TokenResource {
     /**
      * @url OPTIONS
      */
-    public function options() {
+    public function options()
+    {
         $this->sendAllowHeaders();
     }
 
@@ -152,11 +157,13 @@ class TokenResource {
      *
      * @param string $id Id of the token
      */
-    public function optionsForToken($id) {
+    public function optionsForToken($id)
+    {
         $this->sendAllowHeadersForToken();
     }
 
-    private function getTokenManager() {
+    private function getTokenManager()
+    {
         $token_dao = new \Rest_TokenDao();
         return new \Rest_TokenManager(
             $token_dao,
@@ -165,11 +172,13 @@ class TokenResource {
         );
     }
 
-    private function sendAllowHeaders() {
+    private function sendAllowHeaders()
+    {
         Header::allowOptionsPostDelete();
     }
 
-    private function sendAllowHeadersForToken() {
+    private function sendAllowHeadersForToken()
+    {
         Header::allowOptionsDelete();
     }
 }

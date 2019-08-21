@@ -51,7 +51,8 @@ if (defined('NUSOAP')) {
 
 } else {
 
-    function getUserInfo($sessionKey, $user_id) {
+    function getUserInfo($sessionKey, $user_id)
+    {
         if (! session_continue($sessionKey)) {
             return new SoapFault(invalid_session_fault, 'Invalid Session ', 'getUserInfo');
         }
@@ -73,7 +74,8 @@ if (defined('NUSOAP')) {
         }
     }
 
-    function checkUsersExistence($sessionKey, $users) {
+    function checkUsersExistence($sessionKey, $users)
+    {
         if (session_continue($sessionKey)){
             try {
                 $existingUsers         = array();

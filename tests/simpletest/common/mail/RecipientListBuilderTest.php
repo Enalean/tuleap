@@ -45,7 +45,8 @@ class Mail_RecipientListBuilderTest extends TuleapTestCase {
     /** @var Mail_RecipientListBuilder */
     private $builder;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->active_user = aUser()
@@ -98,7 +99,8 @@ class Mail_RecipientListBuilderTest extends TuleapTestCase {
         $this->builder = new Mail_RecipientListBuilder($user_manager);
     }
 
-    public function itReturnsAnExternalAddress() {
+    public function itReturnsAnExternalAddress()
+    {
         $list = $this->builder->getValidRecipientsFromAddresses(array($this->external_address));
 
         $expected = array(
@@ -108,7 +110,8 @@ class Mail_RecipientListBuilderTest extends TuleapTestCase {
         $this->assertEqual($expected, $list);
     }
 
-    public function itReturnsAListOfExternalAddresses() {
+    public function itReturnsAListOfExternalAddresses()
+    {
         $list = $this->builder->getValidRecipientsFromAddresses(
             array($this->external_address, $this->external_address2)
         );
@@ -121,7 +124,8 @@ class Mail_RecipientListBuilderTest extends TuleapTestCase {
         $this->assertEqual($expected, $list);
     }
 
-    public function itLooksForAUser() {
+    public function itLooksForAUser()
+    {
         $list = $this->builder->getValidRecipientsFromAddresses(
             array($this->active_user_address)
         );
@@ -133,7 +137,8 @@ class Mail_RecipientListBuilderTest extends TuleapTestCase {
         $this->assertEqual($expected, $list);
     }
 
-    public function itDoesNotOutputSuspendedNorDeletedUsers() {
+    public function itDoesNotOutputSuspendedNorDeletedUsers()
+    {
         $list = $this->builder->getValidRecipientsFromAddresses(
             array($this->suspended_user_address, $this->deleted_user_address)
         );
@@ -144,7 +149,8 @@ class Mail_RecipientListBuilderTest extends TuleapTestCase {
         $this->assertEqual($expected, $list);
     }
 
-    public function itTakesTheFirstUserAccountWithAllowedStatus() {
+    public function itTakesTheFirstUserAccountWithAllowedStatus()
+    {
         $list = $this->builder->getValidRecipientsFromAddresses(
             array($this->bob_active_user_address)
         );
@@ -156,7 +162,8 @@ class Mail_RecipientListBuilderTest extends TuleapTestCase {
         $this->assertEqual($expected, $list);
     }
 
-    public function itFallbacksOnFindUserIfEmailNotFound() {
+    public function itFallbacksOnFindUserIfEmailNotFound()
+    {
         $list = $this->builder->getValidRecipientsFromAddresses(
             array($this->bob_identifier)
         );
@@ -168,7 +175,8 @@ class Mail_RecipientListBuilderTest extends TuleapTestCase {
         $this->assertEqual($expected, $list);
     }
 
-    public function itValidatesAListOfUsers() {
+    public function itValidatesAListOfUsers()
+    {
         $list = $this->builder->getValidRecipientsFromUsers(
             array(
                 $this->active_user,

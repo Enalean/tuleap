@@ -23,7 +23,8 @@ class PasswordHandlerFactory {
     /**
      * @return PasswordHandler
      */
-    public static function getPasswordHandler() {
+    public static function getPasswordHandler()
+    {
         return new StandardPasswordHandler();
     }
 }

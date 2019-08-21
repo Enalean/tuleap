@@ -27,11 +27,13 @@ class Search_SearchPeople {
     private $manager;
 
 
-    public function __construct(UserManager $manager) {
+    public function __construct(UserManager $manager)
+    {
         $this->manager = $manager;
     }
 
-    public function search(Search_SearchQuery $query, Search_SearchResults $search_results) {
+    public function search(Search_SearchQuery $query, Search_SearchResults $search_results)
+    {
         $user_collection = $this->manager->getPaginatedUsersByUsernameOrRealname(
             $query->getWords(),
             $query->getExact(),
@@ -64,7 +66,8 @@ class Search_SearchPeople {
         );
     }
 
-    private function getResultsPresenters(PaginatedUserCollection $user_collection) {
+    private function getResultsPresenters(PaginatedUserCollection $user_collection)
+    {
         $users_presenters = array();
 
         foreach ($user_collection->getUsers() as $user) {

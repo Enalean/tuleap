@@ -36,7 +36,8 @@ class SystemEvent_SERVICE_USAGE_SWITCH extends SystemEvent {
      *
      * @return string
      */
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         $txt = '';
         list($group_id, $shortname, $is_used) = $this->getParametersAsArray();
         $txt .= 'project: '. $this->verbalizeProjectId($group_id, $with_link) .', service: '. $shortname .', service is used: '. ($is_used ? 'true' : 'false');
@@ -46,7 +47,8 @@ class SystemEvent_SERVICE_USAGE_SWITCH extends SystemEvent {
     /**
      * Process stored event
      */
-    function process() {
+    function process()
+    {
         list($group_id, $shortname, $is_used) = $this->getParametersAsArray();
 
         if ($project = $this->getProject($group_id)) {

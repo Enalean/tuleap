@@ -13,10 +13,12 @@ require_once('Docman_View_Browse.class.php');
 require_once(dirname(__FILE__).'/../Docman_SettingsDao.class.php');
 class Docman_View_Admin_View extends Docman_View_Extra {
 
-    function _title($params) {
+    function _title($params)
+    {
         echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_view_title') .'</h2>';
     }
-    function _content($params) {
+    function _content($params)
+    {
         $html = '';
         $html .= '<p>'. $GLOBALS['Language']->getText('plugin_docman', 'admin_view_instructions') .'</p>';
         $html .= '<form action="'. $params['default_url'] .'" method="POST">';
@@ -35,7 +37,8 @@ class Docman_View_Admin_View extends Docman_View_Extra {
         echo $html;
     }
 
-    /* protected */ function _getSettingsDao() {
+    /* protected */ function _getSettingsDao()
+    {
         $dao = new Docman_SettingsDao(CodendiDataAccess::instance());
         return $dao;
     }

@@ -121,56 +121,64 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     /**
      * @return int The project identifier.
      */
-    public function getGroupId() {
+    public function getGroupId()
+    {
         return $this->project->getID();
     }
 
     /**
      * @return Project
      */
-    public function getProject() {
+    public function getProject()
+    {
         return $this->project;
     }
 
     /**
      * @return Tracker_Artifact
      */
-    public function getArtifact() {
+    public function getArtifact()
+    {
         return $this->artifact;
     }
 
     /**
      * @return bool
      */
-    public function userCanView(PFUser $user) {
+    public function userCanView(PFUser $user)
+    {
         return $this->artifact->getTracker()->userCanView($user);
     }
 
     /**
      * @return int
      */
-    public function getTrackerId() {
+    public function getTrackerId()
+    {
         return $this->artifact->getTrackerId();
     }
 
     /**
      * @return int
      */
-    public function getArtifactId() {
+    public function getArtifactId()
+    {
         return $this->artifact->getId();
     }
 
     /**
      * @return string
      */
-    public function getArtifactTitle() {
+    public function getArtifactTitle()
+    {
         return $this->artifact->getTitle();
     }
 
     /**
      * @return string
      */
-    public function getXRef() {
+    public function getXRef()
+    {
         return $this->artifact->getXRef();
     }
 
@@ -178,28 +186,32 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     /**
      * @return Planning
      */
-    public function getPlanning() {
+    public function getPlanning()
+    {
         return $this->planning;
     }
 
     /**
      * @return int
      */
-    public function getPlanningId() {
+    public function getPlanningId()
+    {
         return $this->planning->getId();
     }
 
     /**
      * @return ArtifactNode
      */
-    public function getPlannedArtifacts() {
+    public function getPlannedArtifacts()
+    {
         return $this->planned_artifacts;
     }
 
     /**
      * @param ArtifactNode $node
      */
-    public function setPlannedArtifacts(ArtifactNode $node) {
+    public function setPlannedArtifacts(ArtifactNode $node)
+    {
         $this->planned_artifacts = $node;
     }
 
@@ -208,7 +220,8 @@ class Planning_ArtifactMilestone implements Planning_Milestone
      * @param PFUser $user
      * @return Tracker_Artifact[]
      */
-    public function getLinkedArtifacts(PFUser $user) {
+    public function getLinkedArtifacts(PFUser $user)
+    {
         $artifacts = $this->artifact->getUniqueLinkedArtifacts($user);
         $root_node = $this->getPlannedArtifacts();
         // TODO get rid of this if, in favor of an empty treenode
@@ -218,7 +231,8 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         return $artifacts;
     }
 
-    private function addChildrenNodes(ArtifactNode $root_node, &$artifacts, $user) {
+    private function addChildrenNodes(ArtifactNode $root_node, &$artifacts, $user)
+    {
         foreach ($root_node->getChildren() as $node) {
             $artifact    = $node->getObject();
             $artifacts[] = $artifact;
@@ -227,11 +241,13 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         }
     }
 
-    public function hasAncestors() {
+    public function hasAncestors()
+    {
         return !empty($this->parent_milestones);
     }
 
-    public function getAncestors() {
+    public function getAncestors()
+    {
         return $this->parent_milestones;
     }
 
@@ -241,7 +257,8 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         return array_shift($parent_milestones_values);
     }
 
-    public function setAncestors(array $parents) {
+    public function setAncestors(array $parents)
+    {
         $this->parent_milestones = $parents;
     }
 
@@ -289,7 +306,8 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         return null;
     }
 
-    public function getCapacity() {
+    public function getCapacity()
+    {
         return $this->capacity;
     }
 
@@ -298,7 +316,8 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         $this->capacity = $capacity;
     }
 
-    public function getRemainingEffort() {
+    public function getRemainingEffort()
+    {
         return $this->remaining_effort;
     }
 
@@ -312,7 +331,8 @@ class Planning_ArtifactMilestone implements Planning_Milestone
      * @param PFUser $user
      * @return bool True if nothing went wrong
      */
-    public function solveInconsistencies(PFUser $user, array $artifacts_ids) {
+    public function solveInconsistencies(PFUser $user, array $artifacts_ids)
+    {
         $artifact = $this->getArtifact();
 
         return $artifact->linkArtifacts($artifacts_ids, $user);
@@ -323,7 +343,8 @@ class Planning_ArtifactMilestone implements Planning_Milestone
      *
      * @return int
      */
-    public function getLastModifiedDate() {
+    public function getLastModifiedDate()
+    {
         return $this->getArtifact()->getLastUpdateDate();
     }
 
@@ -340,7 +361,8 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         return null;
     }
 
-    public function milestoneCanBeSubmilestone(Planning_Milestone $potential_submilestone) {
+    public function milestoneCanBeSubmilestone(Planning_Milestone $potential_submilestone)
+    {
         if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($potential_submilestone->getProject()->getID()) === true) {
             return $this->acceptOnlySameTrackerInMonoMilestoneCofiguration($potential_submilestone);
         }
@@ -361,7 +383,8 @@ class Planning_ArtifactMilestone implements Planning_Milestone
      * @param PFUser $user
      * @return bool
      */
-    public function hasBurdownField(PFUser $user) {
+    public function hasBurdownField(PFUser $user)
+    {
         $burndown_field = $this->getArtifact()->getABurndownField($user);
 
         return (bool) $burndown_field;
@@ -370,11 +393,13 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     /**
      * @param bool $bool
      */
-    public function setHasUsableBurndownField($bool) {
+    public function setHasUsableBurndownField($bool)
+    {
         $this->has_useable_burndown_field = $bool;
     }
 
-    public function hasUsableBurndownField() {
+    public function hasUsableBurndownField()
+    {
         return (bool) $this->has_useable_burndown_field;
     }
 

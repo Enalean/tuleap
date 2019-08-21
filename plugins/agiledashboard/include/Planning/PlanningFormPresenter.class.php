@@ -101,39 +101,48 @@ class Planning_FormPresenter extends PlanningPresenter
         $this->has_warning  = count($warning_list) > 0;
     }
 
-    public function adminTitle() {
+    public function adminTitle()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin');
     }
 
-    public function createPlanning() {
+    public function createPlanning()
+    {
         return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_create');
     }
 
-    public function editPlanning() {
+    public function editPlanning()
+    {
         return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_editing');
     }
 
-    public function planningNameFieldLabel() {
+    public function planningNameFieldLabel()
+    {
         return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_name');
     }
 
-    public function planningBacklogTitleFieldLabel() {
+    public function planningBacklogTitleFieldLabel()
+    {
         return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_backlog_title');
     }
 
-    public function planningPlanTitleFieldLabel() {
+    public function planningPlanTitleFieldLabel()
+    {
         return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_plan_title');
     }
 
-    public function planningPriorityChangePermissionFieldLabel() {
+    public function planningPriorityChangePermissionFieldLabel()
+    {
         return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_priority_change_permission');
     }
 
-    public function priority_change_permission() {
+    public function priority_change_permission()
+    {
         return $this->planning_permissions_manager->getPlanningPermissionForm($this->planning_id, $this->group_id, PlanningPermissionsManager::PERM_PRIORITY_CHANGE, 'planning['.PlanningPermissionsManager::PERM_PRIORITY_CHANGE.']');
     }
 
-    public function btnSubmit() {
+    public function btnSubmit()
+    {
         return $GLOBALS['Language']->getText('global', 'btn_submit');
     }
 }

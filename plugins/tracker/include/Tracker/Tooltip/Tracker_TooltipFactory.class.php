@@ -33,7 +33,8 @@ class Tracker_TooltipFactory implements IBuildSemanticFromXML
      *
      * @return Tracker_TooltipFactory an instance of this factory
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$instance)) {
             $c = self::class;
             self::$instance = new $c;
@@ -49,7 +50,8 @@ class Tracker_TooltipFactory implements IBuildSemanticFromXML
      *
      * @return Tracker_Tooltip
      */
-    public function getInstanceFromRow($row, $tracker) {
+    public function getInstanceFromRow($row, $tracker)
+    {
         $tooltip = new Tracker_Tooltip($tracker);
         $tooltip->setFields($row);
         return $tooltip;
@@ -70,7 +72,8 @@ class Tracker_TooltipFactory implements IBuildSemanticFromXML
      *
      * @return Tracker_TooltipDao The dao
      */
-    public function getDao() {
+    public function getDao()
+    {
         return new Tracker_TooltipDao();
     }
 
@@ -83,7 +86,8 @@ class Tracker_TooltipFactory implements IBuildSemanticFromXML
      *
      * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
+    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping)
+    {
         $duplicator = new Tracker_Semantic_CollectionOfFieldsDuplicator($this->getDao());
         $duplicator->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }

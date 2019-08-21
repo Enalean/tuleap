@@ -66,7 +66,8 @@ class GitPermissionsManager
         $this->fine_grained_retriever       = $fine_grained_retriever;
     }
 
-    public function userIsGitAdmin(PFUser $user, Project $project) {
+    public function userIsGitAdmin(PFUser $user, Project $project)
+    {
         $database_result = $this->getCurrentGitAdminPermissionsForProject($project);
 
         if (db_numrows($database_result) < 1) {
@@ -85,16 +86,19 @@ class GitPermissionsManager
      * @param Project $project
      * Return a DB list of ugroup_ids authorized to access the given object
      */
-    private function getCurrentGitAdminPermissionsForProject(Project $project) {
+    private function getCurrentGitAdminPermissionsForProject(Project $project)
+    {
         return permission_db_authorized_ugroups(Git::PERM_ADMIN, $project->getID());
     }
 
-    private function getDefaultGitAdminPermissions() {
+    private function getDefaultGitAdminPermissions()
+    {
         /** @psalm-suppress DeprecatedFunction */
         return permission_db_get_defaults(Git::PERM_ADMIN);
     }
 
-    public function getCurrentGitAdminUgroups($project_id) {
+    public function getCurrentGitAdminUgroups($project_id)
+    {
         return $this->permissions_manager->getAuthorizedUgroupIds($project_id, Git::PERM_ADMIN);
     }
 
@@ -112,7 +116,8 @@ class GitPermissionsManager
         }
     }
 
-    public function updateSiteAccess($old_value, $new_value) {
+    public function updateSiteAccess($old_value, $new_value)
+    {
         if ($old_value == ForgeAccess::ANONYMOUS) {
             $project_ids = $this->queueProjectsConfigurationUpdate($this->git_permission_dao->getAllProjectsWithAnonymousRepositories());
             if (count($project_ids)) {
@@ -129,7 +134,8 @@ class GitPermissionsManager
         }
     }
 
-    private function queueProjectsConfigurationUpdate(array $dar) {
+    private function queueProjectsConfigurationUpdate(array $dar)
+    {
         $projects_ids = array();
         if (count($dar) > 0) {
             foreach ($dar as $row) {

@@ -52,7 +52,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      * @param Tracker_FormElement_Field    $field      The field the post action should modify
      * @param int $value_type The type of the value to set
      */
-    public function __construct(Transition $transition, $id, $field, $value_type) {
+    public function __construct(Transition $transition, $id, $field, $value_type)
+    {
         parent::__construct($transition, $id, $field);
         $this->value_type = $value_type;
     }
@@ -62,7 +63,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      *
      * @return string
      */
-    public function getShortName() {
+    public function getShortName()
+    {
         return self::SHORT_NAME;
     }
 
@@ -71,7 +73,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      *
      * @return int
      */
-    public function getValueType() {
+    public function getValueType()
+    {
         return $this->value_type;
     }
 
@@ -80,7 +83,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      *
      * @return string
      */
-    public static function getLabel() {
+    public static function getLabel()
+    {
         return $GLOBALS['Language']->getText('workflow_admin', 'post_action_change_value_date_field');
     }
 
@@ -89,7 +93,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      *
      * @return bool
      */
-    public function isDefined() {
+    public function isDefined()
+    {
         return $this->getField() && ($this->value_type === self::CLEAR_DATE || $this->value_type === self::FILL_CURRENT_TIME);
     }
 
@@ -98,7 +103,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      *
      * @return string html
      */
-    public function fetch() {
+    public function fetch()
+    {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
 
@@ -153,7 +159,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      *
      * @return void
      */
-    public function process(Codendi_Request $request) {
+    public function process(Codendi_Request $request)
+    {
         if ($request->getInArray('remove_postaction', $this->id)) {
             $this->getDao()->deletePostAction($this->id);
         } else {
@@ -187,7 +194,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      *
      * @return void
      */
-    public function before(array &$fields_data, PFUser $current_user) {
+    public function before(array &$fields_data, PFUser $current_user)
+    {
         // Do something only if the value_type and the date field are properly defined
         if ($this->isDefined()) {
             $field = $this->getField();
@@ -215,7 +223,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    {
         if ($this->getFieldId()) {
             $child = $root->addChild(Transition_PostAction_Field_Date::XML_TAG_NAME);
              $child->addAttribute('valuetype', $this->getValueType());
@@ -228,7 +237,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      *
      * @return Transition_PostAction_Field_DateDao
      */
-    protected function getDao() {
+    protected function getDao()
+    {
         return new Transition_PostAction_Field_DateDao();
     }
 

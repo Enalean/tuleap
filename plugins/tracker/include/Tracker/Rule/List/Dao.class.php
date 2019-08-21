@@ -23,7 +23,8 @@
  */
 class Tracker_Rule_List_Dao extends DataAccessObject {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_rule_list';
     }
@@ -32,7 +33,8 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
      * Searches Tracker_Rule by Id
      * @return DataAccessResult | false
      */
-    public function searchById($id) {
+    public function searchById($id)
+    {
         $rule_id = $this->da->escapeInt($id);
         $sql = "SELECT *
                 FROM tracker_rule_list
@@ -46,7 +48,8 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
      * Searches Tracker_Rule by TrackerId
      * @return DataAccessResult
      */
-    public function searchByTrackerId($tracker_id) {
+    public function searchByTrackerId($tracker_id)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
                 FROM tracker_rule 
@@ -61,7 +64,8 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
      * @param Tracker_Rule_List $rule
      * @return int The ID of the saved tracker_rule
      */
-    public function insert(Tracker_Rule_List $rule) {
+    public function insert(Tracker_Rule_List $rule)
+    {
         $rule_id         = $this->da->escapeInt($rule->getTrackerId());
         $rule_type       = $this->da->quoteSmart(Tracker_Rule::RULETYPE_VALUE);
 
@@ -115,7 +119,8 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
      * create a row in the table tracker_rule and in tracker_rule_list
      * @return true or id(auto_increment) if there is no error
      */
-    public function create($tracker_id, $source_field_id, $source_value_id, $target_field_id, $target_value_id) {
+    public function create($tracker_id, $source_field_id, $source_value_id, $target_field_id, $target_value_id)
+    {
         $rule_type       = Tracker_Rule::RULETYPE_VALUE;
         $tracker_id      = $this->da->escapeInt($tracker_id);
         $source_field_id = $this->da->escapeInt($source_field_id);

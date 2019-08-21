@@ -24,7 +24,8 @@ use Exception;
 
 class RepositoryAlreadyInQueueForMigrationException extends Exception {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct("The repository is already in queue for migration");
     }
 }

@@ -7,7 +7,8 @@
  * abstract
  */
 class SanitizerTestCase extends TuleapTestCase {
-    function testSanitize() {
+    function testSanitize()
+    {
         trigger_error("testSanitize() not yet implemented");
     }
 }

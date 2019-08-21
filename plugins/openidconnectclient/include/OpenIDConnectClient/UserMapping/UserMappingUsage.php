@@ -39,8 +39,7 @@ class UserMappingUsage {
         $is_unique_authentication_endpoint,
         $user_id,
         $last_used
-    )
-    {
+    ) {
         $this->user_mapping_id                   = $user_mapping_id;
         $this->provider_id                       = $provider_id;
         $this->provider_name                     = $provider_name;
@@ -55,23 +54,28 @@ class UserMappingUsage {
         return $this->user_mapping_id;
     }
 
-    public function getProviderId() {
+    public function getProviderId()
+    {
         return $this->provider_id;
     }
 
-    public function getProviderName() {
+    public function getProviderName()
+    {
         return $this->provider_name;
     }
 
-    public function getProviderIcon() {
+    public function getProviderIcon()
+    {
         return $this->provider_icon;
     }
 
-    public function getUserId() {
+    public function getUserId()
+    {
         return $this->user_id;
     }
 
-    public function getLastUsage() {
+    public function getLastUsage()
+    {
         return $this->last_used;
     }
 

@@ -38,7 +38,8 @@ class WebDAVRootTest extends TuleapTestCase {
     /**
      * Testing when There is no public projects
      */
-    function testGetChildrenWithNoPublicProjects() {
+    function testGetChildrenWithNoPublicProjects()
+    {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
         $user = mock('PFUser');
@@ -52,7 +53,8 @@ class WebDAVRootTest extends TuleapTestCase {
     /**
      * Testing when There is no public project with WebDAV plugin activated
      */
-    function testGetChildrenWithNoPublicProjectWithWebDAVActivated() {
+    function testGetChildrenWithNoPublicProjectWithWebDAVActivated()
+    {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
         $user = mock('PFUser');
@@ -70,7 +72,8 @@ class WebDAVRootTest extends TuleapTestCase {
     /**
      * Testing when there is public projects with WebDAV activated
      */
-    function testGetChildrenWithPublicProjects() {
+    function testGetChildrenWithPublicProjects()
+    {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
         $user = mock('PFUser');
@@ -89,7 +92,8 @@ class WebDAVRootTest extends TuleapTestCase {
     /**
      * Testing when The user can see no project
      */
-    function testGetChildrenNoUserProjects() {
+    function testGetChildrenNoUserProjects()
+    {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
         $user = mock('PFUser');
@@ -104,7 +108,8 @@ class WebDAVRootTest extends TuleapTestCase {
     /**
      * Testing when the user have no projects with WebDAV activated
      */
-    function testGetChildrenUserHaveNoProjectsWithWebDAVActivated() {
+    function testGetChildrenUserHaveNoProjectsWithWebDAVActivated()
+    {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
         $user = mock('PFUser');
@@ -123,7 +128,8 @@ class WebDAVRootTest extends TuleapTestCase {
     /**
      * Testing when the user have projects
      */
-    function testGetChildrenUserHaveProjects() {
+    function testGetChildrenUserHaveProjects()
+    {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
         $user = mock('PFUser');
@@ -142,7 +148,8 @@ class WebDAVRootTest extends TuleapTestCase {
     /**
      * Testing when the project doesn't have WebDAV plugin activated
      */
-    function testGetChildFailWithWebDAVNotActivated() {
+    function testGetChildFailWithWebDAVNotActivated()
+    {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
         $webDAVRoot->setReturnValue('isWebDAVAllowedForProject', false);
@@ -157,7 +164,8 @@ class WebDAVRootTest extends TuleapTestCase {
     /**
      * Testing when the project doesn't exist
      */
-    function testGetChildFailWithNotExist() {
+    function testGetChildFailWithNotExist()
+    {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
 
@@ -176,7 +184,8 @@ class WebDAVRootTest extends TuleapTestCase {
     /**
      * Testing when the project is not active
      */
-    function testGetChildFailWithNotActive() {
+    function testGetChildFailWithNotActive()
+    {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
 
@@ -196,7 +205,8 @@ class WebDAVRootTest extends TuleapTestCase {
     /**
      * Testing when the user can't access the project
      */
-    function testGetChildFailWithUserCanNotRead() {
+    function testGetChildFailWithUserCanNotRead()
+    {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
 
@@ -217,7 +227,8 @@ class WebDAVRootTest extends TuleapTestCase {
     /**
      * Testing when the project exist, is active and user can read
      */
-    function testSucceedGetChild() {
+    function testSucceedGetChild()
+    {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
 

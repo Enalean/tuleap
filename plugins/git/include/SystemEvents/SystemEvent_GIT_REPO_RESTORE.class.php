@@ -43,7 +43,8 @@ class SystemEvent_GIT_REPO_RESTORE extends SystemEvent {
         $this->logger               = $logger;
     }
 
-    public function process() {
+    public function process()
+    {
         $parameters    = $this->getParametersAsArray();
         $repository_id = 0;
 
@@ -73,7 +74,8 @@ class SystemEvent_GIT_REPO_RESTORE extends SystemEvent {
         $this->done();
     }
 
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         $repository = $this->getRepositoryFromParameters();
         if ($repository !== null) {
             return '<a href="/plugins/git/?action=repo_management&group_id='.$repository->getProjectId().'&repo_id='.$repository->getId().'">'.$repository->getName().'</a>';
@@ -81,11 +83,13 @@ class SystemEvent_GIT_REPO_RESTORE extends SystemEvent {
         return '';
     }
 
-    private function getRepositoryFromParameters() {
+    private function getRepositoryFromParameters()
+    {
         return $this->repository_factory->getRepositoryById($this->getRepositoryIdFromParameters());
     }
 
-    private function getRepositoryIdFromParameters() {
+    private function getRepositoryIdFromParameters()
+    {
         $parameters = $this->getParametersAsArray();
         return intval($parameters[0]);
     }

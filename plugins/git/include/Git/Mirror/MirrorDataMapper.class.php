@@ -71,7 +71,8 @@ class Git_Mirror_MirrorDataMapper {
      * @throws Git_Mirror_MissingDataException
      * @throws Git_Mirror_CreateException
      */
-    public function save($url, $hostname, $ssh_key, $password, $name) {
+    public function save($url, $hostname, $ssh_key, $password, $name)
+    {
         if (! $url || ! $ssh_key || ! $name) {
             throw new Git_Mirror_MissingDataException();
         }
@@ -93,7 +94,8 @@ class Git_Mirror_MirrorDataMapper {
         ));
     }
 
-    private function checkThatHostnameIsValidOnCreation($hostname) {
+    private function checkThatHostnameIsValidOnCreation($hostname)
+    {
         if (! $hostname) {
             return true;
         }
@@ -109,12 +111,14 @@ class Git_Mirror_MirrorDataMapper {
         return true;
     }
 
-    private function doesHostnameIsForbidden($hostname) {
+    private function doesHostnameIsForbidden($hostname)
+    {
         return strtolower($hostname) === self::PROJECTS_HOSTNAME ||
                strtolower($hostname) === strtolower($this->reader->getHostname());
     }
 
-    private function checkThatHostnameIsValidOnUpdate($id, $hostname) {
+    private function checkThatHostnameIsValidOnUpdate($id, $hostname)
+    {
         if (! $hostname) {
             return true;
         }
@@ -130,7 +134,8 @@ class Git_Mirror_MirrorDataMapper {
         return true;
     }
 
-    private function createUserForMirror($mirror_id, $password, $ssh_key) {
+    private function createUserForMirror($mirror_id, $password, $ssh_key)
+    {
         $user = new PFUser(array(
             'user_name'       => self::MIRROR_OWNER_PREFIX.$mirror_id,
             'status'          => 'A',
@@ -146,7 +151,8 @@ class Git_Mirror_MirrorDataMapper {
     /**
      * @return Git_Mirror_Mirror[]
      */
-    public function fetchAll() {
+    public function fetchAll()
+    {
         $rows = $this->dao->fetchAll();
 
         return $this->mapDataAccessResultToArrayOfMirrors($rows);
@@ -155,7 +161,8 @@ class Git_Mirror_MirrorDataMapper {
     /**
      * @return Git_Mirror_Mirror[]
      */
-    public function fetchAllForProject(Project $project) {
+    public function fetchAllForProject(Project $project)
+    {
         $rows = $this->dao->fetchAllForProject($project->getID());
 
         return $this->mapDataAccessResultToArrayOfMirrors($rows);
@@ -164,7 +171,8 @@ class Git_Mirror_MirrorDataMapper {
     /**
      * @return Git_Mirror_Mirror[]
      */
-    public function fetchAllRepositoryMirrors(GitRepository $repository) {
+    public function fetchAllRepositoryMirrors(GitRepository $repository)
+    {
         if ($repository instanceof GitRepositoryGitoliteAdmin) {
             return $this->fetchAll();
         }
@@ -188,7 +196,8 @@ class Git_Mirror_MirrorDataMapper {
         return $mirrors;
     }
 
-    public function fetchRepositoriesForMirror(Git_Mirror_Mirror $mirror) {
+    public function fetchRepositoriesForMirror(Git_Mirror_Mirror $mirror)
+    {
         $repositories = array();
         foreach ($this->dao->fetchAllRepositoryMirroredByMirror($mirror->id) as $row) {
             $repositories[] = $this->repository_factory->instanciateFromRow($row);
@@ -197,7 +206,8 @@ class Git_Mirror_MirrorDataMapper {
         return $repositories;
     }
 
-    public function fetchAllProjectRepositoriesForMirror(Git_Mirror_Mirror $mirror, array $project_ids) {
+    public function fetchAllProjectRepositoriesForMirror(Git_Mirror_Mirror $mirror, array $project_ids)
+    {
         $rows         = $this->dao->fetchAllProjectRepositoriesForMirror($mirror->id, $project_ids);
         $repositories = array();
 
@@ -208,7 +218,8 @@ class Git_Mirror_MirrorDataMapper {
         return $repositories;
     }
 
-    public function fetchRepositoriesPerMirrorPresenters(Git_Mirror_Mirror $mirror) {
+    public function fetchRepositoriesPerMirrorPresenters(Git_Mirror_Mirror $mirror)
+    {
         $presenters = array();
 
         $previous_group_id = -1;
@@ -235,7 +246,8 @@ class Git_Mirror_MirrorDataMapper {
     /**
      * @return Project[]
      */
-    public function fetchAllProjectsConcernedByMirroring() {
+    public function fetchAllProjectsConcernedByMirroring()
+    {
         $projects = array();
 
         foreach ($this->dao->fetchAllProjectIdsConcernedByMirroring() as $row) {
@@ -245,7 +257,8 @@ class Git_Mirror_MirrorDataMapper {
         return $projects;
     }
 
-    public function fetchAllProjectsConcernedByAMirror(Git_Mirror_Mirror $mirror) {
+    public function fetchAllProjectsConcernedByAMirror(Git_Mirror_Mirror $mirror)
+    {
         $projects = array();
 
         foreach ($this->dao->fetchAllProjectIdsConcernedByAMirror($mirror->id) as $row) {
@@ -255,29 +268,34 @@ class Git_Mirror_MirrorDataMapper {
         return $projects;
     }
 
-    public function doesAllSelectedMirrorIdsExist($selected_mirror_ids) {
+    public function doesAllSelectedMirrorIdsExist($selected_mirror_ids)
+    {
         if ($selected_mirror_ids) {
             return count($selected_mirror_ids) === count($this->dao->fetchByIds($selected_mirror_ids));
         }
         return true;
     }
 
-    public function unmirrorRepository($repository_id) {
+    public function unmirrorRepository($repository_id)
+    {
         return $this->dao->unmirrorRepository($repository_id);
     }
 
-    public function mirrorRepositoryTo($repository_id, $selected_mirror_ids) {
+    public function mirrorRepositoryTo($repository_id, $selected_mirror_ids)
+    {
         if ($selected_mirror_ids) {
             return $this->dao->mirrorRepositoryTo($repository_id, $selected_mirror_ids);
         }
         return true;
     }
 
-    public function removeAllDefaultMirrorsToProject(Project $project) {
+    public function removeAllDefaultMirrorsToProject(Project $project)
+    {
         return $this->default_dao->removeAllToProject($project->getID());
     }
 
-    public function addDefaultMirrorsToProject(Project $project, array $selected_mirror_ids) {
+    public function addDefaultMirrorsToProject(Project $project, array $selected_mirror_ids)
+    {
         if ($selected_mirror_ids) {
             return $this->default_dao->addDefaultMirrorsToProject($project->getID(), $selected_mirror_ids);
         }
@@ -285,7 +303,8 @@ class Git_Mirror_MirrorDataMapper {
         return true;
     }
 
-    public function getDefaultMirrorIdsForProject(Project $project) {
+    public function getDefaultMirrorIdsForProject(Project $project)
+    {
         return $this->default_dao->getDefaultMirrorIdsForProject($project->getID());
     }
 
@@ -295,7 +314,8 @@ class Git_Mirror_MirrorDataMapper {
      * @throws Git_Mirror_MirrorNotFoundException
      * @throws Git_Mirror_MissingDataException
      */
-    public function update($id, $url, $hostname, $ssh_key, $name) {
+    public function update($id, $url, $hostname, $ssh_key, $name)
+    {
         $mirror = $this->fetch($id);
 
         if ($url == $mirror->url && $hostname == $mirror->hostname && $ssh_key == $mirror->ssh_key && $name == $mirror->name) {
@@ -321,7 +341,8 @@ class Git_Mirror_MirrorDataMapper {
      * @return bool
      * @throws Git_Mirror_MirrorNotFoundException
      */
-    public function delete($id) {
+    public function delete($id)
+    {
         $mirror = $this->fetch($id);
 
         if (! $this->dao->delete($id)) {
@@ -342,11 +363,13 @@ class Git_Mirror_MirrorDataMapper {
     /**
      * @return bool
      */
-    public function deleteFromDefaultMirrors($deleted_mirror_id) {
+    public function deleteFromDefaultMirrors($deleted_mirror_id)
+    {
         return $this->default_dao->deleteFromDefaultMirrors($deleted_mirror_id);
     }
 
-    public function deleteFromDefaultMirrorsInProjects(Git_Mirror_Mirror $mirror, array $project_ids) {
+    public function deleteFromDefaultMirrorsInProjects(Git_Mirror_Mirror $mirror, array $project_ids)
+    {
         return $this->default_dao->deleteFromDefaultMirrorsInProjects($mirror->id, $project_ids);
     }
 
@@ -354,7 +377,8 @@ class Git_Mirror_MirrorDataMapper {
      * @return Git_Mirror_Mirror
      * @throws Git_Mirror_MirrorNotFoundException
      */
-    public function fetch($id) {
+    public function fetch($id)
+    {
         $row = $this->dao->fetch($id);
         if (! $row) {
             throw new Git_Mirror_MirrorNotFoundException();
@@ -364,7 +388,8 @@ class Git_Mirror_MirrorDataMapper {
         return $this->getInstanceFromRow($owner, $row);
     }
 
-    public function getListOfMirrorIdsPerRepositoryForProject(Project $project) {
+    public function getListOfMirrorIdsPerRepositoryForProject(Project $project)
+    {
         $repositories = array();
         foreach ($this->dao->fetchAllRepositoryMirroredInProject($project->getId()) as $row) {
             if (! isset($repositories[$row['repository_id']])) {
@@ -380,7 +405,8 @@ class Git_Mirror_MirrorDataMapper {
     /**
      * @return Git_Mirror_Mirror
      */
-    private function getInstanceFromRow(PFUser $owner, $row) {
+    private function getInstanceFromRow(PFUser $owner, $row)
+    {
         return new Git_Mirror_Mirror(
             $owner,
             $row['id'],
@@ -393,7 +419,8 @@ class Git_Mirror_MirrorDataMapper {
     /**
      * @return PFUser
      */
-    private function getMirrorOwner($mirror_id) {
+    private function getMirrorOwner($mirror_id)
+    {
         return $this->user_manager->getUserByUserName(
             self::MIRROR_OWNER_PREFIX.$mirror_id
         );
@@ -402,7 +429,8 @@ class Git_Mirror_MirrorDataMapper {
     /**
      * @return bool
      */
-    public function duplicate($template_project_id, $new_project_id) {
+    public function duplicate($template_project_id, $new_project_id)
+    {
         return $this->default_dao->duplicate($template_project_id, $new_project_id);
     }
 }

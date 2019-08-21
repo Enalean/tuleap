@@ -38,14 +38,16 @@ class PhpWikiPageFullRepresentation extends PhpWikiPageRepresentation {
      */
     public $versions;
 
-    public function build(WikiPage $page) {
+    public function build(WikiPage $page)
+    {
         parent::build($page);
 
         $this->last_version  = (int) $page->getLastVersionId();
         $this->versions      = $this->getVerisonsRepresentations();
     }
 
-    private function getVerisonsRepresentations() {
+    private function getVerisonsRepresentations()
+    {
         $representations = array();
 
         $wiki_version_dao     = new WikiVersionDao();

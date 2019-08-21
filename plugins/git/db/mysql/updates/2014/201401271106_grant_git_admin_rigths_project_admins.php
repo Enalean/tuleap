@@ -25,7 +25,8 @@ class b201401271106_grant_git_admin_rigths_project_admins extends ForgeUpgrade_B
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Grant project admins as git admins in all projects
 EOT;
@@ -36,7 +37,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -45,7 +47,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
          $sql = "INSERT INTO permissions (object_id, permission_type, ugroup_id)
                  SELECT DISTINCT(group_id), 'PLUGIN_GIT_ADMIN', 4
                  FROM groups";

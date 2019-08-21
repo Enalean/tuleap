@@ -30,13 +30,15 @@ class Tracker_Masschange_Presenter {
     /** @var string */
     public $javascript_rules;
 
-    public function __construct(array $masschange_aids, $form_elements, $javascript_rules) {
+    public function __construct(array $masschange_aids, $form_elements, $javascript_rules)
+    {
         $this->masschange_aids  = $masschange_aids;
         $this->form_elements    = $form_elements;
         $this->javascript_rules = $javascript_rules;
     }
 
-    public function changing_items() {
+    public function changing_items()
+    {
         return $GLOBALS['Language']->getText(
             'plugin_tracker_artifact_masschange',
             'changing_items',
@@ -44,35 +46,43 @@ class Tracker_Masschange_Presenter {
         );
     }
 
-    public function tracker_base_url() {
+    public function tracker_base_url()
+    {
         return TRACKER_BASE_URL;
     }
 
-    public function artifact_fields_title() {
+    public function artifact_fields_title()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'artifact_fields_title');
     }
 
-    public function masschange_info_title() {
+    public function masschange_info_title()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_masschange', 'info');
     }
 
-    public function unsubscribe_label() {
+    public function unsubscribe_label()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_masschange', 'unsubscribe');
     }
 
-    public function add_comment() {
+    public function add_comment()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'add_comment');
     }
 
-    public function notification_label() {
+    public function notification_label()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_masschange','send_notifications');
     }
 
-    public function masschange_submit() {
+    public function masschange_submit()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'submit_mass_change');
     }
 
-    public function default_comment() {
+    public function default_comment()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_index', 'mass_change');
     }
 

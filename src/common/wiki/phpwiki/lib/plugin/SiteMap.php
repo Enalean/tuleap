@@ -48,20 +48,24 @@ extends WikiPlugin
 {
     var $_pagename;
 
-    function getName () {
+    function getName()
+    {
         return _("SiteMap");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("Recursively get BackLinks or links");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.13 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('exclude'        => '',
                      'include_self'   => 0,
                      'noheader'       => 0,
@@ -82,8 +86,12 @@ extends WikiPlugin
 
     // Fixme: overcome limitation if two SiteMap plugins are in the same page!
     // static $VisitedPages still holds it
-    function recursivelyGetBackLinks($startpage, $pagearr, $level = '*',
-                                     $reclimit = '***') {
+    function recursivelyGetBackLinks(
+        $startpage,
+        $pagearr,
+        $level = '*',
+        $reclimit = '***'
+    ) {
         static $VisitedPages = array();
 
         $startpagename = $startpage->getName();
@@ -108,8 +116,12 @@ extends WikiPlugin
         return $pagearr;
     }
 
-    function recursivelyGetLinks($startpage, $pagearr, $level = '*',
-                                 $reclimit = '***') {
+    function recursivelyGetLinks(
+        $startpage,
+        $pagearr,
+        $level = '*',
+        $reclimit = '***'
+    ) {
         static $VisitedPages = array();
 
         $startpagename = $startpage->getName();
@@ -140,7 +152,8 @@ extends WikiPlugin
     }
 
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         include_once('lib/BlockParser.php');
 
         $args = $this->getArgs($argstr, $request, false);

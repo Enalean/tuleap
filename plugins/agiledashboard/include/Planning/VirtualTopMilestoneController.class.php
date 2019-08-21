@@ -75,7 +75,8 @@ class Planning_VirtualTopMilestoneController extends BaseController
         $this->top_milestone_crumb_builder   = $top_milestone_crumb_builder;
     }
 
-    public function showTop() {
+    public function showTop()
+    {
         try {
             $this->generateVirtualTopMilestone();
         } catch (Planning_NoPlanningsException $e) {
@@ -91,7 +92,8 @@ class Planning_VirtualTopMilestoneController extends BaseController
         );
     }
 
-    private function redirectToCorrectPane() {
+    private function redirectToCorrectPane()
+    {
         $current_pane_identifier = $this->getActivePaneIdentifier();
         if ($current_pane_identifier !== $this->request->get('pane')) {
             $this->request->set('pane', $current_pane_identifier);
@@ -99,11 +101,13 @@ class Planning_VirtualTopMilestoneController extends BaseController
         }
     }
 
-    private function getActivePaneIdentifier() {
+    private function getActivePaneIdentifier()
+    {
         return $this->top_milestone_pane_factory->getActivePane($this->milestone)->getIdentifier();
     }
 
-    public function getHeaderOptions() {
+    public function getHeaderOptions()
+    {
         try {
             $this->generateVirtualTopMilestone();
             $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
@@ -118,7 +122,8 @@ class Planning_VirtualTopMilestoneController extends BaseController
         }
     }
 
-    private function getTopMilestonePresenter() {
+    private function getTopMilestonePresenter()
+    {
         $redirect_parameter = new Planning_MilestoneRedirectParameter();
 
         return new AgileDashboard_MilestonePresenter(
@@ -133,7 +138,8 @@ class Planning_VirtualTopMilestoneController extends BaseController
         );
     }
 
-    private function generateVirtualTopMilestone() {
+    private function generateVirtualTopMilestone()
+    {
         $this->milestone = $this->milestone_factory->getVirtualTopMilestone(
             $this->getCurrentUser(),
             $this->project

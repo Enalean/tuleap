@@ -35,7 +35,8 @@ class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
     private $log_analyzer;
 
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->git_exec   = mock('Git_Exec');
         $this->repository = mock('GitRepository');
@@ -45,7 +46,8 @@ class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
         $this->log_analyzer = new Git_Hook_LogAnalyzer($this->git_exec, $this->logger);
     }
 
-    public function itUpdatesBranch() {
+    public function itUpdatesBranch()
+    {
         expect($this->git_exec)->revList('d8f1e57', '469eaa9')->once();
         stub($this->git_exec)->revList()->returns(array('469eaa9'));
 
@@ -55,7 +57,8 @@ class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
         $this->assertEqual($push_details->getRefname(), 'refs/heads/master');
     }
 
-    public function itCreatesBranch() {
+    public function itCreatesBranch()
+    {
         expect($this->git_exec)->revListSinceStart('refs/heads/master', '469eaa9')->once();
         stub($this->git_exec)->revListSinceStart()->returns(array('469eaa9'));
 
@@ -65,14 +68,16 @@ class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
         $this->assertEqual($push_details->getRefname(), 'refs/heads/master');
     }
 
-    public function itDeletesBranch() {
+    public function itDeletesBranch()
+    {
         $push_details = $this->log_analyzer->getPushDetails($this->repository, $this->user, '469eaa9', Git_Hook_LogAnalyzer::FAKE_EMPTY_COMMIT, 'refs/heads/master');
         $this->assertEqual($push_details->getType(), Git_Hook_PushDetails::ACTION_DELETE);
         $this->assertEqual($push_details->getRevisionList(), array());
         $this->assertEqual($push_details->getRefname(), 'refs/heads/master');
     }
 
-    public function itTakesNewRevHashToIdentifyRevTypeOnUpdate() {
+    public function itTakesNewRevHashToIdentifyRevTypeOnUpdate()
+    {
         stub($this->git_exec)->revList()->returns(array('469eaa9'));
         expect($this->git_exec)->getObjectType('469eaa9')->once();
         stub($this->git_exec)->getObjectType()->returns(Git_Hook_PushDetails::OBJECT_TYPE_COMMIT);
@@ -81,7 +86,8 @@ class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
         $this->assertEqual($push_details->getRevType(), Git_Hook_PushDetails::OBJECT_TYPE_COMMIT);
     }
 
-    public function itTakesNewRevHashToIdentifyRevTypeOnCreate() {
+    public function itTakesNewRevHashToIdentifyRevTypeOnCreate()
+    {
         stub($this->git_exec)->revListSinceStart()->returns(array('469eaa9'));
         expect($this->git_exec)->getObjectType('469eaa9')->once();
         stub($this->git_exec)->getObjectType()->returns(Git_Hook_PushDetails::OBJECT_TYPE_COMMIT);
@@ -90,7 +96,8 @@ class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
         $this->assertEqual($push_details->getRevType(), Git_Hook_PushDetails::OBJECT_TYPE_COMMIT);
     }
 
-    public function itTakesOldRevHashToIdentifyRevTypeOnDelete() {
+    public function itTakesOldRevHashToIdentifyRevTypeOnDelete()
+    {
         expect($this->git_exec)->getObjectType('469eaa9')->once();
         stub($this->git_exec)->getObjectType()->returns(Git_Hook_PushDetails::OBJECT_TYPE_COMMIT);
 
@@ -98,7 +105,8 @@ class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
         $this->assertEqual($push_details->getRevType(), Git_Hook_PushDetails::OBJECT_TYPE_COMMIT);
     }
 
-    public function itCommitsOnWorkingBranch() {
+    public function itCommitsOnWorkingBranch()
+    {
         stub($this->git_exec)->revList()->returns(array());
         stub($this->git_exec)->getObjectType()->returns(Git_Hook_PushDetails::OBJECT_TYPE_COMMIT);
 
@@ -106,7 +114,8 @@ class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
         $this->assertEqual($push_details->getRefnameType(), Git_Hook_PushDetails::TYPE_BRANCH);
     }
 
-    public function itCommitsAnUnannotedTag() {
+    public function itCommitsAnUnannotedTag()
+    {
         stub($this->git_exec)->revList()->returns(array());
         stub($this->git_exec)->getObjectType()->returns(Git_Hook_PushDetails::OBJECT_TYPE_COMMIT);
 
@@ -114,7 +123,8 @@ class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
         $this->assertEqual($push_details->getRefnameType(), Git_Hook_PushDetails::TYPE_UNANNOTATED_TAG);
     }
 
-    public function itCommitsAnAnnotedTag() {
+    public function itCommitsAnAnnotedTag()
+    {
         stub($this->git_exec)->revList()->returns(array());
         stub($this->git_exec)->getObjectType()->returns(Git_Hook_PushDetails::OBJECT_TYPE_TAG);
 
@@ -122,7 +132,8 @@ class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
         $this->assertEqual($push_details->getRefnameType(), Git_Hook_PushDetails::TYPE_ANNOTATED_TAG);
     }
 
-    public function itCommitsOnRemoteTrackingBranch() {
+    public function itCommitsOnRemoteTrackingBranch()
+    {
         stub($this->git_exec)->revList()->returns(array());
         stub($this->git_exec)->getObjectType()->returns(Git_Hook_PushDetails::OBJECT_TYPE_COMMIT);
 
@@ -130,7 +141,8 @@ class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
         $this->assertEqual($push_details->getRefnameType(), Git_Hook_PushDetails::TYPE_TRACKING_BRANCH);
     }
 
-    public function itGeneratesAnEmptyPushDetailWhenCannotExtactRevList() {
+    public function itGeneratesAnEmptyPushDetailWhenCannotExtactRevList()
+    {
         stub($this->git_exec)->revList()->throws(new Git_Command_Exception('cmd', array('stuff'), '233'));
 
         expect($this->logger)->error()->once();

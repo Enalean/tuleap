@@ -54,7 +54,8 @@ class PluginFileInfo extends PluginInfo
      * This is left intentionnaly protected so that we can deploy this feature progressively. When all concerned plugins
      * will use it this method will not be required anymore and should be inlined.
      */
-    protected function getDefaultConfPath(Plugin $plugin, $incname) {
+    protected function getDefaultConfPath(Plugin $plugin, $incname)
+    {
         return null;
     }
 
@@ -126,7 +127,8 @@ class PluginFileInfo extends PluginInfo
         }
     }
 
-    private function cleanContentFromClosingPHPTag($content) {
+    private function cleanContentFromClosingPHPTag($content)
+    {
         return str_replace('?>', '', $content);
     }
 

@@ -30,11 +30,13 @@ class NonUniqueUidRetriever {
      */
     private $dao;
 
-    public function __construct(LDAP_UserDao $dao) {
+    public function __construct(LDAP_UserDao $dao)
+    {
         $this->dao = $dao;
     }
 
-    public function getNonUniqueLdapUid() {
+    public function getNonUniqueLdapUid()
+    {
         $rows      = $this->dao->searchNonUniqueLdapUid();
         $ldap_uids = array();
 

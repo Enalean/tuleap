@@ -35,7 +35,8 @@ class ArtifactsCreationWithWrongWorkflowTest extends RestBase {
         );
     }
 
-    public function testPostArtifactFailsIfValueInSelectBoxIsNotValidRegardingWorkflow() {
+    public function testPostArtifactFailsIfValueInSelectBoxIsNotValidRegardingWorkflow()
+    {
         $tracker  = $this->tracker_test_helper->getTrackerRest('releases');
         $response = $tracker->createArtifact(
             array(
@@ -47,7 +48,8 @@ class ArtifactsCreationWithWrongWorkflowTest extends RestBase {
         $this->assertEquals($response['error']['code'], 400);
     }
 
-    public function testPostArtifactSuccededIfValueInSelectBoxIsValidRegardingWorkflow() {
+    public function testPostArtifactSuccededIfValueInSelectBoxIsValidRegardingWorkflow()
+    {
         $tracker       = $this->tracker_test_helper->getTrackerRest('releases');
         $artifact_json = $tracker->createArtifact(
             array(

@@ -32,7 +32,8 @@ class CardwallConfigXmlExport {
     /**  @var XML_RNGValidator */
     private $xml_validator;
 
-    public function __construct(Project $project, TrackerFactory $tracker_factory, Cardwall_OnTop_ConfigFactory $config_factory, XML_RNGValidator $xml_validator) {
+    public function __construct(Project $project, TrackerFactory $tracker_factory, Cardwall_OnTop_ConfigFactory $config_factory, XML_RNGValidator $xml_validator)
+    {
         $this->project         = $project;
         $this->tracker_factory = $tracker_factory;
         $this->config_factory  = $config_factory;
@@ -44,7 +45,8 @@ class CardwallConfigXmlExport {
      * @param SimpleXMLElement $root
      * Export in XML the list of tracker with a cardwall
      */
-    public function export(SimpleXMLElement $root) {
+    public function export(SimpleXMLElement $root)
+    {
         $cardwall_node = $root->addChild(CardwallConfigXml::NODE_CARDWALL);
         $trackers_node = $cardwall_node->addChild(CardwallConfigXml::NODE_TRACKERS);
         $trackers      = $this->tracker_factory->getTrackersByGroupId($this->project->getID());
@@ -56,7 +58,8 @@ class CardwallConfigXmlExport {
         $this->xml_validator->validate($cardwall_node, $rng_path);
     }
 
-    private function addTrackerChild(Tracker $tracker, SimpleXMLElement $trackers_node) {
+    private function addTrackerChild(Tracker $tracker, SimpleXMLElement $trackers_node)
+    {
         $on_top_config = $this->config_factory->getOnTopConfig($tracker);
         if ($on_top_config->isEnabled()) {
             $tracker_node = $trackers_node->addChild(CardwallConfigXml::NODE_TRACKER);
@@ -75,7 +78,8 @@ class CardwallConfigXmlExport {
         }
     }
 
-    private function exportMapping(SimpleXMLElement $mappings_node, Cardwall_OnTop_Config_TrackerMapping $mapping) {
+    private function exportMapping(SimpleXMLElement $mappings_node, Cardwall_OnTop_Config_TrackerMapping $mapping)
+    {
         if (! $mapping->isCustom()) {
             return;
         }
@@ -99,7 +103,8 @@ class CardwallConfigXmlExport {
         $value_node->addAttribute('column_id', 'C'.$value_mapping->getColumnId());
     }
 
-    private function exportColumn(SimpleXMLElement $columns_node, Cardwall_Column $column) {
+    private function exportColumn(SimpleXMLElement $columns_node, Cardwall_Column $column)
+    {
         $column_node = $columns_node->addChild(CardwallConfigXml::NODE_COLUMN);
         $column_node->addAttribute(CardwallConfigXml::ATTRIBUTE_COLUMN_LABEL, $column->getLabel());
         $column_node->addAttribute(CardwallConfigXml::ATTRIBUTE_COLUMN_ID, 'C'.$column->getId());
@@ -107,7 +112,8 @@ class CardwallConfigXmlExport {
         $this->exportColumnColors($column_node, $column);
     }
 
-    private function exportColumnColors(SimpleXMLElement $column_node, Cardwall_Column $column) {
+    private function exportColumnColors(SimpleXMLElement $column_node, Cardwall_Column $column)
+    {
         $bg_green = null;
         $bg_red   = null;
         $bg_blue  = null;

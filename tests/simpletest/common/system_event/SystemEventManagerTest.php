@@ -29,7 +29,8 @@ Mock::generate('DataAccessResult');
 
 class SystemEventManagerTest extends TuleapTestCase {
 
-    public function testConcatParameters() {
+    public function testConcatParameters()
+    {
         $sem = new SystemEventManagerTestVersion($this);
         $params = array(
             'key1' => 'value1',
@@ -46,7 +47,8 @@ class SystemEventManagerTest extends TuleapTestCase {
     /**
      * 'toto' can be renamed if he is not already scheduled for rename
      */
-    public function testCanRenameUser() {
+    public function testCanRenameUser()
+    {
         $user = mock('PFUser');
         $user->setReturnValue('getId', 102);
 
@@ -63,7 +65,8 @@ class SystemEventManagerTest extends TuleapTestCase {
         $this->assertTrue($se->canRenameUser($user));
     }
 
-    public function testCanRenameUserWithUserAlreadyQueudedForRename() {
+    public function testCanRenameUserWithUserAlreadyQueudedForRename()
+    {
         $user = mock('PFUser');
         $user->setReturnValue('getId', 102);
 
@@ -84,7 +87,8 @@ class SystemEventManagerTest extends TuleapTestCase {
      * Test if string 'titi' is not already in system event queue as a futur
      * new username
      */
-    public function testIsUserNameAvailable() {
+    public function testIsUserNameAvailable()
+    {
         $seDao = new MockSystemEventDao($this);
 
         $dar = new MockDataAccessResult($this);
@@ -98,7 +102,8 @@ class SystemEventManagerTest extends TuleapTestCase {
         $this->assertTrue($se->isUserNameAvailable('titi'));
     }
 
-    public function testIsUserNameAvailableWithStringAlreadyQueuded() {
+    public function testIsUserNameAvailableWithStringAlreadyQueuded()
+    {
         $seDao = new MockSystemEventDao($this);
 
         $dar = new MockDataAccessResult($this);
@@ -131,11 +136,13 @@ class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
 
     public const CUSTOM_QUEUE = 'custom_queue';
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->event_manager = new class extends EventManager {
-            function processEvent($event, $params = []) {
+            function processEvent($event, $params = [])
+            {
                 switch ($event) {
                     case Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE:
                         if ($params['queue'] === SystemEventManagerGetTypesForQueueTest::CUSTOM_QUEUE) {
@@ -155,7 +162,8 @@ class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
         EventManager::setInstance($this->event_manager);
     }
 
-    public function itReturnsEmptyArrayIfFantasyQueueIsPassed() {
+    public function itReturnsEmptyArrayIfFantasyQueueIsPassed()
+    {
         $manager = partial_mock('SystemEventManager', array());
 
         $types = $manager->getTypesForQueue('Unicorne');
@@ -163,7 +171,8 @@ class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
         $this->assertArrayEmpty($types);
     }
 
-    public function itReturnsEmptyArrayIfNoQueueIsPassed() {
+    public function itReturnsEmptyArrayIfNoQueueIsPassed()
+    {
         $manager = partial_mock('SystemEventManager', array());
 
         $types = $manager->getTypesForQueue(null);
@@ -171,7 +180,8 @@ class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
         $this->assertArrayEmpty($types);
     }
 
-    public function itReturnsTypesForDefaultQueue() {
+    public function itReturnsTypesForDefaultQueue()
+    {
         $manager = partial_mock('SystemEventManager', array());
 
         $types = $manager->getTypesForQueue(SystemEvent::DEFAULT_QUEUE);
@@ -180,7 +190,8 @@ class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
         $this->assertTrue(in_array('search_wiki', $types));
     }
 
-    public function itReturnsTypesForAppOwner() {
+    public function itReturnsTypesForAppOwner()
+    {
         $manager = partial_mock('SystemEventManager', array());
 
         $types = $manager->getTypesForQueue(SystemEvent::APP_OWNER_QUEUE);
@@ -189,7 +200,8 @@ class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
         $this->assertTrue(in_array('search_wiki', $types));
     }
 
-    public function itReturnsTypesForCustomQueue() {
+    public function itReturnsTypesForCustomQueue()
+    {
         $manager = partial_mock('SystemEventManager', array());
 
         $types = $manager->getTypesForQueue(self::CUSTOM_QUEUE);
@@ -198,7 +210,8 @@ class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
         $this->assertTrue(in_array('track_you', $types));
     }
 
-    public function itDoesNotReturnDefaultTypesForCustomQueue() {
+    public function itDoesNotReturnDefaultTypesForCustomQueue()
+    {
         $manager = partial_mock('SystemEventManager', array());
 
         $types = $manager->getTypesForQueue(self::CUSTOM_QUEUE);
@@ -207,7 +220,8 @@ class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
         $this->assertFalse(in_array('search_wiki', $types));
     }
 
-    public function itDoesNotReturnCustomTypesForDefaultQueue() {
+    public function itDoesNotReturnCustomTypesForDefaultQueue()
+    {
         $manager = partial_mock('SystemEventManager', array());
 
         $types = $manager->getTypesForQueue(SystemEvent::DEFAULT_QUEUE);

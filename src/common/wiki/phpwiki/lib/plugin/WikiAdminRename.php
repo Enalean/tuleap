@@ -34,20 +34,24 @@ require_once('lib/plugin/WikiAdminSelect.php');
 class WikiPlugin_WikiAdminRename
 extends WikiPlugin_WikiAdminSelect
 {
-    function getName() {
+    function getName()
+    {
         return _("WikiAdminRename");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Rename selected pages");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.26 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array_merge
             (
              PageList::supportedArgs(),
@@ -59,7 +63,8 @@ extends WikiPlugin_WikiAdminSelect
                      ));
     }
 
-    function renameHelper($name, $from, $to, $options = false) {
+    function renameHelper($name, $from, $to, $options = false)
+    {
         if ($options['regex']) {
             $pattern = '/' . str_replace('/', '\/', $from) . '/'.($options['icase']?'i':'');
             return preg_replace($pattern, $to, $name);
@@ -70,7 +75,8 @@ extends WikiPlugin_WikiAdminSelect
             return str_replace($from, $to, $name);
     }
 
-    function renamePages(&$dbi, &$request, $pages, $from, $to, $updatelinks=false) {
+    function renamePages(&$dbi, &$request, $pages, $from, $to, $updatelinks=false)
+    {
         $ul = HTML::ul();
         $count = 0;
         $post_args = $request->getArg('admin_rename');
@@ -109,7 +115,8 @@ extends WikiPlugin_WikiAdminSelect
         }
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         if ($request->getArg('action') != 'browse')
             if ($request->getArg('action') != _("PhpWikiAdministration/Rename"))
                 return $this->disabled("(action != 'browse')");
@@ -198,7 +205,8 @@ extends WikiPlugin_WikiAdminSelect
                           $buttons);
     }
 
-    function checkBox (&$post_args, $name, $msg) {
+    function checkBox(&$post_args, $name, $msg)
+    {
         $checkbox = HTML::input(array('type' => 'checkbox',
                                       'name' => 'admin_rename['.$name.']',
                                       'value' => 1));
@@ -207,7 +215,8 @@ extends WikiPlugin_WikiAdminSelect
         return HTML::div($checkbox, ' ', HTML::span($msg));
     }
 
-    function renameForm(&$header, $post_args) {
+    function renameForm(&$header, $post_args)
+    {
         $header->pushContent(_("Rename")." "._("from").': ');
         $header->pushContent(HTML::input(array('name' => 'admin_rename[from]',
                                                'value' => $post_args['from'])));
@@ -230,7 +239,8 @@ extends WikiPlugin_WikiAdminSelect
 
 // moved from lib/PageList.php
 class _PageList_Column_renamed_pagename extends _PageList_Column {
-    function _getValue ($page_handle, &$revision_handle) {
+    function _getValue($page_handle, &$revision_handle)
+    {
         global $request;
         $post_args = $request->getArg('admin_rename');
         $options = array('regex' => @$post_args['regex'],

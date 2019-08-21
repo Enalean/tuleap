@@ -45,7 +45,8 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder {
     /**
      * @return AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations;
      */
-    public function getPaginatedBacklogItemsRepresentationsForMilestone(PFUser $user, Planning_Milestone $milestone, $limit, $offset) {
+    public function getPaginatedBacklogItemsRepresentationsForMilestone(PFUser $user, Planning_Milestone $milestone, $limit, $offset)
+    {
         $backlog = $this->backlog_factory->getBacklog($milestone, $limit, $offset);
 
         return $this->getBacklogItemsRepresentations($user, $milestone, $backlog);
@@ -54,13 +55,15 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder {
     /**
      * @return AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations;
      */
-    public function getPaginatedBacklogItemsRepresentationsForTopMilestone(PFUser $user, Planning_Milestone $top_milestone, $limit, $offset) {
+    public function getPaginatedBacklogItemsRepresentationsForTopMilestone(PFUser $user, Planning_Milestone $top_milestone, $limit, $offset)
+    {
         $backlog = $this->backlog_factory->getSelfBacklog($top_milestone, $limit, $offset);
 
         return $this->getBacklogItemsRepresentations($user, $top_milestone, $backlog);
     }
 
-    private function getBacklogItemsRepresentations(PFUser $user, Planning_Milestone $milestone, $backlog) {
+    private function getBacklogItemsRepresentations(PFUser $user, Planning_Milestone $milestone, $backlog)
+    {
         $backlog_items                 = $this->getMilestoneBacklogItems($user, $milestone, $backlog);
         $backlog_items_representations = array();
 
@@ -71,7 +74,8 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder {
         return new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations($backlog_items_representations, $backlog_items->getTotalAvaialableSize());
     }
 
-    private function getMilestoneBacklogItems(PFUser $user, $milestone, $backlog) {
+    private function getMilestoneBacklogItems(PFUser $user, $milestone, $backlog)
+    {
         return $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $milestone, $backlog, false);
     }
 

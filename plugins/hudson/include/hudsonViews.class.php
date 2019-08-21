@@ -28,20 +28,24 @@ require_once __DIR__ . '/../../../src/www/include/help.php';
 
 class hudsonViews extends Views {
 
-    function __construct(&$controler, $view=null) {
+    function __construct(&$controler, $view=null)
+    {
         $this->View($controler, $view);
     }
 
-    function header() {
+    function header()
+    {
         $request = HTTPRequest::instance();
         $GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'group' => $request->get('group_id'), 'toptab' => 'hudson'));
         echo $this->_getHelp();
         echo '<h2>'.$this->_getTitle().'</h2>';
     }
-    function _getTitle() {
+    function _getTitle()
+    {
         return $GLOBALS['Language']->getText('plugin_hudson','title');
     }
-    function _getHelp($section = '', $questionmark = false) {
+    function _getHelp($section = '', $questionmark = false)
+    {
         if (trim($section) !== '' && $section{0} !== '#') {
             $section = '#'.$section;
         }
@@ -52,12 +56,14 @@ class hudsonViews extends Views {
         }
         return help_button('ci.html'.$section, false, $help_label);
     }
-    function footer() {
+    function footer()
+    {
         $GLOBALS['HTML']->footer(array());
     }
 
     // {{{ Views
-    function projectOverview() {
+    function projectOverview()
+    {
         $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $user     = UserManager::instance()->getCurrentUser();
@@ -96,7 +102,8 @@ class hudsonViews extends Views {
         }
     }
 
-    function job_details() {
+    function job_details()
+    {
         $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
@@ -122,7 +129,8 @@ class hudsonViews extends Views {
         }
     }
 
-    function build_number() {
+    function build_number()
+    {
         $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         if ($request->exist('build')) {
@@ -165,7 +173,8 @@ class hudsonViews extends Views {
         }
     }
 
-    function last_test_result() {
+    function last_test_result()
+    {
         $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_id = $request->get('job_id');
@@ -185,7 +194,8 @@ class hudsonViews extends Views {
         }
     }
 
-    function test_trend() {
+    function test_trend()
+    {
         $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_id = $request->get('job_id');
@@ -205,7 +215,8 @@ class hudsonViews extends Views {
         }
     }
 
-    function editJob() {
+    function editJob()
+    {
         $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_id = $request->get('job_id');
@@ -249,7 +260,8 @@ class hudsonViews extends Views {
     }
     // }}}
 
-    function _display_jobs_table($group_id, $services) {
+    function _display_jobs_table($group_id, $services)
+    {
         $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $purifier = Codendi_HTMLPurifier::instance();
@@ -395,7 +407,8 @@ class hudsonViews extends Views {
         }
     }
 
-    function _display_add_job_form($group_id, $services) {
+    function _display_add_job_form($group_id, $services)
+    {
         $project_manager = ProjectManager::instance();
         $project = $project_manager->getProject($group_id);
 

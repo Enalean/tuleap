@@ -63,7 +63,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
         return strpos($_SERVER['REQUEST_URI'], HUDSON_BASE_URL . '/') === 0;
     }
 
-    public function getPluginInfo() {
+    public function getPluginInfo()
+    {
         if (!is_a($this->pluginInfo, 'hudsonPluginInfo')) {
             require_once('hudsonPluginInfo.class.php');
             $this->pluginInfo = new hudsonPluginInfo($this);
@@ -71,7 +72,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
         return $this->pluginInfo;
     }
 
-    public function getServiceShortname() {
+    public function getServiceShortname()
+    {
         return 'hudson';
     }
 
@@ -80,7 +82,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\Hudson\HudsonService::class;
     }
 
-    function cssFile($params) {
+    function cssFile($params)
+    {
         // Only show the stylesheet if we're actually in the hudson pages.
         // This stops styles inadvertently clashing with the main site.
         if ($this->canIncludeStylesheets() ||
@@ -90,7 +93,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    function jsFile($params) {
+    function jsFile($params)
+    {
         // Only include the js files if we're actually in the IM pages.
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
@@ -106,7 +110,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
      *
      * @param mixed $params ($param['group_id'] the ID of the deleted project)
      */
-    function projectIsDeleted($params) {
+    function projectIsDeleted($params)
+    {
         $group_id = $params['group_id'];
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar = $job_dao->deleteHudsonJobsByGroupID($group_id);
@@ -115,14 +120,16 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
 
     protected $hudsonJobFactory = null;
 
-    protected function getMinimalHudsonJobFactory() {
+    protected function getMinimalHudsonJobFactory()
+    {
         if (!$this->hudsonJobFactory) {
             $this->hudsonJobFactory = new MinimalHudsonJobFactory();
         }
         return $this->hudsonJobFactory;
     }
 
-    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event) {
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
+    {
         $request = HTTPRequest::instance();
 
         $user        = UserManager::instance()->getCurrentUser();
@@ -222,7 +229,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
         ));
     }
 
-    function getAvailableReferenceNatures($params) {
+    function getAvailableReferenceNatures($params)
+    {
         $hudson_plugin_reference_natures = array(
             'hudson_build'  => array('keyword' => 'build', 'label' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_build_nature_key')),
             'hudson_job' => array('keyword' => 'job', 'label' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_job_nature_key')));
@@ -314,7 +322,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    function ajax_reference_sparkline($params) {
+    function ajax_reference_sparkline($params)
+    {
         require_once('HudsonJob.class.php');
         require_once('HudsonBuild.class.php');
         require_once('hudson_Widget_JobLastBuilds.class.php');
@@ -385,7 +394,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
      *
      * @return void
      */
-    public function statistics_collector($params) {
+    public function statistics_collector($params)
+    {
         if (!empty($params['formatter'])) {
             $formatter = $params['formatter'];
             $jobDao = new PluginHudsonJobDao(CodendiDataAccess::instance());

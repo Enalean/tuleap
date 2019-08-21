@@ -25,7 +25,8 @@ class Tracker_FormElement_View_Admin_Field_CrossReferences extends Tracker_FormE
      *
      * @return string the HTML for the part of form for required checkbox
      */
-    protected function fetchRequired() {
+    protected function fetchRequired()
+    {
         return '';
     }
 }

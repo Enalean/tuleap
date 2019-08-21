@@ -24,7 +24,8 @@ class BackendAliasesTest extends TuleapTestCase {
 
     private $alias_file;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
         $GLOBALS['alias_file'] = $this->getTmpDir() . '/aliases.codendi';
@@ -61,7 +62,8 @@ class BackendAliasesTest extends TuleapTestCase {
         );
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         unlink($GLOBALS['alias_file']);
         unset($GLOBALS['alias_file']);
         //clear the cache between each tests
@@ -71,28 +73,33 @@ class BackendAliasesTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    public function itReturnsTrueInCaseOfSuccess() {
+    public function itReturnsTrueInCaseOfSuccess()
+    {
         $this->assertEqual($this->backend->update(), true);
     }
 
-    public function itRunNewaliasesCommand() {
+    public function itRunNewaliasesCommand()
+    {
         expect($this->backend)->system('/usr/bin/newaliases > /dev/null')->once();
         $this->backend->update();
     }
 
-    public function itGeneratesAnAliasesFile() {
+    public function itGeneratesAnAliasesFile()
+    {
         $this->backend->update();
         $aliases = file_get_contents($this->alias_file);
         $this->assertFalse($aliases === false);
     }
 
-    public function itGenerateSiteWideAliases() {
+    public function itGenerateSiteWideAliases()
+    {
         $this->backend->update();
         $aliases = file_get_contents($this->alias_file);
         $this->assertPattern('/codendi-contact/', $aliases, "Codendi-wide aliases not set");
     }
 
-    public function itGeneratesMailingListAliases() {
+    public function itGeneratesMailingListAliases()
+    {
         $this->backend->update();
         $aliases = file_get_contents($this->alias_file);
         $this->assertPattern('/"list1-bounces":/', $aliases, "ML aliases not set");
@@ -100,7 +107,8 @@ class BackendAliasesTest extends TuleapTestCase {
         $this->assertPattern('/"listwithanunexpectednewline":/', $aliases);
     }
 
-    public function itGeneratesUserAliasesGivenByPlugins() {
+    public function itGeneratesUserAliasesGivenByPlugins()
+    {
         $this->backend->update();
         $aliases = file_get_contents($this->alias_file);
         $this->assertPattern('/"forge__tracker":/', $aliases, "Alias of plugins not set");
@@ -109,7 +117,8 @@ class BackendAliasesTest extends TuleapTestCase {
 
 class BackendAliasesTest_FakePlugin {
 
-    public function hook($params) {
+    public function hook($params)
+    {
         $params['aliases'][] = new System_Alias('forge__tracker', 'whatever');
     }
 }

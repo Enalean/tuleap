@@ -50,7 +50,7 @@ if($request->valid($vCodendiUserOnly)) {
 $display_restricted_user = true;
 $requested_project_id    = $request->get('project_id');
 if ($requested_project_id !== '' && $requested_project_id !== false) {
-    $display_restricted_user = (static function(int $project_id) : bool {
+    $display_restricted_user = (static function (int $project_id) : bool {
         $project = ProjectManager::instance()->getProject($project_id);
 
         if ($project->isError()) {

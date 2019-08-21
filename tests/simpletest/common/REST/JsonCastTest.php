@@ -22,7 +22,8 @@ use Tuleap\REST\JsonCast;
 class Rest_JsonCastTest extends TuleapTestCase
 {
 
-    public function itDoesNotReturnNullIfValueIsInt() {
+    public function itDoesNotReturnNullIfValueIsInt()
+    {
         $value = 85;
         $this->assertEqual(JsonCast::toInt($value), 85);
 
@@ -33,13 +34,15 @@ class Rest_JsonCastTest extends TuleapTestCase
         $this->assertEqual(JsonCast::toInt($value), 0);
     }
 
-    public function testCastToIntReturnsNullIfValueIsNull() {
+    public function testCastToIntReturnsNullIfValueIsNull()
+    {
         $value = null;
 
         $this->assertNull(JsonCast::toInt($value));
     }
 
-    public function itDoesNotReturnNullIfValueIsFloat() {
+    public function itDoesNotReturnNullIfValueIsFloat()
+    {
         $value = 85.8;
         $this->assertEqual(JsonCast::toFloat($value), 85.8);
 
@@ -50,19 +53,22 @@ class Rest_JsonCastTest extends TuleapTestCase
         $this->assertEqual(JsonCast::toFloat($value), 0);
     }
 
-    public function testCastToFloatReturnsNullIfValueIsNull() {
+    public function testCastToFloatReturnsNullIfValueIsNull()
+    {
         $value = null;
 
         $this->assertNull(JsonCast::toFloat($value));
     }
 
-    public function testCastToDateReturnsIsoFormattedDate() {
+    public function testCastToDateReturnsIsoFormattedDate()
+    {
         $value = mktime(0, 0, 0, 7, 1, 2000);
 
         $this->assertEqual(JsonCast::toDate($value), '2000-07-01T00:00:00+02:00');
     }
 
-    public function testCastToDateReturnsNullIfValueIsNull() {
+    public function testCastToDateReturnsNullIfValueIsNull()
+    {
         $value = null;
 
         $this->assertNull(JsonCast::toDate($value));

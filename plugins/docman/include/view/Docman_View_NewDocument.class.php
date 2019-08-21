@@ -22,20 +22,25 @@
 
 class Docman_View_NewDocument extends Docman_View_New {
 
-    function _getTitle($params) {
+    function _getTitle($params)
+    {
         return $GLOBALS['Language']->getText('plugin_docman', 'new_document');
     }
-    function _getEnctype() {
+    function _getEnctype()
+    {
         return ' enctype="multipart/form-data" ';
     }
-    function _getAction() {
+    function _getAction()
+    {
         return 'createDocument';
     }
-    function _getActionText() {
+    function _getActionText()
+    {
         return $GLOBALS['Language']->getText('plugin_docman', 'new_document_action');
     }
 
-    function _getSpecificProperties($params) {
+    function _getSpecificProperties($params)
+    {
         $html = '';
         $currentItemType = null;
         if(isset($params['force_item'])) {
@@ -103,7 +108,8 @@ class Docman_View_NewDocument extends Docman_View_New {
         return $html;
     }
 
-    function _getNewItem() {
+    function _getNewItem()
+    {
         $i = new Docman_Document();
         return $i;
     }

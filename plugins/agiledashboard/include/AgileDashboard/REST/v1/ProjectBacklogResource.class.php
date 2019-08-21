@@ -197,7 +197,8 @@ class ProjectBacklogResource
     /**
      * Get the backlog items that can be planned in a top-milestone of a given project
      */
-    public function get(PFUser $user, Project $project, $limit, $offset) {
+    public function get(PFUser $user, Project $project, $limit, $offset)
+    {
         if (! $this->limitValueIsAcceptable($limit)) {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }
@@ -217,15 +218,18 @@ class ProjectBacklogResource
         }
     }
 
-    private function limitValueIsAcceptable($limit) {
+    private function limitValueIsAcceptable($limit)
+    {
         return $limit <= self::MAX_LIMIT;
     }
 
-    public function options(PFUser $user, Project $project, $limit, $offset) {
+    public function options(PFUser $user, Project $project, $limit, $offset)
+    {
         $this->sendAllowHeaders();
     }
 
-    public function put(PFUser $user, Project $project, array $ids) {
+    public function put(PFUser $user, Project $project, array $ids)
+    {
         $this->checkIfUserCanChangePrioritiesInMilestone($user, $project);
 
         $this->validateArtifactIdsAreInUnassignedTopBacklog($ids, $user, $project);
@@ -239,7 +243,8 @@ class ProjectBacklogResource
         $this->sendAllowHeaders();
     }
 
-    public function patch(PFUser $user, Project $project, ?OrderRepresentationBase $order = null, ?array $add = null) {
+    public function patch(PFUser $user, Project $project, ?OrderRepresentationBase $order = null, ?array $add = null)
+    {
         $this->checkIfUserCanChangePrioritiesInMilestone($user, $project);
 
         if ($add) {
@@ -267,7 +272,8 @@ class ProjectBacklogResource
     /**
      * @throws RestException 403
      */
-    private function checkIfUserCanChangePrioritiesInMilestone(PFUser $user, Project $project) {
+    private function checkIfUserCanChangePrioritiesInMilestone(PFUser $user, Project $project)
+    {
         $root_planning = $this->planning_factory->getRootPlanning($user, $project->getId());
 
         if (! $root_planning) {
@@ -286,7 +292,8 @@ class ProjectBacklogResource
         }
     }
 
-    private function validateArtifactIdsAreInUnassignedTopBacklog($ids, $user, $project) {
+    private function validateArtifactIdsAreInUnassignedTopBacklog($ids, $user, $project)
+    {
         try {
             $this->milestone_validator->validateArtifactIdsAreInUnassignedTopBacklog($ids, $user, $project);
         } catch (ArtifactIsNotInUnassignedTopBacklogItemsException $exception) {
@@ -298,11 +305,13 @@ class ProjectBacklogResource
         }
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size) {
+    private function sendPaginationHeaders($limit, $offset, $size)
+    {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
-    private function sendAllowHeaders() {
+    private function sendAllowHeaders()
+    {
         Header::allowOptionsGetPut();
     }
 }

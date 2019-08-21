@@ -21,11 +21,13 @@
 
 class PlanningDao extends DataAccessObject {
 
-    private function getTrackerDao() {
+    private function getTrackerDao()
+    {
         return new TrackerDao();
     }
 
-    function createPlanning($group_id, PlanningParameters $planning_parameters) {
+    function createPlanning($group_id, PlanningParameters $planning_parameters)
+    {
         $planning_name       = $this->da->quoteSmart($planning_parameters->name);
         $backlog_title       = $this->da->quoteSmart($planning_parameters->backlog_title);
         $plan_title          = $this->da->quoteSmart($planning_parameters->plan_title);
@@ -43,7 +45,8 @@ class PlanningDao extends DataAccessObject {
         return $planning_id;
     }
 
-    function createBacklogTracker($planning_id, $backlog_tracker_id) {
+    function createBacklogTracker($planning_id, $backlog_tracker_id)
+    {
         $planning_id = $this->da->escapeInt($planning_id);
         $backlog_tracker_id = $this->da->escapeInt($backlog_tracker_id);
 
@@ -53,7 +56,8 @@ class PlanningDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    function searchPlannings($group_id){
+    function searchPlannings($group_id)
+    {
         $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT * 
                 FROM plugin_agiledashboard_planning
@@ -62,7 +66,8 @@ class PlanningDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchById($planning_id){
+    function searchById($planning_id)
+    {
         $planning_id = $this->da->escapeInt($planning_id);
         $sql = "SELECT * 
                 FROM plugin_agiledashboard_planning
@@ -70,7 +75,8 @@ class PlanningDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchByPlanningTrackerId($planning_tracker_id) {
+    public function searchByPlanningTrackerId($planning_tracker_id)
+    {
         $planning_tracker_id = $this->da->escapeInt($planning_tracker_id);
         $sql = "SELECT * 
                 FROM plugin_agiledashboard_planning
@@ -78,7 +84,8 @@ class PlanningDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchByPlanningTrackerIds(array $planning_tracker_ids) {
+    function searchByPlanningTrackerIds(array $planning_tracker_ids)
+    {
         $planning_tracker_ids = $this->da->escapeIntImplode($planning_tracker_ids);
 
         $sql = "SELECT *
@@ -87,7 +94,8 @@ class PlanningDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchByBacklogTrackerId($backlog_tracker_id) {
+    public function searchByBacklogTrackerId($backlog_tracker_id)
+    {
         $backlog_tracker_id = $this->da->escapeInt($backlog_tracker_id);
         $sql = "
             SELECT p.*,
@@ -102,7 +110,8 @@ class PlanningDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchBacklogTrackersById($planning_id){
+    function searchBacklogTrackersById($planning_id)
+    {
         $planning_id = $this->da->escapeInt($planning_id);
         // TODO: Merge table 'plugin_agiledashboard_planning_backlog_tracker' into 'plugin_agiledashboard_planning'
         $sql = "SELECT *
@@ -111,7 +120,8 @@ class PlanningDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchBacklogItemsByTrackerId($tracker_id){
+    function searchBacklogItemsByTrackerId($tracker_id)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
 
         $sql = "SELECT *
@@ -120,7 +130,8 @@ class PlanningDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchBacklogTrackerIdsByGroupId($group_id) {
+    public function searchBacklogTrackerIdsByGroupId($group_id)
+    {
         $group_id = $this->da->escapeInt($group_id);
 
         $sql = "SELECT tracker_id AS id
@@ -132,7 +143,8 @@ class PlanningDao extends DataAccessObject {
         return $this->retrieveIds($sql);
     }
 
-    function searchPlanningTrackerIdsByGroupId($group_id) {
+    function searchPlanningTrackerIdsByGroupId($group_id)
+    {
         $group_id = $this->da->escapeInt($group_id);
 
         $sql = "SELECT planning_tracker_id AS id
@@ -150,14 +162,16 @@ class PlanningDao extends DataAccessObject {
         return $ids;
     }
 
-    public function searchNonPlanningTrackersByGroupId($group_id) {
+    public function searchNonPlanningTrackersByGroupId($group_id)
+    {
         $planning_tracker_ids = $this->searchPlanningTrackerIdsByGroupId($group_id);
         $tracker_dao          = $this->getTrackerDao();
 
         return $tracker_dao->searchByGroupIdWithExcludedIds($group_id, $planning_tracker_ids);
     }
 
-    function updatePlanning($planning_id, PlanningParameters $planning_parameters) {
+    function updatePlanning($planning_id, PlanningParameters $planning_parameters)
+    {
         $planning_id         = $this->da->escapeInt($planning_id);
         $planning_name       = $this->da->quoteSmart($planning_parameters->name);
         $backlog_title       = $this->da->quoteSmart($planning_parameters->backlog_title);
@@ -175,18 +189,21 @@ class PlanningDao extends DataAccessObject {
         $this->updateBacklogTrackers($planning_id, $planning_parameters);
     }
 
-    private function updateBacklogTrackers($planning_id, PlanningParameters $planning_parameters) {
+    private function updateBacklogTrackers($planning_id, PlanningParameters $planning_parameters)
+    {
         $this->deletePlanningBacklogTrackers($planning_id);
         $this->createBacklogTrackers($planning_id, $planning_parameters);
     }
 
-    private function createBacklogTrackers($planning_id, PlanningParameters $planning_parameters) {
+    private function createBacklogTrackers($planning_id, PlanningParameters $planning_parameters)
+    {
         foreach ($planning_parameters->backlog_tracker_ids as $backlog_tracker_id) {
             $this->createBacklogTracker($planning_id, $backlog_tracker_id);
         }
     }
 
-    function deletePlanning($planning_id) {
+    function deletePlanning($planning_id)
+    {
         $planning_id = $this->da->escapeInt($planning_id);
         $sql = "DELETE FROM plugin_agiledashboard_planning
                 WHERE id=$planning_id";
@@ -195,7 +212,8 @@ class PlanningDao extends DataAccessObject {
         $this->deletePlanningBacklogTrackers($planning_id);
     }
 
-    function deletePlanningBacklogTrackers($planning_id) {
+    function deletePlanningBacklogTrackers($planning_id)
+    {
         $planning_id = $this->da->escapeInt($planning_id);
         $sql = "DELETE FROM plugin_agiledashboard_planning_backlog_tracker
                 WHERE planning_id=$planning_id";

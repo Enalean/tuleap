@@ -25,7 +25,8 @@ class MailConfirmationCodeGenerator {
     /** @var RandomNumberGenerator */
     private $random_generator;
 
-    public function __construct(UserManager $user_manager, RandomNumberGenerator $random_generator) {
+    public function __construct(UserManager $user_manager, RandomNumberGenerator $random_generator)
+    {
         $this->user_manager     = $user_manager;
         $this->random_generator = $random_generator;
     }
@@ -33,7 +34,8 @@ class MailConfirmationCodeGenerator {
     /**
      * @return string
      */
-    public function getConfirmationCode() {
+    public function getConfirmationCode()
+    {
         $confirmation_code = null;
 
         while ($confirmation_code === null) {

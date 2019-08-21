@@ -42,7 +42,8 @@ class WebDAVFRSFileTest extends TuleapTestCase
     /**
      * Testing delete when user is not admin
      */
-    function testDeleteFailWithUserNotAdmin() {
+    function testDeleteFailWithUserNotAdmin()
+    {
 
         $webDAVFile = new WebDAVFRSFileTestVersion($this);
         $webDAVFile->setReturnValue('userCanWrite', false);
@@ -55,7 +56,8 @@ class WebDAVFRSFileTest extends TuleapTestCase
     /**
      * Testing delete when file doesn't exist
      */
-    function testDeleteFileNotExist() {
+    function testDeleteFileNotExist()
+    {
 
         $webDAVFile = new WebDAVFRSFileTestVersion($this);
         $webDAVFile->setReturnValue('userCanWrite', true);
@@ -76,7 +78,8 @@ class WebDAVFRSFileTest extends TuleapTestCase
     /**
      * Testing succeeded delete
      */
-    function testDeleteSucceede() {
+    function testDeleteSucceede()
+    {
 
         $webDAVFile = new WebDAVFRSFileTestVersion($this);
         $webDAVFile->setReturnValue('userCanWrite', true);

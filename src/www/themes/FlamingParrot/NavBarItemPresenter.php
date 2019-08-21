@@ -28,7 +28,8 @@ abstract class FlamingParrot_NavBarItemPresenter {
     public $id;
     public $is_active;
 
-    public function __construct($id, $is_active) {
+    public function __construct($id, $is_active)
+    {
         $this->id        = $id;
         $this->is_active = $is_active;
     }

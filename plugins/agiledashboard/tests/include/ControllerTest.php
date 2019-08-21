@@ -111,24 +111,28 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase
         UserManager::setInstance($this->user_manager);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         UserManager::clearInstance();
         parent::tearDown();
     }
 
-    protected function userIsAdmin() {
+    protected function userIsAdmin()
+    {
         stub($this->current_user)->isAdmin($this->group_id)->returns(true);
     }
 
-    protected function userIsNotAdmin() {
+    protected function userIsNotAdmin()
+    {
         stub($this->current_user)->isAdmin($this->group_id)->returns(false);
     }
 
     /**
      * @param string $action example: 'updatePlanning'
      */
-    protected function assertThatPlanningFactoryActionIsNotCalledWhenUserIsNotAdmin($action) {
+    protected function assertThatPlanningFactoryActionIsNotCalledWhenUserIsNotAdmin($action)
+    {
         $this->userIsNotAdmin();
         stub($this->planning_factory)->$action()->never();
         stub($GLOBALS['Response'])->redirect()->once();
@@ -139,7 +143,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase
 
 abstract class Planning_ControllerAdminTest extends Planning_Controller_BaseTest {
 
-    protected function renderAdminScrum() {
+    protected function renderAdminScrum()
+    {
         $this->planning_factory->expectOnce('getPlannings', array($this->current_user, $this->group_id));
         $this->planning_factory->setReturnValue('getPlannings', $this->plannings);
 
@@ -148,13 +153,15 @@ abstract class Planning_ControllerAdminTest extends Planning_Controller_BaseTest
         $this->output = $this->controller->adminScrum();
     }
 
-    public function itHasALinkToCreateANewPlanning() {
+    public function itHasALinkToCreateANewPlanning()
+    {
         $this->assertPattern('/action=new/', $this->output);
     }
 }
 
 class Planning_ControllerNonEmptyAdminTest extends Planning_ControllerAdminTest {
-    function setUp() {
+    function setUp()
+    {
         parent::setUp();
 
         $this->plannings = array(
@@ -165,7 +172,8 @@ class Planning_ControllerNonEmptyAdminTest extends Planning_ControllerAdminTest 
         $this->renderAdminScrum();
     }
 
-    public function itListsExistingPlannings() {
+    public function itListsExistingPlannings()
+    {
         foreach($this->plannings as $planning) {
             $this->assertPattern('/'.$planning->getName().'/', $this->output);
             $this->assertPattern('/href=".*?planning_id='.$planning->getId().'.*"/', $this->output);
@@ -232,30 +240,35 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         $this->renderNew();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         parent::tearDown();
     }
 
-    protected function renderNew() {
+    protected function renderNew()
+    {
         stub($this->planning_factory)->getAvailablePlanningTrackers()->returns($this->available_planning_trackers);
         stub($this->planning_factory)->getAvailableBacklogTrackers()->returns($this->available_backlog_trackers);
 
         $this->output = $this->planning_controller->new_();
     }
 
-    public function itHasATextFieldForTheName() {
+    public function itHasATextFieldForTheName()
+    {
         $this->assertPattern('/<input type="text" name="planning\[name\]"/', $this->output);
     }
 
-    public function itHasASelectBoxListingBacklogTrackers() {
+    public function itHasASelectBoxListingBacklogTrackers()
+    {
         $this->assertPattern('/\<select name="planning\['.PlanningParameters::BACKLOG_TRACKER_IDS.'\]\[\]"/', $this->output);
         foreach ($this->available_backlog_trackers as $tracker) {
             $this->assertPattern('/\<option value="'.$tracker->getId().'".*\>'.$tracker->getName().'/', $this->output);
         }
     }
 
-    public function itHasASelectBoxListingPlanningTrackers() {
+    public function itHasASelectBoxListingPlanningTrackers()
+    {
         $this->assertPattern('/\<select name="planning\[planning_tracker_id\]"/', $this->output);
         foreach ($this->available_planning_trackers as $tracker) {
             $this->assertPattern('/\<option value="'.$tracker->getId().'".*\>'.$tracker->getName().'/', $this->output);
@@ -264,7 +277,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
 }
 
 abstract class Planning_ControllerCreateTest extends Planning_Controller_BaseTest {
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->planning_factory->setReturnValue('getAvailableBacklogTrackers', array());
@@ -273,7 +287,8 @@ abstract class Planning_ControllerCreateTest extends Planning_Controller_BaseTes
 }
 
 class Planning_ControllerCreateWithInvalidParamsTest extends Planning_ControllerCreateTest {
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->request->set('planning[name]', '');
@@ -281,7 +296,8 @@ class Planning_ControllerCreateWithInvalidParamsTest extends Planning_Controller
         $this->request->set('planning[planning_tracker_id]', '');
     }
 
-    public function itShowsAnErrorMessageAndRedirectsBackToTheCreationForm() {
+    public function itShowsAnErrorMessageAndRedirectsBackToTheCreationForm()
+    {
         $this->userIsAdmin();
         $this->expectFeedback('error', '*');
         $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=new');
@@ -290,7 +306,8 @@ class Planning_ControllerCreateWithInvalidParamsTest extends Planning_Controller
 }
 
 class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCreateTest {
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->planning_parameters = array(
@@ -309,14 +326,16 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
         $this->request->set('planning', $this->planning_parameters);
     }
 
-    public function itCreatesThePlanningAndRedirectsToTheIndex() {
+    public function itCreatesThePlanningAndRedirectsToTheIndex()
+    {
         $this->userIsAdmin();
         $this->planning_factory->expectOnce('createPlanning', array($this->group_id, PlanningParameters::fromArray($this->planning_parameters)));
         $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=admin');
         $this->planning_controller->create();
     }
 
-    public function itDoesntCreateAnythingIfTheUserIsNotAdmin() {
+    public function itDoesntCreateAnythingIfTheUserIsNotAdmin()
+    {
         $this->assertThatPlanningFactoryActionIsNotCalledWhenUserIsNotAdmin('createPlanning');
         $this->planning_controller->create();
     }
@@ -324,7 +343,8 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
 
 class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
 
-    public function itRendersTheEditTemplate() {
+    public function itRendersTheEditTemplate()
+    {
         $group_id         = 123;
         $planning_id      = 456;
         $planning         = aPlanning()->withGroupId($group_id)
@@ -392,7 +412,8 @@ class Planning_Controller_Update_BaseTest extends Planning_Controller_BaseTest {
         )
     );
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->request->set('planning_id', $this->planning_id);
         $this->request->set('planning', $this->planning_parameters);
@@ -405,14 +426,16 @@ class Planning_Controller_Update_BaseTest extends Planning_Controller_BaseTest {
 
 class Planning_Controller_ValidUpdateTest extends Planning_Controller_Update_BaseTest {
 
-    public function itUpdatesThePlanningAndRedirectToTheIndex() {
+    public function itUpdatesThePlanningAndRedirectToTheIndex()
+    {
         $this->userIsAdmin();
         $this->planning_factory->expectOnce('updatePlanning', array($this->planning_id, $this->group_id, PlanningParameters::fromArray($this->planning_parameters)));
         $this->expectRedirectTo("/plugins/agiledashboard/?group_id={$this->group_id}&planning_id={$this->planning_id}&action=edit");
         $this->planning_controller->update();
     }
 
-    public function itDoesntUpdateAnythingIfTheUserIsNotAdmin() {
+    public function itDoesntUpdateAnythingIfTheUserIsNotAdmin()
+    {
         $this->assertThatPlanningFactoryActionIsNotCalledWhenUserIsNotAdmin('updatePlanning');
         $this->planning_controller->update();
     }
@@ -422,22 +445,26 @@ class Planning_Controller_InvalidUpdateTest extends Planning_Controller_Update_B
 
     protected $planning_parameters = array();
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->userIsAdmin();
     }
 
-    public function itDoesNotUpdateThePlanning() {
+    public function itDoesNotUpdateThePlanning()
+    {
         $this->planning_factory->expectNever('updatePlanning');
         $this->planning_controller->update();
     }
 
-    public function itReRendersTheEditForm() {
+    public function itReRendersTheEditForm()
+    {
         $this->expectRedirectTo("/plugins/agiledashboard/?group_id=$this->group_id&planning_id=$this->planning_id&action=edit");
         $this->planning_controller->update();
     }
 
-    public function itDisplaysTheRelevantErrorMessages() {
+    public function itDisplaysTheRelevantErrorMessages()
+    {
         $this->expectFeedback('error', '*');
         $this->planning_controller->update();
     }
@@ -447,7 +474,8 @@ class Planning_ControllerDeleteTest extends Planning_Controller_BaseTest {
 
     protected $planning_id = '12';
 
-    public function itDeletesThePlanningAndRedirectsToTheIndex() {
+    public function itDeletesThePlanningAndRedirectsToTheIndex()
+    {
         $this->userIsAdmin();
         $this->request->set('planning_id', $this->planning_id);
 
@@ -456,7 +484,8 @@ class Planning_ControllerDeleteTest extends Planning_Controller_BaseTest {
         $this->planning_controller->delete();
     }
 
-    public function itDoesntDeleteAnythingIfTheUserIsNotAdmin() {
+    public function itDoesntDeleteAnythingIfTheUserIsNotAdmin()
+    {
         $this->assertThatPlanningFactoryActionIsNotCalledWhenUserIsNotAdmin('deletePlanning');
         $this->planning_controller->delete();
     }

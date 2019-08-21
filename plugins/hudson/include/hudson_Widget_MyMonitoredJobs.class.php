@@ -63,7 +63,8 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_myjobs');
     }
 
-    function updatePreferences(Codendi_Request $request) {
+    function updatePreferences(Codendi_Request $request)
+    {
         $request->valid(new Valid_String('cancel'));
         if (!$request->exist('cancel')) {
             $monitored_jobs = $request->get('myhudsonjobs');
@@ -200,7 +201,8 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         return $html;
     }
 
-    function _getMonitoredJobsByUser() {
+    function _getMonitoredJobsByUser()
+    {
         $user = UserManager::instance()->getCurrentUser();
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar = $job_dao->searchByUserID($user->getId());

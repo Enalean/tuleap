@@ -40,63 +40,77 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
     var $jp_graph_path;
     var $summary_label;
 
-    function setTitle($title) {
+    function setTitle($title)
+    {
         $this->title = $title;
     }
 
-    function setDescription($description) {
+    function setDescription($description)
+    {
         $this->description = $description;
     }
 
-    function setScale($scale) {
+    function setScale($scale)
+    {
         $this->scale = $scale;
     }
 
-    function setStart($start) {
+    function setStart($start)
+    {
         $this->start = $start;
     }
 
-    function setDue($due) {
+    function setDue($due)
+    {
         $this->due = $due;
     }
 
-    function setFinish($finish) {
+    function setFinish($finish)
+    {
         $this->finish = $finish;
     }
 
-    function setProgress($progress) {
+    function setProgress($progress)
+    {
         $this->progress = $progress;
     }
 
 
-    function setRight($right) {
+    function setRight($right)
+    {
         $this->right = $right;
     }
 
 
-    function setAsOfDate($asOfDate) {
+    function setAsOfDate($asOfDate)
+    {
         $this->asOfDate = $asOfDate;
     }
 
-    function setHint($hint) {
+    function setHint($hint)
+    {
         $this->hint = $hint;
     }
 
-    function setSummary($summary) {
+    function setSummary($summary)
+    {
         $this->summary = $summary;
     }
 
 
-    function setLinks($links) {
+    function setLinks($links)
+    {
         $this->links = $links;
     }
 
-    function setData($data) {
+    function setData($data)
+    {
         $this->data = $data;
     }
 
 
-    function formatScale() {
+    function formatScale()
+    {
         switch ($this->scale){
             case 'day':
                 return GANTT_HYEAR | GANTT_HMONTH | GANTT_HWEEK | GANTT_HDAY;
@@ -114,7 +128,8 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
         }
     }
 
-    function getScaleDim() {
+    function getScaleDim()
+    {
         $scale_dim = null;
         switch ($this->scale){
             case 'day':
@@ -138,7 +153,8 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
     /**
     * Builds gantt graph
     */
-    function buildGraph() {
+    function buildGraph()
+    {
         $this->graph = new Chart_Gantt($this->width,$this->height,"auto");
 
         // title setup
@@ -273,7 +289,8 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
         }
     }
 
-    protected function addBar($pos, $data, $progress, $params = array()) {
+    protected function addBar($pos, $data, $progress, $params = array())
+    {
 
         $format = "Y-m-d";
         //start date
@@ -310,7 +327,8 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
         return $bar;
     }
 
-    protected function addMilestone($pos, $data, $params = array()) {
+    protected function addMilestone($pos, $data, $params = array())
+    {
         $format = "Y-m-d";
         $aLabel   = isset($params['label']) ? $params['label'] : array($data['id'], html_entity_decode($data['summary']));
         if (isset($params['date'])) {
@@ -331,7 +349,8 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
         return $milestone;
     }
 
-    protected function addErrorBar($pos, $data) {
+    protected function addErrorBar($pos, $data)
+    {
         $format   = "Y-m-d";
 
         $debut = null;
@@ -362,7 +381,8 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
         $bar->SetPattern(GANTT_RDIAG,"black", 96);
     }
 
-    protected function addLateBar($pos, $data, $progress, $params = array()) {
+    protected function addLateBar($pos, $data, $progress, $params = array())
+    {
         $bar = $this->addBar($pos, $data, $progress, $params);
         $bar->SetColor($this->graph->getLateBarColor().":0.7");
         $bar->SetPattern(GANTT_SOLID,$this->graph->getLateBarColor());

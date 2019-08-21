@@ -27,7 +27,8 @@ Mock::generatePartial('PFUser', 'User4LDAPUserSync', array('getRealName', 'getEm
 
 // Override instance to test the right file
 class LDAP_UserSyncTestVersion extends LDAP_UserSync {
-    public static function instance() {
+    public static function instance()
+    {
         include_once dirname(__FILE__).'/../site-content/en_US/synchronize_user.txt';
         return new LDAPPluginCustomUserSync();
     }
@@ -35,7 +36,8 @@ class LDAP_UserSyncTestVersion extends LDAP_UserSync {
 
 class LDAP_UserSyncTest extends TuleapTestCase {
 
-    function testNoUpdateWhenNoDifference() {
+    function testNoUpdateWhenNoDifference()
+    {
         $user = new User4LDAPUserSync($this);
         $user->setReturnValue('getRealName', 'toto');
         $user->setReturnValue('getEmail',    'toto');
@@ -50,7 +52,8 @@ class LDAP_UserSyncTest extends TuleapTestCase {
         $sync->sync($user, $lr);
     }
 
-    function testUserUpdateEmailIfLdapDoesntMatch() {
+    function testUserUpdateEmailIfLdapDoesntMatch()
+    {
         $user = new User4LDAPUserSync($this);
         $user->setReturnValue('getRealName', 'toto');
         $user->setReturnValue('getEmail',    'toto');
@@ -66,7 +69,8 @@ class LDAP_UserSyncTest extends TuleapTestCase {
     }
 
 
-    function testUserUpdateRealnameIfLdapDoesntMatch() {
+    function testUserUpdateRealnameIfLdapDoesntMatch()
+    {
         $user = new User4LDAPUserSync($this);
         $user->setReturnValue('getRealName', 'toto');
         $user->setReturnValue('getEmail',    'toto');
@@ -81,7 +85,8 @@ class LDAP_UserSyncTest extends TuleapTestCase {
         $sync->sync($user, $lr);
     }
 
-    function testChangeUserStatusWithDedicatedCode() {
+    function testChangeUserStatusWithDedicatedCode()
+    {
         $user = new User4LDAPUserSync($this);
         $user->setReturnValue('getRealName', 'toto');
         $user->setReturnValue('getEmail',    'toto');

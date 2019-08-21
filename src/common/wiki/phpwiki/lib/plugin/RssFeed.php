@@ -29,22 +29,26 @@ class WikiPlugin_RssFeed
 extends WikiPlugin
 {
     // Five required functions in a WikiPlugin.
-    function getName () {
+    function getName()
+    {
         return _("RssFeed");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("Simple RSS Feed aggregator Plugin");
 
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.10 $");
     }
 
     // Establish default values for each of this plugin's arguments.
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('feed'         => "",
                      'description'     => "",
                      'url'         => "", //"http://phpwiki.org/RecentChanges?format=rss",
@@ -53,7 +57,8 @@ extends WikiPlugin
                      );
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         extract($this->getArgs($argstr, $request));
 
         $rss_parser = new RSSParser();
@@ -106,7 +111,8 @@ extends WikiPlugin
         return $html;
     }
 
-    function box($args=false, $request=false, $basepage=false) {
+    function box($args=false, $request=false, $basepage=false)
+    {
         if (!$request) $request = $GLOBALS['request'];
         extract($args);
         if (empty($title)) $title = _("RssFeed");

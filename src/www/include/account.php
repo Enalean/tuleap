@@ -22,7 +22,7 @@
 
 // adduser.php - All the forms and functions to manage unix users
 // Add user to an existing project
-function account_add_user_to_group ($group_id, &$user_unix_name)
+function account_add_user_to_group($group_id, &$user_unix_name)
 {
     $um = UserManager::instance();
     $user = $um->findUser($user_unix_name);
@@ -42,7 +42,8 @@ function account_add_user_to_group ($group_id, &$user_unix_name)
 }
 
 // Generate a valid Unix login name from the email address.
-function account_make_login_from_email($email) {
+function account_make_login_from_email($email)
+{
     $pattern = "/^(.*)@.*$/";
     $replacement = "$1";
     $name=preg_replace($pattern, $replacement, $email);
@@ -60,7 +61,8 @@ function account_make_login_from_email($email) {
  * @param String $name
  * @return int
  */
-function account_namevalid($name, $key = '') {
+function account_namevalid($name, $key = '')
+{
     $rule = new Rule_UserName();
     if (!$rule->isValid($name)) {
         $GLOBALS['register_error'] = $rule->getErrorMessage();
@@ -77,7 +79,8 @@ function account_namevalid($name, $key = '') {
  * @param String $name
  * @return int
  */
-function account_groupnamevalid($name) {
+function account_groupnamevalid($name)
+{
     $rule = new Rule_ProjectName();
     if (!$rule->isValid($name)) {
         $GLOBALS['register_error'] = $rule->getErrorMessage();
@@ -88,7 +91,8 @@ function account_groupnamevalid($name) {
 
 
 // print out shell selects
-function account_shellselects($current) {
+function account_shellselects($current)
+{
     if (!$current) {
         $current = '/sbin/nologin';
     }
@@ -115,7 +119,8 @@ function account_create($loginname=''
                         ,$lang_id='en_US'
                         ,$unix_status='N'
                         ,$expiry_date=0
-                        ) {
+                        )
+{
     $um   = UserManager::instance();
     $user = new PFUser();
     $user->setUserName($loginname);
@@ -140,12 +145,14 @@ function account_create($loginname=''
         return $u;
     }
 }
-function account_create_mypage($user_id) {
+function account_create_mypage($user_id)
+{
     $um   = UserManager::instance();
     return $um->accountCreateMyPage($user_id);
 }
 
-function account_redirect_after_login($return_to) {
+function account_redirect_after_login($return_to)
+{
     global $pv;
 
     $event_manager = EventManager::instance();

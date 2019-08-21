@@ -30,7 +30,8 @@ $csrf    = new CSRFSynchronizerToken('/account/change_pw.php');
 // ###### function register_valid()
 // ###### checks for valid register from form post
 
-function register_valid($user_id, CSRFSynchronizerToken $csrf, $old_password_required)    {
+function register_valid($user_id, CSRFSynchronizerToken $csrf, $old_password_required)
+{
     $request = HTTPRequest::instance();
 
     if (!$request->isPost() || !$request->exist('Update')) {

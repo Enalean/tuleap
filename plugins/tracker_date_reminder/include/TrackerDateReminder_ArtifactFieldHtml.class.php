@@ -27,7 +27,8 @@ class TrackerDateReminder_ArtifactFieldHtml {
      * @param
      * @return void
      */
-    function displayDateFieldNotificationSettings(ArtifactType $at, ArtifactField $field) {
+    function displayDateFieldNotificationSettings(ArtifactType $at, ArtifactField $field)
+    {
         //get date field reminder settings from database
         $tdrArtifactField = new TrackerDateReminder_ArtifactField();
         $res = $tdrArtifactField->getDateFieldReminderSettings($field->getID(), $at->getID());

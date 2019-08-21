@@ -23,7 +23,8 @@
 
 class Docman_MetadataValueDao extends DataAccessObject {
 
-    function searchById($fieldId, $itemId) {
+    function searchById($fieldId, $itemId)
+    {
         $sql = sprintf('SELECT *'.
                        ' FROM plugin_docman_metadata_value'.
                        ' WHERE field_id = %d'.
@@ -33,7 +34,8 @@ class Docman_MetadataValueDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function _matchSqlType($type, $value, &$field, &$dataType, &$escapedValue) {
+    function _matchSqlType($type, $value, &$field, &$dataType, &$escapedValue)
+    {
         switch($type) {
             case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
                 $field        = 'valueText';
@@ -67,7 +69,8 @@ class Docman_MetadataValueDao extends DataAccessObject {
     }
 
     // Special query to get values in rank order.
-    function searchListValuesById($fieldId, $itemId) {
+    function searchListValuesById($fieldId, $itemId)
+    {
         $sql = sprintf('SELECT valueInt'.
                        ' FROM plugin_docman_metadata_value as mdv,'.
                        '      plugin_docman_metadata_love as love'.
@@ -80,7 +83,8 @@ class Docman_MetadataValueDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function create($itemId, $fieldId, $type, $value) {
+    function create($itemId, $fieldId, $type, $value)
+    {
         $fields = array('field_id', 'item_id');
         $types  = array('%d', '%d');
 
@@ -107,7 +111,8 @@ class Docman_MetadataValueDao extends DataAccessObject {
         }
     }
 
-    function _createAndReturnId($sql) {
+    function _createAndReturnId($sql)
+    {
         $inserted = $this->update($sql);
         if ($inserted) {
             $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
@@ -120,7 +125,8 @@ class Docman_MetadataValueDao extends DataAccessObject {
         return $inserted;
     }
 
-    function updateValue($itemId, $fieldId, $type, $value) {
+    function updateValue($itemId, $fieldId, $type, $value)
+    {
         $val     = null;
         $dtype   = null;
         $field   = null;
@@ -142,7 +148,8 @@ class Docman_MetadataValueDao extends DataAccessObject {
         }
     }
 
-    function exist($itemId, $fieldId) {
+    function exist($itemId, $fieldId)
+    {
         $sql = sprintf('SELECT count(*) AS nb'.
                        ' FROM plugin_docman_metadata_value'.
                        ' WHERE item_id = %d'.
@@ -152,7 +159,8 @@ class Docman_MetadataValueDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function updateToListOfValueElementDefault($fieldId, $previousValue, $newValue) {
+    function updateToListOfValueElementDefault($fieldId, $previousValue, $newValue)
+    {
         $sql = sprintf('UPDATE plugin_docman_metadata_value'.
                        ' SET valueInt = %d'.
                        ' WHERE field_id = %d'.
@@ -171,7 +179,8 @@ class Docman_MetadataValueDao extends DataAccessObject {
      * Add a condition to ensure this only affect
      * PLUGIN_DOCMAN_METADATA_TYPE_LIST metadata.
      */
-    function updateOrphansLoveItem($fieldId) {
+    function updateOrphansLoveItem($fieldId)
+    {
         $sql = sprintf('INSERT INTO plugin_docman_metadata_value'.
                        ' (field_id, item_id, valueInt)'.
                        ' SELECT md.field_id, i.item_id, '.PLUGIN_DOCMAN_ITEM_STATUS_NONE.
@@ -197,7 +206,8 @@ class Docman_MetadataValueDao extends DataAccessObject {
      * $fieldId int The metadata id.
      * $itemId int or array of item_id.
      */
-    function delete($fieldId, $itemId) {
+    function delete($fieldId, $itemId)
+    {
         if(!is_array($itemId)) {
             $itemId = array($itemId);
         }
@@ -212,7 +222,8 @@ class Docman_MetadataValueDao extends DataAccessObject {
     /**
      * Delete all usage of given $loveId.
      */
-    function deleteLove($loveId) {
+    function deleteLove($loveId)
+    {
         $sql = sprintf('DELETE FROM plugin_docman_metadata_value'.
                        ' WHERE valueInt = %d',
                        $loveId);
@@ -222,7 +233,8 @@ class Docman_MetadataValueDao extends DataAccessObject {
     /**
      * Copy a given metadata value to a list of item.
      */
-    function massUpdate($srcItemId, $fieldId, $type, $dstItemIdArray) {
+    function massUpdate($srcItemId, $fieldId, $type, $dstItemIdArray)
+    {
         $value     = null;
         $val       = null;
         $dtype     = null;
@@ -236,7 +248,8 @@ class Docman_MetadataValueDao extends DataAccessObject {
      * Then for each value for ($srcItemId, $fieldId) create a new entry
      * for each item in $dstItemIdArray.
      */
-    function massUpdateArray($srcItemId, $fieldId, $fieldType, $dstItemIdArray) {
+    function massUpdateArray($srcItemId, $fieldId, $fieldType, $dstItemIdArray)
+    {
         $this->delete($fieldId, $dstItemIdArray);
 
         // Here is the trick:

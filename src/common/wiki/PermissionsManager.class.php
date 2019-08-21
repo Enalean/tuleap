@@ -80,7 +80,8 @@ class Wiki_PermissionsManager {
         $this->literalizer        = $literalizer;
     }
 
-    public function getFromattedUgroupsThatCanReadWikiPage(WikiPage $wiki_page) {
+    public function getFromattedUgroupsThatCanReadWikiPage(WikiPage $wiki_page)
+    {
         $project    = $this->project_manager->getProject($wiki_page->getGid());
         $ugroup_ids = $this->permission_manager->getAuthorizedUgroupIds(
             $wiki_page->getId(),
@@ -93,7 +94,8 @@ class Wiki_PermissionsManager {
         return $this->literalizer->ugroupIdsToString($ugroup_ids, $project);
     }
 
-    private function filterWikiPagePermissionsAccordingToService(Project $project, array $wiki_page_ugroup_ids) {
+    private function filterWikiPagePermissionsAccordingToService(Project $project, array $wiki_page_ugroup_ids)
+    {
         $wiki_service_ugroup_ids = $this->getWikiServicePermissions($project);
 
         foreach($wiki_service_ugroup_ids as $wiki_service_ugroup_id) {
@@ -107,7 +109,8 @@ class Wiki_PermissionsManager {
         return array_merge($wiki_page_ugroup_ids, $this->getWikiAdminsGroups());
     }
 
-    private function checkServiceOverridesPagePermission(array &$wiki_page_ugroup_ids, $wiki_service_ugroup_id) {
+    private function checkServiceOverridesPagePermission(array &$wiki_page_ugroup_ids, $wiki_service_ugroup_id)
+    {
         foreach($wiki_page_ugroup_ids as $key => $wiki_page_ugroup_id) {
 
             $comparable_wiki_page_ugroup_id    = $this->getComparableUGroupId($wiki_page_ugroup_id);
@@ -119,7 +122,8 @@ class Wiki_PermissionsManager {
         }
     }
 
-    private function filterWikiPagePermissionsAccordingToProject(Project $project, $ugroup_ids) {
+    private function filterWikiPagePermissionsAccordingToProject(Project $project, $ugroup_ids)
+    {
         if (! $project->isPublic()) {
             $ugroup_ids = array_diff($ugroup_ids, $this->getNonProjectMembersGroups());
         }
@@ -132,7 +136,8 @@ class Wiki_PermissionsManager {
         return $this->permission_manager->getAuthorizedUgroupIds($project->getID(), self::SERVICE_WIKI_PERMISSION_READ);
     }
 
-    private function getNonProjectMembersGroups() {
+    private function getNonProjectMembersGroups()
+    {
         return array(ProjectUGroup::REGISTERED, ProjectUGroup::ANONYMOUS);
     }
 
@@ -149,7 +154,8 @@ class Wiki_PermissionsManager {
      *
      * @return int
      */
-    private function getComparableUGroupId($comparable_ugroup_id) {
+    private function getComparableUGroupId($comparable_ugroup_id)
+    {
         if ($comparable_ugroup_id > 100) {
             return ProjectUGroup::PROJECT_MEMBERS;
         }
@@ -157,7 +163,8 @@ class Wiki_PermissionsManager {
         return $comparable_ugroup_id;
     }
 
-    public function isUgroupUsed($ugroup_id, $project_id) {
+    public function isUgroupUsed($ugroup_id, $project_id)
+    {
         $project = $this->project_manager->getProject($project_id);
         if (! $project->usesWiki()) {
             return false;

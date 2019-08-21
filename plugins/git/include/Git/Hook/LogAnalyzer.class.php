@@ -35,7 +35,8 @@ class Git_Hook_LogAnalyzer {
     /** @var Logger */
     private $logger;
 
-    public function __construct(Git_Exec $git_exec, Logger $logger) {
+    public function __construct(Git_Exec $git_exec, Logger $logger)
+    {
         $this->exec_repo = $git_exec;
         $this->logger    = $logger;
     }
@@ -51,7 +52,8 @@ class Git_Hook_LogAnalyzer {
      * @param type $refname
      * @return Git_Hook_PushDetails
      */
-    public function getPushDetails(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname) {
+    public function getPushDetails(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
+    {
         $change_type   = Git_Hook_PushDetails::ACTION_ERROR;
         $revision_list = array();
         $rev_type      = '';

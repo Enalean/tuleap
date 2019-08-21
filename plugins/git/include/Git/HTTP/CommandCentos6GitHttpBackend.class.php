@@ -19,7 +19,8 @@
  */
 
 class Git_HTTP_CommandCentos6GitHttpBackend extends Git_HTTP_Command {
-    public function getCommand() {
+    public function getCommand()
+    {
         return '/usr/libexec/git-core/git-http-backend';
     }
 }

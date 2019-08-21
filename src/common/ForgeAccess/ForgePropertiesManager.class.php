@@ -91,7 +91,8 @@ class ForgeAccess_ForgePropertiesManager
         }
     }
 
-    public function updateLabels($authenticated_label, $registered_label) {
+    public function updateLabels($authenticated_label, $registered_label)
+    {
         $this->config_dao->save(NameTranslator::CONFIG_AUTHENTICATED_LABEL, $authenticated_label);
         $this->config_dao->save(NameTranslator::CONFIG_REGISTERED_LABEL, $registered_label);
     }

@@ -25,7 +25,8 @@ class Tracker_Workflow_Trigger_RulesBuilderFactory {
      */
     private $formelement_factory;
 
-    public function __construct(Tracker_FormElementFactory $formelement_factory) {
+    public function __construct(Tracker_FormElementFactory $formelement_factory)
+    {
         $this->formelement_factory = $formelement_factory;
     }
 
@@ -36,18 +37,21 @@ class Tracker_Workflow_Trigger_RulesBuilderFactory {
      *
      * @return Tracker_Workflow_Trigger_RulesBuilderData
      */
-    public function getForTracker(Tracker $tracker) {
+    public function getForTracker(Tracker $tracker)
+    {
         return new Tracker_Workflow_Trigger_RulesBuilderData(
             $this->formelement_factory->getUsedStaticSbFields($tracker),
             $this->getTriggeringFields($tracker)
         );
     }
 
-    private function getTriggeringFields(Tracker $target_tracker) {
+    private function getTriggeringFields(Tracker $target_tracker)
+    {
         return array_map(array($this, 'getTriggeringFieldForTracker'), $target_tracker->getChildren());
     }
 
-    public function getTriggeringFieldForTracker(Tracker $tracker) {
+    public function getTriggeringFieldForTracker(Tracker $tracker)
+    {
         return new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
             $tracker,
             $this->formelement_factory->getUsedStaticSbFields($tracker)

@@ -29,33 +29,38 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase {
 
     private $output_filename;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->output_filename = $this->getTmpDir() . '/output.csv';
 
         $this->collection = new UsersToBeImportedCollection();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         if (is_file($this->output_filename)) {
             unlink($this->output_filename);
         }
         parent::tearDown();
     }
 
-    private function getCSVHeader() {
+    private function getCSVHeader()
+    {
         list($header,) = $this->parseCSVFile();
 
         return $header;
     }
 
-    private function getCSVFirstData() {
+    private function getCSVFirstData()
+    {
         list(,$first_data) = $this->parseCSVFile();
 
         return $first_data;
     }
 
-    private function parseCSVFile() {
+    private function parseCSVFile()
+    {
         $csv    = fopen($this->output_filename, 'r');
         $header = fgetcsv($csv);
         $first_data = fgetcsv($csv);
@@ -64,14 +69,16 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase {
         return array($header, $first_data);
     }
 
-    public function itGeneratesTheHeader() {
+    public function itGeneratesTheHeader()
+    {
         $this->collection->toCSV($this->output_filename);
 
         $header = $this->getCSVHeader();
         $this->assertEqual($header, array('name', 'action', 'comments'));
     }
 
-    public function itDoesNotDumpAlreadyExistingUser() {
+    public function itDoesNotDumpAlreadyExistingUser()
+    {
         $this->collection->add(new AlreadyExistingUser(mock('PFUser'), 104, 'ldap1234'));
         $this->collection->toCSV($this->output_filename);
 
@@ -79,7 +86,8 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase {
         $this->assertFalse($data);
     }
 
-    public function itDumpsToBeActivatedUser() {
+    public function itDumpsToBeActivatedUser()
+    {
         $user = mock('PFUser');
         stub($user)->getUserName()->returns('jdoe');
         stub($user)->getStatus()->returns('S');
@@ -91,7 +99,8 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase {
         $this->assertEqual($data, array('jdoe', 'noop', 'Status of existing user jdoe is [S]'));
     }
 
-    public function itDumpsToBeCreatedUser() {
+    public function itDumpsToBeCreatedUser()
+    {
         $this->collection->add(new ToBeCreatedUser('jdoe', 'John Doe', 'jdoe@example.com', 104, 'ldap1234'));
         $this->collection->toCSV($this->output_filename);
 
@@ -99,7 +108,8 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase {
         $this->assertEqual($data, array('jdoe', 'create:S', 'John Doe (jdoe) <jdoe@example.com> must be created'));
     }
 
-    public function itDumpsEmailDoesNotMatchUser() {
+    public function itDumpsEmailDoesNotMatchUser()
+    {
         $user = mock('PFUser');
         stub($user)->getUserName()->returns('jdoe');
         stub($user)->getEmail()->returns('john.doe@example.com');
@@ -116,7 +126,8 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase {
         ));
     }
 
-    public function itDumpsToBeMappedUser() {
+    public function itDumpsToBeMappedUser()
+    {
         $user1 = mock('PFUser');
         stub($user1)->getUserName()->returns('john');
         stub($user1)->getRealName()->returns('John Doe');

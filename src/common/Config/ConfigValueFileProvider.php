@@ -23,14 +23,16 @@ class ConfigValueFileProvider implements ConfigValueProvider {
     /** @var string */
     private $file;
 
-    public function __construct($file) {
+    public function __construct($file)
+    {
         $this->file = $file;
     }
 
     /**
      * @see ConfigValueProvider::getVariables()
      */
-    public function getVariables() {
+    public function getVariables()
+    {
         if (! is_file($this->file)) {
             return array();
         }

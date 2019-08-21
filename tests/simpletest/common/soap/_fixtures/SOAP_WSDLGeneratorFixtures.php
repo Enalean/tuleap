@@ -46,32 +46,37 @@ class SOAP_WSDLGeneratorFixtures {
      *
      * @return int The ID of newly created project
      */
-    public function addProject($requesterLogin, $shortName, $realName, $privacy, $templateId) {
+    public function addProject($requesterLogin, $shortName, $realName, $privacy, $templateId)
+    {
     }
 
     /**
      * @return bool
      */
-    public function returnBoolean() {
+    public function returnBoolean()
+    {
     }
 
     /**
      * @return ArrayOfString
      */
-    public function returnArrayOfString() {
+    public function returnArrayOfString()
+    {
     }
 
     /**
      * @return ArrayOfTrucsZarb
      */
-    public function returnUnknownType() {
+    public function returnUnknownType()
+    {
 
     }
 
     /**
      * @return ArrayOfPluginTypes
      */
-    public function returnArrayOfPluginTypes() {
+    public function returnArrayOfPluginTypes()
+    {
 
     }
 }

@@ -21,7 +21,8 @@
 /**
  * @return string
  */
-function service_replace_template_name_in_link($link, array $template , Project $project) {
+function service_replace_template_name_in_link($link, array $template , Project $project)
+{
     $link = preg_replace('#(/www/|/projects/|group=)' . preg_quote($template['name'], '#') . '(/|&|$)#','$1'.$project->getUnixName().'$2',$link);
     $link = preg_replace('/group_id=' . preg_quote($template['id'], '/') . '([^\d]|$)/', 'group_id='. $project->getGroupId() .'$1', $link);
     EventManager::instance()->processEvent(

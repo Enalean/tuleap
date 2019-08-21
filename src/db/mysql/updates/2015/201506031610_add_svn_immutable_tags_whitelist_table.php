@@ -18,15 +18,18 @@
 
 class b201506031610_add_svn_immutable_tags_whitelist_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return "Add table to store SVN immutable tags whitelist";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE svn_immutable_tags_whitelist (
                 group_id INT(11),
                 content TEXT,

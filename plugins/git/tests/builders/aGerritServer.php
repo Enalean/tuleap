@@ -18,19 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function aGerritServer() {
+function aGerritServer()
+{
     return new Test_GerritServer_Builder();
 }
 
 class Test_GerritServer_Builder {
     private $id;
 
-    public function withId($id) {
+    public function withId($id)
+    {
         $this->id = $id;
         return $this;
     }
 
-    public function build() {
+    public function build()
+    {
         $host = $ssh_port = $http_port = $login = $identity_file = $replication_key = $use_ssl = $gerrit_version = $http_password = $auth_type = $replication_password = 0;
         return new Git_RemoteServer_GerritServer(
             $this->id,

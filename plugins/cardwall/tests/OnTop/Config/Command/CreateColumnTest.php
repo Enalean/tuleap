@@ -23,7 +23,8 @@ require_once dirname(__FILE__) .'/../../../../../../tests/simpletest/common/incl
 
 class Cardwall_OnTop_Config_Command_CreateColumnTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->tracker_id = 666;
@@ -34,7 +35,8 @@ class Cardwall_OnTop_Config_Command_CreateColumnTest extends TuleapTestCase {
         $this->command = new Cardwall_OnTop_Config_Command_CreateColumn($tracker, $this->dao);
     }
 
-    public function itCreatesANewColumn() {
+    public function itCreatesANewColumn()
+    {
         $request = aRequest()->with('new_column', 'On Going')->build();
         stub($this->dao)->create($this->tracker_id, 'On Going')->once();
         $this->command->execute($request);

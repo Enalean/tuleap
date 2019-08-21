@@ -22,7 +22,8 @@ require_once dirname(__FILE__).'/GerritTestBase.php';
 
 class Git_Driver_Gerrit_Legacy_GroupExistsTest extends TuleapTestCase implements Git_Driver_Gerrit_groupExistsTest{
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->ls_group_return = array(
             'Administrators',
@@ -41,16 +42,19 @@ class Git_Driver_Gerrit_Legacy_GroupExistsTest extends TuleapTestCase implements
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
     }
 
-    public function itCallsLsGroups() {
+    public function itCallsLsGroups()
+    {
         expect($this->gerrit_driver)->listGroups($this->gerrit_server)->once();
         $this->gerrit_driver->doesTheGroupExist($this->gerrit_server, 'whatever');
     }
 
-    public function itReturnsTrueIfGroupExists() {
+    public function itReturnsTrueIfGroupExists()
+    {
         $this->assertTrue($this->gerrit_driver->doesTheGroupExist($this->gerrit_server, 'project/project_admins'));
     }
 
-    public function itReturnsFalseIfGroupDoNotExists() {
+    public function itReturnsFalseIfGroupDoNotExists()
+    {
         $this->assertFalse($this->gerrit_driver->doesTheGroupExist($this->gerrit_server, 'project/wiki_admins'));
     }
 }

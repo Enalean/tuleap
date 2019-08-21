@@ -20,15 +20,18 @@
 
 class b201404161017_add_color_column_to_tracker extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add color column to tracker table';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE tracker ADD COLUMN color varchar(64) NOT NULL DEFAULT 'inca_silver'";
 
         $result = $this->db->dbh->exec($sql);

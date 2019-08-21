@@ -39,7 +39,8 @@ class ACLUpdaterTest extends PHPUnit\Framework\TestCase {
         $this->readers     = 'gpig-ftp_readers';
     }
 
-    public function testAllDirectoriesHaveDefaultAndEffectiveACLAndAllFilesOnlyHaveEffectiveACL() {
+    public function testAllDirectoriesHaveDefaultAndEffectiveACLAndAllFilesOnlyHaveEffectiveACL()
+    {
         $root_path = $this->path;
 
         $this->backend->expects($this->any())->method('resetacl')->will($this->returnCallback( function ($path) use ($root_path) {
@@ -75,25 +76,29 @@ class ACLUpdaterTest extends PHPUnit\Framework\TestCase {
         $this->addToAssertionCount(1);
     }
 
-    public function testItSetsAclOn4Elements() {
+    public function testItSetsAclOn4Elements()
+    {
         $this->backend->expects($this->exactly(4))->method('resetacl');
         $this->backend->expects($this->exactly(4))->method('modifyacl');
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, $this->writers, $this->readers);
     }
 
-    public function testItSetsACLOnDirectoryWhenNoReaders() {
+    public function testItSetsACLOnDirectoryWhenNoReaders()
+    {
         $this->backend->expects($this->at(1))->method('modifyacl')->with('d:u:httpuser:rwx,d:g:gpig-ftp_writers:rwx,u:httpuser:rwx,g:gpig-ftp_writers:rwx', $this->path);
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, $this->writers, '');
     }
 
-    public function testItSetsACLOnDirectoryWhenNoWriters() {
+    public function testItSetsACLOnDirectoryWhenNoWriters()
+    {
         $this->backend->expects($this->at(1))->method('modifyacl')->with('d:u:httpuser:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rwx,g:gpig-ftp_readers:rx', $this->path);
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, '', $this->readers);
     }
 
-    public function testItSetsACLOnDirectoryWhenNoReadersNorWriters() {
+    public function testItSetsACLOnDirectoryWhenNoReadersNorWriters()
+    {
         $this->backend->expects($this->at(1))->method('modifyacl')->with('d:u:httpuser:rwx,u:httpuser:rwx', $this->path);
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, '', '');

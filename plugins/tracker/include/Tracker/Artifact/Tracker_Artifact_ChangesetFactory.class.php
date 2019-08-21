@@ -57,7 +57,8 @@ class Tracker_Artifact_ChangesetFactory {
      * @param int $changeset_id
      * @return Tracker_Artifact_Changeset | null
      */
-    public function getChangeset(Tracker_Artifact $artifact, $changeset_id) {
+    public function getChangeset(Tracker_Artifact $artifact, $changeset_id)
+    {
         $row = $this->dao->searchByArtifactIdAndChangesetId($artifact->getId(), $changeset_id)->getRow();
         if ($row) {
             return $this->getChangesetFromRow($artifact, $row);
@@ -68,7 +69,8 @@ class Tracker_Artifact_ChangesetFactory {
     /**
      * @return \Tracker_Artifact_Changeset|null
      */
-    public function getLastChangeset(Tracker_Artifact $artifact) {
+    public function getLastChangeset(Tracker_Artifact $artifact)
+    {
         $row = $this->dao->searchLastChangesetByArtifactId($artifact->getId())->getRow();
         if ($row) {
             return $this->getChangesetFromRow($artifact, $row);
@@ -92,7 +94,8 @@ class Tracker_Artifact_ChangesetFactory {
     /**
      * @return \Tracker_Artifact_Changeset|null
      */
-    public function getLastChangesetWithFieldValue(Tracker_Artifact $artifact, Tracker_FormElement_Field $field) {
+    public function getLastChangesetWithFieldValue(Tracker_Artifact $artifact, Tracker_FormElement_Field $field)
+    {
         $dar = $this->dao->searchLastChangesetAndValueForArtifactField($artifact->getId(), $field->getId());
         if ($dar) {
             $row       = $dar->getRow();
@@ -132,7 +135,8 @@ class Tracker_Artifact_ChangesetFactory {
      * @param Tracker_Artifact $artifact
      * @return Tracker_Artifact_Changeset[]
      */
-    public function getChangesetsForArtifact(Tracker_Artifact $artifact) {
+    public function getChangesetsForArtifact(Tracker_Artifact $artifact)
+    {
         $changesets = array();
         foreach ($this->dao->searchByArtifactId($artifact->getId()) as $row) {
             $changesets[$row['id']] = $this->getChangesetFromRow($artifact, $row);
@@ -207,7 +211,8 @@ class Tracker_Artifact_ChangesetFactory {
      * @param int $changeset_id
      * @return array
      */
-    public function getNewChangesetsFormattedForJson(Tracker_Artifact $artifact, $changeset_id) {
+    public function getNewChangesetsFormattedForJson(Tracker_Artifact $artifact, $changeset_id)
+    {
         $changesets = array();
         foreach ($this->dao->searchChangesetNewerThan($artifact->getId(), $changeset_id) as $row) {
             $changesets[] = $this->json_formatter->format($this->getChangesetFromRow($artifact, $row));
@@ -215,7 +220,8 @@ class Tracker_Artifact_ChangesetFactory {
         return $changesets;
     }
 
-    private function getChangesetFromRow(Tracker_Artifact $artifact, $row) {
+    private function getChangesetFromRow(Tracker_Artifact $artifact, $row)
+    {
         return new Tracker_Artifact_Changeset(
             $row['id'],
             $artifact,

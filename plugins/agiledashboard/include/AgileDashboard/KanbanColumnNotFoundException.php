@@ -21,7 +21,8 @@
 
 class AgileDashboard_KanbanColumnNotFoundException extends Exception {
 
-    public function __construct(AgileDashboard_Kanban $kanban, $column_id) {
+    public function __construct(AgileDashboard_Kanban $kanban, $column_id)
+    {
         $message = "Column $column_id has not been found for Kanban ".$kanban->getId();
         parent::__construct($message);
     }

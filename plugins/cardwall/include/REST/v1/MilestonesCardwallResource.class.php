@@ -34,12 +34,14 @@ class MilestonesCardwallResource {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    public function __construct(Cardwall_OnTop_ConfigFactory $config_factory) {
+    public function __construct(Cardwall_OnTop_ConfigFactory $config_factory)
+    {
         $this->config_factory   = $config_factory;
         $this->artifact_factory = Tracker_ArtifactFactory::instance();
     }
 
-    public function options() {
+    public function options()
+    {
         $this->sendAllowHeaderForCardwall();
     }
 
@@ -57,7 +59,8 @@ class MilestonesCardwallResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function get(Planning_Milestone $milestone) {
+    public function get(Planning_Milestone $milestone)
+    {
         $this->checkCardwallIsEnabled($milestone);
 
         $this->sendAllowHeaderForCardwall();
@@ -68,7 +71,8 @@ class MilestonesCardwallResource {
         return $board_representation;
     }
 
-    private function getBoard(Planning_Milestone $milestone) {
+    private function getBoard(Planning_Milestone $milestone)
+    {
         $raw_board_builder = new Cardwall_RawBoardBuilder();
         $config            = $this->config_factory->getOnTopConfigByPlanning($milestone->getPlanning());
 
@@ -83,7 +87,8 @@ class MilestonesCardwallResource {
         return $board;
     }
 
-    private function checkCardwallIsEnabled(Planning_Milestone $milestone) {
+    private function checkCardwallIsEnabled(Planning_Milestone $milestone)
+    {
         $config = $this->config_factory->getOnTopConfig($milestone->getArtifact()->getTracker());
 
         if (! $config->isEnabled()){
@@ -91,11 +96,13 @@ class MilestonesCardwallResource {
         }
     }
 
-    private function getCurrentUser() {
+    private function getCurrentUser()
+    {
         return UserManager::instance()->getCurrentUser();
     }
 
-    private function sendAllowHeaderForCardwall() {
+    private function sendAllowHeaderForCardwall()
+    {
         Header::allowOptionsGet();
     }
 }

@@ -26,28 +26,34 @@ class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement_Field
 
     protected $label;
 
-    public function __construct($id, $label) {
+    public function __construct($id, $label)
+    {
         parent::__construct($id, false);
         $this->label = $label;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->getLabel();
     }
 
-    public function getLabel() {
+    public function getLabel()
+    {
         return $this->label;
     }
 
-    public function getJsonId() {
+    public function getJsonId()
+    {
         return self::OPEN_PREFIX. $this->getId();
     }
 
-    public function getUsername() {
+    public function getUsername()
+    {
         return $this->getLabel();
     }
 
-    public function getXMLExportLabel() {
+    public function getXMLExportLabel()
+    {
         return $this->label;
     }
 

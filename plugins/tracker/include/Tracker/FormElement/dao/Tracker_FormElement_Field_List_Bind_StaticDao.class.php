@@ -19,18 +19,21 @@
  */
 
 class Tracker_FormElement_Field_List_Bind_StaticDao extends DataAccessObject {
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_field_list_bind_static';
     }
-    public function searchByFieldId($field_id) {
+    public function searchByFieldId($field_id)
+    {
         $field_id  = $this->da->escapeInt($field_id);
         $sql = "SELECT *
                 FROM $this->table_name
                 WHERE field_id = $field_id ";
         return $this->retrieve($sql);
     }
-    public function duplicate($from_field_id, $to_field_id) {
+    public function duplicate($from_field_id, $to_field_id)
+    {
         $from_field_id  = $this->da->escapeInt($from_field_id);
         $to_field_id    = $this->da->escapeInt($to_field_id);
         $sql = "REPLACE INTO $this->table_name (field_id, is_rank_alpha)
@@ -39,14 +42,16 @@ class Tracker_FormElement_Field_List_Bind_StaticDao extends DataAccessObject {
                 WHERE field_id = $from_field_id";
         return $this->update($sql);
     }
-    public function save($field_id, $is_rank_alpha) {
+    public function save($field_id, $is_rank_alpha)
+    {
         $field_id      = $this->da->escapeInt($field_id);
         $is_rank_alpha = $this->da->escapeInt($is_rank_alpha);
         $sql = "REPLACE INTO $this->table_name (field_id, is_rank_alpha)
                 VALUES ($field_id, $is_rank_alpha)";
         return $this->update($sql);
     }
-    public function isRankAlpha($field_id) {
+    public function isRankAlpha($field_id)
+    {
         $field_id  = $this->da->escapeInt($field_id);
         $sql = "SELECT is_rank_alpha
                 FROM $this->table_name

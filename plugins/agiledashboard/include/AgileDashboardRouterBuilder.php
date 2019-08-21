@@ -218,7 +218,8 @@ class AgileDashboardRouterBuilder
      *
      * @return PlanningFactory
      */
-    private function getPlanningFactory() {
+    private function getPlanningFactory()
+    {
         return PlanningFactory::build();
     }
 
@@ -226,7 +227,8 @@ class AgileDashboardRouterBuilder
      * Builds a new Planning_MilestoneFactory instance.
      * @return Planning_MilestoneFactory
      */
-    private function getMilestoneFactory() {
+    private function getMilestoneFactory()
+    {
         $form_element_factory = Tracker_FormElementFactory::instance();
 
         return new Planning_MilestoneFactory(
@@ -264,14 +266,16 @@ class AgileDashboardRouterBuilder
         );
     }
 
-    private function getHierarchyFactory() {
+    private function getHierarchyFactory()
+    {
         return Tracker_HierarchyFactory::instance();
     }
 
     /**
      * @return AgileDashboard_KanbanManager
      */
-    private function getKanbanManager() {
+    private function getKanbanManager()
+    {
         return new AgileDashboard_KanbanManager(
             new AgileDashboard_KanbanDao(),
             $this->getTrackerFactory(),
@@ -282,7 +286,8 @@ class AgileDashboardRouterBuilder
     /**
      * @return AgileDashboard_HierarchyChecker
      */
-    private function getHierarchyChecker() {
+    private function getHierarchyChecker()
+    {
         return new AgileDashboard_HierarchyChecker(
             $this->getPlanningFactory(),
             $this->getKanbanFactory(),
@@ -293,14 +298,16 @@ class AgileDashboardRouterBuilder
     /**
      * @return TrackerFactory
      */
-    private function getTrackerFactory() {
+    private function getTrackerFactory()
+    {
         return TrackerFactory::instance();
     }
 
     /**
      * @return AgileDashboard_ConfigurationManager
      */
-    private function getConfigurationManager() {
+    private function getConfigurationManager()
+    {
         return new AgileDashboard_ConfigurationManager(
             new AgileDashboard_ConfigurationDao()
         );
@@ -309,18 +316,21 @@ class AgileDashboardRouterBuilder
     /**
      * @return AgileDashboard_KanbanFactory
      */
-    private function getKanbanFactory() {
+    private function getKanbanFactory()
+    {
         return new AgileDashboard_KanbanFactory(
             $this->getTrackerFactory(),
             new AgileDashboard_KanbanDao()
         );
     }
 
-    private function getArtifactFactory() {
+    private function getArtifactFactory()
+    {
         return Tracker_ArtifactFactory::instance();
     }
 
-    private function getStatusCounter() {
+    private function getStatusCounter()
+    {
         return new AgileDashboard_Milestone_MilestoneStatusCounter(
             new AgileDashboard_BacklogItemDao(),
             new Tracker_ArtifactDao(),
@@ -328,7 +338,8 @@ class AgileDashboardRouterBuilder
         );
     }
 
-    private function getMilestoneRepresentationBuilder() {
+    private function getMilestoneRepresentationBuilder()
+    {
         return new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
             $this->getMilestoneFactory(),
             $this->getBacklogFactory(),
@@ -371,7 +382,8 @@ class AgileDashboardRouterBuilder
         );
     }
 
-    private function getBacklogFactory() {
+    private function getBacklogFactory()
+    {
         return new AgileDashboard_Milestone_Backlog_BacklogFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),

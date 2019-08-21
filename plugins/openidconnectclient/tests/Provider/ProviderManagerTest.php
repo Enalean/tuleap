@@ -24,7 +24,8 @@ use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 
 class ProviderManagerTest extends TuleapTestCase {
-    public function itCreatesNewProvider() {
+    public function itCreatesNewProvider()
+    {
         $provider_dao     = mock('Tuleap\OpenIDConnectClient\Provider\ProviderDao');
         $provider_manager = new ProviderManager($provider_dao);
 
@@ -61,7 +62,8 @@ class ProviderManagerTest extends TuleapTestCase {
         );
     }
 
-    public function itUpdatesProvider() {
+    public function itUpdatesProvider()
+    {
         $provider_dao     = mock('Tuleap\OpenIDConnectClient\Provider\ProviderDao');
         $provider_dao->setReturnValue('save', true);
         $provider_manager = new ProviderManager($provider_dao);
@@ -83,7 +85,8 @@ class ProviderManagerTest extends TuleapTestCase {
         $provider_manager->update($provider);
     }
 
-    public function itChecksDataBeforeManipulatingAProvider() {
+    public function itChecksDataBeforeManipulatingAProvider()
+    {
         $provider_dao     = mock('Tuleap\OpenIDConnectClient\Provider\ProviderDao');
         $provider_manager = new ProviderManager($provider_dao);
 

@@ -32,16 +32,19 @@ class Tracker_SlicedArtifacts {
     /** @var int */
     private $total_size;
 
-    public function __construct(array $artifacts, $total_size) {
+    public function __construct(array $artifacts, $total_size)
+    {
         $this->artifacts  = $artifacts;
         $this->total_size = $total_size;
     }
 
-    public function getArtifacts() {
+    public function getArtifacts()
+    {
         return $this->artifacts;
     }
 
-    public function getTotalSize() {
+    public function getTotalSize()
+    {
         return $this->total_size;
     }
 }

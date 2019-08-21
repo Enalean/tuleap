@@ -32,22 +32,26 @@ class MediawikiGroupPresenter {
     /** @var ProjectUGroup[] */
     private $current_mapping;
 
-    public function __construct($mediawiki_group_id, $mediawiki_group_label, $available_ugroups, $mapping) {
+    public function __construct($mediawiki_group_id, $mediawiki_group_label, $available_ugroups, $mapping)
+    {
         $this->mediawiki_group_id    = $mediawiki_group_id;
         $this->available_ugroups     = $available_ugroups;
         $this->mediawiki_group_label = $mediawiki_group_label;
         $this->current_mapping       = $mapping;
     }
 
-    public function tuleap_group_label() {
+    public function tuleap_group_label()
+    {
         return 'Tuleap groups';
     }
 
-    public function mediawiki_group_label() {
+    public function mediawiki_group_label()
+    {
         return $this->mediawiki_group_label . ' (Mediawiki)';
     }
 
-    public function available_groups() {
+    public function available_groups()
+    {
         $selector = array(
             'name'     => 'available_'.$this->mediawiki_group_id.'[]',
             'class'    => 'forge_mw_available_groups',
@@ -63,7 +67,8 @@ class MediawikiGroupPresenter {
         return $selector;
     }
 
-    public function selected_groups() {
+    public function selected_groups()
+    {
         $selector = array(
             'name'     => 'selected_'.$this->mediawiki_group_id.'[]',
             'class'    => 'forge_mw_selected_groups',
@@ -81,11 +86,13 @@ class MediawikiGroupPresenter {
         return $selector;
     }
 
-    public function hidden_selected_groups_name() {
+    public function hidden_selected_groups_name()
+    {
         return 'hidden_selected_'.$this->mediawiki_group_id;
     }
 
-    public function hidden_selected_groups_value() {
+    public function hidden_selected_groups_value()
+    {
         $ids = array();
         foreach ($this->current_mapping as $ugroup) {
             $ids[] = $ugroup->getId();

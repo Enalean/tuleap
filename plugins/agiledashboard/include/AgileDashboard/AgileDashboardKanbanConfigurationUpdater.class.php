@@ -48,7 +48,8 @@ class AgileDashboardKanbanConfigurationUpdater {
         $this->first_kanban_creator = $first_kanban_creator;
     }
 
-    public function updateConfiguration() {
+    public function updateConfiguration()
+    {
         if (! $this->request->exist('kanban-title-admin')) {
             $this->response->missingKanbanTitle();
             return;
@@ -71,7 +72,8 @@ class AgileDashboardKanbanConfigurationUpdater {
         $this->response->kanbanConfigurationUpdated();
     }
 
-    private function getActivatedKanban() {
+    private function getActivatedKanban()
+    {
         $kanban_was_activated = $this->config_manager->kanbanIsActivatedForProject($this->project_id);
         $kanban_is_activated  = $this->request->get('activate-kanban');
 
@@ -82,7 +84,8 @@ class AgileDashboardKanbanConfigurationUpdater {
         return $kanban_is_activated;
     }
 
-    private function getKanbanTitle() {
+    private function getKanbanTitle()
+    {
         $old_kanban_title = $this->config_manager->getKanbanTitle($this->project_id);
         $kanban_title     = trim($this->request->get('kanban-title-admin'));
 

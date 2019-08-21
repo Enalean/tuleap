@@ -32,15 +32,15 @@ class Account_ConfirmationPresenter {
     public $email_presenter;
 
     public function __construct(
-            $title,
-            $content,
-            $thanks,
-            $is_thanks,
-            $redirect_url,
-            $redirect_content,
-            $displayed_image,
-            $image_url,
-            $email_presenter
+        $title,
+        $content,
+        $thanks,
+        $is_thanks,
+        $redirect_url,
+        $redirect_content,
+        $displayed_image,
+        $image_url,
+        $email_presenter
     ) {
         $this->title            = $title;
         $this->content          = $content;

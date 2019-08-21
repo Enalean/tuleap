@@ -58,7 +58,8 @@ Mock::generatePartial(
     )
 );
 class Tracker_FormElement_Field_OpenListTestVersion_for_saveValue extends Tracker_FormElement_Field_OpenListTestVersion {
-    public function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue, CreatedFileURLMapping $url_mapping) {
+    public function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue, CreatedFileURLMapping $url_mapping)
+    {
         parent::saveValue($artifact, $changeset_value_id, $value, $previous_changesetvalue, $url_mapping);
     }
 }
@@ -70,7 +71,8 @@ Mock::generate('Tracker_FormElement_Field_List_OpenValueDao');
 
 class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
 
-    function __construct($name = 'Open List test') {
+    function __construct($name = 'Open List test')
+    {
         parent::__construct($name);
         $this->field_class            = 'Tracker_FormElement_Field_OpenListTestVersion';
         $this->field_class_for_import = 'Tracker_FormElement_Field_OpenListTestVersion_ForImport';
@@ -79,7 +81,8 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
         $this->mockcv_class           = 'MockTracker_Artifact_ChangesetValue_OpenList';
     }
 
-    function testGetChangesetValue() {
+    function testGetChangesetValue()
+    {
         $open_value_dao = new MockTracker_FormElement_Field_List_OpenValueDao();
         $odar_10 = mock('DataAccessResult');
         $odar_10->setReturnValue('getRow', array('id' => '10', 'field_id' => '1', 'label' => 'Open_1'));
@@ -133,7 +136,8 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
         $this->assertIsA($list_values[4], 'Tracker_FormElement_Field_List_BindValue');
     }
 
-    function testGetChangesetValue_doesnt_exist() {
+    function testGetChangesetValue_doesnt_exist()
+    {
         $value_dao = new $this->dao_class();
         $dar = mock('DataAccessResult');
         $dar->setReturnValue('valid', false);
@@ -148,7 +152,8 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
         $this->assertEqual(count($changeset_value->getListValues()), 0);
     }
 
-    function testSaveValue() {
+    function testSaveValue()
+    {
         $artifact = null;
         $changeset_id = 666;
         $submitted_value = array();
@@ -199,7 +204,8 @@ class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase
     private $bind;
     private $field;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->dao   = mock('Tracker_FormElement_Field_List_OpenValueDao');
@@ -211,11 +217,13 @@ class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase
         stub($this->field)->getId()->returns(1);
     }
 
-    function itResetsTheFieldValueWhenSubmittedValueIsEmpty() {
+    function itResetsTheFieldValueWhenSubmittedValueIsEmpty()
+    {
         $this->assertIdentical('', $this->field->getFieldData('', true));
     }
 
-    function itCreatesOneValue() {
+    function itCreatesOneValue()
+    {
         expect($this->bind)->getFieldData()->count(1);
         stub($this->bind)->getFieldData('new value', '*')->returns(null);
 
@@ -225,7 +233,8 @@ class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase
         $this->assertEqual("!new value", $this->field->getFieldData('new value', true));
     }
 
-    function itUsesOneValueDefinedByAdmin() {
+    function itUsesOneValueDefinedByAdmin()
+    {
         expect($this->bind)->getFieldData()->count(1);
         stub($this->bind)->getFieldData('existing value', '*')->returns(115);
 
@@ -234,7 +243,8 @@ class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase
         $this->assertEqual("b115", $this->field->getFieldData('existing value', true));
     }
 
-    function itUsesOneOpenValueDefinedPreviously() {
+    function itUsesOneOpenValueDefinedPreviously()
+    {
         expect($this->bind)->getFieldData()->count(1);
         stub($this->bind)->getFieldData('existing open value', '*')->returns(null);
 
@@ -244,7 +254,8 @@ class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase
         $this->assertEqual("o30", $this->field->getFieldData('existing open value', true));
     }
 
-    function itCreatesTwoNewValues() {
+    function itCreatesTwoNewValues()
+    {
         expect($this->bind)->getFieldData()->count(2);
         stub($this->bind)->getFieldData('new value', '*')->returns(null);
         stub($this->bind)->getFieldData('yet another new value', '*')->returns(null);
@@ -256,7 +267,8 @@ class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase
         $this->assertEqual("!new value,!yet another new value", $this->field->getFieldData('new value,yet another new value', true));
     }
 
-    function itIgnoresEmptyValues() {
+    function itIgnoresEmptyValues()
+    {
         stub($this->bind)->getFieldData('new value', '*')->returns(null);
         stub($this->bind)->getFieldData('yet another new value', '*')->returns(null);
 
@@ -266,7 +278,8 @@ class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase
         $this->assertEqual("!new value,!yet another new value", $this->field->getFieldData('new value,,yet another new value', true));
     }
 
-    function itCreatesANewValueAndReuseABindValueSetByAdmin() {
+    function itCreatesANewValueAndReuseABindValueSetByAdmin()
+    {
         expect($this->bind)->getFieldData()->count(2);
         stub($this->bind)->getFieldData('new value', '*')->returns(null);
         stub($this->bind)->getFieldData('existing value', '*')->returns(115);
@@ -277,7 +290,8 @@ class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase
         $this->assertEqual("!new value,b115", $this->field->getFieldData('new value,existing value', true));
     }
 
-    function itCreatesANewValueAndReuseABindValueAndCreatesAnOpenValue() {
+    function itCreatesANewValueAndReuseABindValueAndCreatesAnOpenValue()
+    {
         expect($this->bind)->getFieldData()->count(3);
         stub($this->bind)->getFieldData('new value', '*')->returns(null);
         stub($this->bind)->getFieldData('existing open value', '*')->returns(null);
@@ -293,7 +307,8 @@ class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase
 
 class Tracker_FormElement_Field_OpenList_RESTTests extends TuleapTestCase {
 
-    public function itThrowsAnExceptionWhenReturningValueIndexedByFieldName() {
+    public function itThrowsAnExceptionWhenReturningValueIndexedByFieldName()
+    {
         $field = new Tracker_FormElement_Field_OpenList(
             1,
             101,
@@ -321,7 +336,8 @@ class Tracker_FormElement_Field_OpenList_Validate_Values extends TuleapTestCase 
     private $bind;
     private $field;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->artifact = mock('Tracker_Artifact');
         $this->bind     = mock('Tracker_FormElement_Field_List_Bind_Static');
@@ -336,7 +352,8 @@ class Tracker_FormElement_Field_OpenList_Validate_Values extends TuleapTestCase 
         );
     }
 
-    public function itAcceptsValidValues() {
+    public function itAcceptsValidValues()
+    {
         $this->assertTrue($this->field->isValid($this->artifact, ''));
         $this->assertTrue($this->field->isValid($this->artifact, 'b101'));
         $this->assertTrue($this->field->isValid($this->artifact, Tracker_FormElement_Field_OpenList::BIND_PREFIX .

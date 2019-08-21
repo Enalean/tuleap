@@ -29,28 +29,34 @@ class Log_ConsoleLogger implements Logger {
 
     private $log = array();
 
-    public function debug($message) {
+    public function debug($message)
+    {
         $this->log($message, Logger::DEBUG);
     }
 
-    public function error($message, ?Exception $e = null) {
+    public function error($message, ?Exception $e = null)
+    {
         $this->log($this->generateLogWithException($message, $e), Logger::ERROR);
     }
 
-    public function info($message) {
+    public function info($message)
+    {
         $this->log($message, Logger::INFO);
     }
 
-    public function log($message, $level = null) {
+    public function log($message, $level = null)
+    {
         fwrite(STDERR, $this->colorize($level, $level.' '.$message).PHP_EOL);
         fflush(STDERR);
     }
 
-    public function warn($message, ?Exception $e = null) {
+    public function warn($message, ?Exception $e = null)
+    {
         $this->log($this->generateLogWithException($message, $e), Logger::WARN);
     }
 
-    private function generateLogWithException($message, ?Exception $e = null) {
+    private function generateLogWithException($message, ?Exception $e = null)
+    {
         $log_string = $message;
         if (!empty($e)) {
             $error_message  = $e->getMessage();
@@ -69,7 +75,8 @@ class Log_ConsoleLogger implements Logger {
      *
      * @return string
      */
-    private function colorize($level, $message) {
+    private function colorize($level, $message)
+    {
         $color = null;
         switch ($level) {
             case Logger::INFO:

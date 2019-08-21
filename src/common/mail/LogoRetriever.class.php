@@ -22,30 +22,35 @@ class LogoRetriever {
     private $logo_path;
     private $logo_mimetype;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->logo_path     = ForgeConfig::get('sys_urlroot') . '/themes/FlamingParrot/images/organization_logo.png';
         $this->logo_mimetype = 'image/png';
     }
 
-    public function getPath() {
+    public function getPath()
+    {
         if ($this->hasLogo()) {
             return $this->logo_path;
         }
         return null;
     }
 
-    public function getUrl() {
+    public function getUrl()
+    {
         if ($this->hasLogo()) {
             return HTTPRequest::instance()->getServerUrl() . '/themes/FlamingParrot/images/organization_logo.png';
         }
         return null;
     }
 
-    public function getMimetype() {
+    public function getMimetype()
+    {
         return $this->logo_mimetype;
     }
 
-    private function hasLogo() {
+    private function hasLogo()
+    {
         return file_exists($this->logo_path);
     }
 

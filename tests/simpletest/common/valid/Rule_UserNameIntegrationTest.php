@@ -39,11 +39,13 @@ Mock::generate('SystemEventManager');
 
 class Rule_UserNameIntegrationTest extends TuleapTestCase {
 
-    function __construct($name = 'Rule_UserName Integration test') {
+    function __construct($name = 'Rule_UserName Integration test')
+    {
         parent::__construct($name);
     }
 
-    function testOk() {
+    function testOk()
+    {
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserByUserName', null);
 
@@ -68,7 +70,8 @@ class Rule_UserNameIntegrationTest extends TuleapTestCase {
         $this->assertTrue($r->isValid("user-name"));
     }
 
-    function testUserAlreadyExist() {
+    function testUserAlreadyExist()
+    {
         $u  = mock('PFUser');
         $um = new MockUserManager($this);
         stub($um)->getUserByUsername('user')->returns($u);
@@ -92,7 +95,8 @@ class Rule_UserNameIntegrationTest extends TuleapTestCase {
         $this->assertFalse($r->isValid("user"));
     }
 
-    function testProjectAlreadyExist() {
+    function testProjectAlreadyExist()
+    {
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserByUserName', null);
 
@@ -115,7 +119,8 @@ class Rule_UserNameIntegrationTest extends TuleapTestCase {
         $this->assertFalse($r->isValid("user"));
     }
 
-    function testSpaceInName() {
+    function testSpaceInName()
+    {
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserByUserName', null);
 
@@ -138,7 +143,8 @@ class Rule_UserNameIntegrationTest extends TuleapTestCase {
         $this->assertFalse($r->isValid("user name"));
     }
 
-    function testUnixUserExists() {
+    function testUnixUserExists()
+    {
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserByUserName', null);
 
@@ -161,7 +167,8 @@ class Rule_UserNameIntegrationTest extends TuleapTestCase {
         $this->assertFalse($r->isValid("user"));
     }
 
-    function testUnixGroupExists() {
+    function testUnixGroupExists()
+    {
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserByUserName', null);
 

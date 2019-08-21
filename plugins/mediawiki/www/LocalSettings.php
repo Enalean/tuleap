@@ -221,7 +221,8 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 
     require_once 'DatabaseForgeMysql123.php';
 
-    function TuleapMediawikiAuthentication($user, &$result) {
+    function TuleapMediawikiAuthentication($user, &$result)
+    {
         global $fusionforgeproject, $wgGroupPermissions ;
 
         $user_manager = UserManager::instance();
@@ -258,7 +259,8 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
  * On every page load, the user's permissions are recalculated. They are based
  * upon the groups to which the user belongs.
  */
-    function manageMediawikiGroupsForUser(User $mediawiki_user, PFUser $tuleap_user, Group $group) {
+    function manageMediawikiGroupsForUser(User $mediawiki_user, PFUser $tuleap_user, Group $group)
+    {
         $groups_mapper    = new MediawikiUserGroupsMapper($GLOBALS['mediawiki_dao'], new User_ForgeUserGroupPermissionsDao());
         $mediawiki_groups = $groups_mapper->defineUserMediawikiGroups($tuleap_user, $group);
 
@@ -274,12 +276,12 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     }
 
     function customizeMediawikiGroupsRights(
-    array $wgGroupPermissions,
-    MediawikiManager $manager,
-    $fusionforgeproject,
-    array $forbidden_permissions,
-    array $read_permissions,
-    array $write_permissions
+        array $wgGroupPermissions,
+        MediawikiManager $manager,
+        $fusionforgeproject,
+        array $forbidden_permissions,
+        array $read_permissions,
+        array $write_permissions
     ) {
         $user_manager = UserManager::instance();
         $tuleap_user  = $user_manager->getCurrentUser();
@@ -304,7 +306,8 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         return $wgGroupPermissions;
     }
 
-    function addReadPermissionForUser(PFUser $tuleap_user, MediawikiManager $manager, $fusionforgeproject, array $wgGroupPermissions, array $read_permissions) {
+    function addReadPermissionForUser(PFUser $tuleap_user, MediawikiManager $manager, $fusionforgeproject, array $wgGroupPermissions, array $read_permissions)
+    {
         $group = group_get_object_by_name($fusionforgeproject);
 
         if (! $manager->userCanRead($tuleap_user, $group)) {
@@ -318,7 +321,8 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         return $wgGroupPermissions;
     }
 
-    function addWritePermissionForUser(PFUser $tuleap_user, MediawikiManager $manager, $fusionforgeproject, array $wgGroupPermissions, array $write_permissions) {
+    function addWritePermissionForUser(PFUser $tuleap_user, MediawikiManager $manager, $fusionforgeproject, array $wgGroupPermissions, array $write_permissions)
+    {
         $group = group_get_object_by_name($fusionforgeproject);
 
         if (! $manager->userCanWrite($tuleap_user, $group)) {
@@ -332,7 +336,8 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         return $wgGroupPermissions;
     }
 
-    function removeAllGroupsReadWriteRights(array $wgGroupPermissions, array $read_permissions, array $write_permissions) {
+    function removeAllGroupsReadWriteRights(array $wgGroupPermissions, array $read_permissions, array $write_permissions)
+    {
         $permissions = array_merge($read_permissions, $write_permissions);
 
         foreach ($permissions as $permission) {
@@ -346,7 +351,8 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         return $wgGroupPermissions;
     }
 
-    function removeUnwantedRights(array $wgGroupPermissions, array $forbidden_permissions) {
+    function removeUnwantedRights(array $wgGroupPermissions, array $forbidden_permissions)
+    {
         $wgGroupPermissions['bureaucrat']['userrights'] = false;
         $wgGroupPermissions['*']['createaccount']       = false;
 
@@ -361,7 +367,8 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         return $wgGroupPermissions;
     }
 
-    function NoLinkOnMainPage(&$personal_urls){
+    function NoLinkOnMainPage(&$personal_urls)
+    {
         unset($personal_urls['anonlogin']);
         unset($personal_urls['anontalk']);
         unset($personal_urls['logout']);
@@ -375,19 +382,23 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         class SpecialForgeRedir extends SpecialPage {
             var $dstappendself = false;
 
-            function getTitle($subpage="") {
+            function getTitle($subpage="")
+            {
                   return 'SpecialForgeRedir';
             }
 
-            function getRedirect($subpage="") {
+            function getRedirect($subpage="")
+            {
                   return $this;
             }
 
-            function getRedirectQuery() {
+            function getRedirectQuery()
+            {
                   return $this;
             }
 
-            function getFullUrl() {
+            function getFullUrl()
+            {
                   $u = $this->dst;
                 if ($this->dstappendself) {
                     $u .= urlencode(getStringFromServer('REQUEST_URI'));
@@ -409,7 +420,8 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
             var $dst = '/account/lostpw.php';
         }
 
-        function DisableLogInOut(&$mList) {
+        function DisableLogInOut(&$mList)
+        {
             $mList['Userlogin'] = 'SpecialForgeRedirLogin';
             $mList['CreateAccount'] = 'SpecialForgeRedirCreateAccount';
             $mList['Resetpass'] = 'SpecialForgeRedirResetPass';

@@ -32,7 +32,8 @@ class UserPreferenceRepresentation {
     public $value;
 
 
-    public function build($key, $value) {
+    public function build($key, $value)
+    {
         $this->key   = $key;
         $this->value = $value;
     }

@@ -21,17 +21,20 @@
 
 class b201203081704_set_child_id_as_primary_key_in_tracker_hierarchy extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Tracker can have only one parent, so child_id can be used as primary key.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE tracker_hierarchy 
                     DROP KEY idx,
                     ADD PRIMARY KEY (child_id)";

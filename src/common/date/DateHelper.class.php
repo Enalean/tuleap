@@ -33,7 +33,8 @@ class DateHelper {
      *
      * @return string
      */
-    public static function timeAgoInWords($time, $include_seconds = false, $with_title = false) {
+    public static function timeAgoInWords($time, $include_seconds = false, $with_title = false)
+    {
         $str = '-';
         if ($time) {
             $string_key = 'time_ago';
@@ -53,7 +54,8 @@ class DateHelper {
      *
      * @return string
      */
-    public static function distanceOfTimeInWords($from_time, $to_time, $include_seconds = false) {
+    public static function distanceOfTimeInWords($from_time, $to_time, $include_seconds = false)
+    {
         $distance_in_minutes = round((abs($to_time - $from_time))/60);
         $distance_in_seconds = round(abs($to_time - $from_time));
 
@@ -112,7 +114,8 @@ class DateHelper {
      *
      * @return string
      */
-    public static function formatForLanguage(BaseLanguage $lang, $date, $day_only = false) {
+    public static function formatForLanguage(BaseLanguage $lang, $date, $day_only = false)
+    {
         if ($day_only) {
             $user_date = format_date($lang->getText('system', 'datefmt_short'), $date, null);
         } else {
@@ -130,7 +133,8 @@ class DateHelper {
      *
      * @return int
      */
-    public static function getTimestampAtMidnight($date) {
+    public static function getTimestampAtMidnight($date)
+    {
         $time = strtotime($date);
         return mktime(0, 0, 0, date('n', $time), date('j', $time), date('Y', $time));
     }
@@ -143,7 +147,8 @@ class DateHelper {
      *
      * @return int
      */
-    public static function dateDiffInDays($start, $end) {
+    public static function dateDiffInDays($start, $end)
+    {
         return floor(($end - $start) / self::SECONDS_IN_A_DAY);
     }
 
@@ -157,7 +162,8 @@ class DateHelper {
      *
      * @return bool
      */
-    public static function isPeriodicallyDistant($distance, $period) {
+    public static function isPeriodicallyDistant($distance, $period)
+    {
         return ($distance % $period == 0);
     }
 

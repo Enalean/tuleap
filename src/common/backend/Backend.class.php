@@ -52,7 +52,8 @@ class Backend {
     /**
      * Constructor
      */
-    protected function __construct() {
+    protected function __construct()
+    {
 
         /* Make sure umask is properly positioned for the
          entire session. Root has umask 022 by default
@@ -78,7 +79,8 @@ class Backend {
      *
      * @return Backend
      */
-    public static function instance($type = self::BACKEND, $base = null, $setup = null) {
+    public static function instance($type = self::BACKEND, $base = null, $setup = null)
+    {
         if (!isset(self::$backend_instances[$type])) {
             $backend = null;
 
@@ -134,11 +136,13 @@ class Backend {
      *
      * @return void
      */
-    public static function clearInstances() {
+    public static function clearInstances()
+    {
         self::$backend_instances = array();
     }
 
-    public static function setInstance($type, $instance) {
+    public static function setInstance($type, $instance)
+    {
         self::$backend_instances[$type] = $instance;
     }
 
@@ -147,7 +151,8 @@ class Backend {
      *
      * @return UserManager
      */
-    protected function getUserManager() {
+    protected function getUserManager()
+    {
         return UserManager::instance();
     }
 
@@ -156,7 +161,8 @@ class Backend {
      *
      * @return ProjectManager
      */
-    protected function getProjectManager() {
+    protected function getProjectManager()
+    {
         return ProjectManager::instance();
     }
 
@@ -178,7 +184,8 @@ class Backend {
      *
      * @return bool true on success or false on failure
      */
-    public function chown($path, $uid) {
+    public function chown($path, $uid)
+    {
         if (is_link($path)) {
             return lchown($path, $uid);
         }
@@ -196,7 +203,8 @@ class Backend {
      *
      * @return void
      */
-    public function changeOwnerGroupMode($file, $user, $group, $mode) {
+    public function changeOwnerGroupMode($file, $user, $group, $mode)
+    {
         $this->chown($file, $user);
         $this->chgrp($file, $group);
         $this->chmod($file, $mode);
@@ -215,7 +223,8 @@ class Backend {
      *
      * @return bool true on success or false on failure
      */
-    public function chgrp($path, $uid) {
+    public function chgrp($path, $uid)
+    {
         if (is_link($path)) {
             return lchgrp($path, $uid);
         }
@@ -235,7 +244,8 @@ class Backend {
      *
      * @return bool true on success or false on failure
      */
-    public function chmod($file, $mode) {
+    public function chmod($file, $mode)
+    {
         return chmod($file, $mode);
     }
 
@@ -257,7 +267,8 @@ class Backend {
      * @param String $entry    Entry to search
      * @return String|Array|bool Result
      */
-    protected function getent($database, $entry=false) {
+    protected function getent($database, $entry=false)
+    {
         $cmd = 'getent '.escapeshellarg($database);
         if ($entry !== false) {
             $cmd .= ' '.escapeshellarg($entry);
@@ -281,7 +292,8 @@ class Backend {
      * @param String $name Identifier to search
      * @return bool True if user exists
      */
-    public function unixUserExists($name) {
+    public function unixUserExists($name)
+    {
         if ($name != '') {
             return ($this->getent('passwd', $name) !== false);
         }
@@ -294,7 +306,8 @@ class Backend {
      * @param String $name Identifier to search
      * @return bool True if group exists
      */
-    public function unixGroupExists($name) {
+    public function unixGroupExists($name)
+    {
         if ($name != '') {
             return ($this->getent('group', $name) !== false);
         }
@@ -309,7 +322,8 @@ class Backend {
      * @return mixed Returns the last line of the command output on success, and false
      * on failure.
      */
-    protected function system($cmd, &$rval=0) {
+    protected function system($cmd, &$rval=0)
+    {
         return system($cmd, $rval);
     }
 
@@ -321,7 +335,8 @@ class Backend {
      *
      * @return bool true on success or false on failure
      */
-    public function log($message, $level = 'info') {
+    public function log($message, $level = 'info')
+    {
         $logger = new BackendLogger();
         return $logger->log($message, $level);
     }
@@ -331,7 +346,8 @@ class Backend {
      *
      * @return string unix user name
      */
-    public function getHTTPUser() {
+    public function getHTTPUser()
+    {
         if (! $this->httpUser) {
             $this->httpUser = ForgeConfig::getApplicationUserLogin();
         }
@@ -344,7 +360,8 @@ class Backend {
      *
      * @return int unix user ID
      */
-    public function getHTTPUserUID() {
+    public function getHTTPUserUID()
+    {
         $this->initHTTPUserInfo();
         return $this->httpUserUID;
     }
@@ -452,7 +469,8 @@ class Backend {
      *
      * @return bool true on success or false on failure.
      */
-    public function addBlock($filename, $command) {
+    public function addBlock($filename, $command)
+    {
 
         if (!$handle = fopen($filename, 'a')) {
             $this->log("Can't open file for writing: $filename", self::LOG_ERROR);
@@ -471,7 +489,8 @@ class Backend {
      *
      * @return bool true on success or false on failure.
      */
-    public function removeBlock($filename) {
+    public function removeBlock($filename)
+    {
         $file_array     = file($filename);
         $new_file_array = array();
         $inblock        = false;
@@ -499,7 +518,8 @@ class Backend {
      *
      * @return bool true on success or false on failure.
      */
-    public function writeArrayToFile($file_array, $filename) {
+    public function writeArrayToFile($file_array, $filename)
+    {
 
         if (!$handle = fopen($filename, 'w')) {
             $this->log("Can't open file for writing: $filename", self::LOG_ERROR);
@@ -530,7 +550,8 @@ class Backend {
      *
      * @return bool true on success or false on failure.
      */
-    public function installNewFileVersion($file_new, $file, $file_old, $force=false) {
+    public function installNewFileVersion($file_new, $file, $file_old, $force=false)
+    {
         // Backup existing file and install new one if they are different
         if (is_file($file)) {
             if (! $force) {
@@ -575,7 +596,8 @@ class Backend {
      * @param String $entries
      * @param String $path
      */
-    public function modifyacl($entries, $path) {
+    public function modifyacl($entries, $path)
+    {
         $path = escapeshellarg($path);
         $this->setfacl("-m $entries $path");
     }
@@ -585,16 +607,19 @@ class Backend {
      *
      * @param String $path
      */
-    public function resetacl($path) {
+    public function resetacl($path)
+    {
         $path = escapeshellarg($path);
         $this->setfacl("--remove-all --remove-default $path");
     }
 
-    public function setfacl($command) {
+    public function setfacl($command)
+    {
         $this->exec("setfacl $command");
     }
 
-    private function exec($command) {
+    private function exec($command)
+    {
         $output       = array();
         $return_value = 1;
         exec("$command 2>&1", $output, $return_value);
@@ -612,7 +637,8 @@ class Backend {
      *
      * @return true if repository or file  or link already exists, false otherwise
      */
-    public static function fileExists($path) {
+    public static function fileExists($path)
+    {
         return (is_dir($path)  || is_file($path) || is_link($path));
     }
 

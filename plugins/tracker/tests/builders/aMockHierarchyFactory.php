@@ -19,25 +19,30 @@
  */
 require_once __DIR__.'/../bootstrap.php';
 class MockHierarchyFactoryBuilder {
-    public function __construct() {
+    public function __construct()
+    {
         $this->factory = mock('Tracker_HierarchyFactory');
     }
 
-    public function withNoChildrenForTrackerId($tracker_id) {
+    public function withNoChildrenForTrackerId($tracker_id)
+    {
         return $this->withChildrenForTrackerId($tracker_id, array());
     }
 
-    public function withChildrenForTrackerId($tracker_id, $children) {
+    public function withChildrenForTrackerId($tracker_id, $children)
+    {
         stub($this->factory)->getChildren($tracker_id)->returns($children);
         return $this;
     }
 
-    public function build() {
+    public function build()
+    {
         return $this->factory;
     }
 }
 
-function aMockHierarchyFactory() {
+function aMockHierarchyFactory()
+{
     return new MockHierarchyFactoryBuilder();
 }
 ?>

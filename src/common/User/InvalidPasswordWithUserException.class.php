@@ -21,12 +21,14 @@ class User_InvalidPasswordWithUserException extends User_LoginException {
     /** @var PFUser */
     private $user;
 
-    public function __construct(PFUser $user) {
+    public function __construct(PFUser $user)
+    {
         $this->user = $user;
         parent::__construct($GLOBALS['Language']->getText('include_session','invalid_pwd'));
     }
 
-    public function getUser() {
+    public function getUser()
+    {
         return $this->user;
     }
 }

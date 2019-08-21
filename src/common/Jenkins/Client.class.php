@@ -72,7 +72,8 @@ class Jenkins_Client {
      *
      * @return Jenkins_Client
      */
-    public function setToken($token) {
+    public function setToken($token)
+    {
         $this->token = $token;
         return $this;
     }
@@ -142,7 +143,8 @@ class Jenkins_Client {
         return $server_url;
     }
 
-    private function getTokenUrlParameter() {
+    private function getTokenUrlParameter()
+    {
         if ($this->token) {
             return array('token' => $this->token);
         }
@@ -153,7 +155,8 @@ class Jenkins_Client {
      * @param array $build_parameters
      * @return string
      */
-    private function generateBuildParameters(array $build_parameters) {
+    private function generateBuildParameters(array $build_parameters)
+    {
         $parameters = array();
         foreach ($build_parameters as $name => $value) {
             $parameters['parameter'][] = array(

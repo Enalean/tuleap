@@ -20,11 +20,13 @@
 class Planning_PlanningAdminPresenter {
     private $planning;
 
-    public function __construct(Planning $planning) {
+    public function __construct(Planning $planning)
+    {
         $this->planning = $planning;
     }
 
-    public function edit_url() {
+    public function edit_url()
+    {
         return AGILEDASHBOARD_BASE_URL.'/?'.http_build_query(array(
             'group_id' => $this->planning->getGroupId(),
             'planning_id' => $this->planning->getId(),
@@ -32,7 +34,8 @@ class Planning_PlanningAdminPresenter {
         ));
     }
 
-    public function delete_url() {
+    public function delete_url()
+    {
         return AGILEDASHBOARD_BASE_URL.'/?'.http_build_query(array(
             'group_id' => $this->planning->getGroupId(),
             'planning_id' => $this->planning->getId(),
@@ -40,27 +43,33 @@ class Planning_PlanningAdminPresenter {
         ));
     }
 
-    public function name() {
+    public function name()
+    {
         return $this->planning->getName();
     }
 
-    public function delete_icon_path() {
+    public function delete_icon_path()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/bin_closed.png');
     }
 
-    public function edit_action_label() {
+    public function edit_action_label()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit');
     }
 
-    public function edit_icon_path() {
+    public function edit_icon_path()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/edit.png');
     }
 
-    public function li_class() {
+    public function li_class()
+    {
         return '';
     }
 
-    public function extra_message() {
+    public function extra_message()
+    {
         return '';
     }
 }

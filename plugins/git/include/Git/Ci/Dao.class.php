@@ -30,7 +30,8 @@ class Git_Ci_Dao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function retrieveTrigger($jobId) {
+    function retrieveTrigger($jobId)
+    {
         $sql = 'SELECT repository_id
                 FROM plugin_git_ci
                 WHERE job_id = '.$this->da->escapeInt($jobId);
@@ -44,7 +45,8 @@ class Git_Ci_Dao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function retrieveTriggers($projectId) {
+    function retrieveTriggers($projectId)
+    {
         $sql = 'SELECT job_id
                 FROM plugin_git_ci
                 JOIN plugin_git USING(repository_id)
@@ -59,7 +61,8 @@ class Git_Ci_Dao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function retrieveTriggersPathByRepository($repositoryId) {
+    function retrieveTriggersPathByRepository($repositoryId)
+    {
         $sql = 'SELECT job_url, token
                 FROM plugin_hudson_job
                 JOIN plugin_git_ci USING(job_id)
@@ -75,7 +78,8 @@ class Git_Ci_Dao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function checkRepository($jobId, $repositoryId) {
+    function checkRepository($jobId, $repositoryId)
+    {
         $sql = 'SELECT job_id
                 FROM plugin_hudson_job
                 JOIN plugin_git ON (group_id = project_id)
@@ -92,7 +96,8 @@ class Git_Ci_Dao extends DataAccessObject {
      *
      * @return bool
      */
-    function saveTrigger($jobId, $repositoryId) {
+    function saveTrigger($jobId, $repositoryId)
+    {
         $sql = 'REPLACE INTO plugin_git_ci
                 (
                 job_id,
@@ -113,7 +118,8 @@ class Git_Ci_Dao extends DataAccessObject {
      *
      * @return bool
      */
-    function deleteTrigger($jobId) {
+    function deleteTrigger($jobId)
+    {
         $sql = 'DELETE FROM plugin_git_ci
                 WHERE job_id = '.$this->da->escapeInt($jobId);
         return $this->update($sql);

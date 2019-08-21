@@ -27,12 +27,14 @@ use Tuleap\AgileDashboard\REST\TestBase;
  */
 class KanbanColumnsTest extends TestBase {
 
-    public function testOPTIONSKanbanColumns() {
+    public function testOPTIONSKanbanColumns()
+    {
         $response = $this->getResponse($this->client->options('kanban_columns'));
         $this->assertEquals(array('OPTIONS', 'PATCH', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testPATCHKanbanColumns() {
+    public function testPATCHKanbanColumns()
+    {
         $url = 'kanban_columns/'. REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID.'?kanban_id='. REST_TestDataBuilder::KANBAN_ID;
 
         $response = $this->getResponse($this->client->patch(

@@ -22,11 +22,13 @@ class FlamingParrot_NavBarItemPresentersCollection {
 
     private $items = array();
 
-    public function addItem(FlamingParrot_NavBarItemPresenter $item) {
+    public function addItem(FlamingParrot_NavBarItemPresenter $item)
+    {
         $this->items[] = $item;
     }
 
-    public function addItemAfterAnotherOne($sibling_id, FlamingParrot_NavBarItemPresenter $item) {
+    public function addItemAfterAnotherOne($sibling_id, FlamingParrot_NavBarItemPresenter $item)
+    {
         $index = 0;
         foreach ($this->items as $previous) {
             $index++;
@@ -38,7 +40,8 @@ class FlamingParrot_NavBarItemPresentersCollection {
         array_splice($this->items, $index, 0, array($item));
     }
 
-    public function getItems() {
+    public function getItems()
+    {
         return $this->items;
     }
 }

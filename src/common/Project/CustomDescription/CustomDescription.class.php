@@ -37,7 +37,8 @@ class Project_CustomDescription_CustomDescription {
     private $rank;
     private $value;
 
-    public function __construct($id, $name, $description, $is_required, $type, $rank) {
+    public function __construct($id, $name, $description, $is_required, $type, $rank)
+    {
         $this->id          = $id;
         $this->name        = $name;
         $this->description = $description;
@@ -46,15 +47,18 @@ class Project_CustomDescription_CustomDescription {
         $this->rank        = $rank;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function getLabel() {
+    public function getLabel()
+    {
         $label = $this->getName();
         if (preg_match('/(.*):(.*)/', $label, $matches)) {
             if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
@@ -64,23 +68,28 @@ class Project_CustomDescription_CustomDescription {
         return $label;
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->description;
     }
 
-    public function isRequired() {
+    public function isRequired()
+    {
         return $this->is_required == self::REQUIRED;
     }
 
-    public function getType() {
+    public function getType()
+    {
         return $this->type;
     }
 
-    public function getRank() {
+    public function getRank()
+    {
         return $this->rank;
     }
 
-    public function isText() {
+    public function isText()
+    {
         return $this->getType() == self::TYPE_TEXT;
     }
 }

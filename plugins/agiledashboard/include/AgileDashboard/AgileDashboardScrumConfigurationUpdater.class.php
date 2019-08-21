@@ -110,7 +110,8 @@ class AgileDashboardScrumConfigurationUpdater {
         $this->response->scrumConfigurationUpdated();
     }
 
-    private function getActivatedScrum() {
+    private function getActivatedScrum()
+    {
         $scrum_was_activated = $this->config_manager->scrumIsActivatedForProject($this->project_id);
         $scrum_is_activated  = $this->request->get('activate-scrum');
 
@@ -121,7 +122,8 @@ class AgileDashboardScrumConfigurationUpdater {
         return $scrum_is_activated;
     }
 
-    private function getScrumTitle() {
+    private function getScrumTitle()
+    {
         $old_scrum_title = $this->config_manager->getScrumTitle($this->project_id);
         $scrum_title     = trim($this->request->get('scrum-title-admin'));
 

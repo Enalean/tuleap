@@ -49,15 +49,18 @@ class FlamingParrot_Theme extends Layout {
         $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());
     }
 
-    private function render($template_name, $presenter) {
+    private function render($template_name, $presenter)
+    {
         $this->renderer->renderToPage($template_name, $presenter);
     }
 
-    private function getTemplateDir() {
+    private function getTemplateDir()
+    {
         return dirname(__FILE__) . '/templates/';
     }
 
-    public static function getVariants() {
+    public static function getVariants()
+    {
         return array(
             "FlamingParrot_Orange",
             "FlamingParrot_Blue",
@@ -68,7 +71,8 @@ class FlamingParrot_Theme extends Layout {
         );
     }
 
-    public static function getColorOfCurrentTheme($theme) {
+    public static function getColorOfCurrentTheme($theme)
+    {
         $array = array(
             "FlamingParrot_Orange"          => "#F79514",
             "FlamingParrot_Blue"            => "#1593C4",
@@ -81,7 +85,8 @@ class FlamingParrot_Theme extends Layout {
         return $array[$theme];
     }
 
-    public function header(array $params) {
+    public function header(array $params)
+    {
         $title = $GLOBALS['sys_name'];
         if (!empty($params['title'])) {
             $title = $params['title'] .' - '. $title;
@@ -108,7 +113,8 @@ class FlamingParrot_Theme extends Layout {
         $this->body($params);
     }
 
-    protected function includeSubsetOfCombined() {
+    protected function includeSubsetOfCombined()
+    {
         echo $this->include_asset->getHTMLSnippet('tuleap_subset_flamingparrot.js');
     }
 
@@ -149,7 +155,8 @@ class FlamingParrot_Theme extends Layout {
         return $css_file_provider->getCSSFileForVariant($variant_used);
     }
 
-    private function body($params) {
+    private function body($params)
+    {
         $current_user = UserManager::instance()->getCurrentUser();
 
         $selected_top_tab = isset($params['selected_top_tab']) ? $params['selected_top_tab'] : false;
@@ -176,20 +183,23 @@ class FlamingParrot_Theme extends Layout {
         $this->navbar($params, $current_user, $selected_top_tab);
     }
 
-    private function addBodyClassDependingThemeVariant(PFUser $user, array &$body_class) {
+    private function addBodyClassDependingThemeVariant(PFUser $user, array &$body_class)
+    {
         $theme_variant   = new ThemeVariant();
         $current_variant = $theme_variant->getVariantForUser($user);
         $body_class[]    = $current_variant;
     }
 
-    private function addBodyClassDependingUserPreference(PFUser $user, array &$body_class) {
+    private function addBodyClassDependingUserPreference(PFUser $user, array &$body_class)
+    {
         $edition_default_format = $user->getPreference(PFUser::EDITION_DEFAULT_FORMAT);
         if ($edition_default_format && $edition_default_format === 'html') {
             $body_class[] = 'default_format_' . $edition_default_format;
         }
     }
 
-    private function navbar($params, PFUser $current_user, $selected_top_tab) {
+    private function navbar($params, PFUser $current_user, $selected_top_tab)
+    {
         list($search_options, $selected_entry, $hidden_fields) = $this->getSearchEntries();
 
         $project_id_from_params = $this->getProjectIdFromParams($params);
@@ -270,14 +280,16 @@ class FlamingParrot_Theme extends Layout {
         }
     }
 
-    private function getProjectIdFromParams(array $params) {
+    private function getProjectIdFromParams(array $params)
+    {
         $project_id  = (isset($params['project_id'])) ? $params['project_id'] : null;
         $project_id  = (! $project_id && isset($params['group_id'])) ? $params['group_id'] : $project_id;
 
         return $project_id;
     }
 
-    private function getPresentersForProjects($list_of_projects) {
+    private function getPresentersForProjects($list_of_projects)
+    {
         $presenters = array();
         foreach ($list_of_projects as $project) {
             $presenters[] = new FlamingParrot_NavBarProjectPresenter($project);
@@ -286,19 +298,22 @@ class FlamingParrot_Theme extends Layout {
         return $presenters;
     }
 
-    private function getExtraTabs() {
+    private function getExtraTabs()
+    {
         include $GLOBALS['Language']->getContent('layout/extra_tabs', null, null, '.php');
 
         return $additional_tabs;
     }
 
-    private function displayNewAccount() {
+    private function displayNewAccount()
+    {
         $display_new_user = true;
         EventManager::instance()->processEvent('display_newaccount', array('allow' => &$display_new_user));
         return $display_new_user;
     }
 
-    private function container(array $params, ProjectManager $project_manager, PFUser $current_user) {
+    private function container(array $params, ProjectManager $project_manager, PFUser $current_user)
+    {
         $project_tabs        = null;
         $project_name        = null;
         $project_link        = null;
@@ -339,19 +354,23 @@ class FlamingParrot_Theme extends Layout {
         $this->keyboardModal();
     }
 
-    private function getForgeVersion() {
+    private function getForgeVersion()
+    {
         return trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
     }
 
-    private function keyboardModal() {
+    private function keyboardModal()
+    {
         $this->render('keyboard_navigation_help_modal', new KeyboardNavigationModalPresenter());
     }
 
-    private function getProjectLink(Project $project) {
+    private function getProjectLink(Project $project)
+    {
         return '/projects/' . $project->getUnixName() . '/';
     }
 
-    public function footer(array $params) {
+    public function footer(array $params)
+    {
         if ($this->canShowFooter($params)) {
             $this->render('footer', array());
         }
@@ -368,7 +387,8 @@ class FlamingParrot_Theme extends Layout {
      * @param array $params
      * @return bool
      */
-    private function canShowFooter($params) {
+    private function canShowFooter($params)
+    {
         if (! empty($params['without_content'])) {
             return false;
         }
@@ -380,7 +400,8 @@ class FlamingParrot_Theme extends Layout {
         return false;
     }
 
-    private function endOfPage() {
+    private function endOfPage()
+    {
         $current_user = UserManager::instance()->getCurrentUser();
         $tour_factory = new Tuleap_TourFactory(ProjectManager::instance(), new URL());
         $custom_tours = $tour_factory->getToursForPage($current_user, $_SERVER['REQUEST_URI']);
@@ -404,7 +425,8 @@ class FlamingParrot_Theme extends Layout {
         $this->render('end-of-page', null);
     }
 
-    private function isInDebugMode() {
+    private function isInDebugMode()
+    {
         return (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')));
     }
 

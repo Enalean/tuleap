@@ -20,15 +20,18 @@
 
 class b201403191118_add_offset_column_to_fileinfo_temporary_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add offset column to tracker_fileinfo_temporary table';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE tracker_fileinfo_temporary
                     ADD COLUMN offset int(11) UNSIGNED NOT NULL DEFAULT 0";
 

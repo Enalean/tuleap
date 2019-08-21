@@ -65,7 +65,8 @@ class URLRedirect
         return $url;
     }
 
-    public function redirectToLogin(){
+    public function redirectToLogin()
+    {
         $url = $this->buildReturnToLogin($_SERVER);
         $GLOBALS['HTML']->redirect($url);
     }

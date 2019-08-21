@@ -28,7 +28,8 @@ class Tracker_FormElement_View_Admin_UpdateSharedVisitor extends Tracker_FormEle
      *
      * @return String
      */
-    protected function fetchForm() {
+    protected function fetchForm()
+    {
         $html = '';
 
         $html .= $this->adminElement->fetchTypeNotModifiable();

@@ -36,10 +36,12 @@ class Codendi_HTMLPurifierTestVersion extends Codendi_HTMLPurifier {
     // Need to redfine this method too because the parent one return a
     // 'Codendi_HTMLPurifier' object.
 
-    protected function __construct() {
+    protected function __construct()
+    {
     }
 
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$Codendi_HTMLPurifier_testversion_instance)) {
             $c = self::class;
             self::$Codendi_HTMLPurifier_testversion_instance = new $c;
@@ -60,12 +62,14 @@ class ReferenceManagerTestMakeLinks extends MockReferenceManager {
  */
 class Codendi_HTMLPurifierTest extends TuleapTestCase {
 
-    function testPurifySimple() {
+    function testPurifySimple()
+    {
         $p = Codendi_HTMLPurifier::instance();
         $this->assertEqual('&lt;script&gt;alert(1);&lt;/script&gt;', $p->purify('<script>alert(1);</script>'));
     }
 
-    function testStripLightForibdden() {
+    function testStripLightForibdden()
+    {
         $p = new Codendi_HTMLPurifierTestVersion2($this);
         $rm = new MockReferenceManager();
         $val = 'bugtest #123';
@@ -80,7 +84,8 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
         $this->anchorJsInjection(CODENDI_PURIFIER_LIGHT);
     }
 
-    function anchorJsInjection($level) {
+    function anchorJsInjection($level)
+    {
         $p = Codendi_HTMLPurifierTestVersion::instance();
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onblur="evil">Text</a>', $level));
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onclick="evil">Text</a>', $level));
@@ -96,7 +101,8 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onmouseup="evil">Text</a>', $level));
     }
 
-    function testStripLightAllowed() {
+    function testStripLightAllowed()
+    {
         $p = Codendi_HTMLPurifierTestVersion::instance();
 
         $this->assertEqual('<p>Text</p>', $p->purify('<p>Text</p>', CODENDI_PURIFIER_LIGHT));
@@ -107,7 +113,8 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
         $this->assertEqual('<strong>Text</strong>', $p->purify('<strong>Text</strong>', CODENDI_PURIFIER_LIGHT));
     }
 
-    function testStripLightTidy() {
+    function testStripLightTidy()
+    {
         $p = Codendi_HTMLPurifierTestVersion::instance();
         $this->assertEqual('<p>Text</p>', $p->purify('<p>Text', CODENDI_PURIFIER_LIGHT));
         $this->assertEqual('Text<br />', $p->purify('Text<br>', CODENDI_PURIFIER_LIGHT));
@@ -116,7 +123,8 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
 
     }
 
-    function testPurifyArraySimple() {
+    function testPurifyArraySimple()
+    {
         $p = Codendi_HTMLPurifier::instance();
 
         $vRef = array('<script>alert(1);</script>',
@@ -130,14 +138,16 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
         $this->assertIdentical($vExpect, $p->purifyMap($vRef));
     }
 
-    function testSingleton() {
+    function testSingleton()
+    {
         $p1 = Codendi_HTMLPurifier::instance();
         $p2 = Codendi_HTMLPurifier::instance();
         $this->assertReference($p1, $p2);
         $this->assertIsA($p1, 'Codendi_HTMLPurifier');
     }
 
-    function testPurifyJsQuoteAndDQuote() {
+    function testPurifyJsQuoteAndDQuote()
+    {
         $p = Codendi_HTMLPurifier::instance();
         $this->assertEqual('\u003C\/script\u003E', $p->purify('</script>', CODENDI_PURIFIER_JS_DQUOTE));
         $this->assertEqual('a\u0022a', $p->purify('a"a', CODENDI_PURIFIER_JS_DQUOTE));
@@ -151,7 +161,8 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
         $this->assertEqual('100', $p->purify(100, CODENDI_PURIFIER_JS_QUOTE));
     }
 
-    function testBasicNobr() {
+    function testBasicNobr()
+    {
         $p = Codendi_HTMLPurifierTestVersion::instance();
         $this->assertEqual("a<br />\nb", $p->purify("a\nb", CODENDI_PURIFIER_BASIC));
         $this->assertEqual("a\nb", $p->purify("a\nb", CODENDI_PURIFIER_BASIC_NOBR));
@@ -175,13 +186,15 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
         $this->assertPattern('/link-to-art-1/', $p->purify('art #1', CODENDI_PURIFIER_BASIC, 1));
     }
 
-    function testPurifierLight() {
+    function testPurifierLight()
+    {
         $p = Codendi_HTMLPurifier::instance();
         $this->assertEqual("foo\nbar", $p->purify("foo\nbar", CODENDI_PURIFIER_LIGHT));
         $this->assertEqual("foo\nbar", $p->purify("foo\r\nbar", CODENDI_PURIFIER_LIGHT));
     }
 
-    public function itDoesNotDoubleEscapeLinks() {
+    public function itDoesNotDoubleEscapeLinks()
+    {
         $reference_manager = new ReferenceManagerTestMakeLinks();
         $p = partial_mock('Codendi_HTMLPurifier', array('getReferenceManager'));
         stub($p)->getReferenceManager()->returns($reference_manager);

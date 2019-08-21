@@ -26,7 +26,8 @@ class Statistics_Services_UsageFormatterTest extends TuleapTestCase {
     /** @var Statistics_Services_UsageFormatter */
     private $usage_formatter;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $stats_formatter        = mock('Statistics_Formatter');
         $this->usage_formatter  = new Statistics_Services_UsageFormatter($stats_formatter);
@@ -47,7 +48,8 @@ class Statistics_Services_UsageFormatterTest extends TuleapTestCase {
         );
     }
 
-    public function itBuildsData() {
+    public function itBuildsData()
+    {
         $expected = array(
             1 => array(
                 "title" => 'res1'
@@ -65,7 +67,8 @@ class Statistics_Services_UsageFormatterTest extends TuleapTestCase {
 
     }
 
-    public function itOnlyAddTitlesWhithEmptyData() {
+    public function itOnlyAddTitlesWhithEmptyData()
+    {
         $input_datas = array(
             array(
                 'group_id' => 87,

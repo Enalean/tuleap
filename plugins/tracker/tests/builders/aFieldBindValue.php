@@ -24,7 +24,8 @@
 // @see http://nat.truemesh.com/archives/000727.html
 require_once __DIR__.'/../bootstrap.php';
 
-function aFieldListStaticValue() {
+function aFieldListStaticValue()
+{
     return new Test_Tracker_FormElement_Field_List_BindValue_Builder('Tracker_FormElement_Field_List_Bind_StaticValue');
 }
 
@@ -36,16 +37,19 @@ class Test_Tracker_FormElement_Field_List_BindValue_Builder {
     private $rank;
     private $is_hidden;
 
-    public function __construct($klass) {
+    public function __construct($klass)
+    {
         $this->name = $klass;
     }
 
-    public function withId($id) {
+    public function withId($id)
+    {
         $this->id = $id;
         return $this;
     }
 
-    public function withLabel($label) {
+    public function withLabel($label)
+    {
         $this->label = $label;
         return $this;
     }
@@ -53,7 +57,8 @@ class Test_Tracker_FormElement_Field_List_BindValue_Builder {
     /**
      * @return Tracker_FormElement_Field_List_BindValue
      */
-    public function build() {
+    public function build()
+    {
         $klass  = $this->name;
         $object = new $klass($this->id, $this->label, $this->description, $this->rank, $this->is_hidden);
         return $object;

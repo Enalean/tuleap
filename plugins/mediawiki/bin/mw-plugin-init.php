@@ -44,7 +44,8 @@ if (!is_dir($master_path)) {
     mkdir($master_path, 0755, true);
 }
 
-function mysymlink($from, $to) {
+function mysymlink($from, $to)
+{
     global $echo_links;
     if (!@symlink($from, $to)) {
         echo "Could not create symbolic link from $from to $to.\n";

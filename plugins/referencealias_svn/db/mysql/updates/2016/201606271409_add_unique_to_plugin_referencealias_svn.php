@@ -26,7 +26,8 @@ class b201606271409_add_unique_to_plugin_referencealias_svn extends ForgeUpgrade
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add UNIQUE attribute to plugin_referencealias_svn table
 EOT;
@@ -37,7 +38,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -46,7 +48,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER IGNORE TABLE plugin_referencealias_svn ADD UNIQUE (source)";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

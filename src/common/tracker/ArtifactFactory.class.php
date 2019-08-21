@@ -42,7 +42,8 @@ class ArtifactFactory {
      *    @param    object    The ArtifactType object to which this ArtifactFactory is associated.
      *    @return bool success.
      */
-    function __construct(&$ArtifactType) {
+    function __construct(&$ArtifactType)
+    {
         global $Language;
 
         if (!$ArtifactType || !is_object($ArtifactType)) {
@@ -65,7 +66,8 @@ class ArtifactFactory {
      *
      *    @return    array    The array of Artifact objects.
      */
-    function getMyArtifacts($user_id) {
+    function getMyArtifacts($user_id)
+    {
         global $Language;
 
         $artifacts = array();
@@ -123,7 +125,8 @@ class ArtifactFactory {
      *
      *    @return    array    The array of Artifact objects.
      */
-    function getArtifacts($criteria, $offset, $max_rows, &$total_artifacts) {
+    function getArtifacts($criteria, $offset, $max_rows, &$total_artifacts)
+    {
         global $Language, $art_field_fact;
 
         $ACCEPTED_OPERATORS = array('=', '<', '>', '<>', '<=', '>=');
@@ -224,7 +227,8 @@ class ArtifactFactory {
     }
 
 
-    function getArtifactsFromReport($group_id, $group_artifact_id, $report_id, $criteria, $offset, $max_rows, $sort_criteria, &$total_artifacts) {
+    function getArtifactsFromReport($group_id, $group_artifact_id, $report_id, $criteria, $offset, $max_rows, $sort_criteria, &$total_artifacts)
+    {
         global $ath, $art_field_fact, $Language;
 
         $GLOBALS['group_id'] = $group_id;
@@ -351,7 +355,8 @@ class ArtifactFactory {
     /**
      * @param $string
      */
-    public function setError($string) {
+    public function setError($string)
+    {
         $this->error_state = true;
         $this->error_message = $string;
     }
@@ -359,7 +364,8 @@ class ArtifactFactory {
     /**
      * @return string
      */
-    public function getErrorMessage() {
+    public function getErrorMessage()
+    {
         if ($this->error_state) {
             return $this->error_message;
         } else {
@@ -370,7 +376,8 @@ class ArtifactFactory {
     /**
      * @return bool
      */
-    public function isError() {
+    public function isError()
+    {
         return $this->error_state;
     }
 

@@ -27,7 +27,8 @@
  */
 class Docman_Folder extends Docman_Item {
 
-    function __construct($data = null) {
+    function __construct($data = null)
+    {
         parent::__construct($data);
         $this->_resetItems();
     }
@@ -37,27 +38,33 @@ class Docman_Folder extends Docman_Item {
         return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_folder');
     }
 
-    function toRow() {
+    function toRow()
+    {
         $row = parent::toRow();
         $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
         return $row;
     }
 
-    function isRoot() {
+    function isRoot()
+    {
         return $this->parent_id == 0;
     }
 
     var $_items;
-    function addItem(&$item) {
+    function addItem(&$item)
+    {
         $this->_items->add($item, -($item->getRank()));
     }
-    function &getAllItems() {
+    function &getAllItems()
+    {
         return $this->_items;
     }
-    function removeAllItems() {
+    function removeAllItems()
+    {
         $this->_resetItems();
     }
-    function _resetItems() {
+    function _resetItems()
+    {
         if (isset($this->_items)) {
             unset($this->_items);
         }

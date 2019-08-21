@@ -20,27 +20,32 @@
 require_once __DIR__.'/../../bootstrap.php';
 class Tracker_ArtifactNodeTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->artifact = anArtifact()->withId(9787)->build();
         $this->data     = array('somekey' => 'somevalue');
         $this->node     = new ArtifactNode($this->artifact, $this->data);
     }
 
-    public function itHoldsTheArtifact() {
+    public function itHoldsTheArtifact()
+    {
         $this->assertIdentical($this->artifact, $this->node->getArtifact());
         $this->assertIdentical($this->artifact, $this->node->getObject());
     }
 
-    public function itCanHoldData() {
+    public function itCanHoldData()
+    {
         $this->assertIdentical($this->data, $this->node->getData());
     }
 
-    public function itUsesTheIdOfTheArtifact() {
+    public function itUsesTheIdOfTheArtifact()
+    {
         $this->assertEqual($this->artifact->getId(), $this->node->getId());
     }
 
-    public function itCallsTheSuperConstructor() {
+    public function itCallsTheSuperConstructor()
+    {
         $this->assertTrue(is_array($this->node->getChildren()), "getChildren should have been initialized to array()");
     }
 }

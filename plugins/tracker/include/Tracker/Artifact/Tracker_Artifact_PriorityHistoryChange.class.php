@@ -95,62 +95,76 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         $this->prioritized_on           = $prioritized_on;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getMovedArtifact() {
+    public function getMovedArtifact()
+    {
         return $this->moved_artifact;
     }
 
-    public function getArtifactHigher() {
+    public function getArtifactHigher()
+    {
         return $this->artifact_higher;
     }
 
-    public function getArtifactLower() {
+    public function getArtifactLower()
+    {
         return $this->artifact_lower;
     }
 
-    public function getContext() {
+    public function getContext()
+    {
         return $this->context;
     }
 
-    public function getProject() {
+    public function getProject()
+    {
         return $this->project;
     }
 
-    public function hasBeenRaised() {
+    public function hasBeenRaised()
+    {
         return $this->has_been_raised;
     }
 
-    public function getPrioritizedBy() {
+    public function getPrioritizedBy()
+    {
         return $this->prioritized_by;
     }
 
-    public function getPrioritizedOn() {
+    public function getPrioritizedOn()
+    {
         return $this->prioritized_on;
     }
 
-    public function getFollowUpClassnames($diff_to_previous) {
+    public function getFollowUpClassnames($diff_to_previous)
+    {
         return 'tracker_artifact_followup-priority';
     }
 
-    public function getSubmitterUrl() {
+    public function getSubmitterUrl()
+    {
         $user_helper   = UserHelper::instance();
         $submitter_url = $user_helper->getLinkOnUser($this->prioritized_by);
 
         return $submitter_url;
     }
 
-    public function getFollowUpDate() {
+    public function getFollowUpDate()
+    {
         return $this->prioritized_on;
     }
 
-    public function getHTMLAvatar() {
+    public function getHTMLAvatar()
+    {
         return $this->prioritized_by->fetchHtmlAvatar();
     }
 
-    public function fetchFollowUp($diff_to_previous) {
+    public function fetchFollowUp($diff_to_previous)
+    {
         $html  = '';
         $html .= $this->getAvatar();
 
@@ -169,14 +183,16 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return $html;
     }
 
-    public function getFollowupContent($diff_to_previous) {
+    public function getFollowupContent($diff_to_previous)
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'priority_change_intro') .
             ' ' . $this->getRankProgression() .
             $this->getContextRepresentation() .
             ' ' . $this->getRelativeArtifactRepresentation();
     }
 
-    private function getRankProgression() {
+    private function getRankProgression()
+    {
         $html = '<span class="rank-progression">';
 
         if ($this->hasBeenRaised()) {
@@ -190,7 +206,8 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return $html;
     }
 
-    private function getContextRepresentation() {
+    private function getContextRepresentation()
+    {
             $html = '';
 
         if (! is_null($this->context) && $this->context !== self::NO_CONTEXT) {
@@ -211,7 +228,8 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return $html;
     }
 
-    private function getRelativeArtifactRepresentation() {
+    private function getRelativeArtifactRepresentation()
+    {
         if ($this->moved_artifact == $this->artifact_higher) {
             return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'priority_change_before_than') . ' ' . $this->artifact_lower->fetchColoredXRef();
         }

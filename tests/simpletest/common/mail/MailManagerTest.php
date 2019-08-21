@@ -23,18 +23,21 @@ Mock::generate('UserManager');
 
 class MailManagerTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $user_manager = mock('UserManager');
         UserManager::setInstance($user_manager);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         UserManager::clearInstance();
         parent::tearDown();
     }
 
-    function testGetMailPrefsShouldReturnUsersAccordingToPreferences() {
+    function testGetMailPrefsShouldReturnUsersAccordingToPreferences()
+    {
         $mm = TestHelper::getPartialMock('MailManager', array('getUserManager'));
 
         $manuel = mock('PFUser');
@@ -57,7 +60,8 @@ class MailManagerTest extends TuleapTestCase {
         $this->assertEqual($prefs['text'], array($nicolas));
     }
 
-    function testGetMailPrefsShouldReturnUserWithTextPref() {
+    function testGetMailPrefsShouldReturnUserWithTextPref()
+    {
         $mm = TestHelper::getPartialMock('MailManager', array('getUserManager'));
 
         $manuel = mock('PFUser');
@@ -80,7 +84,8 @@ class MailManagerTest extends TuleapTestCase {
         $this->assertEqual($prefs['html'], array());
     }
 
-    function testGetMailPrefsShouldReturnUserWithHtmlPref() {
+    function testGetMailPrefsShouldReturnUserWithHtmlPref()
+    {
         $mm = TestHelper::getPartialMock('MailManager', array('getUserManager'));
 
         $manuel = mock('PFUser');
@@ -103,7 +108,8 @@ class MailManagerTest extends TuleapTestCase {
         $this->assertEqual($prefs['html'], array($manuel2));
     }
 
-    function testGetMailPrefsShouldReturnLastUser() {
+    function testGetMailPrefsShouldReturnLastUser()
+    {
         $mm = TestHelper::getPartialMock('MailManager', array('getUserManager'));
 
         $manuel = mock('PFUser');
@@ -126,7 +132,8 @@ class MailManagerTest extends TuleapTestCase {
         $this->assertEqual($prefs['html'], array($manuel2));
     }
 
-    function testGetMailPrefsShouldReturnHTMLUsersWhithAnonymous() {
+    function testGetMailPrefsShouldReturnHTMLUsersWhithAnonymous()
+    {
         $mm = TestHelper::getPartialMock('MailManager', array('getUserManager', 'getConfig'));
 
         $um = new MockUserManager();
@@ -143,13 +150,15 @@ class MailManagerTest extends TuleapTestCase {
         $this->assertEqual($prefs['html'][0]->getLanguageID(), 'fr_BE');
     }
 
-    function testGetMailPrefsByUsersShouldReturnHTMLByDefault() {
+    function testGetMailPrefsByUsersShouldReturnHTMLByDefault()
+    {
         $mm   = new MailManager();
         $user = new PFUser(array('id' => 123, 'language_id' => 'en_US'));
         $this->assertEqual($mm->getMailPreferencesByUser($user), Codendi_Mail_Interface::FORMAT_HTML);
     }
 
-    function testGetMailPrefsByUsersShouldReturnTextWhenUserRequestIt() {
+    function testGetMailPrefsByUsersShouldReturnTextWhenUserRequestIt()
+    {
         $mm   = new MailManager();
         $user = mock('PFUser');
         $user->expectOnce('getPreference', array('user_tracker_mailformat'));
@@ -157,7 +166,8 @@ class MailManagerTest extends TuleapTestCase {
         $this->assertEqual($mm->getMailPreferencesByUser($user), Codendi_Mail_Interface::FORMAT_TEXT);
     }
 
-    function testGetMailPrefsByUsersShouldReturnHTMLWhenPreferenceReturnsFalse() {
+    function testGetMailPrefsByUsersShouldReturnHTMLWhenPreferenceReturnsFalse()
+    {
         $mm   = new MailManager();
         $user = mock('PFUser');
         $user->expectOnce('getPreference', array('user_tracker_mailformat'));

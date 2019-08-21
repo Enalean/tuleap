@@ -61,22 +61,26 @@ class AgileDashboard_HierarchyChecker {
         return $this->checkHierarchyContainsGivenTrackerIds($hierarchy, $this->getKanbanTrackerIds($project));
     }
 
-    public function isPartOfScrumOrKanbanHierarchy(Tracker $tracker) {
+    public function isPartOfScrumOrKanbanHierarchy(Tracker $tracker)
+    {
         return ($this->isScrumHierarchy($tracker) || $this->isKanbanHierarchy($tracker));
     }
 
-    private function getScrumTrackerIds(Project $project) {
+    private function getScrumTrackerIds(Project $project)
+    {
         $planning_tracker_ids = $this->planning_factory->getPlanningTrackerIdsByGroupId($project->getID());
         $backlog_tracker_ids  = $this->planning_factory->getBacklogTrackerIdsByGroupId($project->getID());
 
         return array_unique(array_merge($planning_tracker_ids, $backlog_tracker_ids));
     }
 
-    private function getKanbanTrackerIds(Project $project) {
+    private function getKanbanTrackerIds(Project $project)
+    {
         return $this->kanban_factory->getKanbanTrackerIds($project->getID());
     }
 
-    private function checkHierarchyContainsGivenTrackerIds(Tracker_Hierarchy $hierarchy, array $tracker_ids) {
+    private function checkHierarchyContainsGivenTrackerIds(Tracker_Hierarchy $hierarchy, array $tracker_ids)
+    {
         foreach ($hierarchy->flatten() as $tracker_id) {
 
             if (in_array($tracker_id, $tracker_ids)) {
@@ -87,7 +91,8 @@ class AgileDashboard_HierarchyChecker {
         return false;
     }
 
-    public function getADTrackerIdsByProjectId($project_id) {
+    public function getADTrackerIdsByProjectId($project_id)
+    {
         $planning_tracker_ids = $this->planning_factory->getPlanningTrackerIdsByGroupId($project_id);
         $backlog_tracker_ids  = $this->planning_factory->getBacklogTrackerIdsByGroupId($project_id);
         $kanban_tracker_ids = $this->kanban_factory->getKanbanTrackerIds($project_id);

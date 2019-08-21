@@ -23,7 +23,8 @@ Mock::generate('ArtifactRuleDao');
 Mock::generate('DataAccessResult');
 class ArtifactRuleFactoryTest extends TuleapTestCase {
 
-    function testGetRuleById() {
+    function testGetRuleById()
+    {
 
         $rules_dar             = new MockDataAccessResult($this);
         $rules_dar->setReturnValue('getRow', array(

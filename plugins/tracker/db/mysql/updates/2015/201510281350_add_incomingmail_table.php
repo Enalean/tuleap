@@ -18,19 +18,23 @@
 
 class b201510281350_add_incomingmail_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return "Add table to store incoming mail for artifact emailgateway";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->createTable();
     }
 
-    private function createTable() {
+    private function createTable()
+    {
         $this->exec(
             "CREATE TABLE tracker_changeset_incomingmail(
                 changeset_id INT(11) NOT NULL PRIMARY KEY,
@@ -40,7 +44,8 @@ class b201510281350_add_incomingmail_table extends ForgeUpgrade_Bucket {
         );
     }
 
-    private function exec($sql, $error_message) {
+    private function exec($sql, $error_message)
+    {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);

@@ -28,41 +28,49 @@ require_once 'bootstrap.php';
 
 class PathJoinUtilTest extends TuleapTestCase {
 
-    function testEmptyArrayReturnsEmptyPath() {
+    function testEmptyArrayReturnsEmptyPath()
+    {
         $this->assertEqual('', PathJoinUtil::unixPathJoin(array()));
     }
 
-    function testTheSlashInFrontOfTheFirstElementIsKept() {
+    function testTheSlashInFrontOfTheFirstElementIsKept()
+    {
         $this->assertEqual('/toto', PathJoinUtil::unixPathJoin(array('/toto')));
         $this->assertEqual('/toto/tata/', PathJoinUtil::unixPathJoin(array('/toto', 'tata/')));
 
     }
 
-    function testAtTheEndThereIsASlashOnlyIfTheLastElementHasOne() {
+    function testAtTheEndThereIsASlashOnlyIfTheLastElementHasOne()
+    {
         $this->assertEqual('toto/', PathJoinUtil::unixPathJoin(array('toto/')));
         $this->assertEqual('toto/tata/', PathJoinUtil::unixPathJoin(array('toto','tata/')));
 
     }
 
-    function testRemoveSlashesWhenThereAreMoreThanOne() {
+    function testRemoveSlashesWhenThereAreMoreThanOne()
+    {
         $this->assertEqual('/toto', PathJoinUtil::unixPathJoin(array('//toto')));
         $this->assertEqual('toto/tata', PathJoinUtil::unixPathJoin(array('toto/', '/tata')));
         $this->assertEqual('/toto/tata/titi/tutu',PathJoinUtil::unixPathJoin(array('/toto/', '/tata/', '/titi/', '//tutu')));
     }
 
-    function testAllEmptyElementsAreIgnored() {
+    function testAllEmptyElementsAreIgnored()
+    {
         $this->assertEqual('toto/0', PathJoinUtil::unixPathJoin(array('', null, 'toto', '0')));
     }
 
-    function testUserRepoPath_IsPrefixedByUsername() {
+    function testUserRepoPath_IsPrefixedByUsername()
+    {
         $this->assertEqual('u/nicolas', PathJoinUtil::userRepoPath('nicolas', ''));
         $this->assertEqual('u/nicolas/toto', PathJoinUtil::userRepoPath('nicolas', 'toto'));
     }
-    function testUserRepoPath_ComplainsWhenThereAreDoubleDots() {
+    function testUserRepoPath_ComplainsWhenThereAreDoubleDots()
+    {
         $this->expectException('MalformedPathException');
         PathJoinUtil::userRepoPath('nicolas', '..');
     }
-    function testUserRepoPath_ComplainsWhenUserTriesToByPathItsHomeDirectory() {
+    function testUserRepoPath_ComplainsWhenUserTriesToByPathItsHomeDirectory()
+    {
         $this->expectException('MalformedPathException');
         $this->assertEqual('u/nicolas/root', PathJoinUtil::userRepoPath('nicolas', '/users/../root'));
     }

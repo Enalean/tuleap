@@ -20,17 +20,20 @@
 
 class b201110171036_add_docman_approval_user_index extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add index on reviewer_id and table_id in docman_approval_user
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         //Simulate indexNameExists
         $sql = 'SHOW INDEX FROM plugin_docman_approval_user WHERE Key_name LIKE "idx_reviewer"';
 
@@ -50,7 +53,8 @@ EOT;
 
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         // As of forgeupgrade 1.2 indexNameExists is buggy, so cannot rely on it for post upgrade check
         // Assume it's ok...
 

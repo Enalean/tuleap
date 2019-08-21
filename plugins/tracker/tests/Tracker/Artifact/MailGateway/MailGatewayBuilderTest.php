@@ -30,7 +30,8 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilderTest extends TuleapTestCase
     private $insecure_mail;
     private $token_mail;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->insecure_mail = new IncomingMail(file_get_contents(__DIR__ . '/_fixtures/insecure-reply-comment.plain.eml'));
@@ -57,13 +58,15 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilderTest extends TuleapTestCase
         );
     }
 
-    public function itReturnsAnInsecureMailGateway() {
+    public function itReturnsAnInsecureMailGateway()
+    {
         $mailgateway = $this->mailgateway_builder->build($this->insecure_mail);
 
         $this->assertIsA($mailgateway, 'Tracker_Artifact_MailGateway_InsecureMailGateway');
     }
 
-    public function itReturnsATokenMailGateway() {
+    public function itReturnsATokenMailGateway()
+    {
         $mailgateway = $this->mailgateway_builder->build($this->token_mail);
 
         $this->assertIsA($mailgateway, 'Tracker_Artifact_MailGateway_TokenMailGateway');

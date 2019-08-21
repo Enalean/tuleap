@@ -37,18 +37,21 @@ class Tracker_Rule_Date_Factory {
      * @param DataAccessObject $dao
      * @param Tracker_FormElementFactory $element_factory
      */
-    public function __construct(Tracker_Rule_Date_Dao $dao, Tracker_FormElementFactory $element_factory) {
+    public function __construct(Tracker_Rule_Date_Dao $dao, Tracker_FormElementFactory $element_factory)
+    {
         $this->dao = $dao;
         $this->element_factory = $element_factory;
     }
 
     /** @return array of Tracker_FormElement_Field_Date */
-    public function getUsedDateFields(Tracker $tracker) {
+    public function getUsedDateFields(Tracker $tracker)
+    {
         return $this->element_factory->getUsedDateFields($tracker);
     }
 
     /** @return Tracker_FormElement_Field_Date|null */
-    public function getUsedDateFieldById(Tracker $tracker, $field_id) {
+    public function getUsedDateFieldById(Tracker $tracker, $field_id)
+    {
         return $this->element_factory->getUsedDateFieldById($tracker, $field_id);
     }
 
@@ -60,7 +63,8 @@ class Tracker_Rule_Date_Factory {
      * @param string $comparator
      * @return Tracker_Rule_Date
      */
-    public function create($source_field_id, $target_field_id, $tracker_id, $comparator) {
+    public function create($source_field_id, $target_field_id, $tracker_id, $comparator)
+    {
         $date_rule = $this->populate(new Tracker_Rule_Date(), $tracker_id, $source_field_id, $target_field_id, $comparator);
         $this->insert($date_rule);
 
@@ -89,12 +93,14 @@ class Tracker_Rule_Date_Factory {
     /**
      * @return bool
      */
-    public function deleteById($tracker_id, $rule_id) {
+    public function deleteById($tracker_id, $rule_id)
+    {
         return $this->dao->deleteById($tracker_id, $rule_id);
     }
 
     /** @return Tracker_Rule_Date */
-    public function getRule(Tracker $tracker, $rule_id) {
+    public function getRule(Tracker $tracker, $rule_id)
+    {
         $rule = $this->dao->searchById($tracker->getId(), $rule_id)->getRow();
         if (!$rule) {
             return null;
@@ -110,7 +116,8 @@ class Tracker_Rule_Date_Factory {
         );
     }
 
-    public function save(Tracker_Rule_Date $rule) {
+    public function save(Tracker_Rule_Date $rule)
+    {
         return $this->dao->save(
             $rule->getId(),
             $rule->getSourceField()->getId(),
@@ -124,7 +131,8 @@ class Tracker_Rule_Date_Factory {
      * @param int $tracker_id
      * @return array An array of Tracker_Rule_Date objects
      */
-    public function searchByTrackerId($tracker_id) {
+    public function searchByTrackerId($tracker_id)
+    {
         $rules = $this->dao->searchByTrackerId($tracker_id);
 
         if(! $rules) {
@@ -153,7 +161,8 @@ class Tracker_Rule_Date_Factory {
      * @param int $to_tracker_id
      * @param array $field_mapping
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
+    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping)
+    {
         $dar = $this->dao->searchByTrackerId($from_tracker_id);
 
         // Retrieve rules of tracker from
@@ -175,7 +184,8 @@ class Tracker_Rule_Date_Factory {
         }
     }
 
-    public function exportToXml(SimpleXMLElement $root, array $xmlMapping, $tracker_id) {
+    public function exportToXml(SimpleXMLElement $root, array $xmlMapping, $tracker_id)
+    {
         $date_rules = $root->addChild('date_rules');
         $rules = $this->searchByTrackerId($tracker_id);
         foreach ($rules as $rule) {
@@ -199,7 +209,8 @@ class Tracker_Rule_Date_Factory {
      * @param string $comparator
      * @return \Tracker_Rule_Date
      */
-    private function populate(Tracker_Rule_Date $date_rule, $tracker_id, $source_field_id, $target_field_id, $comparator, $id = null) {
+    private function populate(Tracker_Rule_Date $date_rule, $tracker_id, $source_field_id, $target_field_id, $comparator, $id = null)
+    {
         $source_field = $this->element_factory->getFormElementById($source_field_id);
         $target_field = $this->element_factory->getFormElementById($target_field_id);
         $date_rule->setTrackerId($tracker_id)

@@ -36,7 +36,8 @@ class GitPresenters_MirroredRepositoryPresenter {
     public $used_mirrors;
 
 
-    public function __construct(GitRepository $repository, array $used_mirrors) {
+    public function __construct(GitRepository $repository, array $used_mirrors)
+    {
         $this->repository_id = $repository->getId();
         $this->name          = $repository->getFullName();
         $this->used_mirrors  = $used_mirrors;

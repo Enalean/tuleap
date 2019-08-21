@@ -26,7 +26,8 @@ class SimpleSanitizerTest extends SimpleSanitizerTestCase {
     /**
      * initialize variables for tests
      */
-    function setUp() {
+    function setUp()
+    {
         $this->sanitizer = new SimpleSanitizer();
     }
 

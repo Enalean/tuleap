@@ -20,17 +20,20 @@
 
 class b201212141151_add_git_read_permission_all_users extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add git read permission types to all users
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         if ($this->permissionTypesMissing()) {
             $sql = "INSERT INTO permissions_values (permission_type, ugroup_id, is_default)
                     VALUES ('PLUGIN_GIT_READ', 1, 0)";
@@ -41,13 +44,15 @@ EOT;
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if ($this->permissionTypesMissing()) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Git read permission to anonymous users for gitolite is missing');
         }
     }
 
-    protected function permissionTypesMissing() {
+    protected function permissionTypesMissing()
+    {
         $sql = "SELECT count(*) as nb FROM permissions_values WHERE permission_type = 'PLUGIN_GIT_READ' AND ugroup_id = 1";
         $res = $this->db->dbh->query($sql);
         $row = $res->fetch();

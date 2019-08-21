@@ -35,7 +35,8 @@ if (USE_HTMLAREA) require_once('lib/htmlarea.php');
 
 class PageEditor
 {
-    function __construct (&$request) {
+    function __construct(&$request)
+    {
         $this->request = &$request;
 
         $this->user = $request->getUser();
@@ -88,7 +89,8 @@ class PageEditor
             header("Content-Type: text/html; charset=" . $GLOBALS['charset']);
     }
 
-    function editPage () {
+    function editPage()
+    {
 
         global $WikiTheme;
         $saveFailed = false;
@@ -173,7 +175,8 @@ class PageEditor
         return $this->output('editpage', _("Edit: %s"));
     }
 
-    function output ($template, $title_fs) {
+    function output($template, $title_fs)
+    {
         global $WikiTheme;
         $selected = &$this->selected;
         $current = &$this->current;
@@ -198,7 +201,8 @@ class PageEditor
     }
 
 
-    function viewSource () {
+    function viewSource()
+    {
         assert($this->isInitialEdit());
         assert($this->selected);
 
@@ -207,7 +211,8 @@ class PageEditor
         return $this->output('viewsource', _("View Source: %s"));
     }
 
-    function updateLock() {
+    function updateLock()
+    {
         if ((bool)$this->page->get('locked') == (bool)$this->locked)
             return false;       // Not changed.
 
@@ -223,7 +228,8 @@ class PageEditor
         return true;            // lock changed.
     }
 
-    function savePage () {
+    function savePage()
+    {
         $request = &$this->request;
 
         if ($this->isUnchanged()) {
@@ -330,20 +336,24 @@ class PageEditor
         return true;
     }
 
-    function isConcurrentUpdate () {
+    function isConcurrentUpdate()
+    {
         assert($this->current->getVersion() >= $this->_currentVersion);
         return $this->current->getVersion() != $this->_currentVersion;
     }
 
-    function canEdit () {
+    function canEdit()
+    {
         return !$this->page->get('locked') || $this->user->isAdmin();
     }
 
-    function isInitialEdit () {
+    function isInitialEdit()
+    {
         return $this->_initialEdit;
     }
 
-    function isUnchanged () {
+    function isUnchanged()
+    {
         $current = &$this->current;
 
         if ($this->meta['markup'] !=  $current->get('markup'))
@@ -352,13 +362,15 @@ class PageEditor
         return $this->_content == $current->getPackedContent();
     }
 
-    function getPreview () {
+    function getPreview()
+    {
         include_once('lib/PageType.php');
         $this->_content = $this->getContent();
         return new TransformedText($this->page, $this->_content, $this->meta);
     }
 
-    function getConvertedPreview () {
+    function getConvertedPreview()
+    {
         include_once('lib/PageType.php');
         $this->_content = $this->getContent();
         $this->meta['markup'] = 2.0;
@@ -367,7 +379,8 @@ class PageEditor
     }
 
     // possibly convert HTMLAREA content back to Wiki markup
-    function getContent () {
+    function getContent()
+    {
         if (USE_HTMLAREA) {
             $xml_output = Edit_HtmlArea_ConvertAfter($this->_content);
             $this->_content = join("", $xml_output->_content);
@@ -377,7 +390,8 @@ class PageEditor
         }
     }
 
-    function getLockedMessage () {
+    function getLockedMessage()
+    {
         return
             HTML(HTML::h2(_("Page Locked")),
                  HTML::p(_("This page has been locked by the administrator so your changes can not be saved.")),
@@ -385,7 +399,8 @@ class PageEditor
                  HTML::p(_("Sorry for the inconvenience.")));
     }
 
-    function getConflictMessage ($unresolved = false) {
+    function getConflictMessage($unresolved = false)
+    {
         /*
          xgettext only knows about c/c++ line-continuation strings
          it does not know about php's dot operator.
@@ -415,7 +430,8 @@ class PageEditor
     }
 
 
-    function getTextArea () {
+    function getTextArea()
+    {
         $request = &$this->request;
 
         $readonly = ! $this->canEdit(); // || $this->isConcurrentUpdate();
@@ -438,7 +454,8 @@ class PageEditor
             return $textarea;
     }
 
-    function getFormElements () {
+    function getFormElements()
+    {
         global $WikiTheme;
         $request = &$this->request;
         $page = &$this->page;
@@ -510,11 +527,13 @@ class PageEditor
         return $el;
     }
 
-    function _redirectToBrowsePage() {
+    function _redirectToBrowsePage()
+    {
         $this->request->redirect(WikiURL($this->page, false, 'absolute_url'));
     }
 
-    function redirectAfterSavingPage($pagename) {
+    function redirectAfterSavingPage($pagename)
+    {
         $url     = WikiURL($this->page, false, 'absolute_url');
         $link    = '<a href="' . $url . '">'.$pagename.'</a>';
         $message = fmt("Saved: %s", $link)->asString();
@@ -523,7 +542,8 @@ class PageEditor
         $GLOBALS['Response']->redirect($url);
     }
 
-    function _restoreState () {
+    function _restoreState()
+    {
         $request = &$this->request;
 
         $posted = $request->getArg('edit');
@@ -567,7 +587,8 @@ class PageEditor
         return true;
     }
 
-    function _initializeState () {
+    function _initializeState()
+    {
         $request = &$this->request;
         $current = &$this->current;
         $selected = &$this->selected;
@@ -606,7 +627,8 @@ class PageEditor
 class LoadFileConflictPageEditor
 extends PageEditor
 {
-    function editPage ($saveFailed = true) {
+    function editPage($saveFailed = true)
+    {
         $tokens = &$this->tokens;
 
         if (!$this->canEdit()) {
@@ -658,7 +680,8 @@ extends PageEditor
         // FIXME: this doesn't display
     }
 
-    function output ($template, $title_fs) {
+    function output($template, $title_fs)
+    {
         $selected = &$this->selected;
         $current = &$this->current;
 
@@ -679,7 +702,7 @@ extends PageEditor
         return true;
     }
 
-    function getConflictMessage ($unresolved = false)
+    function getConflictMessage($unresolved = false)
     {
         $message = HTML(HTML::p(fmt("Some of the changes could not automatically be combined.  Please look for sections beginning with '%s', and ending with '%s'.  You will need to edit those sections by hand before you click Save.",
                                     "<<<<<<<",

@@ -25,7 +25,8 @@
 abstract class Tracker_Workflow_Action_Rules extends Tracker_Workflow_Action {
 
     /** @see Tracker_Workflow_Action_Abstract::getIdentifier() */
-    protected function getPaneIdentifier() {
+    protected function getPaneIdentifier()
+    {
         return 'rules';
     }
 }

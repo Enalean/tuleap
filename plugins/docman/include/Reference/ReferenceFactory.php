@@ -24,7 +24,8 @@ class Docman_ReferenceFactory {
     /**
      * @return Docman_Reference
      */
-    public function getInstanceFromRowAndProjectId($row, $project_id) {
+    public function getInstanceFromRowAndProjectId($row, $project_id)
+    {
         return new Docman_Reference(
             $row['keyword'],
             $row['description'],

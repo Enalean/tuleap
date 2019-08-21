@@ -23,7 +23,8 @@ class b201204021720_create_ci_table extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add the table plugin_git_ci in order to trigger ci jobs after git pushes.
 EOT;
@@ -34,7 +35,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -43,7 +45,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = 'CREATE TABLE plugin_git_ci (
                 job_id INT(11) UNSIGNED NOT NULL,
                 repository_id INT(10) UNSIGNED NOT NULL,
@@ -56,7 +59,8 @@ EOT;
      *
      * @return void
      */
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('plugin_git_ci')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_git_ci table is missing');
         }

@@ -23,7 +23,8 @@
 
 require_once __DIR__ . '/svn_data.php';
 
-function svn_header(Project $project, $params) {
+function svn_header(Project $project, $params)
+{
     global $Language;
 
     \Tuleap\Project\ServiceInstrumentation::increment('svncore');
@@ -89,7 +90,8 @@ function svn_header(Project $project, $params) {
     );
 }
 
-function svn_header_admin($params) {
+function svn_header_admin($params)
+{
     global $group_id,$Language;
 
     //required params for site_project_header();
@@ -125,12 +127,14 @@ function svn_header_admin($params) {
 }
 
 
-function svn_footer($params) {
+function svn_footer($params)
+{
     site_project_footer($params);
 }
 
 
-function svn_utils_technician_box($group_id,$name='_commiter',$checked='xzxz',$text_100='None') {
+function svn_utils_technician_box($group_id,$name='_commiter',$checked='xzxz',$text_100='None')
+{
     global $Language;
     if (!$group_id) {
         return $Language->getText('svn_utils','g_id_err');
@@ -152,7 +156,8 @@ function svn_utils_technician_box($group_id,$name='_commiter',$checked='xzxz',$t
 }
 
 
-function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $commiter='100', $path='', $chunksz=15, $morder='', $msort=0) {
+function svn_utils_show_revision_list($result,$offset,$total_rows,$set='any', $commiter='100', $path='', $chunksz=15, $morder='', $msort=0)
+{
     global $group_id,$Language;
     /*
         Accepts a result set from the svn_commits table. Should include all columns from
@@ -285,7 +290,8 @@ function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $
     echo $nav_bar;
 }
 
-function svn_utils_make_viewlink($group_name, $filename, $text, $view_params) {
+function svn_utils_make_viewlink($group_name, $filename, $text, $view_params)
+{
     return '<A href="/svn/viewvc.php/'.$filename.'?root='.$group_name.'&roottype=svn'.$view_params.'"><B>'.$text.'</B></A>';
 }
 
@@ -339,7 +345,8 @@ function svn_utils_criteria_list_to_query($criteria_list)
 
 // Transform criteria list to readable text statement
 // $url must not contain the morder parameter
-function svn_utils_criteria_list_to_text($criteria_list, $url){
+function svn_utils_criteria_list_to_text($criteria_list, $url)
+{
 
     if ($criteria_list) {
         $morder = '';
@@ -361,7 +368,8 @@ function svn_utils_criteria_list_to_text($criteria_list, $url){
     return join(' > ',$arr_text);
 }
 
-function svn_utils_field_get_label($sortField) {
+function svn_utils_field_get_label($sortField)
+{
     global $Language;
     if ($sortField == "id") {
         return $Language->getText('svn_browse_revision','rev');
@@ -376,7 +384,8 @@ function svn_utils_field_get_label($sortField) {
 }
 
 
-function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id) {
+function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id)
+{
     global $Language;
     $purifier = Codendi_HTMLPurifier::instance();
     /*
@@ -468,7 +477,8 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
 }
 
 // Is there anything in the svn history table ?
-function svn_utils_format_svn_history($group_id) {
+function svn_utils_format_svn_history($group_id)
+{
     global $Language;
     $output = '';
     $res_svnfullhist = svn_data_get_svn_history($group_id);
@@ -504,13 +514,15 @@ function svn_utils_format_svn_history($group_id) {
 }
 
 // read permission access file. The default settings part.
-function svn_utils_read_svn_access_file_defaults($project_svnroot, $display=false) {
+function svn_utils_read_svn_access_file_defaults($project_svnroot, $display=false)
+{
     $accessfile = new SVN_AccessFile_Writer($project_svnroot);
     return $accessfile->read_defaults($display);
 }
 
 // read permission access file. The project specific part.
-function svn_utils_read_svn_access_file($project_svnroot) {
+function svn_utils_read_svn_access_file($project_svnroot)
+{
 
     global $Language;
 
@@ -534,12 +546,14 @@ function svn_utils_read_svn_access_file($project_svnroot) {
     return $buffer;
 }
 
-function svn_utils_write_svn_access_file_with_defaults($project_svnroot, $contents) {
+function svn_utils_write_svn_access_file_with_defaults($project_svnroot, $contents)
+{
     $buffer = svn_utils_read_svn_access_file_defaults($project_svnroot);
     return svn_utils_write_svn_access_file($project_svnroot, $buffer . $contents);
 }
 
-function svn_utils_write_svn_access_file($project_svnroot, $contents) {
+function svn_utils_write_svn_access_file($project_svnroot, $contents)
+{
 
     global $feedback,$Language;
 
@@ -555,7 +569,8 @@ function svn_utils_write_svn_access_file($project_svnroot, $contents) {
     return $ret;
 }
 
-function svn_utils_svn_repo_exists($project_svnroot) {
+function svn_utils_svn_repo_exists($project_svnroot)
+{
     return is_dir("$project_svnroot");
 }
 
@@ -577,7 +592,8 @@ $GLOBALS['SVNGROUPS'] = "None";
  *    the corresponding Python code needs to be updated too.
  *    (see src/utils/svn/svnaccess.py)
  */
-function svn_utils_parse_access_file($project_svnroot) {
+function svn_utils_parse_access_file($project_svnroot)
+{
     global $SVNACCESS, $SVNGROUPS,$Language;
     $filename = "$project_svnroot/.SVNAccessFile";
     $SVNACCESS = array();
@@ -654,7 +670,8 @@ function svn_utils_parse_access_file($project_svnroot) {
 }
 
 
-function svn_utils_get_forbidden_paths($username, $project_svnroot) {
+function svn_utils_get_forbidden_paths($username, $project_svnroot)
+{
     global $SVNACCESS;
 
     if ($SVNACCESS == "None") {
@@ -705,7 +722,8 @@ function svn_utils_get_forbidden_paths($username, $project_svnroot) {
  *    (see src/utils/svn/svnaccess.py)
  */
 
-function svn_utils_check_access($username, $project_svnroot, $svnpath) {
+function svn_utils_check_access($username, $project_svnroot, $svnpath)
+{
     global $SVNACCESS;
 
     if ( (user_getname()==$username) && (user_is_super_user())) return true;
@@ -748,12 +766,14 @@ function svn_utils_check_access($username, $project_svnroot, $svnpath) {
     }
 }
 
-function svn_utils_is_there_specific_permission($project_svnroot) {
+function svn_utils_is_there_specific_permission($project_svnroot)
+{
     $specifics = svn_utils_read_svn_access_file($project_svnroot);
     return !$specifics || $specifics != '';
 }
 
-function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $_commiter = '', $_srch = '', $order_by = '', $pv = 0, $foundRows=true) {
+function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $_commiter = '', $_srch = '', $order_by = '', $pv = 0, $foundRows=true)
+{
     global $_path;
 
     $um = UserManager::instance();

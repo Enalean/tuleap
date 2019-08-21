@@ -57,7 +57,8 @@ class UserLogManager {
         $dao->addRequest($time, $gid, $uid, $userAgent, $requestMethod, $requestUri, $remoteAddr, $httpReferer);
     }
 
-    function displayNewOrIdem($key, $row, &$pval, $display = null) {
+    function displayNewOrIdem($key, $row, &$pval, $display = null)
+    {
         if($pval[$key] != $row[$key]) {
             if($display === null) {
                 $dis = $row[$key];
@@ -79,7 +80,8 @@ class UserLogManager {
         return $dis;
     }
 
-    function initPval(&$pval) {
+    function initPval(&$pval)
+    {
         $pval = array('time' => -1,
                       'hour' => -1,
                       'group_id' => -1,

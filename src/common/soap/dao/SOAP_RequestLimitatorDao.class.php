@@ -19,7 +19,8 @@
 
 class SOAP_RequestLimitatorDao extends DataAccessObject {
 
-    public function searchFirstCallToMethod($name, $delay) {
+    public function searchFirstCallToMethod($name, $delay)
+    {
         $name  = $this->da->quoteSmart($name);
         $delay = $this->da->escapeInt($delay);
         $sql   = "SELECT SQL_CALC_FOUND_ROWS *
@@ -30,7 +31,8 @@ class SOAP_RequestLimitatorDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function saveCallToMethod($name, $time) {
+    public function saveCallToMethod($name, $time)
+    {
         $name = $this->da->quoteSmart($name);
         $time = $this->da->escapeInt($time);
         $sql  = "INSERT INTO soap_call_counter (method_name, date)

@@ -48,7 +48,8 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding {
      *   '-Child 10 (id:24)
      *
      */
-    protected function given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children() {
+    protected function given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children()
+    {
         $parent  = $this->buildBaseTree();
         $child1  = $parent->getChild(0);
         $child2  = $child1->getChild(0);
@@ -81,7 +82,8 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding {
     /**
      * Child 1
      */
-    public function itShouldSetDataToChild1ThatMatches_IndentPipeTreeIndentMinus_treeAndChild() {
+    public function itShouldSetDataToChild1ThatMatches_IndentPipeTreeIndentMinus_treeAndChild()
+    {
         $given = $this->given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
 
@@ -95,7 +97,8 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding {
     /**
      * Child 2
      */
-    public function itShouldSetDataToChild2ThatMatches_IndentPipeBlankIndentPipeTreeIndentMinus_treeAndChild() {
+    public function itShouldSetDataToChild2ThatMatches_IndentPipeBlankIndentPipeTreeIndentMinus_treeAndChild()
+    {
         $given      = $this->given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
 
@@ -109,7 +112,8 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding {
     /**
      * Child 3
      */
-    public function itShouldSetDataToChild3ThatMatches_IndentPipeBlankIndentPipeBlankIndentPipeIndentMinusAndNoChild() {
+    public function itShouldSetDataToChild3ThatMatches_IndentPipeBlankIndentPipeBlankIndentPipeIndentMinusAndNoChild()
+    {
         $given      = $this->given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
 
@@ -123,7 +127,8 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding {
     /**
      * Child 4
      */
-    public function itShouldSetDataToChild4ThatMatches_IndentPipeBlankIndentPipeBlankIndentLast_leftIndentLast_rightAndNoChild() {
+    public function itShouldSetDataToChild4ThatMatches_IndentPipeBlankIndentPipeBlankIndentLast_leftIndentLast_rightAndNoChild()
+    {
         $given      = $this->given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
 
@@ -137,7 +142,8 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding {
     /**
      * Child 5
      */
-    public function itShouldSetDataToChild5ThatMatches_IndentPipeBlankIndentPipeIdentMinusAndNoChild() {
+    public function itShouldSetDataToChild5ThatMatches_IndentPipeBlankIndentPipeIdentMinusAndNoChild()
+    {
         $given      = $this->given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
 
@@ -151,7 +157,8 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding {
     /**
      * Child 6
      */
-    public function itShouldSetDataToChild6ThatMatches_IndentPipeBlankIndentLast_leftIndentLast_rightAndNoChild() {
+    public function itShouldSetDataToChild6ThatMatches_IndentPipeBlankIndentLast_leftIndentLast_rightAndNoChild()
+    {
         $given      = $this->given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
 
@@ -165,7 +172,8 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding {
     /**
      * Child 7
      */
-    public function itShouldSetDataToChild7ThatMatches_IndentPipeIndentMinusAndNoChild() {
+    public function itShouldSetDataToChild7ThatMatches_IndentPipeIndentMinusAndNoChild()
+    {
         $given      = $this->given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
 
@@ -178,7 +186,8 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding {
     /**
      * Child 8
      */
-    public function itShouldSetDataToChild8ThatMatches_IndentLast_LeftTreeIndentMinus_TreeAndChild() {
+    public function itShouldSetDataToChild8ThatMatches_IndentLast_LeftTreeIndentMinus_TreeAndChild()
+    {
         $given      = $this->given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
 
@@ -192,7 +201,8 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding {
     /**
      * Child 9
      */
-    public function itShouldSetDataToChild9ThatMatches_BlankBlankIndentPipeIndentMinusAndNoChild() {
+    public function itShouldSetDataToChild9ThatMatches_BlankBlankIndentPipeIndentMinusAndNoChild()
+    {
         $given      = $this->given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
 
@@ -206,7 +216,8 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding {
     /**
      * Child 10
      */
-    public function itShouldSetDataToChild10ThatMatches_BlankBlankIndentLast_leftIdentLast_rightAndNoChild() {
+    public function itShouldSetDataToChild10ThatMatches_BlankBlankIndentLast_leftIdentLast_rightAndNoChild()
+    {
         $given      = $this->given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
 

@@ -56,7 +56,8 @@ extends XmlParser {
     var $divers = "";
     var $date = "";
 
-    function tag_open($parser, $name, $attrs=''){
+    function tag_open($parser, $name, $attrs='')
+    {
         global $current_tag, $current_attrs;
 
         $current_tag = $name;
@@ -69,7 +70,8 @@ extends XmlParser {
             $this->inside_item = true;
     }
 
-    function tag_close($parser, $tagName, $attrs=''){
+    function tag_close($parser, $tagName, $attrs='')
+    {
         global $current_tag;
 
         if ($tagName == "ITEM") {
@@ -114,7 +116,8 @@ extends XmlParser {
         }
     }
 
-    function cdata($parser, $data){
+    function cdata($parser, $data)
+    {
         global $current_tag, $current_attrs;
 
         if ($this->inside_item) {
@@ -158,7 +161,8 @@ extends XmlParser {
         }
     }
 
-    function parse($content, $is_final = true) {
+    function parse($content, $is_final = true)
+    {
         xml_parse($this->_parser, $content, $is_final) or
             trigger_error(sprintf("XML error: %s at line %d",
                                   xml_error_string(xml_get_error_code($this->_parser)),

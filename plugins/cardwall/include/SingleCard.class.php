@@ -65,15 +65,18 @@ class Cardwall_SingleCard {
     /**
      * @return Cardwall_CardInCellPresenter
      */
-    public function getCardInCellPresenter() {
+    public function getCardInCellPresenter()
+    {
         return $this->card_in_cell_presenter;
     }
 
-    public function getColumnId() {
+    public function getColumnId()
+    {
         return $this->column_id;
     }
 
-    public function getFields() {
+    public function getFields()
+    {
         return $this->card_fields->getFields($this->artifact);
     }
 
@@ -84,7 +87,8 @@ class Cardwall_SingleCard {
      *
      * @return Tracker_FormElement_Field
      */
-    public function getFieldById($id) {
+    public function getFieldById($id)
+    {
         if ($this->fields_cache === null) {
             foreach ($this->getFields() as $field) {
                 $this->fields_cache[$field->getId()] = $field;
@@ -99,19 +103,23 @@ class Cardwall_SingleCard {
     /**
      * @return Tracker_Artifact
      */
-    public function getArtifact() {
+    public function getArtifact()
+    {
         return $this->artifact;
     }
 
-    public function getFieldJsonValue(PFUser $user, Tracker_FormElement_Field $field) {
+    public function getFieldJsonValue(PFUser $user, Tracker_FormElement_Field $field)
+    {
         return $field->getJsonValue($user, $this->artifact->getLastChangeset());
     }
 
-    public function getFieldHTMLValue(PFUser $user, Tracker_FormElement_Field $field) {
+    public function getFieldHTMLValue(PFUser $user, Tracker_FormElement_Field $field)
+    {
         return $field->fetchCardValue($this->artifact, $this->display_preferences);
     }
 
-    public function getMapping() {
+    public function getMapping()
+    {
         return $this->mapping;
     }
 }

@@ -43,7 +43,8 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase {
     private $noida_mirror_id = 2;
     private $data_mapper;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $fixture_dir              = dirname(__FILE__) .'/_fixtures';
         $this->manifest_directory = $fixture_dir .'/manifests';
@@ -69,7 +70,8 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase {
         $this->manager = new Git_Mirror_ManifestManager($this->data_mapper, $this->generator);
     }
 
-    public function itAsksToUpdateTheManifestsWhereTheRepositoryIsMirrored() {
+    public function itAsksToUpdateTheManifestsWhereTheRepositoryIsMirrored()
+    {
         stub($this->data_mapper)->fetchAllRepositoryMirrors()->returns(
             array($this->noida_mirror, $this->singapour_mirror)
         );
@@ -81,7 +83,8 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase {
         $this->manager->triggerUpdate($this->repository);
     }
 
-    public function itAsksToDeleteTheRepositoryFromTheManifestsWhereTheRepositoryIsNotMirrored() {
+    public function itAsksToDeleteTheRepositoryFromTheManifestsWhereTheRepositoryIsNotMirrored()
+    {
         stub($this->data_mapper)->fetchAllRepositoryMirrors()->returns(
             array($this->noida_mirror)
         );
@@ -92,7 +95,8 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase {
         $this->manager->triggerUpdate($this->repository);
     }
 
-    public function itAsksToDeleteTheRepositoryFromAllManifests() {
+    public function itAsksToDeleteTheRepositoryFromAllManifests()
+    {
         expect($this->generator)->removeRepositoryFromManifestFile('*', $this->repository->getPath())->count(2);
         expect($this->generator)->removeRepositoryFromManifestFile($this->singapour_mirror, $this->repository->getPath())->at(0);
         expect($this->generator)->removeRepositoryFromManifestFile($this->noida_mirror, $this->repository->getPath())->at(1);
@@ -100,7 +104,8 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase {
         $this->manager->triggerDelete($this->repository->getPath());
     }
 
-    public function itEnsuresThatManifestFilesOfMirrorsContainTheRepositories() {
+    public function itEnsuresThatManifestFilesOfMirrorsContainTheRepositories()
+    {
         stub($this->data_mapper)->fetchRepositoriesForMirror($this->singapour_mirror)->returns(
             array($this->repository)
         );
@@ -123,7 +128,8 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase {
         $this->manager->checkManifestFiles();
     }
 
-    public function itUpdatesTheCurrentTimeAfterAGitPush() {
+    public function itUpdatesTheCurrentTimeAfterAGitPush()
+    {
         stub($this->data_mapper)->fetchAllRepositoryMirrors()->returns(
             array($this->singapour_mirror)
         );

@@ -29,7 +29,8 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test extends Tule
     protected $json_input;
     protected $validator;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->tracker_id = 274;
         $this->tracker = aTracker()->withId($this->tracker_id)->build();
@@ -43,7 +44,8 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test extends Tule
 
 class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TargetTest extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->tracker_id = 274;
         $this->tracker = aTracker()->withId($this->tracker_id)->build();
@@ -59,7 +61,8 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TargetTest extend
         );
     }
 
-    public function itFetchesFieldFromFormElementFactory() {
+    public function itFetchesFieldFromFormElementFactory()
+    {
         expect($this->formelement_factory)->getUsedFormElementFieldById()->count(2);
         expect($this->formelement_factory)->getUsedFormElementFieldById('30')->at(0);
         stub($this->formelement_factory)->getUsedFormElementFieldById('30')->returns($this->target_field);
@@ -67,14 +70,16 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TargetTest extend
         $this->factory->getRuleFromJson($this->tracker, $this->json_input);
     }
 
-    public function itRaisesAnExceptionIfFieldIsInvalid() {
+    public function itRaisesAnExceptionIfFieldIsInvalid()
+    {
         $this->json_input->target->field_id = '40';
 
         $this->expectException('Tracker_FormElement_InvalidFieldException');
         $this->factory->getRuleFromJson($this->tracker, $this->json_input);
     }
 
-    public function itRaisesAnExceptionWhenFieldDoesntBelongToTracker() {
+    public function itRaisesAnExceptionWhenFieldDoesntBelongToTracker()
+    {
         $tracker = aTracker()->withId(37)->build();
         stub($this->formelement_factory)->getUsedFormElementFieldById()->returns(aMockField()->withTracker($tracker)->build());
 
@@ -82,7 +87,8 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TargetTest extend
         $this->factory->getRuleFromJson($this->tracker, $this->json_input);
     }
 
-    public function itBuildsTheRuleWithTargetFieldAndValue() {
+    public function itBuildsTheRuleWithTargetFieldAndValue()
+    {
         stub($this->formelement_factory)->getUsedFormElementFieldById('30')->returns($this->target_field);
 
         $rule = $this->factory->getRuleFromJson($this->tracker, $this->json_input);
@@ -90,7 +96,8 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TargetTest extend
         $this->assertEqual($rule->getTarget()->getValue(), $this->target_field_value);
     }
 
-    public function itRaisesAnExceptionWhenTargetValueDoesntBelongToField() {
+    public function itRaisesAnExceptionWhenTargetValueDoesntBelongToField()
+    {
         $target_field = aMockField()->withTracker($this->tracker)->build();
         stub($target_field)->getAllValues()->returns(array());
         stub($this->formelement_factory)->getUsedFormElementFieldById()->returns($target_field);
@@ -104,7 +111,8 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TargetTest extend
 
 class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_ConditionTest extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->tracker_id = 274;
         $this->tracker = aTracker()->withId($this->tracker_id)->build();
@@ -119,7 +127,8 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_ConditionTest ext
         stub($this->formelement_factory)->getUsedFormElementFieldById('30')->returns($this->target_field);
     }
 
-    public function itBuildsTheRuleWithCondition() {
+    public function itBuildsTheRuleWithCondition()
+    {
         $rule = $this->factory->getRuleFromJson($this->tracker, $this->json_input);
         $this->assertEqual($rule->getCondition(), Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF);
     }
@@ -127,7 +136,8 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_ConditionTest ext
 
 class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TriggerTest extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->target_field_id = 30;
         $this->tracker_id = 274;
@@ -143,7 +153,8 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TriggerTest exten
         stub($this->formelement_factory)->getUsedFormElementFieldById("$this->target_field_id")->returns($this->target_field);
     }
 
-    public function itHasATrigger() {
+    public function itHasATrigger()
+    {
         $this->child_tracker = aTracker()->withParent($this->tracker)->build();
 
         $this->trigger_field_id = 369;
@@ -168,7 +179,8 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TriggerTest exten
         $this->assertEqual($rule1->getValue(), $this->trigger_field_value);
     }
 
-    public function itRaisesAnErrorIfTriggerTrackerDoesntBelongToChildren() {
+    public function itRaisesAnErrorIfTriggerTrackerDoesntBelongToChildren()
+    {
         $this->not_child_tracker = aTracker()->withParent(null)->build();
 
         $this->trigger_field_id = 369;
@@ -183,7 +195,8 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TriggerTest exten
         $this->factory->getRuleFromJson($this->tracker, $this->json_input);
     }
 
-    private function setUpTwoTriggers() {
+    private function setUpTwoTriggers()
+    {
         // field 1
         $this->child_tracker_1 = aTracker()->withParent($this->tracker)->build();
 
@@ -225,7 +238,8 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TriggerTest exten
         $this->json_input->triggering_fields[] = $json_triggering_field2;
     }
 
-    public function itHasTwoTriggers() {
+    public function itHasTwoTriggers()
+    {
         $this->setUpTwoTriggers();
 
         $rule = $this->factory->getRuleFromJson($this->tracker, $this->json_input);
@@ -245,7 +259,8 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TriggerTest exten
 
 class Tracker_Workflow_Trigger_RulesFactory_JsonInputOutput_TriggerTest extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->tracker_id = 274;
         $this->tracker_name = 'Target Tracker Name';
@@ -302,7 +317,8 @@ class Tracker_Workflow_Trigger_RulesFactory_JsonInputOutput_TriggerTest extends 
         stub($this->formelement_factory)->getUsedFormElementFieldById("$this->trigger_field_id_1")->returns($this->trigger_field_1);
     }
 
-    public function itDoesATwoWayTransform() {
+    public function itDoesATwoWayTransform()
+    {
         // Add to input what should be added by get
         $json_input = clone $this->json_input;
         $json_input->id = null;

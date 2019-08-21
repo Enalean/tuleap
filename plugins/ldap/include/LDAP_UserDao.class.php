@@ -159,7 +159,8 @@ class LDAP_UserDao extends DataAccessObject {
      * @return int
      *
      */
-    public function getNbrActiveUsers() {
+    public function getNbrActiveUsers()
+    {
         $sql = 'SELECT count(u.user_id) as count
         FROM user u
          JOIN plugin_ldap_user ldap_user ON (ldap_user.user_id = u.user_id)
@@ -176,7 +177,8 @@ class LDAP_UserDao extends DataAccessObject {
      * @return DataAccessResult
      *
      */
-    public function getActiveUsers() {
+    public function getActiveUsers()
+    {
         $sql = 'SELECT u.user_id, user_name, email, ldap_id, status, realname, ldap_uid
         FROM user u
          JOIN plugin_ldap_user ldap_user ON (ldap_user.user_id = u.user_id)
@@ -187,7 +189,8 @@ class LDAP_UserDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchNonUniqueLdapUid() {
+    public function searchNonUniqueLdapUid()
+    {
         $sql = "SELECT ldap_uid
                 FROM user
                     JOIN plugin_ldap_user ON (plugin_ldap_user.user_id=user.user_id)

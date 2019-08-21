@@ -39,7 +39,8 @@ class WebDAVUtils {
      *
      * @return void
      */
-    private function __construct() {
+    private function __construct()
+    {
     }
 
     /**
@@ -47,7 +48,8 @@ class WebDAVUtils {
      *
      * @return void
      */
-    private function __clone() {
+    private function __clone()
+    {
     }
 
     /**
@@ -55,7 +57,8 @@ class WebDAVUtils {
      *
      * @return WebDAVUtils
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
 
         if (self::$instance === null) {
             self::$instance = new self();
@@ -71,7 +74,8 @@ class WebDAVUtils {
      *
      * @return String
      */
-    function convertName($name) {
+    function convertName($name)
+    {
 
         $name = str_replace('%', '%25', $name);
         $name = str_replace('/', '%2F', $name);
@@ -87,7 +91,8 @@ class WebDAVUtils {
      *
      * @return String
      */
-    function unconvertHTMLSpecialChars($name) {
+    function unconvertHTMLSpecialChars($name)
+    {
         return util_unconvert_htmlspecialchars($this->convertName($name));
     }
 
@@ -98,7 +103,8 @@ class WebDAVUtils {
      *
      * @return String
      */
-    function retrieveName($name) {
+    function retrieveName($name)
+    {
 
         $name = str_replace('%2F', '/', $name);
         $name = str_replace('%25', '%', $name);
@@ -152,7 +158,8 @@ class WebDAVUtils {
      *
      * @return ProjectManager
      */
-    public function getProjectManager() {
+    public function getProjectManager()
+    {
 
         $pm = ProjectManager::instance();
         return $pm;
@@ -164,7 +171,8 @@ class WebDAVUtils {
      *
      * @return FRSPackageFactory
      */
-    function getPackageFactory() {
+    function getPackageFactory()
+    {
 
         return new FRSPackageFactory();
 
@@ -175,7 +183,8 @@ class WebDAVUtils {
      *
      * @return FRSReleaseFactory
      */
-    function getReleaseFactory() {
+    function getReleaseFactory()
+    {
 
         return new FRSReleaseFactory();
 
@@ -186,7 +195,8 @@ class WebDAVUtils {
      *
      * @return FRSFileFactory
      */
-    function getFileFactory() {
+    function getFileFactory()
+    {
 
         return new FRSFileFactory();
 
@@ -197,7 +207,8 @@ class WebDAVUtils {
      *
      * @return PermissionsManager
      */
-    function getPermissionsManager() {
+    function getPermissionsManager()
+    {
 
         $pm = & PermissionsManager::instance();
         return $pm;
@@ -209,15 +220,18 @@ class WebDAVUtils {
      *
      * @return EventManager
      */
-    function getEventManager() {
+    function getEventManager()
+    {
         return EventManager::instance();
     }
 
-    function getIncomingFileSize($name) {
+    function getIncomingFileSize($name)
+    {
         return PHP_BigFile::getSize($GLOBALS['ftp_incoming_dir'].'/'.$name);
     }
 
-    function getIncomingFileMd5Sum($file) {
+    function getIncomingFileMd5Sum($file)
+    {
         return PHP_BigFile::getMd5Sum($file);
     }
 
@@ -228,7 +242,8 @@ class WebDAVUtils {
      *
      * @return Docman_PermissionsManager
      */
-    function getDocmanPermissionsManager($project) {
+    function getDocmanPermissionsManager($project)
+    {
         return Docman_PermissionsManager::instance($project->getGroupId());
     }
 
@@ -237,7 +252,8 @@ class WebDAVUtils {
      *
      * @return Docman_ItemFactory
      */
-    function getDocmanItemFactory() {
+    function getDocmanItemFactory()
+    {
         return new Docman_ItemFactory();
     }
 
@@ -246,7 +262,8 @@ class WebDAVUtils {
      *
      * @return Docman_VersionFactory
      */
-    function getVersionFactory() {
+    function getVersionFactory()
+    {
         return new Docman_VersionFactory();
     }
 
@@ -255,7 +272,8 @@ class WebDAVUtils {
      *
      * @return String
      */
-    function getDocmanRoot() {
+    function getDocmanRoot()
+    {
         $pluginManager = PluginManager::instance();
         $p             = $pluginManager->getPluginByName('docman');
         $info          = $p->getPluginInfo();
@@ -267,7 +285,8 @@ class WebDAVUtils {
      *
      * @return Docman_FileStorage
      */
-    function getFileStorage() {
+    function getFileStorage()
+    {
         return new Docman_FileStorage($this->getDocmanRoot());
     }
 
@@ -276,7 +295,8 @@ class WebDAVUtils {
      *
      * @return bool
      */
-    function isWriteEnabled() {
+    function isWriteEnabled()
+    {
         $pluginManager = PluginManager::instance();
         $p             = $pluginManager->getPluginByName('webdav');
         $info          = $p->getPluginInfo();
@@ -288,7 +308,8 @@ class WebDAVUtils {
      *
      * @param WebDAV_Request $request
      */
-    function processDocmanRequest(WebDAV_Request $request) {
+    function processDocmanRequest(WebDAV_Request $request)
+    {
         if (!$this->docmanPlugin) {
             $pluginMgr = PluginManager::instance();
             $this->docmanPlugin = $pluginMgr->getPluginByName('docman');

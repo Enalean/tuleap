@@ -33,7 +33,8 @@ class ArtifactStaticListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporte
     protected $dao;
     private $artifact_field_value_not_accurate;
 
-    public function __construct(ArtifactXMLNodeHelper $node_helper, ArtifactXMLExporterDao $dao) {
+    public function __construct(ArtifactXMLNodeHelper $node_helper, ArtifactXMLExporterDao $dao)
+    {
         parent::__construct($node_helper);
         $this->dao = $dao;
         $this->artifact_field_value_not_accurate = array(
@@ -42,14 +43,16 @@ class ArtifactStaticListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporte
         );
     }
 
-    public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row) {
+    public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)
+    {
         $field_node = $this->getNode(self::TV5_TYPE, $row);
         $field_node->setAttribute('bind', self::TV5_BIND);
         $field_node->appendChild($this->getNodeValue($this->getValueLabel($tracker_id, $artifact_id, $row['field_name'], $row['new_value'])));
         $changeset_node->appendChild($field_node);
     }
 
-    private function getValueLabel($tracker_id, $artifact_id, $field_name, $value) {
+    private function getValueLabel($tracker_id, $artifact_id, $field_name, $value)
+    {
         if ($field_name == self::SPECIAL_SEVERITY && $value == 0) {
             return '';
         }
@@ -71,13 +74,15 @@ class ArtifactStaticListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporte
         throw new Exception_TV3XMLException("Unknown label for $artifact_id $value");
     }
 
-    public function getCurrentFieldValue(array $field_value_row, $tracker_id) {
+    public function getCurrentFieldValue(array $field_value_row, $tracker_id)
+    {
         if (! isset($this->artifact_field_value_not_accurate[$field_value_row['field_name']])) {
             return parent::getCurrentFieldValue($field_value_row, $tracker_id);
         }
     }
 
-    public function getFieldValueIndex() {
+    public function getFieldValueIndex()
+    {
         return self::TV3_VALUE_INDEX;
     }
 

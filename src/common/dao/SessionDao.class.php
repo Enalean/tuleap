@@ -85,7 +85,8 @@ class SessionDao extends DataAccessObject
      *
      * @return bool true if success, false otherwise
      */
-    public function deleteAll() {
+    public function deleteAll()
+    {
         return $this->update("TRUNCATE TABLE session");
     }
 }

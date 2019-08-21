@@ -24,11 +24,13 @@
 class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectionActions {
 
     var $token;
-    function __construct($item, $url, $controller, $token) {
+    function __construct($item, $url, $controller, $token)
+    {
         parent::__construct($item, $url, false, true, $controller);
         $this->token = $token;
     }
-    function getContent($params = []) {
+    function getContent($params = [])
+    {
         $folder_or_document = is_a($this->item, 'Docman_Folder') ? 'folder' : (is_a($this->item, 'Docman_File') ? 'file' : 'document');
         $item_type = $this->_controller->getItemFactory()->getItemTypeForItem($this->item);
 
@@ -74,7 +76,8 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         return $content;
     }
 
-    function getWikiDeleteInfo() {
+    function getWikiDeleteInfo()
+    {
         $output = '';
         $output .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_wiki');
 
@@ -100,7 +103,8 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         return $output;
     }
 
-    private function getWikiDocumentPath($item) {
+    private function getWikiDocumentPath($item)
+    {
         $parents = array();
         $html = '';
 

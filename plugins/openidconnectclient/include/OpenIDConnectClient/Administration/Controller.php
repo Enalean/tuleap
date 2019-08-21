@@ -99,7 +99,8 @@ class Controller {
         );
     }
 
-    public function createProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request) {
+    public function createProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request)
+    {
         $csrf_token->check();
 
         $name                   = $request->get('name');
@@ -139,7 +140,8 @@ class Controller {
         $GLOBALS['Response']->redirect(OPENIDCONNECTCLIENT_BASE_URL . '/admin');
     }
 
-    public function updateProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request) {
+    public function updateProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request)
+    {
         $csrf_token->check();
 
         $id                                = $request->get('id');
@@ -227,7 +229,8 @@ class Controller {
         $this->showAdministration($csrf_token, $user);
     }
 
-    private function redirectAfterFailure($message) {
+    private function redirectAfterFailure($message)
+    {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
             $message

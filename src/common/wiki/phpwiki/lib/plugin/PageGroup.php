@@ -41,20 +41,24 @@ rcs_id('$Id: PageGroup.php,v 1.9 2004/09/25 16:35:09 rurban Exp $');
 class WikiPlugin_PageGroup
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("PageGroup");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return sprintf(_("PageGroup for %s"),'[pagename]');
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.9 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array(
                      'parent'  => '',
                      'rev'     => false,
@@ -65,7 +69,8 @@ extends WikiPlugin
     }
 
     // Stolen from IncludePage.php
-    function extractGroupSection ($section, $content, $page) {
+    function extractGroupSection($section, $content, $page)
+    {
         $qsection = preg_replace('/\s+/', '\s+', preg_quote($section, '/'));
         if (preg_match("/ ^(!{1,})\\s*$qsection" // section header
                        . "  \\s*$\\n?"           // possible blank lines
@@ -92,7 +97,8 @@ extends WikiPlugin
         return array(sprintf(_("<%s: no such section>"), $page ." ". $section));
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
 
         $args = $this->getArgs($argstr, $request);
         extract($args);

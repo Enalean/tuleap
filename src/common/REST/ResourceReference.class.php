@@ -34,7 +34,8 @@ class ResourceReference {
      */
     public $uri;
 
-    public function build($id, $base_uri) {
+    public function build($id, $base_uri)
+    {
         $this->id  = JsonCast::toInt($id);
         $this->uri = $base_uri . '/' . $id;
     }

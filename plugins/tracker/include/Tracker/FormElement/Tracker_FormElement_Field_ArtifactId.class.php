@@ -23,33 +23,39 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
 
     public $default_properties = array();
 
-    public function getCriteriaFrom($criteria) {
+    public function getCriteriaFrom($criteria)
+    {
         return '';
     }
 
-    public function getCriteriaWhere($criteria) {
+    public function getCriteriaWhere($criteria)
+    {
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
             return $this->buildMatchExpression("c.artifact_id", $criteria_value);
         }
         return '';
     }
 
-    public function getQuerySelect() {
+    public function getQuerySelect()
+    {
         return "a.id AS `". $this->name ."`";
     }
 
-    public function getQueryFrom() {
+    public function getQueryFrom()
+    {
         return '';
     }
 
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public function getQueryGroupby() {
+    public function getQueryGroupby()
+    {
         return "a.id";
     }
 
-    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
+    {
         $artifact_field_value_full_representation = new Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation();
         $artifact_field_value_full_representation->build(
             $this->getId(),
@@ -60,7 +66,8 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
         return $artifact_field_value_full_representation;
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    {
         if ($from_aid != null) {
             return '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$value )).'&from_aid='.$from_aid.'">'. $value .'</a>';
         }
@@ -70,7 +77,8 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
     /**
      * @return array the available aggreagate functions for this field. empty array if none or irrelevant.
      */
-    public function getAggregateFunctions() {
+    public function getAggregateFunctions()
+    {
         return array();
     }
 
@@ -84,7 +92,8 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      *
      * @return string
      */
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
+    {
         return $value;
     }
 
@@ -113,7 +122,8 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         return '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">#'. (int)$artifact->id .'</a>';
     }
 
@@ -159,7 +169,8 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      * Display the html field in the admin ui
      * @return string html
      */
-    protected function fetchAdminFormElement() {
+    protected function fetchAdminFormElement()
+    {
         $html = '';
         $html .= '<a href="#'.TRACKER_BASE_URL.'/?aid=123" onclick="return false;">#42</a>';
         return $html;
@@ -168,28 +179,32 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
     /**
      * @return the label of the field (mainly used in admin part)
      */
-    public static function getFactoryLabel() {
+    public static function getFactoryLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactid_label');
     }
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
-    public static function getFactoryDescription() {
+    public static function getFactoryDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactid_description');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconUseIt() {
+    public static function getFactoryIconUseIt()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/tracker-aid.png');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconCreate() {
+    public static function getFactoryIconCreate()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/tracker-aid--plus.png');
     }
 
@@ -200,7 +215,8 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         $html = '';
         $html .= $artifact->getId();
         return $html;
@@ -211,7 +227,8 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      *
      * @return true if Tracler is ok
      */
-    public function testImport() {
+    public function testImport()
+    {
         return true;
     }
 
@@ -224,7 +241,8 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      *
      * @return bool true if the value is considered ok
      */
-    protected function validate(Tracker_Artifact $artifact, $value) {
+    protected function validate(Tracker_Artifact $artifact, $value)
+    {
         //No need to validate artifact id (read only for all)
         return true;
     }
@@ -235,7 +253,7 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      * @return string html
      */
     public function fetchSubmit(array $submitted_values)
-     {
+    {
         return '';
     }
 
@@ -249,7 +267,8 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
         return '';
     }
 
-    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+    public function accept(Tracker_FormElement_FieldVisitor $visitor)
+    {
         return $visitor->visitArtifactId($this);
     }
 }

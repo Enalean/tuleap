@@ -25,7 +25,8 @@ class b201401240954_add_git_perms_admin_values extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add PLUGIN_GIT_ADMIN right in table permissions
 EOT;
@@ -36,7 +37,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -45,12 +47,14 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $this->addDefaultGitAdminGroup();
         $this->addGenericUGroups();
     }
 
-    private function addDefaultGitAdminGroup() {
+    private function addDefaultGitAdminGroup()
+    {
         $sql = "INSERT INTO permissions_values (permission_type, ugroup_id, is_default)
                 VALUES ('PLUGIN_GIT_ADMIN', 4, 1)";
 
@@ -60,7 +64,8 @@ EOT;
         }
     }
 
-    private function addGenericUGroups() {
+    private function addGenericUGroups()
+    {
         $sql = "INSERT INTO permissions_values (permission_type, ugroup_id, is_default)
                 VALUES ('PLUGIN_GIT_ADMIN', 1, 0),
                        ('PLUGIN_GIT_ADMIN', 2, 0),

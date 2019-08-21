@@ -33,7 +33,8 @@ $password = getPasswordFromStdin($login);
 $migration = new Docman_ImportFromDocmanV1($wsdl_url, $login, $password);
 $migration->migrate(ProjectManager::instance()->getProject($project_id));
 
-function getPasswordFromStdin($login) {
+function getPasswordFromStdin($login)
+{
     echo "Password for $login: ";
 
     if ( PHP_OS != 'WINNT') {

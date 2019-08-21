@@ -36,7 +36,8 @@ class URLVerificationBaseTest extends TuleapTestCase {
     protected $user;
     protected $request;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
@@ -59,7 +60,8 @@ class URLVerificationBaseTest extends TuleapTestCase {
         stub($this->request)->isSecure()->returns(true);
     }
 
-    function tearDown() {
+    function tearDown()
+    {
         UserManager::clearInstance();
         unset($GLOBALS['Language']);
         unset($GLOBALS['Response']);
@@ -72,7 +74,8 @@ class URLVerificationBaseTest extends TuleapTestCase {
 
 class URLVerificationTest extends URLVerificationBaseTest {
 
-    function testIsScriptAllowedForAnonymous() {
+    function testIsScriptAllowedForAnonymous()
+    {
         $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
 
         $em = Mockery::mock(EventManager::class);
@@ -95,37 +98,44 @@ class URLVerificationTest extends URLVerificationBaseTest {
         $this->assertFalse($urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/foobar', 'SCRIPT_NAME' => '/foobar')));
     }
 
-    function itDoesNotTreatRegularUrlsAsExceptions() {
+    function itDoesNotTreatRegularUrlsAsExceptions()
+    {
         $urlVerification = new URLVerification();
         $this->assertFalse($urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar')));
     }
 
-    function itDoesNotTreatRegularUrlsWhichContainsSOAPAsExceptions() {
+    function itDoesNotTreatRegularUrlsWhichContainsSOAPAsExceptions()
+    {
         $urlVerification = new URLVerification();
         $this->assertFalse($urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar/?p=/soap/index.php')));
     }
 
-    function itDoesNotTreatRegularUrlsWhichContainsAPIAsExceptions() {
+    function itDoesNotTreatRegularUrlsWhichContainsAPIAsExceptions()
+    {
         $urlVerification = new URLVerification();
         $this->assertFalse($urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar/?p=/api/reference/extractCross')));
     }
 
-    function itTreatsSOAPApiAsException() {
+    function itTreatsSOAPApiAsException()
+    {
         $urlVerification = new URLVerification();
         $this->assertTrue($urlVerification->isException(array('SCRIPT_NAME' => '/soap/index.php')));
     }
 
-    function itTreatsSOAPApiOfPluginsAsException() {
+    function itTreatsSOAPApiOfPluginsAsException()
+    {
         $urlVerification = new URLVerification();
         $this->assertTrue($urlVerification->isException(array('SCRIPT_NAME' => '/plugins/docman/soap/index.php')));
     }
 
-    function itTreatsExtractionOfCrossReferencesApiAsException() {
+    function itTreatsExtractionOfCrossReferencesApiAsException()
+    {
         $urlVerification = new URLVerification();
         $this->assertTrue($urlVerification->isException(array('SCRIPT_NAME' => '/api/reference/extractCross')));
     }
 
-    function testIsScriptAllowedForAnonymousFromHook() {
+    function testIsScriptAllowedForAnonymousFromHook()
+    {
         $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
         $em = Mockery::mock(EventManager::class);
         $em->shouldReceive('processEvent')->with(Mockery::any(), Mockery::on(function (array $params) {
@@ -208,7 +218,8 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
     private $em;
     private $overrider_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->em = \Mockery::spy(\EventManager::class);
@@ -224,7 +235,8 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
         stub($this->urlVerification)->getPermissionsOverriderManager()->returns($this->overrider_manager);
     }
 
-    function testVerifyRequestAnonymousWhenScriptException() {
+    function testVerifyRequestAnonymousWhenScriptException()
+    {
         $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '/account/login.php');
         stub($this->user)->isAnonymous()->returns(true);
@@ -235,7 +247,8 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
         $this->assertEqual($chunks['script'], null);
     }
 
-    function testVerifyRequestAnonymousWhenAllowed() {
+    function testVerifyRequestAnonymousWhenAllowed()
+    {
         $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '');
         stub($this->user)->isAnonymous()->returns(true);
@@ -246,7 +259,8 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
         $this->assertEqual($chunks['script'], null);
     }
 
-    function testVerifyRequestAuthenticatedWhenAnonymousAllowed() {
+    function testVerifyRequestAuthenticatedWhenAnonymousAllowed()
+    {
         $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '');
         stub($this->user)->isAnonymous()->returns(false);
@@ -257,7 +271,8 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
         $this->assertEqual($chunks['script'], null);
     }
 
-    function testVerifyRequestAnonymousWhenNotAllowedAtRoot() {
+    function testVerifyRequestAnonymousWhenNotAllowedAtRoot()
+    {
         $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '',
                         'REQUEST_URI' => '/');
@@ -274,7 +289,8 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
         $this->assertEqual($chunks['script'], '/account/login.php?return_to=%2Fmy%2F');
     }
 
-    function testVerifyRequestAnonymousWhenNotAllowedWithScript() {
+    function testVerifyRequestAnonymousWhenNotAllowedWithScript()
+    {
         $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '',
                         'REQUEST_URI' => '/script/');
@@ -289,7 +305,8 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
         $this->assertEqual($chunks['script'], '/account/login.php?return_to=%2Fscript%2F');
     }
 
-    function testVerifyRequestAnonymousWhenNotAllowedWithLightView() {
+    function testVerifyRequestAnonymousWhenNotAllowedWithLightView()
+    {
         $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '',
                         'REQUEST_URI' => '/script?pv=2');
@@ -304,7 +321,8 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
         $this->assertEqual($chunks['script'], '/account/login.php?return_to=%2Fscript%3Fpv%3D2&pv=2');
     }
 
-    function testVerifyRequestAuthenticatedWhenAnonymousNotAllowed() {
+    function testVerifyRequestAuthenticatedWhenAnonymousNotAllowed()
+    {
         $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '');
         stub($this->user)->isAnonymous()->returns(false);
@@ -320,7 +338,8 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
 
 class URLVerification_RedirectionTests extends URLVerificationBaseTest {
 
-    function testGetRedirectionProtocolModified() {
+    function testGetRedirectionProtocolModified()
+    {
         $server = array('HTTP_HOST' => 'example.com',
                         'REQUEST_URI' => '');
         $chunks =  array('protocol'=> 'https');
@@ -332,7 +351,8 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $this->assertEqual($urlVerification->getRedirectionURL($this->request, $server), 'https://example.com');
     }
 
-    function testGetRedirectionProtocolAndHostModified() {
+    function testGetRedirectionProtocolAndHostModified()
+    {
         $server = array('HTTP_HOST' => 'test.example.com',
                         'REQUEST_URI' => '/user.php');
         $chunks =  array('protocol'=> 'http', 'host' =>'secure.example.com');
@@ -344,7 +364,8 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $this->assertEqual($urlVerification->getRedirectionURL($this->request, $server), 'http://secure.example.com/user.php');
     }
 
-    function testGetRedirectionRequestModified() {
+    function testGetRedirectionRequestModified()
+    {
         $server = array('HTTP_HOST' => 'secure.example.com',
                         'REQUEST_URI' => '/user.php');
         $chunks =  array('script'=> '/project.php');
@@ -356,7 +377,8 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $this->assertEqual($urlVerification->getRedirectionURL($this->request, $server), '/project.php');
     }
 
-    function testRestrictedUserCanAccessSearchOnTracker() {
+    function testRestrictedUserCanAccessSearchOnTracker()
+    {
         $_REQUEST['type_of_search'] = 'tracker';
         $urlVerification = TestHelper::getPartialMock('URLVerification', array('getCurrentUser', 'displayRestrictedUserProjectError'));
         $GLOBALS['group_id'] = 120;
@@ -376,7 +398,8 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $urlVerification->checkRestrictedAccess($server, 'stuff');
     }
 
-    function testRestrictedUserCanNotAccessSearchOnPeople() {
+    function testRestrictedUserCanNotAccessSearchOnPeople()
+    {
         $_REQUEST['type_of_search'] = 'people';
 
         $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
@@ -399,7 +422,8 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $urlVerification->checkRestrictedAccess($server, 'stuff');
     }
 
-    function testRestrictedUserCanNotAccessSearchOnLdapPeople() {
+    function testRestrictedUserCanNotAccessSearchOnLdapPeople()
+    {
         $_REQUEST['type_of_search'] = 'people_ldap';
         $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
         $GLOBALS['group_id'] = 120;
@@ -421,7 +445,8 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $urlVerification->checkRestrictedAccess($server, 'stuff');
     }
 
-    function testRestrictedUserCanNotAccessSearchOnSoftwareProjects() {
+    function testRestrictedUserCanNotAccessSearchOnSoftwareProjects()
+    {
         $_REQUEST['type_of_search'] = 'soft';
         $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
         $GLOBALS['group_id'] = 120;
@@ -527,7 +552,8 @@ class URLVerification_PrivateRestrictedTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    public function itChecksUriInternal() {
+    public function itChecksUriInternal()
+    {
         $this->assertFalse($this->url_verification->isInternal('http://evil.example.com/'));
         $this->assertFalse($this->url_verification->isInternal('https://evil.example.com/'));
         $this->assertFalse($this->url_verification->isInternal('javascript:alert(1)'));
@@ -555,7 +581,8 @@ class URLVerification_PermissionsOverriderTest extends URLVerificationBaseTest {
     protected $overrider_manager;
     protected $server;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         ForgeConfig::store();
@@ -573,13 +600,15 @@ class URLVerification_PermissionsOverriderTest extends URLVerificationBaseTest {
         $this->server = array('SERVER_NAME' => 'example.com');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         PermissionsOverrider_PermissionsOverriderManager::clearInstance();
         parent::tearDown();
     }
 
-    protected function getScriptChunk() {
+    protected function getScriptChunk()
+    {
         $this->urlVerification->verifyRequest($this->server);
         $chunks = $this->urlVerification->getUrlChunks();
         return $chunks['script'];
@@ -588,21 +617,24 @@ class URLVerification_PermissionsOverriderTest extends URLVerificationBaseTest {
 
 class URLVerification_PermissionsOverrider_AnonymousPlatformAndNoOverriderTest extends URLVerification_PermissionsOverriderTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         stub($this->overrider_manager)->doesOverriderAllowUserToAccessPlatform()->returns(false);
     }
 
-    function itLetAnonymousAccessLogin() {
+    function itLetAnonymousAccessLogin()
+    {
         $this->server['SCRIPT_NAME'] = '/account/login.php';
         stub($this->user)->isAnonymous()->returns(true);
 
         $this->assertEqual($this->getScriptChunk(), null);
     }
 
-    function itLetAuthenticatedAccessPages() {
+    function itLetAuthenticatedAccessPages()
+    {
         $this->server['SCRIPT_NAME'] = '';
         stub($this->user)->isAnonymous()->returns(false);
 
@@ -612,14 +644,16 @@ class URLVerification_PermissionsOverrider_AnonymousPlatformAndNoOverriderTest e
 
 class URLVerification_PermissionsOverrider_RegularPlatformAndNoOverriderTest extends URLVerification_PermissionsOverriderTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         stub($this->overrider_manager)->doesOverriderAllowUserToAccessPlatform()->returns(false);
     }
 
-    function itForceAnonymousToLoginToAccessRoot() {
+    function itForceAnonymousToLoginToAccessRoot()
+    {
         $this->server['SCRIPT_NAME'] = '';
         $this->server['REQUEST_URI'] = '/';
 
@@ -629,7 +663,8 @@ class URLVerification_PermissionsOverrider_RegularPlatformAndNoOverriderTest ext
 
     }
 
-    function itForceAnonymousToLoginToAccessScript() {
+    function itForceAnonymousToLoginToAccessScript()
+    {
         $this->server['SCRIPT_NAME'] = '';
         $this->server['REQUEST_URI'] = '/script/';
 
@@ -638,7 +673,8 @@ class URLVerification_PermissionsOverrider_RegularPlatformAndNoOverriderTest ext
         $this->assertEqual($this->getScriptChunk(), '/account/login.php?return_to=%2Fscript%2F');
     }
 
-    function itForceAnonymousToLoginToAccessScriptInLightView() {
+    function itForceAnonymousToLoginToAccessScriptInLightView()
+    {
         $this->server['SCRIPT_NAME'] = '';
         $this->server['REQUEST_URI'] = '/script?pv=2';
 
@@ -650,14 +686,16 @@ class URLVerification_PermissionsOverrider_RegularPlatformAndNoOverriderTest ext
 
 class URLVerification_PermissionsOverrider_RestrictedPlatformAndNoOverriderTest extends URLVerification_PermissionsOverriderTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         stub($this->overrider_manager)->doesOverriderAllowUserToAccessPlatform()->returns(false);
     }
 
-    function itForceAnonymousToLoginToAccessRoot() {
+    function itForceAnonymousToLoginToAccessRoot()
+    {
         $this->server['SCRIPT_NAME'] = '';
         $this->server['REQUEST_URI'] = '/';
 
@@ -667,7 +705,8 @@ class URLVerification_PermissionsOverrider_RestrictedPlatformAndNoOverriderTest 
 
     }
 
-    function itForceAnonymousToLoginToAccessScript() {
+    function itForceAnonymousToLoginToAccessScript()
+    {
         $this->server['SCRIPT_NAME'] = '';
         $this->server['REQUEST_URI'] = '/script/';
 
@@ -676,7 +715,8 @@ class URLVerification_PermissionsOverrider_RestrictedPlatformAndNoOverriderTest 
         $this->assertEqual($this->getScriptChunk(), '/account/login.php?return_to=%2Fscript%2F');
     }
 
-    function itForceAnonymousToLoginToAccessScriptInLightView() {
+    function itForceAnonymousToLoginToAccessScriptInLightView()
+    {
         $this->server['SCRIPT_NAME'] = '';
         $this->server['REQUEST_URI'] = '/script?pv=2';
 
@@ -689,7 +729,8 @@ class URLVerification_PermissionsOverrider_RestrictedPlatformAndNoOverriderTest 
 // Bug when platform use forceAnonymous & reverse proxy...
 class URLVerification_PermissionsOverrider_RestrictedPlatformAndOverriderForceAnonymousTest extends URLVerification_PermissionsOverriderTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
@@ -697,7 +738,8 @@ class URLVerification_PermissionsOverrider_RestrictedPlatformAndOverriderForceAn
         stub($this->overrider_manager)->doesOverriderForceUsageOfAnonymous()->returns(true);
     }
 
-    function itForceAnonymousToLoginToAccessRoot() {
+    function itForceAnonymousToLoginToAccessRoot()
+    {
         $this->server['SCRIPT_NAME'] = '';
         $this->server['REQUEST_URI'] = '/';
 
@@ -707,7 +749,8 @@ class URLVerification_PermissionsOverrider_RestrictedPlatformAndOverriderForceAn
 
     }
 
-    function itForceAnonymousToLoginToAccessScript() {
+    function itForceAnonymousToLoginToAccessScript()
+    {
         $this->server['SCRIPT_NAME'] = '';
         $this->server['REQUEST_URI'] = '/script/';
 
@@ -716,7 +759,8 @@ class URLVerification_PermissionsOverrider_RestrictedPlatformAndOverriderForceAn
         $this->assertEqual($this->getScriptChunk(), '/account/login.php?return_to=%2Fscript%2F');
     }
 
-    function itForceAnonymousToLoginToAccessScriptInLightView() {
+    function itForceAnonymousToLoginToAccessScriptInLightView()
+    {
         $this->server['SCRIPT_NAME'] = '';
         $this->server['REQUEST_URI'] = '/script?pv=2';
 
@@ -730,7 +774,8 @@ class URLVerification_PermissionsOverrider_RestrictedPlatformAndOverriderForceAn
 // PermissionOverrider enter in action
 class URLVerification_PermissionsOverrider_RestrictedPlatformAndOverriderForceAnonymousButOverriderForceGrantTest extends URLVerification_PermissionsOverriderTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
@@ -738,21 +783,24 @@ class URLVerification_PermissionsOverrider_RestrictedPlatformAndOverriderForceAn
         stub($this->overrider_manager)->doesOverriderForceUsageOfAnonymous()->returns(true);
     }
 
-    function itLetAnonymousAccessLogin() {
+    function itLetAnonymousAccessLogin()
+    {
         $this->server['SCRIPT_NAME'] = '/account/login.php';
         stub($this->user)->isAnonymous()->returns(true);
 
         $this->assertEqual($this->getScriptChunk(), null);
     }
 
-    function itLetAuthenticatedAccessPages() {
+    function itLetAuthenticatedAccessPages()
+    {
         $this->server['SCRIPT_NAME'] = '';
         stub($this->user)->isAnonymous()->returns(false);
 
         $this->assertEqual($this->getScriptChunk(), null);
     }
 
-    function itLetAnonymousAccessRoot() {
+    function itLetAnonymousAccessRoot()
+    {
         $this->server['SCRIPT_NAME'] = '';
         $this->server['REQUEST_URI'] = '/';
 
@@ -761,7 +809,8 @@ class URLVerification_PermissionsOverrider_RestrictedPlatformAndOverriderForceAn
         $this->assertEqual($this->getScriptChunk(), null);
     }
 
-    function itLetAnonymousAccessScript() {
+    function itLetAnonymousAccessScript()
+    {
         $this->server['SCRIPT_NAME'] = '';
         $this->server['REQUEST_URI'] = '/script/';
 
@@ -770,7 +819,8 @@ class URLVerification_PermissionsOverrider_RestrictedPlatformAndOverriderForceAn
         $this->assertEqual($this->getScriptChunk(), null);
     }
 
-    function itLetAnonymousAccessScriptInLightView() {
+    function itLetAnonymousAccessScriptInLightView()
+    {
         $this->server['SCRIPT_NAME'] = '';
         $this->server['REQUEST_URI'] = '/script?pv=2';
 

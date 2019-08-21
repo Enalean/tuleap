@@ -52,7 +52,8 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * @param string $owner_type the type of the owner
      * @param string $plugin_path the path of the plugin to build urls
      */
-    public function __construct($id, $owner_id, $owner_type, $plugin_path) {
+    public function __construct($id, $owner_id, $owner_type, $plugin_path)
+    {
         parent::__construct($id);
         $this->setOwner($owner_id, $owner_type);
         $this->plugin_path = $plugin_path;
@@ -63,7 +64,8 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * Else it is the title given by the user
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->plugin_docman_widget_embedded_title ?:
                $GLOBALS['Language']->getText('plugin_docman', 'widget_title_embedded');
     }
@@ -72,7 +74,8 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * Compute the content of the widget
      * @return string html
      */
-    public function getContent() {
+    public function getContent()
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $content = '';
         if ($this->plugin_docman_widget_embedded_item_id) {
@@ -91,7 +94,8 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * If true, then the dashboard will be rendered faster but the page will be a little bit crappy until full load.
      * @return bool
      */
-    public function isAjax() {
+    public function isAjax()
+    {
         return true;
     }
 
@@ -174,7 +178,8 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * Lazy load the content
      * @param int $id the id of the content
      */
-    public function loadContent($id) {
+    public function loadContent($id)
+    {
         $sql = "SELECT * FROM plugin_docman_widget_embedded WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
@@ -190,7 +195,8 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * @param Codendi_Request $request
      * @return int the id of the new content
      */
-    public function create(Codendi_Request $request) {
+    public function create(Codendi_Request $request)
+    {
         $content_id = false;
         $vItem_id = new Valid_String('item_id');
         $vItem_id->setErrorMessage("Unable to add the widget. Please give an item id.");
@@ -216,7 +222,8 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * @param Codendi_Request $request
      * @return bool true if something has been updated
      */
-    function updatePreferences(Codendi_Request $request) {
+    function updatePreferences(Codendi_Request $request)
+    {
         $done = false;
         $vContentId = new Valid_UInt('content_id');
         $vContentId->required();
@@ -251,7 +258,8 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * We must delete its content.
      * @param int $id the id of the content
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $sql = 'DELETE FROM plugin_docman_widget_embedded WHERE id = '. $id .' AND owner_id = '. $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
         db_query($sql);
     }
@@ -261,7 +269,8 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * It's up to the widget to decide if it is relevant.
      * @return bool
      */
-    function isUnique() {
+    function isUnique()
+    {
         return false;
     }
 
@@ -270,7 +279,8 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * Here are some exemple of categories used by Codendi: forum, frs, scm, trackers + plugin's ones
      * @return string
      */
-    function getCategory() {
+    function getCategory()
+    {
         return dgettext('tuleap-docman', 'Document manager');
     }
 
@@ -279,7 +289,8 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      * @param int $item_id the id of the item to retrieve
      * @return Docman_Item
      */
-    protected function getItem($item_id) {
+    protected function getItem($item_id)
+    {
         $item = null;
         $dao = new Docman_ItemDao(CodendiDataAccess::instance());
         if ($row = $dao->searchByid($item_id)->getRow()) {
@@ -300,7 +311,8 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         return '';
     }
 
-    function visitDocument($item, $params = array()) {
+    function visitDocument($item, $params = array())
+    {
         // do nothing
         return '';
     }
@@ -358,7 +370,8 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         return '';
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_docman','widget_description_embedded');
     }
 

@@ -20,7 +20,8 @@
 
 abstract class NodeDuplicatorContractTest extends TuleapTestCase {
 
-    public function itCopiesAllPropertiesOfTheGivenNode() {
+    public function itCopiesAllPropertiesOfTheGivenNode()
+    {
         $tree_node      = aNode()->withId(3)
                                  ->withArtifact(mock('Tracker_Artifact'))
                                  ->withChildren(aNode(), aNode())

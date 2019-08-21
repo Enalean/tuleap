@@ -20,7 +20,8 @@
 
 abstract class Tracker_FormElement_Field_ValueDao extends DataAccessObject {
 
-    function searchById($changeset_value_id) {
+    function searchById($changeset_value_id)
+    {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $sql = "SELECT *
                 FROM $this->table_name
@@ -28,7 +29,8 @@ abstract class Tracker_FormElement_Field_ValueDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function delete($changeset_value_id) {
+    function delete($changeset_value_id)
+    {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $sql = "DELETE
                 FROM $this->table_name
@@ -42,7 +44,8 @@ abstract class Tracker_FormElement_Field_ValueDao extends DataAccessObject {
      * @param int $field_id
      * @return mixed array of changeset_value_id or false if nothing inserted
      */
-    public function createNoneChangesetValue($tracker_id, $field_id) {
+    public function createNoneChangesetValue($tracker_id, $field_id)
+    {
         $changesetValueDao     = new Tracker_Artifact_Changeset_ValueDao();
         $changeset_value_ids   = $changesetValueDao->createFromLastChangesetByTrackerId($tracker_id, $field_id, 1);
         if ( empty($changeset_value_ids) ) {

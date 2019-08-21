@@ -37,7 +37,8 @@ define ('_DEBUG_APD',      32);
 define ('_DEBUG_LOGIN',    64); // verbose login debug-msg (settings and reason for failure)
 define ('_DEBUG_SQL',     128);
 
-function isCGI() {
+function isCGI()
+{
     return (substr(php_sapi_name(),0,3) == 'cgi' and
             isset($_ENV['GATEWAY_INTERFACE']) and
             @preg_match('/CGI/',$_ENV['GATEWAY_INTERFACE']));
@@ -54,7 +55,8 @@ function isCGI() {
  *  IE55 has problems with transparent PNG's
  * @author: ReiniUrban
  */
-function browserAgent() {
+function browserAgent()
+{
     static $HTTP_USER_AGENT = false;
     if ($HTTP_USER_AGENT !== false) return $HTTP_USER_AGENT;
     if (!$HTTP_USER_AGENT)
@@ -65,11 +67,13 @@ function browserAgent() {
         $HTTP_USER_AGENT = 'none';
     return $HTTP_USER_AGENT;
 }
-function browserDetect($match) {
+function browserDetect($match)
+{
     return strstr(browserAgent(), $match);
 }
 // returns a similar number for Netscape/Mozilla (gecko=5.0)/IE/Opera features.
-function browserVersion() {
+function browserVersion()
+{
     if (strstr(browserAgent(),    "Mozilla/4.0 (compatible; MSIE"))
         return (float) substr(browserAgent(),30);
     elseif (strstr(browserAgent(),"Mozilla/5.0 (compatible; Konqueror/"))
@@ -77,20 +81,23 @@ function browserVersion() {
     else
         return (float) substr(browserAgent(),8);
 }
-function isBrowserIE() {
+function isBrowserIE()
+{
     return (browserDetect('Mozilla/') and
             browserDetect('MSIE'));
 }
 
 // must omit display alternate stylesheets: konqueror 3.1.4
 // http://sourceforge.net/tracker/index.php?func=detail&aid=945154&group_id=6121&atid=106121
-function isBrowserKonqueror($version = false) {
+function isBrowserKonqueror($version = false)
+{
     if ($version) return browserDetect('Konqueror/') and browserVersion() >= $version;
     return browserDetect('Konqueror/');
 }
 // MacOSX Safari has certain limitations. Need detection and patches.
 // * no <object>, only <embed>
-function isBrowserSafari($version = false) {
+function isBrowserSafari($version = false)
+{
     if ($version) return browserDetect('Safari/') and browserVersion() >= $version;
     return browserDetect('Safari/');
 }
@@ -104,7 +111,8 @@ function isBrowserSafari($version = false) {
  * We should really check additionally if the i18n HomePage version is defined.
  * So must defer this to the request loop.
  */
-function guessing_lang ($languages=false) {
+function guessing_lang($languages=false)
+{
     if (!$languages) {
         // make this faster
         $languages = array("en","de","es","fr","it","ja","zh","nl","sv");
@@ -185,7 +193,8 @@ function guessing_lang ($languages=false) {
  * @see setlocale
  * [56ms]
  */
-function guessing_setlocale ($category, $locale) {
+function guessing_setlocale($category, $locale)
+{
     $alt = array('en' => array('C', 'en_US', 'en_GB', 'en_AU', 'en_CA', 'english'),
                  'de' => array('de_DE', 'de_DE', 'de_DE@euro',
                                'de_AT@euro', 'de_AT', 'German_Austria.1252', 'deutsch',
@@ -244,7 +253,8 @@ function guessing_setlocale ($category, $locale) {
 }
 
 // [99ms]
-function update_locale($loc) {
+function update_locale($loc)
+{
     // $LANG or DEFAULT_LANGUAGE is too less information, at least on unix for
     // setlocale(), for bindtextdomain() to succeed.
     $setlocale = guessing_setlocale(LC_ALL, $loc); // [56ms]
@@ -287,7 +297,8 @@ function update_locale($loc) {
     return $loc;
 }
 
-function deduce_script_name() {
+function deduce_script_name()
+{
     $s = &$_SERVER;
     $script = @$s['SCRIPT_NAME'];
     if (empty($script) or $script[0] != '/') {
@@ -299,7 +310,8 @@ function deduce_script_name() {
     return $script;
 }
 
-function IsProbablyRedirectToIndex () {
+function IsProbablyRedirectToIndex()
+{
     // This might be a redirect to the DirectoryIndex,
     // e.g. REQUEST_URI = /dir/?some_action got redirected
     // to SCRIPT_NAME = /dir/index.php
@@ -319,16 +331,19 @@ function IsProbablyRedirectToIndex () {
  * http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2002-1396
  * Improved version of wordwrap2() in the comments at http://www.php.net/wordwrap
  */
-function safe_wordwrap($str, $width=80, $break="\n", $cut=false) {
+function safe_wordwrap($str, $width=80, $break="\n", $cut=false)
+{
     return wordwrap($str, $width, $break, $cut);
 }
 
-function getUploadFilePath() {
+function getUploadFilePath()
+{
     return defined('PHPWIKI_DIR')
         ? PHPWIKI_DIR . "/uploads/"
         : realpath(dirname(__FILE__) . "/../uploads/");
 }
-function getUploadDataPath() {
+function getUploadDataPath()
+{
     return SERVER_URL . ((substr(DATA_PATH,0,1)=='/') ? '' : "/") . DATA_PATH . '/uploads/'.GROUP_ID.'/';
 }
 

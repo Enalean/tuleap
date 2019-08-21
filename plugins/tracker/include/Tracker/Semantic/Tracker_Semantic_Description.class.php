@@ -34,7 +34,8 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      * @param Tracker                        $tracker    The tracker
      * @param Tracker_FormElement_Field_Text $text_field The field
      */
-    public function __construct(Tracker $tracker, ?Tracker_FormElement_Field_Text $text_field = null) {
+    public function __construct(Tracker $tracker, ?Tracker_FormElement_Field_Text $text_field = null)
+    {
         parent::__construct($tracker);
         $this->text_field = $text_field;
     }
@@ -44,7 +45,8 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      *
      * @return string
      */
-    public function getShortName() {
+    public function getShortName()
+    {
         return self::NAME;
     }
 
@@ -53,7 +55,8 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      *
      * @return string
      */
-    public function getLabel() {
+    public function getLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','description_label');
     }
 
@@ -62,7 +65,8 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      *
      * @return string
      */
-    public function getDescription() {
+    public function getDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','description_description');
     }
 
@@ -71,7 +75,8 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      *
      * @return int The Id of the (text) field used for description semantic, or 0 if no field
      */
-    public function getFieldId() {
+    public function getFieldId()
+    {
         if ($this->text_field) {
             return $this->text_field->getId();
         } else {
@@ -84,7 +89,8 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      *
      * @return Tracker_FormElement_Field_Text The (text) field used for description semantic, or null if no field
      */
-    public function getField() {
+    public function getField()
+    {
         return $this->text_field;
     }
 
@@ -93,7 +99,8 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      *
      * @return void
      */
-    public function display() {
+    public function display()
+    {
         $warning = '';
         $field   = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId());
 
@@ -229,12 +236,14 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      *
      * @return bool true if success, false otherwise
      */
-    public function save() {
+    public function save()
+    {
         $dao = new Tracker_Semantic_DescriptionDao();
         return $dao->save($this->tracker->getId(), $this->getFieldId());
     }
 
-    public function delete() {
+    public function delete()
+    {
         $dao = new Tracker_Semantic_DescriptionDao();
         return $dao->delete($this->tracker->getId());
     }
@@ -247,7 +256,8 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      *
      * @return Tracker_Semantic_Description
      */
-    public static function load(Tracker $tracker) {
+    public static function load(Tracker $tracker)
+    {
         if (!isset(self::$_instances[$tracker->getId()])) {
             $field_id = null;
             $dao = new Tracker_Semantic_DescriptionDao();
@@ -271,7 +281,8 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    {
         if ($this->getFieldId() && in_array($this->getFieldId(), $xmlMapping)) {
             $child = $root->addChild('semantic');
             $child->addAttribute('type', $this->getShortName());
@@ -289,7 +300,8 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      *
      * @return bool returns true if the field is used in semantics, false otherwise
      */
-    public function isUsedInSemantics(Tracker_FormElement_Field $field) {
+    public function isUsedInSemantics(Tracker_FormElement_Field $field)
+    {
         return $this->getFieldId() == $field->getId();
     }
 

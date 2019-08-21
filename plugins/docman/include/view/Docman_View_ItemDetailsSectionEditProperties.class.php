@@ -34,7 +34,8 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
     var $nbDocsImpacted;
     var $nbFoldersImpacted;
 
-    function __construct($item, $url, $theme_path, $force, $token, $updateConfirmed, $recurse, $recurseOnDocs) {
+    function __construct($item, $url, $theme_path, $force, $token, $updateConfirmed, $recurse, $recurseOnDocs)
+    {
         parent::__construct($item, $url, $theme_path, true, $force);
         $this->token = $token;
         $this->formName = 'update_metadata';
@@ -47,11 +48,13 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         $this->nbFoldersImpacted = null;
     }
 
-    function _getDirectLinkField() {
+    function _getDirectLinkField()
+    {
         return '';
     }
 
-    function getContent($params = []) {
+    function getContent($params = [])
+    {
         $html = '';
         $params = array('form_name' => $this->formName);
         $html  .= '<form name="'.$params['form_name'].'" action="'. $this->url .'" method="post" class="docman_form">';
@@ -69,15 +72,18 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         return $html;
     }
 
-    function _showField($field) {
+    function _showField($field)
+    {
         return $field->getField();
     }
 
-    function _getFieldLabel($field) {
+    function _getFieldLabel($field)
+    {
         return $field->getLabel(true);
     }
 
-    function _subItemsAreWritable() {
+    function _subItemsAreWritable()
+    {
         if($this->subItemsWritable === null) {
             $dPm = Docman_PermissionsManager::instance($this->item->getGroupId());
             $this->subItemsWritable = $dPm->currentUserCanWriteSubItems($this->item->getId());
@@ -91,7 +97,8 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         return $this->subItemsWritable;
     }
 
-    function _getDefaultValuePropertyField($field) {
+    function _getDefaultValuePropertyField($field)
+    {
         $html = '';
 
         $html .= '<tr style="vertical-align:top;">';
@@ -115,7 +122,8 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         return $html;
     }
 
-    function _getDefaultValuesTableHeader() {
+    function _getDefaultValuesTableHeader()
+    {
         $html = '';
         if($this->_subItemsAreWritable()) {
             $html .= '<tr>';
@@ -127,7 +135,8 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         return $html;
     }
 
-    function _getDefaultValues() {
+    function _getDefaultValues()
+    {
         $html = '';
         if($this->_subItemsAreWritable()) {
             if(!$this->updateConfirmed) {
@@ -158,7 +167,8 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         return $html;
     }
 
-    function _getAdditionalRows() {
+    function _getAdditionalRows()
+    {
         $html  = '<p>';
         if ($this->token) {
             $html .= '<input type="hidden" name="token" value="'. $this->token .'" />';

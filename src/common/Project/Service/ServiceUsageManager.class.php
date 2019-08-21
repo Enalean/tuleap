@@ -29,7 +29,8 @@ class Project_Service_ServiceUsageManager {
     /** @var Project_Service_ServiceUsageDao */
     private $dao;
 
-    public function __construct(Project_Service_ServiceUsageDao $dao) {
+    public function __construct(Project_Service_ServiceUsageDao $dao)
+    {
         $this->dao = $dao;
     }
 
@@ -39,7 +40,8 @@ class Project_Service_ServiceUsageManager {
      *
      * @return bool
      */
-    public function activateService(Project $project, Project_Service_ServiceUsage $service) {
+    public function activateService(Project $project, Project_Service_ServiceUsage $service)
+    {
         return $this->dao->activateService($project->getID(), $service->getId());
     }
 
@@ -49,7 +51,8 @@ class Project_Service_ServiceUsageManager {
      *
      * @return bool
      */
-    public function deactivateService(Project $project, Project_Service_ServiceUsage $service) {
+    public function deactivateService(Project $project, Project_Service_ServiceUsage $service)
+    {
         return $this->dao->deactivateService($project->getID(), $service->getId());
     }
 }

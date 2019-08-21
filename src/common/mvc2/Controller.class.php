@@ -84,33 +84,40 @@ abstract class MVC2_Controller {
      */
     protected $renderer;
 
-    public function __construct($base_name, Codendi_Request $request) {
+    public function __construct($base_name, Codendi_Request $request)
+    {
         $this->request   = $request;
         $this->base_name = $base_name;
         $this->renderer  = TemplateRendererFactory::build()->getRenderer($this->getTemplatesDir());
     }
 
-    protected function getTemplatesDir() {
+    protected function getTemplatesDir()
+    {
         return ForgeConfig::get('codendi_dir') .'/src/templates/'. $this->base_name;
     }
 
-    protected function render($template_name, $presenter) {
+    protected function render($template_name, $presenter)
+    {
         $this->renderer->renderToPage($template_name, $presenter);
     }
 
-    protected function renderToString($template_name, $presenter) {
+    protected function renderToString($template_name, $presenter)
+    {
         return $this->renderer->renderToString($template_name, $presenter);
     }
 
-    protected function addFeedback($type, $message) {
+    protected function addFeedback($type, $message)
+    {
         $GLOBALS['Response']->addFeedback($type, $message);
     }
 
-    protected function getCurrentUser() {
+    protected function getCurrentUser()
+    {
         return $this->request->getCurrentUser();
     }
 
-    public function getHeaderOptions() {
+    public function getHeaderOptions()
+    {
         return array();
     }
 }

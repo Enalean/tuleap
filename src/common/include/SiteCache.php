@@ -24,11 +24,13 @@ class SiteCache {
 
     private $logger;
 
-    public function __construct(?Logger $logger = null) {
+    public function __construct(?Logger $logger = null)
+    {
         $this->logger = $logger ? $logger : new BackendLogger() ;
     }
 
-    public function invalidatePluginBasedCaches() {
+    public function invalidatePluginBasedCaches()
+    {
         $this->invalidateTemplateEngine();
         $this->invalidateRestler();
         $this->invalidateFrontRouter();
@@ -44,7 +46,8 @@ class SiteCache {
         $template_engine_cache->invalidate();
     }
 
-    private function invalidateRestler() {
+    private function invalidateRestler()
+    {
         $this->logger->info('Invalidate Restler cache');
         $restler = new RestlerCache();
         $restler->invalidateCache();
@@ -56,24 +59,28 @@ class SiteCache {
         \Tuleap\Request\FrontRouter::invalidateCache();
     }
 
-    private function invalidateLanguage() {
+    private function invalidateLanguage()
+    {
         $this->logger->info('Invalidate language cache');
         $GLOBALS['Language']->invalidateCache();
     }
 
-    private function invalidateWSDL() {
+    private function invalidateWSDL()
+    {
         $this->logger->info('Invalidate WSDL');
         foreach (glob(ForgeConfig::get('codendi_cache_dir').'/php/wsdlcache/wsdl*') as $file) {
             unlink($file);
         }
     }
 
-    private function invalidatePlugin() {
+    private function invalidatePlugin()
+    {
         $this->logger->info('Invalidate Plugin hooks');
         PluginLoader::invalidateCache();
     }
 
-    public function restoreCacheDirectories() {
+    public function restoreCacheDirectories()
+    {
         $this->restoreRootCacheDirectory();
 
         $language_cache_directory = $GLOBALS['Language']->getCacheDirectory();
@@ -86,7 +93,8 @@ class SiteCache {
         $this->recreateDirectory($cache_directory);
     }
 
-    private function recreateDirectory($directory) {
+    private function recreateDirectory($directory)
+    {
         if (! is_dir(realpath($directory))) {
             $this->logger->info('Recreating ' . $directory);
             mkdir($directory, 0755, true);
@@ -96,7 +104,8 @@ class SiteCache {
     /**
      * Some files might have been generated as root but should be owned by codendiadm
      */
-    public function restoreOwnership() {
+    public function restoreOwnership()
+    {
         $backend = Backend::instance();
 
         $cache_directory = realpath(ForgeConfig::get('codendi_cache_dir'));

@@ -21,12 +21,14 @@
 
 class Tracker_Artifact_ChangesetDao extends DataAccessObject {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_changeset';
     }
 
-    public function searchByArtifactId($artifact_id) {
+    public function searchByArtifactId($artifact_id)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $sql = "SELECT * FROM $this->table_name
                 WHERE artifact_id = $artifact_id
@@ -34,7 +36,8 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchByArtifactIdAndChangesetId($artifact_id, $changeset_id) {
+    public function searchByArtifactIdAndChangesetId($artifact_id, $changeset_id)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $changeset_id = $this->da->escapeInt($changeset_id);
         $sql = "SELECT * FROM $this->table_name
@@ -43,7 +46,8 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchLastChangesetByArtifactId($artifact_id) {
+    public function searchLastChangesetByArtifactId($artifact_id)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $sql = "SELECT c.* FROM tracker_changeset c
                 JOIN tracker_artifact AS a on (a.last_changeset_id = c.id)
@@ -52,7 +56,8 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchLastChangesetAndValueForArtifactField($artifact_id, $field_id) {
+    public function searchLastChangesetAndValueForArtifactField($artifact_id, $field_id)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $field_id = $this->da->escapeInt($field_id);
         $sql = "SELECT cs.id AS id, cs.submitted_by, cs.submitted_on, cs.email, cv.id AS value_id, cv.has_changed
@@ -82,7 +87,8 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
         return $this->retrieveFirstRow($sql);
     }
 
-    public function create($artifact_id, $submitted_by, $email, $submitted_on) {
+    public function create($artifact_id, $submitted_by, $email, $submitted_on)
+    {
         $artifact_id  = $this->da->escapeInt($artifact_id);
         $submitted_by = $this->da->escapeInt($submitted_by);
         if (!$submitted_by) {
@@ -101,7 +107,8 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
         return $changeset_id;
     }
 
-    public function delete($changeset_id) {
+    public function delete($changeset_id)
+    {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $sql = "DELETE
                 FROM $this->table_name
@@ -117,7 +124,8 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function getArtifactsByFieldAndLastUpdateDate($trackerId, $date) {
+    public function getArtifactsByFieldAndLastUpdateDate($trackerId, $date)
+    {
         $trackerId  = $this->da->escapeInt($trackerId);
         $date       = $this->da->escapeInt($date);
         $halfDay    = 60 * 60 * 12;
@@ -140,7 +148,8 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function searchChangesetNewerThan($artifact_id, $changeset_id) {
+    public function searchChangesetNewerThan($artifact_id, $changeset_id)
+    {
         $artifact_id  = $this->da->escapeInt($artifact_id);
         $changeset_id = $this->da->escapeInt($changeset_id);
 

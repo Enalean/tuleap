@@ -22,7 +22,8 @@ require_once __DIR__ .'/../bootstrap.php';
 
 class Cardwall_OnTop_ConfigTest extends TuleapTestCase {
 
-    public function itAsksForMappingByGivenListOfColumns() {
+    public function itAsksForMappingByGivenListOfColumns()
+    {
         $tracker                 = aTracker()->build();
         $dao                     = \Mockery::spy(\Cardwall_OnTop_Dao::class);
         $column_factory          = \Mockery::spy(\Cardwall_OnTop_Config_ColumnFactory::class);
@@ -39,7 +40,8 @@ class Cardwall_OnTop_ConfigTest extends TuleapTestCase {
 
 class Cardwall_OnTop_Config_getMappingForTest extends TuleapTestCase {
 
-    public function itReturnsNullIfThereIsNoMapping() {
+    public function itReturnsNullIfThereIsNoMapping()
+    {
         $tracker                 = aTracker()->withId(1)->build();
         $mapping_tracker         = aTracker()->withId(2)->build();
 
@@ -51,7 +53,8 @@ class Cardwall_OnTop_Config_getMappingForTest extends TuleapTestCase {
         $this->assertNull($config->getMappingFor($mapping_tracker));
     }
 
-    public function itReturnsTheCorrespondingMapping() {
+    public function itReturnsTheCorrespondingMapping()
+    {
         $tracker                 = aTracker()->withId(1)->build();
         $mapping_tracker         = aTracker()->withId(99)->build();
 
@@ -69,7 +72,8 @@ class Cardwall_OnTop_Config_IsInColumnTest extends TuleapTestCase {
     private $artifact;
     private $config;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -101,7 +105,8 @@ class Cardwall_OnTop_Config_IsInColumnTest extends TuleapTestCase {
                 ->build();
     }
 
-    public function itIsNotInColumnWhenNoFieldAndNoMapping() {
+    public function itIsNotInColumnWhenNoFieldAndNoMapping()
+    {
         stub($this->config)->getMappingFor()->returns(null);
         $field_provider = \Mockery::spy(\Cardwall_FieldProviders_CustomFieldRetriever::class);
         $column         = new Cardwall_Column(10, 'In ', '');
@@ -109,7 +114,8 @@ class Cardwall_OnTop_Config_IsInColumnTest extends TuleapTestCase {
         $this->assertFalse($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
 
-    public function itIsMappedToAColumnWhenTheStatusValueMatchColumnMapping() {
+    public function itIsMappedToAColumnWhenTheStatusValueMatchColumnMapping()
+    {
         stub($this->config)->getMappingFor()->returns($this->mapping);
 
         $field          = mockery_stub(\Tracker_FormElement_Field_List::class)->getFirstValueFor()->returns('In Progress');
@@ -119,7 +125,8 @@ class Cardwall_OnTop_Config_IsInColumnTest extends TuleapTestCase {
         $this->assertTrue($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
 
-    public function itIsNotMappedWhenTheStatusValueDoesntMatchColumnMapping() {
+    public function itIsNotMappedWhenTheStatusValueDoesntMatchColumnMapping()
+    {
         stub($this->config)->getMappingFor()->returns($this->mapping);
 
         $field          = mockery_stub(\Tracker_FormElement_Field_List::class)->getFirstValueFor()->returns('Todo');
@@ -129,7 +136,8 @@ class Cardwall_OnTop_Config_IsInColumnTest extends TuleapTestCase {
         $this->assertFalse($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
 
-    public function itIsMappedToAColumnWhenStatusIsNullAndNoneIsMappedToColumn() {
+    public function itIsMappedToAColumnWhenStatusIsNullAndNoneIsMappedToColumn()
+    {
         stub($this->config)->getMappingFor()->returns($this->mapping);
 
         $field          = mockery_stub(\Tracker_FormElement_Field_List::class)->getFirstValueFor()->returns(null);
@@ -139,7 +147,8 @@ class Cardwall_OnTop_Config_IsInColumnTest extends TuleapTestCase {
         $this->assertTrue($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
 
-    public function itIsMappedToColumnIfStatusMatchColumn() {
+    public function itIsMappedToColumnIfStatusMatchColumn()
+    {
         stub($this->config)->getMappingFor()->returns($this->mapping);
 
         $field          = mockery_stub(\Tracker_FormElement_Field_List::class)->getFirstValueFor()->returns('Ongoing');
@@ -149,7 +158,8 @@ class Cardwall_OnTop_Config_IsInColumnTest extends TuleapTestCase {
         $this->assertTrue($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
 
-    public function itIsMappedToColumnIfStatusIsNullAndMatchColumnNone() {
+    public function itIsMappedToColumnIfStatusIsNullAndMatchColumnNone()
+    {
         stub($this->config)->getMappingFor()->returns($this->mapping);
 
         $field          = mockery_stub(\Tracker_FormElement_Field_List::class)->getFirstValueFor()->returns(null);

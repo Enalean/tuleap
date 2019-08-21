@@ -52,7 +52,8 @@ class Tracker_XML_Exporter_ChildrenXMLExporter {
         $this->children_collector   = $children_collector;
     }
 
-    public function exportChildren(SimpleXMLElement $xml) {
+    public function exportChildren(SimpleXMLElement $xml)
+    {
         while ($artifact_id = $this->children_collector->pop()) {
             $artifact = $this->artifact_factory->getArtifactById($artifact_id);
             if (! $artifact) {

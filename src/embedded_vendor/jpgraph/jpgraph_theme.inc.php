@@ -21,7 +21,8 @@ foreach (glob(dirname(__FILE__) . '/themes/*.php') as $theme_class_script) {
 abstract class Theme {
     protected $color_index;
 
-    function __construct() {
+    function __construct()
+    {
         $this->color_index = 0;
     }
     abstract function GetColorList();
@@ -29,7 +30,8 @@ abstract class Theme {
     abstract function ApplyPlot($plot);
 
 
-    function SetupPlot($plot) {
+    function SetupPlot($plot)
+    {
         if (is_array($plot)) {
             foreach ($plot as $obj) {
                 $this->ApplyPlot($obj);
@@ -39,7 +41,8 @@ abstract class Theme {
         }
     }
 
-    function ApplyGraph($graph) {
+    function ApplyGraph($graph)
+    {
 
         $this->graph = $graph;
         $method_name = '';
@@ -57,10 +60,12 @@ abstract class Theme {
         }
     }
 
-    function PreStrokeApply($graph) {
+    function PreStrokeApply($graph)
+    {
     }
 
-    function GetThemeColors($num = 30) {
+    function GetThemeColors($num = 30)
+    {
         $result_list = array();
 
         $old_index = $this->color_index;
@@ -83,7 +88,8 @@ abstract class Theme {
         return $result_list;
     }
 
-    function GetNextColor() {
+    function GetNextColor()
+    {
         $color_list = $this->GetColorList();
 
         $color = null;

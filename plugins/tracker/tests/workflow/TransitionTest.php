@@ -29,14 +29,16 @@ class Transition_baseTest extends TuleapTestCase {
     protected $from;
     protected $to;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->from = aFieldListStaticValue()->withId(123)->build();
         $this->to   = aFieldListStaticValue()->withId(456)->build();
         PermissionsManager::setInstance(mock('PermissionsManager'));
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         PermissionsManager::clearInstance();
         parent::tearDown();
     }
@@ -44,7 +46,8 @@ class Transition_baseTest extends TuleapTestCase {
 
 class Transition_equalsTest extends Transition_baseTest {
 
-    public function testEquals() {
+    public function testEquals()
+    {
 
         $field_value_new = new MockTracker_FormElement_Field_List_Value();
         $field_value_new->setReturnValue('getId', 2066);
@@ -92,7 +95,8 @@ class Transition_equalsTest extends Transition_baseTest {
 
 class Transition_beforeTest extends Transition_baseTest {
 
-    function testBeforeShouldTriggerActions() {
+    function testBeforeShouldTriggerActions()
+    {
         $current_user = mock('PFUser');
 
         $field_value_new = new MockTracker_FormElement_Field_List_Value();
@@ -120,7 +124,8 @@ class Transition_beforeTest extends Transition_baseTest {
 
 class Transition_AfterTest extends Transition_baseTest {
 
-    function testAfterShouldTriggerActions() {
+    function testAfterShouldTriggerActions()
+    {
         $field_value_new = new MockTracker_FormElement_Field_List_Value();
         $field_value_new->setReturnValue('getId', 2066);
 
@@ -146,7 +151,8 @@ class Transition_AfterTest extends Transition_baseTest {
 
 class Transition_validateTest extends Transition_baseTest {
 
-    public function itReturnsTrueWhenConditionsAreValid() {
+    public function itReturnsTrueWhenConditionsAreValid()
+    {
         $transition  = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
         $fields_data = array();
         $artifact    = mock('Tracker_Artifact');
@@ -155,7 +161,8 @@ class Transition_validateTest extends Transition_baseTest {
         $this->assertTrue($transition->validate($fields_data, $artifact, ''));
     }
 
-    public function itReturnsFalseWhenConditionsAreNotValid() {
+    public function itReturnsFalseWhenConditionsAreNotValid()
+    {
         $transition  = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
         $fields_data = array();
         $artifact    = mock('Tracker_Artifact');
@@ -167,21 +174,24 @@ class Transition_validateTest extends Transition_baseTest {
 
 class Transition_Bypass_Permissions extends Transition_baseTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->transition       = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
         $this->field            = mock('Tracker_FormElement_Field_Date');
         $this->date_post_action = stub('Transition_PostAction_Field_Date')->bypassPermissions()->returns(true);
     }
 
-    public function itBypassesPermission() {
+    public function itBypassesPermission()
+    {
         $posts_actions    = array($this->date_post_action);
 
         $this->transition->setPostActions($posts_actions);
         $this->assertTrue($this->transition->bypassPermissions($this->field));
     }
 
-    public function itBypassesPermissionIfThereIsACIJob() {
+    public function itBypassesPermissionIfThereIsACIJob()
+    {
         $ci_job           = mock('Transition_PostAction_CIBuild');
         $posts_actions    = array($ci_job, $this->date_post_action);
 

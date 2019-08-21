@@ -33,7 +33,8 @@ class Docman_ItemAction {
     var $other_icons;
     var $extraUrlParams;
 
-    function __construct(&$item) {
+    function __construct(&$item)
+    {
         $this->item             = $item;
         $this->action           = '';
         $this->classes          = '';
@@ -42,7 +43,8 @@ class Docman_ItemAction {
         $this->extraUrlParams   = array();
     }
 
-    function fetchAction($params) {
+    function fetchAction($params)
+    {
         $url   = $params['default_url'].'&action='.$this->action.'&id='.$this->item->getId();
         $title = $this->title;
         $href  = '<a href="'.$url.'">'.$title.'</a>';
@@ -50,7 +52,8 @@ class Docman_ItemAction {
         return $html;
     }
 
-    function fetch($params) {
+    function fetch($params)
+    {
         $dfltUrlParams = array('action' => $this->action,
                                'id' => $this->item->getId());
         $_urlParams = array_merge($dfltUrlParams, $this->extraUrlParams);
@@ -68,7 +71,8 @@ class Docman_ItemAction {
     }
 }
 class Docman_ItemActionNewFolder extends Docman_ItemAction {
-    function __construct(&$item) {
+    function __construct(&$item)
+    {
         parent::__construct($item);
         $this->action           = 'newFolder';
         $this->classes          = 'docman_item_option_newfolder';
@@ -76,7 +80,8 @@ class Docman_ItemActionNewFolder extends Docman_ItemAction {
     }
 }
 class Docman_ItemActionNewDocument extends Docman_ItemAction {
-    function __construct(&$item) {
+    function __construct(&$item)
+    {
         parent::__construct($item);
         $this->action           = 'newDocument';
         $this->classes          = 'docman_item_option_newdocument';
@@ -84,7 +89,8 @@ class Docman_ItemActionNewDocument extends Docman_ItemAction {
     }
 }
 class Docman_ItemActionDetails extends Docman_ItemAction {
-    function __construct(&$item) {
+    function __construct(&$item)
+    {
         parent::__construct($item);
         $this->action           = 'details';
         $this->classes          = 'docman_item_option_details';
@@ -92,7 +98,8 @@ class Docman_ItemActionDetails extends Docman_ItemAction {
     }
 }
 class Docman_ItemActionNewVersion extends Docman_ItemAction {
-    function __construct(&$item) {
+    function __construct(&$item)
+    {
         parent::__construct($item);
         $this->action           = 'action_new_version';
         $this->classes          = 'docman_item_option_newversion';
@@ -100,7 +107,8 @@ class Docman_ItemActionNewVersion extends Docman_ItemAction {
     }
 }
 class Docman_ItemActionMove extends Docman_ItemAction {
-    function __construct(&$item) {
+    function __construct(&$item)
+    {
         parent::__construct($item);
         $this->action           = 'move';
         $this->classes          = 'docman_item_option_move';
@@ -112,7 +120,8 @@ class Docman_ItemActionMove extends Docman_ItemAction {
     }
 }
 class Docman_ItemActionPermissions extends Docman_ItemAction {
-    function __construct(&$item) {
+    function __construct(&$item)
+    {
         parent::__construct($item);
         $this->action           = 'details&section=permissions';
         $this->classes          = 'docman_item_option_permissions';
@@ -120,7 +129,8 @@ class Docman_ItemActionPermissions extends Docman_ItemAction {
     }
 }
 class Docman_ItemActionHistory extends Docman_ItemAction {
-    function __construct(&$item) {
+    function __construct(&$item)
+    {
         parent::__construct($item);
         $this->action           = 'details&section=history';
         $this->classes          = 'docman_item_option_history';
@@ -128,7 +138,8 @@ class Docman_ItemActionHistory extends Docman_ItemAction {
     }
 }
 class Docman_ItemActionNotifications extends Docman_ItemAction {
-    function __construct(&$item) {
+    function __construct(&$item)
+    {
         parent::__construct($item);
         $this->action           = 'details&section=notifications';
         $this->classes          = 'docman_item_option_notifications';
@@ -136,7 +147,8 @@ class Docman_ItemActionNotifications extends Docman_ItemAction {
     }
 }
 class Docman_ItemActionDelete extends Docman_ItemAction {
-    function __construct(&$item) {
+    function __construct(&$item)
+    {
         parent::__construct($item);
         $this->action           = 'confirmDelete';
         $this->classes          = 'docman_item_option_delete';
@@ -144,7 +156,8 @@ class Docman_ItemActionDelete extends Docman_ItemAction {
     }
 }
 class Docman_ItemActionUpdate extends Docman_ItemAction {
-    function __construct(&$item) {
+    function __construct(&$item)
+    {
         parent::__construct($item);
         $this->action           = 'action_update';
         $this->classes          = 'docman_item_option_update';
@@ -153,7 +166,8 @@ class Docman_ItemActionUpdate extends Docman_ItemAction {
 }
 
 class Docman_ItemActionCopy extends Docman_ItemAction {
-    function __construct(&$item, $params) {
+    function __construct(&$item, $params)
+    {
         parent::__construct($item);
         $this->action           = 'action_copy';
         $this->classes          = 'docman_item_option_copy';
@@ -167,7 +181,8 @@ class Docman_ItemActionCopy extends Docman_ItemAction {
 }
 
 class Docman_ItemActionCut extends Docman_ItemAction {
-    function __construct(&$item, $params) {
+    function __construct(&$item, $params)
+    {
         parent::__construct($item);
         $this->action           = 'action_cut';
         $this->classes          = 'docman_item_option_cut';
@@ -181,7 +196,8 @@ class Docman_ItemActionCut extends Docman_ItemAction {
 }
 
 class Docman_ItemActionPaste extends Docman_ItemAction {
-    function __construct(&$item, $params) {
+    function __construct(&$item, $params)
+    {
         parent::__construct($item);
         $this->action           = 'action_paste';
         $this->classes          = 'docman_item_option_paste';
@@ -190,7 +206,8 @@ class Docman_ItemActionPaste extends Docman_ItemAction {
 }
 
 class Docman_ItemActionApproval extends Docman_ItemAction {
-    function __construct(&$item) {
+    function __construct(&$item)
+    {
         parent::__construct($item);
         $this->action           = 'details&section=approval';
         $this->classes          = 'docman_item_option_approval';

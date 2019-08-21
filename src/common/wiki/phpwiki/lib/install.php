@@ -27,7 +27,8 @@ rcs_id('$Id: install.php,v 1.4 2005/09/15 05:56:12 rurban Exp $');
  * So we have no main loop and no request object yet.
  */
 
-function init_install() {
+function init_install()
+{
     // prevent from recursion
     static $already = 0;
     // setup default settings
@@ -42,7 +43,8 @@ function init_install() {
  * 2. database and admin_user setup based on configurator.php
  * 3. dump the current settings to config/config.ini.
  */
-function run_install($part = '') {
+function run_install($part = '')
+{
     static $already = 0;
     if ($part) {
         $_GET['show'] = $part;

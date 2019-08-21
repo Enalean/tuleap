@@ -31,20 +31,24 @@ require_once('lib/PageList.php');
 class WikiPlugin_AllPages
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("AllPages");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("List all pages in this wiki.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.36 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array_merge
             (
              PageList::supportedArgs(),
@@ -63,7 +67,8 @@ extends WikiPlugin
     // sortby: [+|-] pagename|mtime|hits
 
     // 2004-07-08 22:05:35 rurban: turned off &$request to prevent from strange bug below
-    function run($dbi, $argstr, $request, $basepage) {
+    function run($dbi, $argstr, $request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         $pages = false;
         // Todo: extend given _GET args
@@ -130,7 +135,8 @@ extends WikiPlugin
         }
     }
 
-    function getmicrotime(){
+    function getmicrotime()
+    {
         list($usec, $sec) = explode(" ",microtime());
         return (float)$usec + (float)$sec;
     }

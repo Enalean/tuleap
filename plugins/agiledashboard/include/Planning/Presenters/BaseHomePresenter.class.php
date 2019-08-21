@@ -41,7 +41,8 @@ class Planning_Presenter_BaseHomePresenter {
         $this->is_mono_milestone_enabled = $is_mono_milestone_enabled;
     }
 
-    public function nothing_set_up() {
+    public function nothing_set_up()
+    {
         if (! $this->is_user_admin) {
             return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_generic');
         }
@@ -49,19 +50,23 @@ class Planning_Presenter_BaseHomePresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_admin');
     }
 
-    public function nothing_set_up_admin_description() {
+    public function nothing_set_up_admin_description()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_admin_description');
     }
 
-    public function come_back_later() {
+    public function come_back_later()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_come_back');
     }
 
-    public function start_kanban() {
+    public function start_kanban()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'start_kanban');
     }
 
-    public function start_scrum() {
+    public function start_scrum()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'start_scrum');
     }
 
@@ -70,7 +75,8 @@ class Planning_Presenter_BaseHomePresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'activate_scrum_v2');
     }
 
-    public function create_scrum_url() {
+    public function create_scrum_url()
+    {
         $params = $this->getBaseParameters();
         $params['activate-scrum']    = 1;
         $params['scrum-title-admin'] = 'Scrum';
@@ -78,7 +84,8 @@ class Planning_Presenter_BaseHomePresenter {
         return '?'. http_build_query($params);
     }
 
-    public function create_kanban_url() {
+    public function create_kanban_url()
+    {
         $params = $this->getBaseParameters();
         $params['activate-kanban']    = 1;
         $params['kanban-title-admin'] = 'Kanban';
@@ -86,7 +93,8 @@ class Planning_Presenter_BaseHomePresenter {
         return '?'. http_build_query($params);
     }
 
-    private function getBaseParameters() {
+    private function getBaseParameters()
+    {
         $token      = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
         $parameters = array(
             'group_id'                                => $this->group_id,

@@ -27,7 +27,8 @@ class LDAP_UserSync_Orange extends LDAP_UserSync {
      *
      * @return array
      */
-    public function getSyncAttributes($ldap) {
+    public function getSyncAttributes($ldap)
+    {
         //Define the default sync attributes
         $this->attributes = array($ldap->getLDAPParam('cn'), $ldap->getLDAPParam('mail'), $ldap->getLDAPParam('uid'));
         return $this->attributes;
@@ -44,7 +45,8 @@ class LDAP_UserSync_Orange extends LDAP_UserSync {
      *
      * @return bool True if the method modified the user object
      */
-    public function sync(PFUser $user, LDAPResult $lr) {
+    public function sync(PFUser $user, LDAPResult $lr)
+    {
         $modified  = false;
 
         $ldapEmail = $lr->getEmail();

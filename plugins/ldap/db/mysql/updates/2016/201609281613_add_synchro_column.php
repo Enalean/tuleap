@@ -19,15 +19,18 @@
  */
 
 class b201609281613_add_synchro_column extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return 'Add synchronization option for project members';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_ldap_project_group ADD COLUMN synchro_policy VARCHAR(255) NOT NULL default 'never'";
 
         $res = $this->db->dbh->exec($sql);

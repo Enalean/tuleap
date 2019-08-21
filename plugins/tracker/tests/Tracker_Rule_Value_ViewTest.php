@@ -11,7 +11,8 @@ require_once('bootstrap.php');
 
 class Tracker_Rule_List_ViewTest extends TuleapTestCase {
 
-    function testFetch() {
+    function testFetch()
+    {
         $rule = mock('Tracker_Rule_List');
         $rule->id                = 'id';
         $rule->tracker_id        = 'tracker_id';

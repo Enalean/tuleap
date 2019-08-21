@@ -120,7 +120,7 @@ class Tracker_Hierarchy_Presenter {
         $this->tracker_used_in_trigger_rules_names = implode(
             ', ',
             array_map(
-                static function(Tracker $tracker) : string {
+                static function (Tracker $tracker) : string {
                     return $tracker->getName();
                 },
                 $trackers_used_in_trigger_rules
@@ -129,23 +129,28 @@ class Tracker_Hierarchy_Presenter {
         $this->tracker_used_in_trigger_rules_nb = count($trackers_used_in_trigger_rules);
     }
 
-    public function getTrackerUrl() {
+    public function getTrackerUrl()
+    {
         return TRACKER_BASE_URL;
     }
 
-    public function getTrackerId() {
+    public function getTrackerId()
+    {
         return $this->tracker->getId();
     }
 
-    public function getManageHierarchyTitle() {
+    public function getManageHierarchyTitle()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_hierarchy_title');
     }
 
-    public function getSubmitLabel() {
+    public function getSubmitLabel()
+    {
         return $GLOBALS['Language']->getText('global', 'btn_submit');
     }
 
-    public function getPossibleChildren() {
+    public function getPossibleChildren()
+    {
         $possible_children = array();
 
         foreach ($this->possible_children as $possible_child) {
@@ -159,7 +164,8 @@ class Tracker_Hierarchy_Presenter {
         return $possible_children;
     }
 
-    private function getSelectedAttribute(Tracker $possible_child) {
+    private function getSelectedAttribute(Tracker $possible_child)
+    {
         if ($this->tracker->hasChild($possible_child)) {
             return 'selected="selected"';
         }

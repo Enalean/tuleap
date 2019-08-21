@@ -59,7 +59,8 @@ abstract class Tracker_Artifact_Followup_Item {
         return '<div class="tracker_artifact_followup_avatar">' . $this->getHTMLAvatar() . '</div>';
     }
 
-    public function getPermalink() {
+    public function getPermalink()
+    {
         $html  = '<a class="tracker_artifact_followup_permalink" href="#followup_' . $this->getId() . '">';
         $html .= '<i class="fa fa-link" title="Link to this followup - #' . $this->getId() . '"></i> ';
         $html .= '</a>';
@@ -67,11 +68,13 @@ abstract class Tracker_Artifact_Followup_Item {
         return $html;
     }
 
-    public function getUserLink() {
+    public function getUserLink()
+    {
         return '<span class="tracker_artifact_followup_title_user">'. $this->getSubmitterUrl() .'</span>';
     }
 
-    public function getTimeAgo() {
+    public function getTimeAgo()
+    {
         return DateHelper::timeAgoInWords($this->getFollowUpDate(), false, true);
     }
 

@@ -98,7 +98,8 @@ class Planning_MilestonePaneFactory
     }
 
     /** @return AgileDashboard_Pane */
-    public function getActivePane(Planning_Milestone $milestone) {
+    public function getActivePane(Planning_Milestone $milestone)
+    {
         if (! isset($this->list_of_pane_info[$milestone->getArtifactId()])) {
             $this->buildActivePane($milestone);
         }
@@ -107,7 +108,8 @@ class Planning_MilestonePaneFactory
     }
 
     /** @return PaneInfo[] */
-    public function getListOfPaneInfo(Planning_Milestone $milestone) {
+    public function getListOfPaneInfo(Planning_Milestone $milestone)
+    {
         if (! isset($this->list_of_pane_info[$milestone->getArtifactId()])) {
             $this->buildListOfPaneInfo($milestone);
         }
@@ -116,11 +118,13 @@ class Planning_MilestonePaneFactory
     }
 
     /** @return string */
-    public function getDefaultPaneIdentifier() {
+    public function getDefaultPaneIdentifier()
+    {
         return DetailsPaneInfo::IDENTIFIER;
     }
 
-    private function buildListOfPaneInfo(Planning_Milestone $milestone) {
+    private function buildListOfPaneInfo(Planning_Milestone $milestone)
+    {
         $this->active_pane[$milestone->getArtifactId()] = null;
 
         $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getDetailsPaneInfo($milestone);
@@ -130,14 +134,16 @@ class Planning_MilestonePaneFactory
         $this->list_of_pane_info[$milestone->getArtifactId()] = array_values(array_filter($this->list_of_pane_info[$milestone->getArtifactId()]));
     }
 
-    private function buildActivePane(Planning_Milestone $milestone) {
+    private function buildActivePane(Planning_Milestone $milestone)
+    {
         $this->buildListOfPaneInfo($milestone);
         if (! $this->active_pane[$milestone->getArtifactId()]) {
             $this->buildDefaultPane($milestone);
         }
     }
 
-    private function getDetailsPaneInfo(Planning_Milestone $milestone) {
+    private function getDetailsPaneInfo(Planning_Milestone $milestone)
+    {
         $pane_info = $this->pane_info_factory->getDetailsPaneInfo($milestone);
         if ($this->request->get('pane') == DetailsPaneInfo::IDENTIFIER) {
             $pane_info->setActive(true);
@@ -147,7 +153,8 @@ class Planning_MilestonePaneFactory
         return $pane_info;
     }
 
-    private function getDetailsPane(DetailsPaneInfo $pane_info, Planning_Milestone $milestone) {
+    private function getDetailsPane(DetailsPaneInfo $pane_info, Planning_Milestone $milestone)
+    {
         return new DetailsPane(
             $pane_info,
             $this->getDetailsPresenterBuilder()->getMilestoneDetailsPresenter($this->request->getCurrentUser(), $milestone)
@@ -182,7 +189,8 @@ class Planning_MilestonePaneFactory
         return $pane_info;
     }
 
-    private function getMilestoneRepresentation(Planning_Milestone $milestone, PFUser $user) {
+    private function getMilestoneRepresentation(Planning_Milestone $milestone, PFUser $user)
+    {
         if (! self::PRELOAD_ENABLED) {
             return null;
         }
@@ -194,7 +202,8 @@ class Planning_MilestonePaneFactory
         );
     }
 
-    private function getPaginatedBacklogItemsRepresentationsForMilestone(Planning_Milestone $milestone, PFUser $user) {
+    private function getPaginatedBacklogItemsRepresentationsForMilestone(Planning_Milestone $milestone, PFUser $user)
+    {
         if (! self::PRELOAD_ENABLED) {
             return null;
         }
@@ -207,7 +216,8 @@ class Planning_MilestonePaneFactory
         );
     }
 
-    private function getPaginatedSubMilestonesRepresentations(Planning_Milestone $milestone, PFUser $user) {
+    private function getPaginatedSubMilestonesRepresentations(Planning_Milestone $milestone, PFUser $user)
+    {
         if (! self::PRELOAD_ENABLED) {
             return null;
         }
@@ -226,7 +236,8 @@ class Planning_MilestonePaneFactory
     /**
      * @return AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane
      */
-    private function getPlanningV2Pane(PlanningV2PaneInfo $info, Planning_Milestone $milestone) {
+    private function getPlanningV2Pane(PlanningV2PaneInfo $info, Planning_Milestone $milestone)
+    {
         return new AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane(
             $info,
             new AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter(
@@ -240,7 +251,8 @@ class Planning_MilestonePaneFactory
         );
     }
 
-    private function buildAdditionnalPanes(Planning_Milestone $milestone) {
+    private function buildAdditionnalPanes(Planning_Milestone $milestone)
+    {
         if ($milestone->getArtifact()) {
             EventManager::instance()->processEvent(
                 AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
@@ -256,7 +268,8 @@ class Planning_MilestonePaneFactory
         }
     }
 
-    private function getDetailsPresenterBuilder() {
+    private function getDetailsPresenterBuilder()
+    {
         return $this->pane_presenter_builder_factory->getDetailsPresenterBuilder();
     }
 }

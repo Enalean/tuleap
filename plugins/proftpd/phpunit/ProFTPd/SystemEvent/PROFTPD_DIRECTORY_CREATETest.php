@@ -59,12 +59,14 @@ class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \PHPUnit\Framework\TestCa
         unset($GLOBALS['sys_http_user']);
     }
 
-    public function testItCreatesDirectory() {
+    public function testItCreatesDirectory()
+    {
         $this->event->process();
         $this->assertTrue(file_exists($this->path));
     }
 
-    public function testItSetsPermissionsOnDirectory() {
+    public function testItSetsPermissionsOnDirectory()
+    {
         $this->backend->expects($this->once())->method('changeOwnerGroupMode')->with(
             $this->path,
             "dummy",
@@ -75,13 +77,15 @@ class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \PHPUnit\Framework\TestCa
         $this->event->process();
     }
 
-    public function testItSetsACLOnDirectory() {
+    public function testItSetsACLOnDirectory()
+    {
         $this->acl_updater->expects($this->once())->method('recursivelyApplyACL')->with($this->path, $GLOBALS['sys_http_user'], '', '');
 
         $this->event->process();
     }
 
-    public function testItMarkProcessAsDone() {
+    public function testItMarkProcessAsDone()
+    {
         $this->event->expects($this->once())->method('done');
         $this->event->process();
     }

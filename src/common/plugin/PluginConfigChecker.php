@@ -25,12 +25,14 @@ class PluginConfigChecker {
      */
     private $logger;
 
-    public function __construct(Logger $logger) {
+    public function __construct(Logger $logger)
+    {
         $this->logger   = $logger;
         $this->app_user = ForgeConfig::get('sys_http_user');
     }
 
-    public function checkFolder(Plugin $plugin) {
+    public function checkFolder(Plugin $plugin)
+    {
         $plugin_etc_root = $plugin->getPluginEtcRoot();
 
         try {
@@ -40,7 +42,8 @@ class PluginConfigChecker {
         }
     }
 
-    public function checkIncFile($inc_file) {
+    public function checkIncFile($inc_file)
+    {
         try {
             $this->checkIncFileOwnedByAppUser($inc_file);
         } catch (Exception $exception) {
@@ -48,7 +51,8 @@ class PluginConfigChecker {
         }
     }
 
-    private function checkFolderOwnedByAppUser($plugin_etc_root) {
+    private function checkFolderOwnedByAppUser($plugin_etc_root)
+    {
         if (! is_dir($plugin_etc_root)) {
             throw new Exception ("Folder $plugin_etc_root does not exist");
         }
@@ -62,7 +66,8 @@ class PluginConfigChecker {
 
     }
 
-    private function checkIncFileOwnedByAppUser($inc_file) {
+    private function checkIncFileOwnedByAppUser($inc_file)
+    {
         if (! is_file($inc_file)) {
             throw new Exception ("File $inc_file does not exist");
         }

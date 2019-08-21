@@ -30,7 +30,8 @@ class TourFactoryTest_getTour extends TuleapTestCase {
     /** @var PFUser */
     protected $user;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->fixtures_dir    = dirname(__FILE__) .'/_fixtures';
@@ -41,19 +42,22 @@ class TourFactoryTest_getTour extends TuleapTestCase {
         ForgeConfig::set('sys_custom_incdir', $this->fixtures_dir);
     }
 
-    public function itReturnsTheWelcomeTour() {
+    public function itReturnsTheWelcomeTour()
+    {
         $tour = $this->factory->getTour($this->user, Tuleap_Tour_WelcomeTour::TOUR_NAME);
         $this->assertIsA($tour, 'Tuleap_Tour_WelcomeTour');
     }
 
-    public function itReturnsACustomTour() {
+    public function itReturnsACustomTour()
+    {
         stub($this->user)->getLocale()->returns('en_US');
 
         $tour = $this->factory->getTour($this->user, 'lala_tour');
         $this->assertIsA($tour, 'Tuleap_Tour');
     }
 
-    public function itThrowsExceptionIfTourIsNotFound() {
+    public function itThrowsExceptionIfTourIsNotFound()
+    {
         stub($this->user)->getLocale()->returns('fr_US');
 
         $this->expectException('Tuleap_UnknownTourException');

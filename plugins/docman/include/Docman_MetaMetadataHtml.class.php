@@ -37,7 +37,8 @@ class Docman_MetaMetadataHtml
         $this->str_no  = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_no');
     }
 
-    function getName(&$sthCanChange) {
+    function getName(&$sthCanChange)
+    {
         $mdContent = '';
         $mdContent .= '<tr>';
         $mdContent .= '<td>';
@@ -60,7 +61,8 @@ class Docman_MetaMetadataHtml
         return $mdContent;
     }
 
-    function getDescription(&$sthCanChange) {
+    function getDescription(&$sthCanChange)
+    {
         $mdContent = '';
         $mdContent .= '<tr>';
         $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_desc').'</td>';
@@ -78,7 +80,8 @@ class Docman_MetaMetadataHtml
         return $mdContent;
     }
 
-    function getEmptyAllowed(&$sthCanChange) {
+    function getEmptyAllowed(&$sthCanChange)
+    {
         $mdContent = '';
         $mdContent .= '<tr>';
         $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_allowempty').'</td>';
@@ -105,7 +108,8 @@ class Docman_MetaMetadataHtml
         return $mdContent;
     }
 
-    function getMultipleValuesAllowed(&$sthCanChange) {
+    function getMultipleValuesAllowed(&$sthCanChange)
+    {
         $mdContent = '';
         $mdContent .= '<tr>';
         $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_allowmultiplevalue').'</td>';
@@ -132,7 +136,8 @@ class Docman_MetaMetadataHtml
         return $mdContent;
     }
 
-    function getUseIt(&$sthCanChange) {
+    function getUseIt(&$sthCanChange)
+    {
         $mdContent = '';
         $mdContent .= '<tr>';
 
@@ -160,7 +165,8 @@ class Docman_MetaMetadataHtml
         return $mdContent;
     }
 
-    function getKeepHistory(&$sthCanChange) {
+    function getKeepHistory(&$sthCanChange)
+    {
         $mdContent = '';
         $mdContent .= '<tr>';
         $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_keephistory').'</td>';
@@ -177,7 +183,8 @@ class Docman_MetaMetadataHtml
         return $mdContent;
     }
 
-    function getType(&$sthCanChange) {
+    function getType(&$sthCanChange)
+    {
         $mdContent = '';
         $mdContent .= '<tr>';
 

@@ -208,7 +208,8 @@ if (defined('NUSOAP')) {
  * @param Object{Group} $group the group we want to convert in soap
  * @return array the soap group object
  */
-    function group_to_soap($group) {
+    function group_to_soap($group)
+    {
         $soap_group = array(
         'group_id' => $group->getGroupId(),
         'group_name' => util_unconvert_htmlspecialchars($group->getPublicName()),
@@ -225,7 +226,8 @@ if (defined('NUSOAP')) {
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @return array the array of SOAPGroup th ecurrent user ismember of
  */
-    function getMyProjects($sessionKey) {
+    function getMyProjects($sessionKey)
+    {
         if (session_continue($sessionKey)){
             $gf = new GroupFactory();
             $my_groups = $gf->getMyGroups();
@@ -244,7 +246,8 @@ if (defined('NUSOAP')) {
  * @param string $unix_group_name the unix name of the group we want to get
  * @return array the SOAPGroup associated with the given unix name
  */
-    function getGroupByName($sessionKey, $unix_group_name) {
+    function getGroupByName($sessionKey, $unix_group_name)
+    {
         if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
@@ -268,7 +271,8 @@ if (defined('NUSOAP')) {
  * @param string $group_id the ID of the group we want to get
  * @return array the SOAPGroup associated with the given ID
  */
-    function getGroupById($sessionKey, $group_id) {
+    function getGroupById($sessionKey, $group_id)
+    {
         if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
@@ -287,7 +291,8 @@ if (defined('NUSOAP')) {
  * Returns the Ugroups associated to the given project
  * This function can only be called by members of the group
  */
-    function getGroupUgroups($sessionKey, $group_id) {
+    function getGroupUgroups($sessionKey, $group_id)
+    {
         if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
@@ -302,7 +307,8 @@ if (defined('NUSOAP')) {
         }
     }
 
-    function getProjectGroupsAndUsers($session_key, $group_id) {
+    function getProjectGroupsAndUsers($session_key, $group_id)
+    {
         try {
             $project_manager        = ProjectManager::instance();
             $user_manager           = UserManager::instance();

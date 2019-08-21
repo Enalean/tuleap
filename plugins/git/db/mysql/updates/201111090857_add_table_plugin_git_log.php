@@ -26,7 +26,8 @@ class b201111090857_add_table_plugin_git_log extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add the table plugin_git_log in order to log git pushes.
 EOT;
@@ -37,7 +38,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -46,7 +48,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = 'CREATE TABLE plugin_git_log ('.
                     ' repository_id INT(10) UNSIGNED NOT NULL,'.
                     ' user_id INT(11) UNSIGNED NULL,'.
@@ -61,7 +64,8 @@ EOT;
      *
      * @return void
      */
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('plugin_git_log')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_git_log table is missing');
         }

@@ -34,7 +34,8 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
      * @deprecated
      * @return bool
      */
-    public function getRow() {
+    public function getRow()
+    {
         return false;
     }
 
@@ -43,7 +44,8 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
      * @deprecated
      * @return int
      */
-    public function rowCount() {
+    public function rowCount()
+    {
         return 0;
     }
 
@@ -52,7 +54,8 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
      * @deprecated
      * @return bool
      */
-    public function isError() {
+    public function isError()
+    {
         return false;
     }
 
@@ -61,24 +64,8 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
      * @deprecated
      * @return bool
      */
-    public function current() {
-        return false;
-    }
-
-    /**
-     * @see IProvideDataAccessResult
-     * @deprecated
-     * @return void
-     */
-    public function next() {
-    }
-
-    /**
-     * @see IProvideDataAccessResult
-     * @deprecated
-     * @return bool
-     */
-    public function valid() {
+    public function current()
+    {
         return false;
     }
 
@@ -87,7 +74,8 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
      * @deprecated
      * @return void
      */
-    public function rewind() {
+    public function next()
+    {
     }
 
     /**
@@ -95,7 +83,27 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
      * @deprecated
      * @return bool
      */
-    public function key() {
+    public function valid()
+    {
+        return false;
+    }
+
+    /**
+     * @see IProvideDataAccessResult
+     * @deprecated
+     * @return void
+     */
+    public function rewind()
+    {
+    }
+
+    /**
+     * @see IProvideDataAccessResult
+     * @deprecated
+     * @return bool
+     */
+    public function key()
+    {
         return false;
     }
 
@@ -104,14 +112,16 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
      * @deprecated
      * @return int
      */
-    public function count() {
+    public function count()
+    {
         return 0;
     }
 
     /**
      * @deprecated
      */
-    public function instanciateWith() {
+    public function instanciateWith()
+    {
         return $this;
     }
 }

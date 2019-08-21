@@ -28,11 +28,13 @@ class Search_SearchPlugin {
     private $event_manager;
 
 
-    public function __construct(EventManager $event_manager) {
+    public function __construct(EventManager $event_manager)
+    {
         $this->event_manager = $event_manager;
     }
 
-    public function search(Search_SearchQuery $query, Search_SearchResults $results) {
+    public function search(Search_SearchQuery $query, Search_SearchResults $results)
+    {
 
         $params   = array(
             'query'   => $query,

@@ -26,7 +26,8 @@ class CanvasScale {
     private $w,$h;
     private $ixmin=0,$ixmax=10,$iymin=0,$iymax=10;
 
-    function __construct($graph,$xmin=0,$xmax=10,$ymin=0,$ymax=10) {
+    function __construct($graph,$xmin=0,$xmax=10,$ymin=0,$ymax=10)
+    {
         $this->g = $graph;
         $this->w = $graph->img->width;
         $this->h = $graph->img->height;
@@ -36,29 +37,34 @@ class CanvasScale {
         $this->iymax = $ymax;
     }
 
-    function Set($xmin=0,$xmax=10,$ymin=0,$ymax=10) {
+    function Set($xmin=0,$xmax=10,$ymin=0,$ymax=10)
+    {
         $this->ixmin = $xmin;
         $this->ixmax = $xmax;
         $this->iymin = $ymin;
         $this->iymax = $ymax;
     }
 
-    function Get() {
+    function Get()
+    {
         return array($this->ixmin,$this->ixmax,$this->iymin,$this->iymax);
     }
 
-    function Translate($x,$y) {
+    function Translate($x,$y)
+    {
         $xp = round(($x-$this->ixmin)/($this->ixmax - $this->ixmin) * $this->w);
         $yp = round(($y-$this->iymin)/($this->iymax - $this->iymin) * $this->h);
         return array($xp,$yp);
     }
 
-    function TranslateX($x) {
+    function TranslateX($x)
+    {
         $xp = round(($x-$this->ixmin)/($this->ixmax - $this->ixmin) * $this->w);
         return $xp;
     }
 
-    function TranslateY($y) {
+    function TranslateY($y)
+    {
         $yp = round(($y-$this->iymin)/($this->iymax - $this->iymin) * $this->h);
         return $yp;
     }
@@ -73,27 +79,32 @@ class CanvasScale {
 class Shape {
     private $img,$scale;
 
-    function __construct($aGraph,$scale) {
+    function __construct($aGraph,$scale)
+    {
         $this->img = $aGraph->img;
         $this->img->SetColor('black');
         $this->scale = $scale;
     }
 
-    function SetColor($aColor) {
+    function SetColor($aColor)
+    {
         $this->img->SetColor($aColor);
     }
 
-    function Line($x1,$y1,$x2,$y2) {
+    function Line($x1,$y1,$x2,$y2)
+    {
         list($x1,$y1) = $this->scale->Translate($x1,$y1);
         list($x2,$y2) = $this->scale->Translate($x2,$y2);
         $this->img->Line($x1,$y1,$x2,$y2);
     }
 
-    function SetLineWeight($aWeight) {
+    function SetLineWeight($aWeight)
+    {
         $this->img->SetLineWeight($aWeight);
     }
 
-    function Polygon($p,$aClosed=false) {
+    function Polygon($p,$aClosed=false)
+    {
         $n=count($p);
         for($i=0; $i < $n; $i+=2 ) {
             $p[$i]   = $this->scale->TranslateX($p[$i]);
@@ -102,7 +113,8 @@ class Shape {
         $this->img->Polygon($p,$aClosed);
     }
 
-    function FilledPolygon($p) {
+    function FilledPolygon($p)
+    {
         $n=count($p);
         for($i=0; $i < $n; $i+=2 ) {
             $p[$i]   = $this->scale->TranslateX($p[$i]);
@@ -118,7 +130,8 @@ class Shape {
     // 2=x1, 3=y1
     // 4=x2, 5=y2
     // 6=x3, 7=y3
-    function Bezier($p,$aSteps=40) {
+    function Bezier($p,$aSteps=40)
+    {
         $x0 = $p[0];
         $y0 = $p[1];
         // Calculate coefficients
@@ -145,19 +158,22 @@ class Shape {
         $this->Line($x_old,$y_old,$p[6],$p[7]);
     }
 
-    function Rectangle($x1,$y1,$x2,$y2) {
+    function Rectangle($x1,$y1,$x2,$y2)
+    {
         list($x1,$y1) = $this->scale->Translate($x1,$y1);
         list($x2,$y2)   = $this->scale->Translate($x2,$y2);
         $this->img->Rectangle($x1,$y1,$x2,$y2);
     }
 
-    function FilledRectangle($x1,$y1,$x2,$y2) {
+    function FilledRectangle($x1,$y1,$x2,$y2)
+    {
         list($x1,$y1) = $this->scale->Translate($x1,$y1);
         list($x2,$y2)   = $this->scale->Translate($x2,$y2);
         $this->img->FilledRectangle($x1,$y1,$x2,$y2);
     }
 
-    function Circle($x1,$y1,$r) {
+    function Circle($x1,$y1,$r)
+    {
         list($x1,$y1) = $this->scale->Translate($x1,$y1);
         if( $r >= 0 )
         $r   = $this->scale->TranslateX($r);
@@ -166,7 +182,8 @@ class Shape {
         $this->img->Circle($x1,$y1,$r);
     }
 
-    function FilledCircle($x1,$y1,$r) {
+    function FilledCircle($x1,$y1,$r)
+    {
         list($x1,$y1) = $this->scale->Translate($x1,$y1);
         if( $r >= 0 )
         $r   = $this->scale->TranslateX($r);
@@ -175,7 +192,8 @@ class Shape {
         $this->img->FilledCircle($x1,$y1,$r);
     }
 
-    function RoundedRectangle($x1,$y1,$x2,$y2,$r=null) {
+    function RoundedRectangle($x1,$y1,$x2,$y2,$r=null)
+    {
         list($x1,$y1) = $this->scale->Translate($x1,$y1);
         list($x2,$y2)   = $this->scale->Translate($x2,$y2);
 
@@ -188,7 +206,8 @@ class Shape {
         $this->img->RoundedRectangle($x1,$y1,$x2,$y2,$r);
     }
 
-    function FilledRoundedRectangle($x1,$y1,$x2,$y2,$r=null) {
+    function FilledRoundedRectangle($x1,$y1,$x2,$y2,$r=null)
+    {
         list($x1,$y1) = $this->scale->Translate($x1,$y1);
         list($x2,$y2)   = $this->scale->Translate($x2,$y2);
 
@@ -201,7 +220,8 @@ class Shape {
         $this->img->FilledRoundedRectangle($x1,$y1,$x2,$y2,$r);
     }
 
-    function ShadowRectangle($x1,$y1,$x2,$y2,$fcolor=false,$shadow_width=null,$shadow_color=array(102,102,102)) {
+    function ShadowRectangle($x1,$y1,$x2,$y2,$fcolor=false,$shadow_width=null,$shadow_color=array(102,102,102))
+    {
         list($x1,$y1) = $this->scale->Translate($x1,$y1);
         list($x2,$y2) = $this->scale->Translate($x2,$y2);
         if( $shadow_width == null )
@@ -211,11 +231,13 @@ class Shape {
         $this->img->ShadowRectangle($x1,$y1,$x2,$y2,$fcolor,$shadow_width,$shadow_color);
     }
 
-    function SetTextAlign($halign,$valign="bottom") {
+    function SetTextAlign($halign,$valign="bottom")
+    {
         $this->img->SetTextAlign($halign,$valign="bottom");
     }
 
-    function StrokeText($x1,$y1,$txt,$dir=0,$paragraph_align="left") {
+    function StrokeText($x1,$y1,$txt,$dir=0,$paragraph_align="left")
+    {
         list($x1,$y1) = $this->scale->Translate($x1,$y1);
         $this->img->StrokeText($x1,$y1,$txt,$dir,$paragraph_align);
     }
@@ -223,7 +245,8 @@ class Shape {
     // A rounded rectangle where one of the corner has been moved "into" the
     // rectangle 'iw' width and 'ih' height. Corners:
     // 0=Top left, 1=top right, 2=bottom right, 3=bottom left
-    function IndentedRectangle($xt,$yt,$w,$h,$iw=0,$ih=0,$aCorner=3,$aFillColor="",$r=4) {
+    function IndentedRectangle($xt,$yt,$w,$h,$iw=0,$ih=0,$aCorner=3,$aFillColor="",$r=4)
+    {
 
         list($xt,$yt) = $this->scale->Translate($xt,$yt);
         list($w,$h)   = $this->scale->Translate($w,$h);
@@ -387,7 +410,8 @@ class CanvasRectangleText {
     private $iAutoBoxMargin=5;
     private $iShadowWidth=3,$iShadowColor='';
 
-    function __construct($aTxt='',$xl=0,$yt=0,$w=0,$h=0) {
+    function __construct($aTxt='',$xl=0,$yt=0,$w=0,$h=0)
+    {
         $this->iTxt = new Text($aTxt);
         $this->ix = $xl;
         $this->iy = $yt;
@@ -395,54 +419,65 @@ class CanvasRectangleText {
         $this->ih = $h;
     }
 
-    function SetShadow($aColor='gray',$aWidth=3) {
+    function SetShadow($aColor='gray',$aWidth=3)
+    {
         $this->iShadowColor = $aColor;
         $this->iShadowWidth = $aWidth;
     }
 
-    function SetFont($FontFam,$aFontStyle,$aFontSize=12) {
+    function SetFont($FontFam,$aFontStyle,$aFontSize=12)
+    {
         $this->iTxt->SetFont($FontFam,$aFontStyle,$aFontSize);
     }
 
-    function SetTxt($aTxt) {
+    function SetTxt($aTxt)
+    {
         $this->iTxt->Set($aTxt);
     }
 
-    function ParagraphAlign($aParaAlign) {
+    function ParagraphAlign($aParaAlign)
+    {
         $this->iParaAlign = $aParaAlign;
     }
 
-    function SetFillColor($aFillColor) {
+    function SetFillColor($aFillColor)
+    {
         $this->iFillColor = $aFillColor;
     }
 
-    function SetAutoMargin($aMargin) {
+    function SetAutoMargin($aMargin)
+    {
         $this->iAutoBoxMargin=$aMargin;
     }
 
-    function SetColor($aColor) {
+    function SetColor($aColor)
+    {
         $this->iColor = $aColor;
     }
 
-    function SetFontColor($aColor) {
+    function SetFontColor($aColor)
+    {
         $this->iFontColor = $aColor;
     }
 
-    function SetPos($xl=0,$yt=0,$w=0,$h=0) {
+    function SetPos($xl=0,$yt=0,$w=0,$h=0)
+    {
         $this->ix = $xl;
         $this->iy = $yt;
         $this->iw = $w;
         $this->ih = $h;
     }
 
-    function Pos($xl=0,$yt=0,$w=0,$h=0) {
+    function Pos($xl=0,$yt=0,$w=0,$h=0)
+    {
         $this->ix = $xl;
         $this->iy = $yt;
         $this->iw = $w;
         $this->ih = $h;
     }
 
-    function Set($aTxt,$xl,$yt,$w=0,$h=0) {
+    function Set($aTxt,$xl,$yt,$w=0,$h=0)
+    {
         $this->iTxt->Set($aTxt);
         $this->ix = $xl;
         $this->iy = $yt;
@@ -450,11 +485,13 @@ class CanvasRectangleText {
         $this->ih = $h;
     }
 
-    function SetCornerRadius($aRad=5) {
+    function SetCornerRadius($aRad=5)
+    {
         $this->ir = $aRad;
     }
 
-    function Stroke($aImg,$scale) {
+    function Stroke($aImg,$scale)
+    {
 
         // If coordinates are specifed as negative this means we should
         // treat them as abolsute (pixels) coordinates

@@ -43,7 +43,8 @@ class ColorPresenterFactory {
         'flamingo_pink'
     );
 
-    public function getColorsPresenters() {
+    public function getColorsPresenters()
+    {
         $colors_presenters = array();
 
         foreach($this->available_colors as $color) {
@@ -53,7 +54,8 @@ class ColorPresenterFactory {
         return $colors_presenters;
     }
 
-    public function getColorsPresentersForProvider(Provider $provider) {
+    public function getColorsPresentersForProvider(Provider $provider)
+    {
         $colors_presenters = array();
 
         foreach($this->available_colors as $color) {

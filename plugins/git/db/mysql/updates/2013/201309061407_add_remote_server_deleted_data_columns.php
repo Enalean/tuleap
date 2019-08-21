@@ -23,7 +23,8 @@ class b201309061407_add_remote_server_deleted_data_columns extends ForgeUpgrade_
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 add columns remote_project_deleted and remote_project_deleted_date to table plugin_git
 EOT;
@@ -34,7 +35,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -43,14 +45,16 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_git
                 ADD COLUMN remote_project_deleted TINYINT DEFAULT '0',
                 ADD COLUMN remote_project_deleted_date INT(11) NULL";
         $this->execDB($sql, 'An error occured while adding remote_project_deleted and remote_project_deleted_date columns to plugin_git table, ');
     }
 
-    private function execDB($sql, $message) {
+    private function execDB($sql, $message)
+    {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message.implode(', ', $this->db->dbh->errorInfo()));

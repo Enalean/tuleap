@@ -61,14 +61,16 @@ class hudson_gitPlugin extends PluginWithLegacyInternalRouting
     /**
      * @see Plugin::getDependencies()
      */
-    public function getDependencies() {
+    public function getDependencies()
+    {
         return array('git', 'hudson');
     }
 
     /**
      * @return PluginInfo
      */
-    public function getPluginInfo() {
+    public function getPluginInfo()
+    {
         if (!$this->pluginInfo) {
             $this->pluginInfo = new PluginInfo($this);
         }
@@ -76,7 +78,8 @@ class hudson_gitPlugin extends PluginWithLegacyInternalRouting
     }
 
     /** @see Tuleap\Git\GitViews\RepoManagement\Pane\Hooks::ADDITIONAL_WEBHOOKS */
-    public function plugin_git_settings_additional_webhooks(array $params) {
+    public function plugin_git_settings_additional_webhooks(array $params)
+    {
         if ($this->isAllowed($params['repository']->getProjectId())) {
             $xzibit = new GitWebhooksSettingsEnhancer(
                 new Hook\HookDao(),
@@ -144,11 +147,13 @@ class hudson_gitPlugin extends PluginWithLegacyInternalRouting
         );
     }
 
-    private function getCSRF() {
+    private function getCSRF()
+    {
         return new CSRFSynchronizerToken('hudson-git-hook-management');
     }
 
-    private function getLogger() {
+    private function getLogger()
+    {
         return new WrapperLogger(new Logger(), 'hudson_git');
     }
 }

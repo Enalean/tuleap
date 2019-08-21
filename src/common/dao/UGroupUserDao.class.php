@@ -40,7 +40,8 @@ class UGroupUserDao extends DataAccessObject {
     *
     * @return DataAccessResult
     */
-    function searchUserByStaticUGroupId($ugroup_id) {
+    function searchUserByStaticUGroupId($ugroup_id)
+    {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql_order = UserHelper::instance()->getDisplayNameSQLOrder();
 
@@ -53,7 +54,8 @@ class UGroupUserDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchUserByStaticUGroupIdIncludingSuspended($ugroup_id) {
+    public function searchUserByStaticUGroupIdIncludingSuspended($ugroup_id)
+    {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
 
         $sql = "SELECT *
@@ -77,7 +79,8 @@ class UGroupUserDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function searchUsersByStaticUGroupIdPaginated($ugroup_id, $limit, $offset) {
+    public function searchUsersByStaticUGroupIdPaginated($ugroup_id, $limit, $offset)
+    {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $limit     = $this->da->escapeInt($limit);
         $offset    = $this->da->escapeInt($offset);
@@ -99,7 +102,8 @@ class UGroupUserDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function countUserByStaticUGroupId($ugroup_id) {
+    function countUserByStaticUGroupId($ugroup_id)
+    {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
 
         $sql = "SELECT count(*) AS count_users
@@ -119,7 +123,8 @@ class UGroupUserDao extends DataAccessObject {
      *
      * @return DataAccessResult|false
      */
-    function returnProjectAdminsByStaticUGroupId($groupId, $ugroups) {
+    function returnProjectAdminsByStaticUGroupId($groupId, $ugroups)
+    {
         $sql = 'SELECT u.email as email FROM user u
                     JOIN ugroup_user uu 
                     USING(user_id)
@@ -141,7 +146,8 @@ class UGroupUserDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function searchUserByDynamicUGroupId($ugroupId, $groupId) {
+    public function searchUserByDynamicUGroupId($ugroupId, $groupId)
+    {
         $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, true);
         if (! $sql) {
             return new DataAccessResultEmpty();
@@ -149,7 +155,8 @@ class UGroupUserDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchUserByDynamicUGroupIdIncludingSuspended($ugroupId, $groupId) {
+    public function searchUserByDynamicUGroupIdIncludingSuspended($ugroupId, $groupId)
+    {
         $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, false, null, true);
 
         if (! $sql) {
@@ -169,7 +176,8 @@ class UGroupUserDao extends DataAccessObject {
      *
      * @return DataAccessResult | false
      */
-    public function searchUsersByDynamicUGroupIdPaginated($ugroupId, $groupId, $limit, $offset) {
+    public function searchUsersByDynamicUGroupIdPaginated($ugroupId, $groupId, $limit, $offset)
+    {
         $ugroupId = $this->da->escapeInt($ugroupId);
         $groupId  = $this->da->escapeInt($groupId);
         $limit    = $this->da->escapeInt($limit);
@@ -192,7 +200,8 @@ class UGroupUserDao extends DataAccessObject {
      * @param int $group_id
      * @return bool
      */
-    public function isDynamicUGroupMember($user_id, $ugroup_id, $group_id) {
+    public function isDynamicUGroupMember($user_id, $ugroup_id, $group_id)
+    {
         return ugroup_user_is_member($user_id, $ugroup_id, $group_id);
     }
 
@@ -204,7 +213,8 @@ class UGroupUserDao extends DataAccessObject {
      *
      * @return bool
      */
-    public function cloneUgroup($source_ugroup_id, $target_ugroup_id) {
+    public function cloneUgroup($source_ugroup_id, $target_ugroup_id)
+    {
         $source_ugroup_id = $this->da->escapeInt($source_ugroup_id);
         $target_ugroup_id = $this->da->escapeInt($target_ugroup_id);
 
@@ -250,7 +260,8 @@ class UGroupUserDao extends DataAccessObject {
      *
      * @return bool
      */
-    public function resetUgroupUserList($ugroupId) {
+    public function resetUgroupUserList($ugroupId)
+    {
         $ugroupId = $this->da->escapeInt($ugroupId);
         $sql      = "DELETE FROM ugroup_user WHERE ugroup_id = $ugroupId";
         return $this->update($sql);

@@ -77,86 +77,105 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         $this->auth_type            = $auth_type;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return self::class . '#' . $this->id;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getHost() {
+    public function getHost()
+    {
         return $this->host;
     }
 
-    public function getIdentityFile() {
+    public function getIdentityFile()
+    {
         return $this->identity_file;
     }
 
-    public function getLogin() {
+    public function getLogin()
+    {
         return $this->login;
     }
 
-    public function getSSHPort() {
+    public function getSSHPort()
+    {
         return $this->ssh_port;
     }
 
-    public function getHTTPPort() {
+    public function getHTTPPort()
+    {
         return $this->http_port;
     }
 
-    public function usesSSL() {
+    public function usesSSL()
+    {
         return $this->use_ssl;
     }
 
-    public function getAuthType() {
+    public function getAuthType()
+    {
         return $this->auth_type;
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
     }
 
-    public function setHost($host) {
+    public function setHost($host)
+    {
         $this->host = $host;
         return $this;
     }
 
-    public function setIdentityFile($identity_file) {
+    public function setIdentityFile($identity_file)
+    {
         $this->identity_file = $identity_file;
         return $this;
     }
 
-    public function setLogin($login) {
+    public function setLogin($login)
+    {
         $this->login = $login;
         return $this;
     }
 
-    public function setSSHPort($ssh_port) {
+    public function setSSHPort($ssh_port)
+    {
         $this->ssh_port = $ssh_port;
         return $this;
     }
 
-    public function setHTTPPort($http_port) {
+    public function setHTTPPort($http_port)
+    {
         $this->http_port = $http_port;
         return $this;
     }
 
-    public function setUseSSL($use_ssl) {
+    public function setUseSSL($use_ssl)
+    {
         $this->use_ssl = $use_ssl;
         return $this;
     }
 
-    public function setAuthType($auth_type) {
+    public function setAuthType($auth_type)
+    {
         $this->auth_type = $auth_type;
         return $this;
     }
 
-    public function getCloneSSHUrl($gerrit_project) {
+    public function getCloneSSHUrl($gerrit_project)
+    {
         return "ext::ssh -p $this->ssh_port -i $this->identity_file $this->login@$this->host %S $gerrit_project";
     }
 
-    public function getEndUserCloneUrl($gerrit_project, ?Git_Driver_Gerrit_User $user = null) {
+    public function getEndUserCloneUrl($gerrit_project, ?Git_Driver_Gerrit_User $user = null)
+    {
         $login = self::DEFAULT_GERRIT_USERNAME;
         if ($user !== null) {
             $login = $user->getSSHUserName();
@@ -164,11 +183,13 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         return 'ssh://'.$login.'@'.$this->host.':'.$this->ssh_port.'/'.$gerrit_project.'.git';
     }
 
-    public function getProjectAdminUrl($gerrit_project) {
+    public function getProjectAdminUrl($gerrit_project)
+    {
         return $this->getBaseUrl()."/#/admin/projects/$gerrit_project";
     }
 
-    public function getProjectUrl($gerrit_project) {
+    public function getProjectUrl($gerrit_project)
+    {
         return $this->getBaseUrl()."/#/q/project:$gerrit_project,n,z";
     }
 
@@ -176,7 +197,8 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
      *
      * @return String
      */
-    public function getReplicationKey() {
+    public function getReplicationKey()
+    {
         return $this->replication_key;
     }
 
@@ -185,7 +207,8 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
      * @param String $key
      * @return Git_RemoteServer_GerritServer
      */
-    public function setReplicationKey($key) {
+    public function setReplicationKey($key)
+    {
         $this->replication_key = $key;
         return $this;
     }
@@ -193,7 +216,8 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     /**
      * @return string The base url of the server. Eg: http://gerrit.example.com:8080/
      */
-    public function getBaseUrl() {
+    public function getBaseUrl()
+    {
         $url = $this->getHTTPProtocol() . $this->host;
         if ($this->http_port != self::DEFAULT_HTTP_PORT) {
             $url .= ":$this->http_port";
@@ -201,7 +225,8 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         return $url;
     }
 
-    private function getHTTPProtocol() {
+    private function getHTTPProtocol()
+    {
         if ($this->usesSSL()) {
             return 'https://';
         }
@@ -212,14 +237,16 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     /**
      * @return String
      */
-    public function getGerritVersion() {
+    public function getGerritVersion()
+    {
         return $this->gerrit_version;
     }
 
     /**
      * @param String $gerrit_version
      */
-    public function setGerritVersion($gerrit_version) {
+    public function setGerritVersion($gerrit_version)
+    {
         $this->gerrit_version = $gerrit_version;
         return $this;
     }
@@ -227,7 +254,8 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     /**
      * @return String
      */
-    public function getHTTPPassword() {
+    public function getHTTPPassword()
+    {
         return (string)$this->http_password;
     }
 
@@ -242,7 +270,8 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     /**
      * @param String $http_password
      */
-    public function setHTTPPassword($http_password) {
+    public function setHTTPPassword($http_password)
+    {
         $this->http_password = $http_password;
         return $this;
     }

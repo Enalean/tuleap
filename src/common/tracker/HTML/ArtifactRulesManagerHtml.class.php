@@ -36,17 +36,20 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
      *
      *  @param $artifact_type object
      */
-    function __construct(&$artifact_type_html, $href = '') {
+    function __construct(&$artifact_type_html, $href = '')
+    {
         parent::__construct();
         $this->artifact_type = $artifact_type_html;
         $this->href          = $href;
     }
 
-    function saveRule($source, $source_value, $target, $target_values) {
+    function saveRule($source, $source_value, $target, $target_values)
+    {
         parent::saveRule($this->artifact_type->getId(), $source, $source_value, $target, $target_values);
     }
 
-    function displayFieldsAndValuesAsJavascript() {
+    function displayFieldsAndValuesAsJavascript()
+    {
         $hp = Codendi_HTMLPurifier::instance();
         echo "\n//------------------------------------------------------\n";
         $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
@@ -69,7 +72,8 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         echo "\n//------------------------------------------------------\n";
     }
 
-    function displayRulesAsJavascript() {
+    function displayRulesAsJavascript()
+    {
         echo "\n//------------------------------------------------------\n";
         $rules = $this->getAllRulesByArtifactTypeWithOrder($this->artifact_type->getId());
         if ($rules && count($rules) > 0) {
@@ -83,7 +87,8 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         echo "\n//------------------------------------------------------\n";
     }
 
-    function getAllSourceFields($target_id) {
+    function getAllSourceFields($target_id)
+    {
         $sources = array();
         $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
         $used_fields = $art_field_fact->getAllUsedFields();
@@ -99,7 +104,8 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         return $sources;
     }
 
-    function getAllTargetFields($source_id) {
+    function getAllTargetFields($source_id)
+    {
         $targets = array();
         $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
         $used_fields = $art_field_fact->getAllUsedFields();
@@ -117,7 +123,8 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
 
 
 
-    function displayEditForm($source_field = false, $target_field = false, $source_value = false, $target_value = false) {
+    function displayEditForm($source_field = false, $target_field = false, $source_value = false, $target_value = false)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         echo '<noscript class="error">'. $GLOBALS['Language']->getText('tracker_field_dependencies','noscript') .'</noscript>';
         echo '<form action="'. $this->href .'" method="post" id="edit_rule_form"><div id="edit_rule">';
@@ -250,7 +257,8 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
 
     }
 
-    function displayRules($source_field = false, $target_field = false, $source_value = false, $target_value = false) {
+    function displayRules($source_field = false, $target_field = false, $source_value = false, $target_value = false)
+    {
         $this->_header();
         echo '<div>'. $GLOBALS['Language']->getText('tracker_field_dependencies','inline_help') .'</div>';
         echo '<br />';
@@ -259,7 +267,8 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         $this->_footer();
     }
 
-    function saveFromRequest(&$request) {
+    function saveFromRequest(&$request)
+    {
         //TODO: Valid the request
         switch ($request->get('direction_type')) {
             case 'source': // 1 source -> n targets
@@ -296,7 +305,8 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         }
     }
 
-    function badRequest() {
+    function badRequest()
+    {
         header("HTTP/1.1 400 Bad Request");
         $GLOBALS['Response']->addFeedback('info', 'Bad Request');
         $this->_header();
@@ -304,7 +314,8 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         $this->_footer();
         exit();
     }
-    function _header() {
+    function _header()
+    {
         $params = array();
         $params['title']   = $this->artifact_type->getName() .' '. $GLOBALS['Language']->getText('tracker_include_type','mng_field_dependencies');
         $params['help']    = 'tracker-v3.html#field-dependencies';
@@ -312,7 +323,8 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         $this->artifact_type->displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type','mng_field_dependencies_title'));
     }
 
-    function _footer() {
+    function _footer()
+    {
         $this->artifact_type->footer(array());
     }
 }

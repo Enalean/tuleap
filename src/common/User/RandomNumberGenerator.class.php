@@ -23,7 +23,8 @@ class RandomNumberGenerator {
 
     // 128 bits of entropy is enough most of the time
     // @see https://www.owasp.org/index.php/Insufficient_Session-ID_Length
-    public function __construct($token_size = 16) {
+    public function __construct($token_size = 16)
+    {
         $this->token_size = $token_size;
     }
 
@@ -33,7 +34,8 @@ class RandomNumberGenerator {
      *
      * @return string Number represented has a hexadecimal string
      */
-    public function getNumber() {
+    public function getNumber()
+    {
         try {
             return bin2hex(random_bytes($this->token_size));
         } catch (Exception $ex) {

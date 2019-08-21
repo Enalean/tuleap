@@ -25,11 +25,13 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator {
      */
     private $formelement_factory;
 
-    public function __construct(Tracker_FormElementFactory $formelement_factory) {
+    public function __construct(Tracker_FormElementFactory $formelement_factory)
+    {
         $this->formelement_factory = $formelement_factory;
     }
 
-    public function process(Tracker_Artifact $artifact, array $fields_data) {
+    public function process(Tracker_Artifact $artifact, array $fields_data)
+    {
         $tracker_data = array();
 
         //only when a previous changeset exists

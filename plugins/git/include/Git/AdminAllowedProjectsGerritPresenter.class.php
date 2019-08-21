@@ -124,47 +124,58 @@ class AdminAllowedProjectsGerritPresenter
         return dgettext('tuleap-git', 'List of allowed projects');
     }
 
-    public function resource_allowed_project_list_allow_placeholder() {
+    public function resource_allowed_project_list_allow_placeholder()
+    {
         return dgettext('tuleap-git', 'Project name');
     }
 
-    public function resource_allowed_project_list_filter_placeholder() {
+    public function resource_allowed_project_list_filter_placeholder()
+    {
         return dgettext('tuleap-git', 'Filter on project id or name');
     }
 
-    public function resource_allowed_project_list_allow_project() {
+    public function resource_allowed_project_list_allow_project()
+    {
         return dgettext('tuleap-git', 'Allow access');
     }
 
-    public function resource_allowed_project_list_revoke_projects() {
+    public function resource_allowed_project_list_revoke_projects()
+    {
         return dgettext('tuleap-git', 'Revoke access to selected');
     }
 
-    public function resource_allowed_project_list_id() {
+    public function resource_allowed_project_list_id()
+    {
         return dgettext('tuleap-git', 'Id');
     }
 
-    public function resource_allowed_project_list_name() {
+    public function resource_allowed_project_list_name()
+    {
         return dgettext('tuleap-git', 'Name');
     }
 
-    public function resource_allowed_project_list_empty() {
+    public function resource_allowed_project_list_empty()
+    {
         return dgettext('tuleap-git', 'Currently, there\'s no project allowed to use this Gerrit server.');
     }
 
-    public function resource_allowed_project_revoke_title() {
+    public function resource_allowed_project_revoke_title()
+    {
         return dgettext('tuleap-git', 'Warning');
     }
 
-    public function resource_allowed_project_revoke_description() {
+    public function resource_allowed_project_revoke_description()
+    {
         return dgettext('tuleap-git', 'You are about to revoke the access to this Gerrit server to one or several projects. Are you sure you want to do this?');
     }
 
-    public function resource_allowed_project_revoke_yes() {
+    public function resource_allowed_project_revoke_yes()
+    {
         return dgettext('tuleap-git', 'Yes, revoke access');
     }
 
-    public function resource_allowed_project_revoke_no() {
+    public function resource_allowed_project_revoke_no()
+    {
         return dgettext('tuleap-git', 'No');
     }
 

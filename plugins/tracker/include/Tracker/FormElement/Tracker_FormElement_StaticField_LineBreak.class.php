@@ -21,13 +21,15 @@
 
 class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_StaticField {
 
-    protected function fetchReadOnly() {
+    protected function fetchReadOnly()
+    {
         $html = '';
         $html .= '<br class="tracker-admin-linebreak" id="tracker-admin-formElements_'. $this->id .'" />';
         return $html;
     }
 
-    public function fetchAdmin($tracker) {
+    public function fetchAdmin($tracker)
+    {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
         $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_'. $this->id .'">';
@@ -52,7 +54,8 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
      *
      * @return string html
      */
-    protected function fetchAdminFormElement() {
+    protected function fetchAdminFormElement()
+    {
         $html = '<hr class="tracker-admin-linebreak" id="tracker-admin-formElements_'. $this->id .'" size="1" />';
         return $html;
     }
@@ -64,7 +67,8 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
      *
      * @return string label, the name if the name is not internationalized, or the localized text if so
      */
-    function getLabel() {
+    function getLabel()
+    {
         global $Language;
         $label = parent::getLabel();
         if ( ! $label) {
@@ -74,7 +78,8 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
         }
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         // no description for Line Break
         return '';
     }
@@ -82,28 +87,32 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
     /**
      * @return the label of the formElement (mainly used in admin part)
      */
-    public static function getFactoryLabel() {
+    public static function getFactoryLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'line_break_label');
     }
 
     /**
      * @return the description of the formElement (mainly used in admin part)
      */
-    public static function getFactoryDescription() {
+    public static function getFactoryDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'line_break_description');
     }
 
     /**
      * @return the path to the icon to use an element
      */
-    public static function getFactoryIconUseIt() {
+    public static function getFactoryIconUseIt()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/arrow-curve-180-gray.png');
     }
 
     /**
      * @return the path to the icon to create an element
      */
-    public static function getFactoryIconCreate() {
+    public static function getFactoryIconCreate()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/arrow-curve-180-gray--plus.png');
     }
 }

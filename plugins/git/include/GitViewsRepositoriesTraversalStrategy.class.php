@@ -23,7 +23,8 @@
  */
 abstract class GitViewsRepositoriesTraversalStrategy {
 
-    public function __construct() {
+    public function __construct()
+    {
     }
 
     /**
@@ -34,7 +35,8 @@ abstract class GitViewsRepositoriesTraversalStrategy {
      *
      * @return string
      */
-    public function fetch(array $repositories, PFUser $user) {
+    public function fetch(array $repositories, PFUser $user)
+    {
         if (empty($repositories)) {
             return '';
         }
@@ -44,7 +46,8 @@ abstract class GitViewsRepositoriesTraversalStrategy {
     /**
      * @return string
      */
-    protected function _makeRepositoryList(array $repositories, PFUser $user) {
+    protected function _makeRepositoryList(array $repositories, PFUser $user)
+    {
         $html = '';
         foreach ( $repositories as $repository ) {
             $repoName = $repository[GitDao::REPOSITORY_NAME];
@@ -71,7 +74,8 @@ abstract class GitViewsRepositoriesTraversalStrategy {
      *
      * @return GitRepository
      */
-    protected function getRepository($row) {
+    protected function getRepository($row)
+    {
         $r = new GitRepository();
         $r->setId($row[GitDao::REPOSITORY_ID]);
         $r->load();

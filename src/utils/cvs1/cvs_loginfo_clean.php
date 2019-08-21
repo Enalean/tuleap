@@ -21,7 +21,8 @@
 require_once __DIR__ . '/../../www/include/pre.php';
 
 
-function cvs_loginfo_format_data($line) {
+function cvs_loginfo_format_data($line)
+{
     $match=array();
     preg_match_all('/\/cvsroot\/([^\/]*?)\/CVSROOT\/loginfo/', $line, $match);
     return $match[1][0];

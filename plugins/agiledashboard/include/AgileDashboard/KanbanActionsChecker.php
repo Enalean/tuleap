@@ -45,7 +45,8 @@ class AgileDashboard_KanbanActionsChecker {
         $this->tracker_factory      = $tracker_factory;
     }
 
-    public function checkUserCanAddInPlace(PFUser $user, AgileDashboard_Kanban $kanban) {
+    public function checkUserCanAddInPlace(PFUser $user, AgileDashboard_Kanban $kanban)
+    {
         $tracker        = $this->getTrackerForKanban($kanban);
         $semantic_title = $this->getSemanticTitle($tracker);
 
@@ -54,7 +55,8 @@ class AgileDashboard_KanbanActionsChecker {
         }
     }
 
-    public function checkUserCanAddColumns(PFUser $user, AgileDashboard_Kanban $kanban) {
+    public function checkUserCanAddColumns(PFUser $user, AgileDashboard_Kanban $kanban)
+    {
         $this->checkUserCanAdministrate($user, $kanban);
 
         $tracker         = $this->getTrackerForKanban($kanban);
@@ -69,7 +71,8 @@ class AgileDashboard_KanbanActionsChecker {
         }
     }
 
-    public function checkUserCanReorderColumns(PFUser $user, AgileDashboard_Kanban $kanban) {
+    public function checkUserCanReorderColumns(PFUser $user, AgileDashboard_Kanban $kanban)
+    {
         $this->checkUserCanAdministrate($user, $kanban);
 
         $tracker         = $this->getTrackerForKanban($kanban);
@@ -84,7 +87,8 @@ class AgileDashboard_KanbanActionsChecker {
         }
     }
 
-    public function checkUserCanAdministrate(PFUser $user, AgileDashboard_Kanban $kanban) {
+    public function checkUserCanAdministrate(PFUser $user, AgileDashboard_Kanban $kanban)
+    {
         $tracker = $this->getTrackerForKanban($kanban);
 
         if (! $this->permissions_manager->userCanAdministrate($user, $tracker->getProject()->getId())) {
@@ -92,7 +96,8 @@ class AgileDashboard_KanbanActionsChecker {
         }
     }
 
-    public function checkUserCanDeleteColumn(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column) {
+    public function checkUserCanDeleteColumn(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column)
+    {
         $this->checkUserCanAdministrate($user, $kanban);
 
         if (! $column->isRemovable()) {
@@ -111,7 +116,8 @@ class AgileDashboard_KanbanActionsChecker {
         }
     }
 
-    public function checkUserCanEditColumnLabel(PFUser $user, AgileDashboard_Kanban $kanban) {
+    public function checkUserCanEditColumnLabel(PFUser $user, AgileDashboard_Kanban $kanban)
+    {
         $this->checkUserCanAdministrate($user, $kanban);
 
         $tracker         = $this->getTrackerForKanban($kanban);
@@ -126,7 +132,8 @@ class AgileDashboard_KanbanActionsChecker {
         }
     }
 
-    public function getTrackerForKanban(AgileDashboard_Kanban $kanban) {
+    public function getTrackerForKanban(AgileDashboard_Kanban $kanban)
+    {
         $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
 
         if (! $tracker) {
@@ -136,7 +143,8 @@ class AgileDashboard_KanbanActionsChecker {
         return $tracker;
     }
 
-    public function getSemanticStatus(Tracker $tracker) {
+    public function getSemanticStatus(Tracker $tracker)
+    {
         $semantic = Tracker_Semantic_Status::load($tracker);
 
         if (! $semantic->getFieldId()) {
@@ -146,7 +154,8 @@ class AgileDashboard_KanbanActionsChecker {
         return $semantic;
     }
 
-    private function getSemanticTitle(Tracker $tracker) {
+    private function getSemanticTitle(Tracker $tracker)
+    {
         $semantic = Tracker_Semantic_Title::load($tracker);
 
         if (! $semantic->getFieldId()) {
@@ -156,7 +165,8 @@ class AgileDashboard_KanbanActionsChecker {
         return $semantic;
     }
 
-    private function trackerHasOnlyTitleRequired(Tracker $tracker, Tracker_Semantic_Title $semantic_title) {
+    private function trackerHasOnlyTitleRequired(Tracker $tracker, Tracker_Semantic_Title $semantic_title)
+    {
         $used_fields = $this->form_element_factory->getUsedFields($tracker);
 
         foreach($used_fields as $used_field) {

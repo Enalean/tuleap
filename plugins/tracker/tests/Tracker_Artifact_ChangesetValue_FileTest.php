@@ -27,7 +27,8 @@ Mock::generate('Tracker_FileInfo');
 
 class Tracker_Artifact_ChangesetValue_FileTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->user = mock('PFUser');
 
@@ -36,7 +37,8 @@ class Tracker_Artifact_ChangesetValue_FileTest extends TuleapTestCase {
         stub($this->artifact)->getLastChangeset()->returns($this->changeset);
     }
 
-    public function testNoDiff() {
+    public function testNoDiff()
+    {
         $info   = new MockTracker_FileInfo();
         $info->setReturnValue('getFilename', 'Screenshot.png');
         $field  = new MockTracker_FormElement_Field_File();
@@ -46,7 +48,8 @@ class Tracker_Artifact_ChangesetValue_FileTest extends TuleapTestCase {
         $this->assertFalse($file_2->diff($file_1));
     }
 
-    public function testDiff() {
+    public function testDiff()
+    {
         $info   = new MockTracker_FileInfo();
         $info->setReturnValue('__toString', '#1 Screenshot.png');
         $info->setReturnValue('getFilename', 'Screenshot.png');
@@ -62,7 +65,8 @@ class Tracker_Artifact_ChangesetValue_FileTest extends TuleapTestCase {
         $this->assertEqual($file_2->diff($file_1, 'text'), 'Screenshot.png added');
     }
 
-    public function testDiff_with_lot_of_files() {
+    public function testDiff_with_lot_of_files()
+    {
         $info1   = new MockTracker_FileInfo();
         $info1->setReturnValue('__toString', '#1 Screenshot1.png');
         $info1->setReturnValue('getFilename', 'Screenshot1.png');

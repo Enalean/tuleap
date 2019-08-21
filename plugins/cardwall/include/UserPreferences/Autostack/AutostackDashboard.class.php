@@ -28,12 +28,14 @@ class Cardwall_UserPreferences_Autostack_AutostackDashboard extends Cardwall_Use
      */
     private $tracker;
 
-    public function __construct(PFUser $user, Tracker $tracker) {
+    public function __construct(PFUser $user, Tracker $tracker)
+    {
         parent::__construct($user);
         $this->tracker = $tracker;
     }
 
-    public function getName(Cardwall_Column $column) {
+    public function getName(Cardwall_Column $column)
+    {
         return 'cardwall_dashboard_'.$this->tracker->getId().'_column_'.$column->getId();
     }
 }

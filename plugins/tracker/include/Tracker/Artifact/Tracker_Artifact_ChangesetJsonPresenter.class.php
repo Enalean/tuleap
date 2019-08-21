@@ -22,35 +22,42 @@ class Tracker_Artifact_ChangesetJsonPresenter {
     /** @var Tracker_Artifact_Changeset */
     private $changeset;
 
-    public function __construct(Tracker_Artifact_Changeset $changeset) {
+    public function __construct(Tracker_Artifact_Changeset $changeset)
+    {
         $this->changeset = $changeset;
     }
 
-    public function author_updated() {
+    public function author_updated()
+    {
         $user_str = UserHelper::instance()->getDisplayNameFromUserId($this->changeset->getSubmittedBy());
         return $GLOBALS['Language']->getText('plugin_tracker', 'artifact_update_popup_title', array($user_str));
     }
 
-    public function time() {
+    public function time()
+    {
         return DateHelper::timeAgoInWords($this->changeset->getSubmittedOn());
     }
 
-    public function there_are_comments_and_diff() {
+    public function there_are_comments_and_diff()
+    {
         return $this->changeset->getComment() && $this->changeset->diffToPrevious();
     }
 
-    public function comment() {
+    public function comment()
+    {
         $comment = $this->changeset->getComment();
         if ($comment) {
             return $comment->fetchFollowUp();
         }
     }
 
-    public function diff() {
+    public function diff()
+    {
         return $this->changeset->diffToPrevious();
     }
 
-    public function got_it() {
+    public function got_it()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker', 'artifact_update_popup_got_it');
     }
 }

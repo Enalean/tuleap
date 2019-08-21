@@ -25,11 +25,13 @@
 
 class Rule_NumericalTest extends TuleapTestCase {
 
-    function UnitTestCase($name = 'Rule_Numerical test') {
+    function UnitTestCase($name = 'Rule_Numerical test')
+    {
         $this->UnitTestCase($name);
     }
 
-    function testBiggerThan() {
+    function testBiggerThan()
+    {
         $r = new Rule_GreaterThan(-1);
 
         $this->assertTrue($r->isValid('0.9'));
@@ -41,7 +43,8 @@ class Rule_NumericalTest extends TuleapTestCase {
         $this->assertFalse($r->isValid('toto'));
     }
 
-    function testBiggerOrEqualThan() {
+    function testBiggerOrEqualThan()
+    {
         $r = new Rule_GreaterOrEqual(0);
 
         $this->assertTrue($r->isValid('1'));
@@ -52,7 +55,8 @@ class Rule_NumericalTest extends TuleapTestCase {
         $this->assertFalse($r->isValid('toto'));
     }
 
-    function testLesserThan() {
+    function testLesserThan()
+    {
         $r = new Rule_LessThan(10);
 
         $this->assertTrue($r->isValid('1'));
@@ -66,7 +70,8 @@ class Rule_NumericalTest extends TuleapTestCase {
         $this->assertFalse($r->isValid('toto'));
     }
 
-    function testLesserOrEqualThan() {
+    function testLesserOrEqualThan()
+    {
         $r = new Rule_lessOrEqual(10);
 
         $this->assertTrue($r->isValid('1'));
@@ -78,7 +83,8 @@ class Rule_NumericalTest extends TuleapTestCase {
         $this->assertFalse($r->isValid('toto'));
     }
 
-    function testWhiteList() {
+    function testWhiteList()
+    {
         $r = new Rule_WhiteList(array('-1', '0', '42'));
 
         $this->assertTrue($r->isValid('-1'));

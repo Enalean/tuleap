@@ -18,25 +18,29 @@
 
 class b201201181909_add_index_on_svn_commits_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add index on repositoryid and date on svn_commits table in order to speed-up
 Computation of svn statistics.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->log->warn('Following operations might take a while, please be patient...');
         $sql = "ALTER TABLE svn_commits
                 ADD INDEX idx_repositoryid_date (repositoryid, date)";
         $this->db->addIndex('svn_commits', 'idx_repositoryid_date', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         // As of forgeupgrade 1.2 indexNameExists is buggy, so cannot rely on it for post upgrade check
         // Assume it's ok...
 

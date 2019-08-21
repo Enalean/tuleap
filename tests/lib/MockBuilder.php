@@ -37,7 +37,8 @@
  *
  * @return \OngoingIntelligentStub
  */
-function stub($classname_or_simpletest_mock) {
+function stub($classname_or_simpletest_mock)
+{
     if ($classname_or_simpletest_mock instanceof \Mockery\MockInterface) {
         return new Tuleap\Test\MockeryOngoingIntelligentStub($classname_or_simpletest_mock);
     } else {
@@ -66,14 +67,16 @@ function stub($classname_or_simpletest_mock) {
  * @param $classname_or_simpletest_mock
  * @return null|OngoingIntelligentStub
  */
-function mockery_stub($classname_or_simpletest_mock) {
+function mockery_stub($classname_or_simpletest_mock)
+{
     if (is_string($classname_or_simpletest_mock)) {
         return stub(\Mockery::spy($classname_or_simpletest_mock));
     }
     return null;
 }
 
-function expect($classname_or_simpletest_mock) {
+function expect($classname_or_simpletest_mock)
+{
     return stub($classname_or_simpletest_mock);
 }
 
@@ -91,7 +94,8 @@ function expect($classname_or_simpletest_mock) {
  *
  * @return a simpletest mock
  */
-function mock($classname) {
+function mock($classname)
+{
     $mockclassname = "Mock$classname";
     if (strpos($classname, '\\') !== false) {
         $mockclassname = "Mock". str_replace('\\', '_', $classname);
@@ -100,11 +104,13 @@ function mock($classname) {
     return new $mockclassname();
 }
 
-function safe_mock($classname) {
+function safe_mock($classname)
+{
     return \Mockery::mock($classname);
 }
 
-function partial_stub($classname_or_simpletest_mock, array $mocked_methods) {
+function partial_stub($classname_or_simpletest_mock, array $mocked_methods)
+{
     if (is_object($classname_or_simpletest_mock)) {
         $mock = $classname_or_simpletest_mock;
     } else {
@@ -113,7 +119,8 @@ function partial_stub($classname_or_simpletest_mock, array $mocked_methods) {
     return new OngoingIntelligentStub($mock);
 }
 
-function partial_mock($classname, array $mocked_methods, ?array $construct_params = null) {
+function partial_mock($classname, array $mocked_methods, ?array $construct_params = null)
+{
     $object = TestHelper::getPartialMock($classname, $mocked_methods);
     if ($construct_params) {
         call_user_func_array(array($object, '__construct'), $construct_params);

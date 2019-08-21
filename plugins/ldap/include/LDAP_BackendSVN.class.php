@@ -28,7 +28,8 @@ class LDAP_BackendSVN extends BackendSVN {
      *
      * @param LDAP $ldap The ldap connexion
      */
-    public function setUp(LDAP $ldap) {
+    public function setUp(LDAP $ldap)
+    {
         $this->ldap = $ldap;
     }
 
@@ -101,7 +102,8 @@ class LDAP_BackendSVN extends BackendSVN {
      *
      * @return String
      */
-    function getSVNAccessUserGroupMembers(Project $project) {
+    function getSVNAccessUserGroupMembers(Project $project)
+    {
         $ldapPrjMgr = $this->getLDAPProjectManager();
         if ($ldapPrjMgr->hasSVNLDAPAuth($project->getID())) {
             $conf       = "";
@@ -110,7 +112,8 @@ class LDAP_BackendSVN extends BackendSVN {
 
             $project_members     = $project->getMembers();
             $project_members_ids = array_map(
-                function (PFUser $member) { return (int) $member->getId(); },
+                function (PFUser $member) {
+                    return (int) $member->getId(); },
                 $project_members
             );
 
@@ -141,7 +144,8 @@ class LDAP_BackendSVN extends BackendSVN {
      *
      * @return String
      */
-    function getSVNAccessRootPathDef($project) {
+    function getSVNAccessRootPathDef($project)
+    {
         $ldapPrjMgr = $this->getLDAPProjectManager();
         if ($ldapPrjMgr->hasSVNLDAPAuth($project->getID())) {
             $conf = "[/]\n";
@@ -162,7 +166,8 @@ class LDAP_BackendSVN extends BackendSVN {
      *
      * @return LDAP_ProjectManager
      */
-    protected function getLDAPProjectManager() {
+    protected function getLDAPProjectManager()
+    {
         if ($this->ldapProjectManager === null) {
             $this->ldapProjectManager = new LDAP_ProjectManager();
         }
@@ -174,7 +179,8 @@ class LDAP_BackendSVN extends BackendSVN {
      *
      * @return LDAP
      */
-    protected function getLDAP() {
+    protected function getLDAP()
+    {
         return $this->ldap;
     }
 
@@ -183,7 +189,8 @@ class LDAP_BackendSVN extends BackendSVN {
      *
      * @return LDAP_UserManager
      */
-    protected function getLDAPUserManager() {
+    protected function getLDAPUserManager()
+    {
         if ($this->ldapUserManager === null) {
             $this->ldapUserManager = new LDAP_UserManager($this->ldap, LDAP_UserSync::instance());
         }

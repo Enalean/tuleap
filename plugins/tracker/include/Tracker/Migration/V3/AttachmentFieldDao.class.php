@@ -20,7 +20,8 @@
 
 class Tracker_Migration_V3_AttachmentFieldDao extends DataAccessObject {
 
-    public function addAttachmentField($tv5_id) {
+    public function addAttachmentField($tv5_id)
+    {
         $tv5_id = $this->da->escapeInt($tv5_id);
         $sql = "INSERT INTO tracker_field(tracker_id, parent_id, formElement_type, name, label, description, use_it, rank, scope, required)
                 SELECT $tv5_id, S1.id, 'file', 'attachment', 'Attachments', '', 1, 1, 'P', 0
@@ -31,7 +32,8 @@ class Tracker_Migration_V3_AttachmentFieldDao extends DataAccessObject {
         $this->setPermissionsForEveryone($id);
     }
 
-    private function setPermissionsForEveryone($field_id) {
+    private function setPermissionsForEveryone($field_id)
+    {
         $sql = "INSERT INTO permissions(permission_type, object_id, ugroup_id) VALUES
                 ('PLUGIN_TRACKER_FIELD_READ', $field_id, 1),
                 ('PLUGIN_TRACKER_FIELD_SUBMIT', $field_id, 1),

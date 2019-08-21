@@ -64,89 +64,110 @@ class SVN_ImmutableTagsPresenter
         $this->existing_tree = json_encode($existing_tree);
     }
 
-    private function keepOnlyDirectories($path) {
+    private function keepOnlyDirectories($path)
+    {
         return substr($path, -1) === '/';
     }
 
-    private function addSlasheAsPrefix(&$path) {
+    private function addSlasheAsPrefix(&$path)
+    {
         if ($path !== '/') {
             $path = '/'. $path;
         }
     }
 
-    public function svn_allow_tag_immutable_title() {
+    public function svn_allow_tag_immutable_title()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'title');
     }
 
-    public function svn_allow_tag_immutable_comment() {
+    public function svn_allow_tag_immutable_comment()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'configuration_description');
     }
 
-    public function immutable_tag_configuration() {
+    public function immutable_tag_configuration()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'configuration');
     }
 
-    public function tree() {
+    public function tree()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'tree');
     }
 
-    public function tree_empty_state() {
+    public function tree_empty_state()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'tree_empty_state');
     }
 
-    public function preview() {
+    public function preview()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'preview');
     }
 
-    public function preview_description() {
+    public function preview_description()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'preview_description');
     }
 
-    public function my_tag() {
+    public function my_tag()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags','my-tag');
     }
 
-    public function some_path() {
+    public function some_path()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags','some/path');
     }
 
-    public function select_tag() {
+    public function select_tag()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags','select_tag');
     }
 
-    public function loading() {
+    public function loading()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags','loading');
     }
 
-    public function svn_status_style() {
+    public function svn_status_style()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags','svn_status_style');
     }
 
-    public function impacted_svn() {
+    public function impacted_svn()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'impacted_svn');
     }
 
-    public function impacted_svn_empty_state() {
+    public function impacted_svn_empty_state()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'impacted_svn_empty_state');
     }
 
-    public function whitelist() {
+    public function whitelist()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'whitelist');
     }
 
-    public function path() {
+    public function path()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'path');
     }
 
-    public function sooo_fat() {
+    public function sooo_fat()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'sooo_fat', self::MAX_NUMBER_OF_FOLDERS);
     }
 
-    public function save() {
+    public function save()
+    {
         return $GLOBALS['Language']->getText('svn_admin_immutable_tags','save');
     }
 
-    public function project_id() {
+    public function project_id()
+    {
         return $this->project->getID();
     }
 }

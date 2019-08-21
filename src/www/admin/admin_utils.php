@@ -19,20 +19,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function site_admin_header($params) {
+function site_admin_header($params)
+{
     GLOBAL $HTML, $Language;
     global $feedback;
     $HTML->header($params);
     echo html_feedback_top($feedback);
 }
 
-function site_admin_footer($vals=0) {
+function site_admin_footer($vals=0)
+{
     GLOBAL $HTML;
     echo html_feedback_bottom($GLOBALS['feedback']);
     $HTML->footer(array());
 }
 
-function site_admin_warnings(Tuleap\Admin\Homepage\NbUsersByStatus $nb_users_by_status) {
+function site_admin_warnings(Tuleap\Admin\Homepage\NbUsersByStatus $nb_users_by_status)
+{
     $warnings = array();
     EventManager::instance()->processEvent(
         Event::GET_SITEADMIN_WARNINGS,

@@ -25,25 +25,29 @@ class Tracker_Workflow_Trigger_TriggerValidator {
     private $triggering_fields = array();
     private $rules_manager;
 
-    public function __construct(Tracker_Workflow_Trigger_RulesManager $rules_manager) {
+    public function __construct(Tracker_Workflow_Trigger_RulesManager $rules_manager)
+    {
         $this->rules_manager = $rules_manager;
     }
 
-    public function validateJsonFormat(stdClass $json, Tracker $tracker) {
+    public function validateJsonFormat(stdClass $json, Tracker $tracker)
+    {
         $this->validateJsonTargetFormat($json);
         $this->validateJsonTargetUniqueness($json, $tracker);
         $this->validateJsonConditionFormat($json);
         $this->validateJsonTriggeringFieldsFormat($json);
     }
 
-    private function validateJsonTargetFormat(stdClass $json) {
+    private function validateJsonTargetFormat(stdClass $json)
+    {
         if (! isset($json->target)) {
             throw new Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException('target is missing');
         }
         $this->validateJsonFieldValueFormat($json->target);
     }
 
-    private function validateJsonTargetUniqueness($json, $tracker) {
+    private function validateJsonTargetUniqueness($json, $tracker)
+    {
         $existing_rules = $this->rules_manager->getForTargetTracker($tracker);
 
         foreach ($existing_rules as $rule) {
@@ -53,7 +57,8 @@ class Tracker_Workflow_Trigger_TriggerValidator {
         }
     }
 
-    private function validateJsonConditionFormat(stdClass $json) {
+    private function validateJsonConditionFormat(stdClass $json)
+    {
         if (! isset($json->condition)) {
             throw new Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException('condition is missing');
         }
@@ -68,7 +73,8 @@ class Tracker_Workflow_Trigger_TriggerValidator {
         }
     }
 
-    private function validateJsonTriggeringFieldsFormat(stdClass $json) {
+    private function validateJsonTriggeringFieldsFormat(stdClass $json)
+    {
         if (! isset($json->triggering_fields)) {
             throw new Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException('no triggering_fields');
         }
@@ -81,7 +87,8 @@ class Tracker_Workflow_Trigger_TriggerValidator {
         }
     }
 
-    private function validateJsonFieldValueFormat($json) {
+    private function validateJsonFieldValueFormat($json)
+    {
         if (! isset($json->field_id)) {
             throw new Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException('field_id is missing');
         }
@@ -90,7 +97,8 @@ class Tracker_Workflow_Trigger_TriggerValidator {
         }
     }
 
-    private function validateTriggeringFieldUniqueness($json) {
+    private function validateTriggeringFieldUniqueness($json)
+    {
         $hash = $json->field_id . '###' . $json->field_value_id;
 
         if (in_array($hash, $this->triggering_fields)) {

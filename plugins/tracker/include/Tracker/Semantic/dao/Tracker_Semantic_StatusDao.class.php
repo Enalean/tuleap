@@ -22,12 +22,14 @@
 
 class Tracker_Semantic_StatusDao extends DataAccessObject {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_semantic_status';
     }
 
-    public function searchByTrackerId($tracker_id) {
+    public function searchByTrackerId($tracker_id)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
                 FROM $this->table_name
@@ -35,7 +37,8 @@ class Tracker_Semantic_StatusDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function save($tracker_id, $field_id, $open_value_ids) {
+    public function save($tracker_id, $field_id, $open_value_ids)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $field_id   = $this->da->escapeInt($field_id);
 
@@ -58,7 +61,8 @@ class Tracker_Semantic_StatusDao extends DataAccessObject {
         return true;
     }
 
-    public function delete($tracker_id) {
+    public function delete($tracker_id)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "DELETE FROM tracker_semantic_status
                 WHERE tracker_id = $tracker_id";

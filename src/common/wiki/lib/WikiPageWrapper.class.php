@@ -36,7 +36,8 @@ class WikiPageWrapper {
   /* private int    */ var $gid;
 
 
-    function __construct($id=0) {
+    function __construct($id=0)
+    {
         $this->gid = (int) $id;
 
         $pm = ProjectManager::instance();
@@ -53,7 +54,8 @@ class WikiPageWrapper {
   /**
    * @return WikiRequest
    */
-    function getRequest() {
+    function getRequest()
+    {
         define('PHPWIKI_NOMAIN', true);
         IniConfig(PHPWIKI_DIR."/config/config.ini");
         ini_set('include_path', PHPWIKI_DIR.':'.ini_get('include_path'));
@@ -64,7 +66,8 @@ class WikiPageWrapper {
         return new WikiRequest();
     }
 
-    function getProjectEmptyLinks() {
+    function getProjectEmptyLinks()
+    {
       // Dirty hack to 'give' a WikiRequest object to phpwiki
       // Obscure functions seems require it.
         $request = $this->getRequest();
@@ -84,7 +87,8 @@ class WikiPageWrapper {
         return $allPages;
     }
 
-    function addNewProjectPage($pagename) {
+    function addNewProjectPage($pagename)
+    {
         $projectPageName='ProjectWantedPages';
 
       // Dirty hack to 'give' a WikiRequest object to phpwiki
@@ -132,11 +136,13 @@ class WikiPageWrapper {
         $pagehandle->save($text, $version + 1, $meta);
     }
 
-    private function wikiPageDoesNotExistInCreatedAndEmptyPages($page_created, $pagename) {
+    private function wikiPageDoesNotExistInCreatedAndEmptyPages($page_created, $pagename)
+    {
         return ! $page_created->exists() && ! in_array($pagename, $this->getProjectEmptyLinks());
     }
 
-    function addUploadPage() {
+    function addUploadPage()
+    {
         // Dirty hack to 'give' a WikiRequest object to phpwiki
         // So obscure functions seems require it.
         $request = $this->getRequest();
@@ -170,7 +176,8 @@ Upload:num_rev/filename
     }
 
 
-    function render($lite=false, $full_screen=false) {
+    function render($lite=false, $full_screen=false)
+    {
         if($lite) {
             define('THEME', 'Codendi-lite');
         }
@@ -187,7 +194,8 @@ Upload:num_rev/filename
    * special install function
    *
    */
-    function install() {
+    function install()
+    {
         if($this->gid == 1) {
             if(!user_is_super_user()) {
                 exit_error($GLOBALS['Language']->getText('global','error'),
@@ -231,7 +239,8 @@ Upload:num_rev/filename
         $this->render();
     }
 
-    function getNextGroupWithWiki($currentGroupId, &$nbMatchFound) {
+    function getNextGroupWithWiki($currentGroupId, &$nbMatchFound)
+    {
         $nextId = null;
 
         $sql = sprintf('SELECT SQL_CALC_FOUND_ROWS DISTINCT group_id'.
@@ -255,7 +264,8 @@ Upload:num_rev/filename
           return $nextId;
     }
 
-    function upgrade() {
+    function upgrade()
+    {
         global $request;
         global $WikiTheme;
 

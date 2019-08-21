@@ -22,24 +22,28 @@
 
 class GraphOnTrackersV5_Chart_BurndownDao extends DataAccessObject {
 
-    function __construct($da = null) {
+    function __construct($da = null)
+    {
         parent::__construct($da);
         $this->table_name = 'plugin_graphontrackersv5_scrum_burndown';
     }
 
-    public function searchById($id) {
+    public function searchById($id)
+    {
         $id = $this->da->escapeInt($id);
         $sql = "SELECT * FROM $this->table_name WHERE id = $id";
         return $this->retrieve($sql);
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $id = $this->da->escapeInt($id);
         $sql = "DELETE FROM $this->table_name WHERE id = $id";
         return $this->update($sql);
     }
 
-    public function save($id, $field_id, $start_date, $duration) {
+    public function save($id, $field_id, $start_date, $duration)
+    {
         $id         = $this->da->escapeInt($id);
         $field_id   = $this->da->escapeInt($field_id);
         $start_date = $this->da->escapeInt($start_date);
@@ -49,7 +53,8 @@ class GraphOnTrackersV5_Chart_BurndownDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function duplicate($from_chart_id, $to_chart_id, $field_mapping) {
+    public function duplicate($from_chart_id, $to_chart_id, $field_mapping)
+    {
         $from_chart_id = $this->da->escapeInt($from_chart_id);
         $to_chart_id   = $this->da->escapeInt($to_chart_id);
         $sql = "INSERT INTO $this->table_name (id, field_id, start_date, duration)

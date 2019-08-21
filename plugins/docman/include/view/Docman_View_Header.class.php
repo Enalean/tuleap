@@ -21,7 +21,8 @@
 
 /* abstract */ class Docman_View_Header extends Docman_View_View {
 
-    function _header($params) {
+    function _header($params)
+    {
         if (!headers_sent()) {
             header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
             header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
@@ -64,7 +65,8 @@
         return array();
     }
 
-    /* protected */ function _getTitle($params) {
+    /* protected */ function _getTitle($params)
+    {
         $title = '';
         $project = $this->getProjectFromParams($params);
         if ($project) {
@@ -87,7 +89,8 @@
         return $title;
     }
 
-    /* protected */ function _footer($params) {
+    /* protected */ function _footer($params)
+    {
         if(isset($params['pv']) && $params['pv'] > 0) {
             $GLOBALS['HTML']->pv_footer(array());
         }
@@ -96,11 +99,13 @@
         }
     }
 
-    /* protected */ function _getAdditionalHtmlParams($params) {
+    /* protected */ function _getAdditionalHtmlParams($params)
+    {
         return  array();
     }
 
-    /* protected */ function _feedback($params) {
+    /* protected */ function _feedback($params)
+    {
         //$this->_controller->feedback->display();
     }
 

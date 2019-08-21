@@ -21,7 +21,8 @@
 
 class PermissionsNormalizer {
 
-    public function getNormalizedUGroupIds(Project $project, array $ugroup_ids, PermissionsNormalizerOverrideCollection $override_collection) {
+    public function getNormalizedUGroupIds(Project $project, array $ugroup_ids, PermissionsNormalizerOverrideCollection $override_collection)
+    {
         $ugroup_mapper = new PermissionsUGroupMapper($project);
         $normalized_ugroup_ids = array();
         foreach ($ugroup_ids as $ugroup_id) {
@@ -34,13 +35,15 @@ class PermissionsNormalizer {
         return $this->filterCatchAllGroups($normalized_ugroup_ids, $override_collection);
     }
 
-    private function appendOnceToHash(array &$array, $id) {
+    private function appendOnceToHash(array &$array, $id)
+    {
         if (! isset($array[$id])) {
             $array[$id] = $id;
         }
     }
 
-    private function filterCatchAllGroups(array $normalized_ugroup_ids, PermissionsNormalizerOverrideCollection $override_collection) {
+    private function filterCatchAllGroups(array $normalized_ugroup_ids, PermissionsNormalizerOverrideCollection $override_collection)
+    {
         $ugroup_ids = $this->filterPlatformCatchAllGroup($normalized_ugroup_ids, $override_collection);
         if ($ugroup_ids === null) {
             $ugroup_ids = $this->filterProjectCatchAllGroup($normalized_ugroup_ids, $override_collection);
@@ -48,7 +51,8 @@ class PermissionsNormalizer {
         return $ugroup_ids;
     }
 
-    private function filterPlatformCatchAllGroup(array $normalized_ugroup_ids, PermissionsNormalizerOverrideCollection $override_collection) {
+    private function filterPlatformCatchAllGroup(array $normalized_ugroup_ids, PermissionsNormalizerOverrideCollection $override_collection)
+    {
         $catch_all_groups = array(ProjectUGroup::ANONYMOUS, ProjectUGroup::AUTHENTICATED, ProjectUGroup::REGISTERED);
         foreach ($catch_all_groups as $catch_all_ugroup_id) {
             if (isset($normalized_ugroup_ids[$catch_all_ugroup_id])) {
@@ -59,7 +63,8 @@ class PermissionsNormalizer {
         return null;
     }
 
-    private function filterProjectCatchAllGroup(array $normalized_ugroup_ids, PermissionsNormalizerOverrideCollection $override_collection) {
+    private function filterProjectCatchAllGroup(array $normalized_ugroup_ids, PermissionsNormalizerOverrideCollection $override_collection)
+    {
         $final = array();
         foreach ($normalized_ugroup_ids as $ugroup_id) {
             if ($this->isProjectCatchAll($ugroup_id, $normalized_ugroup_ids)) {
@@ -71,7 +76,8 @@ class PermissionsNormalizer {
         return $final;
     }
 
-    private function isProjectCatchAll($ugroup_id, array $normalized_ugroup_ids) {
+    private function isProjectCatchAll($ugroup_id, array $normalized_ugroup_ids)
+    {
         return $ugroup_id < ProjectUGroup::DYNAMIC_UPPER_BOUNDARY &&
                isset($normalized_ugroup_ids[ProjectUGroup::PROJECT_MEMBERS]) &&
                $ugroup_id != ProjectUGroup::PROJECT_MEMBERS;

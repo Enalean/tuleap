@@ -22,12 +22,14 @@ class TruncateLevelLoggerTest extends TuleapTestCase {
 
     private $logger;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->logger = mock('Logger');
     }
 
-    public function itLogEverythingByDefault() {
+    public function itLogEverythingByDefault()
+    {
         $truncate_logger = new TruncateLevelLogger($this->logger, Logger::DEBUG);
 
         expect($this->logger)->debug("debug message")->once();
@@ -41,7 +43,8 @@ class TruncateLevelLoggerTest extends TuleapTestCase {
         $truncate_logger->error("error message");
     }
 
-    public function itSkipsDebugWhenLevelIsInfo() {
+    public function itSkipsDebugWhenLevelIsInfo()
+    {
         $truncate_logger = new TruncateLevelLogger($this->logger, Logger::INFO);
 
         expect($this->logger)->debug()->never();
@@ -55,7 +58,8 @@ class TruncateLevelLoggerTest extends TuleapTestCase {
         $truncate_logger->error("error message");
     }
 
-    public function itSkipsDebugAndInfoWhenLevelIsWarn() {
+    public function itSkipsDebugAndInfoWhenLevelIsWarn()
+    {
         $truncate_logger = new TruncateLevelLogger($this->logger, Logger::WARN);
 
         expect($this->logger)->debug()->never();
@@ -69,7 +73,8 @@ class TruncateLevelLoggerTest extends TuleapTestCase {
         $truncate_logger->error("error message");
     }
 
-    public function itSkipsDebugInfoAndWarnWhenLevelIsWarn() {
+    public function itSkipsDebugInfoAndWarnWhenLevelIsWarn()
+    {
         $truncate_logger = new TruncateLevelLogger($this->logger, Logger::ERROR);
 
         expect($this->logger)->debug()->never();

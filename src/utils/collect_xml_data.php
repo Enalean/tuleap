@@ -16,7 +16,8 @@ if (!file_exists($argv[1])) {
 $content = getArchiveFileReferences($argv[1]);
 replaceReferencesByActualFiles($argv[1], $content);
 
-function getArchiveFileReferences($archive_path) {
+function getArchiveFileReferences($archive_path)
+{
     $content = new TuleapArchiveContent();
 
     $src_archive = new ZipArchive();
@@ -44,7 +45,8 @@ function getArchiveFileReferences($archive_path) {
     return $content;
 }
 
-function getFileContentFromArchive(ZipArchive $archive, $filename) {
+function getFileContentFromArchive(ZipArchive $archive, $filename)
+{
     $fp       = $archive->getStream($filename);
     $contents = '';
     while (!feof($fp)) {
@@ -54,7 +56,8 @@ function getFileContentFromArchive(ZipArchive $archive, $filename) {
     return $contents;
 }
 
-function replaceReferencesByActualFiles($archive_path, TuleapArchiveContent $content) {
+function replaceReferencesByActualFiles($archive_path, TuleapArchiveContent $content)
+{
     $src_archive = new ZipArchive();
 
     if ($src_archive->open($archive_path, ZipArchive::OVERWRITE) !== true) {
@@ -78,7 +81,8 @@ class TuleapArchiveContent {
 
     private $content_files   = array();
 
-    public function addFileReference($reference, $target_file_path) {
+    public function addFileReference($reference, $target_file_path)
+    {
         if (file_exists($target_file_path)) {
             $this->reference_files[$reference] = $target_file_path;
         } else {
@@ -86,15 +90,18 @@ class TuleapArchiveContent {
         }
     }
 
-    public function addFileContent($reference, $content) {
+    public function addFileContent($reference, $content)
+    {
         $this->content_files[$reference] = $content;
     }
 
-    public function getFileReferences() {
+    public function getFileReferences()
+    {
         return $this->reference_files;
     }
 
-    public function getFileContents() {
+    public function getFileContents()
+    {
         return $this->content_files;
     }
 }

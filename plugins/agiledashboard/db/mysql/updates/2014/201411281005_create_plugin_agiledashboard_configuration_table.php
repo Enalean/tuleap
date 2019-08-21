@@ -24,17 +24,20 @@
 
 class b201411281005_create_plugin_agiledashboard_configuration_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Creating table plugin_agiledashboard_configuration.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
 
         $sql = "CREATE TABLE plugin_agiledashboard_configuration (
                     project_id INT(11) PRIMARY KEY,
@@ -65,7 +68,8 @@ EOT;
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (! $this->db->tableNameExists('plugin_agiledashboard_configuration')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_agiledashboard_configuration table is missing');
         }

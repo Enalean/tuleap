@@ -228,18 +228,21 @@ class SvnPlugin extends Plugin
         );
     }
 
-    public function getPluginInfo() {
+    public function getPluginInfo()
+    {
         if (!is_a($this->pluginInfo, 'SvnPluginInfo')) {
             $this->pluginInfo = new SvnPluginInfo($this);
         }
         return $this->pluginInfo;
     }
 
-    public function getServiceShortname() {
+    public function getServiceShortname()
+    {
         return self::SERVICE_SHORTNAME;
     }
 
-    public function getTypes() {
+    public function getTypes()
+    {
         return array(
             SystemEvent_SVN_CREATE_REPOSITORY::NAME,
             SystemEvent_SVN_DELETE_REPOSITORY::NAME,
@@ -260,14 +263,16 @@ class SvnPlugin extends Plugin
     }
 
     /** @see Event::UGROUP_MODIFY */
-    public function ugroup_modify(array $params) {
+    public function ugroup_modify(array $params)
+    {
         $project         = $params['project'];
 
         $this->updateAllAccessFileOfProject($project, $params['new_ugroup_name'], $params['old_ugroup_name']);
     }
 
     /** @see Event::MEMBERSHIP_CREATE */
-    public function membership_create(array $params) {
+    public function membership_create(array $params)
+    {
         $project         = $params['project'];
         $new_ugroup_name = null;
         $old_ugroup_name = null;
@@ -276,7 +281,8 @@ class SvnPlugin extends Plugin
     }
 
     /** @see Event::MEMBERSHIP_DELETE */
-    public function membership_delete(array $params) {
+    public function membership_delete(array $params)
+    {
         $project         = $params['project'];
         $new_ugroup_name = null;
         $old_ugroup_name = null;
@@ -306,7 +312,8 @@ class SvnPlugin extends Plugin
         }
     }
 
-    private function updateAllAccessFileOfProject(Project $project, $new_ugroup_name, $old_ugroup_name) {
+    private function updateAllAccessFileOfProject(Project $project, $new_ugroup_name, $old_ugroup_name)
+    {
         $list_repositories = $this->getRepositoryManager()->getRepositoriesInProject($project);
         foreach ($list_repositories as $repository) {
             $this->getBackendSVN()->updateSVNAccessForRepository(
@@ -319,12 +326,14 @@ class SvnPlugin extends Plugin
         }
     }
 
-    public function get_svn_list_repositories_sql_fragments(array $params) {
+    public function get_svn_list_repositories_sql_fragments(array $params)
+    {
         $dao = new Dao();
         $params['sql_fragments'][] = $dao->getListRepositoriesSqlFragment();
     }
 
-    public function system_event_get_types_for_default_queue($params) {
+    public function system_event_get_types_for_default_queue($params)
+    {
         $params['types'][] = 'Tuleap\\SVN\\Events\\'.SystemEvent_SVN_CREATE_REPOSITORY::NAME;
         $params['types'][] = 'Tuleap\\SVN\\Events\\'.SystemEvent_SVN_DELETE_REPOSITORY::NAME;
         $params['types'][] = 'Tuleap\\SVN\\Events\\'.SystemEvent_SVN_RESTORE_REPOSITORY::NAME;
@@ -386,7 +395,8 @@ class SvnPlugin extends Plugin
     }
 
     /** @return Tuleap\SVN\AccessControl\AccessFileHistoryDao */
-    private function getAccessFileHistoryDao(){
+    private function getAccessFileHistoryDao()
+    {
         if(empty($this->accessfile_dao)){
             $this->accessfile_dao = new AccessFileHistoryDao();
         }
@@ -394,7 +404,8 @@ class SvnPlugin extends Plugin
     }
 
     /** @return Tuleap\SVN\AccessControl\AccessFileHistoryFactory */
-    private function getAccessFileHistoryFactory(){
+    private function getAccessFileHistoryFactory()
+    {
         if(empty($this->accessfile_factory)){
             $this->accessfile_factory = new AccessFileHistoryFactory($this->getAccessFileHistoryDao());
         }
@@ -417,7 +428,8 @@ class SvnPlugin extends Plugin
     }
 
     /** @return Tuleap\SVN\Admin\MailNotificationManager */
-    private function getMailNotificationManager() {
+    private function getMailNotificationManager()
+    {
         if (empty($this->mail_notification_manager)) {
             $this->mail_notification_manager = new MailNotificationManager(
                 $this->getMailNotificationDao(),
@@ -474,13 +486,15 @@ class SvnPlugin extends Plugin
         return ProjectManager::instance();
     }
 
-    public function cssFile($params) {
+    public function cssFile($params)
+    {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
 
-    public function javascript_file() {
+    public function javascript_file()
+    {
         // Only show the javascript if we're actually in the svn pages.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/svn.js"></script>';
@@ -636,11 +650,13 @@ class SvnPlugin extends Plugin
     }
 
     /** @return BackendSVN */
-    private function getBackendSVN() {
+    private function getBackendSVN()
+    {
         return Backend::instance(Backend::SVN);
     }
 
-    public function get_reference($params) {
+    public function get_reference($params)
+    {
         $keyword = $params['keyword'];
 
         if ($this->isReferenceASubversionReference($keyword)) {
@@ -657,11 +673,13 @@ class SvnPlugin extends Plugin
 
     }
 
-    private function getReferenceExtractor() {
+    private function getReferenceExtractor()
+    {
         return new Extractor($this->getRepositoryManager());
     }
 
-    private function isReferenceASubversionReference($keyword) {
+    private function isReferenceASubversionReference($keyword)
+    {
         $dao    = new ReferenceDao();
         $result = $dao->searchSystemReferenceByNatureAndKeyword($keyword, self::SYSTEM_NATURE_NAME);
 
@@ -907,7 +925,8 @@ class SvnPlugin extends Plugin
         $injector->declareProjectResource($params['resources'], $params['project']);
     }
 
-    public function rest_project_get_svn(ProjectGetSvn $event) {
+    public function rest_project_get_svn(ProjectGetSvn $event)
+    {
         $event->setPluginActivated();
 
         $class            = "Tuleap\\SVN\\REST\\".$event->getVersion()."\\ProjectResource";

@@ -21,7 +21,8 @@
 
 class CacheableMarkup extends XmlContent {
 
-    function __construct($content, $basepage) {
+    function __construct($content, $basepage)
+    {
         $this->_basepage = $basepage;
         $this->_buf = '';
         $this->_content = array();
@@ -31,7 +32,8 @@ class CacheableMarkup extends XmlContent {
         unset($this->_buf);
     }
 
-    function pack() {
+    function pack()
+    {
         if (function_exists('gzcompress'))
             return gzcompress(serialize($this), 9);
         return serialize($this);
@@ -40,7 +42,8 @@ class CacheableMarkup extends XmlContent {
         //   when no gzcompress is available.
     }
 
-    function unpack($packed) {
+    function unpack($packed)
+    {
         if (!$packed)
             return false;
 
@@ -79,7 +82,8 @@ class CacheableMarkup extends XmlContent {
      * @return array
      * A list of wiki page names (strings).
      */
-    function getWikiPageLinks() {
+    function getWikiPageLinks()
+    {
         include_once('lib/WikiPlugin.php');
         $ploader = new WikiPluginLoader();
 
@@ -98,7 +102,8 @@ class CacheableMarkup extends XmlContent {
         return array_unique($links);
     }
 
-    function _append($item) {
+    function _append($item)
+    {
         if (is_array($item)) {
             foreach ($item as $subitem)
             $this->_append($subitem);
@@ -145,7 +150,8 @@ class CacheableMarkup extends XmlContent {
         }
     }
 
-    function _glean_description($text) {
+    function _glean_description($text)
+    {
         static $two_sentences;
         if (!$two_sentences) {
             $two_sentences = "[.?!][\")]*\s+[\"(]*[[:upper:])]"
@@ -172,11 +178,13 @@ class CacheableMarkup extends XmlContent {
      *
      * @return string
      */
-    function getDescription () {
+    function getDescription()
+    {
         return isset($this->_description) ? $this->_description : '';
     }
 
-    function asXML () {
+    function asXML()
+    {
         $xml = '';
         $basepage = $this->_basepage;
 
@@ -196,7 +204,8 @@ class CacheableMarkup extends XmlContent {
         return $xml;
     }
 
-    function printXML () {
+    function printXML()
+    {
         $basepage = $this->_basepage;
         // _content might be changed from a plugin (CreateToc)
         for ($i=0; $i < count($this->_content); $i++) {
@@ -225,33 +234,39 @@ class CacheableMarkup extends XmlContent {
  */
 class Cached_DynamicContent {
 
-    function cache(&$cache) {
+    function cache(&$cache)
+    {
         $cache[] = $this;
     }
 
-    function expand($basepage, &$obj) {
+    function expand($basepage, &$obj)
+    {
         trigger_error("Pure virtual", E_USER_ERROR);
     }
 
-    function getWikiPageLinks($basepage) {
+    function getWikiPageLinks($basepage)
+    {
         return false;
     }
 }
 
 class Cached_Link extends Cached_DynamicContent {
 
-    function isInlineElement() {
+    function isInlineElement()
+    {
         return true;
     }
 
-    function _getURL($basepage) {
+    function _getURL($basepage)
+    {
         return $this->_url;
     }
 }
 
 class Cached_WikiLink extends Cached_Link {
 
-    function __construct ($page, $label = false, $anchor = false) {
+    function __construct($page, $label = false, $anchor = false)
+    {
         $this->_page = $page;
         if ($anchor)
             $this->_anchor = $anchor;
@@ -259,32 +274,38 @@ class Cached_WikiLink extends Cached_Link {
             $this->_label = $label;
     }
 
-    function _getType() {
+    function _getType()
+    {
         return 'internal';
     }
 
-    function getPagename($basepage) {
+    function getPagename($basepage)
+    {
         $page = new WikiPageName($this->_page, $basepage);
         if ($page->isValid()) return $page->name;
         else return false;
     }
 
-    function getWikiPageLinks($basepage) {
+    function getWikiPageLinks($basepage)
+    {
         if ($basepage == '') return false;
         if ($link = $this->getPagename($basepage)) return array($link);
         else return false;
     }
 
-    function _getName($basepage) {
+    function _getName($basepage)
+    {
         return $this->getPagename($basepage);
     }
 
-    function _getURL($basepage) {
+    function _getURL($basepage)
+    {
         return WikiURL($this->getPagename($basepage));
     //return WikiURL($this->getPagename($basepage), false, 'abs_url');
     }
 
-    function expand($basepage, &$markup) {
+    function expand($basepage, &$markup)
+    {
         $label = isset($this->_label) ? $this->_label : false;
         $anchor = isset($this->_anchor) ? (string)$this->_anchor : '';
         $page = new WikiPageName($this->_page, $basepage, $anchor);
@@ -292,7 +313,8 @@ class Cached_WikiLink extends Cached_Link {
         else return HTML($label);
     }
 
-    function asXml() {
+    function asXml()
+    {
         $label = isset($this->_label) ? $this->_label : false;
         $anchor = isset($this->_anchor) ? (string)$this->_anchor : '';
         $page = new WikiPageName($this->_page, false, $anchor);
@@ -300,7 +322,8 @@ class Cached_WikiLink extends Cached_Link {
         return $link->asXml();
     }
 
-    function asString() {
+    function asString()
+    {
         if (isset($this->_label))
             return $this->_label;
         return $this->_page;
@@ -309,39 +332,46 @@ class Cached_WikiLink extends Cached_Link {
 
 class Cached_WikiLinkIfKnown extends Cached_WikiLink
 {
-    function __construct ($moniker) {
+    function __construct($moniker)
+    {
         $this->_page = $moniker;
     }
 
-    function expand($basepage, &$markup) {
+    function expand($basepage, &$markup)
+    {
         return WikiLink($this->_page, 'if_known');
     }
 }
 
 class Cached_PhpwikiURL extends Cached_DynamicContent
 {
-    function __construct ($url, $label) {
+    function __construct($url, $label)
+    {
         $this->_url = $url;
         if ($label)
             $this->_label = $label;
     }
 
-    function isInlineElement() {
+    function isInlineElement()
+    {
         return true;
     }
 
-    function expand($basepage, &$markup) {
+    function expand($basepage, &$markup)
+    {
         $label = isset($this->_label) ? $this->_label : false;
         return LinkPhpwikiURL($this->_url, $label, $basepage);
     }
 
-    function asXml() {
+    function asXml()
+    {
         $label = isset($this->_label) ? $this->_label : false;
         $link = LinkPhpwikiURL($this->_url, $label);
         return $link->asXml();
     }
 
-    function asString() {
+    function asString()
+    {
         if (isset($this->_label))
             return $this->_label;
         return $this->_url;
@@ -350,22 +380,26 @@ class Cached_PhpwikiURL extends Cached_DynamicContent
 
 class Cached_ExternalLink extends Cached_Link {
 
-    function __construct($url, $label=false) {
+    function __construct($url, $label=false)
+    {
         $this->_url = $url;
         if ($label && $label != $url)
             $this->_label = $label;
     }
 
-    function _getType() {
+    function _getType()
+    {
         return 'external';
     }
 
-    function _getName($basepage) {
+    function _getName($basepage)
+    {
         $label = isset($this->_label) ? $this->_label : false;
         return ($label and is_string($label)) ? $label : $this->_url;
     }
 
-    function expand($basepage, &$markup) {
+    function expand($basepage, &$markup)
+    {
         global $request;
 
         $label = isset($this->_label) ? $this->_label : false;
@@ -381,7 +415,8 @@ class Cached_ExternalLink extends Cached_Link {
         return $link;
     }
 
-    function asString() {
+    function asString()
+    {
         if (isset($this->_label))
             return $this->_label;
         return $this->_url;
@@ -390,29 +425,34 @@ class Cached_ExternalLink extends Cached_Link {
 
 class Cached_InterwikiLink extends Cached_ExternalLink {
 
-    function __construct($link, $label=false) {
+    function __construct($link, $label=false)
+    {
         $this->_link = $link;
         if ($label)
             $this->_label = $label;
     }
 
-    function _getName($basepage) {
+    function _getName($basepage)
+    {
         $label = isset($this->_label) ? $this->_label : false;
         return ($label and is_string($label)) ? $label : $link;
     }
 
-    function _getURL($basepage) {
+    function _getURL($basepage)
+    {
         $link = $this->expand($basepage, $this);
         return $link->getAttr('href');
     }
 
-    function expand($basepage, &$markup) {
+    function expand($basepage, &$markup)
+    {
         $intermap = getInterwikiMap();
         $label = isset($this->_label) ? $this->_label : false;
         return $intermap->link($this->_link, $label);
     }
 
-    function asString() {
+    function asString()
+    {
         if (isset($this->_label))
             return $this->_label;
         return $this->_link;
@@ -423,7 +463,8 @@ class Cached_InterwikiLink extends Cached_ExternalLink {
 // Thanks to PhpWiki:DanFr for finding this bug.
 // Fixed since 1.3.8, prev. versions had no userpages in backlinks
 class Cached_UserLink extends Cached_WikiLink {
-    function expand($basepage, &$markup) {
+    function expand($basepage, &$markup)
+    {
         $label = isset($this->_label) ? $this->_label : false;
         $anchor = isset($this->_anchor) ? (string)$this->_anchor : '';
         $page = new WikiPageName($this->_page, $basepage, $anchor);
@@ -437,21 +478,25 @@ class Cached_UserLink extends Cached_WikiLink {
 
 class Cached_PluginInvocation extends Cached_DynamicContent {
 
-    function __construct ($pi) {
+    function __construct($pi)
+    {
         $this->_pi = $pi;
     }
 
-    function setTightness($top, $bottom) {
+    function setTightness($top, $bottom)
+    {
         $this->_tightenable = 0;
         if ($top) $this->_tightenable |= 1;
         if ($bottom) $this->_tightenable |= 2;
     }
 
-    function isInlineElement() {
+    function isInlineElement()
+    {
         return false;
     }
 
-    function expand($basepage, &$markup) {
+    function expand($basepage, &$markup)
+    {
         $loader = $this->_getLoader();
 
         $xml = $loader->expandPI($this->_pi, $GLOBALS['request'], $markup, $basepage);
@@ -476,18 +521,21 @@ class Cached_PluginInvocation extends Cached_DynamicContent {
         return $div;
     }
 
-    function asString() {
+    function asString()
+    {
         return $this->_pi;
     }
 
 
-    function getWikiPageLinks($basepage) {
+    function getWikiPageLinks($basepage)
+    {
         $loader = $this->_getLoader();
 
         return $loader->getWikiPageLinks($this->_pi, $basepage);
     }
 
-    function & _getLoader() {
+    function & _getLoader()
+    {
         static $loader = false;
 
         if (!$loader) {

@@ -22,7 +22,8 @@ require_once dirname(__FILE__) .'/../../bootstrap.php';
 
 class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         $element_factory = mock('Tracker_FormElementFactory');
 
         $this->dao      = mock('Cardwall_OnTop_ColumnMappingFieldValueDao');
@@ -74,13 +75,15 @@ class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TuleapTestCase {
         ));
     }
 
-    public function itLoadsMappingsFromTheDatabase() {
+    public function itLoadsMappingsFromTheDatabase()
+    {
         $mappings = $this->factory->getMappings($this->tracker, $this->tracker_20, $this->field_124);
         $this->assertEqual(2, count($mappings));
         $this->assertEqual(1002, $mappings[1002]->getValueId());
     }
 
-    public function itLoadStatusValues() {
+    public function itLoadStatusValues()
+    {
         $columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection(
             array(
                 new Cardwall_Column(1, 'Todo', 'white'),
@@ -98,7 +101,8 @@ class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TuleapTestCase {
 
 class Cardwall_OnTop_Config_ValueMappingFactory2Test extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         $element_factory = mock('Tracker_FormElementFactory');
 
         $this->dao      = mock('Cardwall_OnTop_ColumnMappingFieldValueDao');
@@ -128,7 +132,8 @@ class Cardwall_OnTop_Config_ValueMappingFactory2Test extends TuleapTestCase {
         );
     }
 
-    public function itLoadsMappingsFromTheDatabase() {
+    public function itLoadsMappingsFromTheDatabase()
+    {
         $mappings = $this->factory->getMappings($this->tracker, $this->tracker_20, $this->field_124);
         $this->assertEqual(array(), $mappings);
     }

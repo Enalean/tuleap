@@ -19,11 +19,13 @@
  */
 require_once __DIR__.'/../bootstrap.php';
 
-function aChangeset() {
+function aChangeset()
+{
     return new Test_Tracker_Changeset_Builder();
 }
 
-function aChangesetComment() {
+function aChangesetComment()
+{
     return new Test_Tracker_Artifact_Changeset_Comment_Builder();
 }
 
@@ -35,11 +37,13 @@ class Test_Tracker_Changeset_Builder {
     private $artifact;
     private $comment;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->comment = aChangesetComment()->build();
     }
 
-    public function withId($id) {
+    public function withId($id)
+    {
         $this->id = $id;
         return $this;
     }
@@ -49,22 +53,26 @@ class Test_Tracker_Changeset_Builder {
      * @param Tracker_Artifact_Changeset_Comment|-1 $comment
      * @return Test_Tracker_Changeset_Builder
      */
-    public function withComment($comment) {
+    public function withComment($comment)
+    {
         $this->comment = $comment;
         return $this;
     }
 
-    public function withSubmittedBy($submitted_by) {
+    public function withSubmittedBy($submitted_by)
+    {
         $this->submitted_by = $submitted_by;
         return $this;
     }
 
-    public function withSubmittedOn($submitted_on) {
+    public function withSubmittedOn($submitted_on)
+    {
         $this->submitted_on = $submitted_on;
         return $this;
     }
 
-    public function withArtifact(Tracker_Artifact $artifact) {
+    public function withArtifact(Tracker_Artifact $artifact)
+    {
         $this->artifact = $artifact;
         return $this;
     }
@@ -72,7 +80,8 @@ class Test_Tracker_Changeset_Builder {
     /**
      * @return Tracker_Artifact_Changeset
      */
-    public function build() {
+    public function build()
+    {
         $changeset = new Tracker_Artifact_Changeset($this->id, $this->artifact, $this->submitted_by, $this->submitted_on, $this->email);
         if ($this->comment !== null) {
             $changeset->setLatestComment($this->comment);
@@ -92,12 +101,14 @@ class Test_Tracker_Artifact_Changeset_Comment_Builder {
     private $bodyFormat;
     private $parent_id;
 
-    public function withText($text) {
+    public function withText($text)
+    {
         $this->body = $text;
         return $this;
     }
 
-    public function build() {
+    public function build()
+    {
         return new Tracker_Artifact_Changeset_Comment(
             $this->id,
             $this->changeset,

@@ -18,69 +18,82 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function aGitRepository() {
+function aGitRepository()
+{
     return new Test_Git_RepositoryBuilder();
 }
 
 class Test_Git_RepositoryBuilder {
     private $repository;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->repository = new GitRepository();
     }
 
-    public function withPath($path) {
+    public function withPath($path)
+    {
         $this->repository->setPath($path);
         return $this;
     }
 
-    public function withNamespace($namespace) {
+    public function withNamespace($namespace)
+    {
         $this->repository->setNamespace($namespace);
         return $this;
     }
 
-    public function withId($id) {
+    public function withId($id)
+    {
         $this->repository->setId($id);
         return $this;
     }
 
-    public function withName($name) {
+    public function withName($name)
+    {
         $this->repository->setName($name);
         return $this;
     }
 
-    public function withProject(Project $project) {
+    public function withProject(Project $project)
+    {
         $this->repository->setProject($project);
         return $this;
     }
 
-    public function withBackend(Git_Backend_Interface $backend) {
+    public function withBackend(Git_Backend_Interface $backend)
+    {
         $this->repository->setBackend($backend);
         return $this;
     }
 
-    public function withRemoteServerId($id) {
+    public function withRemoteServerId($id)
+    {
         $this->repository->setRemoteServerId($id);
         return $this;
     }
 
-    public function withDescription($description) {
+    public function withDescription($description)
+    {
         $this->repository->setDescription($description);
         return $this;
     }
 
-    public function withMailPrefix($prefix) {
+    public function withMailPrefix($prefix)
+    {
         $this->repository->setMailPrefix($prefix);
         return $this;
     }
 
-    public function withNotifiedEmails($emails) {
+    public function withNotifiedEmails($emails)
+    {
         $this->repository->setNotifiedMails($emails);
         return $this;
     }
 
 
-    public function build() {
+    public function build()
+    {
         return $this->repository;
     }
 }

@@ -35,7 +35,8 @@ class JWTResource {
      *
      * @return Tuleap\JWT\REST\JWTRepresentation
      */
-    public function get() {
+    public function get()
+    {
         $jwt_generator = new JWTGenerator(
             ForgeConfig::get('nodejs_server_jwt_private_key'),
             UserManager::instance(),
@@ -54,11 +55,13 @@ class JWTResource {
      * @url OPTIONS
      *
      */
-    public function options() {
+    public function options()
+    {
         $this->sendAllowHeader();
     }
 
-    private function sendAllowHeader() {
+    private function sendAllowHeader()
+    {
         Header::allowOptionsGet();
     }
 }

@@ -27,7 +27,8 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
     /**
      * @return mixed
      */
-    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
+    {
         return $visitor->visitInteger($this);
     }
 
@@ -36,7 +37,8 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
      *
      * @return int the integer value
      */
-    public function getInteger() {
+    public function getInteger()
+    {
         if ($this->numeric !== null) {
             $this->numeric = (int)$this->numeric;
         }
@@ -48,7 +50,8 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
      *
      * @return int the integer value
      */
-    public function getNumeric() {
+    public function getNumeric()
+    {
         return $this->getInteger();
     }
 
@@ -57,15 +60,18 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
      *
      * @return int The value of this artifact changeset value
      */
-    public function getValue() {
+    public function getValue()
+    {
          return $this->getInteger();
     }
 
-    public function getRESTValue(PFUser $user) {
+    public function getRESTValue(PFUser $user)
+    {
         return $this->getRESTRepresentation($this->getInteger());
     }
 
-    public function getFullRESTValue(PFUser $user) {
+    public function getFullRESTValue(PFUser $user)
+    {
         return $this->getFullRESTRepresentation($this->getInteger());
     }
 }

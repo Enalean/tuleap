@@ -86,18 +86,21 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     /**
      * @see Tracker_CardPresenter
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->artifact->getId();
     }
 
     /**
      * @see Tracker_CardPresenter
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->artifact->getTitle();
     }
 
-    public function getFields() {
+    public function getFields()
+    {
         $diplayed_fields_presenter = array();
         $displayed_fields = $this->card_fields->getFields($this->getArtifact());
 
@@ -107,57 +110,66 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
         return $diplayed_fields_presenter;
     }
 
-    public function hasFields() {
+    public function hasFields()
+    {
         return count($this->getFields()) > 0;
     }
 
     /**
      * @see Tracker_CardPresenter
      */
-    public function getUrl() {
+    public function getUrl()
+    {
         return $this->artifact->getUri();
     }
 
     /**
      * @see Tracker_CardPresenter
      */
-    public function getXRef() {
+    public function getXRef()
+    {
         return $this->artifact->getXRef();
     }
 
     /**
      * @see Tracker_CardPresenter
      */
-    public function getEditUrl() {
+    public function getEditUrl()
+    {
         return $this->getUrl();
     }
 
     /**
      * @see Tracker_CardPresenter
      */
-    public function getArtifactId() {
+    public function getArtifactId()
+    {
         return $this->artifact->getId();
     }
 
     /**
      * @see Tracker_CardPresenter
      */
-    public function getArtifact() {
+    public function getArtifact()
+    {
         return $this->artifact;
     }
 
-    public function getAncestorId() {
+    public function getAncestorId()
+    {
         return $this->parent ? $this->parent->getId() : 0;
     }
 
-    public function getSwimlineId() {
+    public function getSwimlineId()
+    {
         return $this->swimline_id;
     }
 
     /**
      * @see Tracker_CardPresenter
      */
-    public function getEditLabel() {
+    public function getEditLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
     }
 
@@ -194,7 +206,8 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
      *
      * @return Tracker[]
      */
-    public function allowedChildrenTypes() {
+    public function allowedChildrenTypes()
+    {
         return $this->allowed_children;
     }
 

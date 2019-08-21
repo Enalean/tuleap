@@ -78,7 +78,8 @@ class SystemEventProcessor_Root extends SystemEventProcessor {
         $this->generator            = $generator;
     }
 
-    public function getOwner() {
+    public function getOwner()
+    {
         return SystemEvent::OWNER_ROOT;
     }
 
@@ -113,13 +114,15 @@ class SystemEventProcessor_Root extends SystemEventProcessor {
         $this->triggerApplicationOwnerEventsProcessing();
     }
 
-    protected function triggerApplicationOwnerEventsProcessing() {
+    protected function triggerApplicationOwnerEventsProcessing()
+    {
         $app = new SystemEventProcessor_ApplicationOwner(new SystemEventProcessApplicationOwnerDefaultQueue(), $this->system_event_manager, $this->dao, $this->logger);
         $command = sprintf('/usr/bin/tuleap %s %s', \Tuleap\CLI\Command\ProcessSystemEventsCommand::NAME, SystemEvent::OWNER_APP);
         $this->launchAs($app->getProcessOwner(), $command);
     }
 
-    protected function launchAs($user, $command) {
+    protected function launchAs($user, $command)
+    {
         $return_val = 0;
         $output = array();
         $cmd    = 'su -l '.$user.' -c "'.$command.' 2>&1"';
@@ -132,7 +135,8 @@ class SystemEventProcessor_Root extends SystemEventProcessor {
         }
     }
 
-    public function getProcessOwner() {
+    public function getProcessOwner()
+    {
         return 'root';
     }
 }

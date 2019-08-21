@@ -21,12 +21,14 @@
 
 class Tracker_FormElement_Field_Value_FloatDao extends Tracker_FormElement_Field_Value_NumericDao {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_changeset_value_float';
     }
 
-    public function create($changeset_value_id, $value) {
+    public function create($changeset_value_id, $value)
+    {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         if ($value === "") {
             $value = "NULL";
@@ -38,7 +40,8 @@ class Tracker_FormElement_Field_Value_FloatDao extends Tracker_FormElement_Field
         return $this->update($sql);
     }
 
-    public function createNoneValue($tracker_id, $field_id) {
+    public function createNoneValue($tracker_id, $field_id)
+    {
         $changeset_value_ids   = $this->createNoneChangesetValue($tracker_id, $field_id);
         if ( !is_array($changeset_value_ids) || empty($changeset_value_ids) ) {
             return false;
@@ -49,7 +52,8 @@ class Tracker_FormElement_Field_Value_FloatDao extends Tracker_FormElement_Field
         return $this->update($sql);
     }
 
-    public function keep($from, $to) {
+    public function keep($from, $to)
+    {
         $from = $this->da->escapeInt($from);
         $to   = $this->da->escapeInt($to);
         $sql = "INSERT INTO $this->table_name(changeset_value_id, value)

@@ -40,20 +40,23 @@ class SVN_Hook_PreRevPropset extends SVN_Hook {
      * @param String $propname
      * @param String $commit_message
      */
-    public function assertCanBeModified($repository, $action, $propname, $commit_message) {
+    public function assertCanBeModified($repository, $action, $propname, $commit_message)
+    {
         $this->assertPropsetIsOnLog($action, $propname);
         $project = $this->getProjectFromRepositoryPath($repository);
         $this->assertCommitMessageCanBeModified($project);
         $this->message_validator->assertCommitMessageIsValid($project, $commit_message);
     }
 
-    private function assertPropsetIsOnLog($action, $propname) {
+    private function assertPropsetIsOnLog($action, $propname)
+    {
         if (! ($action == 'M' && $propname == 'svn:log')) {
             throw new Exception('Cannot modify anything but svn:log');
         }
     }
 
-    private function assertCommitMessageCanBeModified(Project $project) {
+    private function assertCommitMessageCanBeModified(Project $project)
+    {
         if (! $project->canChangeSVNLog()) {
             throw new Exception('Project forbid to change log messages');
         }

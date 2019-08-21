@@ -22,57 +22,68 @@ class PlotLine {
     private $iLineStyle='solid';
     public $numpoints=0; // Needed since the framework expects this property
 
-    function __construct($aDir=HORIZONTAL,$aPos=0,$aColor='black',$aWeight=1) {
+    function __construct($aDir=HORIZONTAL,$aPos=0,$aColor='black',$aWeight=1)
+    {
         $this->direction = $aDir;
         $this->color=$aColor;
         $this->weight=$aWeight;
         $this->scaleposition=$aPos;
     }
 
-    function SetLegend($aLegend,$aCSIM='',$aCSIMAlt='',$aCSIMWinTarget='') {
+    function SetLegend($aLegend,$aCSIM='',$aCSIMAlt='',$aCSIMWinTarget='')
+    {
         $this->legend = $aLegend;
         $this->legendcsimtarget = $aCSIM;
         $this->legendcsimwintarget = $aCSIMWinTarget;
         $this->legendcsimalt = $aCSIMAlt;
     }
 
-    function HideLegend($f=true) {
+    function HideLegend($f=true)
+    {
         $this->hidelegend = $f;
     }
 
-    function SetPosition($aScalePosition) {
+    function SetPosition($aScalePosition)
+    {
         $this->scaleposition=$aScalePosition;
     }
 
-    function SetDirection($aDir) {
+    function SetDirection($aDir)
+    {
         $this->direction = $aDir;
     }
 
-    function SetColor($aColor) {
+    function SetColor($aColor)
+    {
         $this->color=$aColor;
     }
 
-    function SetWeight($aWeight) {
+    function SetWeight($aWeight)
+    {
         $this->weight=$aWeight;
     }
 
-    function SetLineStyle($aStyle) {
+    function SetLineStyle($aStyle)
+    {
         $this->iLineStyle = $aStyle;
     }
 
-    function GetCSIMAreas() {
+    function GetCSIMAreas()
+    {
         return '';
     }
 
     //---------------
     // PRIVATE METHODS
 
-    function DoLegend($graph) {
+    function DoLegend($graph)
+    {
         if( !$this->hidelegend ) $this->Legend($graph);
     }
 
     // Framework function the chance for each plot class to set a legend
-    function Legend($aGraph) {
+    function Legend($aGraph)
+    {
         if( $this->legend != '' ) {
             $dummyPlotMark = new PlotMark();
             $lineStyle = 1;
@@ -81,30 +92,36 @@ class PlotLine {
         }
     }
 
-    function PreStrokeAdjust($aGraph) {
+    function PreStrokeAdjust($aGraph)
+    {
         // Nothing to do
     }
 
     // Called by framework to allow the object to draw
     // optional information in the margin area
-    function StrokeMargin($aImg) {
+    function StrokeMargin($aImg)
+    {
         // Nothing to do
     }
 
     // Framework function to allow the object to adjust the scale
-    function PrescaleSetup($aGraph) {
+    function PrescaleSetup($aGraph)
+    {
         // Nothing to do
     }
 
-    function Min() {
+    function Min()
+    {
         return array(null,null);
     }
 
-    function Max() {
+    function Max()
+    {
         return array(null,null);
     }
 
-    function _Stroke($aImg,$aMinX,$aMinY,$aMaxX,$aMaxY,$aXPos,$aYPos) {
+    function _Stroke($aImg,$aMinX,$aMinY,$aMaxX,$aMaxY,$aXPos,$aYPos)
+    {
         $aImg->SetColor($this->color);
         $aImg->SetLineWeight($this->weight);
         $oldStyle = $aImg->SetLineStyle($this->iLineStyle);
@@ -126,7 +143,8 @@ class PlotLine {
         $aImg->SetLineStyle($oldStyle);
     }
 
-    function Stroke($aImg,$aXScale,$aYScale) {
+    function Stroke($aImg,$aXScale,$aYScale)
+    {
         $this->_Stroke($aImg,
             $aImg->left_margin,
             $aYScale->Translate($aYScale->GetMinVal()),

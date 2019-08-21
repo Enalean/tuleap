@@ -41,14 +41,16 @@ use Tuleap\Widget\WidgetFactory;
 
 class ProjectCreationTest extends TuleapDbTestCase {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         // Uncomment this during development to avoid aweful 50" setUp
         // $this->markThisTestUnderDevelopment();
     }
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $GLOBALS['feedback'] = '';
         $GLOBALS['svn_prefix'] = '/tmp';
@@ -72,7 +74,8 @@ class ProjectCreationTest extends TuleapDbTestCase {
         ForgeConfig::set('sys_dbname', $sys_dbname);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->mysqli->query('DELETE FROM groups WHERE unix_group_name = "short-name"');
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['cvs_prefix']);

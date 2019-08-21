@@ -29,7 +29,8 @@ use PFUser;
 
 class CardValidator {
 
-    public function getFieldsDataFromREST(PFUser $user, Cardwall_SingleCard $single_card, $label, array $values, $column_id = null) {
+    public function getFieldsDataFromREST(PFUser $user, Cardwall_SingleCard $single_card, $label, array $values, $column_id = null)
+    {
         $fields_data  = $this->getLabelFieldData($single_card, $label);
         $fields_data += $this->getValuesFieldData($user, $values, $single_card);
         if ($column_id !== null) {
@@ -38,7 +39,8 @@ class CardValidator {
         return $fields_data;
     }
 
-    private function getLabelFieldData(Cardwall_SingleCard $single_card, $label) {
+    private function getLabelFieldData(Cardwall_SingleCard $single_card, $label)
+    {
         $semantic_title = Tracker_Semantic_Title::load($single_card->getArtifact()->getTracker());
         if ($semantic_title) {
             return array(
@@ -48,7 +50,8 @@ class CardValidator {
         return array();
     }
 
-    private function getColumnIdFieldData(Cardwall_SingleCard $single_card, $column_id) {
+    private function getColumnIdFieldData(Cardwall_SingleCard $single_card, $column_id)
+    {
         $mapping = $single_card->getMapping();
         foreach($mapping->getValueMappings() as $value_mapping) {
             if ($value_mapping->getColumnId() == $column_id) {
@@ -60,7 +63,8 @@ class CardValidator {
         return array();
     }
 
-    private function getValuesFieldData(PFUser $user, $values, Cardwall_SingleCard $single_card) {
+    private function getValuesFieldData(PFUser $user, $values, Cardwall_SingleCard $single_card)
+    {
         $new_values = array();
         foreach($values as $value) {
             try {
@@ -75,12 +79,14 @@ class CardValidator {
         return $new_values;
     }
 
-    private function getFieldValue(Cardwall_SingleCard $single_card, Tracker_FormElement_Field $field, $value) {
+    private function getFieldValue(Cardwall_SingleCard $single_card, Tracker_FormElement_Field $field, $value)
+    {
         $artifact = $single_card->getArtifact();
         return $field->getFieldDataFromRESTValue($value, $artifact);
     }
 
-    private function getField(PFUser $user, Cardwall_SingleCard $single_card, $value) {
+    private function getField(PFUser $user, Cardwall_SingleCard $single_card, $value)
+    {
         if(! array_key_exists('field_id', $value)) {
             throw new CardResourceBadValueFormatException('field_id');
         }

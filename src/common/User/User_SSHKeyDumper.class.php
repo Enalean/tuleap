@@ -37,7 +37,8 @@ class User_SSHKeyDumper {
      */
     private $backend;
 
-    public function __construct(Backend $backend) {
+    public function __construct(Backend $backend)
+    {
         $this->backend = $backend;
     }
 
@@ -48,7 +49,8 @@ class User_SSHKeyDumper {
      *
      * @return bool
      */
-    public function writeSSHKeys(PFUser $user) {
+    public function writeSSHKeys(PFUser $user)
+    {
         try {
             if ($user->getUnixStatus() != 'A') {
                 return true;
@@ -76,7 +78,8 @@ class User_SSHKeyDumper {
         }
     }
 
-    protected function changeProcessUidGidToUser(PFUser $user) {
+    protected function changeProcessUidGidToUser(PFUser $user)
+    {
         $user_unix_info = posix_getpwnam($user->getUserName());
         if (empty($user_unix_info['uid']) || empty($user_unix_info['gid'])) {
             throw new RuntimeException("User ".$user->getUserName()." has no uid/gid");
@@ -86,12 +89,14 @@ class User_SSHKeyDumper {
         }
     }
 
-    protected function restoreRootUidGid() {
+    protected function restoreRootUidGid()
+    {
         posix_setegid(0);
         posix_seteuid(0);
     }
 
-    private function createSSHDirForUser(PFUser $user, $ssh_dir) {
+    private function createSSHDirForUser(PFUser $user, $ssh_dir)
+    {
         if (is_link($ssh_dir)) {
             $link_path = readlink($ssh_dir);
             unlink($ssh_dir);
@@ -106,7 +111,8 @@ class User_SSHKeyDumper {
         }
     }
 
-    private function writeSSHFile(PFUser $user, $ssh_dir) {
+    private function writeSSHFile(PFUser $user, $ssh_dir)
+    {
         $authorized_keys_new = "$ssh_dir/authorized_keys_new";
         touch($authorized_keys_new);
         $this->backend->chmod($authorized_keys_new, 0600);

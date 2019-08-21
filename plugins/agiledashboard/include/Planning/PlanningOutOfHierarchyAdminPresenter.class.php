@@ -21,16 +21,19 @@
 class Planning_PlanningOutOfHierarchyAdminPresenter extends Planning_PlanningAdminPresenter {
     private $root_planning_name;
 
-    public function __construct(Planning $planning, $root_planning_name) {
+    public function __construct(Planning $planning, $root_planning_name)
+    {
         parent::__construct($planning);
         $this->root_planning_name = $root_planning_name;
     }
 
-    public function li_class() {
+    public function li_class()
+    {
         return 'alert alert-error';
     }
 
-    public function extra_message() {
+    public function extra_message()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_out_of_hierarchy', array(
             $this->root_planning_name
         ));

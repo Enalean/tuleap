@@ -27,7 +27,8 @@ class XML_SecurityTest extends TuleapTestCase {
         <test><testing>&foo;</testing></test>';
 
 
-    public function itDisableExternalLoadOfEntities() {
+    public function itDisableExternalLoadOfEntities()
+    {
         if ($this->isCentOS5()) {
             $this->expectError();
         }
@@ -35,7 +36,8 @@ class XML_SecurityTest extends TuleapTestCase {
         $this->assertEqual('', (string)$doc->testing);
     }
 
-    private function loadXML() {
+    private function loadXML()
+    {
         $xml_security = new XML_Security();
         $xml_security->disableExternalLoadOfEntities();
 
@@ -46,7 +48,8 @@ class XML_SecurityTest extends TuleapTestCase {
         return $xml;
     }
 
-    private function isCentOS5() {
+    private function isCentOS5()
+    {
         $etc_issue = file("/etc/issue");
 
         return strpos($etc_issue[0], "CentOS release 5") === 0;

@@ -17,17 +17,20 @@
  */
 
 class b201210121809_purge_bad_sshkeys_from_db extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Ensure SSH keys uploaded by users are valid.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $update_sql = 'UPDATE user SET authorized_keys = :authorized_keys WHERE user_id = :user_id';
         $update_sth = $this->db->dbh->prepare($update_sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
 

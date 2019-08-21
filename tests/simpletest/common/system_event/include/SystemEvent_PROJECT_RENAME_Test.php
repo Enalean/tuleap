@@ -47,7 +47,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
     /**
      * Rename project 142 'TestProj' in 'FooBar'
      */
-    public function testRenameOps() {
+    public function testRenameOps()
+    {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT,'142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
@@ -109,7 +110,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $this->assertTrue($evt->process());
     }
 
-    public function testRenameSvnRepositoryFailure() {
+    public function testRenameSvnRepositoryFailure()
+    {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
@@ -166,7 +168,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $this->assertFalse($evt->process());
     }
 
-    public function testRenameSvnRepositoryNotAvailable() {
+    public function testRenameSvnRepositoryNotAvailable()
+    {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
@@ -222,7 +225,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $this->assertFalse($evt->process());
     }
 
-    public function testRenameCVSRepositoryFailure() {
+    public function testRenameCVSRepositoryFailure()
+    {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
@@ -282,7 +286,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $this->assertPattern('/could not rename CVS/i', $evt->getLog());
     }
 
-    public function testRenameHomeRepositoryFailure() {
+    public function testRenameHomeRepositoryFailure()
+    {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
@@ -340,7 +345,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $this->assertPattern('/Could not rename project home/i', $evt->getLog());
     }
 
-    public function testRenameFRSRepositoryFailure() {
+    public function testRenameFRSRepositoryFailure()
+    {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
@@ -395,7 +401,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $this->assertPattern('/Could not rename FRS repository/i', $evt->getLog());
     }
 
-    public function testRenameFTPRepositoryFailure() {
+    public function testRenameFTPRepositoryFailure()
+    {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
@@ -448,7 +455,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $this->assertPattern('/Could not rename FTP repository/i', $evt->getLog());
     }
 
-    public function testRenameDBUpdateFailure() {
+    public function testRenameDBUpdateFailure()
+    {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
@@ -497,7 +505,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $this->assertFalse($evt->process());
     }
 
-    function testMultipleErrorLogs() {
+    function testMultipleErrorLogs()
+    {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 

@@ -18,15 +18,18 @@
 
 class b201512281119_add_svn_token_usage_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add table svn_token to store SVN authentification token';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE svn_token_usage (
                     project_id INT(11),
                     PRIMARY KEY(project_id)

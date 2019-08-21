@@ -49,95 +49,118 @@ class User_LoginPresenter
         $this->csrf_token                 = $csrf_token;
     }
 
-    public function getTemplateDir() {
+    public function getTemplateDir()
+    {
         return ForgeConfig::get('codendi_dir') .'/src/templates/user';
     }
 
-    public function getTemplate() {
+    public function getTemplate()
+    {
         return 'login';
     }
 
-    public function form_loginname() {
+    public function form_loginname()
+    {
         return $this->getFormLoginName();
     }
 
-    public function pv() {
+    public function pv()
+    {
         return $this->pv;
     }
 
-    public function return_to() {
+    public function return_to()
+    {
         return $this->getReturnTo();
     }
 
-    public function display_new_account_button() {
+    public function display_new_account_button()
+    {
         return $this->display_new_account_button;
     }
 
-    public function allow_password_recovery() {
+    public function allow_password_recovery()
+    {
         return $this->allow_password_recovery;
     }
 
-    public function help_email() {
+    public function help_email()
+    {
         return ForgeConfig::get('sys_email_admin');
     }
 
-    public function not_a_member() {
+    public function not_a_member()
+    {
         return $GLOBALS['Language']->getText('account_login', 'not_a_member');
     }
 
-    public function create_account_label() {
+    public function create_account_label()
+    {
         return $GLOBALS['Language']->getText('account_login', 'create_account_label');
     }
 
-    public function need_help() {
+    public function need_help()
+    {
         return $GLOBALS['Language']->getText('account_login', 'need_help');
     }
 
-    public function help_subject() {
+    public function help_subject()
+    {
         return $GLOBALS['Language']->getText('account_login', 'help_subject', array(ForgeConfig::get('sys_name')));
     }
 
-    public function account_login_page_title() {
+    public function account_login_page_title()
+    {
         return $GLOBALS['Language']->getText('account_login', 'page_title', array(ForgeConfig::get('sys_name')));
     }
 
-    public function account_login_name() {
+    public function account_login_name()
+    {
         return $GLOBALS['Language']->getText('account_login', 'name');
     }
 
-    public function account_login_password() {
+    public function account_login_password()
+    {
         return $GLOBALS['Language']->getText('account_login', 'password');
     }
 
-    public function account_login_login_btn() {
+    public function account_login_login_btn()
+    {
         return $GLOBALS['Language']->getText('account_login', 'login_btn');
     }
 
-    public function account_login_lost_pw() {
+    public function account_login_lost_pw()
+    {
         return $GLOBALS['Language']->getText('account_login', 'lost_pw');
     }
 
-    public function account_login_login_with_tuleap() {
+    public function account_login_login_with_tuleap()
+    {
         return $GLOBALS['Language']->getText('account_login', 'login_with_tuleap', array(ForgeConfig::get('sys_name')));
     }
 
-    public function getReturnTo() {
+    public function getReturnTo()
+    {
         return $this->return_to;
     }
 
-    public function getPv() {
+    public function getPv()
+    {
         return $this->pv;
     }
 
-    public function getFormLoginName() {
+    public function getFormLoginName()
+    {
         return $this->form_loginname;
     }
 
-    public function login_intro() {
+    public function login_intro()
+    {
         return file_get_contents($GLOBALS['Language']->getContent('account/login_intro', null, null, '.html'));
     }
 
-    public function additional_connectors() {
+    public function additional_connectors()
+    {
         return $this->additional_connectors;
     }
 

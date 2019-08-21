@@ -27,7 +27,8 @@
 *                                      if false then it is a static HTML page
 * @param        prompt what to display to point to the  help
 */
-function help_button($type,$helpid=false,$prompt='[?]') {
+function help_button($type,$helpid=false,$prompt='[?]')
+{
     $purifier = Codendi_HTMLPurifier::instance();
     // Generic processing derives the script name from the help type
     if ($helpid == false) {
@@ -50,7 +51,8 @@ function help_button($type,$helpid=false,$prompt='[?]') {
 *
 * @param        string    Header title
 */
-function help_header($title, $help_banner=true) {
+function help_header($title, $help_banner=true)
+{
     global $Language;
     ?>
 <HTML>
@@ -68,7 +70,8 @@ function help_header($title, $help_banner=true) {
 /**
 * help_footer() - Show a help page footer
 */
-function help_footer() {
+function help_footer()
+{
     ?>
 </BODY>
 </HTML>

@@ -30,7 +30,7 @@ class AgileDashboard_Milestone_MilestoneStatusCounter {
         AgileDashboard_BacklogItemDao $backlog_item_dao,
         Tracker_ArtifactDao $artifact_dao,
         Tracker_ArtifactFactory $artifact_factory
-        ) {
+    ) {
         $this->backlog_item_dao = $backlog_item_dao;
         $this->artifact_dao     = $artifact_dao;
         $this->artifact_factory = $artifact_factory;
@@ -45,7 +45,8 @@ class AgileDashboard_Milestone_MilestoneStatusCounter {
      *
      * @return array
      */
-    public function getStatus(PFUser $user, $milestone_artifact_id) {
+    public function getStatus(PFUser $user, $milestone_artifact_id)
+    {
         $status = array(
             Tracker_Artifact::STATUS_OPEN   => 0,
             Tracker_Artifact::STATUS_CLOSED => 0,
@@ -56,7 +57,8 @@ class AgileDashboard_Milestone_MilestoneStatusCounter {
         return $status;
     }
 
-    private function getStatusForMilestoneArtifactId(PFUser $user, $milestone_artifact_id, array &$status) {
+    private function getStatusForMilestoneArtifactId(PFUser $user, $milestone_artifact_id, array &$status)
+    {
         $artifact_id_list = $this->getBacklogArtifactsUserCanView($user, $milestone_artifact_id);
         $this->countStatus($artifact_id_list, $status);
         if (count($artifact_id_list)) {
@@ -67,7 +69,8 @@ class AgileDashboard_Milestone_MilestoneStatusCounter {
         }
     }
 
-    private function countStatus(array $artifact_id_list, array &$status) {
+    private function countStatus(array $artifact_id_list, array &$status)
+    {
         if (count($artifact_id_list)) {
             $artifact_status = $this->artifact_dao->getArtifactsStatusByIds($artifact_id_list);
             foreach ($artifact_status as $row) {
@@ -76,21 +79,24 @@ class AgileDashboard_Milestone_MilestoneStatusCounter {
         }
     }
 
-    private function getBacklogArtifactsUserCanView(PFUser $user, $milestone_artifact_id) {
+    private function getBacklogArtifactsUserCanView(PFUser $user, $milestone_artifact_id)
+    {
         return $this->getIdsUserCanView(
             $user,
             $this->backlog_item_dao->getBacklogArtifacts($milestone_artifact_id)
         );
     }
 
-    private function getChildrenUserCanView(PFUser $user, array $artifact_ids) {
+    private function getChildrenUserCanView(PFUser $user, array $artifact_ids)
+    {
         return $this->getIdsUserCanView(
             $user,
             $this->artifact_dao->getChildrenForArtifacts($artifact_ids)
         );
     }
 
-    private function getIdsUserCanView(PFUser $user, LegacyDataAccessResultInterface $dar) {
+    private function getIdsUserCanView(PFUser $user, LegacyDataAccessResultInterface $dar)
+    {
         $artifact_ids = array();
         foreach ($dar as $row) {
             $artifact = $this->artifact_factory->getArtifactById($row['id']);

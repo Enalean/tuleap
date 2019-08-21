@@ -20,17 +20,20 @@
 
 class b201411171516_update_user_grokmanifest extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Update user that runs grokmanifest event
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "UPDATE system_event SET owner = 'app' WHERE type = 'GIT_GROKMIRROR_MANIFEST' AND status = 'NEW'";
 
         $res = $this->db->dbh->exec($sql);

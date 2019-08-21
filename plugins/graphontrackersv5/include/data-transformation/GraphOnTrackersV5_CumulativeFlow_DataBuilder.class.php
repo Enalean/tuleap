@@ -38,7 +38,8 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
      *
      * @param GraphOnTrackersV5_Engine_CumulativeFlow $engine object
      */
-    public function buildProperties($engine) {
+    public function buildProperties($engine)
+    {
         parent::buildProperties($engine);
 
         $form_element_factory = Tracker_FormElementFactory::instance();
@@ -64,7 +65,8 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
         $engine->stop_date   = $this->chart->getStopDate();
     }
 
-    protected function getCumulativeFlowData($engine) {
+    protected function getCumulativeFlowData($engine)
+    {
         if($this->nbSteps > GraphOnTrackersV5_CumulativeFlow_DataBuilder::MAX_STEPS) {
             $engine->setError(
                 dgettext('tuleap-graphontrackersv5', 'Please choose a smaller period, or increase the scale.')
@@ -144,7 +146,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
     private function isColumnEmpty(array $column_values)
     {
         $counts = array_map(
-            function($value) {
+            function ($value) {
                 return $value['count'];
             },
             $column_values
@@ -153,7 +155,8 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
         return array_sum($counts) === 0;
     }
 
-    protected function isValidObservedField($observed_field, $type) {
+    protected function isValidObservedField($observed_field, $type)
+    {
         return $observed_field && $observed_field->userCanRead(UserManager::instance()->getCurrentUser());
     }
 
@@ -162,7 +165,8 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
      *
      * @var array
      */
-    protected function isValidType($type) {
+    protected function isValidType($type)
+    {
         return in_array($type, array('sb', 'msb', 'cb'));
     }
 
@@ -172,7 +176,8 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
      * @param int $field_id ID of the observed field
      * @return array $resultArray Initialized array for this graph
      */
-    private function initEmptyColumns($engine) {
+    private function initEmptyColumns($engine)
+    {
 
             //Return {Label, r, g, b}
             $sql = "SELECT val.id, val.label, deco.red, deco.green, deco.blue, deco.tlp_color_name
@@ -215,7 +220,8 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
      * @param int $beforeTimestamp
      * @return array $changesets array of changeset_id
      */
-    private function getLastChangesetsBefore($timestamp) {
+    private function getLastChangesetsBefore($timestamp)
+    {
         $sql = "SELECT MAX(id) as id
             FROM `tracker_changeset` c
             WHERE c.submitted_on < $timestamp

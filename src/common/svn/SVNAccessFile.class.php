@@ -68,7 +68,8 @@ class SVNAccessFile {
      *
      * @return bool
      */
-    public function isGroupDefined($groups, $line, $verbose = false) {
+    public function isGroupDefined($groups, $line, $verbose = false)
+    {
         preg_match($this->getGroupMatcher(self::GROUPNAME_PATTERN), $line, $matches);
         if (!empty($matches)) {
             $match = $matches[1];
@@ -115,7 +116,8 @@ class SVNAccessFile {
      *
      * @return String
      */
-    public function validateUGroupLine($groups, $line, $verbose = null) {
+    public function validateUGroupLine($groups, $line, $verbose = null)
+    {
         $trimmedLine = ltrim($line);
         if (!empty($this->ugroupNewName) && preg_match($this->getGroupMatcher($this->ugroupOldName), $trimmedLine)) {
             return $this->renameGroup($groups, $line);
@@ -158,7 +160,8 @@ class SVNAccessFile {
      *
      * @return String
      */
-    public function commentInvalidLine($groups, $line, $verbose = false) {
+    public function commentInvalidLine($groups, $line, $verbose = false)
+    {
         $trimmedLine = ltrim($line);
         if ($trimmedLine && substr($trimmedLine, 0, 1) == '@' && !$this->isGroupDefined($groups, $trimmedLine, $verbose)) {
             return "# ".$line;
@@ -176,15 +179,18 @@ class SVNAccessFile {
      *
      * @return String
      */
-    public function parseGroupLines(Project $project, $contents, $verbose = false) {
+    public function parseGroupLines(Project $project, $contents, $verbose = false)
+    {
         return $this->parseGroup($project->getSVNRootPath(), $contents, $verbose);
     }
 
-    public function parseGroupLinesByRepositories($svn_dir, $contents, $verbose = false) {
+    public function parseGroupLinesByRepositories($svn_dir, $contents, $verbose = false)
+    {
         return $this->parseGroup($svn_dir, $contents, $verbose);
     }
 
-    private function parseGroup($svn_dir, $contents, $verbose = false) {
+    private function parseGroup($svn_dir, $contents, $verbose = false)
+    {
         $defaultLines = explode("\n", $this->getPlatformBlock($svn_dir));
         $groups = array();
         $currentSection = -1;
@@ -224,7 +230,8 @@ class SVNAccessFile {
      *
      * @return Array
      */
-    public function accumulateDefinedGroups($groups, $line, $defaultSection = false) {
+    public function accumulateDefinedGroups($groups, $line, $defaultSection = false)
+    {
         $trimmedLine = ltrim($line);
         if ($trimmedLine != '') {
             preg_match('/^'.self::GROUPNAME_PATTERN.'\s*=/', $trimmedLine, $matches);
@@ -247,7 +254,8 @@ class SVNAccessFile {
      *
      * @return String
      */
-    public function getCurrentSection($line, $currentSection) {
+    public function getCurrentSection($line, $currentSection)
+    {
         $trimmedLine = ltrim($line);
         if (strcasecmp(substr($trimmedLine, 0, 8), '[groups]') === 0) {
             $currentSection = 'groups';
@@ -265,7 +273,8 @@ class SVNAccessFile {
      *
      * @return void
      */
-    public function setRenamedGroup($ugroupNewName, $ugroupOldName) {
+    public function setRenamedGroup($ugroupNewName, $ugroupOldName)
+    {
         $this->ugroupNewName = $ugroupNewName;
         $this->ugroupOldName = $ugroupOldName;
     }
@@ -277,7 +286,8 @@ class SVNAccessFile {
      *
      * @return String
      */
-    protected function getGroupMatcher($groupPattern) {
+    protected function getGroupMatcher($groupPattern)
+    {
         return '/^@'.$groupPattern.'\s*=/i';
     }
 
@@ -288,7 +298,8 @@ class SVNAccessFile {
      *
      * @return String
      */
-    protected function getPlatformBlock($project_svnroot) {
+    protected function getPlatformBlock($project_svnroot)
+    {
         if (!$this->platformBlock) {
             $this->platformBlock = svn_utils_read_svn_access_file_defaults($project_svnroot, true);
         }
@@ -300,7 +311,8 @@ class SVNAccessFile {
      *
      * @param String $block Default SVN block
      */
-    public function setPlatformBlock($block) {
+    public function setPlatformBlock($block)
+    {
         $this->platformBlock = $block;
     }
 }

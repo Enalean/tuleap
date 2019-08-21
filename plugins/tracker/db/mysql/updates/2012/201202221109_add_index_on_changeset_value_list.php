@@ -21,17 +21,20 @@
 
 class b201202221109_add_index_on_changeset_value_list extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add index on tracker_changeset_value_list table
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE tracker_changeset_value_list ADD INDEX idx_bind (bindvalue_id, changeset_value_id)";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

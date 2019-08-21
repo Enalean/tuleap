@@ -26,7 +26,8 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5 {
      *
      * @param Bar_Engine $engine object
      */
-    function buildProperties($engine) {
+    function buildProperties($engine)
+    {
         parent::buildProperties($engine);
         $engine->title      = $this->chart->getTitle();
         $engine->description= $this->chart->getDescription();
@@ -45,7 +46,8 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5 {
      * @param Gantt_Engine object
      * @return array data array
      */
-    function buildData($engine) {
+    function buildData($engine)
+    {
         $engine->data = array();
 
         $ff = Tracker_FormElementFactory::instance();
@@ -121,7 +123,8 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5 {
         return $engine->data;
     }
 
-    private function getSuitableDateForSorting($artifact_data) {
+    private function getSuitableDateForSorting($artifact_data)
+    {
         $date = $artifact_data['start'];
         // a milestone has no start date, only a end one
         if (! $date) {

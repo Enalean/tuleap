@@ -28,7 +28,8 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
     private $changeset;
     private $artifact;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -48,18 +49,21 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
         $this->artifact->setHierarchyFactory($hierarchy_factory);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
         $this->current_id ++;
     }
 
-    public function itReturnsAnEmptyListWhenThereIsNoArtifactLinkField() {
+    public function itReturnsAnEmptyListWhenThereIsNoArtifactLinkField()
+    {
         stub($this->factory)->getUsedArtifactLinkFields($this->tracker)->returns(array());
         $links = $this->artifact->getLinkedArtifacts($this->user);
         $this->assertEqual(array(), $links);
     }
 
-    public function itReturnsAlistOfTheLinkedArtifacts() {
+    public function itReturnsAlistOfTheLinkedArtifacts()
+    {
         $expected_list = array(
             new Tracker_Artifact(111, null, null, null, null),
             new Tracker_Artifact(222, null, null, null, null)
@@ -80,7 +84,8 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
      *   - art 3
      * - art 2 (should be hidden)
      */
-    public function itReturnsOnlyOneIfTwoLinksIdentical() {
+    public function itReturnsOnlyOneIfTwoLinksIdentical()
+    {
         $artifact3 = $this->giveMeAnArtifactWithChildren();
         $artifact2 = $this->giveMeAnArtifactWithChildren();
         $artifact1 = $this->giveMeAnArtifactWithChildren($artifact2, $artifact3);
@@ -102,7 +107,8 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
      *         -art 4
      * - art 4 (should be hidden)
      */
-    public function itReturnsOnlyOneIfTwoLinksIdenticalInSubHierarchies() {
+    public function itReturnsOnlyOneIfTwoLinksIdenticalInSubHierarchies()
+    {
         $artifact4 = $this->giveMeAnArtifactWithChildren();
         $artifact3 = $this->giveMeAnArtifactWithChildren($artifact4);
         $artifact2 = $this->giveMeAnArtifactWithChildren();
@@ -134,7 +140,8 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
      * As Bug is not a child of Task, we should not get art 3 and 4 under task 2
      * However as art 3 is linked to art 0 we should get it under art 0
      */
-    public function itDoesNotReturnArtifactsThatAreNotInTheHierarchy() {
+    public function itDoesNotReturnArtifactsThatAreNotInTheHierarchy()
+    {
         $us_tracker     = mockery_stub(\Tracker::class)->getId()->returns(101);
         $task_tracker   = mockery_stub(\Tracker::class)->getId()->returns(102);
         $bug_tracker    = mockery_stub(\Tracker::class)->getId()->returns(103);
@@ -243,7 +250,8 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
      *
      * @return Tracker_Artifact
      */
-    public function giveMeAnArtifactWithChildren() {
+    public function giveMeAnArtifactWithChildren()
+    {
         $children  = func_get_args();
         $sub_trackers = array();
         foreach ($children as $child) {

@@ -25,7 +25,8 @@ require_once __DIR__ . '/../mail/mail_utils.php';
 
 $pv=isset($pv)?$pv:false;
 
-function display_ml_details($group_id, $list_server, $result, $i) {
+function display_ml_details($group_id, $list_server, $result, $i)
+{
 
     echo '<IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT="13" WIDTH="15" BORDER="0">&nbsp;<b>'.db_result($result, $i, 'list_name').'</b> [';
     $list_is_public = db_result($result, $i, 'is_public');

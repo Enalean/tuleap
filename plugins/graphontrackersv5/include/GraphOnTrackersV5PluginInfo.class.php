@@ -23,7 +23,8 @@
 
 class GraphOnTrackersV5PluginInfo extends PluginInfo {
 
-    public function __construct($plugin) {
+    public function __construct($plugin)
+    {
         parent::__construct($plugin);
         $this->setPluginDescriptor(new GraphOnTrackersV5PluginDescriptor());
     }

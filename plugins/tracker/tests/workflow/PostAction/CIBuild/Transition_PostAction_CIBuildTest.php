@@ -22,7 +22,8 @@ require_once __DIR__.'/../../../bootstrap.php';
 
 class Transition_PostAction_CIBuildTest extends TuleapTestCase {
 
-    public function itCallsDeleteMethodInDaoWhenDeleteIsRequested() {
+    public function itCallsDeleteMethodInDaoWhenDeleteIsRequested()
+    {
         $transition       = mock('Transition');
         $id               = 123;
         $job_url          = 'http://www.example.com';
@@ -38,7 +39,8 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $post_action_ci_build->process($condendi_request);
     }
 
-    public function itDoesNotUpdateThePostActionIfJobURLIsNotValid() {
+    public function itDoesNotUpdateThePostActionIfJobURLIsNotValid()
+    {
         $transition       = mock('Transition');
         $id               = 123;
         $job_url          = 'http://www.example.com';
@@ -81,7 +83,8 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $post_action_ci_build->process($condendi_request);
     }
 
-    public function itDoesNotUpdateThePostActionIfJobURLIsNotChanged() {
+    public function itDoesNotUpdateThePostActionIfJobURLIsNotChanged()
+    {
         $transition       = mock('Transition');
         $id               = 123;
         $job_url          = 'http://www.example.com';
@@ -101,7 +104,8 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $post_action_ci_build->process($condendi_request);
     }
 
-    public function itIsNotDefinedWhenJobUrlIsEmpty() {
+    public function itIsNotDefinedWhenJobUrlIsEmpty()
+    {
         $transition       = mock('Transition');
         $id               = 123;
         $job_url          = null;
@@ -111,7 +115,8 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $this->assertFalse($post_action_ci_build->isDefined());
     }
 
-    public function itIsDefinedWhenJobUrlIsFilled() {
+    public function itIsDefinedWhenJobUrlIsFilled()
+    {
         $transition       = mock('Transition');
         $id               = 123;
         $job_url          = 'http://example.com/job';
@@ -121,7 +126,8 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $this->assertTrue($post_action_ci_build->isDefined());
     }
 
-    public function itExportsInXMLFormatTheJobUrl() {
+    public function itExportsInXMLFormatTheJobUrl()
+    {
         $transition       = mock('Transition');
         $id               = 123;
         $job_url          = 'http://example.com';
@@ -136,7 +142,8 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $this->assertEqual((string)$root->postaction_ci_build['job_url'], $job_url);
     }
 
-    public function itDoesNotExportThePostActionIfJobUrlIsNotSet() {
+    public function itDoesNotExportThePostActionIfJobUrlIsNotSet()
+    {
         $transition       = mock('Transition');
         $id               = 123;
         $job_url          = '';
@@ -166,7 +173,8 @@ class Transition_PostAction_CIBuildAfterTest extends TuleapTestCase {
     protected $post_action_ci_build;
     protected $job_url;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $build_user             = 'mickey mooouse';
@@ -211,17 +219,20 @@ class Transition_PostAction_CIBuildAfterTest extends TuleapTestCase {
         stub($this->field)->getLabel()->returns($value_triggering_build);
     }
 
-    public function itLaunchTheCIBuildOnAfter() {
+    public function itLaunchTheCIBuildOnAfter()
+    {
         expect($this->client)->launchJobBuild($this->job_url, '*')->once();
         $this->post_action_ci_build->after($this->changeset);
     }
 
-    public function itDisplayInfoFeedbackIfLaunchSucceed() {
+    public function itDisplayInfoFeedbackIfLaunchSucceed()
+    {
         expect($GLOBALS['Response'])->addFeedback('info', '*')->once();
         $this->post_action_ci_build->after($this->changeset);
     }
 
-    public function itDisplayErrorFeedbackIfLaunchFailed() {
+    public function itDisplayErrorFeedbackIfLaunchFailed()
+    {
         $error_message = 'Oops';
         stub($this->client)->launchJobBuild($this->job_url, '*')->throws(new Jenkins_ClientUnableToLaunchBuildException($error_message));
 
@@ -229,12 +240,14 @@ class Transition_PostAction_CIBuildAfterTest extends TuleapTestCase {
         $this->post_action_ci_build->after($this->changeset);
     }
 
-    public function itIncludesTheNeededParameters() {
+    public function itIncludesTheNeededParameters()
+    {
         expect($this->client)->launchJobBuild($this->job_url, $this->expected_parameters)->once();
         $this->post_action_ci_build->after($this->changeset);
     }
 
-    public function itDoesNothingIfThePostActionIsNotDefined() {
+    public function itDoesNothingIfThePostActionIsNotDefined()
+    {
         $id      = 123;
         $job_url = '';
         $post_action_ci_build = new Transition_PostAction_CIBuild($this->transition, $id, $job_url, $this->client);

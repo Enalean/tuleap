@@ -19,7 +19,8 @@
  */
 
 class Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException extends Tracker_Exception {
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('No valid attachment found');
     }
 }

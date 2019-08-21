@@ -22,7 +22,8 @@ require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_Selectbox_RESTTests extends TuleapTestCase {
 
-    public function itThrowsAnExceptionWhenReturningValueIndexedByFieldName() {
+    public function itThrowsAnExceptionWhenReturningValueIndexedByFieldName()
+    {
         $field = new Tracker_FormElement_Field_Selectbox(
             1,
             101,

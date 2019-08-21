@@ -21,7 +21,8 @@
 
 class Tracker_FormElement_View_Admin_Shared extends Tracker_FormElement_View_Admin {
 
-    public function __construct(Tracker_FormElement_Shared $formElement, $allUsedElements) {
+    public function __construct(Tracker_FormElement_Shared $formElement, $allUsedElements)
+    {
         $this->formElement     = $formElement;
         $this->allUsedElements = $allUsedElements;
     }

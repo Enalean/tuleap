@@ -43,7 +43,8 @@ class Docman_Actions extends Actions
         $this->event_manager = $this->_getEventManager();
     }
 
-    protected function _getEventManager() {
+    protected function _getEventManager()
+    {
         $em = EventManager::instance();
         return $em;
     }
@@ -59,18 +60,22 @@ class Docman_Actions extends Actions
         );
     }
 
-    function expandFolder() {
+    function expandFolder()
+    {
         $folderFactory = new Docman_FolderFactory();
         $folderFactory->expand($this->_getFolderFromRequest());
     }
-    function expandAll($params) {
+    function expandAll($params)
+    {
         $params['hierarchy']->accept(new Docman_ExpandAllHierarchyVisitor(), array('folderFactory' => new Docman_FolderFactory()));
     }
-    function collapseFolder() {
+    function collapseFolder()
+    {
         $folderFactory = new Docman_FolderFactory();
         $folderFactory->collapse($this->_getFolderFromRequest());
     }
-    private function _getFolderFromRequest() {
+    private function _getFolderFromRequest()
+    {
         $request = HTTPRequest::instance();
         $folder = new Docman_Folder();
         $folder->setId((int) $request->get('id'));
@@ -96,7 +101,8 @@ class Docman_Actions extends Actions
         return $new_owner_id;
     }
 
-    private function _raiseMetadataChangeEvent(&$user, &$item, $group_id, $old, $new, $field) {
+    private function _raiseMetadataChangeEvent(&$user, &$item, $group_id, $old, $new, $field)
+    {
         $logEventParam = array('group_id' => $group_id,
                                'item'     => &$item,
                                'user'     => &$user,
@@ -114,7 +120,8 @@ class Docman_Actions extends Actions
      * @access: private
      *
      */
-    function _storeFile($item) {
+    function _storeFile($item)
+    {
         $fs       = $this->_getFileStorage();
         $user     = $this->_controler->getUser();
         $request  = $this->_controler->request;
@@ -276,7 +283,8 @@ class Docman_Actions extends Actions
         return $newVersion;
     }
 
-    private function newVersionApprovalTable(Codendi_Request $request, Docman_Item $item, PFUser $user) {
+    private function newVersionApprovalTable(Codendi_Request $request, Docman_Item $item, PFUser $user)
+    {
         $vImport = new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty'));
         $vImport->required();
         $import = $request->getValidated('app_table_import', $vImport, false);
@@ -286,15 +294,18 @@ class Docman_Actions extends Actions
         }
     }
 
-    function createFolder() {
+    function createFolder()
+    {
         $this->createItem();
     }
 
-    function createDocument() {
+    function createDocument()
+    {
         $this->createItem();
     }
 
-    function createItem() {
+    function createItem()
+    {
         $request = $this->_controler->request;
         $item_factory = $this->_getItemFactory();
         if ($request->exist('item')) {
@@ -506,7 +517,8 @@ class Docman_Actions extends Actions
         $this->event_manager->processEvent('send_notifications', array());
     }
 
-    function update() {
+    function update()
+    {
         $request = $this->_controler->request;
         if ($request->exist('item')) {
             $user = $this->_controler->getUser();
@@ -679,7 +691,8 @@ class Docman_Actions extends Actions
         $this->event_manager->processEvent('send_notifications', array());
     }
 
-    function new_version() {
+    function new_version()
+    {
         $request = $this->_controler->request;
         if ($request->exist('id')) {
             $user         = $this->_controler->getUser();
@@ -702,7 +715,8 @@ class Docman_Actions extends Actions
         $this->event_manager->processEvent('send_notifications', array());
     }
 
-    private function updateLink(Codendi_Request $request, Docman_Link $item, PFUser $user) {
+    private function updateLink(Codendi_Request $request, Docman_Link $item, PFUser $user)
+    {
         $data = $request->get('item');
         $item->setUrl($data['link_url']);
         $updated = $this->_getItemFactory()->updateLink($item, $request->get('version'));
@@ -729,7 +743,8 @@ class Docman_Actions extends Actions
         return $updated;
     }
 
-    private function manageLockNewVersion(PFUser $user, Docman_Item $item, Codendi_Request $request) {
+    private function manageLockNewVersion(PFUser $user, Docman_Item $item, Codendi_Request $request)
+    {
         $permission_manager = $this->_getDocmanPermissionsManagerInstance($item->getGroupId());
         if ($request->existAndNonEmpty('lock_document')) {
             $permission_manager->getLockFactory()->lock($item, $user);
@@ -739,42 +754,49 @@ class Docman_Actions extends Actions
     }
 
     protected $filestorage;
-    protected function _getFileStorage() {
+    protected function _getFileStorage()
+    {
         if (!$this->filestorage) {
             $this->filestorage = new Docman_FileStorage($this->_controler->getProperty('docman_root'));
         }
         return $this->filestorage;
     }
 
-    function _getItemFactory($groupId=null) {
+    function _getItemFactory($groupId=null)
+    {
         return new Docman_ItemFactory($groupId);
     }
 
-    function _getFolderFactory($groupId=null) {
+    function _getFolderFactory($groupId=null)
+    {
         return new Docman_FolderFactory($groupId);
     }
 
     protected $version_factory;
-    function _getVersionFactory() {
+    function _getVersionFactory()
+    {
         if (!$this->version_factory) {
             $this->version_factory = new Docman_VersionFactory();
         }
         return $this->version_factory;
     }
     protected $permissions_manager;
-    function &_getPermissionsManagerInstance(){
+    function &_getPermissionsManagerInstance()
+    {
         if(!$this->permissions_manager){
             $this->permissions_manager = PermissionsManager::instance();
         }
         return $this->permissions_manager;
     }
 
-    function _getDocmanPermissionsManagerInstance($groupId) {
+    function _getDocmanPermissionsManagerInstance($groupId)
+    {
         return Docman_PermissionsManager::instance($groupId);
     }
 
     protected $userManager;
-    function _getUserManagerInstance(){
+    function _getUserManagerInstance()
+    {
         if(!$this->userManager){
             $this->userManager = UserManager::instance();
         }
@@ -791,7 +813,8 @@ class Docman_Actions extends Actions
      *
      * @return void
      */
-    protected function _doCutPaste($itemToMove, $newParentItem, $user, $ordering) {
+    protected function _doCutPaste($itemToMove, $newParentItem, $user, $ordering)
+    {
         if ($itemToMove && $newParentItem && $newParentItem->getId() != $itemToMove->getId()) {
             $item_factory = $this->_getItemFactory();
             $old_parent   = $item_factory->getItemFromDb($itemToMove->getParentId());
@@ -826,7 +849,8 @@ class Docman_Actions extends Actions
      *
      * @return void
      */
-    protected function _doCopyPaste($itemToPaste, $newParentItem, $user, $ordering, $importMd, $dataRoot) {
+    protected function _doCopyPaste($itemToPaste, $newParentItem, $user, $ordering, $importMd, $dataRoot)
+    {
         $srcMdFactory = new Docman_MetadataFactory($itemToPaste->getGroupId());
 
         // Import metadata if asked
@@ -861,7 +885,8 @@ class Docman_Actions extends Actions
         $itemFactory->delCutPreference();
     }
 
-    function move() {
+    function move()
+    {
         $request = $this->_controler->request;
         if ($request->exist('id')) {
             $item_factory = $this->_getItemFactory();
@@ -895,7 +920,8 @@ class Docman_Actions extends Actions
         $this->event_manager->processEvent('send_notifications', array());
     }
 
-    function action_cut($params) {
+    function action_cut($params)
+    {
         // Param
         $user = $this->_controler->getUser();
         $item = $this->_controler->_actionParams['item'];
@@ -912,7 +938,8 @@ class Docman_Actions extends Actions
         $this->_controler->feedback->log('info', $hp->purify($item->getTitle()).' '.$GLOBALS['Language']->getText('plugin_docman', 'info_cut_notify_cut'));
     }
 
-    function action_copy($params) {
+    function action_copy($params)
+    {
         // Param
         $user = $this->_controler->getUser();
         $item = $this->_controler->_actionParams['item'];
@@ -941,7 +968,8 @@ class Docman_Actions extends Actions
      *
      * @return void
      */
-    function doPaste($itemToPaste, $newParentItem, $rank, $importMd, $srcMode) {
+    function doPaste($itemToPaste, $newParentItem, $rank, $importMd, $srcMode)
+    {
         $user      = $this->_controler->getUser();
         $mdMapping = false;
         switch ($srcMode) {
@@ -957,7 +985,8 @@ class Docman_Actions extends Actions
         $this->event_manager->processEvent('send_notifications', array());
     }
 
-    function paste($params) {
+    function paste($params)
+    {
         $this->doPaste($this->_controler->_actionParams['itemToPaste'],
                        $this->_controler->_actionParams['item'],
                        $this->_controler->_actionParams['rank'],
@@ -1013,7 +1042,8 @@ class Docman_Actions extends Actions
         }
     }
 
-    function change_view() {
+    function change_view()
+    {
         $request  = HTTPRequest::instance();
         if ($request->exist('selected_view')) {
             if(is_numeric($request->get('selected_view'))) {
@@ -1038,7 +1068,8 @@ class Docman_Actions extends Actions
         }
     }
 
-    function delete() {
+    function delete()
+    {
         $user    = $this->_controler->getUser();
         $request = $this->_controler->request;
 
@@ -1065,7 +1096,8 @@ class Docman_Actions extends Actions
         $this->event_manager->processEvent('send_notifications', array());
     }
 
-    function deleteVersion() {
+    function deleteVersion()
+    {
         $request = $this->_controler->request;
 
         $_sGroupId = (int) $request->get('group_id');
@@ -1119,11 +1151,13 @@ class Docman_Actions extends Actions
      *
      * @return Docman_ActionsDeleteVisitor
      */
-    function _getActionsDeleteVisitor() {
+    function _getActionsDeleteVisitor()
+    {
         return new Docman_ActionsDeleteVisitor();
     }
 
-    function admin_change_view() {
+    function admin_change_view()
+    {
         $request  = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
 
@@ -1141,11 +1175,13 @@ class Docman_Actions extends Actions
     /**
     * @deprecated
     */
-    function install() {
+    function install()
+    {
         die('Install forbidden. Please contact administrator');
     }
 
-    function admin_set_permissions() {
+    function admin_set_permissions()
+    {
         /** @psalm-suppress DeprecatedFunction */
         list ($return_code, $feedback) = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
         if (!$return_code) {
@@ -1155,7 +1191,8 @@ class Docman_Actions extends Actions
         }
     }
 
-    function admin_md_details_update() {
+    function admin_md_details_update()
+    {
         $request = HTTPRequest::instance();
         $_label  = $request->get('label');
         $_gid    = (int) $request->get('group_id');
@@ -1231,7 +1268,8 @@ class Docman_Actions extends Actions
         }
     }
 
-    function admin_create_metadata() {
+    function admin_create_metadata()
+    {
         $request = HTTPRequest::instance();
 
         $_gid                   = (int) $request->get('group_id');
@@ -1275,7 +1313,8 @@ class Docman_Actions extends Actions
     }
 
 
-    function admin_delete_metadata() {
+    function admin_delete_metadata()
+    {
         $md = $this->_controler->_actionParams['md'];
 
         $name = $md->getName();
@@ -1297,7 +1336,8 @@ class Docman_Actions extends Actions
         $this->_controler->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
     }
 
-    function admin_create_love() {
+    function admin_create_love()
+    {
         $request = HTTPRequest::instance();
 
         $_name         = $request->get('name');
@@ -1324,7 +1364,8 @@ class Docman_Actions extends Actions
         }
     }
 
-    function admin_delete_love() {
+    function admin_delete_love()
+    {
         $request = HTTPRequest::instance();
 
         $_loveId  = (int) $request->get('loveid');
@@ -1359,7 +1400,8 @@ class Docman_Actions extends Actions
         }
     }
 
-    function admin_update_love() {
+    function admin_update_love()
+    {
         $md   = $this->_controler->_actionParams['md'];
         $love = $this->_controler->_actionParams['love'];
 
@@ -1383,7 +1425,8 @@ class Docman_Actions extends Actions
         }
     }
 
-    function admin_import_metadata() {
+    function admin_import_metadata()
+    {
         $groupId    = $this->_controler->_actionParams['sGroupId'];
         $srcGroupId = $this->_controler->_actionParams['sSrcGroupId'];
 
@@ -1401,7 +1444,8 @@ class Docman_Actions extends Actions
         }
     }
 
-    function monitor($params) {
+    function monitor($params)
+    {
         $user = $this->_controler->getUser();
         if (!$user->isAnonymous()) {
             $something_happen  = false;
@@ -1457,7 +1501,8 @@ class Docman_Actions extends Actions
      *
      * @return void
      */
-    function _raiseMonitoringListEvent($item, $subscribers, $eventType) {
+    function _raiseMonitoringListEvent($item, $subscribers, $eventType)
+    {
         $p = array('group_id' => $item->getGroupId(),
                                        'item'     => $item,
                                        'listeners' => $subscribers,
@@ -1498,7 +1543,8 @@ class Docman_Actions extends Actions
     /**
      * @access private
      */
-    function _approval_update_settings(Docman_ApprovalTableFactory $atf, $sStatus, $notification, $notificationOccurence, $description, $owner) {
+    function _approval_update_settings(Docman_ApprovalTableFactory $atf, $sStatus, $notification, $notificationOccurence, $description, $owner)
+    {
         $table = $atf->getTable();
         $newOwner = false;
         if(!$table->isCustomizable()) {
@@ -1538,7 +1584,8 @@ class Docman_Actions extends Actions
     /**
      * @access private
      */
-    function _approval_update_add_users($atrf, $usUserList, $sUgroups) {
+    function _approval_update_add_users($atrf, $usUserList, $sUgroups)
+    {
         $noError = true;
         $userAdded = false;
 
@@ -1605,7 +1652,8 @@ class Docman_Actions extends Actions
     /**
      * @access private
      */
-    function _approval_update_del_users($atrf, $selectedUsers) {
+    function _approval_update_del_users($atrf, $selectedUsers)
+    {
         $deletedUsers = 0;
         foreach($selectedUsers as $userId) {
             if($atrf->delUser($userId)) {
@@ -1623,7 +1671,8 @@ class Docman_Actions extends Actions
     /**
      * @access private
      */
-    function _approval_update_notify_users($atrf, $selectedUsers) {
+    function _approval_update_notify_users($atrf, $selectedUsers)
+    {
         $notifiedUsers = 0;
         $atnc = $atrf->_getApprovalTableNotificationCycle(true);
         // For each reviewer, if he is selected, notify it
@@ -1648,7 +1697,8 @@ class Docman_Actions extends Actions
     /**
      * @access private
      */
-    function _approval_update_notif_resend($atrf) {
+    function _approval_update_notif_resend($atrf)
+    {
         $res = $atrf->notifyReviewers();
         if($res) {
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_notification_success'));
@@ -1657,7 +1707,8 @@ class Docman_Actions extends Actions
         }
     }
 
-    function approval_update() {
+    function approval_update()
+    {
         // Params
         $item         = $this->_controler->_actionParams['item'];
         $user         = $this->_controler->getUser();
@@ -1729,7 +1780,8 @@ class Docman_Actions extends Actions
         }
     }
 
-    function approval_delete() {
+    function approval_delete()
+    {
         // Params
         $item = $this->_controler->_actionParams['item'];
         $version = $this->_controler->_actionParams['version'];
@@ -1742,7 +1794,8 @@ class Docman_Actions extends Actions
         }
     }
 
-    function approval_upd_user() {
+    function approval_upd_user()
+    {
         // Params
         $item    = $this->_controler->_actionParams['item'];
         $sUserId = $this->_controler->_actionParams['user_id'];
@@ -1753,7 +1806,8 @@ class Docman_Actions extends Actions
         $atrf->updateUser($sUserId, $usRank);
     }
 
-    function approval_user_commit() {
+    function approval_user_commit()
+    {
         // Params
         $item      = $this->_controler->_actionParams['item'];
         $svState   = $this->_controler->_actionParams['svState'];
@@ -1795,7 +1849,8 @@ class Docman_Actions extends Actions
         $this->monitor($this->_controler->_actionParams);
     }
 
-    function report_del() {
+    function report_del()
+    {
         $user      = $this->_controler->getUser();
         $reportId  = $this->_controler->_actionParams['sReportId'];
         $groupId   = $this->_controler->_actionParams['sGroupId'];
@@ -1821,7 +1876,8 @@ class Docman_Actions extends Actions
         }
     }
 
-    function report_upd() {
+    function report_upd()
+    {
         $reportId = $this->_controler->_actionParams['sReportId'];
         $groupId  = $this->_controler->_actionParams['sGroupId'];
         $scope    = $this->_controler->_actionParams['sScope'];
@@ -1848,7 +1904,8 @@ class Docman_Actions extends Actions
         }
     }
 
-    function report_import() {
+    function report_import()
+    {
         $groupId        = $this->_controler->_actionParams['sGroupId'];
         $importReportId = $this->_controler->_actionParams['sImportReportId'];
         $importGroupId  = $this->_controler->_actionParams['sImportGroupId'];
@@ -1918,7 +1975,8 @@ class Docman_Actions extends Actions
         }
     }
 
-    function action_lock_add() {
+    function action_lock_add()
+    {
         $item = $this->_controler->_actionParams['item'];
         if ($this->_controler->userCanWrite($item->getId())) {
             $user = $this->_controler->getUser();
@@ -1951,7 +2009,8 @@ class Docman_Actions extends Actions
         }
     }
 
-    function action_lock_del() {
+    function action_lock_del()
+    {
         /** @var Docman_Controller $this->_controler */
         $item = $this->_controler->_actionParams['item'];
         $user = $this->_controler->getUser();

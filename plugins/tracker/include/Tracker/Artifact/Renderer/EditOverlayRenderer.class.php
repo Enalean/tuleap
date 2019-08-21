@@ -44,7 +44,8 @@ class Tracker_Artifact_EditOverlayRenderer extends Tracker_Artifact_EditAbstract
      *
      * @return string The HTML code for submit and cancel buttons in the Overlay
      */
-    private function fetchSubmitAndCancelButtons(PFUser $current_user) {
+    private function fetchSubmitAndCancelButtons(PFUser $current_user)
+    {
         if ($this->artifact->userCanUpdate($current_user)) {
             return '<p class="artifact-submit-button">
                       <input class="btn btn-primary" type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />
@@ -54,15 +55,18 @@ class Tracker_Artifact_EditOverlayRenderer extends Tracker_Artifact_EditAbstract
         }
     }
 
-    protected function enhanceRedirect(Codendi_Request $request) {
+    protected function enhanceRedirect(Codendi_Request $request)
+    {
         // does nothing (there is no redirect, it's meant to be inline)
     }
 
-    protected function displayHeader() {
+    protected function displayHeader()
+    {
         $GLOBALS['HTML']->overlay_header();
     }
 
-    protected function displayFooter() {
+    protected function displayFooter()
+    {
         $GLOBALS['HTML']->overlay_footer();
     }
 }

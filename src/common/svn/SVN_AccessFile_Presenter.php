@@ -38,7 +38,8 @@ class SVN_AccessFile_Presenter {
     /** @var string*/
     public $current_version_title;
 
-    public function __construct(Project $project, $content, $default_content, array $select_options, $version_number, $current_version_title) {
+    public function __construct(Project $project, $content, $default_content, array $select_options, $version_number, $current_version_title)
+    {
         $this->project               = $project;
         $this->content               = $content;
         $this->default_content       = $default_content;
@@ -47,51 +48,63 @@ class SVN_AccessFile_Presenter {
         $this->current_version_title = $current_version_title;
     }
 
-    public function project_id() {
+    public function project_id()
+    {
         return $this->project->getID();
     }
 
-    public function policy() {
+    public function policy()
+    {
         return $GLOBALS['Language']->getText('svn_admin_access_control', 'def_policy', $GLOBALS['sys_name']);
     }
 
-    public function permissions_warning() {
+    public function permissions_warning()
+    {
         return $GLOBALS['Language']->getText('svn_admin_access_control', 'permissions_warning');
     }
 
-    public function default_formatted_content() {
+    public function default_formatted_content()
+    {
         return str_replace("\n", "<br>", $this->default_content);
     }
 
-    public function button_new_version_label() {
+    public function button_new_version_label()
+    {
         return $GLOBALS['Language']->getText('svn_admin_access_control', 'button_new_version');
     }
 
-    public function button_other_version_label() {
+    public function button_other_version_label()
+    {
         return $GLOBALS['Language']->getText('svn_admin_access_control', 'button_other_version');
     }
 
-    public function access_ctrl_file() {
+    public function access_ctrl_file()
+    {
         return $GLOBALS['Language']->getText('svn_admin_access_control','access_ctrl_file');
     }
 
-    public function access_form_title() {
+    public function access_form_title()
+    {
         return $GLOBALS['Language']->getText('svn_admin_access_control','access_ctrl');
     }
 
-    public function other_version_title() {
+    public function other_version_title()
+    {
         return $GLOBALS['Language']->getText('svn_admin_access_control', 'other_versions');
     }
 
-    public function version_number() {
+    public function version_number()
+    {
         return $this->version_number;
     }
 
-    public function saved_on() {
+    public function saved_on()
+    {
         return $GLOBALS['Language']->getText('svn_admin_access_control', 'saved_on');
     }
 
-    public function select_version() {
+    public function select_version()
+    {
         return $GLOBALS['Language']->getText('svn_admin_access_control', 'select_version');
     }
 }

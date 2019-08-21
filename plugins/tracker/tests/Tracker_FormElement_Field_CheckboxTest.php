@@ -25,53 +25,62 @@
 require_once 'bootstrap.php';
 
 class Tracker_FormElement_Field_CheckboxHTMLTest extends Tracker_FormElement_Field_Checkbox {
-    public function __construct() {
+    public function __construct()
+    {
         $id = $tracker_id = $parent_id = $name = $label = $description = $use_it = $scope = $required = $notifications = $rank = null;
         parent::__construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank);
     }
 
-    public function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected) {
+    public function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected)
+    {
         return parent::fetchFieldValue($value, $name, $is_selected);
     }
 }
 
 class Tracker_FormElement_Field_CheckboxTest extends TuleapTestCase {
 
-    public function itIsNoneWhenArrayIsFullOfZero() {
+    public function itIsNoneWhenArrayIsFullOfZero()
+    {
         $field = aCheckboxField()->build();
         $this->assertTrue($field->isNone(array('0', '0', '0')));
     }
 
-    public function itIsNotNoneWhenArrayContainsAValue() {
+    public function itIsNotNoneWhenArrayContainsAValue()
+    {
         $field = aCheckboxField()->build();
         $this->assertFalse($field->isNone(array('1' => '0', '2' => '53')));
     }
 
-    public function itHasNoChangesWhenSubmittedValuesAreTheSameAsStored() {
+    public function itHasNoChangesWhenSubmittedValuesAreTheSameAsStored()
+    {
         $previous = stub('Tracker_Artifact_ChangesetValue_List')->getValue()->returns(array(5123, 5125));
         $field = aCheckboxField()->build();
         $this->assertFalse($field->hasChanges(mock('Tracker_Artifact'), $previous, array('5123', '5125')));
     }
 
-    public function itHasNoChangesWhenSubmittedValuesContainsZero() {
+    public function itHasNoChangesWhenSubmittedValuesContainsZero()
+    {
         $previous = stub('Tracker_Artifact_ChangesetValue_List')->getValue()->returns(array(5123, 5125));
         $field = aCheckboxField()->build();
         $this->assertFalse($field->hasChanges(mock('Tracker_Artifact'), $previous, array('5123', '0', '5125')));
     }
 
-    public function itDetectsChangesEvenWhenCSVImportValueIsNull() {
+    public function itDetectsChangesEvenWhenCSVImportValueIsNull()
+    {
         $previous = stub('Tracker_Artifact_ChangesetValue_List')->getValue()->returns(array(5123, 5125));
         $field = aCheckboxField()->build();
         $this->assertTrue($field->hasChanges(mock('Tracker_Artifact'), $previous, null));
     }
 
-    public function itHasChangesWhenSubmittedValuesContainsDifferentValues() {
+    public function itHasChangesWhenSubmittedValuesContainsDifferentValues()
+    {
         $previous = stub('Tracker_Artifact_ChangesetValue_List')->getValue()->returns(array('5123', '5125'));
         $field = aCheckboxField()->build();
         $this->assertTrue($field->hasChanges(mock('Tracker_Artifact'), $previous, array('5123', '0', '5122')));
     }
 
-    public function itHasAnHiddenFieldForEachCheckbox() {
+    public function itHasAnHiddenFieldForEachCheckbox()
+    {
         $value = aFieldListStaticValue()->withId(55)->withLabel('bla')->build();
 
         $field = new Tracker_FormElement_Field_CheckboxHTMLTest();
@@ -80,7 +89,8 @@ class Tracker_FormElement_Field_CheckboxTest extends TuleapTestCase {
         $this->assertPattern('/<input type="hidden" lename/', $html);
     }
 
-    public function itReplaceCSVNullValueByNone() {
+    public function itReplaceCSVNullValueByNone()
+    {
         $field = aCheckboxField()->build();
         $this->assertEqual(
             $field->getFieldDataFromCSVValue(null, null),

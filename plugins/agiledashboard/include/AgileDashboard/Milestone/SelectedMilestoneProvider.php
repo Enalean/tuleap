@@ -45,7 +45,8 @@ class AgileDashboard_Milestone_SelectedMilestoneProvider {
     /** @var bool */
     private $milestone_has_been_loaded = false;
 
-    public function __construct(array $additional_criteria, Planning_MilestoneFactory $milestone_factory, PFUser $user, Project $project) {
+    public function __construct(array $additional_criteria, Planning_MilestoneFactory $milestone_factory, PFUser $user, Project $project)
+    {
         $this->user                = $user;
         $this->project             = $project;
         $this->additional_criteria = $additional_criteria;
@@ -53,14 +54,16 @@ class AgileDashboard_Milestone_SelectedMilestoneProvider {
     }
 
 
-    public function getMilestone() {
+    public function getMilestone()
+    {
         if (! $this->milestone_has_been_loaded) {
             $this->loadMilestone();
         }
         return $this->milestone;
     }
 
-    private function loadMilestone() {
+    private function loadMilestone()
+    {
         if (! isset($this->additional_criteria[self::FIELD_NAME])) {
             return;
         }
@@ -78,7 +81,8 @@ class AgileDashboard_Milestone_SelectedMilestoneProvider {
         $this->milestone_has_been_loaded = true;
     }
 
-    public function getMilestoneId() {
+    public function getMilestoneId()
+    {
         if (! $this->milestone_has_been_loaded) {
             $this->loadMilestone();
         }

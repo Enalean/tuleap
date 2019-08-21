@@ -36,7 +36,8 @@ class customPlugin extends Plugin {
  */
 class PluginFactoryTest extends TuleapTestCase {
 
-    function testGetPluginById() {
+    function testGetPluginById()
+    {
         $plugin_dao    = new MockPluginDao($this);
         $access_result = new MockDataAccessResult($this);
         $plugin_dao->setReturnReference('searchById', $access_result);
@@ -53,7 +54,8 @@ class PluginFactoryTest extends TuleapTestCase {
         $this->assertFalse($pf->getPluginById(124));
     }
 
-    function testGetPluginByName() {
+    function testGetPluginByName()
+    {
         $plugin_dao    = new MockPluginDao($this);
 
         $access_result = new MockDataAccessResult($this);
@@ -78,7 +80,8 @@ class PluginFactoryTest extends TuleapTestCase {
         $this->assertIdentical(false, $pf->getPluginByName('plugin 124'));
     }
 
-    function testCreatePlugin() {
+    function testCreatePlugin()
+    {
         $plugin_dao    = new MockPluginDao($this);
         $access_result = new MockDataAccessResult($this);
         $plugin_dao->setReturnReference('searchByName', $access_result);
@@ -95,7 +98,8 @@ class PluginFactoryTest extends TuleapTestCase {
         $this->assertFalse($pf->createPlugin('error plugin creation'));
     }
 
-    function testGetAvailableplugins() {
+    function testGetAvailableplugins()
+    {
         $plugin_dao    = new MockPluginDao($this);
         $access_result = new MockDataAccessResult($this);
         $plugin_dao->setReturnReference('searchByAvailable', $access_result);
@@ -109,7 +113,8 @@ class PluginFactoryTest extends TuleapTestCase {
         $this->assertEqual(count($col), 2);
     }
 
-    function testGetUnavailableplugins() {
+    function testGetUnavailableplugins()
+    {
         $plugin_dao    = new MockPluginDao($this);
         $access_result = new MockDataAccessResult($this);
         $plugin_dao->setReturnReference('searchByAvailable', $access_result);
@@ -123,7 +128,8 @@ class PluginFactoryTest extends TuleapTestCase {
         $this->assertEqual(count($col), 2);
     }
 
-    function testGetAllPlugins() {
+    function testGetAllPlugins()
+    {
         $plugin_dao    = new MockPluginDao($this);
         $access_result = new MockDataAccessResult($this);
         $plugin_dao->setReturnReference('searchALL', $access_result);
@@ -136,7 +142,8 @@ class PluginFactoryTest extends TuleapTestCase {
         $col = $pf->getAllPlugins();
         $this->assertEqual(count($col), 2);
     }
-    function testIsPluginAvailable() {
+    function testIsPluginAvailable()
+    {
         $plugin_dao    = new MockPluginDao($this);
         $access_result = new MockDataAccessResult($this);
         $plugin_dao->setReturnReference('searchById', $access_result);
@@ -153,7 +160,8 @@ class PluginFactoryTest extends TuleapTestCase {
         $this->assertFalse($pf->isPluginAvailable($p_2));
     }
 
-    function testEnablePlugin() {
+    function testEnablePlugin()
+    {
         $plugin_dao = new MockPluginDao($this);
         $access_result = new MockDataAccessResult($this);
         $plugin_dao->setReturnReference('searchById', $access_result);
@@ -168,7 +176,8 @@ class PluginFactoryTest extends TuleapTestCase {
         $pf->availablePlugin($p);
     }
 
-    function testDisablePlugin() {
+    function testDisablePlugin()
+    {
         $plugin_dao = new MockPluginDao($this);
         $access_result = new MockDataAccessResult($this);
         $plugin_dao->setReturnReference('searchById', $access_result);
@@ -183,7 +192,8 @@ class PluginFactoryTest extends TuleapTestCase {
         $pf->unavailablePlugin($p);
     }
 
-    function testPluginIsCustom() {
+    function testPluginIsCustom()
+    {
         $plugin_dao    = new MockPluginDao($this);
 
         $access_result_custom = new MockDataAccessResult($this);

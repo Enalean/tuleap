@@ -27,7 +27,8 @@ class Git_Driver_Gerrit_GerritDriverFactory {
     /** @var Logger */
     private $logger;
 
-    public function __construct(Logger $logger) {
+    public function __construct(Logger $logger)
+    {
         $this->logger = $logger;
     }
 
@@ -38,7 +39,8 @@ class Git_Driver_Gerrit_GerritDriverFactory {
      *
      * @return Git_Driver_Gerrit
      */
-    public function getDriver(Git_RemoteServer_GerritServer $server) {
+    public function getDriver(Git_RemoteServer_GerritServer $server)
+    {
         if ($server->getGerritVersion() === Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS) {
             require_once '/usr/share/php/Guzzle/autoload.php';
             return new Git_Driver_GerritREST(

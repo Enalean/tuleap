@@ -441,9 +441,12 @@ class DB_Error extends PEAR_Error
      *
      * @see PEAR_Error
      */
-    function __construct($code = DB_ERROR, $mode = PEAR_ERROR_RETURN,
-              $level = E_USER_NOTICE, $debuginfo = null)
-    {
+    function __construct(
+        $code = DB_ERROR,
+        $mode = PEAR_ERROR_RETURN,
+        $level = E_USER_NOTICE,
+        $debuginfo = null
+    ) {
         if (is_int($code)) {
             parent::__construct('DB Error: ' . DB::errorMessage($code), $code, $mode, $level, $debuginfo);
         } else {

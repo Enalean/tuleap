@@ -25,7 +25,8 @@ use DataAccessObject;
 
 class NatureDao extends DataAccessObject {
 
-    public function create($shortname, $forward_label, $reverse_label) {
+    public function create($shortname, $forward_label, $reverse_label)
+    {
         $nature        = $this->getNatureByShortname($shortname);
         $shortname     = $this->da->quoteSmart($shortname);
         $forward_label = $this->da->quoteSmart($forward_label);
@@ -56,7 +57,8 @@ class NatureDao extends DataAccessObject {
         return true;
     }
 
-    public function getNatureByShortname($shortname) {
+    public function getNatureByShortname($shortname)
+    {
         $shortname     = $this->da->quoteSmart($shortname);
 
         $sql = "SELECT * FROM plugin_tracker_artifactlink_natures WHERE shortname = $shortname";
@@ -64,7 +66,8 @@ class NatureDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function edit($shortname, $forward_label, $reverse_label) {
+    public function edit($shortname, $forward_label, $reverse_label)
+    {
         $shortname     = $this->da->quoteSmart($shortname);
         $forward_label = $this->da->quoteSmart($forward_label);
         $reverse_label = $this->da->quoteSmart($reverse_label);
@@ -103,7 +106,8 @@ class NatureDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    private function deleteNatureInTableColumns($shortname) {
+    private function deleteNatureInTableColumns($shortname)
+    {
         $shortname = $this->da->quoteSmart($shortname);
 
         $sql = "DELETE FROM tracker_report_renderer_table_columns WHERE artlink_nature = $shortname";
@@ -111,7 +115,8 @@ class NatureDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function isOrHasBeenUsed($shortname) {
+    public function isOrHasBeenUsed($shortname)
+    {
         $shortname = $this->da->quoteSmart($shortname);
 
         $sql = "SELECT nature
@@ -124,7 +129,8 @@ class NatureDao extends DataAccessObject {
         return (bool)$row['nature'];
     }
 
-    public function searchAllUsedNatureByProject($project_id) {
+    public function searchAllUsedNatureByProject($project_id)
+    {
         $project_id = $this->da->escapeInt($project_id);
 
         $sql = "SELECT DISTINCT nature

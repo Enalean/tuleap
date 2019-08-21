@@ -22,7 +22,8 @@ class UserXMLExportedCollectionTest extends TuleapTestCase {
 
     private $collection;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
         ForgeConfig::set('tuleap_dir', __DIR__.'/../../../../../');
@@ -52,12 +53,14 @@ class UserXMLExportedCollectionTest extends TuleapTestCase {
         );
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         parent::tearDown();
     }
 
-    public function itExportsAUser() {
+    public function itExportsAUser()
+    {
         $this->collection->add($this->a_user);
 
         $xml_content = $this->collection->toXML();
@@ -71,7 +74,8 @@ class UserXMLExportedCollectionTest extends TuleapTestCase {
         $this->assertEqual((string)$xml_object->user[0]->ldapid,   'cb9867');
     }
 
-    public function itExportsMoreThanOneUser() {
+    public function itExportsMoreThanOneUser()
+    {
         $this->collection->add($this->a_user);
         $this->collection->add($this->another_user);
 
@@ -81,7 +85,8 @@ class UserXMLExportedCollectionTest extends TuleapTestCase {
         $this->assertCount($xml_object->user, 2);
     }
 
-    public function itDoesNotExportLdapIdIfNoLdap() {
+    public function itDoesNotExportLdapIdIfNoLdap()
+    {
         $this->collection->add($this->another_user);
 
         $xml_content = $this->collection->toXML();
@@ -90,7 +95,8 @@ class UserXMLExportedCollectionTest extends TuleapTestCase {
         $this->assertEqual((string)$xml_object->user[0]->ldapid, '');
     }
 
-    public function itDoesNotExportNone() {
+    public function itDoesNotExportNone()
+    {
         $this->collection->add($this->none);
 
         $xml_content = $this->collection->toXML();

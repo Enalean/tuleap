@@ -21,18 +21,22 @@
 
 class Templating_Presenter_ButtonDropdownsOptionDivider extends Templating_Presenter_ButtonDropdownsOption {
 
-    public function __construct() {
+    public function __construct()
+    {
     }
 
-    public function simple() {
+    public function simple()
+    {
         return false;
     }
 
-    public function submenu() {
+    public function submenu()
+    {
         return false;
     }
 
-    public function divider() {
+    public function divider()
+    {
         return true;
     }
 }

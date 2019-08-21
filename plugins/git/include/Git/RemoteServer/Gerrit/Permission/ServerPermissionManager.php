@@ -27,12 +27,14 @@ class ServerPermissionManager {
 
     private $dao;
 
-    public function __construct(ServerPermissionDao $dao) {
+    public function __construct(ServerPermissionDao $dao)
+    {
         $this->dao = $dao;
 
     }
 
-    public function isUserAllowedToListServers(PFUser $user) {
+    public function isUserAllowedToListServers(PFUser $user)
+    {
         $rows = $this->dao->searchProjectIdsUserIsGitAdmin($user->getId());
 
         return count($rows) > 0;

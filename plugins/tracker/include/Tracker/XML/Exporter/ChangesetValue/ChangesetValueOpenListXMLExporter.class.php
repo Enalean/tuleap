@@ -25,11 +25,13 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter exte
      */
     private $user_xml_exporter;
 
-    public function __construct(UserXMLExporter $user_xml_exporter) {
+    public function __construct(UserXMLExporter $user_xml_exporter)
+    {
         $this->user_xml_exporter = $user_xml_exporter;
     }
 
-    protected function getFieldChangeType() {
+    protected function getFieldChangeType()
+    {
         return 'open_list';
     }
 
@@ -68,7 +70,8 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter exte
         }
     }
 
-    private function appendValue($value, SimpleXMLElement $field_xml, $bind_type) {
+    private function appendValue($value, SimpleXMLElement $field_xml, $bind_type)
+    {
         if ($bind_type === 'users') {
             $this->appendUserValueToFieldChangeNode($value, $field_xml);
         } else {
@@ -77,27 +80,32 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter exte
 
     }
 
-    private function appendUserValueToFieldChangeNode($value, SimpleXMLElement $field_xml) {
+    private function appendUserValueToFieldChangeNode($value, SimpleXMLElement $field_xml)
+    {
         $user_id = $this->getUserIdFromValue($value);
 
         $this->user_xml_exporter->exportUserByUserId($user_id, $field_xml, 'value');
     }
 
-    private function getUserIdFromValue($value) {
+    private function getUserIdFromValue($value)
+    {
         return (int) substr($value, 1);
     }
 
-    private function appendValueToFieldChangeNode($value, SimpleXMLElement $field_xml) {
+    private function appendValueToFieldChangeNode($value, SimpleXMLElement $field_xml)
+    {
         $value_xml = $field_xml->addChild('value', $value);
         $value_xml->addAttribute('format', 'id');
     }
 
-    private function appendOpenValueLabelToFieldChangeNode($value, SimpleXMLElement $field_xml) {
+    private function appendOpenValueLabelToFieldChangeNode($value, SimpleXMLElement $field_xml)
+    {
         $value_xml = $field_xml->addChild('value', $value);
         $value_xml->addAttribute('format', 'label');
     }
 
-    private function isValueAnOpenValue($value) {
+    private function isValueAnOpenValue($value)
+    {
         return substr($value, 0, 1) === Tracker_FormElement_Field_List_OpenValue::OPEN_PREFIX;
     }
 }

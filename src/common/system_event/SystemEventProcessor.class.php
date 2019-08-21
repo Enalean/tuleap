@@ -55,11 +55,13 @@ abstract class SystemEventProcessor implements IRunInAMutex {
         $this->logger               = $logger;
     }
 
-    public function getProcess() {
+    public function getProcess()
+    {
         return $this->process;
     }
 
-    public function execute($queue) {
+    public function execute($queue)
+    {
         $executed_events_ids = $this->loopOverEventsForOwner($this->getOwner(), $queue);
         try {
             $this->postEventsActions($executed_events_ids, $queue);
@@ -68,7 +70,8 @@ abstract class SystemEventProcessor implements IRunInAMutex {
         }
     }
 
-    protected function loopOverEventsForOwner($owner, $queue) {
+    protected function loopOverEventsForOwner($owner, $queue)
+    {
         $types = $this->system_event_manager->getTypesForQueue($queue);
         if (! $types) {
             return array();
@@ -86,14 +89,16 @@ abstract class SystemEventProcessor implements IRunInAMutex {
         return $executed_events_ids;
     }
 
-    private function getSystemEventFromDar($dar) {
+    private function getSystemEventFromDar($dar)
+    {
         if ($row = $dar->getRow()) {
             return $this->system_event_manager->getInstanceFromRow($row);
         }
         return null;
     }
 
-    private function executeSystemEvent(SystemEvent $sysevent) {
+    private function executeSystemEvent(SystemEvent $sysevent)
+    {
         $this->logger->info("Processing event #".$sysevent->getId()." ".$sysevent->getType()."(".$sysevent->getParameters().")");
         try {
             $sysevent->process();

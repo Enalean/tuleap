@@ -19,18 +19,21 @@
  */
 
 class Tracker_FormElement_Field_ListDao extends DataAccessObject {
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_field_list';
     }
-    public function searchByFieldId($field_id) {
+    public function searchByFieldId($field_id)
+    {
         $field_id  = $this->da->escapeInt($field_id);
         $sql = "SELECT *
                 FROM $this->table_name
                 WHERE field_id = $field_id ";
         return $this->retrieve($sql);
     }
-    public function duplicate($from_field_id, $to_field_id) {
+    public function duplicate($from_field_id, $to_field_id)
+    {
         $from_field_id  = $this->da->escapeInt($from_field_id);
         $to_field_id    = $this->da->escapeInt($to_field_id);
         $sql = "INSERT INTO $this->table_name (field_id, bind_type)
@@ -39,7 +42,8 @@ class Tracker_FormElement_Field_ListDao extends DataAccessObject {
                 WHERE field_id = $from_field_id";
         return $this->update($sql);
     }
-    public function save($field_id, $bind_type) {
+    public function save($field_id, $bind_type)
+    {
         $field_id  = $this->da->escapeInt($field_id);
         $bind_type = $this->da->quoteSmart($bind_type);
         $sql = "REPLACE INTO $this->table_name (field_id, bind_type)

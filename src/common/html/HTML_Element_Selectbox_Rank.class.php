@@ -32,7 +32,8 @@ class HTML_Element_Selectbox_Rank extends HTML_Element_Selectbox {
      * @param $id int The item id
      * @param $siblings array the sibling of the item array('id' => 123, 'name' => 'Item display name', 'rank' => 4)
      */
-    public function __construct($label, $name, $value, $id, $siblings) {
+    public function __construct($label, $name, $value, $id, $siblings)
+    {
         parent::__construct($label, $name, $value);
 
         $this->addOption(new HTML_Element_Option($GLOBALS['Language']->getText('global', 'at_the_beginning'), 'beginning', false));

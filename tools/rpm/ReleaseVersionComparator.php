@@ -27,18 +27,21 @@ class ReleaseVersionComparator {
 
     protected $tmpNames = array();
 
-    public function __construct($prevUri, $curUri) {
+    public function __construct($prevUri, $curUri)
+    {
         $this->prevUri = $prevUri;
         $this->curUri  = $curUri;
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         foreach ($this->tmpNames as $file) {
             @unlink($file);
         }
     }
 
-    public function iterateOverPaths($paths, $rpms, $verbose=false) {
+    public function iterateOverPaths($paths, $rpms, $verbose=false)
+    {
         $iRpms = array_flip(array_map('strtolower', $rpms));
         foreach ($paths as $path) {
             $versionPath = $path.'/VERSION';
@@ -52,7 +55,8 @@ class ReleaseVersionComparator {
         }
     }
 
-    public function displayOneLine($path, $curVersion, $prevVersion, $iRpms, $verbose) {
+    public function displayOneLine($path, $curVersion, $prevVersion, $iRpms, $verbose)
+    {
         $versionOk = version_compare($curVersion, $prevVersion, '>');
         if ($verbose || !$versionOk) {
             $flag = '';
@@ -69,7 +73,8 @@ class ReleaseVersionComparator {
         }
     }
 
-    public function getCurrentVersion($relPath) {
+    public function getCurrentVersion($relPath)
+    {
         if (is_dir($this->curUri)) {
             return $this->getVersionContent($this->curUri.$relPath);
         } else {
@@ -77,16 +82,19 @@ class ReleaseVersionComparator {
         }
     }
 
-    public function getPreviousVersion($relPath) {
+    public function getPreviousVersion($relPath)
+    {
         return $this->getRemoteVersion($this->prevUri.$relPath);
     }
 
-    protected function getRemoteVersion($url) {
+    protected function getRemoteVersion($url)
+    {
         $filePath = $this->getRemoteFile($url);
         return $this->getVersionContent($filePath);
     }
 
-    protected function getRemoteFile($url) {
+    protected function getRemoteFile($url)
+    {
         $name   = tempnam('/tmp', 'codendi_release_');
         $this->tmpNames[] = $name;
         $output = array();
@@ -98,7 +106,8 @@ class ReleaseVersionComparator {
         throw new Exception('Impossible to get remote file: '.$url);
     }
 
-    protected function getVersionContent($filePath) {
+    protected function getVersionContent($filePath)
+    {
         return trim(file_get_contents($filePath));
     }
 
@@ -106,12 +115,14 @@ class ReleaseVersionComparator {
 
 class PluginReleaseVersionComparator extends ReleaseVersionComparator {
 
-    public function __construct($prevUri, $curUri, $fpd) {
+    public function __construct($prevUri, $curUri, $fpd)
+    {
         parent::__construct($prevUri, $curUri);
         $this->fpd = $fpd;
     }
 
-    public function getPreviousVersion($relPath) {
+    public function getPreviousVersion($relPath)
+    {
         try {
             return $this->getRemoteVersion($this->prevUri.$relPath);
         } catch (Exception $e) {

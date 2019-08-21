@@ -69,7 +69,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase
         $this->uri     = 'milestones/'.$this->release['id'].'/backlog';
     }
 
-    public function testPatchBacklogAfter() {
+    public function testPatchBacklogAfter()
+    {
         $response = $this->getResponse($this->client->patch($this->uri, null, json_encode(array(
             'order' => array(
                 'ids'         => array($this->story_mul['id'], $this->story_div['id']),
@@ -90,7 +91,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase
         );
     }
 
-    public function testPatchBacklogWithoutPermission() {
+    public function testPatchBacklogWithoutPermission()
+    {
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->patch($this->uri, null, json_encode(array(
             'order' => array(
                 'ids'         => array($this->story_div['id'], $this->story_mul['id']),
@@ -111,7 +113,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase
         );
     }
 
-    public function testPatchBacklogBefore() {
+    public function testPatchBacklogBefore()
+    {
         $response = $this->getResponse($this->client->patch($this->uri, null, json_encode(array(
             'order' => array(
                 'ids'         => array($this->story_mul['id'], $this->story_sub['id']),
@@ -144,7 +147,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase
         $this->assertEquals(409, $response->getStatusCode());
     }
 
-    public function testPatchContentBefore() {
+    public function testPatchContentBefore()
+    {
         $uri = 'milestones/'.$this->release['id'].'/content';
 
         $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
@@ -168,7 +172,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase
         );
     }
 
-    public function testPatchContentAfter() {
+    public function testPatchContentAfter()
+    {
         $uri = 'milestones/'.$this->release['id'].'/content';
 
         $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
@@ -192,7 +197,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase
         );
     }
 
-    public function testPatchContentWithoutPermission() {
+    public function testPatchContentWithoutPermission()
+    {
         $uri = 'milestones/'.$this->release['id'].'/content';
 
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->patch($uri, null, json_encode(array(
@@ -216,7 +222,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase
         );
     }
 
-    public function testPatchContentReMove() {
+    public function testPatchContentReMove()
+    {
         $uri = 'milestones/'.$this->release['id'].'/content';
 
         $another_release_id = $this->releases['Another release'];
@@ -254,7 +261,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase
     /**
      * @depends testPatchContentReMove
      */
-    public function testPatchAddAndOrder() {
+    public function testPatchAddAndOrder()
+    {
         $uri = 'milestones/'.$this->release['id'].'/content';
 
         $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
@@ -285,7 +293,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase
     /**
      * @depends testPatchBacklogBefore
      */
-    public function testPatchBacklogAddAndOrder() {
+    public function testPatchBacklogAddAndOrder()
+    {
         $inconsistent_story['id'] = $this->stories['Created in sprint'];
         $sprint_id = $this->sprints['Sprint 9001'];
 
@@ -318,7 +327,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase
         $this->assertCount(0, $this->getResponse($this->client->get('milestones/'.$sprint_id.'/backlog'))->json());
     }
 
-    private function getIdsOrderedByPriority($uri) {
+    private function getIdsOrderedByPriority($uri)
+    {
         $response = $this->getResponse($this->client->get($uri));
         $actual_order = array();
         foreach($response->json() as $backlog_element) {

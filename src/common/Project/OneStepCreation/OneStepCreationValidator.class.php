@@ -45,7 +45,8 @@ class Project_OneStepCreation_OneStepCreationValidator {
     /**
      * @return bool
      */
-    public function validateAndGenerateErrors() {
+    public function validateAndGenerateErrors()
+    {
         $this->is_valid = true;
 
         $this->validateTemplateId()
@@ -64,7 +65,8 @@ class Project_OneStepCreation_OneStepCreationValidator {
      *
      * @return \Project_OneStepCreation_OneStepCreationValidator
      */
-    private function validateFullName() {
+    private function validateFullName()
+    {
         if ($this->creation_request->getFullName() == null) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
@@ -85,7 +87,8 @@ class Project_OneStepCreation_OneStepCreationValidator {
      *
      * @return \Project_OneStepCreation_OneStepCreationValidator
      */
-    private function validateShortDescription() {
+    private function validateShortDescription()
+    {
         if ($this->creation_request->getShortDescription() == null) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
@@ -98,7 +101,8 @@ class Project_OneStepCreation_OneStepCreationValidator {
      *
      * @return \Project_OneStepCreation_OneStepCreationValidator
      */
-    private function validateUnixName() {
+    private function validateUnixName()
+    {
         if ($this->creation_request->getUnixName() == null) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
@@ -120,7 +124,8 @@ class Project_OneStepCreation_OneStepCreationValidator {
      *
      * @return \Project_OneStepCreation_OneStepCreationValidator
      */
-    private function validateTemplateId() {
+    private function validateTemplateId()
+    {
         if ($this->creation_request->getTemplateId() == null) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
@@ -148,7 +153,8 @@ class Project_OneStepCreation_OneStepCreationValidator {
      *
      * @return \Project_OneStepCreation_OneStepCreationValidator
      */
-    private function validateProjectPrivacy() {
+    private function validateProjectPrivacy()
+    {
         if ($this->creation_request->isPublic() === null) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
@@ -160,7 +166,8 @@ class Project_OneStepCreation_OneStepCreationValidator {
     /**
      * @return \Project_OneStepCreation_OneStepCreationValidator
      */
-    private function validateTosApproval() {
+    private function validateTosApproval()
+    {
         if (! $this->creation_request->getTosApproval()) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'tos_not_approved'));
             $this->setIsNotValid();
@@ -173,7 +180,8 @@ class Project_OneStepCreation_OneStepCreationValidator {
      *
      * @return \Project_OneStepCreation_OneStepCreationValidator
      */
-    private function validateCustomDescriptions() {
+    private function validateCustomDescriptions()
+    {
         foreach ($this->required_custom_descriptions as $id => $description) {
             if (! $this->creation_request->getCustomProjectDescription($id)) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_project_one_step', 'custom_description_missing', $description->getName()));
@@ -188,7 +196,8 @@ class Project_OneStepCreation_OneStepCreationValidator {
      *
      * @return Project_OneStepCreation_OneStepCreationValidator
      */
-    private function validateTroveCats() {
+    private function validateTroveCats()
+    {
         foreach ($this->trove_cats as $trove_cat) {
             if (! $this->creation_request->getTroveCat($trove_cat->getId())) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_project_one_step', 'mandatory_trovecat_missing', $trove_cat->getFullname()));
@@ -202,7 +211,8 @@ class Project_OneStepCreation_OneStepCreationValidator {
     /**
      * @return Project_OneStepCreation_OneStepCreationValidator
      */
-    private function setIsNotValid() {
+    private function setIsNotValid()
+    {
         $this->is_valid = false;
         return $this;
     }

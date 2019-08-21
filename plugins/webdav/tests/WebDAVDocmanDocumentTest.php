@@ -35,7 +35,8 @@ Mock::generate('Project');
  */
 class WebDAVDocmanDocumentTest extends TuleapTestCase {
 
-    function testDeleteNoWriteEnabled() {
+    function testDeleteNoWriteEnabled()
+    {
         $webDAVDocmanDocument = new WebDAVDocmanDocumentTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', false);
@@ -45,7 +46,8 @@ class WebDAVDocmanDocumentTest extends TuleapTestCase {
         $webDAVDocmanDocument->delete();
     }
 
-    function testDeleteSuccess() {
+    function testDeleteSuccess()
+    {
         $webDAVDocmanDocument = new WebDAVDocmanDocumentTestVersion();
 
         $utils = new MockWebDAVUtils();
@@ -62,7 +64,8 @@ class WebDAVDocmanDocumentTest extends TuleapTestCase {
         $webDAVDocmanDocument->delete();
     }
 
-    function testSetNameNoWriteEnabled() {
+    function testSetNameNoWriteEnabled()
+    {
         $webDAVDocmanDocument = new WebDAVDocmanDocumentTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', false);
@@ -72,7 +75,8 @@ class WebDAVDocmanDocumentTest extends TuleapTestCase {
         $webDAVDocmanDocument->setName('newName');
     }
 
-    function testSetNameSuccess() {
+    function testSetNameSuccess()
+    {
         $webDAVDocmanDocument = new WebDAVDocmanDocumentTestVersion();
 
         $utils = new MockWebDAVUtils();

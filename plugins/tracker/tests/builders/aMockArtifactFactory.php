@@ -22,19 +22,24 @@ require_once __DIR__.'/../bootstrap.php';
 Mock::generate('Tracker_ArtifactFactory');
 
 class MockArtifactFactoryBuilder {
-    public function __construct() {
+    public function __construct()
+    {
         $this->factory = new MockTracker_ArtifactFactory();
     }
 
-    public function withArtifact($artifact) {
+    public function withArtifact($artifact)
+    {
         $this->factory->setReturnValue('getArtifactById', $artifact, array($artifact->getId()));
         return $this;
     }
 
-    public function build() {
+    public function build()
+    {
         return $this->factory;
     }
 }
 
-function aMockArtifactFactory() { return new MockArtifactFactoryBuilder(); }
+function aMockArtifactFactory()
+{
+    return new MockArtifactFactoryBuilder(); }
 ?>

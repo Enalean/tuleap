@@ -65,7 +65,8 @@ $GLOBALS['UGROUPS'] = array(
 *         |
 *    tracker_tech
 */
-function ugroup_get_parent($ugroup_id) {
+function ugroup_get_parent($ugroup_id)
+{
     if ($ugroup_id == $GLOBALS['UGROUP_NONE'] || $ugroup_id == $GLOBALS['UGROUP_ANONYMOUS']) {
         $parent_id = false;
     } else if ($ugroup_id == $GLOBALS['UGROUP_REGISTERED']) {
@@ -128,7 +129,8 @@ function ugroup_db_get_members(
  *
  * @return DB result set
  */
-function ugroup_db_get_existing_ugroups($group_id, $predefined=null) {
+function ugroup_db_get_existing_ugroups($group_id, $predefined=null)
+{
     $_extra = '';
     if($predefined !== null && is_array($predefined)) {
         $_extra = ' OR ugroup_id IN ('.db_ei_implode($predefined).')';
@@ -140,7 +142,8 @@ function ugroup_db_get_existing_ugroups($group_id, $predefined=null) {
 /**
  * Returns a list of ugroups for the given group, with their associated members
  */
-function ugroup_get_ugroups_with_members($group_id) {
+function ugroup_get_ugroups_with_members($group_id)
+{
     $sql="SELECT ugroup.ugroup_id, ugroup.name, user.user_id, user.user_name FROM ugroup ".
     "NATURAL LEFT JOIN ugroup_user ".
     "NATURAL LEFT JOIN user ".
@@ -158,13 +161,15 @@ function ugroup_get_ugroups_with_members($group_id) {
 }
 
 // Return DB ugroup from ugroup_id
-function ugroup_db_get_ugroup($ugroup_id) {
+function ugroup_db_get_ugroup($ugroup_id)
+{
     $sql="SELECT * FROM ugroup WHERE ugroup_id=" .db_ei($ugroup_id);
     return db_query($sql);
 }
 
 
-function ugroup_db_list_all_ugroups_for_user($group_id,$user_id) {
+function ugroup_db_list_all_ugroups_for_user($group_id,$user_id)
+{
     $sql="SELECT ugroup.ugroup_id AS ugroup_id,ugroup.name AS name FROM ugroup, ugroup_user
           WHERE ugroup_user.user_id=".db_ei($user_id)." AND ugroup.group_id=".db_ei($group_id)." AND ugroup_user.ugroup_id=ugroup.ugroup_id";
     return db_query($sql);
@@ -173,7 +178,8 @@ function ugroup_db_list_all_ugroups_for_user($group_id,$user_id) {
 
 /** Return array of ugroup_id for all user-defined ugoups that user is part of
  * and having tracker-related permissions on the $group_artifact_id tracker */
-function ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$user_id) {
+function ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$user_id)
+{
     $data_access       = CodendiDataAccess::instance();
     $group_artifact_id = $data_access->quoteLikeValueSuffix($group_artifact_id);
     $sql="SELECT distinct ug.ugroup_id FROM ugroup ug, ugroup_user ugu, permissions p ".
@@ -190,7 +196,8 @@ function ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$u
 /** Return array of ugroup_id for all dynamic ugoups like
  * (anonymous_user, registered_user, project_member,
  * project_admins, tracker_admins) that user is part of */
-function ugroup_db_list_dynamic_ugroups_for_user($group_id,$instances,$user) {
+function ugroup_db_list_dynamic_ugroups_for_user($group_id,$instances,$user)
+{
 
     if (!is_a($user, 'User')) {
         $user = UserManager::instance()->getUserById($user);
@@ -216,7 +223,8 @@ function ugroup_db_list_dynamic_ugroups_for_user($group_id,$instances,$user) {
 }
 
 /** Return user group name from ID */
-function ugroup_get_name_from_id($ugroup_id) {
+function ugroup_get_name_from_id($ugroup_id)
+{
     $res=ugroup_db_get_ugroup($ugroup_id);
     return db_result($res,0,'name');
 }
@@ -227,7 +235,8 @@ function ugroup_get_name_from_id($ugroup_id) {
  * $atid is necessary for trackers since the tracker admin role is different for each tracker.
  * @return bool true if user is member of the ugroup, false otherwise.
  */
-function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
+function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0)
+{
     $user = UserManager::instance()->getUserById($user_id);
     // Special Cases
     if ($ugroup_id==$GLOBALS['UGROUP_NONE']) {
@@ -291,7 +300,7 @@ function ugroup_db_get_dynamic_members(
     $show_suspended = false,
     bool $show_deleted = false,
     array $user_ids = array()
-    )  : ?string {
+)  : ?string {
     $data_access = CodendiDataAccess::instance();
 
     $sqlname  = "user.user_name AS full_name";
@@ -378,7 +387,8 @@ function ugroup_db_get_dynamic_members(
  * @param int $atid
  * @return Array
  */
-function ugroup_get_all_dynamic_members($group_id, $atid=0) {
+function ugroup_get_all_dynamic_members($group_id, $atid=0)
+{
     $members = array();
     $sql     = array();
     $ugroups = array();
@@ -413,7 +423,8 @@ function ugroup_get_all_dynamic_members($group_id, $atid=0) {
  *
  * @return ugroup_id
  */
-function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_templates) {
+function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_templates)
+{
     global $Language;
 
     // Sanity check
@@ -498,7 +509,8 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
 /**
  * Update ugroup with list of members
  */
-function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description) {
+function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
+{
     global $Language;
     $purifier = Codendi_HTMLPurifier::instance();
 
@@ -561,7 +573,8 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
     $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils','ug_upd_success',array($ugroup_name,count($pickList))));
 }
 
-function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id) {
+function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id)
+{
     $sql = "DELETE FROM ugroup_user 
     WHERE ugroup_id = ". db_ei($ugroup_id) ."
       AND user_id = ". db_ei($user_id);
@@ -592,7 +605,8 @@ function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id) {
                 'user_id' => $user_id));
     }
 }
-function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id) {
+function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id)
+{
     if (!ugroup_user_is_member($user_id, $ugroup_id, $group_id)) {
         $sql = "INSERT INTO ugroup_user (ugroup_id, user_id) VALUES(". db_ei($ugroup_id) .", ". db_ei($user_id) .")";
         $res = db_query($sql);
@@ -623,7 +637,8 @@ function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id) {
  *
  * @return false if error
  */
-function ugroup_delete($group_id, $ugroup_id) {
+function ugroup_delete($group_id, $ugroup_id)
+{
     global $Language;
     if (!$ugroup_id) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_ugroup_utils','ug_not_given'));
@@ -685,7 +700,8 @@ function ugroup_delete($group_id, $ugroup_id) {
  *
  * @return ProjectUGroup
  */
-function ugroup_get_ugroup() {
+function ugroup_get_ugroup()
+{
     return new ProjectUGroup();
 }
 
@@ -697,7 +713,8 @@ function ugroup_get_ugroup() {
  *
  * @return Array
  */
-function ugroup_count_project_admins($groupId, $usersSql) {
+function ugroup_count_project_admins($groupId, $usersSql)
+{
     $admins    = 0;
     $nonAdmins = 0;
     if ($usersSql !== null) {
@@ -726,7 +743,8 @@ function ugroup_count_project_admins($groupId, $usersSql) {
  *
  * @return int
  */
-function ugroup_count_non_admin_for_static_ugroups($groupId, $ugroups, &$validUGroups) {
+function ugroup_count_non_admin_for_static_ugroups($groupId, $ugroups, &$validUGroups)
+{
     $containNonAdmin = 0;
     $uGroup = ugroup_get_ugroup();
     foreach ($ugroups as $ugroupId) {
@@ -755,7 +773,8 @@ function ugroup_count_non_admin_for_static_ugroups($groupId, $ugroups, &$validUG
  *
  * @return int
  */
-function ugroup_count_non_admin_for_dynamic_ugroups($groupId, $ugroups, &$validUGroups) {
+function ugroup_count_non_admin_for_dynamic_ugroups($groupId, $ugroups, &$validUGroups)
+{
     $containNonAdmin = 0;
     foreach ($ugroups as $ugroupId) {
         $sql = ugroup_db_get_dynamic_members($ugroupId, null, $groupId);
@@ -782,7 +801,8 @@ function ugroup_count_non_admin_for_dynamic_ugroups($groupId, $ugroups, &$validU
  *
  * @return Array
  */
-function ugroup_filter_ugroups_by_project_admin($groupId, $ugroups) {
+function ugroup_filter_ugroups_by_project_admin($groupId, $ugroups)
+{
     $validUGroups = array();
     // Check static ugroups
     $nonAdmins = ugroup_count_non_admin_for_static_ugroups($groupId, $ugroups, $validUGroups);

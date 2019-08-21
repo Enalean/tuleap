@@ -39,14 +39,16 @@ class ForumML_FileStorageTest extends TuleapTestCase {
         $this->_namePattern = "`[^a-z0-9_-]`i";
     }
 
-    private function _getFileStorage($path) {
+    private function _getFileStorage($path)
+    {
         $fs = new ForumML_FileStorageTestVersion($this);
         $fs->root = $path;
         $fs->setReturnValue('fileExists', false);
         return $fs;
     }
 
-    function testForumML_FileStorage() {
+    function testForumML_FileStorage()
+    {
         $fstorage = $this->_getFileStorage($this->_fixture);
         $this->assertNotNull($fstorage->root);
         $this->assertIsA($fstorage->root, 'string');
@@ -54,7 +56,8 @@ class ForumML_FileStorageTest extends TuleapTestCase {
     }
 
     // case 1: an attachment file whose name has more than 64 characters
-    function test_getPathFileNameWithMoreThan64Char() {
+    function test_getPathFileNameWithMoreThan64Char()
+    {
         $fs1 = $this->_getFileStorage($this->_fixture);
         $name1 = "a string with more than 64 characters, which is the limit allowed for ForumML attachments";
         $list1 = "gpig-interest";
@@ -81,7 +84,8 @@ class ForumML_FileStorageTest extends TuleapTestCase {
     }
 
     // case 2: an attachment file whose name has less than 64 characters
-    function test_getPathFileNameWithLessThan64Char() {
+    function test_getPathFileNameWithLessThan64Char()
+    {
         $fs1 = $this->_getFileStorage($this->_fixture);
         $name2 = "filename less than 64 chars";
         $list1 = "gpig-interest";
@@ -105,7 +109,8 @@ class ForumML_FileStorageTest extends TuleapTestCase {
     }
 
     // case 3: attachment filename with only alphanumeric characters
-    function test_getPathFileNameWithAlphaNumCharsOnly() {
+    function test_getPathFileNameWithAlphaNumCharsOnly()
+    {
         $fs1 = $this->_getFileStorage($this->_fixture);
         $name3 = "Cx2008-requirements";
         $list1 = "gpig-interest";
@@ -121,7 +126,8 @@ class ForumML_FileStorageTest extends TuleapTestCase {
     }
 
     // case 4: attachment filename is an empty string
-    function test_getPathFileNameEmpty() {
+    function test_getPathFileNameEmpty()
+    {
         $fs1 = $this->_getFileStorage($this->_fixture);
         $name4 = "";
         $list1 = "gpig-interest";
@@ -137,7 +143,8 @@ class ForumML_FileStorageTest extends TuleapTestCase {
     }
 
     // case 5: same attachment name submitted 2 times same day for same list
-    function testGetPathWithSameFileName() {
+    function testGetPathWithSameFileName()
+    {
         $fs = new ForumML_FileStorageTestVersion($this);
         $fs->root = $this->_fixture;
         $fs->setReturnValueAt(0, 'fileExists', false);

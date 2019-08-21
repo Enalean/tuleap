@@ -27,18 +27,26 @@ class PluginDescriptor {
     var $version;
     var $description;
 
-    function __construct($name = '', $version = '', $description = '') {
+    function __construct($name = '', $version = '', $description = '')
+    {
         $this->name        = $name;
         $this->version     = $version;
         $this->description = $description;
         $this->icon_name   = '';
     }
 
-    function getFullName()        { return $this->name; }
-    function getVersion()     { return $this->version; }
-    function getDescription() { return $this->description; }
+    function getFullName()
+    {
+        return $this->name; }
+    function getVersion()
+    {
+        return $this->version; }
+    function getDescription()
+    {
+        return $this->description; }
 
-    public function setVersionFromFile($path) {
+    public function setVersionFromFile($path)
+    {
         if (is_file($path)) {
             $this->version = trim(file_get_contents($path));
         }

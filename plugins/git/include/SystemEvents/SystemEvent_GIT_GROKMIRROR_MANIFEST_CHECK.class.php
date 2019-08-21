@@ -24,16 +24,19 @@ class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK extends SystemEvent {
     /** @var Git_Mirror_ManifestManager */
     private $manifest_manager;
 
-    public function injectDependencies(Git_Mirror_ManifestManager $manifest_manager) {
+    public function injectDependencies(Git_Mirror_ManifestManager $manifest_manager)
+    {
         $this->manifest_manager = $manifest_manager;
     }
 
-    public function process() {
+    public function process()
+    {
         $this->manifest_manager->checkManifestFiles();
         $this->done();
     }
 
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         return '';
     }
 }

@@ -27,7 +27,8 @@ class WikiAttachmentDao extends DataAccessObject {
      * @param string $filename Attachement name
      * @return bool
      */
-    function create($gid, $filename, $filesystemName) {
+    function create($gid, $filename, $filesystemName)
+    {
         $qry = sprintf(' INSERT INTO wiki_attachment (group_id, name, filesystem_name)'
                        .' VALUES (%d, %s, %s)',
                        $gid,
@@ -44,7 +45,8 @@ class WikiAttachmentDao extends DataAccessObject {
      * @param int $id Attachement id
      * @return DataAccessResult
      */
-    function read($id) {
+    function read($id)
+    {
         $qry = sprintf('SELECT * FROM wiki_attachment'
                        .' WHERE id=%d',
                        $id);
@@ -59,7 +61,8 @@ class WikiAttachmentDao extends DataAccessObject {
      *
      * @return bool
      */
-    function delete($id) {
+    function delete($id)
+    {
         $sql = 'UPDATE wiki_attachment SET delete_date='.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
                ' WHERE id = '.$this->da->escapeInt($id);
         if ($this->update($sql)) {
@@ -79,7 +82,8 @@ class WikiAttachmentDao extends DataAccessObject {
      * @param int $gid Group id
      * @return DataAccessResult
      */
-    function getList($gid) {
+    function getList($gid)
+    {
         $qry = sprintf('SELECT * FROM wiki_attachment'
                        .' WHERE group_id=%d',
                        $gid);
@@ -97,7 +101,8 @@ class WikiAttachmentDao extends DataAccessObject {
      * @param int $gid Group id
      * @return DataAccessResult
      */
-    function getListWithCounterOrderedByRevDate($gid) {
+    function getListWithCounterOrderedByRevDate($gid)
+    {
         $qry = sprintf('SELECT wa.id, wa.group_id, wa.name, count(*) as nb, MAX(war.date) as max_date'
                        .' FROM wiki_attachment_revision AS war, wiki_attachment AS wa'
                        .' WHERE wa.group_id=%d'
@@ -118,7 +123,8 @@ class WikiAttachmentDao extends DataAccessObject {
      * @param string  $filename attachement name
      * @return DataAccessResult
      */
-    function getIdFromFilename($gid, $filename) {
+    function getIdFromFilename($gid, $filename)
+    {
         $qry = sprintf('SELECT id FROM wiki_attachment'
                        .' WHERE name COLLATE utf8_bin =%s'
                        .' AND group_id=%d'
@@ -139,7 +145,8 @@ class WikiAttachmentDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function searchAttachmentToPurge($time, $groupId=0, $offset=0, $limit=0) {
+    function searchAttachmentToPurge($time, $groupId=0, $offset=0, $limit=0)
+    {
         $where  = '';
         if ($groupId != 0) {
             $where  .= ' AND attachment.group_id = '.$this->da->escapeInt($groupId);
@@ -160,7 +167,8 @@ class WikiAttachmentDao extends DataAccessObject {
      *
      * @return bool
      */
-    function restoreAttachment($id) {
+    function restoreAttachment($id)
+    {
         $sql = 'UPDATE wiki_attachment SET delete_date = NULL '.
                        'WHERE id = '.$this->da->escapeInt($id);
         if ($this->update($sql)) {
@@ -178,7 +186,8 @@ class WikiAttachmentDao extends DataAccessObject {
      *
      * @return bool
      */
-    function setPurgeDate($id, $time) {
+    function setPurgeDate($id, $time)
+    {
         $sql = 'UPDATE wiki_attachment_deleted SET purge_date ='.$this->da->escapeInt($time).
                        ' WHERE id = '.$this->da->escapeInt($id);
         return $this->update($sql);

@@ -5,9 +5,13 @@ rcs_id('$Id: TextSearchIter.php,v 1.7 2005/11/14 22:24:33 rurban Exp $');
 class WikiDB_backend_dumb_TextSearchIter
 extends WikiDB_backend_iterator
 {
-    function __construct(&$backend, &$pages, $search, $fulltext=false,
-                                                $options=array())
-    {
+    function __construct(
+        &$backend,
+        &$pages,
+        $search,
+        $fulltext=false,
+        $options=array()
+    ) {
         $this->_backend = &$backend;
         $this->_pages = $pages;
         $this->_fulltext = $fulltext;
@@ -22,7 +26,8 @@ extends WikiDB_backend_iterator
         else $this->_exclude = false;
     }
 
-    function _get_content(&$page) {
+    function _get_content(&$page)
+    {
         $backend = $this->_backend;
         $pagename = $page['pagename'];
 
@@ -33,7 +38,8 @@ extends WikiDB_backend_iterator
         return $page['versiondata']['%content'];
     }
 
-    function _match(&$page) {
+    function _match(&$page)
+    {
         $text = $page['pagename'];
         if ($result = $this->_search->match($text)) // first match the pagename only
             return $result;
@@ -50,7 +56,8 @@ extends WikiDB_backend_iterator
             return $result;
     }
 
-    function next() {
+    function next()
+    {
         $pages = &$this->_pages;
         while ($page = $pages->next()) {
             if ($this->_match($page)) {
@@ -62,7 +69,8 @@ extends WikiDB_backend_iterator
         return false;
     }
 
-    function free() {
+    function free()
+    {
         $this->_pages->free();
     }
 };

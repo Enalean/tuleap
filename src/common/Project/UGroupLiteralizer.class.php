@@ -44,7 +44,8 @@ class UGroupLiteralizer {
      *
      * @return array Ex: array('site_active', 'gpig1_project_members')
      */
-    public function getUserGroupsForUserName($user_name) {
+    public function getUserGroupsForUserName($user_name)
+    {
         $user = UserManager::instance()->getUserByUserName($user_name);
         if (!$user) {
             return array();
@@ -59,7 +60,8 @@ class UGroupLiteralizer {
      *
      * @return array Ex: array('site_active', 'gpig1_project_members')
      */
-    public function getUserGroupsForUser(PFUser $user) {
+    public function getUserGroupsForUser(PFUser $user)
+    {
         if (!$this->isValidUser($user)) {
             return array();
         }
@@ -77,7 +79,8 @@ class UGroupLiteralizer {
      *
      * @return array Ex: array('site_active', 'gpig1_project_members')
      */
-    public function getUserGroupsForUserWithArobase(PFUser $user) {
+    public function getUserGroupsForUserWithArobase(PFUser $user)
+    {
         $groups = $this->getUserGroupsForUser($user);
 
         return array_map(array($this, 'injectArobase'), $groups);
@@ -91,7 +94,8 @@ class UGroupLiteralizer {
      *
      * @return array the new array of user's ugroup
      */
-    private function appendDynamicUGroups( PFUser $user, array $user_ugroups = array()) {
+    private function appendDynamicUGroups( PFUser $user, array $user_ugroups = array())
+    {
         $user_projects = $user->getProjects(true);
         foreach ($user_projects as $user_project) {
             $project_name = strtolower($user_project['unix_group_name']);
@@ -112,7 +116,8 @@ class UGroupLiteralizer {
      *
      * @return array the new array of user's ugroup
      */
-    private function appendStaticUgroups( PFUser $user, array $user_ugroups = array()) {
+    private function appendStaticUgroups( PFUser $user, array $user_ugroups = array())
+    {
         $ugroups = $user->getAllUgroups();
         foreach ($ugroups as $row) {
             $user_ugroups[] = 'ug_'.$row['ugroup_id'];
@@ -123,7 +128,8 @@ class UGroupLiteralizer {
     /**
      * @return bool true if the user is considered valid (active or restricted)
      */
-    private function isValidUser(PFUser $user) {
+    private function isValidUser(PFUser $user)
+    {
         return isset(self::$user_status[$user->getStatus()]);
     }
 
@@ -135,7 +141,8 @@ class UGroupLiteralizer {
      *
      * @return string @ug_102 | @gpig_project_admin | @site_active @gpig_project_member | ... or null if not found
      */
-    private function ugroupIdToString($ugroup_id, $project_name) {
+    private function ugroupIdToString($ugroup_id, $project_name)
+    {
         $ugroup = null;
         if ($ugroup_id > 100) {
             $ugroup = '@ug_'. $ugroup_id;
@@ -148,14 +155,16 @@ class UGroupLiteralizer {
     /**
      * @see ugroupIdToString
      */
-    private function ugroupIdToStringWithoutArobase($ugroup_id, $project_name) {
+    private function ugroupIdToStringWithoutArobase($ugroup_id, $project_name)
+    {
         return str_replace('@', '', $this->ugroupIdToString($ugroup_id, $project_name));
     }
 
     /**
      * @see ugroupIdToString
      */
-    private function injectArobase($value) {
+    private function injectArobase($value)
+    {
         return '@'. $value;
     }
 
@@ -169,17 +178,20 @@ class UGroupLiteralizer {
      *
      * @return array of groups converted to string
      */
-    public function getUGroupsThatHaveGivenPermissionOnObject(Project $project, $object_id, $permission_type) {
+    public function getUGroupsThatHaveGivenPermissionOnObject(Project $project, $object_id, $permission_type)
+    {
         $ugroup_ids = $this->getUgroupIds($project, $object_id, $permission_type);
         return $this->ugroupIdsToString($ugroup_ids, $project);
 
     }
 
-    public function getUgroupIds(Project $project, $object_id, $permission_type) {
+    public function getUgroupIds(Project $project, $object_id, $permission_type)
+    {
         return PermissionsManager::instance()->getAuthorizedUGroupIdsForProject($project, $object_id, $permission_type);
     }
 
-    public function ugroupIdsToString($ugroup_ids, Project $project) {
+    public function ugroupIdsToString($ugroup_ids, Project $project)
+    {
         $project_name = $project->getUnixName();
         $strings      = array();
         foreach ($ugroup_ids as $key => $ugroup_id) {

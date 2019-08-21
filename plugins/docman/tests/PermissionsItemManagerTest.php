@@ -30,7 +30,8 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
     protected $literalizer;
     public const PERMISSIONS_TYPE = Docman_PermissionsItemManager::PERMISSIONS_TYPE;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->literalizer         = new UGroupLiteralizer();
         $this->docman_item         = new Docman_Item();
@@ -51,7 +52,8 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         Docman_ItemFactory::setInstance($this->project->getID(), mock('Docman_ItemFactory'));
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
         $this->item_id++;
         PermissionsManager::clearInstance();
@@ -59,31 +61,36 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         Docman_ItemFactory::clearInstance($this->project->getID());
     }
 
-    private function anItem() {
+    private function anItem()
+    {
         $item = new Docman_Item();
         $item->setId($this->uniqId());
         return $item;
     }
 
-    private function uniqId() {
+    private function uniqId()
+    {
         $this->uniq_id++;
         return $this->item_id + $this->uniq_id;
     }
 
-    public function itReturnsPermissionsThanksToPermissionsManager() {
+    public function itReturnsPermissionsThanksToPermissionsManager()
+    {
         stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject()->returns(array(1));
         $this->permissions_manager->expectOnce('getAuthorizedUGroupIdsForProject', array($this->project, $this->item_id, self::PERMISSIONS_TYPE));
         $this->docman_permissions->exportPermissions($this->docman_item);
     }
 
-    public function itAsksForDocmanAdminGroupIfNoPermissionSet() {
+    public function itAsksForDocmanAdminGroupIfNoPermissionSet()
+    {
         stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject()->returns(array());
         $this->permissions_manager->expectOnce('getAuthorizedUGroupIdsForProject', array($this->project, $this->item_id, self::PERMISSIONS_TYPE));
         $this->permissions_manager->expectOnce('getAuthorizedUgroupIds', array('*', 'PLUGIN_DOCMAN_ADMIN'));
         $this->docman_permissions->exportPermissions($this->docman_item);
     }
 
-    public function itReturnsValueOfExternalPermissions_GetProjectObjectGroupsIfItHasNoParents() {
+    public function itReturnsValueOfExternalPermissions_GetProjectObjectGroupsIfItHasNoParents()
+    {
         $permissions = array(ProjectUGroup::REGISTERED, ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, 103);
         stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject()->returns($permissions);
 
@@ -92,7 +99,8 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         $this->assertEqual($expected, $permissions);
     }
 
-    public function ItReturnsTheMembersUgroupWhenItemContainsRegisteredUgroupAndParentContainsTheMembersUgroup() {
+    public function ItReturnsTheMembersUgroupWhenItemContainsRegisteredUgroupAndParentContainsTheMembersUgroup()
+    {
         $parent    = $this->anItem();
         $parent_id = $parent->getId();
         $this->docman_item->setParentId($parent_id);
@@ -109,7 +117,8 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         $this->assertEqual($expected, $permissions);
     }
 
-    public function itReturnsTheMembersUgroupWhenItemContainsTheRegisteredUgroupAndParentOfParentContainsMembers() {
+    public function itReturnsTheMembersUgroupWhenItemContainsTheRegisteredUgroupAndParentOfParentContainsMembers()
+    {
         $project_id       = $this->project->getID();
         $parent           = $this->anItem();
         $parent_id        = $parent->getId();
@@ -134,7 +143,8 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
     }
 
 
-    public function itReturnsTheMembersUgroupWhenItemContainsTheMembersUgroupAndParentContainsTheRegisteredUgroup() {
+    public function itReturnsTheMembersUgroupWhenItemContainsTheMembersUgroupAndParentContainsTheRegisteredUgroup()
+    {
         $parent    = $this->anItem();
         $parent_id = $parent->getId();
         $this->docman_item->setParentId($parent_id);
@@ -152,7 +162,8 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         $this->assertEqual($expected, $permissions);
     }
 
-    public function itReturnsAllItemUgroupsWhenTheyAreAsRestrictiveAsParentAndHaveMoreUgroups() {
+    public function itReturnsAllItemUgroupsWhenTheyAreAsRestrictiveAsParentAndHaveMoreUgroups()
+    {
         $parent    = $this->anItem();
         $parent_id = $parent->getId();
         $this->docman_item->setParentId($parent_id);
@@ -170,7 +181,8 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         $this->assertEqual($expected, $permissions);
     }
 
-    public function itReturnsAllParentUgroupsWhenTheyAreAsRestrictiveAsItemUgroupsAndHaveMoreUgroups() {
+    public function itReturnsAllParentUgroupsWhenTheyAreAsRestrictiveAsItemUgroupsAndHaveMoreUgroups()
+    {
         $parent    = $this->anItem();
         $parent_id = $parent->getId();
         $this->docman_item->setParentId($parent_id);
@@ -188,7 +200,8 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         $this->assertEqual($expected, $permissions);
     }
 
-    public function itReturnsStaticGroupIfPresentInParent() {
+    public function itReturnsStaticGroupIfPresentInParent()
+    {
         $parent    = $this->anItem();
         $parent_id = $parent->getId();
         $this->docman_item->setParentId($parent_id);
@@ -206,7 +219,8 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         $this->assertEqual($expected, $permissions);
     }
 
-    public function itReturnsGroupsOfChildIfParentIsPublic() {
+    public function itReturnsGroupsOfChildIfParentIsPublic()
+    {
         $parent    = $this->anItem();
         $parent_id = $parent->getId();
         $this->docman_item->setParentId($parent_id);
@@ -224,7 +238,8 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         $this->assertEqual($expected, $permissions);
     }
 
-    public function itReturnsGroupsOfParentIfChildIsPublic() {
+    public function itReturnsGroupsOfParentIfChildIsPublic()
+    {
         $parent    = $this->anItem();
         $parent_id = $parent->getId();
         $this->docman_item->setParentId($parent_id);

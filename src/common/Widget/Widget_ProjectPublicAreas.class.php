@@ -31,7 +31,8 @@ class Widget_ProjectPublicAreas extends Widget {
         parent::__construct('projectpublicareas');
     }
 
-    function getTitle() {
+    function getTitle()
+    {
         return $GLOBALS['Language']->getText('include_project_home','public_areas');
     }
     function getContent()
@@ -224,7 +225,8 @@ class Widget_ProjectPublicAreas extends Widget {
         return $html;
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return $GLOBALS['Language']->getText('widget_description_project_public_areas','description');
     }
 }

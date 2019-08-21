@@ -109,22 +109,26 @@ class ProjectTrackersResource
         return true;
     }
 
-    private function limitValueIsAcceptable($limit) {
+    private function limitValueIsAcceptable($limit)
+    {
         return $limit <= self::MAX_LIMIT;
     }
 
-    public function options(PFUser $user, Project $project, $limit, $offset) {
+    public function options(PFUser $user, Project $project, $limit, $offset)
+    {
         $this->sendAllowHeaders();
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size) {
+    private function sendPaginationHeaders($limit, $offset, $size)
+    {
         header('X-PAGINATION-LIMIT: '. $limit);
         header('X-PAGINATION-OFFSET: '. $offset);
         header('X-PAGINATION-SIZE: '. $size);
         header('X-PAGINATION-LIMIT-MAX: '. self::MAX_LIMIT);
     }
 
-    private function sendAllowHeaders() {
+    private function sendAllowHeaders()
+    {
         Header::allowOptionsGet();
     }
 

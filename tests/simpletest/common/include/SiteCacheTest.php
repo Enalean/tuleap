@@ -23,14 +23,16 @@ class SiteCacheTest extends TuleapTestCase {
     private $global_language;
     private $global_html;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
         $this->global_language = $GLOBALS['Language'];
         $this->global_html     = $GLOBALS['HTML'];
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         $GLOBALS['Language'] = $this->global_language;
         $GLOBALS['HTML']     = $this->global_html;
@@ -38,7 +40,8 @@ class SiteCacheTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    public function itCreatesCacheDirectories() {
+    public function itCreatesCacheDirectories()
+    {
         $cache_dir    = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'tuleap_cache_dir';
         $lang_dir     = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'tuleap_lang_dir';
 

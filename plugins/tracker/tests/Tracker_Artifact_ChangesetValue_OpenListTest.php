@@ -26,7 +26,8 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
     private $field;
     private $user;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $base_language = mock('BaseLanguage');
@@ -45,13 +46,15 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
         $this->changeset = mock('Tracker_Artifact_Changeset');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         unset($GLOBALS['Language']);
 
         parent::tearDown();
     }
 
-    public function testLists() {
+    public function testLists()
+    {
         $bind_value = mock('Tracker_FormElement_Field_List_BindValue');
         $bind_value->setReturnValue('getAPIValue', 'Reopen');
         $bind_value->setReturnValue('getId', 106);
@@ -62,7 +65,8 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
         $this->assertEqual($value_list->getValue(), array('b106'));
     }
 
-    public function testDiff_setto() {
+    public function testDiff_setto()
+    {
         $bind_value_1 = mock('Tracker_FormElement_Field_List_BindValue');
         $bind_value_1->setReturnValue('__toString', 'Sandra');
         $bind_value_1->setReturnValue('getLabel', 'Sandra');
@@ -74,7 +78,8 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
         $this->assertEqual($list_1->diff($list_2), ' set to Sandra, Manon');
     }
 
-    public function testDiff_changedfrom() {
+    public function testDiff_changedfrom()
+    {
         $bind_value_1 = mock('Tracker_FormElement_Field_List_BindValue');
         $bind_value_1->setReturnValue('__toString', 'Sandra');
         $bind_value_1->setReturnValue('getLabel', 'Sandra');
@@ -87,7 +92,8 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
         $this->assertEqual($list_2->diff($list_1), ' changed from Sandra to Manon');
     }
 
-    public function testDiff_added() {
+    public function testDiff_added()
+    {
         $bind_value_1 = mock('Tracker_FormElement_Field_List_BindValue');
         $bind_value_1->setReturnValue('__toString', 'Sandra');
         $bind_value_1->setReturnValue('getLabel', 'Sandra');
@@ -99,7 +105,8 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
         $this->assertEqual($list_1->diff($list_2), 'Manon added');
     }
 
-    public function testDiff_removed() {
+    public function testDiff_removed()
+    {
         $bind_value_1 = mock('Tracker_FormElement_Field_List_BindValue');
         $bind_value_1->setReturnValue('__toString', 'Sandra');
         $bind_value_1->setReturnValue('getLabel', 'Sandra');
@@ -111,7 +118,8 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
         $this->assertEqual($list_1->diff($list_2), 'Manon removed');
     }
 
-    public function testDiff_added_and_removed() {
+    public function testDiff_added_and_removed()
+    {
         $bind_value_1 = mock('Tracker_FormElement_Field_List_BindValue');
         $bind_value_1->setReturnValue('__toString', 'Sandra');
         $bind_value_1->setReturnValue('getLabel', 'Sandra');

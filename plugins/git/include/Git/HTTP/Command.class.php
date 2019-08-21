@@ -21,7 +21,8 @@
 abstract class Git_HTTP_Command {
     protected $env;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->env = array(
             'GIT_PROJECT_ROOT'    => ForgeConfig::get('sys_data_dir')."/gitolite/repositories",
             'GIT_HTTP_EXPORT_ALL' => "1",
@@ -35,21 +36,25 @@ abstract class Git_HTTP_Command {
         $this->appendToEnv('HTTP_CONTENT_ENCODING');
     }
 
-    public function setPathInfo($path_info) {
+    public function setPathInfo($path_info)
+    {
         $this->env['PATH_INFO'] = $path_info;
     }
 
-    public function setQueryString($query_string) {
+    public function setQueryString($query_string)
+    {
         $this->env['QUERY_STRING'] = $query_string;
     }
 
     abstract public function getCommand();
 
-    public function getEnvironment() {
+    public function getEnvironment()
+    {
         return $this->env;
     }
 
-    protected function appendToEnv($variable_name) {
+    protected function appendToEnv($variable_name)
+    {
         if (isset($_SERVER[$variable_name])) {
             $this->env[$variable_name] = $_SERVER[$variable_name];
         }

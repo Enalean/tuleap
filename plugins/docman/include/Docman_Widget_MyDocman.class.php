@@ -38,11 +38,13 @@ class Docman_Widget_MyDocman extends Widget
         $this->pluginPath = $pluginPath;
     }
 
-    function getTitle() {
+    function getTitle()
+    {
         return $GLOBALS['Language']->getText('plugin_docman', 'my_reviews');
     }
 
-    function getContent() {
+    function getContent()
+    {
         $html = '';
         $html .= '<script type="text/javascript">';
         $html .= "
@@ -68,7 +70,8 @@ class Docman_Widget_MyDocman extends Widget
         return $html;
     }
 
-    private function _getReviews($reviewer = true) {
+    private function _getReviews($reviewer = true)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
 
@@ -174,14 +177,17 @@ class Docman_Widget_MyDocman extends Widget
         }
         return $html;
     }
-    function isAjax() {
+    function isAjax()
+    {
         return true;
     }
-    function getCategory() {
+    function getCategory()
+    {
         return dgettext('tuleap-docman', 'Document manager');
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_docman','widget_description_my_docman');
     }
 

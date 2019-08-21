@@ -39,7 +39,8 @@ class MilestoneInfoRepresentation {
     /** @var String */
     public $uri;
 
-    public function __construct(\Planning_Milestone $milestone) {
+    public function __construct(\Planning_Milestone $milestone)
+    {
         $this->id            = JsonCast::toInt($milestone->getArtifactId());
         $this->label         = $milestone->getArtifactTitle();
         $this->last_modified = JsonCast::toDate($milestone->getLastModifiedDate());

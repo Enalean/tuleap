@@ -62,14 +62,16 @@ class WikiAttachmentRevision {
     private $displayFilename;
 
 
-    function __construct($gid=null) {
+    function __construct($gid=null)
+    {
         if(is_numeric($gid)) {
             $this->gid = (int) $gid;
             $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'].'/'.$this->gid;
         }
     }
 
-    function &getDao() {
+    function &getDao()
+    {
         static $_codendi_wikiattachmentrevisiondao_instance;
 
         if(!$_codendi_wikiattachmentrevisiondao_instance) {
@@ -79,7 +81,8 @@ class WikiAttachmentRevision {
         return $_codendi_wikiattachmentrevisiondao_instance;
     }
 
-    function dbFetch() {
+    function dbFetch()
+    {
         $dao = $this->getDao();
         $dar = $dao->getRevision($this->attachmentId, $this->revision);
 
@@ -98,7 +101,8 @@ class WikiAttachmentRevision {
         }
     }
 
-    function create($userfile_tmpname) {
+    function create($userfile_tmpname)
+    {
         $this->getFilename();
         $file_dir = $this->basedir.'/'.$this->filename;
 
@@ -124,7 +128,8 @@ class WikiAttachmentRevision {
         return $ret;
     }
 
-    function dbadd() {
+    function dbadd()
+    {
         $dao = $this->getDao();
         $res = $dao->create($this->attachmentId,
                             $this->owner_id,
@@ -171,14 +176,16 @@ class WikiAttachmentRevision {
     }
 
 
-    function exist() {
+    function exist()
+    {
         $this->getFilename();
 
         return is_file($this->basedir.'/'.$this->filename.'/'.$this->revision);
     }
 
 
-    function log($userId) {
+    function log($userId)
+    {
         $dao = $this->getDao();
         $dao->log($this->attachmentId,
                   $this->id,
@@ -188,7 +195,8 @@ class WikiAttachmentRevision {
     }
 
 
-    function setFromRow($row) {
+    function setFromRow($row)
+    {
         $this->id           = $row['id'];
         $this->attachmentId = $row['attachment_id'];
         $this->owner_id     = $row['user_id'];
@@ -198,19 +206,22 @@ class WikiAttachmentRevision {
         $this->size         = $row['size'];
     }
 
-    function setFilename($name="") {
+    function setFilename($name="")
+    {
         $this->filename = $name;
         return true;
     }
 
-    function setGid($gid) {
+    function setGid($gid)
+    {
         if(is_numeric($gid)) {
             $this->gid = (int) $gid;
             $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'].'/'.$this->gid;
         }
     }
 
-    function setSize($s) {
+    function setSize($s)
+    {
         global $sys_max_size_upload;
 
         if ($s> $sys_max_size_upload) {
@@ -225,36 +236,43 @@ class WikiAttachmentRevision {
     }
 
 
-    function setMimeType($m) {
+    function setMimeType($m)
+    {
         $this->mimeType =  $m;
         return true;
     }
 
-    function setOwnerId($uid) {
+    function setOwnerId($uid)
+    {
         $this->owner_id = (int) $uid;
         return true;
     }
 
-    function setAttachmentId($aid) {
+    function setAttachmentId($aid)
+    {
         $this->attachmentId = (int) $aid;
         return true;
     }
 
-    function setDate($date) {
+    function setDate($date)
+    {
         $this->date = (int) $date;
         return true;
     }
 
-    function setRevision($rev) {
+    function setRevision($rev)
+    {
         $this->revision = (int) $rev;
         return true;
     }
 
-    function getRevision() {
+    function getRevision()
+    {
         return $this->revision;
     }
 
-    function getFilename() {
+    function getFilename()
+    {
         if(empty($this->filename)) {
             $wa = new WikiAttachment();
             // @todo: catch error when wiki no attachementId is set.
@@ -273,22 +291,26 @@ class WikiAttachmentRevision {
     }
 
 
-    function getOwnerId() {
+    function getOwnerId()
+    {
         return $this->owner_id;
     }
 
 
-    function getSize() {
+    function getSize()
+    {
         return $this->size;
     }
 
 
-    function getMimeType() {
+    function getMimeType()
+    {
         return trim($this->mimeType, "'");
     }
 
 
-    function getDate() {
+    function getDate()
+    {
         return $this->date;
     }
 
@@ -296,7 +318,8 @@ class WikiAttachmentRevision {
      * @access public static
      * @param  Iterator
      */
-    function getRevisionIterator($gid=null, $id=null) {
+    function getRevisionIterator($gid=null, $id=null)
+    {
         $warArray = array();
         if($id !== null) {
             $id  = (int) $id;

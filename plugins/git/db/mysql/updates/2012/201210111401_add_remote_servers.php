@@ -23,7 +23,8 @@ class b201210111401_add_remote_servers extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 add table plugin_git_remote_servers and field remote_server to table plugin_git
 EOT;
@@ -34,7 +35,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -43,7 +45,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $table = 'CREATE TABLE plugin_git_remote_servers (
                     id INT(11) UNSIGNED NOT NULL auto_increment,
                     host VARCHAR(255) NOT NULL,
@@ -59,7 +62,8 @@ EOT;
         $this->execDB($foreign_key, 'An error occured while foreign key to plugin_git: ');
     }
 
-    protected function execDB($sql, $message) {
+    protected function execDB($sql, $message)
+    {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message.implode(', ', $this->db->dbh->errorInfo()));

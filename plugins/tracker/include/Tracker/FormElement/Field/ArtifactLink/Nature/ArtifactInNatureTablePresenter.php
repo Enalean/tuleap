@@ -36,7 +36,8 @@ class ArtifactInNatureTablePresenter {
     public $html_classes;
     public $artifactlink_field_id;
 
-    public function __construct(\Tracker_Artifact $artifact, $html_classes, Tracker_FormElement_Field_ArtifactLink $field) {
+    public function __construct(\Tracker_Artifact $artifact, $html_classes, Tracker_FormElement_Field_ArtifactLink $field)
+    {
         $this->html_classes = $html_classes;
         $tracker            = $artifact->getTracker();
         $project            = $tracker->getProject();
@@ -66,7 +67,8 @@ class ArtifactInNatureTablePresenter {
         }
     }
 
-    private function userCanReadSubmitter(\Tracker $tracker, \PFUser $current_user) {
+    private function userCanReadSubmitter(\Tracker $tracker, \PFUser $current_user)
+    {
         $formelement_factory = \Tracker_FormElementFactory::instance();
         $fields              = $formelement_factory->getUsedSubmittedByFields($tracker);
         foreach($fields as $field) {
@@ -77,7 +79,8 @@ class ArtifactInNatureTablePresenter {
         return false;
     }
 
-    private function emptyStringIfNull($value) {
+    private function emptyStringIfNull($value)
+    {
         if($value === null) {
             return '';
         }

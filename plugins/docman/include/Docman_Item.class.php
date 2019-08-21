@@ -55,21 +55,25 @@ class Docman_Item {
 
 
 
-    public function __construct($data = null) {
+    public function __construct($data = null)
+    {
         if ($data) {
             $this->initFromRow($data);
         }
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = (int) $id;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function setTitle($title) {
+    public function setTitle($title)
+    {
         if(strpos($title, '_lbl_key') !== FALSE) {
             $this->title = $GLOBALS['Language']->getText('plugin_docman', $title);
             $this->titlekey = $title;
@@ -79,98 +83,120 @@ class Docman_Item {
         }
     }
 
-    public function getTitle($key=false) {
+    public function getTitle($key=false)
+    {
         if($key && $this->titlekey !== null) {
             return $this->titlekey;
         }
         return $this->title;
     }
 
-    public function setDescription($description) {
+    public function setDescription($description)
+    {
         $this->description = $description;
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->description;
     }
 
-    public function setCreateDate($date) {
+    public function setCreateDate($date)
+    {
         $this->createDate = (int) $date;
     }
 
-    public function getCreateDate() {
+    public function getCreateDate()
+    {
         return $this->createDate;
     }
 
-    public function setUpdateDate($date) {
+    public function setUpdateDate($date)
+    {
         $this->updateDate = (int) $date;
     }
 
-    public function getUpdateDate() {
+    public function getUpdateDate()
+    {
         return $this->updateDate;
     }
 
-    public function setDeleteDate($date) {
+    public function setDeleteDate($date)
+    {
         $this->deleteDate = (int) $date;
     }
 
-    public function getDeleteDate() {
+    public function getDeleteDate()
+    {
         return $this->deleteDate;
     }
 
-    public function setRank($rank) {
+    public function setRank($rank)
+    {
         $this->rank = (int) $rank;
     }
 
-    public function getRank() {
+    public function getRank()
+    {
         return $this->rank;
     }
 
-    public function setParentId($id) {
+    public function setParentId($id)
+    {
         $this->parentId = (int) $id;
     }
 
-    public function getParentId() {
+    public function getParentId()
+    {
         return $this->parentId;
     }
 
-    public function setGroupId($id) {
+    public function setGroupId($id)
+    {
         $this->groupId = (int) $id;
     }
 
-    public function getGroupId() {
+    public function getGroupId()
+    {
         return $this->groupId;
     }
 
-    public function setOwnerId($id) {
+    public function setOwnerId($id)
+    {
         $this->ownerId = (int) $id;
     }
 
-    public function getOwnerId() {
+    public function getOwnerId()
+    {
         return $this->ownerId;
     }
 
-    public function setStatus($v) {
+    public function setStatus($v)
+    {
         $this->status = (int) $v;
     }
 
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->status;
     }
 
-    public function setObsolescenceDate($v) {
+    public function setObsolescenceDate($v)
+    {
         $this->obsolescenceDate = (int) $v;
         $this->isObsolete = null; // Clear cache
     }
 
-    public function getObsolescenceDate() {
+    public function getObsolescenceDate()
+    {
         return $this->obsolescenceDate;
     }
 
     /*
      * Convenient accessors
      */
-    public function isObsolete() {
+    public function isObsolete()
+    {
         if ($this->isObsolete == null) {
             $this->isObsolete = false;
             $date = $this->getObsolescenceDate();
@@ -204,7 +230,8 @@ class Docman_Item {
         if (isset($row['obsolescence_date'])) $this->setObsolescenceDate($row['obsolescence_date']);
     }
 
-    public function toRow() {
+    public function toRow()
+    {
         $row = array();
         $row['item_id']     = $this->getId();
         $row['title']       = $this->getTitle(true);
@@ -231,26 +258,31 @@ class Docman_Item {
         return $visitor->visitItem($this, $params);
     }
 
-    public function addMetadata(&$metadata) {
+    public function addMetadata(&$metadata)
+    {
         $this->_metadata[$metadata->getLabel()] = $metadata;
     }
 
-    public function setMetadata(&$metadata) {
+    public function setMetadata(&$metadata)
+    {
         $this->_metadata = $metadata;
     }
 
     /**
      * @return Docman_Metadata[]
      */
-    public function getMetadata() {
+    public function getMetadata()
+    {
         return $this->_metadata;
     }
 
-    public function getMetadataIterator() {
+    public function getMetadataIterator()
+    {
         return new ArrayIterator($this->_metadata);
     }
 
-    public function getHardCodedMetadataValue($label) {
+    public function getHardCodedMetadataValue($label)
+    {
         $value = null;
 
         switch($label) {
@@ -295,7 +327,8 @@ class Docman_Item {
         return $value;
     }
 
-    public function &getMetadataFromLabel($label) {
+    public function &getMetadataFromLabel($label)
+    {
         $metadata_value = $this->getHardCodedMetadataValue($label);
         $metadata       = null; // can't refactor with early return as it returns value by ref :(
         if($metadata_value !== null) {
@@ -310,7 +343,8 @@ class Docman_Item {
     /**
      * Update item's hardcoded values according to Metadata settings.
      */
-    public function updateHardCodedMetadata($metadata) {
+    public function updateHardCodedMetadata($metadata)
+    {
         switch($metadata->getLabel()) {
             case 'title':
                 $this->setTitle($metadata->getValue());
@@ -340,23 +374,28 @@ class Docman_Item {
         }
     }
 
-    public function setPathId(&$path_id) {
+    public function setPathId(&$path_id)
+    {
         $this->pathId = $path_id;
     }
 
-    public function &getPathId() {
+    public function &getPathId()
+    {
         return $this->pathId;
     }
 
-    public function setPathTitle(&$path_title) {
+    public function setPathTitle(&$path_title)
+    {
         $this->pathTitle = $path_title;
     }
 
-    public function &getPathTitle() {
+    public function &getPathTitle()
+    {
         return $this->pathTitle;
     }
 
-    public function fireEvent($event, $user, $parent=null) {
+    public function fireEvent($event, $user, $parent=null)
+    {
         $params = array('group_id' => $this->getGroupId(),
                         'parent'   => $parent,
                         'item'     => $this,
@@ -364,7 +403,8 @@ class Docman_Item {
         $this->getEventManager()->processEvent($event, $params);
     }
 
-    protected function getEventManager() {
+    protected function getEventManager()
+    {
         return EventManager::instance();
     }
 }

@@ -119,7 +119,8 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $git->_doDispatchForkCrossProject($request, null);
     }
 
-    public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks() {
+    public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks()
+    {
         $git = TestHelper::getPartialMock('Git', array('checkSynchronizerToken'));
         $git->throwOn('checkSynchronizerToken', new Exception());
         $this->expectException();

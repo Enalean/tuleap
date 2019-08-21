@@ -71,7 +71,8 @@ class KanbanColumnsResource {
     /** @var TrackerFactory */
     private $tracker_factory;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->tracker_factory = TrackerFactory::instance();
 
         $this->kanban_factory = new AgileDashboard_KanbanFactory(
@@ -115,7 +116,8 @@ class KanbanColumnsResource {
      * /!\ Kanban REST routes are under construction and subject to changes /!\
      * </pre>
      */
-    public function options() {
+    public function options()
+    {
         Header::allowOptionsPatchDelete();
     }
 
@@ -138,7 +140,8 @@ class KanbanColumnsResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    protected function patch($id, $kanban_id, KanbanColumnPATCHRepresentation $updated_column_properties) {
+    protected function patch($id, $kanban_id, KanbanColumnPATCHRepresentation $updated_column_properties)
+    {
         $current_user = $this->getCurrentUser();
         $kanban       = $this->getKanban($current_user, $kanban_id);
 
@@ -207,7 +210,8 @@ class KanbanColumnsResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    protected function delete($id, $kanban_id) {
+    protected function delete($id, $kanban_id)
+    {
         $current_user = $this->getCurrentUser();
         $kanban       = $this->getKanban($current_user, $kanban_id);
 
@@ -248,7 +252,8 @@ class KanbanColumnsResource {
     }
 
     /** @return AgileDashboard_Kanban */
-    private function getKanban(PFUser $user, $id) {
+    private function getKanban(PFUser $user, $id)
+    {
         try {
             $kanban = $this->kanban_factory->getKanban($user, $id);
         } catch (AgileDashboard_KanbanNotFoundException $exception) {
@@ -260,14 +265,16 @@ class KanbanColumnsResource {
         return $kanban;
     }
 
-    private function getCurrentUser() {
+    private function getCurrentUser()
+    {
         return UserManager::instance()->getCurrentUser();
     }
 
     /**
      * @return int
      */
-    private function getProjectIdForKanban(AgileDashboard_Kanban $kanban) {
+    private function getProjectIdForKanban(AgileDashboard_Kanban $kanban)
+    {
         return $this->getKanbanProject($kanban)->getGroupId();
     }
 

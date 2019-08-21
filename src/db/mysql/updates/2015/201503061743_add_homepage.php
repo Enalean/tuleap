@@ -17,20 +17,24 @@
  */
 
 class b201503061743_add_homepage extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return "Add table to store homepage configuration";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->createTable();
         $this->populateTable();
     }
 
-    private function createTable() {
+    private function createTable()
+    {
         $sql = "CREATE TABLE homepage (
             use_standard_homepage TINYINT(1) NOT NULL PRIMARY KEY
         )";
@@ -40,7 +44,8 @@ class b201503061743_add_homepage extends ForgeUpgrade_Bucket {
         }
     }
 
-    private function populateTable() {
+    private function populateTable()
+    {
         $sql = "INSERT INTO homepage (use_standard_homepage) VALUES (0)";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

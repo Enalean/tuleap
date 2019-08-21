@@ -27,16 +27,19 @@ class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends Tuleap
     /** @var BackendLogger */
     private $backend_logger;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->backend_logger = mock("BackendLogger");
         $this->logger         = new Tracker_XML_Importer_CopyArtifactInformationsAggregator($this->backend_logger);
     }
 
-    public function itDoesNotContainsAnyMessageIfThereAreNone() {
+    public function itDoesNotContainsAnyMessageIfThereAreNone()
+    {
         $this->assertEqual($this->logger->getAllLogs(), array());
     }
 
-    public function itContainsAllTheLoggedMessages() {
+    public function itContainsAllTheLoggedMessages()
+    {
         $this->logger->error("this is an error");
         $this->logger->warn("this is a warning");
 
@@ -47,13 +50,15 @@ class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends Tuleap
         $this->assertEqual($this->logger->getAllLogs(), $expected_logs);
     }
 
-    public function itAlsoLogsUsingTheBackendLogger() {
+    public function itAlsoLogsUsingTheBackendLogger()
+    {
         expect($this->backend_logger)->log()->once();
 
         $this->logger->error("this is an error");
     }
 
-    public function itOnlyLogsErrorsAndWarningsInTheLogStack() {
+    public function itOnlyLogsErrorsAndWarningsInTheLogStack()
+    {
         expect($this->backend_logger)->log()->count(4);
 
         $this->logger->error("this is an error");

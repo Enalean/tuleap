@@ -29,7 +29,8 @@ class PermissionsManager implements IPermissionsManagerNG {
 
     private static $_permissionmanager_instance;
 
-    public function __construct($permission_dao) {
+    public function __construct($permission_dao)
+    {
         $this->_permission_dao   = $permission_dao;
         $this->_permissions      = array();
         $this->_ugroups_for_user = array();
@@ -40,18 +41,21 @@ class PermissionsManager implements IPermissionsManagerNG {
      *
      * @return PermissionsManager
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!self::$_permissionmanager_instance) {
             self::$_permissionmanager_instance = new PermissionsManager(new PermissionsDao(CodendiDataAccess::instance()));
         }
         return self::$_permissionmanager_instance;
     }
 
-    public static function setInstance($instance) {
+    public static function setInstance($instance)
+    {
         self::$_permissionmanager_instance = $instance;
     }
 
-    public static function clearInstance() {
+    public static function clearInstance()
+    {
         self::$_permissionmanager_instance = null;
     }
 
@@ -67,7 +71,8 @@ class PermissionsManager implements IPermissionsManagerNG {
     * @param  array   $ugroups         The user's ugroups
     * @return bool
     */
-    public function userHasPermission($object_id, $permission_type, array $ugroups) {
+    public function userHasPermission($object_id, $permission_type, array $ugroups)
+    {
         if (!isset($this->_permissions[$object_id])) {
             $this->_permissions[$object_id] = array();
         }
@@ -96,7 +101,8 @@ class PermissionsManager implements IPermissionsManagerNG {
     *
     * @return array
     */
-    public function getPermissionsAndUgroupsByObjectid($object_id) {
+    public function getPermissionsAndUgroupsByObjectid($object_id)
+    {
         $this->retrievePermissions($object_id);
         $perms = array();
         if (isset($this->_permissions[$object_id])) {
@@ -117,7 +123,8 @@ class PermissionsManager implements IPermissionsManagerNG {
      * @param  int     $object_id       The id of the object
      * @param  string  $permission_type The type of permission asked
      */
-    public function getUgroupNameByObjectIdAndPermissionType($object_id, $permission_type){
+    public function getUgroupNameByObjectIdAndPermissionType($object_id, $permission_type)
+    {
         $dar =& $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($object_id, $permission_type);
         if ($dar->isError()) {
             return;
@@ -148,7 +155,8 @@ class PermissionsManager implements IPermissionsManagerNG {
      * @param  int     $object_id       The id of the object
      * @param  string  $permission_type The type of permission asked
      */
-    public function getUgroupIdByObjectIdAndPermissionType($object_id, $permission_type){
+    public function getUgroupIdByObjectIdAndPermissionType($object_id, $permission_type)
+    {
         $dar = $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($object_id, $permission_type, false);
         if ($dar->isError()) {
             return;
@@ -166,7 +174,8 @@ class PermissionsManager implements IPermissionsManagerNG {
       *
       * @return DataAccessResult
       */
-    public function getDefaults($permissionType, $withName = true) {
+    public function getDefaults($permissionType, $withName = true)
+    {
         return $this->_permission_dao->searchDefaults($permissionType, $withName);
     }
 
@@ -180,7 +189,8 @@ class PermissionsManager implements IPermissionsManagerNG {
       *
       * @return DataAccessResult
       */
-    public function getAuthorizedUgroups($objectId, $permissionType, $withName = true) {
+    public function getAuthorizedUgroups($objectId, $permissionType, $withName = true)
+    {
         $dar = $this->_permission_dao->searchUgroupByObjectIdAndPermissionType((string) $objectId, $permissionType, $withName);
         if ($dar && $dar->rowCount() > 0) {
             return $dar;
@@ -199,7 +209,8 @@ class PermissionsManager implements IPermissionsManagerNG {
       *
       * @return array
       */
-    public function getAuthorizedUgroupIds($objectId, $permissionType, $withName = true) {
+    public function getAuthorizedUgroupIds($objectId, $permissionType, $withName = true)
+    {
         $dar = $this->getAuthorizedUgroups($objectId, $permissionType, $withName);
         if (!$dar || $dar->isError()) {
             return array();
@@ -250,7 +261,8 @@ class PermissionsManager implements IPermissionsManagerNG {
      * @return PermissionsNormalizerOverrideCollection
      * @throws PermissionDaoException
      */
-    public function savePermissions(Project $project, $object_id, $permission_type, array $ugroup_ids) {
+    public function savePermissions(Project $project, $object_id, $permission_type, array $ugroup_ids)
+    {
         return $this->doSavePermissions($project, $object_id, $permission_type, $ugroup_ids, true);
     }
 
@@ -282,7 +294,8 @@ class PermissionsManager implements IPermissionsManagerNG {
         return $override_collection;
     }
 
-    protected function buildPermissionsCache(&$dar, &$ugroups) {
+    protected function buildPermissionsCache(&$dar, &$ugroups)
+    {
         while ($row = $dar->getRow()) {
             if (!isset($this->_permissions[$row['object_id']])) {
                 $this->_permissions[$row['object_id']] = array();
@@ -309,7 +322,8 @@ class PermissionsManager implements IPermissionsManagerNG {
     * @param  int     $object_id  The id of the object
     * @param  array   $ugroups    A list of ugroups we want to see in permissions
     */
-    protected function retrievePermissions($object_id, $ugroups = array()) {
+    protected function retrievePermissions($object_id, $ugroups = array())
+    {
         $tracker_field_id = explode('#', $object_id); //An artifact field ?
         if (count($tracker_field_id) > 1) {
             $dar = $this->_permission_dao->searchPermissionsByArtifactFieldId($tracker_field_id[0]);
@@ -319,7 +333,8 @@ class PermissionsManager implements IPermissionsManagerNG {
         $this->buildPermissionsCache($dar, $ugroups);
     }
 
-    public function clonePermissions($source, $target, $perms, $toGroupId=0) {
+    public function clonePermissions($source, $target, $perms, $toGroupId=0)
+    {
         return $this->_permission_dao->clonePermissions($source, $target, $perms, $toGroupId);
     }
 
@@ -336,7 +351,8 @@ class PermissionsManager implements IPermissionsManagerNG {
     *
     * @return bool
     */
-    public function duplicatePermissions($source, $target, array $permission_types, $ugroup_mapping, $duplicate_type) {
+    public function duplicatePermissions($source, $target, array $permission_types, $ugroup_mapping, $duplicate_type)
+    {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, $duplicate_type, $ugroup_mapping);
     }
 
@@ -349,7 +365,8 @@ class PermissionsManager implements IPermissionsManagerNG {
      *
      * @return bool
      */
-    public function duplicateWithStatic($source, $target, array $permission_types) {
+    public function duplicateWithStatic($source, $target, array $permission_types)
+    {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, PermissionsDao::DUPLICATE_SAME_PROJECT, false);
     }
 
@@ -363,7 +380,8 @@ class PermissionsManager implements IPermissionsManagerNG {
      *
      * @return bool
      */
-    public function duplicateWithStaticMapping($source, $target, array $permission_types, $ugroup_mapping) {
+    public function duplicateWithStaticMapping($source, $target, array $permission_types, $ugroup_mapping)
+    {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, PermissionsDao::DUPLICATE_NEW_PROJECT, $ugroup_mapping);
     }
 
@@ -376,24 +394,29 @@ class PermissionsManager implements IPermissionsManagerNG {
      *
      * @return bool
      */
-    public function duplicateWithoutStatic($source, $target, array $permission_types) {
+    public function duplicateWithoutStatic($source, $target, array $permission_types)
+    {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, PermissionsDao::DUPLICATE_OTHER_PROJECT, false);
     }
 
-    public function isPermissionExist($object_id, $ptype){
+    public function isPermissionExist($object_id, $ptype)
+    {
         $dar = $this->_permission_dao->searchPermissionsByObjectId($object_id, array($ptype));
         return $dar->valid();
     }
 
-    public function addPermission($permission_type, $object_id, $ugroup_id){
+    public function addPermission($permission_type, $object_id, $ugroup_id)
+    {
         return $this->_permission_dao->addPermission($permission_type, $object_id, $ugroup_id);
     }
 
-    public function revokePermissionForUGroup($permission_type, $object_id, $ugroup_id) {
+    public function revokePermissionForUGroup($permission_type, $object_id, $ugroup_id)
+    {
         return $this->_permission_dao->removePermission($permission_type, $object_id, $ugroup_id);
     }
 
-    public function addHistory($permission_type, $object_id, $group_id) {
+    public function addHistory($permission_type, $object_id, $group_id)
+    {
         permission_add_history($group_id, $permission_type, $object_id);
     }
 
@@ -405,11 +428,13 @@ class PermissionsManager implements IPermissionsManagerNG {
      *
      * @return bool
      */
-    public function clearPermission($permissionType, $objectId) {
+    public function clearPermission($permissionType, $objectId)
+    {
         return $this->_permission_dao->clearPermission($permissionType, $objectId);
     }
 
-    public function isUgroupUsedByWikiService($ugroup_id, $project_id) {
+    public function isUgroupUsedByWikiService($ugroup_id, $project_id)
+    {
         if ($this->_permission_dao->isThereAnExplicitWikiServicePermission($ugroup_id)) {
             return true;
         }
@@ -421,11 +446,13 @@ class PermissionsManager implements IPermissionsManagerNG {
         return $this->_permission_dao->isThereADefaultWikiServicePermissionThatUsesUgroup($ugroup_id);
     }
 
-    public function disableRestrictedAccess() {
+    public function disableRestrictedAccess()
+    {
         $this->_permission_dao->disableRestrictedAccess();
     }
 
-    public function disableRestrictedAccessForObjectId(array $permission_type, $object_id) {
+    public function disableRestrictedAccessForObjectId(array $permission_type, $object_id)
+    {
         $this->_permission_dao->disableRestrictedAccessForObjectId($permission_type, $object_id);
     }
 }

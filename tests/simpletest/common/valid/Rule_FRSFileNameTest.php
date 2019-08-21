@@ -24,14 +24,16 @@ require_once __DIR__ . '/../../../../src/www/include/utils.php';
 
 class Rule_FRSFileNameTest extends TuleapTestCase {
 
-    function testNameValid() {
+    function testNameValid()
+    {
         $r = new Rule_FRSFileName();
         $this->assertTrue($r->isValid('toto.txt'));
 
         $this->assertTrue($r->isValid('toto tutu.txt'));
     }
 
-    protected function _testStringWithChar($c) {
+    protected function _testStringWithChar($c)
+    {
         $r = new Rule_FRSFileName();
 
         // start
@@ -44,14 +46,16 @@ class Rule_FRSFileNameTest extends TuleapTestCase {
         $this->assertFalse($r->isValid('tototutu'.$c), $c." is not allowed");
     }
 
-    function testNameContainsInvalidCharacterAnywhere() {
+    function testNameContainsInvalidCharacterAnywhere()
+    {
         $str = "`!\"$%^,&*();=|{}<>?/";
         for($i = 0; $i < strlen($str); $i++) {
             $this->_testStringWithChar($str[$i]);
         }
     }
 
-    function testNameContainsSpecialCharAtBeginning() {
+    function testNameContainsSpecialCharAtBeginning()
+    {
         $r = new Rule_FRSFileName();
         $this->assertTrue($r->isValid('toto@tutu'));
 
@@ -62,7 +66,8 @@ class Rule_FRSFileNameTest extends TuleapTestCase {
         $this->assertFalse($r->isValid('~toto'));
     }
 
-    function testNameContainsDot() {
+    function testNameContainsDot()
+    {
         $r = new Rule_FRSFileName();
 
         $this->assertFalse($r->isValid('../coin'));

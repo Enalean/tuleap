@@ -41,29 +41,45 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
      * The date (timestamp) the sprint start
      */
     protected $start_date;
-    public function getStartDate() { return $this->start_date; }
-    public function setStartDate($start_date) { return $this->start_date = $start_date; }
+    public function getStartDate()
+    {
+        return $this->start_date; }
+    public function setStartDate($start_date)
+    {
+        return $this->start_date = $start_date; }
 
     /**
      * The unit of the duration
      */
     protected $scale;
-    public function getScale() { return $this->scale; }
-    public function setScale($scale) { return $this->scale = $scale; }
+    public function getScale()
+    {
+        return $this->scale; }
+    public function setScale($scale)
+    {
+        return $this->scale = $scale; }
 
     /**
      * The date (timestamp) the sprint stop
      */
     protected $stop_date;
-    public function getStopDate() { return $this->stop_date; }
-    public function setStopDate($stop_date) { return $this->stop_date = $stop_date; }
+    public function getStopDate()
+    {
+        return $this->stop_date; }
+    public function setStopDate($stop_date)
+    {
+        return $this->stop_date = $stop_date; }
 
     /**
      * The observed field id
      */
     protected $field_id;
-    public function getFieldId() { return $this->field_id; }
-    public function setFieldId($field_id) { return $this->field_id = $field_id; }
+    public function getFieldId()
+    {
+        return $this->field_id; }
+    public function setFieldId($field_id)
+    {
+        return $this->field_id = $field_id; }
 
     /**
      * class constructor: use parent one
@@ -73,7 +89,8 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     /**
      * Load object from session
      */
-    public function loadFromSession() {
+    public function loadFromSession()
+    {
         $this->report_session = self::getSession($this->renderer->report->id, $this->renderer->id);
         $chart_in_session = $this->report_session->get($this->id);
         if (isset($chart_in_session['field_id']) && $chart_in_session['field_id'] !== '') {
@@ -90,7 +107,8 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     /**
      * Load object from DB
      */
-    public function loadFromDb() {
+    public function loadFromDb()
+    {
         $arr = $this->getDao()->searchById($this->id)->getRow();
         $this->field_id   = $arr['field_id'];
         $this->start_date = $arr['start_date'];
@@ -98,7 +116,8 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
         $this->stop_date  = $arr['stop_date'];
     }
 
-    public function registerInSession() {
+    public function registerInSession()
+    {
         parent::registerInSession();
         $this->report_session->set("$this->id.field_id", $this->field_id);
         $this->report_session->set("$this->id.start_date", $this->start_date);
@@ -106,11 +125,13 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
         $this->report_session->set("$this->id.stop_date", $this->stop_date);
     }
 
-    protected function getDao() {
+    protected function getDao()
+    {
         return new GraphOnTrackersV5_Chart_CumulativeFlowDao();
     }
 
-    public static function create($graphic_report, $id, $rank, $title, $description, $width, $height) {
+    public static function create($graphic_report, $id, $rank, $title, $description, $width, $height)
+    {
         $session = self::getSession($graphic_report->report->id, $graphic_report->id);
 
         $session->set("$id.field_id", 0);
@@ -127,7 +148,8 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
      * array('prop1' => 'value', 'prop2' => 'value', ...)
      * @return array
      */
-    public function getSpecificRow() {
+    public function getSpecificRow()
+    {
         return array(
             'field_id'   => $this->getFieldId(),
             'start_date' => $this->getStartDate(),
@@ -139,21 +161,24 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     /**
      * Return the chart type (gantt, bar, pie, ...)
      */
-    public function getChartType() {
+    public function getChartType()
+    {
         return "cumulative_flow";
     }
 
     /**
      * @return GraphOnTrackersV5_Engine The engine associated to the concrete chart
      */
-    protected function getEngine() {
+    protected function getEngine()
+    {
         return new GraphOnTrackersV5_Engine_CumulativeFlow();
     }
 
     /**
      * @return ChartDataBuilderV5 The data builder associated to the concrete chart
      */
-    protected function getChartDataBuilder($artifacts) {
+    protected function getChartDataBuilder($artifacts)
+    {
         return new GraphOnTrackersV5_CumulativeFlow_DataBuilder($this,$artifacts);
     }
 
@@ -161,7 +186,8 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
      * Allow update of the specific properties of the concrete chart
      * @return bool true if the update is successful
      */
-    protected function updateSpecificProperties($row) {
+    protected function updateSpecificProperties($row)
+    {
         $session = self::getSession($this->renderer->report->id, $this->renderer->id);
 
         $session->set("$this->id.field_id", $row['field_id']);
@@ -183,7 +209,8 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     /**
      * User as permission to visualize the chart
      */
-    public function userCanVisualize() {
+    public function userCanVisualize()
+    {
         $ff = Tracker_FormElementFactory::instance();
         $observed_field = $ff->getFormElementById($this->field_id);
         if ($observed_field && $observed_field->userCanRead()) {
@@ -195,7 +222,8 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     /**
      * @return array of HTML_Element for properties
      */
-    public function getProperties() {
+    public function getProperties()
+    {
         $scaleSelect = new HTML_Element_Selectbox(
                     $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_scale'),
                     'chart[scale]',
@@ -226,7 +254,8 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
         ));
     }
 
-    public function createDb($id) {
+    public function createDb($id)
+    {
         $field_id   = $this->getFieldId();
         if (!is_int($field_id) && !is_string($field_id) && $field_id) {
             $field_id = $field_id->getid();
@@ -237,7 +266,8 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
         return $this->getDao()->save($id, $field_id, $start_date, $stop_date, $scale);
     }
 
-    public function updateDb() {
+    public function updateDb()
+    {
         $field_id   = $this->getFieldId();
         $start_date = $this->getStartDate();
         $scale      = $this->getScale();
@@ -251,7 +281,8 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
      * @param SimpleXMLElement $xml characterising the chart
      * @param array $formsMapping associating xml IDs to real fields
      */
-    public function setSpecificPropertiesFromXML($xml, $formsMapping) {
+    public function setSpecificPropertiesFromXML($xml, $formsMapping)
+    {
         if ($xml['start_date']) {
             $this->setStartDate((int)$xml['start_date']);
         }
@@ -271,14 +302,16 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
      *
      * @return array containing the properties
      */
-    public function arrayOfSpecificProperties() {
+    public function arrayOfSpecificProperties()
+    {
         return array('start_date' => $this->getStartDate(),
                      'field_id'   => $this->getFieldId(),
                      'scale'      => $this->getScale(),
                      'stop_date'  => $this->getStopDate());
     }
 
-    public function exportToXml(SimpleXMLElement $root, $formsMapping) {
+    public function exportToXml(SimpleXMLElement $root, $formsMapping)
+    {
         parent::exportToXML($root, $formsMapping);
         if ($this->start_date) {
             $root->addAttribute('start_date', $this->start_date);

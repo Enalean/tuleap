@@ -30,7 +30,8 @@ class AdminDelegation_ShowProjectWidget extends Widget {
      *
      * @param Plugin $plugin The plugin
      */
-    function __construct(Plugin $plugin) {
+    function __construct(Plugin $plugin)
+    {
         parent::__construct('admindelegation_projects');
         $this->_plugin = $plugin;
     }
@@ -41,7 +42,8 @@ class AdminDelegation_ShowProjectWidget extends Widget {
      * @see src/common/Widget/Widget#getTitle()
      * @return String
      */
-    function getTitle() {
+    function getTitle()
+    {
         return dgettext('tuleap-admindelegation', 'Admin delegation: search all projects');
     }
 
@@ -52,15 +54,18 @@ class AdminDelegation_ShowProjectWidget extends Widget {
      *
      * @return String
      */
-    function getDescription() {
+    function getDescription()
+    {
         return dgettext('tuleap-admindelegation', 'Site admins can delegate view all projects to you');
     }
 
-    function getCategory() {
+    function getCategory()
+    {
         return dgettext('tuleap-admindelegation', 'Admin delegation');
     }
 
-    function getAllProject($offset, $limit, $condition, $pattern) {
+    function getAllProject($offset, $limit, $condition, $pattern)
+    {
         if (count($condition)> 0){
             $statements   = '(';
             $i            = 0;
@@ -81,7 +86,8 @@ class AdminDelegation_ShowProjectWidget extends Widget {
         return array('projects' => $res, 'numrows' => $row['nb']);
     }
 
-    protected function _showAllProject() {
+    protected function _showAllProject()
+    {
         $request = HTTPRequest::instance();
 
         $urlParam = '';
@@ -213,7 +219,8 @@ class AdminDelegation_ShowProjectWidget extends Widget {
      * @see src/common/Widget/Widget#getContent()
      * @return String
      */
-    public function getContent() {
+    public function getContent()
+    {
         $html = '';
         $usm  = new AdminDelegation_UserServiceManager(
             new AdminDelegation_UserServiceDao(),

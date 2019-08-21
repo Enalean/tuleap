@@ -29,7 +29,8 @@ class ParentArtifactReference extends ArtifactReference {
      */
     public $title;
 
-    public function build(Tracker_Artifact $artifact, $format = '') {
+    public function build(Tracker_Artifact $artifact, $format = '')
+    {
         parent::build($artifact, $format);
 
         $this->title = $artifact->getCachedTitle();

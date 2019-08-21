@@ -32,7 +32,8 @@ use Tracker_URLVerification;
 
 class ProjectAuthorization {
 
-    public static function userCanAccessProject(PFUser $user, Project $project, URLVerification $url_verification) {
+    public static function userCanAccessProject(PFUser $user, Project $project, URLVerification $url_verification)
+    {
         try {
             $url_verification->userCanAccessProject($user, $project);
             return true;
@@ -43,7 +44,8 @@ class ProjectAuthorization {
         }
     }
 
-    public static function canUserAccessUserGroupInfo(PFUser $user, Project $project, URLVerification $url_verification) {
+    public static function canUserAccessUserGroupInfo(PFUser $user, Project $project, URLVerification $url_verification)
+    {
         try {
             $url_verification->userCanAccessProject($user, $project);
             $url_verification->userCanAccessProjectAndIsProjectAdmin($user, $project);

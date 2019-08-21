@@ -18,15 +18,18 @@
 
 class b201604121133_default_permissions_admin_groups extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add default ugroup permissions for admin groups';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "INSERT INTO permissions_values (permission_type, ugroup_id, is_default)
                 VALUES ('PLUGIN_SVN_ADMIN', 4, 1);";
 

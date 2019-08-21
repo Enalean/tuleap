@@ -36,7 +36,8 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
      *
      * @return string
      */
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         $txt = '';
         if (strpos($this->parameters,',' === FALSE)) {
             // Only one Group ID
@@ -50,7 +51,8 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
     /**
      * Process stored event
      */
-    function process() {
+    function process()
+    {
 
         $groups=explode(',',$this->parameters);
 

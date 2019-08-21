@@ -26,7 +26,8 @@ class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_b
     /** @var Git_Driver_GerritLegacy */
     private $gerrit_driver;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->gerrit_driver = partial_mock(
             'Git_Driver_GerritLegacy',
@@ -35,7 +36,8 @@ class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_b
         );
     }
 
-    public function itCreatesGroupsIfItNotExistsOnGerrit() {
+    public function itCreatesGroupsIfItNotExistsOnGerrit()
+    {
         stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
         $create_group_command = "gerrit create-group firefox/project_members --owner firefox/project_admins";
@@ -43,7 +45,8 @@ class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_b
         $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', 'firefox/project_admins');
     }
 
-    public function itDoesNotCreateGroupIfItAlreadyExistsOnGerrit() {
+    public function itDoesNotCreateGroupIfItAlreadyExistsOnGerrit()
+    {
         stub($this->gerrit_driver)->DoesTheGroupExist()->returns(true);
 
         $create_group_command = "gerrit create-group firefox/project_members --owner firefox/project_admins";
@@ -51,14 +54,16 @@ class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_b
         $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', 'firefox/project_admins');
     }
 
-    public function itInformsAboutGroupCreation() {
+    public function itInformsAboutGroupCreation()
+    {
         stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
         expect($this->logger)->info("Gerrit: Group firefox/project_members successfully created")->once();
         $this->gerrit_driver->createGroup($this->gerrit_server,  'firefox/project_members', 'firefox/project_admins');
     }
 
-    public function itRaisesAGerritDriverExceptionOnGroupsCreation(){
+    public function itRaisesAGerritDriverExceptionOnGroupsCreation()
+    {
         stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
         $std_err = 'fatal: group "somegroup" already exists';
@@ -74,7 +79,8 @@ class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_b
         }
     }
 
-    public function itCreatesGroupWithoutOwnerWhenSelfOwnedToAvoidChickenEggIssue() {
+    public function itCreatesGroupWithoutOwnerWhenSelfOwnedToAvoidChickenEggIssue()
+    {
         stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
         $create_group_command = "gerrit create-group firefox/project_admins";
@@ -82,7 +88,8 @@ class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_b
         $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_admins', 'firefox/project_admins');
     }
 
-    public function itAsksGerritForTheGroupUUID() {
+    public function itAsksGerritForTheGroupUUID()
+    {
         $uuid         = 'lsalkj4jlk2jj3452lkj23kj421465';
         $query_result = '{"type":"row","columns":{"group_uuid":"'. $uuid .'"}}'.
                         PHP_EOL .
@@ -92,14 +99,16 @@ class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_b
         $this->assertEqual($uuid, $this->driver->getGroupUUID($this->gerrit_server, $this->groupname));
     }
 
-    public function itReturnsNullUUIDIfNotFound() {
+    public function itReturnsNullUUIDIfNotFound()
+    {
         $query_result = '{"type":"query-stats","rowCount":0,"runTimeMilliseconds":0}';
         stub($this->ssh)->execute($this->gerrit_server, $this->expected_query)->once()->returns($query_result);
 
         $this->assertNull($this->driver->getGroupUUID($this->gerrit_server, $this->groupname));
     }
 
-    public function itAsksGerritForTheGroupId() {
+    public function itAsksGerritForTheGroupId()
+    {
         $id         = '272';
         $query_result = '{"type":"row","columns":{"group_id":"'. $id .'"}}'.
                         PHP_EOL .
@@ -109,14 +118,16 @@ class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_b
         $this->assertEqual($id, $this->driver->getGroupId($this->gerrit_server, $this->groupname));
     }
 
-    public function itReturnsNullIdIfNotFound() {
+    public function itReturnsNullIdIfNotFound()
+    {
         $query_result = '{"type":"query-stats","rowCount":0,"runTimeMilliseconds":0}';
         stub($this->ssh)->execute($this->gerrit_server, $this->expected_query)->once()->returns($query_result);
 
         $this->assertNull($this->driver->getGroupID($this->gerrit_server, $this->groupname));
     }
 
-    public function itReturnsAllGroups() {
+    public function itReturnsAllGroups()
+    {
         $ls_groups_expected_return = <<<EOS
 Administrators	31c2cb467c263d73eb24552a7cc98b7131ac2115	Gerrit Site Administrators	INTERNAL	Administrators	31c2cb467c263d73eb24552a7cc98b7131ac2115	false
 Anonymous Users	global:Anonymous-Users	Any user, signed-in or not	SYSTEM	Administrators	31c2cb467c263d73eb24552a7cc98b7131ac2115	false

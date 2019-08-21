@@ -24,17 +24,20 @@
 
 class b201412031051_remove_project_id_in_kanban_configuration extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Remove project_id from table plugin_agiledashboard_kanban_configuration.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
 
         $sql = "ALTER TABLE plugin_agiledashboard_kanban_configuration
                 DROP COLUMN project_id";

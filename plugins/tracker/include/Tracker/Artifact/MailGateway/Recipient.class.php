@@ -42,15 +42,18 @@ class Tracker_Artifact_MailGateway_Recipient {
         $this->email    = $email;
     }
 
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->email;
     }
 
-    public function getArtifact() {
+    public function getArtifact()
+    {
         return $this->artifact;
     }
 
-    public function getUser() {
+    public function getUser()
+    {
         return $this->user;
     }
 

@@ -22,7 +22,8 @@ require_once __DIR__ .'/../../bootstrap.php';
 
 class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGcTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->dao    = safe_mock(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
         $this->logger = mock('Logger');
@@ -38,7 +39,8 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGcTest extends TuleapTestC
         );
     }
 
-    public function itRunsGitGcIfItIsAllowed() {
+    public function itRunsGitGcIfItIsAllowed()
+    {
         stub($this->dao)->isGitGcEnabled()->returns(true);
 
         expect($this->logger)->info('Running git gc on gitolite admin working copy.')->once();
@@ -47,7 +49,8 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGcTest extends TuleapTestC
         $this->gitgc->cleanUpGitoliteAdminWorkingCopy();
     }
 
-    public function itDoesNotRunGitGcIfItIsNotAllowed() {
+    public function itDoesNotRunGitGcIfItIsNotAllowed()
+    {
         stub($this->dao)->isGitGcEnabled()->returns(false);
 
         expect($this->logger)->warn(

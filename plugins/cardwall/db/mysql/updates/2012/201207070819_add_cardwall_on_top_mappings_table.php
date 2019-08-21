@@ -20,17 +20,20 @@
 
 class b201207070819_add_cardwall_on_top_mappings_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add table to store mappings for cardwall columns
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS plugin_cardwall_on_top_column(
                     id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                     tracker_id INT(11) NOT NULL,
@@ -61,7 +64,8 @@ EOT;
         $this->db->createTable('plugin_cardwall_on_top_column_mapping_field_value', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('plugin_cardwall_on_top_column')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_cardwall_on_top_column table is missing');
         }

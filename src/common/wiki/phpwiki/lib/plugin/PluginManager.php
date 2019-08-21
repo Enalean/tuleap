@@ -28,24 +28,29 @@ define('REQUIRE_ADMIN', false);
 class WikiPlugin_PluginManager
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("PluginManager");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("Description: Provides a list of plugins on this wiki.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.19 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('info' => 'args');
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         extract($this->getArgs($argstr, $request));
 
         $h = HTML();
@@ -69,11 +74,13 @@ extends WikiPlugin
         return $h;
     }
 
-    function _generatePageheader(&$info, &$html) {
+    function _generatePageheader(&$info, &$html)
+    {
         $html->pushContent(HTML::p($this->getDescription()));
     }
 
-    function _generateColgroups(&$info, &$table) {
+    function _generateColgroups(&$info, &$table)
+    {
         // specify last two column widths
         $colgroup = HTML::colgroup();
         $colgroup->pushContent(HTML::col(array('width' => '0*')));
@@ -85,7 +92,8 @@ extends WikiPlugin
         $table->pushcontent($colgroup);
     }
 
-    function _generateColheadings(&$info, &$table) {
+    function _generateColheadings(&$info, &$table)
+    {
         // table headings
         $tr = HTML::tr();
         $headings = array(_("Plugin"), _("Version"), _("Description"));
@@ -97,7 +105,8 @@ extends WikiPlugin
         $table->pushContent(HTML::thead($tr));
     }
 
-    function _generateTableBody(&$info, &$dbi, &$request, &$table) {
+    function _generateTableBody(&$info, &$dbi, &$request, &$table)
+    {
         $plugin_dir = 'lib/plugin';
         if (defined('PHPWIKI_DIR'))
             $plugin_dir = PHPWIKI_DIR . "/$plugin_dir";

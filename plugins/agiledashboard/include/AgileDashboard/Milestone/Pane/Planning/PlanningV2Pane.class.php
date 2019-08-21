@@ -43,28 +43,32 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane extends AgileDashboa
     /**
      * @return string
      */
-    public function getIdentifier() {
+    public function getIdentifier()
+    {
         return $this->info->getIdentifier();
     }
 
     /**
      * @see AgileDashboard_Pane::getFullContent()
      */
-    public function getFullContent() {
+    public function getFullContent()
+    {
         return $this->getPaneContent();
     }
 
     /**
      * @see AgileDashboard_Pane::getMinimalContent()
      */
-    public function getMinimalContent() {
+    public function getMinimalContent()
+    {
         return '';
     }
 
     /**
      * @see templates/pane-planning-v2.mustache
      */
-    private function getPaneContent() {
+    private function getPaneContent()
+    {
         $renderer = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
         return $renderer->renderToString('pane-planning-v2', $this->presenter);
     }

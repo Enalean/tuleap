@@ -32,20 +32,24 @@ include_once("lib/plugin/IncludePage.php");
 class WikiPlugin_IncludePages
 extends WikiPlugin_IncludePage
 {
-    function getName() {
+    function getName()
+    {
         return _("IncludePages");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Include multiple pages.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.2 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array_merge(
                            array( 'pages'   => false,  // the pages to include
                                   'exclude' => false), // the pages to exclude
@@ -53,7 +57,8 @@ extends WikiPlugin_IncludePage
                            );
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         $html = HTML();
         if (empty($args['pages']))

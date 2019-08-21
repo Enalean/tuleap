@@ -32,7 +32,8 @@ class SVN_Hooks {
     /** @var UserManager */
     private $user_manager;
 
-    public function __construct(ProjectManager $project_manager, UserManager $user_manager) {
+    public function __construct(ProjectManager $project_manager, UserManager $user_manager)
+    {
         $this->project_manager = $project_manager;
         $this->user_manager    = $user_manager;
     }
@@ -44,7 +45,8 @@ class SVN_Hooks {
      * @return PFUser
      * @throws Exception
      */
-    public function getUserByName($user_name) {
+    public function getUserByName($user_name)
+    {
         $user = $this->user_manager->findUser($user_name);
         if ($user && $user->isAlive()) {
             return $user;
@@ -59,7 +61,8 @@ class SVN_Hooks {
      * @return Project
      * @throws Exception
      */
-    public function getProjectFromRepositoryPath($repository_path) {
+    public function getProjectFromRepositoryPath($repository_path)
+    {
         $unix_group_name = substr($repository_path, strlen(ForgeConfig::get('svn_prefix')) + 1);
         $project = $this->project_manager->getProjectByUnixName($unix_group_name);
         if ($project && !$project->isError() && !$project->isDeleted()) {
@@ -75,7 +78,8 @@ class SVN_Hooks {
      * @param String $txn
      * @return String
      */
-    public function getMessageFromTransaction($repository, $txn) {
+    public function getMessageFromTransaction($repository, $txn)
+    {
         return $this->getMessageFromSvnLook("-t '$txn' '$repository'");
     }
 
@@ -86,11 +90,13 @@ class SVN_Hooks {
      * @param String $revision
      * @return String
      */
-    public function getMessageFromRevision($repository, $revision) {
+    public function getMessageFromRevision($repository, $revision)
+    {
         return $this->getMessageFromSvnLook("'$repository' -r '$revision'");
     }
 
-    private function getMessageFromSvnLook($parameters) {
+    private function getMessageFromSvnLook($parameters)
+    {
         $logmsg = array();
         exec("/usr/bin/svnlook log $parameters", $logmsg);
         return implode("\n", $logmsg);

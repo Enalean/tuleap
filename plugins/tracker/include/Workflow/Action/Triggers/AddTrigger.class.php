@@ -35,13 +35,15 @@ class Tracker_Workflow_Action_Triggers_AddTrigger {
      */
     private $rule_manager;
 
-    public function __construct(Tracker $tracker, Tracker_FormElementFactory $formelement_factory, Tracker_Workflow_Trigger_RulesManager $rule_manager) {
+    public function __construct(Tracker $tracker, Tracker_FormElementFactory $formelement_factory, Tracker_Workflow_Trigger_RulesManager $rule_manager)
+    {
         $this->tracker             = $tracker;
         $this->formelement_factory = $formelement_factory;
         $this->rule_manager        = $rule_manager;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    {
         $validator = new Tracker_Workflow_Trigger_TriggerValidator($this->rule_manager);
 
         try {

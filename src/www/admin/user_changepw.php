@@ -12,7 +12,8 @@ $request->checkUserIsSuperUser();
 // ###### function register_valid()
 // ###### checks for valid register from form post
 
-function register_valid(Codendi_Request $request, CSRFSynchronizerToken $csrf_token) {
+function register_valid(Codendi_Request $request, CSRFSynchronizerToken $csrf_token)
+{
     global $Language;
 
     if (! $request->existAndNonEmpty('Update')) {

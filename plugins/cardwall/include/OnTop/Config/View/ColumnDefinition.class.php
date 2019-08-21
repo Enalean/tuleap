@@ -32,7 +32,8 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
      */
     private $hp;
 
-    public function __construct(Cardwall_OnTop_Config $config) {
+    public function __construct(Cardwall_OnTop_Config $config)
+    {
         $this->config = $config;
         $this->hp     = Codendi_HTMLPurifier::instance();
     }
@@ -40,7 +41,8 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
     /**
      * @return string
      */
-    public function fetchColumnDefinition() {
+    public function fetchColumnDefinition()
+    {
         $html  = '';
         $html .= $this->fetchSpeech();
         $html .= '<br>';
@@ -87,7 +89,8 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
         return $html;
     }
 
-    public function visitTrackerMappingNoField($mapping) {
+    public function visitTrackerMappingNoField($mapping)
+    {
         $mapping_tracker= $mapping->getTracker();
         $used_sb_fields = $mapping->getAvailableFields();
 
@@ -110,7 +113,8 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
         return $html;
     }
 
-    public function visitTrackerMappingStatus($mapping) {
+    public function visitTrackerMappingStatus($mapping)
+    {
         $mapping_tracker= $mapping->getTracker();
         $used_sb_fields = $mapping->getAvailableFields();
         $field          = $mapping->getField();
@@ -136,7 +140,8 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
         return $html;
     }
 
-    public function visitTrackerMappingFreestyle($mapping) {
+    public function visitTrackerMappingFreestyle($mapping)
+    {
         $mapping_tracker= $mapping->getTracker();
         $used_sb_fields = $mapping->getAvailableFields();
         $field          = $mapping->getField();
@@ -162,7 +167,8 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
         return $html;
     }
 
-    private function fetchCustomizationSwitch(Tracker $mapping_tracker, $customized=false) {
+    private function fetchCustomizationSwitch(Tracker $mapping_tracker, $customized=false)
+    {
         $html     = '';
         $selected = '';
         if ($customized) {
@@ -176,7 +182,8 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
         return $html;
     }
 
-    private function editValues($mapping_tracker, $column, $mapping_values, $field) {
+    private function editValues($mapping_tracker, $column, $mapping_values, $field)
+    {
         $column_id = $column->id;
         $field_values = $field->getVisibleValuesPlusNoneIfAny();
         $html = '';
@@ -201,7 +208,8 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
 
     }
 
-    protected function fetchSpeech() {
+    protected function fetchSpeech()
+    {
         if (! count($this->config->getDashboardColumns())) {
             return $this->translate('plugin_cardwall', 'on_top_semantic_freestyle_column_definition_speech_no_column');
         } else {
@@ -209,7 +217,8 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
         }
     }
 
-    protected function fetchColumnHeader(Cardwall_Column $column) {
+    protected function fetchColumnHeader(Cardwall_Column $column)
+    {
         $html  = '<input type="text" name="column['. $column->id .'][label]" value="'. $this->purify($column->label) .'" />';
         $html .= $this->decorateEdit($column);
 
@@ -245,7 +254,8 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
         );
     }
 
-    protected function fetchAdditionalColumnHeader() {
+    protected function fetchAdditionalColumnHeader()
+    {
         $suggestion = $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholder_suggestion', $this->getPlaceholderSuggestion());
         return '<label>'. $this->translate('plugin_cardwall', 'on_top_new_column') . '<br /><input type="text" name="new_column" value="" placeholder="'. $suggestion  .'" /></label>';
     }
@@ -264,7 +274,8 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
         return $suggestion ? $suggestion : $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholder_default');
     }
 
-    private function removeUsedColumns(&$placeholder, $key, $column_label) {
+    private function removeUsedColumns(&$placeholder, $key, $column_label)
+    {
         if (! levenshtein(soundex($column_label), soundex($placeholder))) {
             $placeholder = '';
         }
@@ -273,14 +284,16 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
     /**
      * @return string
      */
-    protected function purify($value) {
+    protected function purify($value)
+    {
         return $this->hp->purify($value);
     }
 
     /**
      * @return string
      */
-    protected function translate($page, $category, $args = "") {
+    protected function translate($page, $category, $args = "")
+    {
         return $GLOBALS['Language']->getText($page, $category, $args);
     }
 }

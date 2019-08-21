@@ -18,15 +18,18 @@
 
 class b201403281402_add_index_for_reverse_link extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add Index on artlink to improve lookup of reverse links';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         if (! $this->indexNameExists('tracker_changeset_value_artifactlink', 'idx_reverse')) {
             $sql = 'ALTER TABLE tracker_changeset_value_artifactlink ADD INDEX idx_reverse (artifact_id, changeset_value_id)';
             $res = $this->db->dbh->exec($sql);
@@ -39,7 +42,8 @@ class b201403281402_add_index_for_reverse_link extends ForgeUpgrade_Bucket {
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (! $this->indexNameExists('tracker_changeset_value_artifactlink', 'idx_reverse')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException("tracker_changeset_value_artifactlink has no reverse link index");
         }
@@ -53,7 +57,8 @@ class b201403281402_add_index_for_reverse_link extends ForgeUpgrade_Bucket {
      *
      * @return bool
      */
-    private function indexNameExists($tableName, $index) {
+    private function indexNameExists($tableName, $index)
+    {
         $sql = 'SHOW INDEX FROM '.$tableName.' WHERE Key_name LIKE '.$this->db->dbh->quote($index);
         $res = $this->db->dbh->query($sql);
         if ($res && $res->fetch() !== false) {

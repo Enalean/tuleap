@@ -33,7 +33,8 @@ class ArtifactFilesTest extends ArtifactFileBase
     private $second_chunk = 'with more data';
     private $third_file;
 
-    protected function getResponseForDifferentUser($request) {
+    protected function getResponseForDifferentUser($request)
+    {
         return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
     }
 
@@ -63,14 +64,16 @@ class ArtifactFilesTest extends ArtifactFileBase
         );
     }
 
-    public function testOptionsArtifactFiles() {
+    public function testOptionsArtifactFiles()
+    {
         $response = $this->getResponse($this->client->options('artifact_temporary_files'));
         $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals(0, (string) $response->getHeader('X-DISK-USAGE'));
         $this->assertEquals(self::$DEFAULT_QUOTA, (string) $response->getHeader('X-QUOTA'));
     }
 
-    public function testPostArtifactFile() {
+    public function testPostArtifactFile()
+    {
         $post_resource = json_encode($this->first_file);
 
         $request  = $this->client->post('artifact_temporary_files', null, $post_resource);
@@ -96,7 +99,8 @@ class ArtifactFilesTest extends ArtifactFileBase
     /**
      * @depends testPostArtifactFile
      */
-    public function testArtifactTemporaryFilesGetId($file_id) {
+    public function testArtifactTemporaryFilesGetId($file_id)
+    {
         $request  = $this->client->get('artifact_temporary_files/'.$file_id);
         $response = $this->getResponse($request);
 
@@ -111,7 +115,8 @@ class ArtifactFilesTest extends ArtifactFileBase
     /**
      * @depends testPostArtifactFile
      */
-    public function testPutArtifactFileId($file_id) {
+    public function testPutArtifactFileId($file_id)
+    {
         $second_chunk = 'with more data';
 
         $put_resource = json_encode(array(
@@ -138,7 +143,8 @@ class ArtifactFilesTest extends ArtifactFileBase
     /**
      * @depends testPostArtifactFile
      */
-    public function testPutArtifactId_isForbiddenForADifferentUser($file_id) {
+    public function testPutArtifactId_isForbiddenForADifferentUser($file_id)
+    {
         $second_chunk = 'with more data';
 
         $put_resource = json_encode(array(
@@ -155,7 +161,8 @@ class ArtifactFilesTest extends ArtifactFileBase
     /**
      * @depends testPostArtifactFile
      */
-    public function testPutArtifactId_throwsErrorForAWrongOffset($file_id) {
+    public function testPutArtifactId_throwsErrorForAWrongOffset($file_id)
+    {
         $second_chunk = 'with more data';
 
         $put_resource = json_encode(array(
@@ -170,7 +177,8 @@ class ArtifactFilesTest extends ArtifactFileBase
         $this->assertArrayHasKey('X-DISK-USAGE', $response->getHeaders());
     }
 
-    public function testPutArtifactId_throwsErrorForInvalidFile() {
+    public function testPutArtifactId_throwsErrorForInvalidFile()
+    {
         $file_id = 1453655565245655;
         $chunk   = 'with more data';
 
@@ -188,7 +196,8 @@ class ArtifactFilesTest extends ArtifactFileBase
     /**
      * @depends testPostArtifactFile
      */
-    public function testArtifactTemporaryFilesGet($file_id) {
+    public function testArtifactTemporaryFilesGet($file_id)
+    {
         $request  = $this->client->get('artifact_temporary_files');
         $response = $this->getResponse($request);
 
@@ -207,7 +216,8 @@ class ArtifactFilesTest extends ArtifactFileBase
     /**
      * @depends testPostArtifactFile
      */
-    public function testOptionsArtifactTemporaryFilesId($file_id) {
+    public function testOptionsArtifactTemporaryFilesId($file_id)
+    {
         $response = $this->getResponse($this->client->options('artifact_temporary_files/'.$file_id));
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -217,13 +227,15 @@ class ArtifactFilesTest extends ArtifactFileBase
     /**
      * @depends testPostArtifactFile
      */
-    public function testOptionsArtifactId_isAllowedForADifferentUser($file_id) {
+    public function testOptionsArtifactId_isAllowedForADifferentUser($file_id)
+    {
         $request = $this->client->options('artifact_temporary_files/'.$file_id);
         $response = $this->getResponseForDifferentUser($request);
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testAttachFileToPostArtifact() {
+    public function testAttachFileToPostArtifact()
+    {
         $post_resource = json_encode($this->third_file);
         $request  = $this->client->post('artifact_temporary_files', null, $post_resource);
         $response = $this->getResponse($request);
@@ -299,7 +311,8 @@ class ArtifactFilesTest extends ArtifactFileBase
     /**
      * @depends testAttachFileToPostArtifact
      */
-    public function testAttachementHasHTMLURL(array $parameters) {
+    public function testAttachementHasHTMLURL(array $parameters)
+    {
         $response = $this->getResponse($this->client->get('artifacts/' . $parameters['artifact_id']));
         $artifact = $response->json();
 
@@ -319,15 +332,18 @@ class ArtifactFilesTest extends ArtifactFileBase
         $this->assertNull($preview_url);
     }
 
-    private function getPreviewUrl($files) {
+    private function getPreviewUrl($files)
+    {
         return $files[0]['html_preview_url'];
     }
 
-    private function getHTMLUrl($files) {
+    private function getHTMLUrl($files)
+    {
         return $files[0]['html_url'];
     }
 
-    private function getAttachementFieldValues($values, $parameters) {
+    private function getAttachementFieldValues($values, $parameters)
+    {
         foreach ($values as $value) {
             if ($value['field_id'] == $parameters['field_id']) {
                 return $value;
@@ -338,7 +354,8 @@ class ArtifactFilesTest extends ArtifactFileBase
     /**
      * @depends testPutArtifactFileId
      */
-    public function testAttachFileToPutArtifact($file_id) {
+    public function testAttachFileToPutArtifact($file_id)
+    {
         $artifact_id = $this->story_artifact_ids[1];
 
         $request = $this->client->get('trackers/'. $this->user_stories_tracker_id);
@@ -386,7 +403,8 @@ class ArtifactFilesTest extends ArtifactFileBase
     /**
      * @depends testAttachFileToPutArtifact
      */
-    public function testArtifactAttachedFilesGetId($file_id) {
+    public function testArtifactAttachedFilesGetId($file_id)
+    {
         $request  = $this->client->get('artifact_files/' . $file_id);
         $response = $this->getResponse($request);
 
@@ -403,14 +421,16 @@ class ArtifactFilesTest extends ArtifactFileBase
     /**
      * @depends testAttachFileToPutArtifact
      */
-    public function testOptionsArtifactAttachedFilesId($file_id) {
+    public function testOptionsArtifactAttachedFilesId($file_id)
+    {
         $response = $this->getResponse($this->client->options('artifact_files/'.$file_id));
 
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testArtifactTemporaryFilesDeleteId() {
+    public function testArtifactTemporaryFilesDeleteId()
+    {
         $post_resource = json_encode($this->second_file);
         $request  = $this->client->post('artifact_temporary_files', null, $post_resource);
         $response = $this->getResponse($request);

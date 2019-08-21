@@ -21,7 +21,8 @@
 
 require_once('session.php');
 
-function util_microtime_float($offset = null) {
+function util_microtime_float($offset = null)
+{
     list($usec, $sec) = explode(" ", microtime());
     $now = ((float)$usec + (float)$sec);
     return ($offset !== null) ? ($now - $offset) : $now;
@@ -29,7 +30,8 @@ function util_microtime_float($offset = null) {
 
 // This function returns a string of the date $value with the format $format and
 // if this date is not set, return the default value $default_value
-function format_date($format,$value,$default_value = '-') {
+function format_date($format,$value,$default_value = '-')
+{
     if ( $value == 0 ) {
         return $default_value;
     } else {
@@ -48,7 +50,8 @@ function format_date($format,$value,$default_value = '-') {
 * @param string $date the date in the sys_datefmt format (Y-M-d H:i ex: 2004-Feb-03 16:13)
 * @return string the date in the user format, or null if the conversion was not possible or wrong
 */
-function util_sysdatefmt_to_userdateformat($date) {
+function util_sysdatefmt_to_userdateformat($date)
+{
 
     $user_date = null;
     $unix_timestamp = util_sysdatefmt_to_unixtime($date);
@@ -60,7 +63,8 @@ function util_sysdatefmt_to_userdateformat($date) {
     return $user_date;
 }
 
-function util_get_user_preferences_export_datefmt() {
+function util_get_user_preferences_export_datefmt()
+{
     $fmt = '';
     $u_pref = user_get_preference("user_csv_dateformat");
     switch ($u_pref) {
@@ -81,7 +85,8 @@ function util_get_user_preferences_export_datefmt() {
 // into a Unix time. if string is empty return 0 (Epoch time)
 // Returns a list with two values: the unix time and a boolean saying whether the conversion
 // went well (true) or bad (false)
-function util_importdatefmt_to_unixtime($date) {
+function util_importdatefmt_to_unixtime($date)
+{
     $time = 0;
     if (!$date||$date=="") {
         return array($time,false);
@@ -105,7 +110,8 @@ function util_importdatefmt_to_unixtime($date) {
 
 // Explode a date in the form of (m/d/Y H:i or d/m/Y H:i) into its a list of 5 parts (YYYY,MM,DD,H,i)
 // if DD and MM are not defined then default them to 1
-function util_xlsdatefmt_explode($date) {
+function util_xlsdatefmt_explode($date)
+{
 
     if ($u_pref = user_get_preference("user_csv_dateformat")) {
     } else {
@@ -142,7 +148,8 @@ function util_xlsdatefmt_explode($date) {
 // into a Unix time. if string is empty return 0 (Epoch time)
 // Returns a list with two values: the unix time and a boolean saying whether the conversion
 // went well (true) or bad (false)
-function util_date_to_unixtime($date) {
+function util_date_to_unixtime($date)
+{
     $time = 0;
     if (!$date||$date=="") {
         return array($time,false);
@@ -155,7 +162,8 @@ function util_date_to_unixtime($date) {
 
 // Explode a date in the form of (YYYY-MM-DD) into its a list of 3 parts (YYYY,MM,DD)
 // if DD and MM are not defined then default them to 1
-function util_date_explode($date) {
+function util_date_explode($date)
+{
     $res = preg_match("/\s*(\d+)-(\d+)-(\d+)/",$date,$match);
     if ($res == 0) {
     // if it doesn't work try YYYY-MM only
@@ -184,7 +192,8 @@ function util_date_explode($date) {
 // into a Unix time. if string is empty return 0 (Epoch time)
 // Returns a list with two values: the unix time and a boolean saying whether the conversion
 // went well (true) or bad (false)
-function util_sysdatefmt_to_unixtime($date) {
+function util_sysdatefmt_to_unixtime($date)
+{
     $time = 0;
     if (!$date||$date=="") {
         return array($time,false);
@@ -197,7 +206,8 @@ function util_sysdatefmt_to_unixtime($date) {
 
 // Explode a date in the form of (Y-M-d H:i) into its a list of 5 parts (YYYY,MM,DD,H,i)
 // if DD and MM are not defined then default them to 1
-function util_sysdatefmt_explode($date) {
+function util_sysdatefmt_explode($date)
+{
     $months = array("Jan"=>1, "Feb"=>2, "Mar"=>3, "Apr"=>4, "May"=>5, "Jun"=>6, "Jul"=>7, "Aug"=>8, "Sep"=>9, "Oct"=>10, "Nov"=>11, "Dec"=>12);
 
     $res = preg_match("/\s*(\d+)-(.+)-(\d+) (\d+):(\d+)/",$date,$match);
@@ -233,7 +243,8 @@ function util_sysdatefmt_explode($date) {
 }
 
 //accept now month either in format Jan-Dec or 1-12
-function getMonth($month,&$ok) {
+function getMonth($month,&$ok)
+{
     $months = array("Jan"=>1, "Feb"=>2, "Mar"=>3, "Apr"=>4, "May"=>5, "Jun"=>6, "Jul"=>7, "Aug"=>8, "Sep"=>9, "Oct"=>10, "Nov"=>11, "Dec"=>12);
     if (array_key_exists($month,$months)) {
         $ok = true;
@@ -254,13 +265,15 @@ function getMonth($month,&$ok) {
  * and Z ends the time.
  * ������ are milliseconds.
  */
-function util_ISO8601_to_date($ISO8601_date) {
+function util_ISO8601_to_date($ISO8601_date)
+{
     $date = str_replace("T", " ", $ISO8601_date);
     $date = substr($date, 0, 16);
     return $date;
 }
 
-function util_prep_string_for_sendmail($body) {
+function util_prep_string_for_sendmail($body)
+{
     $body=str_replace("\\","\\\\",$body);
     $body=str_replace("\"","\\\"",$body);
     $body=str_replace("\$","\\\$",$body);
@@ -268,7 +281,8 @@ function util_prep_string_for_sendmail($body) {
     return $body;
 }
 
-function util_unconvert_htmlspecialchars($string) {
+function util_unconvert_htmlspecialchars($string)
+{
     if (strlen($string) < 1) {
         return '';
     } else {
@@ -281,7 +295,8 @@ function util_unconvert_htmlspecialchars($string) {
     }
 }
 
-function util_result_column_to_array($result, $col=0) {
+function util_result_column_to_array($result, $col=0)
+{
     /*
         Takes a result set and turns the optional column into
         an array
@@ -299,14 +314,16 @@ function util_result_column_to_array($result, $col=0) {
     return $arr;
 }
 
-function result_column_to_array($result, $col=0) {
+function result_column_to_array($result, $col=0)
+{
     /*
         backwards compatibility
     */
     return util_result_column_to_array($result, $col);
 }
 
-function util_wrap_find_space($string,$wrap) {
+function util_wrap_find_space($string,$wrap)
+{
     //echo"\n";
     $start=$wrap-5;
     $try=1;
@@ -333,7 +350,8 @@ function util_wrap_find_space($string,$wrap) {
     return $pos;
 }
 
-function util_line_wrap ($text, $wrap = 80, $break = "\n") {
+function util_line_wrap($text, $wrap = 80, $break = "\n")
+{
     $paras = explode("\n", $text);
 
     $result = array();
@@ -359,7 +377,8 @@ function util_line_wrap ($text, $wrap = 80, $break = "\n") {
     return implode($break, $result);
 }
 
-function util_make_reference_links ($data,$group_id) {
+function util_make_reference_links($data,$group_id)
+{
     if(empty($data)) { return $data; }
     $reference_manager = ReferenceManager::instance();
     if ($group_id)
@@ -368,7 +387,8 @@ function util_make_reference_links ($data,$group_id) {
     return $data;
 }
 
-function util_user_link ($username) {
+function util_user_link($username)
+{
 
     global $Language;
     $hp = Codendi_HTMLPurifier::instance();
@@ -378,7 +398,8 @@ function util_user_link ($username) {
     return '<a href="/users/'.urlencode($username).'">'. $hp->purify(UserHelper::instance()->getDisplayNameFromUserName($username), CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
 }
 
-function util_user_nolink($username) {
+function util_user_nolink($username)
+{
     global $Language;
     $hp = Codendi_HTMLPurifier::instance();
     if ( $username == $Language->getText('global','none') || empty($username)) {
@@ -387,7 +408,8 @@ function util_user_nolink($username) {
     return $hp->purify(UserHelper::instance()->getDisplayNameFromUserName($username), CODENDI_PURIFIER_CONVERT_HTML) ;
 }
 
-function util_multi_user_link ($usernames) {
+function util_multi_user_link($usernames)
+{
 
     $users = explode(", ",$usernames);
     if ( count($users) > 1 ) {
@@ -406,7 +428,8 @@ function util_multi_user_link ($usernames) {
     }
 }
 
-function util_multi_user_nolink ($usernames) {
+function util_multi_user_nolink($usernames)
+{
 
     $users = explode(", ",$usernames);
     if ( count($users) > 1 ) {
@@ -425,7 +448,8 @@ function util_multi_user_nolink ($usernames) {
     }
 }
 
-function util_double_diff_array($arr1, $arr2) {
+function util_double_diff_array($arr1, $arr2)
+{
 
     // first transform both arrays in hashes
     $h1 = [];
@@ -454,11 +478,13 @@ function util_double_diff_array($arr1, $arr2) {
 }
 
 // Deprecated
-function get_priority_color ($index) {
+function get_priority_color($index)
+{
     return $GLOBALS['HTML']->getPriorityColor($index);
 }
 
-Function  ShowResultSet($result,$title="Untitled",$linkify=false)  {
+Function ShowResultSet($result,$title="Untitled",$linkify=false)
+{
     global $group_id,$HTML;
     /*
         Very simple, plain way to show a generic result set
@@ -515,7 +541,8 @@ Function  ShowResultSet($result,$title="Untitled",$linkify=false)  {
 
 // Clean up email address (remove starting and ending spaces),replace semicolon by comma and put to lower
 // case
-function util_cleanup_emails ($addresses) {
+function util_cleanup_emails($addresses)
+{
     $addresses=preg_replace("/\s+[,;]/",",", $addresses);
     $addresses=preg_replace("/[,;]\s+/",",", $addresses);
     $addresses=str_replace(";",",", $addresses);
@@ -524,7 +551,8 @@ function util_cleanup_emails ($addresses) {
 
 // Clean up email address (remove spaces...) and add @... if it is a simple
 // login name
-function util_normalize_email ($address) {
+function util_normalize_email($address)
+{
     if (strpos(':', $GLOBALS['sys_default_domain']) === false) {
         $host = $GLOBALS['sys_default_domain'];
     } else {
@@ -538,7 +566,8 @@ function util_normalize_email ($address) {
 }
 
 // Clean up email address (remove spaces...) and split comma or semi-colon separated emails
-function util_split_emails($addresses) {
+function util_split_emails($addresses)
+{
     $addresses = util_cleanup_emails($addresses);
     return preg_split('/,/D',$addresses);
 }
@@ -550,7 +579,8 @@ function util_split_emails($addresses) {
  *
  * @return Array containing two arrays one containing good addresses the other contain bad ones
  */
-function util_cleanup_email_list($addresses) {
+function util_cleanup_email_list($addresses)
+{
     $list             = util_split_emails($addresses);
     $cleanedAddresses = array();
     $badAddresses     = array();
@@ -565,13 +595,15 @@ function util_cleanup_email_list($addresses) {
 }
 
 // One Email Verification
-function validate_email ($address) {
+function validate_email($address)
+{
     $rule = new Rule_Email();
     return $rule->isValid($address);
 }
 
 // Verification of comma separated list of email addresses
-function validate_emails ($addresses) {
+function validate_emails($addresses)
+{
     $arr = util_split_emails($addresses);
     foreach ($arr as $addr) {
         if (! validate_email($addr)) {
@@ -589,7 +621,8 @@ function validate_emails ($addresses) {
      *
      * @return bool
      */
-function util_validateCCList(&$arr_email, &$message, $strict=false) {
+function util_validateCCList(&$arr_email, &$message, $strict=false)
+{
     global $Language;
     $valid = true;
     $message = "";
@@ -638,7 +671,8 @@ function util_validateCCList(&$arr_email, &$message, $strict=false) {
  *
  * @return String
  */
-function util_user_finder($ident, $strict=true) {
+function util_user_finder($ident, $strict=true)
+{
     $ident = trim($ident);
     $user = UserManager::instance()->findUser($ident);
     if ($user) {
@@ -669,7 +703,8 @@ function util_get_css_theme()
 // If no theme parameter is given, the current global theme is used.
 // If $absolute is true, then the generated path will be absolute,
 // otherwise it is relative to $sys_urlroot.
-function util_get_image_theme($fn, $the_theme=false, $absolute=false){
+function util_get_image_theme($fn, $the_theme=false, $absolute=false)
+{
     $path = util_get_dir_image_theme($the_theme);
     if ($absolute) {
         $path = $GLOBALS['sys_urlroot'] . $path;
@@ -689,7 +724,8 @@ function util_get_dir_image_theme($the_theme=false)
 }
 
 // Format a size in byte into a size in Mb
-function formatByteToMb($size_byte) {
+function formatByteToMb($size_byte)
+{
     return intval($size_byte/(1024*1024));
 }
 
@@ -702,7 +738,8 @@ function formatByteToMb($size_byte) {
  * @param       string  $system      'si' for SI, 'bi' for binary prefixes
  * @param       string  $retstring   return string format
  */
-function size_readable($size, $max = null, $system = 'bi', $retstring = 'auto') {
+function size_readable($size, $max = null, $system = 'bi', $retstring = 'auto')
+{
     // Pick units
     $systems['si']['prefix'] = array('B', 'K', 'MB', 'GB', 'TB', 'PB');
     $systems['si']['size']   = 1000;
@@ -739,7 +776,8 @@ function size_readable($size, $max = null, $system = 'bi', $retstring = 'auto') 
 
 // Return mailing list server URL
 // Used e.g. when inserting links in emails
-function get_list_server_url() {
+function get_list_server_url()
+{
     $request = HTTPRequest::instance();
     if ($request->isSecure()) {
         return "https://".$GLOBALS['sys_lists_host'];
@@ -754,7 +792,8 @@ function get_list_server_url() {
  *
  * @param       string  The name of the file being uploaded
  */
-function util_check_fileupload($filename) {
+function util_check_fileupload($filename)
+{
 
     /* Empty file is a valid file.
     This is because this function should be called
@@ -789,7 +828,8 @@ function util_check_fileupload($filename) {
 /**
  * Return the group name (i.e. project name) from the group_id
  */
-function util_get_group_name_from_id($group_id) {
+function util_get_group_name_from_id($group_id)
+{
     $sql = "SELECT group_name FROM groups WHERE group_id = ".db_ei($group_id);
     $result = db_query($sql);
     return db_result($result,0,0);
@@ -806,7 +846,8 @@ function util_get_group_name_from_id($group_id) {
  *
  * @return bool
  */
-function util_get_ids_from_aid($aid,&$art_group_id,&$atid,&$art_name) {
+function util_get_ids_from_aid($aid,&$art_group_id,&$atid,&$art_name)
+{
     $sql = "SELECT group_artifact_id FROM artifact WHERE artifact_id = ".db_ei($aid);
 
     $result = db_query($sql);
@@ -836,7 +877,8 @@ function util_get_ids_from_aid($aid,&$art_group_id,&$atid,&$art_name) {
  *
  * @return group_id, or 0 if group does not exist
  */
-function util_get_group_from_commit_id($cid) {
+function util_get_group_from_commit_id($cid)
+{
     $sql = "SELECT repositoryid FROM cvs_checkins WHERE commitid=".db_ei($cid);
     $res = db_query($sql);
     $repository_id = db_result($res, 0, 'repositoryid');
@@ -862,7 +904,8 @@ function util_get_group_from_commit_id($cid) {
  * @param string $key key of the wanted value
  * @return string the value
  */
-function getStringFromServer($key) {
+function getStringFromServer($key)
+{
     if(isset($_SERVER[$key])) {
             return $_SERVER[$key];
     }
@@ -875,7 +918,8 @@ function getStringFromServer($key) {
  * If $text begins with $prefixe ends with $suffixe then returns the
  * translated name found in page $pagename. Else returns $name.
 **/
-function util_translate($text, $prefixe, $suffixe, $pagename) {
+function util_translate($text, $prefixe, $suffixe, $pagename)
+{
     $new_text = $text;
     if (strpos($new_text, $prefixe) === 0 && strpos($new_text, $suffixe)+strlen($suffixe) === strlen($new_text)) {
         $new_text = $GLOBALS['Language']->getText($pagename, $new_text);
@@ -886,17 +930,20 @@ function util_translate($text, $prefixe, $suffixe, $pagename) {
 /**
  * Translate the name of an ugroup
 **/
-function util_translate_name_ugroup($name) {
+function util_translate_name_ugroup($name)
+{
     return util_translate($name, "ugroup_", "_name_key", "project_ugroup");
 }
 /**
  * Translate the description of an ugroup
 **/
-function util_translate_desc_ugroup($desc) {
+function util_translate_desc_ugroup($desc)
+{
     return util_translate($desc, "ugroup_", "_desc_key", "project_ugroup");
 }
 
-function util_return_to($url) {
+function util_return_to($url)
+{
     $request       = HTTPRequest::instance();
     $event_manager = EventManager::instance();
     $url_redirect  = new URLRedirect($event_manager);
@@ -908,7 +955,8 @@ function util_return_to($url) {
 /**
  * @deprecated Use DateHelper::distanceOfTimeInWords() instead
  */
-function util_distance_of_time_in_words($from_time, $to_time, $include_seconds = false) {
+function util_distance_of_time_in_words($from_time, $to_time, $include_seconds = false)
+{
     $distance_in_minutes = round((abs($to_time - $from_time))/60);
     $distance_in_seconds = round(abs($to_time - $from_time));
 
@@ -1006,7 +1054,8 @@ foreach($times as $key => $time) {
  * @param string $content
  * @return array
  */
-function http_split_header_body($content) {
+function http_split_header_body($content)
+{
     $body_header_separator = "\r\n\r\n";
     $end_of_headers        = strpos($content, $body_header_separator);
     $beginning_of_body     = $end_of_headers + strlen($body_header_separator);

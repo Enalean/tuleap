@@ -30,26 +30,31 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingResponse {
     /** @var Logger */
     private $logger;
 
-    public function __construct(Logger $logger) {
+    public function __construct(Logger $logger)
+    {
         $this->logger = $logger;
     }
 
-    public function abort() {
+    public function abort()
+    {
         $this->error('Aborting');
         exit(1);
     }
 
-    public function success() {
+    public function success()
+    {
         $this->info('Exiting with success status');
         exit(0);
     }
 
-    public function error($msg) {
+    public function error($msg)
+    {
         $this->logger->error(self::LOG_PREFIX. $msg);
         echo self::ANSI_RED .'[ERROR] '. self::ANSI_NOCOLOR . $msg . PHP_EOL;
     }
 
-    public function info($msg) {
+    public function info($msg)
+    {
         $this->logger->info(self::LOG_PREFIX. $msg);
         echo self::ANSI_GREEN .'[INFO] '. self::ANSI_NOCOLOR . $msg . PHP_EOL;
     }

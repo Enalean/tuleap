@@ -35,7 +35,8 @@ class Tracker_Rule_List_Factory {
      *
      * @param Tracker_Rule_List_Dao $dao
      */
-    public function __construct(Tracker_Rule_List_Dao $dao) {
+    public function __construct(Tracker_Rule_List_Dao $dao)
+    {
         $this->dao = $dao;
     }
 
@@ -48,7 +49,8 @@ class Tracker_Rule_List_Factory {
      * @param int $target_value
      * @return Tracker_Rule_List
      */
-    public function create($source_field_id, $target_field_id, $tracker_id, $source_value, $target_value) {
+    public function create($source_field_id, $target_field_id, $tracker_id, $source_value, $target_value)
+    {
         $list_rule = $this->populate(new Tracker_Rule_List(), $tracker_id, $source_field_id, $target_field_id, $source_value, $target_value);
         $rule_id = $this->insert($list_rule);
 
@@ -62,7 +64,8 @@ class Tracker_Rule_List_Factory {
      * @param Tracker_Rule_List $list_rule
      * @return bool
      */
-    public function delete(Tracker_Rule_List $list_rule) {
+    public function delete(Tracker_Rule_List $list_rule)
+    {
         return $this->dao->delete($list_rule);
     }
 
@@ -71,7 +74,8 @@ class Tracker_Rule_List_Factory {
      * @param int $rule_id
      * @return Tracker_Rule_List
      */
-    public function searchById($rule_id) {
+    public function searchById($rule_id)
+    {
         $rule = $this->dao->searchById($rule_id);
 
         if(! $rule) {
@@ -86,7 +90,8 @@ class Tracker_Rule_List_Factory {
      * @param int $tracker_id
      * @return array An array of Tracker_Rule_List objects
      */
-    public function searchByTrackerId($tracker_id) {
+    public function searchByTrackerId($tracker_id)
+    {
         $rules = $this->dao->searchByTrackerId($tracker_id);
 
         if(! $rules) {
@@ -112,7 +117,8 @@ class Tracker_Rule_List_Factory {
      *
      * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
+    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping)
+    {
         $dar = $this->dao->searchByTrackerId($from_tracker_id);
 
         // Retrieve rules of tracker from
@@ -156,7 +162,8 @@ class Tracker_Rule_List_Factory {
      * @param Tracker_FormElementFactory $form_element_factory
      * @param int $tracker_id
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping, $form_element_factory, $tracker_id) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping, $form_element_factory, $tracker_id)
+    {
         $rules = $this->searchByTrackerId($tracker_id);
         $list_rules = $root->addChild('list_rules');
 
@@ -189,7 +196,8 @@ class Tracker_Rule_List_Factory {
      * @param Tracker_Rule_List $list_rule
      * @return int The ID of the tracker_Rule created
      */
-    public function insert(Tracker_Rule_List $list_rule) {
+    public function insert(Tracker_Rule_List $list_rule)
+    {
         return $this->dao->insert($list_rule);
     }
 
@@ -204,7 +212,8 @@ class Tracker_Rule_List_Factory {
      * @param int $target_value
      * @return \Tracker_Rule_List
      */
-    private function populate(Tracker_Rule_List $list_rule, $tracker_id, $source_field_id, $target_field_id, $source_value, $target_value) {
+    private function populate(Tracker_Rule_List $list_rule, $tracker_id, $source_field_id, $target_field_id, $source_value, $target_value)
+    {
 
         $list_rule->setTrackerId($tracker_id)
                 ->setSourceFieldId($source_field_id)

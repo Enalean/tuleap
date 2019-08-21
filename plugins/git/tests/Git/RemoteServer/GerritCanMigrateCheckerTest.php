@@ -30,7 +30,8 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
     private $gerrit_server_factory;
     private $project;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->gerrit_server_factory = mock('Git_RemoteServer_GerritServerFactory');

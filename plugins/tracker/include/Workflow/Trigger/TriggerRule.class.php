@@ -36,10 +36,11 @@ class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormat
     private $triggers = array();
 
     public function __construct(
-            $id,
-            Tracker_Workflow_Trigger_FieldValue $target,
-            $condition,
-            array $triggers) {
+        $id,
+        Tracker_Workflow_Trigger_FieldValue $target,
+        $condition,
+        array $triggers
+    ) {
         $this->id        = $id;
         $this->target    = $target;
         $this->condition = $condition;
@@ -49,49 +50,56 @@ class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormat
     /**
      * @return Tracker
      */
-    public function getTargetTracker() {
+    public function getTargetTracker()
+    {
         return $this->getTarget()->getField()->getTracker();
     }
 
     /**
      * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
      * @return Tracker_Workflow_Trigger_FieldValue
      */
-    public function getTarget() {
+    public function getTarget()
+    {
         return $this->target;
     }
 
     /**
      * @return String
      */
-    public function getCondition() {
+    public function getCondition()
+    {
         return $this->condition;
     }
 
     /**
      * @return Tracker_Workflow_Trigger_FieldValue[]
      */
-    public function getTriggers() {
+    public function getTriggers()
+    {
         return $this->triggers;
     }
 
     /**
      * @param int $id
      */
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
     }
 
     /**
      * @return Array
      */
-    public function fetchFormattedForJson() {
+    public function fetchFormattedForJson()
+    {
         return array(
             'id'                => $this->getId(),
             'target'            => $this->getTarget()->fetchFormattedForJson(),
@@ -100,7 +108,8 @@ class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormat
         );
     }
 
-    private function fetchTriggersFormattedForJson() {
+    private function fetchTriggersFormattedForJson()
+    {
         $json = array();
         foreach ($this->triggers as $trigger) {
             $json[] = $trigger->fetchFormattedForJson();
@@ -113,7 +122,8 @@ class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormat
      *
      * @return String
      */
-    public function getAsChangesetComment() {
+    public function getAsChangesetComment()
+    {
         $trg = array();
         foreach ($this->getTriggers() as $trigger) {
             $trg[] = $trigger->getAsChangesetComment($this->getCondition());
@@ -123,7 +133,8 @@ class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormat
                '<ul><li>'.implode('</li><li>'.$this->getConditionOperatorLabel().' ', $trg).'</li></ul>';
     }
 
-    private function getConditionOperatorLabel() {
+    private function getConditionOperatorLabel()
+    {
         return $GLOBALS['Language']->getText('workflow_trigger_rules_processor', 'condition_operator_'.$this->getCondition());
     }
 }

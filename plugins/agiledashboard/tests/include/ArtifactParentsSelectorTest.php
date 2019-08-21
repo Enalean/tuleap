@@ -36,7 +36,8 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
     protected $epic_id     = 2;
     protected $epic2_id    = 3;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         '┝ corporation    ──────≫ theme
@@ -118,7 +119,8 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         $this->selector = new Planning_ArtifactParentsSelector($this->artifact_factory, $planning_factory, $this->milestone_factory, $hierarchy_factory);
     }
 
-    private function getArtifact($id, Tracker $tracker, array $ancestors) {
+    private function getArtifact($id, Tracker $tracker, array $ancestors)
+    {
         reset($ancestors);
         $parent = current($ancestors);
         $artifact = Mockery::mock(Tracker_Artifact::class);
@@ -132,41 +134,50 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         return array($artifact, $milestone);
     }
 
-    private function assertPossibleParentsEqual(array $expected, Tracker $parent_tracker, Tracker_Artifact $source_artifact) {
+    private function assertPossibleParentsEqual(array $expected, Tracker $parent_tracker, Tracker_Artifact $source_artifact)
+    {
         $this->assertEqual($expected, $this->selector->getPossibleParents($parent_tracker, $source_artifact, $this->user));
     }
 
     // nominal cases
-    public function itProvidesEpicsAssociatedToTheReleaseOfTheSprintWhenStoryIsLinkedToASprint() {
+    public function itProvidesEpicsAssociatedToTheReleaseOfTheSprintWhenStoryIsLinkedToASprint()
+    {
         $this->assertPossibleParentsEqual($this->epics_associated_to_release, $this->epic_tracker, $this->sprint);
     }
 
-    public function itProvidesThemesAssociatedToTheCorpOfTheReleaseOfTheSprintWhenEpicIsLinkedToASprint() {
+    public function itProvidesThemesAssociatedToTheCorpOfTheReleaseOfTheSprintWhenEpicIsLinkedToASprint()
+    {
         $this->assertPossibleParentsEqual($this->themes_associated_to_corp, $this->theme_tracker, $this->sprint);
     }
 
-    public function itProvidesThemesAssociatedToACorpWhenEpicIsLinkedToACorp() {
+    public function itProvidesThemesAssociatedToACorpWhenEpicIsLinkedToACorp()
+    {
         $this->assertPossibleParentsEqual($this->themes_associated_to_corp, $this->theme_tracker, $this->corp);
     }
 
-    public function itProvidesNothingWhenTheReleaseIsLinkedToAFaq() {
+    public function itProvidesNothingWhenTheReleaseIsLinkedToAFaq()
+    {
         $this->assertPossibleParentsEqual(array(), $this->product_tracker, $this->faq);
     }
 
     // edge cases
-    public function itProvidesItselfWhenReleaseIsLinkedToAProduct() {
+    public function itProvidesItselfWhenReleaseIsLinkedToAProduct()
+    {
         $this->assertPossibleParentsEqual(array($this->product), $this->product_tracker, $this->product);
     }
 
-    public function itProvidesSubReleasesOfTheCorpWhenSprintIsLinkedToACorp() {
+    public function itProvidesSubReleasesOfTheCorpWhenSprintIsLinkedToACorp()
+    {
         $this->assertPossibleParentsEqual($this->subreleases_of_corp, $this->release_tracker, $this->corp);
     }
 
-    public function itProvidesTheCorpOfTheProductOfTheReleaseWhenProductIsLinkedToARelease() {
+    public function itProvidesTheCorpOfTheProductOfTheReleaseWhenProductIsLinkedToARelease()
+    {
         $this->assertPossibleParentsEqual(array($this->corp), $this->corp_tracker, $this->release);
     }
 
-    public function itProvidesNothingWhenTheReleaseIsLinkedToAnEpic() {
+    public function itProvidesNothingWhenTheReleaseIsLinkedToAnEpic()
+    {
         $this->assertPossibleParentsEqual(array(), $this->product_tracker, $this->epic);
     }
 }

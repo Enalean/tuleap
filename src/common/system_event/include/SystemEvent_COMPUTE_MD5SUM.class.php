@@ -33,7 +33,8 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      *
      * @return void
      */
-    public function setLog($log) {
+    public function setLog($log)
+    {
         if (!isset($this->log) || $this->log == '') {
             $this->log = $log;
         } else {
@@ -50,7 +51,8 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      *
      * @return string
      */
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         $txt = '';
         $txt .= 'File ID: #'. $this->getIdFromParam($this->parameters);
         return $txt;
@@ -61,7 +63,8 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      *
      * @return bool
      */
-    public function process() {
+    public function process()
+    {
         $fileId = $this->getIdFromParam($this->parameters);
         if ($fileId > 0) {
             $fileFactory = $this->getFileFactory();
@@ -103,7 +106,8 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      *
      * @return String
      */
-    public function computeFRSMd5Sum($filePath) {
+    public function computeFRSMd5Sum($filePath)
+    {
         return PHP_BigFile::getMd5Sum($filePath);
     }
     /**
@@ -114,7 +118,8 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      *
      * @return bool
      */
-    public function updateDB($fileId, $md5Computed) {
+    public function updateDB($fileId, $md5Computed)
+    {
         $fileFactory = $this->getFileFactory();
         return $fileFactory->updateComputedMd5sum($fileId, $md5Computed);
     }
@@ -124,7 +129,8 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      *
      * @return FRSFileFactory
      */
-    function getFileFactory() {
+    function getFileFactory()
+    {
         return new FRSFileFactory();
     }
     /**
@@ -159,7 +165,8 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      *
      * @return bool
      */
-    function compareMd5Checksums($file) {
+    function compareMd5Checksums($file)
+    {
         $fileFactory = $this->getFileFactory();
         return $fileFactory->compareMd5Checksums($file->getComputedMd5(), $file->getReferenceMd5());
     }

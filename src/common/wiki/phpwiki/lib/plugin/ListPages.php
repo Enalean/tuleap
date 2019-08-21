@@ -35,20 +35,24 @@ require_once('lib/PageList.php');
 class WikiPlugin_ListPages
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("ListPages");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("List pages that are explicitly given as the pages argument.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.10 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array_merge
             (
              PageList::supportedArgs(),
@@ -66,7 +70,8 @@ extends WikiPlugin
     //   numbacklinks  : number of backlinks (links to the given page)
     //   numpagelinks  : number of forward links (links at the given page)
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         extract($args);
         // If the ratings table does not exist, or on dba it will break otherwise.
@@ -125,11 +130,13 @@ extends WikiPlugin
 
 // how many back-/forwardlinks for this page
 class _PageList_Column_ListPages_count extends _PageList_Column {
-    function __construct($field, $display, $backwards = false) {
+    function __construct($field, $display, $backwards = false)
+    {
         $this->_direction = $backwards;
         return parent::__construct($field, $display, 'center');
     }
-    function _getValue($page, &$revision_handle) {
+    function _getValue($page, &$revision_handle)
+    {
         $iter = $page->getLinks($this->_direction);
         $count = $iter->count();
         return $count;

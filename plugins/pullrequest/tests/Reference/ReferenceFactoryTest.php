@@ -33,7 +33,8 @@ class ReferenceFactoryTest extends TuleapTestCase
      */
     private $reference_factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->pull_request_factory = mock('Tuleap\PullRequest\Factory');
         $this->repository_factory   = mock('GitRepositoryFactory');
@@ -53,7 +54,8 @@ class ReferenceFactoryTest extends TuleapTestCase
         $this->repository   = aGitRepository()->withProject($project)->build();
     }
 
-    public function itCreatesAReference() {
+    public function itCreatesAReference()
+    {
         $keyword         = 'pr';
         $pull_request_id = 1;
 
@@ -68,7 +70,8 @@ class ReferenceFactoryTest extends TuleapTestCase
 
     }
 
-    public function itDoesNotCreateAReferenceIfPullRequestIdNotExisting() {
+    public function itDoesNotCreateAReferenceIfPullRequestIdNotExisting()
+    {
         $keyword         = 'pr';
         $pull_request_id = 1;
 
@@ -81,7 +84,8 @@ class ReferenceFactoryTest extends TuleapTestCase
         $this->assertNull($reference);
     }
 
-    public function itDoesNotCreateAReferenceIfRepositoryDoesNotExistAnymore() {
+    public function itDoesNotCreateAReferenceIfRepositoryDoesNotExistAnymore()
+    {
         $keyword         = 'pr';
         $pull_request_id = 1;
 
@@ -94,7 +98,8 @@ class ReferenceFactoryTest extends TuleapTestCase
         $this->assertNull($reference);
     }
 
-    public function itDoesNotCreateAReferenceIfReferenceAlreadyExistInProject() {
+    public function itDoesNotCreateAReferenceIfReferenceAlreadyExistInProject()
+    {
         $keyword         = 'pr';
         $pull_request_id = 1;
 

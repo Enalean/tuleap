@@ -114,7 +114,8 @@ class Planning_MilestoneController extends BaseController
         );
     }
 
-    private function redirectToCorrectPane() {
+    private function redirectToCorrectPane()
+    {
         $current_pane_identifier = $this->getActivePaneIdentifier();
         if ($current_pane_identifier !== $this->request->get('pane')) {
             $this->request->set('pane', $current_pane_identifier);
@@ -122,11 +123,13 @@ class Planning_MilestoneController extends BaseController
         }
     }
 
-    private function getActivePaneIdentifier() {
+    private function getActivePaneIdentifier()
+    {
         return $this->pane_factory->getActivePane($this->milestone)->getIdentifier();
     }
 
-    public function getHeaderOptions() {
+    public function getHeaderOptions()
+    {
         $this->generateBareMilestone();
         $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
 
@@ -175,7 +178,8 @@ class Planning_MilestoneController extends BaseController
         return $breadcrumbs;
     }
 
-    public function solveInconsistencies() {
+    public function solveInconsistencies()
+    {
         $milestone_artifact = Tracker_ArtifactFactory::instance()->getArtifactById($this->request->get('aid'));
         $milestone          = $this->milestone_factory->getMilestoneFromArtifact($milestone_artifact);
         $artifact_ids       = $this->request->get('inconsistent-artifacts-ids');
@@ -196,7 +200,8 @@ class Planning_MilestoneController extends BaseController
         $this->redirect($extractor->getRedirectToParameters($this->request, $this->project));
     }
 
-    private function inconsistentArtifactsIdsAreValid(array $artifact_ids) {
+    private function inconsistentArtifactsIdsAreValid(array $artifact_ids)
+    {
         $validator        = new Valid_UInt();
         $validator->required();
         $artifact_factory = Tracker_ArtifactFactory::instance();
@@ -209,7 +214,8 @@ class Planning_MilestoneController extends BaseController
         return true;
     }
 
-    private function generateBareMilestone() {
+    private function generateBareMilestone()
+    {
         $this->milestone = $this->milestone_factory->getBareMilestone(
             $this->getCurrentUser(),
             $this->project,

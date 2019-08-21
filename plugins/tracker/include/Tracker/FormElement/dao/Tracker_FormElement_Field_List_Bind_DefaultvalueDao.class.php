@@ -19,18 +19,21 @@
  */
 
 class Tracker_FormElement_Field_List_Bind_DefaultvalueDao extends DataAccessObject {
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_field_list_bind_defaultvalue';
     }
-    public function searchByFieldId($field_id) {
+    public function searchByFieldId($field_id)
+    {
         $field_id  = $this->da->escapeInt($field_id);
         $sql = "SELECT *
                 FROM $this->table_name
                 WHERE field_id = $field_id ";
         return $this->retrieve($sql);
     }
-    public function duplicate($from_field_id, $to_field_id, $value_mapping) {
+    public function duplicate($from_field_id, $to_field_id, $value_mapping)
+    {
         $from_field_id  = $this->da->escapeInt($from_field_id);
         $to_field_id    = $this->da->escapeInt($to_field_id);
         $sql = "INSERT INTO $this->table_name (field_id, value_id)
@@ -50,7 +53,8 @@ class Tracker_FormElement_Field_List_Bind_DefaultvalueDao extends DataAccessObje
         }
     }
 
-    public function save($field_id, $default_values) {
+    public function save($field_id, $default_values)
+    {
         $field_id = $this->da->escapeInt($field_id);
         if (!is_array($default_values)) {
             $default_values = array($default_values);

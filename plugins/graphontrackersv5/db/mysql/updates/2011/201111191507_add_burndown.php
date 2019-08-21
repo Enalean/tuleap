@@ -21,17 +21,20 @@
 
 class b201111191507_add_burndown extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add table to store burndown graphs
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE plugin_graphontrackersv5_scrum_burndown(
                   id int(11)  NOT NULL PRIMARY KEY ,
                   field_id int(11),
@@ -41,7 +44,8 @@ EOT;
         $this->db->createTable('plugin_graphontrackersv5_scrum_burndown', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('plugin_graphontrackersv5_scrum_burndown')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_graphontrackersv5_scrum_burndown table is missing');
         }

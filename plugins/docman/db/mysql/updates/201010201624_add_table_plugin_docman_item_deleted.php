@@ -20,17 +20,20 @@
 
 class b201010201624_add_table_plugin_docman_item_deleted extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add the table plugin_docman_item_deleted to delay deletion of items by introducing purge date in addittion to delete date.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = 'CREATE TABLE plugin_docman_item_deleted ('.
                      ' item_id INT(11) UNSIGNED NOT NULL,'.
                      ' parent_id INT(11) UNSIGNED NULL,'.
@@ -71,7 +74,8 @@ EOT;
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('plugin_docman_item_deleted')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_docman_item_deleted table is missing');
         }

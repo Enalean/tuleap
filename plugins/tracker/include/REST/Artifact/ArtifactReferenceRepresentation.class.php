@@ -34,7 +34,8 @@ class ArtifactReferenceRepresentation {
      */
     public $uri;
 
-    public function build($reference) {
+    public function build($reference)
+    {
         if ($reference instanceof Tracker_Artifact) {
             $this->id = JsonCast::toInt($reference->getId());
         } elseif (is_int($reference)) {

@@ -23,23 +23,28 @@ class MediawikiAdminPanePresenter {
     /** @var Project */
     protected $project;
 
-    public function __construct(Project $project) {
+    public function __construct(Project $project)
+    {
         $this->project = $project;
     }
 
-    public function admin_title() {
+    public function admin_title()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'admin_title');
     }
 
-    public function permissions_label() {
+    public function permissions_label()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'permissions_label');
     }
 
-    public function language_label() {
+    public function language_label()
+    {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'language_label');
     }
 
-    public function group_id() {
+    public function group_id()
+    {
         return $this->project->getID();
     }
 }

@@ -26,7 +26,8 @@ use Tuleap\Dashboard\User\UserDashboardController;
 class Docman_Widget_MyEmbedded extends Docman_Widget_Embedded
 {
 
-    public function __construct($plugin_path) {
+    public function __construct($plugin_path)
+    {
         parent::__construct(
             'plugin_docman_my_embedded',
             UserManager::instance()->getCurrentUser()->getId(),

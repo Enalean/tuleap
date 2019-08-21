@@ -36,11 +36,13 @@ class Cardwall_MappingCollection implements IteratorAggregate {
     /**
      * @return Iterator
      */
-    public function getIterator() {
+    public function getIterator()
+    {
         return new ArrayObject($this->mappings);
     }
 
-    public function add(Cardwall_Mapping $mapping) {
+    public function add(Cardwall_Mapping $mapping)
+    {
         $this->mappings[]                                 = $mapping;
         $this->mappings_by_field_id[$mapping->field_id][] = $mapping;
     }
@@ -52,7 +54,8 @@ class Cardwall_MappingCollection implements IteratorAggregate {
      * @param int $field_id
      * @return array of int
      */
-    public function getSwimLineValues($field_id) {
+    public function getSwimLineValues($field_id)
+    {
         $swim_line_values = array();
         foreach ($this->getMappingsByFieldId($field_id) as $mapping) {
             $swim_line_values[] = $mapping->column_id;
@@ -63,7 +66,8 @@ class Cardwall_MappingCollection implements IteratorAggregate {
     /**
      * @return array of Cardwall_Mapping
      */
-    private function getMappingsByFieldId($field_id) {
+    private function getMappingsByFieldId($field_id)
+    {
         if (isset($this->mappings_by_field_id[$field_id])) {
             return $this->mappings_by_field_id[$field_id];
         }

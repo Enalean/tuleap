@@ -29,7 +29,8 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
      */
     private $event_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->default_xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <project>
@@ -169,7 +170,8 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         );
     }
 
-    public function itStoresAllTheCardwallOnTop() {
+    public function itStoresAllTheCardwallOnTop()
+    {
         $this->event_manager->shouldReceive('processEvent');
 
         expect($this->cardwall_ontop_dao)->enable()->count(2);
@@ -178,7 +180,8 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
 
-    public function itCreatesTheFreestyleColumns() {
+    public function itCreatesTheFreestyleColumns()
+    {
         $this->event_manager->shouldReceive('processEvent');
 
         expect($this->column_dao)->createWithcolor()->count(4);
@@ -190,7 +193,8 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
 
-    public function itCreatesTheFreestyleColumnsWithColor() {
+    public function itCreatesTheFreestyleColumnsWithColor()
+    {
         $this->event_manager->shouldReceive('processEvent');
 
         stub($this->column_dao)->createWithcolor()->returnsAt(0, 20);
@@ -210,7 +214,8 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         $this->cardwall_config_xml_import->import($this->enhanced_xml_input);
     }
 
-    public function itDoesNotCreateMappingAndMappingValueinDefaultXML() {
+    public function itDoesNotCreateMappingAndMappingValueinDefaultXML()
+    {
         $this->event_manager->shouldReceive('processEvent');
 
         expect($this->mapping_field_dao)->create()->never();
@@ -219,7 +224,8 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
 
-    public function itCreatesMappingAndMappingValue() {
+    public function itCreatesMappingAndMappingValue()
+    {
         $this->event_manager->shouldReceive('processEvent');
 
         stub($this->column_dao)->createWithcolor()->returnsAt(0, 20);
@@ -238,7 +244,8 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         $this->cardwall_config_xml_import->import($this->enhanced_xml_input);
     }
 
-    public function itProcessesANewEventIfAllCardwallAreEnabled() {
+    public function itProcessesANewEventIfAllCardwallAreEnabled()
+    {
         $this->event_manager->shouldReceive('processEvent')->with(
             Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
             array(
@@ -253,7 +260,8 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
 
-    public function itDoesNotProcessAnEventIfAtLeastOneCardwallCannotBeEnabledAndThrowsAnException() {
+    public function itDoesNotProcessAnEventIfAtLeastOneCardwallCannotBeEnabledAndThrowsAnException()
+    {
         $cardwall_ontop_dao         = stub('Cardwall_OnTop_Dao')->enable()->returns(false);
         $cardwall_config_xml_import = new CardwallConfigXmlImport(
             $this->group_id,
@@ -275,7 +283,8 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         $cardwall_config_xml_import->import($this->default_xml_input);
     }
 
-    public function itThrowsAnExceptionIfXmlDoesNotMatchRNG() {
+    public function itThrowsAnExceptionIfXmlDoesNotMatchRNG()
+    {
         $xml_validator  = stub('XML_RNGValidator')->validate()->throws(new XML_ParseException('', array(), array()));
 
         $cardwall_config_xml_import = new CardwallConfigXmlImport(

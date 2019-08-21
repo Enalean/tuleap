@@ -47,19 +47,23 @@ abstract class Tracker_Permission_Command {
     /** @var Tracker_Permission_Command */
     private $next_command;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setNextCommand(new Tracker_Permission_ChainOfResponsibility_DoNothing());
     }
 
-    public function setNextCommand(Tracker_Permission_Command $next_command) {
+    public function setNextCommand(Tracker_Permission_Command $next_command)
+    {
         $this->next_command = $next_command;
     }
 
-    public function getNextCommand() {
+    public function getNextCommand()
+    {
         return $this->next_command;
     }
 
-    public function applyNextCommand(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter) {
+    public function applyNextCommand(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter)
+    {
         $this->next_command->apply($request, $permissions_setter);
     }
 
@@ -78,18 +82,21 @@ abstract class Tracker_Permission_Command {
         }
     }
 
-    private function requestContainsNonAdminPermissions(Tracker_Permission_PermissionRequest $request, $ugroup_id) {
+    private function requestContainsNonAdminPermissions(Tracker_Permission_PermissionRequest $request, $ugroup_id)
+    {
         return in_array($request->getPermissionType($ugroup_id), self::$non_admin_permissions);
     }
 
-    private function revokeNonAdmin(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id) {
+    private function revokeNonAdmin(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id)
+    {
         $permission_setter->revokeAccess(Tracker::PERMISSION_FULL, $ugroup_id);
         $permission_setter->revokeAccess(Tracker::PERMISSION_ASSIGNEE, $ugroup_id);
         $permission_setter->revokeAccess(Tracker::PERMISSION_SUBMITTER, $ugroup_id);
         $permission_setter->revokeAccess(Tracker::PERMISSION_SUBMITTER_ONLY, $ugroup_id);
     }
 
-    protected function warnAlreadyHaveFullAccess(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id) {
+    protected function warnAlreadyHaveFullAccess(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id)
+    {
         // eventually do something here
     }
 }

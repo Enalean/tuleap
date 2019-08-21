@@ -174,34 +174,41 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         );
     }
 
-    public function setProjectId($id) {
+    public function setProjectId($id)
+    {
         $this->group_id = $id;
     }
 
-    protected function getProjectId() {
+    protected function getProjectId()
+    {
         if (!$this->group_id) {
             $this->group_id = $this->tracker->getGroupId();
         }
         return $this->group_id;
     }
 
-    public function registerInSession() {
+    public function registerInSession()
+    {
         $this->report_session = new Tracker_Report_Session($this->id);
     }
 
-    public function getReportSession() {
+    public function getReportSession()
+    {
         return $this->report_session;
     }
 
-    public function setIsInExpertMode($is_in_expert_mode) {
+    public function setIsInExpertMode($is_in_expert_mode)
+    {
         $this->is_in_expert_mode = $is_in_expert_mode;
     }
 
-    public function setExpertQuery($expert_query) {
+    public function setExpertQuery($expert_query)
+    {
         $this->expert_query = $expert_query;
     }
 
-    protected function getCriteriaDao() {
+    protected function getCriteriaDao()
+    {
         return new Tracker_Report_CriteriaDao();
     }
 
@@ -220,7 +227,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     }
 
     /** @return Tracker_Report_Criteria[] */
-    public function getCriteria() {
+    public function getCriteria()
+    {
         $session_criteria = null;
         if (isset($this->report_session)) {
             $session_criteria = &$this->report_session->getCriteria();
@@ -277,7 +285,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return $this->criteria;
     }
 
-    public function getCriteriaFromDb() {
+    public function getCriteriaFromDb()
+    {
         $this->criteria = array();
         $ff = $this->getFormElementFactory();
         //retrieve data from database
@@ -297,7 +306,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return $this->criteria;
     }
 
-    public function getFormElementFactory() {
+    public function getFormElementFactory()
+    {
         return Tracker_FormElementFactory::instance();
     }
     /**
@@ -306,7 +316,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * @return Tracker_Report_Criteria
      * @TODO refactor : must be renamed after addCriterion, and return the current criterion
      */
-    protected function setCriteria($field_id) {
+    protected function setCriteria($field_id)
+    {
         $ff = $this->getFormElementFactory();
         $formElement = $ff->getFormElementById($field_id);
         $this->criteria[$field_id] = new Tracker_Report_Criteria(
@@ -320,7 +331,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     }
 
     protected $current_user;
-    protected function getCurrentUser() {
+    protected function getCurrentUser()
+    {
         if (!$this->current_user) {
             $this->current_user = UserManager::instance()->getCurrentUser();
         }
@@ -328,7 +340,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     }
 
     protected $permissions_manager;
-    private function getPermissionsManager() {
+    private function getPermissionsManager()
+    {
         if (!$this->permissions_manager) {
             $this->permissions_manager = PermissionsManager::instance();
         }
@@ -336,7 +349,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     }
 
     protected $matching_ids;
-    public function getMatchingIds($request = null, $use_data_from_db = false) {
+    public function getMatchingIds($request = null, $use_data_from_db = false)
+    {
         if ($this->is_in_expert_mode) {
             return $this->getMatchingIdsFromExpertQuery();
         } else {
@@ -352,7 +366,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      *
      * @return Array
      */
-    private function getLastChangesetIdByArtifactId($matching_ids) {
+    private function getLastChangesetIdByArtifactId($matching_ids)
+    {
         $artifact_ids       = explode(',', $matching_ids['id']);
         $last_changeset_ids = explode(',', $matching_ids['last_changeset_id']);
 
@@ -373,7 +388,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      *
      * @return Array
      */
-    private function implodeMatchingIds($formattedMatchingIds) {
+    private function implodeMatchingIds($formattedMatchingIds)
+    {
         $matchingIds['id']                = '';
         $matchingIds['last_changeset_id'] = '';
         foreach ($formattedMatchingIds as $artifactId => $lastChangesetId) {
@@ -435,21 +451,24 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     /**
      * @return bool true if the report has been modified since the last checkout
      */
-    public function isObsolete() {
+    public function isObsolete()
+    {
         return isset($this->report_session) && $this->updated_at && ($this->report_session->get('checkout_date') < $this->updated_at);
     }
 
     /**
      * @return string html the user who has modified the report. Or false if the report has not been modified
      */
-    public function getLastUpdaterUserName() {
+    public function getLastUpdaterUserName()
+    {
         if ($this->isObsolete()) {
             return UserHelper::instance()->getLinkOnUserFromUserId($this->updated_by);
         }
         return '';
     }
 
-    protected function displayHeader(Tracker_IFetchTrackerSwitcher $layout, $request, $current_user, $report_can_be_modified) {
+    protected function displayHeader(Tracker_IFetchTrackerSwitcher $layout, $request, $current_user, $report_can_be_modified)
+    {
         $header_builder = new Tracker_Report_HeaderRenderer(
             Tracker_ReportFactory::instance(),
             Codendi_HTMLPurifier::instance(),
@@ -458,7 +477,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $header_builder->displayHeader($layout, $request, $current_user, $this, $report_can_be_modified);
     }
 
-    public function nbPublicReport($reports) {
+    public function nbPublicReport($reports)
+    {
         $i = 0;
         foreach ($reports as $report) {
             if ($report->user_id == null) {
@@ -468,7 +488,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return $i;
     }
 
-    public function fetchDisplayQuery(array $criteria, array $additional_criteria, $report_can_be_modified, PFUser $current_user) {
+    public function fetchDisplayQuery(array $criteria, array $additional_criteria, $report_can_be_modified, PFUser $current_user)
+    {
         $div_class = '';
         if ($this->is_in_expert_mode) {
             $div_class = 'tracker-report-query-undisplayed';
@@ -599,7 +620,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return $html;
     }
 
-    private function getAddCriteriaDropdown($used) {
+    private function getAddCriteriaDropdown($used)
+    {
         $add_criteria_presenter = new Templating_Presenter_ButtonDropdownsMini(
             'tracker_report_add_criteria_dropdown',
             $GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_criteria'),
@@ -610,7 +632,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return $this->getTemplateRenderer()->renderToString('button_dropdowns',  $add_criteria_presenter);
     }
 
-    public function getFieldsAsDropdownOptions($id_prefix, array $used, $dropdown_type) {
+    public function getFieldsAsDropdownOptions($id_prefix, array $used, $dropdown_type)
+    {
         $fields_for_criteria = array();
         $fields_for_sort     = array();
 
@@ -735,7 +758,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return new ArtifactLinksUsageDao();
     }
 
-    private function fieldAllowsCustomColumnForTableReport(Tracker_FormElement_Field $field, $dropdown_type) {
+    private function fieldAllowsCustomColumnForTableReport(Tracker_FormElement_Field $field, $dropdown_type)
+    {
         return $this->getArtifactLinksUsageUpdater()->isProjectAllowedToUseArtifactLinkTypes($this->getTracker()->getProject()) &&
             $dropdown_type === self::TYPE_TABLE &&
             $this->getFormElementFactory()->getType($field) === Tracker_FormElement_Field_ArtifactLink::TYPE;
@@ -744,7 +768,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     /**
      * @return NaturePresenterFactory
      */
-    private function getNaturePresenterFactory() {
+    private function getNaturePresenterFactory()
+    {
         return new NaturePresenterFactory(new NatureDao(), $this->getArtifactLinksUsageDao());
     }
 
@@ -756,7 +781,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return new ArtifactLinksUsageUpdater($this->getArtifactLinksUsageDao());
     }
 
-    public function getTemplateRenderer() {
+    public function getTemplateRenderer()
+    {
         return TemplateRendererFactory::build()->getRenderer(
             array(
                 TRACKER_TEMPLATE_DIR.'/report',
@@ -765,7 +791,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         );
     }
 
-    public function display(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
+    public function display(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
+    {
         $link_artifact_id       = (int)$request->get('link-artifact-id');
         $report_can_be_modified = !$link_artifact_id;
 
@@ -937,7 +964,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         }
     }
 
-    public function getRenderers() {
+    public function getRenderers()
+    {
         return Tracker_Report_RendererFactory::instance()->getReportRenderersByReport($this);
     }
 
@@ -953,7 +981,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return new SizeValidatorVisitor($report_config->getExpertQueryLimit());
     }
 
-    protected function orderRenderersByRank($renderers) {
+    protected function orderRenderersByRank($renderers)
+    {
         $array_rank = array();
         foreach($renderers as $field_id => $properties) {
             $array_rank[$field_id] = $properties->rank;
@@ -966,11 +995,13 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return  $renderers_sort;
     }
 
-    protected function getRendererFactory() {
+    protected function getRendererFactory()
+    {
         return Tracker_Report_RendererFactory::instance();
     }
 
-    protected function _fetchAddCriteria($used) {
+    protected function _fetchAddCriteria($used)
+    {
         $html = '';
 
         $options = '';
@@ -993,7 +1024,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      *
      * @return bool
      */
-    public function isPublic() {
+    public function isPublic()
+    {
         return empty($this->user_id);
     }
 
@@ -1004,7 +1036,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * @param PFUser $user the user who wants to update the report
      * @return bool
      */
-    public function userCanUpdate($user) {
+    public function userCanUpdate($user)
+    {
         if (! $this->isBelongingToATracker()) {
             return false;
         }
@@ -1017,19 +1050,22 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         }
     }
 
-    private function isBelongingToATracker() {
+    private function isBelongingToATracker()
+    {
         return $this->getTracker() != null;
     }
 
     protected $tracker;
-    public function getTracker() {
+    public function getTracker()
+    {
         if (!$this->tracker) {
             $this->tracker = TrackerFactory::instance()->getTrackerById($this->tracker_id);
         }
         return $this->tracker;
     }
 
-    public function setTracker(Tracker $tracker) {
+    public function setTracker(Tracker $tracker)
+    {
         $this->tracker    = $tracker;
         $this->tracker_id = $tracker->getId();
     }
@@ -1037,7 +1073,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     /**
      * hide or show the criteria
      */
-    public function toggleQueryDisplay() {
+    public function toggleQueryDisplay()
+    {
         $this->is_query_displayed = !$this->is_query_displayed;
         return $this;
     }
@@ -1046,7 +1083,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * Remove a formElement from criteria
      * @param int $formElement_id the formElement used for the criteria
      */
-    public function removeCriteria($formElement_id) {
+    public function removeCriteria($formElement_id)
+    {
         $criteria = $this->getCriteria();
         if (isset($criteria[$formElement_id])) {
             if ($this->getCriteriaDao()->delete($this->id, $formElement_id)) {
@@ -1064,12 +1102,14 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      *
      * @return int the id of the new criteria
      */
-    public function addCriteria( Tracker_Report_Criteria $criteria ) {
+    public function addCriteria( Tracker_Report_Criteria $criteria )
+    {
         $id = $this->getCriteriaDao()->create($this->id, $criteria->field->id, $criteria->is_advanced);
         return $id;
     }
 
-    public function deleteAllCriteria() {
+    public function deleteAllCriteria()
+    {
         $this->getCriteriaDao()->deleteAll($this->id);
     }
 
@@ -1077,7 +1117,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * Toggle the state 'is_advanced' of a criteria
      * @param int $formElement_id the formElement used for the criteria
      */
-    public function toggleAdvancedCriterion($formElement_id) {
+    public function toggleAdvancedCriterion($formElement_id)
+    {
         $advanced = 1;
         $session_criterion = $this->report_session->getCriterion($formElement_id);
         if ( !empty($session_criterion['is_advanced']) ) {
@@ -1092,7 +1133,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * NOTICE : if a criterion does not exist it is not created
      * @param array $criteria_values
      */
-    public function updateCriteriaValues($criteria_values) {
+    public function updateCriteriaValues($criteria_values)
+    {
         $ff = $this->getFormElementFactory();
         foreach($criteria_values as $formElement_id => $new_value) {
             $session_criterion = $this->report_session->getCriterion($formElement_id);
@@ -1104,7 +1146,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         }
     }
 
-    public function updateAdditionalCriteriaValues($additional_criteria_values) {
+    public function updateAdditionalCriteriaValues($additional_criteria_values)
+    {
         foreach($additional_criteria_values as $key => $new_value) {
             $additional_criterion = new Tracker_Report_AdditionalCriterion($key, $new_value);
             $this->report_session->storeAdditionalCriterion($additional_criterion);
@@ -1117,7 +1160,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * @param Request $request
      * @return ReportRenderer
      */
-    public function processRendererRequest($renderer_id, Tracker_IDisplayTrackerLayout $layout, $request, $current_user, $store_in_session = true) {
+    public function processRendererRequest($renderer_id, Tracker_IDisplayTrackerLayout $layout, $request, $current_user, $store_in_session = true)
+    {
         $rrf = Tracker_Report_RendererFactory::instance();
         if ($renderer = $rrf->getReportRendererByReportAndId($this, $renderer_id, $store_in_session)) {
             $renderer->process($layout, $request, $current_user);
@@ -1128,7 +1172,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * Delete a renderer from the report
      * @param mixed the renderer to remove (Tracker_Report_Renderer or the id as int)
      */
-    public function deleteRenderer($renderer) {
+    public function deleteRenderer($renderer)
+    {
         $rrf = Tracker_Report_RendererFactory::instance();
         if (!is_a($renderer, 'Tracker_Report_Renderer')) {
             $renderer_id = (int)$renderer;
@@ -1148,7 +1193,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * @param mixed $renderer the renderer to remove (Tracker_Report_Renderer or the id as int)
      * @param int   $position the new position
      */
-    public function moveRenderer($renderer, $position) {
+    public function moveRenderer($renderer, $position)
+    {
         $rrf = Tracker_Report_RendererFactory::instance();
         if (!is_a($renderer, 'Tracker_Report_Renderer')) {
             $renderer_id = (int)$renderer;
@@ -1168,12 +1214,14 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      *
      * @return int the id of the new renderer
      */
-    public function addRenderer($name, $description, $type) {
+    public function addRenderer($name, $description, $type)
+    {
         $rrf = Tracker_Report_RendererFactory::instance();
         return $rrf->create($this, $name, $description, $type);
     }
 
-    public function addRendererInSession($name, $description, $type) {
+    public function addRendererInSession($name, $description, $type)
+    {
         $rrf = Tracker_Report_RendererFactory::instance();
         return $rrf->createInSession($this, $name, $description, $type);
     }
@@ -1486,7 +1534,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         }
     }
 
-    public function setDefaultReport() {
+    public function setDefaultReport()
+    {
         $default_report = Tracker_ReportFactory::instance()->getDefaultReportByTrackerId($this->tracker_id);
         if ($default_report) {
             $default_report->is_default = '0';
@@ -1498,7 +1547,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     /**
      * NOTICE: make sure you are in the correct session namespace
      */
-    public function saveCriteria() {
+    public function saveCriteria()
+    {
         //populate $this->criteria
         $this->getCriteria();
         //Delete criteria value
@@ -1527,7 +1577,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         }
     }
 
-    public function saveAdditionalCriteria() {
+    public function saveAdditionalCriteria()
+    {
         $additional_criteria = $this->getAdditionalCriteria();
 
         $this->saveCommentCriterion($additional_criteria);
@@ -1556,7 +1607,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      *
      * @return void
      */
-    public function saveRenderers() {
+    public function saveRenderers()
+    {
         $rrf = Tracker_Report_RendererFactory::instance();
 
         //Get the renderers in the session and in the db
@@ -1588,7 +1640,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     /**
      * Delete the report and its renderers
      */
-    protected function delete() {
+    protected function delete()
+    {
         //Delete user preferences
         $dao = new UserPreferencesDao();
         $dao->deleteByPreferenceNameAndValue('tracker_'. $this->tracker_id .'_last_report', $this->id);
@@ -1613,7 +1666,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         EventManager::instance()->processEvent($event);
     }
 
-    public function duplicate($from_report, $formElement_mapping) {
+    public function duplicate($from_report, $formElement_mapping)
+    {
         //Duplicate criteria
         Tracker_Report_CriteriaFactory::instance()->duplicate($from_report, $this, $formElement_mapping);
 
@@ -1626,7 +1680,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      *
      * @param SimpleXMLElement $root the node to which the Report is attached (passed by reference)
      */
-    public function exportToXml(SimpleXMLElement $roott, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $roott, $xmlMapping)
+    {
         $root = $roott->addChild('report');
         // if old ids are important, modify code here
         if (false) {
@@ -1672,22 +1727,26 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     /**
      * @return Tracker_ReportDao
      */
-    public function getDao() {
+    public function getDao()
+    {
         if (!$this->dao) {
             $this->dao = new Tracker_ReportDao();
         }
         return $this->dao;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function getAdditionalCriteria() {
+    public function getAdditionalCriteria()
+    {
         $session_additional_criteria = null;
         if (isset($this->report_session)) {
             $session_additional_criteria = $this->report_session->getAdditionalCriteria();
@@ -1759,7 +1818,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         );
     }
 
-    private function fetchUpdateRendererForm(Tracker_Report_Renderer $renderer) {
+    private function fetchUpdateRendererForm(Tracker_Report_Renderer $renderer)
+    {
         $hp = Codendi_HTMLPurifier::instance();
 
         $update_renderer  = '';
@@ -1794,7 +1854,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return $update_renderer;
     }
 
-    private function fetchAddRendererForm($current_renderer) {
+    private function fetchAddRendererForm($current_renderer)
+    {
         $hp = Codendi_HTMLPurifier::instance();
 
         $current_renderer_id = ($current_renderer) ? (int)$current_renderer->id : '';

@@ -60,7 +60,8 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
     /** @var Tracker_FormElement_Field_Value_ArtifactLinkDao */
     private $dao;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->field             = mock('Tracker_FormElement_Field_ArtifactLink');
@@ -129,12 +130,14 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
         Tracker_ArtifactFactory::setInstance($this->artifact_factory);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         Tracker_ArtifactFactory::clearInstance();
         parent::tearDown();
     }
 
-    public function itRemovesACrossReference() {
+    public function itRemovesACrossReference()
+    {
         $artifact = stub('Tracker_Artifact')->getTracker()->returns($this->tracker);
 
         $value = array(
@@ -160,7 +163,8 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
         );
     }
 
-    public function itAddsACrossReference() {
+    public function itAddsACrossReference()
+    {
         $artifact = stub('Tracker_Artifact')->getTracker()->returns($this->tracker);
 
         $value = array(
@@ -185,7 +189,8 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
         );
     }
 
-    public function itCallsOnlyOneTimeCreateInDBIfAllArtifactsAreInTheSameTracker() {
+    public function itCallsOnlyOneTimeCreateInDBIfAllArtifactsAreInTheSameTracker()
+    {
         $artifact = mock('Tracker_Artifact');
 
         $value = array(
@@ -209,7 +214,8 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
         );
     }
 
-    public function itUsesArtifactLinkNature() {
+    public function itUsesArtifactLinkNature()
+    {
         $artifact = mock('Tracker_Artifact');
 
         $value = array(
@@ -233,7 +239,8 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
         );
     }
 
-    public function itUsesDefaultArtifactLinkNature() {
+    public function itUsesDefaultArtifactLinkNature()
+    {
         $artifact = mock('Tracker_Artifact');
 
         $value = array(
@@ -257,7 +264,8 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
         );
     }
 
-    public function itUsesIsChildArtifactLinkTypeIfAHierarchyIsDefined() {
+    public function itUsesIsChildArtifactLinkTypeIfAHierarchyIsDefined()
+    {
         $artifact = mock('Tracker_Artifact');
 
         $value = array(
@@ -282,7 +290,8 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
         );
     }
 
-    public function itDoesNotUseIsChildArtifactLinkTypeIfTargetTrackerIsNotChildInHierarchy() {
+    public function itDoesNotUseIsChildArtifactLinkTypeIfTargetTrackerIsNotChildInHierarchy()
+    {
         $artifact = mock('Tracker_Artifact');
 
         $value = array(

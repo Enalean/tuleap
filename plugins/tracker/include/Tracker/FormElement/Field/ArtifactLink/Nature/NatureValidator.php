@@ -28,12 +28,14 @@ class NatureValidator {
     /** @var NatureDao */
     private $dao;
 
-    public function __construct(NatureDao $dao) {
+    public function __construct(NatureDao $dao)
+    {
         $this->dao = $dao;
     }
 
     /** @throws InvalidNatureParameterException */
-    public function checkShortname($shortname) {
+    public function checkShortname($shortname)
+    {
         if (! $shortname) {
             throw new InvalidNatureParameterException(
                 $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'missing_shortname')
@@ -47,7 +49,8 @@ class NatureValidator {
     }
 
     /** @throws InvalidNatureParameterException */
-    public function checkForwardLabel($forward_label) {
+    public function checkForwardLabel($forward_label)
+    {
         if (! $forward_label) {
             throw new InvalidNatureParameterException(
                 $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'missing_forward_label')
@@ -56,7 +59,8 @@ class NatureValidator {
     }
 
     /** @throws InvalidNatureParameterException */
-    public function checkReverseLabel($reverse_label) {
+    public function checkReverseLabel($reverse_label)
+    {
         if (! $reverse_label) {
             throw new InvalidNatureParameterException(
                 $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'missing_reverse_label')
@@ -64,7 +68,8 @@ class NatureValidator {
         }
     }
 
-    public function checkIsNotOrHasNotBeenUsed($shortname) {
+    public function checkIsNotOrHasNotBeenUsed($shortname)
+    {
         if ($this->dao->isOrHasBeenUsed($shortname)) {
             throw new UnableToDeleteNatureException(
                 $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'cannot_delete')

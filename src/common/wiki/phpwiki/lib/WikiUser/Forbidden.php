@@ -12,7 +12,8 @@ rcs_id('$Id: Forbidden.php,v 1.2 2004/12/26 17:11:16 rurban Exp $');
 class _ForbiddenPassUser
 extends _ForbiddenUser
 {
-    function dummy() {
+    function dummy()
+    {
         return;
     }
 }

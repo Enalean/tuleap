@@ -34,7 +34,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
      *
      * @return void
      */
-    function __construct(LegacyDataAccessInterface $da, $groupId = null) {
+    function __construct(LegacyDataAccessInterface $da, $groupId = null)
+    {
         parent::__construct($da);
         if ($groupId) {
             $this->groupFilter = ' AND group_id='.$this->da->escapeInt($groupId);
@@ -49,7 +50,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function totalRead($startDate, $endDate) {
+    function totalRead($startDate, $endDate)
+    {
         $sql = "SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
                 YEAR(day) AS year,
                 SUM(cvs_checkouts) + SUM(cvs_browse) AS count,
@@ -72,7 +74,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function totalCommits($startDate, $endDate) {
+    function totalCommits($startDate, $endDate)
+    {
         $sql = "SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
                 YEAR(day) AS year,
                 SUM(cvs_commits) + SUM(cvs_adds) AS count,
@@ -95,7 +98,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function readByProject($startDate, $endDate) {
+    function readByProject($startDate, $endDate)
+    {
         $sql = "SELECT unix_group_name AS project, SUM(cvs_checkouts) + SUM(cvs_browse) AS count
                 FROM group_cvs_full_history
                 JOIN groups g USING (group_id)
@@ -115,7 +119,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function commitsByProject($startDate, $endDate) {
+    function commitsByProject($startDate, $endDate)
+    {
         $sql = "SELECT unix_group_name AS project, SUM(cvs_commits) + SUM(cvs_adds) AS count
                 FROM group_cvs_full_history
                 JOIN groups g USING (group_id)
@@ -135,7 +140,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function readByUser($startDate, $endDate) {
+    function readByUser($startDate, $endDate)
+    {
         $sql = "SELECT user_name AS user, SUM(cvs_checkouts) + SUM(cvs_browse) AS count
                 FROM group_cvs_full_history
                 JOIN user u USING (user_id)
@@ -156,7 +162,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function commitsByUser($startDate, $endDate) {
+    function commitsByUser($startDate, $endDate)
+    {
         $sql = "SELECT user_name AS user, SUM(cvs_commits) + SUM(cvs_adds) AS count
                 FROM group_cvs_full_history
                 JOIN user u USING (user_id)
@@ -177,7 +184,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function repositoriesWithCommit($startDate, $endDate) {
+    function repositoriesWithCommit($startDate, $endDate)
+    {
         $sql = "SELECT COUNT(DISTINCT(repositoryid)) AS count
                 From cvs_commits cc
                 JOIN cvs_checkins c ON cc.id = c.commitid

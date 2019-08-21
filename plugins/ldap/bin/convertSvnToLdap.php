@@ -18,7 +18,8 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
  * @param array $argv
  * @return array
  */
-function extract_params($argv) {
+function extract_params($argv)
+{
     $arguments = array();
     for($i = 1; $i < count($argv); ++$i) {
         $arg = $argv[$i];
@@ -36,7 +37,8 @@ function extract_params($argv) {
 
 
 
-function getLdapFromUserName($username) {
+function getLdapFromUserName($username)
+{
     static $list;
     if(!isset($list[$username])) {
         $user = UserManager::instance()->getUserByUserName($username);
@@ -57,7 +59,8 @@ function getLdapFromUserName($username) {
 /**
  * Copy/paste adapted from svn_utils_parse_access_file in 'www/svn/svn_utils.php'
  */
-function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFileName, $dstFileName) {
+function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFileName, $dstFileName)
+{
 
     $newContent = '';
 

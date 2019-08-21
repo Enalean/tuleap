@@ -61,7 +61,8 @@ class XMLImportFieldStrategyArtifactLinkTest extends TuleapTestCase {
         );
     }
 
-    public function itShouldWorkWithCompleteMapping() {
+    public function itShouldWorkWithCompleteMapping()
+    {
         $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
         $mapping->add(100, 1);
         $mapping->add(101, 2);
@@ -88,7 +89,8 @@ class XMLImportFieldStrategyArtifactLinkTest extends TuleapTestCase {
         $this->assertEqual($expected_res, $res);
     }
 
-    public function itShouldImportSystemNatures() {
+    public function itShouldImportSystemNatures()
+    {
         $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
         $mapping->add(100, 1);
         $mapping->add(101, 2);
@@ -116,7 +118,8 @@ class XMLImportFieldStrategyArtifactLinkTest extends TuleapTestCase {
         $this->assertEqual($expected_res, $res);
     }
 
-    public function itShouldWorkWithCompleteMappingAndNature() {
+    public function itShouldWorkWithCompleteMappingAndNature()
+    {
         $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
         $mapping->add(100, 1);
         $mapping->add(101, 2);
@@ -145,7 +148,8 @@ class XMLImportFieldStrategyArtifactLinkTest extends TuleapTestCase {
         $this->assertEqual($expected_res, $res);
     }
 
-    public function itShouldLogWhenArtifactLinkReferenceIsBroken() {
+    public function itShouldLogWhenArtifactLinkReferenceIsBroken()
+    {
         $mapping          = new Tracker_XML_Importer_ArtifactImportedMapping();
         $strategy         = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink(
             $mapping,
@@ -167,7 +171,8 @@ class XMLImportFieldStrategyArtifactLinkTest extends TuleapTestCase {
         expect($this->logger)->error()->count(1);
     }
 
-    public function itShouldRemoveValuesWhenArtifactChildrenAreRemoved() {
+    public function itShouldRemoveValuesWhenArtifactChildrenAreRemoved()
+    {
         $mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
         $mapping->add(200, 1);
         $mapping->add(101, 2);

@@ -20,7 +20,8 @@
 
 class Tracker_Migration_V3_ReferenceFieldDao extends DataAccessObject {
 
-    public function addReferenceField($tv5_id) {
+    public function addReferenceField($tv5_id)
+    {
         $tv5_id = $this->da->escapeInt($tv5_id);
         $sql = "INSERT INTO tracker_field(tracker_id, parent_id, formElement_type, name, label, description, use_it, rank, scope, required)
                 SELECT $tv5_id, S1.id, 'cross', 'references', 'References', '', 1, 1, 'P', 0
@@ -31,7 +32,8 @@ class Tracker_Migration_V3_ReferenceFieldDao extends DataAccessObject {
         $this->setReadPermissionsForEveryone($id);
     }
 
-    private function setReadPermissionsForEveryone($field_id) {
+    private function setReadPermissionsForEveryone($field_id)
+    {
         $sql = "INSERT INTO permissions(permission_type, object_id, ugroup_id) VALUES
                 ('PLUGIN_TRACKER_FIELD_READ', $field_id, 1)";
         return $this->update($sql);

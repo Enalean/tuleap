@@ -43,7 +43,8 @@ class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends TuleapT
     private $raw_mail_creation = 'raw mail content for creation';
     private $raw_mail_update   = 'raw mail content for update';
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->dao = mock('Tracker_Artifact_Changeset_IncomingMailDao');
@@ -79,37 +80,43 @@ class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends TuleapT
         $this->retriever = new Tracker_Artifact_Changeset_IncomingMailGoldenRetriever($this->dao);
     }
 
-    public function itRetrievesRawMailThatCreatedArtifact() {
+    public function itRetrievesRawMailThatCreatedArtifact()
+    {
         $raw_mail = $this->retriever->getRawMailThatCreatedArtifact($this->artifact_by_mail);
 
         $this->assertEqual($raw_mail, $this->raw_mail_creation);
     }
 
-    public function itRetrievesNoRawMailIfArtifactWasNotCreatedByMail() {
+    public function itRetrievesNoRawMailIfArtifactWasNotCreatedByMail()
+    {
         $raw_mail = $this->retriever->getRawMailThatCreatedArtifact($this->artifact_by_web);
 
         $this->assertNull($raw_mail);
     }
 
-    public function itRetrievesRawMailThatCreatedChangeset() {
+    public function itRetrievesRawMailThatCreatedChangeset()
+    {
         $raw_mail = $this->retriever->getRawMailThatCreatedChangeset($this->changeset_by_mail);
 
         $this->assertEqual($raw_mail, $this->raw_mail_creation);
     }
 
-    public function itRetrievesRawMailThatCreatedOtherChangeset() {
+    public function itRetrievesRawMailThatCreatedOtherChangeset()
+    {
         $raw_mail = $this->retriever->getRawMailThatCreatedChangeset($this->other_changeset_by_mail);
 
         $this->assertEqual($raw_mail, $this->raw_mail_update);
     }
 
-    public function itRetrievesNoRawMailIfChangesetWasNotCreatedByMail() {
+    public function itRetrievesNoRawMailIfChangesetWasNotCreatedByMail()
+    {
         $raw_mail = $this->retriever->getRawMailThatCreatedChangeset($this->changeset_by_web);
 
         $this->assertNull($raw_mail);
     }
 
-    public function itCachesResultsToSaveTheRainForestAndKittens() {
+    public function itCachesResultsToSaveTheRainForestAndKittens()
+    {
         expect($this->dao)->searchByArtifactId()->once();
 
         $this->retriever->getRawMailThatCreatedArtifact($this->artifact_by_mail);

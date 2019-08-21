@@ -43,17 +43,20 @@ class Manager {
      */
     private $dao;
 
-    public function __construct(Dao $dao, RepositoryManager $repository_manager, SVNPathsUpdater $path_updater) {
+    public function __construct(Dao $dao, RepositoryManager $repository_manager, SVNPathsUpdater $path_updater)
+    {
         $this->dao                = $dao;
         $this->repository_manager = $repository_manager;
         $this->path_updater       = $path_updater;
     }
 
-    public function delete($job_id) {
+    public function delete($job_id)
+    {
         return $this->dao->deleteTrigger($job_id);
     }
 
-    public function save(array $params) {
+    public function save(array $params)
+    {
         $repository_id = $params['request']->get('hudson_use_plugin_svn_trigger');
         $valid_repo_id = new Valid_UInt('hudson_use_plugin_svn_trigger');
         $valid_repo_id->required();
@@ -87,7 +90,8 @@ class Manager {
         }
     }
 
-    private function doesRepositoryExist(Project $project, $repository_id) {
+    private function doesRepositoryExist(Project $project, $repository_id)
+    {
         try {
             $this->repository_manager->getByIdAndProject($repository_id, $project);
             return true;

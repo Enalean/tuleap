@@ -48,15 +48,18 @@ class SVN_IntroPresenter {
         $this->uses_ldap_info         = $uses_ldap_info;
     }
 
-    public function help_link() {
+    public function help_link()
+    {
         return "javascript:help_window('/doc/".$this->user->getShortLocale()."/user-guide/svn.html')";
     }
 
-    public function svn_intro_title() {
+    public function svn_intro_title()
+    {
         return $GLOBALS['Language']->getText('svn_intro', 'title');
     }
 
-    public function svn_user_username() {
+    public function svn_user_username()
+    {
         if ($this->user->isLoggedIn() && ! $this->uses_ldap_info) {
             return $this->user->getName();
         } elseif ($this->user->isLoggedIn() && $this->uses_ldap_info && $this->ldap_row) {
@@ -66,39 +69,48 @@ class SVN_IntroPresenter {
         }
     }
 
-    public function warning_ldap() {
+    public function warning_ldap()
+    {
         return $GLOBALS['Language']->getText('svn_intro', 'warning_ldap');
     }
 
-    public function user_is_loggedin() {
+    public function user_is_loggedin()
+    {
         return $this->user->isLoggedIn();
     }
 
-    public function user_not_connected_username_helper() {
+    public function user_not_connected_username_helper()
+    {
         return $GLOBALS['Language']->getText('svn_intro', 'username_helper');
     }
 
-    public function username_helper_lowercase() {
+    public function username_helper_lowercase()
+    {
         return $GLOBALS['Language']->getText('svn_intro', 'username_helper_lowercase');
     }
 
-    public function svn_command() {
+    public function svn_command()
+    {
         return "svn checkout --username ".strtolower($this->svn_user_username())." ". $this->svn_url;
     }
 
-    public function username_is_in_lowercase() {
+    public function username_is_in_lowercase()
+    {
         return strtolower($this->user->getName()) === $this->user->getName();
     }
 
-    public function command_intro() {
+    public function command_intro()
+    {
         return $GLOBALS['Language']->getText('svn_intro', 'command_intro');
     }
 
-    public function more_info() {
+    public function more_info()
+    {
         return $GLOBALS['Language']->getText('svn_intro', 'more_info');
     }
 
-    public function password() {
+    public function password()
+    {
         if ($this->uses_ldap_info) {
             $password_content = $GLOBALS['Language']->getText('svn_intro', 'ldap_password');
         } else {

@@ -24,27 +24,33 @@ class SVN_AccessFile_Writer {
     private $accessfile;
     private $err;
 
-    function __construct($svnroot) {
+    function __construct($svnroot)
+    {
         $this->accessfile = "$svnroot/.SVNAccessFile";
     }
 
-    public function filename() {
+    public function filename()
+    {
         return $this->accessfile;
     }
 
-    public function hasError() {
+    public function hasError()
+    {
         return (bool) $this->err;
     }
 
-    public function isErrorFile(){
+    public function isErrorFile()
+    {
         return $this->err == 'file';
     }
 
-    public function isErrorWrite(){
+    public function isErrorWrite()
+    {
         return $this->err == 'write';
     }
 
-    public function read_defaults($display=false){
+    public function read_defaults($display=false)
+    {
         $this->err = false;
         $fd = @fopen($this->accessfile, "r");
         $buffer = '';
@@ -66,7 +72,8 @@ class SVN_AccessFile_Writer {
         return $buffer;
     }
 
-    public function write($contents) {
+    public function write($contents)
+    {
         $this->err = false;
         $fd = fopen($this->accessfile, "w+");
         if ($fd) {
@@ -84,7 +91,8 @@ class SVN_AccessFile_Writer {
         return $ret;
     }
 
-    public function write_with_defaults($contents){
+    public function write_with_defaults($contents)
+    {
         return $this->write($this->read_defaults() . $contents);
     }
 }

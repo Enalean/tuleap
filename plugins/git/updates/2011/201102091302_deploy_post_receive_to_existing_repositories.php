@@ -20,13 +20,15 @@
 
 class b201102091302_deploy_post_receive_to_existing_repositories extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add Codendi post-receive hook to all existing git repositories
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $processUser = posix_getpwuid(posix_geteuid());
         $username = $processUser['name'];
         if ($username != 'root') {
@@ -34,7 +36,8 @@ EOT;
         }
     }
 
-    public function up() {
+    public function up()
+    {
         $dir = new DirectoryIterator('/var/lib/codendi/gitroot');
         foreach ($dir as $project) {
             if (!$project->isDot() && $project->isDir()) {
@@ -57,7 +60,8 @@ EOT;
         }
     }
 
-    protected function getHook() {
+    protected function getHook()
+    {
         return <<<EOT
 #!/bin/sh
 #

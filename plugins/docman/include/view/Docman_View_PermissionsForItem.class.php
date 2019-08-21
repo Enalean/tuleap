@@ -11,11 +11,13 @@ require_once('Docman_View_View.class.php');
 
 class Docman_View_PermissionsForItem extends Docman_View_View  /* implements Visitor*/ {
 
-    /* protected */ function _content($params) {
+    /* protected */ function _content($params)
+    {
         echo $this->fetch($params['item']->getId(), $params);
     }
 
-    function fetch($id, $params) {
+    function fetch($id, $params)
+    {
         $html = '';
         if ($params['user_can_manage']) {
             $titles = array();

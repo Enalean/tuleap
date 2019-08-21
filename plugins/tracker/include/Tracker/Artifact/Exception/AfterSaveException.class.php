@@ -20,7 +20,8 @@
  */
 class Tracker_AfterSaveException extends Tracker_Exception {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('Error during the after save');
     }
 }

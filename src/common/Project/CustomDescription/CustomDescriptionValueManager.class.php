@@ -28,11 +28,13 @@ class Project_CustomDescription_CustomDescriptionValueManager {
     /** @var Project_CustomDescription_CustomDescriptionValueDao */
     private $dao;
 
-    public function __construct(Project_CustomDescription_CustomDescriptionValueDao $dao) {
+    public function __construct(Project_CustomDescription_CustomDescriptionValueDao $dao)
+    {
         $this->dao = $dao;
     }
 
-    public function setCustomDescription(Project $project, $field_id_to_update, $field_value) {
+    public function setCustomDescription(Project $project, $field_id_to_update, $field_value)
+    {
         $group_id = $project->getID();
         $this->dao->setDescriptionFieldValue($group_id, $field_id_to_update, $field_value);
     }

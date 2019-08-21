@@ -31,7 +31,8 @@ class XML_SimpleXMLCDATAFactory {
      * @param string $node_name
      * @param string $node_value
      */
-    public function insert(SimpleXMLElement $parent_node, $node_name, $node_value) {
+    public function insert(SimpleXMLElement $parent_node, $node_name, $node_value)
+    {
         $node     = $parent_node->addChild($node_name);
         $dom_node = dom_import_simplexml($node);
         $document = $dom_node->ownerDocument;

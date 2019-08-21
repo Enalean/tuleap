@@ -120,7 +120,8 @@ class MediaWikiXMLImporter
         $this->importReferences($configuration, $project, $xml_mediawiki->references);
     }
 
-    private function importPages(Project $project, $backup_path) {
+    private function importPages(Project $project, $backup_path)
+    {
         $this->logger->info("Importing pages for {$project->getUnixName()}");
         $project_name = escapeshellarg($project->getUnixName());
         $backup_path = escapeshellarg($backup_path);
@@ -129,7 +130,8 @@ class MediaWikiXMLImporter
         return true;
     }
 
-    private function importLanguage(Project $project, $language) {
+    private function importLanguage(Project $project, $language)
+    {
         $this->logger->info("Set language to $language for {$project->getUnixName()}");
         try {
             $this->language_manager->saveLanguageOption($project, $language);
@@ -138,7 +140,8 @@ class MediaWikiXMLImporter
         }
     }
 
-    private function importFiles(Project $project, $backup_path) {
+    private function importFiles(Project $project, $backup_path)
+    {
         $this->logger->info("Importing files for {$project->getUnixName()}");
         $project_name = escapeshellarg($project->getUnixName());
         $backup_path = escapeshellarg($backup_path);
@@ -149,7 +152,8 @@ class MediaWikiXMLImporter
 
     }
 
-    private function importRights(Project $project, SimpleXMLElement $xml_mediawiki) {
+    private function importRights(Project $project, SimpleXMLElement $xml_mediawiki)
+    {
         if($xml_mediawiki->{'read-access'}) {
             $this->logger->info("Importing read access rights for {$project->getUnixName()}");
             $ugroups_ids = $this->getUgroupIdsForPermissions($project, $xml_mediawiki->{'read-access'});
@@ -166,11 +170,13 @@ class MediaWikiXMLImporter
         }
     }
 
-    private function getMaintenanceWrapperPath() {
+    private function getMaintenanceWrapperPath()
+    {
         return __DIR__ . "/../bin/mw-maintenance-wrapper.php";
     }
 
-    private function getUgroupIdsForPermissions(Project $project, SimpleXMLElement $permission_xmlnode) {
+    private function getUgroupIdsForPermissions(Project $project, SimpleXMLElement $permission_xmlnode)
+    {
         $ugroup_ids = array();
         foreach($permission_xmlnode->ugroup as $ugroup) {
             $ugroup_name = (string)$ugroup;

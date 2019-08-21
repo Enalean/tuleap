@@ -20,7 +20,8 @@
 
 class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
 
-    public function create($tv3_id, $tv5_id) {
+    public function create($tv3_id, $tv5_id)
+    {
         $this->insertDefaultValuesForMsb($tv3_id, $tv5_id);
         $this->insertDefaultValuesForDate($tv3_id, $tv5_id);
         $this->insertDefautValuesForInt($tv3_id, $tv5_id);
@@ -36,7 +37,8 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $this->insertMultipleDefaultValuesForUsersMsbFields($tv3_id, $tv5_id);
     }
 
-    private function insertDefaultValuesForMsb($tv3_id, $tv5_id) {
+    private function insertDefaultValuesForMsb($tv3_id, $tv5_id)
+    {
         $sql = "REPLACE INTO tracker_field_msb (field_id, size)
                 SELECT id, CAST(display_size AS SIGNED INTEGER) AS size
                 FROM tracker_field INNER JOIN artifact_field ON(old_id = field_id 
@@ -47,7 +49,8 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function insertDefaultValuesForDate($tv3_id, $tv5_id) {
+    private function insertDefaultValuesForDate($tv3_id, $tv5_id)
+    {
         $sql = "INSERT INTO tracker_field_date (field_id, default_value, default_value_type)
                 SELECT f.id, old.default_value, IF(old.default_value = '', 0, 1)
                 FROM tracker_field AS f
@@ -59,7 +62,8 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function insertDefautValuesForInt($tv3_id, $tv5_id) {
+    private function insertDefautValuesForInt($tv3_id, $tv5_id)
+    {
         $sql = "REPLACE INTO tracker_field_int (field_id, default_value, maxchars, size)
                 SELECT f.id, 
                        IF (old.default_value = '',  NULL, old.default_value),
@@ -75,7 +79,8 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function insertDefautValuesForFloat($tv3_id, $tv5_id) {
+    private function insertDefautValuesForFloat($tv3_id, $tv5_id)
+    {
         $sql = "REPLACE INTO tracker_field_float (field_id, default_value, maxchars, size)
                 SELECT f.id, 
                        IF (old.default_value = '', NULL, old.default_value),
@@ -90,7 +95,8 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function insertDefautValuesForText($tv3_id, $tv5_id) {
+    private function insertDefautValuesForText($tv3_id, $tv5_id)
+    {
         $sql = "REPLACE INTO tracker_field_text (field_id, default_value, rows, cols)
                 SELECT f.id, 
                        old.default_value,
@@ -104,7 +110,8 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function insertDefautValuesForString($tv3_id, $tv5_id) {
+    private function insertDefautValuesForString($tv3_id, $tv5_id)
+    {
         $sql = "REPLACE INTO tracker_field_string (field_id, default_value, maxchars, size)
                 SELECT f.id, 
                        old.default_value,
@@ -119,7 +126,8 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function insertDefautValuesForListBindStaticOnSbFields($tv3_id, $tv5_id) {
+    private function insertDefautValuesForListBindStaticOnSbFields($tv3_id, $tv5_id)
+    {
         $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
                 SELECT f.id, new.id 
                 FROM tracker_field AS f
@@ -134,7 +142,8 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function insertDefautValuesForListBindUsersOnSbFields($tv3_id, $tv5_id) {
+    private function insertDefautValuesForListBindUsersOnSbFields($tv3_id, $tv5_id)
+    {
         $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
                 SELECT f.id, user.user_id 
                 FROM tracker_field AS f
@@ -149,7 +158,8 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function insertDefaultValuesIsNoneForSbFields($tv3_id, $tv5_id) {
+    private function insertDefaultValuesIsNoneForSbFields($tv3_id, $tv5_id)
+    {
         $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
                 SELECT f.id, old.default_value
                 FROM tracker_field AS f
@@ -161,7 +171,8 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function insertDefautSingleValueForListBindStaticOnMsbFields($tv3_id, $tv5_id) {
+    private function insertDefautSingleValueForListBindStaticOnMsbFields($tv3_id, $tv5_id)
+    {
         $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
                SELECT f.id, new.id 
                FROM tracker_field AS f
@@ -178,7 +189,8 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function insertDefautSingleValueForListBindUsersOnMsbFields($tv3_id, $tv5_id) {
+    private function insertDefautSingleValueForListBindUsersOnMsbFields($tv3_id, $tv5_id)
+    {
         $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
                SELECT f.id, user.user_id 
                FROM tracker_field AS f
@@ -195,7 +207,8 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function insertDefaultValuesIsNoneForMsbFields($tv3_id, $tv5_id) {
+    private function insertDefaultValuesIsNoneForMsbFields($tv3_id, $tv5_id)
+    {
         $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
                 SELECT f.id, old.default_value
                 FROM tracker_field AS f
@@ -207,7 +220,8 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function insertMultipleDefaultValuesForStaticMsbFields($tv3_id, $tv5_id) {
+    private function insertMultipleDefaultValuesForStaticMsbFields($tv3_id, $tv5_id)
+    {
         $sql = "SELECT f.id, old.default_value
                 FROM tracker_field AS f
                 INNER JOIN artifact_field AS old ON (
@@ -230,7 +244,8 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         }
     }
 
-    private function insertMultipleDefaultValuesForUsersMsbFields($tv3_id, $tv5_id) {
+    private function insertMultipleDefaultValuesForUsersMsbFields($tv3_id, $tv5_id)
+    {
         $sql = "SELECT f.id, old.default_value 
                 FROM tracker_field AS f
                     INNER JOIN artifact_field AS old ON (

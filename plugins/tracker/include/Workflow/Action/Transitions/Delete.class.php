@@ -23,12 +23,14 @@ class Tracker_Workflow_Action_Transitions_Delete extends Tracker_Workflow_Action
      /** @var WorkflowFactory */
     private $workflow_factory;
 
-    public function __construct(Tracker $tracker, WorkflowFactory $workflow_factory) {
+    public function __construct(Tracker $tracker, WorkflowFactory $workflow_factory)
+    {
         parent::__construct($tracker);
         $this->workflow_factory = $workflow_factory;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    {
         if ($this->workflow_factory->deleteWorkflow($request->get('delete'))) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','deleted'));
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array(

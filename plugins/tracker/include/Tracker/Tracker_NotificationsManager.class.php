@@ -347,7 +347,8 @@ class Tracker_NotificationsManager {
     /**
      * @return Tracker_GlobalNotification[]
      */
-    public function getGlobalNotifications() {
+    public function getGlobalNotifications()
+    {
         $notifs = array();
         foreach($this->getGlobalDao()->searchByTrackerId($this->tracker->id) as $row) {
             $notifs[$row['id']] = new Tracker_GlobalNotification(
@@ -453,7 +454,8 @@ class Tracker_NotificationsManager {
     /**
      * @param bool $update true if the action is an update one (update artifact, add comment, ...) false if it is a create action.
      */
-    public function getAllAddresses($update = false) {
+    public function getAllAddresses($update = false)
+    {
         $addresses = array();
         $notifs = $this->getGlobalNotifications();
         foreach($notifs as $key => $nop) {
@@ -466,7 +468,8 @@ class Tracker_NotificationsManager {
         return $addresses;
     }
 
-    protected function getGlobalDao() {
+    protected function getGlobalDao()
+    {
         return new Tracker_GlobalNotificationDao();
     }
 
@@ -493,11 +496,13 @@ class Tracker_NotificationsManager {
         }
     }
 
-    protected function getWatcherDao() {
+    protected function getWatcherDao()
+    {
         return new Tracker_WatcherDao();
     }
 
-    protected function getNotificationDao() {
+    protected function getNotificationDao()
+    {
         return new Tracker_NotificationDao();
     }
 
@@ -506,7 +511,8 @@ class Tracker_NotificationsManager {
         return new GlobalNotificationsAddressesBuilder();
     }
 
-    public static function isMailingList($email_address) {
+    public static function isMailingList($email_address)
+    {
         $r = preg_match_all('/\S+\@lists\.\S+/', $subject, $matches);
         if ( !empty($r)  ) {
             return true;

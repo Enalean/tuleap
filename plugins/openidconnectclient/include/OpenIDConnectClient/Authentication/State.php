@@ -54,7 +54,8 @@ class State
     /**
      * @return State
      */
-    public static function createFromSignature($signed_state, $return_to, $secret_key, $nonce) {
+    public static function createFromSignature($signed_state, $return_to, $secret_key, $nonce)
+    {
         $provider_id = JWT::decode($signed_state, $secret_key, array(self::SIGNATURE_ALGORITHM));
         return new State($provider_id, $return_to, $secret_key, $nonce);
     }
@@ -62,19 +63,23 @@ class State
     /**
      * @return string
      */
-    public function getSignedState() {
+    public function getSignedState()
+    {
         return JWT::encode($this->provider_id, $this->secret_key, self::SIGNATURE_ALGORITHM);
     }
 
-    public function getProviderId() {
+    public function getProviderId()
+    {
         return $this->provider_id;
     }
 
-    public function getReturnTo() {
+    public function getReturnTo()
+    {
         return $this->return_to;
     }
 
-    public function getSecretKey() {
+    public function getSecretKey()
+    {
         return $this->secret_key;
     }
 

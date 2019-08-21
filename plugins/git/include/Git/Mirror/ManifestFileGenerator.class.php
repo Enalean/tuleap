@@ -31,16 +31,19 @@ class Git_Mirror_ManifestFileGenerator {
 
     public const FILE_PREFIX = 'manifest_mirror_';
 
-    public function __construct(Logger $logger, $manifest_directory) {
+    public function __construct(Logger $logger, $manifest_directory)
+    {
         $this->manifest_directory = $manifest_directory;
         $this->logger             = $logger;
     }
 
-    public function getManifestDirectory() {
+    public function getManifestDirectory()
+    {
         return $this->manifest_directory;
     }
 
-    public function updateCurrentTimeOfRepository(Git_Mirror_Mirror $mirror, GitRepository $repository) {
+    public function updateCurrentTimeOfRepository(Git_Mirror_Mirror $mirror, GitRepository $repository)
+    {
         $filename = $this->getManifestFilenameForMirror($mirror);
 
         $list_of_repositories = $this->getListOfRepositoriesFromManifest($filename);
@@ -50,7 +53,8 @@ class Git_Mirror_ManifestFileGenerator {
 
     }
 
-    public function addRepositoryToManifestFile(Git_Mirror_Mirror $mirror, GitRepository $repository) {
+    public function addRepositoryToManifestFile(Git_Mirror_Mirror $mirror, GitRepository $repository)
+    {
         $filename = $this->getManifestFilenameForMirror($mirror);
 
         $list_of_repositories = $this->getListOfRepositoriesFromManifest($filename);
@@ -60,7 +64,8 @@ class Git_Mirror_ManifestFileGenerator {
         $this->writeManifest($filename, $list_of_repositories);
     }
 
-    public function removeRepositoryFromManifestFile(Git_Mirror_Mirror $mirror, $repository_path) {
+    public function removeRepositoryFromManifestFile(Git_Mirror_Mirror $mirror, $repository_path)
+    {
         $filename = $this->getManifestFilenameForMirror($mirror);
 
         $list_of_repositories = $this->getListOfRepositoriesFromManifest($filename);
@@ -97,7 +102,8 @@ class Git_Mirror_ManifestFileGenerator {
         $this->writeManifest($filename, $list_of_repositories);
     }
 
-    private function getManifestFilenameForMirror(Git_Mirror_Mirror $mirror) {
+    private function getManifestFilenameForMirror(Git_Mirror_Mirror $mirror)
+    {
         return $this->manifest_directory
             . DIRECTORY_SEPARATOR
             . self::FILE_PREFIX . $mirror->id . '.js.gz';
@@ -146,7 +152,8 @@ class Git_Mirror_ManifestFileGenerator {
         unset($list_of_repositories[$repository_key]);
     }
 
-    private function makeSureThatGitoliteAdminRepositoryIsInTheManifest(array &$list_of_repositories) {
+    private function makeSureThatGitoliteAdminRepositoryIsInTheManifest(array &$list_of_repositories)
+    {
         if (isset($list_of_repositories[$this->gladm_path])) {
             return;
         }
@@ -159,7 +166,8 @@ class Git_Mirror_ManifestFileGenerator {
         );
     }
 
-    private function getRepositoryInformation(GitRepository $repository) {
+    private function getRepositoryInformation(GitRepository $repository)
+    {
         return array(
             "owner"       => null,
             "description" => $repository->getDescription(),
@@ -168,15 +176,18 @@ class Git_Mirror_ManifestFileGenerator {
         );
     }
 
-    private function getRepositoryKey(GitRepository $repository) {
+    private function getRepositoryKey(GitRepository $repository)
+    {
         return '/'. $repository->getPath();
     }
 
-    private function getRepositoryKeyFromPathName($path_name) {
+    private function getRepositoryKeyFromPathName($path_name)
+    {
         return '/'. $path_name;
     }
 
-    private function getListOfRepositoriesFromManifest($filename) {
+    private function getListOfRepositoriesFromManifest($filename)
+    {
         if (! is_file($filename)) {
             return array();
         }
@@ -190,7 +201,8 @@ class Git_Mirror_ManifestFileGenerator {
         return $list_of_repositories;
     }
 
-    private function writeManifest($filename, $list_of_repositories) {
+    private function writeManifest($filename, $list_of_repositories)
+    {
         file_put_contents(
             "compress.zlib://$filename",
             json_encode($list_of_repositories)

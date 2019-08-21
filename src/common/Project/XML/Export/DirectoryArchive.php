@@ -25,7 +25,8 @@ use Tuleap\Project\XML\ArchiveException;
 class DirectoryArchive implements ArchiveInterface {
     private $archive_path;
 
-    public function __construct($archive_path) {
+    public function __construct($archive_path)
+    {
         $this->archive_path = $archive_path;
         if (file_exists($this->archive_path)) {
             throw new ArchiveException("Unable to create directory {$this->archive_path} for archive: file already exist");
@@ -33,20 +34,24 @@ class DirectoryArchive implements ArchiveInterface {
         mkdir($this->archive_path, 0700, true);
     }
 
-    public function close() {
+    public function close()
+    {
     }
 
-    public function addEmptyDir($dirname) {
+    public function addEmptyDir($dirname)
+    {
         if (! is_dir($this->archive_path.DIRECTORY_SEPARATOR.$dirname)) {
             return mkdir($this->archive_path.DIRECTORY_SEPARATOR.$dirname, 0700);
         }
     }
 
-    public function addFile($localname, $path_to_filesystem) {
+    public function addFile($localname, $path_to_filesystem)
+    {
         return copy($path_to_filesystem, $this->archive_path.DIRECTORY_SEPARATOR.$localname);
     }
 
-    public function addFromString($localname, $contents) {
+    public function addFromString($localname, $contents)
+    {
         file_put_contents($this->archive_path.DIRECTORY_SEPARATOR.$localname, $contents);
     }
 

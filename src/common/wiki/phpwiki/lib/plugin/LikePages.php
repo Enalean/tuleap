@@ -27,21 +27,25 @@ require_once('lib/PageList.php');
 class WikiPlugin_LikePages
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("LikePages");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return sprintf(_("List page names which share an initial or final title word with '%s'."),
                        '[pagename]');
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.22 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array_merge
             (
              PageList::supportedArgs(),
@@ -55,7 +59,8 @@ extends WikiPlugin
     // info=mtime,hits,summary,version,author,locked,minor
     // exclude arg allows multiple pagenames exclude=HomePage,RecentChanges
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         extract($args);
         if (empty($page) && empty($prefix) && empty($suffix))
@@ -112,7 +117,8 @@ extends WikiPlugin
         return $pagelist;
     }
 
-    function _quote($str) {
+    function _quote($str)
+    {
         return "'" . str_replace("'", "''", $str) . "'";
     }
 };

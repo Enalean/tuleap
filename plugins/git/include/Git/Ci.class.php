@@ -30,7 +30,8 @@ class Git_Ci {
      *
      * @return Git_Ci_Dao
      */
-    function getDao() {
+    function getDao()
+    {
         if (!isset($this->dao)) {
             $this->_dao = new Git_Ci_Dao();
         }
@@ -42,11 +43,13 @@ class Git_Ci {
      *
      * @return ProjectManager
      */
-    function getProjectManager() {
+    function getProjectManager()
+    {
         return ProjectManager::instance();
     }
 
-    private function getEventManager() {
+    private function getEventManager()
+    {
         return EventManager::instance();
     }
 
@@ -149,7 +152,8 @@ class Git_Ci {
      *
      * @return bool
      */
-    function saveTrigger($jobId, $repositoryId) {
+    function saveTrigger($jobId, $repositoryId)
+    {
         $dar = $this->getDao()->checkRepository($jobId, $repositoryId);
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             return $this->getDao()->saveTrigger($jobId, $repositoryId);
@@ -166,7 +170,8 @@ class Git_Ci {
      *
      * @return bool
      */
-    function deleteTrigger($jobId) {
+    function deleteTrigger($jobId)
+    {
         return $this->getDao()->deleteTrigger($jobId);
     }
 }

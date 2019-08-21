@@ -35,7 +35,8 @@ $usage_options .= 'u:'; // give me a user
 $usage_options .= 'i:'; // give me the archive path to import
 $usage_options .= 'm:'; // give me the path of the mapping file
 
-function usage() {
+function usage()
+{
     global $argv;
 
     echo <<< EOT

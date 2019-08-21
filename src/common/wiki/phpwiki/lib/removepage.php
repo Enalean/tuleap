@@ -23,7 +23,8 @@ use Tuleap\PHPWiki\WikiPage;
 rcs_id('$Id: removepage.php,v 1.26 2004/12/20 12:12:31 rurban Exp $');
 require_once('lib/Template.php');
 
-function RemovePage (&$request) {
+function RemovePage(&$request)
+{
     global $WikiTheme;
 
     $page = $request->getPage();

@@ -33,24 +33,29 @@ rcs_id('$Id: RichTable.php,v 1.7 2005/05/06 17:44:24 rurban Exp $');
 class WikiPlugin_RichTable
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("RichTable");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Layout tables using a very rich markup style.");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array();
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.7 $");
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         global $WikiTheme;
         include_once("lib/BlockParser.php");
         // RichTablePlugin markup is new.
@@ -135,7 +140,8 @@ extends WikiPlugin
         return $table;
     }
 
-    function _parse_attr($line) {
+    function _parse_attr($line)
+    {
         $attr_chunks = preg_split("/\s*,\s*/", strtolower($line));
         $options = array();
         foreach ($attr_chunks as $attr_pair) {

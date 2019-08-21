@@ -47,7 +47,8 @@ class AgileDashboard_HierarchyCheckerTest extends TuleapTestCase {
     /** @var PFUser */
     private $user;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $project       = aMockProject()->withId(34)->build();
@@ -101,7 +102,8 @@ class AgileDashboard_HierarchyCheckerTest extends TuleapTestCase {
         $this->assertFalse($this->hierarchy_checker->isPartOfScrumOrKanbanHierarchy($this->tracker));
     }
 
-    public function itReturnsTrueIfATrackerInTheTrackerHierarchyIsUsedInKanban() {
+    public function itReturnsTrueIfATrackerInTheTrackerHierarchyIsUsedInKanban()
+    {
         stub($this->tracker)->getHierarchy()->returns($this->hierarchy);
         stub($this->planning_factory)->getPlanningTrackerIdsByGroupId()->returns(array());
         stub($this->planning_factory)->getBacklogTrackerIdsByGroupId()->returns(array());
@@ -111,7 +113,8 @@ class AgileDashboard_HierarchyCheckerTest extends TuleapTestCase {
         $this->assertTrue($this->hierarchy_checker->isPartOfScrumOrKanbanHierarchy($this->tracker));
     }
 
-    public function itReturnsFalseIfNoTrackerIsUsedInKanban() {
+    public function itReturnsFalseIfNoTrackerIsUsedInKanban()
+    {
         stub($this->tracker)->getHierarchy()->returns($this->hierarchy);
         stub($this->planning_factory)->getPlanningTrackerIdsByGroupId()->returns(array());
         stub($this->planning_factory)->getBacklogTrackerIdsByGroupId()->returns(array());

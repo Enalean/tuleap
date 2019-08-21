@@ -165,7 +165,8 @@ class PEAR
      * @access public
      * @return void
      */
-    function _PEAR() {
+    function _PEAR()
+    {
         if ($this->_debug) {
             printf("PEAR destructor called, class=%s\n", static::class);
         }
@@ -463,14 +464,15 @@ class PEAR
      * @return object   a PEAR error object
      * @see PEAR::setErrorHandling
      */
-    function &raiseError($message = null,
-                         $code = null,
-                         $mode = null,
-                         $options = null,
-                         $userinfo = null,
-                         $error_class = null,
-                         $skipmsg = false)
-    {
+    function &raiseError(
+        $message = null,
+        $code = null,
+        $mode = null,
+        $options = null,
+        $userinfo = null,
+        $error_class = null,
+        $skipmsg = false
+    ) {
         // The error is yet a PEAR error object
         if (is_object($message)) {
             $code        = $message->getCode();
@@ -523,10 +525,11 @@ class PEAR
      * @param string $message
      *
      */
-    function &throwError($message = null,
-                         $code = null,
-                         $userinfo = null)
-    {
+    function &throwError(
+        $message = null,
+        $code = null,
+        $userinfo = null
+    ) {
         if (isset($this) && is_subclass_of($this, 'PEAR_Error')) {
             return $this->raiseError($message, $code, null, null, $userinfo);
         } else {
@@ -682,9 +685,13 @@ class PEAR_Error
      * @access public
      *
      */
-    function __construct($message = 'unknown error', $code = null,
-                        $mode = null, $options = null, $userinfo = null)
-    {
+    function __construct(
+        $message = 'unknown error',
+        $code = null,
+        $mode = null,
+        $options = null,
+        $userinfo = null
+    ) {
         if (function_exists("debug_backtrace")) {
             $this->backtrace = debug_backtrace();
         }
@@ -753,7 +760,8 @@ class PEAR_Error
      * @return int error mode
      * @access public
      */
-    function getMode() {
+    function getMode()
+    {
         return $this->mode;
     }
 
@@ -766,7 +774,8 @@ class PEAR_Error
      * @return mixed callback function or object/method array
      * @access public
      */
-    function getCallback() {
+    function getCallback()
+    {
         return $this->callback;
     }
 
@@ -796,7 +805,7 @@ class PEAR_Error
      * @access public
      */
     function getCode()
-     {
+    {
         return $this->code;
     }
 
@@ -882,7 +891,8 @@ class PEAR_Error
      * @return string a string with an object summary
      * @access public
      */
-    function toString() {
+    function toString()
+    {
         $modes = array();
         $levels = array(E_USER_NOTICE  => 'notice',
                         E_USER_WARNING => 'warning',

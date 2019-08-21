@@ -34,31 +34,37 @@ class Admin_PermissionDelegationDeleteGroupModalPresenter
     private $name;
 
 
-    public function __construct(UserForgeUGroupPresenter $group) {
+    public function __construct(UserForgeUGroupPresenter $group)
+    {
         $this->id   = $group->id;
         $this->name = $group->name;
     }
 
-    public function group_title_delete() {
+    public function group_title_delete()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_title_delete', array($this->name));
     }
 
-    public function purified_group_delete_confirmation() {
+    public function purified_group_delete_confirmation()
+    {
         return Codendi_HTMLPurifier::instance()->purify(
             $GLOBALS['Language']->getText('admin_permission_delegation', 'group_delete_confirmation', $this->name),
             CODENDI_PURIFIER_LIGHT
         );
     }
 
-    public function id() {
+    public function id()
+    {
         return $this->id;
     }
 
-    public function group_submit_delete() {
+    public function group_submit_delete()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_submit_delete');
     }
 
-    public function group_cancel_delete() {
+    public function group_cancel_delete()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_cancel_delete');
     }
 

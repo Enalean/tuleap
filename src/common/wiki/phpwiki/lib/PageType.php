@@ -34,7 +34,8 @@ class TransformedText extends CacheableMarkup {
      * @param string $type_override  For markup of page using a different
      *        pagetype than that specified in its version meta-data.
      */
-    function __construct($page, $text, $meta, $type_override=false) {
+    function __construct($page, $text, $meta, $type_override=false)
+    {
         $pagetype = false;
         if ($type_override)
             $pagetype = $type_override;
@@ -45,7 +46,8 @@ class TransformedText extends CacheableMarkup {
                                $page->getName());
     }
 
-    function getType() {
+    function getType()
+    {
         return $this->_type;
     }
 }
@@ -74,7 +76,8 @@ class PageType {
      * @param string $pagetype  Name of the page type.
      * @return PageType  An object which is a subclass of PageType.
      */
-    function GetPageType ($name=false) {
+    function GetPageType($name=false)
+    {
         if (!$name)
             $name = 'wikitext';
         $class = "PageType_" . (string)$name;
@@ -90,7 +93,8 @@ class PageType {
      *
      * @return string  Page type name.
      */
-    function getName() {
+    function getName()
+    {
         if (!preg_match('/^PageType_(.+)$/i', static::class, $m))
         trigger_error("Bad class name for formatter(?)", E_USER_ERROR);
         return $m[1];
@@ -104,7 +108,8 @@ class PageType {
      * @param hash $meta Version meta-data
      * @return XmlContent The transformed page text.
      */
-    function transform($page, &$text, $meta) {
+    function transform($page, &$text, $meta)
+    {
         $fmt_class = 'PageFormatter_' . $this->getName();
         $formatter = new $fmt_class($page, $meta);
         return $formatter->format($text);
@@ -119,7 +124,8 @@ class PageType_comment extends PageType {}
 class PageType_wikiforum extends PageType {}
 
 /* To prevent from PHP5 Fatal error: Using $this when not in object context */
-function getInterwikiMap ($pagetext = false) {
+function getInterwikiMap($pagetext = false)
+{
     static $map;
     if (empty($map))
         $map = new PageType_interwikimap($pagetext);
@@ -128,7 +134,8 @@ function getInterwikiMap ($pagetext = false) {
 
 class PageType_interwikimap extends PageType
 {
-    function __construct($pagetext = false) {
+    function __construct($pagetext = false)
+    {
         if (!$pagetext) {
             $dbi = $GLOBALS['request']->getDbh();
             $page = $dbi->getPage(_("InterWikiMap"));
@@ -152,7 +159,8 @@ class PageType_interwikimap extends PageType
         $this->_regexp = $this->_getRegexp();
     }
 
-    function GetMap ($pagetext = false) {
+    function GetMap($pagetext = false)
+    {
         /*PHP5 Fatal error: Using $this when not in object context */
         if (empty($this->_map)) {
             $map = new PageType_interwikimap($pagetext);
@@ -162,11 +170,13 @@ class PageType_interwikimap extends PageType
         }
     }
 
-    function getRegexp() {
+    function getRegexp()
+    {
         return $this->_regexp;
     }
 
-    function link ($link, $linktext = false) {
+    function link($link, $linktext = false)
+    {
         list ($moniker, $page) = preg_split ("/:/D", $link, 2);
 
         if (!isset($this->_map[$moniker])) {
@@ -211,7 +221,8 @@ class PageType_interwikimap extends PageType
     }
 
 
-    function _parseMap ($text) {
+    function _parseMap($text)
+    {
         if (!preg_match_all("/^\s*(\S+)\s+(.+)$/m",
                             $text, $matches, PREG_SET_ORDER))
             return false;
@@ -275,14 +286,16 @@ class PageType_interwikimap extends PageType
         return $map;
     }
 
-    function _getMapFromWikiText ($pagetext) {
+    function _getMapFromWikiText($pagetext)
+    {
         if (preg_match('|^<verbatim>\n(.*)^</verbatim>|ms', $pagetext, $m)) {
             return $m[1];
         }
         return false;
     }
 
-    function _getMapFromFile ($filename) {
+    function _getMapFromFile($filename)
+    {
         if (defined('WARN_NONPUBLIC_INTERWIKIMAP') and WARN_NONPUBLIC_INTERWIKIMAP) {
             $error_html = sprintf(_("Loading InterWikiMap from external file %s."),
                                   $filename);
@@ -299,7 +312,8 @@ class PageType_interwikimap extends PageType
         return $data;
     }
 
-    function _getRegexp () {
+    function _getRegexp()
+    {
         if (!$this->_map)
             return '(?:(?!a)a)'; //  Never matches.
 
@@ -318,7 +332,8 @@ class PageFormatter {
      * @param WikiDB_Page $page
      * @param hash $meta Version meta-data.
      */
-    function __construct(&$page, $meta) {
+    function __construct(&$page, $meta)
+    {
         $this->_page = $page;
         $this->_meta = $meta;
         if (!empty($meta['markup']))
@@ -329,7 +344,8 @@ class PageFormatter {
         // New policy: default = new markup (old crashes quite often)
     }
 
-    function _transform($text) {
+    function _transform($text)
+    {
         include_once('lib/BlockParser.php');
         return TransformText($text, $this->_markup);
     }
@@ -339,14 +355,16 @@ class PageFormatter {
      * @param string $text  The raw page content (e.g. wiki-text).
      * @return XmlContent   Transformed content.
      */
-    function format($text) {
+    function format($text)
+    {
         trigger_error("pure virtual", E_USER_ERROR);
     }
 }
 
 class PageFormatter_wikitext extends PageFormatter
 {
-    function format($text) {
+    function format($text)
+    {
         return HTML::div(array('class' => 'wikitext'),
         $this->_transform($text));
     }
@@ -354,27 +372,32 @@ class PageFormatter_wikitext extends PageFormatter
 
 class PageFormatter_interwikimap extends PageFormatter
 {
-    function format($text) {
+    function format($text)
+    {
         return HTML::div(array('class' => 'wikitext'),
                          $this->_transform($this->_getHeader($text)),
                          $this->_formatMap($text),
                          $this->_transform($this->_getFooter($text)));
     }
 
-    function _getHeader($text) {
+    function _getHeader($text)
+    {
         return preg_replace('/<verbatim>.*/s', '', $text);
     }
 
-    function _getFooter($text) {
+    function _getFooter($text)
+    {
         return preg_replace('@.*?(</verbatim>|\Z)@s', '', $text, 1);
     }
 
-    function _getMap($pagetext) {
+    function _getMap($pagetext)
+    {
         $map = getInterwikiMap($pagetext);
         return $map->_map;
     }
 
-    function _formatMap($pagetext) {
+    function _formatMap($pagetext)
+    {
         $map = $this->_getMap($pagetext);
         if (!$map)
         return HTML::p("<No interwiki map found>"); // Shouldn't happen.
@@ -396,11 +419,13 @@ class PageFormatter_interwikimap extends PageFormatter
 }
 
 class FakePageRevision {
-    function __construct($meta) {
+    function __construct($meta)
+    {
         $this->_meta = $meta;
     }
 
-    function get($key) {
+    function get($key)
+    {
         if (empty($this->_meta[$key]))
             return false;
         return $this->_meta[$key];
@@ -413,7 +438,8 @@ class PageFormatter_attach extends PageFormatter
     var $type, $prefix;
 
     // Display templated contents for wikiblog, comment and wikiforum
-    function format($text) {
+    function format($text)
+    {
         if (empty($this->type))
             trigger_error('PageFormatter_attach->format: $type missing');
         include_once('lib/Template.php');
@@ -454,10 +480,12 @@ class PageFormatter_wikiforum extends PageFormatter_attach {
  */
 class PageFormatter_html extends PageFormatter
 {
-    function _transform($text) {
+    function _transform($text)
+    {
         return $text;
     }
-    function format($text) {
+    function format($text)
+    {
         return $text;
     }
 }

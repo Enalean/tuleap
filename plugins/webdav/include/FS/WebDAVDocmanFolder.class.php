@@ -38,7 +38,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return void
      */
-    function __construct($user, Project $project, $item) {
+    function __construct($user, Project $project, $item)
+    {
         $this->user = $user;
         $this->project = $project;
         $this->item = $item;
@@ -49,7 +50,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return int
      */
-    public function getMaxFileSize() {
+    public function getMaxFileSize()
+    {
         return (int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING);
     }
 
@@ -59,7 +61,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return Array
      */
-    function getChildList() {
+    function getChildList()
+    {
         $children = array();
         // hey ! for docman never add something in WebDAVUtils, docman may be not present ;)
         $docmanItemFactory = $this->getUtils()->getDocmanItemFactory();
@@ -114,7 +117,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_ICollection::getChildren()
      */
-    function getChildren() {
+    function getChildren()
+    {
         $children = $this->getChildList();
         // Remove all duplicate elements
         foreach ($children as $key => $node) {
@@ -134,7 +138,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_Directory::getChild()
      */
-    function getChild($name) {
+    function getChild($name)
+    {
         $name = $this->getUtils()->retrieveName($name);
         $children = $this->getChildList();
 
@@ -154,7 +159,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_INode::getName()
      */
-    function getName() {
+    function getName()
+    {
         if ($this->isDocmanRoot()) {
             // case of the root
             return 'Documents';
@@ -170,7 +176,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_Node::getLastModified()
      */
-    function getLastModified() {
+    function getLastModified()
+    {
         return $this->getItem()->getUpdateDate();
     }
 
@@ -179,7 +186,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return Docman_Folder
      */
-    function getItem() {
+    function getItem()
+    {
         return $this->item;
     }
 
@@ -188,7 +196,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return Project
      */
-    function getProject() {
+    function getProject()
+    {
         return $this->project;
     }
 
@@ -197,7 +206,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return PFUser
      */
-    function getUser() {
+    function getUser()
+    {
         return $this->user;
     }
 
@@ -206,7 +216,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return WebDAVUtils
      */
-    function getUtils() {
+    function getUtils()
+    {
         return WebDAVUtils::getInstance();
     }
 
@@ -215,7 +226,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return bool
      */
-    function isDocmanRoot() {
+    function isDocmanRoot()
+    {
         return !$this->getItem()->getParentId();
     }
 
@@ -226,7 +238,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return WebDAVDocmanFile
      */
-    function getWebDAVDocmanFile($item) {
+    function getWebDAVDocmanFile($item)
+    {
         return new WebDAVDocmanFile($this->user, $this->getProject(), $item);
     }
 
@@ -237,7 +250,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return WebDAVDocmanEmpty
      */
-    function getWebDAVDocmanDocument($item) {
+    function getWebDAVDocmanDocument($item)
+    {
         return new WebDAVDocmanDocument($this->user, $this->getProject(), $item);
     }
 
@@ -248,7 +262,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return WebDAVDocmanFolder
      */
-    function getWebDAVDocmanFolder($folder) {
+    function getWebDAVDocmanFolder($folder)
+    {
         return new WebDAVDocmanFolder($this->user, $this->getProject(), $folder);
     }
 
@@ -259,7 +274,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return void
      */
-    function createDirectory($name) {
+    function createDirectory($name)
+    {
         if ($this->getUtils()->isWriteEnabled()) {
             // Request
             $params['action']   = 'createItem';
@@ -286,7 +302,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return void
      */
-    function createFile($name, $data = null) {
+    function createFile($name, $data = null)
+    {
         if ($this->getUtils()->isWriteEnabled()) {
             // Request
             $params['action']   = 'createItem';
@@ -323,7 +340,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return void
      */
-    function setName($name) {
+    function setName($name)
+    {
         if ($this->getUtils()->isWriteEnabled()) {
             // Request
             $params['action']   = 'update';
@@ -345,7 +363,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return void
      */
-    function delete() {
+    function delete()
+    {
         if ($this->getUtils()->isWriteEnabled()) {
             // Request
             $params['action']   = 'delete';

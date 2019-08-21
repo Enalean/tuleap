@@ -40,12 +40,14 @@ class ChooseNewsItemController {
      */
     private $data_mapper;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->request     = HTTPRequest::instance();
         $this->data_mapper = new NewsItemForWidgetDataMapper(new NewsDao());
     }
 
-    public function process() {
+    public function process()
+    {
         $action = $this->request->get('action');
 
         switch ($action) {
@@ -56,13 +58,15 @@ class ChooseNewsItemController {
         }
     }
 
-    public function updatePromotedItems() {
+    public function updatePromotedItems()
+    {
         $promoted_ids = $this->request->get('promoted');
 
         return $this->data_mapper->updatePromotedItems($this->getProjectFromRequest(),$promoted_ids);
     }
 
-    public function display() {
+    public function display()
+    {
         $this->checkAccess();
 
         $this->displayHeader();
@@ -70,7 +74,8 @@ class ChooseNewsItemController {
         $this->displayFooter();
     }
 
-    private function checkAccess() {
+    private function checkAccess()
+    {
         try {
             $project = $this->getProjectFromRequest();
         } catch (\Exception $e) {
@@ -83,7 +88,8 @@ class ChooseNewsItemController {
         }
     }
 
-    private function displayBody() {
+    private function displayBody()
+    {
         $items     = $this->data_mapper->fetchAll($this->getProjectFromRequest());
         $presenter = new ChooseNewsPresenter($items, $this->request->get('project_id'));
         $renderer  = TemplateRendererFactory::build()->getRenderer(
@@ -93,7 +99,8 @@ class ChooseNewsItemController {
         $renderer->renderToPage('choose_news', $presenter);
     }
 
-    private function displayHeader() {
+    private function displayHeader()
+    {
         news_header(
             array(
                 'title'      => $GLOBALS['Language']->getText('news_admin_index','title'),
@@ -103,11 +110,13 @@ class ChooseNewsItemController {
         );
     }
 
-    private function displayFooter() {
+    private function displayFooter()
+    {
         news_footer(array());
     }
 
-    private function getProjectFromRequest() {
+    private function getProjectFromRequest()
+    {
         $project_id      = $this->request->get('project_id');
         $project_manager = ProjectManager::instance();
 

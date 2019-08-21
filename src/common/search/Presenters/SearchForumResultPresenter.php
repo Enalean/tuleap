@@ -28,26 +28,31 @@ class Search_SearchForumResultPresenter {
     /** @var  string */
     private $project_description;
 
-    public function __construct(array $result) {
+    public function __construct(array $result)
+    {
         $this->message_id      = $result['msg_id'];
         $this->message_subject = $result['subject'];
         $this->message_author  = $result['user_name'];
         $this->message_date    = $result['date'];
     }
 
-    public function message_subject() {
+    public function message_subject()
+    {
         return $this->message_subject;
     }
 
-    public function message_uri() {
+    public function message_uri()
+    {
         return "/forum/message.php?msg_id=".$this->message_id;
     }
 
-    public function message_author() {
+    public function message_author()
+    {
         return $this->message_author;
     }
 
-    public function message_date() {
+    public function message_date()
+    {
         return format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->message_date);
     }
 }

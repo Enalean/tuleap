@@ -22,7 +22,8 @@ require_once __DIR__ . '/../bootstrap.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aTracker.php';
 
 class Planning_TrackerPresenter_TestCase extends TuleapTestCase {
-    public function setUp() {
+    public function setUp()
+    {
         $this->planning         = mock('Planning');
         $this->tracker          = aTracker()->build();
         $this->tracker_id       = $this->tracker->getId();
@@ -30,66 +31,79 @@ class Planning_TrackerPresenter_TestCase extends TuleapTestCase {
         $this->presenter        = new Planning_TrackerPresenter($this->planning, $this->tracker);
     }
 
-    public function itHasAnId() {
+    public function itHasAnId()
+    {
         $this->assertEqual($this->presenter->getId(), $this->tracker_id);
     }
 
-    public function itHasAName() {
+    public function itHasAName()
+    {
         $this->assertEqual($this->presenter->getName(), $this->tracker->getName());
     }
 
-    protected function assertSelected($selected) {
+    protected function assertSelected($selected)
+    {
         $this->assertTrue($selected);
     }
 
-    protected function assertNotSelected($selected) {
+    protected function assertNotSelected($selected)
+    {
         $this->assertFalse($selected);
     }
 }
 
 class Planning_TrackerPresenter_BacklogTrackerTest extends Planning_TrackerPresenter_TestCase {
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         stub($this->planning)->getBacklogTrackersIds()->returns(array($this->tracker_id));
         stub($this->planning)->getPlanningTrackerId()->returns($this->other_tracker_id);
     }
 
-    public function itIsSelectedAsABacklogTracker() {
+    public function itIsSelectedAsABacklogTracker()
+    {
         $this->assertSelected($this->presenter->selectedIfBacklogTracker());
     }
 
-    public function itIsNotSelectedAsAPlanningTracker() {
+    public function itIsNotSelectedAsAPlanningTracker()
+    {
         $this->assertNotSelected($this->presenter->selectedIfPlanningTracker());
     }
 }
 
 class Planning_TrackerPresenter_PlanningTrackerTest extends Planning_TrackerPresenter_TestCase {
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         stub($this->planning)->getBacklogTrackersIds()->returns(array($this->other_tracker_id));
         stub($this->planning)->getPlanningTrackerId()->returns($this->tracker_id);
     }
 
-    public function itIsNotSelectedAsABacklogTracker() {
+    public function itIsNotSelectedAsABacklogTracker()
+    {
         $this->assertNotSelected($this->presenter->selectedIfBacklogTracker());
     }
 
-    public function itIsSelectedAsABacklogTracker() {
+    public function itIsSelectedAsABacklogTracker()
+    {
         $this->assertSelected($this->presenter->selectedIfPlanningTracker());
     }
 }
 
 class Planning_TrackerPresenter_NonBacklogNorPlanningTrackerTest extends Planning_TrackerPresenter_TestCase {
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         stub($this->planning)->getBacklogTrackersIds()->returns(array($this->other_tracker_id));
         stub($this->planning)->getPlanningTrackerId()->returns($this->other_tracker_id);
     }
-    public function itIsNotSelectedAsABacklogTracker() {
+    public function itIsNotSelectedAsABacklogTracker()
+    {
         $this->assertNotSelected($this->presenter->selectedIfBacklogTracker());
     }
 
-    public function itIsNotSelectedAsAPlanningTracker() {
+    public function itIsNotSelectedAsAPlanningTracker()
+    {
         $this->assertNotSelected($this->presenter->selectedIfPlanningTracker());
     }
 }

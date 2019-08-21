@@ -23,12 +23,14 @@
 
 class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
 
-    function __construct($da) {
+    function __construct($da)
+    {
         parent::__construct($da);
         $this->table_name = 'plugin_docman_approval_user';
     }
 
-    function getUgroupMembers($ugroupId, $groupId) {
+    function getUgroupMembers($ugroupId, $groupId)
+    {
         require_once __DIR__ . '/../../../../../src/www/project/admin/ugroup_utils.php';
         if($ugroupId > 100) {
             $sql = ugroup_db_get_members($ugroupId);
@@ -41,7 +43,8 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
         return $this->retrieve($sql);
     }
 
-    function getReviewerList($tableId) {
+    function getReviewerList($tableId)
+    {
         $sql = sprintf('SELECT * FROM plugin_docman_approval_user au'.
                        ' WHERE table_id = %d'.
                        ' ORDER BY rank',
@@ -49,7 +52,8 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
         return $this->retrieve($sql);
     }
 
-    function getReviewerById($tableId, $userId) {
+    function getReviewerById($tableId, $userId)
+    {
         $sql = sprintf('SELECT * '.
                        ' FROM plugin_docman_approval_user au'.
                        ' WHERE table_id = %d'.
@@ -58,7 +62,8 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
         return $this->retrieve($sql);
     }
 
-    function getFirstReviewerByStatus($tableId, $status) {
+    function getFirstReviewerByStatus($tableId, $status)
+    {
         if(is_array($status)) {
             $_status = array_map("intval", $status);
             $state = 'state IN ('.implode(',', $status).')';
@@ -76,11 +81,13 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
         return $this->retrieve($sql);
     }
 
-    function prepareUserRanking($tableId, $userId, $rank) {
+    function prepareUserRanking($tableId, $userId, $rank)
+    {
         return parent::prepareRanking($userId, $tableId, $rank, 'reviewer_id', 'table_id');
     }
 
-    function addUser($tableId, $userId) {
+    function addUser($tableId, $userId)
+    {
         $newRank = $this->prepareUserRanking($tableId, $userId, 'end');
         $sql = sprintf('INSERT INTO plugin_docman_approval_user'.
                        '(table_id, reviewer_id, rank)'.
@@ -90,7 +97,8 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
         return $this->update($sql);
     }
 
-    function updateUser($tableId, $userId, $rank) {
+    function updateUser($tableId, $userId, $rank)
+    {
         $newRank = $this->prepareUserRanking($tableId, $userId, $rank);
         if($newRank !== false) {
             $sql = sprintf('UPDATE plugin_docman_approval_user'.
@@ -105,7 +113,8 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
         }
     }
 
-    function delUser($tableId, $userId) {
+    function delUser($tableId, $userId)
+    {
         $sql = sprintf('DELETE FROM plugin_docman_approval_user'.
                        ' WHERE table_id = %d'.
                        ' AND reviewer_id = %d',
@@ -113,14 +122,16 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
         return $this->update($sql);
     }
 
-    function truncateTable($tableId) {
+    function truncateTable($tableId)
+    {
         $sql = sprintf('DELETE FROM plugin_docman_approval_user'.
                        ' WHERE table_id = %d',
                        $tableId);
         return $this->update($sql);
     }
 
-    function updateReview($tableId, $userId, $date, $state, $comment, $version) {
+    function updateReview($tableId, $userId, $date, $state, $comment, $version)
+    {
         $_stmtDate = sprintf('date = %d,', $date);
         if($date === null) {
             $_stmtDate = 'date = NULL,';
@@ -142,15 +153,18 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
         return $this->update($sql);
     }
 
-    function copyReviews($srcTableId, $dstTableId) {
+    function copyReviews($srcTableId, $dstTableId)
+    {
         return $this->_copyReviewers($srcTableId, $dstTableId, 'date', 'state', 'comment', 'version');
     }
 
-    function copyReviewers($srcTableId, $dstTableId) {
+    function copyReviewers($srcTableId, $dstTableId)
+    {
         return $this->_copyReviewers($srcTableId, $dstTableId, 'NULL', 0, "''", 'NULL');
     }
 
-    function _copyReviewers($srcTableId, $dstTableId, $date, $state, $comment, $version) {
+    function _copyReviewers($srcTableId, $dstTableId, $date, $state, $comment, $version)
+    {
         $sql = 'INSERT INTO plugin_docman_approval_user'.
             '(table_id, reviewer_id, rank, date, state, comment, version) '.
             'SELECT '.
@@ -162,7 +176,8 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
         return $this->update($sql);
     }
 
-    function getAllReviewsForUserByState($userId, $state) {
+    function getAllReviewsForUserByState($userId, $state)
+    {
         // Item
         $sql_item = 'SELECT u.table_id, i.item_id, i.group_id, t.date, i.title, g.group_name'.
             ' FROM plugin_docman_approval_user u '.
@@ -202,7 +217,8 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
         return $this->retrieve($sql);
     }
 
-    function getAllApprovalTableForUser($userId) {
+    function getAllApprovalTableForUser($userId)
+    {
         // Item
         $sql_item = 'SELECT t.table_id, i.item_id, i.group_id, t.date, i.title, g.group_name, t.status'.
             ','.parent::getTableStatusFields().

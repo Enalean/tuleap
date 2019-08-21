@@ -61,7 +61,8 @@ class PasswordStrategy {
     *
     * @param  pwd
     */
-    function validate($pwd) {
+    function validate($pwd)
+    {
         $valid = true;
         foreach($this->validators as $key => $nop) {
             if (!$this->validators[$key]->validate($pwd)) {

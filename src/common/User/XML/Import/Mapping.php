@@ -47,7 +47,8 @@ class Mapping implements IFindUserFromXMLReference {
     /**
      * @return PFUser
      */
-    public function getUser(SimpleXMLElement $xml_element) {
+    public function getUser(SimpleXMLElement $xml_element)
+    {
         try {
             return $this->getUserFromXML($xml_element);
         } catch (UserNotFoundException $exception) {
@@ -59,7 +60,8 @@ class Mapping implements IFindUserFromXMLReference {
         }
     }
 
-    private function getUserFromXML(SimpleXMLElement $xml_element) {
+    private function getUserFromXML(SimpleXMLElement $xml_element)
+    {
         $format = (string) $xml_element['format'];
 
         switch ($format) {

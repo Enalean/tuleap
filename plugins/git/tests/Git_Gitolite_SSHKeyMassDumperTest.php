@@ -24,12 +24,14 @@ require_once 'bootstrap.php';
 class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase {
     protected $mass_dumper;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->mass_dumper = new Git_Gitolite_SSHKeyMassDumper($this->dumper, $this->user_manager);
     }
 
-    public function itDumpsSshKeysForOneUser() {
+    public function itDumpsSshKeysForOneUser()
+    {
         $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
         stub($this->user_manager)->getUsersWithSshKey()->returnsDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do')));
 
@@ -42,7 +44,8 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
         $this->assertEmptyGitStatus();
     }
 
-    public function itRemovesSshKeyFileWhenUserDeletedAllHisKeys() {
+    public function itRemovesSshKeyFileWhenUserDeletedAllHisKeys()
+    {
         $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
         expect($this->gitExec)->push()->count(2);
 
@@ -55,7 +58,8 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
         $this->assertFalse(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
     }
 
-    public function itRemovesOnlySshFilesForUsersWithoutKeys() {
+    public function itRemovesOnlySshFilesForUsersWithoutKeys()
+    {
         $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
         $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do')), new PFUser(array('authorized_keys' => $this->key2, 'user_name' => 'do_john'))));
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
@@ -69,7 +73,8 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
         $this->assertEmptyGitStatus();
     }
 
-    public function itRemovesSshFilesWhenKeysAreDeleted() {
+    public function itRemovesSshFilesWhenKeysAreDeleted()
+    {
         $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
         $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do')), new PFUser(array('authorized_keys' => $this->key2 . PFUser::SSH_KEY_SEPARATOR . $this->key1, 'user_name' => 'do_john'))));
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
@@ -85,7 +90,8 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
         $this->assertEmptyGitStatus();
     }
 
-    public function itDoesntRemoveTheGitoliteAdminSSHKey() {
+    public function itDoesntRemoveTheGitoliteAdminSSHKey()
+    {
         $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
         $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do'))));
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
@@ -102,7 +108,8 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
         $this->assertTrue(is_file($this->_glAdmDir . '/keydir/id_rsa_gl-adm.pub'));
     }
 
-    public function itDoesntRemoveTheGerritReservedKeys() {
+    public function itDoesntRemoveTheGerritReservedKeys()
+    {
         $invalid_keys_collector = mock('Tuleap\\Git\\Gitolite\\SSHKey\\InvalidKeysCollector');
         $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do'))));
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);

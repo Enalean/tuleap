@@ -20,12 +20,14 @@
 
 class Tracker_FormElement_Field_Value_FileDao extends Tracker_FormElement_Field_ValueDao {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_changeset_value_file';
     }
 
-    public function create($changeset_value_id, $value_ids) {
+    public function create($changeset_value_id, $value_ids)
+    {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $values = array();
         foreach($value_ids as $v) {
@@ -41,10 +43,12 @@ class Tracker_FormElement_Field_Value_FileDao extends Tracker_FormElement_Field_
         return false;
     }
 
-    public function  createNoneValue($tracker_id, $field_id) {
+    public function createNoneValue($tracker_id, $field_id)
+    {
         $changeset_value_ids = $this->createNoneChangesetValue($tracker_id, $field_id);
     }
-    public function keep($from, $to) {
+    public function keep($from, $to)
+    {
         $from = $this->da->escapeInt($from);
         $to   = $this->da->escapeInt($to);
         $sql = "INSERT INTO $this->table_name(changeset_value_id, fileinfo_id)

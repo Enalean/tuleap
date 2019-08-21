@@ -150,7 +150,8 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         return $nature;
     }
 
-    private function retrieveSystemNatures(array &$natures) {
+    private function retrieveSystemNatures(array &$natures)
+    {
         $params['natures']   = &$natures;
         $params['natures'][] = Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
         EventManager::instance()->processEvent(

@@ -42,7 +42,8 @@ class Webdav_URLVerificationTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    public function testAssertValidUrlHTTPAndHTTPSHostNotAvailable() {
+    public function testAssertValidUrlHTTPAndHTTPSHostNotAvailable()
+    {
         $server = array('HTTP_HOST' => 'webdav.tuleap.test');
 
         $GLOBALS['sys_default_domain'] = 'example.com';
@@ -87,7 +88,8 @@ class Webdav_URLVerificationTest extends TuleapTestCase {
         $this->webdavURLVerification->assertValidUrl($server, $this->request);
     }
 
-    public function testAssertValidUrlHTTPSAndHTTPSHostAvailable() {
+    public function testAssertValidUrlHTTPSAndHTTPSHostAvailable()
+    {
         $server = array('HTTP_HOST' => 'webdav.tuleap.test');
         stub($this->request)->isSecure()->returns(true);
 
@@ -102,7 +104,8 @@ class Webdav_URLVerificationTest extends TuleapTestCase {
         $this->webdavURLVerification->assertValidUrl($server, $this->request);
     }
 
-    function testAssertValidUrlNotPluginHost() {
+    function testAssertValidUrlNotPluginHost()
+    {
         $server = array('HTTP_HOST' => 'codendi.org');
 
         $this->webdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
@@ -114,7 +117,8 @@ class Webdav_URLVerificationTest extends TuleapTestCase {
         $this->webdavURLVerification->assertValidUrl($server, $this->request);
     }
 
-    function testAssertValidUrlButWebdavHostIsDefaultDomain() {
+    function testAssertValidUrlButWebdavHostIsDefaultDomain()
+    {
         $server = array('HTTP_HOST' => 'a.codendi.org');
 
         $GLOBALS['sys_default_domain'] = 'a.codendi.org';
@@ -128,7 +132,8 @@ class Webdav_URLVerificationTest extends TuleapTestCase {
         $this->webdavURLVerification->assertValidUrl($server, $this->request);
     }
 
-    function testAssertValidUrlButWebdavHostIsHttpsHost() {
+    function testAssertValidUrlButWebdavHostIsHttpsHost()
+    {
         $server = array('HTTP_HOST' => 'b.codendi.org');
 
         $GLOBALS['sys_default_domain'] = 'example.com';

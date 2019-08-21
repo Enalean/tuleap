@@ -21,17 +21,20 @@
 class Tracker_Artifact_View_Hierarchy extends Tracker_Artifact_View_View {
 
     /** @see Tracker_Artifact_View_View::getTitle() */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'hierarchy_title');
     }
 
     /** @see Tracker_Artifact_View_View::getIdentifier() */
-    public function getIdentifier() {
+    public function getIdentifier()
+    {
         return 'hierarchy';
     }
 
     /** @see Tracker_Artifact_View_View::fetch() */
-    public function fetch() {
+    public function fetch()
+    {
         return '<div data-artifact-id="'. $this->artifact->getId() .'" class="artifact-hierarchy"></div>';
     }
 }

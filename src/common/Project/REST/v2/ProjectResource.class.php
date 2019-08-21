@@ -44,7 +44,8 @@ class ProjectResource extends AuthenticatedResource {
     /** @var ProjectManager */
     private $project_manager;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->user_manager    = UserManager::instance();
         $this->project_manager = ProjectManager::instance();
     }
@@ -55,7 +56,8 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @return Project
      */
-    private function getProjectForUser($id) {
+    private function getProjectForUser($id)
+    {
         $project = $this->project_manager->getProject($id);
         $user    = $this->user_manager->getCurrentUser();
 
@@ -79,7 +81,8 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @throws RestException 406
      */
-    public function getBacklog($id, $limit = 10, $offset = 0) {
+    public function getBacklog($id, $limit = 10, $offset = 0)
+    {
         $this->checkAccess();
 
         $this->checkAgileEndpointsAvailable();
@@ -95,13 +98,15 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @param int $id Id of the project
      */
-    public function optionsBacklog($id) {
+    public function optionsBacklog($id)
+    {
         $this->checkAgileEndpointsAvailable();
         $this->sendAllowHeadersForBacklog();
     }
 
 
-    private function backlogItems($id, $limit, $offset, $event) {
+    private function backlogItems($id, $limit, $offset, $event)
+    {
         $project = $this->getProjectForUser($id);
         $result  = array();
 
@@ -119,15 +124,18 @@ class ProjectResource extends AuthenticatedResource {
         return $result;
     }
 
-    private function sendAllowHeadersForBacklog() {
+    private function sendAllowHeadersForBacklog()
+    {
         Header::allowOptionsGet();
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size) {
+    private function sendPaginationHeaders($limit, $offset, $size)
+    {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
-    private function checkAgileEndpointsAvailable() {
+    private function checkAgileEndpointsAvailable()
+    {
         $available = false;
 
         EventManager::instance()->processEvent(

@@ -42,7 +42,8 @@ class ArtifactReportField extends ArtifactField {
      *    @param
      *    @return bool success.
      */
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         return true;
     }
@@ -53,7 +54,8 @@ class ArtifactReportField extends ArtifactField {
      *    @param field_array: the array of these attributes
      *
      */
-    function setReportFieldsFromArray($field_array) {
+    function setReportFieldsFromArray($field_array)
+    {
      //echo "setReportFieldsFromArray<br>";
         $this->show_on_query = $field_array['show_on_query'];
         $this->show_on_result = $field_array['show_on_result'];
@@ -69,7 +71,8 @@ class ArtifactReportField extends ArtifactField {
      *    @return string
      *
      */
-    function getShowOnQuery() {
+    function getShowOnQuery()
+    {
         return $this->show_on_query;
     }
 
@@ -79,7 +82,8 @@ class ArtifactReportField extends ArtifactField {
      *    @return string
      *
      */
-    function getShowOnResult() {
+    function getShowOnResult()
+    {
         return $this->show_on_result;
     }
 
@@ -89,7 +93,8 @@ class ArtifactReportField extends ArtifactField {
      *    @return bool
      *
      */
-    function isShowOnQuery() {
+    function isShowOnQuery()
+    {
         return ( $this->show_on_query == 1 );
     }
 
@@ -99,7 +104,8 @@ class ArtifactReportField extends ArtifactField {
      *    @return string
      *
      */
-    function isShowOnResult() {
+    function isShowOnResult()
+    {
         return ( $this->show_on_result == 1 );
     }
 
@@ -109,7 +115,8 @@ class ArtifactReportField extends ArtifactField {
      *    @return string
      *
      */
-    function getPlaceQuery() {
+    function getPlaceQuery()
+    {
         return $this->place_query;
     }
 
@@ -119,7 +126,8 @@ class ArtifactReportField extends ArtifactField {
      *    @return string
      *
      */
-    function getPlaceResult() {
+    function getPlaceResult()
+    {
         return $this->place_result;
     }
 
@@ -129,7 +137,8 @@ class ArtifactReportField extends ArtifactField {
      *    @return int
      *
      */
-    function getColWidth() {
+    function getColWidth()
+    {
         return $this->col_width;
     }
 
@@ -137,7 +146,8 @@ class ArtifactReportField extends ArtifactField {
      *  Dump the object
      *
      */
-    function dump() {
+    function dump()
+    {
         return "show_on_query=".$this->show_on_query.
          " - show_on_result=".$this->show_on_result.
          " - place_query=".$this->place_query.

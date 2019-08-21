@@ -44,7 +44,8 @@ class URLTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    function testProjectsSvnExist() {
+    function testProjectsSvnExist()
+    {
         $url = new URL();
         $this->assertEqual($url->getGroupNameFromSVNUrl('/viewvc.php/?roottype=svn&root=group_name'), 'group_name');
         $this->assertEqual($url->getGroupNameFromSVNUrl('/viewvc.php/?roottype=svn&root=group.name'), 'group.name');
@@ -53,7 +54,8 @@ class URLTest extends TuleapTestCase {
         $this->assertEqual($url->getGroupNameFromSVNUrl('/viewvc.php/?roo=group_name&roottype=svn'), false);
     }
 
-    function testProjectsDontExist() {
+    function testProjectsDontExist()
+    {
         $url = new URLTestVersion($this);
         $dao = new MockProjectDao($this);
         $exists = new MockDataAccessResult($this);
@@ -67,7 +69,8 @@ class URLTest extends TuleapTestCase {
         $this->assertFalse($url->getGroupIdFromURL('/projects/dontexist/'));
     }
 
-    function testProjectsExist() {
+    function testProjectsExist()
+    {
         $url = new URLTestVersion($this);
         $dao = new MockProjectDao($this);
         $exists = new MockDataAccessResult($this);
@@ -91,7 +94,8 @@ class URLTest extends TuleapTestCase {
         $this->assertNotEqual($url->getGroupIdFromURL('/toto/projects/exist/'), 1);
     }
 
-    function testViewVcDontExist() {
+    function testViewVcDontExist()
+    {
         $url = new URLTestVersion($this);
         $dao = new MockProjectDao($this);
         $exists = new MockDataAccessResult($this);
@@ -107,7 +111,8 @@ class URLTest extends TuleapTestCase {
         $this->assertFalse($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=dontexist'));
     }
 
-    function testViewVcExist() {
+    function testViewVcExist()
+    {
         $url = new URLTestVersion($this);
         $dao = new MockProjectDao($this);
         $exists = new MockDataAccessResult($this);
@@ -123,7 +128,8 @@ class URLTest extends TuleapTestCase {
         $this->assertEqual($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=exist'), 1);
     }
 
-    function testViewVcNotValidProjectName() {
+    function testViewVcNotValidProjectName()
+    {
         $url = new URLTestVersion($this);
         $rule = new MockRule_ProjectName();
         $url->setReturnValue('getProjectNameRule', $rule);
@@ -132,7 +138,8 @@ class URLTest extends TuleapTestCase {
         $this->assertEqual($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=ex(ist'), false);
     }
 
-    function testViewVcExistForProjectWithPoint() {
+    function testViewVcExistForProjectWithPoint()
+    {
         $url = new URLTestVersion($this);
         $dao = new MockProjectDao($this);
         $exists = new MockDataAccessResult($this);
@@ -150,7 +157,8 @@ class URLTest extends TuleapTestCase {
         $this->assertEqual($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=test.svn'), 1);
     }
 
-    function testForumDontExist() {
+    function testForumDontExist()
+    {
         $url = new URLTestVersion($this);
         $dao = new MockForumDao($this);
         $exists = new MockDataAccessResult($this);
@@ -161,7 +169,8 @@ class URLTest extends TuleapTestCase {
         $this->assertFalse($url->getGroupIdFromURL('/forum/forum.php?forum_id=dontexist'));
     }
 
-    function testForumExist() {
+    function testForumExist()
+    {
         $url = new URLTestVersion($this);
         $dao = new MockForumDao($this);
         $exists = new MockDataAccessResult($this);
@@ -178,7 +187,8 @@ class URLTest extends TuleapTestCase {
         $this->assertNotEqual($url->getGroupIdFromURL('/toto/forum/forum.php?forum_id=exist'), 1);
     }
 
-    function testNewsBytesDontExist() {
+    function testNewsBytesDontExist()
+    {
         $url = new URLTestVersion($this);
         $dao = new MockForumDao($this);
         $exists = new MockDataAccessResult($this);
@@ -192,7 +202,8 @@ class URLTest extends TuleapTestCase {
 
     }
 
-    function testNewsBytesExist() {
+    function testNewsBytesExist()
+    {
         $url = new URLTestVersion($this);
         $dao = new MockForumDao($this);
         $exists = new MockDataAccessResult($this);
@@ -214,7 +225,8 @@ class URLTest extends TuleapTestCase {
     }
 
 
-    function testArtifactDontExist(){
+    function testArtifactDontExist()
+    {
         $url = new URLTestVersion($this);
         $dao = new MockArtifactDao($this);
         $exists = new MockDataAccessResult($this);
@@ -225,7 +237,8 @@ class URLTest extends TuleapTestCase {
         $this->assertFalse($url->getGroupIdFromURL('/tracker/download.php?artifact_id=dontexist'));
     }
 
-    function testArtifactExist() {
+    function testArtifactExist()
+    {
         $url = new URLTestVersion($this);
         $dao = new MockArtifactDao($this);
         $exists = new MockDataAccessResult($this);

@@ -27,21 +27,25 @@ class Project_Service_ServiceUsage {
     private $short_name;
     private $is_used;
 
-    public function __construct($id, $short_name, $is_used) {
+    public function __construct($id, $short_name, $is_used)
+    {
         $this->id         = $id;
         $this->short_name = $short_name;
         $this->is_used    = $is_used;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getShortName() {
+    public function getShortName()
+    {
         return $this->short_name;
     }
 
-    public function isUsed() {
+    public function isUsed()
+    {
         return $this->is_used;
     }
 }

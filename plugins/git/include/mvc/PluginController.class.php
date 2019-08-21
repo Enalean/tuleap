@@ -56,29 +56,34 @@ abstract class PluginController
      */
     protected $default_page_rendering = true;
 
-    public function __construct(UserManager $user_manager, Codendi_Request $request) {
+    public function __construct(UserManager $user_manager, Codendi_Request $request)
+    {
         $this->user             = $user_manager->getCurrentUser();
         $this->request          = $request;
     }
 
-    public function getRequest() {
+    public function getRequest()
+    {
         return $this->request;
     }
 
-    public function getUser() {
+    public function getUser()
+    {
         return $this->user;
     }
     /**
      * Function called by process method
      */
-    public function request() {
+    public function request()
+    {
     }
 
     /**
      * Wrapper of global redirect method
      * @param String url
      */
-    public function redirect($url) {
+    public function redirect($url)
+    {
         $GLOBALS['HTML']->redirect($url);
     }
 
@@ -86,7 +91,8 @@ abstract class PluginController
      * Wrapper
      * @param String $msg
      */
-    public function addError($msg) {
+    public function addError($msg)
+    {
         $GLOBALS['Response']->addFeedback('error', $msg);
     }
 
@@ -94,7 +100,8 @@ abstract class PluginController
      * Wrapper
      * @param String $msg
      */
-    public function addWarn($msg) {
+    public function addWarn($msg)
+    {
         $GLOBALS['Response']->addFeedback('warning', $msg);
     }
 
@@ -102,7 +109,8 @@ abstract class PluginController
      * Wrapper
      * @param String $msg
      */
-    public function addInfo($msg) {
+    public function addInfo($msg)
+    {
         $GLOBALS['Response']->addFeedback('info', $msg);
     }
 
@@ -111,7 +119,8 @@ abstract class PluginController
      * @see isAPermittedAction
      * @param Array $actions a list of action name
      */
-    public function setPermittedActions($actions) {
+    public function setPermittedActions($actions)
+    {
         $this->permittedActions = $actions;
     }
 
@@ -119,14 +128,16 @@ abstract class PluginController
      * Returns the array of actions
      * @return Array
      */
-    public function getPermittedActions() {
+    public function getPermittedActions()
+    {
         return $this->permittedActions;
     }
     /**
      *
      * @param <type> $action
      */
-    public function addPermittedAction($action) {
+    public function addPermittedAction($action)
+    {
         $this->permittedActions[] = $action;
     }
     /**
@@ -135,7 +146,8 @@ abstract class PluginController
      * @param String $actionName
      * @return bool
      */
-    public function isAPermittedAction($actionName) {
+    public function isAPermittedAction($actionName)
+    {
         return in_array($actionName, $this->permittedActions);
     }
 
@@ -144,7 +156,8 @@ abstract class PluginController
      * @see getData()
      * @param <type> $data
      */
-    public function addData($data) {
+    public function addData($data)
+    {
         if ( !empty($data) && is_array($data)) {
             $this->actionResultData = array_merge($this->actionResultData, $data);
         }
@@ -154,15 +167,18 @@ abstract class PluginController
      * Gives data added during PluginAction methods (actions)
      * @return Array data
      */
-    public function getData() {
+    public function getData()
+    {
         return $this->actionResultData;
     }
 
-    public function addView($viewName, $params=array()) {
+    public function addView($viewName, $params=array())
+    {
         $this->views[$viewName] = $params;
     }
 
-    public function addAction($actionName, $params=array()) {
+    public function addAction($actionName, $params=array())
+    {
         $this->actions[$actionName] = $params;
     }
 
@@ -172,7 +188,8 @@ abstract class PluginController
      * @TODO associate an action and a view in order to skip action call to provide data to a given view.(like Symfony framework component)
      * @return null
      */
-    function executeViews() {
+    function executeViews()
+    {
         $wv = $this->instantiateView();
         //this allow to skip header
         if (! $this->isADownload() && $this->default_page_rendering) {
@@ -197,7 +214,8 @@ abstract class PluginController
      * @TODO associate an action and a view in order to skip action call to provide data to a given view.(like Symfony framework component)
      * @return null
      */
-    function executeActions() {
+    function executeActions()
+    {
         if ( empty($this->actions) ) {
             return false;
         }
@@ -218,14 +236,16 @@ abstract class PluginController
      *
      * @return PluginActions
      */
-    protected function instantiateAction($action) {
+    protected function instantiateAction($action)
+    {
         return new $action($this);
     }
 
     /**
      * Render everything
      */
-    function process() {
+    function process()
+    {
         $this->request();
         $this->executeActions();
         $this->executeViews();
@@ -236,7 +256,8 @@ abstract class PluginController
      *
      * @param bool $bool
      */
-    protected function setDefaultPageRendering($bool) {
+    protected function setDefaultPageRendering($bool)
+    {
         $this->default_page_rendering = $bool;
     }
 

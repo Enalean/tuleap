@@ -23,7 +23,8 @@ class b201601271109_add_remote_servers_migration extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add column to track remote server status
 EOT;
@@ -34,7 +35,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -44,13 +46,15 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = 'ALTER TABLE plugin_git
                 ADD COLUMN remote_server_migration_status ENUM("DONE", "ERROR") NULL AFTER remote_project_deleted_date';
         $this->execDB($sql, 'An error occured while adding remote_server_migration_status to plugin_git: ');
     }
 
-    protected function execDB($sql, $message) {
+    protected function execDB($sql, $message)
+    {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message.implode(', ', $this->db->dbh->errorInfo()));

@@ -23,7 +23,8 @@ class b201402191017_add_mwgroups_table extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Create plugin_mediawiki_tuleap_mwgroups table
 EOT;
@@ -34,7 +35,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -43,7 +45,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE plugin_mediawiki_tuleap_mwgroups (
                     mw_group_name ENUM( 'anonymous', 'user', 'bot', 'sysop', 'bureaucrat' ) NOT NULL DEFAULT 'anonymous',
                     real_name varbinary(32) NOT NULL DEFAULT '',
@@ -63,7 +66,8 @@ EOT;
         $this->execDB($sql, "Cannot init table");
     }
 
-    private function execDB($sql, $message) {
+    private function execDB($sql, $message)
+    {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message.implode(', ', $this->db->dbh->errorInfo()));

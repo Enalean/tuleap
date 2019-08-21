@@ -24,7 +24,8 @@ class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
 
     private $user_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $user            = aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
@@ -35,13 +36,15 @@ class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
         UserManager::setInstance($this->user_manager);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         UserManager::clearInstance();
 
         parent::tearDown();
     }
 
-    public function itExportsToXML() {
+    public function itExportsToXML()
+    {
         $body = '<b> My comment 01</b>';
 
         $comment = new Tracker_Artifact_Changeset_Comment(
@@ -71,7 +74,8 @@ class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
         $this->assertEqual($changeset_node->comment->body['format'], 'html');
     }
 
-    public function itExportsToXMLWithCrossReferencesEscaped() {
+    public function itExportsToXMLWithCrossReferencesEscaped()
+    {
         $body         = 'See art #290';
         $escaped_body = 'See art # 290';
 

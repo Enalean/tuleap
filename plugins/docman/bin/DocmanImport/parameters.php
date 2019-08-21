@@ -38,7 +38,8 @@
  *    not just a flag. This can also be seen as "isn't a flag" value
  */
 
-function getParameter(&$parameter_array, $parameter, $require_value=false) {
+function getParameter(&$parameter_array, $parameter, $require_value=false)
+{
     for ($i=0; $i < count($parameter_array); $i++) {
         $res = array();
         if (preg_match("/^\\-\\-(.+)/s",$parameter_array[$i],$res)) {    // several-character parameter? (IE, "--username=john")

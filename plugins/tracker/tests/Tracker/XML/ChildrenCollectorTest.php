@@ -24,19 +24,22 @@ class Tracker_XML_Exporter_ChildrenCollectorTest extends TuleapTestCase {
     /** @var Tracker_XML_Exporter_ChildrenCollectorTest */
     private $collector;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->collector = new Tracker_XML_ChildrenCollector();
     }
 
-    public function itRaisesAnExceptionWhenTooManyChildrenAreAdded() {
+    public function itRaisesAnExceptionWhenTooManyChildrenAreAdded()
+    {
         $this->expectException('Tracker_XML_Exporter_TooManyChildrenException');
         for ($i = 0 ; $i <= Tracker_XML_ChildrenCollector::MAX ; ++$i) {
             $this->collector->addChild($i, 'whatever');
         }
     }
 
-    public function itPopsChildren() {
+    public function itPopsChildren()
+    {
         $this->collector->addChild(1, 'whatever');
         $this->collector->addChild(2, 'whatever');
 
@@ -45,13 +48,15 @@ class Tracker_XML_Exporter_ChildrenCollectorTest extends TuleapTestCase {
         $this->assertEqual(null, $this->collector->pop());
     }
 
-    public function itDoesNotStackTwiceTheSameChild() {
+    public function itDoesNotStackTwiceTheSameChild()
+    {
         $this->collector->addChild(1, 1123);
         $this->collector->addChild(1, 1123);
         $this->assertEqual($this->collector->getAllChildrenIds(), array(1));
     }
 
-    public function itReturnsAllParents() {
+    public function itReturnsAllParents()
+    {
         $this->collector->addChild(1, 1123);
         $this->collector->addChild(2, 1123);
         $this->collector->addChild(3, 147);
@@ -60,7 +65,8 @@ class Tracker_XML_Exporter_ChildrenCollectorTest extends TuleapTestCase {
         $this->assertEqual($parents_array, $this->collector->getAllParents());
     }
 
-    public function itReturnsChildrenOfAParent() {
+    public function itReturnsChildrenOfAParent()
+    {
         $parent_id = 1123;
         $this->collector->addChild(1, $parent_id);
         $this->collector->addChild(2, $parent_id);
@@ -70,7 +76,8 @@ class Tracker_XML_Exporter_ChildrenCollectorTest extends TuleapTestCase {
         $this->assertEqual($children_array, $this->collector->getChildrenForParent($parent_id));
     }
 
-    public function itReturnsEmptyArrayIfParentNotFound() {
+    public function itReturnsEmptyArrayIfParentNotFound()
+    {
         $parent_id = 1123;
         $this->collector->addChild(1, $parent_id);
         $this->collector->addChild(2, $parent_id);
@@ -80,7 +87,8 @@ class Tracker_XML_Exporter_ChildrenCollectorTest extends TuleapTestCase {
         $this->assertEqual($children_array, $this->collector->getChildrenForParent(666));
     }
 
-    public function itAddsTheParentEvenIfChildIsAlreadyStacked() {
+    public function itAddsTheParentEvenIfChildIsAlreadyStacked()
+    {
         $this->collector->addChild(1, 1123);
         $this->collector->addChild(1, 1124);
         $this->assertEqual($this->collector->getAllChildrenIds(), array(1));

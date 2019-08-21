@@ -24,7 +24,8 @@ require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/bui
 
 class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
@@ -46,12 +47,14 @@ class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
         $this->controller = new Planning_ArtifactCreationController($planning_factory, $this->request);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         parent::tearDown();
     }
 
-    public function itRedirectsToArtifactCreationForm() {
+    public function itRedirectsToArtifactCreationForm()
+    {
         $new_artifact_url = preg_quote(TRACKER_BASE_URL."/?tracker=$this->planning_tracker_id&func=new-artifact&planning[{$this->planning->getId()}]=-1");
 
         $this->expectRedirectTo(new PatternExpectation("@$new_artifact_url@"));

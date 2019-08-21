@@ -32,16 +32,19 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      * (The field itself will be deleted later)
      * @return bool true if success
      */
-    public function delete() {
+    public function delete()
+    {
         return true;
     }
 
-    public function getCriteriaFrom($criteria) {
+    public function getCriteriaFrom($criteria)
+    {
         // SubmittedOn is stored in the artifact
         return '';
     }
 
-    public function getCriteriaWhere($criteria) {
+    public function getCriteriaWhere($criteria)
+    {
         //Only filter query if criteria is valuated
         if ($criteria_value= $this->getCriteriaValue($criteria)) {
             $a = 'A_'. $this->id;
@@ -58,16 +61,19 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         return '';
     }
 
-    public function getQuerySelect() {
+    public function getQuerySelect()
+    {
         // SubmittedOn is stored in the artifact
         return "a.submitted_by AS `". $this->name ."`";
     }
 
-    public function getQueryFrom() {
+    public function getQueryFrom()
+    {
         // SubmittedOn is stored in the artifact
         return '';
     }
-    public function getQueryFromAggregate() {
+    public function getQueryFromAggregate()
+    {
         $R1 = 'R1_'. $this->id;
         $R2 = 'R2_'. $this->id;
         return " LEFT JOIN  user AS $R2 ON ($R2.user_id = a.submitted_by ) ";
@@ -76,7 +82,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public function getQueryGroupby() {
+    public function getQueryGroupby()
+    {
         // SubmittedOn is stored in the artifact
         return 'a.submitted_by';
     }
@@ -84,35 +91,40 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     /**
      * Get the "order by" statement to retrieve field values
      */
-    public function getQueryOrderby() {
+    public function getQueryOrderby()
+    {
         return $this->name;
     }
 
     /**
      * @return the label of the field (mainly used in admin part)
      */
-    public static function getFactoryLabel() {
+    public static function getFactoryLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedby_label');
     }
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
-    public static function getFactoryDescription() {
+    public static function getFactoryDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedby_description');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconUseIt() {
+    public static function getFactoryIconUseIt()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/user-female.png');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconCreate() {
+    public static function getFactoryIconCreate()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/user-female--plus.png');
     }
 
@@ -136,7 +148,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @return int or array of int
      */
-    protected function keepValue($artifact, $changeset_value_id, Tracker_Artifact_ChangesetValue $previous_changesetvalue) {
+    protected function keepValue($artifact, $changeset_value_id, Tracker_Artifact_ChangesetValue $previous_changesetvalue)
+    {
         //The field is ReadOnly
         return null;
     }
@@ -148,7 +161,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      * @param bool $tracker_is_empty
      * @return void
      */
-    public function afterCreate(array $form_element_data, $tracker_is_empty) {
+    public function afterCreate(array $form_element_data, $tracker_is_empty)
+    {
         //force the bind
         $form_element_data['bind-type'] = 'users';
         $form_element_data['bind'] = array(
@@ -159,7 +173,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         parent::afterCreate($form_element_data, $tracker_is_empty);
     }
 
-    public function fetchSubmit(array $submitted_values) {
+    public function fetchSubmit(array $submitted_values)
+    {
         // We do not display the field in the artifact submit form
         return '';
     }
@@ -169,7 +184,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         return '';
     }
 
-    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
+    {
         $value              = new Tracker_FormElement_Field_List_Bind_UsersValue($changeset->getArtifact()->getSubmittedBy());
         $submitted_by_value = $value->getFullRESTValue($this);
 
@@ -208,7 +224,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
         $value    = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getSubmittedBy());
@@ -271,7 +288,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @return bool true if the value is considered ok
      */
-    public function isValid(Tracker_Artifact $artifact, $value) {
+    public function isValid(Tracker_Artifact $artifact, $value)
+    {
         // this field is always valid as it is not filled by users.
         return true;
     }
@@ -308,7 +326,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @return string html
      */
-    protected function fetchAdminFormElement() {
+    protected function fetchAdminFormElement()
+    {
         $purifier   = Codendi_HTMLPurifier::instance();
         $html       = '';
         $fake_value = new Tracker_FormElement_Field_List_Bind_UsersValue(UserManager::instance()->getCurrentUser()->getId());
@@ -329,14 +348,16 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @return string
      */
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    {
         return $this->getBind()->formatChangesetValue(new Tracker_FormElement_Field_List_Bind_UsersValue($value));
     }
 
     /**
      * @see Tracker_FormElement_Field::fetchTooltipValue()
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
@@ -359,7 +380,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @return string
      */
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
+    {
         return $this->getBind()->formatChangesetValueForCSV(new Tracker_FormElement_Field_List_Bind_UsersValue($value));
     }
 
@@ -368,7 +390,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @return bool
      */
-    public function isNotificationsSupported() {
+    public function isNotificationsSupported()
+    {
         return true;
     }
 
@@ -377,11 +400,13 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @return bool
      */
-    public function shouldBeBindXML() {
+    public function shouldBeBindXML()
+    {
         return false;
     }
 
-    public function getUserManager() {
+    public function getUserManager()
+    {
         return UserManager::instance();
     }
      /**
@@ -392,7 +417,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @return int the user id
      */
-    public function getFieldData($value) {
+    public function getFieldData($value)
+    {
         $um = $this->getUserManager();
         $u = $um->getUserByUserName($value);
         if ($u) {
@@ -402,19 +428,23 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         }
     }
 
-    public function isNone($value) {
+    public function isNone($value)
+    {
         return false;
     }
 
-    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+    public function accept(Tracker_FormElement_FieldVisitor $visitor)
+    {
         return $visitor->visitSubmittedBy($this);
     }
 
-    public function getDefaultValue() {
+    public function getDefaultValue()
+    {
         return Tracker_FormElement_Field_List_Bind::NONE_VALUE;
     }
 
-    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null)
+    {
          return null;
     }
 }

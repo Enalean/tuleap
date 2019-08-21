@@ -37,20 +37,24 @@ require_once('lib/plugin/WikiAdminSelect.php');
 class WikiPlugin_WikiAdminRemove
 extends WikiPlugin_WikiAdminSelect
 {
-    function getName() {
+    function getName()
+    {
         return _("WikiAdminRemove");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Permanently remove all selected pages.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.30 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array_merge
             (
              PageList::supportedArgs(),
@@ -77,7 +81,8 @@ extends WikiPlugin_WikiAdminSelect
                    ));
     }
 
-    function collectPages(&$list, &$dbi, $sortby, $limit=0) {
+    function collectPages(&$list, &$dbi, $sortby, $limit=0)
+    {
         extract($this->_args);
 
         $now = time();
@@ -107,7 +112,8 @@ extends WikiPlugin_WikiAdminSelect
         return $list;
     }
 
-    function removePages(&$request, $pages) {
+    function removePages(&$request, $pages)
+    {
         $ul = HTML::ul();
         $dbi = $request->getDbh(); $count = 0;
         foreach ($pages as $name) {
@@ -125,7 +131,8 @@ extends WikiPlugin_WikiAdminSelect
                     HTML::p(fmt("%d pages have been permanently removed.",$count)));
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         if ($request->getArg('action') != 'browse')
             if ($request->getArg('action') != _("PhpWikiAdministration/Remove"))
                 return $this->disabled("(action != 'browse')");
@@ -228,7 +235,8 @@ extends WikiPlugin_WikiAdminSelect
 }
 
 class _PageList_Column_remove extends _PageList_Column {
-    function _getValue ($page_handle, &$revision_handle) {
+    function _getValue($page_handle, &$revision_handle)
+    {
         return Button(array('action' => 'remove'), _("Remove"),
                       $page_handle->getName());
     }

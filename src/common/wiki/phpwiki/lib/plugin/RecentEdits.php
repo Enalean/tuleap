@@ -7,16 +7,19 @@ require_once("lib/plugin/RecentChanges.php");
 class WikiPlugin_RecentEdits
 extends WikiPlugin_RecentChanges
 {
-    function getName () {
+    function getName()
+    {
         return _("RecentEdits");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.1 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         $args = parent::getDefaultArguments();
         $args['show_minor'] = true;
         $args['show_all'] = true;
@@ -25,7 +28,8 @@ extends WikiPlugin_RecentChanges
 
     // box is used to display a fixed-width, narrow version with common header.
     // just a numbered list of limit pagenames, without date.
-    function box($args = false, $request = false, $basepage = false) {
+    function box($args = false, $request = false, $basepage = false)
+    {
         if (!$request) $request = $GLOBALS['request'];
         if (!isset($args['limit'])) $args['limit'] = 15;
         $args['format'] = 'box';

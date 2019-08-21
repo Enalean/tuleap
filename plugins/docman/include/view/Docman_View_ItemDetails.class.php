@@ -28,23 +28,27 @@ class Docman_View_ItemDetails {
     var $current_section;
     var $url;
 
-    function __construct($item, $url) {
+    function __construct($item, $url)
+    {
         $this->item             = $item;
         $this->url              = $url;
         $this->current_section  = null;
         $this->sections         = array();
     }
 
-    function addSection($section) {
+    function addSection($section)
+    {
         $this->sections[$section->getId()] = $section;
         if (!$this->current_section && count($this->sections) == 1) {
             $this->setCurrentSection($section->getId());
         }
     }
-    function setCurrentSection($id_section) {
+    function setCurrentSection($id_section)
+    {
         $this->current_section = $id_section;
     }
-    function fetch() {
+    function fetch()
+    {
         $html = '';
 
         $html .= '<br />';
@@ -64,7 +68,8 @@ class Docman_View_ItemDetails {
         }
         return $html;
     }
-    function display() {
+    function display()
+    {
         echo $this->fetch();
     }
 }

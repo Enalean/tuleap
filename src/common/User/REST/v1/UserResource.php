@@ -78,7 +78,8 @@ class UserResource extends AuthenticatedResource {
     /** @var User_ForgeUserGroupPermissionsManager */
     private $forge_ugroup_permissions_manager;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->user_manager       = UserManager::instance();
         $this->json_decoder       = new JsonDecoder();
         $this->ugroup_literalizer = new UGroupLiteralizer();
@@ -110,7 +111,8 @@ class UserResource extends AuthenticatedResource {
      *
      * @return UserRepresentation {@type UserRepresentation}
      */
-    public function getId($id) {
+    public function getId($id)
+    {
         $this->checkAccess();
 
         $user                = $this->getUserById($id);
@@ -128,7 +130,8 @@ class UserResource extends AuthenticatedResource {
      * @throws RestException 400
      * @throws RestException 404
      */
-    public function optionsId($id) {
+    public function optionsId($id)
+    {
         $this->sendAllowHeaders();
     }
 
@@ -137,7 +140,8 @@ class UserResource extends AuthenticatedResource {
      *
      * @access public
      */
-    public function options() {
+    public function options()
+    {
         $this->sendAllowHeaders();
     }
 
@@ -179,7 +183,8 @@ class UserResource extends AuthenticatedResource {
         return $this->getUsersListRepresentation($user_collection, $offset, $limit);
     }
 
-    private function getUserFromExactSearch($query) {
+    private function getUserFromExactSearch($query)
+    {
         $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
         if (! isset($json_query['username'])) {
             throw new RestException(400, 'You can only search on "username"');
@@ -195,7 +200,8 @@ class UserResource extends AuthenticatedResource {
         );
     }
 
-    private function getUsersFromPatternSearch($query, $offset, $limit) {
+    private function getUsersFromPatternSearch($query, $offset, $limit)
+    {
         $exact = false;
         return $this->user_manager->getPaginatedUsersByUsernameOrRealname(
             $query,
@@ -205,7 +211,8 @@ class UserResource extends AuthenticatedResource {
         );
     }
 
-    private function getUsersListRepresentation(PaginatedUserCollection $user_collection, $offset, $limit) {
+    private function getUsersListRepresentation(PaginatedUserCollection $user_collection, $offset, $limit)
+    {
         $this->sendAllowHeaders();
         Header::sendPaginationHeaders(
             $limit,
@@ -248,7 +255,8 @@ class UserResource extends AuthenticatedResource {
      *
      * @return array {@type string}
      */
-    public function getMembership($id) {
+    public function getMembership($id)
+    {
         $this->checkAccess();
 
         $watchee = $this->getUserById($id);
@@ -266,7 +274,8 @@ class UserResource extends AuthenticatedResource {
      *
      * @access public
      */
-    public function optionPreferences($id) {
+    public function optionPreferences($id)
+    {
         Header::allowOptionsGetPatchDelete();
     }
 
@@ -286,7 +295,8 @@ class UserResource extends AuthenticatedResource {
      *
      * @return UserPreferenceRepresentation
      */
-    public function getPreferences($id, $key) {
+    public function getPreferences($id, $key)
+    {
         $this->checkAccess();
         $this->optionPreferences($id);
 
@@ -367,7 +377,8 @@ class UserResource extends AuthenticatedResource {
      * @throws RestException 401
      * @throws RestException 500
      */
-    public function deletePreferences($id, $key) {
+    public function deletePreferences($id, $key)
+    {
         $this->checkAccess();
         $this->optionPreferences($id);
 
@@ -395,7 +406,8 @@ class UserResource extends AuthenticatedResource {
      *
      * @return UserPreferenceRepresentation
      */
-    public function patchPreferences($id, $preference) {
+    public function patchPreferences($id, $preference)
+    {
         $this->checkAccess();
         $this->optionPreferences($id);
 
@@ -408,19 +420,23 @@ class UserResource extends AuthenticatedResource {
         }
     }
 
-    private function getUserPreference($user_id, $key) {
+    private function getUserPreference($user_id, $key)
+    {
         return $this->user_manager->getUserById($user_id)->getPreference($key);
     }
 
-    private function setUserPreference($user_id, $key, $value) {
+    private function setUserPreference($user_id, $key, $value)
+    {
         return $this->user_manager->getUserById($user_id)->setPreference($key, $value);
     }
 
-    private function deleteUserPreference($user_id, $key) {
+    private function deleteUserPreference($user_id, $key)
+    {
         return $this->user_manager->getUserById($user_id)->delPreference($key);
     }
 
-    private function checkUserCanSeeOtherUser(PFUser $watcher, PFUser $watchee) {
+    private function checkUserCanSeeOtherUser(PFUser $watcher, PFUser $watchee)
+    {
         if ($watcher->isSuperUser()) {
             return true;
         }
@@ -460,7 +476,8 @@ class UserResource extends AuthenticatedResource {
      * @param Array   $values    User fields values
      *
      */
-    protected function patchUserDetails($id, array $values) {
+    protected function patchUserDetails($id, array $values)
+    {
         $watchee = $this->getUserById($id);
         $watcher = $this->rest_user_manager->getCurrentUser();
         if ($this->checkUserCanUpdateOtherUser($watcher, $watchee)) {
@@ -499,7 +516,8 @@ class UserResource extends AuthenticatedResource {
      * @return bool
      *
      */
-    private function checkUserCanUpdateOtherUser(PFUser $watcher, PFUser $watchee) {
+    private function checkUserCanUpdateOtherUser(PFUser $watcher, PFUser $watchee)
+    {
         if ($watcher->isSuperUser()) {
             return true;
         }
@@ -509,7 +527,8 @@ class UserResource extends AuthenticatedResource {
         );
     }
 
-    private function getUserById($id) {
+    private function getUserById($id)
+    {
         $user = $this->user_manager->getUserById($id);
 
         if (! $user) {
@@ -519,7 +538,8 @@ class UserResource extends AuthenticatedResource {
         return $user;
     }
 
-    private function sendAllowHeaders() {
+    private function sendAllowHeaders()
+    {
         Header::allowOptionsGetPatch();
     }
 

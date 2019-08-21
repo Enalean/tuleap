@@ -21,7 +21,8 @@ require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_List_BindValueTest extends TuleapTestCase {
 
-    public function testJSon() {
+    public function testJSon()
+    {
         $id          = 123;
         $label       = 'Reopen';
         $value = partial_mock('Tracker_FormElement_Field_List_BindValue', array('getLabel', '__toString'));

@@ -66,7 +66,8 @@ class Tracker_MasschangeUpdater
         $this->artifact_dao                = $artifact_dao;
     }
 
-    public function updateArtifacts(PFUser $user, Codendi_Request $request) {
+    public function updateArtifacts(PFUser $user, Codendi_Request $request)
+    {
         if ($this->tracker->userIsAdmin($user)) {
 
             $masschange_aids = $request->get('masschange_aids');
@@ -207,8 +208,7 @@ class Tracker_MasschangeUpdater
         Tracker_Artifact_Changeset $changeset,
         array $list_fields,
         array $fields_data
-    ) : array
-    {
+    ) : array {
         foreach ($list_fields as $list_field) {
             $changeset_value = $changeset->getValue($list_field);
             if ($changeset_value !== null) {
@@ -230,7 +230,8 @@ class Tracker_MasschangeUpdater
         return $fields_data;
     }
 
-    private function unsubscribeUserFromEachArtifactNotification(PFUser $user, Codendi_Request $request, array $masschange_aids) {
+    private function unsubscribeUserFromEachArtifactNotification(PFUser $user, Codendi_Request $request, array $masschange_aids)
+    {
         foreach ($masschange_aids as $artifact_id) {
             $notification_subscriber = $this->getArtifactNotificationSubscriber($artifact_id);
             $notification_subscriber->unsubscribeUserWithoutRedirect($user, $request);
@@ -261,7 +262,8 @@ class Tracker_MasschangeUpdater
     /**
      * @return bool
      */
-    private function getSendNotificationsFromRequest(Codendi_Request $request) {
+    private function getSendNotificationsFromRequest(Codendi_Request $request)
+    {
         $send_notifications = false;
         if ($request->exist('notify')) {
             if ($request->get('notify') == 'ok') {

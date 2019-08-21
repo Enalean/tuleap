@@ -29,7 +29,8 @@ class ToBeActivatedUser extends ActionToBeTakenForUser {
 
     private $status;
 
-    public function __construct(PFUser $user, $original_user_id, $original_ldap_id) {
+    public function __construct(PFUser $user, $original_user_id, $original_ldap_id)
+    {
         parent::__construct(
             $user->getUserName(),
             $user->getRealName(),
@@ -42,7 +43,8 @@ class ToBeActivatedUser extends ActionToBeTakenForUser {
     }
 
     /** @return array */
-    public function getCSVData() {
+    public function getCSVData()
+    {
         return array(
             $this->username,
             self::ACTION,
@@ -54,7 +56,8 @@ class ToBeActivatedUser extends ActionToBeTakenForUser {
         );
     }
 
-    public function isActionAllowed($action) {
+    public function isActionAllowed($action)
+    {
         return in_array($action, self::$ALLOWED_ACTIONS);
     }
 }

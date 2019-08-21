@@ -28,11 +28,13 @@ abstract class HudsonJobWidget extends HudsonWidget {
 
     var $job_id;
 
-    function isUnique() {
+    function isUnique()
+    {
         return false;
     }
 
-    function create(Codendi_Request $request) {
+    function create(Codendi_Request $request)
+    {
         $content_id = false;
         $vId = new Valid_UInt($this->widget_id . '_job_id');
         $vId->setErrorMessage("Can't add empty job id");
@@ -46,7 +48,8 @@ abstract class HudsonJobWidget extends HudsonWidget {
         return $content_id;
     }
 
-    function destroy($id) {
+    function destroy($id)
+    {
         $sql = 'DELETE FROM plugin_hudson_widget WHERE id = '. $id .' AND owner_id = '. $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
         db_query($sql);
     }
@@ -108,7 +111,8 @@ abstract class HudsonJobWidget extends HudsonWidget {
         return $html;
     }
 
-    function updatePreferences(Codendi_Request $request) {
+    function updatePreferences(Codendi_Request $request)
+    {
         $request->valid(new Valid_String('cancel'));
         if (!$request->exist('cancel')) {
             $job_id = $request->get($this->widget_id . '_job_id');

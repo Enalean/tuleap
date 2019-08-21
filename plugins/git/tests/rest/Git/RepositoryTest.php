@@ -31,11 +31,13 @@ require_once dirname(__FILE__).'/../bootstrap.php';
  */
 class RepositoryTest extends TestBase {
 
-    protected function getResponseForNonMember($request) {
+    protected function getResponseForNonMember($request)
+    {
         return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
     }
 
-    public function testGetGitRepository() {
+    public function testGetGitRepository()
+    {
         $response  = $this->getResponse($this->client->get(
             'git/'.GitDataBuilder::REPOSITORY_GIT_ID
         ));
@@ -48,12 +50,14 @@ class RepositoryTest extends TestBase {
         $this->assertArrayHasKey('server', $repository);
     }
 
-    public function testOPTIONS() {
+    public function testOPTIONS()
+    {
         $response = $this->getResponse($this->client->options('git/'.GitDataBuilder::REPOSITORY_GIT_ID));
         $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGetGitRepositoryThrows403IfUserCantSeeRepository() {
+    public function testGetGitRepositoryThrows403IfUserCantSeeRepository()
+    {
         $response = $this->getResponseForNonMember($this->client->get(
             'git/'.GitDataBuilder::REPOSITORY_GIT_ID
         ));

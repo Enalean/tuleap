@@ -20,15 +20,18 @@
 
 class b201308090903_add_workflow_manager_user extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add Workflow User Manager';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "INSERT INTO user SET
                     user_id = 90,
                     user_name = 'forge__tracker_workflow_manager',
@@ -65,7 +68,8 @@ class b201308090903_add_workflow_manager_user extends ForgeUpgrade_Bucket {
         $this->executeSql($sql);
     }
 
-    private function executeSql($sql) {
+    private function executeSql($sql)
+    {
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());

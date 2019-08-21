@@ -46,7 +46,8 @@ class PluginsAdministrationActions extends Actions
         );
     }
 
-    function available() {
+    function available()
+    {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $request = HTTPRequest::instance();
         $plugin_data = $this->_getPluginFromRequest();
@@ -71,7 +72,8 @@ class PluginsAdministrationActions extends Actions
         $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=installed');
     }
 
-    function install() {
+    function install()
+    {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $request = HTTPRequest::instance();
         $name = $request->get('name');
@@ -93,7 +95,8 @@ class PluginsAdministrationActions extends Actions
         $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=available');
     }
 
-    function unavailable() {
+    function unavailable()
+    {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $request = HTTPRequest::instance();
         $plugin_data = $this->_getPluginFromRequest();
@@ -118,7 +121,8 @@ class PluginsAdministrationActions extends Actions
         $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=installed');
     }
 
-    function uninstall() {
+    function uninstall()
+    {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $plugin = $this->_getPluginFromRequest();
         if ($plugin && $this->plugin_disabler_verifier->canPluginBeDisabled($plugin['plugin'])) {
@@ -133,7 +137,8 @@ class PluginsAdministrationActions extends Actions
     }
 
     // Secure args: force each value to be an integer.
-    function _validateProjectList($usList) {
+    function _validateProjectList($usList)
+    {
         $sPrjList = null;
         $usList = trim(rtrim($usList));
         if($usList) {
@@ -143,19 +148,22 @@ class PluginsAdministrationActions extends Actions
         return $sPrjList;
     }
 
-    function _addAllowedProjects($prjList) {
+    function _addAllowedProjects($prjList)
+    {
         $plugin = $this->_getPluginFromRequest();
         $plugin_manager = $this->plugin_manager;
         $plugin_manager->addProjectForPlugin($plugin['plugin'], $prjList);
     }
 
-    function _delAllowedProjects($prjList) {
+    function _delAllowedProjects($prjList)
+    {
         $plugin = $this->_getPluginFromRequest();
         $plugin_manager = $this->plugin_manager;
         $plugin_manager->delProjectForPlugin($plugin['plugin'], $prjList);
     }
 
-    function _changePluginGenericProperties($properties) {
+    function _changePluginGenericProperties($properties)
+    {
         if(isset($properties['allowed_project'])) {
             $sPrjList = $this->_validateProjectList($properties['allowed_project']);
             if($sPrjList !== null) {
@@ -223,7 +231,8 @@ class PluginsAdministrationActions extends Actions
     }
 
 
-    function _getPluginFromRequest() {
+    function _getPluginFromRequest()
+    {
         $return = false;
         $request = HTTPRequest::instance();
         if ($request->exist('plugin_id') && is_numeric($request->get('plugin_id'))) {
@@ -244,7 +253,8 @@ class PluginsAdministrationActions extends Actions
         return $return;
     }
 
-    public function setPluginRestriction() {
+    public function setPluginRestriction()
+    {
         $request                    = HTTPRequest::instance();
         $plugin_id                  = $request->get('plugin_id');
         $plugin_data                = $this->_getPluginFromRequest();
@@ -268,7 +278,8 @@ class PluginsAdministrationActions extends Actions
         }
     }
 
-    private function setPluginRestricted(Plugin $plugin) {
+    private function setPluginRestricted(Plugin $plugin)
+    {
         if ($this->getPluginResourceRestrictor()->setPluginRestricted($plugin)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
@@ -279,7 +290,8 @@ class PluginsAdministrationActions extends Actions
         }
     }
 
-    private function unsetPluginRestricted(Plugin $plugin) {
+    private function unsetPluginRestricted(Plugin $plugin)
+    {
         if ($this->getPluginResourceRestrictor()->unsetPluginRestricted($plugin)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
@@ -290,14 +302,16 @@ class PluginsAdministrationActions extends Actions
         }
     }
 
-    private function sendProjectRestrictedError() {
+    private function sendProjectRestrictedError()
+    {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
             dgettext('tuleap-pluginsadministration', 'Something went wrong during the update of the plugin restriction status.')
         );
     }
 
-    public function updateAllowedProjectList() {
+    public function updateAllowedProjectList()
+    {
         $request                    = HTTPRequest::instance();
         $plugin_id                  = $request->get('plugin_id');
         $plugin_data                = $this->_getPluginFromRequest();
@@ -320,13 +334,15 @@ class PluginsAdministrationActions extends Actions
         $this->redirectToPluginAdministration($plugin->getId());
     }
 
-    private function redirectToPluginAdministration($plugin_id) {
+    private function redirectToPluginAdministration($plugin_id)
+    {
         $GLOBALS['Response']->redirect(
             '/plugins/pluginsadministration/?view=restrict&plugin_id=' . $plugin_id
         );
     }
 
-    private function allowProjectOnPlugin(Plugin $plugin, $project_to_add) {
+    private function allowProjectOnPlugin(Plugin $plugin, $project_to_add)
+    {
         $project_manager            = ProjectManager::instance();
         $plugin_resource_restrictor = $this->getPluginResourceRestrictor();
         $project                    = $project_manager->getProjectFromAutocompleter($project_to_add);
@@ -342,7 +358,8 @@ class PluginsAdministrationActions extends Actions
 
     }
 
-    private function revokeProjectsFromPlugin(Plugin $plugin, $project_ids) {
+    private function revokeProjectsFromPlugin(Plugin $plugin, $project_ids)
+    {
         $plugin_resource_restrictor = $this->getPluginResourceRestrictor();
 
         if (count($project_ids) > 0 && $plugin_resource_restrictor->revokeProjectsFromPlugin($plugin, $project_ids)) {
@@ -356,19 +373,22 @@ class PluginsAdministrationActions extends Actions
 
     }
 
-    private function sendUpdateProjectListError() {
+    private function sendUpdateProjectListError()
+    {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
             dgettext('tuleap-pluginsadministration', 'Something went wrong during the update of the allowed project list.')
         );
     }
 
-    private function checkSynchronizerToken($url) {
+    private function checkSynchronizerToken($url)
+    {
         $token = new CSRFSynchronizerToken($url);
         $token->check();
     }
 
-    private function getPluginResourceRestrictor() {
+    private function getPluginResourceRestrictor()
+    {
         return new PluginResourceRestrictor(
             new RestrictedPluginDao()
         );

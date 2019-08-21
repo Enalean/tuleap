@@ -20,15 +20,18 @@
  * Replace version date column values by timestamp
  */
 class b201405071644_replace_version_date_column_values_by_timestamp extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return "Replace version date column values by timestamp";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "UPDATE svn_accessfile_history
                 SET version_date = UNIX_TIMESTAMP()";
 

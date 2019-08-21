@@ -56,7 +56,8 @@ class Cardwall_OnTop_Config_TrackerMappingFactory {
     /**
      * @return array of Tracker
      */
-    public function getTrackers(Tracker $tracker) {
+    public function getTrackers(Tracker $tracker)
+    {
         $trackers = $this->tracker_factory->getTrackersByGroupId($tracker->getGroupId());
         return array_diff($trackers, array($tracker));
     }
@@ -69,7 +70,8 @@ class Cardwall_OnTop_Config_TrackerMappingFactory {
      *
      * @return Cardwall_OnTop_Config_TrackerMapping[]
      */
-    public function getMappings(Tracker $tracker, Cardwall_OnTop_Config_ColumnCollection $columns) {
+    public function getMappings(Tracker $tracker, Cardwall_OnTop_Config_ColumnCollection $columns)
+    {
         $mappings = array();
         foreach ($this->dao->searchMappingFields($tracker->getId()) as $row) {
             $this->instantiateMappingFromRow($tracker, $mappings, $row, $columns);
@@ -77,7 +79,8 @@ class Cardwall_OnTop_Config_TrackerMappingFactory {
         return $mappings;
     }
 
-    private function instantiateMappingFromRow(Tracker $tracker, array &$mappings, array $row, Cardwall_OnTop_Config_ColumnCollection $columns) {
+    private function instantiateMappingFromRow(Tracker $tracker, array &$mappings, array $row, Cardwall_OnTop_Config_ColumnCollection $columns)
+    {
         $mapping_tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
         if ($mapping_tracker && $mapping_tracker != $tracker) {
             //TODO: field is used?
@@ -100,7 +103,8 @@ class Cardwall_OnTop_Config_TrackerMappingFactory {
     /**
      * @return Cardwall_OnTop_Config_TrackerMapping
      */
-    private function instantiateMappingStatus(Tracker $tracker, array &$mappings, Tracker $mapping_tracker, array $available_fields, Cardwall_OnTop_Config_ColumnCollection $columns) {
+    private function instantiateMappingStatus(Tracker $tracker, array &$mappings, Tracker $mapping_tracker, array $available_fields, Cardwall_OnTop_Config_ColumnCollection $columns)
+    {
         $mapping_values = array();
         $status_field   = $mapping_tracker->getStatusField();
         $mapping_values = $this->value_mapping_factory->getStatusMappings($mapping_tracker, $columns);
@@ -115,7 +119,8 @@ class Cardwall_OnTop_Config_TrackerMappingFactory {
     /**
      * @return Cardwall_OnTop_Config_TrackerMappingFreestyle
      */
-    private function instantiateFreestyleMapping(Tracker $tracker, array &$mappings, Tracker $mapping_tracker, array $available_fields, $mapping_field) {
+    private function instantiateFreestyleMapping(Tracker $tracker, array &$mappings, Tracker $mapping_tracker, array $available_fields, $mapping_field)
+    {
         $mapping_values = $this->value_mapping_factory->getMappings($tracker, $mapping_tracker, $mapping_field);
         return new Cardwall_OnTop_Config_TrackerMappingFreestyle(
             $mapping_tracker,
@@ -128,7 +133,8 @@ class Cardwall_OnTop_Config_TrackerMappingFactory {
     /**
      * @return Cardwall_OnTop_Config_TrackerMappingFreestyle
      */
-    private function instantiateNoFieldMapping(Tracker $mapping_tracker, array $available_fields) {
+    private function instantiateNoFieldMapping(Tracker $mapping_tracker, array $available_fields)
+    {
         return new Cardwall_OnTop_Config_TrackerMappingNoField(
             $mapping_tracker,
             $available_fields

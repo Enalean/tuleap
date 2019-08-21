@@ -18,7 +18,8 @@
 
 class MailGatewaySaltDao extends DataAccessObject {
 
-    public function searchMailSalt(){
+    public function searchMailSalt()
+    {
         $sql = "SELECT salt
                 FROM email_gateway_salt";
 

@@ -31,7 +31,8 @@ class Tracker_FormElement_Field_List_Bind_StaticValue_None extends Tracker_FormE
      * @param int $rank
      * @param bool $is_hidden
      */
-    public function __construct() {
+    public function __construct()
+    {
         $id = self::VALUE_ID;
         $label = $GLOBALS['Language']->getText('global','none');
         $description = '';
@@ -41,7 +42,8 @@ class Tracker_FormElement_Field_List_Bind_StaticValue_None extends Tracker_FormE
         parent::__construct($id, $label, $description, $rank, $is_hidden);
     }
 
-    public function getXMLId() {
+    public function getXMLId()
+    {
         return self::XML_VALUE_ID;
     }
 }

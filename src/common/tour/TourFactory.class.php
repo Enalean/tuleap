@@ -26,7 +26,8 @@ class Tuleap_TourFactory {
     /** @var URL */
     private $url_processor;
 
-    public function __construct(ProjectManager $project_manager, URL $url_processor) {
+    public function __construct(ProjectManager $project_manager, URL $url_processor)
+    {
         $this->project_manager = $project_manager;
         $this->url_processor   = $url_processor;
     }
@@ -39,7 +40,8 @@ class Tuleap_TourFactory {
      *
      * @return Tuleap_Tour
      */
-    public function getTour(PFUser $user, $tour_name) {
+    public function getTour(PFUser $user, $tour_name)
+    {
         switch ($tour_name) {
             case Tuleap_Tour_WelcomeTour::TOUR_NAME:
                 $tour = new Tuleap_Tour_WelcomeTour($user);
@@ -54,7 +56,8 @@ class Tuleap_TourFactory {
         return $tour;
     }
 
-    private function getCustomTour($user, $tour_name) {
+    private function getCustomTour($user, $tour_name)
+    {
         $custom_tours_factory = new Tuleap_CustomToursFactory($this->project_manager, $this->url_processor);
         return $custom_tours_factory->getTour($user, $tour_name);
     }
@@ -62,7 +65,8 @@ class Tuleap_TourFactory {
     /**
      * @return Tuleap_Tour[]
      */
-    public function getToursForPage(PFUser $user, $current_location) {
+    public function getToursForPage(PFUser $user, $current_location)
+    {
         $custom_tours_factory = new Tuleap_CustomToursFactory($this->project_manager, $this->url_processor);
         return $custom_tours_factory->getToursForPage($user, $current_location);
     }

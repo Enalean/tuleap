@@ -53,7 +53,8 @@ require_once("lib/loadsave.php");
 /**
  * TODO: check for the pgsrc_version number, not the revision mtime only
  */
-function doPgsrcUpdate(&$request,$pagename,$path,$filename,$checkonly=false) {
+function doPgsrcUpdate(&$request,$pagename,$path,$filename,$checkonly=false)
+{
     $dbi = $request->getDbh();
     $page = $dbi->getPage($pagename);
     if ($page->exists()) {
@@ -100,7 +101,8 @@ function doPgsrcUpdate(&$request,$pagename,$path,$filename,$checkonly=false) {
 /** Need the english filename (required precondition: urlencode == urldecode).
  *  Returns the plugin name.
  */
-function isActionPage($filename) {
+function isActionPage($filename)
+{
     static $special = array("DebugInfo"     => "_BackendInfo",
                             "PhpWikiRecentChanges" => "RssFeed",
                             "ProjectSummary"      => "RssFeed",
@@ -113,7 +115,8 @@ function isActionPage($filename) {
     else return false;
 }
 
-function CheckActionPageUpdate(&$request, $checkonly=false)  {
+function CheckActionPageUpdate(&$request, $checkonly=false)
+{
     echo "<h3>",_("check for necessary ActionPage updates"),"</h3>\n";
     $dbi = $request->getDbh();
     $path = FindFile('codendipgsrc');
@@ -139,7 +142,8 @@ function CheckActionPageUpdate(&$request, $checkonly=false)  {
 }
 
 // see loadsave.php for saving new pages.
-function CheckPgsrcUpdate(&$request, $checkonly=false) {
+function CheckPgsrcUpdate(&$request, $checkonly=false)
+{
     echo "<h3>",_("check for necessary pgsrc updates"),"</h3>\n";
     $dbi = $request->getDbh();
     $path = FindLocalizedFile(WIKI_PGSRC);
@@ -168,7 +172,8 @@ function CheckPgsrcUpdate(&$request, $checkonly=false) {
     return;
 }
 
-function fixConfigIni($match, $new) {
+function fixConfigIni($match, $new)
+{
     $file = FindFile("config/config.ini");
     $found = false;
     if (is_writable($file)) {
@@ -208,7 +213,8 @@ function fixConfigIni($match, $new) {
     }
 }
 
-function CheckConfigUpdate(&$request) {
+function CheckConfigUpdate(&$request)
+{
     echo "<h3>",_("check for necessary config updates"),"</h3>\n";
     echo _("check for old CACHE_CONTROL = NONE")," ... ";
     if (defined('CACHE_CONTROL') and CACHE_CONTROL == '') {
@@ -254,7 +260,8 @@ class Upgrade_CheckDatabaseUpdate extends Upgrade {
 
 /** entry function from lib/main.php
  */
-function DoUpgrade($request) {
+function DoUpgrade($request)
+{
 
     if (!$request->_user->isAdmin()) {
         $request->_notAuthorized(WIKIAUTH_ADMIN);
