@@ -89,7 +89,7 @@ class DebugTimer {
         return ((float)$usec + (float)$sec);
     }
 }
-$RUNTIMER = new DebugTimer;
+$GLOBALS['RUNTIMER'] = new DebugTimer;
 /*
 if (defined('E_STRICT') and (E_ALL & E_STRICT)) // strict php5?
     error_reporting(E_ALL & ~E_STRICT);     // exclude E_STRICT

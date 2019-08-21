@@ -93,7 +93,6 @@ function RemovePage (&$request) {
         $pagehandle->save($text, $version + 1, $meta);
 
         //Codendi specific: remove permissions for this page @codenditodo: may be transferable otherwhere.
-        require_once('common/wiki/lib/WikiPage.class.php');
         $wiki_page = new WikiPage(GROUP_ID, $_REQUEST['pagename']);
 
         $wiki_page->resetPermissions();
