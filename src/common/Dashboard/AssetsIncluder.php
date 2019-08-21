@@ -35,11 +35,19 @@ class AssetsIncluder
      * @var IncludeAssets
      */
     private $include_assets;
+    /**
+     * @var CssAssetCollection
+     */
+    private $css_asset_collection;
 
-    public function __construct(BaseLayout $layout, IncludeAssets $include_assets)
-    {
-        $this->layout         = $layout;
-        $this->include_assets = $include_assets;
+    public function __construct(
+        BaseLayout $layout,
+        IncludeAssets $include_assets,
+        CssAssetCollection $css_asset_collection
+    ) {
+        $this->layout               = $layout;
+        $this->include_assets       = $include_assets;
+        $this->css_asset_collection = $css_asset_collection;
     }
 
     /**
@@ -48,21 +56,22 @@ class AssetsIncluder
     public function includeAssets(array $dashboards_presenter)
     {
         $this->layout->includeFooterJavascriptFile($this->include_assets->getFileURL('dashboard.js'));
-        $this->includeAssetsNeededByWidgets($dashboards_presenter);
+        $css_assets = $this->includeAssetsNeededByWidgets($dashboards_presenter);
+        $this->layout->addCssAssetCollection($css_assets);
     }
 
     /**
      * @param DashboardPresenter[] $dashboards_presenter
      */
-    private function includeAssetsNeededByWidgets(array $dashboards_presenter)
+    private function includeAssetsNeededByWidgets(array $dashboards_presenter): CssAssetCollection
     {
+        $deduplicated_css_assets = $this->css_asset_collection;
         $current_dashboard = $this->getCurrentDashboard($dashboards_presenter);
         if (! $current_dashboard) {
-            return;
+            return $deduplicated_css_assets;
         }
 
         $is_unique_dependency_included = [];
-        $deduplicated_css_assets = new CssAssetCollection([]);
         foreach ($current_dashboard->widget_lines as $line) {
             foreach ($line->widget_columns as $column) {
                 /** @var DashboardWidgetPresenter $widget */
@@ -86,7 +95,7 @@ class AssetsIncluder
             }
         }
 
-        $this->layout->addCssAssetCollection($deduplicated_css_assets);
+        return $deduplicated_css_assets;
     }
 
     /**

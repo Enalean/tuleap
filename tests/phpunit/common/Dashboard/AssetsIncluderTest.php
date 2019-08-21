@@ -20,8 +20,6 @@
 
 namespace Tuleap\Dashboard;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -30,6 +28,7 @@ use Tuleap\Dashboard\Widget\DashboardWidgetColumnPresenter;
 use Tuleap\Dashboard\Widget\DashboardWidgetLinePresenter;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenter;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 
@@ -45,6 +44,9 @@ class AssetsIncluderTest extends TestCase
      */
     private $layout;
 
+    /** @var CssAssetCollection */
+    private $css_asset_collection;
+
     private $backup_globals;
 
     protected function setUp() : void
@@ -57,13 +59,17 @@ class AssetsIncluderTest extends TestCase
         $include_assets->allows('getFileUrl')->andReturnUsing(function ($file_name) {
             return $file_name;
         });
+        $css_include_assets = Mockery::mock(IncludeAssets::class);
+        $css_include_assets->allows('getPath');
+        $this->css_asset_collection = new CssAssetCollection([new CssAsset($css_include_assets, 'dashboards')]);
 
-        $this->includer = new AssetsIncluder($this->layout, $include_assets);
+        $this->includer = new AssetsIncluder($this->layout, $include_assets, $this->css_asset_collection);
     }
 
-    public function testItAlwaysIncludesDashboardJs() : void
+    public function testItAlwaysIncludesDashboardJsAndCss() : void
     {
         $this->layout->shouldReceive('includeFooterJavascriptFile')->once()->with('dashboard.js');
+        $this->layout->shouldReceive('addCssAssetCollection')->once()->with($this->css_asset_collection);
 
         $this->includer->includeAssets([]);
     }
@@ -71,7 +77,7 @@ class AssetsIncluderTest extends TestCase
     public function testItDoesNotIncludeDependenciesIfThereIsNoDashboard() : void
     {
         $this->expectDependenciesScriptsWillNOTBeIncluded();
-        $this->layout->shouldNotReceive('addCssAssetCollection');
+        $this->layout->shouldReceive('addCssAssetCollection')->once()->with($this->css_asset_collection);
 
         $this->includer->includeAssets([]);
     }
