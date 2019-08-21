@@ -56,7 +56,11 @@ export default {
         ...mapState(["is_item_status_metadata_used"]),
         ...mapState("metadata", ["has_loaded_metadata"]),
         has_recursion_metadata() {
-            return this.is_item_status_metadata_used === true;
+            return (
+                this.is_item_status_metadata_used === true ||
+                (this.currentlyUpdatedItem.metadata &&
+                    this.currentlyUpdatedItem.metadata.length > 0)
+            );
         }
     },
     mounted() {
