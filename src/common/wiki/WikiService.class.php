@@ -155,7 +155,7 @@ class WikiService extends Controler {
 
       // If Wiki for project doesn't exist, propose creation...
         if(!$this->wiki->exist()) {
-            if ($_REQUEST['view'] != 'doinstall')
+            if (! isset($_REQUEST['view']) || $_REQUEST['view'] != 'doinstall')
                 $this->view='install';
             else $this->view='doinstall';
         }

@@ -23,7 +23,6 @@ use Tuleap\PHPWiki\WikiPage;
 rcs_id('$Id: editpage.php,v 1.96 2005/05/06 17:54:22 rurban Exp $');
 
 require_once('lib/Template.php');
-require_once('common/reference/ReferenceManager.class.php');
 
 // USE_HTMLAREA - Support for some WYSIWYG HTML Editor
 // Not yet enabled, since we cannot convert HTML to Wiki Markup yet.

@@ -68,6 +68,7 @@ function codendi_main () {
     // kill the global PEAR _PEAR_destructor_object_list
     if (!empty($_PEAR_destructor_object_list))
         $_PEAR_destructor_object_list = array();
+    require_once __DIR__ . '/lib/prepend.php';
     $request->possiblyDeflowerVirginWiki();
 
     $validators = array('wikiname' => WIKI_NAME,
