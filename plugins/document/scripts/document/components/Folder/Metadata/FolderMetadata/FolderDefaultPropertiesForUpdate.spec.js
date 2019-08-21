@@ -60,34 +60,30 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                 }
             };
 
-            default_property(
-                {
-                    currentlyUpdatedItem: {
-                        metadata: [],
-                        status: 100,
-                        type: TYPE_FILE,
-                        title: "title"
-                    }
+            default_property({
+                currentlyUpdatedItem: {
+                    metadata: [],
+                    status: 100,
+                    type: TYPE_FILE,
+                    title: "title"
                 },
-                { parent: 102 }
-            );
+                itemMetadata: []
+            });
 
             expect(store.dispatch).toHaveBeenCalledWith("metadata/loadProjectMetadata", [store]);
         });
 
         it(`Given custom component are loading
             Then it displays spinner`, () => {
-            const wrapper = default_property(
-                {
-                    currentlyUpdatedItem: {
-                        metadata: [],
-                        status: 100,
-                        type: TYPE_FILE,
-                        title: "title"
-                    }
+            const wrapper = default_property({
+                currentlyUpdatedItem: {
+                    metadata: [],
+                    status: 100,
+                    type: TYPE_FILE,
+                    title: "title"
                 },
-                { parent: 102 }
-            );
+                itemMetadata: []
+            });
 
             store.state = {
                 is_item_status_metadata_used: true,
@@ -136,7 +132,8 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                         value: "rejected",
                         recursion: "none"
                     }
-                }
+                },
+                itemMetadata: []
             });
 
             expect(
@@ -169,7 +166,8 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                             ]
                         }
                     ]
-                }
+                },
+                itemMetadata: [{ id: 100 }]
             });
 
             expect(
@@ -193,54 +191,13 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                         id: 102
                     },
                     metadata: null
-                }
+                },
+                itemMetadata: []
             });
 
             expect(
                 wrapper.find("[data-test=document-folder-default-properties-container]").exists()
             ).toBeFalsy();
-        });
-        it("Transform custom metadata", () => {
-            store.state.metadata = {
-                has_loaded_metadata: false
-            };
-
-            const custom_metadata = {
-                short_name: "field_1234",
-                list_value: [
-                    {
-                        id: 103
-                    }
-                ],
-                type: "list",
-                is_multiple_value_allowed: false
-            };
-
-            const wrapper = default_property(
-                {
-                    currentlyUpdatedItem: {
-                        metadata: [
-                            {
-                                short_name: "status",
-                                list_value: [
-                                    {
-                                        id: 103
-                                    }
-                                ],
-                                type: "list",
-                                is_multiple_value_allowed: false
-                            },
-                            custom_metadata
-                        ],
-                        status: 100,
-                        type: TYPE_FILE,
-                        title: "title"
-                    }
-                },
-                { parent: 102 }
-            );
-
-            expect(wrapper.vm.custom_metadata).toEqual([custom_metadata]);
         });
     });
 
@@ -275,7 +232,8 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                         value: "rejected",
                         recursion: "none"
                     }
-                }
+                },
+                itemMetadata: []
             });
 
             wrapper.vm.recursion_option = "all_items";
@@ -313,7 +271,13 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                             ]
                         }
                     ]
-                }
+                },
+                itemMetadata: [
+                    {
+                        short_name: "field_",
+                        list_value: [103]
+                    }
+                ]
             });
 
             store.state.is_item_status_metadata_used = true;
@@ -374,7 +338,21 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                         value: "rejected",
                         recursion: "none"
                     }
-                }
+                },
+                itemMetadata: [
+                    {
+                        short_name: "field_1",
+                        list_value: [103]
+                    },
+                    {
+                        short_name: "field_2",
+                        value: "non"
+                    },
+                    {
+                        short_name: "field_3",
+                        list_value: [100]
+                    }
+                ]
             });
 
             wrapper.vm.recursion_option = "all_items";
@@ -437,7 +415,21 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                         value: "rejected",
                         recursion: "none"
                     }
-                }
+                },
+                itemMetadata: [
+                    {
+                        short_name: "field_1",
+                        list_value: [103]
+                    },
+                    {
+                        short_name: "field_2",
+                        value: "non"
+                    },
+                    {
+                        short_name: "field_3",
+                        list_value: [100]
+                    }
+                ]
             });
 
             wrapper.vm.recursion_option = "all_items";
@@ -495,7 +487,8 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                         value: "rejected",
                         recursion: "none"
                     }
-                }
+                },
+                itemMetadata: []
             });
 
             wrapper.vm.recursion_option = "none";

@@ -22,9 +22,13 @@ import localVue from "../../../../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import CustomMetadataListMultipleValue from "./CustomMetadataListMultipleValue.vue";
+import {
+    rewire as rewireEventBus,
+    restore as restoreEventBus
+} from "../../../../helpers/event-bus.js";
 
 describe("CustomMetadataListMultipleValue", () => {
-    let store, factory;
+    let store, factory, event_bus;
     beforeEach(() => {
         store = createStoreMock({}, { metadata: {} });
 
@@ -35,7 +39,15 @@ describe("CustomMetadataListMultipleValue", () => {
                 mocks: { $store: store }
             });
         };
+
+        event_bus = jasmine.createSpyObj("event_bus", ["$emit"]);
+        rewireEventBus(event_bus);
     });
+
+    afterEach(() => {
+        restoreEventBus();
+    });
+
     it(`Given a list metadata
         Then it renders only the possible values of this list metadata`, async () => {
         store.state.metadata = {
@@ -193,5 +205,39 @@ describe("CustomMetadataListMultipleValue", () => {
 
         const wrapper = factory({ currentlyUpdatedItemMetadata });
         expect(wrapper.contains("[data-test=document-custom-metadata-list-multiple]")).toBeFalsy();
+    });
+
+    it(`It throws an event when list value is changed`, () => {
+        store.state.metadata = {
+            project_metadata_list: [
+                {
+                    short_name: "list",
+                    allowed_list_values: [
+                        { id: 100, value: "None" },
+                        { id: 101, value: "abcde" },
+                        { id: 102, value: "fghij" }
+                    ]
+                }
+            ]
+        };
+        const currentlyUpdatedItemMetadata = {
+            short_name: "list",
+            name: "custom list",
+            list_value: [101],
+            is_required: true,
+            type: "list",
+            is_multiple_value_allowed: true
+        };
+
+        const wrapper = factory({ currentlyUpdatedItemMetadata });
+
+        wrapper.vm.updateMultipleMetadataListValue();
+
+        expect(event_bus.$emit).toHaveBeenCalledWith("update-multiple-metadata-list-value", {
+            detail: {
+                value: wrapper.vm.multiple_list_values,
+                id: "list"
+            }
+        });
     });
 });

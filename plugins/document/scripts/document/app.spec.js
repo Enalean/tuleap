@@ -141,6 +141,7 @@ import "./components/Folder/ModalNewItem/NewFolderModal.spec.js";
 import "./components/Folder/ModalNewItem/CreationModalPermissionsSection.spec.js";
 
 import "./components/Folder/ModalUpdateMetadata/UpdateFolderMetadataModal.spec.js";
+import "./components/Folder/ModalUpdateMetadata/UpdateMetadataModal.spec.js";
 
 import "./components/Folder/Permissions/PermissionsUpdateModal.spec.js";
 import "./components/Folder/Permissions/PermissionsUpdateFolderSubItems.spec.js";

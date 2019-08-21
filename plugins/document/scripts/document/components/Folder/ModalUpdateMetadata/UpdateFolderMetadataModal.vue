@@ -29,6 +29,7 @@
             <info-access-old-properties-page v-bind:project-id="project_id" v-bind:item-id="item_to_update.id"/>
             <folder-global-metadata-for-update v-bind:currently-updated-item="item_to_update"
                                                v-bind:parent="current_folder"
+                                               v-bind:item-metadata="formatted_item_metadata"
             />
         </div>
         <modal-footer v-bind:is-loading="is_loading"
@@ -48,8 +49,12 @@ import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import InfoAccessOldPropertiesPage from "./InfoAccessOldPropertiesPage.vue";
 import FolderGlobalMetadataForUpdate from "../Metadata/FolderMetadata/FolderGlobalMetadataForUpdate.vue";
-import { transformFolderMetadataForRecursionAtUpdate } from "../../../helpers/metadata-helpers/data-transformatter-helper.js";
+import {
+    transformCustomMetadataForItemUpdate,
+    transformFolderMetadataForRecursionAtUpdate
+} from "../../../helpers/metadata-helpers/data-transformatter-helper.js";
 import EventBus from "../../../helpers/event-bus.js";
+import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper.js";
 
 export default {
     name: "UpdateFolderMetadataModal",
@@ -69,7 +74,8 @@ export default {
             is_loading: false,
             modal: null,
             recursion_option: "none",
-            metadata_list_to_update: []
+            metadata_list_to_update: [],
+            formatted_item_metadata: []
         };
     },
     computed: {
@@ -91,15 +97,21 @@ export default {
     mounted() {
         this.modal = createModal(this.$el);
 
+        this.formatted_item_metadata = getCustomMetadata(this.item.metadata);
+
+        transformCustomMetadataForItemUpdate(this.formatted_item_metadata);
+
         this.show();
     },
     created() {
         EventBus.$on("metadata-recursion-metadata-list", this.setMetadataListUpdate);
         EventBus.$on("metadata-recursion-option", this.setRecursionOption);
+        EventBus.$on("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
     },
     beforeDestroy() {
         EventBus.$off("metadata-recursion-metadata-list", this.show);
         EventBus.$off("metadata-recursion-option", this.show);
+        EventBus.$off("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
     },
     methods: {
         show() {
@@ -109,6 +121,7 @@ export default {
             event.preventDefault();
             this.is_loading = true;
             this.$store.commit("error/resetModalError");
+            this.item_to_update.metadata = this.formatted_item_metadata;
             await this.$store.dispatch("updateFolderMetadata", [
                 this.item,
                 this.item_to_update,
@@ -126,6 +139,15 @@ export default {
         },
         setRecursionOption(event) {
             this.recursion_option = event.detail.recursion_option;
+        },
+        updateMultipleMetadataListValue(event) {
+            if (!this.formatted_item_metadata) {
+                return;
+            }
+            const item_metadata = this.formatted_item_metadata.find(
+                metadata => metadata.short_name === event.detail.id
+            );
+            item_metadata.list_value = event.detail.value;
         }
     }
 };

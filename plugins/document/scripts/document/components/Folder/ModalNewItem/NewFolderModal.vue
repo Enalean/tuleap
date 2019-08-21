@@ -91,10 +91,12 @@ export default {
         this.item = this.getDefaultItem();
         this.modal = createModal(this.$el);
         EventBus.$on("show-new-folder-modal", this.show);
+        EventBus.$on("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
     },
     beforeDestroy() {
         EventBus.$off("show-new-folder-modal", this.show);
+        EventBus.$off("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
         this.modal.removeEventListener("tlp-modal-hidden", this.reset);
     },
     methods: {
@@ -153,6 +155,15 @@ export default {
             if (formatted_metadata.length > 0) {
                 this.item.metadata = formatted_metadata;
             }
+        },
+        updateMultipleMetadataListValue(event) {
+            if (!this.item.metadata) {
+                return;
+            }
+            const item_metadata = this.item.metadata.find(
+                metadata => metadata.short_name === event.detail.id
+            );
+            item_metadata.list_value = event.detail.value;
         }
     }
 };
