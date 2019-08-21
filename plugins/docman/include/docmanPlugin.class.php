@@ -343,8 +343,8 @@ class DocmanPlugin extends Plugin
 
     public function service_public_areas(GetPublicAreas $event) {
         $project = $event->getProject();
-        if ($project->usesService($this->getServiceShortname())) {
-            $service = $project->getService($this->getServiceShortname());
+        $service = $project->getService($this->getServiceShortname());
+        if ($service !== null) {
             $event->addArea(
                 '<a href="/plugins/docman/?group_id='. urlencode((string) $project->getId()) .'">' .
                 '<i class="dashboard-widget-content-projectpublicareas '.Codendi_HTMLPurifier::instance()->purify($service->getIcon()).'"></i>' .
@@ -1242,11 +1242,11 @@ class DocmanPlugin extends Plugin
             );
 
         $project         = $event->getProject();
-        $rank_in_project = $project->getService(
-            $this->getServiceShortname()
-        )->getRank();
-
-        $event->addPane($admin_permission_pane, $rank_in_project);
+        $service         = $project->getService($this->getServiceShortname());
+        if ($service !== null) {
+            $rank_in_project = $service->getRank();
+            $event->addPane($admin_permission_pane, $rank_in_project);
+        }
     }
 
     /** @see Event::REST_RESOURCES */

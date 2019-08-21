@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -85,20 +85,29 @@ class PanesPermissionPerGroupBuilder
     {
         $frs_pane = $this->pane_collector->collectPane($project, $selected_ugroup);
         if ($frs_pane) {
-            $rank_in_project           = $project->getService(Service::FILE)->getRank();
-            $panes[ $rank_in_project ] = $frs_pane;
+            $file_service = $project->getService(Service::FILE);
+            if ($file_service !== null) {
+                $rank_in_project         = $file_service->getRank();
+                $panes[$rank_in_project] = $frs_pane;
+            }
         }
 
         $phpwiki_pane =  $this->phpwiki_pane_builder->getPaneContent($project, $selected_ugroup);
         if ($phpwiki_pane) {
-            $rank_in_project           = $project->getService(Service::WIKI)->getRank();
-            $panes[ $rank_in_project ] = $phpwiki_pane;
+            $wiki_service = $project->getService(Service::WIKI);
+            if ($wiki_service !== null) {
+                $rank_in_project         = $wiki_service->getRank();
+                $panes[$rank_in_project] = $phpwiki_pane;
+            }
         }
 
         $news_pane = $this->news_pane_builder->getPaneContent($project, $selected_ugroup);
         if ($news_pane) {
-            $rank_in_project           = $project->getService(Service::NEWS)->getRank();
-            $panes[ $rank_in_project ] = $news_pane;
+            $news_service = $project->getService(Service::NEWS);
+            if ($news_service !== null) {
+                $rank_in_project           = $news_service->getRank();
+                $panes[ $rank_in_project ] = $news_pane;
+            }
         }
     }
 }

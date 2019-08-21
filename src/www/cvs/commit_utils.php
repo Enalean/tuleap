@@ -53,11 +53,12 @@ function commits_header($params) {
     $pm = ProjectManager::instance();
     $project=$pm->getProject($group_id);
 
-    if (!$project->usesCVS()) {
+    $service = $project->getService(Service::CVS);
+    if ($service === null) {
         exit_error($GLOBALS['Language']->getText('global', 'error'),
                    $GLOBALS['Language']->getText('cvs_commit_utils', 'error_off'));
+        return;
     }
-    $service = $project->getService(Service::CVS);
 
     $toolbar = array();
     $toolbar[] = array('title' => $GLOBALS['Language']->getText('svn_utils','svn_info'),

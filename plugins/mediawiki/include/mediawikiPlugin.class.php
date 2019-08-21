@@ -856,11 +856,12 @@ class MediaWikiPlugin extends Plugin {
             ->getRenderer($templates_dir)
             ->renderToString('project-admin-permission-per-group', $presenter);
 
-        $project         = $event->getProject();
-        $rank_in_project = $project->getService(
-            $this->getServiceShortname()
-        )->getRank();
+        $project = $event->getProject();
+        $service = $project->getService($this->getServiceShortname());
+        if ($service !== null) {
+            $rank_in_project = $service->getRank();
+            $event->addPane($content, $rank_in_project);
+        }
 
-        $event->addPane($content, $rank_in_project);
     }
 }

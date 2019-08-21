@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once('Widget.class.php');
-
 /**
 * Widget_ProjectLatestFileReleases
 *
@@ -35,7 +33,11 @@ class Widget_ProjectLatestFileReleases extends Widget {
         $pm = ProjectManager::instance();
         $project = $pm->getProject($request->get('group_id'));
         if ($project && $this->canBeUsedByProject($project)) {
-            $this->content = $project->getService(Service::FILE)->getSummaryPageContent();
+            $service = $project->getService(Service::FILE);
+            if ($service !== null) {
+                assert($service instanceof ServiceFile);
+                $this->content = $service->getSummaryPageContent();
+            }
         }
     }
 
@@ -61,4 +63,3 @@ class Widget_ProjectLatestFileReleases extends Widget {
         return $GLOBALS['Language']->getText('widget_description_project_latest_file_releases','description');
     }
 }
-?>

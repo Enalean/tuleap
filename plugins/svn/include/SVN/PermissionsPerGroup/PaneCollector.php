@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -54,11 +54,11 @@ class PaneCollector
             ->getRenderer($templates_dir)
             ->renderToString('project-admin-permission-per-group', $service_presenter);
 
-        $project         = $event->getProject();
-        $rank_in_project = $project->getService(
-            SvnPlugin::SERVICE_SHORTNAME
-        )->getRank();
-
-        $event->addPane($content, $rank_in_project);
+        $project = $event->getProject();
+        $service = $project->getService(SvnPlugin::SERVICE_SHORTNAME);
+        if ($service !== null) {
+            $rank_in_project = $service->getRank();
+            $event->addPane($content, $rank_in_project);
+        }
     }
 }

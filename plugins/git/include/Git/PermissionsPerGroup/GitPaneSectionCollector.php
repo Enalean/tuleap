@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -57,9 +57,11 @@ class GitPaneSectionCollector
             $user_group
         );
 
-        $rank_in_project = $project->getService(
-            GitPlugin::SERVICE_SHORTNAME
-        )->getRank();
+        $service = $project->getService(GitPlugin::SERVICE_SHORTNAME);
+        if ($service === null) {
+            return;
+        }
+        $rank_in_project = $service->getRank();
 
         $templates_dir = GIT_TEMPLATE_DIR . '/project-admin/';
         $pane          = TemplateRendererFactory::build()

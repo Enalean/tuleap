@@ -1655,9 +1655,12 @@ class AgileDashboardPlugin extends Plugin
                 )
             );
 
-        $rank_in_project = $project->getService($this->getServiceShortname())->getRank();
+        $service = $project->getService($this->getServiceShortname());
+        if ($service !== null) {
+            $rank_in_project = $service->getRank();
+            $event->addPane($admin_permission_pane, $rank_in_project);
+        }
 
-        $event->addPane($admin_permission_pane, $rank_in_project);
     }
 
     public function tracker_event_artifact_delete(array $params)
