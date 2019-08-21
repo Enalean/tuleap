@@ -31,6 +31,7 @@ function svn_header(Project $project, $params) {
     $service = $project->getService('svn');
     if (!$service) {
         exit_error($Language->getText('global','error'),$Language->getText('svn_utils','svn_off'));
+        return;
     }
 
     $group_id = $project->getID();
@@ -99,6 +100,7 @@ function svn_header_admin($params) {
     $service = $project->getService('svn');
     if (!$service) {
         exit_error($Language->getText('global','error'),$Language->getText('svn_utils','svn_off'));
+        return;
     }
 
     $toolbar = array();

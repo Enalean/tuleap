@@ -21,8 +21,6 @@
 
 use Tuleap\Widget\Event\GetPublicAreas;
 
-require_once('Widget.class.php');
-
 /**
 * Widget_ProjectPublicAreas
 */
@@ -45,8 +43,8 @@ class Widget_ProjectPublicAreas extends Widget {
         $project  = $pm->getProject($group_id);
         $html     = '';
 
-        if ($project->usesHomePage()) {
-            $homepage_service = $project->getService(Service::HOMEPAGE);
+        $homepage_service = $project->getService(Service::HOMEPAGE);
+        if ($homepage_service !== null) {
             $html .= "<p><a ";
             if (substr($homepage_service->getUrl(), 0, 1)!="/") {
                 // Absolute link -> open new window on click
@@ -59,8 +57,8 @@ class Widget_ProjectPublicAreas extends Widget {
 
         // ################## forums
 
-        if ($project->usesForum()) {
-            $service_forum = $project->getService(Service::FORUM);
+        $service_forum = $project->getService(Service::FORUM);
+        if ($service_forum !== null) {
             $html .= '<p><a href="'.$purifier->purify($service_forum->getUrl()).'">';
             $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($service_forum->getIcon()).'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','public_forums').'</A>';
@@ -82,8 +80,8 @@ class Widget_ProjectPublicAreas extends Widget {
 
         // ##################### Mailing lists (only for Active)
 
-        if ($project->usesMail()) {
-            $mail_service = $project->getService(Service::ML);
+        $mail_service = $project->getService(Service::ML);
+        if ($mail_service !== null) {
             $html .= '<p><a href="'.$purifier->purify($mail_service->getUrl()).'">';
             $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($mail_service->getIcon()).'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','mail_lists').'</A>';
@@ -94,8 +92,8 @@ class Widget_ProjectPublicAreas extends Widget {
 
         // ######################### Wiki (only for Active)
 
-        if ($project->usesWiki()) {
-            $wiki_service = $project->getService(Service::WIKI);
+        $wiki_service = $project->getService(Service::WIKI);
+        if ($wiki_service !== null) {
             $html .= '<p><a href="'.$purifier->purify($wiki_service->getUrl()).'">';
             $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($wiki_service->getIcon()).'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','wiki').'</A>';
@@ -109,8 +107,8 @@ class Widget_ProjectPublicAreas extends Widget {
 
         // ######################### CVS (only for Active)
 
-        if ($project->usesCVS()) {
-            $cvs_service = $project->getService(Service::CVS);
+        $cvs_service = $project->getService(Service::CVS);
+        if ($cvs_service !== null) {
             $html .= '<p><a href="'.$purifier->purify($cvs_service->getUrl()).'">';
             $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($cvs_service->getIcon()).'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home', 'cvs_repo') . '</a>';
@@ -138,8 +136,8 @@ class Widget_ProjectPublicAreas extends Widget {
 
         // ######################### Subversion (only for Active)
 
-        if ($project->usesService('svn')) {
-            $svn_service = $project->getService(Service::SVN);
+        $svn_service = $project->getService(Service::SVN);
+        if ($svn_service !== null) {
             $html .= '<p><a href="'.$purifier->purify($svn_service->getUrl()).'">';
             $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($svn_service->getIcon()).'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home', 'svn_repo') . '</a>';
@@ -159,13 +157,14 @@ class Widget_ProjectPublicAreas extends Widget {
 
         // ######################### File Releases (only for Active)
 
-        if ($project->usesFile()) {
-            $html .= $project->getService(Service::FILE)->getPublicArea();
+        $file_service = $project->getService(Service::FILE);
+        if ($file_service !== null) {
+            $html .= $file_service->getPublicArea();
         }
 
         // ######################### Trackers (only for Active)
-        if ( $project->usesTracker() ) {
-            $trackerv3_service = $project->getService(Service::TRACKERV3);
+        $trackerv3_service = $project->getService(Service::TRACKERV3);
+        if ($trackerv3_service !== null) {
             $html .= '<p><a href="'.$purifier->purify($trackerv3_service->getUrl()).'">';
             $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($trackerv3_service->getIcon()).'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','trackers').'</a>';

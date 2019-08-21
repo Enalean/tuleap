@@ -832,7 +832,7 @@ class trackerPlugin extends Plugin {
                         $entries[] = '<a href="'. TRACKER_BASE_URL .'/?tracker='. $t->id .'">'. $name .'</a>';
                     }
                 }
-                if ($entries) {
+                if ($service !== null && $entries) {
                     $area = '';
                     $area .= '<a href="'. TRACKER_BASE_URL .'/?group_id='. urlencode($project->getGroupId()) .'">';
                     $area .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($service->getIcon()).'"></i>';
@@ -1552,7 +1552,8 @@ class trackerPlugin extends Plugin {
 
     public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event)
     {
-        if (! $event->getProject()->usesService(self::SERVICE_SHORTNAME)) {
+        $service = $event->getProject()->getService($this->getServiceShortname());
+        if ($service === null) {
             return;
         }
 
@@ -1576,10 +1577,7 @@ class trackerPlugin extends Plugin {
                 $presenter
             );
 
-        $project         = $event->getProject();
-        $rank_in_project = $project->getService(
-            $this->getServiceShortname()
-        )->getRank();
+        $rank_in_project = $service->getRank();
 
         $event->addPane($admin_permission_pane, $rank_in_project);
     }

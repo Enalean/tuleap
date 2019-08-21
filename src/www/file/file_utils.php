@@ -38,7 +38,11 @@ function file_utils_header($params) {
         $project_manager = ProjectManager::instance();
         $project         = $project_manager->getProject($group_id);
 
-        $project->getService(Service::FILE)->displayFRSHeader($project, $params['title']);
+        $service = $project->getService(Service::FILE);
+        if ($service !== null) {
+            assert($service instanceof ServiceFile);
+            $service->displayFRSHeader($project, $params['title']);
+        }
     }
 }
 
