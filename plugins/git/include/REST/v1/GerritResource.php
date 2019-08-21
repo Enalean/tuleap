@@ -102,8 +102,8 @@ class GerritResource extends AuthenticatedResource {
      *
      * @return array {@type Tuleap\Git\REST\v1\GerritServerRepresentation}
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     protected function get($for_project = null) {
         $current_user = $this->user_manager->getCurrentUser();
@@ -135,7 +135,7 @@ class GerritResource extends AuthenticatedResource {
     }
 
     /**
-     * @return Project
+     * @return \Project
      */
     private function getProjectFromRequest($project_id)
     {

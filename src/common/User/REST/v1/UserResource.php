@@ -104,9 +104,9 @@ class UserResource extends AuthenticatedResource {
      *
      * @param int $id Id of the desired user
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      *
      * @return UserRepresentation {@type UserRepresentation}
      */
@@ -125,8 +125,8 @@ class UserResource extends AuthenticatedResource {
      *
      * @access public
      *
-     * @throws 400
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 404
      */
     public function optionsId($id) {
         $this->sendAllowHeaders();
@@ -242,9 +242,9 @@ class UserResource extends AuthenticatedResource {
      *
      * @param int $id Id of the desired user
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      *
      * @return array {@type string}
      */
@@ -280,9 +280,9 @@ class UserResource extends AuthenticatedResource {
      * @param int    $id  Id of the desired user
      * @param string $key Preference key
      *
-     * @throws 401
-     * @throws 403
-     * @throws 404
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
      *
      * @return UserPreferenceRepresentation
      */
@@ -364,8 +364,8 @@ class UserResource extends AuthenticatedResource {
      * @param int    $id Id of the desired user
      * @param string $key Preference key
      *
-     * @throws 401
-     * @throws 500
+     * @throws RestException 401
+     * @throws RestException 500
      */
     public function deletePreferences($id, $key) {
         $this->checkAccess();
@@ -390,8 +390,8 @@ class UserResource extends AuthenticatedResource {
      * @param int $id Id of the desired user
      * @param UserPreferenceRepresentation $preference Preference representation {@from body}
      *
-     * @throws 401
-     * @throws 500
+     * @throws RestException 401
+     * @throws RestException 500
      *
      * @return UserPreferenceRepresentation
      */
@@ -549,7 +549,7 @@ class UserResource extends AuthenticatedResource {
      *
      * @param int    $id  Id of the desired user
      *
-     * @throws 403
+     * @throws RestException 403
      *
      * @return UserHistoryRepresentation {@type UserHistoryRepresentation}
      */
@@ -589,7 +589,7 @@ class UserResource extends AuthenticatedResource {
      * @param int    $id  Id of the desired user
      * @param UserHistoryEntryRepresentation[] $history_entries History entries representation {@from body}
      *
-     * @throws 403
+     * @throws RestException 403
      */
     public function putHistory($id, array $history_entries)
     {
@@ -639,7 +639,7 @@ class UserResource extends AuthenticatedResource {
      *
      * @access protected
      *
-     * @throws 403
+     * @throws RestException 403
      *
      * @return array {@type \Tuleap\User\AccessKey\REST\UserAccessKeyRepresentation}
      */

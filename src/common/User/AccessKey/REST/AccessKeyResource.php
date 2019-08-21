@@ -70,7 +70,7 @@ class AccessKeyResource extends AuthenticatedResource
      *
      * @status 201
      *
-     * @throws 400
+     * @throws RestException 400
      *
      * @return UserAccessKeyCreationRepresentation
      */

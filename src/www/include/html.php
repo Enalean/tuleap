@@ -366,6 +366,7 @@ function html_build_select_box (
     if ($text_any == '') { $text_any = $Language->getText('global','any'); }
     if ($text_unchanged == '') { $text_unchanged = $Language->getText('global','unchanged'); }
 
+    /** @psalm-suppress DeprecatedFunction */
     return html_build_select_box_from_arrays(
             util_result_column_to_array($result,0),
             util_result_column_to_array($result,1),

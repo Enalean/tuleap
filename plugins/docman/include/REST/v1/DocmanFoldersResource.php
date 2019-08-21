@@ -150,9 +150,9 @@ class DocmanFoldersResource extends AuthenticatedResource
      * @return CreatedItemRepresentation
      *
      * @throws I18NRestException 400
-     * @throws 403
-     * @throws 404
-     * @throws 409
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 409
      */
     public function postFiles(int $id, DocmanPOSTFilesRepresentation $files_representation): CreatedItemRepresentation
     {
@@ -241,10 +241,10 @@ class DocmanFoldersResource extends AuthenticatedResource
      *
      * @return CreatedItemRepresentation
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
-     * @throws 409
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 409
      */
     public function postFolders(int $id, DocmanFolderPOSTRepresentation $folder_representation): CreatedItemRepresentation
     {
@@ -319,10 +319,10 @@ class DocmanFoldersResource extends AuthenticatedResource
      *
      * @return CreatedItemRepresentation
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
-     * @throws 409
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 409
      */
     public function postEmpties(int $id, DocmanEmptyPOSTRepresentation $empty_representation): CreatedItemRepresentation
     {
@@ -399,10 +399,10 @@ class DocmanFoldersResource extends AuthenticatedResource
      *
      * @return CreatedItemRepresentation
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
-     * @throws 409
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 409
      */
     public function postWikis(int $id, DocmanWikiPOSTRepresentation $wiki_representation): CreatedItemRepresentation
     {
@@ -473,10 +473,10 @@ class DocmanFoldersResource extends AuthenticatedResource
      *
      * @return CreatedItemRepresentation
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
-     * @throws 409
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 409
      */
     public function postEmbeds(int $id, DocmanEmbeddedPOSTRepresentation $embeds_representation): CreatedItemRepresentation
     {
@@ -564,9 +564,9 @@ class DocmanFoldersResource extends AuthenticatedResource
      * @return CreatedItemRepresentation
      *
      * @throws I18NRestException 400
-     * @throws 403
-     * @throws 404
-     * @throws 409
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 409
      */
     public function postLinks(int $id, DocmanLinkPOSTRepresentation $links_representation): CreatedItemRepresentation
     {

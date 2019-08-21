@@ -390,7 +390,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @return CrossTrackerReportRepresentation
      *
-     * @throws 404
+     * @throws RestException 404
      */
     public function getId($id)
     {
@@ -433,7 +433,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @return CrossTrackerArtifactReportRepresentation[]
      *
-     * @throws 404
+     * @throws RestException 404
      */
     public function getIdContent($id, $query, $limit = self::MAX_LIMIT, $offset = 0)
     {
@@ -513,8 +513,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @return CrossTrackerReportRepresentation
      *
-     * @throws 400
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 404
      */
     protected function put($id, array $trackers_id, $expert_query = "")
     {
@@ -600,7 +600,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      * @param                    $query
      * @param CrossTrackerReport $report
      *
-     * @throws 400
+     * @throws RestException 400
      *
      * @return array
      */

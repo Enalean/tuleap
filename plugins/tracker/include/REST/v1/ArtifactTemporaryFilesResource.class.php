@@ -80,7 +80,7 @@ class ArtifactTemporaryFilesResource {
      * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}
      * @param int    $offset Position of the first element to display {@from path}{@min 0}
      *
-     * @throws 400
+     * @throws RestException 400
      */
     protected function get($limit  = self::PAGINATION_DEFAULT_LIMIT, $offset = self::PAGINATION_DEFAULT_OFFSET) {
         if ($limit > self::PAGINATION_MAX_LIMIT) {
@@ -112,8 +112,8 @@ class ArtifactTemporaryFilesResource {
      *
      * @return FileDataRepresentation
      *
-     * @throws 404
-     * @throws 406
+     * @throws RestException 404
+     * @throws RestException 406
      */
     protected function getId($id, $offset = 0, $limit = self::DEFAULT_LIMIT) {
         $this->checkLimitValue($limit);
@@ -130,8 +130,8 @@ class ArtifactTemporaryFilesResource {
     }
 
     /**
-     * @throws 401
-     * @throws 404
+     * @throws RestException 401
+     * @throws RestException 404
      */
     private function getTemporaryFileContent($id, $offset, $limit) {
         $file = $this->getFile($id);
@@ -145,7 +145,7 @@ class ArtifactTemporaryFilesResource {
     }
 
     /**
-     * @throws 404
+     * @throws RestException 404
      */
     private function getTemporaryFileSize($id) {
         return $this->getFile($id)->getSize();
@@ -171,7 +171,9 @@ class ArtifactTemporaryFilesResource {
      * @param string $description   Description of the file {@from body}
      *
      * @return \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation
-     * @throws 500 406 403
+     * @throws RestException 500
+     * @throws RestException 406
+     * @throws RestException 403
      */
     protected function post($name, $mimetype, $content, $description = null) {
         try {
@@ -220,7 +222,7 @@ class ArtifactTemporaryFilesResource {
      * @param int    $offset  Used to check that the chunk uploaded is the next one (minimum value is 2) {@from body}
      *
      * @return \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation
-     * @throws 406
+     * @throws RestException 406
      */
     protected function putId($id, $content, $offset) {
         $this->checkFileIsTemporary($id);
@@ -254,8 +256,8 @@ class ArtifactTemporaryFilesResource {
     /**
      * @url OPTIONS {id}
      *
-     * @throws 401
-     * @throws 404
+     * @throws RestException 401
+     * @throws RestException 404
      */
     public function optionsId($id) {
         $this->sendAllowHeadersForArtifactFilesId();
@@ -299,7 +301,7 @@ class ArtifactTemporaryFilesResource {
     }
 
     /**
-     * @throws 401
+     * @throws RestException 401
      */
     private function checkTemporaryFileBelongsToCurrentUser(TemporaryFile $file) {
         $creator_id = $file->getCreatorId();
@@ -316,7 +318,8 @@ class ArtifactTemporaryFilesResource {
      *
      * @url DELETE {id}
      *
-     * @throws 500, 400
+     * @throws RestException 500
+     * @throws RestException 400
      *
      * @param string $id Id of the file
      */
@@ -375,7 +378,7 @@ class ArtifactTemporaryFilesResource {
     }
 
     /**
-     * @throws 406
+     * @throws RestException 406
      */
     private function checkLimitValue($limit) {
         if ($limit > self::DEFAULT_LIMIT) {

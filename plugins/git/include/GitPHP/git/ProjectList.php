@@ -53,7 +53,7 @@ class ProjectList
      * @access public
      * @static
      * @return mixed instance of projectlist
-     * @throws Exception if projectlist has not been instantiated yet
+     * @throws \Exception if projectlist has not been instantiated yet
      */
     public static function GetInstance() // @codingStandardsIgnoreLine
     {

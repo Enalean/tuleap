@@ -900,7 +900,6 @@ class ProjectManager
      * @param int $group_id
      * @param int $parent_group_id
      * @return Boolean
-     * @throws Project_HierarchyManagerNoChangeException
      * @throws Project_HierarchyManagerAlreadyAncestorException
      * @throws Project_HierarchyManagerAncestorIsSelfException
      */

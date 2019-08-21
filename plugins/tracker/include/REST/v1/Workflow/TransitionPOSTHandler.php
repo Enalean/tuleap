@@ -138,7 +138,7 @@ class TransitionPOSTHandler
     /**
      * Checks if workflow exists for the tracker before return object
      *
-     * @throws 404 I18NRestException
+     * @throws I18NRestException 404
      */
     private function getWorkflowByTrackerId(int $tracker_id): Workflow
     {
@@ -152,7 +152,7 @@ class TransitionPOSTHandler
     }
 
     /**
-     * @throws 404 I18NRestException
+     * @throws I18NRestException 404
      */
     private function getTrackerByTrackerId(int $tracker_id): \Tracker
     {

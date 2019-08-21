@@ -71,7 +71,7 @@ abstract class GitObject
      * @param mixed $project the project
      * @param string $hash object hash
      * @return mixed git object
-     * @throws Exception exception on invalid hash
+     * @throws \Exception exception on invalid hash
      */
     public function __construct($project, $hash)
     {

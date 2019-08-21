@@ -53,7 +53,7 @@ class WrapperLogger implements Logger {
     }
 
     private function formatMessage($message) {
-        return '['.implode($this->prefix, '][').'] '.$message;
+        return '['. implode('][', $this->prefix) .'] '.$message;
     }
 
     public function push($prefix) {

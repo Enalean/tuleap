@@ -45,7 +45,7 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
                     )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_type_confirm').'\');">'
                        .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_'. $type ).'</a> ';
             }
-            $html .= implode($change_links,', ');
+            $html .= implode(', ', $change_links);
             $html .= ')';
         }
 

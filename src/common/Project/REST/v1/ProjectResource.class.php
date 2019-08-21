@@ -209,9 +209,9 @@ class ProjectResource extends AuthenticatedResource
      *
      *
      * @return ProjectRepresentation
-     * @throws 400
-     * @throws 403
-     * @throws 429
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 429
      */
     protected function post($shortname, $description, $label, $is_public, ?bool $allow_restricted, $template_id)
     {
@@ -302,9 +302,9 @@ class ProjectResource extends AuthenticatedResource
      * @param int    $offset Position of the first element to display
      * @param string $query  JSON object of search criteria properties {@from path}
      *
-     * @throws 403
-     * @throws 404
-     * @throws 406
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 406
      *
      * @return array {@type Tuleap\Project\REST\ProjectRepresentation}
      */
@@ -426,8 +426,8 @@ class ProjectResource extends AuthenticatedResource
      * @param int $id Id of the project
      *
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      *
      * @return ProjectRepresentation
      */
@@ -454,8 +454,8 @@ class ProjectResource extends AuthenticatedResource
      *
      * @param int $id Id of the project
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function optionsId($id)
     {
@@ -463,8 +463,8 @@ class ProjectResource extends AuthenticatedResource
     }
 
     /**
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      *
      * @return Project
      */
@@ -479,8 +479,8 @@ class ProjectResource extends AuthenticatedResource
     }
 
     /**
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      *
      * @return Project
      */
@@ -820,9 +820,9 @@ class ProjectResource extends AuthenticatedResource
      *
      * @return array {@type Tuleap\Tracker\REST\TrackerRepresentation}
      *
-     * @throws 400 RestException
-     * @throws 403 RestException
-     * @throws 404 RestException
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getTrackers($id, $representation = 'full', $limit = 10, $offset = 0, $query = '')
     {
@@ -890,7 +890,7 @@ class ProjectResource extends AuthenticatedResource
      *
      * @return array {@type Tuleap\REST\v1\BacklogItemRepresentationBase}
      *
-     * @throws 406
+     * @throws RestException 406
      */
     public function getBacklog($id, $limit = 10, $offset = 0)
     {
@@ -930,7 +930,7 @@ class ProjectResource extends AuthenticatedResource
      * @param int   $id  Id of the project
      * @param array $ids Ids of backlog items {@from body}
      *
-     * @throws 500
+     * @throws RestException 500
      */
     public function putBacklog($id, array $ids)
     {
@@ -995,9 +995,9 @@ class ProjectResource extends AuthenticatedResource
      * @param \Tuleap\REST\v1\OrderRepresentationBase $order Order of the children {@from body}
      * @param array                                   $add   Add (move) item to the backlog {@from body}
      *
-     * @throws 500
-     * @throws 409
-     * @throws 400
+     * @throws RestException 500
+     * @throws RestException 409
+     * @throws RestException 400
      */
     public function patchBacklog($id, ?OrderRepresentationBase $order = null, ?array $add = null)
     {
@@ -1049,10 +1049,10 @@ class ProjectResource extends AuthenticatedResource
      * @param int                        $id             Id of the project
      * @param PATCHProjectRepresentation $patch_resource {@from body} {@type Tuleap\Project\REST\v1\PATCHProjectRepresentation}
      *
-     * @throws 400
-     * @throws 401
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function patchProject($id, PATCHProjectRepresentation $patch_resource)
     {
@@ -1164,8 +1164,8 @@ class ProjectResource extends AuthenticatedResource
     }
 
     /**
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      *
      * @return bool
      */
@@ -1183,7 +1183,7 @@ class ProjectResource extends AuthenticatedResource
      *
      * @param int $id Id of the project
      *
-     * @throws 404
+     * @throws RestException 404
      */
     public function optionsGit($id)
     {
@@ -1343,7 +1343,7 @@ class ProjectResource extends AuthenticatedResource
      *
      * @param int $id Id of the project
      *
-     * @throws 404
+     * @throws RestException 404
      */
     public function optionsSvn($id)
     {
@@ -1389,7 +1389,7 @@ class ProjectResource extends AuthenticatedResource
      *
      * @return array {@type Tuleap\REST\v1\SvnRepositoryRepresentationBase}
      *
-     * @throws 404
+     * @throws RestException 404
      */
     public function getSvn($id, $query = '', $limit = 10, $offset = 0)
     {
@@ -1514,9 +1514,9 @@ class ProjectResource extends AuthenticatedResource
      * @param int $offset Position of the first element to display {@from path} {@min 0}
      *
      * @return array {@type Tuleap\Project\REST\v1\ServiceRepresentation}
-     * @throws 401
-     * @throws 403
-     * @throws 404
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getServices(int $id, int $limit = 10, int $offset = 0): array
     {

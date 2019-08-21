@@ -146,10 +146,10 @@ class TimetrackingResource extends AuthenticatedResource
      * @param TimetrackingPOSTRepresentation $item_representation The created Time {@from body} {@type Tuleap\Timetracking\REST\v1\TimetrackingPOSTRepresentation}
      * @return TimetrackingRepresentation
      *
-     * @throws 400
-     * @throws 401
+     * @throws RestException 400
+     * @throws RestException 401
      * @throws RestException 403
-     * @throws 404
+     * @throws RestException 404
      */
     protected function addTime(TimetrackingPOSTRepresentation $item)
     {
@@ -202,10 +202,10 @@ class TimetrackingResource extends AuthenticatedResource
      *
      * @return TimetrackingRepresentation
      *
-     * @throws 400
-     * @throws 401
+     * @throws RestException 400
+     * @throws RestException 401
      * @throws RestException 403
-     * @throws 404
+     * @throws RestException 404
      */
     protected function updateTime($id, TimetrackingPUTRepresentation $item)
     {
@@ -254,9 +254,9 @@ class TimetrackingResource extends AuthenticatedResource
      *
      * @param int $id Id of the time
      *
-     * @throws 401
+     * @throws RestException 401
      * @throws RestException 403
-     * @throws 404
+     * @throws RestException 404
      */
     protected function delete($id)
     {

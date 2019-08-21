@@ -75,7 +75,7 @@ class UserMembershipResource extends AuthenticatedResource {
      *
      * @url GET
      * @access protected
-     * @throws 406
+     * @throws RestException 406
      *
      * @param string $query Criterion to filter the results {@choice with_ssh_key}
      * @param int $limit  Number of elements displayed per page
@@ -137,8 +137,8 @@ class UserMembershipResource extends AuthenticatedResource {
      *
      * @access public
      *
-     * @throws 400
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 404
      */
     public function options() {
         $this->sendAllowHeaders();

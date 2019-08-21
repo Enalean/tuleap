@@ -134,9 +134,9 @@ class KanbanColumnsResource {
      * @param int                             $kanban_id Id of the Kanban {@from query}
      * @param KanbanColumnPATCHRepresentation $column    The kanban column {@from body} {@type Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnPATCHRepresentation}
      *
-     * @throws 401
+     * @throws RestException 401
      * @throws RestException 403
-     * @throws 404
+     * @throws RestException 404
      */
     protected function patch($id, $kanban_id, KanbanColumnPATCHRepresentation $updated_column_properties) {
         $current_user = $this->getCurrentUser();
@@ -203,9 +203,9 @@ class KanbanColumnsResource {
      * @param int $id           Id of the column
      * @param int $kanban_id    Id of the Kanban {@from query}
      *
-     * @throws 401
+     * @throws RestException 401
      * @throws RestException 403
-     * @throws 404
+     * @throws RestException 404
      */
     protected function delete($id, $kanban_id) {
         $current_user = $this->getCurrentUser();

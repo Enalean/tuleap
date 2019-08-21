@@ -95,9 +95,9 @@ class DocmanItemsResource extends AuthenticatedResource
      *
      * @return ItemRepresentation
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getId($id)
     {
@@ -130,9 +130,9 @@ class DocmanItemsResource extends AuthenticatedResource
      *
      * @return ItemRepresentation[]
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getDocumentItems($id, $limit = self::MAX_LIMIT, $offset = 0)
     {
@@ -195,9 +195,9 @@ class DocmanItemsResource extends AuthenticatedResource
      * @return ItemRepresentation[]
      *
      * @status 200
-     * @throws 400
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      *
      */
     public function getParents($id, $limit = self::MAX_LIMIT, $offset = 0)
@@ -226,7 +226,7 @@ class DocmanItemsResource extends AuthenticatedResource
      *
      * @deprecated this route will be split into smaller routes, easier to use (POST docman_folders/id/type)
      *
-     * @throws 301
+     * @throws RestException 301
      */
     public function post()
     {

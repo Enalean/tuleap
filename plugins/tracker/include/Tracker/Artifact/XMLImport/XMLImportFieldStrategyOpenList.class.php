@@ -69,7 +69,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
         return implode(',', $values);
     }
 
-    private function getUserValue(Tracker_FormElement_Field $field, $value) {
+    private function getUserValue(Tracker_FormElement_Field $field, SimpleXMLElement $value) {
         if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID) {
             return (string) $value;
         }
@@ -94,7 +94,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
             );
     }
 
-    private function getFieldChangeId(Tracker_FormElement_Field $field, $value) {
+    private function getFieldChangeId(Tracker_FormElement_Field $field, SimpleXMLElement $value) {
         if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID){
             return $this->xml_fields_mapping->getNewOpenValueId((string) $value);
         }

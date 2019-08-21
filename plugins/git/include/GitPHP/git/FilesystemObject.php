@@ -83,7 +83,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      * @param mixed $project the project
      * @param string $hash object hash
      * @return mixed git filesystem object
-     * @throws Exception exception on invalid hash
+     * @throws \Exception exception on invalid hash
      */
     public function __construct($project, $hash)
     {

@@ -122,8 +122,8 @@ class TransitionsResource extends AuthenticatedResource
      *
      * @return WorkflowTransitionPOSTRepresentation {@type WorkflowTransitionPOSTRepresentation}
      *
-     * @throws 400 I18NRestException
-     * @throws 404 I18NRestException
+     * @throws I18NRestException 400
+     * @throws I18NRestException 404
      * @throws \Luracast\Restler\RestException
      * @throws \Rest_Exception_InvalidTokenException
      * @throws \User_LoginException
@@ -163,11 +163,10 @@ class TransitionsResource extends AuthenticatedResource
      *
      * @param  int $id Transition id
      *
-     * @throws 400 I18NRestException
-     * @throws 401 RestException
-     * @throws 403 I18NRestException
-     * @throws 404 I18NRestException
-     * @throws \Luracast\Restler\RestException
+     * @throws I18NRestException 400
+     * @throws RestException 401
+     * @throws I18NRestException 403
+     * @throws I18NRestException 404
      * @throws \Rest_Exception_InvalidTokenException
      * @throws \User_PasswordExpiredException
      * @throws \User_StatusDeletedException
@@ -262,9 +261,9 @@ class TransitionsResource extends AuthenticatedResource
      *
      * @return TransitionRepresentation
      *
-     * @throws 401 I18NRestException
-     * @throws 403 I18NRestException
-     * @throws 404 I18NRestException
+     * @throws I18NRestException 401 I18NRestException
+     * @throws I18NRestException 403 I18NRestException
+     * @throws I18NRestException 404 I18NRestException
      * @throws \Luracast\Restler\RestException
      * @throws \Rest_Exception_InvalidTokenException
      * @throws \User_PasswordExpiredException
@@ -306,9 +305,9 @@ class TransitionsResource extends AuthenticatedResource
      *
      * @return array
      *
-     * @throws 401 I18NRestException
-     * @throws 403 I18NRestException
-     * @throws 404 I18NRestException
+     * @throws I18NRestException 401
+     * @throws I18NRestException 403
+     * @throws I18NRestException 404
      * @throws OrphanTransitionException
      * @throws \Luracast\Restler\RestException
      */
@@ -386,9 +385,9 @@ class TransitionsResource extends AuthenticatedResource
      * @param int $id Id of transition
      * @param PostActionsPUTRepresentation $post_actions_representation actions {@from body}
      *
-     * @throws 401 I18NRestException
-     * @throws 403 I18NRestException
-     * @throws 404 I18NRestException
+     * @throws I18NRestException 401
+     * @throws I18NRestException 403
+     * @throws I18NRestException 404
      * @throws OrphanTransitionException
      * @throws \DataAccessQueryException
      * @throws RestException

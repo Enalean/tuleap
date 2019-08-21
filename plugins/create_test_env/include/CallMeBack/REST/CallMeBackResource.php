@@ -68,8 +68,8 @@ class CallMeBackResource extends AuthenticatedResource
      * @url POST
      * @status 201
      *
-     * @throws 403
-     * @throws 500
+     * @throws RestException 403
+     * @throws RestException 500
      */
     public function post($phone, $date)
     {

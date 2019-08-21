@@ -447,7 +447,7 @@ class GitActions extends PluginActions
      * @param Git_Driver_Gerrit_Template_Template $template
      * @param Project $project
      * @param PFUser $user
-     * @throws Git_ProjectNotInHierarchyException
+     * @throws Git_TemplateNotInProjectHierarchyException
      */
     private function checkTemplateIsAccessible(Git_Driver_Gerrit_Template_Template $template, Project $project, PFUser $user) {
         $template_id = $template->getId();

@@ -119,8 +119,8 @@ class FileResource extends AuthenticatedResource
      *
      * @status 202
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     protected function deleteId(int $id): void
     {
@@ -141,7 +141,7 @@ class FileResource extends AuthenticatedResource
     }
 
     /**
-     * @throws 403
+     * @throws RestException 403
      */
     private function getFile($id, PFUser $user): FRSFile
     {
@@ -188,8 +188,8 @@ class FileResource extends AuthenticatedResource
      * @return CreatedFileRepresentation
      *
      * @status 201
-     * @throws 400
-     * @throws 403
+     * @throws RestException 400
+     * @throws RestException 403
      */
     protected function post(FilePOSTRepresentation $file_post_representation): CreatedFileRepresentation
     {

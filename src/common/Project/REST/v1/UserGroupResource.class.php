@@ -100,9 +100,9 @@ class UserGroupResource extends AuthenticatedResource
      * - format: projectId_ugroupId for dynamic project user groups (project members...)<br>
      * - format: ugroupId for all other groups (registered users, custom groups, ...)
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      *
      * @return \Tuleap\Project\REST\UserGroupRepresentation
      */
@@ -133,9 +133,9 @@ class UserGroupResource extends AuthenticatedResource
      *
      * @param string $id Id of the ugroup (format: projectId_ugroupId)
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function optionsId($id)
     {
@@ -168,10 +168,10 @@ class UserGroupResource extends AuthenticatedResource
      * @param string $query User name to look for
      *
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
-     * @throws 406
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 406
      *
      * @return array {@type \Tuleap\User\REST\UserRepresentation}
      */
@@ -255,9 +255,9 @@ class UserGroupResource extends AuthenticatedResource
      *
      * @param array $user_references {@from body}
      *
-     * @throws 400
+     * @throws RestException 400
      * @throws RestException 403
-     * @throws 404
+     * @throws RestException 404
      */
     protected function putUsers($id, array $user_references)
     {
@@ -393,7 +393,7 @@ class UserGroupResource extends AuthenticatedResource
     /**
      * Get the members of a group
      *
-     * @throws 404
+     * @throws RestException 404
      *
      * @return PFUser[]
      */
@@ -428,8 +428,8 @@ class UserGroupResource extends AuthenticatedResource
     }
 
     /**
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      *
      * @return bool
      */
@@ -443,8 +443,8 @@ class UserGroupResource extends AuthenticatedResource
     }
 
     /**
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      *
      * @return bool
      */
@@ -463,7 +463,7 @@ class UserGroupResource extends AuthenticatedResource
     /**
      * @param int $ugroup_id
      *
-     * @throws 404
+     * @throws RestException 404
      *
      * @return bool
      */
@@ -498,7 +498,7 @@ class UserGroupResource extends AuthenticatedResource
      *
      * @return bool
      *
-     * @throws 406
+     * @throws RestException 406
      */
 
     private function checkLimitValueIsAcceptable($limit)
@@ -548,9 +548,9 @@ class UserGroupResource extends AuthenticatedResource
      *
      * @return UserGroupRepresentation {@type \Tuleap\Project\REST\v1\UserGroupRepresentation}
      *
-     * @throws 401
-     * @throws 403
-     * @throws 404
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
      *
      * @status 201
      */

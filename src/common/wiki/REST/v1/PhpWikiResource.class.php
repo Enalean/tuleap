@@ -76,7 +76,7 @@ class PhpWikiResource extends AuthenticatedResource {
      *
      * @param int $id Id of the wiki page
      *
-     * @throws 403
+     * @throws RestException 403
      *
      * @return \Tuleap\PhpWiki\REST\v1\PhpWikiPageFullRepresentation
      */
@@ -120,9 +120,9 @@ class PhpWikiResource extends AuthenticatedResource {
      * @param int $id         Id of the wiki page
      * @param int $version_id Id of the version to filter the collection. If version_id=0, we return the last version. {@from request}
      *
-     * @throws 401
-     * @throws 403
-     * @throws 404
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
      *
      * @return array {@type Tuleap\PhpWiki\REST\v1\PhpWikiPageVersionFullRepresentation}
      */
@@ -224,8 +224,8 @@ class PhpWikiResource extends AuthenticatedResource {
     }
 
     /**
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     private function checkUserCanAccessProject($project_id) {
         $project = $this->project_manager->getProject($project_id);

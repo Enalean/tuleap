@@ -297,8 +297,8 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * @return array {@type Tuleap\PullRequest\REST\v1\PullRequestRepresentation}
      *
-     * @throws 403
-     * @throws 404 x Pull request does not exist
+     * @throws RestException 403
+     * @throws RestException 404 x Pull request does not exist
      */
     protected function get($id)
     {
@@ -351,10 +351,10 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * @return array {@type \Tuleap\Git\REST\v1\GitCommitRepresentation}
      *
-     * @throws 403
-     * @throws 404 x Pull request does not exist
-     * @throws 410
-     * @throws 500
+     * @throws RestException 403
+     * @throws RestException 404 x Pull request does not exist
+     * @throws RestException 410
+     * @throws RestException 500
      */
     public function getCommits($id, $limit = 50, $offset = 0)
     {
@@ -431,8 +431,8 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * @return array
      *
-     * @throws 403
-     * @throws 404 x Pull request does not exist
+     * @throws RestException 403
+     * @throws RestException 404 x Pull request does not exist
      */
     protected function getLabels($id, $limit = self::MAX_LIMIT, $offset = 0)
     {
@@ -518,9 +518,9 @@ class PullRequestsResource extends AuthenticatedResource
      * @param int $id pull request ID
      * @param LabelsPATCHRepresentation $body
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404 x Pull request does not exist
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404 x Pull request does not exist
      */
     protected function patchLabels($id, LabelsPATCHRepresentation $body)
     {
@@ -566,8 +566,8 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * @return array {@type PullRequest\REST\v1\PullRequestFileRepresentation}
      *
-     * @throws 403
-     * @throws 404 x Pull request does not exist
+     * @throws RestException 403
+     * @throws RestException 404 x Pull request does not exist
      */
     protected function getFiles($id)
     {
@@ -614,9 +614,9 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * @return PullRequestFileUniDiffRepresentation {@type Tuleap\PullRequest\REST\v1\PullRequestFileUniDiffRepresentation}
      *
-     * @throws 403
-     * @throws 404 x Pull request does not exist
-     * @throws 404 x The file does not exist
+     * @throws RestException 403
+     * @throws RestException 404 x Pull request does not exist
+     * @throws RestException 404 x The file does not exist
      */
     protected function getFileDiff($id, $path)
     {
@@ -780,9 +780,9 @@ class PullRequestsResource extends AuthenticatedResource
      * @param  PullRequestPOSTRepresentation $content Id of the Git repository, name of the source branch and name of the destination branch
      * @return PullRequestReference
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      * @status 201
      */
     protected function post(PullRequestPOSTRepresentation $content)
@@ -891,11 +891,11 @@ class PullRequestsResource extends AuthenticatedResource
      * @param  PullRequestPATCHRepresentation $body new pull request status {@from body}
      * @return array {@type Tuleap\PullRequest\REST\v1\PullRequestRepresentation}
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404 x Pull request does not exist
-     * @throws 500 x Error while abandoning the pull request
-     * @throws 500 x Error while merging the pull request
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404 x Pull request does not exist
+     * @throws RestException 500 x Error while abandoning the pull request
+     * @throws RestException 500 x Error while merging the pull request
      */
     protected function patch($id, PullRequestPATCHRepresentation $body)
     {
@@ -958,8 +958,8 @@ class PullRequestsResource extends AuthenticatedResource
     }
 
     /**
-     * @throws 400
-     * @throws 403
+     * @throws RestException 400
+     * @throws RestException 403
      */
     private function patchInfo(
         PFUser $user,
@@ -1010,8 +1010,8 @@ class PullRequestsResource extends AuthenticatedResource
      * @return array {@type Tuleap\PullRequest\REST\v1\TimelineRepresentation}
      *
      * @throws RestException 403
-     * @throws 404
-     * @throws 406
+     * @throws RestException 404
+     * @throws RestException 406
      */
     protected function getTimeline($id, $limit = 10, $offset = 0)
     {
@@ -1068,8 +1068,8 @@ class PullRequestsResource extends AuthenticatedResource
      * @return array {@type Tuleap\PullRequest\REST\v1\CommentRepresentation}
      *
      * @throws RestException 403
-     * @throws 404
-     * @throws 406
+     * @throws RestException 404
+     * @throws RestException 406
      */
     protected function getComments($id, $limit = 10, $offset = 0, $order = 'asc')
     {

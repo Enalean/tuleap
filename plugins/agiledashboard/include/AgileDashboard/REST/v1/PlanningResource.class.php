@@ -90,8 +90,8 @@ class PlanningResource extends AuthenticatedResource {
      *
      * @return array {@type Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation}
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getMilestones($id, $limit = 10, $offset = 0) {
         $this->checkAccess();

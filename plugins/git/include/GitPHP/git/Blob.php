@@ -92,7 +92,7 @@ class Blob extends FilesystemObject
      * @param mixed $project the project
      * @param string $hash object hash
      * @return mixed blob object
-     * @throws Exception exception on invalid hash
+     * @throws \Exception exception on invalid hash
      */
     public function __construct($project, $hash)
     {

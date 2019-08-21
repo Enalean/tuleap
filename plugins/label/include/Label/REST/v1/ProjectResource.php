@@ -95,7 +95,7 @@ class ProjectResource
      *
      * @return CollectionOfLabeledItemsRepresentation {@type CollectionOfLabeledItemsRepresentation}
      *
-     * @throws 406
+     * @throws RestException 406
      */
     public function getLabeledItems($id, $query, $limit = 50, $offset = 0)
     {
@@ -154,8 +154,8 @@ class ProjectResource
     }
 
     /**
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      *
      * @return Project
      */

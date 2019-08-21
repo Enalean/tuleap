@@ -94,10 +94,10 @@ class PackageResource extends AuthenticatedResource
      * @param string $label      Label of the package {@from body}
      *
      * @return \Tuleap\FRS\REST\v1\PackageRepresentation
-     * @throws 400 BadRequest Given project does not exist
-     * @throws 403 Forbidden User doesn't have permission to create a package
-     * @throws 409 Conflict Package with the same label already exists in this project
-     * @throws 500 Error Unable to create the package
+     * @throws RestException 400 BadRequest Given project does not exist
+     * @throws RestException 403 Forbidden User doesn't have permission to create a package
+     * @throws RestException 409 Conflict Package with the same label already exists in this project
+     * @throws RestException 500 Error Unable to create the package
      */
     protected function post($project_id, $label)
     {

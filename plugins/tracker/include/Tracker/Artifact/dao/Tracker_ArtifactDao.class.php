@@ -387,8 +387,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
         $keywords_array = array_map(array($this, 'quote_keyword'), explode(" ", $keywords));
 
         // search in all text fields
-        $search_query1 = implode($keywords_array, " $criteria cvt.value LIKE ");
-        $search_query2 = implode($keywords_array, " $criteria cc.body LIKE ");
+        $search_query1 = implode(" $criteria cvt.value LIKE ", $keywords_array);
+        $search_query2 = implode(" $criteria cc.body LIKE ", $keywords_array);
         $sql = "SELECT SQL_CALC_FOUND_ROWS a.id AS artifact_id
                 FROM tracker_artifact AS a
                 INNER JOIN tracker_changeset AS c ON (a.id = c.artifact_id)

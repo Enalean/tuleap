@@ -344,6 +344,7 @@ class TrackerXmlImport
         }
 
         foreach ($xml_input->natures->nature as $xml_type) {
+            assert($xml_type instanceof SimpleXMLElement);
             $is_used = ! isset($xml_type['is_used']) || PHPCast::toBoolean($xml_type['is_used']) === true;
 
             if (! $is_used) {

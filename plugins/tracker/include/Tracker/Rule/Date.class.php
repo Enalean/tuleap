@@ -52,7 +52,7 @@ class Tracker_Rule_Date extends Tracker_Rule {
     /**
      *
      * @param string $comparator
-     * @throws Tracker_Rule_Date_Exception
+     * @throws Tracker_Rule_Date_InvalidComparatorException
      */
     public function setComparator($comparator) {
         if(! in_array($comparator, self::$allowed_comparators)) {

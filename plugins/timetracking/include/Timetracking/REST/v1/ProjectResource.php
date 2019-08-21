@@ -172,7 +172,7 @@ class ProjectResource
      * @return array
      *
      * @throws RestException
-     * @throws 400
+     * @throws RestException 400
      * @throws \Rest_Exception_InvalidTokenException
      * @throws \User_PasswordExpiredException
      * @throws \User_StatusInvalidException

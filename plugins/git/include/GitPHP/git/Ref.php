@@ -65,7 +65,7 @@ abstract class Ref extends GitObject
      * @param string $refDir the ref directory
      * @param string $refName the ref name
      * @param string $refHash the ref hash
-     * @throws Exception if not a valid ref
+     * @throws \Exception if not a valid ref
      * @return mixed git ref
      */
     public function __construct($project, $refDir, $refName, $refHash = '')
