@@ -15,8 +15,4 @@
     <meta name="msapplication-config" content="{{ imgRoot }}favicon/{{ variant }}/browserconfig.xml">
     <meta name="theme-color" content="{{ variant_color_code }}">
 
-    {{# open_graph }}
-        {{# properties }}
-            <meta property="og:{{ name }}" content="{{ content }}" />
-        {{/ properties}}
-    {{/ open_graph }}
+    {{> open-graph }}

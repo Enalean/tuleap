@@ -25,6 +25,7 @@ use Feedback;
 use PFUser;
 use ThemeVariantColor;
 use Tuleap\Layout\SidebarPresenter;
+use Tuleap\OpenGraph\OpenGraphPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\Presenter as NavbarPresenter;
 use Tuleap\TimezoneRetriever;
 
@@ -93,6 +94,10 @@ class HeaderPresenter
     public $user_timezone;
     /** @var string */
     public $date_time_format;
+    /**
+     * @var OpenGraphPresenter
+     */
+    public $open_graph;
 
     public function __construct(
         PFUser $user,
@@ -108,7 +113,8 @@ class HeaderPresenter
         $current_project_navbar_info_presenter,
         array $toolbar,
         array $breadcrumbs,
-        $motd
+        $motd,
+        OpenGraphPresenter $open_graph
     ) {
         $this->date_time_format                      = $GLOBALS['Language']->getText('system', 'datefmt');
         $this->user_timezone                         = TimezoneRetriever::getUserTimezone($user);
@@ -128,6 +134,7 @@ class HeaderPresenter
         $this->motd                                  = $motd;
         $this->has_motd                              = ! empty($motd);
         $this->breadcrumbs                           = $breadcrumbs;
+        $this->open_graph                            = $open_graph;
 
         $this->buildFeedbacks($feedback_logs);
 
