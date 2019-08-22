@@ -114,7 +114,7 @@ class ArtifactFilesResource
     }
 
     /**
-     * @throws 406
+     * @throws RestException 406
      */
     private function checkLimitValue($limit) {
         if ($limit > self::DEFAULT_LIMIT) {

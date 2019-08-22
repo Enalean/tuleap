@@ -92,14 +92,12 @@ class SemanticTimeframe extends Tracker_Semantic
             echo dgettext('tuleap-tracker', 'This semantic is not defined yet.');
         } else {
             if ($this->duration_field !== null) {
-                /** @psalm-suppress PossiblyNullReference https://github.com/vimeo/psalm/issues/1994 */
                 echo sprintf(
                     dgettext('tuleap-tracker', 'Timeframe is based on start date field "%s" and duration field "%s".'),
                     $this->start_date_field->getLabel(),
                     $this->duration_field->getLabel()
                 );
             } elseif ($this->end_date_field !== null) {
-                /** @psalm-suppress PossiblyNullReference https://github.com/vimeo/psalm/issues/1994 */
                 echo sprintf(
                     dgettext('tuleap-tracker', 'Timeframe is based on start date field "%s" and end date field "%s".'),
                     $this->start_date_field->getLabel(),
@@ -184,7 +182,6 @@ class SemanticTimeframe extends Tracker_Semantic
             return;
         }
 
-        /** @psalm-suppress PossiblyNullReference https://github.com/vimeo/psalm/issues/1994 */
         $start_date_field_id = (int) $this->start_date_field->getId();
         $start_date_ref      = array_search($start_date_field_id, $xmlMapping);
 
@@ -287,7 +284,6 @@ class SemanticTimeframe extends Tracker_Semantic
             return null;
         }
 
-        /** @psalm-suppress PossiblyNullReference https://github.com/vimeo/psalm/issues/1994 */
         $start_date_field_id = (int) $this->start_date_field->getId();
 
         if ($this->duration_field !== null) {

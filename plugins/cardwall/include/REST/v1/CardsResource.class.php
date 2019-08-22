@@ -94,8 +94,8 @@ class CardsResource
      *
      * @param string $id Id of the card
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function optionsId($id) {
         Header::allowOptionsPut();
@@ -177,7 +177,7 @@ class CardsResource
      *
      * @return bool
      *
-     * @throws 400
+     * @throws RestException 400
      */
     private function checkIdIsWellFormed($id) {
         $regexp = '/^[0-9]+_[0-9]+$/';

@@ -236,9 +236,9 @@ class MilestoneResource extends AuthenticatedResource {
      * @param int $id    Id of the milestone
      * @param array $ids Ids of the new milestones {@from body}
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      */
     protected function putSubmilestones($id, array $ids) {
         $user      = $this->getCurrentUser();
@@ -304,9 +304,9 @@ class MilestoneResource extends AuthenticatedResource {
      * @param int   $id  Id of the milestone
      * @param array $add Submilestones to add in milestone {@from body}
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      */
     protected function patchSubmilestones($id, ?array $add = null) {
         $user      = $this->getCurrentUser();
@@ -378,8 +378,8 @@ class MilestoneResource extends AuthenticatedResource {
      *
      * @return Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getId($id) {
         $this->checkAccess();
@@ -409,8 +409,8 @@ class MilestoneResource extends AuthenticatedResource {
      *
      * @param string $id Id of the milestone
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function optionsId($id) {
         Header::allowOptionsGet();
@@ -421,8 +421,8 @@ class MilestoneResource extends AuthenticatedResource {
      *
      * @param int $id ID of the milestone
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function optionsMilestones($id) {
         $this->sendAllowHeaderForSubmilestones();
@@ -433,8 +433,8 @@ class MilestoneResource extends AuthenticatedResource {
      *
      * @param int $id ID of the milestone
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function optionsSiblings($id)
     {
@@ -462,9 +462,9 @@ class MilestoneResource extends AuthenticatedResource {
      *
      * @return array {@type Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation}
      *
-     * @thorws 400
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getSiblings($id, $query = '', $limit = 10, $offset = 0)
     {
@@ -518,9 +518,9 @@ class MilestoneResource extends AuthenticatedResource {
      *
      * @return array {@type Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation}
      *
-     * @thorws 400
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getMilestones(
         $id,
@@ -570,8 +570,8 @@ class MilestoneResource extends AuthenticatedResource {
      *
      * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getContent($id, $limit = 10, $offset = 0)
     {
@@ -605,15 +605,15 @@ class MilestoneResource extends AuthenticatedResource {
      *
      * @param int $id Id of the milestone
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function optionsContent($id) {
         $this->sendAllowHeaderForContent();
     }
 
     /**
-     * @throws 403
+     * @throws RestException 403
      */
     private function checkIfUserCanChangePrioritiesInMilestone(Planning_Milestone $milestone, PFUser $user) {
         if (! $this->milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user)) {
@@ -631,9 +631,9 @@ class MilestoneResource extends AuthenticatedResource {
      * @param int $id    Id of the milestone
      * @param array $ids Ids of backlog items {@from body}
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      */
     protected function putContent($id, array $ids) {
         $current_user = $this->getCurrentUser();
@@ -706,10 +706,10 @@ class MilestoneResource extends AuthenticatedResource {
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
      * @param array $add Ids to add/move to milestone content  {@from body}
      *
-     * @throws 400
+     * @throws RestException 400
      * @throws RestException 403
-     * @throws 404
-     * @throws 409
+     * @throws RestException 404
+     * @throws RestException 409
      */
     protected function patchContent($id, ?OrderRepresentation $order = null, ?array $add = null) {
         $user      = $this->getCurrentUser();
@@ -796,8 +796,8 @@ class MilestoneResource extends AuthenticatedResource {
      *
      * @param int $id Id of the milestone
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function optionsBacklog($id) {
         $this->sendAllowHeaderForBacklog();
@@ -817,8 +817,8 @@ class MilestoneResource extends AuthenticatedResource {
      *
      * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getBacklog($id, $limit = 10, $offset = 0)
     {
@@ -865,9 +865,9 @@ class MilestoneResource extends AuthenticatedResource {
      * @param int $id Id of the milestone
      * @param array $ids Ids of backlog items {@from body}{@type int}
      *
-     * @throws 400
+     * @throws RestException 400
      * @throws RestException 403
-     * @throws 404
+     * @throws RestException 404
      */
     protected function putBacklog($id, array $ids) {
         $user      = $this->getCurrentUser();
@@ -936,10 +936,10 @@ class MilestoneResource extends AuthenticatedResource {
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
      * @param array                                              $add    Ids to add/move to milestone backlog {@from body}
      *
-     * @throws 400
+     * @throws RestException 400
      * @throws RestException 403
-     * @throws 404
-     * @throws 409
+     * @throws RestException 404
+     * @throws RestException 409
      */
     protected function patchBacklog($id, ?OrderRepresentation $order = null, ?array $add = null) {
         $user      = $this->getCurrentUser();
@@ -1039,9 +1039,9 @@ class MilestoneResource extends AuthenticatedResource {
      * @param int                  $id   Id of the milestone
      * @param BacklogItemReference $item Reference of the Backlog Item {@from body} {@type BacklogItemReference}
      *
-     * @throws 400
+     * @throws RestException 400
      * @throws RestException 403
-     * @throws 404
+     * @throws RestException 404
      */
     protected function postBacklog($id, BacklogItemReference $item) {
         $user        = $this->getCurrentUser();
@@ -1090,8 +1090,8 @@ class MilestoneResource extends AuthenticatedResource {
      *
      * @param int $id Id of the milestone
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function optionsCardwall($id) {
         $this->sendAllowHeadersForCardwall();

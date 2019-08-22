@@ -73,9 +73,9 @@ class ProjectResource extends AuthenticatedResource
      * @return array {@type \Tuleap\FRS\REST\v1\PackageMinimalRepresentation}
      * @pslam-var PackageMinimalRepresentation[]
      *
-     * @throws 403
-     * @throws 404
-     * @throws 406
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 406
      */
     public function getFRSPackages(int $id, int $limit = 10, int $offset = 0)
     {
@@ -92,8 +92,8 @@ class ProjectResource extends AuthenticatedResource
     }
 
     /**
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      *
      * @return Project
      */
@@ -151,8 +151,8 @@ class ProjectResource extends AuthenticatedResource
      * @param int $id     Id of the project
      *
      * @return ServiceRepresentation {@type \Tuleap\FRS\REST\v1\ServiceRepresentation}
-     * @throws 404
-     * @throws 403
+     * @throws RestException 404
+     * @throws RestException 403
      */
     public function getService(int $id): ServiceRepresentation
     {

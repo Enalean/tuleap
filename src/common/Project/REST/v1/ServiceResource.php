@@ -88,10 +88,10 @@ class ServiceResource extends AuthenticatedResource
      * @param int                   $id   The id of the service
      * @param ServiceRepresentation $body The service data
      *
-     * @throws 400
-     * @throws 401
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function putId(int $id, ServiceRepresentation $body): void
     {
@@ -117,8 +117,8 @@ class ServiceResource extends AuthenticatedResource
     }
 
     /**
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     private function getService(int $id, PFUser $user): Service
     {

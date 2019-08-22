@@ -34,8 +34,8 @@ class TransitionValidator
      * Source id must exist for the workflow field.
      * If source is a new artefact (from_id = 0), it returns null value.
      *
-     * @throws 400 I18NRestException
-     * @throws 404 I18NRestException
+     * @throws I18NRestException 400
+     * @throws I18NRestException 404
      */
     public function validateForCreation(Workflow $workflow, int $param_from_id, int $param_to_id): TransitionCreationParameters
     {

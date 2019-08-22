@@ -143,7 +143,7 @@ class Git_Driver_Gerrit_ProjectCreator {
     /**
      * @return string Gerrit project name
      *
-     * @throws Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyexistsException
+     * @throws Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyExistsException
      * @throws Git_Driver_Gerrit_Exception
      * @throws Git_Command_Exception
      */

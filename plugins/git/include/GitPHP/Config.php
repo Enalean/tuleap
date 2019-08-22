@@ -85,7 +85,7 @@ class Config
      *
      * @access public
      * @param string $configFile config file to load
-     * @throws Exception on failure
+     * @throws \Exception on failure
      */
     public function LoadConfig($configFile) // @codingStandardsIgnoreLine
     {

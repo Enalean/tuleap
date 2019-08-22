@@ -128,7 +128,7 @@ class Tag extends Ref
      * @param string $tag tag name
      * @param string $tagHash tag hash
      * @return mixed tag object
-     * @throws Exception exception on invalid tag or hash
+     * @throws \Exception exception on invalid tag or hash
      */
     public function __construct($project, $tag, $tagHash = '')
     {

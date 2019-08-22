@@ -25,6 +25,8 @@ use FeedbackDao;
 use Log_NoopLogger;
 use Luracast\Restler\RestException;
 use PFUser;
+use Project_AccessException;
+use Project_AccessProjectNotFoundException;
 use Tracker_Artifact;
 use Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException;
 use Tracker_Artifact_Attachment_FileNotFoundException;
@@ -822,10 +824,10 @@ class ArtifactsResource extends AuthenticatedResource {
      *
      * @url DELETE {id}
      *
-     * @throws 401 Unauthorized
-     * @throws 403 Forbidden
-     * @throws 404 Artifact Not found
-     * @throws 429 Too Many Requests (rate limit exceeded)
+     * @throws RestException 401 Unauthorized
+     * @throws RestException 403 Forbidden
+     * @throws RestException 404 Artifact Not found
+     * @throws RestException 429 Too Many Requests (rate limit exceeded)
      *
      * @access hybrid
      * @param int $id Id of the artifact
@@ -946,11 +948,11 @@ class ArtifactsResource extends AuthenticatedResource {
      *
      * @return ArtifactPatchResponseRepresentation
      *
-     * @throws 400
-     * @throws 403
-     * @throws 426
-     * @throws 404 Artifact Not found
-     * @throws 500
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 426
+     * @throws RestException 404 Artifact Not found
+     * @throws RestException 500
      */
     protected function patchArtifact($id, ArtifactPatchRepresentation $patch)
     {

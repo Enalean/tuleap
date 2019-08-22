@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.4.10@c283f0877d543e7ab738d231ba6a3cdce5e1039a">
+<files psalm-version="3.4.12@86e5e50c1bb492045e70f2ebe1da3cad06e4e9b2">
   <file src="plugins/admindelegation/include/AdminDelegationBuilder.php">
     <PossiblyNullReference occurrences="1">
       <code>getId</code>
@@ -1081,9 +1081,6 @@
       <code>getDashboardColumns</code>
       <code>getDashboardColumns</code>
     </InvalidMethodCall>
-    <InvalidPassByReference occurrences="1">
-      <code>array_filter($placeholders)</code>
-    </InvalidPassByReference>
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$config</code>
     </InvalidPropertyAssignmentValue>
@@ -2880,9 +2877,6 @@
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/git/include/Git/URL.class.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$repository_id</code>
-    </InvalidScalarArgument>
     <PossiblyNullPropertyAssignmentValue occurrences="1">
       <code>$this-&gt;getRepositoryFromStandardURL()</code>
     </PossiblyNullPropertyAssignmentValue>
@@ -3467,20 +3461,6 @@
     <MismatchingDocblockParamType occurrences="1">
       <code>Array</code>
     </MismatchingDocblockParamType>
-  </file>
-  <file src="plugins/git/include/REST/v1/GerritResource.php">
-    <InvalidArgument occurrences="1">
-      <code>$project</code>
-    </InvalidArgument>
-    <InvalidReturnStatement occurrences="1">
-      <code>$project</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>Project</code>
-    </InvalidReturnType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>Project</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/REST/v1/GitCommitRepresentation.php">
     <InvalidPropertyAssignmentValue occurrences="2">
@@ -6844,12 +6824,6 @@
       <code>null</code>
       <code>null</code>
     </NullableReturnStatement>
-    <PossiblyNullArgument occurrences="4">
-      <code>$tracker</code>
-      <code>$tracker</code>
-      <code>$tracker</code>
-      <code>$tracker</code>
-    </PossiblyNullArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/DateFormatter.class.php">
     <UndefinedMethod occurrences="3">
@@ -7933,9 +7907,8 @@
       <code>Tracker_ReportCriteria</code>
       <code>Tracker_ReportCriteria</code>
     </UndefinedDocblockClass>
-    <UndefinedMethod occurrences="2">
+    <UndefinedMethod occurrences="1">
       <code>$v</code>
-      <code>$val</code>
     </UndefinedMethod>
     <UndefinedThisPropertyFetch occurrences="3">
       <code>$this-&gt;values</code>
@@ -9508,9 +9481,6 @@
       <code>$duplicate_source_field_id</code>
       <code>$duplicate_target_field_id</code>
     </PossiblyUndefinedVariable>
-    <UndefinedClass occurrences="1">
-      <code>Tracker_Rule_Date_Exception</code>
-    </UndefinedClass>
     <UndefinedMethod occurrences="1">
       <code>setComparator</code>
     </UndefinedMethod>
@@ -11972,11 +11942,6 @@
       <code>$query</code>
     </PossiblyNullArgument>
   </file>
-  <file src="src/common/Project/REST/v2/ProjectResource.class.php">
-    <UndefinedClass occurrences="1">
-      <code>RestException</code>
-    </UndefinedClass>
-  </file>
   <file src="src/common/Project/Service/ServicePOSTDataBuilder.php">
     <InvalidScalarArgument occurrences="1">
       <code>$project-&gt;getID()</code>
@@ -12069,16 +12034,6 @@
       <code>`mktemp -d -p $tmp_dir $template`</code>
     </ForbiddenCode>
   </file>
-  <file src="src/common/Queue/Redis/RedisPersistentQueue.php">
-    <UndefinedDocblockClass occurrences="6">
-      <code>\Redis</code>
-      <code>$this-&gt;redis</code>
-      <code>$this-&gt;redis</code>
-      <code>$this-&gt;redis</code>
-      <code>$this-&gt;redis</code>
-      <code>$this-&gt;redis</code>
-    </UndefinedDocblockClass>
-  </file>
   <file src="src/common/Queue/Worker.php">
     <InvalidScalarArgument occurrences="1">
       <code>$id</code>
@@ -12124,19 +12079,6 @@
     <LessSpecificImplementedReturnType occurrences="1">
       <code>ResponseInterface</code>
     </LessSpecificImplementedReturnType>
-  </file>
-  <file src="src/common/Redis/ClientFactory.php">
-    <UndefinedClass occurrences="1">
-      <code>\Redis</code>
-    </UndefinedClass>
-    <UndefinedDocblockClass occurrences="1">
-      <code>\Redis</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="src/common/Redis/RedisInitializer.php">
-    <UndefinedClass occurrences="1">
-      <code>\Redis</code>
-    </UndefinedClass>
   </file>
   <file src="src/common/Request/FrontRouter.php">
     <TypeDoesNotContainType occurrences="1">
@@ -12646,10 +12588,9 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="src/common/Widget/Widget_MyArtifacts.class.php">
-    <PossiblyUndefinedArrayOffset occurrences="3">
+    <PossiblyUndefinedArrayOffset occurrences="2">
       <code>$artifact_types[$group_id][$atid]['user_can_view_at']</code>
       <code>$artifact_types[$group_id][$atid]['user_can_view_summary_or_aid']</code>
-      <code>$artifact_types[$group_id][$atid]['at']</code>
     </PossiblyUndefinedArrayOffset>
     <PossiblyUndefinedVariable occurrences="4">
       <code>$my_artifacts</code>
@@ -12667,11 +12608,6 @@
     <UndefinedFunction occurrences="1">
       <code>my_hide_url('my_svn_group', $project_id, $request-&gt;get('hide_item_id'), count($project_ids), $request-&gt;get('hide_my_svn_group'), $request-&gt;get('dashboard_id'))</code>
     </UndefinedFunction>
-  </file>
-  <file src="src/common/Widget/Widget_ProjectLatestFileReleases.class.php">
-    <UndefinedMethod occurrences="1">
-      <code>getSummaryPageContent</code>
-    </UndefinedMethod>
   </file>
   <file src="src/common/Widget/Widget_ProjectSvnStats.class.php">
     <InvalidScalarArgument occurrences="2">
@@ -12942,9 +12878,7 @@
       <code>void</code>
       <code>false</code>
     </InvalidReturnType>
-    <InvalidScalarArgument occurrences="3">
-      <code>0</code>
-      <code>0</code>
+    <InvalidScalarArgument occurrences="1">
       <code>true</code>
     </InvalidScalarArgument>
     <TypeDoesNotContainType occurrences="1">
@@ -13995,9 +13929,6 @@
     </UndefinedVariable>
   </file>
   <file src="src/common/frs/PermissionController.php">
-    <ArgumentTypeCoercion occurrences="1">
-      <code>$service</code>
-    </ArgumentTypeCoercion>
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$ugroup_factory</code>
     </InvalidPropertyAssignmentValue>
@@ -14552,9 +14483,6 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/reference/ReferenceManager.class.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>0</code>
-    </InvalidScalarArgument>
     <InvalidStaticInvocation occurrences="3">
       <code>Reference::computeNumParam($ref-&gt;getLink())</code>
       <code>Reference::computeNumParam($ref-&gt;getLink())</code>
@@ -14648,15 +14576,6 @@
       <code>null</code>
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
-  </file>
-  <file src="src/common/svn/SVNAuthenticationCacheInvalidator.php">
-    <UndefinedClass occurrences="1">
-      <code>?\Redis</code>
-    </UndefinedClass>
-    <UndefinedDocblockClass occurrences="2">
-      <code>\Redis|null</code>
-      <code>$this-&gt;redis_client</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/common/svn/SVN_LogDao.class.php">
     <PossiblyFalseReference occurrences="3">
@@ -15953,9 +15872,6 @@
     <UndefinedClass occurrences="1">
       <code>COM</code>
     </UndefinedClass>
-    <UndefinedMethod occurrences="1">
-      <code>displayFRSHeader</code>
-    </UndefinedMethod>
   </file>
   <file src="src/www/forum/forum_utils.php">
     <InvalidReturnStatement occurrences="1">

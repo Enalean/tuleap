@@ -55,8 +55,8 @@ class TokenResource {
      * @url POST
      * @status 201
      *
-     * @throws 400
-     * @throws 500
+     * @throws RestException 400
+     * @throws RestException 500
      *
      * @param string $username The username of the user
      * @param string $password The password of the user
@@ -103,7 +103,7 @@ class TokenResource {
      *
      * @url DELETE {id}
      *
-     * @throws 500
+     * @throws RestException 500
      *
      * @param string $id Id of the token
      */

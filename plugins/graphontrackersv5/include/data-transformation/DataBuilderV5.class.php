@@ -83,7 +83,7 @@ class DataBuilderV5 {
             // on type 3 query because mysql was not able to use index on
             // (artifact_id, field_id, value_int) so perfs was horrible.
             $from     .= "artifact a ";
-            $where    .= "a.artifact_id IN (".implode($this->artifacts,',').") ";
+            $where    .= "a.artifact_id IN (". implode(',', $this->artifacts) .") ";
 
             if ($af_x->isStandardField() && (!$af_x->isUsername())) {
                 //echo "1";

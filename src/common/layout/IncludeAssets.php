@@ -48,7 +48,7 @@ class IncludeAssets
 
     /**
      * @throws IncludeAssetsException
-     * @throws IncludeAssetsManifestExceptione
+     * @throws IncludeAssetsManifestException
      */
     public function getFileURLWithFallback(string $file_name, string $fallback_filename): string
     {

@@ -39,7 +39,7 @@ class UserGroupRetriever
     /**
      * @return ProjectUGroup
      *
-     * @throws 404
+     * @throws RestException 404
      */
     public function getExistingUserGroup(string $id)
     {
@@ -68,7 +68,7 @@ class UserGroupRetriever
     /**
      * @return bool
      *
-     * @throws 400
+     * @throws RestException 400
      */
     private function checkIdIsAppropriate($id)
     {

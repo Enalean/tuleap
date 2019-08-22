@@ -315,8 +315,8 @@ class KanbanResource extends AuthenticatedResource
      *
      * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getId($id) {
         $this->checkAccess();
@@ -379,8 +379,8 @@ class KanbanResource extends AuthenticatedResource
      * @param bool $collapse_archive True to collapse the archive (save in user prefs) {@from body}
      * @param bool $collapse_backlog True to collapse the backlog (save in user prefs) {@from body}
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function patchId(
         $id,
@@ -505,8 +505,8 @@ class KanbanResource extends AuthenticatedResource
      *
      * @return Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getBacklog($id, $query = '', $limit = 10, $offset = 0)
     {
@@ -591,8 +591,8 @@ class KanbanResource extends AuthenticatedResource
      * @param \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanAddRepresentation  $add   Ids to add to Kanban backlog {@from body}
      * @param string                                                         $from_column   Id of the column the item is coming from (when moving an item) {@from body}
      *
-     * @throws 400
-     * @throws 403
+     * @throws RestException 400
+     * @throws RestException 403
      */
     protected function patchBacklog(
         $id,
@@ -775,8 +775,8 @@ class KanbanResource extends AuthenticatedResource
      *
      * @return Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getArchive($id, $query = '', $limit = 10, $offset = 0)
     {
@@ -832,8 +832,8 @@ class KanbanResource extends AuthenticatedResource
      * @param \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanAddRepresentation  $add   Ids to add to Kanban backlog {@from body}
      * @param string                                                         $from_column   Id of the column the item is coming from (when moving an item) {@from body}
      *
-     * @throws 400
-     * @throws 403
+     * @throws RestException 400
+     * @throws RestException 403
      */
     protected function patchArchive(
         $id,
@@ -952,8 +952,8 @@ class KanbanResource extends AuthenticatedResource
      *
      * @return Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getItems($id, $column_id, $query = '', $limit = 10, $offset = 0)
     {
@@ -1021,8 +1021,8 @@ class KanbanResource extends AuthenticatedResource
      * @param \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanAddRepresentation  $add   Ids to add to the column {@from body}
      * @param string                                                         $from_column   Id of the column the item is coming from (when moving an item) {@from body}
      *
-     * @throws 400
-     * @throws 403
+     * @throws RestException 400
+     * @throws RestException 403
      */
     protected function patchItems(
         $id,
@@ -1192,10 +1192,10 @@ class KanbanResource extends AuthenticatedResource
      * @param string                         $id     Id of the Kanban
      * @param KanbanColumnPOSTRepresentation $column The created kanban column {@from body} {@type Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnPOSTRepresentation}
      *
-     * @throws 400
-     * @throws 401
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
      *
      * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation
      */
@@ -1275,10 +1275,10 @@ class KanbanResource extends AuthenticatedResource
      * @param string $id         Id of the Kanban
      * @param array  $column_ids The created kanban column {@from body} {@type int}
      *
-     * @throws 400
-     * @throws 401
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
      */
     protected function putColumns($id, array $column_ids) {
         $user      = $this->getCurrentUser();
@@ -1356,9 +1356,9 @@ class KanbanResource extends AuthenticatedResource
      *
      * @return Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentation
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getCumulativeFlow($id, $start_date, $end_date, $interval_between_point, $query = '')
     {
@@ -1539,10 +1539,10 @@ class KanbanResource extends AuthenticatedResource
      * @param int   $id                  Id of the kanban
      * @param array $tracker_report_ids  List of selected report ids {@from body} {@type int}
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
-     * @throws 500
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 500
      */
     protected function putTrackerReports($id, array $tracker_report_ids)
     {

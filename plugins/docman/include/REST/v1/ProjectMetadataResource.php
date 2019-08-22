@@ -68,7 +68,7 @@ class ProjectMetadataResource extends AuthenticatedResource
      *
      * @param int $id Id of the project
      *
-     * @throws 404
+     * @throws RestException 404
      */
     public function optionsDocman($id): void
     {

@@ -90,7 +90,7 @@ class TreeDiff implements \Iterator, \Countable
      * @param string $fromHash from commit hash
      * @param bool $renames whether to detect file renames
      * @return mixed TreeDiff object
-     * @throws Exception exception on invalid parameters
+     * @throws \Exception exception on invalid parameters
      */
     public function __construct($project, $toHash, $fromHash = '', $renames = false)
     {

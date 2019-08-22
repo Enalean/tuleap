@@ -65,9 +65,9 @@ class CreateTestEnvResource
      * @status 201
      * @return TestEnvironmentRepresentation
      *
-     * @throws 403 RestException You are not authorized to use this route
-     * @throws 400 RestException Invalid request
-     * @throws 500 RestException Server error
+     * @throws RestException 403 You are not authorized to use this route
+     * @throws RestException 400 Invalid request
+     * @throws RestException 500 Server error
      */
     public function post($secret, $firstname, $lastname, $email, $login, $password, $archive)
     {

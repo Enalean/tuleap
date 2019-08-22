@@ -126,7 +126,7 @@ class TimetrackingReportResource extends AuthenticatedResource
      *
      * @return TimetrackingReportRepresentation
      *
-     * @throws 404
+     * @throws RestException 404
      */
     public function getId($id)
     {
@@ -230,8 +230,8 @@ class TimetrackingReportResource extends AuthenticatedResource
      *
      * @return TimetrackingReportRepresentation
      *
-     * @throws 400
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 404
      */
     protected function put($id, array $trackers_id)
     {
@@ -259,7 +259,7 @@ class TimetrackingReportResource extends AuthenticatedResource
      *
      * @return TimetrackingReport
      * @throws TimetrackingReportNotFoundException
-     * @throws 403
+     * @throws RestException 403
      */
     private function getReport(int $id)
     {
@@ -288,7 +288,7 @@ class TimetrackingReportResource extends AuthenticatedResource
      * @param                    $query
      * @param TimetrackingReport $report
      *
-     * @throws 400
+     * @throws RestException 400
      *
      * @return array
      */

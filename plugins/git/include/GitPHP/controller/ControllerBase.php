@@ -65,7 +65,7 @@ abstract class ControllerBase
      *
      * @access public
      * @return mixed controller object
-     * @throws Exception on invalid project
+     * @throws \Exception on invalid project
      */
     public function __construct()
     {

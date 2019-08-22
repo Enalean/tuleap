@@ -339,8 +339,8 @@ class RepositoryResource extends AuthenticatedResource
      *
      * @param string $id Id of the repository
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function optionsId($id) {
         $this->sendAllowHeaders();
@@ -352,8 +352,8 @@ class RepositoryResource extends AuthenticatedResource
      * @param int $id Id of the repository
      * @return GitRepositoryRepresentation | null
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function get($id) {
         $this->checkAccess();
@@ -371,7 +371,7 @@ class RepositoryResource extends AuthenticatedResource
      *
      * @param int $id Id of the repository
      *
-     * @throws 404
+     * @throws RestException 404
      */
     public function optionsPullRequests($id) {
         $this->checkPullRequestEndpointsAvailable();
@@ -404,8 +404,8 @@ class RepositoryResource extends AuthenticatedResource
      *
      * @return Tuleap\PullRequest\REST\v1\RepositoryPullRequestRepresentation
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getPullRequests($id, $query = '', $limit = self::MAX_LIMIT, $offset = 0)
     {
@@ -435,10 +435,10 @@ class RepositoryResource extends AuthenticatedResource
      * @param $name       {@type string} {@from body} Repository name
      *
      * @status 201
-     * @throws 400
-     * @throws 401
-     * @throws 404
-     * @throws 500
+     * @throws RestException 400
+     * @throws RestException 401
+     * @throws RestException 404
+     * @throws RestException 500
      */
     public function post($project_id, $name)
     {
@@ -508,9 +508,9 @@ class RepositoryResource extends AuthenticatedResource
      * @param string $token            {@from body}
      *
      * @status 201
-     * @throws 403
-     * @throws 404
-     * @throws 400
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 400
      */
     public function postCommitStatus($id_or_path, $commit_reference, $state, $token)
     {
@@ -587,9 +587,9 @@ class RepositoryResource extends AuthenticatedResource
      * @param GitRepositoryGerritMigratePATCHRepresentation $migrate_to_gerrit {@from body}{@required false}
      * @param string $disconnect_from_gerrit {@from body}{@required false} {@choice delete,read-only,noop}
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      */
     protected function patchId(
         $id,
@@ -654,9 +654,9 @@ class RepositoryResource extends AuthenticatedResource
      * @return GitFileContentRepresentation
      *
      * @status 200
-     * @throws 401
-     * @throws 403
-     * @throws 404
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
      *
      */
     public function getFileContent($id, $path_to_file, $ref = 'master')
@@ -707,10 +707,10 @@ class RepositoryResource extends AuthenticatedResource
      * @return array {@type \Tuleap\Git\REST\v1\GitBranchRepresentation}
      *
      * @status 200
-     * @throws 401
-     * @throws 403
-     * @throws 404
-     * @throws 406
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 406
      */
     public function getBranches($id, $offset = 0, $limit = self::MAX_LIMIT)
     {
@@ -788,10 +788,10 @@ class RepositoryResource extends AuthenticatedResource
      * @return array {@type \Tuleap\Git\REST\v1\GitTagRepresentation}
      *
      * @status 200
-     * @throws 401
-     * @throws 403
-     * @throws 404
-     * @throws 406
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 406
      */
     public function getTags($id, $offset = 0, $limit = self::MAX_LIMIT)
     {

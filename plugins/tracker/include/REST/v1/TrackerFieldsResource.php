@@ -86,8 +86,8 @@ class TrackerFieldsResource extends AuthenticatedResource
      *
      * @access protected
      *
-     * @throws 400
-     * @throws 401
+     * @throws RestException 400
+     * @throws RestException 401
      * @throws RestException 403
      * @throws RestException 404
      */
@@ -157,8 +157,8 @@ class TrackerFieldsResource extends AuthenticatedResource
      * @return CreatedFileRepresentation
      *
      * @status 201
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     protected function postFiles(int $id, FilePOSTRepresentation $file_post_representation): CreatedFileRepresentation
     {

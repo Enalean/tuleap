@@ -58,7 +58,7 @@ class CallMeBackMessageResource extends AuthenticatedResource
      *
      * @url GET
      *
-     * @throws 403
+     * @throws RestException 403
      *
      * @return MessageRepresentation
      */

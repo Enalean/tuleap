@@ -64,7 +64,7 @@ class Tree extends FilesystemObject
      * @param mixed $project the project
      * @param string $hash tree hash
      * @return mixed tree object
-     * @throws Exception exception on invalid hash
+     * @throws \Exception exception on invalid hash
      */
     public function __construct($project, $hash)
     {

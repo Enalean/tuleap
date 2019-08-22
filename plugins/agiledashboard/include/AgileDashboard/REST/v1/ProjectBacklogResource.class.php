@@ -265,7 +265,7 @@ class ProjectBacklogResource
     }
 
     /**
-     * @throws 403
+     * @throws RestException 403
      */
     private function checkIfUserCanChangePrioritiesInMilestone(PFUser $user, Project $project) {
         $root_planning = $this->planning_factory->getRootPlanning($user, $project->getId());

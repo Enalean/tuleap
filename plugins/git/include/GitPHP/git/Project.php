@@ -275,7 +275,7 @@ class Project
      * @access public
      * @param string $projectRoot project root
      * @param string $project project
-     * @throws Exception if project is invalid or outside of projectroot
+     * @throws \Exception if project is invalid or outside of projectroot
      */
     public function __construct($projectRoot, $project)
     {
@@ -308,7 +308,7 @@ class Project
      * Attempts to set the project
      *
      * @access private
-     * @throws Exception if project is invalid or outside of projectroot
+     * @throws \Exception if project is invalid or outside of projectroot
      */
     private function SetProject($project) // @codingStandardsIgnoreLine
     {

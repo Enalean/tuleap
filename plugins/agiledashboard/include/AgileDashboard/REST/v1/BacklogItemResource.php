@@ -124,8 +124,8 @@ class BacklogItemResource extends AuthenticatedResource
      *
      * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function get($id)
     {
@@ -228,9 +228,9 @@ class BacklogItemResource extends AuthenticatedResource
      *
      * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
      *
-     * @throws 403
-     * @throws 404
-     * @throws 406
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 406
      */
     public function getChildren($id, $limit = 10, $offset = 0)
     {
@@ -300,10 +300,10 @@ class BacklogItemResource extends AuthenticatedResource
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation    $order Order of the children {@from body}
      * @param array                                                 $add   Ids to add to backlog_items content  {@from body}
      *
-     * @throws 400
+     * @throws RestException 400
      * @throws RestException 403
-     * @throws 404
-     * @throws 409
+     * @throws RestException 404
+     * @throws RestException 409
      */
     protected function patch($id, ?OrderRepresentation $order = null, ?array $add = null) {
 
@@ -389,7 +389,7 @@ class BacklogItemResource extends AuthenticatedResource
      *
      * @param int $id Id of the BacklogItem
      *
-     * @throws 404
+     * @throws RestException 404
      */
     public function optionsChildren($id) {
         $this->sendAllowHeaderForChildren();

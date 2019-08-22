@@ -54,8 +54,8 @@ class MilestonesCardwallResource {
      *
      * @return \Tuleap\Cardwall\REST\v1\MilestonesCardwallRepresentation
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function get(Planning_Milestone $milestone) {
         $this->checkCardwallIsEnabled($milestone);

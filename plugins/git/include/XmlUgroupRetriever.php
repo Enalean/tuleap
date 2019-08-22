@@ -21,8 +21,6 @@
 namespace Tuleap\Git;
 
 use GitXmlImporter;
-use GitXmlImporterUGroupNotFoundException;
-use Tuleap\Project\UgroupDuplicator;
 use UGroupManager;
 use Logger;
 use SimpleXMLElement;
@@ -49,8 +47,6 @@ class XmlUgroupRetriever
 
     /**
      * @return array
-     *
-     * @throws GitXmlImporterUGroupNotFoundException
      */
     public function getUgroupIdsForPermissionNode(Project $project, SimpleXMLElement $permission_xmlnode)
     {
@@ -77,8 +73,6 @@ class XmlUgroupRetriever
 
     /**
      * @return array
-     *
-     * @throws GitXmlImporterUGroupNotFoundException
      */
     public function getUgroupsForPermissionNode(Project $project, SimpleXMLElement $permission_xmlnode)
     {

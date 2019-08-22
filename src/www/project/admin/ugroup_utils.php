@@ -28,7 +28,7 @@ require_once __DIR__ . '/../../include/utils.php';
 require_once __DIR__ . '/project_admin_utils.php';
 
 // Predefined ugroups. Should be consistent with DB (table 'ugroup')
-/** @deprecated **/
+/* @deprecated */
 $GLOBALS['UGROUP_NONE']               = ProjectUGroup::NONE;
 $GLOBALS['UGROUP_ANONYMOUS']          = ProjectUGroup::ANONYMOUS;
 $GLOBALS['UGROUP_REGISTERED']         = ProjectUGroup::REGISTERED;

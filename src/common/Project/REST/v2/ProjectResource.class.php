@@ -19,6 +19,7 @@
 
 namespace Tuleap\Project\REST\v2;
 
+use Luracast\Restler\RestException;
 use ProjectManager;
 use UserManager;
 use Project;
@@ -49,8 +50,8 @@ class ProjectResource extends AuthenticatedResource {
     }
 
     /**
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      *
      * @return Project
      */
@@ -76,7 +77,7 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @return array {@type Tuleap\REST\v2\BacklogRepresentationBase}
      *
-     * @throws 406
+     * @throws RestException 406
      */
     public function getBacklog($id, $limit = 10, $offset = 0) {
         $this->checkAccess();

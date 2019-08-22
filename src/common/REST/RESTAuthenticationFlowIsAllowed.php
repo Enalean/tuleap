@@ -20,6 +20,7 @@
 namespace Tuleap\REST;
 
 use Luracast\Restler\InvalidAuthCredentials;
+use Luracast\Restler\RestException;
 use Rest_Exception_InvalidTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\User\AccessKey\AccessKeyException;

@@ -68,12 +68,12 @@ class Tracker_Rule_Date_Factory {
     }
 
     /**
-     * @throws Tracker_Rule_Date_Exception
+     * @throws Tracker_Rule_Date_InvalidComparatorException
      */
     public function insert(Tracker_Rule_Date $rule)
     {
         if (!in_array($rule->getComparator(), Tracker_Rule_Date::$allowed_comparators)) {
-            throw new Tracker_Rule_Date_Exception('Invalid Comparator');
+            throw new Tracker_Rule_Date_InvalidComparatorException('Invalid Comparator');
         }
 
         $rule_id = $this->dao->insert(
