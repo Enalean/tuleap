@@ -227,7 +227,10 @@ function createBurnupChart({
     }
 
     function isThereALastDayProgression() {
-        return last_day_data.hasOwnProperty("progression") && last_day_data.progression !== null;
+        return (
+            Object.prototype.hasOwnProperty.call(last_day_data, "progression") &&
+            last_day_data.progression !== null
+        );
     }
 
     function getDateLegendContent() {

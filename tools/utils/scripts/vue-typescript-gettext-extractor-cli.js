@@ -20,8 +20,6 @@
 
 /* From https://github.com/Polyconseil/easygettext/ */
 
-/* eslint-disable no-console */
-
 const fs = require("fs");
 const minimist = require("minimist");
 const ts = require("typescript");

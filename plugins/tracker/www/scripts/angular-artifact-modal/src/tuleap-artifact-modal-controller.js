@@ -239,7 +239,7 @@ function ArtifactModalController(
     function isUploadQuotaExceeded(error) {
         return (
             error.code === 406 &&
-            error.hasOwnProperty("message") &&
+            Object.prototype.hasOwnProperty.call(error, "message") &&
             error.message.includes("You exceeded your quota")
         );
     }

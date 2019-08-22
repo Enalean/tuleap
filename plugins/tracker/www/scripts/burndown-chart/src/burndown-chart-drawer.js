@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 import moment from "moment";
 import { sprintf } from "sprintf-js";
 import { max } from "d3-array";
@@ -199,7 +200,7 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
 
     function isThereARemainingEffort() {
         return (
-            last_day_data.hasOwnProperty("remaining_effort") &&
+            Object.prototype.hasOwnProperty.call(last_day_data, "remaining_effort") &&
             last_day_data.remaining_effort !== null
         );
     }

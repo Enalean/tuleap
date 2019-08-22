@@ -19,6 +19,7 @@
 
 const gulp = require("gulp");
 const merge = require("merge2");
+// eslint-disable-next-line you-dont-need-lodash-underscore/map
 const map = require("lodash.map");
 const concat = require("gulp-concat");
 const rev = require("gulp-rev");

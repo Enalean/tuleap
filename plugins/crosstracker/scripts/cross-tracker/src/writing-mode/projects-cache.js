@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,10 +28,13 @@ async function getSortedProjectsIAmMemberOf() {
         return cached_projects;
     }
 
-    const sorted_projects = await getProjects();
-    cached_projects = sorted_projects.map(({ id, label }) => {
-        return { id, label };
-    });
+    await fetchProjects();
 
     return cached_projects;
+}
+
+async function fetchProjects() {
+    cached_projects = await getProjects().map(({ id, label }) => {
+        return { id, label };
+    });
 }

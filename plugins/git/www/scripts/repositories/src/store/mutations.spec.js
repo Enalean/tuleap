@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -53,7 +53,11 @@ describe("Store mutations", () => {
 
             mutations.pushRepositoriesForCurrentOwner(state, []);
 
-            expect(state.repositories_for_owner.hasOwnProperty("101")).toBe(true);
+            const has_101 = Object.prototype.hasOwnProperty.call(
+                state.repositories_for_owner,
+                "101"
+            );
+            expect(has_101).toBe(true);
         });
 
         it("will set the repository label as 'normalized_path' when it is a 'root' repository (without path)", () => {

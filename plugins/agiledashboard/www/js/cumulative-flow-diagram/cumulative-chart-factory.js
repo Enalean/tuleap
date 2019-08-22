@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,13 +14,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 import * as d3 from "d3";
 import cumulativeFlowChart from "./cumulative-chart.js";
 import moment from "moment";
-import { map, first, filter, find, findIndex, forEach, defaults, reduce } from "lodash";
+/* eslint-disable-next-line you-dont-need-lodash-underscore/map, you-dont-need-lodash-underscore/find, you-dont-need-lodash-underscore/for-each, you-dont-need-lodash-underscore/reduce */
+import { map, find, forEach, defaults, reduce } from "lodash";
 
 export default function(options = {}) {
     let chart = {};
@@ -109,14 +110,14 @@ export default function(options = {}) {
 
         chart.colorScale(color_scale);
 
-        var color_domain = map(chart.columns(), function(data, index, columns) {
+        var color_domain = chart.columns().map(function(data, index, columns) {
             return columns.length - 1 - index;
         });
         chart.colorScale().domain(color_domain);
     };
 
     chart.initX = function() {
-        var first_column = first(chart.columns());
+        const first_column = chart.columns()[0];
 
         var time_scale_extent = d3.extent(first_column.values, function(d) {
             return moment(d.start_date).toDate();
@@ -161,7 +162,7 @@ export default function(options = {}) {
     };
 
     chart.initYMax = function() {
-        var first_column = first(chart.columns());
+        const first_column = chart.columns()[0];
 
         var max_kanban_items_count = d3.max(first_column.values, function(data_point, index) {
             return sumKanbanItemsCountsForOneDay(index);
@@ -170,7 +171,7 @@ export default function(options = {}) {
         chart.yMax(max_kanban_items_count);
 
         function sumKanbanItemsCountsForOneDay(day_index) {
-            var columns_activated = filter(chart.columns(), { activated: true });
+            const columns_activated = chart.columns().filter(column => column.activated === true);
 
             return columns_activated.reduce(function(previous_sum, current_column) {
                 return previous_sum + current_column.values[day_index].kanban_items_count;
@@ -304,7 +305,7 @@ export default function(options = {}) {
 
             var tooltip_content_row = tooltip
                 .selectAll(".tooltip-content-row")
-                .data(filter(chart.columns(), { activated: true }))
+                .data(chart.columns().filter(column => column.activated === true))
                 .enter()
                 .append("div")
                 .attr("id", function(d) {
@@ -319,7 +320,7 @@ export default function(options = {}) {
                 .append("div")
                 .attr("class", "row-legend")
                 .style("background-color", function(d) {
-                    var index = findIndex(chart.columns(), { id: d.id });
+                    const index = chart.columns().findIndex(column => column.id === d.id);
                     return chart.colorScale()(chart.columns().length - 1 - index);
                 });
 

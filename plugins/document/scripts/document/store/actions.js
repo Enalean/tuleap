@@ -395,6 +395,10 @@ async function uploadNewVersion(
     Vue.set(updated_item, "upload_error", null);
     Vue.set(updated_item, "is_uploading_new_version", true);
 
+    uploadVersionAndAssignUploader(item, context, uploaded_file, new_version);
+}
+
+function uploadVersionAndAssignUploader(item, context, uploaded_file, new_version) {
     item.uploader = uploadVersion(context, uploaded_file, item, new_version);
 }
 

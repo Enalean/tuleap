@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { find, flatMapDeep, map } from "lodash";
+import { flatMapDeep } from "lodash";
 import { render } from "mustache";
 import { sanitize } from "dompurify";
 import { get } from "jquery";
@@ -167,7 +167,7 @@ function loadDynamicallyWidgetsContent(modal, modal_content, url) {
 
 function initializeWidgets(table, data) {
     const data_widgets = flatMapDeep(data, function(category) {
-        return map(category, "widgets");
+        return category.map(cat => cat.widgets);
     });
     const widgets_element = table.querySelectorAll(".dashboard-add-widget-list-table-widget");
     [].forEach.call(widgets_element, function(widget_element) {
@@ -182,34 +182,32 @@ function displayWidgetSettings(table, widget_element, data_widgets) {
         "dashboard-add-widget-settings-placeholder"
     ).textContent;
 
-    var widget_data = find(data_widgets, function(widget) {
-        return widget.id === widget_element.dataset.widgetId;
-    });
-    if (widget_data) {
-        const settings = document.getElementById("dashboard-add-widget-settings");
+    const widget_data = data_widgets.find(widget => widget.id === widget_element.dataset.widgetId);
+    if (widget_data === undefined) {
+        return;
+    }
 
-        settings.innerHTML = sanitize(render(widget_settings_template, widget_data));
-        document.dispatchEvent(
-            new CustomEvent("dashboard-add-widget-settings-loaded", {
-                detail: { target: settings }
-            })
-        );
+    const settings = document.getElementById("dashboard-add-widget-settings");
 
-        var already_selected_widget = table.querySelector(
-            ".dashboard-add-widget-list-table-widget-selected"
-        );
-        if (already_selected_widget) {
-            already_selected_widget.classList.remove(
-                "dashboard-add-widget-list-table-widget-selected"
-            );
-        }
-        widget_element.classList.add("dashboard-add-widget-list-table-widget-selected");
+    settings.innerHTML = sanitize(render(widget_settings_template, widget_data));
+    document.dispatchEvent(
+        new CustomEvent("dashboard-add-widget-settings-loaded", {
+            detail: { target: settings }
+        })
+    );
 
-        var add_widget_button = document.getElementById("dashboard-add-widget-button");
-        if (!widget_data.is_used && widget_data.can_be_added_from_widget_list) {
-            add_widget_button.disabled = false;
-        } else {
-            add_widget_button.disabled = true;
-        }
+    var already_selected_widget = table.querySelector(
+        ".dashboard-add-widget-list-table-widget-selected"
+    );
+    if (already_selected_widget) {
+        already_selected_widget.classList.remove("dashboard-add-widget-list-table-widget-selected");
+    }
+    widget_element.classList.add("dashboard-add-widget-list-table-widget-selected");
+
+    var add_widget_button = document.getElementById("dashboard-add-widget-button");
+    if (!widget_data.is_used && widget_data.can_be_added_from_widget_list) {
+        add_widget_button.disabled = false;
+    } else {
+        add_widget_button.disabled = true;
     }
 }

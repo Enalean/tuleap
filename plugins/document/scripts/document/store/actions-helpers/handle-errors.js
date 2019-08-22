@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -102,8 +102,8 @@ export async function handleErrorsForDeletionModal(context, exception, item) {
 }
 
 export function getErrorMessage(error_json) {
-    if (error_json.hasOwnProperty("error")) {
-        if (error_json.error.hasOwnProperty("i18n_error_message")) {
+    if (Object.prototype.hasOwnProperty.call(error_json, "error")) {
+        if (Object.prototype.hasOwnProperty.call(error_json.error, "i18n_error_message")) {
             return error_json.error.i18n_error_message;
         }
 

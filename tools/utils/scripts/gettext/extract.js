@@ -298,7 +298,7 @@ exports.Extractor = class Extractor {
         };
 
         for (let msgid in this.items) {
-            if (this.items.hasOwnProperty(msgid)) {
+            if (Object.prototype.hasOwnProperty.call(this.items, msgid)) {
                 const contexts = Object.keys(this.items[msgid]).sort();
                 for (const ctx of contexts) {
                     catalog.items.push(this.items[msgid][ctx]);

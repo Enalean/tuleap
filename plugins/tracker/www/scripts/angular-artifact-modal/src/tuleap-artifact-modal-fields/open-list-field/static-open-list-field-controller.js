@@ -1,6 +1,24 @@
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { select2 } from "tlp";
-import { isDefined } from "angular";
-import { unique, union, remove, findIndex, find } from "lodash";
+import { unique, union, remove } from "lodash";
 
 export default StaticOpenListFieldController;
 
@@ -53,11 +71,9 @@ function StaticOpenListFieldController($element) {
     }
 
     function isStaticValueSelected(field_value) {
-        var found = find(self.value_model.value.bind_value_objects, function(value_object) {
-            return value_object.id === field_value.id.toString();
-        });
-
-        return isDefined(found);
+        return self.value_model.value.bind_value_objects.some(
+            value_object => value_object.id === field_value.id.toString()
+        );
     }
 
     function handleStaticValueSelection(event) {
@@ -91,11 +107,10 @@ function StaticOpenListFieldController($element) {
             return null;
         }
 
-        var tag_already_exists = findIndex(self.field.values, function(value) {
-            return value.label.toLowerCase() === term.toLowerCase();
-        });
-
-        if (tag_already_exists !== -1) {
+        const tag_already_exists = self.field.values.some(
+            value => value.label.toLowerCase() === term.toLowerCase()
+        );
+        if (tag_already_exists === true) {
             return null;
         }
 

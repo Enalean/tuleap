@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* eslint-disable no-console */
-
 const fs = require("fs");
 const minimist = require("minimist");
 const ts = require("typescript");

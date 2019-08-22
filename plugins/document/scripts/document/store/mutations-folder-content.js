@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -184,7 +184,7 @@ function isParentFoldedByOnOfIsAncestors(state, parent_folder) {
 }
 
 function isFolderClosed(state, folder_id) {
-    return state.folded_by_map.hasOwnProperty(folder_id);
+    return Object.prototype.hasOwnProperty.call("state", folder_id);
 }
 
 function foldFolderContent(state, folder_id) {
@@ -241,7 +241,7 @@ function getFolderUnfoldedDescendants(state, folder_id) {
     const unfolded_descendants = [];
 
     children.forEach(child => {
-        if (state.folded_by_map.hasOwnProperty(child.id)) {
+        if (Object.prototype.hasOwnProperty.call(state.folded_by_map, child.id)) {
             return;
         }
 

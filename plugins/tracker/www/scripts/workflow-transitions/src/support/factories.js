@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,7 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 const identity = i => i;
@@ -120,20 +119,20 @@ const evaluateAttributesAsFunction = instance =>
     }, {});
 
 function getDefaultAttributes(factory_name) {
-    if (!factories.hasOwnProperty(factory_name)) {
+    if (!Object.prototype.hasOwnProperty.call(factories, factory_name)) {
         throw new Error(
             `No factory found with name [${factory_name}]. Did you register this new factory?`
         );
     }
     const factory = factories[factory_name];
-    if (!factory.hasOwnProperty("default")) {
+    if (!Object.prototype.hasOwnProperty.call(factory, "default")) {
         throw new Error(`No default trait found for factory [${factory_name}]`);
     }
     return factories[factory_name].default;
 }
 
 function getTraitAttributes(factory_name, trait) {
-    if (!factories[factory_name].hasOwnProperty(trait)) {
+    if (!Object.prototype.hasOwnProperty.call(factories[factory_name], trait)) {
         throw new Error(`No trait [${trait}] found for factory [${factory_name}]`);
     }
     return factories[factory_name][trait];
