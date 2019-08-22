@@ -219,24 +219,6 @@ class DocmanItemsResource extends AuthenticatedResource
     }
 
     /**
-     * Create new item
-     *
-     * @url    POST
-     * @access hybrid
-     *
-     * @deprecated this route will be split into smaller routes, easier to use (POST docman_folders/id/type)
-     *
-     * @throws RestException 301
-     */
-    public function post()
-    {
-        throw new RestException(
-            301,
-            "This route have been split into smaller routes, please use POST docman_folders/id/type instead"
-        );
-    }
-
-    /**
      * @throws I18NRestException
      */
     private function checkItemCanHaveSubitems(\Docman_Item $item)
