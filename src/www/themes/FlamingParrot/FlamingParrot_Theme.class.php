@@ -220,7 +220,6 @@ class FlamingParrot_Theme extends Layout {
         );
         $csrf_logout_token     = new CSRFSynchronizerToken('logout_action');
         $url_redirect          = new URLRedirect($event_manager);
-        $glyph_finder          = new GlyphFinder($event_manager);
 
         $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($project_manager, $params);
 
@@ -240,8 +239,7 @@ class FlamingParrot_Theme extends Layout {
                 $navbar_items_builder->buildNavBarItemPresentersCollection(),
                 $this->getUserActions($current_user),
                 $csrf_logout_token,
-                $url_redirect,
-                $glyph_finder
+                $url_redirect
             )
         );
 

@@ -30,7 +30,7 @@ use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\History\UserHisto
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\LogoutPresenter;
 
-class UserNavPresenter
+class UserNavPresenter // phpcs:ignoreFile
 {
     /** @var HTTPRequest */
     private $request;
@@ -44,23 +44,17 @@ class UserNavPresenter
      * @var URLRedirect
      */
     private $url_redirect;
-    /**
-     * @var GlyphFinder
-     */
-    private $glyph_finder;
 
     public function __construct(
         HTTPRequest $request,
         PFUser $current_user,
         $display_new_user_menu_item,
-        URLRedirect $url_redirect,
-        GlyphFinder $glyph_finder
+        URLRedirect $url_redirect
     ) {
         $this->request                    = $request;
         $this->current_user               = $current_user;
         $this->display_new_user_menu_item = $display_new_user_menu_item;
         $this->url_redirect               = $url_redirect;
-        $this->glyph_finder               = $glyph_finder;
     }
 
     public function is_user_logged_in()
@@ -125,11 +119,7 @@ class UserNavPresenter
         return new DropdownMenuItemPresenter(
             _('History'),
             'fa fa-history',
-            new UserHistoryPresenter(
-                'user-history',
-                $this->current_user,
-                $this->glyph_finder
-            ),
+            new UserHistoryPresenter('user-history', $this->current_user),
             'only-icon without-carret nav-dropdown-right'
         );
     }

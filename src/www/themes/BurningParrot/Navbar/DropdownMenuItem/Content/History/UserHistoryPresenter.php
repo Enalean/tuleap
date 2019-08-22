@@ -32,13 +32,9 @@ class UserHistoryPresenter extends Presenter
     public $empty_history;
     public $error_fetch;
     public $error_clear;
-    public $project_icon;
 
-    public function __construct(
-        $id,
-        PFUser $current_user,
-        GlyphFinder $glyph_finder
-    ) {
+    public function __construct($id, PFUser $current_user)
+    {
         parent::__construct($id);
 
         $this->current_user_id = $current_user->getId();
@@ -46,6 +42,5 @@ class UserHistoryPresenter extends Presenter
         $this->clear_history   = _('Clear history');
         $this->error_fetch     = _('An error occurred while fetching the content of your history');
         $this->error_clear     = _('An error occurred while clearing the content of your history');
-        $this->project_icon    = $glyph_finder->get('project-small')->getInlineString();
     }
 }

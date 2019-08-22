@@ -29,11 +29,9 @@
     margin: 0 $tlp-double-spacing 0 0;
 }
 
-.project-admin-ugroup-binding-project-info {
-    > .tuleap-svg-project-small {
-        margin: 0 3px 0 0;
-        fill: $tlp-ui-dimmed;
-    }
+.project-admin-ugroup-binding-project-info-icon {
+    margin: 0 3px 0 0;
+    color: $tlp-ui-dimmed;
 }
 
 .project-admin-ugroup-binding-clones-ugroup {
@@ -45,11 +43,10 @@
 
 .project-admin-ugroup-binding-clones-project {
     white-space: nowrap;
+}
 
-    > .tuleap-svg-project-small {
-        margin: 0 3px 0 0;
-        fill: $tlp-theme-color;
-    }
+.project-admin-ugroup-binding-clones-project-icon {
+    margin: 0 3px 0 0;
 }
 
 .project-admin-user-groups-container {
