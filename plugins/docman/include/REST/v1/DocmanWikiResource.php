@@ -137,8 +137,6 @@ class DocmanWikiResource extends AuthenticatedResource
     }
 
     /**
-     * Delete a wiki document in the document manager
-     *
      * Delete an existing wiki document
      *
      * @url    DELETE {id}
@@ -183,12 +181,7 @@ class DocmanWikiResource extends AuthenticatedResource
     }
 
     /**
-     * Create a version of a wiki
-     *
-     * Create a version of an existing wiki document
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
+     * Create a version of a wiki document
      *
      * @url    POST {id}/version
      * @access hybrid
@@ -241,11 +234,7 @@ class DocmanWikiResource extends AuthenticatedResource
 
 
     /**
-     * Update the wiki metadata
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
+     * Update the wiki document metadata
      *
      * @url    PUT {id}/metadata
      * @access hybrid
@@ -311,11 +300,7 @@ class DocmanWikiResource extends AuthenticatedResource
     }
 
     /**
-     * Lock a specific wiki
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
+     * Lock a specific wiki document
      *
      * @param int $id Id of the wiki you want to lock
      *
@@ -348,11 +333,7 @@ class DocmanWikiResource extends AuthenticatedResource
     }
 
     /**
-     * Unlock an already locked wiki
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
+     * Unlock an already locked wiki document
      *
      * @param int  $id Id of the wiki you want to unlock
      *

@@ -128,8 +128,6 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
     }
 
     /**
-     * Delete an empty document in the document manager
-     *
      * Delete an existing empty document
      *
      * @url    DELETE {id}
@@ -173,10 +171,6 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
     /**
      * Lock a specific empty document
      *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
-     *
      * @param int $id Id of the empty document you want to lock
      *
      * @throws I18NRestException 400
@@ -209,10 +203,6 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
 
     /**
      * Unlock an already locked empty document
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
      *
      * @param int  $id Id of the empty document you want to unlock
      *
@@ -258,10 +248,6 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
 
     /**
      * Update the empty document metadata
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
      *
      * @url    PUT {id}/metadata
      * @access hybrid

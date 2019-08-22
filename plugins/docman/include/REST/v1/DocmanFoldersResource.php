@@ -125,11 +125,7 @@ class DocmanFoldersResource extends AuthenticatedResource
     }
 
     /**
-     * Create new file
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
+     * Create new file document
      *
      * The format of the obsolescence date is : "YYYY-MM-DD"
      *
@@ -304,10 +300,6 @@ class DocmanFoldersResource extends AuthenticatedResource
     /**
      * Create new empty document
      *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
-     *
      * The format of the obsolescence date is : "YYYY-MM-DD"
      *
      * @param int                                 $id   Id of the parent folder
@@ -383,10 +375,6 @@ class DocmanFoldersResource extends AuthenticatedResource
 
     /**
      * Create new wiki document
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
      *
      * The format of the obsolescence date is : "YYYY-MM-DD"
      *
@@ -547,10 +535,6 @@ class DocmanFoldersResource extends AuthenticatedResource
     /**
      * Create new link document
      *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
-     *
      * The format of the obsolescence date is : "YYYY-MM-DD"
      *
      * @param int                              $id   Id of the parent folder
@@ -670,8 +654,6 @@ class DocmanFoldersResource extends AuthenticatedResource
     }
 
     /**
-     * Delete a folder in the document manager
-     *
      * Delete an existing folder and its content
      *
      * @url    DELETE {id}
@@ -741,10 +723,6 @@ class DocmanFoldersResource extends AuthenticatedResource
 
     /**
      * Update the folder metadata and apply this changes to its children
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
      *
      * <pre>
      * recursion possible options are<br>
