@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,7 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 import { getTracker } from "../api/rest-querier";
@@ -56,7 +55,7 @@ export default {
         update(state, tracker) {
             const semantic_fields = { ...state.fields_by_tracker_id };
 
-            if (!semantic_fields.hasOwnProperty(tracker.id)) {
+            if (!Object.prototype.hasOwnProperty.call(semantic_fields, tracker.id)) {
                 semantic_fields[tracker.id] = {};
             }
 
@@ -91,8 +90,11 @@ export default {
 
         field_label: state => (tracker_id, semantic) => {
             if (
-                !state.fields_by_tracker_id.hasOwnProperty(tracker_id) ||
-                !state.fields_by_tracker_id[tracker_id].hasOwnProperty(semantic)
+                !Object.prototype.hasOwnProperty.call(state.fields_by_tracker_id, tracker_id) ||
+                !Object.prototype.hasOwnProperty.call(
+                    state.fields_by_tracker_id[tracker_id],
+                    semantic
+                )
             ) {
                 return null;
             }

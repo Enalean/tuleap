@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,14 +15,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 const getMessageFromException = async exception => {
     let response = await exception.response.json();
 
-    if (response.hasOwnProperty("error")) {
-        if (response.error.hasOwnProperty("i18n_error_message")) {
+    if (Object.prototype.hasOwnProperty.call(response, "error")) {
+        if (Object.prototype.hasOwnProperty.call(response.error, "i18n_error_message")) {
             return response.error.i18n_error_message;
         }
 
