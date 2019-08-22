@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\RecentlyVisited;
 
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\User\History\HistoryEntry;
+use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryQuickLink;
 
 class VisitRetriever
@@ -65,13 +66,15 @@ class VisitRetriever
     }
 
     /**
-     * @return HistoryEntry[]
      * @throws \DataAccessException
      */
-    public function getVisitHistory(\PFUser $user, $max_length_history)
+    public function getVisitHistory(HistoryEntryCollection $collection, int $max_length_history): void
     {
-        $history               = array();
-        $recently_visited_rows = $this->dao->searchVisitByUserId($user->getId(), $max_length_history);
+        $recently_visited_rows = $this->dao->searchVisitByUserId(
+            $collection->getUser()->getId(),
+            $max_length_history
+        );
+
         foreach ($recently_visited_rows as $recently_visited_row) {
             $artifact = $this->artifact_factory->getArtifactById($recently_visited_row['artifact_id']);
             if ($artifact === null) {
@@ -79,25 +82,25 @@ class VisitRetriever
             }
 
             $tracker     = $artifact->getTracker();
-            $quick_links = array(
+            $quick_links = [
                 new HistoryQuickLink(
                     sprintf(dgettext('tuleap-tracker', '%s tracker'), $tracker->getName()),
                     $tracker->getUri()
                 )
-            );
-            $history[]   = new HistoryEntry(
-                $recently_visited_row['created_on'],
-                $artifact->getXRef(),
-                $artifact->getUri(),
-                $artifact->getTitle(),
-                $tracker->getColor()->getName(),
-                $this->glyph_finder->get('tuleap-tracker-small'),
-                $this->glyph_finder->get('tuleap-tracker'),
-                $artifact->getTracker()->getProject(),
-                $quick_links
+            ];
+            $collection->addEntry(
+                new HistoryEntry(
+                    $recently_visited_row['created_on'],
+                    $artifact->getXRef(),
+                    $artifact->getUri(),
+                    $artifact->getTitle(),
+                    $tracker->getColor()->getName(),
+                    $this->glyph_finder->get('tuleap-tracker-small'),
+                    $this->glyph_finder->get('tuleap-tracker'),
+                    $tracker->getProject(),
+                    $quick_links
+                )
             );
         }
-
-        return $history;
     }
 }

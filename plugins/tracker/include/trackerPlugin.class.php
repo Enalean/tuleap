@@ -142,6 +142,7 @@ use Tuleap\Tracker\XMLTemplatesController;
 use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
+use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\Widget\Event\GetPublicAreas;
@@ -230,7 +231,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
         $this->addHook(Event::SITE_ACCESS_CHANGE);
 
-        $this->addHook(Event::USER_HISTORY, 'getRecentlyVisitedArtifacts');
+        $this->addHook(HistoryEntryCollection::NAME);
         $this->addHook(Event::USER_HISTORY_CLEAR, 'clearRecentlyVisitedArtifacts');
 
         $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
@@ -1473,21 +1474,14 @@ class trackerPlugin extends Plugin {
         );
     }
 
-    /**
-     * @see Event::USER_HISTORY
-     */
-    public function getRecentlyVisitedArtifacts(array $params)
+    public function getHistoryEntryCollection(HistoryEntryCollection $collection)
     {
-        /** @var PFUser $user */
-        $user = $params['user'];
-
         $visit_retriever = new \Tuleap\Tracker\RecentlyVisited\VisitRetriever(
             new RecentlyVisitedDao(),
             $this->getArtifactFactory(),
             new \Tuleap\Glyph\GlyphFinder(EventManager::instance())
         );
-        $history_artifacts = $visit_retriever->getVisitHistory($user, HistoryRetriever::MAX_LENGTH_HISTORY);
-        $params['history'] = array_merge($params['history'], $history_artifacts);
+        $visit_retriever->getVisitHistory($collection, HistoryRetriever::MAX_LENGTH_HISTORY);
     }
 
     /**

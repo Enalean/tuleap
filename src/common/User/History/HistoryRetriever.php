@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,24 +39,19 @@ class HistoryRetriever
     /**
      * @return HistoryEntry[]
      */
-    public function getHistory(\PFUser $user)
+    public function getHistory(\PFUser $user): array
     {
-        $history = array();
+        $collection = new HistoryEntryCollection($user);
 
-        $this->event_manager->processEvent(
-            Event::USER_HISTORY,
-            array(
-                'user'    => $user,
-                'history' => &$history
-            )
-        );
+        $this->event_manager->processEvent($collection);
+        $history = $collection->getEntries();
 
         $this->sortHistoryByVisitTime($history);
 
         return array_slice($history, 0, self::MAX_LENGTH_HISTORY);
     }
 
-    private function sortHistoryByVisitTime(array &$history)
+    private function sortHistoryByVisitTime(array &$history): void
     {
         usort($history, function (HistoryEntry $a, HistoryEntry $b) {
             if ($a->getVisitTime() === $b->getVisitTime()) {
