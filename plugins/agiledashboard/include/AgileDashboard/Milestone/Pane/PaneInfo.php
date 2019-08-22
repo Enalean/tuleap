@@ -85,7 +85,7 @@ abstract class PaneInfo
      */
     public function getUri()
     {
-        return '?' .
+        return AGILEDASHBOARD_BASE_URL . '/?' .
             http_build_query(
                 [
                     'group_id'    => $this->milestone->getGroupId(),

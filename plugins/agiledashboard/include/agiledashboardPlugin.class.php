@@ -26,6 +26,7 @@ use Tuleap\AgileDashboard\FormElement\BurnupCacheDao;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDao;
+use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
@@ -37,6 +38,7 @@ use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
+use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -44,6 +46,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
+use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\MoveChangesetXMLUpdater;
 use Tuleap\AgileDashboard\Semantic\MoveSemanticInitialEffortChecker;
@@ -61,23 +64,28 @@ use Tuleap\AgileDashboard\Widget\WidgetKanbanDeletor;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanRetriever;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\RealTime\NodeJSClient;
+use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
+use Tuleap\Tracker\RecentlyVisited\HistoryQuickLinkCollection;
+use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
-use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusFieldCanBeUpdated;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
@@ -85,6 +93,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\TrackerCrumbInContext;
+use Tuleap\User\History\HistoryQuickLink;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
 require_once __DIR__ . '/../../cardwall/include/cardwallPlugin.class.php';
@@ -189,6 +198,7 @@ class AgileDashboardPlugin extends Plugin
             $this->addHook(MoveArtifactActionAllowedByPluginRetriever::NAME);
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
             $this->addHook(TrackerCrumbInContext::NAME);
+            $this->addHook(HistoryQuickLinkCollection::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1816,11 +1826,121 @@ class AgileDashboardPlugin extends Plugin
 
     public function routeLegacyController() : \Tuleap\AgileDashboard\AgileDashboardLegacyController
     {
-        return new \Tuleap\AgileDashboard\AgileDashboardLegacyController();
+        return new \Tuleap\AgileDashboard\AgileDashboardLegacyController(
+            new AgileDashboardRouterBuilder(
+                PluginFactory::instance(),
+                $this->getMilestonePaneFactory(),
+                new VisitRecorder(new RecentlyVisitedDao())
+            )
+        );
     }
 
     public function trackerCrumbInContext(TrackerCrumbInContext $crumb)
     {
         (new \Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder($this->getTrackerFactory(), $this->getKanbanFactory()))->addKanbanCrumb($crumb);
+    }
+
+    public function getHistoryQuickLinkCollection(HistoryQuickLinkCollection $collection): void
+    {
+        $milestone = $this->getMilestoneFactory()->getMilestoneFromArtifact($collection->getArtifact());
+        if ($milestone === null) {
+            return;
+        }
+
+        $pane_factory = $this->getMilestonePaneFactory();
+
+        foreach ($pane_factory->getListOfPaneInfo($milestone) as $pane) {
+            $collection->add(new HistoryQuickLink(
+               $pane->getTitle(),
+               $pane->getUri(),
+               $pane->getIconName()
+            ));
+        }
+    }
+
+    private function getBacklogItemPresenterCollectionFactory($milestone_factory): AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
+    {
+        $form_element_factory = Tracker_FormElementFactory::instance();
+
+        return new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
+            new AgileDashboard_BacklogItemDao(),
+            $this->getArtifactFactory(),
+            $form_element_factory,
+            $milestone_factory,
+            $this->getPlanningFactory(),
+            new AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder(),
+            new RemainingEffortValueRetriever(
+                $form_element_factory
+            )
+        );
+    }
+
+    private function getMilestoneRepresentationBuilder(): AgileDashboard_Milestone_MilestoneRepresentationBuilder
+    {
+        return new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
+            $this->getMilestoneFactory(),
+            $this->getBacklogFactory(),
+            EventManager::instance(),
+            $this->getMonoMileStoneChecker(),
+            new ParentTrackerRetriever($this->getPlanningFactory())
+        );
+    }
+
+    private function getPaginatedBacklogItemsRepresentationsBuilder(): AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
+    {
+        $color_builder = new BackgroundColorBuilder(new BindDecoratorRetriever());
+        $item_factory  = new BacklogItemRepresentationFactory(
+            $color_builder,
+            UserManager::instance(),
+            EventManager::instance()
+        );
+
+        return new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
+            $item_factory,
+            $this->getBacklogItemCollectionFactory(),
+            $this->getBacklogFactory()
+        );
+    }
+
+    private function getMilestonePaneFactory(): Planning_MilestonePaneFactory
+    {
+        $request = HTTPRequest::instance();
+
+        $planning_factory       = $this->getPlanningFactory();
+        $milestone_factory      = $this->getMilestoneFactory();
+        $hierarchy_factory      = $this->getHierarchyFactory();
+        $mono_milestone_checker = $this->getMonoMileStoneChecker();
+        $submilestone_finder    = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
+            $hierarchy_factory,
+            $planning_factory,
+            $mono_milestone_checker,
+            $this->getTrackerFactory()
+        );
+
+        $milestone_representation_builder                = $this->getMilestoneRepresentationBuilder();
+        $paginated_backlog_items_representations_builder = $this->getPaginatedBacklogItemsRepresentationsBuilder();
+
+        $pane_info_factory = new AgileDashboard_PaneInfoFactory(
+            $request->getCurrentUser(),
+            $submilestone_finder,
+            $this->getThemePath()
+        );
+
+        $pane_factory = new Planning_MilestonePaneFactory(
+            $request,
+            $milestone_factory,
+            new AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory(
+                $this->getBacklogFactory(),
+                $this->getBacklogItemPresenterCollectionFactory($this->getMilestoneFactory()),
+                new BurnupFieldRetriever(Tracker_FormElementFactory::instance()),
+                EventManager::instance()
+            ),
+            $submilestone_finder,
+            $pane_info_factory,
+            $milestone_representation_builder,
+            $paginated_backlog_items_representations_builder
+        );
+
+        return $pane_factory;
     }
 }

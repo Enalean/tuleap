@@ -33,6 +33,7 @@ function normalize(entries) {
 
     entries.forEach(function(entry) {
         entry.color_name = entry.color_name.replace(all_underscores, "-");
+        entry.has_quick_links = entry.quick_links.length > 0;
     });
 
     return entries;

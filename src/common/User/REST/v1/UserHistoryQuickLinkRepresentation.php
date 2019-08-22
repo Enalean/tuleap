@@ -32,10 +32,15 @@ class UserHistoryQuickLinkRepresentation
      * @var string Link to the information {@type string} {@required true}
      */
     public $html_url;
+    /**
+     * @var string Icon for the quick link {@type string} {@required true}
+     */
+    public $icon_name;
 
     public function build(HistoryQuickLink $quick_link)
     {
-        $this->name     = $quick_link->getName();
-        $this->html_url = $quick_link->getUrl();
+        $this->name      = $quick_link->getName();
+        $this->html_url  = $quick_link->getUrl();
+        $this->icon_name = $quick_link->getIconName();
     }
 }

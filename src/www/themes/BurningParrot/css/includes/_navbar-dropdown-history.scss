@@ -80,7 +80,7 @@
     position: relative;
     flex: 1 0 auto;
     align-items: center;
-    padding: $tlp-spacing;
+    padding: $tlp-half-spacing $tlp-half-spacing $tlp-half-spacing $tlp-spacing;
     border-bottom: 1px solid $tlp-ui-border-light;
     color: $tlp-typo-default-text-color;
     text-decoration: none;
@@ -89,51 +89,36 @@
         border-bottom: 0;
     }
 
+    &:focus-within,
     &:hover {
         background-color: transparentize($tlp-theme-color, .9);
         text-decoration: none;
         cursor: pointer;
 
-        .history-item-content-description-info {
-            transform: translateY(-10px);
-            transition: transform 50ms 500ms;
-        }
+        &.history-item-with-quicklinks {
+            > .history-item-project {
+                display: none;
+            }
 
-        .history-item-content-description-links {
-            transform: translateY(-2px);
-            transition: transform 50ms 500ms, opacity 50ms 500ms;
-            opacity: 1;
-            pointer-events: auto;
+            > .history-item-links {
+                display: flex;
+            }
         }
     }
 }
 
-.history-item-icon {
-    margin: 0 $tlp-half-spacing 0 0;
-}
-
-.history-item-content {
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-}
-
-.history-item-content-description {
-    flex-grow: 1;
-    margin: 0 $tlp-spacing 0 0;
-}
-
-.history-item-content-description-info {
+.history-item-description {
     display: flex;
     align-items: center;
-    transition: transform 50ms;
+    flex-grow: 1;
+    margin: $tlp-half-spacing $tlp-spacing $tlp-half-spacing 0;
 }
 
-.history-item-content-description-info-badge {
+.history-item-description-badge {
     margin: 0 5px 0 0;
 }
 
-.history-item-content-description-info-title {
+.history-item-description-title {
     max-width: 200px;
     font-size: 14px;
     line-height: 18px;
@@ -142,52 +127,36 @@
     overflow: hidden;
 }
 
-.history-item-content-description-links {
-    position: absolute;
-    transition: transform 50ms, opacity 50ms;
-    opacity: 0;
-    pointer-events: none;
+.history-item-links {
+    display: none;
+    font-size: 16px;
+    line-height: 18px;
 }
 
-.history-item-content-description-link {
-    margin: 0 10px 0 0;
-    color: $tlp-theme-color;
-    font-size: 12px;
+.history-item-links-link {
+    display: flex;
+    padding: $tlp-half-spacing;
+    transition: color 100ms ease-in-out;
+    color: $tlp-ui-dimmed;
 
     &:hover {
-        text-decoration: underline;
+        transition: color 100ms ease-in-out;
+        color: $tlp-theme-color;
     }
 }
 
-.history-item-content-description-link-icon {
-    margin: 0 3px 0 0;
-}
-
-.history-item-content-project {
+.history-item-project {
+    margin: 0 $tlp-half-spacing 0 0;
     max-width: 150px;
     color: $tlp-ui-dimmed;
     text-align: right;
     text-decoration: none;
     text-overflow: ellipsis;
     white-space: nowrap;
-    overflow: hidden;
-
-    &:hover > .history-item-content-project-name {
-        text-decoration: underline;
-    }
-}
-
-.history-item-content-project-icon {
-    margin: 0 5px 0 0;
-}
-
-.history-item-content-project-name {
     line-height: 16px;
-    white-space: normal;
+    overflow: hidden;
 }
 
-@each $color-name, $colors in $tlp-swatch-color-map {
-    .history-item-icon-#{$color-name} > svg {
-        fill: transparentize(map-get($colors, 'primary'), .7);
-    }
+.history-item-project-icon {
+    margin: 0 3px 0 0;
 }
