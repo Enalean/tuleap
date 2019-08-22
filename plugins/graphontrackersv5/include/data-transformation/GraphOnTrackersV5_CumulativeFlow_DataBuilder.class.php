@@ -213,7 +213,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
      *
      * Get the the last changeset BEFORE the timestamp for each artifact
      * @param int $beforeTimestamp
-     * @return $changesets array of changeset_id
+     * @return array $changesets array of changeset_id
      */
     private function getLastChangesetsBefore($timestamp) {
         $sql = "SELECT MAX(id) as id

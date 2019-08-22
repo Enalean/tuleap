@@ -1256,6 +1256,9 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
+    /**
+     * @psalm-suppress UndefinedClass
+     */
     public function testmanagementGetMilestone(\Tuleap\TestManagement\Event\GetMilestone $event)
     {
         $milestone_factory = $this->getMilestoneFactory();
@@ -1263,6 +1266,9 @@ class AgileDashboardPlugin extends Plugin
         $event->setMilestone($milestone);
     }
 
+    /**
+     * @psalm-suppress UndefinedClass
+     */
     public function testmanagementGetItemsFromMilestone(\Tuleap\TestManagement\Event\GetItemsFromMilestone $event)
     {
         $milestone_factory               = $this->getMilestoneFactory();

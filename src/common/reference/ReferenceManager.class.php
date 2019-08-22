@@ -474,7 +474,7 @@ class ReferenceManager {
 
     /**
      * the regexp used to find a reference
-     * @return $exp the string which may the regexp
+     * @return string $exp the string which may the regexp
      */
     function _getExpForRef() {
         $exp = "`
