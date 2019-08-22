@@ -24,6 +24,9 @@ export default {
 
     setTrackersTimes(state, times) {
         state.trackers_times = times;
+        state.trackers_times.forEach(function(time) {
+            setUsers(state, time);
+        });
     },
 
     setDisplayVoidTrackers(state, are_void_trackers_hidden) {
@@ -77,8 +80,8 @@ export default {
 
     setTrackers(state, trackers) {
         trackers.forEach(function(tracker) {
-            tracker.disabled = state.selected_trackers.find(
-                selected_tracker => selected_tracker.id === tracker.id
+            tracker.disabled = Boolean(
+                state.selected_trackers.find(selected_tracker => selected_tracker.id === tracker.id)
             );
         });
         state.trackers = trackers;
@@ -89,6 +92,10 @@ export default {
         state.selected_trackers.forEach(function(tracker) {
             state.trackers_ids.push(tracker.id);
         });
+    },
+
+    setSelectedUser(state, user) {
+        state.selected_user = user;
     },
 
     addSelectedTrackers(state, tracker_id) {
@@ -119,3 +126,18 @@ export default {
         state.report_id = report_id;
     }
 };
+
+function setUsers(state, time) {
+    if (time.time_per_user.length > 0) {
+        time.time_per_user.reduce(function(users, user_time) {
+            if (!users.find(user => user.user_id === user_time.user_id)) {
+                const user = {
+                    user_name: user_time.user_name,
+                    user_id: user_time.user_id
+                };
+                users.push(user);
+            }
+            return users;
+        }, state.users);
+    }
+}

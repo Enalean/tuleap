@@ -115,7 +115,7 @@ class TimetrackingReportTest extends TimetrackingBase
         $total    = 0;
 
         foreach ($result as $tracker) {
-            $total += $tracker["minutes"];
+            $total += $this->getTotaltimeByTracker($tracker["time_per_user"]);
         }
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -139,7 +139,7 @@ class TimetrackingReportTest extends TimetrackingBase
         $total    = 0;
 
         foreach ($result as $tracker) {
-            $total += $tracker["minutes"];
+            $total += $this->getTotaltimeByTracker($tracker["time_per_user"]);
         }
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -157,10 +157,20 @@ class TimetrackingReportTest extends TimetrackingBase
         $total    = 0;
 
         foreach ($result as $tracker) {
-            $total += $tracker["minutes"];
+            $total += $this->getTotaltimeByTracker($tracker["time_per_user"]);
         }
 
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertEquals($total, 200);
+    }
+
+    private function getTotaltimeByTracker(array $times_per_user) : int
+    {
+        $minutes = 0;
+        foreach ($times_per_user as $time_per_user) {
+            $minutes += (int)$time_per_user['minutes'];
+        }
+
+        return $minutes;
     }
 }

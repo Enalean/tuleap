@@ -74,7 +74,12 @@
     margin: $tlp-spacing $tlp-spacing 0;
 }
 
+.timetracking-overview-users-selector-input.tlp-select-small {
+    padding: 0 $tlp-spacing 0 $tlp-half-spacing;
+}
+
 .timetracking-overview-project-selector-input,
+.timetracking-overview-users-selector-input,
 .timetracking-overview-trackers-selector-input.tlp-select {
     min-width: 150px;
 }

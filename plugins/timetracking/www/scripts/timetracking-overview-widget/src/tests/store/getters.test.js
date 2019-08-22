@@ -53,18 +53,64 @@ describe("Getters Timetracking Overview", () => {
                     label: "tracker",
                     project: {},
                     uri: "",
-                    minutes: 60
+                    time_per_user: [
+                        {
+                            user_name: "user",
+                            user_id: 102,
+                            minutes: 60
+                        }
+                    ]
                 },
                 {
                     id: "18",
                     label: "tracker 2",
                     project: {},
                     uri: "",
-                    minutes: 20
+                    time_per_user: [
+                        {
+                            user_name: "user",
+                            user_id: 102,
+                            minutes: 20
+                        }
+                    ]
                 }
             ];
             mutations.setTrackersTimes(state, trackers);
             expect(getters.get_formatted_total_sum(state)).toBe("01:20");
+        });
+
+        it("Given a widget with state initialisation with selected user, Then set trackers, getters should give total times of all trackers' user", () => {
+            state.selected_user = 102;
+            let trackers = [
+                {
+                    id: "16",
+                    label: "tracker",
+                    project: {},
+                    uri: "",
+                    time_per_user: [
+                        {
+                            user_name: "user",
+                            user_id: 102,
+                            minutes: 60
+                        }
+                    ]
+                },
+                {
+                    id: "18",
+                    label: "tracker 2",
+                    project: {},
+                    uri: "",
+                    time_per_user: [
+                        {
+                            user_name: "user_2",
+                            user_id: 103,
+                            minutes: 60
+                        }
+                    ]
+                }
+            ];
+            mutations.setTrackersTimes(state, trackers);
+            expect(getters.get_formatted_total_sum(state)).toBe("01:00");
         });
 
         it("Given a widget with state initialisation, Then get_formatted_time should format total time", () => {
@@ -73,9 +119,56 @@ describe("Getters Timetracking Overview", () => {
                 label: "tracker",
                 project: {},
                 uri: "",
-                minutes: 120
+                time_per_user: [
+                    {
+                        user_name: "user",
+                        user_id: 102,
+                        minutes: 120
+                    }
+                ]
             };
-            expect(getters.get_formatted_time()(trackers)).toBe("02:00");
+            mutations.setTrackersTimes(state, [trackers]);
+            expect(getters.get_formatted_time(state)(trackers)).toBe("02:00");
+        });
+
+        it("Given a widget with state initialisation, Then is_tracker_total_som_equals_zero should be true if no time", () => {
+            let trackers = {
+                id: "16",
+                label: "tracker",
+                project: {},
+                uri: "",
+                time_per_user: [
+                    {
+                        user_name: "user",
+                        user_id: 102,
+                        minutes: 0
+                    }
+                ]
+            };
+            mutations.setTrackersTimes(state, [trackers]);
+            expect(
+                getters.is_tracker_total_sum_equals_zero(state)(trackers.time_per_user)
+            ).toBeTruthy();
+        });
+
+        it("Given a widget with state initialisation, Then is_tracker_total_som_equals_zero should be false if their is times", () => {
+            let trackers = {
+                id: "16",
+                label: "tracker",
+                project: {},
+                uri: "",
+                time_per_user: [
+                    {
+                        user_name: "user",
+                        user_id: 102,
+                        minutes: 120
+                    }
+                ]
+            };
+            mutations.setTrackersTimes(state, [trackers]);
+            expect(
+                getters.is_tracker_total_sum_equals_zero(state)(trackers.time_per_user)
+            ).toBeFalsy();
         });
 
         it("Given a widget with state initialisation, Then is_sum_of_times_equals_zero should return false", () => {
@@ -85,14 +178,26 @@ describe("Getters Timetracking Overview", () => {
                     label: "tracker",
                     project: {},
                     uri: "",
-                    minutes: 60
+                    time_per_user: [
+                        {
+                            user_name: "user",
+                            user_id: 102,
+                            minutes: 60
+                        }
+                    ]
                 },
                 {
                     id: "18",
                     label: "tracker 2",
                     project: {},
                     uri: "",
-                    minutes: 20
+                    time_per_user: [
+                        {
+                            user_name: "user",
+                            user_id: 102,
+                            minutes: 20
+                        }
+                    ]
                 }
             ];
             mutations.setTrackersTimes(state, trackers);
@@ -106,14 +211,26 @@ describe("Getters Timetracking Overview", () => {
                     label: "tracker",
                     project: {},
                     uri: "",
-                    minutes: 0
+                    time_per_user: [
+                        {
+                            user_name: "user",
+                            user_id: 102,
+                            minutes: 0
+                        }
+                    ]
                 },
                 {
                     id: "18",
                     label: "tracker 2",
                     project: {},
                     uri: "",
-                    minutes: 0
+                    time_per_user: [
+                        {
+                            user_name: "user",
+                            user_id: 102,
+                            minutes: 0
+                        }
+                    ]
                 }
             ];
             mutations.setTrackersTimes(state, trackers);

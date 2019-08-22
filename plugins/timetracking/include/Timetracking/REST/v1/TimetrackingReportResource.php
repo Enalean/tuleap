@@ -43,6 +43,7 @@ use Tuleap\Timetracking\Time\TimetrackingReportFactory;
 use Tuleap\Tracker\Report\TrackerDuplicateException;
 use Tuleap\Tracker\Report\TrackerNotFoundException;
 use Tuleap\Tracker\Report\TrackerReportExtractor;
+use UserHelper;
 use UserManager;
 
 class TimetrackingReportResource extends AuthenticatedResource
@@ -100,7 +101,8 @@ class TimetrackingReportResource extends AuthenticatedResource
             new TimeDao(),
             new PermissionsRetriever(new TimetrackingUgroupRetriever(new TimetrackingUgroupDao())),
             \TrackerFactory::instance(),
-            \Tracker_ArtifactFactory::instance()
+            \Tracker_ArtifactFactory::instance(),
+            UserHelper::instance()
         );
     }
 

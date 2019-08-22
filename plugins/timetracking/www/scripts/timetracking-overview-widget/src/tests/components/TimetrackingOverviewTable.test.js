@@ -39,7 +39,8 @@ describe("Given a timetracking overview widget", () => {
                 is_loading: false,
                 error_message: null,
                 are_void_trackers_hidden: false,
-                trackers_times: [{ tracker_id: 1 }]
+                trackers_times: [{ tracker_id: 1 }],
+                users: [1, 2]
             },
             getters: {
                 can_results_be_displayed: true,
@@ -58,6 +59,7 @@ describe("Given a timetracking overview widget", () => {
         expect(wrapper.contains("[data-test=empty-cell]")).toBeFalsy();
         expect(wrapper.contains("[data-test=table-row]")).toBeTruthy();
         expect(wrapper.contains("[data-test=table-action]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=user-list-component]")).toBeTruthy();
         expect(wrapper.contains("[data-test=tfoot]")).toBeTruthy();
     });
 
@@ -125,5 +127,12 @@ describe("Given a timetracking overview widget", () => {
 
         expect(wrapper.contains("[data-test=alert-danger]")).toBeTruthy();
         expect(wrapper.contains("[data-test=overview-table]")).toBeFalsy();
+    });
+
+    it("When no users, then user list is not displayed", () => {
+        store_options.state.users = [];
+        const wrapper = getTimeTrackingOverviewTableInstance(store_options);
+
+        expect(wrapper.contains("[data-test=user-list-component]")).toBeFalsy();
     });
 });

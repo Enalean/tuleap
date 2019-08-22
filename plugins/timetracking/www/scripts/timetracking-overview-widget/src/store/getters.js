@@ -32,12 +32,39 @@ export function is_sum_of_times_equals_zero(state) {
     return getTotalSum(state) === 0;
 }
 
-export const get_formatted_time = () => time => {
-    return formatMinutes(time.minutes);
+export const is_tracker_total_sum_equals_zero = state => time_per_user => {
+    return getTotalSumPerUser(state, time_per_user) === 0;
+};
+
+export const get_formatted_time = state => times => {
+    const minutes = getTotalSumPerUser(state, times.time_per_user);
+
+    return formatMinutes(minutes);
 };
 
 export const can_results_be_displayed = state => !state.is_loading && state.error_message === null;
 
 function getTotalSum(state) {
-    return state.trackers_times.reduce((sum, { minutes }) => minutes + sum, 0);
+    return state.trackers_times.reduce(
+        (sum, { time_per_user }) => getTotalSumPerUser(state, time_per_user) + sum,
+        0
+    );
+}
+
+function getTotalSumPerUser(state, time_per_user) {
+    let minutes = 0;
+    if (time_per_user.length > 0) {
+        if (state.selected_user) {
+            time_per_user.forEach(time => {
+                if (time.user_id === parseInt(state.selected_user, 10)) {
+                    minutes = minutes + time.minutes;
+                }
+            });
+        } else {
+            time_per_user.forEach(time => {
+                minutes = minutes + time.minutes;
+            });
+        }
+    }
+    return minutes;
 }

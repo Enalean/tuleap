@@ -118,21 +118,23 @@ class TimeDao extends DataAccessObject
         return $this->getDB()->row($sql, $user_id, $artifact_id);
     }
 
-    public function getTotalTimeByTracker(array $tracker_ids, string $start_date, string $end_date, int $limit, int $offset)
+    public function getTotalTimeByTracker(array $tracker_ids, string $start_date, string $end_date, string $display_name_sql, int $limit, int $offset)
     {
         $trackers_list = EasyStatement::open();
         $trackers_list->in('artifact.tracker_id IN(?*)', $tracker_ids);
 
-        $sql = "SELECT tracker.id as tracker_id, SUM(plugin_timetracking_times.minutes) as minutes
-                FROM plugin_timetracking_times
+        $sql = "SELECT tracker.id as tracker_id, times.user_id, $display_name_sql, SUM(times.minutes) as minutes
+                FROM plugin_timetracking_times as times
                 INNER JOIN tracker_artifact as artifact
-                          ON artifact.id = plugin_timetracking_times.artifact_id
+                          ON artifact.id = times.artifact_id
                 INNER JOIN tracker as tracker
                           ON tracker.id = artifact.tracker_id
+                INNER JOIN user as user
+                          ON user.user_id = times.user_id
                 WHERE $trackers_list
-                 AND  plugin_timetracking_times.day BETWEEN CAST(? AS DATE)
+                 AND  times.day BETWEEN CAST(? AS DATE)
                              AND   CAST(? AS DATE)
-                             GROUP BY tracker.id
+                             GROUP BY tracker.id, times.user_id
                              LIMIT ?, ?";
         return $this->getDB()
                     ->safeQuery($sql, array_merge($trackers_list->values(), [$start_date, $end_date, $offset, $limit]));
