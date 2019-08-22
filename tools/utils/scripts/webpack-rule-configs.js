@@ -195,8 +195,8 @@ const rule_scss_loader = {
                 url: url => {
                     // Organization logos might be customized by administrators, let's exclude them for now
                     return (
-                        url.endsWith("organization_logo.png") ||
-                        url.endsWith("organization_logo_small.png")
+                        !url.endsWith("organization_logo.png") &&
+                        !url.endsWith("organization_logo_small.png")
                     );
                 }
             }
