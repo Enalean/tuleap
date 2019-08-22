@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,11 +19,7 @@
 
 import { sortAlphabetically } from "../../ksort.js";
 
-export {
-    buildInitialTestsList,
-    buildCategory,
-    buildTest
-};
+export { buildInitialTestsList, buildCategory, buildTest };
 
 function buildInitialTestsList(definitions, executions) {
     const tests_collection = buildCollectionOfTests(definitions, executions);
@@ -35,7 +31,7 @@ function buildInitialTestsList(definitions, executions) {
 function buildObjectOfCategories(tests) {
     return tests.reduce((accumulator, test) => {
         const category = test.definition.category;
-        if (! accumulator.hasOwnProperty(category)) {
+        if (!Object.prototype.hasOwnProperty.call(accumulator, category)) {
             accumulator[category] = buildCategory(category);
         }
         accumulator[category].tests[test.definition.id] = test;
@@ -45,7 +41,9 @@ function buildObjectOfCategories(tests) {
 
 function buildCollectionOfTests(definitions, executions) {
     return definitions.map(definition => {
-        const corresponding_execution = executions.find(execution => execution.definition.id === definition.id);
+        const corresponding_execution = executions.find(
+            execution => execution.definition.id === definition.id
+        );
         if (corresponding_execution) {
             return buildTest(definition, corresponding_execution, true);
         }
@@ -54,16 +52,16 @@ function buildCollectionOfTests(definitions, executions) {
 }
 
 function buildCategory(category) {
-        return {
-            tests: {},
-            label: category
-        };
-    }
+    return {
+        tests: {},
+        label: category
+    };
+}
 
-    function buildTest(definition, execution, selected) {
-        return {
-            definition,
-            execution,
-            selected
-        };
-    }
+function buildTest(definition, execution, selected) {
+    return {
+        definition,
+        execution,
+        selected
+    };
+}

@@ -38,7 +38,7 @@ function ArtifactLinksModelService() {
             title: artifact.title
         };
 
-        if (artifact.hasOwnProperty("error")) {
+        if (Object.prototype.hasOwnProperty.call(artifact, "error")) {
             modal_model.errors.push(artifact.error.message);
         } else {
             var outgoing_artifact_links = artifact.links,

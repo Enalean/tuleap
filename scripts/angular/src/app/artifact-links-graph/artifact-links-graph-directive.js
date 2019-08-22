@@ -18,12 +18,11 @@
  */
 
 import angular from "angular";
-import { find, remove, has } from "lodash";
+import _, { has, remove } from "lodash";
 import { zoom as d3_zoom, zoomIdentity } from "d3-zoom";
 import { drag } from "d3-drag";
-import { forceSimulation, forceCenter, forceLink, forceManyBody } from "d3-force";
-import { selectAll, select, event as d3_event } from "d3-selection";
-import _ from "lodash";
+import { forceCenter, forceLink, forceManyBody, forceSimulation } from "d3-force";
+import { event as d3_event, select, selectAll } from "d3-selection";
 
 export default Graph;
 
@@ -124,9 +123,7 @@ function Graph(
                 graphd3.figures(figures);
 
                 function findNode(node_id) {
-                    return find(data_nodes, function(node) {
-                        return node.id === node_id;
-                    });
+                    return data_nodes.find(node => node.id === node_id);
                 }
 
                 function getAllFigures(links) {
@@ -546,9 +543,10 @@ function Graph(
                 };
 
                 _(graph.nodes).forEach(function(node) {
-                    var node_exist = find(graphd3.graph().nodes(), function(d3_node) {
-                        return d3_node.id === node.id;
-                    });
+                    const node_exist = graphd3
+                        .graph()
+                        .nodes()
+                        .some(d3_node => d3_node.id === node.id);
                     if (!node_exist) {
                         graphd3.nodes()[node.id] = node;
                         graphd3
@@ -559,18 +557,15 @@ function Graph(
                 });
 
                 _(graph.links).forEach(function(link) {
-                    var link_exist = find(
-                        graphd3
-                            .graph()
-                            .force("link")
-                            .links(),
-                        function(d3_link) {
-                            return (
+                    const link_exist = graphd3
+                        .graph()
+                        .force("link")
+                        .links()
+                        .some(
+                            d3_link =>
                                 d3_link.source.id === link.source &&
                                 d3_link.target.id === link.target
-                            );
-                        }
-                    );
+                        );
 
                     var d3_link = {
                         source: graphd3.nodes()[link.source],
@@ -639,9 +634,10 @@ function Graph(
                 _(complement.links)
                     .compact()
                     .forEach(function(link) {
-                        var node_source_exist = find(graphd3.graph().nodes(), function(d3_node) {
-                            return d3_node.id === link.source.id;
-                        });
+                        const node_source_exist = graphd3
+                            .graph()
+                            .nodes()
+                            .some(d3_node => d3_node.id === link.source.id);
 
                         if (nodes_duplicate[link.source.id]) {
                             link.source = nodes_duplicate[link.source.id].node;
@@ -655,9 +651,10 @@ function Graph(
                                 .push(link.source);
                         }
 
-                        var node_target_exist = find(graphd3.graph().nodes(), function(d3_node) {
-                            return d3_node.id === link.target.id;
-                        });
+                        const node_target_exist = graphd3
+                            .graph()
+                            .nodes()
+                            .some(d3_node => d3_node.id === link.target.id);
 
                         if (nodes_duplicate[link.target.id]) {
                             link.target = nodes_duplicate[link.target.id].node;
@@ -805,16 +802,11 @@ function Graph(
                 }
 
                 function artifactMustBeRemoved(node) {
-                    var link_exist = find(
-                        graphd3
-                            .graph()
-                            .force("link")
-                            .links(),
-                        function(link) {
-                            return link.source.id === node.id || link.target.id === node.id;
-                        }
-                    );
-
+                    const link_exist = graphd3
+                        .graph()
+                        .force("link")
+                        .links()
+                        .some(link => link.source.id === node.id || link.target.id === node.id);
                     return !link_exist;
                 }
             };

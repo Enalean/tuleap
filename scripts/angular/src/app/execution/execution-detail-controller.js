@@ -1,4 +1,23 @@
-import _ from "lodash";
+/*
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { has, remove } from "lodash";
 
 import "./execution-link-issue.tpl.html";
 import ExecutionLinkIssueCtrl from "./execution-link-issue-controller.js";
@@ -74,7 +93,7 @@ function ExecutionDetailCtrl(
 
     $scope.$on("$destroy", function() {
         var future_execution_id = parseInt($state.params.execid, 10);
-        if (!_.isFinite(future_execution_id)) {
+        if (!Number.isFinite(future_execution_id)) {
             $rootScope.$broadcast("execution-detail-destroy");
             ExecutionRestService.leaveTestExecution(execution_id);
             ExecutionService.removeViewTestExecution(
@@ -209,7 +228,7 @@ function ExecutionDetailCtrl(
             theTestHasJustBeenUpdated();
 
             return DefinitionService.getDefinitionById(artifact_id).then(function(definition) {
-                _(executions).forEach(function(execution) {
+                executions.forEach(execution => {
                     $scope.execution = ExecutionService.executions[execution.id];
 
                     $scope.execution.definition.category = definition.category;
@@ -350,17 +369,17 @@ function ExecutionDetailCtrl(
     }
 
     function categoryExists(categories, category_updated) {
-        return _.has(categories, category_updated);
+        return has(categories, category_updated);
     }
 
     function executionAlreadyPlaced(scopeExecution, categories, category_updated) {
-        return _.has(categories, function(category) {
-            return _.has(category.executions, scopeExecution.id, category_updated);
+        return has(categories, function(category) {
+            return has(category.executions, scopeExecution.id, category_updated);
         });
     }
 
     function removeCategory(executions, scopeExecution) {
-        _.remove(executions, function(execution) {
+        remove(executions, function(execution) {
             return execution.id === scopeExecution.id;
         });
     }
