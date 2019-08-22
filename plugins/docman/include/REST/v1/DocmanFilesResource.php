@@ -92,11 +92,7 @@ class DocmanFilesResource extends AuthenticatedResource
     }
 
     /**
-     * Lock a specific file
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
+     * Lock a specific file document
      *
      * @param int $id Id of the file you want to lock
      *
@@ -129,11 +125,7 @@ class DocmanFilesResource extends AuthenticatedResource
     }
 
     /**
-     * Unlock an already locked file
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
+     * Unlock an already locked file document
      *
      * @param int  $id Id of the file you want to unlock
      *
@@ -217,8 +209,6 @@ class DocmanFilesResource extends AuthenticatedResource
     }
 
     /**
-     * Delete a file document in the document manager
-     *
      * Delete an existing file document
      *
      * @url    DELETE {id}
@@ -268,11 +258,6 @@ class DocmanFilesResource extends AuthenticatedResource
 
     /**
      * Create a version of a file
-     *
-     * Create a version of an existing file document
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
      *
      * <pre>
      * approval_table_action should be provided only if item has an existing approval table.<br>
@@ -326,11 +311,7 @@ class DocmanFilesResource extends AuthenticatedResource
     }
 
     /**
-     * Update the file metadata
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
+     * Update the file document metadata
      *
      * @url    PUT {id}/metadata
      * @access hybrid

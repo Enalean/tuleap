@@ -97,7 +97,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     }
 
     /**
-     * Move an existing embedded document
+     * Move an existing embedded file document
      *
      *
      * @url    PATCH {id}
@@ -142,8 +142,6 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     }
 
     /**
-     * Delete an embedded file document in the document manager
-     *
      * Delete an existing embedded file document
      *
      * @url    DELETE {id}
@@ -194,11 +192,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     }
 
     /**
-     * Lock a specific embedded file
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
+     * Lock a specific embedded file document
      *
      * @param int $id Id of the embedded  file file you want to lock
      *
@@ -231,11 +225,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     }
 
     /**
-     * Unlock an already locked embedded file
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
+     * Unlock an already locked embedded file document
      *
      * @param int $id Id of the embbeded file you want to unlock
      *
@@ -267,12 +257,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     }
 
     /**
-     * Create a version of an embedded file
-     *
-     * Create a version of an existing embedded file document
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
+     * Create a version of an embedded file document
      *
      * <pre>
      * approval_table_action should be provided only if item has an existing approval table.<br>
@@ -332,11 +317,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     }
 
     /**
-     * Update the embedded file metadata
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
+     * Update the embedded file document metadata
      *
      * @url    PUT {id}/metadata
      * @access hybrid

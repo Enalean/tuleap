@@ -135,8 +135,6 @@ class DocmanLinksResource extends AuthenticatedResource
     }
 
     /**
-     * Delete a link document in the document manager
-     *
      * Delete an existing link document
      *
      * @url    DELETE {id}
@@ -182,11 +180,7 @@ class DocmanLinksResource extends AuthenticatedResource
     }
 
     /**
-     * Lock a specific link
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
+     * Lock a specific link document
      *
      * @param int $id Id of the link you want to lock
      *
@@ -219,11 +213,7 @@ class DocmanLinksResource extends AuthenticatedResource
     }
 
     /**
-     * Unlock an already locked link
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
+     * Unlock an already locked link document
      *
      * @param int  $id Id of the link you want to unlock
      *
@@ -256,11 +246,6 @@ class DocmanLinksResource extends AuthenticatedResource
 
     /**
      * Create a version of a link
-     *
-     * Create a version of an existing link document
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
      *
      * <pre>
      * approval_table_action should be provided only if item has an existing approval table.<br>
@@ -308,11 +293,7 @@ class DocmanLinksResource extends AuthenticatedResource
 
 
     /**
-     * Update the link metadata
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
+     * Update the link document metadata
      *
      * @url    PUT {id}/metadata
      * @access hybrid
@@ -363,7 +344,7 @@ class DocmanLinksResource extends AuthenticatedResource
     }
 
     /**
-     * Update permissions of a link
+     * Update permissions of a link document
      *
      * @url    PUT {id}/permissions
      * @access hybrid
