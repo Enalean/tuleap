@@ -33,6 +33,7 @@ use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Layout\ThemeVariation;
+use Tuleap\OpenGraph\OpenGraphPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use URLRedirect;
 
@@ -83,7 +84,8 @@ class HeaderPresenterBuilder
         array $toolbar,
         array $breadcrumbs,
         $motd,
-        CssAssetCollection $css_assets
+        CssAssetCollection $css_assets,
+        OpenGraphPresenter $open_graph
     ) {
         $this->navbar_presenter_builder              = $navbar_presenter_builder;
         $this->request                               = $request;
@@ -119,7 +121,8 @@ class HeaderPresenterBuilder
             $this->current_project_navbar_info_presenter,
             $toolbar,
             $breadcrumbs,
-            $motd
+            $motd,
+            $open_graph
         );
     }
 

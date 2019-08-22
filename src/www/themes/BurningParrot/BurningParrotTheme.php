@@ -30,6 +30,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SidebarPresenter;
+use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
@@ -106,6 +107,8 @@ class BurningParrotTheme extends BaseLayout
 
         $breadcrumbs = $breadcrumb_presenter_builder->build($this->breadcrumbs);
 
+        $open_graph = isset($params['open_graph']) ? $params['open_graph'] : new NoOpenGraphPresenter();
+
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),
             $this->request,
@@ -121,7 +124,8 @@ class BurningParrotTheme extends BaseLayout
             $this->toolbar,
             $breadcrumbs,
             $this->getMOTD(),
-            $this->css_assets
+            $this->css_assets,
+            $open_graph
         );
 
         $this->renderer->renderToPage('header', $header_presenter);
