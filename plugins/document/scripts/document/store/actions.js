@@ -866,3 +866,18 @@ export const loadProjectUserGroupsIfNeeded = async context => {
 
     context.commit("setProjectUserGroups", project_ugroups);
 };
+
+export const toggleQuickLook = async (context, item_id) => {
+    try {
+        const item = await getItem(item_id);
+        context.commit("updateCurrentlyPreviewedItem", item);
+        context.commit("toggleQuickLook", true);
+    } catch (exception) {
+        await handleErrorsForDocument(context, exception);
+    }
+};
+
+export const removeQuickLook = context => {
+    context.commit("updateCurrentlyPreviewedItem", null);
+    context.commit("toggleQuickLook", false);
+};

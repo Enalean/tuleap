@@ -67,13 +67,13 @@ import EventBus from "../../helpers/event-bus.js";
 export default {
     name: "FolderContent",
     components: { QuicklookGlobal, FolderContentRow },
-    data() {
-        return {
-            toggle_quick_look: false
-        };
-    },
     computed: {
-        ...mapState(["folder_content", "currently_previewed_item"]),
+        ...mapState([
+            "folder_content",
+            "currently_previewed_item",
+            "toggle_quick_look",
+            "current_folder"
+        ]),
         item_id() {
             if (this.currently_previewed_item === null) {
                 return null;
@@ -83,7 +83,7 @@ export default {
         },
         quick_look_dropzone_class() {
             if (this.currently_previewed_item === null) {
-                return;
+                return "";
             }
 
             return {
@@ -105,19 +105,43 @@ export default {
     },
     methods: {
         toggleQuickLook(event) {
-            if (this.currently_previewed_item === event.details.item) {
-                this.toggle_quick_look = !this.toggle_quick_look;
+            if (!this.currently_previewed_item) {
+                this.displayQuickLook(event.details.item);
                 return;
             }
 
-            this.displayQuickLook(event.details.item);
+            if (this.currently_previewed_item.id !== event.details.item.id) {
+                this.displayQuickLook(event.details.item);
+                return;
+            }
+
+            if (!this.toggle_quick_look) {
+                this.displayQuickLook(event.details.item);
+            } else {
+                this.closeQuickLook(event.details.item);
+            }
         },
         displayQuickLook(item) {
+            this.$router.replace({
+                name: "preview",
+                params: { preview_item_id: item.id }
+            });
+
             this.$store.commit("updateCurrentlyPreviewedItem", item);
-            this.toggle_quick_look = true;
+            this.$store.commit("toggleQuickLook", true);
         },
         closeQuickLook() {
-            this.toggle_quick_look = false;
+            if (this.current_folder.parent_id !== 0) {
+                this.$router.replace({
+                    name: "folder",
+                    params: { item_id: this.current_folder.id }
+                });
+            } else {
+                this.$router.replace({
+                    name: "root_folder"
+                });
+            }
+            this.$store.commit("toggleQuickLook", false);
         }
     }
 };

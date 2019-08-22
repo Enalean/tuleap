@@ -19,34 +19,6 @@
 
 import { mockFetchError } from "tlp-mocks";
 import {
-    addNewUploadFile,
-    cancelFileUpload,
-    cancelFolderUpload,
-    cancelVersionUpload,
-    createNewEmbeddedFileVersionFromModal,
-    createNewFileVersion,
-    createNewFileVersionFromModal,
-    createNewItem,
-    createNewLinkVersionFromModal,
-    createNewWikiVersionFromModal,
-    deleteItem,
-    displayEmbeddedInLargeMode,
-    displayEmbeddedInNarrowMode,
-    getWikisReferencingSameWikiPage,
-    loadDocumentWithAscendentHierarchy,
-    loadFolder,
-    loadRootFolder,
-    lockDocument,
-    setUserPreferenciesForFolder,
-    setUserPreferenciesForUI,
-    unlockDocument,
-    unsetUnderConstructionUserPreference,
-    updateMetadata,
-    updateFolderMetadata,
-    updatePermissions,
-    loadProjectUserGroupsIfNeeded
-} from "./actions.js";
-import {
     restore as restoreUploadFile,
     restore as restoreUploadVersion,
     rewire$uploadFile,
@@ -69,10 +41,10 @@ import {
     rewire$deleteUserPreferenciesForFolderInProject,
     rewire$deleteUserPreferenciesForUnderConstructionModal,
     rewire$deleteWiki,
+    rewire$getDocumentManagerServiceInformation,
     rewire$getItem,
     rewire$getItemsReferencingSameWikiPage,
     rewire$getParents,
-    rewire$getDocumentManagerServiceInformation,
     rewire$patchUserPreferenciesForFolderInProject,
     rewire$postEmbeddedFile,
     rewire$postLinkVersion,
@@ -80,18 +52,18 @@ import {
     rewire$postLockFile,
     rewire$postWiki,
     rewire$putEmbeddedFileMetadata,
-    rewire$putFileMetadata,
-    rewire$putLinkMetadata,
-    rewire$putWikiMetadata,
-    rewire$putEmptyDocumentMetadata,
-    rewire$removeUserPreferenceForEmbeddedDisplay,
-    rewire$setNarrowModeForEmbeddedDisplay,
     rewire$putEmbeddedFilePermissions,
-    rewire$putFilePermissions,
-    rewire$putLinkPermissions,
-    rewire$putWikiPermissions,
+    rewire$putEmptyDocumentMetadata,
     rewire$putEmptyDocumentPermissions,
-    rewire$putFolderPermissions
+    rewire$putFileMetadata,
+    rewire$putFilePermissions,
+    rewire$putFolderPermissions,
+    rewire$putLinkMetadata,
+    rewire$putLinkPermissions,
+    rewire$putWikiMetadata,
+    rewire$putWikiPermissions,
+    rewire$removeUserPreferenceForEmbeddedDisplay,
+    rewire$setNarrowModeForEmbeddedDisplay
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -106,8 +78,8 @@ import {
     rewire$handleErrorsForModal
 } from "./actions-helpers/handle-errors.js";
 import {
-    rewire$getProjectUserGroupsWithoutServiceSpecialUGroups,
-    restore as restoreUGroupsHelper
+    restore as restoreUGroupsHelper,
+    rewire$getProjectUserGroupsWithoutServiceSpecialUGroups
 } from "../helpers/permissions/ugroups.js";
 
 import {
@@ -118,6 +90,35 @@ import {
     TYPE_LINK,
     TYPE_WIKI
 } from "../constants.js";
+import {
+    addNewUploadFile,
+    cancelFileUpload,
+    cancelFolderUpload,
+    cancelVersionUpload,
+    createNewEmbeddedFileVersionFromModal,
+    createNewFileVersion,
+    createNewFileVersionFromModal,
+    createNewItem,
+    createNewLinkVersionFromModal,
+    createNewWikiVersionFromModal,
+    deleteItem,
+    displayEmbeddedInLargeMode,
+    displayEmbeddedInNarrowMode,
+    getWikisReferencingSameWikiPage,
+    loadDocumentWithAscendentHierarchy,
+    loadFolder,
+    toggleQuickLook,
+    loadProjectUserGroupsIfNeeded,
+    loadRootFolder,
+    lockDocument,
+    setUserPreferenciesForFolder,
+    setUserPreferenciesForUI,
+    unlockDocument,
+    unsetUnderConstructionUserPreference,
+    updateFolderMetadata,
+    updateMetadata,
+    updatePermissions
+} from "./actions.js";
 
 describe("Store actions", () => {
     afterEach(() => {
@@ -2460,6 +2461,41 @@ describe("Store actions", () => {
             await loadProjectUserGroupsIfNeeded(context);
 
             expect(getProjectUserGroupsWithoutServiceSpecialUGroupsSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("toggleQuickLook", () => {
+        let getItem, context;
+
+        beforeEach(() => {
+            context = { commit: jasmine.createSpy("commit") };
+            getItem = jasmine.createSpy("getItem");
+            rewire$getItem(getItem);
+        });
+
+        afterEach(() => {
+            restoreHandleErrors();
+        });
+
+        it("should load item and store it as open in quick look", async () => {
+            const item = {
+                id: 123,
+                title: "My file",
+                type: TYPE_FILE,
+                description: "n",
+                owner: {
+                    id: 102
+                },
+                status: "none",
+                obsolescence_date: null
+            };
+
+            getItem.and.returnValue(Promise.resolve(item));
+
+            await toggleQuickLook(context, [item]);
+
+            expect(context.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", item);
+            expect(context.commit).toHaveBeenCalledWith("toggleQuickLook", true);
         });
     });
 });

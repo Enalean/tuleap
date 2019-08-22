@@ -45,6 +45,11 @@ export function createRouter(store, project_name) {
                 path: "/folder/:folder_id/:item_id",
                 name: "item",
                 component: DisplayEmbedded
+            },
+            {
+                path: "/preview/:preview_item_id",
+                name: "preview",
+                component: ChildFolder
             }
         ]
     });
