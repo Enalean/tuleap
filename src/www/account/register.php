@@ -52,10 +52,9 @@ function register_valid($mail_confirm_code, array &$errors)    {
 
     $request = HTTPRequest::instance();
 
-    $vLoginName = new Valid_UserNameFormat('form_loginname');
-    $vLoginName->required();
-    if (!$request->valid($vLoginName)) {
-        $errors['form_loginname'] = $Language->getText('account_register', 'err_exist');
+    $rule_username = new Rule_UserName();
+    if (! $rule_username->isValid((string) $request->get('form_loginname'))) {
+        $errors['form_loginname'] = $rule_username->getErrorMessage();
         return 0;
     }
 

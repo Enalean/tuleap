@@ -10,7 +10,16 @@
                     <div class="control-group error">
                         <div class="controls">
                     {{/has_error }}
-                            <input type="text" id="form_loginname" name="form_loginname" placeholder="{{ login }} *" value="{{ value }}" required="required" autocomplete="username" />
+                            <input
+                                    type="text"
+                                    id="form_loginname"
+                                    name="form_loginname"
+                                    placeholder="{{ login }} *"
+                                    value="{{ value }}"
+                                    required="required"
+                                    autocomplete="username"
+                                    pattern="^[a-zA-Z][a-zA-Z0-9\-_\.]{2,}$"
+                            />
                     {{# has_error }}
                             <span class="help-inline">{{ error }}</span>
                         </div>
