@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ThemeVariantColor
+class ThemeVariantColor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /** @var string */
     private $name;
@@ -36,10 +36,10 @@ class ThemeVariantColor
     {
         $theme_variant = new ThemeVariant();
 
-        return self::buildFromVariant($theme_variant);
+        return self::buildFromVariant($theme_variant->getDefault());
     }
 
-    public static function buildFromVariant($variant)
+    public static function buildFromVariant(string $variant): ThemeVariantColor
     {
         switch ($variant) {
             case 'FlamingParrot_Orange':
