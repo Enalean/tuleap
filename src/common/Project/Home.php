@@ -22,16 +22,9 @@
 namespace Tuleap\Project;
 
 use CSRFSynchronizerToken;
-use ProjectManager;
-use HTTPRequest;
-use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\Request\NotFoundException;
-use UserManager;
 use EventManager;
-use ForgeConfig;
-use User_ForgeUserGroupPermissionsManager;
-use User_ForgeUserGroupPermissionsDao;
+use HTTPRequest;
+use ProjectManager;
 use Tuleap\Dashboard\AssetsIncluder;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
@@ -50,8 +43,16 @@ use Tuleap\Dashboard\Widget\DashboardWidgetReorder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\NotFoundException;
 use Tuleap\Widget\WidgetFactory;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
+use UserManager;
 
 class Home implements DispatchableWithRequest
 {
@@ -108,7 +109,16 @@ class Home implements DispatchableWithRequest
                         new WidgetMinimizor($dashboard_widget_dao),
                         new AssetsIncluder(
                             $layout,
-                            new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets')
+                            new IncludeAssets(__DIR__ .'/../../www/assets', '/assets'),
+                            new CssAssetCollection(
+                                [new CssAsset(
+                                    new IncludeAssets(
+                                        __DIR__ . '/../../www/themes/BurningParrot/assets',
+                                        '/themes/BurningParrot/assets'
+                                    ),
+                                    'dashboards'
+                                )]
+                            )
                         )
                     ),
                     new WidgetDashboardController(

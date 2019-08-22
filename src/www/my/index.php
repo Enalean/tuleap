@@ -19,16 +19,14 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
-use Tuleap\Admin\Homepage\UserCounterDao;
 use Tuleap\Dashboard\AssetsIncluder;
-use Tuleap\Dashboard\User\UserDashboardDeletor;
-use Tuleap\Dashboard\User\UserDashboardRouter;
 use Tuleap\Dashboard\User\UserDashboardController;
-use Tuleap\Dashboard\User\UserDashboardRetriever;
-use Tuleap\Dashboard\User\UserDashboardUpdator;
 use Tuleap\Dashboard\User\UserDashboardDao;
+use Tuleap\Dashboard\User\UserDashboardDeletor;
+use Tuleap\Dashboard\User\UserDashboardRetriever;
+use Tuleap\Dashboard\User\UserDashboardRouter;
 use Tuleap\Dashboard\User\UserDashboardSaver;
+use Tuleap\Dashboard\User\UserDashboardUpdator;
 use Tuleap\Dashboard\User\WidgetDeletor;
 use Tuleap\Dashboard\User\WidgetMinimizor;
 use Tuleap\Dashboard\Widget\DashboardWidgetChecker;
@@ -41,6 +39,8 @@ use Tuleap\Dashboard\Widget\DashboardWidgetReorder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Widget\WidgetFactory;
 
@@ -73,7 +73,13 @@ $router                     = new UserDashboardRouter(
         new WidgetMinimizor($dashboard_widget_dao),
         new AssetsIncluder(
             $GLOBALS['Response'],
-            new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets')
+            new IncludeAssets(__DIR__ . '/../assets', '/assets'),
+            new CssAssetCollection(
+                [new CssAsset(
+                    new IncludeAssets(__DIR__ . '/../themes/BurningParrot/assets', '/themes/BurningParrot/assets'),
+                    'dashboards'
+                )]
+            )
         )
     ),
     new WidgetDashboardController(

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,21 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../scripts/node_modules/smooth-scrollbar/dist/smooth-scrollbar';
-@import '../../common/css/utils/tooltip';
-
-@import 'includes/global-variables';
-@import 'includes/smooth-scrollbar-overrides';
-@import 'includes/structure';
-@import 'includes/siteadmin';
-@import 'includes/resource_restrictor';
-@import 'includes/autocomplete';
-@import 'includes/homepage';
-@import 'includes/profile';
-@import 'includes/toggler';
-@import 'includes/modals';
-@import 'includes/breadcrumb';
-@import 'includes/project-admin';
-@import 'includes/software_map';
-@import 'includes/error';
-@import 'includes/ckeditor';
+@import '../../common/tlp/src/scss/variables/variables-green';
+@import './includes/dashboard';
