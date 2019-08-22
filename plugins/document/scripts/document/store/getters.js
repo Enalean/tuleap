@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,7 +35,7 @@ export const user_can_dragndrop = state => state.max_files_dragndrop > 0;
 
 export const global_upload_progress = state => {
     const ongoing_uploads = state.folder_content.filter(item => {
-        return item.hasOwnProperty("progress") && item.upload_error === null;
+        return Object.prototype.hasOwnProperty.call(item, "progress") && item.upload_error === null;
     });
 
     if (ongoing_uploads.length === 0) {

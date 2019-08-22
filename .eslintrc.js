@@ -36,6 +36,7 @@ module.exports = {
         "dot-notation": "warn",
         eqeqeq: "warn",
         "no-alert": "error",
+        "no-console": "error",
         "no-caller": "error",
         "no-div-regex": "error",
         "no-else-return": "warn",
@@ -141,6 +142,9 @@ module.exports = {
             ],
             env: {
                 node: true
+            },
+            rules: {
+                "no-console": "off"
             }
         },
         {

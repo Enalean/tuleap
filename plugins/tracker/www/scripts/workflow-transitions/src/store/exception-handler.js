@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,9 @@
  */
 
 export async function getErrorMessage(exception) {
-    let response = await exception.response.json();
-
-    if (response.hasOwnProperty("error")) {
-        if (response.error.hasOwnProperty("i18n_error_message")) {
+    const response = await exception.response.json();
+    if (Object.prototype.hasOwnProperty.call(response, "error")) {
+        if (Object.prototype.hasOwnProperty.call(response.error, "i18n_error_message")) {
             return response.error.i18n_error_message;
         }
 

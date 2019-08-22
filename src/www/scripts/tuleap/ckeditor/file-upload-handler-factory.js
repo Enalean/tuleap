@@ -78,18 +78,22 @@ async function startUpload(loader, onErrorCallback) {
         }
 
         try {
-            const json = await exception.response.json();
-            if (json.hasOwnProperty("error")) {
-                loader.message = json.error.message;
-
-                if (json.error.hasOwnProperty("i18n_error_message")) {
-                    loader.message = json.error.i18n_error_message;
-                }
-            }
+            handleException(loader, exception);
         } finally {
             loader.changeStatus("error");
         }
         throw exception;
+    }
+}
+
+async function handleException(loader, exception) {
+    const json = await exception.response.json();
+    if (Object.prototype.hasOwnProperty.call(json, "error")) {
+        loader.message = json.error.message;
+
+        if (Object.prototype.hasOwnProperty.call(json.error, "i18n_error_message")) {
+            loader.message = json.error.i18n_error_message;
+        }
     }
 }
 

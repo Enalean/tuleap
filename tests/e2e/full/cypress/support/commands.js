@@ -55,8 +55,8 @@ Cypress.Commands.add("userLogout", () => {
 const cache_service_urls = {};
 Cypress.Commands.add("visitProjectService", (project_unixname, service_label) => {
     if (
-        cache_service_urls.hasOwnProperty(project_unixname) &&
-        cache_service_urls[project_unixname].hasOwnProperty(service_label)
+        Object.prototype.hasOwnProperty.call(cache_service_urls, project_unixname) &&
+        Object.prototype.hasOwnProperty.call(cache_service_urls[project_unixname], service_label)
     ) {
         cy.visit(cache_service_urls[project_unixname][service_label]);
         return;

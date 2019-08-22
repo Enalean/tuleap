@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -255,9 +255,9 @@ function getSumOfWidgetsHeights(widgets) {
 
 function hasNoWidgets(handle) {
     return (
-        !handle.hasOwnProperty("widgets") ||
+        !Object.prototype.hasOwnProperty.call(handle, "widgets") ||
         !handle.widgets ||
-        (handle.hasOwnProperty("widgets") && handle.widgets.length === 0)
+        (Object.prototype.hasOwnProperty.call(handle, "widgets") && handle.widgets.length === 0)
     );
 }
 

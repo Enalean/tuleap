@@ -125,7 +125,7 @@ function ValidateService() {
                 case "bind_value_ids":
                 case "field_id":
                 case "value":
-                    return !_.isUndefined(property);
+                    return property !== undefined;
                 default:
                     return false;
             }

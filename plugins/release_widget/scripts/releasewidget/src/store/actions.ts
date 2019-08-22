@@ -44,16 +44,19 @@ async function getCurrentMilestones(context: Context): Promise<void> {
     context.commit("resetErrorMessage");
     const milestones = await getAllCurrentMilestones(context.state);
 
-    const promises: Promise<void>[] = [];
+    const promises = milestones.map(
+        async (milestone: MilestoneData): Promise<MilestoneData> => {
+            await getInitialEffortAndNumberArtifactsInTrackers(context, milestone);
+            return {
+                ...milestone,
+                total_sprint: await getNumberOfSprints(context, milestone)
+            };
+        }
+    );
 
-    milestones.forEach((milestone: MilestoneData) => {
-        promises.push(getInitialEffortAndNumberArtifactsInTrackers(context, milestone));
-        promises.push(getNumberOfSprints(context, milestone));
-    });
+    const enriched_milestones = await Promise.all<MilestoneData>(promises);
 
-    await Promise.all<void>(promises);
-
-    return context.commit("setCurrentMilestones", milestones);
+    return context.commit("setCurrentMilestones", enriched_milestones);
 }
 
 export async function getMilestones(context: Context): Promise<void> {
@@ -77,9 +80,9 @@ async function getTrackersProject(context: Context): Promise<void> {
     return context.commit("setTrackers", trackers);
 }
 
-async function getNumberOfSprints(context: Context, milestone: MilestoneData): Promise<void> {
+function getNumberOfSprints(context: Context, milestone: MilestoneData): Promise<number> {
     context.commit("resetErrorMessage");
-    milestone.total_sprint = await getSprints(milestone.id, context.state);
+    return getSprints(milestone.id, context.state);
 }
 
 async function getInitialEffortAndNumberArtifactsInTrackers(

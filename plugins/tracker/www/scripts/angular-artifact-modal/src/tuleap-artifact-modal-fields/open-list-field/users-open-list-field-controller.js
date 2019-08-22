@@ -1,7 +1,26 @@
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import "./users-result-template.tpl.html";
 import { select2 } from "tlp";
 import { isDefined } from "angular";
-import { has, remove, find } from "lodash";
+import { has, remove } from "lodash";
 import { searchUsers } from "../../rest/rest-service.js";
 
 export default OpenListFieldController;
@@ -85,7 +104,7 @@ function OpenListFieldController($element, $compile, $rootScope, $templateCache)
     }
 
     function getUserRepresentationForInitialSelection(result) {
-        return find(self.value_model.value.bind_value_objects, function(value_object) {
+        return self.value_model.value.bind_value_objects.find(value_object => {
             if (value_object.id) {
                 return result.id === value_object.id.toString();
             }

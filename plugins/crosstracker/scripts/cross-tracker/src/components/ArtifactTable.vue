@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -141,12 +141,12 @@ export default {
                 this.artifacts = this.artifacts.concat(new_artifacts);
             } catch (error) {
                 this.is_load_more_displayed = false;
-                if (error.hasOwnProperty("response")) {
+                if (Object.prototype.hasOwnProperty.call(error, "response")) {
                     const error_json = await error.response.json();
                     if (
                         error_json &&
-                        error_json.hasOwnProperty("error") &&
-                        error_json.error.hasOwnProperty("i18n_error_message")
+                        Object.prototype.hasOwnProperty.call(error_json, "error") &&
+                        Object.prototype.hasOwnProperty.call(error_json.error, "i18n_error_message")
                     ) {
                         this.$store.commit("setErrorMessage", error_json.error.i18n_error_message);
                     } else {

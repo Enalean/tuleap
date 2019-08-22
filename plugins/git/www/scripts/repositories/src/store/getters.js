@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,10 @@ export const isCurrentRepositoryListEmpty = (state, getters) =>
     getters.currentRepositoryList.length === 0;
 
 export const areRepositoriesAlreadyLoadedForCurrentOwner = state => {
-    return state.repositories_for_owner.hasOwnProperty(state.selected_owner_id);
+    return Object.prototype.hasOwnProperty.call(
+        state.repositories_for_owner,
+        state.selected_owner_id
+    );
 };
 
 export const filteredRepositoriesByLastUpdateDate = (state, getters) => {

@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2017-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -101,7 +101,7 @@ export default {
 
                 this.$emit("saved");
             } catch (error) {
-                if (error.hasOwnProperty("response")) {
+                if (Object.prototype.hasOwnProperty.call(error, "response")) {
                     const error_json = await error.response.json();
                     this.$store.commit("setErrorMessage", error_json.error.message);
                 }

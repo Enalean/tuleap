@@ -1,5 +1,23 @@
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { element } from "angular";
-import { isNull } from "lodash";
 
 export default KanbanColumnController;
 
@@ -94,7 +112,7 @@ function KanbanColumnController(
         var target_column_id = getColumnId(element(target_element));
         var source_column = self.column;
         var target_column = ColumnCollectionService.getColumn(target_column_id);
-        var target_model_items = !isNull(target_model) ? target_model : source_model;
+        var target_model_items = target_model !== null ? target_model : source_model;
         var current_kanban = SharedPropertiesService.getKanban();
         var dropped_item = target_model_items[target_index];
         var compared_to = DroppedService.getComparedTo(target_model_items, target_index);
