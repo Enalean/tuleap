@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,8 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('ReferenceAdministrationViews.class.php');
-require_once('ReferenceAdministrationActions.class.php');
+namespace Tuleap\Project\Admin\Reference;
+
+use Controler;
+use HTTPRequest;
 
 class ReferenceAdministration extends Controler
 {

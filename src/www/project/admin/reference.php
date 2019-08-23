@@ -18,8 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\Admin\Reference\ReferenceAdministration;
+
 require_once __DIR__ . '/../../include/pre.php';
-require_once __DIR__ . '/include/ReferenceAdministration.class.php';
 
 $refAdmin = new ReferenceAdministration();
 
