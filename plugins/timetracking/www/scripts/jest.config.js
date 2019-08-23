@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "tlp-mocks";
-
-import "../../time-formatters.spec.js";
-import "./api/rest-querier.spec.js";
-
-import "./store/mutations.spec.js";
-import "./store/actions.spec.js";
-import "./store/getters.spec.js";
-
-import "./components/Widget.spec.js";
-import "./components/WidgetArtifactTable.spec.js";
-import "./components/modal/WidgetModalContent.spec.js";
-import "./components/modal/WidgetModalTable.spec.js";
-import "./components/modal/WidgetModalTimes.spec.js";
+module.exports = require("../../../../tests/jest/jest.config.js");

@@ -1,7 +1,7 @@
 /**
  * Copyright Enalean (c) 2019. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchSuccess, tlp } from "tlp-mocks";
+import * as tlp from "tlp";
+import { mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
 
 import {
     getProjectsWithTimetracking,
@@ -29,6 +30,8 @@ import {
     getTrackersWithTimetracking,
     saveNewReport
 } from "./rest-querier.js";
+
+jest.mock("tlp");
 
 describe("Get Report() -", () => {
     it("the REST API will be queried : report with its trackers is returned", async () => {
@@ -39,13 +42,14 @@ describe("Get Report() -", () => {
                 trackers: [{ id: 1, label: "timetracking_tracker" }]
             }
         ];
-        mockFetchSuccess(tlp.get, {
+        const tlpGet = jest.spyOn(tlp, "get");
+        mockFetchSuccess(tlpGet, {
             return_json: report
         });
 
         const result = await getTrackersFromReport(1);
 
-        expect(tlp.get).toHaveBeenCalledWith("/api/v1/timetracking_reports/1");
+        expect(tlpGet).toHaveBeenCalledWith("/api/v1/timetracking_reports/1");
         expect(result).toEqual([
             {
                 id: 1,
@@ -85,13 +89,14 @@ describe("Get Report's times() -", () => {
                 uri: ""
             }
         ];
-        mockFetchSuccess(tlp.get, {
+        const tlpGet = jest.spyOn(tlp, "get");
+        mockFetchSuccess(tlpGet, {
             return_json: trackers
         });
 
         const result = await getTrackersFromReport(1);
 
-        expect(tlp.get).toHaveBeenCalledWith("/api/v1/timetracking_reports/1");
+        expect(tlpGet).toHaveBeenCalledWith("/api/v1/timetracking_reports/1");
         expect(result).toEqual(trackers);
     });
 });
@@ -99,13 +104,14 @@ describe("Get Report's times() -", () => {
 describe("getProjects() -", () => {
     it("the REST route projects will be queried with with_time_tracking parameter and the projects returned", async () => {
         const projects = [{ id: 765, label: "timetracking" }, { id: 239, label: "projectTest" }];
-        mockFetchSuccess(tlp.get, {
+        const tlpGet = jest.spyOn(tlp, "get");
+        mockFetchSuccess(tlpGet, {
             return_json: projects
         });
 
         const result = await getProjectsWithTimetracking();
 
-        expect(tlp.get).toHaveBeenCalledWith("/api/v1/projects", {
+        expect(tlpGet).toHaveBeenCalledWith("/api/v1/projects", {
             params: {
                 limit: 50,
                 offset: 0,
@@ -122,13 +128,14 @@ describe("getProjects() -", () => {
 describe("getTrackers() -", () => {
     it("the  REST route projects/id/trackers will be queried project id and with_time_tracking parameter and the trackers returned", async () => {
         const trackers = [{ id: 16, label: "tracker_1" }, { id: 18, label: "tracker_2" }];
-        mockFetchSuccess(tlp.get, {
+        const tlpGet = jest.spyOn(tlp, "get");
+        mockFetchSuccess(tlpGet, {
             return_json: trackers
         });
 
         const result = await getTrackersWithTimetracking(102);
 
-        expect(tlp.get).toHaveBeenCalledWith("/api/v1/projects/102/trackers", {
+        expect(tlpGet).toHaveBeenCalledWith("/api/v1/projects/102/trackers", {
             params: {
                 representation: "minimal",
                 limit: 50,
@@ -153,7 +160,8 @@ describe("Save new Report() -", () => {
             }
         ];
 
-        mockFetchSuccess(tlp.put, {
+        const tlpPut = jest.spyOn(tlp, "put");
+        mockFetchSuccess(tlpPut, {
             return_json: report
         });
         const headers = {
@@ -165,7 +173,7 @@ describe("Save new Report() -", () => {
 
         const result = await saveNewReport(1, [1, 2]);
 
-        expect(tlp.put).toHaveBeenCalledWith("/api/v1/timetracking_reports/1", {
+        expect(tlpPut).toHaveBeenCalledWith("/api/v1/timetracking_reports/1", {
             headers,
             body
         });

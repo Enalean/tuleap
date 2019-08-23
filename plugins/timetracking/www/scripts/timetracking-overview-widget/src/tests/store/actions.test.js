@@ -1,7 +1,7 @@
 /*
  * Copyright Enalean (c) 2019. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -23,14 +23,15 @@
 
 import * as actions from "../../store/actions.js";
 import initial_state from "../../store/state.js";
-import { mockFetchError, mockFetchSuccess, tlp } from "tlp-mocks";
+import { mockFetchError } from "tlp-fetch-mocks-helper-jest";
 import { ERROR_OCCURRED } from "../../../../constants.js";
+import * as rest_querier from "../../api/rest-querier.js";
 
 describe("Store actions", () => {
     let context;
     beforeEach(() => {
         context = {
-            commit: jasmine.createSpy("commit"),
+            commit: jest.fn(),
             state: { ...initial_state }
         };
     });
@@ -45,9 +46,9 @@ describe("Store actions", () => {
                 }
             ];
 
-            mockFetchSuccess(tlp.get, {
-                return_json: report
-            });
+            jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(
+                Promise.resolve(report)
+            );
 
             await actions.initWidgetWithReport(context);
             expect(context.commit).toHaveBeenCalledWith("resetMessages");
@@ -57,7 +58,7 @@ describe("Store actions", () => {
 
     describe("initWidgetWithReport - rest errors", () => {
         it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async () => {
-            mockFetchError(tlp.get, {});
+            jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(Promise.reject());
 
             await actions.initWidgetWithReport(context);
             expect(context.commit).toHaveBeenCalledWith("resetMessages");
@@ -96,9 +97,9 @@ describe("Store actions", () => {
             ];
             context.state.trackers_times = trackers;
 
-            mockFetchSuccess(tlp.get, {
-                return_json: trackers
-            });
+            jest.spyOn(rest_querier, "getTimesFromReport").mockReturnValue(
+                Promise.resolve(trackers)
+            );
 
             await actions.loadTimes(context);
             expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
@@ -108,8 +109,8 @@ describe("Store actions", () => {
     });
 
     describe("loadTimes - rest errors", () => {
-        it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async () => {
-            mockFetchError(tlp.get, {
+        it("Given a rest error with a known error message, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async () => {
+            mockFetchError(jest.spyOn(rest_querier, "getTrackersFromReport"), {
                 error_json: {
                     error: {
                         code: 403,
@@ -124,7 +125,7 @@ describe("Store actions", () => {
         });
 
         it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async () => {
-            mockFetchError(tlp.get, {});
+            jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(Promise.reject());
 
             await actions.initWidgetWithReport(context);
             expect(context.commit).toHaveBeenCalledWith("resetMessages");
@@ -139,9 +140,9 @@ describe("Store actions", () => {
                 { id: 239, label: "projectTest" }
             ];
 
-            mockFetchSuccess(tlp.get, {
-                return_json: projects
-            });
+            jest.spyOn(rest_querier, "getProjectsWithTimetracking").mockReturnValue(
+                Promise.resolve(projects)
+            );
 
             await actions.getProjects(context);
             expect(context.commit).toHaveBeenCalledWith("resetMessages");
@@ -153,9 +154,9 @@ describe("Store actions", () => {
         it("Given a success response, When trackers are received, Then no message error is received", async () => {
             const trackers = [{ id: 16, label: "tracker_1" }, { id: 18, label: "tracker_2" }];
 
-            mockFetchSuccess(tlp.get, {
-                return_json: trackers
-            });
+            jest.spyOn(rest_querier, "getTrackersWithTimetracking").mockReturnValue(
+                Promise.resolve(trackers)
+            );
 
             await actions.getTrackers(context);
             expect(context.commit).toHaveBeenCalledWith("resetMessages");
@@ -176,9 +177,7 @@ describe("Store actions", () => {
                 }
             ];
 
-            mockFetchSuccess(tlp.put, {
-                return_json: report
-            });
+            jest.spyOn(rest_querier, "saveNewReport").mockReturnValue(Promise.resolve(report));
             const success_message = "Report has been successfully saved";
 
             await actions.saveReport(context, success_message);
@@ -192,7 +191,7 @@ describe("Store actions", () => {
 
     describe("SaveReport - error", () => {
         it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async () => {
-            mockFetchError(tlp.get, {});
+            jest.spyOn(rest_querier, "saveNewReport").mockReturnValue(Promise.reject());
             const success_message = "Report has been successfully saved";
 
             await actions.saveReport(context, success_message);

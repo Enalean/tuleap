@@ -1,7 +1,7 @@
 /*
  * Copyright Enalean (c) 2018 - present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -22,8 +22,8 @@
  */
 
 import * as actions from "./actions.js";
-import { rewire$loadFirstBatchOfTimes } from "./actions.js";
-import { tlp, mockFetchError, mockFetchSuccess } from "tlp-mocks";
+import * as rest_querier from "../api/rest-querier.js";
+import { mockFetchError } from "tlp-fetch-mocks-helper-jest";
 import {
     REST_FEEDBACK_ADD,
     REST_FEEDBACK_EDIT,
@@ -35,7 +35,7 @@ describe("Store actions", () => {
     let context;
     beforeEach(() => {
         context = {
-            commit: jasmine.createSpy("commit"),
+            commit: jest.fn(),
             state: {
                 start_date: "2015-09-14",
                 end_date: "2017-04-24",
@@ -55,7 +55,7 @@ describe("Store actions", () => {
 
     describe("loadFirstBatchOfTimes - success", () => {
         it("Given a success response, When times are received, Then no message error is reveived", async () => {
-            let times = [
+            const times = [
                 [
                     {
                         artifact: {},
@@ -66,18 +66,9 @@ describe("Store actions", () => {
             ];
             context.state.times = times;
 
-            mockFetchSuccess(tlp.get, {
-                headers: {
-                    get: header_name => {
-                        const headers = {
-                            "X-PAGINATION-SIZE": 1
-                        };
-
-                        return headers[header_name];
-                    }
-                },
-                return_json: times
-            });
+            jest.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(
+                Promise.resolve({ times, total: 1 })
+            );
 
             await actions.loadFirstBatchOfTimes(context);
             expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
@@ -88,7 +79,7 @@ describe("Store actions", () => {
 
         describe("getTimes - rest errors", () => {
             it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async () => {
-                mockFetchError(tlp.get, {
+                mockFetchError(jest.spyOn(rest_querier, "getTrackedTimes"), {
                     error_json: {
                         error: {
                             code: 403,
@@ -102,8 +93,8 @@ describe("Store actions", () => {
                 expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "403 Forbidden");
             });
 
-            it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async () => {
-                mockFetchError(tlp.get, {});
+            it("Given a rest error, When a json error message is received, Then the message is extracted by getTimes() into the error_message private property.", async () => {
+                jest.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(Promise.reject());
 
                 await actions.getTimes(context);
                 expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
@@ -113,7 +104,7 @@ describe("Store actions", () => {
 
         describe("addTime - rest errors", () => {
             it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's rest_feedback private property.", async () => {
-                mockFetchError(tlp.post, {
+                mockFetchError(jest.spyOn(rest_querier, "addTime"), {
                     error_json: {
                         error: {
                             code: 403,
@@ -129,8 +120,8 @@ describe("Store actions", () => {
                 ]);
             });
 
-            it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's rest_feedback private property.", async () => {
-                mockFetchError(tlp.post, {});
+            it("Given a rest error, When a json error message is received, Then the message is extracted by addTime() into the rest_feedback private property.", async () => {
+                jest.spyOn(rest_querier, "addTime").mockReturnValue(Promise.reject());
 
                 await actions.addTime(context, ["2018-01-01", 1, "11:11", "oui"]);
                 expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
@@ -142,31 +133,28 @@ describe("Store actions", () => {
 
         describe("addTime - success", () => {
             it("Given no rest error, then a success message is displayed", async () => {
-                const loadFirstBatchOfTimes = jasmine.createSpy("loadFirstBatchOfTimes");
-                rewire$loadFirstBatchOfTimes(loadFirstBatchOfTimes);
+                const restAddTime = jest.spyOn(rest_querier, "addTime");
 
                 let time = {
                     artifact: {},
                     project: {},
                     minutes: 20
                 };
-                mockFetchSuccess(tlp.post, {
-                    return_json: time
-                });
+                restAddTime.mockReturnValue(Promise.resolve(time));
 
                 await actions.addTime(context, ["2018-01-01", 1, "00:20", "oui"]);
                 expect(context.commit).toHaveBeenCalledWith("pushCurrentTimes", [
                     [time],
                     REST_FEEDBACK_ADD
                 ]);
-                expect(loadFirstBatchOfTimes).toHaveBeenCalled();
+                expect(restAddTime).toHaveBeenCalledTimes(1);
                 expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback");
             });
         });
 
         describe("updateTime - rest errors", () => {
             it("Given a rest error, When a json error message is received, Then it should add the json error message on rest_feedback", async () => {
-                mockFetchError(tlp.put, {
+                mockFetchError(jest.spyOn(rest_querier, "updateTime"), {
                     error_json: {
                         error: {
                             code: 403,
@@ -183,7 +171,7 @@ describe("Store actions", () => {
             });
 
             it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async () => {
-                mockFetchError(tlp.put, {});
+                jest.spyOn(rest_querier, "updateTime").mockReturnValue(Promise.reject());
 
                 await actions.updateTime(context, ["2018-01-01", 1, "11:11", "oui"]);
                 expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
@@ -195,8 +183,7 @@ describe("Store actions", () => {
 
         describe("updateTime - success", () => {
             it("Given no rest error, then a success message is displayed", async () => {
-                const loadFirstBatchOfTimes = jasmine.createSpy("loadFirstBatchOfTimes");
-                rewire$loadFirstBatchOfTimes(loadFirstBatchOfTimes);
+                const getTrackedTimes = jest.spyOn(rest_querier, "getTrackedTimes");
 
                 let time = {
                     artifact: {},
@@ -204,23 +191,21 @@ describe("Store actions", () => {
                     id: 1,
                     minutes: 20
                 };
-                mockFetchSuccess(tlp.put, {
-                    return_json: time
-                });
+                jest.spyOn(rest_querier, "updateTime").mockReturnValue(Promise.resolve(time));
 
                 await actions.updateTime(context, ["2018-01-01", 1, "00:20", "oui"]);
                 expect(context.commit).toHaveBeenCalledWith("replaceInCurrentTimes", [
                     time,
                     REST_FEEDBACK_EDIT
                 ]);
-                expect(loadFirstBatchOfTimes).toHaveBeenCalled();
+                expect(getTrackedTimes).toHaveBeenCalled();
                 expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback");
             });
         });
 
         describe("deleteTime - rest errors", () => {
             it("Given a rest error, When a json error message is received, Then it should add the json error message on rest_feedback", async () => {
-                mockFetchError(tlp.del, {
+                mockFetchError(jest.spyOn(rest_querier, "deleteTime"), {
                     error_json: {
                         error: {
                             code: 403,
@@ -237,7 +222,7 @@ describe("Store actions", () => {
             });
 
             it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async () => {
-                mockFetchError(tlp.del, {});
+                jest.spyOn(rest_querier, "deleteTime").mockReturnValue(Promise.reject());
 
                 await actions.deleteTime(context, 1);
                 expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
@@ -249,10 +234,9 @@ describe("Store actions", () => {
 
         describe("deleteTime - success", () => {
             it("Given no rest error, then a success message is displayed", async () => {
-                const loadFirstBatchOfTimes = jasmine.createSpy("loadFirstBatchOfTimes");
-                rewire$loadFirstBatchOfTimes(loadFirstBatchOfTimes);
+                const getTrackedTimes = jest.spyOn(rest_querier, "getTrackedTimes");
 
-                mockFetchSuccess(tlp.del, {});
+                jest.spyOn(rest_querier, "deleteTime").mockReturnValue(Promise.resolve());
 
                 const time_id = 1;
                 await actions.deleteTime(context, time_id);
@@ -260,7 +244,7 @@ describe("Store actions", () => {
                     time_id,
                     REST_FEEDBACK_DELETE
                 ]);
-                expect(loadFirstBatchOfTimes).toHaveBeenCalled();
+                expect(getTrackedTimes).toHaveBeenCalled();
                 expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback");
             });
         });
@@ -278,18 +262,7 @@ describe("Store actions", () => {
                 ];
                 context.state.times = times;
 
-                mockFetchSuccess(tlp.get, {
-                    headers: {
-                        get: header_name => {
-                            const headers = {
-                                "X-PAGINATION-SIZE": 1
-                            };
-
-                            return headers[header_name];
-                        }
-                    },
-                    return_json: times
-                });
+                jest.spyOn(rest_querier, "getTrackedTimes").mockReturnValue(times);
 
                 await actions.reloadTimes(context);
                 expect(context.commit).toHaveBeenCalledWith("resetTimes");
