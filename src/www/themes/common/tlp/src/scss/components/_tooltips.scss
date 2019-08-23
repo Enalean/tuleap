@@ -32,7 +32,7 @@ $tlp-tooltip-margin: 5px;
     &::before,
     &::after {
         position: absolute;
-        transition: opacity 100ms linear;
+        transition: opacity 100ms linear 250ms;
         opacity: 0;
         z-index: 10000;
         pointer-events: none;
@@ -40,7 +40,7 @@ $tlp-tooltip-margin: 5px;
 
     &:hover::before,
     &:hover::after {
-        transition: opacity 100ms linear;
+        transition: opacity 100ms linear 500ms;
         opacity: 1;
     }
 
