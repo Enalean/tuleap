@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -227,8 +227,8 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
     public function getStylesheetDependencies()
     {
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../www/themes/default/assets',
-            GRAPH_ON_TRACKERS_V5_URL . '/themes/default/assets'
+            __DIR__ . '/../../../src/www/assets/graphontrackersv5/themes',
+            '/assets/graphontrackersv5/themes'
         );
         return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($include_assets, 'style')]);
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
  *
@@ -26,7 +26,6 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
-require_once __DIR__ . '/constants.php';
 require_once __DIR__ .  '/../vendor/autoload.php';
 
 class GraphOnTrackersV5Plugin extends Plugin
@@ -272,8 +271,8 @@ class GraphOnTrackersV5Plugin extends Plugin
     {
         if ($this->canIncludeStylesheets()) {
             $include_assets = new IncludeAssets(
-                __DIR__ . '/../www/themes/default/assets',
-                GRAPH_ON_TRACKERS_V5_URL . '/themes/default/assets'
+                __DIR__ . '/../../../src/www/assets/graphontrackersv5/themes',
+                '/assets/graphontrackersv5/themes'
             );
             echo '<link rel="stylesheet" type="text/css" href="' . $include_assets->getFileURL('style.css') . '" />';
         }
@@ -295,19 +294,16 @@ class GraphOnTrackersV5Plugin extends Plugin
         $params['factories']['pie'] = array(
             'chart_type'      => 'pie',
             'chart_classname' => 'GraphOnTrackersV5_Chart_Pie',
-            'icon'            => $this->getThemePath().'/images/chart_pie.png',
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','pie'),
         );
         $params['factories']['bar'] = array(
             'chart_type'      => 'bar',
             'chart_classname' => 'GraphOnTrackersV5_Chart_Bar',
-            'icon'            => $this->getThemePath().'/images/chart_bar.png',
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','bar'),
         );
         $params['factories']['gantt'] = array(
             'chart_type'      => 'gantt',
             'chart_classname' => 'GraphOnTrackersV5_Chart_Gantt',
-            'icon'            => $this->getThemePath().'/images/chart_gantt.png',
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','gantt'),
         );
         $params['factories']['burndown'] = array(
@@ -315,8 +311,6 @@ class GraphOnTrackersV5Plugin extends Plugin
             'chart_type'      => 'burndown',
             //The classname of the chart. The class must be already declared.
             'chart_classname' => 'GraphOnTrackersV5_Chart_Burndown',
-            //The icon used for the button 'Add a chart'
-            'icon'            => $this->getThemePath().'/images/burndown.png',
             //The title for the button 'Add a chart'
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum', 'add_title_burndown'),
         );
@@ -325,8 +319,6 @@ class GraphOnTrackersV5Plugin extends Plugin
             'chart_type'      => 'cumulative_flow',
             //The classname of the chart. The class must be already declared.
             'chart_classname' => 'GraphOnTrackersV5_Chart_CumulativeFlow',
-            //The icon used for the button 'Add a chart'
-            'icon'            => $this->getThemePath().'/images/cumulative_flow.png',
             //The title for the button 'Add a chart'
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','cumulative_flow'),
         );

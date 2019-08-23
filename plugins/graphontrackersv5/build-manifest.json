@@ -1,16 +1,8 @@
 {
     "name": "graphontrackersv5",
-    "themes": {
-        "default": {
-            "files": [
-                "www/themes/default/css/style.scss"
-            ],
-            "target_dir": "www/themes/default/assets",
-            "is_revisioned": true
-        }
-    },
     "components": [
-        "www/scripts"
+        "www/scripts",
+        "themes/"
     ],
     "gettext-js": {
         "graphontrackersv5": {

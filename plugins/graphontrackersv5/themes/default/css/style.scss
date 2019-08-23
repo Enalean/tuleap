@@ -1,13 +1,4 @@
-@import '../../../../../../src/www/themes/common/tlp/src/scss/variables/colors/common-colors';
-
-.inline_help {
-    width: auto;
-    background: url(../images/help.png) no-repeat;
-    background-position: 10px 10px;
-    border: 1px solid #DDDDDD;
-    padding: 20px 40px 20px 52px;
-    margin: 0.5em;
-}
+@import '../../../../../src/www/themes/common/tlp/src/scss/variables/colors/common-colors';
 
 form[name=edit_chart_form] label {
     font-weight: bold;
@@ -33,10 +24,9 @@ form[name=edit_chart_form] label {
     margin-top: 0;
 
     > .widget_report_graph > .widget {
-
         > .widget_titlebar {
-            color: #222;
-            border-bottom-color: #B2B2B2;
+            border-bottom-color: #b2b2b2;
+            color: #222222;
 
             > .plugin_graphontrackersv5_widget_actions {
                 display: none;
@@ -44,7 +34,7 @@ form[name=edit_chart_form] label {
         }
 
         > .widget_content {
-            border-top-color: #B2B2B2;
+            border-top-color: #b2b2b2;
         }
     }
 }
@@ -68,17 +58,17 @@ form[name=edit_chart_form] label {
     text-align: center;
 
     text {
-        font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-        fill: #222;
-        font-size: 0.9em;
+        fill: #222222;
+        font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+        font-size: .9em;
     }
 
     .legend {
         font-size: inherit;
 
         > text {
+            fill: #222222;
             font-style: normal;
-            fill: #222;
         }
     }
 
@@ -86,7 +76,7 @@ form[name=edit_chart_form] label {
     .axis {
         path,
         line {
-            stroke: #DDD;
+            stroke: #dddddd;
             shape-rendering: crispEdges;
         }
 
@@ -96,8 +86,8 @@ form[name=edit_chart_form] label {
     }
 
     .y.axis line {
-        stroke: #BBB;
         stroke-dasharray: 2, 2;
+        stroke: #bbbbbb;
     }
 }
 
@@ -117,11 +107,11 @@ form[name=edit_chart_form] label {
 }
 
 .cumulative-flowchart-legend-list {
-    flex: 1 1 auto;
-    margin: 0;
     display: flex;
-    justify-content: space-around;
+    flex: 1 1 auto;
     flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 0;
     list-style: none;
 }
 
