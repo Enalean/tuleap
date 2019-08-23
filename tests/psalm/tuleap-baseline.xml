@@ -315,9 +315,8 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/CardRepresentation.class.php">
-    <InvalidPropertyAssignmentValue occurrences="2">
+    <InvalidPropertyAssignmentValue occurrences="1">
       <code>$planning_id . '_' . $card-&gt;getId()</code>
-      <code>array_map(function ($value) { return JsonCast::toInt($value); }, $card-&gt;getDropIntoIds())</code>
     </InvalidPropertyAssignmentValue>
     <UndefinedDocblockClass occurrences="2">
       <code>ProjectReference</code>
@@ -3898,9 +3897,6 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/graphontrackersv5/include/data-transformation/GraphOnTrackersV5_CumulativeFlow_DataBuilder.class.php">
-    <MissingDocblockType occurrences="1">
-      <code>private function getLastChangesetsBefore($timestamp) {</code>
-    </MissingDocblockType>
     <UndefinedPropertyAssignment occurrences="1">
       <code>$engine-&gt;legend</code>
     </UndefinedPropertyAssignment>
@@ -14488,9 +14484,6 @@
       <code>Reference::computeNumParam($ref-&gt;getLink())</code>
       <code>Reference::computeNumParam($row['link'])</code>
     </InvalidStaticInvocation>
-    <MissingDocblockType occurrences="1">
-      <code>function _getExpForRef() {</code>
-    </MissingDocblockType>
     <NullableReturnStatement occurrences="2">
       <code>null</code>
       <code>null</code>

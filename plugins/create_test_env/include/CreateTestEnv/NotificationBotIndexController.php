@@ -56,15 +56,10 @@ class NotificationBotIndexController implements DispatchableWithRequest
     }
 
     /**
-     * Is able to process a request routed by FrontRouter
-     *
-     * @param HTTPRequest $request
-     * @param BaseLayout $layout
-     * @param array $variables
-     * @return void
+     * @psalm-suppress UndefinedDocblockClass
      * @throws \Tuleap\BotMattermost\Exception\BotNotFoundException
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-create_test_env', 'You should be site administrator to access this page'));

@@ -74,7 +74,14 @@ class AgileDashboard_CardRepresentation {
         }
         $this->column_id    = JsonCast::toInt($column_id);
         if($this->column_id) {
-            $this->allowed_column_ids = array_map(function ($value) { return JsonCast::toInt($value); }, $card->getDropIntoIds());
+            $this->allowed_column_ids = array_filter(
+                array_map(
+                    static function ($value) {
+                        return JsonCast::toInt($value);
+                    },
+                    $card->getDropIntoIds()
+                )
+            );
         } else {
             $this->allowed_column_ids = array();
         }
