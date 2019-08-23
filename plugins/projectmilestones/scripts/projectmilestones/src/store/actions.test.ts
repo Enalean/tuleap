@@ -59,6 +59,7 @@ describe("Store actions", () => {
                 });
 
                 jest.spyOn(rest_querier, "getNbOfPastRelease").mockReturnValue(Promise.resolve(10));
+                jest.spyOn(rest_querier, "getLastRelease");
 
                 await actions.getMilestones(context);
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
@@ -95,7 +96,8 @@ describe("Store actions", () => {
                     label_tracker_planning: "Release",
                     is_timeframe_duration: true,
                     label_start_date: "start date",
-                    label_timeframe: "duration"
+                    label_timeframe: "duration",
+                    last_release: null
                 } as State;
 
                 const milestones: MilestoneData[] = [
@@ -104,15 +106,27 @@ describe("Store actions", () => {
                     } as MilestoneData
                 ];
 
+                const last_release: MilestoneData[] = [
+                    {
+                        id: 10
+                    } as MilestoneData
+                ];
+
+                jest.spyOn(rest_querier, "getLastRelease").mockReturnValue(
+                    Promise.resolve(last_release)
+                );
+
                 jest.spyOn(rest_querier, "getCurrentMilestones").mockReturnValue(
                     Promise.resolve(milestones)
                 );
 
                 jest.spyOn(rest_querier, "getNbOfPastRelease").mockReturnValue(Promise.resolve(10));
+
                 await actions.getMilestones(context);
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
                 expect(context.commit).toHaveBeenCalledWith("setCurrentMilestones", milestones);
                 expect(context.commit).toHaveBeenCalledWith("setNbPastReleases", 10);
+                expect(context.commit).toHaveBeenCalledWith("setLastRelease", last_release[0]);
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
             });
         });

@@ -50,13 +50,18 @@ import { MilestoneData } from "../../../type";
 import { Component, Prop } from "vue-property-decorator";
 
 @Component({
-    components: { ReleaseHeaderRemainingPoints, ReleaseHeaderRemainingDays }
+    components: {
+        ReleaseHeaderRemainingPoints,
+        ReleaseHeaderRemainingDays
+    }
 })
 export default class ReleaseHeader extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
     @Prop()
     readonly isLoading!: boolean;
+    @Prop()
+    readonly isPastRelease!: boolean;
 
     formatDate = (date: string): string => formatDateYearMonthDay(date);
 

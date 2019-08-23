@@ -111,6 +111,7 @@ export interface StoreOptions {
         label_timeframe?: string;
         user_can_view_sub_milestones_planning?: boolean;
         burnup_mode?: string;
+        last_release?: MilestoneData | null;
     };
     getters?: {
         has_rest_error?: boolean;
@@ -134,6 +135,7 @@ export interface State {
     user_can_view_sub_milestones_planning: boolean;
     burnup_mode: BurnupMode;
     nb_past_releases: number;
+    last_release: MilestoneData | null;
 }
 
 export interface Context {

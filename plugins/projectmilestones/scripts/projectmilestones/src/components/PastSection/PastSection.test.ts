@@ -17,25 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import PastSection from "./PastSection.vue";
 import { createStoreMock } from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import Vue from "vue";
-import { StoreOptions } from "../../type";
-import { initVueGettext } from "../../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+import { MilestoneData, StoreOptions } from "../../type";
+import ReleaseDisplayer from "../WhatsHotSection/ReleaseDisplayer.vue";
+import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
 
 const project_id = 102;
+const component_options: ShallowMountOptions<PastSection> = {};
+
 async function getPersonalWidgetInstance(
     store_options: StoreOptions
 ): Promise<Wrapper<PastSection>> {
     const store = createStoreMock(store_options);
-    const component_options = {
-        mocks: { $store: store }
-    };
 
-    await initVueGettext(Vue, () => {
-        throw new Error("Fallback to default");
-    });
+    component_options.mocks = { $store: store };
+    component_options.localVue = await createReleaseWidgetLocalVue();
 
     return shallowMount(PastSection, component_options);
 }
@@ -63,5 +61,21 @@ describe("PastSection", () => {
         expect(wrapper.find("[data-test=past-releases-link]").attributes("href")).toContain(
             "/plugins/agiledashboard/?group_id=" + encodeURIComponent(project_id) + "&period=past"
         );
+    });
+
+    it("When there is no last_milestone, then ReleaseDisplayer Component is not displayed", async () => {
+        store_options.state.last_release = null;
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.contains(ReleaseDisplayer)).toBe(false);
+    });
+
+    it("When there is one last_milestone, then ReleaseDisplayer Component is displayed", async () => {
+        store_options.state.last_release = {
+            id: 1
+        } as MilestoneData;
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.contains(ReleaseDisplayer)).toBe(true);
     });
 });
