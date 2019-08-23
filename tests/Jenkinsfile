@@ -94,11 +94,19 @@ pipeline {
                         stage('Karma Document plugin') {
                             steps { script { actions.runKarmaTests('document', 'plugins/document/scripts') } }
                         }
-                        stage('Karma ReleaseWidget plugin') {
-                            steps { script { actions.runKarmaTests('release_widget', 'plugins/release_widget/scripts') } }
-                        }
                     }
                     post { always { junit 'results/karma/test-*-results.xml' } }
+                }
+                stage ('Jest') {
+                    agent {
+                        docker {
+                            image 'node:12.6-alpine'
+                            reuseNode true
+                            args '--network none'
+                        }
+                    }
+                    steps { script { actions.runJestTests('Tuleap', '.') } }
+                    post { always { junit 'results/jest/test-*-results.xml' } }
                 }
                 stage('REST') {
                     stages {

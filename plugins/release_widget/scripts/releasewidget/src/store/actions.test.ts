@@ -18,15 +18,16 @@
  */
 
 import * as actions from "./actions";
-import { mockFetchError, tlp } from "tlp-mocks";
+import { mockFetchError } from "tlp-fetch-mocks-helper-jest";
 import { TrackerProject, Context } from "../type";
+import * as rest_querier from "../api/rest-querier";
 
 describe("Store actions", () => {
     let context: Context;
 
     beforeEach(() => {
         context = {
-            commit: jasmine.createSpy("commit"),
+            commit: jest.fn(),
             state: {
                 project_id: 102,
                 nb_backlog_items: 0,
@@ -44,7 +45,7 @@ describe("Store actions", () => {
     describe("getMilestones - rest", () => {
         describe("getMilestones - rest errors", () => {
             it("Given a rest error, When a json error message is received, Then the error message is set.", async () => {
-                mockFetchError(tlp.get, {
+                mockFetchError(jest.spyOn(rest_querier, "getTrackersProject"), {
                     error_json: {
                         error: {
                             code: 403,
@@ -75,11 +76,6 @@ describe("Store actions", () => {
                     }
                 ];
 
-                const headers = {
-                    // X-PAGINATION-SIZE
-                    get: () => 2
-                };
-
                 context.state = {
                     project_id: 102,
                     nb_backlog_items: 0,
@@ -101,51 +97,31 @@ describe("Store actions", () => {
                                     trackers: [
                                         {
                                             id: 1,
-                                            label: "Bug"
+                                            label: "one",
+                                            color_name: "red_fiesta"
                                         }
                                     ]
                                 }
                             }
-                        }
+                        },
+                        number_of_artifact_by_trackers: []
                     }
                 ];
 
-                const user_story = [
-                    {
-                        initial_effort: 5,
-                        artifact: {
-                            tracker: {
-                                id: 1
-                            }
-                        }
-                    },
-                    {
-                        initial_effort: 10,
-                        artifact: {
-                            tracker: {
-                                id: 1
-                            }
-                        }
-                    },
-                    {
-                        initial_effort: null,
-                        artifact: {
-                            tracker: {
-                                id: 1
-                            }
-                        }
-                    }
-                ];
-
-                tlp.get.and.returnValues({ headers }, { headers }, { headers });
-
-                tlp.recursiveGet.and.returnValues(
-                    trackers,
-                    milestones,
-                    milestones,
-                    user_story,
-                    user_story
+                jest.spyOn(rest_querier, "getTrackersProject").mockReturnValue(
+                    Promise.resolve(trackers)
                 );
+                jest.spyOn(rest_querier, "getNbOfUpcomingReleases").mockReturnValue(
+                    Promise.resolve(1)
+                );
+                jest.spyOn(rest_querier, "getNbOfBacklogItems").mockReturnValue(Promise.resolve(2));
+                jest.spyOn(rest_querier, "getCurrentMilestones").mockReturnValue(
+                    Promise.resolve(milestones)
+                );
+                jest.spyOn(rest_querier, "getMilestonesContent").mockReturnValue(
+                    Promise.resolve([])
+                );
+                jest.spyOn(rest_querier, "getNbOfSprints").mockReturnValue(Promise.resolve(15));
 
                 const milestones_state = [
                     {
@@ -156,7 +132,8 @@ describe("Store actions", () => {
                                     trackers: [
                                         {
                                             id: 1,
-                                            label: "Bug"
+                                            label: "one",
+                                            color_name: "red_fiesta"
                                         }
                                     ]
                                 }
@@ -165,13 +142,13 @@ describe("Store actions", () => {
                         number_of_artifact_by_trackers: [
                             {
                                 id: 1,
-                                label: "Bug",
-                                color_name: "red_fiesta",
-                                total_artifact: 3
+                                label: "one",
+                                total_artifact: 0,
+                                color_name: "red_fiesta"
                             }
                         ],
-                        total_sprint: 2,
-                        initial_effort: 15
+                        initial_effort: 0,
+                        total_sprint: 15
                     }
                 ];
 

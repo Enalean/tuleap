@@ -34,6 +34,15 @@ def runKarmaTests(String name, String path) {
     """
 }
 
+def runJestTests(String name, String path) {
+    sh """
+    mkdir -p 'results/jest'
+    export JEST_JUNIT_OUTPUT="\$WORKSPACE/results/jest/test-${name}-results.xml"
+    export JEST_SUITE_NAME="Jest ${name} test suite"
+    npm --prefix "sources/" test -- --ci --reporters=default --reporters=jest-junit --roots '${path}'
+    """
+}
+
 def runRESTTests(String version) {
     sh """
     mkdir -p results/api-rest/${version}

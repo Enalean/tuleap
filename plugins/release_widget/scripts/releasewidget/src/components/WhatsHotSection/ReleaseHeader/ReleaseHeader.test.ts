@@ -20,15 +20,14 @@
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import { shallowMount } from "@vue/test-utils";
-import ReleaseDisplayer from "./ReleaseDisplayer.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper";
-import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
-import { ComponentOption, MilestoneData, StoreOptions } from "../../type";
+import ReleaseHeader from "./ReleaseHeader.vue";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import { ComponentOption, MilestoneData, StoreOptions } from "../../../type";
 
 let releaseData: MilestoneData;
 let component_options: ComponentOption;
 
-describe("ReleaseDisplayer", () => {
+describe("ReleaseHeader", () => {
     let store_options: StoreOptions;
     let store;
 
@@ -42,7 +41,7 @@ describe("ReleaseDisplayer", () => {
             silent: true
         });
 
-        return shallowMount(ReleaseDisplayer, component_options);
+        return shallowMount(ReleaseHeader, component_options);
     }
 
     beforeEach(() => {
@@ -55,32 +54,57 @@ describe("ReleaseDisplayer", () => {
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00"),
             capacity: 10,
-            total_sprint: 20,
-            initial_effort: 10,
             number_of_artifact_by_trackers: []
         };
 
         component_options = {
             propsData: {
                 releaseData
-            },
-            data() {
-                return {
-                    is_open: false
-                };
             }
         };
 
         getPersonalWidgetInstance(store_options);
     });
 
-    it("When the user toggle twice a release, the content widget is displayed first and hidden after", () => {
+    describe("Display arrow between dates", () => {
+        it("When there is a start date of a release, Then an arrow is displayed", () => {
+            const wrapper = getPersonalWidgetInstance(store_options);
+
+            expect(wrapper.contains("[data-test=display-arrow]")).toBeTruthy();
+        });
+
+        it("When there isn't a start date of a release, Then there isn't an arrow", () => {
+            releaseData = {
+                label: "mile",
+                id: 2,
+                start_date: null,
+                number_of_artifact_by_trackers: []
+            };
+
+            component_options.propsData = {
+                releaseData
+            };
+
+            const wrapper = getPersonalWidgetInstance(store_options);
+
+            expect(wrapper.contains("[data-test=display-arrow]")).toBeFalsy();
+        });
+    });
+
+    it("When the widget is rendered, Then the component ReleaseHeaderRemainingEffort is displayed", () => {
+        releaseData = {
+            label: "mile",
+            id: 2,
+            number_of_artifact_by_trackers: []
+        };
+
+        component_options.propsData = {
+            releaseData
+        };
+
         const wrapper = getPersonalWidgetInstance(store_options);
 
-        wrapper.find(ReleaseHeader).vm.$emit("toggleReleaseDetails");
-        expect(wrapper.contains("[data-test=toggle_open]")).toBeTruthy();
-
-        wrapper.find(ReleaseHeader).vm.$emit("toggleReleaseDetails");
-        expect(wrapper.contains("[data-test=toggle_open]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=display-remaining-days]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=display-remaining-points]")).toBeTruthy();
     });
 });

@@ -21,7 +21,7 @@ import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseHeaderRemainingPoints from "./ReleaseHeaderRemainingPoints.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import { ComponentOption, MilestoneData, StoreOptions } from "../../../type";
 
 let releaseData: MilestoneData;

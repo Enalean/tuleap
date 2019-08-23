@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import WhatsHotSection from "./WhatsHotSection.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import { MilestoneData, StoreOptions } from "../../type";

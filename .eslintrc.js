@@ -4,6 +4,7 @@ module.exports = {
         "cypress",
         "vue",
         "jasmine",
+        "jest",
         "@typescript-eslint",
         "import"
     ],
@@ -133,12 +134,24 @@ module.exports = {
             }
         },
         {
+            files: ["*.test.js", "*.test.ts"],
+            extends: ["plugin:jest/recommended"],
+            rules: {
+                "jest/no-expect-resolves": "error",
+                "jest/prefer-spy-on": "error",
+                "jest/no-empty-title": "error",
+                "jest/consistent-test-it": "error"
+            }
+        },
+        {
             files: [
                 "gulpfile.js",
                 "karma.*.js",
                 "webpack.*.js",
                 "plugins/tracker/grammar/",
-                "tools/**/*.js"
+                "tools/**/*.js",
+                "jest.config.js",
+                "tests/jest/*.js"
             ],
             env: {
                 node: true

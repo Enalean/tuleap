@@ -25,8 +25,11 @@ import {
     getMilestonesContent
 } from "./rest-querier";
 
-import { mockFetchSuccess, tlp } from "tlp-mocks";
+import * as tlp from "tlp";
+import { mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
 import { MilestoneContent, MilestoneData } from "../type";
+
+jest.mock("tlp");
 
 describe("getProject() -", () => {
     const limit = 50,
@@ -35,7 +38,9 @@ describe("getProject() -", () => {
         milestone_id = 102;
 
     it("the REST API will be queried and the project's backlog returned", async () => {
-        mockFetchSuccess(tlp.get, {
+        const tlpGetMock = jest.spyOn(tlp, "get");
+
+        mockFetchSuccess(tlpGetMock, {
             headers: {
                 // X-PAGINATION-SIZE
                 get: () => 2
@@ -47,7 +52,7 @@ describe("getProject() -", () => {
             limit,
             offset
         });
-        expect(tlp.get).toHaveBeenCalledWith("/api/v1/projects/" + project_id + "/backlog", {
+        expect(tlpGetMock).toHaveBeenCalledWith("/api/v1/projects/" + project_id + "/backlog", {
             params: { limit, offset }
         });
 
@@ -72,7 +77,8 @@ describe("getProject() -", () => {
             ]
         ];
 
-        tlp.recursiveGet.and.returnValue(milestones);
+        const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
+        tlpRecursiveGetMock.mockReturnValue(Promise.resolve(milestones));
 
         const result = await getNbOfUpcomingReleases({
             project_id,
@@ -84,7 +90,7 @@ describe("getProject() -", () => {
             period: "future"
         });
 
-        expect(tlp.recursiveGet).toHaveBeenCalledWith(
+        expect(tlpRecursiveGetMock).toHaveBeenCalledWith(
             "/api/v1/projects/" + project_id + "/milestones",
             {
                 params: {
@@ -107,7 +113,8 @@ describe("getProject() -", () => {
             }
         ];
 
-        tlp.recursiveGet.and.returnValue(milestones);
+        const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
+        tlpRecursiveGetMock.mockReturnValue(Promise.resolve(milestones));
 
         const result = await getCurrentMilestones({
             project_id,
@@ -119,7 +126,7 @@ describe("getProject() -", () => {
             period: "current"
         });
 
-        expect(tlp.recursiveGet).toHaveBeenCalledWith(
+        expect(tlpRecursiveGetMock).toHaveBeenCalledWith(
             "/api/v1/projects/" + project_id + "/milestones",
             {
                 params: {
@@ -134,7 +141,8 @@ describe("getProject() -", () => {
     });
 
     it("the REST API will be queried and all the content of a milestone returned", async () => {
-        mockFetchSuccess(tlp.get, {
+        const tlpGetMock = jest.spyOn(tlp, "get");
+        mockFetchSuccess(tlpGetMock, {
             headers: {
                 // X-PAGINATION-SIZE
                 get: () => 2
@@ -146,12 +154,15 @@ describe("getProject() -", () => {
             offset
         });
 
-        expect(tlp.get).toHaveBeenCalledWith("/api/v1/milestones/" + milestone_id + "/milestones", {
-            params: {
-                limit,
-                offset
+        expect(tlpGetMock).toHaveBeenCalledWith(
+            "/api/v1/milestones/" + milestone_id + "/milestones",
+            {
+                params: {
+                    limit,
+                    offset
+                }
             }
-        });
+        );
 
         expect(result).toEqual(2);
     });
@@ -176,14 +187,15 @@ describe("getProject() -", () => {
             }
         ];
 
-        tlp.recursiveGet.and.returnValue(user_stories);
+        const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
+        tlpRecursiveGetMock.mockReturnValue(Promise.resolve(user_stories));
 
         const result = await getMilestonesContent(milestone_id, {
             limit,
             offset
         });
 
-        expect(tlp.recursiveGet).toHaveBeenCalledWith(
+        expect(tlpRecursiveGetMock).toHaveBeenCalledWith(
             "/api/v1/milestones/" + milestone_id + "/content",
             {
                 params: {

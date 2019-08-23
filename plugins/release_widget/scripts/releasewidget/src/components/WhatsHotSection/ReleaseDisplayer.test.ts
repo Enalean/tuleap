@@ -17,19 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
-import ReleaseDescription from "./ReleaseDescription.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper";
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import { ComponentOption, MilestoneData, StoreOptions } from "../../../type";
+import { shallowMount } from "@vue/test-utils";
+import ReleaseDisplayer from "./ReleaseDisplayer.vue";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
+import { ComponentOption, MilestoneData, StoreOptions } from "../../type";
 
 let releaseData: MilestoneData;
-const component_options: ComponentOption = {};
-const project_id = 102;
+let component_options: ComponentOption;
 
-describe("ReleaseDescription", () => {
+describe("ReleaseDisplayer", () => {
     let store_options: StoreOptions;
     let store;
 
@@ -43,9 +42,7 @@ describe("ReleaseDescription", () => {
             silent: true
         });
 
-        Vue.use(VueDOMPurifyHTML);
-
-        return shallowMount(ReleaseDescription, component_options);
+        return shallowMount(ReleaseDisplayer, component_options);
     }
 
     beforeEach(() => {
@@ -54,33 +51,36 @@ describe("ReleaseDescription", () => {
         };
 
         releaseData = {
+            label: "mile",
             id: 2,
-            planning: {
-                id: "100"
-            },
+            start_date: new Date("2017-01-22T13:42:08+02:00"),
+            capacity: 10,
+            total_sprint: 20,
+            initial_effort: 10,
             number_of_artifact_by_trackers: []
         };
 
-        component_options.propsData = {
-            releaseData
+        component_options = {
+            propsData: {
+                releaseData
+            },
+            data() {
+                return {
+                    is_open: false
+                };
+            }
         };
 
         getPersonalWidgetInstance(store_options);
     });
 
-    it("Given user display widget, Then a good link to top planning of the release is rendered", () => {
-        store_options.state.project_id = project_id;
-
+    it("When the user toggle twice a release, the content widget is displayed first and hidden after", () => {
         const wrapper = getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.find("[data-test=overview-link]").attributes("href")).toEqual(
-            "/plugins/agiledashboard/?group_id=" +
-                encodeURIComponent(project_id) +
-                "&planning_id=" +
-                encodeURIComponent(releaseData.planning!.id) +
-                "&action=show&aid=" +
-                encodeURIComponent(releaseData.id) +
-                "&pane=details"
-        );
+        wrapper.find(ReleaseHeader).vm.$emit("toggleReleaseDetails");
+        expect(wrapper.contains("[data-test=toggle_open]")).toBeTruthy();
+
+        wrapper.find(ReleaseHeader).vm.$emit("toggleReleaseDetails");
+        expect(wrapper.contains("[data-test=toggle_open]")).toBeFalsy();
     });
 });

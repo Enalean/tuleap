@@ -20,6 +20,7 @@
 const BabelPresetEnv = require("@babel/preset-env").default;
 const BabelPluginSyntaxDynamicImport = require("@babel/plugin-syntax-dynamic-import").default;
 const BabelPluginRewireExports = require("babel-plugin-rewire-exports").default;
+const BabelPluginDynamicImportNode = require("babel-plugin-dynamic-import-node");
 const BabelPluginIstanbul = require("babel-plugin-istanbul").default;
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
@@ -36,17 +37,19 @@ const babel_preset_env_ie_config = [
     }
 ];
 
-const babel_preset_env_chrome_config = [
-    BabelPresetEnv,
-    {
-        targets: {
-            browsers: ["last 2 Chrome versions"]
-        },
-        modules: false,
-        useBuiltIns: "usage",
-        corejs: "3"
-    }
-];
+const babel_preset_env_chrome_config = modules => {
+    return [
+        BabelPresetEnv,
+        {
+            targets: {
+                browsers: ["last 2 Chrome versions"]
+            },
+            modules: modules,
+            useBuiltIns: "usage",
+            corejs: "3"
+        }
+    ];
+};
 
 const babel_options_ie11 = {
     presets: [babel_preset_env_ie_config],
@@ -58,11 +61,11 @@ const babel_options_karma = {
         watch: babel_options_ie11,
         production: babel_options_ie11,
         test: {
-            presets: [babel_preset_env_chrome_config],
+            presets: [babel_preset_env_chrome_config(false)],
             plugins: [BabelPluginSyntaxDynamicImport, BabelPluginRewireExports]
         },
         coverage: {
-            presets: [babel_preset_env_chrome_config],
+            presets: [babel_preset_env_chrome_config(false)],
             plugins: [
                 BabelPluginSyntaxDynamicImport,
                 BabelPluginRewireExports,
@@ -75,6 +78,11 @@ const babel_options_karma = {
             ]
         }
     }
+};
+
+const babel_options_jest = {
+    presets: [babel_preset_env_chrome_config("auto")],
+    plugins: [BabelPluginSyntaxDynamicImport, BabelPluginDynamicImportNode]
 };
 
 function configureBabelRule(babel_options) {
@@ -222,6 +230,7 @@ module.exports = {
     configureTypescriptRules,
     babel_options_ie11,
     babel_options_karma,
+    babel_options_jest,
     rule_po_files,
     rule_mustache_files,
     rule_vue_loader,
