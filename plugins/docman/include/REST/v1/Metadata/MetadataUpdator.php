@@ -302,6 +302,10 @@ class MetadataUpdator
      */
     private function checkThereIsNoOnGoingUploadWithSameDocumentName(\Docman_Item $item): void
     {
+        if ($item->getParentId() === 0) {
+            return;
+        }
+
         $parent_item = $this->item_factory->getItemFromDb($item->getParentId());
         if (! $parent_item) {
             throw new \LogicException(
