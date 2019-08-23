@@ -37,7 +37,9 @@ export default {
         $route(to) {
             if (this.$route.name !== "preview") {
                 this.$store.dispatch("removeQuickLook");
-                this.$store.dispatch("loadFolder", parseInt(this.$route.params.item_id, 10));
+                if (this.current_folder && this.current_folder.id !== this.$route.params.item_id) {
+                    this.$store.dispatch("loadFolder", parseInt(this.$route.params.item_id, 10));
+                }
             } else {
                 this.$store.dispatch("toggleQuickLook", to.params.preview_item_id);
             }
