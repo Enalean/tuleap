@@ -104,4 +104,50 @@ describe("ChildFolder", () => {
         expect(store.dispatch).toHaveBeenCalledWith("toggleQuickLook", 20);
         expect(store.dispatch).not.toHaveBeenCalledWith("loadFolder");
     });
+
+    it(`Given route is updated to "folder" and given folder has changed (=> redirection into a folder)
+        Then the folder is loaded`, () => {
+        store.state.current_folder = { id: 10, title: "current folder" };
+
+        router.push({
+            name: "preview",
+            params: {
+                preview_item_id: 10
+            }
+        });
+        factory();
+
+        router.push({
+            name: "folder",
+            params: {
+                item_id: 20
+            }
+        });
+
+        expect(store.dispatch).toHaveBeenCalledWith("removeQuickLook");
+        expect(store.dispatch).toHaveBeenCalledWith("loadFolder", 20);
+    });
+
+    it(`Given route is updated to "folder" and given folder is the same (=> close preview)
+        Then we only close quick look`, () => {
+        store.state.current_folder = { id: 10, title: "current folder" };
+
+        router.push({
+            name: "preview",
+            params: {
+                preview_item_id: 20
+            }
+        });
+        factory();
+
+        router.push({
+            name: "folder",
+            params: {
+                preview_item_id: 20
+            }
+        });
+
+        expect(store.dispatch).toHaveBeenCalledWith("removeQuickLook");
+        expect(store.dispatch).not.toHaveBeenCalledWith("loadFolder");
+    });
 });
