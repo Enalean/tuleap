@@ -68,8 +68,7 @@ class PresenterBuilder
                 $this->request,
                 $this->current_user,
                 $this->displayNewAccountMenuItem(),
-                $url_redirect,
-                new GlyphFinder(\EventManager::instance())
+                $url_redirect
             ),
             new JoinCommunityPresenter()
         );
