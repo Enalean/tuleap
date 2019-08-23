@@ -139,7 +139,12 @@ class ArtifactNodeBuilder {
         return $node;
     }
 
-    private function updateNodesWithArtifactValues(array &$artifact_ids, array $nodes) {
+    /**
+     * @param array $artifact_ids
+     * @param NodeRepresentation[][] $nodes
+     */
+    private function updateNodesWithArtifactValues(array &$artifact_ids, array $nodes): void
+    {
         $dar = $this->dao->getTitlesStatusAndTypes($artifact_ids);
         foreach ($dar as $row) {
             foreach($nodes[$row['id']] as $node) {
@@ -150,7 +155,7 @@ class ArtifactNodeBuilder {
                     $row['item_name'],
                     $row['tracker_label'],
                     $row['color'],
-                    $row['title'],
+                    (string) $row['title'],
                     $row['status_semantic'],
                     $row['status_label']
                 );
