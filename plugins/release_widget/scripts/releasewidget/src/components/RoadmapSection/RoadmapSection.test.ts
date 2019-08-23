@@ -58,10 +58,6 @@ describe("RoadmapSection", () => {
     it("Given user display widget, Then a good link to top planning of the project is rendered", () => {
         const wrapper = getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.find("[data-test=backlog-link]").attributes("href")).toContain(
-            "/plugins/agiledashboard/?action=show-top&group_id=" +
-                encodeURIComponent(project_id) +
-                "&pane=topplanning-v2"
-        );
+        expect(wrapper.element).toMatchSnapshot();
     });
 });

@@ -140,7 +140,8 @@ module.exports = {
                 "jest/no-expect-resolves": "error",
                 "jest/prefer-spy-on": "error",
                 "jest/no-empty-title": "error",
-                "jest/consistent-test-it": "error"
+                "jest/consistent-test-it": "error",
+                "jest/no-large-snapshots": ["error", { maxSize: 100 }]
             }
         },
         {
