@@ -33,7 +33,6 @@
             </p>
             <ul>
                 <li v-translate>Modal "create a new version" for documents of type "empty"</li>
-                <li v-translate>Share the preview url of a document</li>
             </ul>
             <p v-translate>
                 You can switch to the old Document Manager UI whenever you want. (The switch is at the bottom of the page)
