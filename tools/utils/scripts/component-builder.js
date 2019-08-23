@@ -25,26 +25,26 @@ const exec = require("child_process").exec;
 const spawn = require("child_process").spawn;
 
 function verifyPackageJsonFile(component_path) {
-    var package_json_path = path.join(component_path, "package.json");
+    const package_json_path = path.join(component_path, "package.json");
 
-    return readPkg(package_json_path)
-        .then(function(pkg) {
-            if (!pkg.name) {
+    return readPkg({ cwd: component_path })
+        .then(package_json => {
+            if (!package_json.name) {
                 throw new Error("package.json file should have a 'name' " + package_json_path);
             }
 
-            if (!pkg.scripts || !pkg.scripts.build) {
+            if (!package_json.scripts || !package_json.scripts.build) {
                 throw new Error(
                     "package.json file should have a 'build' script " + package_json_path
                 );
             }
 
             return {
-                name: pkg.name,
+                name: package_json.name,
                 path: component_path
             };
         })
-        .catch(function() {
+        .catch(() => {
             throw new Error("package.json file could not be found at " + package_json_path);
         });
 }
