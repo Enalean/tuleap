@@ -414,9 +414,6 @@ msgstr "Rejeté"
 msgid "Reset the approval cycle."
 msgstr "Recommencer le cycle d'approbation."
 
-msgid "Share the preview url of a document"
-msgstr "Partager l'url de l'aperçu d'un document"
-
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
 
