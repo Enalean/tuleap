@@ -100,6 +100,23 @@ input[type="file"] {
     }
 }
 
+@each $color-name, $colors in $swatch-color-map {
+    .badge.tlp-badge-#{$color-name},
+    .badge.#{$color-name} {
+        border: 1px solid map-get($colors, 'primary');
+        background: map-get($colors, 'primary');
+        color: #ffffff;
+        text-shadow: none;
+
+        &.tlp-badge-outline {
+            border: 1px solid transparentize(map-get($colors, 'primary'), .4);
+            background: transparentize(map-get($colors, 'primary'), .9);
+            color: map-get($colors, 'text');
+        }
+    }
+}
+
+
 .popover[class*="tour"] {
     min-width: 370px;
     max-width: 370px;

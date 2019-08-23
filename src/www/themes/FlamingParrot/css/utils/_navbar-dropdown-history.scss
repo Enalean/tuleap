@@ -4,8 +4,6 @@ $history-dropdown-ui-border-light: #f3f3f3;
 $history-dropdown-ui-dimmed: #747474;
 $history-dropdown-item-text-color: #333333;
 
-@import 'badge-colors';
-
 .nav-dropdown-content-title {
     padding: 10px;
     border-top-left-radius: $nav-dropdown-content-border-radius;
@@ -134,19 +132,16 @@ $history-dropdown-item-text-color: #333333;
 }
 
 .history-item-description-badge {
-    @extend %badge-colors;
-
     margin: 0 5px 0 0;
-    text-shadow: none;
 }
 
 .history-item-description-title {
     max-width: 200px;
+    overflow: hidden;
     font-size: 14px;
     line-height: 18px;
     text-overflow: ellipsis;
     white-space: nowrap;
-    overflow: hidden;
 }
 
 .history-item-links {
@@ -182,4 +177,5 @@ $history-dropdown-item-text-color: #333333;
 
 .history-item-project-icon {
     margin: 0 3px 0 0;
+    white-space: normal;
 }
