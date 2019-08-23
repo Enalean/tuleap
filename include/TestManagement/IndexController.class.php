@@ -25,6 +25,7 @@ use EventManager;
 use PFUser;
 use Tracker_FormElementFactory;
 use TrackerFactory;
+use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 
 class IndexController extends TestManagementController
 {
@@ -32,21 +33,30 @@ class IndexController extends TestManagementController
      * @var TrackerFactory
      */
     private $tracker_factory;
+    /**
+     * @var VisitRecorder
+     */
+    private $visit_recorder;
 
     public function __construct(
         Codendi_Request $request,
         Config $config,
         EventManager $event_manager,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
+        VisitRecorder $visit_recorder
     ) {
         parent::__construct($request, $config, $event_manager);
 
         $this->tracker_factory = $tracker_factory;
+        $this->visit_recorder  = $visit_recorder;
     }
 
     public function index()
     {
         $current_user = $this->request->getCurrentUser();
+
+        $this->recordVisit($current_user);
+
         return $this->renderToString(
             'index',
             new IndexPresenter(
@@ -87,5 +97,19 @@ class IndexController extends TestManagementController
             ),
             "xref_color" => $issue_tracker->getColor()->getName()
         );
+    }
+
+    private function recordVisit(PFUser $current_user): void
+    {
+        if ($this->current_milestone === null) {
+            return;
+        }
+
+        $artifact = $this->current_milestone->getArtifact();
+        if ($artifact === null) {
+            return;
+        }
+
+        $this->visit_recorder->record($current_user, $artifact);
     }
 }

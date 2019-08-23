@@ -53,6 +53,8 @@ use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
+use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
@@ -428,7 +430,8 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
             $event_manager,
             $this->getArtifactLinksUsageUpdater(),
             $step_field_usage_detector,
-            $this->getTrackerChecker()
+            $this->getTrackerChecker(),
+            new VisitRecorder(new RecentlyVisitedDao())
         );
 
         try {

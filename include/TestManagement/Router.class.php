@@ -33,6 +33,7 @@ use TrackerXmlImport;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use UserManager;
 use XMLImportHelper;
 
@@ -84,6 +85,10 @@ class Router {
      * @var TrackerChecker
      */
     private $tracker_checker;
+    /**
+     * @var VisitRecorder
+     */
+    private $visit_recorder;
 
     public function __construct(
         Plugin $plugin,
@@ -94,7 +99,8 @@ class Router {
         EventManager $event_manager,
         ArtifactLinksUsageUpdater $artifact_links_usage_updater,
         StepFieldUsageDetector $step_field_usage_detector,
-        TrackerChecker $tracker_checker
+        TrackerChecker $tracker_checker,
+        VisitRecorder $visit_recorder
     ) {
         $this->config                       = $config;
         $this->plugin                       = $plugin;
@@ -105,6 +111,7 @@ class Router {
         $this->artifact_links_usage_updater = $artifact_links_usage_updater;
         $this->step_field_usage_detector    = $step_field_usage_detector;
         $this->tracker_checker              = $tracker_checker;
+        $this->visit_recorder               = $visit_recorder;
     }
 
     public function route(Codendi_Request $request)
@@ -189,7 +196,13 @@ class Router {
     }
 
     public function renderIndex(Codendi_Request $request) {
-        $controller = new IndexController($request, $this->config, $this->event_manager, $this->tracker_factory);
+        $controller = new IndexController(
+            $request,
+            $this->config,
+            $this->event_manager,
+            $this->tracker_factory,
+            $this->visit_recorder
+        );
         $this->renderAction($controller, 'index', $request);
     }
 
