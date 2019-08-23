@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -154,10 +154,10 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         $layout->addCssAsset(
             new CssAsset(
                 new IncludeAssets(
-                    __DIR__ . '/../../www/themes/BurningParrot/assets',
-                    GIT_BASE_URL . '/themes/BurningParrot/assets'
+                    __DIR__ . '/../../../../src/www/assets/git/themes',
+                    '/assets/git/themes'
                 ),
-                'site-admin'
+                'bp-style-siteadmin'
             )
         );
 
