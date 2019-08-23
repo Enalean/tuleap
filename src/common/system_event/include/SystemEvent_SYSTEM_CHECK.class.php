@@ -35,14 +35,16 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
      *
      * @return string
      */
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         return '-';
     }
 
     /**
      * Process stored event
      */
-    function process() {
+    function process()
+    {
         /** @var BackendSystem $backendSystem */
         $backendSystem      = Backend::instance('System');
         $backendAliases     = Backend::instance('Aliases');
@@ -180,7 +182,8 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         return true;
     }
 
-    function expireRestTokens(UserManager $user_manager) {
+    function expireRestTokens(UserManager $user_manager)
+    {
         $token_dao     = new Rest_TokenDao();
         $token_factory = new Rest_TokenFactory($token_dao);
         $token_manager = new Rest_TokenManager($token_dao, $token_factory, $user_manager);

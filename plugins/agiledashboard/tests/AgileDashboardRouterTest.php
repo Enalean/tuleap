@@ -66,39 +66,45 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase
         stub($this->router)->buildController()->returns(mock('Tuleap\AgileDashboard\AdminController'));
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         parent::tearDown();
     }
 
-    public function itRoutesPlanningEditionRequests() {
+    public function itRoutesPlanningEditionRequests()
+    {
         $request = aRequest()->with('planning_id', 1)
                              ->with('action', 'edit')->build();
         $this->router->expectOnce('renderAction', array($this->planning_controller, 'edit', $request));
         $this->router->route($request);
     }
 
-    public function itRoutesPlanningUpdateRequests() {
+    public function itRoutesPlanningUpdateRequests()
+    {
         $request = aRequest()->with('planning_id', 1)
                              ->with('action', 'update')->build();
         $this->router->expectOnce('executeAction', array($this->planning_controller, 'update'));
         $this->router->route($request);
     }
 
-    public function itRoutesToTheArtifactPlannificationByDefault() {
+    public function itRoutesToTheArtifactPlannificationByDefault()
+    {
         $request = aRequest()->withUri('someurl')->build();
         $this->router->expectOnce('executeAction', array(new IsAExpectation('Planning_MilestoneSelectorController'), 'show'));
         $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_MilestoneController'), 'show', $request, '*', '*'));
         $this->router->routeShowPlanning($request);
     }
 
-    public function itRoutesToTheArtifactPlannificationWhenTheAidIsSetToAPositiveNumber() {
+    public function itRoutesToTheArtifactPlannificationWhenTheAidIsSetToAPositiveNumber()
+    {
         $request = aRequest()->with('aid', '732')->withUri('someurl')->build();
         $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_MilestoneController'), 'show', $request, '*', '*'));
         $this->router->routeShowPlanning($request);
     }
 
-    public function itRoutesToArtifactCreationWhenAidIsSetToMinusOne() {
+    public function itRoutesToArtifactCreationWhenAidIsSetToMinusOne()
+    {
         $request = new Codendi_Request(array('aid' => '-1'));
         $this->router->expectOnce('executeAction', array(new IsAExpectation('Planning_ArtifactCreationController'), 'createArtifact'));
         $this->router->routeShowPlanning($request);

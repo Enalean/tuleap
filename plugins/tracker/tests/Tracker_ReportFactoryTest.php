@@ -31,14 +31,16 @@ class Tracker_ReportFactoryTest extends TuleapTestCase {
     /** @var XML_Security */
     protected $xml_security;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->xml_security = new XML_Security();
         $this->xml_security->enableExternalLoadOfEntities();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->xml_security->disableExternalLoadOfEntities();
         foreach ($_SESSION as $key => $nop) {
             unset($_SESSION[$key]);
@@ -48,7 +50,8 @@ class Tracker_ReportFactoryTest extends TuleapTestCase {
     }
 
     //testing CannedResponse import
-    public function testImport() {
+    public function testImport()
+    {
         $repo = new Tracker_ReportFactoryTestVersion();
         $crit = new MockTracker_Report_CriteriaFactory();
         $repo->setReturnReference('getCriteriaFactory', $crit);

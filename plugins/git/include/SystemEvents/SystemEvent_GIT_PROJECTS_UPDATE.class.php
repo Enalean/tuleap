@@ -45,11 +45,13 @@ class SystemEvent_GIT_PROJECTS_UPDATE extends SystemEvent {
         $this->gitolite_driver      = $gitolite_driver;
     }
 
-    private function getProjectIdsFromParameters() {
+    private function getProjectIdsFromParameters()
+    {
         return array_map('intval', $this->getParametersAsArray());
     }
 
-    public function process() {
+    public function process()
+    {
         foreach ($this->getProjectIdsFromParameters() as $project_id) {
             $project = $this->project_manager->getProject($project_id);
             if ($project && ! $project->isError()) {
@@ -62,7 +64,8 @@ class SystemEvent_GIT_PROJECTS_UPDATE extends SystemEvent {
         $this->done();
     }
 
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         return implode(', ', $this->getParametersAsArray());
     }
 }

@@ -22,17 +22,20 @@ class SystemCheckLogger extends WrapperLogger {
 
     private $warning_messages = array();
 
-    public function warn($message, ?Exception $e = null) {
+    public function warn($message, ?Exception $e = null)
+    {
         $this->warning_messages[] = $message;
 
         parent::warn($message, $e);
     }
 
-    public function getAllWarnings() {
+    public function getAllWarnings()
+    {
         return implode(', ', $this->warning_messages);
     }
 
-    public function hasWarnings() {
+    public function hasWarnings()
+    {
         return count($this->warning_messages) > 0;
     }
 }

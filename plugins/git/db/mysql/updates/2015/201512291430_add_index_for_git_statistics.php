@@ -18,15 +18,18 @@
 
 class b201512291430_add_index_for_git_statistics extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add missing index to speed up statistics generation';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $table_name = 'plugin_git_log';
         $index_name = 'idx_push_date';
         $sql        = "ALTER TABLE $table_name ADD INDEX $index_name (push_date)";

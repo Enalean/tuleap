@@ -28,14 +28,16 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor
     var $actions;
     private $user;
 
-    function __construct(&$user, $groupId) {
+    function __construct(&$user, $groupId)
+    {
         $this->dPm = Docman_PermissionsManager::instance($groupId);
         $this->user = $user;
         $this->if = Docman_ItemFactory::instance($groupId);
         $this->actions = array();
     }
 
-    function visitItem(Docman_Item $item, $params = array()) {
+    function visitItem(Docman_Item $item, $params = array())
+    {
         if($this->dPm->userCanManage($this->user, $item->getId())) {
             $this->actions['canPermissions'] = true;
         }
@@ -81,7 +83,8 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor
         return $this->actions;
     }
 
-    function visitFolder(Docman_Folder $item, $params = array()) {
+    function visitFolder(Docman_Folder $item, $params = array())
+    {
         if($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canNewDocument'] = true;
             $this->actions['canNewFolder']   = true;
@@ -102,18 +105,21 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor
         return $this->actions;
     }
 
-    function visitDocument($item, $params = array()) {
+    function visitDocument($item, $params = array())
+    {
         return $this->visitItem($item, $params);
     }
 
-    function visitWiki(Docman_Wiki $item, $params = array()) {
+    function visitWiki(Docman_Wiki $item, $params = array())
+    {
         if($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canUpdate'] = true;
         }
         return $this->visitDocument($item, $params);
     }
 
-    function visitLink(Docman_Link $item, $params = array()) {
+    function visitLink(Docman_Link $item, $params = array())
+    {
         if ($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canNewVersion'] = true;
         }
@@ -121,7 +127,8 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor
         return $this->visitDocument($item, $params);
     }
 
-    function visitFile(Docman_File $item, $params = array()) {
+    function visitFile(Docman_File $item, $params = array())
+    {
         if($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canNewVersion'] = true;
         }
@@ -133,11 +140,13 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor
         return $this->visitDocument($item, $params);
     }
 
-    function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array()) {
+    function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array())
+    {
         return $this->visitFile($item, $params);
     }
 
-    function visitEmpty(Docman_Empty $item, $params = array()) {
+    function visitEmpty(Docman_Empty $item, $params = array())
+    {
         if($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canUpdate'] = true;
         }

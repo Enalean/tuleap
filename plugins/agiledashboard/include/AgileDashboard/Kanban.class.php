@@ -30,21 +30,25 @@ class AgileDashboard_Kanban {
     /** @var string */
     private $name;
 
-    public function __construct($id, $tracker_id, $name) {
+    public function __construct($id, $tracker_id, $name)
+    {
         $this->id         = $id;
         $this->tracker_id = $tracker_id;
         $this->name       = $name;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getTrackerId() {
+    public function getTrackerId()
+    {
         return $this->tracker_id;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 }

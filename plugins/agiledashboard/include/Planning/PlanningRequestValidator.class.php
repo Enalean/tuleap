@@ -73,7 +73,8 @@ class Planning_RequestValidator {
      *
      * @return bool
      */
-    private function nameIsPresent(PlanningParameters $planning_parameters) {
+    private function nameIsPresent(PlanningParameters $planning_parameters)
+    {
         $name = new Valid_String();
         $name->required();
 
@@ -88,7 +89,8 @@ class Planning_RequestValidator {
      *
      * @return bool
      */
-    private function backlogTrackerIdsArePresentAndArePositiveIntegers(PlanningParameters $planning_parameters) {
+    private function backlogTrackerIdsArePresentAndArePositiveIntegers(PlanningParameters $planning_parameters)
+    {
         $backlog_tracker_id = new Valid_UInt();
         $backlog_tracker_id->required();
         $are_present = count($planning_parameters->backlog_tracker_ids) > 0;
@@ -109,7 +111,8 @@ class Planning_RequestValidator {
      *
      * @return bool
      */
-    private function planningTrackerIdIsPresentAndIsAPositiveInteger(PlanningParameters $planning_parameters) {
+    private function planningTrackerIdIsPresentAndIsAPositiveInteger(PlanningParameters $planning_parameters)
+    {
         $planning_tracker_id = new Valid_UInt();
         $planning_tracker_id->required();
 
@@ -127,7 +130,8 @@ class Planning_RequestValidator {
      *
      * @return bool
      */
-    private function planningTrackerIsNotThePlanningTrackerOfAnotherPlanningInTheSameProject($group_id, $planning_id, PlanningParameters $planning_parameters) {
+    private function planningTrackerIsNotThePlanningTrackerOfAnotherPlanningInTheSameProject($group_id, $planning_id, PlanningParameters $planning_parameters)
+    {
         return ($this->planningTrackerIsTheCurrentOne($planning_id, $planning_parameters) ||
                 $this->trackerIsNotAlreadyUsedAsAPlanningTrackerInProject($group_id, $planning_parameters));
     }
@@ -141,7 +145,8 @@ class Planning_RequestValidator {
      *
      * @return bool
      */
-    private function planningTrackerIsTheCurrentOne($planning_id, PlanningParameters $planning_parameters) {
+    private function planningTrackerIsTheCurrentOne($planning_id, PlanningParameters $planning_parameters)
+    {
         $planning = $this->factory->getPlanning($planning_id);
 
         if (! $planning) {
@@ -163,7 +168,8 @@ class Planning_RequestValidator {
      *
      * @return bool
      */
-    private function trackerIsNotAlreadyUsedAsAPlanningTrackerInProject($group_id, PlanningParameters $planning_parameters) {
+    private function trackerIsNotAlreadyUsedAsAPlanningTrackerInProject($group_id, PlanningParameters $planning_parameters)
+    {
         $planning_tracker_id          = $planning_parameters->planning_tracker_id;
         $project_planning_tracker_ids = $this->factory->getPlanningTrackerIdsByGroupId($group_id);
 

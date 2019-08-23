@@ -32,7 +32,8 @@
     protected $url;
     var $hp;
 
-    function __construct($item, string $url, $id, $title) {
+    function __construct($item, string $url, $id, $title)
+    {
         $this->id     = $id;
         $this->title  = $title;
         $this->item   = $item;
@@ -40,13 +41,16 @@
         $this->hp     = Codendi_HTMLPurifier::instance();
     }
 
-    function getId() {
+    function getId()
+    {
         return $this->id;
     }
-    function getTitle() {
+    function getTitle()
+    {
         return $this->title;
     }
-    function getContent($params = []) {
+    function getContent($params = [])
+    {
         return '';
     }
 }

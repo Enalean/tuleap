@@ -18,7 +18,8 @@ extends _UserPreference
     var $valid_values = array('php','mysuggest','mymovielens','mycluto');
     var $default_value = 'php';
 
-    function sanify ($value) {
+    function sanify($value)
+    {
         if (!in_array($value, $this->valid_values)) return $this->default_value;
         else return $value;
     }
@@ -36,7 +37,8 @@ extends _UserPreference
          'bayes');   // Naïve Bayesian Classifier
     var $default_value = 'itemProb';
 
-    function sanify ($value) {
+    function sanify($value)
+    {
         if (!in_array($value, $this->valid_values)) return $this->default_value;
         else return $value;
     }

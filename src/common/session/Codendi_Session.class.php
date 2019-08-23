@@ -24,7 +24,8 @@ class Codendi_Session extends PHP_Session {
     protected $session_namespace_path;
     protected $session_namespace;
 
-    public function __construct(&$session_storage = null) {
+    public function __construct(&$session_storage = null)
+    {
         if ($session_storage === null) {
             $this->session =& parent::getSession();
         } else {
@@ -34,20 +35,24 @@ class Codendi_Session extends PHP_Session {
         $this->session_namespace =& $this->session;
     }
 
-    public function __isset($key) {
+    public function __isset($key)
+    {
         return isset($this->session_namespace[$key]);
     }
 
-    public function __get($key) {
+    public function __get($key)
+    {
         $null = null;
         return isset($this->session_namespace[$key]) ? $this->session_namespace[$key] : $null;
     }
 
-    public function __set($key, $v) {
+    public function __set($key, $v)
+    {
         return $this->session_namespace[$key] = $v;
     }
 
-    public function __unset($key) {
+    public function __unset($key)
+    {
         unset($this->session_namespace[$key]);
     }
 
@@ -57,7 +62,8 @@ class Codendi_Session extends PHP_Session {
      * @param <type> $namespace
      * @param <type> $key
      */
-    public function remove($namespace, $key=null) {
+    public function remove($namespace, $key=null)
+    {
         $session = &$this->getNamespace($namespace);
         if ( $key !== null ) {
             unset($session[$key]);
@@ -72,7 +78,8 @@ class Codendi_Session extends PHP_Session {
      * @param string $key
      * @return <type>
      */
-    public function &get($namespace, $key=null) {
+    public function &get($namespace, $key=null)
+    {
         $session = &$this->getNamespace($namespace);
         if ( $key !== null ) {
             if ( $session[$key] ) {
@@ -88,7 +95,8 @@ class Codendi_Session extends PHP_Session {
      * @param <type> $namespace
      * @param <type> $value
      */
-    public function set($namespace, $value) {
+    public function set($namespace, $value)
+    {
         $session = &$this->getNamespace($namespace, true);
         $session = $value;
     }
@@ -97,7 +105,8 @@ class Codendi_Session extends PHP_Session {
      * @param string $namespace
      * @return mixed
      */
-    public function &getNamespace($namespace, $create_path=false) {
+    public function &getNamespace($namespace, $create_path=false)
+    {
         $session = &$this->getSessionNamespace();
         //empty namespace
         if ( empty($namespace) ) {
@@ -141,11 +150,13 @@ class Codendi_Session extends PHP_Session {
      * clean a given namespace
      * @todo pass namespace as argument, make a safe clean global session way
      */
-    public function cleanNamespace() {
+    public function cleanNamespace()
+    {
         $this->session_namespace = '';
     }
 
-    public function &getSessionNamespace() {
+    public function &getSessionNamespace()
+    {
         return $this->session_namespace;
     }
 
@@ -154,7 +165,8 @@ class Codendi_Session extends PHP_Session {
      * Set the current session namespace
      * @param <type> $session_namespace
      */
-    public function setSessionNamespace(&$session_namespace) {
+    public function setSessionNamespace(&$session_namespace)
+    {
         $this->session_namespace = &$session_namespace;
     }
 
@@ -162,7 +174,8 @@ class Codendi_Session extends PHP_Session {
      * Change global session namespace (only goes down into the tree)
      * @param <type> $namespace
      */
-    public function changeSessionNamespace($namespace) {
+    public function changeSessionNamespace($namespace)
+    {
 
         if ( strpos($namespace, '.') === 0 ) {
             //absolute path
@@ -184,14 +197,16 @@ class Codendi_Session extends PHP_Session {
      * Gives the absolute session path
      * @return string
      */
-    public function getSessionNamespacePath() {
+    public function getSessionNamespacePath()
+    {
         return $this->session_namespace_path;
     }
 
     /**
      * !! WARNING !! Unit testing only
      */
-    public function setSessionNamespacePath($namespace) {
+    public function setSessionNamespacePath($namespace)
+    {
         $this->session_namespace_path = $namespace;
     }
 

@@ -19,18 +19,21 @@
  */
 
 class Tracker_FormElement_Field_List_Bind_UsersDao extends DataAccessObject {
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_field_list_bind_users';
     }
-    public function searchByFieldId($field_id) {
+    public function searchByFieldId($field_id)
+    {
         $field_id  = $this->da->escapeInt($field_id);
         $sql = "SELECT *
                 FROM $this->table_name
                 WHERE field_id = $field_id ";
         return $this->retrieve($sql);
     }
-    public function duplicate($from_field_id, $to_field_id) {
+    public function duplicate($from_field_id, $to_field_id)
+    {
         $from_field_id  = $this->da->escapeInt($from_field_id);
         $to_field_id    = $this->da->escapeInt($to_field_id);
         $sql = "INSERT INTO $this->table_name (field_id, value_function)
@@ -39,7 +42,8 @@ class Tracker_FormElement_Field_List_Bind_UsersDao extends DataAccessObject {
                 WHERE field_id = $from_field_id";
         return $this->update($sql);
     }
-    public function save($field_id, $value_function) {
+    public function save($field_id, $value_function)
+    {
         $field_id       = $this->da->escapeInt($field_id);
         $value_function = $this->da->quoteSmart(implode(',', $value_function));
         $sql = "REPLACE INTO $this->table_name (field_id, value_function)
@@ -47,7 +51,8 @@ class Tracker_FormElement_Field_List_Bind_UsersDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function searchChangesetValues($changeset_id, $field_id, $display_name_query, $display_name_order) {
+    public function searchChangesetValues($changeset_id, $field_id, $display_name_query, $display_name_order)
+    {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $field_id     = $this->da->escapeInt($field_id);
         $sql = "SELECT user.user_id AS id, user.user_name, user.realname, $display_name_query

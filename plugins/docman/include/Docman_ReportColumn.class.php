@@ -27,19 +27,23 @@ class Docman_ReportColumn {
     var $md;
     var $sort;
 
-    function __construct($md) {
+    function __construct($md)
+    {
         $this->md = $md;
         $this->sort = null;
     }
 
-    function setSort($s) {
+    function setSort($s)
+    {
         $this->sort = $s;
     }
-    function getSort() {
+    function getSort()
+    {
         return $this->sort;
     }
 
-    function getSortParameter() {
+    function getSortParameter()
+    {
         $sortParam = null;
         if($this->md !== null) {
             $sortParam = 'sort_'.$this->md->getLabel();
@@ -47,7 +51,8 @@ class Docman_ReportColumn {
         return $sortParam;
     }
 
-    function getSortSelectorHtml() {
+    function getSortSelectorHtml()
+    {
         $html = '';
         $sort = $this->getSort();
         if($sort !== null) {
@@ -58,7 +63,8 @@ class Docman_ReportColumn {
     }
 
 
-    function getTitle($view, $viewParams) {
+    function getTitle($view, $viewParams)
+    {
         $sort = $this->getSort();
         if($sort == 1) {
             $toggleValue = '0';
@@ -91,14 +97,16 @@ class Docman_ReportColumn {
         return $href;
     }
 
-    function initFromRequest($request) {
+    function initFromRequest($request)
+    {
         $sortparam = $this->getSortParameter();
         if($request->exist($sortparam)) {
             $this->setSort((int) $request->get($sortparam));
         }
     }
 
-    function _getMdHtml($item) {
+    function _getMdHtml($item)
+    {
         $mdHtml = null;
         $md = $item->getMetadataFromLabel($this->md->getLabel());
         if($md !== null) {
@@ -107,7 +115,8 @@ class Docman_ReportColumn {
         return $mdHtml;
     }
 
-    function getTableBox($item, $view, $params) {
+    function getTableBox($item, $view, $params)
+    {
         $mdHtml = $this->_getMdHtml($item);
         if($mdHtml !== null) {
             return $mdHtml->getValue();
@@ -115,22 +124,26 @@ class Docman_ReportColumn {
         return '';
     }
 
-    function getJavascript($item, $view) {
+    function getJavascript($item, $view)
+    {
         return '';
     }
 }
 
 class Docman_ReportColumnLocation
 extends Docman_ReportColumn {
-    function __construct() {
+    function __construct()
+    {
         $this->sort = null;
     }
 
-    function setSort($s) {
+    function setSort($s)
+    {
         return;
     }
 
-    function getSortSelectorHtml() {
+    function getSortSelectorHtml()
+    {
         return;
     }
 
@@ -144,7 +157,8 @@ extends Docman_ReportColumn {
         return;
     }
 
-    function getTableBox($item, $view, $params) {
+    function getTableBox($item, $view, $params)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $pathTitle = $item->getPathTitle();
         $pathId    = $item->getPathId();
@@ -167,11 +181,13 @@ extends Docman_ReportColumn {
 
 class Docman_ReportColumnTitle
 extends Docman_ReportColumn {
-    function __construct($md) {
+    function __construct($md)
+    {
         parent::__construct($md);
     }
 
-    function getTableBox($item, $view, $params) {
+    function getTableBox($item, $view, $params)
+    {
         $html = '';
         $docmanIcons = $view->_getDocmanIcons($params);
         $icon_src = $docmanIcons->getIconForItem($item, $params);
@@ -193,18 +209,21 @@ extends Docman_ReportColumn {
         return $html;
     }
 
-    function getJavascript($item, $view) {
+    function getJavascript($item, $view)
+    {
         return $view->getActionForItem($item);
     }
 }
 
 class Docman_ReportColumnList
 extends Docman_ReportColumn {
-    function __construct($md) {
+    function __construct($md)
+    {
         parent::__construct($md);
     }
 
-    function getTableBox($item, $view, $params) {
+    function getTableBox($item, $view, $params)
+    {
         $mdHtml = $this->_getMdHtml($item);
         if($mdHtml !== null) {
             return $mdHtml->getValue(true);

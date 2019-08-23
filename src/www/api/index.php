@@ -77,7 +77,7 @@ if (ForgeConfig::get('DEBUG_MODE')) {
     $restler->setSupportedFormats('JsonFormat', 'XmlFormat');
 }
 
-$restler->onComplete(static function() use ($restler) {
+$restler->onComplete(static function () use ($restler) {
     \Tuleap\Request\RequestInstrumentation::incrementRest($restler->responseCode);
 
     if ($restler->exception === null || $restler->responseCode !== 500) {

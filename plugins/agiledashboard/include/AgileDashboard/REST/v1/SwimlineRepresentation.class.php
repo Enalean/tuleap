@@ -23,7 +23,8 @@ class AgileDashboard_SwimlineRepresentation {
     /** @var AgileDashboard_CardRepresentation[]*/
     public $cards;
 
-    public function build(Cardwall_Swimline $swimline, $planning_id, PFUser $user) {
+    public function build(Cardwall_Swimline $swimline, $planning_id, PFUser $user)
+    {
         $this->cards = array();
         $swimline_card_in_cell_presenter = $swimline->getCardInCellPresenter();
         if ($swimline_card_in_cell_presenter) {

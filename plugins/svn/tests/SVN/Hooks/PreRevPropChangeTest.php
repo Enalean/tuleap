@@ -50,7 +50,8 @@ class PreRevPropChangeTest extends TuleapTestCase {
     /** @var PreRevPropChange */
     private $hook;
 
-    public function setUp() {
+    public function setUp()
+    {
         global $Language;
         parent::setUp();
 
@@ -67,7 +68,8 @@ class PreRevPropChangeTest extends TuleapTestCase {
         $Language = mock('BaseLanguage');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         global $Language;
         unset($Language);
         parent::tearDown();
@@ -85,7 +87,8 @@ class PreRevPropChangeTest extends TuleapTestCase {
         );
     }
 
-    public function itRejectsPropChangeIfNotAllowed() {
+    public function itRejectsPropChangeIfNotAllowed()
+    {
         $ref_manager = safe_mock('ReferenceManager');
         stub($this->hook_config)->getHookConfig(HookConfig::COMMIT_MESSAGE_CAN_CHANGE)->returns(false);
         stub($this->hook_config)->getHookConfig(HookConfig::MANDATORY_REFERENCE)->returns(false);
@@ -96,7 +99,8 @@ class PreRevPropChangeTest extends TuleapTestCase {
         $this->hook->checkAuthorized($ref_manager);
     }
 
-    public function itAllowsPropChangeIfNotAllowed() {
+    public function itAllowsPropChangeIfNotAllowed()
+    {
         $ref_manager = safe_mock('ReferenceManager');
         stub($ref_manager)->stringContainsReferences()->returns(true);
         stub($this->hook_config)->getHookConfig(HookConfig::COMMIT_MESSAGE_CAN_CHANGE)->returns(true);

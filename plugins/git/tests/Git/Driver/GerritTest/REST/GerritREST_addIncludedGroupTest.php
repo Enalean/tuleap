@@ -22,7 +22,8 @@ require_once 'GerritREST_Base.php';
 
 class Git_Driver_GerritREST_addIncludedGroupTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_addIncludedGroupTest {
 
-    public function itAddAnIncludedGroup() {
+    public function itAddAnIncludedGroup()
+    {
         $group_name          = 'grp';
         $included_group_name = 'proj grp';
 

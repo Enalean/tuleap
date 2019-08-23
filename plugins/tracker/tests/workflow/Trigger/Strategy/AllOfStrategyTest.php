@@ -34,7 +34,8 @@ abstract class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_BaseTest  e
     protected $task_tracker;
     protected $story_tracker;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -76,7 +77,8 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_OneRuleTest extends 
 
     private $bug_tracker;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -85,20 +87,23 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_OneRuleTest extends 
         $this->strategy = new Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy($this->artifact, $this->rule);
     }
 
-    public function itSetTheValueIfArtifactHasNoSiblings() {
+    public function itSetTheValueIfArtifactHasNoSiblings()
+    {
         $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator());
 
         $this->assertTrue($this->strategy->allPrecondtionsAreMet());
     }
 
-    public function itDoesntSetTheValueIfOneSiblingHasNoValue() {
+    public function itDoesntSetTheValueIfOneSiblingHasNoValue()
+    {
         $sibling = aMockArtifact()->withTracker($this->task_tracker)->build();
         $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator(array($sibling)));
 
         $this->assertFalse($this->strategy->allPrecondtionsAreMet());
     }
 
-    public function itSetTheValueIfOneSameTypeSiblingHasCorrectValue() {
+    public function itSetTheValueIfOneSameTypeSiblingHasCorrectValue()
+    {
         $sibling = \Mockery::spy(\Tracker_Artifact::class);
         stub($sibling)->getId()->returns(112);
         stub($sibling)->getTracker()->returns($this->task_tracker);
@@ -108,7 +113,8 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_OneRuleTest extends 
         $this->assertTrue($this->strategy->allPrecondtionsAreMet());
     }
 
-    public function itDoesntSetTheValueIfOneSameTypeSiblingHasIncorrectValue() {
+    public function itDoesntSetTheValueIfOneSameTypeSiblingHasIncorrectValue()
+    {
         $sibling_1 = \Mockery::spy(\Tracker_Artifact::class);
         stub($sibling_1)->getId()->returns(112);
         stub($sibling_1)->getTracker()->returns($this->task_tracker);
@@ -129,7 +135,8 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_SeveralRulesTest ext
 
     private $bug_tracker;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -163,7 +170,8 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_SeveralRulesTest ext
         $this->strategy = new Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy($this->artifact, $this->complex_rule);
     }
 
-    public function itSetTheValueIfDifferentTypeSiblingHaveLegitValue() {
+    public function itSetTheValueIfDifferentTypeSiblingHaveLegitValue()
+    {
         $sibling_1 = \Mockery::spy(\Tracker_Artifact::class);
         stub($sibling_1)->getId()->returns(112);
         stub($sibling_1)->getTracker()->returns($this->task_tracker);
@@ -179,7 +187,8 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_SeveralRulesTest ext
         $this->assertTrue($this->strategy->allPrecondtionsAreMet());
     }
 
-    public function itDoesntSetTheValueIfOneOfTheChildDoesntApply() {
+    public function itDoesntSetTheValueIfOneOfTheChildDoesntApply()
+    {
         $sibling_1 = \Mockery::spy(\Tracker_Artifact::class);
         stub($sibling_1)->getId()->returns(112);
         stub($sibling_1)->getTracker()->returns($this->task_tracker);

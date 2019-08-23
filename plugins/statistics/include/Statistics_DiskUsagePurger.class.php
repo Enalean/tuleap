@@ -43,12 +43,14 @@ class Statistics_DiskUsagePurger {
         'plugin_statistics_diskusage_user',
     );
 
-    public function __construct(Statistics_DiskUsageDao $disk_usage_dao, Logger $logger) {
+    public function __construct(Statistics_DiskUsageDao $disk_usage_dao, Logger $logger)
+    {
         $this->disk_usage_dao = $disk_usage_dao;
         $this->logger         = $logger;
     }
 
-    public function purge($from_date) {
+    public function purge($from_date)
+    {
         $this->disk_usage_dao->startTransaction();
         $this->logger->debug("Gathering stats to purge...");
 
@@ -66,7 +68,8 @@ class Statistics_DiskUsagePurger {
     /**
      * Keep only the first found data of each month older than two years
      */
-    private function purgeDataOlderThanTwoYears($from_date, $table) {
+    private function purgeDataOlderThanTwoYears($from_date, $table)
+    {
         $two_years_ago                      = date('Y-m-d 00:00:00', strtotime('-2 years', $from_date));
         $first_day_with_data_of_each_months = $this->findFirstDayWithDataOfEachMonthsOlderThan($table, $two_years_ago);
 
@@ -76,7 +79,8 @@ class Statistics_DiskUsagePurger {
         }
     }
 
-    private function findFirstDayWithDataOfEachMonthsOlderThan($table, $threshold_date) {
+    private function findFirstDayWithDataOfEachMonthsOlderThan($table, $threshold_date)
+    {
         $oldest_date = $this->fetchOldestDate($table);
         if (! $oldest_date || strtotime($oldest_date) >= strtotime($threshold_date)) {
             return false;
@@ -102,7 +106,8 @@ class Statistics_DiskUsagePurger {
     /**
      * Keep only the first found data of each month older than two years
      */
-    private function purgeDataBetweenTwoYearsAndThreeMonths($from_date, $table) {
+    private function purgeDataBetweenTwoYearsAndThreeMonths($from_date, $table)
+    {
         $two_years_ago                     = date('Y-m-d 00:00:00', strtotime('-2 years', $from_date));
         $three_months_ago                  = date('Y-m-d 00:00:00', strtotime('-3 months', $from_date));
         $first_day_with_data_of_each_weeks = $this->findFirstDayWithDataOfEachWeeksBetweenTwoDates($table, $two_years_ago, $three_months_ago);
@@ -113,7 +118,8 @@ class Statistics_DiskUsagePurger {
         }
     }
 
-    private function findFirstDayWithDataOfEachWeeksBetweenTwoDates($table, $threshold_date_min, $threshold_date_max) {
+    private function findFirstDayWithDataOfEachWeeksBetweenTwoDates($table, $threshold_date_min, $threshold_date_max)
+    {
         $oldest_date = $this->fetchOldestDate($table);
         if (! $oldest_date || strtotime($oldest_date) >= strtotime($threshold_date_max)) {
             return false;
@@ -136,11 +142,13 @@ class Statistics_DiskUsagePurger {
         return $first_day_with_data_of_each_weeks;
     }
 
-    private function fetchOldestDate($table) {
+    private function fetchOldestDate($table)
+    {
         return $this->disk_usage_dao->searchOldestDate($table);
     }
 
-    public function getFirstDayOfEachMonthsBetweenTwoDates($date_min, $date_max) {
+    public function getFirstDayOfEachMonthsBetweenTwoDates($date_min, $date_max)
+    {
         if (strtotime($date_min) >= strtotime($date_max)) {
             return false;
         }
@@ -157,7 +165,8 @@ class Statistics_DiskUsagePurger {
         return $first_day_of_each_months;
     }
 
-    public function getFirstDayOfEachWeeksBetweenTwoDates($date_min, $date_max) {
+    public function getFirstDayOfEachWeeksBetweenTwoDates($date_min, $date_max)
+    {
         if (strtotime($date_min) >= strtotime($date_max)) {
             return false;
         }

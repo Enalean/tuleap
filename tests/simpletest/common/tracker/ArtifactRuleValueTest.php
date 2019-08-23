@@ -20,7 +20,8 @@
  */
 class ArtifactRuleValueTest extends TuleapTestCase {
 
-    function testApplyTo() {
+    function testApplyTo()
+    {
         $arv = new ArtifactRuleValue('id', 'group_artifact_id', 'source_field', 'source_value', 'target_field', 'target_value');
 
         $this->assertTrue( $arv->applyTo('group_artifact_id',       'source_field',        'source_value',       'target_field',       'target_value'      ));
@@ -34,7 +35,8 @@ class ArtifactRuleValueTest extends TuleapTestCase {
         $this->assertFalse($arv->applyTo('group_artifact_id',       'source_field',        'source_value',       'false_target_field', 'false_value'       ));
         $this->assertFalse($arv->applyTo('group_artifact_id',       'source_field',        'source_value',       'false_target_field', 'false_target_value'));
     }
-    function testCanApplyTo() {
+    function testCanApplyTo()
+    {
         $arv = new ArtifactRuleValue('id', 'group_artifact_id', 'source_field', 'source_value', 'target_field', 'target_value');
 
         $this->assertTrue( $arv->canApplyTo('group_artifact_id',       'source_field',        'source_value',       'target_field',       'target_value'      ));

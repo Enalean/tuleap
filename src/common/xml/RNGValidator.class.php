@@ -20,7 +20,8 @@
 
 class XML_RNGValidator {
 
-    public function validate(SimpleXMLElement $xml_element, $rng_path) {
+    public function validate(SimpleXMLElement $xml_element, $rng_path)
+    {
         $dom          = $this->simpleXmlElementToDomDocument($xml_element);
         $xml_security = new XML_Security();
         $xml_security->enableExternalLoadOfEntities();
@@ -39,7 +40,8 @@ class XML_RNGValidator {
      *
      * @return \DOMDocument
      */
-    private function simpleXmlElementToDomDocument(SimpleXMLElement $xml_element) {
+    private function simpleXmlElementToDomDocument(SimpleXMLElement $xml_element)
+    {
         $dom = new DOMDocument("1.0", "UTF-8");
         $dom_element = $dom->importNode(dom_import_simplexml($xml_element), true);
         $dom->appendChild($dom_element);

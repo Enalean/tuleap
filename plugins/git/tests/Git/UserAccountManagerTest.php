@@ -34,7 +34,8 @@ class Git_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
      */
     private $gerrit_user_account_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->user                         = aUser()->withLdapId("testUser")->build();
         $this->gerrit_driver_factory        = mock('Git_Driver_Gerrit_GerritDriverFactory');
@@ -63,7 +64,8 @@ class Git_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
         );
     }
 
-    public function itThrowsAnExceptionIfGerritSynchFails() {
+    public function itThrowsAnExceptionIfGerritSynchFails()
+    {
         expect($this->gerrit_user_account_manager)->synchroniseSSHKeys()->once();
 
         $this->gerrit_user_account_manager->throwOn('synchroniseSSHKeys', new Git_UserSynchronisationException());
@@ -92,7 +94,8 @@ class Git_UserAccountManager_PushSSHKeysTest extends TuleapTestCase {
      */
     private $gerrit_user_account_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->user = aUser()->withLdapId("testUser")->build();
@@ -105,7 +108,8 @@ class Git_UserAccountManager_PushSSHKeysTest extends TuleapTestCase {
         $this->user_account_manager->setGerritUserAccountManager($this->gerrit_user_account_manager);
     }
 
-    public function itThrowsAnExceptionIfGerritPushFails() {
+    public function itThrowsAnExceptionIfGerritPushFails()
+    {
         expect($this->gerrit_user_account_manager)->pushSSHKeys()->once();
 
         $this->gerrit_user_account_manager->throwOn('pushSSHKeys', new Git_UserSynchronisationException());

@@ -36,7 +36,8 @@ class Widget_ProjectSvnStats extends Widget
         return $GLOBALS['Language']->getText('svn_widget', 'svnstats');
     }
 
-    function getCategory() {
+    function getCategory()
+    {
         return _('Source code management');
     }
 
@@ -144,7 +145,8 @@ class Widget_ProjectSvnStats extends Widget
         echo $c->stroke();
     }
 
-    protected function sortByTop($a, $b) {
+    protected function sortByTop($a, $b)
+    {
         return strnatcasecmp($this->tmp_nb_of_commit[$a], $this->tmp_nb_of_commit[$b]);
     }
 

@@ -20,7 +20,8 @@
  */
 
 class CardControllerBuilderRequestIdException extends Exception {
-    public function __construct() {
+    public function __construct()
+    {
         $message = 'Invalid/missing card id (id)';
         parent::__construct($message);
     }

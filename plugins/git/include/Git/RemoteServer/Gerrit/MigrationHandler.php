@@ -92,7 +92,8 @@ class MigrationHandler {
      * @throws RepositoryNotMigratedException
      * @throws \Git_RemoteServer_NotFoundException
      */
-    public function migrate(GitRepository $repository, $remote_server_id, $gerrit_template_id, PFUser $user) {
+    public function migrate(GitRepository $repository, $remote_server_id, $gerrit_template_id, PFUser $user)
+    {
         if (! $repository->canMigrateToGerrit()) {
             throw new RepositoryCannotBeMigratedException();
         }
@@ -131,7 +132,8 @@ class MigrationHandler {
      * @throws RepositoryNotMigratedException
      * @throws DeletePluginNotInstalledException
      */
-    public function disconnect(GitRepository $repository, $disconnect_option) {
+    public function disconnect(GitRepository $repository, $disconnect_option)
+    {
         if (! $repository->isMigratedToGerrit()) {
             throw new RepositoryNotMigratedException();
         }
@@ -177,12 +179,14 @@ class MigrationHandler {
         }
     }
 
-    private function disconnectFromGerrit(GitRepository $repository) {
+    private function disconnectFromGerrit(GitRepository $repository)
+    {
         $repository->getBackend()->disconnectFromGerrit($repository);
         $this->git_system_event_manager->queueRepositoryUpdate($repository);
     }
 
-    private function getRepositoryServer(GitRepository $repository) {
+    private function getRepositoryServer(GitRepository $repository)
+    {
         $server = $this->gerrit_server_factory->getServerById($repository->getRemoteServerId());
         if (! $server) {
             throw new RemoteServerDoesNotExistException();

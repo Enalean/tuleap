@@ -36,20 +36,24 @@ rcs_id('$Id: FileInfo.php,v 1.4 2005/10/29 14:18:47 rurban Exp $');
 class WikiPlugin_FileInfo
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("FileInfo");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("Display file information like version,size,date,... of uploaded files.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.4 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array(
                      'file'      => false, // relative path from PHPWIKI_DIR. (required)
                      'display'   => false, // version,size,date,mtime,owner,name,path,dirname,link.  (required)
@@ -58,7 +62,8 @@ extends WikiPlugin
                     );
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         extract($this->getArgs($argstr, $request));
         if (!$file)
             return $this->error(sprintf(_("A required argument '%s' is missing."), 'file'));
@@ -118,7 +123,8 @@ extends WikiPlugin
         }
     }
 
-    function magic($file) {
+    function magic($file)
+    {
         if (function_exists('finfo_file') or loadPhpExtension('fileinfo')) {
             // Valid finfo_open (i.e. libmagic) options:
             // FILEINFO_NONE | FILEINFO_SYMLINK | FILEINFO_MIME | FILEINFO_COMPRESS | FILEINFO_DEVICES |
@@ -131,18 +137,21 @@ extends WikiPlugin
         return '';
     }
 
-    function mime_type($file) {
+    function mime_type($file)
+    {
         return '';
     }
 
-    function _formatsize ($n, $factor, $suffix = '') {
+    function _formatsize($n, $factor, $suffix = '')
+    {
         if ($n > $factor) {
             $b = $n / $factor;
             $n -= floor($factor * $b);
             return number_format($b, $n ? 3 : 0). $suffix;
         }
     }
-    function phonysize ($a) {
+    function phonysize($a)
+    {
         $factor = 1024 * 1024 * 1000;
         if ($a > $factor)
             return $this->_formatsize($a, $factor, ' GB');
@@ -158,7 +167,8 @@ extends WikiPlugin
             return $a;
     }
 
-    function exeversion($file) {
+    function exeversion($file)
+    {
         if (!isWindows()) return "?";
         if (class_exists('ffi') or loadPhpExtension('ffi'))
         return $this->exeversion_ffi($file);
@@ -169,13 +179,15 @@ extends WikiPlugin
     }
 
     // http://www.codeproject.com/dll/showver.asp
-    function exeversion_showver($file) {
+    function exeversion_showver($file)
+    {
         $path = realpath($file);
         $result = `showver $path`;
         return "?";
     }
 
-    function exeversion_ffi($file) {
+    function exeversion_ffi($file)
+    {
         if (!DEBUG)
         return "?"; // not yet stable
 
@@ -230,7 +242,8 @@ struct VS_VERSIONINFO { struct VS_VERSIONINFO
 
     // Read "RT_VERSION/VERSIONINFO" exe/dll resource info for MSWin32 binaries
     // The "win32std" extension is not ready yet to pass back a VERSIONINFO struct
-    function exeversion_resopen($file) {
+    function exeversion_resopen($file)
+    {
         if (function_exists('res_list_type') or loadPhpExtension('win32std')) {
             // See http://msdn.microsoft.com/workshop/networking/predefined/res.asp
             $v = file_get_contents('res://'.realpath($file).urlencode('/RT_VERSION/#1'));

@@ -28,17 +28,20 @@ class Tracker_Permission_PermissionController implements Tracker_Dispatchable_In
     /** @var Tracker_Permission_PermissionPresenterBuilder */
     private $presenter_builder;
 
-    public function __construct(Tracker $tracker) {
+    public function __construct(Tracker $tracker)
+    {
         $this->tracker           = $tracker;
         $this->renderer          = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
         $this->presenter_builder = new Tracker_Permission_PermissionPresenterBuilder();
     }
 
-    public function getTracker() {
+    public function getTracker()
+    {
         return $this->tracker;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
+    {
         if ($request->get('update')) {
             $this->save($request);
         } else {
@@ -46,14 +49,16 @@ class Tracker_Permission_PermissionController implements Tracker_Dispatchable_In
         }
     }
 
-    private function view(Tracker_IDisplayTrackerLayout $layout) {
+    private function view(Tracker_IDisplayTrackerLayout $layout)
+    {
         $presenter = $this->presenter_builder->getPresenter($this->tracker);
         $this->displayHeader($layout, $presenter->title());
         $this->renderer->renderToPage('admin-perms-tracker', $presenter);
         $this->displayFooter($layout);
     }
 
-    private function displayHeader(Tracker_IDisplayTrackerLayout $layout, $title) {
+    private function displayHeader(Tracker_IDisplayTrackerLayout $layout, $title)
+    {
         $items = $this->tracker->getPermsItems();
         $this->tracker->displayAdminPermsHeader(
             $layout,
@@ -62,11 +67,13 @@ class Tracker_Permission_PermissionController implements Tracker_Dispatchable_In
         );
     }
 
-    private function displayFooter(Tracker_IDisplayTrackerLayout $layout) {
+    private function displayFooter(Tracker_IDisplayTrackerLayout $layout)
+    {
         $this->tracker->displayFooter($layout);
     }
 
-    private function save(Codendi_Request $request) {
+    private function save(Codendi_Request $request)
+    {
         $permission_setter  = $this->getPermissionSetter();
         $permission_request = new Tracker_Permission_PermissionRequest(array());
         $permission_request->setFromRequest($request, $permission_setter->getAllGroupIds());
@@ -77,7 +84,8 @@ class Tracker_Permission_PermissionController implements Tracker_Dispatchable_In
         $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId().'&func=admin-perms-tracker');
     }
 
-    private function getPermissionSetter() {
+    private function getPermissionSetter()
+    {
         return new Tracker_Permission_PermissionSetter(
             $this->tracker,
             plugin_tracker_permission_get_tracker_ugroups_permissions(

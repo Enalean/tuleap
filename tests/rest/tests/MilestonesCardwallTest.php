@@ -25,12 +25,14 @@ use Tuleap\REST\MilestoneBase;
  */
 class MilestonesCardwallTest extends MilestoneBase
 {
-    public function testOPTIONSCardwallOnSprintGivesOPTIONSandGET() {
+    public function testOPTIONSCardwallOnSprintGivesOPTIONSandGET()
+    {
         $response = $this->getResponse($this->client->options('milestones/'.$this->sprint_artifact_ids[1].'/cardwall'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGETCardwall() {
+    public function testGETCardwall()
+    {
         $response = $this->getResponse($this->client->get('milestones/'.$this->sprint_artifact_ids[1].'/cardwall'));
 
         $cardwall = $response->json();

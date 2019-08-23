@@ -39,31 +39,38 @@ class Presenter
         $this->is_registering_possible = $is_registering_possible;
     }
 
-    public function link_id() {
+    public function link_id()
+    {
         return $this->link_id;
     }
 
-    public function return_to() {
+    public function return_to()
+    {
         return $this->return_to;
     }
 
-    public function account_login_name() {
+    public function account_login_name()
+    {
         return $GLOBALS['Language']->getText('account_login', 'name');
     }
 
-    public function account_login_password() {
+    public function account_login_password()
+    {
         return $GLOBALS['Language']->getText('account_login', 'password');
     }
 
-    public function account_login_login_btn() {
+    public function account_login_login_btn()
+    {
         return $GLOBALS['Language']->getText('account_login', 'login_btn');
     }
 
-    public function link_page_title() {
+    public function link_page_title()
+    {
         return dgettext('tuleap-openidconnectclient', 'Link an account');
     }
 
-    public function link_page_title_to() {
+    public function link_page_title_to()
+    {
         return dgettext('tuleap-openidconnectclient', 'to OpenID Connect');
     }
 
@@ -77,19 +84,23 @@ class Presenter
         return sprintf(dgettext('tuleap-openidconnectclient', 'You have successfully been authenticated by %1$s. The only remaining step is to create a link with an existing %2$s account.'), $this->provider_name, ForgeConfig::get('sys_name'));
     }
 
-    public function action() {
+    public function action()
+    {
         return OPENIDCONNECTCLIENT_BASE_URL . '/?action=link-existing';
     }
 
-    public function or_label() {
+    public function or_label()
+    {
         return dgettext('tuleap-openidconnectclient', 'or');
     }
 
-    public function register() {
+    public function register()
+    {
         return dgettext('tuleap-openidconnectclient', 'Register a new account');
     }
 
-    public function link_to_register_page() {
+    public function link_to_register_page()
+    {
         return $this->link_to_register_page;
     }
 

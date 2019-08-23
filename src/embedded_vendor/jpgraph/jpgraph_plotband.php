@@ -23,7 +23,8 @@ define("BAND_DIAGCROSS",8); // Diagonal crosses
 class Rectangle {
     public $x,$y,$w,$h;
     public $xe, $ye;
-    function __construct($aX,$aY,$aWidth,$aHeight) {
+    function __construct($aX,$aY,$aWidth,$aHeight)
+    {
         $this->x=$aX;
         $this->y=$aY;
         $this->w=$aWidth;
@@ -48,24 +49,29 @@ class RectPattern {
     protected $linespacing; // Line spacing in pixels
     protected $iBackgroundColor=-1;  // Default is no background fill
 
-    function __construct($aColor,$aWeight=1) {
+    function __construct($aColor,$aWeight=1)
+    {
         $this->color = $aColor;
         $this->weight = $aWeight;
     }
 
-    function SetBackground($aBackgroundColor) {
+    function SetBackground($aBackgroundColor)
+    {
         $this->iBackgroundColor=$aBackgroundColor;
     }
 
-    function SetPos($aRect) {
+    function SetPos($aRect)
+    {
         $this->rect = $aRect;
     }
 
-    function ShowFrame($aShow=true) {
+    function ShowFrame($aShow=true)
+    {
         $this->doframe=$aShow;
     }
 
-    function SetDensity($aDens) {
+    function SetDensity($aDens)
+    {
         if( $aDens < 1 || $aDens > 100 )
         JpGraphError::RaiseL(16001,$aDens);
         //(" Desity for pattern must be between 1 and 100. (You tried $aDens)");
@@ -75,7 +81,8 @@ class RectPattern {
 
     }
 
-    function Stroke($aImg) {
+    function Stroke($aImg)
+    {
         if( $this->rect == null )
         JpGraphError::RaiseL(16002);
         //(" No positions specified for pattern.");
@@ -105,11 +112,13 @@ class RectPattern {
 //=====================================================================
 class RectPatternSolid extends RectPattern {
 
-    function __construct($aColor="black",$aWeight=1) {
+    function __construct($aColor="black",$aWeight=1)
+    {
         parent::__construct($aColor,$aWeight);
     }
 
-    function DoPattern($aImg) {
+    function DoPattern($aImg)
+    {
         $aImg->SetColor($this->color);
         $aImg->FilledRectangle($this->rect->x,$this->rect->y,
         $this->rect->xe,$this->rect->ye);
@@ -122,12 +131,14 @@ class RectPatternSolid extends RectPattern {
 //=====================================================================
 class RectPatternHor extends RectPattern {
 
-    function __construct($aColor="black",$aWeight=1,$aLineSpacing=7) {
+    function __construct($aColor="black",$aWeight=1,$aLineSpacing=7)
+    {
         parent::__construct($aColor,$aWeight);
         $this->linespacing = $aLineSpacing;
     }
 
-    function DoPattern($aImg) {
+    function DoPattern($aImg)
+    {
         $x0 = $this->rect->x;
         $x1 = $this->rect->xe;
         $y = $this->rect->y;
@@ -144,14 +155,16 @@ class RectPatternHor extends RectPattern {
 //=====================================================================
 class RectPatternVert extends RectPattern {
 
-    function __construct($aColor="black",$aWeight=1,$aLineSpacing=7) {
+    function __construct($aColor="black",$aWeight=1,$aLineSpacing=7)
+    {
         parent::__construct($aColor,$aWeight);
         $this->linespacing = $aLineSpacing;
     }
 
     //--------------------
     // Private methods
-    function DoPattern($aImg) {
+    function DoPattern($aImg)
+    {
         $x = $this->rect->x;
         $y0 = $this->rect->y;
         $y1 = $this->rect->ye;
@@ -169,12 +182,14 @@ class RectPatternVert extends RectPattern {
 //=====================================================================
 class RectPatternRDiag extends RectPattern {
 
-    function __construct($aColor="black",$aWeight=1,$aLineSpacing=12) {
+    function __construct($aColor="black",$aWeight=1,$aLineSpacing=12)
+    {
         parent::__construct($aColor,$aWeight);
         $this->linespacing = $aLineSpacing;
     }
 
-    function DoPattern($aImg) {
+    function DoPattern($aImg)
+    {
         //  --------------------
         //  | /   /   /   /   /|
         //  |/   /   /   /   / |
@@ -238,12 +253,14 @@ class RectPatternRDiag extends RectPattern {
 //=====================================================================
 class RectPatternLDiag extends RectPattern {
 
-    function __construct($aColor="black",$aWeight=1,$aLineSpacing=12) {
+    function __construct($aColor="black",$aWeight=1,$aLineSpacing=12)
+    {
         $this->linespacing = $aLineSpacing;
         parent::__construct($aColor,$aWeight);
     }
 
-    function DoPattern($aImg) {
+    function DoPattern($aImg)
+    {
         //  --------------------
         //  |\   \   \   \   \ |
         //  | \   \   \   \   \|
@@ -306,16 +323,19 @@ class RectPattern3DPlane extends RectPattern {
     // top of the band. Specifies how fast the lines
     // converge.
 
-    function __construct($aColor="black",$aWeight=1) {
+    function __construct($aColor="black",$aWeight=1)
+    {
         parent::__construct($aColor,$aWeight);
         $this->SetDensity(10);  // Slightly larger default
     }
 
-    function SetHorizon($aHorizon) {
+    function SetHorizon($aHorizon)
+    {
         $this->alpha=$aHorizon;
     }
 
-    function DoPattern($aImg) {
+    function DoPattern($aImg)
+    {
         // "Fake" a nice 3D grid-effect.
         $x0 = $this->rect->x + $this->rect->w/2;
         $y0 = $this->rect->y;
@@ -420,29 +440,34 @@ class RectPattern3DPlane extends RectPattern {
 class RectPatternCross extends RectPattern {
     private $vert=null;
     private $hor=null;
-    function __construct($aColor="black",$aWeight=1) {
+    function __construct($aColor="black",$aWeight=1)
+    {
         parent::__construct($aColor,$aWeight);
         $this->vert = new RectPatternVert($aColor,$aWeight);
         $this->hor  = new RectPatternHor($aColor,$aWeight);
     }
 
-    function SetOrder($aDepth) {
+    function SetOrder($aDepth)
+    {
         $this->vert->SetOrder($aDepth);
         $this->hor->SetOrder($aDepth);
     }
 
-    function SetPos($aRect) {
+    function SetPos($aRect)
+    {
         parent::SetPos($aRect);
         $this->vert->SetPos($aRect);
         $this->hor->SetPos($aRect);
     }
 
-    function SetDensity($aDens) {
+    function SetDensity($aDens)
+    {
         $this->vert->SetDensity($aDens);
         $this->hor->SetDensity($aDens);
     }
 
-    function DoPattern($aImg) {
+    function DoPattern($aImg)
+    {
         $this->vert->DoPattern($aImg);
         $this->hor->DoPattern($aImg);
     }
@@ -456,29 +481,34 @@ class RectPatternCross extends RectPattern {
 class RectPatternDiagCross extends RectPattern {
     private $left=null;
     private $right=null;
-    function __construct($aColor="black",$aWeight=1) {
+    function __construct($aColor="black",$aWeight=1)
+    {
         parent::__construct($aColor,$aWeight);
         $this->right = new RectPatternRDiag($aColor,$aWeight);
         $this->left  = new RectPatternLDiag($aColor,$aWeight);
     }
 
-    function SetOrder($aDepth) {
+    function SetOrder($aDepth)
+    {
         $this->left->SetOrder($aDepth);
         $this->right->SetOrder($aDepth);
     }
 
-    function SetPos($aRect) {
+    function SetPos($aRect)
+    {
         parent::SetPos($aRect);
         $this->left->SetPos($aRect);
         $this->right->SetPos($aRect);
     }
 
-    function SetDensity($aDens) {
+    function SetDensity($aDens)
+    {
         $this->left->SetDensity($aDens);
         $this->right->SetDensity($aDens);
     }
 
-    function DoPattern($aImg) {
+    function DoPattern($aImg)
+    {
         $this->left->DoPattern($aImg);
         $this->right->DoPattern($aImg);
     }
@@ -490,10 +520,12 @@ class RectPatternDiagCross extends RectPattern {
 // Factory class for rectangular pattern
 //=====================================================================
 class RectPatternFactory {
-    function __construct() {
+    function __construct()
+    {
         // Empty
     }
-    function Create($aPattern,$aColor,$aWeight=1) {
+    function Create($aPattern,$aColor,$aWeight=1)
+    {
         switch($aPattern) {
             case BAND_RDIAG:
                 $obj =  new RectPatternRDiag($aColor,$aWeight);
@@ -539,7 +571,8 @@ class PlotBand {
     private $prect=null;
     private $dir, $min, $max;
 
-    function __construct($aDir,$aPattern,$aMin,$aMax,$aColor="black",$aWeight=1,$aDepth=DEPTH_BACK) {
+    function __construct($aDir,$aPattern,$aMin,$aMax,$aColor="black",$aWeight=1,$aDepth=DEPTH_BACK)
+    {
         $f =  new RectPatternFactory();
         $this->prect = $f->Create($aPattern,$aColor,$aWeight);
         if( is_numeric($aMin) && is_numeric($aMax) && ($aMin > $aMax) )
@@ -552,42 +585,51 @@ class PlotBand {
     }
 
     // Set position. aRect contains absolute image coordinates
-    function SetPos($aRect) {
+    function SetPos($aRect)
+    {
         assert( $this->prect != null ) ;
         $this->prect->SetPos($aRect);
     }
 
-    function ShowFrame($aFlag=true) {
+    function ShowFrame($aFlag=true)
+    {
         $this->prect->ShowFrame($aFlag);
     }
 
     // Set z-order. In front of pplot or in the back
-    function SetOrder($aDepth) {
+    function SetOrder($aDepth)
+    {
         $this->depth=$aDepth;
     }
 
-    function SetDensity($aDens) {
+    function SetDensity($aDens)
+    {
         $this->prect->SetDensity($aDens);
     }
 
-    function GetDir() {
+    function GetDir()
+    {
         return $this->dir;
     }
 
-    function GetMin() {
+    function GetMin()
+    {
         return $this->min;
     }
 
-    function GetMax() {
+    function GetMax()
+    {
         return $this->max;
     }
 
-    function PreStrokeAdjust($aGraph) {
+    function PreStrokeAdjust($aGraph)
+    {
         // Nothing to do
     }
 
     // Display band
-    function Stroke($aImg,$aXScale,$aYScale) {
+    function Stroke($aImg,$aXScale,$aYScale)
+    {
         assert( $this->prect != null ) ;
         if( $this->dir == HORIZONTAL ) {
             if( $this->min === 'min' ) $this->min = $aYScale->GetMinVal();

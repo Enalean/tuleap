@@ -22,7 +22,8 @@
 
 class Docman_View_SOAP_List {
 
-    function display($params) {
+    function display($params)
+    {
 
         $result = array();
         $itemFactory = new Docman_ItemFactory($params['group_id']);

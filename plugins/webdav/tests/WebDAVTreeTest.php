@@ -37,7 +37,8 @@ Mock::generate('PFUser');
  */
 class TestTree extends WebDAVTree {
 
-    function getNodeForPath($path) {
+    function getNodeForPath($path)
+    {
         return new MockWebDAVFRSFile();
     }
 }
@@ -45,7 +46,8 @@ Mock::generatePartial('TestTree', 'TestTreeTestVersion', array('canBeMoved', 'ge
 
 class TestFile extends WebDAVFRSFile {
 
-    function getProject() {
+    function getProject()
+    {
         $project = new MockProject();
         $project->setReturnValue('getGroupId', 1);
         return $project;
@@ -54,7 +56,8 @@ class TestFile extends WebDAVFRSFile {
 
 class TestRelease extends WebDAVFRSRelease {
 
-    function getProject() {
+    function getProject()
+    {
         $project = new MockProject();
         $project->setReturnValue('getGroupId', 1);
         return $project;
@@ -63,7 +66,8 @@ class TestRelease extends WebDAVFRSRelease {
 
 class TestRelease2 extends WebDAVFRSRelease {
 
-    function getProject() {
+    function getProject()
+    {
         $project = new MockProject();
         $project->setReturnValue('getGroupId', 2);
         return $project;
@@ -72,7 +76,8 @@ class TestRelease2 extends WebDAVFRSRelease {
 
 class TestPackage extends WebDAVFRSPackage {
 
-    function getProject() {
+    function getProject()
+    {
         $project = new MockProject();
         $project->setReturnValue('getGroupId', 1);
         return $project;
@@ -81,22 +86,26 @@ class TestPackage extends WebDAVFRSPackage {
 
 class TestFolder extends WebDAVDocmanFolder {
 
-    function setItem($item) {
+    function setItem($item)
+    {
         $this->item = $item;
     }
 
-    function getItem() {
+    function getItem()
+    {
         return $this->item;
     }
 }
 
 class TestDocmanFile extends WebDAVDocmanFile {
 
-    function setItem($item) {
+    function setItem($item)
+    {
         $this->item = $item;
     }
 
-    function getItem() {
+    function getItem()
+    {
         return $this->item;
     }
 }
@@ -134,7 +143,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    function testCanBeMovedFailNotMovable() {
+    function testCanBeMovedFailNotMovable()
+    {
         $source = null;
         $destination = null;
         $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
@@ -142,7 +152,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
 
-    function testCanBeMovedFailSourceNotReleaseDestinationPackage() {
+    function testCanBeMovedFailSourceNotReleaseDestinationPackage()
+    {
         $source = null;
         $destination = new TestPackage($this->user, $this->project, $this->package, 0);
         $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
@@ -150,7 +161,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
 
-    function testCanBeMovedFailSourceNotFileDestinationRelease() {
+    function testCanBeMovedFailSourceNotFileDestinationRelease()
+    {
         $source = null;
         $destination = new TestRelease($this->user, $this->project, $this->package, $this->release, 0);
         $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
@@ -158,7 +170,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
 
-    function testCanBeMovedFailSourceReleaseDestinationNotPackage() {
+    function testCanBeMovedFailSourceReleaseDestinationNotPackage()
+    {
         $source = new TestRelease($this->user, $this->project, $this->package, $this->release, 0);
         $destination = null;
         $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
@@ -166,7 +179,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
 
-    function testCanBeMovedFailSourceFileDestinationNotRelease() {
+    function testCanBeMovedFailSourceFileDestinationNotRelease()
+    {
         $source = new TestFile($this->user, $this->project, $this->package, $this->release, 0);
         $destination = null;
         $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
@@ -174,7 +188,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
 
-    function testCanBeMovedFailSourceReleaseDestinationPackageNotSameProject() {
+    function testCanBeMovedFailSourceReleaseDestinationPackageNotSameProject()
+    {
         $source = new TestRelease2($this->user, $this->project, $this->package, $this->release, 0);
         $destination = new TestPackage($this->user, $this->project, $this->package, 0);
         $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
@@ -182,7 +197,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
 
-    function testCanBeMovedFailSourceFileDestinationReleaseNotSameProject() {
+    function testCanBeMovedFailSourceFileDestinationReleaseNotSameProject()
+    {
         $source = new TestFile($this->user, $this->project, $this->package, $this->release, 0);
         $destination = new TestRelease2($this->user, $this->project, $this->package, $this->release, 0);
         $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
@@ -190,7 +206,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
 
-    function testCanBeMovedSucceedeSourceReleaseDestinationPackage() {
+    function testCanBeMovedSucceedeSourceReleaseDestinationPackage()
+    {
         $source = new TestRelease($this->user, $this->project, $this->package, $this->release, 0);
         $destination = new TestPackage($this->user, $this->project, $this->package, 0);
         $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
@@ -198,7 +215,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $this->assertEqual($tree->canBeMoved($source, $destination), true);
     }
 
-    function testCanBeMovedSucceedeSourceFileDestinationRelease() {
+    function testCanBeMovedSucceedeSourceFileDestinationRelease()
+    {
         $source = new TestFile($this->user, $this->project, $this->package, $this->release, $this->file);
         $destination = new TestRelease($this->user, $this->project, $this->package, $this->release, 0);
         $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
@@ -206,7 +224,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $this->assertEqual($tree->canBeMoved($source, $destination), true);
     }
 
-    function testMoveOnlyRename() {
+    function testMoveOnlyRename()
+    {
         $node = new MockWebDAVFRSRelease();
         $tree = new TestTreeTestVersion($this);
         $tree->setReturnValue('canBeMoved', true);
@@ -221,7 +240,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $tree->move('project1/package1/release1', 'project1/package1/release2');
     }
 
-    function testMoveCanNotMove() {
+    function testMoveCanNotMove()
+    {
         $node = new MockWebDAVFRSRelease();
         $tree = new TestTreeTestVersion($this);
         $tree->setReturnValue('canBeMoved', false);
@@ -237,7 +257,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $tree->move('project1/package1/release1', 'project1/package2/release2');
     }
 
-    function testMoveSucceed() {
+    function testMoveSucceed()
+    {
         $node = new MockWebDAVFRSRelease();
         $tree = new TestTreeTestVersion($this);
         $tree->setReturnValue('canBeMoved', true);
@@ -253,7 +274,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $tree->move('project1/package1/release1', 'project1/package2/release2');
     }
 
-    function testCopyNoWriteEnabled() {
+    function testCopyNoWriteEnabled()
+    {
         $tree = new TestTreeTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', false);
@@ -266,7 +288,8 @@ class WebDAVTreeTest extends TuleapTestCase {
     /**
      * Fail when destination is not a docman folder
      */
-    function testCopyWrongDestination() {
+    function testCopyWrongDestination()
+    {
         $tree = new TestTreeTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
@@ -283,7 +306,8 @@ class WebDAVTreeTest extends TuleapTestCase {
     /**
      * Fail when source is not a docman folder
      */
-    function testCopyWrongSource() {
+    function testCopyWrongSource()
+    {
         $tree = new TestTreeTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
@@ -297,7 +321,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $tree->copy('source', 'destination/item');
     }
 
-    function testCopyNotTheSameProject() {
+    function testCopyNotTheSameProject()
+    {
         $tree = new TestTreeTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
@@ -317,7 +342,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $tree->copy('source', 'destination/item');
     }
 
-    function testCopyNoReadOnSource() {
+    function testCopyNoReadOnSource()
+    {
         $tree = new TestTreeTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
@@ -341,7 +367,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $tree->copy('source', 'destination/item');
     }
 
-    function testCopyNoWriteOnDestination() {
+    function testCopyNoWriteOnDestination()
+    {
         $tree = new TestTreeTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
@@ -365,7 +392,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $tree->copy('source', 'destination/item');
     }
 
-    function testCopySucceede() {
+    function testCopySucceede()
+    {
         $tree = new TestTreeTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
@@ -392,7 +420,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $tree->copy('source', 'destination/item');
     }
 
-    function testMoveDocmanSucceed() {
+    function testMoveDocmanSucceed()
+    {
         $tree = new TestTreeTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
@@ -425,7 +454,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $tree->move('source', 'destination/item');
     }
 
-    function testMoveDocmanNoWriteOnSubItems() {
+    function testMoveDocmanNoWriteOnSubItems()
+    {
         $tree = new TestTreeTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
@@ -455,7 +485,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $tree->move('source', 'destination/item');
     }
 
-    function testMoveDocmanNoWriteEnabled() {
+    function testMoveDocmanNoWriteEnabled()
+    {
         $tree = new TestTreeTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', false);
@@ -465,7 +496,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $tree->move('source', 'destination/item');
     }
 
-    function testMoveDocmanNotTheSameProject() {
+    function testMoveDocmanNotTheSameProject()
+    {
         $tree = new TestTreeTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
@@ -485,7 +517,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $tree->move('source', 'destination/item');
     }
 
-    function testMoveDocmanNoReadOnSource() {
+    function testMoveDocmanNoReadOnSource()
+    {
         $tree = new TestTreeTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
@@ -510,7 +543,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $tree->move('source', 'destination/item');
     }
 
-    function testMoveDocmanNoWriteOnDestination() {
+    function testMoveDocmanNoWriteOnDestination()
+    {
         $tree = new TestTreeTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
@@ -535,7 +569,8 @@ class WebDAVTreeTest extends TuleapTestCase {
         $tree->move('source', 'destination/item');
     }
 
-    function testMoveDocmanWrongDestinationItemType() {
+    function testMoveDocmanWrongDestinationItemType()
+    {
         $tree = new TestTreeTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);

@@ -23,14 +23,16 @@ class Docman_SystemCheckProjectRetriever {
     /** @var Docman_SystemCheckDao */
     private $dao;
 
-    public function __construct(Docman_SystemCheckDao $dao) {
+    public function __construct(Docman_SystemCheckDao $dao)
+    {
         $this->dao = $dao;
     }
 
     /**
      * @return array
      */
-    public function getActiveProjectUnixNamesThatUseDocman() {
+    public function getActiveProjectUnixNamesThatUseDocman()
+    {
         $result = $this->dao->getActiveProjectUnixNamesThatUseDocman();
 
         $project_shortnames = array();

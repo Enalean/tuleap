@@ -80,7 +80,8 @@ class ProjectMilestonesResource {
     /** @var QueryToMilestoneRepresentationBuilderConverter */
     private $query_to_milestone_representation_builder_converter;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
         $this->planning_factory             = PlanningFactory::build();
         $this->tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
@@ -160,7 +161,8 @@ class ProjectMilestonesResource {
      * Get the top milestones of a given project
      * @throws RestException
      */
-    public function get(PFUser $user, $project, $representation_type, $query, $limit, $offset, $order) {
+    public function get(PFUser $user, $project, $representation_type, $query, $limit, $offset, $order)
+    {
 
         if (! $this->limitValueIsAcceptable($limit)) {
             throw new RestException(406, 'Maximum value for limit exceeded');
@@ -185,19 +187,23 @@ class ProjectMilestonesResource {
         }
     }
 
-    private function limitValueIsAcceptable($limit) {
+    private function limitValueIsAcceptable($limit)
+    {
         return $limit <= self::MAX_LIMIT;
     }
 
-    public function options(PFUser $user, Project $project, $limit, $offset) {
+    public function options(PFUser $user, Project $project, $limit, $offset)
+    {
         $this->sendAllowHeaders();
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size) {
+    private function sendPaginationHeaders($limit, $offset, $size)
+    {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
-    private function sendAllowHeaders() {
+    private function sendAllowHeaders()
+    {
         Header::allowOptionsGet();
     }
 }

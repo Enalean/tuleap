@@ -24,7 +24,8 @@ class Tracker_Report_CriteriaFactory {
     /**
      * A protected constructor; prevents direct creation of object
      */
-    protected function __construct() {
+    protected function __construct()
+    {
     }
 
     /**
@@ -35,7 +36,8 @@ class Tracker_Report_CriteriaFactory {
     /**
      * The singleton method
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$_instance)) {
             $c = self::class;
             self::$_instance = new $c;
@@ -47,7 +49,8 @@ class Tracker_Report_CriteriaFactory {
      * @param array the row allowing the construction of a criteria
      * @return Criteria Object
      */
-    public function getInstanceFromRow($row) {
+    public function getInstanceFromRow($row)
+    {
         return new Tracker_Report_Criteria(
             $row['id'],
             $row['report'],
@@ -64,7 +67,8 @@ class Tracker_Report_CriteriaFactory {
      *
      * @return Tracker_Report_Criteria Object
      */
-    public function getInstanceFromXML($xml, &$xmlMapping) {
+    public function getInstanceFromXML($xml, &$xmlMapping)
+    {
         $att = $xml->attributes();
         $fatt = $xml->field->attributes();
         $row = array('field' => $xmlMapping[(string)$fatt['REF']],
@@ -82,15 +86,18 @@ class Tracker_Report_CriteriaFactory {
         return $this->getInstanceFromRow($row);
     }
 
-    public function duplicate($from_report, $to_report, $fields_mapping) {
+    public function duplicate($from_report, $to_report, $fields_mapping)
+    {
         $this->getDao()->duplicate($from_report->id, $to_report->id, $fields_mapping);
     }
 
-    public function saveObject($criteria) {
+    public function saveObject($criteria)
+    {
 
     }
 
-    protected function getDao() {
+    protected function getDao()
+    {
         return new Tracker_Report_CriteriaDao();
     }
 }

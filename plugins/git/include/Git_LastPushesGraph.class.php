@@ -70,7 +70,8 @@ class Git_LastPushesGraph {
      *
      * @return Void
      */
-    public function __construct($groupId, $weeksNumber) {
+    public function __construct($groupId, $weeksNumber)
+    {
         $dao                = new GitDao();
         // TODO: Optionally include presonal forks in repo list
         $allRepositories    = $dao->getProjectRepositoryList($groupId);
@@ -101,7 +102,8 @@ class Git_LastPushesGraph {
      *
      * @return Chart
      */
-    private function prepareGraph() {
+    private function prepareGraph()
+    {
         $nbRepo = count($this->repoList);
 
         $columns                 = $this->getNumberOfColumnForLegendWhenMultipleRepositories($nbRepo);
@@ -157,7 +159,8 @@ class Git_LastPushesGraph {
      *
      * @return BarPlot
      */
-    private function displayRepositoryPushesByWeek() {
+    private function displayRepositoryPushesByWeek()
+    {
         $colors_for_charts = new ColorsForCharts();
         $nbRepo   = count($this->repoList);
         $colors   = array_slice($colors_for_charts->getChartColors(), 0, $nbRepo);
@@ -188,7 +191,8 @@ class Git_LastPushesGraph {
      *
      * @return Array
      */
-    private function getRepositoryPushesByWeek(GitRepository $repository) {
+    private function getRepositoryPushesByWeek(GitRepository $repository)
+    {
         $pushes    = array();
         $gitLogDao = new Git_LogDao();
         foreach ($this->weekNum as $key => $w) {
@@ -213,7 +217,8 @@ class Git_LastPushesGraph {
      *
      * @return Void
      */
-    private function displayAccumulatedGraph($bplot, $graph) {
+    private function displayAccumulatedGraph($bplot, $graph)
+    {
         $abplot = new AccBarPlot($bplot);
         $abplot->SetAbsWidth(10);
         $graph->Add($abplot);
@@ -223,7 +228,8 @@ class Git_LastPushesGraph {
     /**
      * Display the graph else an error if no pushes for this period
      */
-    public function display() {
+    public function display()
+    {
         $graph = $this->prepareGraph();
         $bplot = $this->displayRepositoryPushesByWeek();
         if ($this->displayChart) {

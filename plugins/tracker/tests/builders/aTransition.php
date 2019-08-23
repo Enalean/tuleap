@@ -24,7 +24,8 @@
 // @see http://nat.truemesh.com/archives/000727.html
 require_once __DIR__.'/../bootstrap.php';
 
-function aTransition() {
+function aTransition()
+{
     return new Test_Transition_Builder();
 }
 
@@ -50,24 +51,28 @@ class Test_Transition_Builder {
      */
     private $to_field_value;
 
-    public function withId($id) {
+    public function withId($id)
+    {
         $this->transition_id = $id;
         return $this;
     }
 
-    public function fromFieldValueId($id) {
+    public function fromFieldValueId($id)
+    {
         $this->from_field_value = mock('Tracker_FormElement_Field_List_Value');
         stub($this->from_field_value)->getId()->returns($id);
         return $this;
     }
 
-    public function toFieldValueId($id) {
+    public function toFieldValueId($id)
+    {
         $this->to_field_value = mock('Tracker_FormElement_Field_List_Value');
         stub($this->to_field_value)->getId()->returns($id);
         return $this;
     }
 
-    public function build() {
+    public function build()
+    {
         return new Transition($this->transition_id,
                               $this->workflow_id,
                               $this->from_field_value,

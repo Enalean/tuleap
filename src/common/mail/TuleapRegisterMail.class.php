@@ -29,7 +29,8 @@ class TuleapRegisterMail {
     /** @var string */
     private $template;
 
-    public function __construct(MailPresenterFactory $mail_presenter_factory, TemplateRenderer $renderer, $template) {
+    public function __construct(MailPresenterFactory $mail_presenter_factory, TemplateRenderer $renderer, $template)
+    {
         $this->mail_presenter_factory = $mail_presenter_factory;
         $this->renderer               = $renderer;
         $this->template               = $template;
@@ -84,7 +85,8 @@ class TuleapRegisterMail {
      *
      * @return Codendi_Mail
      */
-    public function getMailProject($subject, $from, $to, $project) {
+    public function getMailProject($subject, $from, $to, $project)
+    {
         $mail     = new Codendi_Mail();
         $cid_logo = $this->addLogoInAttachment($mail);
         $mail->setSubject($subject);
@@ -104,7 +106,8 @@ class TuleapRegisterMail {
      *
      * @return Codendi_Mail
      */
-    public function getMailNotificationProject($subject, $from, $to, $project) {
+    public function getMailNotificationProject($subject, $from, $to, $project)
+    {
         $mail     = new Codendi_Mail();
         $cid_logo = $this->addLogoInAttachment($mail);
         $mail->setSubject($subject);
@@ -124,7 +127,8 @@ class TuleapRegisterMail {
      *
      * @return string
      */
-    private function createNotificationMessageText($login, $redirect_url) {
+    private function createNotificationMessageText($login, $redirect_url)
+    {
         $message = $GLOBALS['Language']->getText('account_register', 'mail_approval_title') . "\n\n"
            . $GLOBALS['Language']->getText('account_register', 'mail_approval_section_one', array($GLOBALS['sys_name'])) . " "
            . $login . $GLOBALS['Language']->getText('account_register', 'mail_approval_section_after_login', array($GLOBALS['sys_name'])). "\n\n"
@@ -136,7 +140,8 @@ class TuleapRegisterMail {
         return $message;
     }
 
-    private function addLogoInAttachment(Codendi_Mail $mail) {
+    private function addLogoInAttachment(Codendi_Mail $mail)
+    {
         $logo_retriever = new LogoRetriever();
         $cid_logo       = '';
         $path_logo      = $logo_retriever->getPath();

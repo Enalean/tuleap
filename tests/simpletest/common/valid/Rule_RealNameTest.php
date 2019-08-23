@@ -21,37 +21,44 @@
 class Rule_RealNameTest extends TuleapTestCase {
     private $rule;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->rule = new Rule_RealName();
     }
 
-    public function itForbidsCRLFChar() {
+    public function itForbidsCRLFChar()
+    {
         $this->assertFalse($this->rule->isValid("toto\ntata"));
         $this->assertFalse($this->rule->isValid("toto
 tata"));
         $this->assertFalse($this->rule->isValid("\ntata"));
     }
 
-    public function itForbidsBackslashN() {
+    public function itForbidsBackslashN()
+    {
         $this->assertFalse($this->rule->isValid('toto\ntata'));
     }
 
-    public function itForbidsBellChar() {
+    public function itForbidsBellChar()
+    {
         $this->assertFalse($this->rule->isValid("toto\atard"));
         $this->assertFalse($this->rule->isValid('toto\atard'));
     }
 
-    public function itForbidsTabChar() {
+    public function itForbidsTabChar()
+    {
         $this->assertFalse($this->rule->isValid("tot\tata"));
         $this->assertFalse($this->rule->isValid('tot\tata'));
     }
 
-    public function itAllowsValidNameWithSpace() {
+    public function itAllowsValidNameWithSpace()
+    {
         $this->assertTrue($this->rule->isValid('John Doe'));
     }
 
-    public function itAllowsValidNameWithUTF8Chars() {
+    public function itAllowsValidNameWithUTF8Chars()
+    {
         $this->assertTrue($this->rule->isValid('你hǎo 好'));
         $this->assertTrue($this->rule->isValid('いろはにほへとちりぬるを'));
     }

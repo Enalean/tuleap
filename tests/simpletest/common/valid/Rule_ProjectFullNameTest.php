@@ -22,7 +22,8 @@ Mock::generate('BaseLanguage');
 
 class Rule_ProjectFullNameTest extends TuleapTestCase {
 
-    function __construct($name = 'Rule_ProjectFullNameFormat test') {
+    function __construct($name = 'Rule_ProjectFullNameFormat test')
+    {
         parent::__construct($name);
     }
 
@@ -34,7 +35,8 @@ class Rule_ProjectFullNameTest extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText', 'name_too_long', array('include_account','name_too_long', 40));
     }
 
-    function testIsValid() {
+    function testIsValid()
+    {
         $rule = new Rule_ProjectFullName();
         $this->assertTrue($rule->isValid("prj"));
         $this->assertEqual($rule->getErrorMessage(), null);

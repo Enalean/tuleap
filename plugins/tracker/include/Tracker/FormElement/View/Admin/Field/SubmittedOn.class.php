@@ -20,7 +20,8 @@
 
 class Tracker_FormElement_View_Admin_Field_SubmittedOn extends Tracker_FormElement_View_Admin_Field {
 
-    protected function fetchCustomHelp() {
+    protected function fetchCustomHelp()
+    {
         $html = '';
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedon_help');
@@ -28,7 +29,8 @@ class Tracker_FormElement_View_Admin_Field_SubmittedOn extends Tracker_FormEleme
         return $html;
     }
 
-    protected function fetchRequired() {
+    protected function fetchRequired()
+    {
         return '';
     }
 }

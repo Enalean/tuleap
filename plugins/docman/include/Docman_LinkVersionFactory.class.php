@@ -29,14 +29,16 @@ class Docman_LinkVersionFactory {
      */
     private $dao;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->dao = new Docman_LinkVersionDao();
     }
 
     /**
      * @return Docman_LinkVersion[]
      */
-    public function getAllVersionForItem(Docman_Link $item) {
+    public function getAllVersionForItem(Docman_Link $item)
+    {
         $versions = array();
         $rows     = $this->dao->searchByItemId($item->getId());
 
@@ -50,7 +52,8 @@ class Docman_LinkVersionFactory {
     /**
      * @return Docman_LinkVersion|null
      */
-    public function getSpecificVersion(Docman_Link $item, $number) {
+    public function getSpecificVersion(Docman_Link $item, $number)
+    {
         $row = $this->dao->searchByNumber($item->getId(), $number)->getRow();
         if (! $row) {
             return null;
@@ -59,18 +62,21 @@ class Docman_LinkVersionFactory {
         return new Docman_LinkVersion($row);
     }
 
-    public function create(Docman_Link $link, $label, $changelog, $date) {
+    public function create(Docman_Link $link, $label, $changelog, $date)
+    {
         return $this->dao->createNewLinkVersion($link, $label, $changelog, $date);
     }
 
-    public function createLinkWithSpecificVersion(Docman_Link $link, string $label, string $changelog, int $date, int $version) {
+    public function createLinkWithSpecificVersion(Docman_Link $link, string $label, string $changelog, int $date, int $version)
+    {
         return $this->dao->createLinkWithSpecificVersion($link, $label, $changelog, $date, $version);
     }
 
     /**
      * @return Docman_LinkVersion|null
      */
-    public function getLatestVersion(Docman_Link $link) {
+    public function getLatestVersion(Docman_Link $link)
+    {
         $row = $this->dao->searchByItemId($link->getId())->getRow();
 
         if (! $row) {

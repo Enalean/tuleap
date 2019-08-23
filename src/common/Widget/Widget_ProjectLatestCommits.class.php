@@ -38,8 +38,10 @@ abstract class Widget_ProjectLatestCommits extends Widget
         $this->commits_callback = $get_commits_callback;
     }
 
-    /* protected */ function _getLinkToCommit($data) { }
-    /* protected */ function _getLinkToMore() { }
+    /* protected */ function _getLinkToCommit($data)
+    { }
+    /* protected */ function _getLinkToMore()
+    { }
 
     protected abstract function canBeUsedByProject(Project $project);
 

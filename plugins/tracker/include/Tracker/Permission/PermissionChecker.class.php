@@ -71,7 +71,8 @@ class Tracker_Permission_PermissionChecker
         return false;
     }
 
-    private function userCanViewArtifact(PFUser $user, Tracker_Artifact $artifact) {
+    private function userCanViewArtifact(PFUser $user, Tracker_Artifact $artifact)
+    {
         if ($artifact->useArtifactPermissions()) {
             $rows = $artifact->permission_db_authorized_ugroups(Tracker_Artifact::PERMISSION_ACCESS);
 
@@ -109,7 +110,8 @@ class Tracker_Permission_PermissionChecker
         return false;
     }
 
-    private function userHavePermissionOnTracker(PFUser $user, Tracker_Artifact $artifact) {
+    private function userHavePermissionOnTracker(PFUser $user, Tracker_Artifact $artifact)
+    {
         $permissions = $artifact->getTracker()->getAuthorizedUgroupsByPermissionType();
 
         foreach ($permissions  as $permission_type => $ugroups) {
@@ -162,7 +164,8 @@ class Tracker_Permission_PermissionChecker
         return false;
     }
 
-    private function userBelongsToGroup(PFUser $user, Tracker_Artifact $artifact, $ugroup_id) {
+    private function userBelongsToGroup(PFUser $user, Tracker_Artifact $artifact, $ugroup_id)
+    {
         return $user->isMemberOfUGroup($ugroup_id, $artifact->getTracker()->getGroupId());
     }
 }

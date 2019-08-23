@@ -22,12 +22,14 @@
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 class TrackerDao extends DataAccessObject {
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker';
     }
 
-    function searchById($id) {
+    function searchById($id)
+    {
         $id      = $this->da->escapeInt($id);
         $sql = "SELECT *
                 FROM $this->table_name
@@ -35,7 +37,8 @@ class TrackerDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchByGroupId($group_id) {
+    function searchByGroupId($group_id)
+    {
         $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT *
                 FROM $this->table_name
@@ -48,7 +51,8 @@ class TrackerDao extends DataAccessObject {
     /**
      * searches trackers by group_id, excluding some given trackers
      */
-    public function searchByGroupIdWithExcludedIds($group_id, array $excluded_tracker_ids) {
+    public function searchByGroupIdWithExcludedIds($group_id, array $excluded_tracker_ids)
+    {
         $group_id             = $this->da->escapeInt($group_id);
         $excluded_clause = $this->restrict("AND id NOT IN", $excluded_tracker_ids);
 
@@ -70,7 +74,8 @@ class TrackerDao extends DataAccessObject {
     * @param int $group_id the ID of the group
     * @return bool
     */
-    public function isShortNameExists($item_name, $group_id) {
+    public function isShortNameExists($item_name, $group_id)
+    {
         $item_name = $this->da->quoteSmart($item_name);
         $group_id  = $this->da->escapeInt($group_id);
 
@@ -112,7 +117,8 @@ class TrackerDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function markAsDeleted($id) {
+    public function markAsDeleted($id)
+    {
         $id = $this->da->escapeInt($id);
         $deletion_date = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
         $sql = "UPDATE $this->table_name
@@ -128,7 +134,8 @@ class TrackerDao extends DataAccessObject {
         }
     }
 
-    function duplicate($atid_template, $group_id, $name, $description, $item_name) {
+    function duplicate($atid_template, $group_id, $name, $description, $item_name)
+    {
         $atid_template = $this->da->escapeInt($atid_template);
         $group_id      = $this->da->escapeInt($group_id);
         $name          = $this->da->quoteSmart($name);
@@ -248,7 +255,8 @@ class TrackerDao extends DataAccessObject {
         return false;
     }
 
-    function save(Tracker $tracker) {
+    function save(Tracker $tracker)
+    {
         $id                  = $this->da->escapeInt($tracker->id);
         $group_id                     = $this->da->escapeInt($tracker->group_id);
         $name                         = $this->da->quoteSmart($tracker->name);
@@ -283,12 +291,14 @@ class TrackerDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    function delete($id) {
+    function delete($id)
+    {
         $sql = "DELETE FROM $this->table_name WHERE id = ". $this->da->escapeInt($id);
         return $this->update($sql);
     }
 
-    public function updateItemName ($group_id, $oldItemname, $itemname) {
+    public function updateItemName($group_id, $oldItemname, $itemname)
+    {
         $group_id = $this->da->quoteSmart($group_id);
         $itemname= $this->da->quoteSmart($itemname);
         $oldItemname= $this->da->quoteSmart($oldItemname);
@@ -298,7 +308,8 @@ class TrackerDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    private function restrict($restriction_clause, $excluded_tracker_ids) {
+    private function restrict($restriction_clause, $excluded_tracker_ids)
+    {
         if (!$excluded_tracker_ids) {
             return "";
         }
@@ -311,7 +322,8 @@ class TrackerDao extends DataAccessObject {
     *
     * @return DataAccessResult
     */
-    public function retrieveTrackersMarkAsDeleted() {
+    public function retrieveTrackersMarkAsDeleted()
+    {
         $sql = "SELECT tracker.*
                 FROM tracker
                     INNER JOIN groups USING (group_id)
@@ -329,7 +341,8 @@ class TrackerDao extends DataAccessObject {
     *
     * @return bool
     */
-    public function restoreTrackerMarkAsDeleted($tracker_id) {
+    public function restoreTrackerMarkAsDeleted($tracker_id)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql        = "UPDATE $this->table_name SET
                           deletion_date = NULL

@@ -29,7 +29,8 @@ class ReferenceManagerTest extends TuleapTestCase {
     private $rm;
     private $user_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         EventManager::setInstance(\Mockery::spy(\EventManager::class));
         ProjectManager::setInstance(mock('ProjectManager'));
@@ -45,19 +46,22 @@ class ReferenceManagerTest extends TuleapTestCase {
         $this->rm->__construct();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         EventManager::clearInstance();
         ProjectManager::clearInstance();
         UserManager::clearInstance();
         parent::tearDown();
     }
 
-    function testSingleton() {
+    function testSingleton()
+    {
         $this->assertEqual(ReferenceManager::instance(), ReferenceManager::instance());
         $this->assertIsA(ReferenceManager::instance(), 'ReferenceManager');
     }
 
-    function testExtractReference() {
+    function testExtractReference()
+    {
         $dao = new MockReferenceDao($this);
         $dar = new MockDataAccessResult($this);
 
@@ -106,7 +110,8 @@ class ReferenceManagerTest extends TuleapTestCase {
         $this->assertTrue(count($this->rm->extractReferences("art #100:123", 0)) == 1, "Art is a reference for project named codendi");
     }
 
-    function testExtractRegexp() {
+    function testExtractRegexp()
+    {
         $dao = new MockReferenceDao($this);
         //The Reference manager
         $this->rm->setReturnReference('_getReferenceDao', $dao);
@@ -170,7 +175,8 @@ class ReferenceManagerTest extends TuleapTestCase {
         $this->assertEqual($matches[0]['value'], '12784');
     }
 
-    function test_updateProjectReferenceShortName() {
+    function test_updateProjectReferenceShortName()
+    {
         $ref_dao = new MockReferenceDao($this);
         $cross_dao = new MockCrossReferenceDao($this);
 
@@ -239,7 +245,8 @@ class ReferenceManagerTest extends TuleapTestCase {
         );
     }
 
-    public function itInsertsLinkForMentionAtTheBeginningOfTheString() {
+    public function itInsertsLinkForMentionAtTheBeginningOfTheString()
+    {
         stub($this->user_manager)->getUserByUserName('username')->returns(mock('PFUser'));
 
         $html = '@username';
@@ -247,7 +254,8 @@ class ReferenceManagerTest extends TuleapTestCase {
         $this->assertEqual($html, '<a href="/users/username">@username</a>');
     }
 
-    public function itDoesNotInsertsLinkForUserThatDoNotExist() {
+    public function itDoesNotInsertsLinkForUserThatDoNotExist()
+    {
         stub($this->user_manager)->getUserByUserName('username')->returns(null);
 
         $html = '@username';
@@ -255,7 +263,8 @@ class ReferenceManagerTest extends TuleapTestCase {
         $this->assertEqual($html, '@username');
     }
 
-    public function itInsertsLinkForMentionAtTheMiddleOfTheString() {
+    public function itInsertsLinkForMentionAtTheMiddleOfTheString()
+    {
         stub($this->user_manager)->getUserByUserName('username')->returns(mock('PFUser'));
 
         $html = '/cc @username';
@@ -263,7 +272,8 @@ class ReferenceManagerTest extends TuleapTestCase {
         $this->assertEqual($html, '/cc <a href="/users/username">@username</a>');
     }
 
-    public function itDoesNotBreakEmailAddress() {
+    public function itDoesNotBreakEmailAddress()
+    {
         $html = 'toto@userna.me';
         $this->rm->insertReferences($html, 0);
         $this->assertEqual($html, 'toto@userna.me');

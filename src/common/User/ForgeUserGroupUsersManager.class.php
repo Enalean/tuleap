@@ -23,22 +23,26 @@ class User_ForgeUserGroupUsersManager {
     /** @var User_ForgeUserGroupUsersDao */
     private $users_dao;
 
-    public function __construct(User_ForgeUserGroupUsersDao $users_dao) {
+    public function __construct(User_ForgeUserGroupUsersDao $users_dao)
+    {
         $this->users_dao = $users_dao;
     }
 
-    public function addUserToForgeUserGroup(PFUser $user, User_ForgeUGroup $user_group) {
+    public function addUserToForgeUserGroup(PFUser $user, User_ForgeUGroup $user_group)
+    {
         if ($this->userIsAlreadyInTheGroup($user, $user_group)) {
             return true;
         }
         return $this->users_dao->addUserToForgeUserGroup($user->getId(), $user_group->getId());
     }
 
-    public function removeUserFromForgeUserGroup(PFUser $user, User_ForgeUGroup $user_group) {
+    public function removeUserFromForgeUserGroup(PFUser $user, User_ForgeUGroup $user_group)
+    {
         return $this->users_dao->removeUserFromForgeUserGroup($user->getId(), $user_group->getId());
     }
 
-    public function userIsAlreadyInTheGroup(PFUser $user, User_ForgeUGroup $user_group) {
+    public function userIsAlreadyInTheGroup(PFUser $user, User_ForgeUGroup $user_group)
+    {
         return $this->users_dao->isUserInGroup($user->getId(), $user_group->getId());
     }
 

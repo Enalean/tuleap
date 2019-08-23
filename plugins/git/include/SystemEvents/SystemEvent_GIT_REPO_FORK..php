@@ -26,27 +26,33 @@ class SystemEvent_GIT_REPO_FORK extends SystemEvent {
     /** @var GitRepositoryFactory */
     private $repository_factory;
 
-    public function injectDependencies(GitRepositoryFactory $repository_factory) {
+    public function injectDependencies(GitRepositoryFactory $repository_factory)
+    {
         $this->repository_factory = $repository_factory;
     }
 
-    private function getOldRepositoryIdFromParameters() {
+    private function getOldRepositoryIdFromParameters()
+    {
         return intval($this->getParameter(0));
     }
 
-    private function getNewRepositoryIdFromParameters() {
+    private function getNewRepositoryIdFromParameters()
+    {
         return intval($this->getParameter(1));
     }
 
-    private function getOldRepositoryFromParameters() {
+    private function getOldRepositoryFromParameters()
+    {
         return $this->repository_factory->getRepositoryById($this->getOldRepositoryIdFromParameters());
     }
 
-    private function getNewRepositoryFromParameters() {
+    private function getNewRepositoryFromParameters()
+    {
         return $this->repository_factory->getRepositoryById($this->getNewRepositoryIdFromParameters());
     }
 
-    public function process() {
+    public function process()
+    {
         $old_repository = $this->getOldRepositoryFromParameters();
         $new_repository = $this->getNewRepositoryFromParameters();
 
@@ -61,7 +67,8 @@ class SystemEvent_GIT_REPO_FORK extends SystemEvent {
         $this->done();
     }
 
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         $old_repository = $this->getOldRepositoryFromParameters();
         $new_repository = $this->getNewRepositoryFromParameters();
         if ($old_repository && $new_repository) {
@@ -75,7 +82,8 @@ class SystemEvent_GIT_REPO_FORK extends SystemEvent {
         }
     }
 
-    private function getLinkToRepositoryManagement(GitRepository $repository) {
+    private function getLinkToRepositoryManagement(GitRepository $repository)
+    {
         $project = $repository->getProject();
         return '<a href="/plugins/git/?action=repo_management&group_id='.$project->getId().'&repo_id='.$repository->getId().'">'.$project->getUnixName().'/'.$repository->getFullName().'</a>';
     }

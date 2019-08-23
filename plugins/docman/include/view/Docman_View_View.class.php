@@ -38,13 +38,15 @@
      */
     var $hp;
 
-    function __construct(&$controller) {
+    function __construct(&$controller)
+    {
         $this->_controller = $controller;
         $this->hp = Codendi_HTMLPurifier::instance();
         $this->javascript = "";
     }
 
-    function display($params = array()) {
+    function display($params = array())
+    {
         $this->_header($params);
         $this->_scripts($params);
         $this->_feedback($params);
@@ -56,23 +58,32 @@
         $this->_javascript($params);
         $this->_footer($params);
     }
-    /* protected */ function _header($params) {
+    /* protected */ function _header($params)
+    {
     }
-    /* protected */ function _scripts($params) {
+    /* protected */ function _scripts($params)
+    {
     }
-    /* protected */ function _feedback($params) {
+    /* protected */ function _feedback($params)
+    {
     }
-    /* protected */ function _title($params) {
+    /* protected */ function _title($params)
+    {
     }
-    /* protected */ function _breadCrumbs($params) {
+    /* protected */ function _breadCrumbs($params)
+    {
     }
-    /* protected */ function _mode($params) {
+    /* protected */ function _mode($params)
+    {
     }
-    /* protected */ function _filter($params) {
+    /* protected */ function _filter($params)
+    {
     }
-    /* protected */ function _content($params) {
+    /* protected */ function _content($params)
+    {
     }
-    /* protected */ function _javascript($params) {
+    /* protected */ function _javascript($params)
+    {
         if($this->javascript != "") {
             echo "<script type=\"text/javascript\">\n".
             "//<!--\n".
@@ -81,19 +92,23 @@
             "</script>\n";
         }
     }
-    /* protected */ function _footer($params) {
+    /* protected */ function _footer($params)
+    {
     }
 
 
-    function &_getVersionFactory($params) {
+    function &_getVersionFactory($params)
+    {
         $vf = new Docman_VersionFactory();
         return $vf;
     }
-    function &_getDocmanIcons($params) {
+    function &_getDocmanIcons($params)
+    {
         $icons = new Docman_Icons($params['theme_path'] .'/images/ic/');
         return $icons;
     }
-    function &_getItemFactory($params) {
+    function &_getItemFactory($params)
+    {
         $f = new Docman_ItemFactory();
         return $f;
     }
@@ -102,7 +117,8 @@
      * This method build the paramater list of the current url for filters and
      * sort.
      */
-    function _initSearchAndSortParams($params) {
+    function _initSearchAndSortParams($params)
+    {
         if(!count($this->dfltSortParams)) {
             $this->dfltSortParams = array();
             $this->dfltSearchParams = array();
@@ -149,12 +165,14 @@
         }
     }
 
-    function getSearchParams($params) {
+    function getSearchParams($params)
+    {
         $this->_initSearchAndSortParams($params);
         return $this->dfltSearchParams;
     }
 
-    function getSortParams($params) {
+    function getSortParams($params)
+    {
         $this->_initSearchAndSortParams($params);
         return $this->dfltSortParams;
     }

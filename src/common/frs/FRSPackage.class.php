@@ -60,7 +60,8 @@ class FRSPackage {
      */
     var $approve_license;
 
-    function __construct($data_array = null) {
+    function __construct($data_array = null)
+    {
         $this->package_id       = null;
         $this->group_id         = null;
         $this->name             = null;
@@ -73,40 +74,52 @@ class FRSPackage {
         }
     }
 
-    function getPackageID() {
+    function getPackageID()
+    {
         return $this->package_id;
     }
-    function setPackageID($package_id) {
+    function setPackageID($package_id)
+    {
         $this->package_id = (int) $package_id;
     }
-    function getGroupID() {
+    function getGroupID()
+    {
         return $this->group_id;
     }
-    function setGroupID($group_id) {
+    function setGroupID($group_id)
+    {
         $this->group_id = (int) $group_id;
     }
-    function getName() {
+    function getName()
+    {
         return $this->name;
     }
-    function setName($name) {
+    function setName($name)
+    {
         $this->name = $name;
     }
-    function getStatusID() {
+    function getStatusID()
+    {
         return $this->status_id;
     }
-    function setStatusID($status_id) {
+    function setStatusID($status_id)
+    {
         $this->status_id = (int) $status_id;
     }
-    function getRank() {
+    function getRank()
+    {
         return $this->rank;
     }
-    function setRank($rank) {
+    function setRank($rank)
+    {
         $this->rank = $rank;
     }
-    function getApproveLicense() {
+    function getApproveLicense()
+    {
         return $this->approve_license;
     }
-    function setApproveLicense($approve_license) {
+    function setApproveLicense($approve_license)
+    {
         $this->approve_license = $approve_license;
     }
 
@@ -114,7 +127,8 @@ class FRSPackage {
      * Determines if the package is active or not
      * @return bool true if the package is active, false otherwise
      */
-    function isActive() {
+    function isActive()
+    {
         $frsrf = new FRSPackageFactory();
         return $this->getStatusID() == $frsrf->STATUS_ACTIVE;
     }
@@ -123,7 +137,8 @@ class FRSPackage {
      * Determines if the package is hidden or not
      * @return bool true if the package is hidden, false otherwise
      */
-    function isHidden() {
+    function isHidden()
+    {
         $frsrf = new FRSPackageFactory();
         return $this->getStatusID() == $frsrf->STATUS_HIDDEN;
     }
@@ -132,12 +147,14 @@ class FRSPackage {
      * Determines if the package is deleted or not
      * @return bool true if the package is deleted, false otherwise
      */
-    function isDeleted() {
+    function isDeleted()
+    {
         $frsrf = new FRSPackageFactory();
         return $this->getStatusID() == $frsrf->STATUS_DELETED;
     }
 
-    function initFromArray($array) {
+    function initFromArray($array)
+    {
         if (isset($array['package_id']))      $this->setPackageID($array['package_id']);
         if (isset($array['group_id']))        $this->setGroupID($array['group_id']);
         if (isset($array['name']))            $this->setName($array['name']);
@@ -146,7 +163,8 @@ class FRSPackage {
         if (isset($array['approve_license'])) $this->setApproveLicense($array['approve_license']);
     }
 
-    function toArray() {
+    function toArray()
+    {
         $array = array();
         $array['package_id']      = $this->getPackageID();
         $array['group_id']        = $this->getGroupID();
@@ -171,7 +189,8 @@ class FRSPackage {
      *
      *  return  array   Array of FRSRelease Objects.
      */
-    function &getReleases() {
+    function &getReleases()
+    {
         if (!is_array($this->package_releases) || count($this->package_releases) < 1) {
             $this->package_releases=array();
             $frsrf = new FRSReleaseFactory();

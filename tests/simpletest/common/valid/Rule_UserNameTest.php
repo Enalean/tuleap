@@ -37,7 +37,8 @@ Mock::generate('BaseLanguage');
 
 class Rule_UserNameTest extends TuleapTestCase {
 
-    function testReservedNames() {
+    function testReservedNames()
+    {
         $r = new Rule_UserName();
         $this->assertTrue($r->isReservedName("root"));
         $this->assertTrue($r->isReservedName("bin"));
@@ -78,7 +79,8 @@ class Rule_UserNameTest extends TuleapTestCase {
         $this->assertTrue($r->isReservedName("DUMMY"));
     }
 
-    function testReservedPrefix() {
+    function testReservedPrefix()
+    {
         $r = new Rule_UserName();
         $this->assertTrue($r->isReservedName("forge__"));
         $this->assertTrue($r->isReservedName("forge__tutu"));
@@ -86,7 +88,8 @@ class Rule_UserNameTest extends TuleapTestCase {
         $this->assertFalse($r->isReservedName("forgeron"));
     }
 
-    function testCVSNames() {
+    function testCVSNames()
+    {
         $r = new Rule_UserName();
         $this->assertTrue($r->isCvsAccount("anoncvs_"));
         $this->assertTrue($r->isCvsAccount("anoncvs_test"));
@@ -94,7 +97,8 @@ class Rule_UserNameTest extends TuleapTestCase {
         $this->assertTrue($r->isCvsAccount("ANONCVS_TEST"));
     }
 
-    function testMinLen() {
+    function testMinLen()
+    {
         $r = new Rule_UserName();
         $this->assertTrue($r->lessThanMin(""));
         $this->assertTrue($r->lessThanMin("a"));
@@ -104,14 +108,16 @@ class Rule_UserNameTest extends TuleapTestCase {
         $this->assertFalse($r->lessThanMin("abcd"));
     }
 
-    function testMaxLen() {
+    function testMaxLen()
+    {
         $r = new Rule_UserName();
         $this->assertFalse($r->greaterThanMax("abcdefghijklmnopkrstuvwxyzabc"));
         $this->assertFalse($r->greaterThanMax("abcdefghijklmnopkrstuvwxyzabcd"));
         $this->assertTrue($r->greaterThanMax("abcdefghijklmnopkrstuvwxyzabcde"));
     }
 
-    function testIllegalChars() {
+    function testIllegalChars()
+    {
         $r = new Rule_UserName();
 
         // Special chars
@@ -165,7 +171,8 @@ class Rule_UserNameTest extends TuleapTestCase {
         $this->assertTrue($r->containsIllegalChars("userç"));
     }
 
-    function testBeginnigByAChar() {
+    function testBeginnigByAChar()
+    {
         $r = new Rule_UserName();
 
         $this->assertFalse($r->atLeastOneChar("1"));
@@ -173,7 +180,8 @@ class Rule_UserNameTest extends TuleapTestCase {
         $this->assertTrue($r->atLeastOneChar("a1b"));
     }
 
-    function testNoSpaces() {
+    function testNoSpaces()
+    {
         $r = new Rule_UserName();
 
         $this->assertFalse($r->noSpaces("user test"));
@@ -183,7 +191,8 @@ class Rule_UserNameTest extends TuleapTestCase {
         $this->assertTrue($r->noSpaces("user"));
     }
 
-    function testUserNameNotExists() {
+    function testUserNameNotExists()
+    {
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserByUserName', null);
 
@@ -193,7 +202,8 @@ class Rule_UserNameTest extends TuleapTestCase {
         $this->assertFalse($r->isAlreadyUserName("usertest"));
     }
 
-    function testUserNameExists() {
+    function testUserNameExists()
+    {
         $u = mock('PFUser');
 
         $um = new MockUserManager($this);
@@ -205,7 +215,8 @@ class Rule_UserNameTest extends TuleapTestCase {
         $this->assertTrue($r->isAlreadyUserName("usertest"));
     }
 
-    function testProjectNameNotExists() {
+    function testProjectNameNotExists()
+    {
         $pm = new MockProjectManager($this);
         $pm->setReturnValue('getProjectByUnixName', null);
 
@@ -215,7 +226,8 @@ class Rule_UserNameTest extends TuleapTestCase {
         $this->assertFalse($r->isAlreadyProjectName("usertest"));
     }
 
-    function testProjectNameExists() {
+    function testProjectNameExists()
+    {
         $p = new MockProject($this);
 
         $pm = new MockProjectManager($this);
@@ -227,7 +239,8 @@ class Rule_UserNameTest extends TuleapTestCase {
         $this->assertTrue($r->isAlreadyProjectName("usertest"));
     }
 
-    function testUnixUserExists() {
+    function testUnixUserExists()
+    {
         $backend = new MockBackend($this);
         $backend->setReturnValue('unixUserExists', true);
         $backend->setReturnValue('unixGroupExists', false);
@@ -238,7 +251,8 @@ class Rule_UserNameTest extends TuleapTestCase {
         $this->assertTrue($r->isSystemName("usertest"));
     }
 
-    function testUnixGroupExists() {
+    function testUnixGroupExists()
+    {
         $backend = new MockBackend($this);
         $backend->setReturnValue('unixUserExists', false);
         $backend->setReturnValue('unixGroupExists', true);
@@ -249,7 +263,8 @@ class Rule_UserNameTest extends TuleapTestCase {
         $this->assertTrue($r->isSystemName("usertest"));
     }
 
-    function testUnixUserAndGroupExists() {
+    function testUnixUserAndGroupExists()
+    {
         $backend = new MockBackend($this);
         $backend->setReturnValue('unixUserExists', true);
         $backend->setReturnValue('unixGroupExists', true);
@@ -260,7 +275,8 @@ class Rule_UserNameTest extends TuleapTestCase {
         $this->assertTrue($r->isSystemName("usertest"));
     }
 
-    function testNoUnixUserOrGroupExists() {
+    function testNoUnixUserOrGroupExists()
+    {
         $backend = new MockBackend($this);
         $backend->setReturnValue('unixUserExists', false);
         $backend->setReturnValue('unixGroupExists', false);

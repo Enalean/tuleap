@@ -26,10 +26,12 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
 
     public const MESSAGE_ADDED = 'added'; // X has been added
 
-    function _getListeningUsersItemId($params) {
+    function _getListeningUsersItemId($params)
+    {
         return $params['parent']->getId();
     }
-    function _buildMessage($event, $params, $user) {
+    function _buildMessage($event, $params, $user)
+    {
         switch($event) {
             case 'plugin_docman_event_add':
                 $parent = $this->_item_factory->getItemFromDb($params['item']->getParentId());
@@ -48,7 +50,8 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
                 break;
         }
     }
-    function _getMessageForUser($user, $message_type, $params) {
+    function _getMessageForUser($user, $message_type, $params)
+    {
         $msg = '';
         switch($message_type) {
             case self::MESSAGE_ADDED:
@@ -67,7 +70,8 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
         return $msg;
     }
 
-    protected function getMessageLink($type, $params) {
+    protected function getMessageLink($type, $params)
+    {
         switch($type) {
             case self::MESSAGE_ADDED:
                 $link = $this->_url . '&action=show&id=' . $params['parent']->getId();

@@ -77,7 +77,8 @@ class Toggler {
      *
      * @return string the classname of the toggler depending on the current state
      */
-    public static function getClassname($id, $force = null, $noajax = false) {
+    public static function getClassname($id, $force = null, $noajax = false)
+    {
         $current_user = UserManager::instance()->getCurrentUser();
         $ajax_mode = $current_user->isAnonymous() || $noajax ? '-noajax' : '';
         if ($current_user->isAnonymous()) {
@@ -96,7 +97,8 @@ class Toggler {
      *
      * @param string $id the id of the toggler
      */
-    public static function toggle($id) {
+    public static function toggle($id)
+    {
         $current_user = UserManager::instance()->getCurrentUser();
         if ($current_user->isLoggedIn()) {
             $done = false;
@@ -125,7 +127,8 @@ class Toggler {
      *
      * @return bool
      */
-    public static function shouldBeDisplayed(PFUser $user, $id, $default) {
+    public static function shouldBeDisplayed(PFUser $user, $id, $default)
+    {
         if ($user->isLoggedIn()) {
             $should_be_displayed = $user->getPreference('toggle_'. $id); //TODO: DRY 'toggle_'. $id
             if ($should_be_displayed !== false) {
@@ -142,7 +145,8 @@ class Toggler {
      * @param PFUser   $current_user The user
      * @param string $id           the id of the toggler
      */
-    public static function togglePreference(PFUser $current_user, $id) {
+    public static function togglePreference(PFUser $current_user, $id)
+    {
         $current_user->setPreference('toggle_'. $id, 1 - (int)$current_user->getPreference('toggle_'. $id));
     }
 }

@@ -70,7 +70,8 @@ rcs_id('$Id: PhotoAlbum.php,v 1.14 2005/10/12 06:19:07 rurban Exp $');
 
 class ImageTile extends HtmlElement
 {
-    function image_tile (/*...*/) {
+    function image_tile(/*...*/)
+    {
         $el = new HTML ('img');
         $tag = func_get_args();
         $params = "<img src='../ImageTile.php?url=". $tag[0]['src'];
@@ -91,15 +92,18 @@ class ImageTile extends HtmlElement
 class WikiPlugin_PhotoAlbum
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("PhotoAlbum");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("Displays a set of photos listed in a text file with optional descriptions");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.14 $");
     }
@@ -110,7 +114,8 @@ extends WikiPlugin
 // define('album_default_extension', '.jpg');
 // define('desc_separator', ';');
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('src'      => '',          // textfile of image list, or local dir.
                      'url'      => '',          // if src=localfs, url prefix (webroot for the links)
                      'mode'    => 'normal',     // normal|thumbs|tiles|list
@@ -156,7 +161,8 @@ extends WikiPlugin
     }
     // descriptions (instead of filenames) for image alt-tags
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
 
         extract($this->getArgs($argstr, $request));
 
@@ -513,7 +519,8 @@ display_slides();"));
      * @param mixed $value Either absolute no. or HTML percentage e.g. '50%'
      * @return int New size in pixels
      */
-    function newSize($oldSize, $value) {
+    function newSize($oldSize, $value)
+    {
         if (trim(substr($value,strlen($value)-1)) != "%") {
             return $value;
         }
@@ -529,7 +536,8 @@ display_slides();"));
     * @param array $photos
     * @return string Error if fixed location is not allowed
     */
-    function fromLocation($src, &$photos) {
+    function fromLocation($src, &$photos)
+    {
         /*if (!allow_album_location) {
             return $this->error(_("Fixed album location is not allowed. Please specify parameter src."));
         }*/
@@ -549,7 +557,8 @@ display_slides();"));
      * @param array $photos
      * @return string Error when bad url or file couldn't be opened
      */
-    function fromFile($src, &$photos, $webpath='') {
+    function fromFile($src, &$photos, $webpath='')
+    {
         $src_bak = $src;
         //there has a big security hole... as loading config/config.ini !
         if (!preg_match('/(\.csv|\.jpg|\.jpeg|\.png|\.gif|\/)$/',$src)) {

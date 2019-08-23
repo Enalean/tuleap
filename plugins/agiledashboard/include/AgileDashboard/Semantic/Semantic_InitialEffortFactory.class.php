@@ -37,7 +37,8 @@ class AgileDashboard_Semantic_InitialEffortFactory implements IBuildSemanticFrom
      *
      * @return AgileDashboard_Semantic_InitialEffortFactory an instance of the factory
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$instance)) {
             $class_name = self::class;
             self::$instance = new $class_name;
@@ -67,7 +68,8 @@ class AgileDashboard_Semantic_InitialEffortFactory implements IBuildSemanticFrom
      *
      * @return AgileDashboard_Semantic_Dao_InitialEffort The dao
      */
-    public function getDao() {
+    public function getDao()
+    {
         return new AgileDashboard_Semantic_Dao_InitialEffort();
     }
 
@@ -80,7 +82,8 @@ class AgileDashboard_Semantic_InitialEffortFactory implements IBuildSemanticFrom
      *
      * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping) {
+    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping)
+    {
         $row = $this->getDao()->searchByTrackerId($from_tracker_id)->getRow();
         if ($row) {
             $from_title_field_id = $row['field_id'];

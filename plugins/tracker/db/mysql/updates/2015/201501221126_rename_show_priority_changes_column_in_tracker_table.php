@@ -18,15 +18,18 @@
 
 class b201501221126_rename_show_priority_changes_column_in_tracker_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Rename show_priority_changes to log_priority_changes column in tracker table';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE tracker CHANGE show_priority_changes log_priority_changes TINYINT(1) NULL";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
@@ -34,7 +37,8 @@ class b201501221126_rename_show_priority_changes_column_in_tracker_table extends
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (! $this->db->columnNameExists('tracker', 'log_priority_changes')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while renaming show_priority_changes column in tracker table');
         }

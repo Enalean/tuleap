@@ -81,7 +81,8 @@ class Reference {
      *
      * The constructor only builds full objects; Only the 'myid' and 'mygroup_id' params may be set to 0 if unknown.
      */
-    public function __construct($myid,$mykeyword,$mydescription,$mylink,$myscope,$myservice_short_name,$nature,$myis_active,$mygroup_id) {
+    public function __construct($myid,$mykeyword,$mydescription,$mylink,$myscope,$myservice_short_name,$nature,$myis_active,$mygroup_id)
+    {
         $this->id=$myid;
         $this->keyword=strtolower($mykeyword);
         $this->description=$mydescription;
@@ -97,37 +98,47 @@ class Reference {
     /**
      * Accessors
      */
-    function getId() {
+    function getId()
+    {
         return $this->id;
     }
-    function getKeyword() {
+    function getKeyword()
+    {
         return $this->keyword;
     }
-    function getDescription() {
+    function getDescription()
+    {
         return $this->description;
     }
-    function getLink() {
+    function getLink()
+    {
         return $this->link;
     }
-    function getScope() {
+    function getScope()
+    {
         return $this->scope;
     }
-    function getServiceShortName() {
+    function getServiceShortName()
+    {
         return $this->service_short_name;
     }
-    function getNature() {
+    function getNature()
+    {
         return $this->nature;
     }
-    function isActive() {
+    function isActive()
+    {
         return $this->is_active;
     }
-    function getGroupId() {
+    function getGroupId()
+    {
         return $this->group_id;
     }
     /**
      * @return bool true if this is a system reference (false if project reference)
      */
-    function isSystemReference() {
+    function isSystemReference()
+    {
         return ($this->scope == 'S');
     }
 
@@ -136,30 +147,36 @@ class Reference {
     /**
      * @see computeNumParam()
      */
-    function getNumParam() {
+    function getNumParam()
+    {
         // Compute number of parameters if not already done
         if ($this->num_param == false)
             $this->num_param=$this->computeNumParam($this->link);
         return $this->num_param;
     }
 
-    function setIsActive($my_is_active) {
+    function setIsActive($my_is_active)
+    {
         $this->is_active=$my_is_active;
     }
 
-    function setGroupId($my_group_id) {
+    function setGroupId($my_group_id)
+    {
         $this->group_id=$my_group_id;
     }
 
-    function setId($my_id) {
+    function setId($my_id)
+    {
         $this->id=$my_id;
     }
 
-    function setDescription($my_description) {
+    function setDescription($my_description)
+    {
         $this->description=$my_description;
     }
 
-    public function setLink($link) {
+    public function setLink($link)
+    {
         $this->link = $link;
     }
 
@@ -176,7 +193,8 @@ class Reference {
      * @param array $args array of arguments (optional)
      * @param string $projname contains the project name (optional)
     */
-    function replaceLink($args=null, $projname=null) {
+    function replaceLink($args=null, $projname=null)
+    {
         $this->link = str_replace('$0', $this->keyword, $this->link);
         if ($projname) {
             $this->link = str_replace('$projname', $projname, $this->link);
@@ -203,7 +221,8 @@ class Reference {
      * @return int number of parameters needed to compute the link
      * @static
      */
-    function computeNumParam($link) {
+    function computeNumParam($link)
+    {
         for ($i=9; $i>0; $i--) {
             if (strpos($link,'$'.$i)!==false) return $i;
         }
@@ -213,7 +232,8 @@ class Reference {
     /**
      * @return ReferenceDao instance
      */
-    function &_getReferenceDao() {
+    function &_getReferenceDao()
+    {
         if (!is_a($this->referenceDao, 'ReferenceDao')) {
             $this->referenceDao = new ReferenceDao(CodendiDataAccess::instance());
         }

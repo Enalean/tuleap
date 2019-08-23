@@ -33,7 +33,8 @@ class Tracker_Semantic_StatusFactory implements IBuildSemanticFromXML, IDuplicat
      *
      * @return Tracker_Semantic_StatusFactory an instance of the factory
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$instance)) {
             $c = self::class;
             self::$instance = new $c;
@@ -41,7 +42,8 @@ class Tracker_Semantic_StatusFactory implements IBuildSemanticFromXML, IDuplicat
         return self::$instance;
     }
 
-    public function getByTracker(Tracker $tracker) {
+    public function getByTracker(Tracker $tracker)
+    {
         return Tracker_Semantic_Status::load($tracker);
     }
 
@@ -65,7 +67,8 @@ class Tracker_Semantic_StatusFactory implements IBuildSemanticFromXML, IDuplicat
      *
      * @return Tracker_Semantic_StatusDao The dao
      */
-    public function getDao() {
+    public function getDao()
+    {
         return new Tracker_Semantic_StatusDao();
     }
 
@@ -78,7 +81,8 @@ class Tracker_Semantic_StatusFactory implements IBuildSemanticFromXML, IDuplicat
      *
      * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping) {
+    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping)
+    {
         $dar = $this->getDao()->searchByTrackerId($from_tracker_id);
         $from_status_field_id = null;
         $from_open_value_ids = array();

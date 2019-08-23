@@ -63,7 +63,8 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
      *
      * @return string
      */
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         $txt = '';
         list($group_id, $project_is_private) = $this->getParametersAsArray();
         $txt .= 'project: '. $this->verbalizeProjectId($group_id, $with_link) .', project is private: '. ($project_is_private ? 'true' : 'false');

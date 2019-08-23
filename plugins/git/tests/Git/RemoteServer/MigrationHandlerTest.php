@@ -43,7 +43,8 @@ class MigrationHandlerBaseTest extends TuleapTestCase {
     protected $server_factory;
     protected $driver_factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->git_system_event_manager = mock('Git_SystemEventManager');
@@ -66,14 +67,16 @@ class MigrationHandlerBaseTest extends TuleapTestCase {
 
 class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->user   = mock('PFUser');
         $this->server = aGerritServer()->withId(1)->build();
     }
 
-    public function itThrowsAnExceptionIfRepositoryCannotBeMigrated() {
+    public function itThrowsAnExceptionIfRepositoryCannotBeMigrated()
+    {
         $repository = stub('GitRepository')->canMigrateToGerrit()->returns(false);
         stub($this->project_manager)->getParentProject()->returns(null);
         stub($repository)->getProject()->returns(\Mockery::spy(Project::class));
@@ -87,7 +90,8 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
-    public function itThrowsAnExceptionIfRepositoryIsAlreadyInQueueForMigration() {
+    public function itThrowsAnExceptionIfRepositoryIsAlreadyInQueueForMigration()
+    {
         $repository = stub('GitRepository')->canMigrateToGerrit()->returns(true);
         stub($repository)->getProject()->returns(\Mockery::spy(Project::class));
 
@@ -102,7 +106,8 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
-    public function itThrowsAnExceptionIfRepositoryWillBeMigratedIntoARestrictedGerritServer() {
+    public function itThrowsAnExceptionIfRepositoryWillBeMigratedIntoARestrictedGerritServer()
+    {
         $repository = stub('GitRepository')->canMigrateToGerrit()->returns(true);
         stub($this->project_manager)->getParentProject()->returns(null);
         stub($repository)->getProject()->returns(\Mockery::spy(Project::class));
@@ -119,7 +124,8 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
-    public function itThrowsAnExceptionIfParentProjectIsNotActive() {
+    public function itThrowsAnExceptionIfParentProjectIsNotActive()
+    {
         $repository = stub('GitRepository')->canMigrateToGerrit()->returns(true);
         $project = mock(Project::class);
         stub($this->project_manager)->getParentProject()->returns($project);
@@ -138,7 +144,8 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
-    public function itMigratesRepositoryWhenParentIsActive() {
+    public function itMigratesRepositoryWhenParentIsActive()
+    {
         $repository = stub('GitRepository')->canMigrateToGerrit()->returns(true);
         $project = mock(Project::class);
         stub($this->project_manager)->getParentProject()->returns($project);
@@ -157,7 +164,8 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
     }
 
 
-    public function itMigratesRepository() {
+    public function itMigratesRepository()
+    {
         $repository = stub('GitRepository')->canMigrateToGerrit()->returns(true);
         stub($this->project_manager)->getParentProject()->returns(null);
         stub($repository)->getProject()->returns(\Mockery::spy(Project::class));
@@ -173,7 +181,8 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
-    public function itDoesNothingWhenServerDoesNotExist() {
+    public function itDoesNothingWhenServerDoesNotExist()
+    {
         $repository         = stub('GitRepository')->canMigrateToGerrit()->returns(true);
         $remote_server_id   = 1;
         $gerrit_template_id = "none";
@@ -189,7 +198,8 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
 
 class MigrationHandlerDisconnectTest extends MigrationHandlerBaseTest {
 
-    public function itThrowsAnExceptionIfRepositoryIsNotMigrated() {
+    public function itThrowsAnExceptionIfRepositoryIsNotMigrated()
+    {
         $repository        = stub('GitRepository')->isMigratedToGerrit()->returns(false);
         $disconnect_option = '';
 
@@ -198,7 +208,8 @@ class MigrationHandlerDisconnectTest extends MigrationHandlerBaseTest {
         $this->handler->disconnect($repository, $disconnect_option);
     }
 
-    public function itDisconnectsWithoutOptionsIfTheRemoteServerDoesNotExist() {
+    public function itDisconnectsWithoutOptionsIfTheRemoteServerDoesNotExist()
+    {
         $backend           = stub('Git_Backend_Gitolite')->disconnectFromGerrit()->returns(true);
         $repository        = stub('GitRepository')->isMigratedToGerrit()->returns(true);
         $disconnect_option = '';
@@ -212,7 +223,8 @@ class MigrationHandlerDisconnectTest extends MigrationHandlerBaseTest {
         $this->handler->disconnect($repository, $disconnect_option);
     }
 
-    public function itDisconnectsWithtEmptyOption() {
+    public function itDisconnectsWithtEmptyOption()
+    {
         $backend           = stub('Git_Backend_Gitolite')->disconnectFromGerrit()->returns(true);
         $repository        = stub('GitRepository')->isMigratedToGerrit()->returns(true);
         $server            = mock('Git_RemoteServer_GerritServer');
@@ -230,7 +242,8 @@ class MigrationHandlerDisconnectTest extends MigrationHandlerBaseTest {
         $this->handler->disconnect($repository, $disconnect_option);
     }
 
-    public function itDisconnectsWithtReadOnlyOption() {
+    public function itDisconnectsWithtReadOnlyOption()
+    {
         $backend           = stub('Git_Backend_Gitolite')->disconnectFromGerrit()->returns(true);
         $repository        = stub('GitRepository')->isMigratedToGerrit()->returns(true);
         $server            = mock('Git_RemoteServer_GerritServer');
@@ -248,7 +261,8 @@ class MigrationHandlerDisconnectTest extends MigrationHandlerBaseTest {
         $this->handler->disconnect($repository, $disconnect_option);
     }
 
-    public function itDisconnectsWithtDeleteOption() {
+    public function itDisconnectsWithtDeleteOption()
+    {
         $backend           = stub('Git_Backend_Gitolite')->disconnectFromGerrit()->returns(true);
         $repository        = stub('GitRepository')->isMigratedToGerrit()->returns(true);
         $server            = mock('Git_RemoteServer_GerritServer');
@@ -267,7 +281,8 @@ class MigrationHandlerDisconnectTest extends MigrationHandlerBaseTest {
         $this->handler->disconnect($repository, $disconnect_option);
     }
 
-    public function itThrowsAnExceptionIfDeletePluginNotInstalled() {
+    public function itThrowsAnExceptionIfDeletePluginNotInstalled()
+    {
         $backend           = stub('Git_Backend_Gitolite')->disconnectFromGerrit()->returns(true);
         $repository        = stub('GitRepository')->isMigratedToGerrit()->returns(true);
         $server            = mock('Git_RemoteServer_GerritServer');

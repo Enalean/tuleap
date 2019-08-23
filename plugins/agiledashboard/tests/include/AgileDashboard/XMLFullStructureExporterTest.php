@@ -31,7 +31,8 @@ class XMLFullStructureExporterTest extends TuleapTestCase {
     private $xml_exporter;
     private $project;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->router = mock('AgileDashboardRouter');
 
         $this->event_manager  = \Mockery::mock(\EventManager::class);
@@ -47,7 +48,8 @@ class XMLFullStructureExporterTest extends TuleapTestCase {
         $this->project = stub('Project')->getID()->returns(101);
     }
 
-    public function itAsksToPluginToExportStuffForTheGivenProject() {
+    public function itAsksToPluginToExportStuffForTheGivenProject()
+    {
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
                                                <project />');
 
@@ -58,7 +60,8 @@ class XMLFullStructureExporterTest extends TuleapTestCase {
         $this->xml_exporter->export($this->project);
     }
 
-    public function testAgileDashboardExportsItself() {
+    public function testAgileDashboardExportsItself()
+    {
         expect($this->router)->route()->once();
 
         $this->event_manager->shouldReceive('processEvent')->with(AGILEDASHBOARD_EXPORT_XML, \Mockery::any());

@@ -19,11 +19,13 @@
  */
 
 class Rule_RegexpTest extends TuleapTestCase {
-    function __construct($name = 'Rule_Int test') {
+    function __construct($name = 'Rule_Int test')
+    {
         parent::__construct($name);
     }
 
-    function testPattern() {
+    function testPattern()
+    {
         $r = new Rule_Regexp('/[a-z]+/');
 
         $input = '123';

@@ -21,7 +21,8 @@ require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_List_Bind_UgroupsValueTest extends TuleapTestCase {
 
-    public function testJSonReturnsBothNameAndShortName() {
+    public function testJSonReturnsBothNameAndShortName()
+    {
         $id         = 123;
         $name       = 'The smurfs';
         $short_name = 'blueThings';

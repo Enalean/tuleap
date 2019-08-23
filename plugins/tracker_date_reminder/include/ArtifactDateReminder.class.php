@@ -28,11 +28,13 @@ class ArtifactDateReminder {
 
     private $logger;
 
-    function __construct(TrackerDateReminder_Logger $logger) {
+    function __construct(TrackerDateReminder_Logger $logger)
+    {
         $this->logger = new TrackerDateReminder_Logger_Prefix($logger, '');
     }
 
-    function codexDaily() {
+    function codexDaily()
+    {
         $this->logger->info('Start');
 
         $sql = "SELECT notification_id FROM artifact_date_reminder_processing ORDER BY notification_id";

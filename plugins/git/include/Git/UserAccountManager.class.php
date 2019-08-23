@@ -46,11 +46,13 @@ class Git_UserAccountManager {
      * @param array $new_keys
      * @throws Git_UserSynchronisationException
      */
-    public function synchroniseSSHKeys(array $original_keys, array $new_keys, PFUser $user) {
+    public function synchroniseSSHKeys(array $original_keys, array $new_keys, PFUser $user)
+    {
         $this->synchroniseSSHKeysWithGerrit($original_keys, $new_keys, $user);
     }
 
-    private function synchroniseSSHKeysWithGerrit($original_keys, $new_keys, $user) {
+    private function synchroniseSSHKeysWithGerrit($original_keys, $new_keys, $user)
+    {
         $this->getGerritUserAccountManager()
             ->synchroniseSSHKeys(
                 $original_keys,
@@ -65,11 +67,13 @@ class Git_UserAccountManager {
      * @return void
      * @throws Git_UserSynchronisationException
      */
-    public function pushSSHKeys(PFUser $user) {
+    public function pushSSHKeys(PFUser $user)
+    {
         $this->pushSSHKeysToGerrit($user);
     }
 
-    private function pushSSHKeysToGerrit($user) {
+    private function pushSSHKeysToGerrit($user)
+    {
         $this->getGerritUserAccountManager()->pushSSHKeys($user);
     }
 
@@ -77,7 +81,8 @@ class Git_UserAccountManager {
      *
      * @return Git_Driver_Gerrit_UserAccountManager
      */
-    public function getGerritUserAccountManager() {
+    public function getGerritUserAccountManager()
+    {
         if (! $this->gerrit_user_account_manager) {
             $this->gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager(
                 $this->gerrit_driver_factory,
@@ -93,7 +98,8 @@ class Git_UserAccountManager {
      * @param Git_Driver_Gerrit_UserAccountManager $manager
      * @return Git_UserAccountManager
      */
-    public function setGerritUserAccountManager(Git_Driver_Gerrit_UserAccountManager $manager) {
+    public function setGerritUserAccountManager(Git_Driver_Gerrit_UserAccountManager $manager)
+    {
         $this->gerrit_user_account_manager = $manager;
         return $this;
     }

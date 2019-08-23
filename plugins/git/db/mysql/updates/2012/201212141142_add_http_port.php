@@ -25,7 +25,8 @@ class b201212141142_add_http_port extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 add gerrit http port info
 EOT;
@@ -36,7 +37,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -45,14 +47,16 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = 'ALTER TABLE plugin_git_remote_servers
                     CHANGE port ssh_port INT(11) UNSIGNED NOT NULL,
                     ADD http_port INT(11) UNSIGNED NOT NULL DEFAULT 80';
         $this->execDB($sql, 'An error occured while adding the http_port col into the table plugin_git_remote_servers');
     }
 
-    protected function execDB($sql, $message) {
+    protected function execDB($sql, $message)
+    {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message.implode(', ', $this->db->dbh->errorInfo()));

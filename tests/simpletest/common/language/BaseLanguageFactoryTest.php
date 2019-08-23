@@ -44,7 +44,8 @@ class BaseLanguageFactoryTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    public function testFactoryShouldReturnABaseLanguageAccordingToTheLocale() {
+    public function testFactoryShouldReturnABaseLanguageAccordingToTheLocale()
+    {
         $us = new BaseLanguage($this->supportedLanguages, 'en_US');
         $fr = new BaseLanguage($this->supportedLanguages, 'fr_FR');
         $factory = new BaseLanguageFactory();
@@ -56,7 +57,8 @@ class BaseLanguageFactoryTest extends TuleapTestCase {
         $this->assertNotEqual($factory->getBaseLanguage('en_US'), $factory->getBaseLanguage('fr_FR'));
     }
 
-    public function testItInstantiatesMissingLanguages() {
+    public function testItInstantiatesMissingLanguages()
+    {
         $us = new BaseLanguage($this->supportedLanguages, 'en_US');
         $us->loadLanguage('en_US');
         $fr = new BaseLanguage($this->supportedLanguages, 'fr_FR');
@@ -69,7 +71,8 @@ class BaseLanguageFactoryTest extends TuleapTestCase {
         $this->assertTrue($factory->getBaseLanguage('en_US') === $factory->getBaseLanguage('en_US'), 'the language should be cached');
     }
 
-    public function testFactoryShouldSetADefaultLanguageForUnknownLocales() {
+    public function testFactoryShouldSetADefaultLanguageForUnknownLocales()
+    {
         $default_language = new BaseLanguage($this->supportedLanguages, ForgeConfig::get('sys_lang'));
         $default_language->loadLanguage(ForgeConfig::get('sys_lang'));
         $factory = new BaseLanguageFactory();
@@ -77,7 +80,8 @@ class BaseLanguageFactoryTest extends TuleapTestCase {
         $this->assertEqual($default_language, $factory->getBaseLanguage('unknown_locale'));
     }
 
-    public function testBecauseOfTheLazyLoadingOfLangTheLangDependedOnTheCurrentUser() {
+    public function testBecauseOfTheLazyLoadingOfLangTheLangDependedOnTheCurrentUser()
+    {
         $factory = new BaseLanguageFactory();
 
         $fr = $factory->getBaseLanguage('fr_FR');
@@ -86,7 +90,8 @@ class BaseLanguageFactoryTest extends TuleapTestCase {
         $us = $factory->getBaseLanguage('en_US');
         $this->assertEqual('en_US', $us->lang);
     }
-    public function testDoesnMessUpGlobalState() {
+    public function testDoesnMessUpGlobalState()
+    {
         $factory = new BaseLanguageFactory();
 
         $currentlocale = setlocale(LC_ALL, '0');

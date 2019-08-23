@@ -32,7 +32,8 @@ class JsonDecoder {
      * @param string $value
      * @return bool
      */
-    public function looksLikeJson($value) {
+    public function looksLikeJson($value)
+    {
         return substr($value, 0, 1) === '{' && substr($value, -1) === '}';
     }
 
@@ -56,7 +57,8 @@ class JsonDecoder {
         return $value;
     }
 
-    private function checkForJsonErrors($key) {
+    private function checkForJsonErrors($key)
+    {
         switch (json_last_error()) {
             case JSON_ERROR_NONE :
                 return;

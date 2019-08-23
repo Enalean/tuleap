@@ -22,36 +22,43 @@ class ArtifactXMLNodeHelper {
     /** @var DOMDocument */
     private $document;
 
-    public function __construct(DOMDocument $document) {
+    public function __construct(DOMDocument $document)
+    {
         $this->document = $document;
     }
 
-    public function createElement($name) {
+    public function createElement($name)
+    {
         return $this->document->createElement($name);
     }
 
-    public function appendChild(DOMElement $node) {
+    public function appendChild(DOMElement $node)
+    {
         $this->document->appendChild($node);
     }
 
-    public function addUserFormatAttribute(DOMElement $node, $is_anonymous) {
+    public function addUserFormatAttribute(DOMElement $node, $is_anonymous)
+    {
         $node->setAttribute('format', $is_anonymous ? 'email' : 'username');
         if ($is_anonymous) {
             $node->setAttribute('is_anonymous', "1");
         }
     }
 
-    public function appendSubmittedBy(DOMElement $xml, $submitted_by, $is_anonymous) {
+    public function appendSubmittedBy(DOMElement $xml, $submitted_by, $is_anonymous)
+    {
         $submitted_by_node = $this->document->createElement('submitted_by', $submitted_by);
         $this->addUserFormatAttribute($submitted_by_node, $is_anonymous);
         $xml->appendChild($submitted_by_node);
     }
 
-    public function appendSubmittedOn(DOMElement $xml, $timestamp) {
+    public function appendSubmittedOn(DOMElement $xml, $timestamp)
+    {
         $xml->appendChild($this->getDateNodeFromTimestamp('submitted_on', $timestamp));
     }
 
-    public function getDateNodeFromTimestamp($name, $timestamp) {
+    public function getDateNodeFromTimestamp($name, $timestamp)
+    {
         $timestamp = intval($timestamp);
         $iso       = $timestamp > 0 ? date('c', $timestamp) : '';
         $node      = $this->document->createElement($name, $iso);
@@ -59,12 +66,14 @@ class ArtifactXMLNodeHelper {
         return $node;
     }
 
-    public function getCDATASection(DOMNode $node, $value) {
+    public function getCDATASection(DOMNode $node, $value)
+    {
         $no = $node->ownerDocument;
         return $no->createCDATASection($value);
     }
 
-    public function getNodeWithValue($node_name, $value) {
+    public function getNodeWithValue($node_name, $value)
+    {
         $node = $this->document->createElement($node_name);
         $node->appendChild($this->getCDATASection($node, $value));
         return $node;

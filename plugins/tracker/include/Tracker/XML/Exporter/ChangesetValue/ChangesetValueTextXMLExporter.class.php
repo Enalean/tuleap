@@ -20,7 +20,8 @@
 
 class Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter {
 
-    protected function getFieldChangeType() {
+    protected function getFieldChangeType()
+    {
         return 'text';
     }
 

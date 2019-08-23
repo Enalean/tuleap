@@ -45,7 +45,8 @@ use Tuleap\SVN\SvnAdmin;
 
 class hudson_svnPlugin extends Plugin {
 
-    public function __construct($id) {
+    public function __construct($id)
+    {
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
 
@@ -65,27 +66,31 @@ class hudson_svnPlugin extends Plugin {
     /**
      * @see Plugin::getDependencies()
      */
-    public function getDependencies() {
+    public function getDependencies()
+    {
         return array('svn', 'hudson');
     }
 
     /**
      * @return HudsonSvnPluginInfo
      */
-    public function getPluginInfo() {
+    public function getPluginInfo()
+    {
         if (!$this->pluginInfo) {
             $this->pluginInfo = new HudsonSvnPluginInfo($this);
         }
         return $this->pluginInfo;
     }
 
-    public function cssfile($params) {
+    public function cssfile($params)
+    {
         if (strpos($_SERVER['REQUEST_URI'], HUDSON_BASE_URL) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
 
-    public function javascript_file($params) {
+    public function javascript_file($params)
+    {
         if (strpos($_SERVER['REQUEST_URI'], HUDSON_BASE_URL) === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/form.js"></script>';
         }
@@ -111,11 +116,13 @@ class hudson_svnPlugin extends Plugin {
         $params['services'][] = $collector->collect($project, $job_id);
     }
 
-    private function getJobFactory() {
+    private function getJobFactory()
+    {
         return new Factory(new JobDao());
     }
 
-    private function getRenderer() {
+    private function getRenderer()
+    {
         return TemplateRendererFactory::build()->getRenderer(HUDSON_SVN_BASE_DIR.'/templates');
     }
 
@@ -167,35 +174,42 @@ class hudson_svnPlugin extends Plugin {
         return new SvnAdmin($this->getSystemCommand(), $this->getLogger(), Backend::instance(Backend::SVN));
     }
 
-    private function getProjectManager() {
+    private function getProjectManager()
+    {
         return ProjectManager::instance();
     }
 
-    private function getJobManager() {
+    private function getJobManager()
+    {
         return new Manager(new JobDao(), $this->getRepositoryManager(), new SVNPathsUpdater());
     }
 
-    private function isJobValid($job_id) {
+    private function isJobValid($job_id)
+    {
         return isset($job_id) && !empty($job_id);
     }
 
-    private function isRequestWellFormed(array $params) {
+    private function isRequestWellFormed(array $params)
+    {
         return $this->isJobValid($params['job_id']) &&
                isset($params['request']) &&
                !empty($params['request']);
     }
 
-    private function isPluginConcerned(array $params) {
+    private function isPluginConcerned(array $params)
+    {
         return $params['request']->get('hudson_use_plugin_svn_trigger_checkbox');
     }
 
-    public function save_ci_triggers($params) {
+    public function save_ci_triggers($params)
+    {
         if ($this->isRequestWellFormed($params) && $this->isPluginConcerned($params)) {
             $this->getJobManager()->save($params);
         }
     }
 
-    public function update_ci_triggers($params) {
+    public function update_ci_triggers($params)
+    {
         $params['job_id'] = $params['request']->get('job_id');
         if ($this->isRequestWellFormed($params) && $this->isPluginConcerned($params)) {
             $vRepoId = new Valid_UInt('hudson_use_plugin_svn_trigger');
@@ -208,7 +222,8 @@ class hudson_svnPlugin extends Plugin {
         }
     }
 
-    public function delete_ci_triggers($params) {
+    public function delete_ci_triggers($params)
+    {
         if ($this->isJobValid($params['job_id'])) {
             if (! $this->getJobManager()->delete($params['job_id'])) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson_svn','ci_trigger_not_deleted'));

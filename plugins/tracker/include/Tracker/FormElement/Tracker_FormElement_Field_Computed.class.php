@@ -470,7 +470,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         $current_user = UserManager::instance()->getCurrentUser();
         $changeset    = $artifact->getLastChangesetWithFieldValue($this);
         $value        = $this->getComputedValue($current_user, $changeset->getArtifact(), $changeset->getSubmittedOn());
@@ -488,7 +489,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $this->getComputedValue($current_user, $changeset->getArtifact(), $changeset->getSubmittedOn());
     }
 
-    public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+    public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
+    {
         return $this->getFullRESTValue($user, $changeset);
     }
 
@@ -562,54 +564,66 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     /**
      * @return the label of the field (mainly used in admin part)
      */
-    public static function getFactoryLabel() {
+    public static function getFactoryLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'aggregate_label');
     }
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
-    public static function getFactoryDescription() {
+    public static function getFactoryDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'aggregate_description');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconUseIt() {
+    public static function getFactoryIconUseIt()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/sum.png');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconCreate() {
+    public static function getFactoryIconCreate()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/sum.png');
     }
 
-    protected function getDao() {
+    protected function getDao()
+    {
         return new Tracker_FormElement_Field_ComputedDao();
     }
 
-    public function getCriteriaFrom($criteria) {
+    public function getCriteriaFrom($criteria)
+    {
     }
 
-    public function getCriteriaWhere($criteria) {
+    public function getCriteriaWhere($criteria)
+    {
     }
 
-    public function getQuerySelect() {
+    public function getQuerySelect()
+    {
     }
 
-    public function getQueryFrom() {
+    public function getQueryFrom()
+    {
     }
 
-    public function fetchCriteriaValue($criteria) {
+    public function fetchCriteriaValue($criteria)
+    {
     }
 
-    public function fetchRawValue($value) {
+    public function fetchRawValue($value)
+    {
     }
 
-    protected function getCriteriaDao() {
+    protected function getCriteriaDao()
+    {
     }
 
     public function getAggregateFunctions()
@@ -759,11 +773,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $html;
     }
 
-    protected function getValueDao() {
+    protected function getValueDao()
+    {
         return new ComputedDao();
     }
 
-    public function fetchFollowUp($artifact, $from, $to) {
+    public function fetchFollowUp($artifact, $from, $to)
+    {
     }
 
     public function isArtifactValueAutocomputed(Tracker_Artifact $artifact)
@@ -822,7 +838,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $html;
     }
 
-    public function fetchRawValueFromChangeset($changeset) {
+    public function fetchRawValueFromChangeset($changeset)
+    {
     }
 
     public function getChangesetValue($changeset, $value_id, $has_changed)
@@ -932,10 +949,12 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return  (float) $previous_changeset_value->getNumeric() !== (float) $new_value;
     }
 
-    public function getRESTAvailableValues() {
+    public function getRESTAvailableValues()
+    {
     }
 
-    public function testImport() {
+    public function testImport()
+    {
         return true;
     }
 
@@ -944,14 +963,16 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $this->validateValue($value);
     }
 
-    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+    public function accept(Tracker_FormElement_FieldVisitor $visitor)
+    {
         return $visitor->visitComputed($this);
     }
 
     /**
      * @return int | null if no value found
      */
-    public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null) {
+    public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null)
+    {
         $dao   = Tracker_FormElement_Field_ComputedDaoCache::instance();
         $value = $dao->getCachedFieldValueAtTimestamp($artifact->getId(), $this->getId(), $timestamp);
 
@@ -961,7 +982,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $value;
     }
 
-    public function canBeUsedAsReportCriterion() {
+    public function canBeUsedAsReportCriterion()
+    {
         return false;
     }
 

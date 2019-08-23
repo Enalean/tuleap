@@ -34,7 +34,8 @@ class IconPresenter {
     public $is_selected;
 
 
-    public function __construct($icon, $is_selected) {
+    public function __construct($icon, $is_selected)
+    {
         $this->icon        = $icon;
         $this->is_selected = $is_selected;
     }

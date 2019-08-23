@@ -34,20 +34,24 @@ require_once('lib/plugin/WikiAdminSelect.php');
 class WikiPlugin_WikiAdminSearchReplace
 extends WikiPlugin_WikiAdminSelect
 {
-    function getName() {
+    function getName()
+    {
         return _("WikiAdminSearchReplace");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Search and replace text in selected wiki pages.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.19 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array_merge
             (
              PageList::supportedArgs(),
@@ -58,7 +62,8 @@ extends WikiPlugin_WikiAdminSelect
                    ));
     }
 
-    function replaceHelper(&$dbi, $pagename, $from, $to, $case_exact=true, $regex=false) {
+    function replaceHelper(&$dbi, $pagename, $from, $to, $case_exact=true, $regex=false)
+    {
         $page = $dbi->getPage($pagename);
         if ($page->exists()) {// don't replace default contents
             $current = $page->getCurrentRevision();
@@ -83,7 +88,8 @@ extends WikiPlugin_WikiAdminSelect
         return false;
     }
 
-    function searchReplacePages(&$dbi, &$request, $pages, $from, $to) {
+    function searchReplacePages(&$dbi, &$request, $pages, $from, $to)
+    {
         if (empty($from)) return HTML::p(HTML::strong(fmt("Error: Empty search string.")));
         $ul = HTML::ul();
         $count = 0;
@@ -111,7 +117,8 @@ extends WikiPlugin_WikiAdminSelect
         }
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         // no action=replace support yet
         if ($request->getArg('action') != 'browse')
             return $this->disabled("(action != 'browse')");
@@ -203,7 +210,8 @@ extends WikiPlugin_WikiAdminSelect
                           $buttons);
     }
 
-    function replaceForm(&$header, $post_args) {
+    function replaceForm(&$header, $post_args)
+    {
         $header->pushContent(HTML::div(array('class'=>'hint'),
                                        _("Replace all occurences of the given string in the content of all pages.")),
                              HTML::br());

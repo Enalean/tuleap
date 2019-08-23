@@ -20,7 +20,8 @@
 
 class Tracker_Workflow_GlobalRulesViolationException extends Tracker_Exception {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct($GLOBALS['Language']->getText('plugin_tracker_artifact', 'global_rules_not_valid'));
     }
 }

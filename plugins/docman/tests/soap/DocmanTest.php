@@ -46,7 +46,8 @@ class DocmanTest extends SOAPBase
         parent::tearDown();
     }
 
-    public function testGetDocumentRootFolder() {
+    public function testGetDocumentRootFolder()
+    {
         $session_hash = $this->getSessionHash();
 
         $root_folder_id = $this->soap_base->getRootFolder(
@@ -212,7 +213,8 @@ class DocmanTest extends SOAPBase
     /**
      * @depends testGetDocumentRootFolder
      */
-    public function testCreateFolder($root_folder_id) {
+    public function testCreateFolder($root_folder_id)
+    {
         $session_hash = $this->getSessionHash();
 
         $title       = 'My Folder';
@@ -249,7 +251,8 @@ class DocmanTest extends SOAPBase
     /**
      * @depends testCreateFolder
      */
-    public function testCreateFolderWithSpaces($root_folder_id) {
+    public function testCreateFolderWithSpaces($root_folder_id)
+    {
         $session_hash = $this->getSessionHash();
 
         $title       = ' My second Folder ';
@@ -286,7 +289,8 @@ class DocmanTest extends SOAPBase
     /**
      * @depends testCreateFolderWithSpaces
      */
-    public function testGetFirstFolder($root_folder_id) {
+    public function testGetFirstFolder($root_folder_id)
+    {
         $session_hash = $this->getSessionHash();
 
         $response = $this->soap_base->listFolder(

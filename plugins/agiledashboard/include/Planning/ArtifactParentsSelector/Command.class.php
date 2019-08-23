@@ -40,7 +40,8 @@ abstract class Planning_ArtifactParentsSelector_Command {
      */
     protected $hierarchy_factory;
 
-    public function __construct(Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory, Planning_MilestoneFactory $milestone_factory, Tracker_HierarchyFactory $hierarchy_factory) {
+    public function __construct(Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory, Planning_MilestoneFactory $milestone_factory, Tracker_HierarchyFactory $hierarchy_factory)
+    {
         $this->artifact_factory  = $artifact_factory;
         $this->planning_factory  = $planning_factory;
         $this->milestone_factory = $milestone_factory;
@@ -52,7 +53,8 @@ abstract class Planning_ArtifactParentsSelector_Command {
     /**
      * @return array of Tracker_Artifact
      */
-    protected function keepOnlyArtifactsBelongingToParentTracker(&$artifact, $key, $parent_tracker) {
+    protected function keepOnlyArtifactsBelongingToParentTracker(&$artifact, $key, $parent_tracker)
+    {
         if ($artifact->getTracker() != $parent_tracker) {
             $artifact = null;
         }

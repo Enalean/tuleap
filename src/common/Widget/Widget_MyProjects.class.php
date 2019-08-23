@@ -33,7 +33,8 @@ class Widget_MyProjects extends Widget {
         parent::__construct('myprojects');
     }
 
-    function getTitle() {
+    function getTitle()
+    {
         return $GLOBALS['Language']->getText('my_index', 'my_projects');
     }
 
@@ -192,10 +193,12 @@ class Widget_MyProjects extends Widget {
         return $html;
     }
 
-    function hasRss() {
+    function hasRss()
+    {
         return true;
     }
-    function displayRss() {
+    function displayRss()
+    {
         $server_url = HTTPRequest::instance()->getServerUrl();
         $rss        = new RSS(array(
             'title'       => 'Codendi - MyProjects',
@@ -243,11 +246,13 @@ class Widget_MyProjects extends Widget {
         }
         $rss->display();
     }
-    function getDescription() {
+    function getDescription()
+    {
         return $GLOBALS['Language']->getText('widget_description_my_projects','description');
     }
 
-    private function fetchMassMailForm(CSRFSynchronizerToken $token) {
+    private function fetchMassMailForm(CSRFSynchronizerToken $token)
+    {
         $presenter = new MassmailFormPresenter(
             $token,
             $GLOBALS['Language']->getText('my_index', 'massmail_form_title'),

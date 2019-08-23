@@ -29,11 +29,13 @@ class Search_SearchForum {
     private $dao;
 
 
-    public function __construct(ForumDao $dao) {
+    public function __construct(ForumDao $dao)
+    {
         $this->dao = $dao;
     }
 
-    public function search(Search_SearchQuery $query, Search_SearchResults $search_results) {
+    public function search(Search_SearchQuery $query, Search_SearchResults $search_results)
+    {
         $dao_results = $this->dao->searchGlobalPaginated($query->getWords(), $query->getExact(), $query->getOffset(), $query->getForumId(), $query->getNumberOfResults());
 
         $results_count      = count($dao_results);
@@ -44,7 +46,8 @@ class Search_SearchForum {
         return $this->getSearchForumResultPresenter($dao_results, $query->getWords(), $maybe_more_results);
     }
 
-    private function getSearchForumResultPresenter(LegacyDataAccessResultInterface $results, $words, $maybe_more_results) {
+    private function getSearchForumResultPresenter(LegacyDataAccessResultInterface $results, $words, $maybe_more_results)
+    {
         return new Search_SearchResultsPresenter(
             new Search_SearchResultsIntroPresenter($results, $words),
             $this->getResultsPresenters($results),
@@ -53,7 +56,8 @@ class Search_SearchForum {
         );
     }
 
-    private function getResultsPresenters(LegacyDataAccessResultInterface $results) {
+    private function getResultsPresenters(LegacyDataAccessResultInterface $results)
+    {
         $results_presenters = array();
 
         foreach ($results as $result) {

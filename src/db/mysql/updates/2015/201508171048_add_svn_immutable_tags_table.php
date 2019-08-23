@@ -18,15 +18,18 @@
 
 class b201508171048_add_svn_immutable_tags_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return "Modify table svn_immutable_tags_whitelist to store SVN immutable tags paths";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->db->dbh->beginTransaction();
         $this->createTable();
         $this->convertExistingConfig();
@@ -35,7 +38,8 @@ class b201508171048_add_svn_immutable_tags_table extends ForgeUpgrade_Bucket {
         $this->db->dbh->commit();
     }
 
-    private function createTable() {
+    private function createTable()
+    {
         $sql = "CREATE TABLE svn_immutable_tags (
                 group_id INT(11),
                 paths TEXT NOT NULL DEFAULT '',
@@ -49,7 +53,8 @@ class b201508171048_add_svn_immutable_tags_table extends ForgeUpgrade_Bucket {
         }
     }
 
-    private function convertExistingConfig() {
+    private function convertExistingConfig()
+    {
         $sql = "INSERT INTO svn_immutable_tags (group_id, paths)
                 SELECT groups.group_id, '/*/tags'
                 FROM groups
@@ -73,7 +78,8 @@ class b201508171048_add_svn_immutable_tags_table extends ForgeUpgrade_Bucket {
         }
     }
 
-    private function convertWhitelist() {
+    private function convertWhitelist()
+    {
         $sql = "SELECT *
                 FROM svn_immutable_tags_whitelist";
 
@@ -92,7 +98,8 @@ class b201508171048_add_svn_immutable_tags_table extends ForgeUpgrade_Bucket {
         }
     }
 
-    private function getNewContent($content) {
+    private function getNewContent($content)
+    {
         $folders = explode(PHP_EOL, $content);
 
         foreach ($folders as $index => $folder) {
@@ -102,7 +109,8 @@ class b201508171048_add_svn_immutable_tags_table extends ForgeUpgrade_Bucket {
         return implode(PHP_EOL, $folders);
     }
 
-    private function deleteOldTable() {
+    private function deleteOldTable()
+    {
         $sql = "DROP TABLE svn_immutable_tags_whitelist";
         $res = $this->db->dbh->exec($sql);
 
@@ -111,7 +119,8 @@ class b201508171048_add_svn_immutable_tags_table extends ForgeUpgrade_Bucket {
         }
     }
 
-    private function rollBackOnError($message) {
+    private function rollBackOnError($message)
+    {
         $this->db->dbh->rollBack();
         throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message);
     }

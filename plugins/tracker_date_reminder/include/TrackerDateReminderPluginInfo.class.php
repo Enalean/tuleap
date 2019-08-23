@@ -20,7 +20,8 @@
 
 class TrackerDateReminderPluginInfo extends PluginFileInfo {
 
-    function __construct($plugin) {
+    function __construct($plugin)
+    {
         parent::__construct($plugin, 'config');
         $this->setPluginDescriptor(new TrackerDateReminderPluginDescriptor());
     }

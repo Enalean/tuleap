@@ -27,7 +27,8 @@ class JWTRepresentation {
      */
     public $token;
 
-    public function build($token) {
+    public function build($token)
+    {
         $this->token   = $token;
     }
 }

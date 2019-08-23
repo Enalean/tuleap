@@ -19,7 +19,8 @@
  */
 
 class DatabaseForge extends DatabaseMysqli {
-    function __construct($params) {
+    function __construct($params)
+    {
             global $wgDBtype;
 
             $params['schema'] = null;
@@ -27,7 +28,8 @@ class DatabaseForge extends DatabaseMysqli {
             parent::__construct($params);
     }
 
-    function tableName($name, $format = 'quoted') {
+    function tableName($name, $format = 'quoted')
+    {
         switch ($name) {
             case 'interwiki':
                 return ForgeConfig::get('sys_dbname').'.plugin_mediawiki_interwiki';

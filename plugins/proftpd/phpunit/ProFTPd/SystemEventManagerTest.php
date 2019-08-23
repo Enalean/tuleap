@@ -43,7 +43,8 @@ class ProFTPd_SystemEventManagerTest extends \PHPUnit\Framework\TestCase {
             dirname(__FILE__).'/_fixtures');
     }
 
-    public function testItCreatesRepositoryCreateEvent() {
+    public function testItCreatesRepositoryCreateEvent()
+    {
         $project_unix_name = 'test';
         $this->system_event_manager
             ->expects($this->once())
@@ -58,7 +59,8 @@ class ProFTPd_SystemEventManagerTest extends \PHPUnit\Framework\TestCase {
         $this->proftpd_system_event_manager->queueDirectoryCreate($project_unix_name);
     }
 
-    public function testItDoesntQueueDirectoryCreationIfAlreadyExists() {
+    public function testItDoesntQueueDirectoryCreationIfAlreadyExists()
+    {
         $this->system_event_manager
             ->expects($this->never())
             ->method('createEvent');
@@ -66,7 +68,8 @@ class ProFTPd_SystemEventManagerTest extends \PHPUnit\Framework\TestCase {
         $this->proftpd_system_event_manager->queueDirectoryCreate('project_name');
     }
 
-    public function testItQueuesUpdateACLEvent() {
+    public function testItQueuesUpdateACLEvent()
+    {
         $project_unix_name = 'test';
         $this->system_event_manager
             ->expects($this->once())

@@ -37,7 +37,8 @@ class Git_Ci_Launcher {
     /** @var Logger */
     private $logger;
 
-    public function __construct(Jenkins_Client $jenkins_client, Git_Ci_Dao $dao, Logger $logger) {
+    public function __construct(Jenkins_Client $jenkins_client, Git_Ci_Dao $dao, Logger $logger)
+    {
         $this->jenkins_client     = $jenkins_client;
         $this->dao                = $dao;
         $this->logger             = $logger;
@@ -48,13 +49,15 @@ class Git_Ci_Launcher {
      *
      * @param GitRepository $repository_location Name of the git repository
      */
-    public function executeForRepository(GitRepository $repository) {
+    public function executeForRepository(GitRepository $repository)
+    {
         if ($repository->getProject()->usesService('hudson')) {
             $this->launchForRepository($repository);
         }
     }
 
-    private function launchForRepository(GitRepository $repository) {
+    private function launchForRepository(GitRepository $repository)
+    {
         $res = $this->dao->retrieveTriggersPathByRepository($repository->getId());
         if ($res && !$res->isError() && $res->rowCount() > 0) {
             foreach ($res as $row) {

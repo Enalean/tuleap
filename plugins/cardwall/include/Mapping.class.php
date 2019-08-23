@@ -41,7 +41,8 @@ class Cardwall_Mapping {
      */
     public $value_id;
 
-    public function __construct($column_id, $field_id, $value_id) {
+    public function __construct($column_id, $field_id, $value_id)
+    {
         $this->column_id = $column_id;
         $this->field_id  = $field_id;
         $this->value_id  = $value_id;

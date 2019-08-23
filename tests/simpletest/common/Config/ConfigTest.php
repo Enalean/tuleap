@@ -20,37 +20,43 @@
 
 class ConfigTestWhiteBoxVersion extends ForgeConfig {
 
-    public static function load(ConfigValueProvider $value_provider) {
+    public static function load(ConfigValueProvider $value_provider)
+    {
         return parent::load($value_provider);
     }
 }
 
 class ConfigTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         parent::tearDown();
     }
 
-    public function testUsage() {
+    public function testUsage()
+    {
         $this->assertFalse(ForgeConfig::get('toto'));
         ForgeConfig::loadFromFile(dirname(__FILE__).'/_fixtures/config/local.inc');
         $this->assertEqual(ForgeConfig::get('toto'), 66);
         $this->assertFalse(ForgeConfig::get('titi')); //not defined should return false
     }
 
-    public function testDefault() {
+    public function testDefault()
+    {
         $this->assertEqual(ForgeConfig::get('toto', 99), 99); //not defined should return default value given in parameter
         ForgeConfig::loadFromFile(dirname(__FILE__).'/_fixtures/config/local.inc');
         $this->assertEqual(ForgeConfig::get('toto', 99), 66); //now it is defined. Should NOT return default value given in parameter
     }
 
-    public function testMultipleFiles() {
+    public function testMultipleFiles()
+    {
         // Unitialized
         $this->assertIdentical(ForgeConfig::get('toto'), false);
         $this->assertIdentical(ForgeConfig::get('tutu'), false);
@@ -69,7 +75,8 @@ class ConfigTest extends TuleapTestCase {
         $this->assertIdentical(ForgeConfig::get('tata'), 456);
     }
 
-    public function testDump() {
+    public function testDump()
+    {
         ForgeConfig::loadFromFile(dirname(__FILE__).'/_fixtures/config/local.inc');
         ob_start();
         ForgeConfig::dump();
@@ -78,13 +85,15 @@ class ConfigTest extends TuleapTestCase {
         $this->assertEqual($dump, var_export(array('toto' => 66, 'tutu' => 123), 1));
     }
 
-    public function itDoesntEmitAnyNoticesOrWarningsWhenThereAreTwoRestoresAndOneLoad() {
+    public function itDoesntEmitAnyNoticesOrWarningsWhenThereAreTwoRestoresAndOneLoad()
+    {
         ForgeConfig::restore();
         ForgeConfig::restore();
         ForgeConfig::loadFromFile(dirname(__FILE__).'/_fixtures/config/local.inc');
     }
 
-    public function itLoadsFromDatabase() {
+    public function itLoadsFromDatabase()
+    {
         $dao = mock('ConfigDao');
         stub($dao)->searchAll()->returnsDar(array('name' => 'a_var', 'value' => 'its_value'));
         ConfigTestWhiteBoxVersion::load(new ConfigValueDatabaseProvider($dao));
@@ -95,28 +104,33 @@ class ConfigTest extends TuleapTestCase {
 
 class ForgeConfig_areAnonymousAllowedTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         parent::tearDown();
     }
-    public function itReturnsTrueIfAccessModeIsAnonymous() {
+    public function itReturnsTrueIfAccessModeIsAnonymous()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
         $this->assertTrue(ForgeConfig::areAnonymousAllowed());
     }
 
-    public function itReturnsFalseIfAccessModeIsRegular() {
+    public function itReturnsFalseIfAccessModeIsRegular()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
 
         $this->assertFalse(ForgeConfig::areAnonymousAllowed());
     }
 
-    public function itReturnsFalseIfAccessModeIsRestricted() {
+    public function itReturnsFalseIfAccessModeIsRestricted()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
         $this->assertFalse(ForgeConfig::areAnonymousAllowed());
@@ -128,7 +142,8 @@ class ForgeConfig_getSuperPublicProjectsTest extends TuleapTestCase {
     private $fixtures;
     private $default;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
 
@@ -138,13 +153,15 @@ class ForgeConfig_getSuperPublicProjectsTest extends TuleapTestCase {
         $this->default_file = dirname(__FILE__) .'/../../../../site-content/en_US/include/restricted_user_permissions.txt';
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         unset($GLOBALS['Language']);
         ForgeConfig::restore();
         parent::tearDown();
     }
 
-    public function itReturnsEmptyArrayIfRestrictedUserFileIsTheDefaultOne() {
+    public function itReturnsEmptyArrayIfRestrictedUserFileIsTheDefaultOne()
+    {
         stub($GLOBALS['Language'])
             ->getContent('include/restricted_user_permissions', 'en_US')
             ->returns($this->default_file);
@@ -152,7 +169,8 @@ class ForgeConfig_getSuperPublicProjectsTest extends TuleapTestCase {
         $this->assertEqual(ForgeConfig::getSuperPublicProjectsFromRestrictedFile(), array());
     }
 
-    public function itReturnsArrayOfProjectIdsDefinedInRestrictedUserFile() {
+    public function itReturnsArrayOfProjectIdsDefinedInRestrictedUserFile()
+    {
         stub($GLOBALS['Language'])
             ->getContent('include/restricted_user_permissions', 'en_US')
             ->returns($this->customised_file);
@@ -160,7 +178,8 @@ class ForgeConfig_getSuperPublicProjectsTest extends TuleapTestCase {
         $this->assertEqual(ForgeConfig::getSuperPublicProjectsFromRestrictedFile(), array(123, 456));
     }
 
-    public function itDoesNotStorePublicProjectsInTheStorage() {
+    public function itDoesNotStorePublicProjectsInTheStorage()
+    {
         stub($GLOBALS['Language'])
             ->getContent('include/restricted_user_permissions', 'en_US')
             ->returns($this->customised_file);

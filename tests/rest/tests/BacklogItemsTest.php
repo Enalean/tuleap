@@ -41,12 +41,14 @@ class BacklogItemsTest extends RestBase {
         ];
     }
 
-    public function testOPTIONS() {
+    public function testOPTIONS()
+    {
         $response = $this->getResponse($this->client->options('backlog_items/'.$this->stories_ids[0]));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGET() {
+    public function testGET()
+    {
         $response      = $this->getResponse($this->client->get('backlog_items/'.$this->stories_ids[0]));
         $backlog_item  = $response->json();
 
@@ -55,12 +57,14 @@ class BacklogItemsTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testOPTIONSChildren() {
+    public function testOPTIONSChildren()
+    {
         $response = $this->getResponse($this->client->options('backlog_items/'.$this->stories_ids[0].'/children'));
         $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGETChildren() {
+    public function testGETChildren()
+    {
         $response      = $this->getResponse($this->client->get('backlog_items/'.$this->stories_ids[0].'/children'));
         $backlog_items = $response->json();
         $this->assertCount(0, $backlog_items);
@@ -75,7 +79,8 @@ class BacklogItemsTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testPATCHChildren() {
+    public function testPATCHChildren()
+    {
         $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
         $response      = $this->getResponse($this->client->get($uri));
         $backlog_items = $response->json();
@@ -124,7 +129,8 @@ class BacklogItemsTest extends RestBase {
         $this->assertEquals($first_task['label'], "Implement the feature");
     }
 
-    public function testPATCHChildrenDuplicateIds() {
+    public function testPATCHChildrenDuplicateIds()
+    {
         $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
         $response      = $this->getResponse($this->client->get($uri));
         $backlog_items = $response->json();
@@ -146,7 +152,8 @@ class BacklogItemsTest extends RestBase {
         $this->assertEquals(409, $response->getStatusCode());
     }
 
-    public function testPATCHSomeoneElseChildren() {
+    public function testPATCHSomeoneElseChildren()
+    {
         $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
         $response      = $this->getResponse($this->client->get($uri));
         $backlog_items = $response->json();
@@ -168,12 +175,14 @@ class BacklogItemsTest extends RestBase {
         $this->assertEquals(409, $response->getStatusCode());
     }
 
-    public function testGETChildrenWithWrongId() {
+    public function testGETChildrenWithWrongId()
+    {
         $response      = $this->getResponse($this->client->get('backlog_items/700/children'));
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
-    public function testPatchChildrenAdd() {
+    public function testPatchChildrenAdd()
+    {
         $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
         $backlog_items = $this->getResponse($this->client->get($uri))->json();
 
@@ -206,7 +215,8 @@ class BacklogItemsTest extends RestBase {
         );
     }
 
-    public function testPatchChildrenMove() {
+    public function testPatchChildrenMove()
+    {
         $uri = 'backlog_items/'.$this->stories_ids[2].'/children';
         $backlog_items = $this->getResponse($this->client->get($uri))->json();
 
@@ -247,7 +257,8 @@ class BacklogItemsTest extends RestBase {
         $this->assertCount(0, $this->getResponse($this->client->get('backlog_items/'.$another_story_id.'/children'))->json());
     }
 
-    private function getIdsOrderedByPriority($uri) {
+    private function getIdsOrderedByPriority($uri)
+    {
         $response = $this->getResponse($this->client->get($uri));
         $actual_order = array();
         foreach($response->json() as $backlog_element) {

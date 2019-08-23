@@ -32,7 +32,8 @@ class Codendi_DiffTest extends TuleapTestCase {
         $this->g = array('Line 10', 'Line 2', 'Line 3', 'Line 4', 'Line 50');
     }
 
-    public function testHtmlUnifiedDiffFormatter_NoChanges() {
+    public function testHtmlUnifiedDiffFormatter_NoChanges()
+    {
 
         $formatter = new Codendi_HtmlUnifiedDiffFormatter();
 
@@ -40,7 +41,8 @@ class Codendi_DiffTest extends TuleapTestCase {
                            '');
     }
 
-    public function testHtmlUnifiedDiffFormatter_LineModified() {
+    public function testHtmlUnifiedDiffFormatter_LineModified()
+    {
 
         $formatter = new Codendi_HtmlUnifiedDiffFormatter();
         $this->assertEqual($formatter->format(new Codendi_Diff($this->b, $this->c)),
@@ -63,7 +65,8 @@ class Codendi_DiffTest extends TuleapTestCase {
                                 '</div>');
     }
 
-    public function testHtmlUnifiedDiffFormatter_LineDeleted() {
+    public function testHtmlUnifiedDiffFormatter_LineDeleted()
+    {
 
         $formatter = new Codendi_HtmlUnifiedDiffFormatter();
         $this->assertEqual($formatter->format(new Codendi_Diff($this->b, $this->d)),
@@ -81,7 +84,8 @@ class Codendi_DiffTest extends TuleapTestCase {
                                 '</div>');
     }
 
-    public function testHtmlUnifiedDiffFormatter_LineAdded() {
+    public function testHtmlUnifiedDiffFormatter_LineAdded()
+    {
 
         $formatter = new Codendi_HtmlUnifiedDiffFormatter();
         $this->assertEqual($formatter->format(new Codendi_Diff($this->e, $this->d)),
@@ -94,7 +98,8 @@ class Codendi_DiffTest extends TuleapTestCase {
                                 '</div>');
     }
 
-    public function testHtmlUnifiedDiffFormatter_MultipleDiffs() {
+    public function testHtmlUnifiedDiffFormatter_MultipleDiffs()
+    {
         $formatter = new Codendi_HtmlUnifiedDiffFormatter(0);
         $this->assertEqual($formatter->format(new Codendi_Diff($this->f, $this->g)),
                                 '<div class="block">'.

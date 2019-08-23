@@ -30,11 +30,13 @@ class Git_Driver_Gerrit_ProjectCreatorStatus {
     public const QUEUE = 'QUEUE';
     public const DONE  = 'DONE';
 
-    public function __construct(Git_Driver_Gerrit_ProjectCreatorStatusDao $dao) {
+    public function __construct(Git_Driver_Gerrit_ProjectCreatorStatusDao $dao)
+    {
         $this->dao = $dao;
     }
 
-    public function getStatus(GitRepository $repository) {
+    public function getStatus(GitRepository $repository)
+    {
         $event_status = $this->getEventStatus($repository);
         if (! $repository->isMigratedToGerrit()) {
             if ($event_status == SystemEvent::STATUS_NEW) {
@@ -54,7 +56,8 @@ class Git_Driver_Gerrit_ProjectCreatorStatus {
         }
     }
 
-    private function getEventStatus(GitRepository $repository) {
+    private function getEventStatus(GitRepository $repository)
+    {
         $row = $this->getEvent($repository);
         if ($row) {
             return $row['status'];
@@ -62,28 +65,32 @@ class Git_Driver_Gerrit_ProjectCreatorStatus {
         return null;
     }
 
-    public function getEventDate(GitRepository $repository) {
+    public function getEventDate(GitRepository $repository)
+    {
         $row = $this->getEvent($repository);
         if ($row) {
             return $row['create_date'];
         }
     }
 
-    public function getLog(GitRepository $repository) {
+    public function getLog(GitRepository $repository)
+    {
         $row = $this->getEvent($repository);
         if ($row) {
             return $row['log'];
         }
     }
 
-    private function getEvent(GitRepository $repository) {
+    private function getEvent(GitRepository $repository)
+    {
         if (! isset($this->cache[$repository->getId()])) {
             $this->cache[$repository->getId()] = $this->dao->getSystemEventForRepository($repository->getId());
         }
         return $this->cache[$repository->getId()];
     }
 
-    public function canModifyPermissionsTuleapSide(GitRepository $repository) {
+    public function canModifyPermissionsTuleapSide(GitRepository $repository)
+    {
         $status = $this->getStatus($repository);
         if ($status == Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE || $status == Git_Driver_Gerrit_ProjectCreatorStatus::DONE) {
             return false;

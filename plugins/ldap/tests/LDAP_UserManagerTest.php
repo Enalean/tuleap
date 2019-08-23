@@ -33,7 +33,8 @@ Mock::generate('SystemEventManager');
 
 class LDAP_UserManagerTest extends TuleapTestCase {
 
-    function testGetLoginFromString() {
+    function testGetLoginFromString()
+    {
         $ldap = new MockLDAP($this);
         $lum = new LDAP_UserManager($ldap, mock('LDAP_UserSync'));
 
@@ -72,7 +73,8 @@ class LDAP_UserManagerTest extends TuleapTestCase {
         //$this->assertEqual($lum->getLoginFromString(utf8_decode('coiné')), 'coine');
     }
 
-    function testGenerateLoginNotAlreadyUsed() {
+    function testGenerateLoginNotAlreadyUsed()
+    {
         $lum = new LDAP_UserManagerGenerateLogin($this);
 
         $lum->setReturnValue('getLoginFromString', 'john');
@@ -81,7 +83,8 @@ class LDAP_UserManagerTest extends TuleapTestCase {
         $this->assertEqual($lum->generateLogin('john'), 'john');
     }
 
-    function testGenerateLoginAlreadyUsed() {
+    function testGenerateLoginAlreadyUsed()
+    {
         $lum = new LDAP_UserManagerGenerateLogin($this);
 
         $lum->setReturnValue('getLoginFromString', 'john');
@@ -91,7 +94,8 @@ class LDAP_UserManagerTest extends TuleapTestCase {
         $this->assertEqual($lum->generateLogin('john'), 'john2');
     }
 
-    function testUpdateLdapUidShouldPrepareRenameOfUserInTheWholePlatform() {
+    function testUpdateLdapUidShouldPrepareRenameOfUserInTheWholePlatform()
+    {
         // Parameters
         $user = mock('PFUser');
         $user->setReturnValue('getId', 105);
@@ -108,7 +112,8 @@ class LDAP_UserManagerTest extends TuleapTestCase {
         $this->assertEqual($lum->getUsersToRename(), array($user));
     }
 
-    function testTriggerRenameOfUsersShouldUpdateSVNAccessFileOfProjectWhereTheUserIsMember() {
+    function testTriggerRenameOfUsersShouldUpdateSVNAccessFileOfProjectWhereTheUserIsMember()
+    {
         // Parameters
         $user = mock('PFUser');
         $user->setReturnValue('getId', 105);
@@ -126,7 +131,8 @@ class LDAP_UserManagerTest extends TuleapTestCase {
         $lum->triggerRenameOfUsers();
     }
 
-    function testTriggerRenameOfUsersWithSeveralUsers() {
+    function testTriggerRenameOfUsersWithSeveralUsers()
+    {
         // Parameters
         $user1 = mock('PFUser');
         $user1->setReturnValue('getId', 101);
@@ -150,7 +156,8 @@ class LDAP_UserManagerTest extends TuleapTestCase {
         $lum->triggerRenameOfUsers();
     }
 
-    function testTriggerRenameOfUsersWithoutUser() {
+    function testTriggerRenameOfUsersWithoutUser()
+    {
         $lum = TestHelper::getPartialMock('LDAP_UserManager', array('getSystemEventManager'));
 
         $sem = new MockSystemEventManager();
@@ -180,7 +187,8 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
     private $empty_ldap_result_iterator;
     private $john_mc_lane_result_iterator;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
         ForgeConfig::set('sys_logger_level', 'debug');
@@ -214,12 +222,14 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
         stub($this->ldap_user_manager)->getUserManager()->returns($this->user_manager);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         parent::tearDown();
     }
 
-    public function itDelegatesAutenticateToLDAP() {
+    public function itDelegatesAutenticateToLDAP()
+    {
         stub($this->user_sync)->getSyncAttributes()->returns(array());
         stub($this->ldap)->authenticate()->returns(true);
         stub($this->ldap)->searchLogin()->returns($this->john_mc_lane_result_iterator);
@@ -229,7 +239,8 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
 
-    public function itRaisesAnExceptionIfAuthenticationFailed() {
+    public function itRaisesAnExceptionIfAuthenticationFailed()
+    {
         $this->expectException('LDAP_AuthenticationFailedException');
 
         stub($this->ldap)->authenticate()->returns(false);
@@ -237,7 +248,8 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
 
-    public function itFetchLDAPUserInfoBasedOnLogin() {
+    public function itFetchLDAPUserInfoBasedOnLogin()
+    {
         stub($this->user_sync)->getSyncAttributes()->returns(array());
         stub($this->ldap)->authenticate()->returns(true);
         stub($this->ldap)->searchLogin()->returns($this->john_mc_lane_result_iterator);
@@ -247,7 +259,8 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
 
-    public function itFetchesLDAPUserInfoWithExtendedAttributesDefinedInUserSync() {
+    public function itFetchesLDAPUserInfoWithExtendedAttributesDefinedInUserSync()
+    {
         $attributes = array('mail', 'cn', 'uid', 'uuid', 'dn', 'employeeType');
         stub($this->user_sync)->getSyncAttributes()->returns($attributes);
         stub($this->ldap)->authenticate()->returns(true);
@@ -258,7 +271,8 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
 
-    public function itFetchesStandardLDAPInfosEvenWhenNotSpecifiedInSyncAttributes() {
+    public function itFetchesStandardLDAPInfosEvenWhenNotSpecifiedInSyncAttributes()
+    {
         $attributes = array('employeeType');
         stub($this->user_sync)->getSyncAttributes()->returns($attributes);
         stub($this->ldap)->authenticate()->returns(true);
@@ -269,7 +283,8 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
 
-    public function itTriesToFindTheTuleapUserBasedOnLdapId() {
+    public function itTriesToFindTheTuleapUserBasedOnLdapId()
+    {
         stub($this->user_sync)->getSyncAttributes()->returns(array());
         stub($this->ldap)->authenticate()->returns(true);
         stub($this->ldap)->searchLogin()->returns($this->john_mc_lane_result_iterator);
@@ -279,7 +294,8 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
 
-    public function itRaisesAnExceptionWhenLDAPUserIsNotFound() {
+    public function itRaisesAnExceptionWhenLDAPUserIsNotFound()
+    {
         stub($this->user_sync)->getSyncAttributes()->returns(array());
         stub($this->ldap)->authenticate()->returns(true);
         stub($this->ldap)->searchLogin()->returns($this->empty_ldap_result_iterator);
@@ -289,7 +305,8 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
 
-    public function itRaisesAnExceptionWhenSeveralLDAPUsersAreFound() {
+    public function itRaisesAnExceptionWhenSeveralLDAPUsersAreFound()
+    {
         stub($this->user_sync)->getSyncAttributes()->returns(array());
         stub($this->ldap)->authenticate()->returns(true);
         stub($this->ldap)->searchLogin()->returns(
@@ -321,7 +338,8 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
 
-    public function itCreatesUserAccountWhenUserDoesntExist() {
+    public function itCreatesUserAccountWhenUserDoesntExist()
+    {
         stub($this->user_sync)->getSyncAttributes()->returns(array());
         stub($this->ldap)->authenticate()->returns(true);
         stub($this->ldap)->searchLogin()->returns($this->john_mc_lane_result_iterator);
@@ -332,7 +350,8 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
 
-    public function itReturnsUserOnAccountCreation() {
+    public function itReturnsUserOnAccountCreation()
+    {
         $expected_user = aUser()->withId(123)->build();
         stub($this->user_sync)->getSyncAttributes()->returns(array());
         stub($this->ldap)->authenticate()->returns(true);
@@ -345,7 +364,8 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
         $this->assertIdentical($user, $expected_user);
     }
 
-    public function itUpdateUserAccountsIfAlreadyExists() {
+    public function itUpdateUserAccountsIfAlreadyExists()
+    {
         $expected_user = aUser()->withId(123)->build();
         stub($this->user_sync)->getSyncAttributes()->returns(array());
         stub($this->ldap)->authenticate()->returns(true);
@@ -361,7 +381,8 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
         $this->ldap_user_manager->authenticate($this->username, $this->password);
     }
 
-    public function itReturnsUserOnAccountUpdate() {
+    public function itReturnsUserOnAccountUpdate()
+    {
         $expected_user = aUser()->withId(123)->build();
         stub($this->user_sync)->getSyncAttributes()->returns(array());
         stub($this->ldap)->authenticate()->returns(true);

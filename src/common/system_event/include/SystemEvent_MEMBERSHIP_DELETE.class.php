@@ -36,7 +36,8 @@ class SystemEvent_MEMBERSHIP_DELETE extends SystemEvent {
      *
      * @return string
      */
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         $txt = '';
         list($group_id, $user_id) = $this->getParametersAsArray();
         $txt .= 'project: '. $this->verbalizeProjectId($group_id, $with_link) .', user to add: '. $this->verbalizeUserId($user_id, $with_link);
@@ -46,7 +47,8 @@ class SystemEvent_MEMBERSHIP_DELETE extends SystemEvent {
     /**
      * Process stored event
      */
-    function process() {
+    function process()
+    {
         list($group_id,$user_id) = $this->getParametersAsArray();
 
         if ($project = $this->getProject($group_id)) {

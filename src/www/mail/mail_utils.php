@@ -3,7 +3,8 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 
-function mail_header($params) {
+function mail_header($params)
+{
     global $group_id, $Language;
 
     \Tuleap\Project\ServiceInstrumentation::increment('mailinglists');
@@ -31,7 +32,8 @@ function mail_header($params) {
     }
     echo '</B><P>';
 }
-function mail_header_admin($params) {
+function mail_header_admin($params)
+{
     global $group_id, $Language;
 
     //required for site_project_header
@@ -57,12 +59,14 @@ function mail_header_admin($params) {
 
 }
 
-function mail_footer($params) {
+function mail_footer($params)
+{
     site_project_footer($params);
 }
 
 // Checks if the mailing-list (list_id) is public (return 1) or private (return 0)
-function mail_is_list_public($list) {
+function mail_is_list_public($list)
+{
 
     $sql = sprintf('SELECT is_public FROM mail_group_list'.
                       ' WHERE group_list_id = "%d"',
@@ -73,7 +77,8 @@ function mail_is_list_public($list) {
 }
 
 //Checks if a mailing-list (list_id) exist and is active
-function mail_is_list_active($list) {
+function mail_is_list_active($list)
+{
 
     $sql = sprintf('SELECT status'.
                     ' FROM mail_group_list'.
@@ -94,7 +99,8 @@ function mail_is_list_active($list) {
 }
 
 // Gets mailing-list name from list id
-function mail_get_listname_from_list_id($list_id) {
+function mail_get_listname_from_list_id($list_id)
+{
 
     $sql = sprintf('SELECT list_name'.
                     ' FROM mail_group_list'.

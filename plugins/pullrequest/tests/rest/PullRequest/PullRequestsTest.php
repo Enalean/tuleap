@@ -30,7 +30,8 @@ require_once dirname(__FILE__).'/../bootstrap.php';
  */
 class PullRequestsTest extends RestBase
 {
-    protected function getResponseForNonMember($request) {
+    protected function getResponseForNonMember($request)
+    {
         return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
     }
 
@@ -49,13 +50,15 @@ class PullRequestsTest extends RestBase
     //    $this->assertEquals('master', $pull_request['branch_dest']);
     //}
 
-    public function testOPTIONS() {
+    public function testOPTIONS()
+    {
         $response = $this->getResponse($this->client->options('pull_requests/'));
 
         $this->assertEquals(array('OPTIONS', 'GET', 'POST', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGetPullRequestThrows403IfUserCantSeeGitRepository() {
+    public function testGetPullRequestThrows403IfUserCantSeeGitRepository()
+    {
         $response = $this->getResponseForNonMember($this->client->get('pull_requests/1'));
 
         $this->assertEquals($response->getStatusCode(), 403);
@@ -82,7 +85,8 @@ class PullRequestsTest extends RestBase
     //     $this->assertEquals('abandon', $pull_request['status']);
     // }
 
-    public function testPATCHPullRequestThrow400IfStatusIsUnknown() {
+    public function testPATCHPullRequestThrow400IfStatusIsUnknown()
+    {
         $data = json_encode(array(
             'status' => 'whatever'
         ));

@@ -28,7 +28,8 @@ class Tracker_Workflow_Trigger_RulesFactory {
     /** @var Tracker_Workflow_Trigger_TriggerValidator */
     private $validator;
 
-    public function __construct(Tracker_FormElementFactory $formelement_factory, Tracker_Workflow_Trigger_TriggerValidator $validator) {
+    public function __construct(Tracker_FormElementFactory $formelement_factory, Tracker_Workflow_Trigger_TriggerValidator $validator)
+    {
         $this->formelement_factory = $formelement_factory;
         $this->validator = $validator;
     }
@@ -48,7 +49,8 @@ class Tracker_Workflow_Trigger_RulesFactory {
      *
      * @return Tracker_Workflow_Trigger_TriggerRule
      */
-    public function getRuleFromJson(Tracker $tracker, stdClass $json) {
+    public function getRuleFromJson(Tracker $tracker, stdClass $json)
+    {
         $this->validator->validateJsonFormat($json, $tracker);
 
         $target    = $this->getTarget($tracker->getId(), $json->target->field_id, $json->target->field_value_id);
@@ -62,13 +64,15 @@ class Tracker_Workflow_Trigger_RulesFactory {
         );
     }
 
-    private function getTarget($tracker_id, $target_field_id, $target_value_id) {
+    private function getTarget($tracker_id, $target_field_id, $target_value_id)
+    {
         $field       = $this->getTargetField($target_field_id, $tracker_id);
         $field_value = $this->getTargetFieldValue($target_value_id, $field);
         return new Tracker_Workflow_Trigger_FieldValue($field, $field_value);
     }
 
-    private function getTargetField($target_field_id, $tracker_id) {
+    private function getTargetField($target_field_id, $tracker_id)
+    {
         $field = $this->formelement_factory->getUsedFormElementFieldById($target_field_id);
         if ($field) {
             if ($field->getTracker()->getId() == $tracker_id) {
@@ -79,14 +83,16 @@ class Tracker_Workflow_Trigger_RulesFactory {
         throw new Tracker_FormElement_InvalidFieldException('Unknown field');
     }
 
-    private function getTargetFieldValue($target_value_id, Tracker_FormElement_Field_List $target_field) {
+    private function getTargetFieldValue($target_value_id, Tracker_FormElement_Field_List $target_field)
+    {
         return $this->getMatchingValueById(
             $target_field,
             $target_value_id
         );
     }
 
-    private function getTriggeringFields(Tracker $target_tracker, array $triggering_fields) {
+    private function getTriggeringFields(Tracker $target_tracker, array $triggering_fields)
+    {
         $fields = array();
         foreach ($triggering_fields as $triggering_field) {
             $fields[] = $this->getOneTriggeringField($target_tracker, $triggering_field->field_id, $triggering_field->field_value_id);
@@ -94,7 +100,8 @@ class Tracker_Workflow_Trigger_RulesFactory {
         return $fields;
     }
 
-    private function getOneTriggeringField(Tracker $target_tracker, $trigger_field_id, $trigger_value_id) {
+    private function getOneTriggeringField(Tracker $target_tracker, $trigger_field_id, $trigger_value_id)
+    {
         $field = $this->formelement_factory->getUsedFormElementFieldById($trigger_field_id);
         if ($field) {
             if ($field->getTracker()->getParent() == $target_tracker) {
@@ -107,7 +114,8 @@ class Tracker_Workflow_Trigger_RulesFactory {
         }
     }
 
-    private function getMatchingValueById(Tracker_FormElement_Field_List $field, $value_id) {
+    private function getMatchingValueById(Tracker_FormElement_Field_List $field, $value_id)
+    {
         foreach ($field->getAllValues() as $value) {
             if ($value->getId() == $value_id) {
                 return $value;

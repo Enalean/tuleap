@@ -62,7 +62,8 @@ class TemplateRendererFactory
      * @param string $plugin_templates_dir
      * @return TemplateRenderer
      */
-    public function getRenderer($plugin_templates_dir) {
+    public function getRenderer($plugin_templates_dir)
+    {
         return new MustacheRenderer($this->template_cache, $plugin_templates_dir);
     }
 }

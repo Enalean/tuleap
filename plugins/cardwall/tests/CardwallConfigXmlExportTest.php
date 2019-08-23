@@ -31,7 +31,8 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
     /** @var Cardwall_OnTop_ConfigFactory **/
     private $config_factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -71,7 +72,8 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
         $this->assertEqual( (String) $attributes['id'], 'T614');
     }
 
-    public function itReturnsTheGoodRootXmlWithoutTrackers() {
+    public function itReturnsTheGoodRootXmlWithoutTrackers()
+    {
         $cardwall_config       = mockery_stub(\Cardwall_OnTop_Config::class)->isEnabled()->returns(false);
         $cardwall_config2      = mockery_stub(\Cardwall_OnTop_Config::class)->isEnabled()->returns(false);
         $this->config_factory2 = \Mockery::spy(\Cardwall_OnTop_ConfigFactory::class);
@@ -85,7 +87,8 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
         $this->assertEqual(count($this->root->cardwall->trackers->children()), 0);
     }
 
-    public function itThrowsAnExceptionIfXmlGeneratedIsNotValid() {
+    public function itThrowsAnExceptionIfXmlGeneratedIsNotValid()
+    {
         $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker1)->once()->andReturn($this->cardwall_config);
         $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker2)->once()->andReturn($this->cardwall_config2);
 
@@ -110,7 +113,8 @@ class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
     /** @var Cardwall_OnTop_ConfigFactory **/
     private $config_factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -131,7 +135,8 @@ class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
         $this->xml_exporter = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory, $this->xml_validator);
     }
 
-    public function itDumpsNoColumnsWhenNoColumnsDefined() {
+    public function itDumpsNoColumnsWhenNoColumnsDefined()
+    {
         stub($this->cardwall_config)->getDashboardColumns()->returns(new Cardwall_OnTop_Config_ColumnCollection(array()));
         stub($this->cardwall_config)->getMappings()->returns(array());
 
@@ -139,7 +144,8 @@ class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
         $this->assertEqual(count($this->root->cardwall->trackers->tracker->children()), 0);
     }
 
-    public function itDumpsColumnsAsDefined() {
+    public function itDumpsColumnsAsDefined()
+    {
         stub($this->cardwall_config)->getDashboardColumns()->returns(new Cardwall_OnTop_Config_ColumnCollection(array(
             new Cardwall_Column(112, "Todo", "red"),
             new Cardwall_Column(113, "On going", "fiesta-red"),
@@ -154,7 +160,8 @@ class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
         $this->assertCount($column_xml, 3);
     }
 
-    public function itDumpsColumnsAsDefinedWithMappings() {
+    public function itDumpsColumnsAsDefinedWithMappings()
+    {
         stub($this->cardwall_config)->getDashboardColumns()->returns(new Cardwall_OnTop_Config_ColumnCollection(array(
             new Cardwall_Column(112, "Todo", "red"),
             new Cardwall_Column(113, "On going", "fiesta-red"),

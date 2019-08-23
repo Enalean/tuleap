@@ -13,31 +13,37 @@ require_once(dirname(__FILE__).'/../Docman_MetadataFactory.class.php');
 
 class Docman_View_NewFolder extends Docman_View_New {
 
-    function _getTitle($params) {
+    function _getTitle($params)
+    {
         return $GLOBALS['Language']->getText('plugin_docman', 'new_folder');
     }
 
-    function _getAction() {
+    function _getAction()
+    {
         return 'createFolder';
     }
 
-    function _getActionText() {
+    function _getActionText()
+    {
         return $GLOBALS['Language']->getText('plugin_docman', 'new_folder_action');
     }
 
-    function _getNewItem() {
+    function _getNewItem()
+    {
         $i = new Docman_Folder();
         return $i;
     }
 
-    function _getGeneralProperties($params) {
+    function _getGeneralProperties($params)
+    {
         $html = '';
         $html .= parent::_getGeneralProperties($params);
         $html .= '<input type="hidden" name="item[item_type]" value="'. PLUGIN_DOCMAN_ITEM_TYPE_FOLDER .'" />';
         return $html;
     }
 
-    function _getDefaultValuesFields($params) {
+    function _getDefaultValuesFields($params)
+    {
         $mdFactory = new Docman_MetadataFactory($this->newItem->getGroupId());
         $inheritableMda = $mdFactory->getInheritableMdLabelArray(true);
 
@@ -47,7 +53,8 @@ class Docman_View_NewFolder extends Docman_View_New {
         return $mdHtmlFactory->buildFieldArray($mdIter, $inheritableMda, true, $params['form_name'], $params['theme_path']);
     }
 
-    function _getDefaultValuesFieldset($params) {
+    function _getDefaultValuesFieldset($params)
+    {
         $html = '';
 
         $html .= '<div class="properties">'."\n";
@@ -60,7 +67,8 @@ class Docman_View_NewFolder extends Docman_View_New {
         return $html;
     }
 
-    function _getSpecificPropertiesFieldset($params) {
+    function _getSpecificPropertiesFieldset($params)
+    {
         return '';
     }
 

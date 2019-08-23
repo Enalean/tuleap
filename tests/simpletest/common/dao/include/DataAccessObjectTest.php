@@ -23,7 +23,8 @@ Mock::generate('DataAccessResult');
 
 class DaoTest extends TuleapTestCase {
 
-    function testDao() {
+    function testDao()
+    {
         $da = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         $dar = new MockDataAccessResult($this);
         $da->setReturnReference('query', $dar);

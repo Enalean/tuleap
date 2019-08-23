@@ -37,7 +37,8 @@ class Statistics_Services_UsageFormatter {
     public const GROUP_ID = 'group_id';
     public const VALUES   = 'result';
 
-    public function __construct(Statistics_Formatter $stats_formatter) {
+    public function __construct(Statistics_Formatter $stats_formatter)
+    {
         $this->stats_formatter = $stats_formatter;
         $this->datas           = array();
         $this->title           = array();
@@ -47,7 +48,8 @@ class Statistics_Services_UsageFormatter {
      * Export in CSV the datas builded from SQL queries
      * @return String $content the CSV content
      */
-    public function exportCSV() {
+    public function exportCSV()
+    {
         $this->stats_formatter->clearContent();
         $this->stats_formatter->addLine(array_values($this->title));
         foreach ($this->datas as $value) {
@@ -61,7 +63,8 @@ class Statistics_Services_UsageFormatter {
      * @param array|DataAccessResult $query_result
      * @param type $title
      */
-    public function buildDatas($query_result, $title) {
+    public function buildDatas($query_result, $title)
+    {
         $this->initiateDatas($query_result);
         $this->title[] = $title;
         $this->addDefaultValuesForTitle($title);
@@ -75,7 +78,8 @@ class Statistics_Services_UsageFormatter {
      *
      * @param array|DataAccessResult $query_result
      */
-    public function formatSizeInMegaBytes($query_results) {
+    public function formatSizeInMegaBytes($query_results)
+    {
         $resized_results = array();
         foreach ($query_results as $result) {
             $result[self::VALUES] = round($result[self::VALUES]/self::BYTES_NUMBER_IN_MB);
@@ -85,14 +89,16 @@ class Statistics_Services_UsageFormatter {
         return $resized_results;
     }
 
-    private function addDefaultValuesForTitle($title) {
+    private function addDefaultValuesForTitle($title)
+    {
         $ids = array_keys($this->datas);
         foreach ($ids as $id) {
             $this->datas[$id][$title] = 0;
         }
     }
 
-    private function addValuesFromQueryResultForTitle($query_result, $title) {
+    private function addValuesFromQueryResultForTitle($query_result, $title)
+    {
         foreach ($query_result as $data) {
             if ($this->canAddValueFromQuery($data)) {
                 $this->datas[$data[self::GROUP_ID]][$title] = $data[self::VALUES];
@@ -100,7 +106,8 @@ class Statistics_Services_UsageFormatter {
         }
     }
 
-    private function initiateDatas($query_result) {
+    private function initiateDatas($query_result)
+    {
         if (! empty($this->datas)) {
             return;
         }
@@ -110,7 +117,8 @@ class Statistics_Services_UsageFormatter {
         }
     }
 
-    private function canAddValueFromQuery(array $data) {
+    private function canAddValueFromQuery(array $data)
+    {
         return array_key_exists($data[self::GROUP_ID], $this->datas) && isset($data[self::VALUES]);
     }
 }

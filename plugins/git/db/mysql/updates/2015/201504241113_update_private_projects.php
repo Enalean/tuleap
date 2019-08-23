@@ -20,22 +20,26 @@
 
 class b201504241113_update_private_projects extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Re-apply permissions for private projects
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->fixPermissions();
         $this->queueEvent();
     }
 
-    private function fixPermissions() {
+    private function fixPermissions()
+    {
         $sql = "UPDATE permissions p
                     JOIN plugin_git git ON (p.object_id = CAST(git.repository_id AS CHAR) AND permission_type IN ('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))
                     JOIN groups         ON (git.project_id = groups.group_id)
@@ -50,7 +54,8 @@ EOT;
         }
     }
 
-    private function queueEvent() {
+    private function queueEvent()
+    {
         $sql = 'SET SESSION group_concat_max_len = 134217728';
         $this->db->dbh->exec($sql);
 

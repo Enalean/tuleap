@@ -35,7 +35,8 @@ class Docman_XMLExportVisitor implements ItemVisitor
     protected $dataPath;
     protected $logger;
 
-    public function __construct(DOMDocument $doc, Logger $logger) {
+    public function __construct(DOMDocument $doc, Logger $logger)
+    {
         $this->doc = $doc;
 
         $this->fileCounter = 0;
@@ -53,7 +54,8 @@ class Docman_XMLExportVisitor implements ItemVisitor
 
     }
 
-    public function setDataPath($path) {
+    public function setDataPath($path)
+    {
         $this->dataPath = $path;
     }
 
@@ -89,7 +91,8 @@ class Docman_XMLExportVisitor implements ItemVisitor
         return $node;
     }
 
-    protected function appendItemMetadataNode(DOMElement $node, Docman_Item $item) {
+    protected function appendItemMetadataNode(DOMElement $node, Docman_Item $item)
+    {
         $metaDataFactory = new Docman_MetadataFactory($item->getGroupId());
         $metaDataFactory->appendItemMetadataList($item);
         foreach($item->getMetadata() as $metadata) {
@@ -100,7 +103,8 @@ class Docman_XMLExportVisitor implements ItemVisitor
         }
     }
 
-    protected function getNodeForMetadata(Docman_Metadata $metadata) {
+    protected function getNodeForMetadata(Docman_Metadata $metadata)
+    {
         $metaDataFactory = new Docman_MetadataFactory($metadata->getGroupId());
         if($metaDataFactory->isRealMetadata($metadata->getLabel())) {
             $node = $this->doc->createElement('property');
@@ -120,7 +124,8 @@ class Docman_XMLExportVisitor implements ItemVisitor
         }
     }
 
-    protected function getNodeForMetadataValues($mdValues, $mdNode) {
+    protected function getNodeForMetadataValues($mdValues, $mdNode)
+    {
         foreach($mdValues as $val) {
             if($val->getId() != 100) {
                 $node = $this->doc->createElement('value');
@@ -198,7 +203,8 @@ class Docman_XMLExportVisitor implements ItemVisitor
         return $this->visitDocument($item);
     }
 
-    protected function createVersion($version) {
+    protected function createVersion($version)
+    {
         $vNode = $this->doc->createElement('version');
         $this->appendChild($vNode, 'author', $this->getNormalizedLogin($version->getAuthorId()));
         $this->appendChild($vNode, 'label', $version->getLabel());
@@ -220,7 +226,8 @@ class Docman_XMLExportVisitor implements ItemVisitor
         return $vNode;
     }
 
-    protected function getNormalizedLogin($userId) {
+    protected function getNormalizedLogin($userId)
+    {
         if(!isset($this->userCache[$userId])) {
             $um = UserManager::instance();
             $user = $um->getUserById($userId);
@@ -233,7 +240,8 @@ class Docman_XMLExportVisitor implements ItemVisitor
         return $this->userCache[$userId];
     }
 
-    protected function getNormalizedStatus($statusId) {
+    protected function getNormalizedStatus($statusId)
+    {
         switch($statusId) {
             case PLUGIN_DOCMAN_ITEM_STATUS_NONE:
                 return 'none';
@@ -246,13 +254,15 @@ class Docman_XMLExportVisitor implements ItemVisitor
         }
     }
 
-    protected function setAttribute(DOMElement $node, $label, $value) {
+    protected function setAttribute(DOMElement $node, $label, $value)
+    {
         if($value != '') {
             $node->setAttribute($label, $value);
         }
     }
 
-    protected function appendChild(DOMElement $node, $label, $value) {
+    protected function appendChild(DOMElement $node, $label, $value)
+    {
         if($value != '') {
             $subNode = $this->doc->createElement($label);
             $subNode->appendChild($this->doc->createTextNode($value));
@@ -260,11 +270,13 @@ class Docman_XMLExportVisitor implements ItemVisitor
         }
     }
 
-    public function getXML(Docman_Item $item) {
+    public function getXML(Docman_Item $item)
+    {
         return $item->accept($this);
     }
 
-    public function displayStatistics() {
+    public function displayStatistics()
+    {
         var_dump($this->statistics);
     }
 }

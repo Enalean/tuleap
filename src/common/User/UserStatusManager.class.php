@@ -28,7 +28,8 @@ class User_UserStatusManager {
      * @throws User_StatusInvalidException
      * @throws User_StatusPendingException
      */
-    public function checkStatus(PFUser $user) {
+    public function checkStatus(PFUser $user)
+    {
         if (! $this->isFinalStatus($user)) {
             switch ($user->getStatus()) {
                 case PFUser::STATUS_VALIDATED:
@@ -54,7 +55,8 @@ class User_UserStatusManager {
      * @throws User_StatusInvalidException
      * @throws User_StatusPendingException
      */
-    public function checkStatusOnVerifyPage(PFUser $user) {
+    public function checkStatusOnVerifyPage(PFUser $user)
+    {
         if (! $this->isFinalStatus($user)) {
             switch ($user->getStatus()) {
                 case PFUser::STATUS_VALIDATED:
@@ -79,7 +81,8 @@ class User_UserStatusManager {
      * @throws User_StatusDeletedException
      * @throws User_StatusSuspendedException
      */
-    private function isFinalStatus(PFUser $user) {
+    private function isFinalStatus(PFUser $user)
+    {
         $status = $user->getStatus();
         switch ($status) {
             case PFUser::STATUS_ACTIVE:

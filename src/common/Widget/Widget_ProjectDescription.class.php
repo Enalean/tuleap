@@ -30,10 +30,12 @@ class Widget_ProjectDescription extends Widget {
         parent::__construct('projectdescription');
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return $GLOBALS['Language']->getText('include_project_home','project_description');
     }
-    public function getContent() {
+    public function getContent()
+    {
         $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $pm = ProjectManager::instance();
@@ -59,7 +61,8 @@ class Widget_ProjectDescription extends Widget {
         return $html;
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return $GLOBALS['Language']->getText('widget_description_project_description','description');
     }
 }

@@ -33,7 +33,8 @@ class AgileDashboard_KanbanUserPreferencesTest extends TuleapTestCase {
 
     private $column_id = 10;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->user = mock('PFUser');
 
@@ -41,13 +42,15 @@ class AgileDashboard_KanbanUserPreferencesTest extends TuleapTestCase {
         $this->kanban = new AgileDashboard_Kanban(1, 1, 'My first kanban');
     }
 
-    public function testDefaultBehavior() {
+    public function testDefaultBehavior()
+    {
         $this->assertFalse($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
         $this->assertFalse($this->user_preferences->isArchiveOpen($this->kanban, $this->user));
         $this->assertTrue($this->user_preferences->isColumnOpen($this->kanban, $this->column_id, $this->user));
     }
 
-    public function itOpensTheBacklog() {
+    public function itOpensTheBacklog()
+    {
         stub($this->user)
             ->getPreference('kanban_collapse_backlog_1')
             ->returns(AgileDashboard_KanbanUserPreferences::EXPAND);
@@ -55,7 +58,8 @@ class AgileDashboard_KanbanUserPreferencesTest extends TuleapTestCase {
         $this->assertTrue($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
     }
 
-    public function itOpensTheArchive() {
+    public function itOpensTheArchive()
+    {
         stub($this->user)
             ->getPreference('kanban_collapse_archive_1')
             ->returns(AgileDashboard_KanbanUserPreferences::EXPAND);
@@ -63,7 +67,8 @@ class AgileDashboard_KanbanUserPreferencesTest extends TuleapTestCase {
         $this->assertTrue($this->user_preferences->isArchiveOpen($this->kanban, $this->user));
     }
 
-    public function itOpensTheColumn() {
+    public function itOpensTheColumn()
+    {
         stub($this->user)
             ->getPreference('kanban_collapse_column_1_10')
             ->returns(AgileDashboard_KanbanUserPreferences::EXPAND);
@@ -71,7 +76,8 @@ class AgileDashboard_KanbanUserPreferencesTest extends TuleapTestCase {
         $this->assertTrue($this->user_preferences->isColumnOpen($this->kanban, $this->column_id, $this->user));
     }
 
-    public function itClosesTheBacklog() {
+    public function itClosesTheBacklog()
+    {
         stub($this->user)
                 ->getPreference('kanban_collapse_backlog_1')
                 ->returns(AgileDashboard_KanbanUserPreferences::COLLAPSE);
@@ -79,7 +85,8 @@ class AgileDashboard_KanbanUserPreferencesTest extends TuleapTestCase {
         $this->assertFalse($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
     }
 
-    public function itClosesTheArchive() {
+    public function itClosesTheArchive()
+    {
         stub($this->user)
             ->getPreference('kanban_collapse_archive_1')
             ->returns(AgileDashboard_KanbanUserPreferences::COLLAPSE);
@@ -87,7 +94,8 @@ class AgileDashboard_KanbanUserPreferencesTest extends TuleapTestCase {
         $this->assertFalse($this->user_preferences->isArchiveOpen($this->kanban, $this->user));
     }
 
-    public function itClosesTheColumn() {
+    public function itClosesTheColumn()
+    {
         stub($this->user)
             ->getPreference('kanban_collapse_column_1_10')
             ->returns(AgileDashboard_KanbanUserPreferences::COLLAPSE);

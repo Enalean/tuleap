@@ -22,56 +22,65 @@ require_once __DIR__.'/../../bootstrap.php';
 
 class MigrationLoggerTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->backend_logger   = mock('BackendLogger');
         $this->mail_logger      = mock('Tracker_Migration_MailLogger');
         $this->migration_logger = new Tracker_Migration_MigrationLogger($this->backend_logger, $this->mail_logger);
     }
 
-    public function itLogsErrorsInMailLogger() {
+    public function itLogsErrorsInMailLogger()
+    {
         expect($this->mail_logger)->error("bla", '*')->once();
 
         $this->migration_logger->error("bla");
     }
 
-    public function itLogsErrorsInBackendLogger() {
+    public function itLogsErrorsInBackendLogger()
+    {
         expect($this->backend_logger)->error("bla", '*')->once();
 
         $this->migration_logger->error("bla");
     }
 
-    public function itLogsWarningsInMailLogger() {
+    public function itLogsWarningsInMailLogger()
+    {
         expect($this->mail_logger)->warn("bla", '*')->once();
 
         $this->migration_logger->warn("bla");
     }
 
-    public function itLogsWarningsInBackendLogger() {
+    public function itLogsWarningsInBackendLogger()
+    {
         expect($this->backend_logger)->warn("bla", '*')->once();
 
         $this->migration_logger->warn("bla");
     }
 
-    public function itDoesntLogsInfoInMailLogger() {
+    public function itDoesntLogsInfoInMailLogger()
+    {
         expect($this->mail_logger)->info()->never();
 
         $this->migration_logger->info("bla");
     }
 
-    public function itLogsInfoInBackendLogger() {
+    public function itLogsInfoInBackendLogger()
+    {
         expect($this->backend_logger)->info("bla")->once();
 
         $this->migration_logger->info("bla");
     }
 
-    public function itDoesntLogsDebugInMailLogger() {
+    public function itDoesntLogsDebugInMailLogger()
+    {
         expect($this->mail_logger)->debug()->never();
 
         $this->migration_logger->debug("bla");
     }
 
-    public function itLogsDebugInBackendLogger() {
+    public function itLogsDebugInBackendLogger()
+    {
         expect($this->backend_logger)->debug("bla")->once();
 
         $this->migration_logger->debug("bla");

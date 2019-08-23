@@ -26,7 +26,8 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
     /**
      * @access: protected
      */
-    function _getTitle($params) {
+    function _getTitle($params)
+    {
         // If a title is defined in the report, use it instead of the  default one
         $title = $this->getTitleWhenFilterIsSet($params);
         if ($title === false) {
@@ -61,7 +62,8 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         return htmlentities($params['filter']->getTitle(), ENT_COMPAT, 'UTF-8');
     }
 
-    /* protected */ function _mode($params) {
+    /* protected */ function _mode($params)
+    {
         $html = '';
         // No mode selector in printer version
         if(isset($params['pv']) && $params['pv'] > 0) {
@@ -101,7 +103,8 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
     }
 
     var $dfltParams = null;
-    function _getDefaultUrlParams($params) {
+    function _getDefaultUrlParams($params)
+    {
         if($this->dfltParams === null) {
             $this->dfltParams = array('action' => 'search',
                                       'id'     => $params['item']->getId());
@@ -111,7 +114,8 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         return array_merge($this->dfltParams, $this->dfltSearchParams, $this->dfltSortParams);
     }
 
-    function _buildSearchUrl($params, $extraParams = array()) {
+    function _buildSearchUrl($params, $extraParams = array())
+    {
         $parameters = array_merge($this->_getDefaultUrlParams($params), $extraParams);
         return DocmanViewURLBuilder::buildActionUrl($params['item'], $params, $parameters);
     }
@@ -119,7 +123,8 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
     /**
      * @access: protected
      */
-    function _filter($params) {
+    function _filter($params)
+    {
         $html = '';
 
         // No filter in printer version
@@ -138,14 +143,17 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         echo $html;
     }
 
-    function getActionOnIconForFolder() {
+    function getActionOnIconForFolder()
+    {
         return 'show';
     }
-    function getClassForFolderLink() {
+    function getClassForFolderLink()
+    {
         return '';
     }
 
-    /* static */ function getItemClasses($params) {
+    /* static */ function getItemClasses($params)
+    {
         $li_classes = 'docman_item';
         if (isset($params['is_last']) && $params['is_last']) {
             $li_classes .= '_last';
@@ -158,7 +166,8 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         //List is part of SOAP api
         return in_array($view, array_merge(array_keys(Docman_View_Browse::getDefaultViews()), array('List')));
     }
-    /* static */ function getViewForCurrentUser($group_id, $report = '') {
+    /* static */ function getViewForCurrentUser($group_id, $report = '')
+    {
         if($report != '') {
             $pref = $report;
         }

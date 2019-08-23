@@ -7,7 +7,8 @@ require_once __DIR__ . '/Template.php';
 /**
  * Extract keywords from Category* links on page.
  */
-function GleanKeywords ($page) {
+function GleanKeywords($page)
+{
     if (!defined('KEYWORDS')) return '';
     include_once("lib/TextSearchQuery.php");
     $search = new TextSearchQuery(KEYWORDS, true);
@@ -29,7 +30,8 @@ function GleanKeywords ($page) {
  * @param $pagename string  Name of redirecting page.
  * @return XmlContent Link to the redirecting page.
  */
-function RedirectorLink($pagename) {
+function RedirectorLink($pagename)
+{
     $url = WikiURL($pagename, array('redirectfrom' => ''));
     return HTML::a(array('class' => 'redirectfrom wiki',
                          'href' => $url),
@@ -37,7 +39,8 @@ function RedirectorLink($pagename) {
 }
 
 
-function actionPage(&$request, $action) {
+function actionPage(&$request, $action)
+{
     global $WikiTheme;
 
     $pagename = $request->getArg('pagename');
@@ -81,7 +84,8 @@ function actionPage(&$request, $action) {
     flush();
 }
 
-function displayPage(&$request, $template=false) {
+function displayPage(&$request, $template=false)
+{
     global $WikiTheme, $pv;
     $pagename = $request->getArg('pagename');
     $version = $request->getArg('version');

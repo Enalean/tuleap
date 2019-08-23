@@ -20,7 +20,8 @@
  */
 
 class CardResourceBadValueFormatException extends Exception {
-    public function __construct($field) {
+    public function __construct($field)
+    {
         $message = "field '$field' not found in value object";
         parent::__construct($message);
     }

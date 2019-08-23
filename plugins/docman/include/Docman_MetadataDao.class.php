@@ -24,14 +24,16 @@ class Docman_MetadataDao extends DataAccessObject {
     var $deletedStmt;
     var $notDeletedStmt;
 
-    function __construct($da) {
+    function __construct($da)
+    {
         parent::__construct($da);
 
         $this->deletedStmt    = 'special = 100';
         $this->notDeletedStmt = 'special != 100';
     }
 
-    function searchById($id) {
+    function searchById($id)
+    {
         $sql = sprintf('SELECT *'
                        .' FROM plugin_docman_metadata'
                        .' WHERE field_id = %d'
@@ -40,7 +42,8 @@ class Docman_MetadataDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchByGroupId($id, $onlyUsed, $type = array()) {
+    function searchByGroupId($id, $onlyUsed, $type = array())
+    {
         $where_clause = '';
         if($onlyUsed) {
             $where_clause .= ' AND use_it = '.PLUGIN_DOCMAN_METADATA_USED;
@@ -63,7 +66,8 @@ class Docman_MetadataDao extends DataAccessObject {
 
     // Very limited implementation of update
     // right now, only 'use_it' field is concerned by update
-    function updateById($id, $name, $description, $emptyAllowed, $mulValuesAllowed, $useIt) {
+    function updateById($id, $name, $description, $emptyAllowed, $mulValuesAllowed, $useIt)
+    {
         $row = array('field_id' => $id,
                      'name' => $name,
                      'description' => $description,
@@ -73,7 +77,8 @@ class Docman_MetadataDao extends DataAccessObject {
         return $this->updateFromRow($row);
     }
 
-    function updateFromRow($row) {
+    function updateFromRow($row)
+    {
         $updated = false;
         $id = false;
         if(!isset($row['field_id'])) {
@@ -101,8 +106,17 @@ class Docman_MetadataDao extends DataAccessObject {
         return $updated;
     }
 
-    function create($groupId, $name, $type, $description, $isRequired,
-                    $isEmptyAllowed, $mulValuesAllowed, $special, $useIt) {
+    function create(
+        $groupId,
+        $name,
+        $type,
+        $description,
+        $isRequired,
+        $isEmptyAllowed,
+        $mulValuesAllowed,
+        $special,
+        $useIt
+    ) {
         $sql = sprintf('INSERT INTO plugin_docman_metadata('.
                        'group_id, name, data_type, description,'.
                        'required, empty_ok, mul_val_ok, special,'.
@@ -141,7 +155,8 @@ class Docman_MetadataDao extends DataAccessObject {
 
     }
 
-    function _createAndReturnId($sql) {
+    function _createAndReturnId($sql)
+    {
         $inserted = $this->update($sql);
         if ($inserted) {
             $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
@@ -154,7 +169,8 @@ class Docman_MetadataDao extends DataAccessObject {
         return $inserted;
     }
 
-    function delete($id) {
+    function delete($id)
+    {
         $sql = sprintf('UPDATE plugin_docman_metadata'.
                        ' SET special = 100'.
                        ' WHERE field_id = %d',
@@ -162,7 +178,8 @@ class Docman_MetadataDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    function searchByName($groupId, $name) {
+    function searchByName($groupId, $name)
+    {
         $sql = sprintf('SELECT *'.
                        ' FROM plugin_docman_metadata'.
                        ' WHERE group_id = %d'.
@@ -173,7 +190,8 @@ class Docman_MetadataDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchValueById($fieldId, $itemId) {
+    function searchValueById($fieldId, $itemId)
+    {
         $sql = sprintf('SELECT *'.
                        ' FROM plugin_docman_metadata_value'.
                        ' WHERE field_id = %d'.

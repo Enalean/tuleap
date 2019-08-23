@@ -22,44 +22,52 @@ require_once '_fixtures/SOAP_WSDLGeneratorFixtures.php';
 
 class SOAP_WSDLMethodGeneratorTest extends TuleapTestCase {
 
-    function tearDown() {
+    function tearDown()
+    {
         EventManager::clearInstance();
     }
 
-    function testExtractCommentShouldContainsComment() {
+    function testExtractCommentShouldContainsComment()
+    {
         $comment = $this->GivenTheCommentOfAddProject();
         $this->assertContains($comment, 'Create a new project');
     }
 
-    function testExtractCommentShouldContainsParams() {
+    function testExtractCommentShouldContainsParams()
+    {
         $comment = $this->GivenTheCommentOfAddProject();
         $this->assertContains($comment, '@param');
     }
 
-    function testExtractCommentShouldNotContainsCommentsDelimiters() {
+    function testExtractCommentShouldNotContainsCommentsDelimiters()
+    {
         $comment = $this->GivenTheCommentOfAddProject();
         $this->assertDoesntContain($comment, '/**');
         $this->assertDoesntContain($comment, '*/');
     }
 
-    function testExtractCommentShouldNotContainsDocblocks() {
+    function testExtractCommentShouldNotContainsDocblocks()
+    {
         $comment = $this->GivenTheCommentOfAddProject();
         $this->assertDoesntContain($comment, '@return');
         $this->assertDoesntContain($comment, '@see');
         $this->assertDoesntContain($comment, '@todo');
     }
 
-    function testExtractCommentShouldNotFinishByTonsOfSpaces() {
+    function testExtractCommentShouldNotFinishByTonsOfSpaces()
+    {
         $comment = $this->GivenTheCommentOfAddProject();
         $this->assertFalse(preg_match('%[ ]+$%', $comment));
     }
 
-    function testExtractParamsShouldListAllParameters() {
+    function testExtractParamsShouldListAllParameters()
+    {
         $params = $this->GivenTheParametersOfAddProject();
         $this->assertEqual(count($params), 5);
     }
 
-    function testExtractParamsShouldListParamsInOrder() {
+    function testExtractParamsShouldListParamsInOrder()
+    {
         $params = $this->GivenTheParametersOfAddProject();
 
         $this->assertEqual($params, array(
@@ -70,27 +78,32 @@ class SOAP_WSDLMethodGeneratorTest extends TuleapTestCase {
             'templateId'     => 'xsd:int'));
     }
 
-    function testExtractReturnType() {
+    function testExtractReturnType()
+    {
         $return = $this->GivenTheReturnTypeOfAddProject();
         $this->assertEqual($return, array('addProject' => 'xsd:int'));
     }
 
-    function testExtractReturnTypeBoolean() {
+    function testExtractReturnTypeBoolean()
+    {
         $gen = $this->GivenGenerator('returnBoolean');
         $this->assertEqual($gen->getReturnType(), array('returnBoolean' => 'xsd:boolean'));
     }
 
-    function itExtractReturnTypeArrayOfString() {
+    function itExtractReturnTypeArrayOfString()
+    {
         $gen = $this->GivenGenerator('returnArrayOfString');
         $this->assertEqual($gen->getReturnType(), array('returnArrayOfString' => 'tns:ArrayOfstring'));
     }
 
-    function itThrowAnExceptionOnUnknownTypes() {
+    function itThrowAnExceptionOnUnknownTypes()
+    {
         $this->expectException('Exception');
         $this->GivenGenerator('returnUnknownType');
     }
 
-    function itAsksToPluginsForUnkownTypes() {
+    function itAsksToPluginsForUnkownTypes()
+    {
         $plugin = new SOAP_WSDLMethodGeneratorTest_FakePlugin();
         EventManager::instance()->addListener(Event::WSDL_DOC2SOAP_TYPES, $plugin, 'wsdl_doc2soap_types', false);
 
@@ -98,37 +111,44 @@ class SOAP_WSDLMethodGeneratorTest extends TuleapTestCase {
         $this->assertEqual($gen->getReturnType(), array('returnArrayOfPluginTypes' => 'tns:ArrayOfStats'));
     }
 
-    private function assertDoesntContain($reference, $search) {
+    private function assertDoesntContain($reference, $search)
+    {
         $this->assertTrue(strpos($reference, $search) === false);
     }
 
-    private function assertContains($reference, $search) {
+    private function assertContains($reference, $search)
+    {
         $this->assertTrue(strpos($reference, $search) !== false);
     }
 
-    private function GivenTheCommentOfAddProject() {
+    private function GivenTheCommentOfAddProject()
+    {
         $gen = $this->GivenGenerator('addProject');
         return $gen->getComment();
     }
 
-    private function GivenTheParametersOfAddProject() {
+    private function GivenTheParametersOfAddProject()
+    {
         $gen = $this->GivenGenerator('addProject');
         return $gen->getParameters();
     }
 
-    private function GivenTheReturnTypeOfAddProject() {
+    private function GivenTheReturnTypeOfAddProject()
+    {
         $gen = $this->GivenGenerator('addProject');
         return $gen->getReturnType();
     }
 
-    private function GivenGenerator($methodName) {
+    private function GivenGenerator($methodName)
+    {
         $class = new ReflectionClass('SOAP_WSDLGeneratorFixtures');
         return new SOAP_WSDLMethodGenerator($class->getMethod($methodName));
     }
 }
 
 class SOAP_WSDLMethodGeneratorTest_FakePlugin {
-    function wsdl_doc2soap_types($params) {
+    function wsdl_doc2soap_types($params)
+    {
         $params['doc2soap_types'] = array_merge($params['doc2soap_types'], array(
             'arrayofplugintypes' => 'tns:ArrayOfStats'
         ));

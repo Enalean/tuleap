@@ -30,7 +30,8 @@ class Git_AdminRepositoryListForProjectPresenter {
     /** @var array */
     public $repositories = array();
 
-    public function __construct($project_id, $project_name) {
+    public function __construct($project_id, $project_name)
+    {
         $this->project_id   = $project_id;
         $this->project_name = $project_name;
     }

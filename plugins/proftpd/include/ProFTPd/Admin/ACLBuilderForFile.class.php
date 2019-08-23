@@ -25,15 +25,18 @@ namespace Tuleap\ProFTPd\Admin;
  */
 class ACLBuilderForFile extends ACLBuilder {
 
-    public function getACL($http_user, $writers, $readers) {
+    public function getACL($http_user, $writers, $readers)
+    {
         return $this->getEffectiveACL($http_user, $writers, $readers);
     }
 
-    protected function getACLReaders($label) {
+    protected function getACLReaders($label)
+    {
         return "$label:r";
     }
 
-    protected function getACLWriters($label) {
+    protected function getACLWriters($label)
+    {
         return "$label:rw";
     }
 

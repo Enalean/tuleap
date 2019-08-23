@@ -60,7 +60,8 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      * @param string $description the description of the renderer
      * @param int $rank the rank
      */
-    public function __construct($id, $report, $name, $description, $rank) {
+    public function __construct($id, $report, $name, $description, $rank)
+    {
         $this->id          = $id;
         $this->report      = $report;
         $this->name        = $name;
@@ -73,7 +74,8 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      *
      * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
@@ -130,12 +132,14 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      */
     public abstract function afterSaveObject(Tracker_Report_Renderer $renderer);
 
-    public function process(TrackerManager $tracker_manager, $request, $current_user) {
+    public function process(TrackerManager $tracker_manager, $request, $current_user)
+    {
         $this->processRequest($tracker_manager, $request, $current_user);
         $this->afterProcessRequest($tracker_manager, $request, $current_user);
     }
 
-    public function afterProcessRequest(TrackerManager $tracker_manager, $request, $current_user) {
+    public function afterProcessRequest(TrackerManager $tracker_manager, $request, $current_user)
+    {
         if (!$request->isAjax()) {
             $params = array(
                 'report'   => $this->report->id,
@@ -155,7 +159,8 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      *
      * @return array of 'item_key' => {url: '', icon: '', label: ''}
      */
-    public function getOptionsMenuItems() {
+    public function getOptionsMenuItems()
+    {
         $items = array(
             'printer_version' => '<div class="btn-group"><a class="btn btn-mini" href="'. TRACKER_BASE_URL.'/?'.http_build_query(
                 array(
@@ -200,11 +205,13 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
         $items = array('add_to_dashboard' => $html) + $items;
     }
 
-    private function getTemplateRenderer() {
+    private function getTemplateRenderer()
+    {
         return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/report');
     }
 
-    private function canAddToDashboard($user) {
+    private function canAddToDashboard($user)
+    {
         return $this->id > 0
             && (!isset($this->report_session) || !$this->report_session->hasChanged())
             && $user->isLoggedIn();
@@ -230,7 +237,8 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      *
      * @return string html
      */
-    public function fetchWidgetGoToReport() {
+    public function fetchWidgetGoToReport()
+    {
         return $this->fetchLinkGoTo('['. $GLOBALS['Language']->getText('plugin_tracker_report_widget','go_to_report') .']');
     }
 
@@ -242,7 +250,8 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      *
      * @return string html
      */
-    public function fetchArtifactLinkGoToTracker() {
+    public function fetchArtifactLinkGoToTracker()
+    {
         $html = '';
         $html .= '<div class="tracker-form-element-artifactlink-gototracker">';
         $html .=  $this->fetchLinkGoTo($GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'go_to_tracker'), array('target' => '_blank', 'rel' => 'noreferrer'));
@@ -257,7 +266,8 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      *
      * @return string html
      */
-    protected function fetchLinkGoTo($msg, $params = array()) {
+    protected function fetchLinkGoTo($msg, $params = array())
+    {
         $html = '';
         $html .= '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
             array(
@@ -279,7 +289,8 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      *
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      */
-    public function exportToXml(SimpleXMLElement $root, array $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, array $xmlMapping)
+    {
         $root->addAttribute('type', $this->getType());
         $root->addAttribute('rank', $this->rank);
         // if old ids are important, modify code here

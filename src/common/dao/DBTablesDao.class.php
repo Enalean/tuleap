@@ -26,22 +26,26 @@ class DBTablesDao extends DataAccessObject {
     * Gets a log files
     * @return object a result object
     */
-    function searchAll() {
+    function searchAll()
+    {
         $sql="SHOW TABLES";
         return $this->retrieve($sql);
     }
 
-    function analyzeTable($name) {
+    function analyzeTable($name)
+    {
         $sql = "ANALYZE TABLE ".$name;
         return $this->retrieve($sql);
     }
 
-    function checkTable($name) {
+    function checkTable($name)
+    {
         $sql = "CHECK TABLE ".$name;
         return $this->retrieve($sql);
     }
 
-    function convertToUTF8($name) {
+    function convertToUTF8($name)
+    {
         $field_changes = array();
         $sql = "SHOW FULL COLUMNS FROM ".$name;
         foreach($this->retrieve($sql) as $field) {
@@ -70,12 +74,14 @@ class DBTablesDao extends DataAccessObject {
     * Gets a log files
     * @return object a result object
     */
-    function searchByName($name) {
+    function searchByName($name)
+    {
         $sql = "DESC ".$name;
         return $this->retrieve($sql);
     }
 
-    function updateFromFile($filename) {
+    function updateFromFile($filename)
+    {
         $file_content = file($filename);
         $query = "";
         foreach($file_content as $sql_line){

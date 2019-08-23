@@ -207,7 +207,8 @@ class TrackerXmlImport
      *
      * @return array Array of SimpleXmlElement with each tracker
      */
-    protected function getAllXmlTrackers(SimpleXMLElement $xml_input) {
+    protected function getAllXmlTrackers(SimpleXMLElement $xml_input)
+    {
         $tracker_list = array();
         foreach ($xml_input->trackers->tracker as $xml_tracker) {
             $tracker_list[$this->getXmlTrackerAttribute($xml_tracker, 'id')] = $xml_tracker;
@@ -221,7 +222,8 @@ class TrackerXmlImport
      * @param type $attribute_name
      * @return String | bool the attribute value in String, False if this attribute does not exist
      */
-    private function getXmlTrackerAttribute(SimpleXMLElement $xml_tracker, $attribute_name) {
+    private function getXmlTrackerAttribute(SimpleXMLElement $xml_tracker, $attribute_name)
+    {
         $tracker_attributes = $xml_tracker->attributes();
         if (! $tracker_attributes[$attribute_name]) {
             return false;
@@ -503,7 +505,8 @@ class TrackerXmlImport
         }
     }
 
-    private function importHierarchy(SimpleXMLElement $xml_input, array $created_trackers_list) {
+    private function importHierarchy(SimpleXMLElement $xml_input, array $created_trackers_list)
+    {
         $all_hierarchies = array();
         foreach ($this->getAllXmlTrackers($xml_input) as $xml_tracker) {
             $all_hierarchies = $this->buildTrackersHierarchy($all_hierarchies, $xml_tracker, $created_trackers_list);
@@ -620,7 +623,8 @@ class TrackerXmlImport
      * @return Tracker
      * @throws Tracker_Exception
      */
-    public function createFromXMLFile(Project $project, $filepath) {
+    public function createFromXMLFile(Project $project, $filepath)
+    {
         $xml_security = new XML_Security();
         $tracker_xml = $xml_security->loadFile($filepath);
         if ($tracker_xml !== false) {
@@ -632,7 +636,8 @@ class TrackerXmlImport
         }
     }
 
-    public function getTrackerItemNameFromXMLFile($filepath) {
+    public function getTrackerItemNameFromXMLFile($filepath)
+    {
         $xml_security = new XML_Security();
         $tracker_xml = $xml_security->loadFile($filepath);
         if ($tracker_xml !== false) {
@@ -652,7 +657,8 @@ class TrackerXmlImport
      * @throws TrackerFromXmlException
      * @throws Tracker_Exception
      */
-    public function createFromXMLFileWithInfo(Project $project, $filepath, $name, $description, $item_name) {
+    public function createFromXMLFileWithInfo(Project $project, $filepath, $name, $description, $item_name)
+    {
         $xml_security = new XML_Security();
         $tracker_xml  = $xml_security->loadFile($filepath);
         if ($tracker_xml) {
@@ -674,7 +680,8 @@ class TrackerXmlImport
      * @throws TrackerFromXmlException
      * @throws Tracker_Exception
      */
-    public function createFromXML(SimpleXMLElement $xml_element, Project $project, $name, $description, $itemname) {
+    public function createFromXML(SimpleXMLElement $xml_element, Project $project, $name, $description, $itemname)
+    {
         $tracker = null;
         if ($this->tracker_factory->validMandatoryInfoOnCreate($name, $description, $itemname, $project->getId())) {
             $this->rng_validator->validate($xml_element, realpath(dirname(TRACKER_BASE_DIR).'/www/resources/tracker.rng'));
@@ -908,7 +915,8 @@ class TrackerXmlImport
         return $tracker;
     }
 
-    private function getUGroupId(Project $project, $ugroup_name) {
+    private function getUGroupId(Project $project, $ugroup_name)
+    {
         if(isset($GLOBALS['UGROUPS'][$ugroup_name])) {
             $ugroup_id = $GLOBALS['UGROUPS'][$ugroup_name];
         } else {
@@ -954,7 +962,8 @@ class TrackerXmlImport
      *
      * Stores in database the hierarchy between created trackers
      */
-    public function storeHierarchyInDB(array $all_hierarchies) {
+    public function storeHierarchyInDB(array $all_hierarchies)
+    {
         foreach ($all_hierarchies as $parent_id => $hierarchy) {
             $this->hierarchy_dao->updateChildren($parent_id, $hierarchy);
         }

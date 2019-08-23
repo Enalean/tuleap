@@ -20,17 +20,20 @@
 
 class b201411101016_add_backup_path_for_repositories extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add backup path for git repositories
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_git
             ADD COLUMN `repository_backup_path` text NULL";
 

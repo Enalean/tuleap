@@ -21,28 +21,33 @@
 class Tracker_Permission_PermissionRequest {
     private $permissions = array();
 
-    public function __construct(array $permissions) {
+    public function __construct(array $permissions)
+    {
         $this->permissions = $permissions;
     }
 
-    public function setFromRequest(Codendi_Request $request, array $ugroup_ids) {
+    public function setFromRequest(Codendi_Request $request, array $ugroup_ids)
+    {
         foreach ($ugroup_ids as $id) {
             $this->permissions[$id] = $request->get(Tracker_Permission_Command::PERMISSION_PREFIX.$id);
         }
     }
 
-    public function containsPermissionType($permission_type) {
+    public function containsPermissionType($permission_type)
+    {
         return in_array($permission_type, $this->permissions);
     }
 
-    public function getPermissionType($id) {
+    public function getPermissionType($id)
+    {
         if (isset($this->permissions[$id])) {
             return $this->permissions[$id];
         }
         return null;
     }
 
-    public function revoke($id) {
+    public function revoke($id)
+    {
         if (isset($this->permissions[$id])) {
             unset($this->permissions[$id]);
         }

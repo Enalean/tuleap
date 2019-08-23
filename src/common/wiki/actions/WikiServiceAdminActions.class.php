@@ -44,7 +44,8 @@ class WikiServiceAdminActions extends WikiActions
         $this->gid = (int) $controler->gid;
     }
 
-    function checkPage($page) {
+    function checkPage($page)
+    {
         global $feedback;
 
       /**
@@ -68,7 +69,8 @@ class WikiServiceAdminActions extends WikiActions
     }
 
 
-    function create() {
+    function create()
+    {
         $page=$_POST['page'];
         if(!empty($_POST['upage'])) {
             $page=$_POST['upage'];
@@ -88,7 +90,8 @@ class WikiServiceAdminActions extends WikiActions
         }
     }
 
-    function delete() {
+    function delete()
+    {
         $we = new WikiEntry();
         $we->setGid($this->gid);
         $we->setId($_REQUEST['id']);
@@ -99,7 +102,8 @@ class WikiServiceAdminActions extends WikiActions
   /**
    * Perform wiki attachment removal.
    */
-    function deleteAttachments() {
+    function deleteAttachments()
+    {
         $request = HTTPRequest::instance();
         if ($request->isPost() && $request->exist('attachments_to_delete')) {
             $args = $request->get('attachments_to_delete');
@@ -131,7 +135,8 @@ class WikiServiceAdminActions extends WikiActions
         }
     }
 
-    function update() {
+    function update()
+    {
         $page=$_POST['page'];
         if(!empty($_POST['upage'])) {
             $page=$_POST['upage'];
@@ -151,7 +156,8 @@ class WikiServiceAdminActions extends WikiActions
         }
     }
 
-    function setWikiPerms() {
+    function setWikiPerms()
+    {
         global $feedback;
 
         $w = new Wiki($this->gid);
@@ -175,7 +181,8 @@ class WikiServiceAdminActions extends WikiActions
         );
     }
 
-    function setWikiPagePerms() {
+    function setWikiPagePerms()
+    {
         global $feedback;
 
         $wp = new WikiPage($_POST['object_id']);
@@ -213,7 +220,8 @@ class WikiServiceAdminActions extends WikiActions
     /**
      * Wrapper to set permissions on wiki attachments.
      */
-    function setWikiAttachmentPerms() {
+    function setWikiAttachmentPerms()
+    {
         global $feedback;
 
         $wa = new WikiAttachment($this->gid);

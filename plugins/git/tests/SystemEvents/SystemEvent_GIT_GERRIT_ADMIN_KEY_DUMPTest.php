@@ -34,7 +34,8 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
     /** @var Git_Gitolite_SSHKeyDumper */
     private $ssh_key_dumper;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->ssh_key_dumper = mock('Git_Gitolite_SSHKeyDumper');
         $this->gerrit_server_factory = mock('Git_RemoteServer_GerritServerFactory');
@@ -42,7 +43,8 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
         $this->event->injectDependencies($this->gerrit_server_factory, $this->ssh_key_dumper);
     }
 
-    public function itAddsKeyForAServer() {
+    public function itAddsKeyForAServer()
+    {
         $gerrit_server_id = 7;
         $this->event->setParameters("$gerrit_server_id");
 
@@ -52,7 +54,8 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
         $this->event->process();
     }
 
-    public function itDumpsTheNewKeyForServer() {
+    public function itDumpsTheNewKeyForServer()
+    {
         $gerrit_server_id = 7;
         $this->event->setParameters("$gerrit_server_id");
 
@@ -85,7 +88,8 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
         $this->event->process();
     }
 
-    public function itDeleteCorrespondingKeyWhenNoServer() {
+    public function itDeleteCorrespondingKeyWhenNoServer()
+    {
         $gerrit_server_id = 7;
         $this->event->setParameters("$gerrit_server_id");
 
@@ -98,7 +102,8 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
         $this->event->process();
     }
 
-    public function itMarkAsDoneWhenDumpWorks() {
+    public function itMarkAsDoneWhenDumpWorks()
+    {
         $this->event->setParameters("7");
 
         stub($this->gerrit_server_factory)->getServerById()->returns(mock('Git_RemoteServer_GerritServer'));
@@ -109,7 +114,8 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
         $this->event->process();
     }
 
-    public function itMarkAsErrorWhenDumpDoesntWork() {
+    public function itMarkAsErrorWhenDumpDoesntWork()
+    {
         $this->event->setParameters("7");
 
         stub($this->gerrit_server_factory)->getServerById()->returns(mock('Git_RemoteServer_GerritServer'));

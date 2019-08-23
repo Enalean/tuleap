@@ -28,19 +28,23 @@ abstract class Git_GitoliteHousekeeping_ChainOfResponsibility_Command {
     /** @var Git_GitoliteHousekeeping_ChainOfResponsibility_Command */
     private $next_command;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setNextCommand(new Git_GitoliteHousekeeping_ChainOfResponsibility_DoNothing());
     }
 
-    public function setNextCommand(Git_GitoliteHousekeeping_ChainOfResponsibility_Command $next_command) {
+    public function setNextCommand(Git_GitoliteHousekeeping_ChainOfResponsibility_Command $next_command)
+    {
         $this->next_command = $next_command;
     }
 
-    public function getNextCommand() {
+    public function getNextCommand()
+    {
         return $this->next_command;
     }
 
-    public function executeNextCommand() {
+    public function executeNextCommand()
+    {
         $this->next_command->execute();
     }
 

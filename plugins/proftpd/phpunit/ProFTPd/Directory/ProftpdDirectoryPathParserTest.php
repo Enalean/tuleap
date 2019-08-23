@@ -31,7 +31,8 @@ class DirectoryPathParser_CleanPathTest extends \PHPUnit\Framework\TestCase {
         $this->parser = new DirectoryPathParser();
     }
 
-    public function itReturnsTheBasePathIfPathIsEmpty() {
+    public function itReturnsTheBasePathIfPathIsEmpty()
+    {
         $base_path = DirectoryPathParser::BASE_PATH;
 
         $this->assertEquals($base_path, $this->parser->getCleanPath(''));
@@ -39,7 +40,8 @@ class DirectoryPathParser_CleanPathTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($base_path, $this->parser->getCleanPath(false));
     }
 
-    public function testItReturnsTheSubmittedPathIfPathHasNoDotDot() {
+    public function testItReturnsTheSubmittedPathIfPathHasNoDotDot()
+    {
         $path = 'some_path';
         $this->assertEquals($path, $this->parser->getCleanPath($path));
 
@@ -53,7 +55,8 @@ class DirectoryPathParser_CleanPathTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($path, $this->parser->getCleanPath($path));
     }
 
-    public function testItReturnsTheParentPathIfPathHasDotDot() {
+    public function testItReturnsTheParentPathIfPathHasDotDot()
+    {
         $path = '../some_path';
         $this->assertEquals('', $this->parser->getCleanPath($path));
 

@@ -44,7 +44,8 @@ class Admin_PermissionDelegationGroupModalPresenter
     private $is_new;
 
 
-    public function __construct(?UserForgeUGroupPresenter $group = null) {
+    public function __construct(?UserForgeUGroupPresenter $group = null)
+    {
         $this->is_new = true;
 
         if ($group) {
@@ -55,7 +56,8 @@ class Admin_PermissionDelegationGroupModalPresenter
         }
     }
 
-    public function group_title() {
+    public function group_title()
+    {
         if ($this->is_new) {
             return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_title_create');
         }
@@ -63,31 +65,38 @@ class Admin_PermissionDelegationGroupModalPresenter
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_title_edit', array($this->name));
     }
 
-    public function name_label() {
+    public function name_label()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_name');
     }
 
-    public function description_label() {
+    public function description_label()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_description');
     }
 
-    public function id() {
+    public function id()
+    {
         return $this->id;
     }
 
-    public function name() {
+    public function name()
+    {
         return $this->name;
     }
 
-    public function description() {
+    public function description()
+    {
         return $this->description;
     }
 
-    public function is_new() {
+    public function is_new()
+    {
         return $this->is_new;
     }
 
-    public function group_submit() {
+    public function group_submit()
+    {
         if ($this->is_new) {
             return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_submit_create');
         }
@@ -95,7 +104,8 @@ class Admin_PermissionDelegationGroupModalPresenter
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_submit_edit');
     }
 
-    public function group_cancel() {
+    public function group_cancel()
+    {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_cancel');
     }
 

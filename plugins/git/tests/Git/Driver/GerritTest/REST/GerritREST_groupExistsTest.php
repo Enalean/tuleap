@@ -22,7 +22,8 @@ require_once 'GerritREST_Base.php';
 
 class Git_DriverREST_Gerrit_groupExistsTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_groupExistsTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->group         = 'contributors';
@@ -30,7 +31,8 @@ class Git_DriverREST_Gerrit_groupExistsTest extends Git_Driver_GerritREST_base i
 
     }
 
-    public function itReturnsTrueIfGroupExists(){
+    public function itReturnsTrueIfGroupExists()
+    {
         $response = stub('Guzzle\Http\Message\Response')->getBody(true)->returns('');
         stub($this->guzzle_request)->send()->returns($response);
 
@@ -39,13 +41,15 @@ class Git_DriverREST_Gerrit_groupExistsTest extends Git_Driver_GerritREST_base i
         $this->assertTrue($this->driver->doesTheGroupExist($this->gerrit_server, $this->groupname));
     }
 
-    public function itReturnsFalseIfGroupDoNotExists(){
+    public function itReturnsFalseIfGroupDoNotExists()
+    {
         stub($this->guzzle_client)->get()->throws(new Guzzle\Http\Exception\ClientErrorResponseException());
 
         $this->assertFalse($this->driver->doesTheGroupExist($this->gerrit_server, $this->groupname));
     }
 
-    public function itCallsTheRightOptions() {
+    public function itCallsTheRightOptions()
+    {
         $url = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
             .'/a/groups/'. urlencode($this->groupname);

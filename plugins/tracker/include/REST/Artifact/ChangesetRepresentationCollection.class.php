@@ -25,16 +25,19 @@ class ChangesetRepresentationCollection {
     private $collection;
     private $total_count;
 
-    public function __construct(array $collection, $total_count) {
+    public function __construct(array $collection, $total_count)
+    {
         $this->collection  = $collection;
         $this->total_count = $total_count;
     }
 
-    public function toArray() {
+    public function toArray()
+    {
         return $this->collection;
     }
 
-    public function totalCount() {
+    public function totalCount()
+    {
         return $this->total_count;
     }
 }

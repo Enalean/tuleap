@@ -25,7 +25,8 @@ Mock::generate('LDAP');
 Mock::generate('LDAP_ProjectManager');
 
 class LDAP_BackendSVNTestEventManager extends EventManager {
-    public function processEvent($event_name, $params = []) {
+    public function processEvent($event_name, $params = [])
+    {
         $ldap             = mock('LDAP');
         $cache_parameters = mock('Tuleap\SvnCore\Cache\Parameters');
 
@@ -35,17 +36,20 @@ class LDAP_BackendSVNTestEventManager extends EventManager {
 
 class LDAP_BackendSVNTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         $GLOBALS['svn_prefix'] = '/svnroot';
         $GLOBALS['sys_name']   = 'Platform';
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['sys_name']);
     }
 
-    private function GivenAFullApacheConf() {
+    private function GivenAFullApacheConf()
+    {
         $backend  = TestHelper::getPartialMock(
             'LDAP_BackendSVN',
             array(
@@ -90,14 +94,16 @@ class LDAP_BackendSVNTest extends TuleapTestCase {
         return $backend->getApacheConf();
     }
 
-    public function testFullConfShouldWrapEveryThing() {
+    public function testFullConfShouldWrapEveryThing()
+    {
         $conf = $this->GivenAFullApacheConf();
 
         $this->assertPattern('/TuleapLdapServers/', $conf);
         $this->ThenThereAreTwoLocationDefinedGpigAndGarden($conf);
     }
 
-    private function ThenThereAreTwoLocationDefinedGpigAndGarden($conf) {
+    private function ThenThereAreTwoLocationDefinedGpigAndGarden($conf)
+    {
         $matches = array();
         preg_match_all('%<Location /svnroot/([^>]*)>%', $conf, $matches);
         $this->assertEqual($matches[1][0], 'gpig');

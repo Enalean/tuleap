@@ -23,14 +23,16 @@ class SVN_Immutable_Tags_Handler {
     /** @var SVN_Immutable_Tags_DAO */
     private $dao;
 
-    public function __construct(SVN_Immutable_Tags_DAO $dao) {
+    public function __construct(SVN_Immutable_Tags_DAO $dao)
+    {
         $this->dao = $dao;
     }
 
     /**
      * @return string
      */
-    public function getImmutableTagsWhitelistForProject($project_id) {
+    public function getImmutableTagsWhitelistForProject($project_id)
+    {
         $result = $this->dao->getImmutableTagsWhitelistForProject($project_id)->getRow();
 
         if (! $result) {
@@ -43,7 +45,8 @@ class SVN_Immutable_Tags_Handler {
     /**
      * @return string
      */
-    public function getImmutableTagsPathForProject($project_id) {
+    public function getImmutableTagsPathForProject($project_id)
+    {
         $result = $this->dao->getImmutableTagsPathForProject($project_id)->getRow();
 
         if (! $result) {
@@ -53,11 +56,13 @@ class SVN_Immutable_Tags_Handler {
         return $result['paths'];
     }
 
-    public function saveImmutableTagsForProject($project_id, $whitelist, $path) {
+    public function saveImmutableTagsForProject($project_id, $whitelist, $path)
+    {
         return $this->dao->saveImmutableTagsForProject($project_id, $whitelist, $path);
     }
 
-    public function getAllowedTagsFromWhiteList(Project $project) {
+    public function getAllowedTagsFromWhiteList(Project $project)
+    {
         $content = $this->getImmutableTagsWhitelistForProject($project->getID());
 
         if (! $content) {
@@ -67,7 +72,8 @@ class SVN_Immutable_Tags_Handler {
         return explode(PHP_EOL, $content);
     }
 
-    public function doesProjectUsesImmutableTags(Project $project) {
+    public function doesProjectUsesImmutableTags(Project $project)
+    {
         return $this->getImmutableTagsPathForProject($project->getID()) != '';
     }
 

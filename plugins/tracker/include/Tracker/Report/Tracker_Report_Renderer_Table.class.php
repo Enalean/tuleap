@@ -50,13 +50,15 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * @param int $chnuksz the size of the chunk (Browse X at once)
      * @param bool $multisort use multisort?
      */
-    public function __construct($id, $report, $name, $description, $rank, $chunksz, $multisort) {
+    public function __construct($id, $report, $name, $description, $rank, $chunksz, $multisort)
+    {
         parent::__construct($id, $report, $name, $description, $rank);
         $this->chunksz   = $chunksz;
         $this->multisort = $multisort;
     }
 
-    public function initiateSession() {
+    public function initiateSession()
+    {
         $this->report_session = new Tracker_Report_Session($this->report->id);
         $this->report_session->changeSessionNamespace("renderers");
         $this->report_session->set("{$this->id}.chunksz",   $this->chunksz);
@@ -66,7 +68,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * Delete the renderer
      */
-    public function delete() {
+    public function delete()
+    {
         $this->getSortDao()->delete($this->id);
         $this->getColumnsDao()->delete($this->id);
         $this->getAggregatesDao()->deleteByRendererId($this->id);
@@ -76,14 +79,16 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * @param array $sort
      */
-    public function setSort($sort) {
+    public function setSort($sort)
+    {
         $this->_sort = $sort;
     }
     /**
      * Get field ids used to (multi)sort results
      * @return array [{'field_id' => 12, 'is_desc' => 0, 'rank' => 2}, [...]]
      */
-    public function getSort($store_in_session = true) {
+    public function getSort($store_in_session = true)
+    {
         $sort = null;
         if ($store_in_session) {
             if (isset($this->report_session)) {
@@ -139,7 +144,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @param array $sort
      */
-    public function saveSort($sort) {
+    public function saveSort($sort)
+    {
         $dao = $this->getSortDao();
         if (is_array($sort)) {
             foreach ($sort as $key => $s) {
@@ -152,7 +158,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * @param array $cols
      */
-    public function setColumns($cols) {
+    public function setColumns($cols)
+    {
         $this->_columns = $cols;
     }
     /**
@@ -227,7 +234,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * @param array $aggs
      */
-    public function setAggregates($aggs) {
+    public function setAggregates($aggs)
+    {
         $this->_aggregates = $aggs;
     }
     /**
@@ -235,7 +243,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @param array $cols
      */
-    public function saveAggregates($aggs) {
+    public function saveAggregates($aggs)
+    {
         $dao = $this->getAggregatesDao();
         foreach ($aggs as $field_id => $aggregates) {
             foreach ($aggregates as $aggregate) {
@@ -285,7 +294,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $this->_aggregates;
     }
 
-    public function storeColumnsInSession() {
+    public function storeColumnsInSession()
+    {
         $columns = $this->_columns;
         foreach($columns as $key => $column) {
             $field_id = $this->fallbackFieldId($key, $column);
@@ -310,7 +320,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * As we don't want to break existing session once the Tuleap server is upgraded to the new version,
      * if we don't find any field_id information then we fallback on the key used as index.
      */
-    private function fallbackFieldId($key, $column) {
+    private function fallbackFieldId($key, $column)
+    {
         if (isset($column['field_id'])) {
             return $column['field_id'];
         }
@@ -322,7 +333,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * Get field ids and width used to display results
      * @return array  [{'field_id' => 12, 'width' => 33, 'rank' => 5}, [...]]
      */
-    public function getColumnsFromDb() {
+    public function getColumnsFromDb()
+    {
         $ff = $this->getFieldFactory();
         $this->_columns = array();
         foreach($this->getColumnsDao()->searchByRendererId($this->id) as $row) {
@@ -340,15 +352,18 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $this->_columns;
     }
 
-    protected function getSortDao() {
+    protected function getSortDao()
+    {
         return new Tracker_Report_Renderer_Table_SortDao();
     }
 
-    protected function getColumnsDao() {
+    protected function getColumnsDao()
+    {
         return new Tracker_Report_Renderer_Table_ColumnsDao();
     }
 
-    protected function getAggregatesDao() {
+    protected function getAggregatesDao()
+    {
         return new Tracker_Report_Renderer_Table_FunctionsAggregatesDao();
     }
 
@@ -356,7 +371,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * Fetch content of the renderer
      * @return string
      */
-    public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user) {
+    public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user)
+    {
         $html = '';
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         $offset     = (int)$request->get('offset');
@@ -407,7 +423,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
-    private function fetchHeader($report_can_be_modified, PFUser $user, $total_rows, array $queries) {
+    private function fetchHeader($report_can_be_modified, PFUser $user, $total_rows, array $queries)
+    {
         $html = '';
 
         $html .= $this->fetchViewButtons($report_can_be_modified, $user);
@@ -508,7 +525,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @return array of 'item_key' => {url: '', icon: '', label: ''}
      */
-    public function getOptionsMenuItems() {
+    public function getOptionsMenuItems()
+    {
         $my_items = array('export' => '');
         $my_items['export'] .= '<div class="btn-group">';
         $my_items['export'] .= '<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">';
@@ -539,7 +557,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $my_items + parent::getOptionsMenuItems();
     }
 
-    private function getExportResultURL($export_only_displayed_fields) {
+    private function getExportResultURL($export_only_displayed_fields)
+    {
         return TRACKER_BASE_URL.'/?'.http_build_query(
             array(
                 'report'         => $this->report->id,
@@ -553,7 +572,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         );
     }
 
-    private function fetchFormStart($id = '', $func = 'renderer') {
+    private function fetchFormStart($id = '', $func = 'renderer')
+    {
         $html  = '';
         $html .= '<form method="POST" action="" id="'. $id .'" class="form-inline">';
         $html .= '<input type="hidden" name="report" value="'. $this->report->id .'" />';
@@ -565,7 +585,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * Fetch content to be displayed in widget
      */
-    public function fetchWidget(PFUser $user) {
+    public function fetchWidget(PFUser $user)
+    {
         $html = '';
         $use_data_from_db = true;
         $store_in_session = false;
@@ -618,12 +639,14 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
-    private function fetchMatchingNumber($total_rows) {
+    private function fetchMatchingNumber($total_rows)
+    {
         $html = '<p>'. $GLOBALS['Language']->getText('plugin_tracker_include_report', 'matching', $total_rows) .'</p>';
         return $html;
     }
 
-    private function fetchSort() {
+    private function fetchSort()
+    {
         $purifier     = Codendi_HTMLPurifier::instance();
         $html         = '<div class="tracker_report_table_sortby_panel">';
         $sort_columns = $this->getSort();
@@ -653,7 +676,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
-    private function fetchAddColumn() {
+    private function fetchAddColumn()
+    {
         $add_columns_presenter = new Templating_Presenter_ButtonDropdownsMini(
             'tracker_report_add_columns_dropdown',
             $GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_columns'),
@@ -664,7 +688,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $this->report->getTemplateRenderer()->renderToString('button_dropdowns', $add_columns_presenter);
     }
 
-    private function fetchRange($from, $to, $total_rows, $additionnal_html) {
+    private function fetchRange($from, $to, $total_rows, $additionnal_html)
+    {
         $html = '';
         $html .= '<span class="tracker_report_table_pager_range">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_report','items');
@@ -676,7 +701,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
-    private function fetchNextPrevious($total_rows, $offset, $report_can_be_modified, $link_artifact_id = null) {
+    private function fetchNextPrevious($total_rows, $offset, $report_can_be_modified, $link_artifact_id = null)
+    {
         $html = '';
         if ($total_rows) {
             $parameters = array(
@@ -742,7 +768,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
-    private function getDisabledPagerButton($direction) {
+    private function getDisabledPagerButton($direction)
+    {
         $icons = array(
             'begin' => 'fa fa-angle-double-left',
             'end'   => 'fa fa-angle-double-right',
@@ -761,7 +788,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
-    private function getPagerButton($url, $direction) {
+    private function getPagerButton($url, $direction)
+    {
         $icons = array(
             'begin' => 'fa fa-angle-double-left',
             'end'   => 'fa fa-angle-double-right',
@@ -780,7 +808,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
-    protected function reorderColumnsByRank($columns) {
+    protected function reorderColumnsByRank($columns)
+    {
 
         $array_rank = array();
         foreach($columns as $key => $properties) {
@@ -799,7 +828,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     public const EXTRACOLUMN_LINK       = 2;
     public const EXTRACOLUMN_UNLINK     = 3;
 
-    private function fetchTHead($extracolumn = 1, $only_one_column = null, $with_sort_links = true, $use_data_from_db = false, $id_suffix = '', $store_in_session = true, $is_nature_col = false) {
+    private function fetchTHead($extracolumn = 1, $only_one_column = null, $with_sort_links = true, $use_data_from_db = false, $id_suffix = '', $store_in_session = true, $is_nature_col = false)
+    {
         $current_user = UserManager::instance()->getCurrentUser();
 
         $html  = '';
@@ -988,11 +1018,13 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
-    private function getTemplateRenderer() {
+    private function getTemplateRenderer()
+    {
         return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/report');
     }
 
-    public function getTableColumns($only_one_column, $use_data_from_db, $store_in_session = true) {
+    public function getTableColumns($only_one_column, $use_data_from_db, $store_in_session = true)
+    {
         $columns = array();
         if ($use_data_from_db) {
             $all_columns = $this->reorderColumnsByRank($this->getColumnsFromDb());
@@ -1210,7 +1242,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $all_natures;
     }
 
-    public function fetchAggregates($matching_ids, $extracolumn, $only_one_column, $columns, $use_data_from_db, $read_only) {
+    public function fetchAggregates($matching_ids, $extracolumn, $only_one_column, $columns, $use_data_from_db, $read_only)
+    {
         $html = '';
 
         //We presume that if EXTRACOLUMN_LINK then it means that we are in the ArtifactLink selector so we force read only mode
@@ -1411,7 +1444,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
-    private function getAggregateURL($field, $function) {
+    private function getAggregateURL($field, $function)
+    {
         $field_id = $field->getId();
         $params = array(
             'func'       => 'renderer',
@@ -1426,7 +1460,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return TRACKER_BASE_URL .'/?'. http_build_query($params);
     }
 
-    private function fetchAggregatesExtraColumns($extracolumn, $only_one_column, PFUser $current_user) {
+    private function fetchAggregatesExtraColumns($extracolumn, $only_one_column, PFUser $current_user)
+    {
         $html        = '';
         $inner_table = '<table><thead><tr><th></th></tr></thead></table>';
         if ($extracolumn) {
@@ -1455,7 +1490,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
-    protected function formatAggregateResult($value) {
+    protected function formatAggregateResult($value)
+    {
         if (is_numeric($value)) {
             $decimals = 2;
             if (round($value) == $value) {
@@ -1605,7 +1641,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $queries;
     }
 
-    private function fetchMassChange($matching_ids, $total_rows, $offset) {
+    private function fetchMassChange($matching_ids, $total_rows, $offset)
+    {
         $html    = '';
         $tracker = $this->report->getTracker();
         if ($tracker->userIsAdmin()) {
@@ -1623,14 +1660,16 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
-    protected function getFieldFactory() {
+    protected function getFieldFactory()
+    {
         return Tracker_FormElementFactory::instance();
     }
 
     /**
      * Duplicate the renderer
      */
-    public function duplicate($from_renderer, $field_mapping) {
+    public function duplicate($from_renderer, $field_mapping)
+    {
         //duplicate sort
         $this->getSortDao()->duplicate($from_renderer->id, $this->id, $field_mapping);
         //duplicate columns
@@ -1639,7 +1678,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $this->getAggregatesDao()->duplicate($from_renderer->id, $this->id, $field_mapping);
     }
 
-    public function getType() {
+    public function getType()
+    {
         return self::TABLE;
     }
 
@@ -1647,7 +1687,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * Process the request
      * @param Request $request
      */
-    public function processRequest(TrackerManager $tracker_manager, $request, $current_user) {
+    public function processRequest(TrackerManager $tracker_manager, $request, $current_user)
+    {
         $ff = $this->getFieldFactory();
 
         $renderer_parameters = $request->get('renderer_table');
@@ -2176,7 +2217,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         fputs($csv_file, $bom);
     }
 
-    private function canFieldBeExportedToCSV(Tracker_FormElement_Field $field) {
+    private function canFieldBeExportedToCSV(Tracker_FormElement_Field $field)
+    {
         return $field->isUsed()
             && $field->userCanRead()
             && ! ($field instanceof Tracker_FormElement_Field_ArtifactId
@@ -2190,7 +2232,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @param int $renderer_id the id of the renderer
      */
-    protected function saveColumnsRenderer($renderer_id) {
+    protected function saveColumnsRenderer($renderer_id)
+    {
         $columns = $this->getColumns();
         if (! is_array($columns)) {
             return;
@@ -2225,7 +2268,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @param int $renderer_id the id of the renderer
      */
-    protected function saveAggregatesRenderer($renderer_id) {
+    protected function saveAggregatesRenderer($renderer_id)
+    {
         $aggregates = $this->getAggregates();
         $ff = $this->getFieldFactory();
         //Add columns in db
@@ -2246,7 +2290,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @param int $renderer_id the id of the renderer
      */
-    protected function saveRendererProperties ($renderer_id) {
+    protected function saveRendererProperties($renderer_id)
+    {
         $dao = new Tracker_Report_Renderer_TableDao();
         if (!$dao->searchByRendererId($renderer_id)->getRow()) {
             $dao->create($renderer_id, $this->chunksz);
@@ -2259,7 +2304,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @param int $renderer_id the id of the renderer
      */
-    protected function saveSortRenderer($renderer_id) {
+    protected function saveSortRenderer($renderer_id)
+    {
         $sort = $this->getSort();
         if (is_array($sort)) {
             foreach ($sort as $field_id => $properties) {
@@ -2273,7 +2319,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @return bool true if success, false if failure
      */
-    public function create() {
+    public function create()
+    {
         $success = true;
         $rrf = Tracker_Report_RendererFactory::instance();
 
@@ -2299,7 +2346,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @return bool true if success, false if failure
      */
-    public function update() {
+    public function update()
+    {
         $success = true;
         if ($this->id > 0) {
             //first delete existing columns and sort
@@ -2327,7 +2375,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * Set the session
      *
      */
-    public function setSession($renderer_id = null) {
+    public function setSession($renderer_id = null)
+    {
         if(!$renderer_id) {
             $renderer_id = $this->id;
         }
@@ -2343,13 +2392,15 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @param Tracker_Report_Renderer $renderer containing the columns
      */
-    public function afterSaveObject(Tracker_Report_Renderer $renderer) {
+    public function afterSaveObject(Tracker_Report_Renderer $renderer)
+    {
         $renderer->injectUnsavedColumnsInRendererDB($this);
         $this->saveAggregates($renderer->getAggregates());
         $this->saveSort($renderer->getSort());
     }
 
-    public function injectUnsavedColumnsInRendererDB(Tracker_Report_Renderer_Table $renderer) {
+    public function injectUnsavedColumnsInRendererDB(Tracker_Report_Renderer_Table $renderer)
+    {
         $renderer->saveColumns($this->_columns);
     }
 
@@ -2358,7 +2409,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @return bool, true f sort has at least one used field
      */
-    public function sortHasUsedField($store_in_session = true) {
+    public function sortHasUsedField($store_in_session = true)
+    {
         $sort = $this->getSort($store_in_session);
         foreach($sort as $s) {
             if (isset($s['field']) && $s['field']->isUsed()) {
@@ -2373,7 +2425,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      *@return bool true if still multisort
      */
-    public function isMultisort(){
+    public function isMultisort()
+    {
         $sort = $this->getSort();
         $used = 0;
         foreach($sort as $s) {
@@ -2388,15 +2441,18 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         }
     }
 
-    private function getSortIcon($is_desc) {
+    private function getSortIcon($is_desc)
+    {
         return ' <i class="fa fa-caret-'. ( $is_desc ? 'down' : 'up' ) .'"></i>';
     }
 
-    public function getIcon() {
+    public function getIcon()
+    {
         return 'fa fa-list-ul';
     }
 
-    private function fetchViewButtons($report_can_be_modified, PFUser $current_user) {
+    private function fetchViewButtons($report_can_be_modified, PFUser $current_user)
+    {
         $html  = '';
         $html .= '<div id="tracker_report_renderer_view_controls">';
         if ($this->sortHasUsedField()) {

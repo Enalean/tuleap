@@ -30,7 +30,8 @@ class PaginatedUserCollection implements Countable {
      * @param PFUser[] $users
      * @param int $total_count
      */
-    public function __construct(array $users, $total_count) {
+    public function __construct(array $users, $total_count)
+    {
         $this->users       = $users;
         $this->total_count = $total_count;
     }
@@ -38,14 +39,16 @@ class PaginatedUserCollection implements Countable {
     /**
      * @return PFUsers[]
      */
-    public function getUsers() {
+    public function getUsers()
+    {
         return $this->users;
     }
 
     /**
      * @return int
      */
-    public function getTotalCount() {
+    public function getTotalCount()
+    {
         return $this->total_count;
     }
 
@@ -54,7 +57,8 @@ class PaginatedUserCollection implements Countable {
      *
      * @return int
      */
-    public function count() {
+    public function count()
+    {
         return count($this->users);
     }
 }

@@ -21,7 +21,8 @@ require_once('bootstrap.php');
 
 class Tracker_FormElement_StaticField_LineBreakTest extends TuleapTestCase {
 
-    public function testFetchDescription() {
+    public function testFetchDescription()
+    {
         $expected_message = '';
         $id = 2;
         $tracker_id = 254;

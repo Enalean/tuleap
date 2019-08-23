@@ -23,11 +23,13 @@ class UsersToBeImportedCollection {
 
     private $users = array();
 
-    public function add(User $user) {
+    public function add(User $user)
+    {
         $this->users[$user->getUserName()] = $user;
     }
 
-    public function toCSV($filename) {
+    public function toCSV($filename)
+    {
         $file = fopen($filename, 'w');
         $headers = array('name', 'action', 'comments');
         fputcsv($file, $headers);
@@ -41,12 +43,14 @@ class UsersToBeImportedCollection {
     }
 
     /** @return User[] */
-    public function toArray() {
+    public function toArray()
+    {
         return $this->users;
     }
 
     /** @return User\XML\Import\User */
-    public function getUser($username) {
+    public function getUser($username)
+    {
         if (! isset($this->users[$username])) {
             throw new UserNotFoundException();
         }

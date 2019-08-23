@@ -39,14 +39,16 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     /** @var Transition_PostAction_CIBuildDao */
     private $dao;
 
-    public function __construct(Transition_PostAction_CIBuildDao $dao) {
+    public function __construct(Transition_PostAction_CIBuildDao $dao)
+    {
         $this->dao = $dao;
     }
 
     /**
      * @see Transition_PostActionSubFactory::addPostAction()
      */
-    public function addPostAction(Transition $transition, $requested_postaction) {
+    public function addPostAction(Transition $transition, $requested_postaction)
+    {
         $job_url = '';
         $this->dao->create($transition->getId(), $job_url);
     }
@@ -54,7 +56,8 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     /**
      * @see Transition_PostActionSubFactory::loadPostActions()
      */
-    public function loadPostActions(Transition $transition) {
+    public function loadPostActions(Transition $transition)
+    {
         $post_actions = array();
 
         foreach($this->loadPostActionRows($transition) as $row) {
@@ -67,21 +70,24 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     /**
      * @see Transition_PostActionSubFactory::saveObject()
      */
-    public function saveObject(Transition_PostAction $post_action) {
+    public function saveObject(Transition_PostAction $post_action)
+    {
         $this->dao->create($post_action->getTransition()->getId(), $post_action->getJobUrl());
     }
 
     /**
      * @see Transition_PostActionSubFactory::duplicate()
      */
-    public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping) {
+    public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping)
+    {
         $this->dao->duplicate($from_transition->getId(), $to_transition_id);
     }
 
     /**
      * @see Transition_PostActionSubFactory::fetchPostActions()
      */
-    public function fetchPostActions() {
+    public function fetchPostActions()
+    {
         $html = '';
         $html .= '<option value="" selected>--</option>';
         $html .= '<option value="'. Transition_PostAction_CIBuild::SHORT_NAME .'">';
@@ -94,21 +100,24 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     /**
      * @see Transition_PostActionSubFactory::deleteWorkflow()
      */
-    public function deleteWorkflow($workflow_id) {
+    public function deleteWorkflow($workflow_id)
+    {
         return $this->dao->deletePostActionsByWorkflowId($workflow_id);
     }
 
     /**
      * @see Transition_PostActionSubFactory::isFieldUsedInPostActions()
      */
-    public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
+    public function isFieldUsedInPostActions(Tracker_FormElement_Field $field)
+    {
         return false;
     }
 
     /**
      * @see Transition_PostActionSubFactory::getInstanceFromXML()
      */
-    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
+    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
+    {
         $postaction_attributes = $xml->attributes();
         $row = array(
             'id'      => 0,
@@ -128,7 +137,8 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
       *
       * @return Transition_PostAction
       */
-    private function buildPostAction(Transition $transition, $row) {
+    private function buildPostAction(Transition $transition, $row)
+    {
         $id                           = (int)$row['id'];
         $job_url                      = (string)$row['job_url'];
         $http_client                  = HttpClientFactory::createClient();
@@ -152,7 +162,8 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
      *
      * @return DataAccessResult
      */
-    private function loadPostActionRows(Transition $transition) {
+    private function loadPostActionRows(Transition $transition)
+    {
         return $this->dao->searchByTransitionId($transition->getId());
     }
 }

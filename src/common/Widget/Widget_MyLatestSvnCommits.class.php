@@ -46,17 +46,21 @@ class Widget_MyLatestSvnCommits extends Widget {
         }
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return $GLOBALS['Language']->getText('my_index','my_latest_svn_commit');
     }
-    public function _getLinkToCommit($group_id, $commit_id) {
+    public function _getLinkToCommit($group_id, $commit_id)
+    {
         return '/svn/?func=detailrevision&amp;group_id='.$group_id.'&amp;rev_id='.$commit_id;
     }
-    public function _getLinkToMore($group_id, $commiter) {
+    public function _getLinkToMore($group_id, $commiter)
+    {
         return '/svn/?func=browse&group_id='.$group_id.'&_commiter='.$commiter;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $html        = '';
         $uh          = UserHelper::instance();
         $request     = HTTPRequest::instance();
@@ -150,7 +154,8 @@ class Widget_MyLatestSvnCommits extends Widget {
             ';
     }
 
-    function updatePreferences(Codendi_Request $request) {
+    function updatePreferences(Codendi_Request $request)
+    {
         $request->valid(new Valid_String('cancel'));
         $nbShow = new Valid_UInt('nb_svn_commits');
         $nbShow->required();
@@ -165,13 +170,16 @@ class Widget_MyLatestSvnCommits extends Widget {
         return true;
     }
 
-    function getCategory() {
+    function getCategory()
+    {
         return _('Source code management');
     }
-    function getDescription() {
+    function getDescription()
+    {
         return $GLOBALS['Language']->getText('widget_description_my_latest_svn_commits','description');
     }
-    function isAjax() {
+    function isAjax()
+    {
         return true;
     }
 

@@ -38,7 +38,8 @@ $request->checkUserIsSuperUser();
 *
 * @return Array
 */
-function get_sort_values($previous_sort_header, $current_sort_header, $sort_order, $offset){
+function get_sort_values($previous_sort_header, $current_sort_header, $sort_order, $offset)
+{
     $sort_order_hash = array(
         'sort_header'    => $current_sort_header,
         'user_name_icon' => '',

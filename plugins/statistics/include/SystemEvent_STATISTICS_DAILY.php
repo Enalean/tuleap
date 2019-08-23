@@ -54,7 +54,8 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent {
         $this->disk_usage_manager    = $disk_usage_manager;
     }
 
-    public function process() {
+    public function process()
+    {
         if ($this->todayIsSunday()) {
             $this->done('We do not collect datas on Sundays, since the db is stopped');
             return;
@@ -83,11 +84,13 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent {
         return $message;
     }
 
-    private function todayIsSunday() {
+    private function todayIsSunday()
+    {
         return date("N") === "7";
     }
 
-    private function purge() {
+    private function purge()
+    {
         $this->logger->debug(__METHOD__);
         if ($this->configuration_manager->isDailyPurgeActivated()) {
             $this->disk_usage_purger->purge(strtotime(date('Y-m-d 00:00:00')));
@@ -97,7 +100,8 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent {
     /**
      * @return array
      */
-    private function diskUsage() {
+    private function diskUsage()
+    {
         $this->logger->debug(__METHOD__);
         return $this->disk_usage_manager->collectAll();
     }
@@ -110,7 +114,8 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent {
      * This not perfect because with very short session (few hours for instance)
      * do data will survive in this session table.
      */
-    private function archiveSessions() {
+    private function archiveSessions()
+    {
         $this->logger->debug(__METHOD__);
         $max = 0;
         $sql = 'SELECT MAX(time) as max FROM plugin_statistics_user_session';
@@ -127,7 +132,8 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent {
         db_query($sql);
     }
 
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         return '';
     }
 }

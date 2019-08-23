@@ -21,10 +21,12 @@
 
 class Docman_Path {
     var $path;
-    function __construct() {
+    function __construct()
+    {
         $this->path = array();
     }
-    function get(&$item) {
+    function get(&$item)
+    {
         if (!isset($this->path[$item->getId()])) {
             $this->path[$item->getId()] = '';
             if ($item->getParentId()) {
@@ -39,7 +41,8 @@ class Docman_Path {
         return $this->path[$item->getId()];
     }
     var $item_factory;
-    private function _getItemFactory() {
+    private function _getItemFactory()
+    {
         if (!$this->item_factory) {
             $this->item_factory = new Docman_ItemFactory();
         }

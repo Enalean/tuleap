@@ -22,7 +22,8 @@ require_once dirname(__FILE__) .'/bootstrap.php';
 
 class CardInCellPresenterTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->card_field_id     = 9999;
         $swimline_field_values   = array(100, 221);
@@ -34,24 +35,29 @@ class CardInCellPresenterTest extends TuleapTestCase {
         $this->presenter         = new Cardwall_CardInCellPresenter($this->card_presenter, $this->card_field_id, $swimline_id, $swimline_field_values);
     }
 
-    public function itHasColumnDropInto() {
+    public function itHasColumnDropInto()
+    {
         $drop_into               = 'drop-into-3-100 drop-into-3-221';
         $this->assertEqual($drop_into, $this->presenter->getDropIntoClass());
     }
 
-    public function itHasCardFieldId() {
+    public function itHasCardFieldId()
+    {
         $this->assertEqual($this->card_field_id, $this->presenter->getCardFieldId());
     }
 
-    public function itHasACardPresenter() {
+    public function itHasACardPresenter()
+    {
         $this->assertEqual($this->card_presenter, $this->presenter->getCardPresenter());
     }
 
-    public function itHasAnArtifact() {
+    public function itHasAnArtifact()
+    {
         $this->assertEqual($this->artifact, $this->presenter->getArtifact());
     }
 
-    public function itHasAnId() {
+    public function itHasAnId()
+    {
         $this->assertEqual($this->card_id, $this->presenter->getId());
     }
 }

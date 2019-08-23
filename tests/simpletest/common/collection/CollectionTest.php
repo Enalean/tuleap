@@ -25,7 +25,8 @@ class CollectionTest extends CollectionTestCase {
      * Constructor of the test. Can be ommitted.
      * Usefull to set the name of the test
      */
-    function __construct($name = 'Collection test') {
+    function __construct($name = 'Collection test')
+    {
         parent::__construct($name);
         $this->collection_class_name = 'Collection';
     }

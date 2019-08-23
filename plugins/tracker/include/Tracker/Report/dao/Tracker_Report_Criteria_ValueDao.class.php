@@ -19,7 +19,8 @@
  */
 abstract class Tracker_Report_Criteria_ValueDao extends DataAccessObject {
 
-    public function searchByCriteriaId($criteria_id) {
+    public function searchByCriteriaId($criteria_id)
+    {
         $criteria_id  = $this->da->escapeInt($criteria_id);
         $sql = "SELECT *
                 FROM $this->table_name
@@ -27,7 +28,8 @@ abstract class Tracker_Report_Criteria_ValueDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $id  = $this->da->escapeInt($id);
         $sql = "DELETE FROM $this->table_name WHERE criteria_id = $id";
         return $this->update($sql);

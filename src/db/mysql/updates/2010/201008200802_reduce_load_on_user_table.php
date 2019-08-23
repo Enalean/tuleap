@@ -19,17 +19,20 @@
  */
 
 class b201008200802_reduce_load_on_user_table extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Create a new dedicated table for user access on frequently updated fields to reduce load on user table.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = 'CREATE TABLE user_access (
                     user_id int(11) NOT NULL DEFAULT "0",
                     last_access_date int(11) NOT NULL DEFAULT 0,
@@ -95,7 +98,8 @@ EOT;
 
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('user_access')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('user_access table is missing');
         }

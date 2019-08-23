@@ -20,15 +20,18 @@
 
 class b201211221712_create_tracker_rule_date_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add tracker_rule_date table';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS tracker_rule_date(
             tracker_rule_id int(11) unsigned NOT NULL PRIMARY KEY,
             source_field_id int(11) unsigned NOT NULL,
@@ -40,7 +43,8 @@ class b201211221712_create_tracker_rule_date_table extends ForgeUpgrade_Bucket {
         $this->createTable('tracker_rule_date', $sql);
     }
 
-    private function createTable($name, $sql) {
+    private function createTable($name, $sql)
+    {
         $result = $this->db->createTable($name, $sql);
 
         if ($result === false) {

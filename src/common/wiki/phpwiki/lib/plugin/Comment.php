@@ -19,26 +19,31 @@ extends WikiPlugin
 {
     // Five required functions in a WikiPlugin.
 
-    function getName() {
+    function getName()
+    {
         return _("Comment");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Embed hidden comments in WikiPages.");
 
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.2 $");
     }
 
     // No arguments here.
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array();
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
     }
 
     // function handle_plugin_args_cruft(&$argstr, &$args) {

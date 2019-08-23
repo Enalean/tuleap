@@ -20,15 +20,18 @@
  * Rename Experimental to FlamingParrot
  */
 class b201404281427_rename_experimental_to_flamingparrot extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return "Rename Experimental to FlamingParrot";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "UPDATE user SET theme = 'FlamingParrot' WHERE theme = 'Experimental'";
 
         $res = $this->db->dbh->exec($sql);

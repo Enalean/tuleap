@@ -38,7 +38,8 @@ class ArtifactFieldValueFileRepresentation {
      */
     public $file_descriptions = array();
 
-    public function build($id, $label, array $values) {
+    public function build($id, $label, array $values)
+    {
         $this->field_id          = JsonCast::toInt($id);
         $this->label             = $label;
         $this->file_descriptions = $values;

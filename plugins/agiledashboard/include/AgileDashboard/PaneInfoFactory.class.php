@@ -45,11 +45,13 @@ class AgileDashboard_PaneInfoFactory {
         $this->theme_path                   = $theme_path;
     }
 
-    public function getDetailsPaneInfo(Planning_Milestone $milestone) {
+    public function getDetailsPaneInfo(Planning_Milestone $milestone)
+    {
         return new DetailsPaneInfo($milestone, $this->theme_path);
     }
 
-    public function getPlanningV2PaneInfo(Planning_Milestone $milestone) {
+    public function getPlanningV2PaneInfo(Planning_Milestone $milestone)
+    {
         $submilestone_tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($milestone);
         if (! $submilestone_tracker) {
             return;

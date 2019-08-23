@@ -27,7 +27,8 @@ require_once __DIR__ .'/../../bootstrap.php';
 
 class MailReceivedFromUserExtractorTest extends TuleapTestCase {
 
-    public function itVerifyThatMailListIsValid(){
+    public function itVerifyThatMailListIsValid()
+    {
         $list_mails = 'validmail@example.com;avalid+&mail1@example.com,mail_with-authorised.values@example.com';
 
         $mail = new MailReceivedFromUserExtractor($list_mails);
@@ -35,7 +36,8 @@ class MailReceivedFromUserExtractorTest extends TuleapTestCase {
         $this->assertEqual($mail->getInvalidAdresses(), array());
     }
 
-    public function itVerifyThatMailListIsInvalid(){
+    public function itVerifyThatMailListIsInvalid()
+    {
         $list_mails = 'aninvalidmailexample.com;invalid¤mail@example.com,notvalid';
 
         $mail = new MailReceivedFromUserExtractor($list_mails);

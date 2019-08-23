@@ -27,7 +27,8 @@ class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdaterTest extends Tule
     /** @var SimpleXMLElement */
     private $field_change_xml;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->updater          = new Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater();
         $this->field_change_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
@@ -38,7 +39,8 @@ class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdaterTest extends Tule
         );
     }
 
-    public function itUpdatesTheValueNodesValueWithTwoNewSubmittedValue() {
+    public function itUpdatesTheValueNodesValueWithTwoNewSubmittedValue()
+    {
         $this->updater->update(
             $this->field_change_xml,
             array(
@@ -53,7 +55,8 @@ class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdaterTest extends Tule
         $this->assertEqual((string)$this->field_change_xml->value[1]['format'], 'id');
     }
 
-    public function itUpdatesTheValueNodesValueWithOneNewSubmittedValue() {
+    public function itUpdatesTheValueNodesValueWithOneNewSubmittedValue()
+    {
         $this->updater->update(
             $this->field_change_xml,
             array(

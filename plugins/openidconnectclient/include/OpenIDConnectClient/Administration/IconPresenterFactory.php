@@ -39,7 +39,8 @@ class IconPresenterFactory {
         'heart'
     );
 
-    public function getIconsPresenters() {
+    public function getIconsPresenters()
+    {
         $icons_presenters = array();
 
         foreach($this->available_icons as $icon) {
@@ -49,7 +50,8 @@ class IconPresenterFactory {
         return $icons_presenters;
     }
 
-    public function getIconsPresentersForProvider(Provider $provider) {
+    public function getIconsPresentersForProvider(Provider $provider)
+    {
         $icons_presenters = array();
 
         foreach($this->available_icons as $icon) {

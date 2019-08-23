@@ -27,7 +27,8 @@ class Tracker_Artifact_IncomingMessageTokenBuilder {
      */
     private $recipient_factory;
 
-    public function __construct(Tracker_Artifact_MailGateway_RecipientFactory $recipient_factory) {
+    public function __construct(Tracker_Artifact_MailGateway_RecipientFactory $recipient_factory)
+    {
         $this->recipient_factory = $recipient_factory;
     }
 

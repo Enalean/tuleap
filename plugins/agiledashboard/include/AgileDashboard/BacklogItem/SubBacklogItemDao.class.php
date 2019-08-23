@@ -21,7 +21,8 @@
 
 class AgileDashboard_BacklogItem_SubBacklogItemDao extends DataAccessObject {
 
-    public function getAllBacklogItemIdInMilestone($milestone_id, array $parent_backlog_tracker_ids) {
+    public function getAllBacklogItemIdInMilestone($milestone_id, array $parent_backlog_tracker_ids)
+    {
         $select_fragments = $this->getSelectFragments($parent_backlog_tracker_ids);
         $from_fragments   = $this->getFromFragments($milestone_id, $parent_backlog_tracker_ids);
 
@@ -31,12 +32,14 @@ class AgileDashboard_BacklogItem_SubBacklogItemDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    private function getSelectFragments(array $list_of_trackers_ids) {
+    private function getSelectFragments(array $list_of_trackers_ids)
+    {
         $tracker_id = end($list_of_trackers_ids);
         return "GROUP_CONCAT(backlog_item_{$tracker_id}.id) AS list_of_ids";
     }
 
-    private function getFromFragments($milestone_id, array $list_of_trackers_ids) {
+    private function getFromFragments($milestone_id, array $list_of_trackers_ids)
+    {
         $trackers_ids              = $list_of_trackers_ids;
         $milestone_backlog_item_id = array_shift($trackers_ids);
 
@@ -55,7 +58,8 @@ class AgileDashboard_BacklogItem_SubBacklogItemDao extends DataAccessObject {
         return $from;
     }
 
-    private function joinRecursively($parent_tracker_id, array $trackers_ids) {
+    private function joinRecursively($parent_tracker_id, array $trackers_ids)
+    {
         $child_tracker_id = array_shift($trackers_ids);
         if (! $child_tracker_id) {
             return '';

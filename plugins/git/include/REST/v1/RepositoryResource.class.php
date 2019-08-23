@@ -342,7 +342,8 @@ class RepositoryResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function optionsId($id) {
+    public function optionsId($id)
+    {
         $this->sendAllowHeaders();
     }
 
@@ -355,7 +356,8 @@ class RepositoryResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function get($id) {
+    public function get($id)
+    {
         $this->checkAccess();
 
         $user       = $this->getCurrentUser();
@@ -373,7 +375,8 @@ class RepositoryResource extends AuthenticatedResource
      *
      * @throws RestException 404
      */
-    public function optionsPullRequests($id) {
+    public function optionsPullRequests($id)
+    {
         $this->checkPullRequestEndpointsAvailable();
         $this->sendAllowHeaders();
     }
@@ -860,7 +863,8 @@ class RepositoryResource extends AuthenticatedResource
         return $provider->GetProject();
     }
 
-    private function disconnect(GitRepository $repository, $disconnect_from_gerrit) {
+    private function disconnect(GitRepository $repository, $disconnect_from_gerrit)
+    {
         try {
             $this->migration_handler->disconnect($repository, $disconnect_from_gerrit);
         } catch (DeletePluginNotInstalledException $e) {
@@ -899,11 +903,13 @@ class RepositoryResource extends AuthenticatedResource
         }
     }
 
-    private function getCurrentUser() {
+    private function getCurrentUser()
+    {
         return UserManager::instance()->getCurrentUser();
     }
 
-    private function getRepository(PFUser $user, $id) {
+    private function getRepository(PFUser $user, $id)
+    {
         try {
             $repository = $this->repository_factory->getRepositoryByIdUserCanSee($user, $id);
         } catch (GitRepoNotReadableException $exception) {
@@ -917,7 +923,8 @@ class RepositoryResource extends AuthenticatedResource
         return $repository;
     }
 
-    private function getPaginatedPullRequests(GitRepository $repository, $query, $limit, $offset) {
+    private function getPaginatedPullRequests(GitRepository $repository, $query, $limit, $offset)
+    {
         $result = null;
 
         EventManager::instance()->processEvent(
@@ -935,7 +942,8 @@ class RepositoryResource extends AuthenticatedResource
         return $result;
     }
 
-    private function checkPullRequestEndpointsAvailable() {
+    private function checkPullRequestEndpointsAvailable()
+    {
         $available = false;
 
         EventManager::instance()->processEvent(
@@ -950,15 +958,18 @@ class RepositoryResource extends AuthenticatedResource
         }
     }
 
-    private function sendAllowHeaders() {
+    private function sendAllowHeaders()
+    {
         Header::allowOptionsGetPatch();
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size) {
+    private function sendPaginationHeaders($limit, $offset, $size)
+    {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
-    private function checkLimit($limit) {
+    private function checkLimit($limit)
+    {
         if ($limit > self::MAX_LIMIT) {
             throw new RestException(406, 'Maximum value for limit exceeded');
         }

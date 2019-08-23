@@ -43,7 +43,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     /** @var string */
     private $format;
 
-    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $text, $format) {
+    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $text, $format)
+    {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->text   = $text;
         $this->format = $format;
@@ -52,7 +53,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     /**
      * @return mixed
      */
-    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
+    {
         return $visitor->visitText($this);
     }
 
@@ -61,26 +63,31 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      *
      * @return string the text
      */
-    public function getText() {
+    public function getText()
+    {
         return (string) $this->text;
     }
 
-    public function getFormat() {
+    public function getFormat()
+    {
         if ($this->format == NULL) {
             return self::TEXT_CONTENT;
         }
         return $this->format;
     }
 
-    public function getRESTValue(PFUser $user) {
+    public function getRESTValue(PFUser $user)
+    {
         return $this->getFullRESTValue($user);
     }
 
-    public function getFullRESTValue(PFUser $user) {
+    public function getFullRESTValue(PFUser $user)
+    {
         return $this->getFullRESTRepresentation($this->getText());
     }
 
-    protected function getFullRESTRepresentation($value) {
+    protected function getFullRESTRepresentation($value)
+    {
         $artifact_field_value_full_representation = new ArtifactFieldValueTextRepresentation();
         $artifact_field_value_full_representation->build(
             $this->field->getId(),
@@ -98,7 +105,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      *
      * @return string The value of this artifact changeset value
      */
-    public function getValue() {
+    public function getValue()
+    {
         $hp = Codendi_HTMLPurifier::instance();
 
         if ($this->isInHTMLFormat()) {
@@ -125,7 +133,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $this->fetchDiff($previous, $next, $format);
     }
 
-    public function modalDiff($changeset_value, $format = 'modal', ?PFUser $user = null) {
+    public function modalDiff($changeset_value, $format = 'modal', ?PFUser $user = null)
+    {
         return $this->diff($changeset_value, 'modal', $user);
     }
 
@@ -163,7 +172,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     /**
      * @return string text to be displayed in mail notifications when the text has been changed
      */
-    protected function fetchHtmlMailDiff($formated_diff, $artifact_id, $changeset_id) {
+    protected function fetchHtmlMailDiff($formated_diff, $artifact_id, $changeset_id)
+    {
         $url      = HTTPRequest::instance()->getServerUrl().TRACKER_BASE_URL.'/?aid='.$artifact_id.'#followup_'.$changeset_id;
 
         return '<a href="'.$url.'">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'goto_diff') . '</a>';
@@ -174,7 +184,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      *
      * @return string The sentence to add in changeset
      */
-    public function nodiff($format = 'html') {
+    public function nodiff($format = 'html')
+    {
         $next = $this->getText();
         if ($next != '') {
             $previous = array('');
@@ -188,7 +199,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     *
     * @return string The text to display
     */
-    public function fetchDiff($previous, $next, $format) {
+    public function fetchDiff($previous, $next, $format)
+    {
         $string = '';
         switch ($format) {
             case 'text':
@@ -216,7 +228,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     /**
      * @return string text to be displayed in web ui when the text has been changed
      */
-    protected function fetchDiffInFollowUp($formated_diff) {
+    protected function fetchDiffInFollowUp($formated_diff)
+    {
         $html  = '';
         $html .= '<button class="btn btn-mini toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>';
         $html .= '<div class="diff" style="display: none">'. $formated_diff .'</div>';
@@ -224,7 +237,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $html;
     }
 
-    private function getFormatedDiff($previous, $next) {
+    private function getFormatedDiff($previous, $next)
+    {
         $callback = array(Codendi_HTMLPurifier::instance(), 'purify');
         $formater = new Codendi_HtmlUnifiedDiffFormatter();
         $diff     = new Codendi_Diff(
@@ -235,7 +249,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $formater->format($diff);
     }
 
-    public function getContentAsText() {
+    public function getContentAsText()
+    {
         $hp = Codendi_HTMLPurifier::instance();
         if ($this->isInHTMLFormat()) {
             return $hp->purify($this->getText(), CODENDI_PURIFIER_STRIP_HTML);
@@ -244,7 +259,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $this->getText();
     }
 
-    private function isInHTMLFormat() {
+    private function isInHTMLFormat()
+    {
         return $this->getFormat() == self::HTML_CONTENT;
     }
 }

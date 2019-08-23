@@ -24,7 +24,8 @@ class IconPlot {
     private $iImgString='';
 
 
-    function __construct($aFile="",$aX=0,$aY=0,$aScale=1.0,$aMix=100) {
+    function __construct($aFile="",$aX=0,$aY=0,$aScale=1.0,$aMix=100)
+    {
         $this->iFile = $aFile;
         $this->iX=$aX;
         $this->iY=$aY;
@@ -35,7 +36,8 @@ class IconPlot {
         $this->iMix = $aMix ;
     }
 
-    function SetCountryFlag($aFlag,$aX=0,$aY=0,$aScale=1.0,$aMix=100,$aStdSize=3) {
+    function SetCountryFlag($aFlag,$aX=0,$aY=0,$aScale=1.0,$aMix=100,$aStdSize=3)
+    {
         $this->iCountryFlag = $aFlag;
         $this->iX=$aX;
         $this->iY=$aY;
@@ -47,32 +49,38 @@ class IconPlot {
         $this->iCountryStdSize = $aStdSize;
     }
 
-    function SetPos($aX,$aY) {
+    function SetPos($aX,$aY)
+    {
         $this->iX=$aX;
         $this->iY=$aY;
     }
 
-    function CreateFromString($aStr) {
+    function CreateFromString($aStr)
+    {
         $this->iImgString = $aStr;
     }
 
-    function SetScalePos($aX,$aY) {
+    function SetScalePos($aX,$aY)
+    {
         $this->iScalePosX = $aX;
         $this->iScalePosY = $aY;
     }
 
-    function SetScale($aScale) {
+    function SetScale($aScale)
+    {
         $this->iScale = $aScale;
     }
 
-    function SetMix($aMix) {
+    function SetMix($aMix)
+    {
         if( $aMix < 0 || $aMix > 100 ) {
             JpGraphError::RaiseL(8001);//('Mix value for icon must be between 0 and 100.');
         }
         $this->iMix = $aMix ;
     }
 
-    function SetAnchor($aXAnchor='left',$aYAnchor='center') {
+    function SetAnchor($aXAnchor='left',$aYAnchor='center')
+    {
         if( !in_array($aXAnchor,$this->iAnchors) ||
         !in_array($aYAnchor,$this->iAnchors) ) {
             JpGraphError::RaiseL(8002);//("Anchor position for icons must be one of 'top', 'bottom', 'left', 'right' or 'center'");
@@ -81,15 +89,18 @@ class IconPlot {
         $this->iVertAnchor=$aYAnchor;
     }
 
-    function PreStrokeAdjust($aGraph) {
+    function PreStrokeAdjust($aGraph)
+    {
         // Nothing to do ...
     }
 
-    function DoLegend($aGraph) {
+    function DoLegend($aGraph)
+    {
         // Nothing to do ...
     }
 
-    function Max() {
+    function Max()
+    {
         return array(false,false);
     }
 
@@ -97,25 +108,37 @@ class IconPlot {
     // The next four function are framework function tht gets called
     // from Gantt and is not menaiungfull in the context of Icons but
     // they must be implemented to avoid errors.
-    function GetMaxDate() { return false;   }
-    function GetMinDate() { return false;   }
-    function GetLineNbr() { return 0;   }
-    function GetAbsHeight() {return 0;  }
+    function GetMaxDate()
+    {
+        return false;   }
+    function GetMinDate()
+    {
+        return false;   }
+    function GetLineNbr()
+    {
+        return 0;   }
+    function GetAbsHeight()
+    {
+        return 0;  }
 
 
-    function Min() {
+    function Min()
+    {
         return array(false,false);
     }
 
-    function StrokeMargin(&$aImg) {
+    function StrokeMargin(&$aImg)
+    {
         return true;
     }
 
-    function Stroke($aImg,$axscale=null,$ayscale=null) {
+    function Stroke($aImg,$axscale=null,$ayscale=null)
+    {
         $this->StrokeWithScale($aImg,$axscale,$ayscale);
     }
 
-    function StrokeWithScale($aImg,$axscale,$ayscale) {
+    function StrokeWithScale($aImg,$axscale,$ayscale)
+    {
         if( $this->iScalePosX === null || $this->iScalePosY === null ||
             $axscale === null || $ayscale === null ) {
             $this->_Stroke($aImg);
@@ -127,12 +150,14 @@ class IconPlot {
         }
     }
 
-    function GetWidthHeight() {
+    function GetWidthHeight()
+    {
         $dummy=0;
         return $this->_Stroke($dummy,null,null,true);
     }
 
-    function _Stroke($aImg,$x=null,$y=null,$aReturnWidthHeight=false) {
+    function _Stroke($aImg,$x=null,$y=null,$aReturnWidthHeight=false)
+    {
         if( $this->iFile != '' && $this->iCountryFlag != '' ) {
             JpGraphError::RaiseL(8003);//('It is not possible to specify both an image file and a country flag for the same icon.');
         }

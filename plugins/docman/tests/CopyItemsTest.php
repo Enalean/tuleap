@@ -43,7 +43,8 @@ require_once 'bootstrap.php';
  */
 class CopyItemsTest extends TuleapTestCase {
 
-    function testDocumentCopyWithinTheSameProject() {
+    function testDocumentCopyWithinTheSameProject()
+    {
         $srcGroupId = $dstGroupId = 1789;
 
         $item_to_clone = \Mockery::spy(Docman_Link::class);

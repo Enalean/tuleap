@@ -23,11 +23,13 @@ class Tracker_SlicedArtifactsBuilder {
     /** @var Tracker_ArtifactDao */
     private $artifact_dao;
 
-    public function __construct(Tracker_ArtifactDao $artifact_dao) {
+    public function __construct(Tracker_ArtifactDao $artifact_dao)
+    {
         $this->artifact_dao = $artifact_dao;
     }
 
-    public function getSlicedChildrenArtifactsForUser(Tracker_Artifact $artifact, PFUser $user, $limit, $offset) {
+    public function getSlicedChildrenArtifactsForUser(Tracker_Artifact $artifact, PFUser $user, $limit, $offset)
+    {
         $children            = array();
         $paginated_children  = $this->getPaginatedChildrenOfArtifact($artifact, $limit, $offset);
         $total_size          = $this->artifact_dao->foundRows();
@@ -44,11 +46,13 @@ class Tracker_SlicedArtifactsBuilder {
         );
     }
 
-    private function getPaginatedChildrenOfArtifact(Tracker_Artifact $artifact, $limit, $offset) {
+    private function getPaginatedChildrenOfArtifact(Tracker_Artifact $artifact, $limit, $offset)
+    {
         return $this->artifact_dao->getPaginatedChildren($artifact->getId(), $limit, $offset)->instanciateWith(array($this->getArtifactFactory(), 'getInstanceFromRow'));
     }
 
-    private function getArtifactFactory() {
+    private function getArtifactFactory()
+    {
         return Tracker_ArtifactFactory::instance();
     }
 }

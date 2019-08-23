@@ -94,53 +94,65 @@ class AdminScrumPresenter {
         }
     }
 
-    public function has_plannings() {
+    public function has_plannings()
+    {
         return count($this->plannings) > 0;
     }
 
-    public function create_planning() {
+    public function create_planning()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_create');
     }
 
-    public function import_template() {
+    public function import_template()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_template');
     }
 
-    public function export_template() {
+    public function export_template()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'export_template');
     }
 
-    public function import_export_section() {
+    public function import_export_section()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_export_section');
     }
 
-    public function planning_section() {
+    public function planning_section()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_section');
     }
 
-    public function general_settings_section() {
+    public function general_settings_section()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'general_settings_section');
     }
 
-    public function can_create_planning() {
+    public function can_create_planning()
+    {
         return $this->can_create_planning;
     }
 
-    public function cannot_create_planning() {
+    public function cannot_create_planning()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'cannot_create_planning');
     }
 
-    public function cannot_create_planning_no_trackers() {
+    public function cannot_create_planning_no_trackers()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'cannot_create_planning_no_trackers');
     }
 
-    public function cannot_create_planning_hierarchy() {
+    public function cannot_create_planning_hierarchy()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'cannot_create_planning_hierarchy', array(
             $this->getPlanningNamesHierarchy()
         ));
     }
 
-    private function getPlanningNamesHierarchy() {
+    private function getPlanningNamesHierarchy()
+    {
         if (count($this->planning_hierarchy) > 0) {
             return implode(', ', $this->planning_hierarchy);
         } else {
@@ -148,50 +160,61 @@ class AdminScrumPresenter {
         }
     }
 
-    public function cannot_create_planning_config() {
+    public function cannot_create_planning_config()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'cannot_create_planning_config', array(
             $this->root_planning_name,
             $this->root_planning_tracker_url.'&func=admin-hierarchy',
         ));
     }
 
-    public function edit_action_label() {
+    public function edit_action_label()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_action_label');
     }
 
-    public function delete_action_label() {
+    public function delete_action_label()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'delete_action_label');
     }
 
-    public function config_title() {
+    public function config_title()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'config_title');
     }
 
-    public function activate_scrum_label() {
+    public function activate_scrum_label()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'activate_scrum_label');
     }
 
-    public function title_label() {
+    public function title_label()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'title');
     }
 
-    public function title_label_help() {
+    public function title_label_help()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'title_scrum_help');
     }
 
-    public function scrum_activated_label() {
+    public function scrum_activated_label()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_activated_label');
     }
 
-    public function scrum_not_activated_label() {
+    public function scrum_not_activated_label()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_not_activated_label');
     }
 
-    public function first_scrum_will_be_created() {
+    public function first_scrum_will_be_created()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'first_scrum_will_be_created');
     }
 
-    public function token() {
+    public function token()
+    {
         $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
         return $token->fetchHTMLInput();
     }

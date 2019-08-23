@@ -29,13 +29,15 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopper extends Git_
     /** @var BackendService */
     private $backend_service;
 
-    public function __construct(Git_GitoliteHousekeeping_GitoliteHousekeepingResponse $response, BackendService $backend_service) {
+    public function __construct(Git_GitoliteHousekeeping_GitoliteHousekeepingResponse $response, BackendService $backend_service)
+    {
         parent::__construct();
         $this->response         = $response;
         $this->backend_service  = $backend_service;
     }
 
-    public function execute() {
+    public function execute()
+    {
         $this->response->info('Stopping service');
         $this->backend_service->stop();
         $this->executeNextCommand();

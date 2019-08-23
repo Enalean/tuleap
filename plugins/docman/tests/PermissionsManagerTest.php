@@ -539,7 +539,8 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
     }
 
-    function testSetUserCanReadWrite() {
+    function testSetUserCanReadWrite()
+    {
         $itemId = 1515;
         $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
         $this->docmanPm->_setCanWrite($this->user->getId(), $itemId, true);
@@ -547,7 +548,8 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
     }
 
-    function testSetUserCanReadWriteManage() {
+    function testSetUserCanReadWriteManage()
+    {
         $itemId = 1515;
         $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
         $this->docmanPm->_setCanWrite($this->user->getId(), $itemId, true);
@@ -557,7 +559,8 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
     }
 
-    function testSetUserCanReadManage() {
+    function testSetUserCanReadManage()
+    {
         $itemId = 1515;
         $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
         $this->docmanPm->_setCanManage($this->user->getId(), $itemId, true);
@@ -566,7 +569,8 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
     }
 
-    function testSetUserCanManageWrite() {
+    function testSetUserCanManageWrite()
+    {
         $itemId = 1515;
         $this->docmanPm->_setCanManage($this->user->getId(), $itemId, true);
         $this->docmanPm->_setCanWrite($this->user->getId(), $itemId, true);
@@ -575,7 +579,8 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
     }
 
-    function testSetUserCanManageRead() {
+    function testSetUserCanManageRead()
+    {
         $itemId = 1515;
         $this->docmanPm->_setCanManage($this->user->getId(), $itemId, true);
         $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
@@ -584,7 +589,8 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
     }
 
-    function testSetUserCanWriteRead() {
+    function testSetUserCanWriteRead()
+    {
         $itemId = 1515;
         $this->docmanPm->_setCanWrite($this->user->getId(), $itemId, true);
         $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
@@ -664,7 +670,8 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         $this->assertEqual(array(), $this->docmanPm->getDocmanManagerUsers(1, 1));
     }
 
-    function testGetDocmanManagerUsersStaticUgroup() {
+    function testGetDocmanManagerUsersStaticUgroup()
+    {
         $dar = array(array('ugroup_id' => 100));
         $pm = new MockPermissionsManager();
         $pm->setReturnValue('getUgroupIdByObjectIdAndPermissionType', $dar);
@@ -678,7 +685,8 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         $this->assertEqual(array(), $this->docmanPm->getDocmanManagerUsers(1, 1));
     }
 
-    function testGetDocmanAdminUsersError() {
+    function testGetDocmanAdminUsersError()
+    {
         $dao = new MockDocman_PermissionsManagerDao();
         $dao->setReturnValue('getDocmanAdminUgroups', null);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao);

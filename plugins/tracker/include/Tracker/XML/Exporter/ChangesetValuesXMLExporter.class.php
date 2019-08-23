@@ -132,7 +132,8 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter {
         return false;
     }
 
-    private function isFileField(Tracker_Artifact_ChangesetValue $changeset_value) {
+    private function isFileField(Tracker_Artifact_ChangesetValue $changeset_value)
+    {
         $field = $changeset_value->getField();
 
         return is_a($field, 'Tracker_FormElement_Field_File');

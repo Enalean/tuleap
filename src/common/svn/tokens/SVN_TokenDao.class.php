@@ -21,7 +21,8 @@
 
 class SVN_TokenDao extends DataAccessObject {
 
-    public function getSVNTokensForUser($user_id) {
+    public function getSVNTokensForUser($user_id)
+    {
         $user_id = $this->da->escapeInt($user_id);
 
         $sql = "SELECT *
@@ -31,7 +32,8 @@ class SVN_TokenDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function generateSVNTokenForUser($user_id, $token, $comment) {
+    public function generateSVNTokenForUser($user_id, $token, $comment)
+    {
         $user_id        = $this->da->escapeInt($user_id);
         $token          = $this->da->quoteSmart($token);
         $generated_date = time();
@@ -43,7 +45,8 @@ class SVN_TokenDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function deleteSVNTokensForUser($user_id, $tokens_to_be_deleted) {
+    public function deleteSVNTokensForUser($user_id, $tokens_to_be_deleted)
+    {
         $user_id              = $this->da->escapeInt($user_id);
         $tokens_to_be_deleted = $this->da->escapeIntImplode($tokens_to_be_deleted);
 
@@ -54,7 +57,8 @@ class SVN_TokenDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function isProjectAuthorizingTokens($project_id) {
+    public function isProjectAuthorizingTokens($project_id)
+    {
         $project_id = $this->da->escapeInt($project_id);
 
         $sql = "SELECT *
@@ -64,7 +68,8 @@ class SVN_TokenDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function setProjectAuthorizesTokens($project_id) {
+    public function setProjectAuthorizesTokens($project_id)
+    {
         $project_id = $this->da->escapeInt($project_id);
 
         $sql = "INSERT INTO svn_token_usage (project_id)
@@ -73,14 +78,16 @@ class SVN_TokenDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function getProjectsAuthorizingTokens() {
+    public function getProjectsAuthorizingTokens()
+    {
         $sql = "SELECT *
                 FROM svn_token_usage";
 
         return $this->retrieve($sql);
     }
 
-    public function removeProjectsAuthorizationForTokens(array $project_ids) {
+    public function removeProjectsAuthorizationForTokens(array $project_ids)
+    {
         $project_ids = $this->da->escapeIntImplode($project_ids);
 
         $sql = "DELETE FROM svn_token_usage

@@ -53,7 +53,8 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         $this->link_version_factory = $link_version_factory;
     }
 
-    function visitFolder($item, $params = array()) {
+    function visitFolder($item, $params = array())
+    {
         // Clone folder
         $newItemId = $this->_cloneItem($item, $params);
         if($newItemId > 0) {
@@ -76,15 +77,18 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         }
     }
 
-    function visitDocument(&$item, $params = array()) {
+    function visitDocument(&$item, $params = array())
+    {
         die('never happen');
     }
 
-    public function visitWiki(Docman_Wiki $item, $params = array()) {
+    public function visitWiki(Docman_Wiki $item, $params = array())
+    {
         $this->_cloneItem($item, $params);
     }
 
-    public function visitLink(Docman_Link $item, $params = array()) {
+    public function visitLink(Docman_Link $item, $params = array())
+    {
         $copied_item_id = $this->_cloneItem($item, $params);
 
         $copied_item = $this->_getItemFactory()->getItemFromDb($copied_item_id);
@@ -99,15 +103,18 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         }
     }
 
-    public function visitFile(Docman_File $item, $params = array()) {
+    public function visitFile(Docman_File $item, $params = array())
+    {
         $this->_cloneFile($item, $params);
     }
 
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array()) {
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array())
+    {
         $this->_cloneFile($item, $params);
     }
 
-    public function visitEmpty(Docman_Empty $item, $params = array()) {
+    public function visitEmpty(Docman_Empty $item, $params = array())
+    {
         $this->_cloneItem($item, $params);
     }
 
@@ -115,7 +122,8 @@ class Docman_CloneItemsVisitor implements ItemVisitor
     {
     }
 
-    function _cloneFile($item, $params) {
+    function _cloneFile($item, $params)
+    {
         $newItemId = $this->_cloneItem($item, $params);
         if($newItemId > 0) {
             // Clone physical file of the last version in the template item
@@ -173,7 +181,8 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         );
     }
 
-    function _cloneItem($item, $params) {
+    function _cloneItem($item, $params)
+    {
         $parentId = $params['parentId'];
         $metadataMapping = $params['metadataMapping'];
         $ugroupsMapping = $params['ugroupsMapping'];
@@ -213,7 +222,8 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         return $newItemId;
     }
 
-    function _clonePermissions($item, $newItemId, $ugroupsMapping) {
+    function _clonePermissions($item, $newItemId, $ugroupsMapping)
+    {
         $dpm = $this->_getPermissionsManager($item->getGroupId());
         if($ugroupsMapping === false) {
             // ugroups mapping is not available.
@@ -225,7 +235,8 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         }
     }
 
-    function _cloneMetadataValues($item, $newItemId, $metadataMapping) {
+    function _cloneMetadataValues($item, $newItemId, $metadataMapping)
+    {
         // List for current item all its metadata and
         // * change the itemId
         // * change the fieldId (use mapping between template metadata and
@@ -282,7 +293,8 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         }
     }
 
-    function _metadataEnabled($srcGroupId, $mdLabel) {
+    function _metadataEnabled($srcGroupId, $mdLabel)
+    {
         if(!isset($this->_cacheMetadataUsage[$mdLabel])) {
             $srcSettingsBo = $this->_getSettingsBo($srcGroupId);
             $dstSettingsBo = $this->_getSettingsBo($this->dstGroupId);
@@ -296,7 +308,8 @@ class Docman_CloneItemsVisitor implements ItemVisitor
      * Return the mapping between item_id in the original tree (src) and the new one (dst).
      * Src item id it the key of the hash map.
      */
-    function getItemMapping() {
+    function getItemMapping()
+    {
         return $this->itemMapping;
     }
 

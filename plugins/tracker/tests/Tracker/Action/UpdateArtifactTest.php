@@ -124,30 +124,35 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase
 
     }
 
-    protected function setUpAjaxRequestHeaders() {
+    protected function setUpAjaxRequestHeaders()
+    {
         $this->old_request_with           = isset($_SERVER['HTTP_X_REQUESTED_WITH']) ? $_SERVER['HTTP_X_REQUESTED_WITH'] : null;
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPREQUEST';
     }
 
-    protected function restoreAjaxRequestHeaders() {
+    protected function restoreAjaxRequestHeaders()
+    {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = $this->old_request_with;
     }
 }
 
 class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends Tracker_Artifact_Update_BaseTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         stub($this->computed_field)->isArtifactValueAutocomputed()->returns(false);
         $this->setUpAjaxRequestHeaders();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->restoreAjaxRequestHeaders();
         parent::tearDown();
     }
 
-    public function itDoesNotSendAnythingIfNoRemainingEffortFieldIsDefinedOnTask() {
+    public function itDoesNotSendAnythingIfNoRemainingEffortFieldIsDefinedOnTask()
+    {
         stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns(null);
 
         $expected = array();
@@ -156,7 +161,8 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends T
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itSendsParentsRemainingEffortEvenIfTaskDontHaveOne() {
+    public function itSendsParentsRemainingEffortEvenIfTaskDontHaveOne()
+    {
         stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns($this->user_story);
 
         $user_story_id = $this->user_story->getId();
@@ -166,7 +172,8 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends T
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itDoesNotSendParentWhenParentHasNoRemainingEffortField() {
+    public function itDoesNotSendParentWhenParentHasNoRemainingEffortField()
+    {
         $tracker_user_story_id = 110;
         $tracker_user_story    = aMockeryTracker()->withId($tracker_user_story_id)->build();
         $user_story_id         = 111;
@@ -186,7 +193,8 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends T
 
 class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Tracker_Artifact_Update_BaseTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpAjaxRequestHeaders();
         stub($this->formelement_factory)->getComputableFieldByNameForUser(
@@ -197,7 +205,8 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
 
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->restoreAjaxRequestHeaders();
         parent::tearDown();
     }
@@ -232,7 +241,8 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
         $action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itSendsTheRemainingEffortOfTheArtifactAndItsParent() {
+    public function itSendsTheRemainingEffortOfTheArtifactAndItsParent()
+    {
         stub($this->computed_field)->isArtifactValueAutocomputed()->returns(false);
         stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns($this->user_story);
 
@@ -246,7 +256,8 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itDoesNotSendParentsRemainingEffortWhenThereIsNoParent() {
+    public function itDoesNotSendParentsRemainingEffortWhenThereIsNoParent()
+    {
         stub($this->computed_field)->isArtifactValueAutocomputed()->returns(false);
         stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns(null);
 
@@ -258,7 +269,8 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
-    public function itDoesNotSendParentWhenParentHasNoRemainingEffortField() {
+    public function itDoesNotSendParentWhenParentHasNoRemainingEffortField()
+    {
         $tracker_user_story_id = 110;
         $tracker_user_story    = aMockeryTracker()->withId($tracker_user_story_id)->build();
         $user_story_id         = 111;
@@ -280,7 +292,8 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
 
 class Tracker_Artifact_UpdateActionFromOverlay extends Tracker_Artifact_Update_BaseTest {
 
-    public function itCreatesAChangeset() {
+    public function itCreatesAChangeset()
+    {
         stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns(null);
         $request      = aRequest()->with('func', 'artifact-update')->with('from_overlay', '1')->build();
 
@@ -289,7 +302,8 @@ class Tracker_Artifact_UpdateActionFromOverlay extends Tracker_Artifact_Update_B
         $this->getProccesAndCaptureOutput($this->layout, $request, $this->user);
     }
 
-    public function itReturnsTheScriptBaliseIfRequestIsFromOverlay() {
+    public function itReturnsTheScriptBaliseIfRequestIsFromOverlay()
+    {
         stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns($this->user_story);
         $request      = aRequest()->with('func', 'artifact-update')->with('from_overlay', '1')->build();
 
@@ -298,7 +312,8 @@ class Tracker_Artifact_UpdateActionFromOverlay extends Tracker_Artifact_Update_B
         $this->assertIdentical($from_overlay, $expected);
     }
 
-    public function itDoesntReturnScriptWhenInAjax() {
+    public function itDoesntReturnScriptWhenInAjax()
+    {
         $this->setUpAjaxRequestHeaders();
         stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns(null);
         $request      = aRequest()->with('func', 'artifact-update')->with('from_overlay', '1')->build();
@@ -308,7 +323,8 @@ class Tracker_Artifact_UpdateActionFromOverlay extends Tracker_Artifact_Update_B
         $this->restoreAjaxRequestHeaders();
     }
 
-    private function getProccesAndCaptureOutput($layout, $request, $user) {
+    private function getProccesAndCaptureOutput($layout, $request, $user)
+    {
         ob_start();
         $this->action->process($layout, $request, $user);
         return ob_get_clean();
@@ -316,25 +332,29 @@ class Tracker_Artifact_UpdateActionFromOverlay extends Tracker_Artifact_Update_B
 }
 
 class Tracker_Artifact_RedirectUrlTestVersion extends Tracker_Action_UpdateArtifact {
-    public function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request) {
+    public function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request)
+    {
         return parent::getRedirectUrlAfterArtifactUpdate($request);
     }
 }
 
 class Tracker_Artifact_RedirectUrlTest extends Tracker_Artifact_Update_BaseTest {
-    public function itRedirectsToTheTrackerHomePageByDefault() {
+    public function itRedirectsToTheTrackerHomePageByDefault()
+    {
         $request_data = array();
         $redirect_uri = $this->getRedirectUrlFor($request_data);
         $this->assertEqual(TRACKER_BASE_URL."/?tracker=$this->tracker_id", $redirect_uri->toUrl());
     }
 
-    public function itStaysOnTheCurrentArtifactWhen_submitAndStay_isSpecified() {
+    public function itStaysOnTheCurrentArtifactWhen_submitAndStay_isSpecified()
+    {
         $request_data = array('submit_and_stay' => true);
         $redirect_uri = $this->getRedirectUrlFor($request_data);
         $this->assertEqual(TRACKER_BASE_URL."/?aid=$this->artifact_id", $redirect_uri->toUrl());
     }
 
-    public function itReturnsToThePreviousArtifactWhen_fromAid_isGiven() {
+    public function itReturnsToThePreviousArtifactWhen_fromAid_isGiven()
+    {
         $from_aid     = 33;
         $request_data = array('from_aid' => $from_aid);
         $artifact_id  = 66;
@@ -342,7 +362,8 @@ class Tracker_Artifact_RedirectUrlTest extends Tracker_Artifact_Update_BaseTest 
         $this->assertEqual(TRACKER_BASE_URL."/?aid=$from_aid", $redirect_uri->toUrl());
     }
 
-    public function testSubmitAndStayHasPrecedenceOver_fromAid() {
+    public function testSubmitAndStayHasPrecedenceOver_fromAid()
+    {
         $from_aid     = 33;
         $request_data = array('from_aid' => $from_aid,
             'submit_and_stay' => true);
@@ -351,13 +372,15 @@ class Tracker_Artifact_RedirectUrlTest extends Tracker_Artifact_Update_BaseTest 
         $this->assertUriHasArgument($redirect_uri->toUrl(), "from_aid", $from_aid);
     }
 
-    public function testSubmitAndStayHasPrecedenceOver_returnToAid() {
+    public function testSubmitAndStayHasPrecedenceOver_returnToAid()
+    {
         $request_data = array('submit_and_stay' => true);
         $redirect_uri = $this->getRedirectUrlFor($request_data);
         $this->assertUriHasArgument($redirect_uri->toUrl(), "aid", $this->artifact_id);
     }
 
-    private function getRedirectUrlFor($request_data) {
+    private function getRedirectUrlFor($request_data)
+    {
         $request        = new Codendi_Request($request_data);
         $visit_recorder = \Mockery::spy(\Tuleap\Tracker\RecentlyVisited\VisitRecorder::class);
         $action         = new Tracker_Artifact_RedirectUrlTestVersion(

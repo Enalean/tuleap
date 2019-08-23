@@ -21,7 +21,8 @@
 
 class FRSPackageTest extends TuleapTestCase {
 
-    function testIsActive() {
+    function testIsActive()
+    {
         global $GLOBALS;
 
         $active_value = 1;
@@ -39,7 +40,8 @@ class FRSPackageTest extends TuleapTestCase {
         $this->assertFalse($p->isActive());
     }
 
-    function testIsDeleted() {
+    function testIsDeleted()
+    {
         global $GLOBALS;
 
         $active_value = 1;
@@ -57,7 +59,8 @@ class FRSPackageTest extends TuleapTestCase {
         $this->assertFalse($p->isDeleted());
     }
 
-    function testIsHidden() {
+    function testIsHidden()
+    {
         global $GLOBALS;
 
         $active_value = 1;

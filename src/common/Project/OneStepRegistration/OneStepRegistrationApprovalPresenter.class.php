@@ -23,27 +23,33 @@
  */
 class Project_OneStepRegistration_OneStepRegistrationApprovalPresenter {
 
-    public function get_title() {
+    public function get_title()
+    {
         return $GLOBALS['Language']->getText('register_confirmation_approval_project_one_step', 'title');
     }
 
-    public function get_section_one() {
+    public function get_section_one()
+    {
         return "";
     }
 
-    public function get_section_two() {
+    public function get_section_two()
+    {
         return $GLOBALS['Language']->getText('register_confirmation_approval_project_one_step', 'section_two');
     }
 
-    public function get_redirect_url() {
+    public function get_redirect_url()
+    {
         return '/my/';
     }
 
-    public function get_redirect_content() {
+    public function get_redirect_content()
+    {
         return $GLOBALS['Language']->getText('register_confirmation_approval_project_one_step', 'redirect_content');
     }
 
-    public function get_thanks() {
+    public function get_thanks()
+    {
         return $GLOBALS['Language']->getText('register_confirmation_approval_project_one_step', 'thanks', array(ForgeConfig::get('sys_name')));
     }
 }

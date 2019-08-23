@@ -34,41 +34,49 @@ class ProjectTruncatedEmailsPresenter
         $this->can_configure_truncated_mail = $can_configure_truncated_mail;
     }
 
-    public function truncated_emails_title() {
+    public function truncated_emails_title()
+    {
         return $GLOBALS['Language']->getText('project_admin_editgroupinfo', 'truncated_emails_title');
     }
 
-    public function use_truncated_emails() {
+    public function use_truncated_emails()
+    {
         return $GLOBALS['Language']->getText('project_admin_editgroupinfo', 'use_truncated_emails');
     }
 
-    public function project_uses_truncated_emails() {
+    public function project_uses_truncated_emails()
+    {
         return (bool) $this->project->getTruncatedEmailsUsage();
     }
 
-    public function impacted_services() {
+    public function impacted_services()
+    {
         return implode(', ', $this->impacted_services_list);
     }
 
-    public function truncated_emails_impacted_services_introduction() {
+    public function truncated_emails_impacted_services_introduction()
+    {
         return $GLOBALS['Language']->getText(
             'project_admin_editgroupinfo',
             'truncated_emails_impacted_services_introduction'
         );
     }
 
-    public function has_impacted_services_enabled() {
+    public function has_impacted_services_enabled()
+    {
         return count($this->impacted_services_list) > 0;
     }
 
-    public function truncated_emails_impacted_services_no_available() {
+    public function truncated_emails_impacted_services_no_available()
+    {
         return $GLOBALS['Language']->getText(
             'project_admin_editgroupinfo',
             'truncated_emails_impacted_services_no_available'
         );
     }
 
-    public function truncated_emails_impacted_services_impacted_services() {
+    public function truncated_emails_impacted_services_impacted_services()
+    {
         return $GLOBALS['Language']->getText(
             'project_admin_editgroupinfo',
             'truncated_emails_impacted_services_impacted_services'

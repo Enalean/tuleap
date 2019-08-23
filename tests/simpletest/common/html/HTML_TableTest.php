@@ -29,40 +29,49 @@ class HTML_TableTest extends TuleapTestCase {
      */
     protected $html_table;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->html_table = new HTML_Table();
     }
 
-    public function itBuildsATable() {
+    public function itBuildsATable()
+    {
         $this->assertPattern('%<table>.*</table>%s', $this->html_table->render());
     }
 
-    public function itBuildsTableWithTitles() {
+    public function itBuildsTableWithTitles()
+    {
         $this->assertPattern('%<th>Bla</th>%', $this->html_table->setColumnsTitle(array('Bla'))->render());
     }
 
-    public function itBuildsTableWithBody() {
+    public function itBuildsTableWithBody()
+    {
         $this->assertPattern('%<tbody>Bla</tbody>%', $this->html_table->setBody('Bla')->render());
     }
 
-    public function itHasNoTableHeadIfNoTitles() {
+    public function itHasNoTableHeadIfNoTitles()
+    {
         $this->assertNoPattern('%<thead>.*</thead>%', $this->html_table->render());
     }
 
-    public function itHasColumnTitleWhenWeAddTitles() {
+    public function itHasColumnTitleWhenWeAddTitles()
+    {
         $this->assertPattern('%<th>foo</th><th>bar</th>%', $this->html_table->addColumnTitle('foo')->addColumnTitle('bar')->render());
     }
 
-    public function itHasNoTableBodyIfNoBoby() {
+    public function itHasNoTableBodyIfNoBoby()
+    {
         $this->assertNoPattern('%<tbody>.*</tbody>%', $this->html_table->render());
     }
 
-    public function itHasTableClasses() {
+    public function itHasTableClasses()
+    {
         $this->assertPattern('%<table class="bla">%', $this->html_table->addTableClass('bla')->render());
     }
 
-    public function itHasAnId() {
+    public function itHasAnId()
+    {
         $this->assertPattern('%<table.*id="bla".*>%', $this->html_table->setId('bla')->render());
     }
 }

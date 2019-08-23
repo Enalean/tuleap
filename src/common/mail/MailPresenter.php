@@ -29,7 +29,8 @@ class MailPresenter {
     /** @var string */
     public $service_shortname;
 
-    public function __construct($service_shortname, $goto_link, $platform_name) {
+    public function __construct($service_shortname, $goto_link, $platform_name)
+    {
         $this->service_shortname = $service_shortname;
         $this->goto_link         = $goto_link;
 

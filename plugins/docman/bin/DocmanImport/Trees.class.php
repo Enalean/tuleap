@@ -27,7 +27,8 @@ class Trees {
     /**
      * Returns a tree of nodes build using a list of nodes: (node_id => array of children_id) (recursive)
      */
-    private static function nodeListToTreeRec($listOfNodes, $nodeId) {
+    private static function nodeListToTreeRec($listOfNodes, $nodeId)
+    {
         $children = null;
         if (array_key_exists($nodeId, $listOfNodes)) {
             foreach ($listOfNodes[$nodeId] as $child) {
@@ -41,7 +42,8 @@ class Trees {
     /**
      * Find the root of a tree in a list of nodes
      */
-    private static function findRoot($listOfNodes) {
+    private static function findRoot($listOfNodes)
+    {
         foreach ($listOfNodes as $rootCandidate => $children) {
             $isRoot = true;
             foreach ($listOfNodes as $currentNode) {
@@ -60,7 +62,8 @@ class Trees {
     /**
      * Returns a tree of nodes build using a list of nodes: (node_id => array of children_id)
      */
-    public static function nodeListToTree($listOfNodes) {
+    public static function nodeListToTree($listOfNodes)
+    {
         $root = self::findRoot($listOfNodes);
         if ($root === null) {
             return null;
@@ -72,7 +75,8 @@ class Trees {
     /**
      * Megre two trees and tag the nodes with the information: IN_FIRST, IN_SECOND, IN_BOTH (recursive)
      */
-    private static function mergeTagRec($array1, $array2) {
+    private static function mergeTagRec($array1, $array2)
+    {
         $res = null;
 
         if ($array1 != null) {
@@ -118,7 +122,8 @@ class Trees {
     /**
      * Set recursively the given tag to all nodes of the tree
      */
-    private static function tagTree(&$tree, $tag) {
+    private static function tagTree(&$tree, $tag)
+    {
         $tree['tag'] = $tag;
         if (isset($tree['children'])) {
             foreach ($tree['children'] as $name => $node) {
@@ -130,7 +135,8 @@ class Trees {
     /**
      * Merge two trees and tag the nodes with the information: IN_FIRST, IN_SECOND, IN_BOTH
      */
-    public static function mergeTag(array $array1, array $array2) {
+    public static function mergeTag(array $array1, array $array2)
+    {
         $array1_keys = array_keys($array1);
         $root1 = array_pop($array1_keys);
         $array2_keys = array_keys($array2);

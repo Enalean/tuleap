@@ -24,7 +24,8 @@ class Widget_MySystemEvent extends Widget {
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('mysystemevent');
     }
 
@@ -32,7 +33,8 @@ class Widget_MySystemEvent extends Widget {
      * Get the title of the widget.
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $GLOBALS['Language']->getText('admin_main', 'system_event');
     }
 
@@ -40,7 +42,8 @@ class Widget_MySystemEvent extends Widget {
      * Compute the content of the widget
      * @return string html
      */
-    public function getContent() {
+    public function getContent()
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $se = SystemEventManager::instance();
         $content = '';
@@ -54,7 +57,8 @@ class Widget_MySystemEvent extends Widget {
      * If true, then the dashboard will be rendered faster but the page will be a little bit crappy until full load.
      * @return bool
      */
-    public function isAjax() {
+    public function isAjax()
+    {
         return true;
     }
 
@@ -62,7 +66,8 @@ class Widget_MySystemEvent extends Widget {
      * Get the description of the widget
      * @return string html
      */
-    function getDescription() {
+    function getDescription()
+    {
         return $GLOBALS['Language']->getText('widget_description_my_system_event','description');
     }
 }

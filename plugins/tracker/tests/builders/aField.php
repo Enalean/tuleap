@@ -24,19 +24,23 @@
 // @see http://nat.truemesh.com/archives/000727.html
 require_once __DIR__.'/../bootstrap.php';
 
-function aTextField() {
+function aTextField()
+{
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Text');
 }
 
-function anIntegerField() {
+function anIntegerField()
+{
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Integer');
 }
 
-function aFloatField() {
+function aFloatField()
+{
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Float');
 }
 
-function aStringField() {
+function aStringField()
+{
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_String');
 }
 
@@ -50,31 +54,38 @@ function aMockDateWithoutTimeField()
     return new Test_Tracker_FormElementDate_Builder('Tracker_FormElement_Field_Date', false);
 }
 
-function anOpenListField() {
+function anOpenListField()
+{
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_OpenList');
 }
 
-function anArtifactLinkField() {
+function anArtifactLinkField()
+{
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_ArtifactLink');
 }
 
-function aSelectBoxField() {
+function aSelectBoxField()
+{
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Selectbox');
 }
 
-function aMultiSelectBoxField() {
+function aMultiSelectBoxField()
+{
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_MultiSelectbox');
 }
 
-function aCheckboxField() {
+function aCheckboxField()
+{
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Checkbox');
 }
 
-function aRadiobuttonField() {
+function aRadiobuttonField()
+{
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Radiobutton');
 }
 
-function aFileField() {
+function aFileField()
+{
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_File');
 }
 
@@ -90,31 +101,37 @@ class Test_Tracker_FormElement_Builder {
     protected $label;
     private $properties = array();
 
-    public function __construct($klass) {
+    public function __construct($klass)
+    {
         $this->klass = $klass;
     }
 
-    public function withName($name) {
+    public function withName($name)
+    {
         $this->name = $name;
         return $this;
     }
 
-    public function withId($id) {
+    public function withId($id)
+    {
         $this->id = $id;
         return $this;
     }
 
-    public function withTracker($tracker) {
+    public function withTracker($tracker)
+    {
         $this->tracker   = $tracker;
         return $this;
     }
 
-    public function withTrackerId($trackerId) {
+    public function withTrackerId($trackerId)
+    {
         $this->trackerId = $trackerId;
         return $this;
     }
 
-    public function isUsed() {
+    public function isUsed()
+    {
         $this->use_it = true;
         return $this;
     }
@@ -122,12 +139,14 @@ class Test_Tracker_FormElement_Builder {
     /**
      * @only for Tracker_FormElement_Field_List
      */
-    public function withBind($bind) {
+    public function withBind($bind)
+    {
         $this->bind = $bind;
         return $this;
     }
 
-    public function withLabel($label) {
+    public function withLabel($label)
+    {
         $this->label = $label;
         return $this;
     }
@@ -153,7 +172,8 @@ class Test_Tracker_FormElement_Builder {
     /**
      * @return Tracker_FormElement
      */
-    public function build() {
+    public function build()
+    {
         $klass  = $this->klass;
         $object = new $klass($this->id, $this->trackerId, null, $this->name, $this->label, null, $this->use_it, null, null, null, null, $this->originalField);
         if ($this->tracker) {

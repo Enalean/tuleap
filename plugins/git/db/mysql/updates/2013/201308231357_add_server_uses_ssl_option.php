@@ -23,7 +23,8 @@ class b201308231357_add_server_uses_ssl_option extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 add column use_ssl to table plugin_git_remote_servers
 EOT;
@@ -34,7 +35,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -43,17 +45,20 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $this->addColumn();
     }
 
-    private function addColumn() {
+    private function addColumn()
+    {
         $sql = 'ALTER TABLE plugin_git_remote_servers
                 ADD COLUMN use_ssl boolean DEFAULT 0';
         $this->execDB($sql, 'An error occured while adding use_ssl column to plugin_git_remote_servers table, ');
     }
 
-    private function execDB($sql, $message) {
+    private function execDB($sql, $message)
+    {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message.implode(', ', $this->db->dbh->errorInfo()));

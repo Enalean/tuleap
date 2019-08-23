@@ -20,15 +20,18 @@
 
 class b201603251450_add_index_on_nature_column extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add an index on nature column of the tracker_changeset_value_artifactlink table';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE tracker_changeset_value_artifactlink ADD INDEX idx_nature (nature(10))";
 
         $res = $this->db->dbh->exec($sql);

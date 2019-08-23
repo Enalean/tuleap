@@ -23,7 +23,8 @@ require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/bui
 /**
  * @return \Test_ArtifactNode_Builder
  */
-function anArtifactNode() {
+function anArtifactNode()
+{
     return new Test_ArtifactNode_Builder();
 }
 
@@ -44,7 +45,8 @@ class Test_ArtifactNode_Builder extends Test_TreeNode_Builder {
     /**
      * @return ArtifactNode
      */
-    public function build() {
+    public function build()
+    {
         $node = new ArtifactNode($this->artifact, $this->data);
         $node->setChildren($this->children);
         return $node;

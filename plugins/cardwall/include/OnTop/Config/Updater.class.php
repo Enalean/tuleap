@@ -28,11 +28,13 @@ class Cardwall_OnTop_Config_Updater {
      */
     private $commands = array();
 
-    public function addCommand(Cardwall_OnTop_Config_Command $command) {
+    public function addCommand(Cardwall_OnTop_Config_Command $command)
+    {
         $this->commands[] = $command;
     }
 
-    public function process(Codendi_Request $request) {
+    public function process(Codendi_Request $request)
+    {
         foreach ($this->commands as $command) {
             $command->execute($request);
         }

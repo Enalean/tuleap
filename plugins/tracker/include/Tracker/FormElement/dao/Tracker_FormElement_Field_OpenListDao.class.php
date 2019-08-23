@@ -20,12 +20,14 @@
 
 
 class Tracker_FormElement_Field_OpenListDao extends Tracker_FormElement_SpecificPropertiesDao {
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_field_openlist';
     }
 
-    public function save($field_id, $row) {
+    public function save($field_id, $row)
+    {
         $field_id  = $this->da->escapeInt($field_id);
 
         if (isset($row['hint'])) {
@@ -47,7 +49,8 @@ class Tracker_FormElement_Field_OpenListDao extends Tracker_FormElement_Specific
      *
      * @return bool true if ok, false otherwise
      */
-    public function duplicate($from_field_id, $to_field_id) {
+    public function duplicate($from_field_id, $to_field_id)
+    {
         $from_field_id = $this->da->escapeInt($from_field_id);
         $to_field_id   = $this->da->escapeInt($to_field_id);
 
@@ -58,7 +61,8 @@ class Tracker_FormElement_Field_OpenListDao extends Tracker_FormElement_Specific
         return $this->update($sql);
     }
 
-    public function searchChangesetValues($changeset_id, $field_id, $bindtable_select, $bindtable_select_nb, $bindtable_from, $bindtable_join_on_id) {
+    public function searchChangesetValues($changeset_id, $field_id, $bindtable_select, $bindtable_select_nb, $bindtable_from, $bindtable_join_on_id)
+    {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $field_id     = $this->da->escapeInt($field_id);
         //      SELECT user.user_id AS id, user.user_name, user.realname, CONCAT(user.realname,' (',user.user_name,')') AS full_name, null as openvalue_label, l.insertion_order

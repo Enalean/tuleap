@@ -12,7 +12,8 @@ class _BogoLoginPassUser extends _PassUser {
 
     var $_authmethod = 'BogoLogin';
 
-    function userExists() {
+    function userExists()
+    {
         if (isWikiWord($this->_userid)) {
             $this->_level = WIKIAUTH_BOGO;
             return true;
@@ -25,7 +26,8 @@ class _BogoLoginPassUser extends _PassUser {
     /** A BogoLoginUser requires no password at all
      *  But if there's one stored, we override it with the PersonalPagePassUser instead
      */
-    function checkPass($submitted_password) {
+    function checkPass($submitted_password)
+    {
         if ($this->_prefs->get('passwd')) {
             if (isset($this->_prefs->_method) and $this->_prefs->_method == 'HomePage') {
                 $user = new _PersonalPagePassUser($this->_userid, $this->_prefs);

@@ -20,29 +20,34 @@ class WikiPlugin_JabberPresence
 extends WikiPlugin
 {
     // Five required functions in a WikiPlugin.
-    function getName () {
+    function getName()
+    {
         return _("JabberPresence");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("Simple jabber presence plugin");
 
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.3 $");
     }
 
     // Establish default values for each of this plugin's arguments.
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('scripturl' => "http://edgar.netflint.net/status.php",
                      'jid'       => MY_JABBER_ID,
         'type'      => 'image',
                      'iconset'   => "gabber");
     }
 
-    function run($dbi, $argstr, $request) {
+    function run($dbi, $argstr, $request)
+    {
         extract($this->getArgs($argstr, $request));
         // Any text that is returned will not be further transformed,
         // so use html where necessary.

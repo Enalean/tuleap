@@ -30,12 +30,14 @@ class GitRepositoryMirrorUpdater {
      */
     private $mirror_data_mapper;
 
-    public function __construct(Git_Mirror_MirrorDataMapper $mirror_data_mapper, ProjectHistoryDao $history_dao) {
+    public function __construct(Git_Mirror_MirrorDataMapper $mirror_data_mapper, ProjectHistoryDao $history_dao)
+    {
         $this->mirror_data_mapper = $mirror_data_mapper;
         $this->history_dao        = $history_dao;
     }
 
-    public function updateRepositoryMirrors(GitRepository $repository, array $mirror_ids) {
+    public function updateRepositoryMirrors(GitRepository $repository, array $mirror_ids)
+    {
         if ($this->mirror_data_mapper->doesAllSelectedMirrorIdsExist($mirror_ids)
             && $this->mirror_data_mapper->unmirrorRepository($repository->getId())
             && $this->mirror_data_mapper->mirrorRepositoryTo($repository->getId(), $mirror_ids)) {

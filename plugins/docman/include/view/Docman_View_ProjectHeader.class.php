@@ -21,7 +21,8 @@
 
 /* abstract */ class Docman_View_ProjectHeader extends Docman_View_Header {
 
-    /* protected */ function _scripts($params) {
+    /* protected */ function _scripts($params)
+    {
         echo '<script type="text/javascript"> var docman = new com.xerox.codendi.Docman('. $params['group_id'] .', ';
         $di = $this->_getDocmanIcons($params);
         echo json_encode(array_merge(array(
@@ -70,14 +71,16 @@
         echo '); </script>';
     }
 
-    /* protected */ function _getAdditionalHtmlParams($params) {
+    /* protected */ function _getAdditionalHtmlParams($params)
+    {
         return  array(
             'group'  => $params['group_id'],
             'toptab' => 'docman');
     }
 
 
-    /* protected */ function _getJSDocmanParameters($params) {
+    /* protected */ function _getJSDocmanParameters($params)
+    {
         return array();
     }
 }

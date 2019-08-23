@@ -34,12 +34,14 @@ array('issetUsername', 'setHeader', 'getUsername', 'getPassword', 'getUser', 'er
 class WebDAVAuthenticationTest extends TuleapTestCase {
 
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         parent::tearDown();
     }
@@ -47,7 +49,8 @@ class WebDAVAuthenticationTest extends TuleapTestCase {
     /**
      * Testing when user gives only the username
      */
-    function testAuthenticateFailureWithOnlyUsername() {
+    function testAuthenticateFailureWithOnlyUsername()
+    {
 
         $webDAVAuthentication = new WebDAVAuthenticationTestVersion($this);
         $webDAVAuthentication->setReturnValue('issetUsername', true);
@@ -63,7 +66,8 @@ class WebDAVAuthenticationTest extends TuleapTestCase {
     /**
      * Testing when the user gives only the password
      */
-    function testAuthenticateFailureWithOnlyPassword() {
+    function testAuthenticateFailureWithOnlyPassword()
+    {
 
         $webDAVAuthentication = new WebDAVAuthenticationTestVersion($this);
         $webDAVAuthentication->setReturnValue('issetUsername', true);
@@ -79,7 +83,8 @@ class WebDAVAuthenticationTest extends TuleapTestCase {
     /**
      * Testing when the user gives a wrong username or password
      */
-    function testAuthenticateFailureWithWrongUsernameAndPassword() {
+    function testAuthenticateFailureWithWrongUsernameAndPassword()
+    {
 
         $webDAVAuthentication = new WebDAVAuthenticationTestVersion($this);
         $webDAVAuthentication->setReturnValue('issetUsername', true);
@@ -95,7 +100,8 @@ class WebDAVAuthenticationTest extends TuleapTestCase {
     /**
      * Testing when the user is authenticated as anonymous
      */
-    function testAuthenticateSuccessWithAnonymousUserNotAllowed() {
+    function testAuthenticateSuccessWithAnonymousUserNotAllowed()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
 
         $webDAVAuthentication = new WebDAVAuthenticationTestVersion($this);
@@ -112,7 +118,8 @@ class WebDAVAuthenticationTest extends TuleapTestCase {
     /**
      * Testing when the user is authenticated as anonymous
      */
-    function testAuthenticateSuccessWithAnonymousUserAllowed() {
+    function testAuthenticateSuccessWithAnonymousUserAllowed()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
         $webDAVAuthentication = new WebDAVAuthenticationTestVersion($this);
@@ -129,7 +136,8 @@ class WebDAVAuthenticationTest extends TuleapTestCase {
     /**
      * Testing when the user is authenticated as a registered user
      */
-    function testAuthenticateSuccessWithNotAnonymousUser() {
+    function testAuthenticateSuccessWithNotAnonymousUser()
+    {
 
         $webDAVAuthentication = new WebDAVAuthenticationTestVersion($this);
         $webDAVAuthentication->setReturnValue('issetUsername', true);

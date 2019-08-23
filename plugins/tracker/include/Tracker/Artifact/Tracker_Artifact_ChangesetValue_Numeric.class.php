@@ -29,7 +29,8 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
      */
     protected $numeric;
 
-    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $numeric) {
+    public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $numeric)
+    {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->numeric = $numeric;
     }
@@ -39,7 +40,8 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
      *
      * @return mixed (int or float) the Numeric
      */
-    public function getNumeric() {
+    public function getNumeric()
+    {
         return $this->numeric;
     }
 
@@ -48,7 +50,8 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
      *
      * @return string|null
      */
-    public function getValue() {
+    public function getValue()
+    {
         return $this->numeric;
     }
 

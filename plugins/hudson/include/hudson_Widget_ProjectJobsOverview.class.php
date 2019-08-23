@@ -55,7 +55,8 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget
         return $GLOBALS['Language']->getText('plugin_hudson', 'project_jobs');
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_jobsoverview');
     }
 
@@ -64,7 +65,8 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget
         return false;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $purifier         = Codendi_HTMLPurifier::instance();
         $minimal_jobs     = $this->getJobsByGroup($this->group_id);
         $nb_jobs_in_error = 0;

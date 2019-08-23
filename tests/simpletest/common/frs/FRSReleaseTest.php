@@ -26,7 +26,8 @@ Mock::generatePartial('FRSRelease', 'FRSReleaseTestVersion', array('_getFRSPacka
 
 class FRSReleaseTest extends TuleapTestCase {
 
-    function testIsActive() {
+    function testIsActive()
+    {
         $active_value = 1;
         $deleted_value = 2;
         $hidden_value = 3;
@@ -42,7 +43,8 @@ class FRSReleaseTest extends TuleapTestCase {
         $this->assertFalse($r->isActive());
     }
 
-    function testIsHidden() {
+    function testIsHidden()
+    {
         $active_value = 1;
         $deleted_value = 2;
         $hidden_value = 3;
@@ -58,7 +60,8 @@ class FRSReleaseTest extends TuleapTestCase {
         $this->assertFalse($r->isHidden());
     }
 
-    function testIsDeleted() {
+    function testIsDeleted()
+    {
         $active_value = 1;
         $deleted_value = 2;
         $hidden_value = 3;
@@ -74,7 +77,8 @@ class FRSReleaseTest extends TuleapTestCase {
         $this->assertFalse($r->isDeleted());
     }
 
-    function testGetProjectWithProjectSet() {
+    function testGetProjectWithProjectSet()
+    {
         $r = new FRSRelease();
 
         $p = new MockProject($this);
@@ -83,7 +87,8 @@ class FRSReleaseTest extends TuleapTestCase {
         $this->assertIdentical($p, $r->getProject());
     }
 
-    function testGetProjectWithGroupIdSet() {
+    function testGetProjectWithGroupIdSet()
+    {
         $r = new FRSReleaseTestVersion($this);
         $r->setGroupID(123);
 
@@ -98,7 +103,8 @@ class FRSReleaseTest extends TuleapTestCase {
         $this->assertIdentical($p, $r->getProject());
     }
 
-    function testGetProjectWithNeitherProjectNorGroupID() {
+    function testGetProjectWithNeitherProjectNorGroupID()
+    {
         $r = new FRSReleaseTestVersion($this);
         $r->setPackageId(696);
 
@@ -118,7 +124,8 @@ class FRSReleaseTest extends TuleapTestCase {
         $this->assertIdentical($p, $r->getProject());
     }
 
-    function testGetGroupIdWithoutProjectSet() {
+    function testGetGroupIdWithoutProjectSet()
+    {
         $r = new FRSReleaseTestVersion($this);
         $r->setPackageId(696);
 
@@ -132,7 +139,8 @@ class FRSReleaseTest extends TuleapTestCase {
         $this->assertEqual($r->getGroupID(), 123);
     }
 
-    function testGetGroupIdWithProjectSet() {
+    function testGetGroupIdWithProjectSet()
+    {
         $r = new FRSRelease();
 
         $p = new MockProject($this);

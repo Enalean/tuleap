@@ -34,7 +34,8 @@ class Cardwall_OnTop_Config_Command_CreateMappingField extends Cardwall_OnTop_Co
      */
     private $tracker_factory;
 
-    public function __construct(Tracker $tracker, Cardwall_OnTop_ColumnMappingFieldDao $dao, TrackerFactory $tracker_factory) {
+    public function __construct(Tracker $tracker, Cardwall_OnTop_ColumnMappingFieldDao $dao, TrackerFactory $tracker_factory)
+    {
         parent::__construct($tracker);
         $this->dao             = $dao;
         $this->tracker_factory = $tracker_factory;
@@ -43,7 +44,8 @@ class Cardwall_OnTop_Config_Command_CreateMappingField extends Cardwall_OnTop_Co
     /**
      * @see Cardwall_OnTop_Config_Command::execute()
      */
-    public function execute(Codendi_Request $request) {
+    public function execute(Codendi_Request $request)
+    {
         if ($request->get('add_mapping_on')) {
             $new_mapping_tracker = $this->tracker_factory->getTrackerById($request->get('add_mapping_on'));
             if ($new_mapping_tracker && $this->dao->create($this->tracker->getId(), $new_mapping_tracker->getId(), null)) {

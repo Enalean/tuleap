@@ -26,7 +26,8 @@ require_once(__DIR__ . '/../bootstrap.php');
 
 class StateManagerTest extends TuleapTestCase
 {
-    public function itValidatesValidState() {
+    public function itValidatesValidState()
+    {
         $key           = 'Tuleap_key';
         $return_to     = '/return_to';
         $nonce         = 'random_string';
@@ -41,7 +42,8 @@ class StateManagerTest extends TuleapTestCase
         $state_manager->validateState($signed_state);
     }
 
-    public function itDoesNotValidateInvalidState() {
+    public function itDoesNotValidateInvalidState()
+    {
         $return_to     = '/return_to';
         $nonce         = 'random_string';
         $state_factory = mock('Tuleap\OpenIDConnectClient\Authentication\StateFactory');
@@ -56,7 +58,8 @@ class StateManagerTest extends TuleapTestCase
         $state_manager->validateState($signed_state);
     }
 
-    public function itDoesNotTryToValidateInvalidStoredStateHash() {
+    public function itDoesNotTryToValidateInvalidStoredStateHash()
+    {
         $state_factory = mock('Tuleap\OpenIDConnectClient\Authentication\StateFactory');
         $state_storage = mock('Tuleap\OpenIDConnectClient\Authentication\StateStorage');
         $state_storage->setReturnValue('loadState', null);
@@ -66,7 +69,8 @@ class StateManagerTest extends TuleapTestCase
         $state_manager->validateState('signed_state');
     }
 
-    public function itDoesNotTryToValidateMissingStateHash() {
+    public function itDoesNotTryToValidateMissingStateHash()
+    {
         $state_factory = mock('Tuleap\OpenIDConnectClient\Authentication\StateFactory');
         $state_storage = mock('Tuleap\OpenIDConnectClient\Authentication\StateStorage');
         $state_storage->setReturnValue('loadState', 'stored_state_hash');

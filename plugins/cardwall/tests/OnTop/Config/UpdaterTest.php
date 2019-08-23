@@ -21,7 +21,8 @@ require_once dirname(__FILE__) .'/../../bootstrap.php';
 
 class Cardwall_OnTop_Config_UpdaterTest extends TuleapTestCase {
 
-    public function itScheduleExecuteOnCommands() {
+    public function itScheduleExecuteOnCommands()
+    {
         $request  = mock('Codendi_Request');
         $c1       = mock('Cardwall_OnTop_Config_Command');
         $c2       = mock('Cardwall_OnTop_Config_Command');

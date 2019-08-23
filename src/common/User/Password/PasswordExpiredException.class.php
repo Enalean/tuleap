@@ -21,12 +21,14 @@ class User_PasswordExpiredException extends User_LoginException {
     /** @var PFUser */
     private $user;
 
-    public function __construct(PFUser $user) {
+    public function __construct(PFUser $user)
+    {
         $this->user = $user;
         parent::__construct($GLOBALS['Language']->getText('include_session', 'expired_password'));
     }
 
-    public function getUser() {
+    public function getUser()
+    {
         return $this->user;
     }
 }

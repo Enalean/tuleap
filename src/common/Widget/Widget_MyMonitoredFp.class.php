@@ -33,10 +33,12 @@ class Widget_MyMonitoredFp extends Widget {
         parent::__construct('mymonitoredfp');
     }
 
-    function getTitle() {
+    function getTitle()
+    {
         return $GLOBALS['Language']->getText('my_index', 'my_files');
     }
-    function getContent() {
+    function getContent()
+    {
         $frsrf = new FRSReleaseFactory();
         $html_my_monitored_fp = '';
         $sql="SELECT groups.group_name,groups.group_id ".
@@ -118,13 +120,16 @@ class Widget_MyMonitoredFp extends Widget {
         return $html_my_monitored_fp;
     }
 
-    function getCategory() {
+    function getCategory()
+    {
         return _('Files');
     }
-    function getDescription() {
+    function getDescription()
+    {
         return $GLOBALS['Language']->getText('widget_description_my_monitored_fp','description');;
     }
-    function isAjax() {
+    function isAjax()
+    {
         return true;
     }
 

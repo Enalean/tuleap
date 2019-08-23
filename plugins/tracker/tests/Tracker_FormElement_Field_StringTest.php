@@ -63,7 +63,8 @@ class Tracker_FormElement_Field_StringTest extends TuleapTestCase
         $this->assertTrue($string->isValid($artifact, "Du texte"));
     }
 
-    function testIsValid_cr() {
+    function testIsValid_cr()
+    {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
 
         $rule_string = \Mockery::spy(\Rule_String::class);
@@ -134,7 +135,8 @@ class Tracker_FormElement_Field_StringTest extends TuleapTestCase
         $this->assertFalse($string->isValid($artifact, 'Tuleap'));
     }
 
-    function testGetFieldData() {
+    function testGetFieldData()
+    {
         $f = \Mockery::mock(\Tracker_FormElement_Field_String::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertEqual('this is a string value', $f->getFieldData('this is a string value'));
     }
@@ -142,7 +144,8 @@ class Tracker_FormElement_Field_StringTest extends TuleapTestCase
     /**
      * @see https://tuleap.net/plugins/tracker?aid=6449
      */
-    function itIsEmptyWhenThereIsNoContent() {
+    function itIsEmptyWhenThereIsNoContent()
+    {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $field    = aStringField()->build();
         $this->assertTrue($field->isEmpty('', $artifact));
@@ -151,7 +154,8 @@ class Tracker_FormElement_Field_StringTest extends TuleapTestCase
     /**
      * @see https://tuleap.net/plugins/tracker?aid=6449
      */
-    function itIsEmptyWhenThereIsOnlyWhitespaces() {
+    function itIsEmptyWhenThereIsOnlyWhitespaces()
+    {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $field    = aStringField()->build();
         $this->assertTrue($field->isEmpty('  ', $artifact));
@@ -160,7 +164,8 @@ class Tracker_FormElement_Field_StringTest extends TuleapTestCase
     /**
      * @see https://tuleap.net/plugins/tracker?aid=6449
      */
-    function itIsNotEmptyWhenThereIsContent() {
+    function itIsNotEmptyWhenThereIsContent()
+    {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $field    = aStringField()->build();
         $this->assertFalse($field->isEmpty('sdf', $artifact));
@@ -169,7 +174,8 @@ class Tracker_FormElement_Field_StringTest extends TuleapTestCase
 
 class Tracker_FormElement_Field_String_RESTTests extends TuleapTestCase {
 
-    public function itReturnsTheValueIndexedByFieldName() {
+    public function itReturnsTheValueIndexedByFieldName()
+    {
         $field = aStringField()->build();
         $value = array(
             "field_id" => 330,
@@ -182,7 +188,8 @@ class Tracker_FormElement_Field_String_RESTTests extends TuleapTestCase {
 
 class Tracker_FormElement_Field_String_Changes extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -190,13 +197,15 @@ class Tracker_FormElement_Field_String_Changes extends TuleapTestCase {
         $this->previous_value = mockery_stub(\Tracker_Artifact_ChangesetValue_String::class)->getText()->returns('1');
     }
 
-    public function itReturnsTrueIfThereIsAChange() {
+    public function itReturnsTrueIfThereIsAChange()
+    {
         $new_value = '1.0';
 
         $this->assertTrue($this->field->hasChanges(\Mockery::spy(\Tracker_Artifact::class), $this->previous_value, $new_value));
     }
 
-    public function itReturnsFalseIfThereIsNoChange() {
+    public function itReturnsFalseIfThereIsNoChange()
+    {
         $new_value = '1';
 
         $this->assertFalse($this->field->hasChanges(\Mockery::spy(\Tracker_Artifact::class), $this->previous_value, $new_value));

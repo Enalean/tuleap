@@ -31,11 +31,13 @@ class TemplateSingleton
     public const TEMPLATE     = 2;
     public const TEST_PROJECT = 3;
 
-    function __construct() {
+    function __construct()
+    {
         $this->update();
     }
 
-    public static function instance() {
+    public static function instance()
+    {
         static $template_instance;
         if (!$template_instance) {
             $template_instance = new TemplateSingleton();
@@ -43,11 +45,13 @@ class TemplateSingleton
         return $template_instance;
     }
 
-    function getLabel($proj_type) {
+    function getLabel($proj_type)
+    {
         return $GLOBALS['Language']->getText('include_common_template',$this->data_array[$proj_type]);
     }
 
-    function update() {
+    function update()
+    {
         $db_res=db_query("SELECT * FROM group_type");
         $this->data_array=array();
         $rows=db_numrows($db_res);
@@ -56,19 +60,23 @@ class TemplateSingleton
         }
     }
 
-    function isTemplate($id) {
+    function isTemplate($id)
+    {
         return ($id == self::TEMPLATE);
     }
 
-    function isProject($id) {
+    function isProject($id)
+    {
         return ($id == self::PROJECT);
     }
 
-    function isTestProject($id) {
+    function isTestProject($id)
+    {
         return ($id == self::TEST_PROJECT);
     }
 
-    function showTypeBox($name='group_type',$checked_val='xzxz') {
+    function showTypeBox($name='group_type',$checked_val='xzxz')
+    {
         $localizedTypes = array();
         foreach (array_keys($this->data_array) as $type_id) {
             $localizedTypes[] = $this->getLabel($type_id);
@@ -86,7 +94,8 @@ class TemplateSingleton
         return $localized;
     }
 
-    function getTemplates() {
+    function getTemplates()
+    {
         $db_templates = db_query("SELECT group_id,group_name,unix_group_name,short_description,register_time FROM groups WHERE type='2' and status IN ('A','s')");
         return $db_templates;
     }

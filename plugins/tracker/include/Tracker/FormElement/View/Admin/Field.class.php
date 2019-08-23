@@ -34,7 +34,8 @@ class Tracker_FormElement_View_Admin_Field extends Tracker_FormElement_View_Admi
      *
      * @return string html
      */
-    public function fetchAdminSpecificProperties() {
+    public function fetchAdminSpecificProperties()
+    {
         $html = '';
 
         //required
@@ -74,7 +75,8 @@ class Tracker_FormElement_View_Admin_Field extends Tracker_FormElement_View_Admi
      *
      * @return string the HTML for the part of form for required checkbox
      */
-    protected function fetchRequired() {
+    protected function fetchRequired()
+    {
         $html = '';
         $html .= '<p>';
         $html .= '<input type="hidden" name="formElement_data[required]" value="0" />';

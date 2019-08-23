@@ -43,7 +43,8 @@ class Tracker_DateReminderFactory {
      *
      * @return Tracker
      */
-    public function getTracker() {
+    public function getTracker()
+    {
         return $this->tracker;
     }
 
@@ -54,7 +55,8 @@ class Tracker_DateReminderFactory {
      *
      * @return Tracker_DateReminder[]
      */
-    public function getTrackerReminders($allReminders = false) {
+    public function getTrackerReminders($allReminders = false)
+    {
         $reminders = array();
         $reminderDao = $this->getDao();
         if ($allReminders) {
@@ -122,7 +124,8 @@ class Tracker_DateReminderFactory {
      *
      * @return Void
      */
-    protected function checkDuplicatedReminders($fieldId, $notificationType, $distance, $reminderId = 0) {
+    protected function checkDuplicatedReminders($fieldId, $notificationType, $distance, $reminderId = 0)
+    {
         $dupilcatedReminders = $this->getDao()->findReminders($this->getTracker()->getId(), $fieldId, $notificationType, $distance, $reminderId);
         if ($dupilcatedReminders && !$dupilcatedReminders->isError() && $dupilcatedReminders->rowCount() > 0) {
             $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_duplicated');
@@ -138,7 +141,8 @@ class Tracker_DateReminderFactory {
      *
      * @return Void
      */
-    protected function isReminderBeforeOpenDate($fieldId, $notificationType) {
+    protected function isReminderBeforeOpenDate($fieldId, $notificationType)
+    {
         $tff              = Tracker_FormElementFactory::instance();
         $trackerDateField = $tff->getFieldById($fieldId);
         $fieldType        = $tff->getType($trackerDateField);
@@ -197,7 +201,8 @@ class Tracker_DateReminderFactory {
      *
      * @return Tracker_DateReminder
      */
-    public function getInstanceFromRow($row) {
+    public function getInstanceFromRow($row)
+    {
         $roles = array();
         $dar = $this->getDao()->getRolesByReminderId($row['reminder_id']);
         if ($dar && !$dar->isError() && $dar->rowCount() >0) {
@@ -235,7 +240,8 @@ class Tracker_DateReminderFactory {
      *
      * @return Tracker_DateReminderDao
      */
-    protected function getDao() {
+    protected function getDao()
+    {
         return new Tracker_DateReminderDao();
     }
 
@@ -246,7 +252,8 @@ class Tracker_DateReminderFactory {
      *
      * @return Tracker_DateReminder
      */
-    public function getReminder($reminderId) {
+    public function getReminder($reminderId)
+    {
         if ($row = $this->getDao()->searchById($reminderId)->getRow()) {
             return $this->getInstanceFromRow($row);
         }
@@ -258,7 +265,8 @@ class Tracker_DateReminderFactory {
      *
      * @return UserManager
      */
-    public function getUserManager() {
+    public function getUserManager()
+    {
         return UserManager::instance();
     }
 

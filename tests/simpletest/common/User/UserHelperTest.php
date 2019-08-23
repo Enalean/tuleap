@@ -27,7 +27,8 @@ Mock::generatePartial('UserHelper', 'UserHelperTestVersion', array('_getUserDao'
 
 class UserHelperTest extends TuleapTestCase {
 
-    function testGetDisplayName() {
+    function testGetDisplayName()
+    {
         $uh = new UserHelperTestVersion($this);
         $uh->setReturnValueAt(0, '_getCurrentUserUsernameDisplayPreference', 1);
         $uh->setReturnValueAt(1, '_getCurrentUserUsernameDisplayPreference', 2);
@@ -51,7 +52,8 @@ class UserHelperTest extends TuleapTestCase {
         $this->assertEqual("realname (user_name)", $uh->getDisplayName("user_name", "realname"));
     }
 
-    function testGetDisplayNameFromUser() {
+    function testGetDisplayNameFromUser()
+    {
         $user = mock('PFUser');
         $user->setReturnValue('getUserName', 'user_name');
         $user->setReturnValue('getRealName', 'realname');
@@ -63,7 +65,8 @@ class UserHelperTest extends TuleapTestCase {
         $this->assertNull($uh->getDisplayNameFromUser(null));
     }
 
-    function testGetDisplayNameFromUserId() {
+    function testGetDisplayNameFromUserId()
+    {
         $user = mock('PFUser');
         $user->setReturnValue('getUserName', 'user_name');
         $user->setReturnValue('getRealName', 'realname');
@@ -79,7 +82,8 @@ class UserHelperTest extends TuleapTestCase {
         $this->assertEqual("user_name (realname)", $uh->getDisplayNameFromUserId(123));
     }
 
-    function testGetDisplayNameFromUserName() {
+    function testGetDisplayNameFromUserName()
+    {
         $user = mock('PFUser');
         $user->setReturnValue('getUserName', 'user_name');
         $user->setReturnValue('getRealName', 'realname');
@@ -96,7 +100,8 @@ class UserHelperTest extends TuleapTestCase {
         $this->assertEqual("user_name (realname)", $uh->getDisplayNameFromUserName('user_name'));
     }
 
-    function testGetDisplayNameForNone() {
+    function testGetDisplayNameForNone()
+    {
         $user = mock('PFUser');
         $user->setReturnValue('isNone', true);
         $user->setReturnValue('getUserName', 'None');
@@ -131,7 +136,8 @@ class UserHelperTest extends TuleapTestCase {
         $this->assertEqual("Aucun", $uh->getDisplayNameFromUserName("Aucun"));
     }
 
-    function testInternalCachingById() {
+    function testInternalCachingById()
+    {
         $dao = new MockUserDao($this);
         $dar = new MockDataAccessResult($this);
         $dao->setReturnReference('searchByUserId', $dar);
@@ -156,7 +162,8 @@ class UserHelperTest extends TuleapTestCase {
         $this->assertEqual("user_name (realname)", $uh->getDisplayNameFromUserId(123));
         $this->assertEqual("user_name (realname)", $uh->getDisplayNameFromUserName('user_name'));
     }
-    function testInternalCachingByUserName() {
+    function testInternalCachingByUserName()
+    {
         $dao = new MockUserDao($this);
         $dar = new MockDataAccessResult($this);
         $dao->setReturnReference('searchByUserName', $dar);
@@ -182,7 +189,8 @@ class UserHelperTest extends TuleapTestCase {
         $this->assertEqual("user_name (realname)", $uh->getDisplayNameFromUserId(123));
     }
 
-    function itCachesUnknownNames() {
+    function itCachesUnknownNames()
+    {
         $name = "L'équipe de développement de PhpWiki";
 
         $dao = mock('UserDao');

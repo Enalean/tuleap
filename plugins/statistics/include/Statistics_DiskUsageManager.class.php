@@ -83,7 +83,8 @@ class Statistics_DiskUsageManager {
      *
      * @return Array
      */
-    public function getProjectServices($siteAdminView = true) {
+    public function getProjectServices($siteAdminView = true)
+    {
         if (count($this->_services) == 0) {
             $this->_services = array(self::SVN           => 'Subversion',
                                      self::CVS           => 'CVS',
@@ -109,7 +110,8 @@ class Statistics_DiskUsageManager {
      *
      * @return String
      */
-    public function getServiceColor($service) {
+    public function getServiceColor($service)
+    {
         switch($service) {
             case self::SVN:
                 return 'darkolivegreen';
@@ -146,7 +148,8 @@ class Statistics_DiskUsageManager {
         }
     }
 
-    public function getGeneralData($date) {
+    public function getGeneralData($date)
+    {
         $res = array();
         $dao  = $this->_getDao();
         if ($date) {
@@ -172,13 +175,15 @@ class Statistics_DiskUsageManager {
         }
         return $res;
     }
-    public function getLatestData() {
+    public function getLatestData()
+    {
         $dao  = $this->_getDao();
         $date = $dao->searchMostRecentDate();
         return  $this->getGeneralData($date);
     }
 
-    function getKeyFromGroupBy($row, $groupBy) {
+    function getKeyFromGroupBy($row, $groupBy)
+    {
         switch ($groupBy) {
             case 'DAY':
                 return $row['year'].'-'.$row['month'].'-'.$row['day'];
@@ -196,7 +201,8 @@ class Statistics_DiskUsageManager {
         }
     }
 
-    function getRangeDates($dar, $groupBy) {
+    function getRangeDates($dar, $groupBy)
+    {
         $dates = array();
         foreach ($dar as $row) {
             $dates[$this->getKeyFromGroupBy($row, $groupBy)] = 0;
@@ -204,7 +210,8 @@ class Statistics_DiskUsageManager {
         return $dates;
     }
 
-    public function getWeeklyEvolutionServiceData($services, $groupBy, $startDate, $endDate) {
+    public function getWeeklyEvolutionServiceData($services, $groupBy, $startDate, $endDate)
+    {
         $res     = array();
         $groupBy = strtoupper($groupBy);
         $dao     = $this->_getDao();
@@ -223,7 +230,8 @@ class Statistics_DiskUsageManager {
 
     }
 
-    public function getUsagePerProject($startDate, $endDate, $service, $order, $offset, $limit) {
+    public function getUsagePerProject($startDate, $endDate, $service, $order, $offset, $limit)
+    {
         $dao   = $this->_getDao();
         $dar   = $dao->getProjectContributionForService($startDate, $endDate, $service, $order, $offset, $limit);
         $nbPrj = $dao->foundRows();
@@ -239,7 +247,8 @@ class Statistics_DiskUsageManager {
      *
      * @return Array
      */
-    public function returnServiceEvolutionForPeriod($startDate, $endDate, $groupId=null) {
+    public function returnServiceEvolutionForPeriod($startDate, $endDate, $groupId=null)
+    {
         // Build final array based on services (ensure always same order)
         $values = array();
         foreach ($this->getProjectServices() as $k => $v) {
@@ -315,7 +324,8 @@ class Statistics_DiskUsageManager {
         return $res;
     }
 
-    public function returnTotalProjectSize($group_id){
+    public function returnTotalProjectSize($group_id)
+    {
         $dao            = $this->_getDao();
         $recentDate     = $dao->searchMostRecentDate();
         $dar            = $dao->searchServicesSizesPerProject($group_id, $recentDate);
@@ -355,7 +365,8 @@ class Statistics_DiskUsageManager {
         return $saved_usages;
     }
 
-    public function returnTotalSizeOfProjects($date) {
+    public function returnTotalSizeOfProjects($date)
+    {
         $dao            = $this->_getDao();
         $projects_sizes = array();
         $projects       = $dao->searchAllGroups();
@@ -368,7 +379,8 @@ class Statistics_DiskUsageManager {
         return $projects_sizes;
     }
 
-    public function returnTotalSizeOfProjectNearDate($group_id, $date) {
+    public function returnTotalSizeOfProjectNearDate($group_id, $date)
+    {
         $dao    = $this->_getDao();
         $result = array();
 
@@ -392,7 +404,8 @@ class Statistics_DiskUsageManager {
      *
      * @return array
      */
-    public function returnTotalServiceSizeByProject($group_id) {
+    public function returnTotalServiceSizeByProject($group_id)
+    {
         $dao               = $this->_getDao();
         $recentDate        = $dao->searchMostRecentDate();
         $size_per_services = $dao->searchSizePerService($recentDate, $group_id);
@@ -406,12 +419,14 @@ class Statistics_DiskUsageManager {
         );
     }
 
-    public function getTopUsers($endDate, $order) {
+    public function getTopUsers($endDate, $order)
+    {
         $dao = $this->_getDao();
         return $dao->searchTopUsers($endDate, $order);
     }
 
-    public function getWeeklyEvolutionProjectTotalSize($groupId,$groupBy, $startDate, $endDate){
+    public function getWeeklyEvolutionProjectTotalSize($groupId,$groupBy, $startDate, $endDate)
+    {
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
         $dar = $dao->searchSizePerProjectForPeriod($groupId, $groupBy, $startDate, $endDate);
@@ -425,7 +440,8 @@ class Statistics_DiskUsageManager {
 
     }
 
-    public function getWeeklyEvolutionUserData($userId,$groupBy, $startDate, $endDate){
+    public function getWeeklyEvolutionUserData($userId,$groupBy, $startDate, $endDate)
+    {
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
         $dar = $dao->searchSizePerUserForPeriod($userId, $groupBy, $startDate, $endDate);
@@ -439,7 +455,8 @@ class Statistics_DiskUsageManager {
 
     }
 
-    public function getWeeklyEvolutionProjectData($services, $groupId,$groupBy, $startDate, $endDate){
+    public function getWeeklyEvolutionProjectData($services, $groupId,$groupBy, $startDate, $endDate)
+    {
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
         $dar = $dao->searchSizePerServiceForPeriod($services, $groupBy, $startDate, $endDate, $groupId);
@@ -457,7 +474,8 @@ class Statistics_DiskUsageManager {
 
     }
 
-    public function getDirSize($dir) {
+    public function getDirSize($dir)
+    {
         if (is_dir($dir)) {
             $output = array();
             exec("nice -n 19 du -s --block-size=1 $dir", $output, $returnValue);
@@ -487,7 +505,8 @@ class Statistics_DiskUsageManager {
         $time_to_collect[$service] += $time;
     }
 
-    public function storeForUser($userId, $service, $path) {
+    public function storeForUser($userId, $service, $path)
+    {
         $size = $this->getDirSize($path.'/');
         if ($size) {
             $dao = $this->_getDao();
@@ -495,7 +514,8 @@ class Statistics_DiskUsageManager {
         }
     }
 
-    public function storeForSite($service, $path) {
+    public function storeForSite($service, $path)
+    {
         $size = $this->getDirSize($path.'/');
         if ($size) {
             $dao = $this->_getDao();
@@ -506,7 +526,8 @@ class Statistics_DiskUsageManager {
     /**
      * @return array
      */
-    public function collectAll() {
+    public function collectAll()
+    {
         $time_to_collect = $this->collectProjects();
         $this->collectUsers();
         $this->collectSite();
@@ -517,7 +538,8 @@ class Statistics_DiskUsageManager {
     /**
      * 'SVN', 'CVS', 'FRS', 'FTP', 'HOME', 'WIKI', 'MAILMAN', 'DOCMAN', 'FORUMML', 'WEBDAV',
      */
-    public function collectProjects() {
+    public function collectProjects()
+    {
         $time_to_collect = array(
             Service::SVN => 0,
             Service::CVS => 0,
@@ -645,7 +667,8 @@ class Statistics_DiskUsageManager {
         $time_to_collect[self::MAILMAN] += $time;
     }
 
-    public function collectUsers() {
+    public function collectUsers()
+    {
         if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $dao = $this->_getDao();
             $dao->startTransaction();
@@ -661,7 +684,8 @@ class Statistics_DiskUsageManager {
     }
 
     // dfMYSQL, LOG, backup
-    public function collectSite() {
+    public function collectSite()
+    {
         $this->_getDao()->startTransaction();
         $this->storeForSite('mysql', '/var/lib/mysql');
         $this->storeForSite('codendi_log', '/var/log/codendi');
@@ -672,7 +696,8 @@ class Statistics_DiskUsageManager {
 
     }
 
-    public function storeDf() {
+    public function storeDf()
+    {
         $output      = array();
         $returnValue = -1;
         exec("nice -n 19 df --sync -k --portability --block-size=1", $output, $returnValue);
@@ -693,7 +718,8 @@ class Statistics_DiskUsageManager {
         }
     }
 
-    public function _getDao() {
+    public function _getDao()
+    {
         return $this->dao;
     }
 
@@ -704,7 +730,8 @@ class Statistics_DiskUsageManager {
      *
      * @return String
      */
-    public function getProperty($name) {
+    public function getProperty($name)
+    {
         $pluginManager = PluginManager::instance();
         $p = $pluginManager->getPluginByName('statistics');
         $info =$p->getPluginInfo();

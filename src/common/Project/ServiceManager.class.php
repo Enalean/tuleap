@@ -63,7 +63,8 @@ class ServiceManager {
      * ServiceManager is a singleton
      * @return ServiceManager
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$instance)) {
             $c = self::class;
             self::$instance = new $c(new ServiceDao(), ProjectManager::instance());
@@ -76,21 +77,24 @@ class ServiceManager {
      *
      * @param ServiceManager $service_manager
      */
-    public function setInstance(ServiceManager $service_manager) {
+    public function setInstance(ServiceManager $service_manager)
+    {
         self::$instance = $service_manager;
     }
 
     /**
      * Only for testing purpose
      */
-    public function clearInstance() {
+    public function clearInstance()
+    {
         self::$instance = null;
     }
 
     /**
      * @return Service[]
      */
-    public function getListOfAllowedServicesForProject(Project $project) {
+    public function getListOfAllowedServicesForProject(Project $project)
+    {
         if (! isset($this->list_of_services_per_project[$project->getID()])) {
             $this->list_of_services_per_project[$project->getID()] = array();
             $allowed_services_dar = $this->dao->searchByProjectIdAndShortNames(
@@ -114,29 +118,33 @@ class ServiceManager {
         return $this->list_of_services_per_project[$project->getID()];
     }
 
-    private function getListOfPluginBasedServices(Project $project) {
+    private function getListOfPluginBasedServices(Project $project)
+    {
         $services = array();
         EventManager::instance()->processEvent(Event::SERVICES_ALLOWED_FOR_PROJECT, array('project' => $project, 'services' => &$services));
         return $services;
     }
 
-    public function isServiceAllowedForProject(Project $project, $service_id) {
+    public function isServiceAllowedForProject(Project $project, $service_id)
+    {
         $list_of_allowed_services = $this->getListOfAllowedServicesForProject($project);
 
         return isset($list_of_allowed_services[$service_id]);
     }
 
-    public function isServiceAvailableAtSiteLevelByShortName($name) {
+    public function isServiceAvailableAtSiteLevelByShortName($name)
+    {
         return $this->dao->isServiceAvailableAtSiteLevelByShortName($name);
     }
 
-    private function isServiceActiveInProject ($project, $name)
+    private function isServiceActiveInProject($project, $name)
     {
         $project_id = $project->getId();
         return $this->dao->isServiceActiveInProjectByShortName($project_id, $name);
     }
 
-    public function toggleServiceUsage(Project $project, $short_name, $is_used) {
+    public function toggleServiceUsage(Project $project, $short_name, $is_used)
+    {
         if ($this->isServiceAvailableAtSiteLevelByShortName($short_name) || $this->isServiceActiveInProject($project, $short_name)) {
             if ($this->doesServiceUsageChange($project, $short_name, $is_used)) {
                 $this->updateServiceUsage($project, $short_name, $is_used);
@@ -144,7 +152,8 @@ class ServiceManager {
         }
     }
 
-    private function updateServiceUsage(Project $project, $short_name, $is_used) {
+    private function updateServiceUsage(Project $project, $short_name, $is_used)
+    {
         $this->dao->updateServiceUsageByShortName($project->getID(), $short_name, $is_used);
         ProjectManager::instance()->clearProjectFromCache($project->getID());
 

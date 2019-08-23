@@ -13,11 +13,13 @@
   *  -id_destination is the id of the folder (in codendi doc manager)
   */
 
-function getChunk($filePath, $offset, $size) {
+function getChunk($filePath, $offset, $size)
+{
     return base64_encode(file_get_contents($filePath, null, null, $offset * $size, $size));
 }
 
-function uploadAllowed($name) {
+function uploadAllowed($name)
+{
     $allowed = true;
     // Don't upload hidden files
     if ($name[0] == '.') {

@@ -64,7 +64,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class openidconnectclientPlugin extends Plugin
 {
-    public function __construct($id) {
+    public function __construct($id)
+    {
         parent::__construct($id);
         bindtextdomain('tuleap-openidconnectclient', __DIR__ . '/../site-content');
 
@@ -99,19 +100,22 @@ class openidconnectclientPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function anonymous_access_to_script_allowed($params) {
+    public function anonymous_access_to_script_allowed($params)
+    {
         if (strpos($params['script_name'], $this->getPluginPath()) === 0) {
             $params['anonymous_allowed'] = true;
         }
     }
 
-    public function javascript_file($params) {
+    public function javascript_file($params)
+    {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/open-id-connect-client.js"></script>';
         }
     }
 
-    public function cssfile() {
+    public function cssfile()
+    {
         if (strpos($_SERVER['REQUEST_URI'], '/account') === 0 || strpos($_SERVER['REQUEST_URI'], '/plugins/openidconnectclient') === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
         }
@@ -241,11 +245,13 @@ class openidconnectclientPlugin extends Plugin
     /**
      * @return bool
      */
-    private function canPluginAuthenticateUser() {
+    private function canPluginAuthenticateUser()
+    {
         return ForgeConfig::get('sys_auth_type') !== 'ldap';
     }
 
-    public function login_additional_connector(array $params) {
+    public function login_additional_connector(array $params)
+    {
         if(! $this->canPluginAuthenticateUser()) {
             return;
         }
@@ -270,7 +276,8 @@ class openidconnectclientPlugin extends Plugin
         $params['additional_connector'] .= $renderer->renderToString('login_connector', $login_connector_presenter);
     }
 
-    public function before_register(array $params) {
+    public function before_register(array $params)
+    {
         $request = $params['request'];
         $link_id = $request->get('openidconnect_link_id');
 
@@ -298,11 +305,13 @@ class openidconnectclientPlugin extends Plugin
     /**
      * @return bool
      */
-    private function isUserRegistrationWithOpenIDConnectPossible($is_registration_confirmation, $link_id) {
+    private function isUserRegistrationWithOpenIDConnectPossible($is_registration_confirmation, $link_id)
+    {
         return ! $is_registration_confirmation && $link_id && $this->canPluginAuthenticateUser();
     }
 
-    public function user_register_additional_field(array $params) {
+    public function user_register_additional_field(array $params)
+    {
         $request = $params['request'];
         $link_id = $request->get('openidconnect_link_id');
 
@@ -313,7 +322,8 @@ class openidconnectclientPlugin extends Plugin
         }
     }
 
-    public function after_user_registration(array $params) {
+    public function after_user_registration(array $params)
+    {
         $request = $params['request'];
         $link_id = $request->get('openidconnect_link_id');
 
@@ -333,7 +343,8 @@ class openidconnectclientPlugin extends Plugin
         }
     }
 
-    public function manage_third_party_apps(array $params) {
+    public function manage_third_party_apps(array $params)
+    {
         $user                 = $params['user'];
         $user_mapping_manager = new UserMappingManager(new UserMappingDao());
         $user_mappings_usage  = $user_mapping_manager->getUsageByUser($user);

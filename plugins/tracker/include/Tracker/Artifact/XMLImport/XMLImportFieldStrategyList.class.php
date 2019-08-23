@@ -80,7 +80,8 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
         return $data;
     }
 
-    private function getStaticListDataValue(Tracker_FormElement_Field $field, $value) {
+    private function getStaticListDataValue(Tracker_FormElement_Field $field, $value)
+    {
         if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID){
             return $this->xml_fields_mapping->getNewValueId((int) $value);
         }
@@ -91,7 +92,8 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
 
     }
 
-    private function getUgroupListDataValue($value) {
+    private function getUgroupListDataValue($value)
+    {
         if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID){
             return $this->xml_fields_mapping->getNewValueId((int) $value);
         }

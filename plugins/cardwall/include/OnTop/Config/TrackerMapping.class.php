@@ -31,7 +31,8 @@ abstract class Cardwall_OnTop_Config_TrackerMapping {
      */
     private $available_fields;
 
-    public function __construct(Tracker $tracker, array $available_fields) {
+    public function __construct(Tracker $tracker, array $available_fields)
+    {
         $this->tracker          = $tracker;
         $this->available_fields = $available_fields;
     }
@@ -39,11 +40,13 @@ abstract class Cardwall_OnTop_Config_TrackerMapping {
     /**
      * @return Tracker
      */
-    public function getTracker() {
+    public function getTracker()
+    {
         return $this->tracker;
     }
 
-    public function getAvailableFields() {
+    public function getAvailableFields()
+    {
         return $this->available_fields;
     }
 
@@ -55,7 +58,8 @@ abstract class Cardwall_OnTop_Config_TrackerMapping {
      *
      * @return bool
      */
-    public function isMappedTo(Cardwall_Column $column, $artifact_status) {
+    public function isMappedTo(Cardwall_Column $column, $artifact_status)
+    {
         foreach ($this->getValueMappings() as $value_mapping) {
             if ($value_mapping->matchStatusLabel($artifact_status)) {
                 return $value_mapping->getColumnId() == $column->getId();
@@ -79,7 +83,8 @@ abstract class Cardwall_OnTop_Config_TrackerMapping {
      */
     public abstract function accept($visitor);
 
-    public function isCustom() {
+    public function isCustom()
+    {
         return false;
     }
 

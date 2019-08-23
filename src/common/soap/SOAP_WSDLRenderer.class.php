@@ -28,7 +28,8 @@ class SOAP_WSDLRenderer {
      *
      * @param string $wsdl_uri https://example.com/plugins/statistics/soap/?wsdl
      */
-    public function render($wsdl_uri) {
+    public function render($wsdl_uri)
+    {
         $xml_security = new XML_Security();
         $xml_security->enableExternalLoadOfEntities();
 
@@ -45,11 +46,13 @@ class SOAP_WSDLRenderer {
         $xml_security->disableExternalLoadOfEntities();
     }
 
-    private function getWSDL($wsdl_uri) {
+    private function getWSDL($wsdl_uri)
+    {
         return file_get_contents($wsdl_uri, false, stream_context_create($this->getHTTPContext()));
     }
 
-    private function getHTTPContext() {
+    private function getHTTPContext()
+    {
         if (ForgeConfig::get('sys_use_unsecure_ssl_certificate', false)) {
             return array(
                 'ssl' => array(

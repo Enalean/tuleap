@@ -57,7 +57,8 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $this->token                          = $token;
         $this->ugroups_to_be_notified_builder = $ugroups_to_be_notified_builder;
     }
-    function getContent($params = []) {
+    function getContent($params = [])
+    {
         $content = '<dl><fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications') .'</legend>';
         $content .= '<dd>';
         $content .= '<form action="" method="POST">';
@@ -116,25 +117,32 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         return $content;
     }
 
-    function visitEmpty(&$item, $params) {
+    function visitEmpty(&$item, $params)
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitWiki(&$item, $params) {
+    function visitWiki(&$item, $params)
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitLink(&$item, $params) {
+    function visitLink(&$item, $params)
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitEmbeddedFile(&$item, $params) {
+    function visitEmbeddedFile(&$item, $params)
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitFile(&$item, $params) {
+    function visitFile(&$item, $params)
+    {
         return $this->visitDocument($item, $params);
     }
-    function visitDocument(&$item, $params) {
+    function visitDocument(&$item, $params)
+    {
         return '';
     }
-    function visitFolder(&$item, $params) {
+    function visitFolder(&$item, $params)
+    {
         $content = '<blockquote>';
         $checked  = !$params['user']->isAnonymous() && $this->notificationsManager->userExists($params['user']->getId(), $this->item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE) ? 'checked="checked"' : '';
         $disabled = $params['user']->isAnonymous() ? 'disabled="disabled"' : '';

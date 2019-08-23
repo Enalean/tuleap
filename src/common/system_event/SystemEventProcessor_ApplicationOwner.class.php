@@ -25,11 +25,13 @@ require_once 'SystemEventProcessor.class.php';
 
 class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor {
 
-    public function getOwner() {
+    public function getOwner()
+    {
         return SystemEvent::OWNER_APP;
     }
 
-    protected function postEventsActions(array $executed_events_ids, $queue_name) {
+    protected function postEventsActions(array $executed_events_ids, $queue_name)
+    {
         $this->ensureWorkersAreRunning();
         $params = array(
             'executed_events_ids'  => $executed_events_ids,
@@ -61,7 +63,8 @@ class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor {
         return 0;
     }
 
-    public function getProcessOwner() {
+    public function getProcessOwner()
+    {
         return ForgeConfig::get('sys_http_user');
     }
 }

@@ -21,15 +21,18 @@
 
 class b201505302300_remove_twitter_widgets extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Remove all Twitter widgets';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = 'DELETE FROM layouts_contents WHERE name = "mytwitterfollow" OR name = "projecttwitterfollow"';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

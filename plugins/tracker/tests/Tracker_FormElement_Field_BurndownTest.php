@@ -22,7 +22,8 @@ require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_Burndown_RequestProcessingTest extends TuleapTestCase
 {
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -35,12 +36,14 @@ class Tracker_FormElement_Field_Burndown_RequestProcessingTest extends TuleapTes
         $this->field->setTracker($tracker);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
         Tracker_ArtifactFactory::clearInstance();
     }
 
-    public function itShouldRenderGraphWhenShowBurndownFuncIsCalled() {
+    public function itShouldRenderGraphWhenShowBurndownFuncIsCalled()
+    {
         $artifact_id = 999;
 
         $request = new Codendi_Request(array('formElement' => 1234,
@@ -56,7 +59,8 @@ class Tracker_FormElement_Field_Burndown_RequestProcessingTest extends TuleapTes
         $this->field->process($this->tracker_manager, $request, $this->current_user);
     }
 
-    public function itMustNotBuildBurndownWhensrc_aidIsNotValid() {
+    public function itMustNotBuildBurndownWhensrc_aidIsNotValid()
+    {
         $request = new Codendi_Request(array('formElement' => 1234,
                                              'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
                                              'src_aid'     => '; DROP DATABASE mouuahahahaha!'));
@@ -69,7 +73,8 @@ class Tracker_FormElement_Field_Burndown_RequestProcessingTest extends TuleapTes
         $this->field->process($this->tracker_manager, $request, $this->current_user);
     }
 
-    public function itMustNotBuildBurndownWhenArtifactDoesNotExist() {
+    public function itMustNotBuildBurndownWhenArtifactDoesNotExist()
+    {
         $request = new Codendi_Request(array('formElement' => 1234,
                                              'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
                                              'src_aid'     => 999));

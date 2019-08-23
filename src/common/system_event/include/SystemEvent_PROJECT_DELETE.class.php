@@ -49,7 +49,8 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
      *
      * @return string
      */
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         $txt = '';
         $txt .= 'project: '. $this->verbalizeProjectId($this->getIdFromParam($this->parameters), $with_link);
         return $txt;
@@ -60,7 +61,8 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
      *
      * @return bool
      */
-    public function process() {
+    public function process()
+    {
         // Check parameters
         $groupId=$this->getIdFromParam($this->parameters);
 
@@ -167,7 +169,8 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
      *
      * @return bool
      */
-    protected function removeProjectMembers($project) {
+    protected function removeProjectMembers($project)
+    {
         $pm = $this->getProjectManager();
         return $pm->removeProjectMembers($project);
     }
@@ -180,7 +183,8 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
      *
      * @return bool
      */
-    protected function deleteMembershipRequestNotificationEntries($groupId) {
+    protected function deleteMembershipRequestNotificationEntries($groupId)
+    {
         $pm = $this->getProjectManager();
         return $pm->deleteMembershipRequestNotificationEntries($groupId);
     }
@@ -193,7 +197,8 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
      *
      * @return bool
      */
-    protected function cleanupProjectFRS($groupId) {
+    protected function cleanupProjectFRS($groupId)
+    {
         $frsff = $this->getFRSFileFactory();
         return $frsff->deleteProjectFRS($groupId, $this->getBackend('System'));
     }
@@ -205,7 +210,8 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
      *
      * @return ArtifactTypeFactory
      */
-    function getArtifactTypeFactory($project) {
+    function getArtifactTypeFactory($project)
+    {
         return new ArtifactTypeFactory($project);
     }
 
@@ -214,7 +220,8 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
      *
      * @return FRSFileFactory
      */
-    protected function getFRSFileFactory() {
+    protected function getFRSFileFactory()
+    {
         return new FRSFileFactory();
     }
 
@@ -225,7 +232,8 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
      *
      * @return WikiAttachment
      */
-    protected function getWikiAttachment($groupId) {
+    protected function getWikiAttachment($groupId)
+    {
         return new WikiAttachment($groupId);
     }
 
@@ -234,7 +242,8 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
      *
      * @return ProjectManager
      */
-    protected function getProjectManager() {
+    protected function getProjectManager()
+    {
         return ProjectManager::instance();
     }
 
@@ -245,7 +254,8 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
      *
      * @return bool
      */
-    protected function cleanupProjectUgroupsBinding($groupId) {
+    protected function cleanupProjectUgroupsBinding($groupId)
+    {
         $ugroupUserDao = new UGroupUserDao();
         $ugroupManager = new UGroupManager(new UGroupDao());
         $uGroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);

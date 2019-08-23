@@ -54,7 +54,8 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase {
     /** @var Tracker_FormElement_Field */
     private $field_details;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->artifact_xml        = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
                 . '<artifact>'
@@ -96,7 +97,8 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase {
             ->returns($this->field_details);
     }
 
-    public function itUpdatesTheSubmittedOnInformation() {
+    public function itUpdatesTheSubmittedOnInformation()
+    {
         $now = time();
 
         $this->updater->update($this->tracker, $this->artifact_xml, $this->submitted_values, $this->user, $now);
@@ -104,13 +106,15 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase {
         $this->assertEqual((string)$this->artifact_xml->changeset->submitted_on, date('c', $now));
     }
 
-    public function itUpdatesTheSubmittedByInformation() {
+    public function itUpdatesTheSubmittedByInformation()
+    {
         $this->updater->update($this->tracker, $this->artifact_xml, $this->submitted_values, $this->user, time());
 
         $this->assertEqual((int)$this->artifact_xml->changeset->submitted_by, $this->user->getId());
     }
 
-    public function itAsksToVisitorToUpdateSummary() {
+    public function itAsksToVisitorToUpdateSummary()
+    {
         expect($this->visitor)->update(
             $this->artifact_xml->changeset->field_change[0],
             $this->field_summary,
@@ -120,7 +124,8 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase {
         $this->updater->update($this->tracker, $this->artifact_xml, $this->submitted_values, $this->user, time());
     }
 
-    public function itAsksToVisitorToUpdateEffort() {
+    public function itAsksToVisitorToUpdateEffort()
+    {
         expect($this->visitor)->update(
             $this->artifact_xml->changeset->field_change[1],
             $this->field_effort,
@@ -130,7 +135,8 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase {
         $this->updater->update($this->tracker, $this->artifact_xml, $this->submitted_values, $this->user, time());
     }
 
-    public function itDoesNotUpdateFieldIfTheyAreNotSubmitted() {
+    public function itDoesNotUpdateFieldIfTheyAreNotSubmitted()
+    {
         expect($this->visitor)->update()->count(2);
 
         $this->updater->update($this->tracker, $this->artifact_xml, $this->submitted_values, $this->user, time());

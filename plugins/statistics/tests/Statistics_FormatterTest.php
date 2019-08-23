@@ -22,7 +22,8 @@ require_once __DIR__ . '/bootstrap.php';
 
 class Statistics_FormatterTest extends TuleapTestCase {
 
-    public function itExportsCsv() {
+    public function itExportsCsv()
+    {
         $data_line            = array('Data1,', 'Data 2', 'Data 3', 'Data 4', 'Data5');
         $statistics_formatter = new Statistics_Formatter('', '', ',', ',');
         $statistics_formatter->addHeader('Title');
@@ -37,7 +38,8 @@ Title
 ');
     }
 
-    public function itClearsContent() {
+    public function itClearsContent()
+    {
         $data_line            = array('Data', 'Data', 'Data');
         $statistics_formatter = new Statistics_Formatter('', '', ',');
         $statistics_formatter->addHeader('Title');
@@ -47,7 +49,8 @@ Title
         $this->assertEqual($statistics_formatter->getCsvContent(), '');
     }
 
-    public function itExportsMultipleTimes() {
+    public function itExportsMultipleTimes()
+    {
         $data_line            = array('Data', 'Data', 'Data');
         $statistics_formatter = new Statistics_Formatter('', '', ',');
         $statistics_formatter->addLine($data_line);

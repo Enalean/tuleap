@@ -31,7 +31,8 @@ class SvnNotificationDao extends DataAccessObject {
      *
      * @return bool
      */
-    function setSvnMailingList($groupId, $mailingList, $path) {
+    function setSvnMailingList($groupId, $mailingList, $path)
+    {
         $sql = ' REPLACE INTO svn_notification
                          ( group_id, svn_events_mailing_list, path)
                  VALUES (
@@ -51,7 +52,8 @@ class SvnNotificationDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function getSvnMailingList($groupId, $path = null) {
+    function getSvnMailingList($groupId, $path = null)
+    {
         $condition = '';
         if (!empty($path)) {
             $condition = 'AND path = '.$this->da->quoteSmart($path);
@@ -71,7 +73,8 @@ class SvnNotificationDao extends DataAccessObject {
      *
      * @return bool
      */
-    function deleteSvnMailingList($groupId, $path) {
+    function deleteSvnMailingList($groupId, $path)
+    {
         $sql = 'DELETE FROM svn_notification
                 WHERE path='.$this->da->quoteSmart($path).'
                 AND group_id='.$this->da->escapeInt($groupId);

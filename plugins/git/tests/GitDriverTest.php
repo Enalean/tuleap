@@ -29,7 +29,8 @@ class GitDriverTest extends TuleapTestCase {
     private $destinationPath;
     private $sourcePath;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->curDir = getcwd();
         $this->fixturesPath = dirname(__FILE__).'/_fixtures';
@@ -41,18 +42,21 @@ class GitDriverTest extends TuleapTestCase {
         @exec('GIT_DIR='.$this->sourcePath.' git --bare init --shared=group');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         chdir($this->curDir);
         parent::tearDown();
     }
 
-    public function itExtractsTheGitVersion() {
+    public function itExtractsTheGitVersion()
+    {
         $git_driver = partial_mock('GitDriver', array('execGitAction'));
         stub($git_driver)->execGitAction('git --version', 'version')->returns('git version 1.8.1.2');
         $this->assertEqual($git_driver->getGitVersion(), "1.8.1.2");
     }
 
-    public function testInitBareRepo() {
+    public function testInitBareRepo()
+    {
         $path = $this->getTmpDir();
         chdir($path);
 
@@ -62,7 +66,8 @@ class GitDriverTest extends TuleapTestCase {
         $this->assertEqual(file_get_contents($path.'/description'), 'Default description for this project'.PHP_EOL);
     }
 
-    public function testInitStdRepo() {
+    public function testInitStdRepo()
+    {
         $path = $this->getTmpDir();
         chdir($path);
 
@@ -71,7 +76,8 @@ class GitDriverTest extends TuleapTestCase {
         $this->assertTrue(file_exists($path.'/.git/HEAD'));
     }
 
-    public function testForkRepo() {
+    public function testForkRepo()
+    {
         $srcPath = $this->getTmpDir() . '/tmp/repo.git';
         $dstPath = $this->getTmpDir() . '/tmp/fork.git';
 
@@ -85,14 +91,16 @@ class GitDriverTest extends TuleapTestCase {
         $this->assertEqual(file_get_contents($dstPath.'/description'), 'Default description for this project'.PHP_EOL);
     }
 
-    public function testCloneAtSpecifiqBranch() {
+    public function testCloneAtSpecifiqBranch()
+    {
         $driver = new GitDriver();
         $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destinationPath, "master");
 
         $this->assertTrue(file_exists($this->destinationPath));
     }
 
-    public function testAdd() {
+    public function testAdd()
+    {
         $driver = new GitDriver();
         $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destinationPath, "master");
 
@@ -102,7 +110,8 @@ class GitDriverTest extends TuleapTestCase {
         $this->assertEqual(implode($out), 'A  toto');
     }
 
-    public function testGetInformationsFile() {
+    public function testGetInformationsFile()
+    {
         $driver = new GitDriver();
         $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destinationPath, "master");
 
@@ -113,7 +122,8 @@ class GitDriverTest extends TuleapTestCase {
         $this->assertEqual(strlen($sha1[1]), 40);
     }
 
-    public function testCommit() {
+    public function testCommit()
+    {
             $driver = new GitDriver();
             $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destinationPath, "master");
 
@@ -126,14 +136,16 @@ class GitDriverTest extends TuleapTestCase {
             $this->assertEqual(implode($out), '');
     }
 
-    public function testRmREpo() {
+    public function testRmREpo()
+    {
         $driver = new GitDriver();
         $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destinationPath, "master");
         $driver->removeRepository($this->destinationPath);
         $this->assertTrue(!file_exists($this->destinationPath));
     }
 
-    public function testMergeAndPush() {
+    public function testMergeAndPush()
+    {
             $destinationPath2 = "/var/tmp/".uniqid();
             mkdir($destinationPath2, 0770, true);
             $destinationPath3 = "/var/tmp/".uniqid();
@@ -163,7 +175,8 @@ class GitDriverTest extends TuleapTestCase {
             @exec('/bin/rm -rdf '.$destinationPath3);
     }
 
-    public function testSetRepositoryAccessPublic() {
+    public function testSetRepositoryAccessPublic()
+    {
         $srcPath = $this->getTmpDir().'/tmp/repo.git';
 
         mkdir($srcPath, 0770, true);
@@ -178,7 +191,8 @@ class GitDriverTest extends TuleapTestCase {
         $this->assertEqual(base_convert($stat['mode'], 10, 8), 42775);
     }
 
-    public function testSetRepositoryAccessPrivate() {
+    public function testSetRepositoryAccessPrivate()
+    {
         $srcPath = $this->getTmpDir().'/tmp/repo.git';
 
         mkdir($srcPath, 0770, true);
@@ -193,7 +207,8 @@ class GitDriverTest extends TuleapTestCase {
         $this->assertEqual(base_convert($stat['mode'], 10, 8), 42770);
     }
 
-    public function testForkRepoUnixPermissions() {
+    public function testForkRepoUnixPermissions()
+    {
         $srcPath = $this->getTmpDir().'/tmp/repo.git';
         $dstPath = $this->getTmpDir().'/tmp/fork.git';
 
@@ -216,7 +231,8 @@ class GitDriverTest extends TuleapTestCase {
         $this->assertEqual(base_convert($stat['mode'], 10, 8), 42775, '/refs/heads must have setgid bit');
     }
 
-    public function testActivateHook() {
+    public function testActivateHook()
+    {
         mkdir($this->getTmpDir().'/hooks', 0770, true);
         copy($this->fixturesPath.'/hooks/post-receive', $this->getTmpDir().'/hooks/blah');
 
@@ -226,7 +242,8 @@ class GitDriverTest extends TuleapTestCase {
         $this->assertEqual(substr(sprintf('%o', fileperms($this->getTmpDir().'/hooks/blah')), -4), '0755');
     }
 
-    public function testSetConfigSimple() {
+    public function testSetConfigSimple()
+    {
         copy($this->fixturesPath.'/config', $this->getTmpDir().'/config');
 
         $driver = new GitDriver();
@@ -236,7 +253,8 @@ class GitDriverTest extends TuleapTestCase {
         $this->assertEqual($config['hooks']['showrev'], 'abcd');
     }
 
-    public function testSetConfigComplex() {
+    public function testSetConfigComplex()
+    {
         copy($this->fixturesPath.'/config', $this->getTmpDir().'/config');
 
         $val = "t=%s; git log --name-status --pretty='format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=git.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t~1..\$t";
@@ -248,7 +266,8 @@ class GitDriverTest extends TuleapTestCase {
         $this->assertEqual($config['hooks']['showrev'], 't=%s; git log --name-status --pretty=\'format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=git.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b\' $t~1..$t');
     }
 
-    public function testSetConfigWithSpace() {
+    public function testSetConfigWithSpace()
+    {
         copy($this->fixturesPath.'/config', $this->getTmpDir().'/config');
 
         $driver = new GitDriver();
@@ -258,7 +277,8 @@ class GitDriverTest extends TuleapTestCase {
         $this->assertEqual($config['hooks']['showrev'], '[MyVal] ');
     }
 
-    public function testSetEmptyConfig() {
+    public function testSetEmptyConfig()
+    {
         copy($this->fixturesPath.'/config', $this->getTmpDir().'/config');
 
         $driver = new GitDriver();

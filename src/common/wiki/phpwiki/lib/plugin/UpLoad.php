@@ -42,15 +42,18 @@ extends WikiPlugin
     // TODO: use PagePerms instead
     var $only_authenticated = false; // allow only authenticated users may upload.
 
-    function getName () {
+    function getName()
+    {
         return "UpLoad";
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("Upload files to the local InterWiki Upload:<filename>");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('logfile'  => false,
                  // add a link of the fresh file automatically to the
                  // end of the page (or current page)
@@ -59,7 +62,8 @@ extends WikiPlugin
                  );
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $this->disallowed_extensions = explode("\n",
         "ad[ep]
 asd
@@ -248,7 +252,8 @@ ws[cfh]");
         return $result;
     }
 
-    function log ($userfile, $upload_log, &$message) {
+    function log($userfile, $upload_log, &$message)
+    {
         global $WikiTheme;
         $user = $GLOBALS['request']->_user;
         if (!is_writable($upload_log)) {

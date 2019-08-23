@@ -51,7 +51,8 @@ class Project_OneStepCreation_OneStepCreationRouter {
         $this->trove_cat_factory                    = $trove_cat_factory;
     }
 
-    public function route(Codendi_Request $request) {
+    public function route(Codendi_Request $request)
+    {
         $csrf_token = new CSRFSynchronizerToken('/project/register.php');
         $controller = new Project_OneStepCreation_OneStepCreationController(
             $request,

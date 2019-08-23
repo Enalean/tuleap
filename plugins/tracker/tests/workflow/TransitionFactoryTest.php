@@ -29,7 +29,8 @@ class TransitionFactory_BaseTest extends TuleapTestCase {
     /** @var Workflow_Transition_ConditionFactory */
     protected $condition_factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         $this->condition_factory  = \Mockery::spy(\Workflow_Transition_ConditionFactory::class);
@@ -50,7 +51,8 @@ class TransitionFactory_isFieldUsedInTransitionsTest extends TransitionFactory_B
     private $a_field_used_in_post_actions;
     private $a_field_used_in_conditions;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         $this->a_field_not_used_in_transitions = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
@@ -71,22 +73,26 @@ class TransitionFactory_isFieldUsedInTransitionsTest extends TransitionFactory_B
         stub($this->condition_factory)->isFieldUsedInConditions($this->a_field_used_in_conditions)->returns(true);
     }
 
-    public function itReturnsTrueIfFieldIsUsedInPostActions() {
+    public function itReturnsTrueIfFieldIsUsedInPostActions()
+    {
         $this->assertTrue($this->factory->isFieldUsedInTransitions($this->a_field_used_in_post_actions));
     }
 
-    public function itReturnsTrueIfFieldIsUsedInConditions() {
+    public function itReturnsTrueIfFieldIsUsedInConditions()
+    {
         $this->assertTrue($this->factory->isFieldUsedInTransitions($this->a_field_used_in_conditions));
     }
 
-    public function itReturnsFalseIsNiotUsedInTransitions() {
+    public function itReturnsFalseIsNiotUsedInTransitions()
+    {
         $this->assertFalse($this->factory->isFieldUsedInTransitions($this->a_field_not_used_in_transitions));
     }
 }
 
 class TransitionFactory_duplicateTest extends TransitionFactory_BaseTest {
 
-    public function testDuplicate() {
+    public function testDuplicate()
+    {
         $field_value_new = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
         $field_value_new->shouldReceive('getId')->andReturns(2066);
         $field_value_analyzed = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);

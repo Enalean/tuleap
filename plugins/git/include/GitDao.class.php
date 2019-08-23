@@ -54,7 +54,8 @@ class GitDao extends \Tuleap\DB\DataAccessObject
     public const NOT_DELETED_DATE = '0000-00-00 00:00:00';
     public const ORDER_BY_PATH    = 'path';
 
-    public function exists($id) {
+    public function exists($id)
+    {
         if ( empty($id) ) {
             return false;
         }
@@ -77,7 +78,8 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         return true;
     }
 
-    public function save(GitRepository $repository) {
+    public function save(GitRepository $repository)
+    {
         $id          = (int)$repository->getId();
 
         $name        = $repository->getName();
@@ -151,7 +153,8 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         return $this->getDB()->lastInsertId();
     }
 
-    public function delete(GitRepository $repository) {
+    public function delete(GitRepository $repository)
+    {
         $id        = $repository->getId();
         $projectId = $repository->getProjectId();
         if ( empty($id) || empty($projectId) ) {
@@ -304,7 +307,8 @@ class GitDao extends \Tuleap\DB\DataAccessObject
      * @param GitRepository $repository
      * @return <type>
      */
-    public function getProjectRepository($repository) {
+    public function getProjectRepository($repository)
+    {
         $projectId      = $repository->getProjectId();
         $repositoryPath = $repository->getPathWithoutLazyLoading();
         if ( empty($projectId) || empty($repositoryPath)  )  {
@@ -380,7 +384,8 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         return true;
     }
 
-    public function getProjectRepositoryById($repository) {
+    public function getProjectRepositoryById($repository)
+    {
         $id = (int)$repository->getId();
         if ( empty($id) ) {
             return false;
@@ -435,7 +440,8 @@ class GitDao extends \Tuleap\DB\DataAccessObject
      * @param GitRepository $repository
      * @param type $result
      */
-    public function hydrateRepositoryObject(GitRepository $repository, $result) {
+    public function hydrateRepositoryObject(GitRepository $repository, $result)
+    {
         $repository->setName($result[self::REPOSITORY_NAME]);
         $repository->setPath($result[self::REPOSITORY_PATH]);
         $repository->setId($result[self::REPOSITORY_ID]);
@@ -556,7 +562,8 @@ class GitDao extends \Tuleap\DB\DataAccessObject
     /**
      * @return bool
      */
-    public function setGerritProjectAsDeleted($repository_id) {
+    public function setGerritProjectAsDeleted($repository_id)
+    {
         $sql = 'UPDATE plugin_git
                 SET remote_project_deleted_date = UNIX_TIMESTAMP(), remote_server_migration_status = NULL
                 WHERE repository_id = ?';
@@ -667,7 +674,8 @@ class GitDao extends \Tuleap\DB\DataAccessObject
      * @param Int $project_id
      * @param Int $retention_period
      */
-    public function getDeletedRepositoriesByProjectId($project_id, $retention_period) {
+    public function getDeletedRepositoriesByProjectId($project_id, $retention_period)
+    {
         $query = 'SELECT * '.
                  ' FROM plugin_git'.
                  ' WHERE repository_deletion_date != "0000-00-00 00:00:00"'.

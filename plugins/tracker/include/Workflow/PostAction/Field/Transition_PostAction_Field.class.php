@@ -35,7 +35,8 @@ abstract class Transition_PostAction_Field extends Transition_PostAction {
      * @param int $id Id of the post action
      * @param Tracker_FormElement_Field    $field      The field the post action should modify
      */
-    public function __construct(Transition $transition, $id, $field) {
+    public function __construct(Transition $transition, $id, $field)
+    {
         parent::__construct($transition, $id);
         $this->field = $field;
     }
@@ -43,7 +44,8 @@ abstract class Transition_PostAction_Field extends Transition_PostAction {
     /**
      * @see Transition_PostAction
      */
-    public function getCssClasses() {
+    public function getCssClasses()
+    {
         return 'workflow_action_field '.parent::getCssClasses();
     }
 
@@ -52,7 +54,8 @@ abstract class Transition_PostAction_Field extends Transition_PostAction {
      *
      * @return Tracker_FormElement_Field
      */
-    public function getField() {
+    public function getField()
+    {
         return $this->field;
     }
 
@@ -61,7 +64,8 @@ abstract class Transition_PostAction_Field extends Transition_PostAction {
      *
      * @return int
      */
-    public function getFieldId() {
+    public function getFieldId()
+    {
         if ($this->field) {
             return $this->field->getId();
         } else {
@@ -76,7 +80,8 @@ abstract class Transition_PostAction_Field extends Transition_PostAction {
      *
      * @return bool
      */
-    public function bypassPermissions(Tracker_FormElement_Field $field) {
+    public function bypassPermissions(Tracker_FormElement_Field $field)
+    {
         return $this->getFieldId() == $field->getId() && $this->bypass_permissions;
     }
 
@@ -87,7 +92,8 @@ abstract class Transition_PostAction_Field extends Transition_PostAction {
      *
      * @return int, a field id
      */
-    public function getFieldIdOfPostActionToUpdate($request_field_id) {
+    public function getFieldIdOfPostActionToUpdate($request_field_id)
+    {
         $field_id = $this->getFieldId();
 
         if ($request_field_id != $field_id) {
@@ -112,7 +118,8 @@ abstract class Transition_PostAction_Field extends Transition_PostAction {
      *
      * @return Tracker_FormElementFactory
      */
-    protected function getFormElementFactory() {
+    protected function getFormElementFactory()
+    {
         return Tracker_FormElementFactory::instance();
     }
 }

@@ -21,16 +21,19 @@
 class User_MutableInfoPresenter extends User_ImmutableInfoPresenter {
     private $change;
 
-    public function __construct($label, $value, $change) {
+    public function __construct($label, $value, $change)
+    {
         parent::__construct($label, $value);
         $this->change = $change;
     }
 
-    public function can_change() {
+    public function can_change()
+    {
         return true;
     }
 
-    public function change() {
+    public function change()
+    {
         return $this->change;
     }
 }

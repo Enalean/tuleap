@@ -39,7 +39,8 @@ class Tracker_Artifact_MailGateway_MailGateway_BaseTest extends TuleapTestCase {
      */
     protected $incoming_mail;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->artifact                 = mock('Tracker_Artifact');
         $this->user                     = mock('PFUser');
@@ -71,7 +72,8 @@ class Tracker_Artifact_MailGateway_MailGateway_BaseTest extends TuleapTestCase {
 
 class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifact_MailGateway_MailGateway_BaseTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $filter = mock('Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter');
@@ -91,7 +93,8 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
         stub($filter)->isAnAutoReplyMail()->returns(false);
     }
 
-    public function itDoesNotCreateArtifact() {
+    public function itDoesNotCreateArtifact()
+    {
         stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(false);
         stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(true);
         stub($this->incoming_message)->isAFollowUp()->returns(false);
@@ -100,7 +103,8 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
         $this->mailgateway->process($this->incoming_mail);
     }
 
-    public function itCreatesANewChangeset() {
+    public function itCreatesANewChangeset()
+    {
         stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(false);
         stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(true);
         stub($this->incoming_message)->isAFollowUp()->returns(true);
@@ -111,7 +115,8 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
         $this->mailgateway->process($this->incoming_mail);
     }
 
-    public function itCreatesANewChangesetEvenIfPlatformIsInInsecureMode() {
+    public function itCreatesANewChangesetEvenIfPlatformIsInInsecureMode()
+    {
         stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(true);
         stub($this->tracker)->isEmailgatewayEnabled()->returns(true);
         stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(false);
@@ -123,7 +128,8 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
         $this->mailgateway->process($this->incoming_mail);
     }
 
-    public function itCreatesNothingWhenGatewayIsDisabled() {
+    public function itCreatesNothingWhenGatewayIsDisabled()
+    {
         stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(false);
         stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(false);
         stub($this->incoming_message)->isAFollowUp()->returns(true);
@@ -134,7 +140,8 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
         $this->mailgateway->process($this->incoming_mail);
     }
 
-    public function itDoesNotCreateWhenUserCannotUpdate() {
+    public function itDoesNotCreateWhenUserCannotUpdate()
+    {
         stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(false);
         stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(true);
         stub($this->incoming_message)->isAFollowUp()->returns(true);
@@ -145,7 +152,8 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
         $this->mailgateway->process($this->incoming_mail);
     }
 
-    public function itUpdatesArtifact() {
+    public function itUpdatesArtifact()
+    {
         stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(false);
         stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(true);
         stub($this->incoming_message)->isAFollowUp()->returns(true);
@@ -156,7 +164,8 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
         $this->mailgateway->process($this->incoming_mail);
     }
 
-    public function itDoesNotUpdateArtifactWhenMailGatewayIsDisabled() {
+    public function itDoesNotUpdateArtifactWhenMailGatewayIsDisabled()
+    {
         stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(false);
         stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(false);
         stub($this->incoming_message)->isAFollowUp()->returns(true);
@@ -167,7 +176,8 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
         $this->mailgateway->process($this->incoming_mail);
     }
 
-    public function itLinksRawEmailToCreatedChangeset() {
+    public function itLinksRawEmailToCreatedChangeset()
+    {
         stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(false);
         stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(true);
         $changeset = stub('Tracker_Artifact_Changeset')->getId()->returns(666);
@@ -183,7 +193,8 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
 
 class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Artifact_MailGateway_MailGateway_BaseTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $title_field       = aStringField()->build();
@@ -210,7 +221,8 @@ class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Arti
         stub($filter)->isAnAutoReplyMail()->returns(false);
     }
 
-    public function itUpdatesArtifact() {
+    public function itUpdatesArtifact()
+    {
         stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(true);
         stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(false);
         stub($this->tracker)->isEmailgatewayEnabled()->returns(true);
@@ -222,7 +234,8 @@ class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Arti
         $this->mailgateway->process($this->incoming_mail);
     }
 
-    public function itDoesNotUpdatesArtifactWhenGatewayIsDisabled() {
+    public function itDoesNotUpdatesArtifactWhenGatewayIsDisabled()
+    {
         stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(true);
         stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(false);
         stub($this->tracker)->isEmailgatewayEnabled()->returns(false);
@@ -234,7 +247,8 @@ class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Arti
         $this->mailgateway->process($this->incoming_mail);
     }
 
-    public function itCreatesArtifact() {
+    public function itCreatesArtifact()
+    {
         stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(true);
         stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(false);
         stub($this->tracker)->isEmailgatewayEnabled()->returns(true);
@@ -263,7 +277,8 @@ class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Arti
         $this->mailgateway->process($this->incoming_mail);
     }
 
-    public function itDoesNotCreateArtifactWhenGatewayIsDisabled() {
+    public function itDoesNotCreateArtifactWhenGatewayIsDisabled()
+    {
         stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(true);
         stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(false);
         stub($this->tracker)->isEmailgatewayEnabled()->returns(false);
@@ -275,7 +290,8 @@ class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Arti
         $this->mailgateway->process($this->incoming_mail);
     }
 
-    public function itLinksRawEmailToCreatedChangeset() {
+    public function itLinksRawEmailToCreatedChangeset()
+    {
         stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(true);
         stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(false);
         $artifact = anArtifact()

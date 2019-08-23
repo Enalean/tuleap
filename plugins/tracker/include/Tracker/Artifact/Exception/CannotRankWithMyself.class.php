@@ -19,7 +19,8 @@
  */
 
 class Tracker_Artifact_Exception_CannotRankWithMyself extends Exception {
-    public function __construct($artifact_id) {
+    public function __construct($artifact_id)
+    {
         parent::__construct('Artifact '.$artifact_id.' cannot be ranked with itself.');
     }
 }

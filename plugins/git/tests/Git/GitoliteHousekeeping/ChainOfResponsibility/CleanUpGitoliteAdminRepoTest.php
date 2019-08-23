@@ -24,7 +24,8 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTes
 
     private $fixtures;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->response = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingResponse');
         $this->fixtures = $this->getTmpDir();
@@ -45,7 +46,8 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTes
         $this->command->clearExecuteAs();
     }
 
-    public function itAbortsIfThereIsAlreadyABackupDir() {
+    public function itAbortsIfThereIsAlreadyABackupDir()
+    {
         $next = mock('Git_GitoliteHousekeeping_ChainOfResponsibility_Command');
         `(cd $this->fixtures && cp -r admin admin.old)`;
         $this->command->setNextCommand($next);
@@ -57,26 +59,30 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTes
         $this->command->execute();
     }
 
-    public function itMovesTheAdminDirInABackupDir() {
+    public function itMovesTheAdminDirInABackupDir()
+    {
         $this->command->execute();
 
         $this->assertTrue(is_file($this->fixtures .'/admin.old/'. $this->expected_file_in_old_dir));
     }
 
-    public function itClonesAFreshRepository() {
+    public function itClonesAFreshRepository()
+    {
         $this->command->execute();
 
         $this->assertTrue(is_dir($this->fixtures .'/admin/'));
         $this->assertFalse(is_dir($this->fixtures .'/admin/'. $this->expected_file_in_old_dir));
     }
 
-    public function itDisplaysMeaningfulFeedbackToTheUser() {
+    public function itDisplaysMeaningfulFeedbackToTheUser()
+    {
         expect($this->response)->info("Moving admin to $this->fixtures/admin.old and cloning $this->remote_admin_repository")->once();
 
         $this->command->execute();
     }
 
-    public function itExecutesTheNextCommand() {
+    public function itExecutesTheNextCommand()
+    {
         $next = mock('Git_GitoliteHousekeeping_ChainOfResponsibility_Command');
         expect($next)->execute()->once();
 

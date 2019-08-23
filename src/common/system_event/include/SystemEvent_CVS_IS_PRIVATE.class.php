@@ -36,7 +36,8 @@ class SystemEvent_CVS_IS_PRIVATE extends SystemEvent {
      *
      * @return string
      */
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         $txt = '';
         list($group_id, $cvs_is_private) = $this->getParametersAsArray();
         $txt .= 'project: '. $this->verbalizeProjectId($group_id, $with_link) .', cvs is private: '. ($cvs_is_private ? 'true' : 'false');
@@ -46,7 +47,8 @@ class SystemEvent_CVS_IS_PRIVATE extends SystemEvent {
     /**
      * Process stored event
      */
-    function process() {
+    function process()
+    {
         list($group_id, $cvs_is_private) = $this->getParametersAsArray();
 
         if ($project = $this->getProject($group_id)) {

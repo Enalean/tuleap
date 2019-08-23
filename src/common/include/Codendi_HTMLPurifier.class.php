@@ -58,7 +58,8 @@ class Codendi_HTMLPurifier {
     /**
      * Constructor
      */
-    protected function __construct() {
+    protected function __construct()
+    {
     }
 
     /**
@@ -66,14 +67,16 @@ class Codendi_HTMLPurifier {
      *
      * @return Codendi_HTMLPurifier
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$Codendi_HTMLPurifier_instance)) {
             self::$Codendi_HTMLPurifier_instance = new Codendi_HTMLPurifier();
         }
         return self::$Codendi_HTMLPurifier_instance;
     }
 
-    private function setConfigAttribute(HTMLPurifier_Config $config, $key, $subkey, $value) {
+    private function setConfigAttribute(HTMLPurifier_Config $config, $key, $subkey, $value)
+    {
         if (version_compare($config->version, '4.0.0') >= 0) {
             $config->set("$key.$subkey", $value);
         } else {
@@ -84,7 +87,8 @@ class Codendi_HTMLPurifier {
     /**
      * Base configuration of HTML Purifier for codendi.
      */
-    protected function getCodendiConfig() {
+    protected function getCodendiConfig()
+    {
         $config = HTMLPurifier_Config::createDefault();
         $this->setConfigAttribute($config, 'Core', 'Encoding', 'UTF-8');
         if (posix_getpwuid(posix_geteuid())['name'] === ForgeConfig::getApplicationUserLogin()) {
@@ -101,7 +105,8 @@ class Codendi_HTMLPurifier {
      * @see http://htmlpurifier.org/live/configdoc/plain.html#AutoFormat
      *
      */
-    function getLightConfig() {
+    function getLightConfig()
+    {
         $config = $this->getCodendiConfig();
         $this->setConfigAttribute($config, 'HTML', 'Allowed', $this->getLightConfigMarkups());
         $this->setConfigAttribute($config, 'AutoFormat', 'Linkify', true);
@@ -124,7 +129,8 @@ class Codendi_HTMLPurifier {
      * - 'ul', 'ol', 'li'
      * - 'cite', 'code', 'blockquote', 'strong', 'em', 'pre', 'b', 'i'
      */
-    function getLightConfigMarkups() {
+    function getLightConfigMarkups()
+    {
         $allowed = 'p,br,'.
                    'a[href|title|class],img[src|alt],'.
                    'ul,ol,li,'.
@@ -132,7 +138,8 @@ class Codendi_HTMLPurifier {
         return $allowed;
     }
 
-    function getStripConfig() {
+    function getStripConfig()
+    {
         $config = $this->getCodendiConfig();
         $this->setConfigAttribute($config, 'HTML', 'Allowed', '');
         return $config;
@@ -141,7 +148,8 @@ class Codendi_HTMLPurifier {
     /**
      * HTML Purifier configuration factory
      */
-    function getHPConfig($level) {
+    function getHPConfig($level)
+    {
         if (isset($this->config[$level])) {
             return $this->config[$level];
         }
@@ -224,7 +232,8 @@ class Codendi_HTMLPurifier {
      * - CODENDI_PURIFIER_DISABLED
      *   No filter at all.
      */
-    function purify($html, $level=0, $groupId=0) {
+    function purify($html, $level=0, $groupId=0)
+    {
         $clean = '';
         switch($level) {
             case CODENDI_PURIFIER_DISABLED:
@@ -287,7 +296,8 @@ class Codendi_HTMLPurifier {
      *
      * @return String
      */
-    public function purifyHTMLWithReferences($html, $group_id) {
+    public function purifyHTMLWithReferences($html, $group_id)
+    {
         $this->insertReferences($html, $group_id);
 
         return $this->purify($html, CODENDI_PURIFIER_FULL);
@@ -296,11 +306,13 @@ class Codendi_HTMLPurifier {
     /**
      * @return string
      */
-    public function purifyTextWithReferences($html, $group_id) {
+    public function purifyTextWithReferences($html, $group_id)
+    {
         return $this->purify($html, CODENDI_PURIFIER_BASIC, $group_id);
     }
 
-    function purifyMap($array, $level=0, $groupId=0) {
+    function purifyMap($array, $level=0, $groupId=0)
+    {
         return array_map(array(&$this, "purify"), $array, array($level), array($groupId));
     }
 
@@ -309,11 +321,13 @@ class Codendi_HTMLPurifier {
      *
      * @return ReferenceManager
      */
-    public function getReferenceManager() {
+    public function getReferenceManager()
+    {
         return ReferenceManager::instance();
     }
 
-    private function insertReferences(&$html, $group_id = 0) {
+    private function insertReferences(&$html, $group_id = 0)
+    {
         if (! $group_id) {
             return;
         }

@@ -28,11 +28,13 @@ class Tracker_Artifact_Presenter_FollowUpCommentsPresenter {
     /**
      * @param Tracker_Artifact_Followup_Item[] $followups
      */
-    public function __construct(array $followups) {
+    public function __construct(array $followups)
+    {
         $this->followups = $this->buildFollowUpsPresenters($followups);
     }
 
-    public function no_comment() {
+    public function no_comment()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'no_comment');
     }
 

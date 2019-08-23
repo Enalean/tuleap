@@ -38,7 +38,8 @@ class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends TuleapTestCase
     private $target_value;
     private $task_tracker;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->parent = Mockery::spy(Tracker_Artifact::class);
         $this->parent->shouldReceive('getTrackerId')->andReturn(899);
@@ -70,14 +71,16 @@ class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends TuleapTestCase
             ->build();
     }
 
-    public function itDoesNothingWhenArtifactHasNoParents() {
+    public function itDoesNothingWhenArtifactHasNoParents()
+    {
         $artifact = anArtifact()->withTracker($this->task_tracker)->withoutParentWithoutPermissionChecking()->build();
 
         // expect no errors
         $this->rules_processor->process($artifact, $this->rule);
     }
 
-    public function itAlwaysApplyRuleWhenAtLeastOneValueIsSet() {
+    public function itAlwaysApplyRuleWhenAtLeastOneValueIsSet()
+    {
         $fields_data = array(
             $this->target_field_id => $this->target_value_id
         );
@@ -90,7 +93,8 @@ class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends TuleapTestCase
         $this->rules_processor->process($this->artifact, $this->rule);
     }
 
-    public function itDoesntSetTargetValueIfAlreadySet() {
+    public function itDoesntSetTargetValueIfAlreadySet()
+    {
         stub($this->parent)->getValue($this->target_field)->returns(aChangesetValueList()->withValues(array($this->target_value))->build());
         expect($this->parent)->createNewChangeset()->never();
         $this->rules_processor->process($this->artifact, $this->rule);

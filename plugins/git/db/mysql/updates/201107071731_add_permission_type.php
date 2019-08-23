@@ -21,17 +21,20 @@
 
 class b201107071731_add_permission_type extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add permission types in order to manage gitolite integration
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         if ($this->permissionTypesMissing()) {
             $sql = "INSERT INTO permissions_values (permission_type, ugroup_id, is_default) 
                     VALUES ('PLUGIN_GIT_READ', 2, 1),
@@ -50,13 +53,15 @@ EOT;
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if ($this->permissionTypesMissing()) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Permission types for gitolite are missing');
         }
     }
 
-    protected function permissionTypesMissing() {
+    protected function permissionTypesMissing()
+    {
         $sql = "SELECT count(*) as nb FROM permissions_values WHERE permission_type = 'PLUGIN_GIT_READ'";
         $res = $this->db->dbh->query($sql);
         $row = $res->fetch();

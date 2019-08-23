@@ -53,7 +53,8 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
     /** @var Logger */
     protected $logger;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->cwd           = getcwd();
         $this->_fixDir       = dirname(__FILE__).'/_fixtures';
@@ -124,7 +125,8 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
         );
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
         chdir($this->cwd);
 
@@ -133,7 +135,8 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
         PermissionsManager::clearInstance();
     }
 
-    public function assertEmptyGitStatus() {
+    public function assertEmptyGitStatus()
+    {
         $cwd = getcwd();
         chdir($this->_glAdmDir);
         exec('git status --porcelain', $output, $ret_val);
@@ -142,7 +145,8 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
         $this->assertEqual($ret_val, 0);
     }
 
-    public function assertNotEmptyGitStatus() {
+    public function assertNotEmptyGitStatus()
+    {
         $cwd = getcwd();
         chdir($this->_glAdmDir);
         exec('git status --porcelain', $output, $ret_val);

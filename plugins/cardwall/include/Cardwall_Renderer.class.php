@@ -91,7 +91,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         $this->report_session->set("{$this->id}.field_id", $field_id);
     }
 
-    private function getFormElementFactory() {
+    private function getFormElementFactory()
+    {
         return Tracker_FormElementFactory::instance();
     }
 
@@ -103,13 +104,15 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      *
      * @return string
      */
-    public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user) {
+    public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user)
+    {
         $used_sb = $this->getFormElementFactory()->getUsedFormElementsByType($this->report->getTracker(), array('sb'));
         $form    = new Cardwall_Form($this->report->id, $this->id, $request->get('pv'), $this->field, $used_sb);
         return $this->fetchCards($matching_ids, $user, $form);
     }
 
-    private function fetchCards($matching_ids, PFUser $user, $form = null) {
+    private function fetchCards($matching_ids, PFUser $user, $form = null)
+    {
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         if (!$total_rows) {
             return '<p>'. $GLOBALS['Language']->getText('plugin_tracker', 'no_artifacts') .'</p>';
@@ -184,13 +187,16 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
 
     /*----- Implements below some abstract methods ----*/
 
-    public function delete() {}
+    public function delete()
+    {}
 
-    public function getType() {
+    public function getType()
+    {
         return 'plugin_cardwall';
     }
 
-    public function processRequest(TrackerManager $tracker_manager, $request, $current_user) {
+    public function processRequest(TrackerManager $tracker_manager, $request, $current_user)
+    {
         $renderer_parameters = $request->get('renderer_cardwall');
         $this->initiateSession();
         if ($renderer_parameters && is_array($renderer_parameters)) {
@@ -217,7 +223,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      *
      * @return string
      */
-    public function fetchWidget(PFUser $user) {
+    public function fetchWidget(PFUser $user)
+    {
         $this->enable_qr_code = false;
         $html  = '';
 
@@ -241,7 +248,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      *
      * @return bool true if success, false if failure
      */
-    public function create() {
+    public function create()
+    {
         $success = true;
         $rrf = Tracker_Report_RendererFactory::instance();
         if ($renderer_id = $rrf->saveRenderer($this->report, $this->name, $this->description, $this->getType())) {
@@ -256,7 +264,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      *
      * @return bool true if success, false if failure
      */
-    public function update() {
+    public function update()
+    {
         $success = true;
         if ($this->id > 0) {
             //field_id
@@ -265,7 +274,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         return $success;
     }
 
-    public function duplicate($from_renderer, $field_mapping) { }
+    public function duplicate($from_renderer, $field_mapping)
+    { }
 
     public function afterSaveObject(Tracker_Report_Renderer $renderer)
     {
@@ -289,7 +299,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     /**
      * Wrapper for Cardwall_RendererDao
      */
-    public function getDao() {
+    public function getDao()
+    {
         return new Cardwall_RendererDao();
     }
 
@@ -299,14 +310,16 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      * @param $formsMapping the form elements mapping
      */
-    public function exportToXml(SimpleXMLElement $root, array $formsMapping) {
+    public function exportToXml(SimpleXMLElement $root, array $formsMapping)
+    {
         parent::exportToXml($root, $formsMapping);
         if ($this->field !== null && ($mapping = (string)array_search($this->field->getId(), $formsMapping))) {
             $root->addAttribute('field_id', $mapping);
         }
     }
 
-    public function getIcon() {
+    public function getIcon()
+    {
         return 'fa fa-table';
     }
 

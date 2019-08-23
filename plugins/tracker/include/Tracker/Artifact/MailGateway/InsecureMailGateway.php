@@ -20,11 +20,13 @@
 
 class Tracker_Artifact_MailGateway_InsecureMailGateway extends Tracker_Artifact_MailGateway_MailGateway {
 
-    protected function canCreateArtifact(Tracker $tracker) {
+    protected function canCreateArtifact(Tracker $tracker)
+    {
         return $this->tracker_artifactbyemail->canCreateArtifact($tracker);
     }
 
-    protected function canUpdateArtifact(Tracker $tracker) {
+    protected function canUpdateArtifact(Tracker $tracker)
+    {
         return $this->tracker_artifactbyemail->canUpdateArtifactInInsecureMode($tracker);
     }
 }

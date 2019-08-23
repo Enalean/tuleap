@@ -28,7 +28,8 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
     var $inheritableMetadataArray;
     var $_controller;
 
-    function __construct($item, $url, $controller) {
+    function __construct($item, $url, $controller)
+    {
         $this->_controller = $controller;
 
         $id = 'statistics';
@@ -36,7 +37,8 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
         parent::__construct($item, $url, $id, $title);
     }
 
-    function _getPropertyRow($label, $value) {
+    function _getPropertyRow($label, $value)
+    {
         $html = '';
         $html .= '<tr style="vertical-align:top;">';
         $html .= '<td class="label">'.$label.'</td>';
@@ -45,7 +47,8 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
         return $html;
     }
 
-    function _getStatisticsFields($params) {
+    function _getStatisticsFields($params)
+    {
         $html = '';
 
         if(is_a($this->item, 'Docman_Folder')) {
@@ -78,13 +81,15 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
         return $html;
     }
 
-    function getContent($params = array()) {
+    function getContent($params = array())
+    {
         $html = '<div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_statistics_help').'</div>';
         $html .= $this->_getStatisticsFields($params);
         return $html;
     }
 
-    private function convertBytesToHumanReadable($bytes) {
+    private function convertBytesToHumanReadable($bytes)
+    {
         $byteSymbol = $GLOBALS['Language']->getText('plugin_docman', 'details_statistics_byte_symbol');
 
         $s = array('', 'k', 'M', 'G', 'T', 'P');

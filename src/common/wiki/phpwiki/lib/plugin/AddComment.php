@@ -36,15 +36,18 @@ include_once("lib/plugin/WikiBlog.php");
 class WikiPlugin_AddComment
 extends WikiPlugin_WikiBlog
 {
-    function getName () {
+    function getName()
+    {
         return _("AddComment");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return sprintf(_("Show and add comments for %s"),'[pagename]');
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.8 $");
     }
@@ -63,7 +66,8 @@ extends WikiPlugin_WikiBlog
     //  jshide - boolean  - quick javascript expansion of the comments
     //                      and addcomment box
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('pagename'   => '[pagename]',
                      'order'      => 'normal',
                      'mode'       => 'add,show',
@@ -73,7 +77,8 @@ extends WikiPlugin_WikiBlog
                     );
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         if (!$args['pagename'])
             return $this->error(_("No pagename specified"));

@@ -21,7 +21,8 @@
 require_once dirname(__FILE__).'/GerritTestBase.php';
 
 class Git_Driver_GerritLegacy_addIncludedGroupTest extends TuleapTestCase implements Git_Driver_Gerrit_addIncludedGroupTest {
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
 
@@ -30,7 +31,8 @@ class Git_Driver_GerritLegacy_addIncludedGroupTest extends TuleapTestCase implem
         $this->driver = new Git_Driver_GerritLegacy($this->ssh, $this->logger);
     }
 
-    public function itAddAnIncludedGroup() {
+    public function itAddAnIncludedGroup()
+    {
         $group_name    = 'gdb/developers';
         $included_group_name = 'gcc/coders';
         $insert_included_query = 'gerrit gsql --format json -c "INSERT\ INTO\ account_group_includes\ (group_id,\ include_id)\ SELECT\ G.group_id,\ I.group_id\ FROM\ account_groups\ G,\ account_groups\ I\ WHERE\ G.name=\\\''. $group_name .'\\\'\ AND\ I.name=\\\''. $included_group_name .'\\\'"';

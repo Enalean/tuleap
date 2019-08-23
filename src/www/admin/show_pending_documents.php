@@ -317,7 +317,8 @@ function frs_file_restore_process($request, $group_id)
     $GLOBALS['Response']->redirect('?group_id=' . (int)$group_id);
 }
 
-function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_token, &$idArray, &$nomArray, &$htmlArray) {
+function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_token, &$idArray, &$nomArray, &$htmlArray)
+{
     $wikiAttachment = new WikiAttachment($group_id);
     $attachments    = $wikiAttachment->listPendingAttachments($group_id, 0, 0);
     $purifier       = Codendi_HTMLPurifier::instance();

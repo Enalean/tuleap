@@ -24,7 +24,8 @@ class BurndownFieldBuilder {
     private $tracker;
     private $hierarchy_factory;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->id            = null;
         $this->tracker_id    = null;
         $this->parent_id     = null;
@@ -38,17 +39,20 @@ class BurndownFieldBuilder {
         $this->rank          = null;
     }
 
-    public function withTracker(Tracker $tracker) {
+    public function withTracker(Tracker $tracker)
+    {
         $this->tracker = $tracker;
         return $this;
     }
 
-    public function withHierarchyFactory(Tracker_HierarchyFactory $hierarchy_factory) {
+    public function withHierarchyFactory(Tracker_HierarchyFactory $hierarchy_factory)
+    {
         $this->hierarchy_factory = $hierarchy_factory;
         return $this;
     }
 
-    public function build() {
+    public function build()
+    {
         $field = new Tracker_FormElement_Field_Burndown(
             $this->id,
             $this->tracker_id,
@@ -74,7 +78,8 @@ class BurndownFieldBuilder {
     }
 }
 
-function aBurndownField() {
+function aBurndownField()
+{
     return new BurndownFieldBuilder();
 }
 

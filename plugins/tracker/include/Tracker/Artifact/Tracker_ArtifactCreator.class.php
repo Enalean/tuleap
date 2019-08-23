@@ -68,7 +68,8 @@ class Tracker_ArtifactCreator //phpcs:ignore
      *
      * @return Tracker_Artifact|false false if an error occurred
      */
-    public function createBare(Tracker $tracker, PFUser $user, $submitted_on) {
+    public function createBare(Tracker $tracker, PFUser $user, $submitted_on)
+    {
         $artifact = $this->getBareArtifact($tracker, $submitted_on, $user->getId(), 0);
         $success = $this->insertArtifact($tracker, $user, $artifact, $submitted_on, 0);
         if(!$success) {
@@ -250,7 +251,8 @@ class Tracker_ArtifactCreator //phpcs:ignore
         }
     }
 
-    private function getBareArtifact(Tracker $tracker, $submitted_on, $submitted_by, $artifact_id) {
+    private function getBareArtifact(Tracker $tracker, $submitted_on, $submitted_by, $artifact_id)
+    {
         $artifact = $this->artifact_factory->getInstanceFromRow(
             array(
                 'id'                       => $artifact_id,

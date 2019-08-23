@@ -26,7 +26,8 @@ class LinkedListTest extends LinkedListTestCase {
      * Constructor of the test. Can be ommitted.
      * Usefull to set the name of the test
      */
-    function __construct($name = 'LinkedList test') {
+    function __construct($name = 'LinkedList test')
+    {
         parent::__construct($name, 'LinkedList');
     }
 

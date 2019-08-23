@@ -20,17 +20,20 @@
 
 class b201410061023_modify_table_plugin_git_mirrors extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Modify plugin_git_mirrors table to drop ssh key column.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_git_mirrors
             DROP COLUMN ssh_key";
 

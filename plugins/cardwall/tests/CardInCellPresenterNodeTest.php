@@ -24,13 +24,15 @@ require_once dirname(__FILE__).'/../../../tests/simpletest/common/TreeNode/NodeD
 
 class Cardwall_CardInCellPresenterNodeTest extends TuleapTestCase {
 
-    public function itHoldsTheGivenPresenter() {
+    public function itHoldsTheGivenPresenter()
+    {
         $presenter      = mock('Cardwall_CardInCellPresenter');
         $presenter_node = new Cardwall_CardInCellPresenterNode($presenter);
         $this->assertEqual($presenter, $presenter_node->getCardInCellPresenter());
     }
 
-    public function itHasAnArtifact() {
+    public function itHasAnArtifact()
+    {
         $artifact       = mock('Tracker_Artifact');
         $presenter      = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact);
         $presenter_node = new Cardwall_CardInCellPresenterNode($presenter);

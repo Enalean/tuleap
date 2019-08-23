@@ -41,7 +41,8 @@ class FieldListBindUserValueRepresentation {
      */
     public $user_reference;
 
-    public function build(Tracker_FormElement_Field_List_Value $value, UserRepresentation $user_representation) {
+    public function build(Tracker_FormElement_Field_List_Value $value, UserRepresentation $user_representation)
+    {
         $this->id             = JsonCast::toInt($value->getId());
         $this->label          = $value->getAPIValue();
         $this->user_reference = $user_representation;

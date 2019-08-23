@@ -65,7 +65,8 @@ class BacklogItemRepresentation extends BacklogItemRepresentationBase
         $this->background_color_name = $background_color->getBackgroundColorName();
     }
 
-    private function addAllowedSubItemTypes(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {
+    private function addAllowedSubItemTypes(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item)
+    {
         $child_trackers = $backlog_item->getArtifact()->getTracker()->getChildren();
 
         $this->accept = array('trackers' => array());

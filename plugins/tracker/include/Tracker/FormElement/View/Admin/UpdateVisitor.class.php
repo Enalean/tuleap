@@ -23,7 +23,8 @@
  */
 class Tracker_FormElement_View_Admin_UpdateVisitor extends Tracker_FormElement_View_Admin_Visitor {
 
-    protected function fetchForm() {
+    protected function fetchForm()
+    {
         $html = '';
 
         $html .= $this->adminElement->fetchTypeForUpdate();
@@ -48,7 +49,8 @@ class Tracker_FormElement_View_Admin_UpdateVisitor extends Tracker_FormElement_V
      *
      * @return void
      */
-    public function display(TrackerManager $tracker_manager, HTTPRequest $request) {
+    public function display(TrackerManager $tracker_manager, HTTPRequest $request)
+    {
         $label            = $this->element->getLabel();
         $title            = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'upd_label', $label);
         $url              = $this->element->getAdminEditUrl();

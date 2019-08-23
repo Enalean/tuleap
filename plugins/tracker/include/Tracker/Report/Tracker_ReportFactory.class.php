@@ -23,7 +23,8 @@ class Tracker_ReportFactory {
     /**
      * A protected constructor; prevents direct creation of object
      */
-    protected function __construct() {
+    protected function __construct()
+    {
     }
 
     /**
@@ -36,7 +37,8 @@ class Tracker_ReportFactory {
      *
      * @return Tracker_ReportFactory
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$_instance)) {
             $c = self::class;
             self::$_instance = new $c;
@@ -48,7 +50,8 @@ class Tracker_ReportFactory {
      * @param int $id the id of the report to retrieve
      * @return Tracker_Report | null
      */
-    public function getReportById($id, $user_id, $store_in_session = true) {
+    public function getReportById($id, $user_id, $store_in_session = true)
+    {
         $row = $this->getDao()
                     ->searchById($id, $user_id)
                     ->getRow();
@@ -65,7 +68,8 @@ class Tracker_ReportFactory {
      *                   if null then project reports instead of user ones
      * @return Tracker_Report[]
      */
-    public function getReportsByTrackerId($tracker_id, $user_id) {
+    public function getReportsByTrackerId($tracker_id, $user_id)
+    {
         $reports = array();
         foreach ($this->getDao()->searchByTrackerId($tracker_id, $user_id) as $row) {
             $reports[$row['id']] = $this->getInstanceFromRow($row);
@@ -76,7 +80,8 @@ class Tracker_ReportFactory {
      * @param int $tracker_id the id of the tracker
      * @param array
      */
-    public function getDefaultReportsByTrackerId($tracker_id) {
+    public function getDefaultReportsByTrackerId($tracker_id)
+    {
         $report = null;
         if ($row = $this->getDao()->searchDefaultByTrackerId($tracker_id)->getRow()) {
             $report = $this->getInstanceFromRow($row);
@@ -88,7 +93,8 @@ class Tracker_ReportFactory {
      * @param int $tracker_id the id of the tracker
      * @param Tracker_Report
      */
-    public function getDefaultReportByTrackerId($tracker_id) {
+    public function getDefaultReportByTrackerId($tracker_id)
+    {
         $default_report = null;
         if ($row = $this->getDao()->searchDefaultReportByTrackerId($tracker_id)->getRow()) {
             $default_report = $this->getInstanceFromRow($row);
@@ -100,7 +106,8 @@ class Tracker_ReportFactory {
      * @param int $user_id the user who are searching for reports. He cannot access to other user's reports
      * @param array of reports
      */
-    public function getReportsByUserId($user_id) {
+    public function getReportsByUserId($user_id)
+    {
         $reports = array();
         foreach ($this->getDao()->searchByUserId($user_id) as $row) {
             $reports[$row['id']] = $this->getInstanceFromRow($row);
@@ -115,7 +122,8 @@ class Tracker_ReportFactory {
      *
      * @return bool true if the save succeed
      */
-    public function save(Tracker_Report $report) {
+    public function save(Tracker_Report $report)
+    {
         $user = UserManager::instance()->getCurrentUser();
         return $this->getDao()->save(
             $report->id,
@@ -133,7 +141,8 @@ class Tracker_ReportFactory {
         );
     }
 
-    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
+    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping)
+    {
         $report_mapping = array();
         foreach($this->getReportsByTrackerId($from_tracker_id, null) as $from_report) {
             $new_report = $this->duplicateReport($from_report, $to_tracker_id, $field_mapping, null);
@@ -153,7 +162,8 @@ class Tracker_ReportFactory {
      *
      * @return Tracker_Report the new report
      */
-    public function duplicateReport($from_report, $to_tracker_id, $field_mapping, $current_user_id) {
+    public function duplicateReport($from_report, $to_tracker_id, $field_mapping, $current_user_id)
+    {
         $report = null;
         //duplicate report info
         if ($id = $this->getDao()->duplicate($from_report->id, $to_tracker_id)) {
@@ -164,7 +174,8 @@ class Tracker_ReportFactory {
         return $report;
     }
 
-    public function duplicateReportSkeleton($from_report, $to_tracker_id, $current_user_id) {
+    public function duplicateReportSkeleton($from_report, $to_tracker_id, $current_user_id)
+    {
         $report = null;
         //duplicate report info
         if ($id = $this->getDao()->duplicate($from_report->id, $to_tracker_id)) {
@@ -179,7 +190,8 @@ class Tracker_ReportFactory {
     /**
      * @return Tracker_ReportDao
      */
-    protected function getDao() {
+    protected function getDao()
+    {
         if (!$this->dao) {
             $this->dao = new Tracker_ReportDao();
         }
@@ -189,14 +201,16 @@ class Tracker_ReportFactory {
     /**
      * @return Tracker_Report_CriteriaFactory
      */
-    protected function getCriteriaFactory() {
+    protected function getCriteriaFactory()
+    {
         return Tracker_Report_CriteriaFactory::instance();
     }
 
     /**
      * @return Tracker_Report_RendererFactory
      */
-    protected function getRendererFactory() {
+    protected function getRendererFactory()
+    {
         return Tracker_Report_RendererFactory::instance();
     }
 
@@ -204,7 +218,8 @@ class Tracker_ReportFactory {
      * @param array the row identifing a report
      * @return Tracker_Report
      */
-    protected function getInstanceFromRow($row, $store_in_session = true) {
+    protected function getInstanceFromRow($row, $store_in_session = true)
+    {
         $r = new Tracker_Report(
             $row['id'],
             $row['name'],
@@ -237,7 +252,8 @@ class Tracker_ReportFactory {
      *
      * @return Tracker_Report Object
      */
-    public function getInstanceFromXML($xml, &$xmlMapping, $group_id) {
+    public function getInstanceFromXML($xml, &$xmlMapping, $group_id)
+    {
         $att = $xml->attributes();
         $row = array('name' => (string)$xml->name,
                      'description' => (string)$xml->description);
@@ -283,7 +299,8 @@ class Tracker_ReportFactory {
      *
      * @return id of the newly created Report
      */
-    public function saveObject($trackerId, $report) {
+    public function saveObject($trackerId, $report)
+    {
         $reportId = $this->getDao()->create(
             $report->name,
             $report->description,
@@ -321,7 +338,8 @@ class Tracker_ReportFactory {
      *
      * @return bool true if success
      */
-    public function delete($report_id) {
+    public function delete($report_id)
+    {
         return $this->getDao()->delete($report_id);
     }
 

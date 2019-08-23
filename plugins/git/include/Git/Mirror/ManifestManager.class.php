@@ -38,7 +38,8 @@ class Git_Mirror_ManifestManager {
         $this->generator   = $generator;
     }
 
-    public function triggerUpdate(GitRepository $repository) {
+    public function triggerUpdate(GitRepository $repository)
+    {
         $repository_mirrors = $this->data_mapper->fetchAllRepositoryMirrors($repository);
         $all_mirrors        = $this->data_mapper->fetchAll();
 
@@ -52,7 +53,8 @@ class Git_Mirror_ManifestManager {
         }
     }
 
-    public function triggerUpdateFollowingAGitPush(GitRepository $repository) {
+    public function triggerUpdateFollowingAGitPush(GitRepository $repository)
+    {
         $repository_mirrors = $this->data_mapper->fetchAllRepositoryMirrors($repository);
 
         foreach ($repository_mirrors as $mirror) {
@@ -60,7 +62,8 @@ class Git_Mirror_ManifestManager {
         }
     }
 
-    public function checkManifestFiles() {
+    public function checkManifestFiles()
+    {
         $gitolite_admin_repository = new GitRepositoryGitoliteAdmin();
         $all_mirrors = $this->data_mapper->fetchAll();
         foreach ($all_mirrors as $mirror) {
@@ -74,14 +77,16 @@ class Git_Mirror_ManifestManager {
         $this->forceFileOwnershipToAppUser();
     }
 
-    public function triggerDelete($repository_path) {
+    public function triggerDelete($repository_path)
+    {
         $all_mirrors = $this->data_mapper->fetchAll();
         foreach ($all_mirrors as $mirror) {
             $this->generator->removeRepositoryFromManifestFile($mirror, $repository_path);
         }
     }
 
-    private function forceFileOwnershipToAppUser() {
+    private function forceFileOwnershipToAppUser()
+    {
         $manifest_directory = $this->generator->getManifestDirectory();
         if (is_dir($manifest_directory)) {
             foreach (glob($manifest_directory . '/' . Git_Mirror_ManifestFileGenerator::FILE_PREFIX . '*') as $file) {

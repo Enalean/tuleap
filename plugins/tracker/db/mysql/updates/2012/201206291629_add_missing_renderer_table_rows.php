@@ -20,15 +20,18 @@
 
 class b201206291629_add_missing_renderer_table_rows extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add missing renderer table entries';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "INSERT INTO tracker_report_renderer_table (renderer_id, chunksz, multisort)
                 SELECT tracker_report_renderer.id, 15, 0
                 FROM tracker_report_renderer 

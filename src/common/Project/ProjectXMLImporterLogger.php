@@ -20,7 +20,8 @@
 
 class ProjectXMLImporterLogger extends TruncateLevelLogger {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct(
             new BackendLogger(ForgeConfig::get('codendi_log') .'/project_xml_import_syslog'),
             ForgeConfig::get('sys_logger_level')

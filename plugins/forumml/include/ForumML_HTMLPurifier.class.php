@@ -35,7 +35,8 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier {
     /**
      * Constructor
      */
-    protected function __construct() {
+    protected function __construct()
+    {
     }
 
     /**
@@ -43,7 +44,8 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier {
      * Override parent method
      * @access: static
      */
-    public static function instance() {
+    public static function instance()
+    {
      //static $purifier;
         if (!isset(self::$ForumML_HTMLPurifier_instance)) {
             $c = self::class;
@@ -56,7 +58,8 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier {
      * No basic HTML markups, no forms, no javascript
      * Allow urls, auto-magic links, <blockquote> and CSS styles
      */
-    function getForumMLConfig() {
+    function getForumMLConfig()
+    {
 
         $config = $this->getCodendiConfig();
         // allow <blockquote> html tag, used to display ForumML messages replies
@@ -69,7 +72,8 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier {
     /**
      * HTML Purifier configuration factory
      */
-    function getHPConfig($level) {
+    function getHPConfig($level)
+    {
         $config = null;
         switch($level) {
             case CODENDI_PURIFIER_FORUMML:
@@ -85,7 +89,8 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier {
     /**
     * Perform HTML purification depending of level purification required and create links.
     */
-    function purify($html, $level=0, $groupId=0) {
+    function purify($html, $level=0, $groupId=0)
+    {
         $clean = '';
         switch($level) {
             case CODENDI_PURIFIER_FORUMML:

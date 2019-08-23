@@ -41,12 +41,14 @@ Mock::generate('LDAP_SyncNotificationManager');
 // Ensure user is suspended
 class MyUmMock4Suspended extends MockUserManager {
     private $_myUmTest;
-    function __construct($test) {
+    function __construct($test)
+    {
         $this->_myUmTest = $test;
         parent::__construct($test);
     }
 
-    function updateDb($user) {
+    function updateDb($user)
+    {
         $this->_myUmTest->assertEqual($user->getStatus(), 'S');
         $this->_myUmTest->assertEqual($user->getUnixStatus(), 'D');
         // For expectations
@@ -58,7 +60,8 @@ class LDAP_DirectorySynchronizationTest extends TuleapTestCase {
 
     private $previous_log_dir;
 
-    function setUp() {
+    function setUp()
+    {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Language']->setReturnValue('getContent', dirname(__FILE__).'/empty.txt');
         $this->previous_log_dir = ForgeConfig::get('codendi_log');
@@ -66,7 +69,8 @@ class LDAP_DirectorySynchronizationTest extends TuleapTestCase {
         ForgeConfig::set('sys_logger_level', 'debug');
     }
 
-    function tearDown() {
+    function tearDown()
+    {
         ForgeConfig::restore();
         ForgeConfig::set('codendi_log', $this->previous_log_dir);
         unset($GLOBALS['Language']);
@@ -103,7 +107,8 @@ class LDAP_DirectorySynchronizationTest extends TuleapTestCase {
         $sync->ldapSync(array('ldap_id' => 'ed1234'), 1);
     }
 
-    function testNoDBUpdateIfLdapSearchErrno() {
+    function testNoDBUpdateIfLdapSearchErrno()
+    {
         $sync = new LDAP_DirectorySynchronizationTestVersion($this);
 
         $lri = new MockLDAPResultIterator($this);
@@ -134,7 +139,8 @@ class LDAP_DirectorySynchronizationTest extends TuleapTestCase {
         $sync->ldapSync(array('ldap_id' => 'ed1234'), 1);
     }
 
-    function testUserSuspendedIfNotInLDAP() {
+    function testUserSuspendedIfNotInLDAP()
+    {
         $sync = new LDAP_DirectorySynchronizationTestVersion($this);
         ForgeConfig::set('codendi_log', '/tmp');
 
@@ -173,7 +179,8 @@ class LDAP_DirectorySynchronizationTest extends TuleapTestCase {
         $sync->ldapSync(array('ldap_id' => 'ed1234'), 1);
     }
 
-    function testUserLdapUidUpdateIfLdapDoesntMatch() {
+    function testUserLdapUidUpdateIfLdapDoesntMatch()
+    {
         $row = array('user_id'  => '4321',
                      'ldap_id'  => 'ed1234',
                      'ldap_uid' => 'oula la'
@@ -218,7 +225,8 @@ class LDAP_DirectorySynchronizationTest extends TuleapTestCase {
         $sync->ldapSync($row, 1);
     }
 
-    function testUserUpdateIfUserTellsSo() {
+    function testUserUpdateIfUserTellsSo()
+    {
         $sync = new LDAP_DirectorySynchronizationTestVersion($this);
 
         $res = new MockLDAPResult($this);
@@ -263,7 +271,8 @@ class LDAP_DirectorySynchronizationTest extends TuleapTestCase {
         $sync->ldapSync($row, 1);
     }
 
-    function testUserNoUpdateIfNothingChangedInLdap() {
+    function testUserNoUpdateIfNothingChangedInLdap()
+    {
         $sync = new LDAP_DirectorySynchronizationTestVersion($this);
 
         $res = new MockLDAPResult($this);
@@ -305,7 +314,8 @@ class LDAP_DirectorySynchronizationTest extends TuleapTestCase {
         $sync->ldapSync($row, 1);
     }
 
-    function testUserInSecondBranch() {
+    function testUserInSecondBranch()
+    {
         $sync = new LDAP_DirectorySynchronizationTestVersion($this);
 
         $res = new MockLDAPResult($this);

@@ -17,17 +17,20 @@
  */
 
 class b201207051342_add_has_avatar_column extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add has_avatar column on user table.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = 'ALTER TABLE user ADD COLUMN has_avatar TINYINT(1) NOT NULL DEFAULT 0';
         if ($this->db->tableNameExists('user')) {
             $res = $this->db->dbh->exec($sql);
@@ -37,7 +40,8 @@ EOT;
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->columnNameExists('user', 'has_avatar')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column has_avatar not created in user');
         }

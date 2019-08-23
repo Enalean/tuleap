@@ -52,42 +52,48 @@ class Tracker_Artifact_MailGateway_IncomingMessage {
     /**
      * @return string
      */
-    public function getSubject() {
+    public function getSubject()
+    {
         return $this->subject;
     }
 
     /**
      * @return string The body of the message
      */
-    public function getBody() {
+    public function getBody()
+    {
         return $this->body;
     }
 
     /**
      * @return PFUser
      */
-    public function getUser() {
+    public function getUser()
+    {
         return $this->user;
     }
 
     /**
      * @return Tracker
      */
-    public function getTracker() {
+    public function getTracker()
+    {
         return $this->tracker;
     }
 
     /**
      * @return Tracker_Artifact
      */
-    public function getArtifact() {
+    public function getArtifact()
+    {
         return $this->artifact;
     }
 
     /**
      * @return bool
      */
-    public function isAFollowUp() {
+    public function isAFollowUp()
+    {
         return $this->artifact !== null;
     }
 }

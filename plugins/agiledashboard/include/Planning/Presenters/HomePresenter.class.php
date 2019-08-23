@@ -90,11 +90,13 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         $this->kanban_title                    = $kanban_title;
     }
 
-    public function kanban_empty_message_must_be_displayed() {
+    public function kanban_empty_message_must_be_displayed()
+    {
         return count($this->kanban_summary_presenters) === 0 && ! $this->is_user_admin ;
     }
 
-    public function scrum_nothing_set_up() {
+    public function scrum_nothing_set_up()
+    {
 
         if ($this->is_user_admin) {
             return $GLOBALS['Language']->getText(
@@ -107,27 +109,33 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_scrum_generic');
     }
 
-    public function kanban_nothing_set_up() {
+    public function kanban_nothing_set_up()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_kanban_generic');
     }
 
-    public function come_back_later() {
+    public function come_back_later()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_come_back');
     }
 
-    public function past() {
+    public function past()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','past');
     }
 
-    public function now() {
+    public function now()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','now');
     }
 
-    public function future() {
+    public function future()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','future');
     }
 
-    public function past_active() {
+    public function past_active()
+    {
         if ($this->period == Planning_Controller::PAST_PERIOD) {
             return 'active';
         }
@@ -135,7 +143,8 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         return '';
     }
 
-    public function now_active() {
+    public function now_active()
+    {
         if (! $this->past_active() && !$this->future_active()) {
             return 'active';
         }
@@ -143,7 +152,8 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         return '';
     }
 
-    public function future_active() {
+    public function future_active()
+    {
         if ($this->period == Planning_Controller::FUTURE_PERIOD) {
             return 'active';
         }
@@ -151,7 +161,8 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         return '';
     }
 
-    public function project_backlog() {
+    public function project_backlog()
+    {
         return $GLOBALS['Language']->getText(
             'plugin_agiledashboard',
             'project_backlog',
@@ -159,11 +170,13 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         );
     }
 
-    public function has_milestone_presenters() {
+    public function has_milestone_presenters()
+    {
         return ! empty($this->milestone_presenters);
     }
 
-    public function user_helper() {
+    public function user_helper()
+    {
         if ($this->past_active() !== '') {
             return $GLOBALS['Language']->getText('plugin_agiledashboard','home_user_helper_done');
         }
@@ -171,35 +184,43 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         return $GLOBALS['Language']->getText('plugin_agiledashboard','home_user_helper_others');
     }
 
-    public function add_kanban() {
+    public function add_kanban()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','add_kanban');
     }
 
-    public function user_can_see_kanban() {
+    public function user_can_see_kanban()
+    {
         return $this->kanban_activated;
     }
 
-    public function add_kanban_modal_title() {
+    public function add_kanban_modal_title()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','add_kanban_modal_title');
     }
 
-    public function btn_close_label() {
+    public function btn_close_label()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','btn_close_label');
     }
 
-    public function btn_add_modal_label() {
+    public function btn_add_modal_label()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','btn_add_modal_label');
     }
 
-    public function kanban_name_label() {
+    public function kanban_name_label()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','kanban_name_label');
     }
 
-    public function tracker_kanban_label() {
+    public function tracker_kanban_label()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','tracker_kanban_label');
     }
 
-    public function are_trackers_available() {
+    public function are_trackers_available()
+    {
         foreach ($this->trackers as $tracker) {
             if ($tracker['used'] === false) {
                 return true;
@@ -209,7 +230,8 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         return false;
     }
 
-    public function no_tracker_available() {
+    public function no_tracker_available()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','no_tracker_available');
     }
 

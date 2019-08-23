@@ -37,20 +37,24 @@ require_once('lib/PageList.php');
 class WikiPlugin_WikiAdminSelect
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("WikiAdminSelect");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Allows selection of multiple pages which get passed to other WikiAdmin plugins.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.23 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('s'       => '', // preselect pages
                      /* select pages by meta-data: */
                      'author'   => false,
@@ -69,7 +73,8 @@ extends WikiPlugin
      * Default collector for all WikiAdmin* plugins.
      * preSelectS() is similar, but fills $this->_list
      */
-    function collectPages(&$list, &$dbi, $sortby, $limit=0, $exclude=false) {
+    function collectPages(&$list, &$dbi, $sortby, $limit=0, $exclude=false)
+    {
         $allPages = $dbi->getAllPages(0, $sortby, $limit, $exclude);
         while ($pagehandle = $allPages->next()) {
             $pagename = $pagehandle->getName();
@@ -86,7 +91,8 @@ extends WikiPlugin
      * 'only: forgot what the diffrrence to 's' was.
      * Sets $this->_list, which is picked up by collectPages() and is a default for p[]
      */
-    function preSelectS (&$args, &$request) {
+    function preSelectS(&$args, &$request)
+    {
         // override plugin argument by GET: probably not needed if s||="" is used
         // anyway, we force it for unique interface.
         if (!empty($request->getArg['s']))
@@ -116,7 +122,8 @@ extends WikiPlugin
         return $this->_list;
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         //if ($request->getArg('action') != 'browse')
         //    return $this->disabled("(action != 'browse')");
         $args = $this->getArgs($argstr, $request);

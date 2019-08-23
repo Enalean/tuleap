@@ -43,27 +43,32 @@ extends WikiPlugin
 {
     // Five required functions in a WikiPlugin.
 
-    function getName () {
+    function getName()
+    {
         return _("HelloWorld");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("Simple Sample Plugin");
 
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.13 $");
     }
 
     // Establish default values for each of this plugin's arguments.
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('salutation' => "Hello,",
                      'name'       => "World");
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         extract($this->getArgs($argstr, $request));
 
         // Any text that is returned will not be further transformed,

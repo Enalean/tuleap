@@ -109,7 +109,8 @@ class Tracker_Artifact_XMLImport {
         $this->tracker_artifact_source_id_dao         = $artifact_source_id_dao;
     }
 
-    public function importFromArchive(Tracker $tracker, Tracker_Artifact_XMLImport_XMLImportZipArchive $archive) {
+    public function importFromArchive(Tracker $tracker, Tracker_Artifact_XMLImport_XMLImportZipArchive $archive)
+    {
         $archive->extractFiles();
         $xml = simplexml_load_string($archive->getXML());
 
@@ -123,7 +124,8 @@ class Tracker_Artifact_XMLImport {
         $archive->cleanUp();
     }
 
-    public function importFromFile(Tracker $tracker, $xml_file_path) {
+    public function importFromFile(Tracker $tracker, $xml_file_path)
+    {
         $xml_security      = new XML_Security();
         $xml               = $xml_security->loadFile($xml_file_path);
         $xml_file_path     = "";
@@ -437,7 +439,8 @@ class Tracker_Artifact_XMLImport {
      * @return array
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
-    private function getSortedBySubmittedOn(SimpleXMLElement $changesets) {
+    private function getSortedBySubmittedOn(SimpleXMLElement $changesets)
+    {
         $changeset_array = array();
         foreach ($changesets as $changeset) {
             $timestamp = $this->getSubmittedOn($changeset);
@@ -451,7 +454,8 @@ class Tracker_Artifact_XMLImport {
         return $this->flattenChangesetArray($changeset_array);
     }
 
-    private function flattenChangesetArray(array $changesets_per_timestamp) {
+    private function flattenChangesetArray(array $changesets_per_timestamp)
+    {
         $changesets = array();
         foreach ($changesets_per_timestamp as $changeset_per_timestamp) {
             foreach ($changeset_per_timestamp as $changeset) {
@@ -618,7 +622,8 @@ class Tracker_Artifact_XMLImport {
      * @param SimpleXMLElement $xml_changeset
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
-    private function updateComments(Tracker_Artifact_Changeset $changeset, SimpleXMLElement $xml_changeset) {
+    private function updateComments(Tracker_Artifact_Changeset $changeset, SimpleXMLElement $xml_changeset)
+    {
         if (isset($xml_changeset->comments) && count($xml_changeset->comments->comment) > 1) {
             $all_comments = $xml_changeset->comments->comment;
             for ($i = 1; $i < count($all_comments); ++$i) {
@@ -636,7 +641,8 @@ class Tracker_Artifact_XMLImport {
      * @param SimpleXMLElement $xml_changeset
      * @return \PFUser
      */
-    private function getSubmittedBy(SimpleXMLElement $xml_changeset) {
+    private function getSubmittedBy(SimpleXMLElement $xml_changeset)
+    {
         return $this->user_finder->getUser($xml_changeset->submitted_by);
     }
 
@@ -645,7 +651,8 @@ class Tracker_Artifact_XMLImport {
      * @return int
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
-    private function getSubmittedOn(SimpleXMLElement $xml_changeset) {
+    private function getSubmittedOn(SimpleXMLElement $xml_changeset)
+    {
         $time = strtotime((string)$xml_changeset->submitted_on);
         if ($time !== false) {
             return $time;

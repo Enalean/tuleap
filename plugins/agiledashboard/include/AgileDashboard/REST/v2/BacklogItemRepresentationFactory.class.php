@@ -25,14 +25,16 @@ use EventManager;
 
 class BacklogItemRepresentationFactory {
 
-    public function createBacklogItemRepresentation(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {
+    public function createBacklogItemRepresentation(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item)
+    {
         $backlog_item_representation = new BacklogItemRepresentation();
         $backlog_item_representation->build($backlog_item, $this->getBacklogItemCardFields($backlog_item));
 
         return $backlog_item_representation;
     }
 
-    private function getBacklogItemCardFields($backlog_item) {
+    private function getBacklogItemCardFields($backlog_item)
+    {
         $current_user         = UserManager::instance()->getCurrentUser();
         $card_fields_semantic = $this->getCardFieldsSemantic($backlog_item);
         $card_fields          = array();
@@ -46,7 +48,8 @@ class BacklogItemRepresentationFactory {
         return $card_fields;
     }
 
-    private function getCardFieldsSemantic($backlog_item) {
+    private function getCardFieldsSemantic($backlog_item)
+    {
         $card_fields_semantic = null;
 
         EventManager::instance()->processEvent(

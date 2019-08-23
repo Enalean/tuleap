@@ -29,7 +29,8 @@ class Project_Service_ServiceUsageFactory {
     /** @var Project_Service_ServiceUsageDao */
     private $dao;
 
-    public function __construct(Project_Service_ServiceUsageDao $dao) {
+    public function __construct(Project_Service_ServiceUsageDao $dao)
+    {
         $this->dao = $dao;
     }
 
@@ -38,7 +39,8 @@ class Project_Service_ServiceUsageFactory {
      *
      * @return Project_Service_ServiceUsage[]
      */
-    public function getAllServicesUsage(Project $project) {
+    public function getAllServicesUsage(Project $project)
+    {
         $services_usages = array();
         $res = $this->dao->getAllServicesUsage($project->getID());
         while ($row = $res->getRow()) {
@@ -53,7 +55,8 @@ class Project_Service_ServiceUsageFactory {
      *
      * @return Project_Service_ServiceUsage
      */
-    public function getServiceUsage(Project $project, $service_id) {
+    public function getServiceUsage(Project $project, $service_id)
+    {
         $query_result = $this->dao->getServiceUsage($project->getID(), $service_id);
         $row          = $query_result->getRow();
         if ($row) {
@@ -70,7 +73,8 @@ class Project_Service_ServiceUsageFactory {
      *
      * @return ServiceUsage
      */
-    public function getInstanceFromRow(array $row) {
+    public function getInstanceFromRow(array $row)
+    {
         return new Project_Service_ServiceUsage(
             $row['service_id'],
             $row['short_name'],

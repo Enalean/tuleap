@@ -20,15 +20,18 @@
 
 class RestrictedPluginDao extends RestrictedResourceDao {
 
-    public function getResourceAllowedProjectsTableName() {
+    public function getResourceAllowedProjectsTableName()
+    {
         return 'project_plugin';
     }
 
-    public function getResourceFieldName() {
+    public function getResourceFieldName()
+    {
         return 'plugin_id';
     }
 
-    public function isResourceRestricted($plugin_id) {
+    public function isResourceRestricted($plugin_id)
+    {
         $plugin_id = $this->da->escapeInt($plugin_id);
 
         $sql = "SELECT * FROM plugin WHERE id = $plugin_id";
@@ -42,7 +45,8 @@ class RestrictedPluginDao extends RestrictedResourceDao {
         return false;
     }
 
-    public function setResourceRestricted($plugin_id) {
+    public function setResourceRestricted($plugin_id)
+    {
         $plugin_id = $this->da->escapeInt($plugin_id);
 
         $sql = "UPDATE plugin SET prj_restricted = 1 WHERE id = $plugin_id";
@@ -50,7 +54,8 @@ class RestrictedPluginDao extends RestrictedResourceDao {
         return $this->update($sql);
     }
 
-    public function unsetResourceRestricted($plugin_id) {
+    public function unsetResourceRestricted($plugin_id)
+    {
         $plugin_id = $this->da->escapeInt($plugin_id);
 
         $sql = "UPDATE plugin SET prj_restricted = 0 WHERE id = $plugin_id";
@@ -62,7 +67,8 @@ class RestrictedPluginDao extends RestrictedResourceDao {
         return false;
     }
 
-    public function searchAllowedProjectsOnResource($plugin_id) {
+    public function searchAllowedProjectsOnResource($plugin_id)
+    {
         $plugin_id = $this->da->escapeInt($plugin_id);
 
         $sql = "SELECT *
@@ -73,7 +79,8 @@ class RestrictedPluginDao extends RestrictedResourceDao {
         return $this->retrieve($sql);
     }
 
-    public function isPluginAllowedForProject($plugin_id, $project_id) {
+    public function isPluginAllowedForProject($plugin_id, $project_id)
+    {
         $plugin_id = $this->da->escapeInt($plugin_id);
         $project_id = $this->da->escapeInt($project_id);
 

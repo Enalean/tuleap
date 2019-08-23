@@ -35,7 +35,8 @@ class ArtifactReportFactory {
      *
      *    @return bool success.
      */
-    function __construct() {
+    function __construct()
+    {
         return true;
     }
 
@@ -46,7 +47,8 @@ class ArtifactReportFactory {
      *
      * @return void
      */
-    function getArtifactReportHtml($report_id,$atid) {
+    function getArtifactReportHtml($report_id,$atid)
+    {
         $sql = "SELECT * FROM artifact_report ".
          "WHERE report_id=". db_ei($report_id) ;
      //echo $sql.'<br>';
@@ -66,7 +68,8 @@ class ArtifactReportFactory {
      *
      *    @return bool
      */
-    function copyReports($atid_source,$atid_dest) {
+    function copyReports($atid_source,$atid_dest)
+    {
         global $Language;
         $report_mapping = array(100 => 100); //The system report 'Default' (sic)
      //
@@ -134,7 +137,8 @@ class ArtifactReportFactory {
      *
      *    @return bool
      */
-    function deleteReports($atid) {
+    function deleteReports($atid)
+    {
 
      // Delete artifact_report_field records
         $sql='SELECT report_id '.
@@ -178,7 +182,8 @@ class ArtifactReportFactory {
      *
      *    @return    array    The array of ArtifactReport objects.
      */
-    function getReports($group_artifact_id, $user_id) {
+    function getReports($group_artifact_id, $user_id)
+    {
 
         $artifactreports = array();
         $sql = 'SELECT report_id,name,description,scope,is_default FROM artifact_report WHERE ';
@@ -211,7 +216,8 @@ class ArtifactReportFactory {
      *  @return int     report_id
      */
 
-    function getDefaultReport($group_artifact_id) {
+    function getDefaultReport($group_artifact_id)
+    {
         $report_id = null;
         $sql = "SELECT report_id FROM artifact_report WHERE group_artifact_id=".db_ei($group_artifact_id)." AND is_default = 1";
         $result = db_query($sql);
@@ -224,7 +230,8 @@ class ArtifactReportFactory {
     /**
      * @param $string
      */
-    public function setError($string) {
+    public function setError($string)
+    {
         $this->error_state = true;
         $this->error_message = $string;
     }
@@ -232,7 +239,8 @@ class ArtifactReportFactory {
     /**
      * @return string
      */
-    public function getErrorMessage() {
+    public function getErrorMessage()
+    {
         if ($this->error_state) {
             return $this->error_message;
         } else {

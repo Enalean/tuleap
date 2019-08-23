@@ -20,42 +20,49 @@
 class User_LoginManagerStatusTest extends TuleapTestCase {
     private $user_status_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
         $this->user_status_manager = new User_UserStatusManager();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         parent::tearDown();
     }
 
-    public function itSucceedsIfUserIsActive() {
+    public function itSucceedsIfUserIsActive()
+    {
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_ACTIVE)->build()
         );
     }
 
-    public function itSucceedsIfUserIsRestricted() {
+    public function itSucceedsIfUserIsRestricted()
+    {
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_RESTRICTED)->build()
         );
     }
 
-    public function itSucceedsIfAllowPendingAndStatusIsValidated() {
+    public function itSucceedsIfAllowPendingAndStatusIsValidated()
+    {
         $this->user_status_manager->checkStatusOnVerifyPage(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_VALIDATED)->build()
         );
     }
 
-    public function itSucceedsIfAllowPendingAndStatusIsValidatedRestricted() {
+    public function itSucceedsIfAllowPendingAndStatusIsValidatedRestricted()
+    {
         $this->user_status_manager->checkStatusOnVerifyPage(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_VALIDATED_RESTRICTED)->build()
         );
     }
 
-    public function itSucceedsIfAllowPendingAndStatusIsPendingAndNoUserApproval() {
+    public function itSucceedsIfAllowPendingAndStatusIsPendingAndNoUserApproval()
+    {
         ForgeConfig::set('sys_user_approval', 0);
         $this->user_status_manager->checkStatusOnVerifyPage(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_PENDING)->build()
@@ -63,7 +70,8 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
 
     }
 
-    public function itRaisesAnExceptionWhenUserIsDeleted() {
+    public function itRaisesAnExceptionWhenUserIsDeleted()
+    {
         $this->expectException('User_StatusDeletedException');
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_DELETED)->build()
@@ -71,7 +79,8 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
 
     }
 
-    public function itRaisesAnExceptionWhenUserIsSuspended() {
+    public function itRaisesAnExceptionWhenUserIsSuspended()
+    {
         $this->expectException('User_StatusSuspendedException');
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_SUSPENDED)->build()
@@ -79,7 +88,8 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
 
     }
 
-    public function itRaisesAnExceptionWhenStatusIsUnknown() {
+    public function itRaisesAnExceptionWhenStatusIsUnknown()
+    {
         $this->expectException('User_StatusInvalidException');
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus('dsfd')->build()
@@ -87,7 +97,8 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
 
     }
 
-    public function itRaisesAnExceptionIfAllowPendingAndStatusIsUnknown() {
+    public function itRaisesAnExceptionIfAllowPendingAndStatusIsUnknown()
+    {
         $this->expectException('User_StatusInvalidException');
         $this->user_status_manager->checkStatusOnVerifyPage(
             aUser()->withPassword('password')->withStatus('dfd')->build()
@@ -95,7 +106,8 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
 
     }
 
-    public function itRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsPending() {
+    public function itRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsPending()
+    {
         $this->expectException('User_StatusPendingException');
         ForgeConfig::set('sys_user_approval', 1);
         $this->user_status_manager->checkStatus(
@@ -104,7 +116,8 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
 
     }
 
-    public function itRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsValidated() {
+    public function itRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsValidated()
+    {
         $this->expectException('User_StatusPendingException');
         ForgeConfig::set('sys_user_approval', 1);
         $this->user_status_manager->checkStatus(
@@ -113,7 +126,8 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
 
     }
 
-    public function itRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsValidated() {
+    public function itRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsValidated()
+    {
         $this->expectException('User_StatusPendingException');
         ForgeConfig::set('sys_user_approval', 0);
         $this->user_status_manager->checkStatus(
@@ -122,7 +136,8 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
 
     }
 
-    public function itRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsValidatedRestricted() {
+    public function itRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsValidatedRestricted()
+    {
         $this->expectException('User_StatusPendingException');
         ForgeConfig::set('sys_user_approval', 1);
         $this->user_status_manager->checkStatus(
@@ -131,7 +146,8 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
 
     }
 
-    public function itRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsValidatedRestricted() {
+    public function itRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsValidatedRestricted()
+    {
         $this->expectException('User_StatusPendingException');
         ForgeConfig::set('sys_user_approval', 0);
         $this->user_status_manager->checkStatus(
@@ -140,7 +156,8 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
 
     }
 
-    public function itRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsPending() {
+    public function itRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsPending()
+    {
         $this->expectException('User_StatusPendingException');
         ForgeConfig::set('sys_user_approval', 0);
         $this->user_status_manager->checkStatus(

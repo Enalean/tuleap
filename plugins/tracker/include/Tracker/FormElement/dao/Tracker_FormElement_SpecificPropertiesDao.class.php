@@ -23,7 +23,8 @@
  */
 abstract class Tracker_FormElement_SpecificPropertiesDao extends DataAccessObject {
 
-    public function searchByFieldId($field_id) {
+    public function searchByFieldId($field_id)
+    {
         $field_id  = $this->da->escapeInt($field_id);
         $sql = "SELECT *
                 FROM $this->table_name
@@ -31,7 +32,8 @@ abstract class Tracker_FormElement_SpecificPropertiesDao extends DataAccessObjec
         return $this->retrieve($sql);
     }
 
-    public function delete($field_id) {
+    public function delete($field_id)
+    {
         $field_id  = $this->da->escapeInt($field_id);
         $sql = "DELETE FROM $this->table_name
                 WHERE field_id = $field_id ";

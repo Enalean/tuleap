@@ -31,16 +31,19 @@ class PaginatedTemporaryFiles {
      */
     private $files;
 
-    public function __construct(LegacyDataAccessResultInterface $files, $total_count) {
+    public function __construct(LegacyDataAccessResultInterface $files, $total_count)
+    {
         $this->files       = $files;
         $this->total_count = $total_count;
     }
 
-    public function getFiles() {
+    public function getFiles()
+    {
         return $this->files;
     }
 
-    public function getTotalCount() {
+    public function getTotalCount()
+    {
         return $this->total_count;
     }
 }

@@ -28,7 +28,8 @@ class FileModuleMonitorFactory {
 
     var $dao;
 
-    function whoIsMonitoringPackageById($group_id, $package_id) {
+    function whoIsMonitoringPackageById($group_id, $package_id)
+    {
         $_group_id   = (int) $group_id;
         $_package_id = (int) $package_id;
 
@@ -57,7 +58,8 @@ class FileModuleMonitorFactory {
      *
      * @return DataAccessResult
      */
-    function whoIsPubliclyMonitoringPackage($packageId) {
+    function whoIsPubliclyMonitoringPackage($packageId)
+    {
         $dao    = $this->_getFileModuleMonitorDao();
         $dar    = $dao->whoIsPubliclyMonitoringPackage($packageId);
         $result = array();
@@ -67,7 +69,8 @@ class FileModuleMonitorFactory {
         return $result;
     }
 
-    function getFilesModuleMonitorFromDb($id) {
+    function getFilesModuleMonitorFromDb($id)
+    {
         $_id = (int) $id;
         $dao = $this->_getFileModuleMonitorDao();
         $dar = $dao->searchById($_id);
@@ -91,7 +94,8 @@ class FileModuleMonitorFactory {
      *
      * @return bool is_monitoring
      */
-    function isMonitoring($filemodule_id, PFUser $user, $publicly) {
+    function isMonitoring($filemodule_id, PFUser $user, $publicly)
+    {
         $_filemodule_id = (int) $filemodule_id;
         $dao            = $this->_getFileModuleMonitorDao();
         $dar            = $dao->searchMonitoringFileByUserAndPackageId($_filemodule_id, $user, $publicly);
@@ -107,7 +111,8 @@ class FileModuleMonitorFactory {
         }
     }
 
-    function _getFileModuleMonitorDao() {
+    function _getFileModuleMonitorDao()
+    {
         if (!$this->dao) {
             $this->dao = new FileModuleMonitorDao(CodendiDataAccess :: instance());
         }
@@ -123,7 +128,8 @@ class FileModuleMonitorFactory {
      *
      * @return DataAccessResult
      */
-    function setMonitor($filemodule_id, PFUser $user, $anonymous = true) {
+    function setMonitor($filemodule_id, PFUser $user, $anonymous = true)
+    {
         $dao = $this->_getFileModuleMonitorDao();
         $res = $dao->create($filemodule_id, $user, $anonymous);
         return $res;
@@ -141,7 +147,8 @@ class FileModuleMonitorFactory {
      *
      * @return Void
      */
-    public function addUserMonitoring(PFUser $user, $groupId, $fileModuleId, FRSPackage $package, FRSPackageFactory $frspf, UserHelper $userHelper) {
+    public function addUserMonitoring(PFUser $user, $groupId, $fileModuleId, FRSPackage $package, FRSPackageFactory $frspf, UserHelper $userHelper)
+    {
         if ($user) {
             $publicly = true;
             if ($frspf->userCanRead($groupId, $fileModuleId, $user->getId())) {
@@ -176,7 +183,8 @@ class FileModuleMonitorFactory {
      *
      * @return bool
      */
-    function stopMonitor($filemodule_id, PFUser $user, $onlyPublic = false) {
+    function stopMonitor($filemodule_id, PFUser $user, $onlyPublic = false)
+    {
         $_id = (int) $filemodule_id;
         $dao = $this->_getFileModuleMonitorDao();
         return $dao->delete($_id, $user, $onlyPublic);
@@ -194,7 +202,8 @@ class FileModuleMonitorFactory {
      *
      * @return Void
      */
-    function stopMonitoringForUsers($users, $groupId, $fileModuleId, FRSPackage $package, UserManager $um, UserHelper $userHelper) {
+    function stopMonitoringForUsers($users, $groupId, $fileModuleId, FRSPackage $package, UserManager $um, UserHelper $userHelper)
+    {
         if ($users && !empty($users) && is_array($users)) {
             foreach ($users as $userId) {
                 $user = $um->getUserById($userId);
@@ -223,7 +232,8 @@ class FileModuleMonitorFactory {
      *
      * @return Void
      */
-    private function stopMonitoringForUser($fileModuleId, $user, $groupId, FRSPackage $package, UserHelper $userHelper) {
+    private function stopMonitoringForUser($fileModuleId, $user, $groupId, FRSPackage $package, UserHelper $userHelper)
+    {
         if ($this->stopMonitor($fileModuleId, $user, true)) {
             $historyDao = new ProjectHistoryDao();
             $historyDao->groupAddHistory("frs_stop_monitor_package", $fileModuleId."_".$user->getId(), $groupId);
@@ -237,7 +247,8 @@ class FileModuleMonitorFactory {
     /**
      * @return Notification
      */
-    private function getNotification(FRSPackage $package, PFUser $user, $html_body, $text_body) {
+    private function getNotification(FRSPackage $package, PFUser $user, $html_body, $text_body)
+    {
         $subject = $GLOBALS['Language']->getText(
             'file_filemodule_monitor',
             'mail_subject',
@@ -261,7 +272,8 @@ class FileModuleMonitorFactory {
      *
      * @return bool
      */
-    function notifyAfterAdd(FRSPackage $package, PFUser $user) {
+    function notifyAfterAdd(FRSPackage $package, PFUser $user)
+    {
         $mail_builder = new MailBuilder(
             TemplateRendererFactory::build(),
             new MailFilter(
@@ -301,7 +313,8 @@ class FileModuleMonitorFactory {
      *
      * @return bool
      */
-    function notifyAfterDelete(FRSPackage $package, PFUser $user) {
+    function notifyAfterDelete(FRSPackage $package, PFUser $user)
+    {
         $mail_builder = new MailBuilder(
             TemplateRendererFactory::build(),
             new MailFilter(
@@ -346,7 +359,8 @@ class FileModuleMonitorFactory {
      *
      * @return String
      */
-    public function getMonitoringListHTML($fileModuleId, $um, $userHelper) {
+    public function getMonitoringListHTML($fileModuleId, $um, $userHelper)
+    {
         $editContent = '<h3>'.$GLOBALS['Language']->getText('file_filemodule_monitor', 'monitoring_people_title').'</h3>';
         $list        = $this->whoIsPubliclyMonitoringPackage($fileModuleId);
         $totalCount  = count($this->getFilesModuleMonitorFromDb($fileModuleId));
@@ -379,7 +393,8 @@ class FileModuleMonitorFactory {
      *
      * @return String
      */
-    public function getAddMonitoringForm($fileModuleId) {
+    public function getAddMonitoringForm($fileModuleId)
+    {
         $purifier    = Codendi_HTMLPurifier::instance();
         $editContent = '<form id="filemodule_monitor_form_add" method="post" >';
         $editContent .= '<input type="hidden" name="action" value="add_monitoring">';
@@ -401,7 +416,8 @@ class FileModuleMonitorFactory {
      *
      * @return String
      */
-    public function getSelfMonitoringForm($currentUser, $fileModuleId) {
+    public function getSelfMonitoringForm($currentUser, $fileModuleId)
+    {
         $purifier    = Codendi_HTMLPurifier::instance();
 
         $html = '<h3>'.$GLOBALS['Language']->getText('file_filemodule_monitor', 'my_monitoring').'</h3>';
@@ -445,7 +461,8 @@ class FileModuleMonitorFactory {
      *
      * @return String
      */
-    public function getMonitoringHTML($currentUser, $groupId, $fileModuleId, $um, $userHelper) {
+    public function getMonitoringHTML($currentUser, $groupId, $fileModuleId, $um, $userHelper)
+    {
         $purifier = Codendi_HTMLPurifier::instance();
 
         $frspf   = new FRSPackageFactory();
@@ -469,7 +486,8 @@ class FileModuleMonitorFactory {
      *
      * @return String
      */
-    public function processSelfMonitoringAction($request, $currentUser, $groupId, $fileModuleId) {
+    public function processSelfMonitoringAction($request, $currentUser, $groupId, $fileModuleId)
+    {
         $anonymous     = true;
         $performAction = false;
         if ($request->get('action') == 'monitor_package') {
@@ -502,7 +520,8 @@ class FileModuleMonitorFactory {
      *
      * @return bool
      */
-    private function stopMonitorActionListener($currentUser, $fileModuleId) {
+    private function stopMonitorActionListener($currentUser, $fileModuleId)
+    {
         if ($this->isMonitoring($fileModuleId, $currentUser, false)) {
             $result = $this->stopMonitor($fileModuleId, $currentUser);
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'monitor_turned_off'));
@@ -523,7 +542,8 @@ class FileModuleMonitorFactory {
      *
      * @return bool
      */
-    private function anonymousMonitoringActionListener($currentUser, $fileModuleId, $anonymous, $groupId) {
+    private function anonymousMonitoringActionListener($currentUser, $fileModuleId, $anonymous, $groupId)
+    {
         $performAction = false;
         if ($anonymous && (!$this->isMonitoring($fileModuleId, $currentUser, false) || $this->isMonitoring($fileModuleId, $currentUser, $anonymous))) {
             $performAction = true;
@@ -558,7 +578,8 @@ class FileModuleMonitorFactory {
      *
      * @return String
      */
-    public function processEditMonitoringAction($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper) {
+    public function processEditMonitoringAction($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper)
+    {
         $frspf   = new FRSPackageFactory();
         $package = $frspf->getFRSPackageFromDb($fileModuleId);
 
@@ -598,7 +619,8 @@ class FileModuleMonitorFactory {
      *
      * @return String
      */
-    public function processMonitoringActions($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper) {
+    public function processMonitoringActions($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper)
+    {
         $this->processSelfMonitoringAction($request, $currentUser, $groupId, $fileModuleId);
         $this->processEditMonitoringAction($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper);
     }

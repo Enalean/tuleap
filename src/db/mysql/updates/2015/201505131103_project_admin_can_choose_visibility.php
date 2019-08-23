@@ -17,15 +17,18 @@
  */
 
 class b201505131103_project_admin_can_choose_visibility extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return "By default, project admin can choose their project visibility";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "REPLACE INTO forgeconfig (name, value) VALUES ('project_admin_can_choose_visibility', '1')";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

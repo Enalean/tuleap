@@ -30,7 +30,8 @@ class MailingListDao extends DataAccessObject {
     * return all active lists
     * @return DataAccessResult
     */
-    function searchAllActiveML() {
+    function searchAllActiveML()
+    {
         $sql = "SELECT *
                 FROM mail_group_list
                 WHERE is_public IN (0,1)";
@@ -41,7 +42,8 @@ class MailingListDao extends DataAccessObject {
     * Searches by group_list_id
     * @return DataAccessResult
     */
-    function searchByGroupListId($group_list_id) {
+    function searchByGroupListId($group_list_id)
+    {
         $group_list_id = $this->da->escapeInt($group_list_id);
         $sql = "SELECT * FROM mail_group_list
                 WHERE group_list_id = $group_list_id";
@@ -55,7 +57,8 @@ class MailingListDao extends DataAccessObject {
     *
     * @return DataAccessResult
     */
-    function searchByProject($projectId) {
+    function searchByProject($projectId)
+    {
         $projectId = $this->da->escapeInt($projectId);
         $sql = "SELECT * FROM mail_group_list
                 WHERE group_id = $projectId";
@@ -69,7 +72,8 @@ class MailingListDao extends DataAccessObject {
      *
      * @return bool
      */
-    function deleteList($listId) {
+    function deleteList($listId)
+    {
         $listId = $this->da->escapeInt($listId);
         $sql="UPDATE mail_group_list SET is_public=9 ".
              " WHERE group_list_id=".$listId;
@@ -83,7 +87,8 @@ class MailingListDao extends DataAccessObject {
      *
      * @return bool
      */
-    function deleteListDefinitively($listId) {
+    function deleteListDefinitively($listId)
+    {
         $listId = $this->da->escapeInt($listId);
         $sql="DELETE FROM mail_group_list ".
              " WHERE group_list_id=".$listId;

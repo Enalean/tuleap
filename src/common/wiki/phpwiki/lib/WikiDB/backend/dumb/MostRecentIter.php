@@ -13,7 +13,8 @@ require_once('lib/WikiDB/backend.php');
 class WikiDB_backend_dumb_MostRecentIter
 extends WikiDB_backend_iterator
 {
-    function __construct(&$backend, &$pages, $params) {
+    function __construct(&$backend, &$pages, $params)
+    {
         $limit = false;
         extract($params);
         if ($exclude_major_revisions)
@@ -55,22 +56,26 @@ extends WikiDB_backend_iterator
         }
     }
 
-    function next() {
+    function next()
+    {
         return array_shift($this->_revisions);
     }
 
-    function free() {
+    function free()
+    {
         unset($this->_revisions);
     }
 }
 
-function WikiDB_backend_dumb_MostRecentIter_sortf($a, $b) {
+function WikiDB_backend_dumb_MostRecentIter_sortf($a, $b)
+{
     $acreated = $a['versiondata']['mtime'];
     $bcreated = $b['versiondata']['mtime'];
     return $bcreated - $acreated;
 }
 
-function WikiDB_backend_dumb_MostRecentIter_sortf_rev($a, $b) {
+function WikiDB_backend_dumb_MostRecentIter_sortf_rev($a, $b)
+{
     $acreated = $a['versiondata']['mtime'];
     $bcreated = $b['versiondata']['mtime'];
     return $acreated - $bcreated;

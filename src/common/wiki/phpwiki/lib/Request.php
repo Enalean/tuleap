@@ -24,7 +24,8 @@ rcs_id('$Id: Request.php,v 1.100 2006/01/17 18:57:09 uckelman Exp $');
 
 class Request {
 
-    function __construct() {
+    function __construct()
+    {
         $this->_fix_magic_quotes_gpc();
         $this->_fix_multipart_form_data();
 
@@ -46,7 +47,8 @@ class Request {
         $GLOBALS['request'] = $this;
     }
 
-    function get($key) {
+    function get($key)
+    {
         if (!empty($_SERVER))
             $vars = &$_SERVER;
         else // cgi or other servers than Apache
@@ -67,17 +69,20 @@ class Request {
         }
     }
 
-    function getArg($key) {
+    function getArg($key)
+    {
         if (isset($this->args[$key]))
             return $this->args[$key];
         return false;
     }
 
-    function getArgs () {
+    function getArgs()
+    {
         return $this->args;
     }
 
-    function setArg($key, $val) {
+    function setArg($key, $val)
+    {
         if ($val === false)
             unset($this->args[$key]);
         else
@@ -85,7 +90,8 @@ class Request {
     }
 
     // Well oh well. Do we really want to pass POST params back as GET?
-    function getURLtoSelf($args = false, $exclude = array()) {
+    function getURLtoSelf($args = false, $exclude = array())
+    {
         $get_args = $this->args;
         if ($args)
             $get_args = array_merge($get_args, $args);
@@ -113,16 +119,19 @@ class Request {
         return WikiURL($pagename, $get_args);
     }
 
-    function isPost () {
+    function isPost()
+    {
         return $this->get("REQUEST_METHOD") == "POST";
     }
 
-    function isGetOrHead () {
+    function isGetOrHead()
+    {
         return in_array($this->get('REQUEST_METHOD'),
                         array('GET', 'HEAD'));
     }
 
-    function httpVersion() {
+    function httpVersion()
+    {
         if (!preg_match('@HTTP\s*/\s*(\d+.\d+)@', $this->get('SERVER_PROTOCOL'), $m))
             return false;
         return (float) $m[1];
@@ -131,7 +140,8 @@ class Request {
     /* Redirects after edit may fail if no theme signature image is defined.
      * Set DISABLE_HTTP_REDIRECT = true then.
      */
-    function redirect($url, $noreturn = true) {
+    function redirect($url, $noreturn = true)
+    {
         $bogus = defined('DISABLE_HTTP_REDIRECT') && DISABLE_HTTP_REDIRECT;
 
         if (!$bogus) {
@@ -208,7 +218,8 @@ class Request {
      *  // After all validators have been set:
      *  $request->checkValidators();
      */
-    function setValidators($validator_set) {
+    function setValidators($validator_set)
+    {
         if (is_array($validator_set))
             $validator_set = new HTTP_ValidatorSet($validator_set);
         $this->_validators = $validator_set;
@@ -218,7 +229,8 @@ class Request {
      *  i.e dependencies on other pages mtimes
      *  now it may be called in init also to simplify client code.
      */
-    function appendValidators($validator_set) {
+    function appendValidators($validator_set)
+    {
         if (!isset($this->_validators)) {
             $this->setValidators($validator_set);
             return;
@@ -236,7 +248,8 @@ class Request {
      * instead will send "304 Not Modified" or "412 Precondition
      * Failed" (as appropriate) back to the client.
      */
-    function checkValidators() {
+    function checkValidators()
+    {
         $validators = &$this->_validators;
 
         // Set validator headers
@@ -267,7 +280,8 @@ class Request {
 
     /** Set the cache control headers in the HTTP response.
      */
-    function cacheControl($strategy=CACHE_CONTROL, $max_age=CACHE_CONTROL_MAX_AGE) {
+    function cacheControl($strategy=CACHE_CONTROL, $max_age=CACHE_CONTROL_MAX_AGE)
+    {
         if ($strategy == 'NO_CACHE') {
             $cache_control = "no-cache"; // better set private. See Pear HTTP_Header
             $max_age = -20;
@@ -284,7 +298,8 @@ class Request {
         header("Vary: Cookie"); // FIXME: add more here?
     }
 
-    function setStatus($status) {
+    function setStatus($status)
+    {
         if (preg_match('|^HTTP/.*?\s(\d+)|i', $status, $m)) {
             header($status);
             $status = $m[1];
@@ -308,7 +323,8 @@ class Request {
             $this->_log_entry->setStatus($status);
     }
 
-    function buffer_output($compress = true) {
+    function buffer_output($compress = true)
+    {
         // FIXME: disables sessions (some byte before all headers_sent())
         /*if (defined('USECACHE') and !USECACHE) {
             $this->_is_buffering_output = false;
@@ -382,7 +398,8 @@ class Request {
         $this->_ob_get_length = 0;
     }
 
-    function discardOutput() {
+    function discardOutput()
+    {
         if (!empty($this->_is_buffering_output)) {
             ob_clean();
             $this->_is_buffering_output = false;
@@ -398,7 +415,8 @@ class Request {
      * Note that this must not be called inside Template expansion or other
      * sections with ob_buffering.
      */
-    function chunkOutput() {
+    function chunkOutput()
+    {
         if (!empty($this->_is_buffering_output) or
             (@ob_get_level())) {
             $this->_do_chunked_output = true;
@@ -410,7 +428,8 @@ class Request {
         }
     }
 
-    function finish() {
+    function finish()
+    {
         $this->_finishing = true;
 
         if (!empty($this->_is_buffering_output)) {
@@ -435,10 +454,12 @@ class Request {
         exit;
     }
 
-    function getSessionVar($key) {
+    function getSessionVar($key)
+    {
         return $this->session->get($key);
     }
-    function setSessionVar($key, $val) {
+    function setSessionVar($key, $val)
+    {
         if ($key == 'wiki_user') {
             if (empty($val->page))
                 $val->page = $this->getArg('pagename');
@@ -462,16 +483,19 @@ class Request {
         }
         return $this->session->set($key, $val);
     }
-    function deleteSessionVar($key) {
+    function deleteSessionVar($key)
+    {
         return $this->session->delete($key);
     }
 
-    function getUploadedFile($key) {
+    function getUploadedFile($key)
+    {
         return Request_UploadedFile::getUploadedFile($key);
     }
 
 
-    function _fix_magic_quotes_gpc() {
+    function _fix_magic_quotes_gpc()
+    {
         $needs_fix = array('_POST',
                            '_GET',
                            '_COOKIE',
@@ -485,7 +509,8 @@ class Request {
         }
     }
 
-    function _stripslashes(&$var) {
+    function _stripslashes(&$var)
+    {
         if (is_array($var)) {
             foreach ($var as $key => $val)
                 $this->_stripslashes($var[$key]);
@@ -494,12 +519,14 @@ class Request {
             $var = stripslashes($var);
     }
 
-    function _fix_multipart_form_data () {
+    function _fix_multipart_form_data()
+    {
         if (preg_match('|^multipart/form-data|', $this->get('CONTENT_TYPE')))
             $this->_strip_leading_nl($_POST);
     }
 
-    function _strip_leading_nl(&$var) {
+    function _strip_leading_nl(&$var)
+    {
         if (is_array($var)) {
             foreach ($var as $key => $val)
                 $this->_strip_leading_nl($var[$key]);
@@ -510,7 +537,8 @@ class Request {
 }
 
 class Request_SessionVars {
-    function __construct() {
+    function __construct()
+    {
         // Prevent cacheing problems with IE 5
         session_cache_limiter('none');
 
@@ -520,13 +548,15 @@ class Request_SessionVars {
             session_start();
     }
 
-    function get($key) {
+    function get($key)
+    {
         if (isset($_SESSION[$key]))
             return $_SESSION[$key];
         return false;
     }
 
-    function set($key, $val) {
+    function set($key, $val)
+    {
         if (!function_usable('get_cfg_var') or get_cfg_var('register_globals')) {
             // This is funky but necessary, at least in some PHP's
             $GLOBALS[$key] = $val;
@@ -534,7 +564,8 @@ class Request_SessionVars {
         $_SESSION[$key] = $val;
     }
 
-    function delete($key) {
+    function delete($key)
+    {
         if (!function_usable('ini_get'))
             unset($GLOBALS[$key]);
         if (DEBUG) trigger_error("delete session $key", E_USER_WARNING);
@@ -550,7 +581,8 @@ class Request_SessionVars {
    Otherwise "\\" => "" and the uploaded file will not be found.
 */
 class Request_UploadedFile {
-    function getUploadedFile($postname) {
+    function getUploadedFile($postname)
+    {
 
         // Against php5 with !ini_get('register-long-arrays'). See Bug #1180115
         if (!isset($_FILES[$postname]))
@@ -613,27 +645,33 @@ class Request_UploadedFile {
         return new Request_UploadedFile($fileinfo);
     }
 
-    function __construct($fileinfo) {
+    function __construct($fileinfo)
+    {
         $this->_info = $fileinfo;
     }
 
-    function getSize() {
+    function getSize()
+    {
         return $this->_info['size'];
     }
 
-    function getName() {
+    function getName()
+    {
         return $this->_info['name'];
     }
 
-    function getType() {
+    function getType()
+    {
         return $this->_info['type'];
     }
 
-    function getTmpName() {
+    function getTmpName()
+    {
         return $this->_info['tmp_name'];
     }
 
-    function open() {
+    function open()
+    {
         if ( ($fd = fopen($this->_info['tmp_name'], "rb")) ) {
             if ($this->getSize() < filesize($this->_info['tmp_name'])) {
                 // FIXME: Some PHP's (or is it some browsers?) put
@@ -659,7 +697,8 @@ class Request_UploadedFile {
         return $fd;
     }
 
-    function getContents() {
+    function getContents()
+    {
         $fd = $this->open();
         $data = fread($fd, $this->getSize());
         fclose($fd);
@@ -668,7 +707,8 @@ class Request_UploadedFile {
 }
 
 class HTTP_ETag {
-    function __construct($val, $is_weak=false) {
+    function __construct($val, $is_weak=false)
+    {
         $this->_val = wikihash($val);
         $this->_weak = $is_weak;
     }
@@ -678,7 +718,8 @@ class HTTP_ETag {
      * Strong comparison: If either (or both) tag is weak, they
      *  are not equal.
      */
-    function equals($that, $strong_match=false) {
+    function equals($that, $strong_match=false)
+    {
         if ($this->_val != $that->_val)
             return false;
         if ($strong_match and ($this->_weak or $that->_weak))
@@ -687,7 +728,8 @@ class HTTP_ETag {
     }
 
 
-    function asString() {
+    function asString()
+    {
         $quoted = '"' . addslashes($this->_val) . '"';
         return $this->_weak ? "W/$quoted" : $quoted;
     }
@@ -696,14 +738,16 @@ class HTTP_ETag {
      *
      * This is a static member function.
      */
-    function parse($strval) {
+    function parse($strval)
+    {
         if (!preg_match(':^(W/)?"(.+)"$:i', trim($strval), $m))
             return false;       // parse failed
         list(,$weak,$str) = $m;
         return new HTTP_ETag(stripslashes($str), $weak);
     }
 
-    function matches($taglist, $strong_match=false) {
+    function matches($taglist, $strong_match=false)
+    {
         $taglist = trim($taglist);
 
         if ($taglist == '*') {
@@ -734,7 +778,8 @@ define ('_HTTP_VAL_MODIFIED', 2);     // Test failed, content changed
 define ('_HTTP_VAL_FAILED', 3);       // Precondition failed.
 
 class HTTP_ValidatorSet {
-    function __construct($validators) {
+    function __construct($validators)
+    {
         $this->_mtime = $this->_weak = false;
         $this->_tag = array();
 
@@ -752,7 +797,8 @@ class HTTP_ValidatorSet {
         }
     }
 
-    function append($that) {
+    function append($that)
+    {
         if (is_array($that))
             $that = new HTTP_ValidatorSet($that);
 
@@ -770,17 +816,20 @@ class HTTP_ValidatorSet {
             $this->_tag = $that->_tag;
     }
 
-    function getETag() {
+    function getETag()
+    {
         if (! $this->_tag)
             return false;
         return new HTTP_ETag($this->_tag, $this->_weak);
     }
 
-    function getModificationTime() {
+    function getModificationTime()
+    {
         return $this->_mtime;
     }
 
-    function checkConditionalRequest (&$request) {
+    function checkConditionalRequest(&$request)
+    {
         $result = max($this->_checkIfUnmodifiedSince($request),
                       $this->_checkIfModifiedSince($request),
                       $this->_checkIfMatch($request),
@@ -797,7 +846,8 @@ class HTTP_ValidatorSet {
         return false;
     }
 
-    function _checkIfUnmodifiedSince(&$request) {
+    function _checkIfUnmodifiedSince(&$request)
+    {
         if ($this->_mtime !== false) {
             $since = ParseRfc1123DateTime($request->get("HTTP_IF_UNMODIFIED_SINCE"));
             if ($since !== false && $this->_mtime > $since)
@@ -806,7 +856,8 @@ class HTTP_ValidatorSet {
         return _HTTP_VAL_PASS;
     }
 
-    function _checkIfModifiedSince(&$request) {
+    function _checkIfModifiedSince(&$request)
+    {
         if ($this->_mtime !== false and $request->isGetOrHead()) {
             $since = ParseRfc1123DateTime($request->get("HTTP_IF_MODIFIED_SINCE"));
             if ($since !== false) {
@@ -818,7 +869,8 @@ class HTTP_ValidatorSet {
         return _HTTP_VAL_PASS;
     }
 
-    function _checkIfMatch(&$request) {
+    function _checkIfMatch(&$request)
+    {
         if ($this->_tag && ($taglist = $request->get("HTTP_IF_MATCH"))) {
             $tag = $this->getETag();
             if (!$tag->matches($taglist, 'strong'))
@@ -827,7 +879,8 @@ class HTTP_ValidatorSet {
         return _HTTP_VAL_PASS;
     }
 
-    function _checkIfNoneMatch(&$request) {
+    function _checkIfNoneMatch(&$request)
+    {
         if ($this->_tag && ($taglist = $request->get("HTTP_IF_NONE_MATCH"))) {
             $tag = $this->getETag();
             $strong_compare = ! $request->isGetOrHead();

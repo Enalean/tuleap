@@ -30,7 +30,8 @@ class OrderValidatorTest extends TuleapTestCase {
     /** @var OrderValidator */
     private $order_validator;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->order_validator = new OrderValidator(
@@ -43,7 +44,8 @@ class OrderValidatorTest extends TuleapTestCase {
         );
     }
 
-    public function itAllowsToRankWhenItemsArePartOfMilestonesLinkedArtifacts() {
+    public function itAllowsToRankWhenItemsArePartOfMilestonesLinkedArtifacts()
+    {
         $order_representation = new OrderRepresentation();
         $order_representation->ids = array(115, 116);
         $order_representation->compared_to = 118;
@@ -51,7 +53,8 @@ class OrderValidatorTest extends TuleapTestCase {
         $this->order_validator->validate($order_representation);
     }
 
-    public function itDoesntAllowToRankItemsThatAreNotPartMilestonesLinkedArtifacts() {
+    public function itDoesntAllowToRankItemsThatAreNotPartMilestonesLinkedArtifacts()
+    {
         $order_representation = new OrderRepresentation();
         $order_representation->ids = array(115, 235);
         $order_representation->compared_to = 118;
@@ -60,7 +63,8 @@ class OrderValidatorTest extends TuleapTestCase {
         $this->order_validator->validate($order_representation);
     }
 
-    public function itDoesntAllowToRankItemsWithThatAreNotPartMilestonesLinkedArtifacts() {
+    public function itDoesntAllowToRankItemsWithThatAreNotPartMilestonesLinkedArtifacts()
+    {
         $order_representation = new OrderRepresentation();
         $order_representation->ids = array(115, 116);
         $order_representation->compared_to = 235;
@@ -69,7 +73,8 @@ class OrderValidatorTest extends TuleapTestCase {
         $this->order_validator->validate($order_representation);
     }
 
-    public function itDoesntAllowDuplicatedIds() {
+    public function itDoesntAllowDuplicatedIds()
+    {
         $order_representation = new OrderRepresentation();
         $order_representation->ids = array(115, 116, 115, 117);
         $order_representation->compared_to = 118;

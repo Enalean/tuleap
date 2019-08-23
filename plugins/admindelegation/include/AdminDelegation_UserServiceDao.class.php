@@ -21,18 +21,21 @@
 
 class AdminDelegation_UserServiceDao extends DataAccessObject
 {
-    public function searchAllUsers() {
+    public function searchAllUsers()
+    {
         $sql = 'SELECT * FROM plugin_admindelegation_service_user';
         return $this->retrieve($sql);
     }
 
-    public function searchUser($userId) {
+    public function searchUser($userId)
+    {
         $sql = 'SELECT service_id FROM plugin_admindelegation_service_user'.
                ' WHERE user_id = '.$this->da->escapeInt($userId);
         return $this->retrieve($sql);
     }
 
-    public function isUserGrantedForService($userId, $serviceId) {
+    public function isUserGrantedForService($userId, $serviceId)
+    {
         $sql = 'SELECT NULL FROM plugin_admindelegation_service_user'.
                ' WHERE user_id = '.$this->da->escapeInt($userId).
                ' AND service_id = '.$this->da->escapeInt($serviceId);
@@ -50,13 +53,15 @@ class AdminDelegation_UserServiceDao extends DataAccessObject
      * @param int $serviceId
      * @return DataAccessResult
      */
-    public function searchAllUserService($serviceId) {
+    public function searchAllUserService($serviceId)
+    {
         $sql = 'SELECT user_id FROM plugin_admindelegation_service_user'.
                ' WHERE service_id = '.$this->da->escapeInt($serviceId);
         return $this->retrieve($sql);
     }
 
-    public function isUserGranted($userId) {
+    public function isUserGranted($userId)
+    {
         $sql = 'SELECT NULL FROM plugin_admindelegation_service_user'.
                ' WHERE user_id = '.$this->da->escapeInt($userId).
                ' LIMIT 1';
@@ -68,13 +73,15 @@ class AdminDelegation_UserServiceDao extends DataAccessObject
         }
     }
 
-    public function addUserService($userId, $serviceId) {
+    public function addUserService($userId, $serviceId)
+    {
         $sql = 'INSERT INTO plugin_admindelegation_service_user (service_id, user_id)'.
                ' VALUES ('.$this->da->escapeInt($serviceId).', '.$this->da->escapeInt($userId).')';
         return $this->update($sql);
     }
 
-    public function removeUser($userId) {
+    public function removeUser($userId)
+    {
         $sql = 'DELETE FROM plugin_admindelegation_service_user'.
                ' WHERE user_id = '.$this->da->escapeInt($userId);
         return $this->update($sql);

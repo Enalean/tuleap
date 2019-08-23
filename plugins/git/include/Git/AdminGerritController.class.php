@@ -67,7 +67,8 @@ class Git_AdminGerritController {
         $this->admin_gerrit_builder        = $admin_gerrit_builder;
     }
 
-    public function process(Codendi_Request $request) {
+    public function process(Codendi_Request $request)
+    {
         if ($request->get('action') == 'edit-gerrit-server') {
             $this->updateGerritServer($request);
         } else if ($request->get('action') == 'add-gerrit-server') {
@@ -97,14 +98,16 @@ class Git_AdminGerritController {
         $GLOBALS['Response']->redirect(GIT_SITE_ADMIN_BASE_URL . '?pane=gerrit_servers_admin');
     }
 
-    private function updateGerritServer(Codendi_Request $request) {
+    private function updateGerritServer(Codendi_Request $request)
+    {
         $request_gerrit_server = $request->params;
         $this->csrf->check();
         $this->updateServer($request_gerrit_server);
         $GLOBALS['Response']->redirect(GIT_SITE_ADMIN_BASE_URL . '?pane=gerrit_servers_admin');
     }
 
-    public function display(Codendi_Request $request) {
+    public function display(Codendi_Request $request)
+    {
         $title = dgettext('tuleap-git', 'Git');
 
         switch ($request->get('action')) {
@@ -157,7 +160,8 @@ class Git_AdminGerritController {
         );
     }
 
-    private function getManageAllowedProjectsPresenter(Codendi_Request $request) {
+    private function getManageAllowedProjectsPresenter(Codendi_Request $request)
+    {
         $gerrit_server_id = $request->get('gerrit_server_id');
         $gerrit_server    = $this->gerrit_server_factory->getServerById($gerrit_server_id);
 
@@ -168,13 +172,15 @@ class Git_AdminGerritController {
         );
     }
 
-    private function fetchGerritServers() {
+    private function fetchGerritServers()
+    {
         if (empty($this->servers)) {
             $this->servers = $this->gerrit_server_factory->getServers();
         }
     }
 
-    private function getListOfGerritServersPresenters() {
+    private function getListOfGerritServersPresenters()
+    {
         $this->fetchGerritServers();
 
         $list_of_presenters = array();

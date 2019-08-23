@@ -52,14 +52,16 @@ class FakePluginToTestHooks extends Plugin {
 
 class PluginTest extends TuleapTestCase {
 
-    function testId() {
+    function testId()
+    {
         $p = new Plugin();
         $this->assertEqual($p->getId(), -1);
         $p = new Plugin(123);
         $this->assertEqual($p->getId(), 123);
     }
 
-    function testPluginInfo() {
+    function testPluginInfo()
+    {
         $p = new Plugin();
         $this->assertIsA($p->getPluginInfo(), 'PluginInfo');
     }
@@ -127,13 +129,15 @@ class PluginTest extends TuleapTestCase {
         $plugin->addHook('no_callback_defined');
     }
 
-    function testScope() {
+    function testScope()
+    {
         $p = new Plugin();
         $this->assertIdentical($p->getScope(), Plugin::SCOPE_SYSTEM);
         $this->assertNotEqual($p->getScope(), Plugin::SCOPE_PROJECT);
         $this->assertNotEqual($p->getScope(), Plugin::SCOPE_USER);
     }
-    function testGetPluginEtcRoot() {
+    function testGetPluginEtcRoot()
+    {
         $GLOBALS['sys_custompluginsroot'] = $this->getTmpDir().'/test/custom/';
         $shortname = 'shortname';
         $pm = new MockPluginManager($this);
@@ -143,7 +147,8 @@ class PluginTest extends TuleapTestCase {
 
         $this->assertEqual($p->getPluginEtcRoot(), $GLOBALS['sys_custompluginsroot'].'/'.$shortname.'/etc');
     }
-    function testGetPluginPath() {
+    function testGetPluginPath()
+    {
         $GLOBALS['sys_pluginspath']       = '/plugins';
         $GLOBALS['sys_custompluginspath'] = '/customplugins';
         $shortname = 'shortname';
@@ -158,7 +163,8 @@ class PluginTest extends TuleapTestCase {
         $this->assertEqual($p->getPluginPath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname);
     }
 
-    function testGetThemePath() {
+    function testGetThemePath()
+    {
         $GLOBALS['sys_user_theme']        = 'current_theme';
         $GLOBALS['sys_pluginspath']       = '/plugins';
         $GLOBALS['sys_custompluginspath'] = '/customplugins';
@@ -252,7 +258,8 @@ class PluginTest extends TuleapTestCase {
         rmdir(dirname($GLOBALS['sys_custompluginsroot']));
     }
 
-    function testGetThemePathShouldReturnNullIfNoUserTheme() {
+    function testGetThemePathShouldReturnNullIfNoUserTheme()
+    {
         unset($GLOBALS['sys_user_theme']);
         $GLOBALS['sys_pluginspath']       = '/plugins';
         $GLOBALS['sys_custompluginspath'] = '/customplugins';
@@ -269,7 +276,8 @@ class PluginTest extends TuleapTestCase {
         $this->assertEqual($p->getThemePath(), '');
     }
 
-    function testGetFilesystemPath() {
+    function testGetFilesystemPath()
+    {
         $GLOBALS['sys_pluginsroot']       = '/my/application';
 
         $pm = new MockPluginManager($this);
@@ -282,7 +290,8 @@ class PluginTest extends TuleapTestCase {
         $this->assertEqual($p->getFilesystemPath(), '/my/application/zataz');
     }
 
-    function testGetFilesystemPathCustom() {
+    function testGetFilesystemPathCustom()
+    {
         $GLOBALS['sys_custompluginsroot']       = '/my/custom/application';
 
         $pm = new MockPluginManager($this);
@@ -295,7 +304,8 @@ class PluginTest extends TuleapTestCase {
         $this->assertEqual($p->getFilesystemPath(), '/my/custom/application/zataz');
     }
 
-    function testGetFilesystemPathWithSlashAtTheEnd() {
+    function testGetFilesystemPathWithSlashAtTheEnd()
+    {
         $GLOBALS['sys_pluginsroot']       = '/my/application/';
 
         $pm = new MockPluginManager($this);
@@ -308,12 +318,14 @@ class PluginTest extends TuleapTestCase {
         $this->assertEqual($p->getFilesystemPath(), '/my/application/zataz');
     }
 
-    function itHasNoDependenciesByDefault() {
+    function itHasNoDependenciesByDefault()
+    {
         $plugin = new Plugin();
         $this->assertArrayEmpty($plugin->getDependencies());
     }
 
-    function itDoesntAllowToListenSameHookSeveralTimes() {
+    function itDoesntAllowToListenSameHookSeveralTimes()
+    {
         $this->expectException();
         $plugin = new Plugin();
         $plugin->addHook('bla');

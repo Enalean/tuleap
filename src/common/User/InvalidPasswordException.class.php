@@ -18,7 +18,8 @@
  */
 
 class User_InvalidPasswordException extends User_LoginException {
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct($GLOBALS['Language']->getText('include_session','invalid_pwd'));
     }
 }

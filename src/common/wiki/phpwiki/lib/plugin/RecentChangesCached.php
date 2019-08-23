@@ -43,32 +43,39 @@ class WikiPlugin_RecentChangesCached
 extends WikiPluginCached
 {
     /* --------- overwrite virtual or abstract methods ---------------- */
-    function getPluginType() {
+    function getPluginType()
+    {
         return PLUGIN_CACHED_HTML;
     }
 
-    function getName() {
+    function getName()
+    {
         return "RecentChangesCached";
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return 'Caches output of RecentChanges called with default arguments.';
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.4 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return WikiPlugin_RecentChanges::getDefaultArguments();
     }
 
-    function getExpire($dbi, $argarray, $request) {
+    function getExpire($dbi, $argarray, $request)
+    {
         return '+900'; // 15 minutes
     }
 
-    function getHtml($dbi, $argarray, $request, $basepage) {
+    function getHtml($dbi, $argarray, $request, $basepage)
+    {
         $loader = new WikiPluginLoader;
         return $loader->expandPI('<?plugin RecentChanges '
             . WikiPluginCached::glueArgs($argarray)

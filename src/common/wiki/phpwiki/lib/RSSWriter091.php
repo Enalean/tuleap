@@ -55,7 +55,8 @@ class RSSWriter091 extends RssWriter
     /**
      * Create a new RDF <em>typedNode</em>.
      */
-    function node($type, $properties, $uri = false) {
+    function node($type, $properties, $uri = false)
+    {
         return new XmlElement($type, '',
                               $this->elementize($properties));
     }
@@ -63,7 +64,8 @@ class RSSWriter091 extends RssWriter
     /**
      * Write output to HTTP client.
      */
-    function spew() {
+    function spew()
+    {
         header("Content-Type: application/xml; charset=" . RSS_ENCODING);
         printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", RSS_ENCODING);
         print("<!DOCTYPE rss PUBLIC \"-//Netscape Communications//DTD RSS 0.91//EN\"\n");
@@ -78,7 +80,7 @@ class _RecentChanges_RssFormatter091
 extends _RecentChanges_RssFormatter
 // This class should probably go at then of RecentChanges.php
 {
-    function format ($changes)
+    function format($changes)
     {
         //    include_once('lib/RssWriter.php');
         $rss = new RSSWriter091;
@@ -103,7 +105,7 @@ extends _RecentChanges_RssFormatter
     }
 
 
-    function channel_properties ()
+    function channel_properties()
     {
         global $request;
 
@@ -125,7 +127,7 @@ extends _RecentChanges_RssFormatter
     }
 
 
-    function item_properties ($rev)
+    function item_properties($rev)
     {
         $page = $rev->getPage();
         $pagename = $page->getName();

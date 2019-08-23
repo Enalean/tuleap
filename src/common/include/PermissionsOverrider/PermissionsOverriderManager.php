@@ -36,7 +36,8 @@ class PermissionsOverrider_PermissionsOverriderManager {
     /**
      * Allows clear instance for test. DO NOT USE IT IN PRODUCTION CODE!
      */
-    public static function clearInstance() {
+    public static function clearInstance()
+    {
         self::$instance = null;
     }
 
@@ -44,7 +45,8 @@ class PermissionsOverrider_PermissionsOverriderManager {
      * Set current instance of singleton.  DO NOT USE IT IN PRODUCTION CODE!
      * @param EventManager $instance
      */
-    public static function setInstance(PermissionsOverrider_PermissionsOverriderManager $instance) {
+    public static function setInstance(PermissionsOverrider_PermissionsOverriderManager $instance)
+    {
         self::$instance = $instance;
     }
 
@@ -53,7 +55,8 @@ class PermissionsOverrider_PermissionsOverriderManager {
      *
      * @return PermissionsOverrider_PermissionsOverriderManager
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (! self::$instance) {
             self::$instance = new PermissionsOverrider_PermissionsOverriderManager();
         }
@@ -61,7 +64,8 @@ class PermissionsOverrider_PermissionsOverriderManager {
     }
 
 
-    public function doesOverriderAllowUserToAccessPlatform(PFUser $user) {
+    public function doesOverriderAllowUserToAccessPlatform(PFUser $user)
+    {
         $permissions_overrider = $this->getPermissionsOverrider();
 
         if (! $permissions_overrider) {
@@ -71,7 +75,8 @@ class PermissionsOverrider_PermissionsOverriderManager {
         return $permissions_overrider->decideToLetUserAccessPlatformEvenIfTuleapWouldNot($user);
     }
 
-    public function doesOverriderAllowUserToAccessProject(PFUser $user, Project $project) {
+    public function doesOverriderAllowUserToAccessProject(PFUser $user, Project $project)
+    {
         $permissions_overrider = $this->getPermissionsOverrider();
 
         if (! $permissions_overrider) {
@@ -81,7 +86,8 @@ class PermissionsOverrider_PermissionsOverriderManager {
         return $permissions_overrider->decideToLetUserAccessProjectEvenIfTuleapWouldNot($user, $project);
     }
 
-    public function doesOverriderForceUsageOfAnonymous() {
+    public function doesOverriderForceUsageOfAnonymous()
+    {
         $permissions_overrider = $this->getPermissionsOverrider();
 
         if (! $permissions_overrider) {
@@ -91,15 +97,18 @@ class PermissionsOverrider_PermissionsOverriderManager {
         return $permissions_overrider->forceUsageOfAnonymous();
     }
 
-    private function getPermissionsOverriderDirectory() {
+    private function getPermissionsOverriderDirectory()
+    {
         return ForgeConfig::get("sys_custom_dir")."/".self::PERMISSIONS_OVERRIDER_DIRECTORY;
     }
 
-    private function getPermissionsOverriderFilePath() {
+    private function getPermissionsOverriderFilePath()
+    {
         return $this->getPermissionsOverriderDirectory()."/".self::PERMISSIONS_OVERRIDER_FILE;
     }
 
-    private function getPermissionsOverrider() {
+    private function getPermissionsOverrider()
+    {
         if (! is_dir($this->getPermissionsOverriderDirectory())) {
             return;
         }

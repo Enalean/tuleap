@@ -29,14 +29,16 @@ use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBu
 class Docman_MetadataListOfValuesElementFactory {
     var $metadataId;
 
-    function __construct($metadataId=null) {
+    function __construct($metadataId=null)
+    {
         $this->metadataId = $metadataId;
     }
 
     /**
      * Return Docman_MetadataListOfValuesElementDao object.
      */
-    private function getDao() {
+    private function getDao()
+    {
         static $_plugin_docman_metadata_love_dao_instance;
         if(!$_plugin_docman_metadata_love_dao_instance) {
             $_plugin_docman_metadata_love_dao_instance = new Docman_MetadataListOfValuesElementDao(CodendiDataAccess::instance());
@@ -49,7 +51,8 @@ class Docman_MetadataListOfValuesElementFactory {
      * Then keep metadata_value consistent: if there is no entry for a given
      * (item, $this->metadataId), create a default entry (NONE value).
      */
-    function delete(&$love) {
+    function delete(&$love)
+    {
         $dao = $this->getDao();
         $deleted = $dao->delete($love->getId());
         if($deleted) {
@@ -59,7 +62,8 @@ class Docman_MetadataListOfValuesElementFactory {
         return $deleted;
     }
 
-    function deleteByMetadataId() {
+    function deleteByMetadataId()
+    {
         $deleted = false;
         if($this->metadataId !== null ) {
             $dao = $this->getDao();
@@ -68,7 +72,8 @@ class Docman_MetadataListOfValuesElementFactory {
         return $deleted;
     }
 
-    function create(&$love) {
+    function create(&$love)
+    {
         $dao = $this->getDao();
 
         $status = $love->getStatus();
@@ -83,7 +88,8 @@ class Docman_MetadataListOfValuesElementFactory {
                             $status);
     }
 
-    function update($love) {
+    function update($love)
+    {
         $dao = $this->getDao();
         return $dao->updateElement($this->metadataId,
                                    $love->getId(),
@@ -96,7 +102,8 @@ class Docman_MetadataListOfValuesElementFactory {
     /**
      * Add 'None' value as a value of the list for metadata $this->metadataId.
      */
-    function createNoneValue() {
+    function createNoneValue()
+    {
         $dao = $this->getDao();
         return $dao->createMetadataElementBond($this->metadataId, PLUGIN_DOCMAN_ITEM_STATUS_NONE);
     }
@@ -111,7 +118,8 @@ class Docman_MetadataListOfValuesElementFactory {
     /**
      * Return the list of Elements for a given Metadata id.
      */
-    public function getListByFieldId($id, $mdLabel, $onlyActive) {
+    public function getListByFieldId($id, $mdLabel, $onlyActive)
+    {
         if($mdLabel == 'status') {
             $lst = $this->getStatusList();
             return $lst;
@@ -122,7 +130,8 @@ class Docman_MetadataListOfValuesElementFactory {
         }
     }
 
-    public function getIteratorByFieldId($id, $mdLabel, $onlyActive) {
+    public function getIteratorByFieldId($id, $mdLabel, $onlyActive)
+    {
         $loveArray = $this->getListByFieldId($id, $mdLabel, $onlyActive);
         $loveIter  = new ArrayIterator($loveArray);
         return $loveIter;
@@ -131,7 +140,8 @@ class Docman_MetadataListOfValuesElementFactory {
     /**
      * Return the Element from its Id.
      */
-    public function getByElementId($id, $mdLabel = null) {
+    public function getByElementId($id, $mdLabel = null)
+    {
         $e = null;
         switch($mdLabel) {
             case 'status':
@@ -152,7 +162,8 @@ class Docman_MetadataListOfValuesElementFactory {
     /**
      * Return the all elements that match given name.
      */
-    function getByName($name, $mdLabel) {
+    function getByName($name, $mdLabel)
+    {
         $ea = array();
         $ei = null;
         switch($mdLabel) {
@@ -175,7 +186,8 @@ class Docman_MetadataListOfValuesElementFactory {
         return $ei;
     }
 
-    public function getLoveValuesForItem($item, $md) {
+    public function getLoveValuesForItem($item, $md)
+    {
         $dao = $this->getDao();
         $dar = $dao->searchListValuesById($md->getId(), $item->getId());
         $i   = $this->_returnLoveIteratorFromDar($dar);
@@ -193,7 +205,8 @@ class Docman_MetadataListOfValuesElementFactory {
      *
      * @return Array Map between source and destination
      */
-    function cloneValues(Docman_Metadata $srcMd, Docman_Metadata $dstMd) {
+    function cloneValues(Docman_Metadata $srcMd, Docman_Metadata $dstMd)
+    {
         $valuesMapping = array();
         $dstLoveFactory = $this->getMetadataListOfValuesElementFactory($dstMd->getId());
         $loveArray = $this->getListByFieldId($srcMd->getId(), $srcMd->getLabel(), false);
@@ -229,7 +242,8 @@ class Docman_MetadataListOfValuesElementFactory {
      * @param Docman_Metadata $dstMd   Destination metadata
      * @param Array           $loveMap Map between elements of $srcMd and $dstMd
      */
-    function exportValues($srcMd, $dstMd, $loveMap) {
+    function exportValues($srcMd, $dstMd, $loveMap)
+    {
         $dstLoveFactory = $this->getMetadataListOfValuesElementFactory($dstMd->getId());
 
         $srcLoveArray = $this->getListByFieldId($srcMd->getId(), $srcMd->getLabel(), true);
@@ -257,7 +271,8 @@ class Docman_MetadataListOfValuesElementFactory {
     /**
      * Try to find matching values between 2 metadata
      */
-    function getLoveMapping($md, $dstMdId, &$metadataMapping) {
+    function getLoveMapping($md, $dstMdId, &$metadataMapping)
+    {
         // Special treatement for value 'Any' that is not recorded in the DB but
         // that is always 0.
         $metadataMapping['love'][0] = 0;
@@ -288,7 +303,8 @@ class Docman_MetadataListOfValuesElementFactory {
     /**
      * Return static list of status (hardcoded metadata with hardcoded values)
      */
-    public function getStatusList($status=null) {
+    public function getStatusList($status=null)
+    {
         $ea = array();
 
         $e = new Docman_MetadataListOfValuesElement();
@@ -334,7 +350,8 @@ class Docman_MetadataListOfValuesElementFactory {
         }
     }
 
-    private function _returnLoveIteratorFromDar($dar) {
+    private function _returnLoveIteratorFromDar($dar)
+    {
         $ea = array();
         if($dar && !$dar->isError()) {
             $dar->rewind();
@@ -348,7 +365,8 @@ class Docman_MetadataListOfValuesElementFactory {
         return $ei;
     }
 
-    function getMetadataListOfValuesElementFactory($metadataId=null) {
+    function getMetadataListOfValuesElementFactory($metadataId=null)
+    {
         return new Docman_MetadataListOfValuesElementFactory($metadataId);
     }
 }

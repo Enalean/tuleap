@@ -43,7 +43,8 @@ class ArtifactCanned {
      *  @param    array    (all fields from artifact_file_user_vw) OR id from database.
      *  @return bool success.
      */
-    function __construct(&$ArtifactType, $data=false) {
+    function __construct(&$ArtifactType, $data=false)
+    {
         global $Language;
 
      //was ArtifactType legit?
@@ -84,7 +85,8 @@ class ArtifactCanned {
      *    @param    string    The item body.
      *  @return id on success / false on failure.
      */
-    function create($title, $body) {
+    function create($title, $body)
+    {
         global $Language;
 
      //    data validation
@@ -127,7 +129,8 @@ class ArtifactCanned {
      *    @param int    The ID number.
      *    @return bool success.
      */
-    function fetchData($id) {
+    function fetchData($id)
+    {
         global $Language;
 
         $res=db_query("SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='". db_ei($id) ."' AND group_artifact_id='". db_ei($this->atid) ."'");
@@ -145,7 +148,8 @@ class ArtifactCanned {
      *
      *    @return ArtifactType.
      */
-    function getArtifactType() {
+    function getArtifactType()
+    {
         return $this->ArtifactType;
     }
 
@@ -154,7 +158,8 @@ class ArtifactCanned {
      *
      *    @return    int    The id #.
      */
-    function getID() {
+    function getID()
+    {
         return $this->data_array['artifact_canned_id'];
     }
 
@@ -163,7 +168,8 @@ class ArtifactCanned {
      *
      *    @return    string    The title.
      */
-    function getTitle() {
+    function getTitle()
+    {
         return $this->data_array['title'];
     }
 
@@ -172,7 +178,8 @@ class ArtifactCanned {
      *
      *    @return    string    The message body.
      */
-    function getBody() {
+    function getBody()
+    {
         return $this->data_array['body'];
     }
 
@@ -183,7 +190,8 @@ class ArtifactCanned {
      *  @param    string    Body of the message.
      *  @return bool success.
      */
-    function delete($artifact_canned_id) {
+    function delete($artifact_canned_id)
+    {
         global $Language;
 
         if (!$this->ArtifactType->userIsAdmin()) {
@@ -213,7 +221,8 @@ class ArtifactCanned {
      *  @param    string    Body of the message.
      *  @return bool success.
      */
-    function update($title,$body) {
+    function update($title,$body)
+    {
         global $Language;
 
         if (!$this->ArtifactType->userIsAdmin()) {
@@ -242,12 +251,14 @@ class ArtifactCanned {
     /**
      * @param $string
      */
-    public function setError($string) {
+    public function setError($string)
+    {
         $this->error_state = true;
         $this->error_message = $string;
     }
 
-    public function clearError() {
+    public function clearError()
+    {
         $this->error_state = false;
         $this->error_message = '';
     }
@@ -255,7 +266,8 @@ class ArtifactCanned {
     /**
      * @return string
      */
-    public function getErrorMessage() {
+    public function getErrorMessage()
+    {
         if ($this->error_state) {
             return $this->error_message;
         } else {
@@ -266,7 +278,8 @@ class ArtifactCanned {
     /**
      * @return bool
      */
-    public function isError() {
+    public function isError()
+    {
         return $this->error_state;
     }
 }

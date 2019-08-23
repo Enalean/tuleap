@@ -28,7 +28,8 @@ Mock::generatePartial('Valid', 'ValidTestVersion', array('addFeedback'));
 
 class ValidTest extends TuleapTestCase {
 
-    function testArgPropagate() {
+    function testArgPropagate()
+    {
         $v = new Valid();
         $v->disableFeedback();
         $r = new MockRule($this);
@@ -37,7 +38,8 @@ class ValidTest extends TuleapTestCase {
         $v->validate('value');
     }
 
-    function testRetPropagate() {
+    function testRetPropagate()
+    {
         $v = new Valid();
         $v->disableFeedback();
         $r = new MockRule($this);
@@ -47,7 +49,8 @@ class ValidTest extends TuleapTestCase {
     }
 
     // If one fails, all test fails
-    function testOneFailAllFail() {
+    function testOneFailAllFail()
+    {
         $v = new Valid();
         $v->disableFeedback();
 
@@ -67,7 +70,8 @@ class ValidTest extends TuleapTestCase {
     }
 
     // All conditions are tested
-    function testAllRulesChecked() {
+    function testAllRulesChecked()
+    {
         $v = new Valid();
         $v->disableFeedback();
 
@@ -90,7 +94,8 @@ class ValidTest extends TuleapTestCase {
     }
 
 
-    function testDefaultErrorMessage() {
+    function testDefaultErrorMessage()
+    {
         $v = new Valid();
         $v->disableFeedback();
 
@@ -102,7 +107,8 @@ class ValidTest extends TuleapTestCase {
         $v->validate('value');
     }
 
-    function testNoErrorMessage() {
+    function testNoErrorMessage()
+    {
         $v = new Valid();
         $v->disableFeedback();
 
@@ -114,7 +120,8 @@ class ValidTest extends TuleapTestCase {
         $v->validate('value');
     }
 
-    function testNotRequiredEmptyCall() {
+    function testNotRequiredEmptyCall()
+    {
         $r1 = new MockRule($this);
         $r1->expectNever('isValid');
         $v1 = new Valid();
@@ -135,7 +142,8 @@ class ValidTest extends TuleapTestCase {
         $v3->validate(null);
     }
 
-    function testRequiredEmptyCall() {
+    function testRequiredEmptyCall()
+    {
         $r1 = new MockRule($this);
         $r1->expectOnce('isValid');
         $v1 = new Valid();
@@ -165,7 +173,8 @@ class ValidTest extends TuleapTestCase {
      * Need to throw an error if the value is required but the rule return true
      * even with empty values
      */
-    function testRequiredAndPermissive() {
+    function testRequiredAndPermissive()
+    {
         $r = new MockRule($this);
         $r->setReturnValue('isValid', true);
 
@@ -176,7 +185,8 @@ class ValidTest extends TuleapTestCase {
         $this->assertFalse($v->validate(''));
     }
 
-    function testValueEmpty() {
+    function testValueEmpty()
+    {
         $v = new Valid();
         $this->assertTrue($v->isValueEmpty(''));
         $this->assertTrue($v->isValueEmpty(false));
@@ -184,7 +194,8 @@ class ValidTest extends TuleapTestCase {
         $this->assertFalse($v->isValueEmpty(' '));
     }
 
-    function testNoFeedback() {
+    function testNoFeedback()
+    {
         $v = new ValidTestVersion($this);
         $v->disableFeedback();
         $v->expectNever('addFeedback');
@@ -196,7 +207,8 @@ class ValidTest extends TuleapTestCase {
         $v->validate('value');
     }
 
-    function testFeedback() {
+    function testFeedback()
+    {
         $v = new ValidTestVersion($this);
         // Need to call the constructore manually
         $v->__construct();
@@ -210,7 +222,8 @@ class ValidTest extends TuleapTestCase {
         $v->validate('value');
     }
 
-    function testFeedbackErrorWhenRequired() {
+    function testFeedbackErrorWhenRequired()
+    {
         $v = new ValidTestVersion($this);
         // Need to call the constructore manually
         $v->__construct();
@@ -225,7 +238,8 @@ class ValidTest extends TuleapTestCase {
         $v->validate('value');
     }
 
-    function testFeedbackWarning() {
+    function testFeedbackWarning()
+    {
         $v = new ValidTestVersion($this);
         // Need to call the constructore manually
         $v->__construct();
@@ -239,7 +253,8 @@ class ValidTest extends TuleapTestCase {
         $v->validate('value');
     }
 
-    function testFeedbackGlobal() {
+    function testFeedbackGlobal()
+    {
         $v = new ValidTestVersion($this);
         // Need to call the constructore manually
         $v->__construct();
@@ -261,7 +276,8 @@ class ValidTest extends TuleapTestCase {
         $v->validate('value');
     }
 
-    function testFeedbackGlobalWithoutErrors() {
+    function testFeedbackGlobalWithoutErrors()
+    {
         $v = new ValidTestVersion($this);
         // Need to call the constructore manually
         $v->__construct();

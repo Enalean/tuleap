@@ -22,7 +22,8 @@ require_once 'bootstrap.php';
 
 class Tracker_Artifact_ChangesetJsonFormatterTest extends TuleapTestCase {
 
-    public function itHasJsonRepresentation() {
+    public function itHasJsonRepresentation()
+    {
         $timestamp = mktime(1,1,1,9,25,2013);
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class, [15, aMockArtifact()->build(), 45, $timestamp, ''])->makePartial()->shouldAllowMockingProtectedMethods();
         $template_renderer = \Mockery::spy(\TemplateRenderer::class);

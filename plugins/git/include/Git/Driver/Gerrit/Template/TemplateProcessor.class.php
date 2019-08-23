@@ -22,7 +22,8 @@ class Git_Driver_Gerrit_Template_TemplateProcessor {
 
     public const PROJECT_NAME_VARIABLE = '%projectname%';
 
-    public function processTemplate(Git_Driver_Gerrit_Template_Template $template, Project $project) {
+    public function processTemplate(Git_Driver_Gerrit_Template_Template $template, Project $project)
+    {
         return str_replace(self::PROJECT_NAME_VARIABLE, $project->getUnixName(), $template->getContent());
     }
 }

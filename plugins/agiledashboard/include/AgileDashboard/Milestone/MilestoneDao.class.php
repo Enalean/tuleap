@@ -222,7 +222,8 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    private function getStatusStatements(ISearchOnStatus $criterion, $alias_name) {
+    private function getStatusStatements(ISearchOnStatus $criterion, $alias_name)
+    {
         $from_status_statement  = "";
         $where_status_statement = "1";
         if ($criterion->shouldRetrieveOpenMilestones() && $criterion->shouldRetrieveClosedMilestones()) {
@@ -268,7 +269,8 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
         return array($from_status_statement, $where_status_statement);
     }
 
-    public function searchSubMilestones($milestone_artifact_id) {
+    public function searchSubMilestones($milestone_artifact_id)
+    {
         $limit     = null;
         $offset    = null;
         $order     = 'asc';
@@ -277,7 +279,8 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
         return $this->searchPaginatedSubMilestones($milestone_artifact_id, $criterion, $limit, $offset, $order);
     }
 
-    public function getAllMilestoneByTrackers(array $list_of_trackers_ids) {
+    public function getAllMilestoneByTrackers(array $list_of_trackers_ids)
+    {
         $select_fragments = $this->getSelectFragments($list_of_trackers_ids);
         $from_fragments   = $this->getFromFragments($list_of_trackers_ids);
         $order_fragments  = $this->getOrderFragments($list_of_trackers_ids);
@@ -289,19 +292,23 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    private function getOrderFragments(array $list_of_trackers_ids) {
+    private function getOrderFragments(array $list_of_trackers_ids)
+    {
         return 'm'. implode('.id, m', $list_of_trackers_ids) .'.id';
     }
 
-    private function getSelectFragments(array $list_of_trackers_ids) {
+    private function getSelectFragments(array $list_of_trackers_ids)
+    {
         return implode(', ', array_map(array($this, 'extractSelectFragments'), $list_of_trackers_ids));
     }
 
-    private function extractSelectFragments($tracker_id) {
+    private function extractSelectFragments($tracker_id)
+    {
         return "m{$tracker_id}.id as m{$tracker_id}_id, m{$tracker_id}_CVT.value AS m{$tracker_id}_title";
     }
 
-    private function getFromFragments(array $list_of_trackers_ids) {
+    private function getFromFragments(array $list_of_trackers_ids)
+    {
         $trackers_ids = $list_of_trackers_ids;
         $first_tracker_id = array_shift($trackers_ids);
         return "tracker_artifact AS m{$first_tracker_id}
@@ -310,7 +317,8 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
                 {$this->joinRecursively($first_tracker_id, $trackers_ids)}";
     }
 
-    private function joinRecursively($parent_tracker_id, array $trackers_ids) {
+    private function joinRecursively($parent_tracker_id, array $trackers_ids)
+    {
         $child_tracker_id = array_shift($trackers_ids);
         if (! $child_tracker_id) {
             return '';
@@ -326,7 +334,8 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
         ) ON (m{$parent_tracker_id}.last_changeset_id = m{$parent_tracker_id}_CV2.changeset_id)";
     }
 
-    private function getTitleFromFragment($tracker_id) {
+    private function getTitleFromFragment($tracker_id)
+    {
         return "LEFT JOIN (
             tracker_changeset_value AS m{$tracker_id}_CV
             INNER JOIN tracker_semantic_title AS m{$tracker_id}_ST ON ( m{$tracker_id}_CV.field_id = m{$tracker_id}_ST.field_id )
@@ -334,7 +343,8 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
         ) ON (m{$tracker_id}.last_changeset_id = m{$tracker_id}_CV.changeset_id)";
     }
 
-    private function getTrackerFromFragment($tracker_id) {
+    private function getTrackerFromFragment($tracker_id)
+    {
         return "INNER JOIN tracker AS mt{$tracker_id} ON (mt{$tracker_id}.id = m{$tracker_id}.tracker_id AND m{$tracker_id}.tracker_id = {$tracker_id})";
     }
 }

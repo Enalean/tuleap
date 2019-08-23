@@ -26,7 +26,8 @@ class Project_Service_ServiceUsageDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function getAllServicesUsage($group_id) {
+    public function getAllServicesUsage($group_id)
+    {
         $group_id = $this->da->escapeInt($group_id);
 
         $sql = "SELECT service_id, short_name, is_used
@@ -43,7 +44,8 @@ class Project_Service_ServiceUsageDao extends DataAccessObject {
      *
      * @return bool
      */
-    public function activateService($group_id, $service_id) {
+    public function activateService($group_id, $service_id)
+    {
         $group_id   = $this->da->escapeInt($group_id);
         $service_id = $this->da->escapeInt($service_id);
 
@@ -61,7 +63,8 @@ class Project_Service_ServiceUsageDao extends DataAccessObject {
      *
      * @return bool
      */
-    public function deactivateService($group_id, $service_id) {
+    public function deactivateService($group_id, $service_id)
+    {
         $group_id   = $this->da->escapeInt($group_id);
         $service_id = $this->da->escapeInt($service_id);
 
@@ -79,7 +82,8 @@ class Project_Service_ServiceUsageDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function getServiceUsage($group_id, $service_id) {
+    public function getServiceUsage($group_id, $service_id)
+    {
         $group_id   = $this->da->escapeInt($group_id);
         $service_id = $this->da->escapeInt($service_id);
 

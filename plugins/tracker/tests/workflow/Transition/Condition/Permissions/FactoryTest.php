@@ -28,7 +28,8 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
     /** @var Transition */
     private $transition;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->permissions_manager = mock('PermissionsManager');
         PermissionsManager::setInstance($this->permissions_manager);
@@ -40,12 +41,14 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
         $this->permissions_factory = new Workflow_Transition_Condition_Permissions_Factory($this->ugroup_manager);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         PermissionsManager::clearInstance();
         parent::tearDown();
     }
 
-    public function itReconstitutesLegacyPermissions() {
+    public function itReconstitutesLegacyPermissions()
+    {
         $xml = new SimpleXMLElement('
             <permissions>
                 <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
@@ -57,7 +60,8 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
         $this->assertIsA($condition, 'Workflow_Transition_Condition_Permissions');
     }
 
-    public function _itReconstitutesPermissions() {
+    public function _itReconstitutesPermissions()
+    {
         $xml = new SimpleXMLElement('
             <condition type="perms">
                 <permissions>
@@ -72,7 +76,8 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
         $this->assertIsA($condition, 'Workflow_Transition_Condition_Permissions');
     }
 
-    public function itDelegatesDuplicateToPermissionsManager() {
+    public function itDelegatesDuplicateToPermissionsManager()
+    {
         $new_transition_id = 2;
         $field_mapping     = array('some fields mapping');
         $ugroup_mapping    = array('some ugroups mapping');

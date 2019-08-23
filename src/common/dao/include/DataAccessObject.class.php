@@ -46,7 +46,8 @@ class DataAccessObject {
      * @param $da LegacyDataAccessInterface
      * @deprecated
      */
-    public function __construct(?LegacyDataAccessInterface $da = null) {
+    public function __construct(?LegacyDataAccessInterface $da = null)
+    {
         $this->table_name = 'CLASSNAME_MUST_BE_DEFINE_FOR_EACH_CLASS';
         $this->da = $da ? $da : CodendiDataAccess::instance();
     }
@@ -54,7 +55,8 @@ class DataAccessObject {
     /**
      * @deprecated
      */
-    public function startTransaction() {
+    public function startTransaction()
+    {
         $this->da->startTransaction();
     }
 
@@ -62,14 +64,16 @@ class DataAccessObject {
      * After having called this method, all DB errors will be converted to exception
      * @deprecated
      */
-    public function enableExceptionsOnError() {
+    public function enableExceptionsOnError()
+    {
         $this->throw_exception_on_errors = true;
     }
 
     /**
      * @deprecated
      */
-    public function commit() {
+    public function commit()
+    {
         $this->da->commit();
         if ($this->da->isError() && $this->throw_exception_on_errors) {
             throw new DataAccessException($this->da->isError());
@@ -79,7 +83,8 @@ class DataAccessObject {
     /**
      * @deprecated
      */
-    public function rollBack() {
+    public function rollBack()
+    {
         $this->da->rollback();
     }
 
@@ -87,7 +92,8 @@ class DataAccessObject {
      * @deprecated
      * @return LegacyDataAccessInterface
      */
-    public function getDa() {
+    public function getDa()
+    {
         return $this->da;
     }
 
@@ -100,7 +106,8 @@ class DataAccessObject {
      * @deprecated
      * @return DataAccessResult|false
      */
-    public function retrieve($sql, $params = array()) {
+    public function retrieve($sql, $params = array())
+    {
         $result = $this->da->query($sql, $params);
         if (! $this->handleError($result, $sql)) {
             return false;
@@ -117,7 +124,8 @@ class DataAccessObject {
      *
      * @return array|false
      */
-    protected function retrieveFirstRow($sql) {
+    protected function retrieveFirstRow($sql)
+    {
         return $this->retrieve($sql)->getRow();
     }
 
@@ -144,7 +152,8 @@ class DataAccessObject {
      *
      * @return array of string
      */
-    protected function retrieveIds($sql) {
+    protected function retrieveIds($sql)
+    {
         return $this->extractIds($this->retrieve($sql));
     }
 
@@ -157,7 +166,8 @@ class DataAccessObject {
      *
      * @return array of string
      */
-    private function extractIds(LegacyDataAccessResultInterface $dar) {
+    private function extractIds(LegacyDataAccessResultInterface $dar)
+    {
         $ids = array();
         foreach ($dar as $row) {
             $ids[] = (int)$row['id'];
@@ -176,7 +186,8 @@ class DataAccessObject {
      *
      * @return bool true if success
      */
-    public function update($sql, $params = array()) {
+    public function update($sql, $params = array())
+    {
         $result = $this->da->query($sql, $params);
         return $this->handleError($result, $sql);
     }
@@ -184,7 +195,8 @@ class DataAccessObject {
     /**
      * @deprecated
      */
-    private function handleError(LegacyDataAccessResultInterface $dar, $sql) {
+    private function handleError(LegacyDataAccessResultInterface $dar, $sql)
+    {
         if ($dar->isError()) {
             if ($this->throw_exception_on_errors) {
                 throw new DataAccessQueryException($this->getErrorMessage($dar, $sql));
@@ -200,7 +212,8 @@ class DataAccessObject {
     /**
      * @deprecated
      */
-    private function getErrorMessage(LegacyDataAccessResultInterface $dar, $sql) {
+    private function getErrorMessage(LegacyDataAccessResultInterface $dar, $sql)
+    {
         $trace = debug_backtrace();
         $i     = isset($trace[1]) ? 1 : 0;
         return $dar->isError() .' ==> '. $sql ." @@ ". $trace[$i]['file'] .' at line '. $trace[$i]['line'];
@@ -215,7 +228,8 @@ class DataAccessObject {
      *
      * @return int the last insert id or false if there is an error
      */
-    protected function updateAndGetLastId($sql) {
+    protected function updateAndGetLastId($sql)
+    {
         if ($inserted = $this->update($sql)) {
             $inserted = $this->da->lastInsertId();
         }
@@ -246,7 +260,8 @@ class DataAccessObject {
      *          value of the new rank of the item. If return 'null' it means
      *          that sth wrong happended.
      */
-    protected function prepareRanking($id, $parent_id, $rank, $primary_key = 'id', $parent_key = 'parent_id', $rank_key = 'rank') {
+    protected function prepareRanking($id, $parent_id, $rank, $primary_key = 'id', $parent_key = 'parent_id', $rank_key = 'rank')
+    {
         $newRank = null;
 
         // First, check if there is already some items
@@ -384,7 +399,8 @@ class DataAccessObject {
      * Return the result of 'FOUND_ROWS()' SQL method for the last query.
      * @deprecated
      */
-    function foundRows() {
+    function foundRows()
+    {
         $sql = "SELECT FOUND_ROWS() as nb";
         $dar = $this->retrieve($sql);
         if($dar && !$dar->isError()) {
@@ -405,7 +421,8 @@ class DataAccessObject {
      *
      * @deprecated
      */
-    public function setGroupConcatLimit() {
+    public function setGroupConcatLimit()
+    {
         $this->retrieve("SET SESSION group_concat_max_len = 134217728");
     }
 
@@ -429,7 +446,8 @@ class DataAccessObject {
      *
      * @return String
      */
-    protected function searchExplodeMatch($field, $string) {
+    protected function searchExplodeMatch($field, $string)
+    {
         return implode(
             " OR $field LIKE ",
             array_map(

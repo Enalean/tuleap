@@ -34,7 +34,8 @@ class Transition_PostActionSubFactories {
     /**
      * @param array of Transition_PostActionSubFactory
      */
-    public function __construct(array $factories) {
+    public function __construct(array $factories)
+    {
         $this->factories = $factories;
     }
 
@@ -45,7 +46,8 @@ class Transition_PostActionSubFactories {
      *
      * @return void
      */
-    public function loadPostActions(Transition $transition) {
+    public function loadPostActions(Transition $transition)
+    {
         $post_actions = array();
         foreach ($this->factories as $factory) {
             $post_actions = array_merge($post_actions, $factory->loadPostActions($transition));
@@ -60,7 +62,8 @@ class Transition_PostActionSubFactories {
      *
      * @return bool
      */
-    public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
+    public function isFieldUsedInPostActions(Tracker_FormElement_Field $field)
+    {
         foreach ($this->factories as $factory) {
             if ($factory->isFieldUsedInPostActions($field)) {
                 return true;
@@ -74,7 +77,8 @@ class Transition_PostActionSubFactories {
      * @param int $workflow_id the id of the workflow
      *
      */
-    public function deleteWorkflow($workflow_id) {
+    public function deleteWorkflow($workflow_id)
+    {
         $status = true;
         foreach ($this->factories as $factory) {
             $status = $factory->deleteWorkflow($workflow_id) && $status;
@@ -89,7 +93,8 @@ class Transition_PostActionSubFactories {
      * @param int $to_transition_id the id of the transition
      * @param Array $field_mapping the field mapping
      */
-    public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping) {
+    public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping)
+    {
         foreach ($this->factories as $factory) {
             $factory->duplicate($from_transition, $to_transition_id, $field_mapping);
         }
@@ -100,7 +105,8 @@ class Transition_PostActionSubFactories {
      *
      * @return string html
      */
-    public function fetchPostActions() {
+    public function fetchPostActions()
+    {
         $html  = '';
         foreach ($this->factories as $factory) {
             $html .= $factory->fetchPostActions();

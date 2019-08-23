@@ -31,7 +31,8 @@ Mock::generate('BackendCVS');
 
 class Rule_ProjectNameTest extends TuleapTestCase {
 
-    function testNoUnderscore() {
+    function testNoUnderscore()
+    {
         $r = new Rule_ProjectName();
         $this->assertFalse($r->isDNSCompliant("group_test"));
         $this->assertFalse($r->isDNSCompliant("_grouptest"));
@@ -39,7 +40,8 @@ class Rule_ProjectNameTest extends TuleapTestCase {
         $this->assertFalse($r->isDNSCompliant("group_test_1"));
     }
 
-    function testNoSpaces() {
+    function testNoSpaces()
+    {
         $r = new Rule_ProjectName();
         $this->assertFalse($r->noSpaces("group test"));
         $this->assertFalse($r->noSpaces(" grouptest"));
@@ -47,7 +49,8 @@ class Rule_ProjectNameTest extends TuleapTestCase {
         $this->assertFalse($r->noSpaces("group test 1"));
     }
 
-    function testNoDot() {
+    function testNoDot()
+    {
         $r = new Rule_ProjectName();
         $this->assertFalse($r->isValid("group.test"));
         $this->assertFalse($r->isValid(".grouptest"));
@@ -55,7 +58,8 @@ class Rule_ProjectNameTest extends TuleapTestCase {
         $this->assertFalse($r->isValid("group.test.1"));
     }
 
-    function testReservedNames() {
+    function testReservedNames()
+    {
         $r = new Rule_ProjectName();
         $this->assertTrue($r->isReservedName("www"));
         $this->assertTrue($r->isReservedName("www1"));
@@ -90,7 +94,8 @@ class Rule_ProjectNameTest extends TuleapTestCase {
         $this->assertTrue($r->isReservedName("gitolite"));
     }
 
-    function testReservedNamesUpperCase() {
+    function testReservedNamesUpperCase()
+    {
         $r = new Rule_ProjectName();
         $this->assertTrue($r->isReservedName("WWW"));
         $this->assertTrue($r->isReservedName("WWW1"));
@@ -123,13 +128,15 @@ class Rule_ProjectNameTest extends TuleapTestCase {
         $this->assertTrue($r->isReservedName("MIRROR"));
     }
 
-    function testReservedPrefix() {
+    function testReservedPrefix()
+    {
         $r = new Rule_UserName();
         $this->assertTrue($r->isReservedName("forge__"));
         $this->assertFalse($r->isReservedName("forgeron"));
     }
 
-    function testIsNameAvailableSuccess() {
+    function testIsNameAvailableSuccess()
+    {
         $r = new Rule_ProjectNameTestVersion();
 
         $backendSVN = new MockBackendSVN($this);
@@ -148,7 +155,8 @@ class Rule_ProjectNameTest extends TuleapTestCase {
 
     }
 
-    function testIsNameAvailableSVNFailure() {
+    function testIsNameAvailableSVNFailure()
+    {
         $r = new Rule_ProjectNameTestVersion();
 
         $backendSVN = new MockBackendSVN($this);
@@ -161,7 +169,8 @@ class Rule_ProjectNameTest extends TuleapTestCase {
         $this->assertFalse($r->isNameAvailable('foobar'));
     }
 
-    function testIsNameAvailableCVSFailure() {
+    function testIsNameAvailableCVSFailure()
+    {
         $r = new Rule_ProjectNameTestVersion();
 
         $backendSVN = new MockBackendSVN($this);
@@ -178,7 +187,8 @@ class Rule_ProjectNameTest extends TuleapTestCase {
         $this->assertFalse($r->isNameAvailable('foobar'));
     }
 
-    function testIsNameAvailableSystemFailure() {
+    function testIsNameAvailableSystemFailure()
+    {
         $r = new Rule_ProjectNameTestVersion();
 
         $backendSVN = new MockBackendSVN($this);

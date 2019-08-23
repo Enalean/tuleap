@@ -25,7 +25,8 @@ require_once 'bootstrap.php';
 abstract class GitRepositoryImplTest extends TuleapTestCase {
 
 
-    public function test_isNameValid() {
+    public function test_isNameValid()
+    {
         $creator = $this->newCreator();
         $this->assertFalse($creator->isNameValid(''));
         $this->assertFalse($creator->isNameValid('/'));
@@ -44,7 +45,8 @@ abstract class GitRepositoryImplTest extends TuleapTestCase {
         $this->assertTrue($creator->isNameValid('jambon/beurre'));
     }
 
-    public function itAllowsLettersNumbersDotsUnderscoresSlashesAndDashes() {
+    public function itAllowsLettersNumbersDotsUnderscoresSlashesAndDashes()
+    {
         $creator = $this->newCreator();
         $this->assertEqual($creator->getAllowedCharsInNamePattern(), 'a-zA-Z0-9/_.-');
     }
@@ -57,7 +59,8 @@ abstract class GitRepositoryImplTest extends TuleapTestCase {
 }
 
 class Git_Backend_Gitolite_isNameValidTest extends GitRepositoryImplTest {
-    public function newCreator() {
+    public function newCreator()
+    {
         return new Git_Backend_Gitolite(mock('Git_GitoliteDriver'), mock(GitoliteAccessURLGenerator::class), mock('Logger'));
     }
 }

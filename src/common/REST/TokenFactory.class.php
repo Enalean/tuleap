@@ -25,24 +25,28 @@ class Rest_TokenFactory {
 
     private $token_dao;
 
-    public function __construct(Rest_TokenDao $token_dao) {
+    public function __construct(Rest_TokenDao $token_dao)
+    {
         $this->token_dao = $token_dao;
     }
 
-    public function getTokensForUser(PFUser $user) {
+    public function getTokensForUser(PFUser $user)
+    {
         $tokens_dar = $this->token_dao->getTokensForUserId($user->getId());
         $tokens     = $tokens_dar->instanciateWith(array($this, 'instantiateFromRow'));
 
         return $tokens;
     }
 
-    public function doesTokenExist($user_id, $token_value) {
+    public function doesTokenExist($user_id, $token_value)
+    {
         $token_dar = $this->token_dao->checkTokenExistenceForUserId($user_id, $token_value);
 
         return count($token_dar) > 0;
     }
 
-    public function instantiateFromRow(array $row) {
+    public function instantiateFromRow(array $row)
+    {
         return new Rest_Token(
             $row['user_id'],
             $row['token']

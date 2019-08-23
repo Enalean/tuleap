@@ -59,95 +59,118 @@ class Tracker_Report_HeaderInReportPresenter {
         $this->warnings              = $warnings;
     }
 
-    public function has_browse_instructions() {
+    public function has_browse_instructions()
+    {
         return $this->browse_instructions != '';
     }
 
-    public function browse_instructions() {
+    public function browse_instructions()
+    {
         return $this->browse_instructions;
     }
 
-    public function title() {
+    public function title()
+    {
         return $this->title;
     }
 
-    public function select_report_url() {
+    public function select_report_url()
+    {
         return $this->select_report_url;
     }
 
-    public function reports_selector() {
+    public function reports_selector()
+    {
         return $this->reports_selector;
     }
 
-    public function options_dropdown() {
+    public function options_dropdown()
+    {
         return $this->options_dropdown;
     }
 
-    public function saveas_url() {
+    public function saveas_url()
+    {
         return '?'.http_build_query(array_merge($this->options_params, array('func' => Tracker_Report::ACTION_SAVEAS)));
     }
 
-    public function can_save() {
+    public function can_save()
+    {
         return $this->save_button !== false;
     }
 
-    public function save_dropdown() {
+    public function save_dropdown()
+    {
         return $this->save_button;
     }
 
-    public function revert_url() {
+    public function revert_url()
+    {
         return '?'. http_build_query(array_merge($this->options_params, array('func' => Tracker_Report::ACTION_CLEANSESSION)));
     }
 
-    public function has_changed_classname() {
+    public function has_changed_classname()
+    {
         return $this->has_changed_classname;
     }
 
-    public function haschanged_explainations() {
+    public function haschanged_explainations()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_report', 'haschanged_explanations');
     }
 
-    public function isobsolete_explainations() {
+    public function isobsolete_explainations()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_report', 'isobsolete_explanations', array($this->updated_by_username));
     }
 
-    public function report_haschanged_and_isobsolete_explainations() {
+    public function report_haschanged_and_isobsolete_explainations()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_report', 'haschanged_isobsolete_explanations', array($this->updated_by_username));
     }
 
-    public function report_name() {
+    public function report_name()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_report', 'report_name');
     }
 
-    public function save_report_as() {
+    public function save_report_as()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_report', 'save_report_as');
     }
 
-    public function copy_of() {
+    public function copy_of()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_report', 'copy_of') . ' ' . $this->report_name;
     }
 
-    public function cancel() {
+    public function cancel()
+    {
         return $GLOBALS['Language']->getText('global', 'btn_cancel');
     }
 
-    public function or_lbl() {
+    public function or_lbl()
+    {
         return $GLOBALS['Language']->getText('global', 'or');
     }
 
-    public function save_new_report() {
+    public function save_new_report()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_report', 'save_new_report');
     }
 
-    public function revert() {
+    public function revert()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_report', 'revert');
     }
 
-    public function has_warnings() {
+    public function has_warnings()
+    {
         return count($this->warnings) > 0;
     }
 
-    public function warnings() {
+    public function warnings()
+    {
         return $this->warnings;
     }
 }

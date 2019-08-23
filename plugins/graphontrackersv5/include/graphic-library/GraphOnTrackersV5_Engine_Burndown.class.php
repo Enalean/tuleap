@@ -25,7 +25,8 @@ class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine {
     public $duration;
     public $start_date;
 
-    function validData(){
+    function validData()
+    {
 
         if ($this->duration && $this->duration > 0){
             return true;
@@ -38,7 +39,8 @@ class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine {
     /**
      * @return Chart
      */
-    public function buildGraph() {
+    public function buildGraph()
+    {
         $burndown = new Tracker_Chart_Burndown($this->data);
         $burndown->setTitle($this->title);
         $burndown->setDescription($this->description);

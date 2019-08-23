@@ -336,7 +336,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         $this->initInconsistentItems($user, $milestone, $redirect_to_self, $planned);
     }
 
-    private function getParentArtifacts(Planning_Milestone $milestone, PFUser $user, array $backlog_item_ids) {
+    private function getParentArtifacts(Planning_Milestone $milestone, PFUser $user, array $backlog_item_ids)
+    {
         $parents         = $this->artifact_factory->getParents($backlog_item_ids);
         $parent_tracker  = $this->getParentTracker($parents);
         if ($parent_tracker) {
@@ -353,7 +354,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         return $parents;
     }
 
-    private function setParentItemName(Planning_Milestone $milestone, $name) {
+    private function setParentItemName(Planning_Milestone $milestone, $name)
+    {
         if (! $milestone->getArtifactId() ) {
             return;
         }
@@ -367,7 +369,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         }
     }
 
-    private function getParentTracker(array $artifacts) {
+    private function getParentTracker(array $artifacts)
+    {
         if (count($artifacts) > 0) {
             $artifact = current($artifacts);
             reset($artifacts);
@@ -378,7 +381,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
     }
 
 
-    private function getArtifactsSemantics(PFUser $user, Planning_Milestone $milestone, array $backlog_item_ids, $artifacts) {
+    private function getArtifactsSemantics(PFUser $user, Planning_Milestone $milestone, array $backlog_item_ids, $artifacts)
+    {
         if (! $backlog_item_ids) {
             return array();
         }
@@ -401,7 +405,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         return $semantics;
     }
 
-    private function setTitleSemantic(PFUser $user, Tracker_Artifact $artifact, Tracker $tracker, array $row, array &$semantics) {
+    private function setTitleSemantic(PFUser $user, Tracker_Artifact $artifact, Tracker $tracker, array $row, array &$semantics)
+    {
         $semantics[$artifact->getId()][Tracker_Semantic_Title::NAME] = '';
         if ($this->userCanReadBacklogTitleField($user, $tracker)) {
             $semantics[$artifact->getId()][Tracker_Semantic_Title::NAME] = $row[Tracker_Semantic_Title::NAME];
@@ -409,14 +414,16 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         }
     }
 
-    private function setStatusSemantic(PFUser $user, Tracker_Artifact $artifact, Tracker $tracker, array $row, array &$semantics) {
+    private function setStatusSemantic(PFUser $user, Tracker_Artifact $artifact, Tracker $tracker, array $row, array &$semantics)
+    {
         $semantics[$artifact->getId()][Tracker_Semantic_Status::NAME] = '';
         if ($this->userCanReadBacklogStatusField($user, $tracker)) {
             $semantics[$artifact->getId()][Tracker_Semantic_Status::NAME] = $row[Tracker_Semantic_Status::NAME];
         }
     }
 
-    private function setInitialEffortSemantic(PFUser $user, Tracker_Artifact $artifact, Tracker $tracker, array $row, array &$semantics) {
+    private function setInitialEffortSemantic(PFUser $user, Tracker_Artifact $artifact, Tracker $tracker, array $row, array &$semantics)
+    {
         $semantics[$artifact->getId()][AgileDashBoard_Semantic_InitialEffort::NAME] = '';
         if ($this->userCanReadInitialEffortField($user, $tracker)) {
             $semantics[$artifact->getId()][AgileDashBoard_Semantic_InitialEffort::NAME] = $this->getSemanticEffortValue($user, $artifact);
@@ -429,7 +436,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
      * @param Tracker_Artifact $artifact
      * @return string | float
      */
-    private function getSemanticEffortValue(PFUser $user, Tracker_Artifact $artifact) {
+    private function getSemanticEffortValue(PFUser $user, Tracker_Artifact $artifact)
+    {
         if (! $field = $this->getInitialEffortField($artifact->getTracker())) {
             return false;
         }
@@ -437,7 +445,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         return $field->getComputedValue($user, $artifact);
     }
 
-    protected function userCanReadBacklogTitleField(PFUser $user, Tracker $tracker) {
+    protected function userCanReadBacklogTitleField(PFUser $user, Tracker $tracker)
+    {
         if (! isset($this->cache_read_title[$tracker->getId()])) {
             $field = Tracker_Semantic_Title::load($tracker)->getField();
             if (! $field) {
@@ -449,7 +458,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         return $this->cache_read_title[$tracker->getId()];
     }
 
-    protected function userCanReadBacklogStatusField(PFUser $user, Tracker $tracker) {
+    protected function userCanReadBacklogStatusField(PFUser $user, Tracker $tracker)
+    {
         if (! isset($this->cache_read_status[$tracker->getId()])) {
             $this->cache_read_status[$tracker->getId()] = false;
             $field = Tracker_Semantic_Status::load($tracker)->getField();
@@ -460,7 +470,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         return $this->cache_read_status[$tracker->getId()];
     }
 
-    protected function userCanReadInitialEffortField(PFUser $user, Tracker $tracker) {
+    protected function userCanReadInitialEffortField(PFUser $user, Tracker $tracker)
+    {
         if (! isset($this->cache_initial_effort[$tracker->getId()])) {
             $this->cache_read_initial_effort[$tracker->getId()] = false;
             $field = $this->getInitialEffortField($tracker);
@@ -475,11 +486,13 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
      * @param Tracker $tracker
      * @return Tracker_FormElement_Field | null
      */
-    protected function getInitialEffortField(Tracker $tracker) {
+    protected function getInitialEffortField(Tracker $tracker)
+    {
         return AgileDashBoard_Semantic_InitialEffort::load($tracker)->getField();
     }
 
-    protected function setInitialEffort(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item, $semantics_per_artifact) {
+    protected function setInitialEffort(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item, $semantics_per_artifact)
+    {
         if ( isset($semantics_per_artifact[AgileDashBoard_Semantic_InitialEffort::NAME]) ) {
             $backlog_item->setInitialEffort($semantics_per_artifact[AgileDashBoard_Semantic_InitialEffort::NAME]);
         }
@@ -552,7 +565,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         }
     }
 
-    private function getPlannedArtifactIds(PFUser $user, Planning_Milestone $milestone) {
+    private function getPlannedArtifactIds(PFUser $user, Planning_Milestone $milestone)
+    {
         $sub_milestone_ids = $this->getSubmilestoneIds($user, $milestone);
         if (! $sub_milestone_ids) {
             return array();
@@ -560,11 +574,13 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         return $this->dao->getPlannedItemIds($sub_milestone_ids);
     }
 
-    private function getSubmilestoneIds(PFUser $user, Planning_Milestone $milestone) {
+    private function getSubmilestoneIds(PFUser $user, Planning_Milestone $milestone)
+    {
         return $this->milestone_factory->getSubMilestoneIds($user, $milestone);
     }
 
-    private function filterOutAssignedBacklogItems(AgileDashboard_Milestone_Backlog_IBacklogItemCollection $collection, PFUser $user) {
+    private function filterOutAssignedBacklogItems(AgileDashboard_Milestone_Backlog_IBacklogItemCollection $collection, PFUser $user)
+    {
         $artifact_ids = $this->getBacklogItemsArtifactIds($collection);
 
         if (! $artifact_ids) {
@@ -586,7 +602,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         return $this->removeLinkedItemsFromCollection($collection, $linked_item_artifacts_ids);
     }
 
-    private function getBacklogItemsArtifactIds(AgileDashboard_Milestone_Backlog_IBacklogItemCollection $collection) {
+    private function getBacklogItemsArtifactIds(AgileDashboard_Milestone_Backlog_IBacklogItemCollection $collection)
+    {
         $artifact_ids = array();
 
         foreach ($collection as $backlog_item) {
@@ -596,7 +613,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         return $artifact_ids;
     }
 
-    private function removeLinkedItemsFromCollection(AgileDashboard_Milestone_Backlog_IBacklogItemCollection $collection, $linked_item_artifacts_ids) {
+    private function removeLinkedItemsFromCollection(AgileDashboard_Milestone_Backlog_IBacklogItemCollection $collection, $linked_item_artifacts_ids)
+    {
         $cleaned_collection = $this->backlog_item_builder->getCollection();
 
         foreach ($collection as $backlog_item) {
@@ -612,7 +630,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
     /**
      * @param Planning[] $plannings
      */
-    private function getPlanningMilestoneTrackerIds($plannings) {
+    private function getPlanningMilestoneTrackerIds($plannings)
+    {
         $ids = array();
         foreach ($plannings as $planning) {
             $ids[] = $planning->getPlanningTrackerId();

@@ -26,7 +26,8 @@ class PluginDependencySolver {
     /** @var PluginManager */
     private $plugin_manager;
 
-    public function __construct(PluginManager $plugin_manager) {
+    public function __construct(PluginManager $plugin_manager)
+    {
         $this->plugin_manager = $plugin_manager;
     }
 
@@ -35,7 +36,8 @@ class PluginDependencySolver {
      *
      * @return array of strings
      */
-    public function getInstalledDependencies(Plugin $plugin) {
+    public function getInstalledDependencies(Plugin $plugin)
+    {
         return $this->getMissingDependencies($plugin, $this->plugin_manager->getAllPlugins());
     }
 
@@ -44,7 +46,8 @@ class PluginDependencySolver {
      *
      * @return array of strings
      */
-    public function getAvailableDependencies(Plugin $plugin) {
+    public function getAvailableDependencies(Plugin $plugin)
+    {
         return $this->getMissingDependencies($plugin, $this->plugin_manager->getAvailablePlugins());
     }
 
@@ -53,7 +56,8 @@ class PluginDependencySolver {
      *
      * @return array of strings
      */
-    public function getUnmetInstalledDependencies($plugin_name) {
+    public function getUnmetInstalledDependencies($plugin_name)
+    {
         $plugin = $this->plugin_manager->getPluginDuringInstall($plugin_name);
         return $this->getUnmetMissingDependencies($plugin, 'getPluginByName');
     }
@@ -63,11 +67,13 @@ class PluginDependencySolver {
      *
      * @return array of strings
      */
-    public function getUnmetAvailableDependencies(Plugin $plugin) {
+    public function getUnmetAvailableDependencies(Plugin $plugin)
+    {
         return $this->getUnmetMissingDependencies($plugin, 'getAvailablePluginByName');
     }
 
-    private function getUnmetMissingDependencies(Plugin $plugin, $method) {
+    private function getUnmetMissingDependencies(Plugin $plugin, $method)
+    {
         $unmet_dependencies = array();
         foreach ($plugin->getDependencies() as $dependency_name) {
             $dependency_plugin = $this->plugin_manager->$method($dependency_name);
@@ -78,7 +84,8 @@ class PluginDependencySolver {
         return $unmet_dependencies;
     }
 
-    private function getMissingDependencies(Plugin $plugin, array $plugins_collection) {
+    private function getMissingDependencies(Plugin $plugin, array $plugins_collection)
+    {
         $missing_dependencies = array();
         foreach ($plugins_collection as $candidate_plugin) {
             if (in_array($plugin->getName(), $candidate_plugin->getDependencies())) {

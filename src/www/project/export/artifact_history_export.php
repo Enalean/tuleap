@@ -45,7 +45,8 @@ if ( $atid ) {
 
 }
 
-function extract_history($atid) {
+function extract_history($atid)
+{
 
     // This is the SQL query to retrieve all the artifact history for this group
     // Note: the text value of the comment_type_id is not fetched by the

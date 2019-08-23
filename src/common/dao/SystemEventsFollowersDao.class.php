@@ -21,12 +21,14 @@
 require_once('include/DataAccessObject.class.php');
 
 class SystemEventsFollowersDao extends DataAccessObject {
-    public function __construct($da) {
+    public function __construct($da)
+    {
         parent::__construct($da);
         $this->table_name = 'system_events_followers';
     }
 
-    public function searchAll() {
+    public function searchAll()
+    {
         $sql = "SELECT *
                 FROM $this->table_name
                 ORDER BY id ASC";
@@ -43,7 +45,8 @@ class SystemEventsFollowersDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function create($emails, $types) {
+    public function create($emails, $types)
+    {
         $emails = $this->da->quoteSmart($emails);
         $types  = $this->da->quoteSmart($types);
         $sql = "INSERT INTO $this->table_name(emails, types)
@@ -52,14 +55,16 @@ class SystemEventsFollowersDao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $id = $this->da->escapeInt($id);
         $sql = "DELETE FROM $this->table_name
                 WHERE id = $id";
         return $this->update($sql);
     }
 
-    public function save($id, $emails, $types) {
+    public function save($id, $emails, $types)
+    {
         $id = $this->da->escapeInt($id);
         $emails = $this->da->quoteSmart($emails);
         $types  = $this->da->quoteSmart($types);

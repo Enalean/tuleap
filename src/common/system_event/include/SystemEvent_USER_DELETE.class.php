@@ -37,7 +37,8 @@ class SystemEvent_USER_DELETE extends SystemEvent {
      *
      * @return string
      */
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         $txt = '';
         $txt .= 'user: '. $this->verbalizeUserId($this->getIdFromParam($this->parameters), $with_link);
         return $txt;
@@ -46,7 +47,8 @@ class SystemEvent_USER_DELETE extends SystemEvent {
     /**
      * Process stored event
      */
-    function process() {
+    function process()
+    {
         // Check parameters
         $user_id=$this->getIdFromParam($this->parameters);
 

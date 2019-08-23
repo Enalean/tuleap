@@ -24,12 +24,15 @@ require_once('HTML_Element_Input.class.php');
  * Define a html input text field
  */
 class HTML_Element_Input_Text extends HTML_Element_Input {
-    public function __construct($label, $name, $value, $size = 30, $desc='') {
+    public function __construct($label, $name, $value, $size = 30, $desc='')
+    {
         parent::__construct($label, $name, $value, $desc);
         $this->params['size'] = $size;
     }
 
-    protected function getInputType() { return 'text'; }
+    protected function getInputType()
+    {
+        return 'text'; }
 }
 
 

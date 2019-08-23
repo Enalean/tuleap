@@ -20,17 +20,20 @@
 
 class b201409251452_add_table_plugin_git_mirrors extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add plugin_git_mirrors table to store mirrors.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS plugin_git_mirrors (
             id INT(11) unsigned NOT NULL auto_increment,
             url VARCHAR(255) NOT NULL,
@@ -40,7 +43,8 @@ EOT;
         $this->db->createTable('plugin_git_mirrors', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('plugin_git_mirrors')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_git_mirrors table is missing');
         }

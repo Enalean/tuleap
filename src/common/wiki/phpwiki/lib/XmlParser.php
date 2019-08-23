@@ -52,7 +52,9 @@ class XmlParser {
 
     var $_parser, $root, $current;
 
-    function __construct($encoding = '') { //  "ISO-8859-1"
+    function __construct($encoding = '')
+    {
+ //  "ISO-8859-1"
         if ($encoding)
             $this->_parser = xml_parser_create($encoding);
         else
@@ -71,7 +73,8 @@ class XmlParser {
         unset($GLOBALS['xml_parser_root']);
     }
 
-    function __destruct() {
+    function __destruct()
+    {
         global $xml_parser_root, $xml_parser_current;
 
         if (!empty($this->_parser)) xml_parser_free($this->_parser);
@@ -84,7 +87,8 @@ class XmlParser {
         unset($xml_parser_current);
     }
 
-    function tag_open($parser, $name, $attrs='') {
+    function tag_open($parser, $name, $attrs='')
+    {
         $this->_tag = strtolower($name);
         $node = new XmlElement($this->_tag);
         if (is_string($attrs) and !empty($attrs)) {
@@ -118,12 +122,14 @@ class XmlParser {
         }
     }
 
-    function tag_close($parser, $name, $attrs='') {
+    function tag_close($parser, $name, $attrs='')
+    {
         //$this->parent = $this->current;   // copy!
         //unset($this->current);
     }
 
-    function cdata($parser, $data) {
+    function cdata($parser, $data)
+    {
         if (isset($this->current)) {
             $this->current->_content[] = $data;
         } else {
@@ -135,7 +141,8 @@ class XmlParser {
         }
     }
 
-    function parse($content, $is_final = true) {
+    function parse($content, $is_final = true)
+    {
         xml_parse($this->_parser, $content, $is_final) or
             trigger_error(sprintf("XML error: %s at line %d",
                                   xml_error_string(xml_get_error_code($this->_parser)),
@@ -143,7 +150,8 @@ class XmlParser {
                           E_USER_WARNING);
     }
 
-    function parse_url($file, $debug=false)   {
+    function parse_url($file, $debug=false)
+    {
         if (get_cfg_var('allow_url_fopen')) {
             if (!($fp = fopen("$file","r"))) {
                 trigger_error("Error parse url $file");

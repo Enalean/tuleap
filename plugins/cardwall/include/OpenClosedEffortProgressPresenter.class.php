@@ -25,13 +25,15 @@ class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgr
     private $nb_open;
     private $nb_closed;
 
-    public function __construct($nb_open, $nb_closed) {
+    public function __construct($nb_open, $nb_closed)
+    {
         $this->nb_open   = $nb_open;
         $this->nb_closed = $nb_closed;
         $this->nb_total  = $this->nb_open + $this->nb_closed;
     }
 
-    public function initial_effort_completion() {
+    public function initial_effort_completion()
+    {
         if ($this->cannotBeDivided($this->nb_total)) {
             return 100;
         }
@@ -43,31 +45,38 @@ class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgr
         return $this->returnRelevantProgressBarValue($completion);
     }
 
-    public function milestone_capacity() {
+    public function milestone_capacity()
+    {
         return '';
     }
 
-    public function milestone_has_initial_effort() {
+    public function milestone_has_initial_effort()
+    {
         return true;
     }
 
-    public function milestone_initial_effort() {
+    public function milestone_initial_effort()
+    {
         return $this->nb_total;
     }
 
-    public function milestone_initial_effort_value() {
+    public function milestone_initial_effort_value()
+    {
         return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_open_closed_progress_info');
     }
 
-    public function milestone_points_to_go() {
+    public function milestone_points_to_go()
+    {
         return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_open_closed_open_items');
     }
 
-    public function milestone_remaining_effort() {
+    public function milestone_remaining_effort()
+    {
         return $this->nb_open . '/' . $this->nb_total;
     }
 
-    private function returnRelevantProgressBarValue($value) {
+    private function returnRelevantProgressBarValue($value)
+    {
         if ($value < 0) {
             return 0;
         }
@@ -75,15 +84,18 @@ class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgr
         return $value;
     }
 
-    private function cannotBeDivided($number) {
+    private function cannotBeDivided($number)
+    {
         return $number === 0;
     }
 
-    public function milestone_count_style() {
+    public function milestone_count_style()
+    {
         return self::COUNT_STYLE;
     }
 
-    public function count_style_helper() {
+    public function count_style_helper()
+    {
         return $GLOBALS['Language']->getText('plugin_cardwall', 'count_style_helper');
     }
 }

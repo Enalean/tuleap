@@ -17,17 +17,20 @@
  */
 
 class b201305161743_remove_unique_from_svn_checkins extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Remove unique from svn checkins
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE svn_checkins DROP KEY uniq_checkins_idx";
         if ($this->db->tableNameExists('svn_checkins')) {
             $res = $this->db->dbh->exec($sql);
@@ -45,7 +48,8 @@ EOT;
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
     }
 }
 

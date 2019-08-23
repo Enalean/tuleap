@@ -29,7 +29,8 @@ class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_Changese
     /**
      * @return mixed
      */
-    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
+    {
         return $visitor->visitOpenList($this);
     }
 
@@ -38,7 +39,8 @@ class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_Changese
      *
      * @return array of int The values of this artifact changeset value
      */
-    public function getValue() {
+    public function getValue()
+    {
         $values = $this->getListValues();
         $array = array();
         foreach ($values as $value) {
@@ -47,11 +49,13 @@ class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_Changese
         return $array;
     }
 
-    protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
+    protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value)
+    {
         return $value->getAPIValue();
     }
 
-    public function getFullRESTValue(PFUser $user) {
+    public function getFullRESTValue(PFUser $user)
+    {
         $full_values = array();
         $labels      = array();
         foreach ($this->getListValues() as $list_value) {
@@ -70,7 +74,8 @@ class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_Changese
         return $representation;
     }
 
-    protected function getLabel($value) {
+    protected function getLabel($value)
+    {
         return $value->getLabel();
     }
 }

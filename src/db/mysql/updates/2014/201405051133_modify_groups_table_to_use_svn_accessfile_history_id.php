@@ -20,20 +20,24 @@
  * Modify groups table to use svn accessfile history id
  */
 class b201405051133_modify_groups_table_to_use_svn_accessfile_history_id extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return "Modify groups table to use svn accessfile history id";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->modifySvnAccessfileGroups();
         $this->addNewSvnAccessfileGroupsValue();
     }
 
-    private function modifySvnAccessfileGroups() {
+    private function modifySvnAccessfileGroups()
+    {
         $sql = "ALTER TABLE groups
                     MODIFY svn_accessfile INT(11)";
 
@@ -43,7 +47,8 @@ class b201405051133_modify_groups_table_to_use_svn_accessfile_history_id extends
         }
     }
 
-    private function addNewSvnAccessfileGroupsValue() {
+    private function addNewSvnAccessfileGroupsValue()
+    {
         $sql = "UPDATE groups, svn_accessfile_history
                 SET groups.svn_accessfile = svn_accessfile_history.id
                 WHERE svn_accessfile_history.group_id = groups.group_id";

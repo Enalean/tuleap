@@ -33,7 +33,8 @@ class Workflow_Transition_ConditionFactory_BaseTest extends TuleapTestCase {
     /** @var Workflow_Transition_Condition_Permissions_Factory */
     protected $permissions_factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->permissions_factory     = mock('Workflow_Transition_Condition_Permissions_Factory');
         $this->fieldnotempty_factory   = mock('Workflow_Transition_Condition_FieldNotEmpty_Factory');
@@ -51,7 +52,8 @@ class Workflow_Transition_ConditionFactory_BaseTest extends TuleapTestCase {
 
 class Workflow_Transition_ConditionFactory_isFieldUsedInConditionsTest extends Workflow_Transition_ConditionFactory_BaseTest {
 
-    public function itDelegatesToFieldNotEmptyFactory() {
+    public function itDelegatesToFieldNotEmptyFactory()
+    {
         $field = mock('Tracker_FormElement_Field_Date');
         stub($this->fieldnotempty_factory)->isFieldUsedInConditions($field)->once()->returns(true);
         $this->assertTrue($this->condition_factory->isFieldUsedInConditions($field));
@@ -65,7 +67,8 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends W
     /** @var Transition */
     private $transition;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         PermissionsManager::setInstance(mock('PermissionsManager'));
 
@@ -100,12 +103,14 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends W
             ->returns(mock('Workflow_Transition_Condition_Permissions'));
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         PermissionsManager::clearInstance();
         parent::tearDown();
     }
 
-    public function itReconstitutesLegacyPermissions() {
+    public function itReconstitutesLegacyPermissions()
+    {
         $conditions = $this->condition_factory->getAllInstancesFromXML(
             $this->legacy_permissions_xml,
             $this->xml_mapping,
@@ -116,7 +121,8 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends W
         $this->assertIsA($conditions[0], 'Workflow_Transition_Condition_Permissions');
     }
 
-    public function itReconstitutesPermissions() {
+    public function itReconstitutesPermissions()
+    {
         $conditions = $this->condition_factory->getAllInstancesFromXML(
             $this->from_5_7_permissions_xml,
             $this->xml_mapping,
@@ -127,7 +133,8 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends W
         $this->assertIsA($conditions[0], 'Workflow_Transition_Condition_Permissions');
     }
 
-    public function itReconstituesFieldNotEmpty() {
+    public function itReconstituesFieldNotEmpty()
+    {
         $xml = new SimpleXMLElement('
             <transition>
                 <conditions>
@@ -151,7 +158,8 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends W
         $this->assertEqual($conditions[0], $condition);
     }
 
-    public function itIgnoresNullConditions() {
+    public function itIgnoresNullConditions()
+    {
         $xml = new SimpleXMLElement('
             <transition>
                 <conditions>
@@ -172,7 +180,8 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends W
         $this->assertEqual($conditions, new Workflow_Transition_ConditionsCollection());
     }
 
-    public function itDelegatesTheDuplicateToSubFactories() {
+    public function itDelegatesTheDuplicateToSubFactories()
+    {
         $new_transition_id = 2;
         $field_mapping     = array('some fields mapping');
         $ugroup_mapping    = array('some ugroups mapping');

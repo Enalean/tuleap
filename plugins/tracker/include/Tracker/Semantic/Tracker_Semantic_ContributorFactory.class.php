@@ -33,7 +33,8 @@ class Tracker_Semantic_ContributorFactory implements IBuildSemanticFromXML, IDup
      *
      * @return Tracker_Semantic_ContributorFactory an instance of the factory
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$instance)) {
             $c = self::class;
             self::$instance = new $c;
@@ -41,7 +42,8 @@ class Tracker_Semantic_ContributorFactory implements IBuildSemanticFromXML, IDup
         return self::$instance;
     }
 
-    public function getByTracker(Tracker $tracker) {
+    public function getByTracker(Tracker $tracker)
+    {
         return Tracker_Semantic_Contributor::load($tracker);
     }
 
@@ -58,7 +60,8 @@ class Tracker_Semantic_ContributorFactory implements IBuildSemanticFromXML, IDup
      *
      * @return Tracker_Semantic_ContributorDao The dao
      */
-    public function getDao() {
+    public function getDao()
+    {
         return new Tracker_Semantic_ContributorDao();
     }
 
@@ -71,7 +74,8 @@ class Tracker_Semantic_ContributorFactory implements IBuildSemanticFromXML, IDup
      *
      * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping) {
+    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping)
+    {
         $row = $this->getDao()->searchByTrackerId($from_tracker_id)->getRow();
         if ($row) {
             $from_contributor_field_id = $row['field_id'];

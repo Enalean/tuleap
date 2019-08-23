@@ -43,7 +43,8 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
     /**
      * @param Array $allUsedElements
      */
-    public function __construct($allUsedElements) {
+    public function __construct($allUsedElements)
+    {
         $this->allUsedElements = $allUsedElements;
     }
 
@@ -52,7 +53,8 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
      *
      * @param Tracker_FormElement $element
      */
-    public function visit(/*Tracker_FormElement*/ $element) {
+    public function visit(/*Tracker_FormElement*/ $element)
+    {
         $this->element = $element;
 
         if ($element instanceof Tracker_FormElement_Container) {
@@ -70,35 +72,43 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         }
     }
 
-    public function visitArtifactLink(Tracker_FormElement_Field_ArtifactLink $field) {
+    public function visitArtifactLink(Tracker_FormElement_Field_ArtifactLink $field)
+    {
         $this->visitField($field);
     }
 
-    public function visitDate(Tracker_FormElement_Field_Date $field) {
+    public function visitDate(Tracker_FormElement_Field_Date $field)
+    {
         $this->visitField($field);
     }
 
-    public function visitFile(Tracker_FormElement_Field_File $field) {
+    public function visitFile(Tracker_FormElement_Field_File $field)
+    {
         $this->visitField($field);
     }
 
-    public function visitFloat(Tracker_FormElement_Field_Float $field) {
+    public function visitFloat(Tracker_FormElement_Field_Float $field)
+    {
         $this->visitField($field);
     }
 
-    public function visitInteger(Tracker_FormElement_Field_Integer $field) {
+    public function visitInteger(Tracker_FormElement_Field_Integer $field)
+    {
         $this->visitField($field);
     }
 
-    public function visitOpenList(Tracker_FormElement_Field_OpenList $field) {
+    public function visitOpenList(Tracker_FormElement_Field_OpenList $field)
+    {
         $this->visitList($field);
     }
 
-    public function visitString(Tracker_FormElement_Field_String $field) {
+    public function visitString(Tracker_FormElement_Field_String $field)
+    {
         $this->visitField($field);
     }
 
-    public function visitText(Tracker_FormElement_Field_Text $field) {
+    public function visitText(Tracker_FormElement_Field_Text $field)
+    {
         $this->visitField($field);
     }
 
@@ -108,100 +118,121 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->adminElement = new Computed($element, $this->allUsedElements);
     }
 
-    private function visitField(Tracker_FormElement_Field $element) {
+    private function visitField(Tracker_FormElement_Field $element)
+    {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field($element, $this->allUsedElements);
     }
 
-    public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $element) {
+    public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $element)
+    {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_ArtifactId($element, $this->allUsedElements);
     }
 
-    public function visitPerTrackerArtifactId(Tracker_FormElement_Field_PerTrackerArtifactId $element) {
+    public function visitPerTrackerArtifactId(Tracker_FormElement_Field_PerTrackerArtifactId $element)
+    {
         $this->visitArtifactId($element);
     }
 
-    public function visitCrossReferences(Tracker_FormElement_Field_CrossReferences $element) {
+    public function visitCrossReferences(Tracker_FormElement_Field_CrossReferences $element)
+    {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_CrossReferences($element, $this->allUsedElements);
     }
 
-    public function visitBurndown(Tracker_FormElement_Field_Burndown $element) {
+    public function visitBurndown(Tracker_FormElement_Field_Burndown $element)
+    {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_Burndown($element, $this->allUsedElements);
     }
-    public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $element) {
+    public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $element)
+    {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_LastUpdateDate($element, $this->allUsedElements);
     }
 
-    public function visitPermissionsOnArtifact(Tracker_FormElement_Field_PermissionsOnArtifact $element) {
+    public function visitPermissionsOnArtifact(Tracker_FormElement_Field_PermissionsOnArtifact $element)
+    {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_PermissionsOnArtifact($element, $this->allUsedElements);
     }
 
-    private function visitList(Tracker_FormElement_Field_List $element) {
+    private function visitList(Tracker_FormElement_Field_List $element)
+    {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_List($element, $this->allUsedElements);
     }
 
-    public function visitSelectbox(Tracker_FormElement_Field_Selectbox $element) {
+    public function visitSelectbox(Tracker_FormElement_Field_Selectbox $element)
+    {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_Selectbox($element, $this->allUsedElements);
     }
 
-    public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $element) {
+    public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $element)
+    {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_SubmittedBy($element, $this->allUsedElements);
     }
 
-    public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $element) {
+    public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $element)
+    {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_LastModifiedBy($element, $this->allUsedElements);
     }
 
-    public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $element) {
+    public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $element)
+    {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_SubmittedOn($element, $this->allUsedElements);
     }
 
-    public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $element) {
+    public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $element)
+    {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_MultiSelectbox($element, $this->allUsedElements);
     }
 
-    public function visitCheckbox(Tracker_FormElement_Field_Checkbox $element) {
+    public function visitCheckbox(Tracker_FormElement_Field_Checkbox $element)
+    {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_Checkbox($element, $this->allUsedElements);
     }
 
-    public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $element) {
+    public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $element)
+    {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_Radiobutton($element, $this->allUsedElements);
     }
 
-    private function visitContainer(Tracker_FormElement_Container $element) {
+    private function visitContainer(Tracker_FormElement_Container $element)
+    {
         $this->adminElement = new Tracker_FormElement_View_Admin_Container($element, $this->allUsedElements);
     }
 
-    private function visitStaticField(Tracker_FormElement_StaticField $element) {
+    private function visitStaticField(Tracker_FormElement_StaticField $element)
+    {
         $this->adminElement = new Tracker_FormElement_View_Admin_StaticField($element, $this->allUsedElements);
     }
 
-    private function visitLineBreak(Tracker_FormElement_StaticField_LineBreak $element) {
+    private function visitLineBreak(Tracker_FormElement_StaticField_LineBreak $element)
+    {
         $this->adminElement = new Tracker_FormElement_View_Admin_StaticField_LineBreak($element, $this->allUsedElements);
     }
 
-    private function visitSeparator(Tracker_FormElement_StaticField_Separator $element) {
+    private function visitSeparator(Tracker_FormElement_StaticField_Separator $element)
+    {
         $this->adminElement = new Tracker_FormElement_View_Admin_StaticField_Separator($element, $this->allUsedElements);
     }
 
-    private function visitShared(Tracker_FormElement_Shared $element) {
+    private function visitShared(Tracker_FormElement_Shared $element)
+    {
         $this->adminElement = new Tracker_FormElement_View_Admin_Shared($element, $this->allUsedElements);
     }
 
-    public function visitPriority(Tracker_FormElement_Field_Priority $element) {
+    public function visitPriority(Tracker_FormElement_Field_Priority $element)
+    {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Priority($element, $this->allUsedElements);
     }
@@ -219,11 +250,13 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
      *
      * @return Tracker_FormElement_View_Admin
      */
-    public function getAdmin() {
+    public function getAdmin()
+    {
         return $this->adminElement;
     }
 
-    protected function displayForm(TrackerManager $tracker_manager, HTTPRequest $request, $breadcrumbsLabel, $url, $title, $formContent) {
+    protected function displayForm(TrackerManager $tracker_manager, HTTPRequest $request, $breadcrumbsLabel, $url, $title, $formContent)
+    {
         $form  = '<form name="form1" method="POST" action="'. $url .'">';
         $form .= $formContent;
         $form .= '</form>';
@@ -235,12 +268,14 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         }
     }
 
-    protected function displayAjax($title, $form) {
+    protected function displayAjax($title, $form)
+    {
         header(JSONHeader::getHeaderForPrototypeJS(['dialog-title' => $title]));
         echo $form;
     }
 
-    protected function displayFullPage(TrackerManager $tracker_manager, $breadcrumbsLabel, $url, $title, $form) {
+    protected function displayFullPage(TrackerManager $tracker_manager, $breadcrumbsLabel, $url, $title, $form)
+    {
         $breadcrumbs = array(
             array(
                 'title' => $breadcrumbsLabel,

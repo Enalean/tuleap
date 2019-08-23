@@ -25,7 +25,8 @@
 class GitDriverSourceNotFoundException extends GitDriverException {
     //put your code here
 
-    public function __construct($msg) {
+    public function __construct($msg)
+    {
         parent::__construct(self::class.' : '.$msg);
     }
 

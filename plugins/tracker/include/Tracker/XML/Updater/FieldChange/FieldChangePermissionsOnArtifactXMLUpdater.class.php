@@ -24,7 +24,8 @@ class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater
      * @param SimpleXMLElement $field_change_xml
      * @param mixed            $submitted_value
      */
-    public function update(SimpleXMLElement $field_change_xml, $submitted_value) {
+    public function update(SimpleXMLElement $field_change_xml, $submitted_value)
+    {
         $this->removeExistingUgroupNodes($field_change_xml);
 
         $field_change_xml['use_perm'] = (int)$submitted_value['use_artifact_permissions'];
@@ -47,7 +48,8 @@ class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater
         $node->addAttribute('ugroup_id', $ugroup_id);
     }
 
-    private function removeExistingUgroupNodes(SimpleXMLElement $field_change_xml) {
+    private function removeExistingUgroupNodes(SimpleXMLElement $field_change_xml)
+    {
         unset($field_change_xml->ugroup);
     }
 }

@@ -33,7 +33,8 @@ Mock::generate('ArtifactField');
 
 class ArtifactRulesManagerTest extends TuleapTestCase {
 
-    function testValidate() {
+    function testValidate()
+    {
         /*
         Fields:
         F1(A1, A2)
@@ -213,7 +214,8 @@ class ArtifactRulesManagerTest extends TuleapTestCase {
         //$this->assertEqual($GLOBALS['feedback'],  'f_1(a_1) -> f_2(b_2)');
     }
 
-    function testForbidden() {
+    function testForbidden()
+    {
         $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
@@ -267,7 +269,8 @@ class ArtifactRulesManagerTest extends TuleapTestCase {
         $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'D', 'D'), "Field D cannot be the target of field D");
     }
 
-    function testFieldHasSourceTarget() {
+    function testFieldHasSourceTarget()
+    {
         $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
@@ -293,7 +296,8 @@ class ArtifactRulesManagerTest extends TuleapTestCase {
         $this->assertFalse($arm->fieldHasTarget(1, 'F'));
 
     }
-    function testIsCyclic() {
+    function testIsCyclic()
+    {
         $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
@@ -335,7 +339,8 @@ class ArtifactRulesManagerTest extends TuleapTestCase {
         $this->assertTrue($arm->isCyclic(1, 'E', 'E'));
     }
 
-    function testRuleExists() {
+    function testRuleExists()
+    {
         $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
@@ -378,7 +383,8 @@ class ArtifactRulesManagerTest extends TuleapTestCase {
         $this->assertFalse($arm->ruleExists(1, 'E', 'E'));
 
     }
-    function testValueHasSourceTarget() {
+    function testValueHasSourceTarget()
+    {
         $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
         $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');

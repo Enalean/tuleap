@@ -26,7 +26,8 @@ class b201401221648_ftpgroups_view_concat extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Update ftpgroups view to have exactly one line per group
 EOT;
@@ -37,7 +38,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -46,7 +48,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE OR REPLACE VIEW ftpgroups AS
             (
                 SELECT unix_group_name as groupname, group_id+1000 as gid, GROUP_CONCAT(user_name) as members

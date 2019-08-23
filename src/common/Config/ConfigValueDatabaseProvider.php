@@ -23,14 +23,16 @@ class ConfigValueDatabaseProvider implements ConfigValueProvider {
     /** @var ConfigDao */
     private $dao;
 
-    public function __construct(ConfigDao $dao) {
+    public function __construct(ConfigDao $dao)
+    {
         $this->dao = $dao;
     }
 
     /**
      * @see ConfigValueProvider::getVariables()
      */
-    public function getVariables() {
+    public function getVariables()
+    {
         $variables = array();
 
         foreach ($this->dao->searchAll() as $row) {

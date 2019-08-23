@@ -22,11 +22,13 @@
 
 class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox {
 
-    protected function fetchFieldContainerStart($id, $name) {
+    protected function fetchFieldContainerStart($id, $name)
+    {
         return '';
     }
 
-    protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected) {
+    protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected)
+    {
         if ($value->getId() == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
             return '';
         }
@@ -41,7 +43,8 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
         return $html;
     }
 
-    protected function fetchFieldContainerEnd() {
+    protected function fetchFieldContainerEnd()
+    {
         return '';
     }
 
@@ -53,39 +56,45 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
         return parent::hasChanges($artifact, $previous_changesetvalue, $this->filterZeroWhenArray($new_value));
     }
 
-    public function isNone($value) {
+    public function isNone($value)
+    {
         return parent::isNone($this->filterZeroWhenArray($value));
     }
 
-    private function filterZeroWhenArray($values) {
+    private function filterZeroWhenArray($values)
+    {
         return is_array($values) ? array_filter($values) : $values;
     }
 
     /**
      * @return the label of the field (mainly used in admin part)
      */
-    public static function getFactoryLabel() {
+    public static function getFactoryLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'checkbox');
     }
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
-    public static function getFactoryDescription() {
+    public static function getFactoryDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','checkbox_desc');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconUseIt() {
+    public static function getFactoryIconUseIt()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/ui-check-box.png');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconCreate() {
+    public static function getFactoryIconCreate()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/ui-check--plus.png');
     }
 
@@ -95,7 +104,8 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
      *
      * @return bool true if the change is allowed and successful
      */
-    public function changeType($type) {
+    public function changeType($type)
+    {
         if (in_array($type, array('sb', 'msb', 'rb'))) {
             // We should remove the entry in msb table
             // However we keep it for the case where admin changes its mind.
@@ -104,7 +114,8 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
         return false;
     }
 
-    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+    public function accept(Tracker_FormElement_FieldVisitor $visitor)
+    {
         return $visitor->visitCheckbox($this);
     }
 }

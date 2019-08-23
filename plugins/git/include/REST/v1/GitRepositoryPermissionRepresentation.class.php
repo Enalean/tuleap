@@ -36,36 +36,42 @@ class GitRepositoryPermissionRepresentation extends GitRepositoryPermissionRepre
     /** @var UGroupManager */
     private $ugroup_manager;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->repository_permissions_manager = new GitRepositoryPermissionsManager(new GitDao());
         $this->ugroup_manager                 = new UGroupManager();
     }
 
-    public function build(GitRepository $repository) {
+    public function build(GitRepository $repository)
+    {
         $this->read   = $this->getUGroupsReaders($repository);
         $this->write  = $this->getUGroupsWriters($repository);
         $this->rewind = $this->getUGroupsRewinders($repository);
     }
 
-    private function getUGroupsReaders(GitRepository $repository) {
+    private function getUGroupsReaders(GitRepository $repository)
+    {
         $read_ugroups_rows   = $this->repository_permissions_manager->getUGroupsReaders($repository);
 
         return $this->buildUGroupRepresentations($repository, $read_ugroups_rows);
     }
 
-    private function getUGroupsWriters(GitRepository $repository) {
+    private function getUGroupsWriters(GitRepository $repository)
+    {
         $write_ugroups_rows  = $this->repository_permissions_manager->getUGroupsWriters($repository);
 
         return $this->buildUGroupRepresentations($repository, $write_ugroups_rows);
     }
 
-    private function getUGroupsRewinders(GitRepository $repository) {
+    private function getUGroupsRewinders(GitRepository $repository)
+    {
         $rewind_ugroups_rows = $this->repository_permissions_manager->getUGroupsRewinders($repository);
 
         return $this->buildUGroupRepresentations($repository, $rewind_ugroups_rows);
     }
 
-    private function buildUGroupRepresentations(GitRepository $repository, $ugroup_rows) {
+    private function buildUGroupRepresentations(GitRepository $repository, $ugroup_rows)
+    {
         $ugroup_representations = array();
         foreach ($ugroup_rows as $row) {
             $ugroup = $this->ugroup_manager->getById($row['ugroup_id']);

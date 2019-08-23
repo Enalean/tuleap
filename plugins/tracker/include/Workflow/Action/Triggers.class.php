@@ -25,7 +25,8 @@
 abstract class Tracker_Workflow_Action_Triggers extends Tracker_Workflow_Action {
 
     /** @see Tracker_Workflow_Action_Abstract::getIdentifier() */
-    protected function getPaneIdentifier() {
+    protected function getPaneIdentifier()
+    {
         return Tracker_Workflow_Action::PANE_CROSS_TRACKER_TRIGGERS;
     }
 }

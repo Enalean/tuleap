@@ -22,7 +22,8 @@ require_once __DIR__ .'/../../../bootstrap.php';
 
 class Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGcTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->response = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingResponse');
         $this->dao      = \Mockery::spy(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
@@ -30,14 +31,16 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGcTest extends Tul
         $this->command = new Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGc($this->response, $this->dao);
     }
 
-    public function itEnablesGitGc() {
+    public function itEnablesGitGc()
+    {
         expect($this->response)->info('Enabling git gc')->once();
         expect($this->dao)->enableGitGc()->once();
 
         $this->command->execute();
     }
 
-    public function itExecutesTheNextCommand() {
+    public function itExecutesTheNextCommand()
+    {
         $next = mock('Git_GitoliteHousekeeping_ChainOfResponsibility_Command');
         expect($next)->execute()->once();
 

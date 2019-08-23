@@ -34,7 +34,8 @@ class UGroupDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function searchByGroupId($group_id) {
+    function searchByGroupId($group_id)
+    {
         $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT * 
                 FROM ugroup 
@@ -49,7 +50,8 @@ class UGroupDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function searchByUGroupId($ugroup_id) {
+    function searchByUGroupId($ugroup_id)
+    {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql = "SELECT * 
                 FROM ugroup 
@@ -68,7 +70,8 @@ class UGroupDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchDynamicAndStaticByGroupId($group_id) {
+    function searchDynamicAndStaticByGroupId($group_id)
+    {
         $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT * 
                 FROM ugroup 
@@ -77,7 +80,8 @@ class UGroupDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchStaticByGroupId($group_id) {
+    function searchStaticByGroupId($group_id)
+    {
         $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT *
                 FROM ugroup
@@ -86,7 +90,8 @@ class UGroupDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchByGroupIdAndUGroupId($group_id, $ugroup_id) {
+    public function searchByGroupIdAndUGroupId($group_id, $ugroup_id)
+    {
         $group_id  = $this->da->escapeInt($group_id);
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql = "SELECT * 
@@ -95,7 +100,8 @@ class UGroupDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchNameByGroupIdAndUGroupId($project_id, $ugroup_id) {
+    function searchNameByGroupIdAndUGroupId($project_id, $ugroup_id)
+    {
         $project_id = $this->da->escapeInt($project_id);
         $ugroup_id  = $this->da->escapeInt($ugroup_id);
         $sql = "SELECT name
@@ -105,7 +111,8 @@ class UGroupDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchByGroupIdAndName($group_id, $name) {
+    function searchByGroupIdAndName($group_id, $name)
+    {
         $group_id  = $this->da->escapeInt($group_id);
         $name      = $this->da->quoteSmart($name);
         $sql = "SELECT *
@@ -122,7 +129,8 @@ class UGroupDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function searchGroupByUserId($userId) {
+    function searchGroupByUserId($userId)
+    {
         $user_id = $this->da->escapeInt($userId);
         $sql = "SELECT groups.group_id
                   FROM ugroup
@@ -141,7 +149,8 @@ class UGroupDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function searchByUserId($user_id) {
+    public function searchByUserId($user_id)
+    {
         $user_id = $this->da->quoteSmart($user_id);
 
         $sql = "SELECT ug.*
@@ -202,7 +211,8 @@ class UGroupDao extends DataAccessObject {
      *
      * @return bool
      */
-    function checkUGroupValidityByGroupId($groupId, $ugroupId) {
+    function checkUGroupValidityByGroupId($groupId, $ugroupId)
+    {
         $groupId = $this->da->escapeInt($groupId);
         $ugroupId = $this->da->escapeInt($ugroupId);
 
@@ -225,7 +235,8 @@ class UGroupDao extends DataAccessObject {
      *
      * @return bool
      */
-    function updateUgroupBinding($ugroupId, $sourceId = null) {
+    function updateUgroupBinding($ugroupId, $sourceId = null)
+    {
         $ugroupId = $this->da->escapeInt($ugroupId);
         if (isset($sourceId)) {
             $sourceId      = $this->da->escapeInt($sourceId);
@@ -244,7 +255,8 @@ class UGroupDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function searchUGroupByBindingSource($sourceId) {
+    function searchUGroupByBindingSource($sourceId)
+    {
         $ugroupId = $this->da->escapeInt($sourceId);
         $sql      = "SELECT * FROM ugroup WHERE source_id = ".$sourceId;
         return $this->retrieve($sql);
@@ -272,7 +284,8 @@ class UGroupDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function getUgroupBindingSource($ugroupId) {
+    function getUgroupBindingSource($ugroupId)
+    {
         $ugroupId = $this->da->escapeInt($ugroupId);
         $sql      = "SELECT source.*
                      FROM ugroup u 

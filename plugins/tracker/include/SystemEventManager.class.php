@@ -27,11 +27,13 @@ class Tracker_SystemEventManager extends SystemEventManager {
     /** @var  SystemEventManager */
     private $system_event_manager;
 
-    public function __construct(SystemEventManager $system_event_manager) {
+    public function __construct(SystemEventManager $system_event_manager)
+    {
         $this->system_event_manager = $system_event_manager;
     }
 
-    public function queueTV3Migration(PFUser $user, Project $project, $tracker_id, $name, $description, $short_name) {
+    public function queueTV3Migration(PFUser $user, Project $project, $tracker_id, $name, $description, $short_name)
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_TRACKER_V3_MIGRATION::NAME,
             $short_name.SystemEvent::PARAMETER_SEPARATOR.
@@ -45,15 +47,18 @@ class Tracker_SystemEventManager extends SystemEventManager {
         );
     }
 
-    public function isThereAMigrationQueuedForTracker(Tracker $tracker) {
+    public function isThereAMigrationQueuedForTracker(Tracker $tracker)
+    {
         return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent_TRACKER_V3_MIGRATION::NAME, $tracker->getItemName());
     }
 
-    public function isThereAMigrationQueuedForProject(Project $project) {
+    public function isThereAMigrationQueuedForProject(Project $project)
+    {
         return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingParameter(SystemEvent_TRACKER_V3_MIGRATION::NAME, $project->getGroupId());
     }
 
-    public function getTypes() {
+    public function getTypes()
+    {
         return array(
             SystemEvent_TRACKER_V3_MIGRATION::NAME,
         );

@@ -106,7 +106,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * Plugin constructor
      */
-    public function __construct($id) {
+    public function __construct($id)
+    {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         bindTextDomain('tuleap-agiledashboard', AGILEDASHBOARD_BASE_DIR . '/../site-content');
@@ -210,11 +211,13 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see Plugin::getDependencies()
      */
-    public function getDependencies() {
+    public function getDependencies()
+    {
         return array('tracker', 'cardwall');
     }
 
-    public function getServiceShortname() {
+    public function getServiceShortname()
+    {
         return self::PLUGIN_SHORTNAME;
     }
 
@@ -223,7 +226,8 @@ class AgileDashboardPlugin extends Plugin
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\AgileDashboard\AgileDashboardService::class;
     }
 
-    public function register_project_creation($params) {
+    public function register_project_creation($params)
+    {
         if ($params['project_creation_data']->projectShouldInheritFromTemplate()) {
             $this->getConfigurationManager()->duplicate(
                 $params['group_id'],
@@ -254,13 +258,15 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @return AgileDashboard_ConfigurationManager
      */
-    private function getConfigurationManager() {
+    private function getConfigurationManager()
+    {
         return new AgileDashboard_ConfigurationManager(
             new AgileDashboard_ConfigurationDao()
         );
     }
 
-    public function cardwall_event_get_swimline_tracker($params) {
+    public function cardwall_event_get_swimline_tracker($params)
+    {
         $planning_factory = $this->getPlanningFactory();
         if ($planning = $planning_factory->getPlanningByPlanningTracker($params['tracker'])) {
             $params['backlog_trackers'] = $planning->getBacklogTrackers();
@@ -270,7 +276,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA
      */
-    public function tracker_event_report_display_additional_criteria($params) {
+    public function tracker_event_report_display_additional_criteria($params)
+    {
         $backlog_tracker = $params['tracker'];
         if (! $backlog_tracker) {
             return;
@@ -306,7 +313,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY
      */
-    public function tracker_event_report_process_additional_query($params) {
+    public function tracker_event_report_process_additional_query($params)
+    {
         $backlog_tracker = $params['tracker'];
 
         $user    = $params['user'];
@@ -331,7 +339,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA
      */
-    public function tracker_event_report_save_additional_criteria($params) {
+    public function tracker_event_report_save_additional_criteria($params)
+    {
         $dao     = new MilestoneReportCriterionDao();
         $project = $params['report']->getTracker()->getProject();
         $user    = $this->getCurrentUser();
@@ -348,7 +357,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA
      */
-    public function tracker_event_report_load_additional_criteria($params) {
+    public function tracker_event_report_load_additional_criteria($params)
+    {
         $dao        = new MilestoneReportCriterionDao();
         $report_id  = $params['report']->getId();
         $field_name = AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME;
@@ -359,7 +369,8 @@ class AgileDashboardPlugin extends Plugin
         }
     }
 
-    public function event_artifact_parents_selector($params) {
+    public function event_artifact_parents_selector($params)
+    {
         $artifact_parents_selector = new Planning_ArtifactParentsSelector(
             $this->getArtifactFactory(),
             PlanningFactory::build(),
@@ -378,7 +389,8 @@ class AgileDashboardPlugin extends Plugin
         }
     }
 
-    public function tracker_event_general_settings($params) {
+    public function tracker_event_general_settings($params)
+    {
         $hierarchyChecker = new AgileDashboard_HierarchyChecker(
                                 $this->getPlanningFactory(),
                                 $this->getKanbanFactory(),
@@ -387,7 +399,8 @@ class AgileDashboardPlugin extends Plugin
         $params['cannot_configure_instantiate_for_new_projects']= $hierarchyChecker->isPartOfScrumOrKanbanHierarchy($params['tracker']);
     }
 
-    public function tracker_event_project_creation_trackers_required($params) {
+    public function tracker_event_project_creation_trackers_required($params)
+    {
         $hierarchyChecker = new AgileDashboard_HierarchyChecker(
                                 $this->getPlanningFactory(),
                                 $this->getKanbanFactory(),
@@ -414,7 +427,8 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    public function tracker_event_redirect_after_artifact_creation_or_update($params) {
+    public function tracker_event_redirect_after_artifact_creation_or_update($params)
+    {
         $params_extractor        = new AgileDashboard_PaneRedirectionExtractor();
         $artifact_linker         = new Planning_ArtifactLinker($this->getArtifactFactory(), PlanningFactory::build());
         $last_milestone_artifact = $artifact_linker->linkBacklogWithPlanningItems($params['request'], $params['artifact']);
@@ -425,7 +439,8 @@ class AgileDashboardPlugin extends Plugin
         }
     }
 
-    public function tracker_usage($params) {
+    public function tracker_usage($params)
+    {
         $tracker    = $params['tracker'];
         $tracker_id = $tracker->getId();
 
@@ -522,7 +537,8 @@ class AgileDashboardPlugin extends Plugin
         }
     }
 
-    private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Artifact_Redirect $redirect, $requested_planning, ?Tracker_Artifact $last_milestone_artifact = null) {
+    private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Artifact_Redirect $redirect, $requested_planning, ?Tracker_Artifact $last_milestone_artifact = null)
+    {
         $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
 
         if ($planning && ! $redirect->stayInTracker()) {
@@ -538,7 +554,8 @@ class AgileDashboardPlugin extends Plugin
         }
     }
 
-    private function redirectToPlanning(Tracker_Artifact $artifact, $requested_planning, Planning $planning, Tracker_Artifact_Redirect $redirect) {
+    private function redirectToPlanning(Tracker_Artifact $artifact, $requested_planning, Planning $planning, Tracker_Artifact_Redirect $redirect)
+    {
         $redirect_to_artifact = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
         if ($redirect_to_artifact == -1) {
             $redirect_to_artifact = $artifact->getId();
@@ -553,7 +570,8 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    private function redirectToTopPlanning(Tracker_Artifact $artifact, $requested_planning, Tracker_Artifact_Redirect $redirect) {
+    private function redirectToTopPlanning(Tracker_Artifact $artifact, $requested_planning, Tracker_Artifact_Redirect $redirect)
+    {
         $redirect->base_url = '/plugins/agiledashboard/';
         $group_id = null;
 
@@ -568,14 +586,16 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    public function tracker_event_build_artifact_form_action($params) {
+    public function tracker_event_build_artifact_form_action($params)
+    {
         $this->setQueryParametersFromRequest($params['request'], $params['redirect']);
         if ($params['request']->exist('child_milestone')) {
             $params['redirect']->query_parameters['child_milestone'] = $params['request']->getValidated('child_milestone', 'uint', 0);
         }
     }
 
-    private function setQueryParametersFromRequest(Codendi_Request $request, Tracker_Artifact_Redirect $redirect) {
+    private function setQueryParametersFromRequest(Codendi_Request $request, Tracker_Artifact_Redirect $redirect)
+    {
         $params_extractor   = new AgileDashboard_PaneRedirectionExtractor();
         $requested_planning = $params_extractor->extractParametersFromRequest($request);
         if ($requested_planning) {
@@ -588,7 +608,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @return AgileDashboardPluginInfo
      */
-    public function getPluginInfo() {
+    public function getPluginInfo()
+    {
         if (!$this->pluginInfo) {
             $this->pluginInfo = new AgileDashboardPluginInfo($this);
         }
@@ -686,17 +707,20 @@ class AgileDashboardPlugin extends Plugin
         return null;
     }
 
-    private function isAnAgiledashboardRequest() {
+    private function isAnAgiledashboardRequest()
+    {
         return $this->currentRequestIsForPlugin();
     }
 
-    private function isKanbanURL() {
+    private function isKanbanURL()
+    {
         $request = HTTPRequest::instance();
 
         return $request->get('action') === 'showKanban';
     }
 
-    private function isPlanningV2URL() {
+    private function isPlanningV2URL()
+    {
         $request = HTTPRequest::instance();
         $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
 
@@ -715,7 +739,8 @@ class AgileDashboardPlugin extends Plugin
      *
      * @return PlanningFactory
      */
-    protected function getPlanningFactory() {
+    protected function getPlanningFactory()
+    {
         return PlanningFactory::build();
     }
 
@@ -723,7 +748,8 @@ class AgileDashboardPlugin extends Plugin
      * Builds a new Planning_MilestoneFactory instance.
      * @return Planning_MilestoneFactory
      */
-    protected function getMilestoneFactory() {
+    protected function getMilestoneFactory()
+    {
         $form_element_factory = $this->getFormElementFactory();
 
         return new Planning_MilestoneFactory(
@@ -744,15 +770,18 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    private function getArtifactFactory() {
+    private function getArtifactFactory()
+    {
         return Tracker_ArtifactFactory::instance();
     }
 
-    private function getHierarchyFactory() {
+    private function getHierarchyFactory()
+    {
         return Tracker_HierarchyFactory::instance();
     }
 
-    private function getBacklogFactory() {
+    private function getBacklogFactory()
+    {
         return new AgileDashboard_Milestone_Backlog_BacklogFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
@@ -762,7 +791,8 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    public function tracker_event_artifact_association_edited($params) {
+    public function tracker_event_artifact_association_edited($params)
+    {
         if ($params['request']->isAjax()) {
 
             $milestone_factory = $this->getMilestoneFactory();
@@ -784,7 +814,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see Event::TRACKER_EVENT_MANAGE_SEMANTICS
      */
-    public function tracker_event_manage_semantics($parameters) {
+    public function tracker_event_manage_semantics($parameters)
+    {
         $tracker   = $parameters['tracker'];
         /** @var Tracker_SemanticCollection $semantics */
         $semantics = $parameters['semantics'];
@@ -796,7 +827,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see Event::TRACKER_EVENT_SEMANTIC_FROM_XML
      */
-    public function tracker_event_semantic_from_xml(&$parameters) {
+    public function tracker_event_semantic_from_xml(&$parameters)
+    {
         $tracker           = $parameters['tracker'];
         $xml               = $parameters['xml'];
         $full_semantic_xml = $parameters['full_semantic_xml'];
@@ -824,11 +856,13 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS
      */
-    public function tracker_event_get_semantic_duplicators($params) {
+    public function tracker_event_get_semantic_duplicators($params)
+    {
         $params['factories'][] = $this->getSemanticInitialEffortFactory();
     }
 
-    protected function getSemanticInitialEffortFactory() {
+    protected function getSemanticInitialEffortFactory()
+    {
         return AgileDashboard_Semantic_InitialEffortFactory::instance();
     }
 
@@ -837,7 +871,8 @@ class AgileDashboardPlugin extends Plugin
      *
      * @see TRACKER_EVENT_GET_SEMANTICS_NAMES
      */
-    public function tracker_event_get_semantics_names(&$params) {
+    public function tracker_event_get_semantics_names(&$params)
+    {
         $params['semantics'][] = AgileDashBoard_Semantic_InitialEffort::NAME;
     }
 
@@ -850,7 +885,8 @@ class AgileDashboardPlugin extends Plugin
      *      mapping     array           An array of mappings between xml tracker IDs and their true IDs
      *
      */
-    public function import_xml_project_cardwall_done($params) {
+    public function import_xml_project_cardwall_done($params)
+    {
         $request = new HTTPRequest($params);
         $request->set('action', 'import');
         $request->set('xml_content', $params['xml_content']);
@@ -861,7 +897,8 @@ class AgileDashboardPlugin extends Plugin
         $this->routeLegacyController()->process($request, $GLOBALS['Response'], []);
     }
 
-    public function plugin_statistics_service_usage($params) {
+    public function plugin_statistics_service_usage($params)
+    {
         $dao                  = new AgileDashboard_Dao();
         $statistic_aggregator = new AgileDashboardStatisticsAggregator();
         $params['csv_exporter']->buildDatas($dao->getProjectsWithADActivated(), "Agile Dashboard activated");
@@ -878,7 +915,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_PROJECT_ADDITIONAL_INFORMATIONS
      */
-    public function rest_project_additional_informations($params) {
+    public function rest_project_additional_informations($params)
+    {
         $root_planning = $this->getPlanningFactory()->getRootPlanning($this->getCurrentUser(), $params['project']->getGroupId());
         if (! $root_planning) {
             return;
@@ -893,7 +931,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_RESOURCES
      */
-    public function rest_resources($params) {
+    public function rest_resources($params)
+    {
         $injector = new AgileDashboard_REST_ResourcesInjector();
         $injector->populate($params['restler']);
 
@@ -906,7 +945,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_RESOURCES_V2
      */
-    public function rest_resources_v2($params) {
+    public function rest_resources_v2($params)
+    {
         $injector = new AgileDashboard_REST_v2_ResourcesInjector();
         $injector->populate($params['restler']);
     }
@@ -914,7 +954,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_GET_PROJECT_PLANNINGS
      */
-    public function rest_get_project_plannings($params) {
+    public function rest_get_project_plannings($params)
+    {
         $user              = $this->getCurrentUser();
         $planning_resource = $this->buildRightVersionOfProjectPlanningsResource($params['version']);
 
@@ -929,7 +970,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_OPTIONS_PROJECT_PLANNINGS
      */
-    public function rest_options_project_plannings($params) {
+    public function rest_options_project_plannings($params)
+    {
         $user              = $this->getCurrentUser();
         $planning_resource = $this->buildRightVersionOfProjectPlanningsResource($params['version']);
 
@@ -941,7 +983,8 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    private function buildRightVersionOfProjectPlanningsResource($version) {
+    private function buildRightVersionOfProjectPlanningsResource($version)
+    {
         $class_with_right_namespace = '\\Tuleap\\AgileDashboard\\REST\\'.$version.'\\ProjectPlanningsResource';
         return new $class_with_right_namespace;
     }
@@ -949,7 +992,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see Event::REST_PROJECT_RESOURCES
      */
-    public function rest_project_resources(array $params) {
+    public function rest_project_resources(array $params)
+    {
         $injector = new AgileDashboard_REST_ResourcesInjector();
         $injector->declareProjectPlanningResource($params['resources'], $params['project']);
     }
@@ -957,7 +1001,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_GET_PROJECT_MILESTONES
      */
-    public function rest_get_project_milestones($params) {
+    public function rest_get_project_milestones($params)
+    {
         $user               = $this->getCurrentUser();
         $milestone_resource = $this->buildRightVersionOfProjectMilestonesResource($params['version']);
 
@@ -975,7 +1020,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_OPTIONS_PROJECT_MILESTONES
      */
-    public function rest_options_project_milestones($params) {
+    public function rest_options_project_milestones($params)
+    {
         $user               = $this->getCurrentUser();
         $milestone_resource = $this->buildRightVersionOfProjectMilestonesResource($params['version']);
 
@@ -987,7 +1033,8 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    private function buildRightVersionOfProjectMilestonesResource($version) {
+    private function buildRightVersionOfProjectMilestonesResource($version)
+    {
         $class_with_right_namespace = '\\Tuleap\\AgileDashboard\\REST\\'.$version.'\\ProjectMilestonesResource';
         return new $class_with_right_namespace;
     }
@@ -995,7 +1042,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_GET_PROJECT_BACKLOG
      */
-    public function rest_get_project_backlog($params) {
+    public function rest_get_project_backlog($params)
+    {
         $user                     = $this->getCurrentUser();
         $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
 
@@ -1010,7 +1058,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_OPTIONS_PROJECT_BACKLOG
      */
-    public function rest_options_project_backlog($params) {
+    public function rest_options_project_backlog($params)
+    {
         $user                     = $this->getCurrentUser();
         $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
 
@@ -1025,7 +1074,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_PUT_PROJECT_BACKLOG
      */
-    public function rest_put_project_backlog($params) {
+    public function rest_put_project_backlog($params)
+    {
         $user                     = $this->getCurrentUser();
         $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
 
@@ -1039,7 +1089,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_PATCH_PROJECT_BACKLOG
      */
-    public function rest_patch_project_backlog($params) {
+    public function rest_patch_project_backlog($params)
+    {
         $user                     = UserManager::instance()->getCurrentUser();
         $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
 
@@ -1054,7 +1105,8 @@ class AgileDashboardPlugin extends Plugin
     /**
     * @see ITEM_PRIORITY_CHANGE
     */
-    public function item_priority_change($params) {
+    public function item_priority_change($params)
+    {
         $planning_id = $this->getPlanningIdFromParameters($params);
 
         $params['user_is_authorized'] = $this->getPlanningPermissionsManager()->userHasPermissionOnPlanning(
@@ -1065,7 +1117,8 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    private function getPlanningIdFromParameters($params) {
+    private function getPlanningIdFromParameters($params)
+    {
         if ($params['milestone_id'] == 0) {
             $planning = $this->getPlanningFactory()->getRootPlanning(
                 $params['user'],
@@ -1082,12 +1135,14 @@ class AgileDashboardPlugin extends Plugin
 
     }
 
-    private function buildRightVersionOfProjectBacklogResource($version) {
+    private function buildRightVersionOfProjectBacklogResource($version)
+    {
         $class_with_right_namespace = '\\Tuleap\\AgileDashboard\\REST\\'.$version.'\\ProjectBacklogResource';
         return new $class_with_right_namespace;
     }
 
-    private function getStatusCounter() {
+    private function getStatusCounter()
+    {
         return new AgileDashboard_Milestone_MilestoneStatusCounter(
             new AgileDashboard_BacklogItemDao(),
             new Tracker_ArtifactDao(),
@@ -1096,7 +1151,8 @@ class AgileDashboardPlugin extends Plugin
     }
 
     /** @see Event::GET_PROJECTID_FROM_URL */
-    public function get_projectid_from_url($params) {
+    public function get_projectid_from_url($params)
+    {
         if (strpos($params['url'],'/plugins/agiledashboard/') === 0) {
             $params['project_id'] = $params['request']->get('group_id');
         }
@@ -1105,7 +1161,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT
      */
-    public function tracker_event_field_augment_data_for_report($params) {
+    public function tracker_event_field_augment_data_for_report($params)
+    {
         if (! $this->isFieldPriority($params['field'])) {
             return;
         }
@@ -1118,18 +1175,21 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    private function getFieldPriorityAugmenter() {
+    private function getFieldPriorityAugmenter()
+    {
         return new AgileDashboard_FieldPriorityAugmenter(
             $this->getSequenceIdManager(),
             $this->getMilestoneFactory()
         );
     }
 
-    private function isFieldPriority(Tracker_FormElement_Field $field) {
+    private function isFieldPriority(Tracker_FormElement_Field $field)
+    {
         return $field instanceof Tracker_FormElement_Field_Priority;
     }
 
-    private function getSequenceIdManager() {
+    private function getSequenceIdManager()
+    {
         if (! $this->sequence_id_manager) {
             $this->sequence_id_manager = new AgileDashboard_SequenceIdManager(
                     $this->getBacklogFactory(),
@@ -1155,7 +1215,8 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    public function cardwall_event_use_standard_javascript($params) {
+    public function cardwall_event_use_standard_javascript($params)
+    {
         $request = HTTPRequest::instance();
         $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
         if ($pane_info_identifier->isPaneAPlanningV2($request->get('pane')) || $this->isKanbanURL()) {
@@ -1164,7 +1225,8 @@ class AgileDashboardPlugin extends Plugin
     }
 
 
-    public function rest_project_agile_endpoints($params) {
+    public function rest_project_agile_endpoints($params)
+    {
         $params['available'] = true;
     }
 
@@ -1195,14 +1257,16 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @return TrackerFactory
      */
-    private function getTrackerFactory() {
+    private function getTrackerFactory()
+    {
         return TrackerFactory::instance();
     }
 
     /**
      * @return AgileDashboard_KanbanManager
      */
-    private function getKanbanManager() {
+    private function getKanbanManager()
+    {
         return new AgileDashboard_KanbanManager(
             new AgileDashboard_KanbanDao(),
             $this->getTrackerFactory(),
@@ -1210,18 +1274,21 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    private function getCurrentUser() {
+    private function getCurrentUser()
+    {
         return UserManager::instance()->getCurrentUser();
     }
 
-    private function getPlanningPermissionsManager() {
+    private function getPlanningPermissionsManager()
+    {
         return new PlanningPermissionsManager();
     }
 
     /**
      * @return AgileDashboard_HierarchyChecker
      */
-    private function getHierarchyChecker() {
+    private function getHierarchyChecker()
+    {
         return new AgileDashboard_HierarchyChecker(
             $this->getPlanningFactory(),
             $this->getKanbanFactory(),
@@ -1232,7 +1299,8 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @return AgileDashboard_KanbanFactory
      */
-    private function getKanbanFactory() {
+    private function getKanbanFactory()
+    {
         return new AgileDashboard_KanbanFactory(
             TrackerFactory::instance(),
             new AgileDashboard_KanbanDao()
@@ -1741,7 +1809,7 @@ class AgileDashboardPlugin extends Plugin
 
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
-        $event->getRouteCollector()->addGroup('/plugins/agiledashboard', function(FastRoute\RouteCollector $r) {
+        $event->getRouteCollector()->addGroup('/plugins/agiledashboard', function (FastRoute\RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
         });
     }

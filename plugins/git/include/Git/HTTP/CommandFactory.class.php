@@ -44,7 +44,8 @@ class Git_HTTP_CommandFactory
         return $command;
     }
 
-    private function getGitHttpBackendCommand() {
+    private function getGitHttpBackendCommand()
+    {
         $command = new Git_HTTP_CommandCentos6GitHttpBackend();
         if (Git_Exec::isGit212Installed()) {
             $command = new \Tuleap\Git\HTTP\CommandSCL212GitHttpBackend();
@@ -52,7 +53,8 @@ class Git_HTTP_CommandFactory
         return $command;
     }
 
-    private function getGitoliteCommand(PFO_User $user, Git_HTTP_Command $command) {
+    private function getGitoliteCommand(PFO_User $user, Git_HTTP_Command $command)
+    {
         if ($this->detector->isGitolite3()) {
             return new Git_HTTP_CommandGitolite3($user, $command);
         }

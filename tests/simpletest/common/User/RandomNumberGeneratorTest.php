@@ -20,7 +20,8 @@
  */
 
 class RandomNumberGeneratorTest extends TuleapTestCase {
-    public function itGeneratesTokenOfTheAskedSize() {
+    public function itGeneratesTokenOfTheAskedSize()
+    {
         $number_generator_8_bits = new RandomNumberGenerator(1);
         $this->assertEqual(2, strlen($number_generator_8_bits->getNumber()));
         $number_generator_64_bits = new RandomNumberGenerator(8);

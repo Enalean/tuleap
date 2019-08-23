@@ -23,7 +23,8 @@ class b201306031352_add_branch_and_type_to_log extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 add columns 'refname' and 'operation_type' to table plugin_git_log
 EOT;
@@ -34,7 +35,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -43,7 +45,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = 'ALTER TABLE plugin_git_log
                 ADD COLUMN refname TEXT NULL';
         $this->execDB($sql, 'An error occured while adding refname to plugin_git_log: ');
@@ -57,7 +60,8 @@ EOT;
         $this->execDB($sql, 'An error occured while adding refname_type to plugin_git_log: ');
     }
 
-    private function execDB($sql, $message) {
+    private function execDB($sql, $message)
+    {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message.implode(', ', $this->db->dbh->errorInfo()));

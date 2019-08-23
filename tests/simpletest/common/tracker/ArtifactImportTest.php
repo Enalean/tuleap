@@ -25,13 +25,20 @@ Mock::generate('BaseLanguage');
 
 //substitute ArtifactField
 class ArtifactImportTest_ArtifactField {
-    function getLabel() {}
-    function getName() {}
-    function isEmptyOk() {}
-    function getDisplayType() {}
-    function isDateField() {}
-    function isSelectBox() {}
-    function isMultiSelectBox() {}
+    function getLabel()
+    {}
+    function getName()
+    {}
+    function isEmptyOk()
+    {}
+    function getDisplayType()
+    {}
+    function isDateField()
+    {}
+    function isSelectBox()
+    {}
+    function isMultiSelectBox()
+    {}
 }
 
 
@@ -66,7 +73,8 @@ Mock::generate('ArtifactType');
 
 
 class ArtifactImportTest extends TuleapTestCase {
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->da  = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);;
         $this->dar = mock('DataAccessResult');
@@ -74,12 +82,14 @@ class ArtifactImportTest extends TuleapTestCase {
         CodendiDataAccess::setInstance($this->da);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
         CodendiDataAccess::clearInstance();
     }
 
-    function testALL() {
+    function testALL()
+    {
 
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Language']->setReturnValue('getText','on',array('global','on'));
@@ -431,14 +441,16 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
       */
     }
 
-    function testSplitFollowUpComments() {
+    function testSplitFollowUpComments()
+    {
         $aitv = new ArtifactImportFollowUpCommentsTestVersion($this);
         $followup_comments = file_get_contents(dirname(__FILE__) . '/_fixtures/followup_comments1.txt');
         $comments = $aitv->splitFollowUpComments($followup_comments);
         $this->assertEqual(count($comments), 4 + 1); // + 1 because the follow-up comments header is returned
     }
 
-    function testCanApplyHtmlSpecialCharsWithBaseTranslation() {
+    function testCanApplyHtmlSpecialCharsWithBaseTranslation()
+    {
         $ai = new ArtifactImportTestVersion($this);
         $this->assertTrue($ai->canApplyHtmlSpecialChars('"'));
         $this->assertTrue($ai->canApplyHtmlSpecialChars('<'));
@@ -447,7 +459,8 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->assertFalse($ai->canApplyHtmlSpecialChars("'"));
     }
 
-    function testCanApplyHtmlSpecialCharsWithTranslatedChars() {
+    function testCanApplyHtmlSpecialCharsWithTranslatedChars()
+    {
         $ai = new ArtifactImportTestVersion($this);
         $this->assertFalse($ai->canApplyHtmlSpecialChars('&quot;'));
         $this->assertFalse($ai->canApplyHtmlSpecialChars('&lt;'));
@@ -456,7 +469,8 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->assertTrue($ai->canApplyHtmlSpecialChars('&#039;'));
     }
 
-    function testCanApplyHtmlSpecialCharsWithAdvancedHTMLTricks() {
+    function testCanApplyHtmlSpecialCharsWithAdvancedHTMLTricks()
+    {
         $ai = new ArtifactImportTestVersion($this);
         $this->assertFalse($ai->canApplyHtmlSpecialChars("&lt;p&gt;this is 'my test'&lt;/p&gt;"));
         $this->assertTrue($ai->canApplyHtmlSpecialChars("<p>this is 'my test'</p>"));
@@ -478,7 +492,8 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
      * (for instance &lt;), then exported it in CSV and finaly imported it with
      * CSV as well.
      */
-    function testUnCatchableStrings() {
+    function testUnCatchableStrings()
+    {
         $ai = new ArtifactImportTestVersion($this);
 
         $this->assertFalse($ai->canApplyHtmlSpecialChars("Test&amp;lt;"));
@@ -487,7 +502,8 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->assertFalse($ai->canApplyHtmlSpecialChars("Test&lt;"));
     }
 
-    function testCanApplyHtmlSpecialCharsWithRealTextTricks() {
+    function testCanApplyHtmlSpecialCharsWithRealTextTricks()
+    {
         $ai = new ArtifactImportTestVersion($this);
         $this->assertTrue($ai->canApplyHtmlSpecialChars('"Description"'));
         $this->assertFalse($ai->canApplyHtmlSpecialChars("Following today's Codex framework update, it looks better in the sense I now have access to all charts."));
@@ -497,7 +513,8 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->assertTrue($ai->canApplyHtmlSpecialChars('&&quot;'));
     }
 
-    function testCheckCommentExistInLegacyFormat() {
+    function testCheckCommentExistInLegacyFormat()
+    {
         stub($this->da)->numRows()->returns(1);
         stub($this->da)->fetchArray()->returns(array ('new_value' => '<pre> testing issue </pre>'));
         stub($this->dar)->getResult()->returns(true);

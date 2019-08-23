@@ -32,7 +32,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param unknown_type $endDate
      * @param bool $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayServiceGraph($services, $groupBy, $startDate, $endDate, $accumulative, $absolute=true){
+    function displayServiceGraph($services, $groupBy, $startDate, $endDate, $accumulative, $absolute=true)
+    {
         $graph = new Chart(750,450,"auto");
         $graph->SetScale("textint");
         $graph->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_title'));
@@ -99,7 +100,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param unknown_type $endDate
      * @param bool $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayUserGraph($userId, $groupBy, $startDate, $endDate, $absolute=true){
+    function displayUserGraph($userId, $groupBy, $startDate, $endDate, $absolute=true)
+    {
         $graph = new Chart(750,450,"auto");
         $graph->SetScale("textlin");
         $graph->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_user_title'));
@@ -146,7 +148,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param Date    $endDate
      * @param bool $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, $absolute=true, $accumulative = true, $siteAdminView = true){
+    function displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, $absolute=true, $accumulative = true, $siteAdminView = true)
+    {
         $graph = new Chart(750,450,"auto");
         $graph->SetScale("textint");
         $graph->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_project_title'));
@@ -225,7 +228,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param Date    $endDate
      * @param bool $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayProjectTotalSizeGraph($groupId, $groupBy, $startDate, $endDate, $absolute=true){
+    function displayProjectTotalSizeGraph($groupId, $groupBy, $startDate, $endDate, $absolute=true)
+    {
         $graph = new Chart(420 ,340 , "auto");
         $graph->img->SetMargin(70, 50, 30, 70);
         $graph->SetScale("textlin");
@@ -267,7 +271,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         }
     }
 
-    function displayError($msg) {
+    function displayError($msg)
+    {
         //ttf from jpgraph
         $ttf = new TTF();
         Chart_TTFFactory::setUserFont($ttf);
@@ -293,7 +298,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         }
     }
 
-    public function applyColorModifierRGB($color) {
+    public function applyColorModifierRGB($color)
+    {
         $jpgraphRgb = new RGB();
         $newColor   = $jpgraphRgb->color($color.':1.5');
 
@@ -303,7 +309,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         return 'rgb('.$col.')';
     }
 
-    public function applyColorModifierRGBA($color) {
+    public function applyColorModifierRGBA($color)
+    {
         $jpgraphRgb = new RGB();
         $newColor   = $jpgraphRgb->color($color.':1.5');
 

@@ -63,7 +63,8 @@ class Cardwall_CardInCellPresenterBuilder
     /**
      * @return Cardwall_CardInCellPresenter
      */
-    public function getCardInCellPresenter(Tracker_Artifact $artifact, $swimline_id = 0) {
+    public function getCardInCellPresenter(Tracker_Artifact $artifact, $swimline_id = 0)
+    {
         return $this->card_in_cell_presenter_factory->getCardInCellPresenter(
             $this->getCardPresenter($artifact, $swimline_id)
         );
@@ -72,7 +73,8 @@ class Cardwall_CardInCellPresenterBuilder
     /**
      * @return Cardwall_CardInCellPresenter[]
      */
-    public function getCardInCellPresenters(array $artifacts, $swimline_id = 0) {
+    public function getCardInCellPresenters(array $artifacts, $swimline_id = 0)
+    {
         $presenters = array();
 
         foreach ($artifacts as $artifact) {

@@ -119,14 +119,16 @@ class Git extends PluginController
      *
      * @return array
      */
-    public static function allPermissionTypes() {
+    public static function allPermissionTypes()
+    {
         return array(Git::PERM_READ, Git::PERM_WRITE, Git::PERM_WPLUS);
     }
 
     /**
      * @return array
      */
-    public static function allDefaultPermissionTypes() {
+    public static function allDefaultPermissionTypes()
+    {
         return array(Git::DEFAULT_PERM_READ, Git::DEFAULT_PERM_WRITE, Git::DEFAULT_PERM_WPLUS);
     }
 
@@ -393,27 +395,33 @@ class Git extends PluginController
         );
     }
 
-    public function setPermissionsManager(GitPermissionsManager $permissions_manager) {
+    public function setPermissionsManager(GitPermissionsManager $permissions_manager)
+    {
         $this->permissions_manager = $permissions_manager;
     }
 
-    public function setProjectManager($projectManager) {
+    public function setProjectManager($projectManager)
+    {
         $this->projectManager = $projectManager;
     }
 
-    public function setFactory(GitRepositoryFactory $factory) {
+    public function setFactory(GitRepositoryFactory $factory)
+    {
         $this->factory = $factory;
     }
 
-    public function setRequest(Codendi_Request $request) {
+    public function setRequest(Codendi_Request $request)
+    {
         $this->request = $request;
     }
 
-    public function setUserManager(UserManager $userManager) {
+    public function setUserManager(UserManager $userManager)
+    {
         $this->userManager = $userManager;
     }
 
-    public function setAction($action) {
+    public function setAction($action)
+    {
         $this->action = $action;
     }
 
@@ -426,18 +434,21 @@ class Git extends PluginController
         $this->project = $project;
     }
 
-    public function setPermittedActions($permittedActions) {
+    public function setPermittedActions($permittedActions)
+    {
         $this->permittedActions = $permittedActions;
     }
 
     /**
      * @return GitPlugin
      */
-    public function getPlugin() {
+    public function getPlugin()
+    {
         return $this->plugin;
     }
 
-    protected function definePermittedActions(/* GitRepository */ $repository, $user) {
+    protected function definePermittedActions(/* GitRepository */ $repository, $user)
+    {
         if ($this->permissions_manager->userIsGitAdmin($user, $this->projectManager->getProject($this->groupId))) {
             $this->permittedActions = array(
                 'index',
@@ -503,7 +514,8 @@ class Git extends PluginController
         $this->addAdditionalPermittedActions($user, $repository);
     }
 
-    private function addAdditionalPermittedActions(PFUser $user, /* GitRepository */ $repository) {
+    private function addAdditionalPermittedActions(PFUser $user, /* GitRepository */ $repository)
+    {
         $permitted_actions = array();
         $params            = array(
             'repository'        => $repository,
@@ -518,7 +530,8 @@ class Git extends PluginController
         }
     }
 
-    public function request() {
+    public function request()
+    {
         $valid = new Valid_String('repo_name');
         $valid->required();
         $repositoryName = null;
@@ -555,7 +568,8 @@ class Git extends PluginController
         $this->_dispatchActionAndView($this->action, $repository, $repoId, $repositoryName, $user);
     }
 
-    public function _dispatchActionAndView($action, /* GitRepository */ $repository, $repo_id, $repositoryName, $user) {
+    public function _dispatchActionAndView($action, /* GitRepository */ $repository, $repo_id, $repositoryName, $user)
+    {
         $pane = $this->request->get('pane');
         switch ($action) {
              // DELETE a repository
@@ -1076,7 +1090,8 @@ class Git extends PluginController
         $this->addAction('redirectToDefaultSettings', [$this->groupId, $pane]);
     }
 
-    private function getValidatedGerritTemplateId($repository) {
+    private function getValidatedGerritTemplateId($repository)
+    {
         if (empty($repository)) {
             return null;
         }
@@ -1103,7 +1118,8 @@ class Git extends PluginController
         return null;
     }
 
-    private function gerritProjectAlreadyExists($remote_server_id, GitRepository $repo) {
+    private function gerritProjectAlreadyExists($remote_server_id, GitRepository $repo)
+    {
         $gerrit_server       = $this->gerrit_server_factory->getServerById($remote_server_id);
         $driver              = $this->driver_factory->getDriver($gerrit_server);
         $gerrit_project_name = $driver->getGerritProjectName($repo);
@@ -1111,7 +1127,8 @@ class Git extends PluginController
         return $driver->doesTheProjectExist($gerrit_server, $gerrit_project_name);
     }
 
-    private function processRepoManagementNotifications($pane, $repoId, $repositoryName, $user) {
+    private function processRepoManagementNotifications($pane, $repoId, $repositoryName, $user)
+    {
         $this->addView('repoManagement');
         if ($this->request->exist('mail_prefix')) {
             $valid = new Valid_String('mail_prefix');
@@ -1171,7 +1188,8 @@ class Git extends PluginController
         $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
     }
 
-    protected function _informAboutPendingEvents(/* GitRepository */ $repository) {
+    protected function _informAboutPendingEvents(/* GitRepository */ $repository)
+    {
         $sem = SystemEventManager::instance();
         $dar = $sem->_getDao()->searchWithParam('head', $this->groupId, array('GIT_REPO_CREATE', 'GIT_REPO_DELETE'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
         foreach ($dar as $row) {
@@ -1205,7 +1223,8 @@ class Git extends PluginController
      *
      * @return PluginActions
      */
-    protected function instantiateAction($action) {
+    protected function instantiateAction($action)
+    {
         return new $action(
             $this,
             $this->git_system_event_manager,
@@ -1247,7 +1266,8 @@ class Git extends PluginController
         );
     }
 
-    public function _doDispatchForkCrossProject($request, $user) {
+    public function _doDispatchForkCrossProject($request, $user)
+    {
         $this->checkSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
         $validators = array(new Valid_UInt('to_project'), new Valid_String('repos'), new Valid_Array('repo_access'));
 
@@ -1281,17 +1301,20 @@ class Git extends PluginController
         }
     }
 
-    public function redirectNoRepositoryError() {
+    public function redirectNoRepositoryError()
+    {
         $this->addError(dgettext('tuleap-git', 'The repository does not exist'));
         $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
     }
 
-    protected function checkSynchronizerToken($url) {
+    protected function checkSynchronizerToken($url)
+    {
         $token = new CSRFSynchronizerToken($url);
         $token->check();
     }
 
-    public function _doDispatchForkRepositories($request, $user) {
+    public function _doDispatchForkRepositories($request, $user)
+    {
         $this->addAction('getProjectRepositoryList', array($this->groupId));
         $this->checkSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
 
@@ -1321,7 +1344,8 @@ class Git extends PluginController
     /**
      * @return array
      */
-    private function getForkPermissionsFromRequest(Codendi_Request $request) {
+    private function getForkPermissionsFromRequest(Codendi_Request $request)
+    {
         $fork_permissions = $request->get('repo_access');
         if ($fork_permissions) {
             return $fork_permissions;
@@ -1333,7 +1357,8 @@ class Git extends PluginController
         return array();
     }
 
-    private function getRepositoriesFromIds($repository_ids) {
+    private function getRepositoriesFromIds($repository_ids)
+    {
         $repositories = array();
 
         foreach($repository_ids as $repository_id) {
@@ -1356,12 +1381,14 @@ class Git extends PluginController
      *
      * @return Void
      */
-    public function logsDaily($params) {
+    public function logsDaily($params)
+    {
         $logger  = new GitLog();
         $logger->logsDaily($params);
     }
 
-    private function areMirrorsEnabledForProject() {
+    private function areMirrorsEnabledForProject()
+    {
         return count($this->mirror_data_mapper->fetchAllForProject($this->project)) > 0;
     }
 }

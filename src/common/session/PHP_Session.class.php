@@ -41,11 +41,13 @@ class PHP_Session
         session_destroy();
     }
 
-    public function clean() {
+    public function clean()
+    {
         $_SESSION = array();
     }
 
-    protected function &getSession() {
+    protected function &getSession()
+    {
         return $_SESSION;
     }
 

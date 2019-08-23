@@ -22,7 +22,8 @@ use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 require_once __DIR__.'/../bootstrap.php';
 
-function aWorkflow() {
+function aWorkflow()
+{
     return new Test_Workflow_Builder();
 }
 
@@ -35,42 +36,50 @@ class Test_Workflow_Builder {
     private $global_rules_manager;
     private $trigger_rules_manager;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->global_rules_manager = mock('Tracker_RulesManager');
         $this->trigger_rules_manager = mock('Tracker_Workflow_Trigger_RulesManager');
     }
 
-    public function withGlobalRulesManager(Tracker_RulesManager $global_rules_manager) {
+    public function withGlobalRulesManager(Tracker_RulesManager $global_rules_manager)
+    {
         $this->global_rules_manager  = $global_rules_manager;
         return $this;
     }
 
-    public function withTriggerRulesManager(Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager) {
+    public function withTriggerRulesManager(Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager)
+    {
         $this->trigger_rules_manager = $trigger_rules_manager;
         return $this;
     }
 
-    public function withId($id) {
+    public function withId($id)
+    {
         $this->id = $id;
         return $this;
     }
 
-    public function withFieldId($field_id) {
+    public function withFieldId($field_id)
+    {
         $this->field_id = $field_id;
         return $this;
     }
 
-    public function withTrackerId($tracker_id) {
+    public function withTrackerId($tracker_id)
+    {
         $this->tracker_id = $tracker_id;
         return $this;
     }
 
-    public function withIsUsed($is_used) {
+    public function withIsUsed($is_used)
+    {
         $this->is_used = $is_used;
         return $this;
     }
 
-    public function withTransitions($transitions) {
+    public function withTransitions($transitions)
+    {
         $this->transitions = $transitions;
         return $this;
     }

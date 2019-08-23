@@ -41,27 +41,33 @@ require_once("lib/ASCIIMathPHP/ASCIIMathPHP.class.php");
 class WikiPlugin_AsciiMath
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("AsciiMath");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Render ASCII Math as MathML");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.1 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array();
     }
-    function handle_plugin_args_cruft(&$argstr, &$args) {
+    function handle_plugin_args_cruft(&$argstr, &$args)
+    {
         $this->source = $argstr;
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         if (empty($this->source))
             return '';

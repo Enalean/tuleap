@@ -22,7 +22,8 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use Exception;
 
 class ArtifactCannotBeChildrenOfException extends Exception {
-    public function __construct($parent_id, $child_id) {
+    public function __construct($parent_id, $child_id)
+    {
         parent::__construct("Item $child_id cannot be children of $parent_id according to tracker hierarchy");
     }
 }

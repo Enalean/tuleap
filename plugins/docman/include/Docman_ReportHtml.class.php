@@ -39,7 +39,8 @@ class Docman_ReportHtml
         $this->hp         = Codendi_HTMLPurifier::instance();
     }
 
-    function getSelectOption($value, $text, $selected=null) {
+    function getSelectOption($value, $text, $selected=null)
+    {
         $html = '';
         $html .= '<option value="'.$value.'"';
         if($value == $selected) {
@@ -49,7 +50,8 @@ class Docman_ReportHtml
         return $html;
     }
 
-    function getSelectOptionFromReportIterator($reportIter, $current=null) {
+    function getSelectOptionFromReportIterator($reportIter, $current=null)
+    {
         $html = '';
         $reportIter->rewind();
         while($reportIter->valid()) {
@@ -60,7 +62,8 @@ class Docman_ReportHtml
         return $html;
     }
 
-    function getReportSelector($item) {
+    function getReportSelector($item)
+    {
         $html = '';
 
         $reportFactory = new Docman_ReportFactory($this->report->getGroupId());
@@ -99,7 +102,8 @@ class Docman_ReportHtml
         return $html;
     }
 
-    function _getFilterDisplayBox($filter, $params, $trashLinkBase, &$displayedFilters) {
+    function _getFilterDisplayBox($filter, $params, $trashLinkBase, &$displayedFilters)
+    {
         $html = '';
         $htmlFilter = Docman_HtmlFilterFactory::getFromFilter($filter);
         if($htmlFilter !== null) {
@@ -109,7 +113,8 @@ class Docman_ReportHtml
         return $html;
     }
 
-    function getSelectedFilters($params, &$displayedFilters) {
+    function getSelectedFilters($params, &$displayedFilters)
+    {
         $html = '';
 
         $html .= '<table class="docman_form" data-test="docman_form_table">';
@@ -144,7 +149,8 @@ class Docman_ReportHtml
         return $html;
     }
 
-    function getFiltersOptions($params, $displayedFilters) {
+    function getFiltersOptions($params, $displayedFilters)
+    {
         $html = '';
 
         $html .= '<div id="docman_report_options">';
@@ -203,7 +209,8 @@ class Docman_ReportHtml
         return $html;
     }
 
-    function getReportOptions() {
+    function getReportOptions()
+    {
         $html = '';
 
         $user = $this->getCurrentUser();
@@ -260,7 +267,8 @@ class Docman_ReportHtml
     /**
      * Entry point
      */
-    public function toHtml($params) {
+    public function toHtml($params)
+    {
         $html = '';
 
         $html .= $this->getReportSelector($params['item']);
@@ -326,7 +334,8 @@ class Docman_ReportHtml
         return $html;
     }
 
-    function getReportImage() {
+    function getReportImage()
+    {
         $html = '';
         if($this->report->getImage() !== null) {
             $itemId = $this->report->getImage();

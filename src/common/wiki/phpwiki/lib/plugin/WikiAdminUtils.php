@@ -33,26 +33,31 @@ rcs_id('$Id: WikiAdminUtils.php,v 1.18 2005/09/10 11:30:40 rurban Exp $');
 class WikiPlugin_WikiAdminUtils
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("WikiAdminUtils");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("Miscellaneous utility functions for the Administrator.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.18 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('action'           => '',
                      'label'        => '',
                      );
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         $args['action'] = strtolower($args['action']);
         extract($args);
@@ -80,7 +85,8 @@ extends WikiPlugin
         return $this->_makeButton($request, $args, $label);
     }
 
-    function _makeButton(&$request, $args, $label) {
+    function _makeButton(&$request, $args, $label)
+    {
         $args['return_url'] = $request->getURLtoSelf();
         return HTML::form(array('action' => $request->getPostURL(),
                                 'method' => 'post'),
@@ -91,7 +97,8 @@ extends WikiPlugin
                           HiddenInputs($request->getArgs()));
     }
 
-    function do_action(&$request, $args) {
+    function do_action(&$request, $args)
+    {
         $method = strtolower('_do_' . str_replace('-', '_', $args['action']));
         if (!method_exists($this, $method))
             return $this->error("Bad action");
@@ -105,14 +112,16 @@ extends WikiPlugin
         $alert->show();         // noreturn
     }
 
-    function _getLabel($action) {
+    function _getLabel($action)
+    {
         $labels = array('purge-cache' => _("Purge Markup Cache"),
                         'purge-bad-pagenames' => _("Purge all Pages With Invalid Names"),
                         'purge-empty-pages' => _("Purge all empty, unreferenced Pages"));
         return @$labels[$action];
     }
 
-    function _do_purge_cache(&$request, $args) {
+    function _do_purge_cache(&$request, $args)
+    {
         $dbi = $request->getDbh();
         $pages = $dbi->getAllPages('include_empty'); // Do we really want the empty ones too?
         while (($page = $pages->next())) {
@@ -121,7 +130,8 @@ extends WikiPlugin
         return _("Markup cache purged!");
     }
 
-    function _do_purge_bad_pagenames(&$request, $args) {
+    function _do_purge_bad_pagenames(&$request, $args)
+    {
         // FIXME: this should be moved into WikiDB::normalize() or something...
         $dbi = $request->getDbh();
         $count = 0;
@@ -148,7 +158,8 @@ extends WikiPlugin
     /**
      * Purge all non-referenced empty pages. Mainly those created by bad link extraction.
      */
-    function _do_purge_empty_pages(&$request, $args) {
+    function _do_purge_empty_pages(&$request, $args)
+    {
         $dbi = $request->getDbh();
         $count = 0; $notpurgable = 0;
         $list = HTML::ol(array('align'=>'left'));
@@ -179,7 +190,8 @@ extends WikiPlugin
     }
 
 
-    function _do_convert_cached_html(&$request, $args) {
+    function _do_convert_cached_html(&$request, $args)
+    {
 
         return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
     }
@@ -187,12 +199,14 @@ extends WikiPlugin
 
     //TODO: We need a seperate plugin for this.
     //      Too many options.
-    function _do_access_restrictions(&$request, &$args) {
+    function _do_access_restrictions(&$request, &$args)
+    {
         return _("Sorry. Access Restrictions not yet implemented");
     }
 
     // pagelist with enable/disable button
-    function _do_email_verification(&$request, &$args) {
+    function _do_email_verification(&$request, &$args)
+    {
         return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
         $dbi = $request->getDbh();
         $pagelist = new PageList('pagename',0,$args);
@@ -261,14 +275,16 @@ require_once("lib/PageList.php");
 
 class _PageList_Column_email
 extends _PageList_Column {
-    function _getValue (&$prefs, $dummy) {
+    function _getValue(&$prefs, $dummy)
+    {
         return $prefs->get('email');
     }
 }
 
 class _PageList_Column_emailVerified
 extends _PageList_Column {
-    function _getValue (&$prefs, $status) {
+    function _getValue(&$prefs, $status)
+    {
         $name = $prefs->get('userid');
         $input = HTML::input(array('type' => 'checkbox',
                                    'name' => 'wikiadminutils[verified]['.$name.']',

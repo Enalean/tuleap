@@ -25,7 +25,8 @@ class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase {
     private $field;
     private $user;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $base_language = mock('BaseLanguage');
@@ -40,13 +41,15 @@ class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase {
         $this->changeset = mock('Tracker_Artifact_Changeset');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         unset($GLOBALS['Language']);
 
         parent::tearDown();
     }
 
-    public function testIntegers() {
+    public function testIntegers()
+    {
 
         $integer = new Tracker_Artifact_ChangesetValue_Integer(111, $this->changeset, $this->field, false, 42);
 
@@ -65,7 +68,8 @@ class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase {
         $this->assertNull($null_int->getValue());
     }
 
-    public function testNoDiff() {
+    public function testNoDiff()
+    {
         $this->field = mock('Tracker_FormElement_Field_Integer');
         $int_1 = new Tracker_Artifact_ChangesetValue_Integer(111, $this->changeset, $this->field, false, 54);
         $int_2 = new Tracker_Artifact_ChangesetValue_Integer(111, $this->changeset, $this->field, false, 54);
@@ -73,7 +77,8 @@ class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase {
         $this->assertFalse($int_2->diff($int_1));
     }
 
-    public function testDiff() {
+    public function testDiff()
+    {
         $this->field = mock('Tracker_FormElement_Field_Integer');
         $int_1 = new Tracker_Artifact_ChangesetValue_Integer(111, $this->changeset, $this->field, false, 66);
         $int_2 = new Tracker_Artifact_ChangesetValue_Integer(111, $this->changeset, $this->field, false, 666);
@@ -83,7 +88,8 @@ class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase {
 
 class Tracker_Artifact_ChangesetValue_Integer_RESTTest extends TuleapTestCase {
 
-    public function itReturnsTheRESTValue() {
+    public function itReturnsTheRESTValue()
+    {
         $field = stub('Tracker_FormElement_Field_Integer')->getName()->returns('field_int');
         $user  = aUser()->withId(101)->build();
 

@@ -29,7 +29,8 @@ abstract class Error_PermissionDenied {
      */
     protected $url;
 
-    function __construct(?URL $url = null) {
+    function __construct(?URL $url = null)
+    {
         if ($url === null) {
             $url = new URL();
         }
@@ -48,7 +49,8 @@ abstract class Error_PermissionDenied {
      *
      * @return String
      */
-    function getTextBase() {
+    function getTextBase()
+    {
         return 'include_exit';
     }
 
@@ -66,7 +68,8 @@ abstract class Error_PermissionDenied {
      * @param String $link
      * @param BaseLanguage $language
      */
-    function getRedirectLink($link, $language) {
+    function getRedirectLink($link, $language)
+    {
         return $link;
     }
 
@@ -74,7 +77,8 @@ abstract class Error_PermissionDenied {
      * Build the user interface to ask for membership
      *
      */
-    function buildInterface(PFUser $user, ?Project $project = null) {
+    function buildInterface(PFUser $user, ?Project $project = null)
+    {
         if ($user->isAnonymous()) {
             $event_manager = EventManager::instance();
             $redirect = new URLRedirect($event_manager);
@@ -93,7 +97,8 @@ abstract class Error_PermissionDenied {
      *
      * @return Array
      */
-    function extractReceiver($project, $urlData) {
+    function extractReceiver($project, $urlData)
+    {
         $admins = array();
         $status  = true;
         $pm = ProjectManager::instance();
@@ -155,7 +160,8 @@ abstract class Error_PermissionDenied {
      * Prepare the mail inputs
      * @return String $messageToAdmin
      */
-    function processMail($messageToAdmin) {
+    function processMail($messageToAdmin)
+    {
         $request =HTTPRequest::instance();
 
         $pm = $this->getProjectManager();
@@ -183,7 +189,8 @@ abstract class Error_PermissionDenied {
      * @param String  $hrefApproval
      * @param String  $messageToAdmin
      */
-    function sendMail($project, $user, $urlData, $hrefApproval,$messageToAdmin) {
+    function sendMail($project, $user, $urlData, $hrefApproval,$messageToAdmin)
+    {
         $mail = new Codendi_Mail();
 
         //to
@@ -218,7 +225,8 @@ abstract class Error_PermissionDenied {
      *
      * @return UserManager
      */
-    protected function getUserManager() {
+    protected function getUserManager()
+    {
         return UserManager::instance();
     }
 
@@ -227,7 +235,8 @@ abstract class Error_PermissionDenied {
      *
      * @return ProjectManager
      */
-    protected function getProjectManager() {
+    protected function getProjectManager()
+    {
         return ProjectManager::instance();
     }
 
@@ -236,14 +245,16 @@ abstract class Error_PermissionDenied {
      *
      * @return ProjectUGroup
      */
-    protected function getUGroup() {
+    protected function getUGroup()
+    {
         return new ProjectUGroup();
     }
 
     /**
      * Build the Permission Denied error interface
      */
-    private function buildPermissionDeniedInterface(?Project $project = null) {
+    private function buildPermissionDeniedInterface(?Project $project = null)
+    {
         $purifier = Codendi_HTMLPurifier::instance();
         $param    = $this->returnBuildInterfaceParam();
 

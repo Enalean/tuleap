@@ -20,17 +20,20 @@
 
 class b201010191436_add_table_frs_file_deleted extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add the table frs_file_deleted to manage deleted files in order to facilitate their restore later
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE frs_file_deleted (
   file_id int(11) NOT NULL,
   filename text,
@@ -50,7 +53,8 @@ EOT;
         $this->db->createTable('frs_file_deleted', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('frs_file_deleted')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('frs_file_deleted table is missing');
         }

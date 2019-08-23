@@ -32,42 +32,51 @@ class Project_CustomDescription_CustomDescriptionPresenter {
     /** @var string */
     private $form_prefix;
 
-    public function __construct(Project_CustomDescription_CustomDescription $custom_description, $value, $form_prefix) {
+    public function __construct(Project_CustomDescription_CustomDescription $custom_description, $value, $form_prefix)
+    {
         $this->value              = $value;
         $this->form_prefix        = $form_prefix;
         $this->custom_description = $custom_description;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->getTranslation($this->custom_description->getName());
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         $hp = Codendi_HTMLPurifier::instance();
         return $hp->purify($this->getTranslation($this->custom_description->getDescription()), CODENDI_PURIFIER_LIGHT);
     }
 
-    public function isRequired() {
+    public function isRequired()
+    {
         return $this->custom_description->isRequired();
     }
 
-    public function isText() {
+    public function isText()
+    {
         return $this->custom_description->isText();
     }
 
-    public function getFormName() {
+    public function getFormName()
+    {
         return $this->form_prefix . $this->custom_description->getId();
     }
 
-    public function getValue() {
+    public function getValue()
+    {
         return $this->value;
     }
 
-    public function setValue($value) {
+    public function setValue($value)
+    {
         $this->value = $value;
     }
 
-    private function getTranslation($text) {
+    private function getTranslation($text)
+    {
         if (preg_match('/(.*):(.*)/', $text, $matches)) {
             if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
                 return $GLOBALS['Language']->getText($matches[1], $matches[2]);

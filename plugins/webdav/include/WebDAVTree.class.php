@@ -32,7 +32,8 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
      *
      * @return bool
      */
-    function releaseCanBeMoved($release, $destination) {
+    function releaseCanBeMoved($release, $destination)
+    {
         return (($destination instanceof WebDAVFRSPackage)
         && ($release->getProject()->getGroupId() == $destination->getProject()->getGroupId()));
     }
@@ -46,7 +47,8 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
      *
      * @return bool
      */
-    function fileCanBeMoved($file, $destination) {
+    function fileCanBeMoved($file, $destination)
+    {
         return (($destination instanceof WebDAVFRSRelease)
         && ($file->getProject()->getGroupId() == $destination->getProject()->getGroupId()));
     }
@@ -59,7 +61,8 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
      *
      * @return bool
      */
-    function canBeMoved($source, $destination) {
+    function canBeMoved($source, $destination)
+    {
         return(($source instanceof WebDAVFRSRelease && $this->releaseCanBeMoved($source, $destination))
         || ($source instanceof WebDAVFRSFile && $this->fileCanBeMoved($source, $destination)));
     }
@@ -77,7 +80,8 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
      *
      * @return void
      */
-    public function copy($sourcePath, $destinationPath) {
+    public function copy($sourcePath, $destinationPath)
+    {
         throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
 
         // Check that write access is enabled for WebDAV
@@ -133,7 +137,8 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
      *
      * @see lib/Sabre/DAV/Sabre_DAV_Tree#move($sourcePath, $destinationPath)
      */
-    public function move($sourcePath, $destinationPath) {
+    public function move($sourcePath, $destinationPath)
+    {
         list($sourceDir, $sourceName) = Sabre_DAV_URLUtil::splitPath($sourcePath);
         list($destinationDir, $destinationName) = Sabre_DAV_URLUtil::splitPath($destinationPath);
 
@@ -183,7 +188,8 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
      *
      * @return WebDAVUtils
      */
-    function getUtils() {
+    function getUtils()
+    {
         return WebDAVUtils::getInstance();
     }
 

@@ -32,15 +32,18 @@ class Codendi_DiffOp {
     var $orig;
     var $fin;
 
-    function reverse() {
+    function reverse()
+    {
         trigger_error("pure virtual", E_USER_ERROR);
     }
 
-    function norig() {
+    function norig()
+    {
         return $this->orig ? sizeof($this->orig) : 0;
     }
 
-    function nfin() {
+    function nfin()
+    {
         return $this->fin ? sizeof($this->fin) : 0;
     }
 }
@@ -48,14 +51,16 @@ class Codendi_DiffOp {
 class Codendi_DiffOp_Copy extends Codendi_DiffOp {
     var $type = 'copy';
 
-    function __construct($orig, $fin = false) {
+    function __construct($orig, $fin = false)
+    {
         if (!is_array($fin))
             $fin = $orig;
         $this->orig = $orig;
         $this->fin = $fin;
     }
 
-    function reverse() {
+    function reverse()
+    {
         return new Codendi_DiffOp_Copy($this->fin, $this->orig);
     }
 }
@@ -63,12 +68,14 @@ class Codendi_DiffOp_Copy extends Codendi_DiffOp {
 class Codendi_DiffOp_Delete extends Codendi_DiffOp {
     var $type = 'delete';
 
-    function __construct($lines) {
+    function __construct($lines)
+    {
         $this->orig = $lines;
         $this->fin = false;
     }
 
-    function reverse() {
+    function reverse()
+    {
         return new Codendi_DiffOp_Add($this->orig);
     }
 }
@@ -76,12 +83,14 @@ class Codendi_DiffOp_Delete extends Codendi_DiffOp {
 class Codendi_DiffOp_Add extends Codendi_DiffOp {
     var $type = 'add';
 
-    function __construct($lines) {
+    function __construct($lines)
+    {
         $this->fin = $lines;
         $this->orig = false;
     }
 
-    function reverse() {
+    function reverse()
+    {
         return new Codendi_DiffOp_Delete($this->fin);
     }
 }
@@ -89,12 +98,14 @@ class Codendi_DiffOp_Add extends Codendi_DiffOp {
 class Codendi_DiffOp_Change extends Codendi_DiffOp {
     var $type = 'change';
 
-    function __construct($orig, $fin) {
+    function __construct($orig, $fin)
+    {
         $this->orig = $orig;
         $this->fin = $fin;
     }
 
-    function reverse() {
+    function reverse()
+    {
         return new Codendi_DiffOp_Change($this->fin, $this->orig);
     }
 }
@@ -120,7 +131,8 @@ class Codendi_DiffOp_Change extends Codendi_DiffOp {
  */
 class Codendi_DiffEngine
 {
-    function diff ($from_lines, $to_lines) {
+    function diff($from_lines, $to_lines)
+    {
         $n_from = sizeof($from_lines);
         $n_to = sizeof($to_lines);
 
@@ -222,7 +234,8 @@ class Codendi_DiffEngine
      * match.  The caller must trim matching lines from the beginning and end
      * of the portions it is going to specify.
      */
-    function _diag ($xoff, $xlim, $yoff, $ylim, $nchunks) {
+    function _diag($xoff, $xlim, $yoff, $ylim, $nchunks)
+    {
         $flip = false;
 
         if ($xlim - $xoff > $ylim - $yoff) {
@@ -293,7 +306,8 @@ class Codendi_DiffEngine
         return array($this->lcs, $seps);
     }
 
-    function _lcs_pos ($ypos) {
+    function _lcs_pos($ypos)
+    {
         $end = $this->lcs;
         if ($end == 0 || $ypos > $this->seq[$end]) {
             $this->seq[++$this->lcs] = $ypos;
@@ -327,7 +341,8 @@ class Codendi_DiffEngine
      * Note that XLIM, YLIM are exclusive bounds.
      * All line numbers are origin-0 and discarded lines are not counted.
      */
-    function _compareseq ($xoff, $xlim, $yoff, $ylim) {
+    function _compareseq($xoff, $xlim, $yoff, $ylim)
+    {
         // Slide down the bottom initial diagonal.
         while ($xoff < $xlim && $yoff < $ylim
                && $this->xv[$xoff] == $this->yv[$yoff]) {
@@ -384,7 +399,8 @@ class Codendi_DiffEngine
      *
      * This is extracted verbatim from analyze.c (GNU diffutils-2.7).
      */
-    function _shift_boundaries ($lines, &$changed, $other_changed) {
+    function _shift_boundaries($lines, &$changed, $other_changed)
+    {
         $i = 0;
         $j = 0;
 
@@ -500,7 +516,8 @@ class Codendi_Diff
      *        (Typically these are lines from a file.)
      * @param $to_lines array An array of strings.
      */
-    function __construct($from_lines, $to_lines) {
+    function __construct($from_lines, $to_lines)
+    {
         $eng = new Codendi_DiffEngine();
         $this->edits = $eng->diff($from_lines, $to_lines);
         //$this->_check($from_lines, $to_lines);
@@ -516,7 +533,8 @@ class Codendi_Diff
      * @return object A Diff object representing the inverse of the
      *                original diff.
      */
-    function reverse () {
+    function reverse()
+    {
         $rev = $this;
         $rev->edits = array();
         foreach ($this->edits as $edit) {
@@ -530,7 +548,8 @@ class Codendi_Diff
      *
      * @return bool True iff two sequences were identical.
      */
-    function isEmpty () {
+    function isEmpty()
+    {
         foreach ($this->edits as $edit) {
             if ($edit->type != 'copy')
                 return false;
@@ -545,7 +564,8 @@ class Codendi_Diff
      *
      * @return int The length of the LCS.
      */
-    function lcs () {
+    function lcs()
+    {
         $lcs = 0;
         foreach ($this->edits as $edit) {
             if ($edit->type == 'copy')
@@ -562,7 +582,8 @@ class Codendi_Diff
      *
      * @return array The original sequence of strings.
      */
-    function orig() {
+    function orig()
+    {
         $lines = array();
 
         foreach ($this->edits as $edit) {
@@ -580,7 +601,8 @@ class Codendi_Diff
      *
      * @return array The sequence of strings.
      */
-    function _fin() {
+    function _fin()
+    {
         $lines = array();
 
         foreach ($this->edits as $edit) {
@@ -595,7 +617,8 @@ class Codendi_Diff
      *
      * This is here only for debugging purposes.
      */
-    function _check ($from_lines, $to_lines) {
+    function _check($from_lines, $to_lines)
+    {
         if (serialize($from_lines) != serialize($this->orig()))
             trigger_error("Reconstructed original doesn't match", E_USER_ERROR);
         if (serialize($to_lines) != serialize($this->_fin()))
@@ -651,8 +674,12 @@ extends Codendi_Diff
      * @param $mapped_to_lines array This array should
      *  have the same number of elements as $to_lines.
      */
-    function __construct($from_lines, $to_lines,
-                        $mapped_from_lines, $mapped_to_lines) {
+    function __construct(
+        $from_lines,
+        $to_lines,
+        $mapped_from_lines,
+        $mapped_to_lines
+    ) {
 
         assert(sizeof($from_lines) == sizeof($mapped_from_lines));
         assert(sizeof($to_lines) == sizeof($mapped_to_lines));
@@ -710,7 +737,8 @@ class Codendi_DiffFormatter
      * @param $diff object A Diff object.
      * @return string The formatted output.
      */
-    function format($diff) {
+    function format($diff)
+    {
 
         $xi = $yi = 1;
         $block = false;
@@ -769,7 +797,8 @@ class Codendi_DiffFormatter
         return $this->_end_diff();
     }
 
-    function _block($xbeg, $xlen, $ybeg, $ylen, &$edits) {
+    function _block($xbeg, $xlen, $ybeg, $ylen, &$edits)
+    {
         $this->_start_block($this->_block_header($xbeg, $xlen, $ybeg, $ylen));
 
         foreach ($edits as $edit) {
@@ -793,17 +822,20 @@ class Codendi_DiffFormatter
         $this->_end_block();
     }
 
-    function _start_diff() {
+    function _start_diff()
+    {
         ob_start();
     }
 
-    function _end_diff() {
+    function _end_diff()
+    {
         $val = ob_get_contents();
         ob_end_clean();
         return $val;
     }
 
-    function _block_header($xbeg, $xlen, $ybeg, $ylen) {
+    function _block_header($xbeg, $xlen, $ybeg, $ylen)
+    {
         if ($xlen > 1)
             $xbeg .= "," . ($xbeg + $xlen - 1);
         if ($ylen > 1)
@@ -812,31 +844,38 @@ class Codendi_DiffFormatter
         return $xbeg . ($xlen ? ($ylen ? 'c' : 'd') : 'a') . $ybeg;
     }
 
-    function _start_block($header) {
+    function _start_block($header)
+    {
         echo $header;
     }
 
-    function _end_block() {
+    function _end_block()
+    {
     }
 
-    function _lines($lines, $prefix = ' ') {
+    function _lines($lines, $prefix = ' ')
+    {
         foreach ($lines as $line) {
             echo "$prefix $line\n";
         }
     }
 
-    function _context($lines) {
+    function _context($lines)
+    {
         $this->_lines($lines);
     }
 
-    function _added($lines) {
+    function _added($lines)
+    {
         $this->_lines($lines, ">");
     }
-    function _deleted($lines) {
+    function _deleted($lines)
+    {
         $this->_lines($lines, "<");
     }
 
-    function _changed($orig, $fin) {
+    function _changed($orig, $fin)
+    {
         $this->_deleted($orig);
         echo "---\n";
         $this->_added($fin);
@@ -850,12 +889,14 @@ class Codendi_DiffFormatter
  */
 class Codendi_UnifiedDiffFormatter extends Codendi_DiffFormatter
 {
-    function __construct($context_lines = 4) {
+    function __construct($context_lines = 4)
+    {
         $this->leading_context_lines = $context_lines;
         $this->trailing_context_lines = $context_lines;
     }
 
-    function _block_header($xbeg, $xlen, $ybeg, $ylen) {
+    function _block_header($xbeg, $xlen, $ybeg, $ylen)
+    {
         if ($xlen != 1)
             $xbeg .= "," . $xlen;
         if ($ylen != 1)
@@ -863,13 +904,16 @@ class Codendi_UnifiedDiffFormatter extends Codendi_DiffFormatter
         return "@@ -$xbeg +$ybeg @@\n";
     }
 
-    function _added($lines) {
+    function _added($lines)
+    {
         $this->_lines($lines, "+");
     }
-    function _deleted($lines) {
+    function _deleted($lines)
+    {
         $this->_lines($lines, "-");
     }
-    function _changed($orig, $fin) {
+    function _changed($orig, $fin)
+    {
         $this->_deleted($orig);
         $this->_added($fin);
     }
@@ -888,11 +932,13 @@ class Codendi_UnifiedDiffFormatter extends Codendi_DiffFormatter
  */
 class Codendi_BlockDiffFormatter extends Codendi_DiffFormatter
 {
-    function __construct($context_lines = 4) {
+    function __construct($context_lines = 4)
+    {
         $this->leading_context_lines = $context_lines;
         $this->trailing_context_lines = $context_lines;
     }
-    function _lines($lines, $prefix = '') {
+    function _lines($lines, $prefix = '')
+    {
         if (! $prefix == '')
             echo "$prefix\n";
         foreach ($lines as $line)
@@ -900,16 +946,20 @@ class Codendi_BlockDiffFormatter extends Codendi_DiffFormatter
         if (! $prefix == '')
             echo "$prefix\n";
     }
-    function _added($lines) {
+    function _added($lines)
+    {
         $this->_lines($lines, ">>>>>>>");
     }
-    function _deleted($lines) {
+    function _deleted($lines)
+    {
         $this->_lines($lines, "<<<<<<<");
     }
-    function _block_header($xbeg, $xlen, $ybeg, $ylen) {
+    function _block_header($xbeg, $xlen, $ybeg, $ylen)
+    {
         return "";
     }
-    function _changed($orig, $fin) {
+    function _changed($orig, $fin)
+    {
         $this->_deleted($orig);
         $this->_added($fin);
     }
@@ -932,38 +982,45 @@ class Codendi_BlockDiffFormatter extends Codendi_DiffFormatter
  */
 class Codendi_HtmlUnifiedDiffFormatter extends Codendi_UnifiedDiffFormatter
 {
-    function __construct($context_lines = 4) {
+    function __construct($context_lines = 4)
+    {
         parent::__construct($context_lines);
         $this->_html = '';
     }
 
-    function _block_header($xbeg, $xlen, $ybeg, $ylen) {
+    function _block_header($xbeg, $xlen, $ybeg, $ylen)
+    {
         if ($xbeg > 1) {
             return '[...]';
         }
         return "";
     }
 
-    function _start_diff() {
+    function _start_diff()
+    {
         $this->_html .= '';
     }
-    function _end_diff() {
+    function _end_diff()
+    {
         $this->_html .= '';
         return $this->_html;
     }
 
-    function _start_block($header) {
+    function _start_block($header)
+    {
         $this->_html .= '<div class="block">';
         if ($header) {
             $this->_html .= '<tt>'. $header .'</tt>';
         }
     }
 
-    function _end_block() {
+    function _end_block()
+    {
         $this->_html .= '</div>';
     }
 
-    function _lines($lines, $class = '', $prefix = false, $elem = false) {
+    function _lines($lines, $class = '', $prefix = false, $elem = false)
+    {
         if (!$prefix) {
             $prefix = '&nbsp;';
         }
@@ -980,18 +1037,22 @@ class Codendi_HtmlUnifiedDiffFormatter extends Codendi_UnifiedDiffFormatter
         $this->_html .= '</div>';
     }
 
-    function _context($lines) {
+    function _context($lines)
+    {
         $this->_lines($lines, 'context');
     }
-    function _deleted($lines) {
+    function _deleted($lines)
+    {
         $this->_lines($lines, 'deleted', '-', 'del');
     }
 
-    function _added($lines) {
+    function _added($lines)
+    {
         $this->_lines($lines, 'added', '+', 'ins');
     }
 
-    function _changed($orig, $fin) {
+    function _changed($orig, $fin)
+    {
         $diff = new Codendi_WordLevelDiff($orig, $fin);
         $this->_lines($diff->orig(), 'original', '-');
         $this->_lines($diff->_fin(), 'final', '+');
@@ -1000,7 +1061,8 @@ class Codendi_HtmlUnifiedDiffFormatter extends Codendi_UnifiedDiffFormatter
 
 class Codendi_WordLevelDiff extends Codendi_MappedDiff
 {
-    function __construct($orig_lines, $fin_lines) {
+    function __construct($orig_lines, $fin_lines)
+    {
         list ($orig_words, $orig_stripped) = $this->_split($orig_lines);
         list ($fin_words, $fin_stripped) = $this->_split($fin_lines);
 
@@ -1008,7 +1070,8 @@ class Codendi_WordLevelDiff extends Codendi_MappedDiff
                           $orig_stripped, $fin_stripped);
     }
 
-    function _split($lines) {
+    function _split($lines)
+    {
         // FIXME: fix POSIX char class.
         if (!preg_match_all('/ ( [^\S\n]+ | [[:alnum:]]+ | . ) (?: (?!< \n) [^\S\n])? /xs',
                             implode("\n", $lines),
@@ -1018,7 +1081,8 @@ class Codendi_WordLevelDiff extends Codendi_MappedDiff
         return array($m[0], $m[1]);
     }
 
-    function orig () {
+    function orig()
+    {
         $orig = new Codendi_HWLDF_WordAccumulator();
 
         foreach ($this->edits as $edit) {
@@ -1030,7 +1094,8 @@ class Codendi_WordLevelDiff extends Codendi_MappedDiff
         return $orig->getLines();
     }
 
-    function _fin () {
+    function _fin()
+    {
         $fin = new Codendi_HWLDF_WordAccumulator();
 
         foreach ($this->edits as $edit) {
@@ -1044,14 +1109,16 @@ class Codendi_WordLevelDiff extends Codendi_MappedDiff
 }
 
 class Codendi_HWLDF_WordAccumulator {
-    function __construct() {
+    function __construct()
+    {
         $this->_lines = array();
         $this->_line = false;
         $this->_group = false;
         $this->_tag = '~begin';
     }
 
-    function _flushGroup ($new_tag) {
+    function _flushGroup($new_tag)
+    {
         if ($this->_group !== false) {
             if (!$this->_line)
                 $this->_line = "";
@@ -1067,14 +1134,16 @@ class Codendi_HWLDF_WordAccumulator {
         $this->_tag = $new_tag;
     }
 
-    function _flushLine ($new_tag) {
+    function _flushLine($new_tag)
+    {
         $this->_flushGroup($new_tag);
         if ($this->_line)
             $this->_lines[] = $this->_line;
         $this->_line = "";
     }
 
-    function addWords ($words, $tag = '') {
+    function addWords($words, $tag = '')
+    {
         if ($tag != $this->_tag)
             $this->_flushGroup($tag);
 
@@ -1093,7 +1162,8 @@ class Codendi_HWLDF_WordAccumulator {
         }
     }
 
-    function getLines() {
+    function getLines()
+    {
         $this->_flushLine('~done');
         return $this->_lines;
     }

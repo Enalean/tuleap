@@ -26,7 +26,8 @@ class b201112130946_add_user_id extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add the column user_id in plugin_git.
 EOT;
@@ -37,7 +38,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -46,7 +48,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = 'ALTER TABLE plugin_git ADD user_id INT(11) NULL';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
@@ -59,7 +62,8 @@ EOT;
      *
      * @return void
      */
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->columnNameExists('plugin_git', 'user_id')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column user_id in table plugin_git is missing');
         }

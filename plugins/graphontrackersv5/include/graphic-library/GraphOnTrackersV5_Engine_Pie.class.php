@@ -31,7 +31,8 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
     var $legend;
 
 
-    public function validData(){
+    public function validData()
+    {
         if ((is_array($this->data)) && (array_sum($this->data) > 0)){
             return true;
         } else {
@@ -47,7 +48,8 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
     /**
      * Builds pie graph
      */
-    function buildGraph() {
+    function buildGraph()
+    {
         $this->graph = new Chart_Pie($this->width,$this->height);
 
         // title setup
@@ -78,7 +80,8 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
         return $this->graph;
     }
 
-    public function toArray() {
+    public function toArray()
+    {
         return parent::toArray() + array(
             'type'   => 'pie',
             'title'  => $this->title,

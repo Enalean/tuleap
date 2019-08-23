@@ -20,7 +20,8 @@
 
 class LDAP_Exception_AddException extends RuntimeException {
 
-    public function __construct($message, $dn) {
+    public function __construct($message, $dn)
+    {
         parent::__construct("An error occured while adding new LDAP entry $dn: $message");
     }
 }

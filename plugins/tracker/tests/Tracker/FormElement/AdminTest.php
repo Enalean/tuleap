@@ -21,18 +21,21 @@ require_once __DIR__.'/../../bootstrap.php';
 
 class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         $expected_url = TRACKER_BASE_URL .'/?tracker=101&amp;func=admin-formElement-update&amp;formElement=666';
         $GLOBALS['Language']->shouldReceive('getText')->with('plugin_tracker_include_type', 'field_copied_from', array('Bugs', 'Tuleap', $expected_url))->andReturns('This field is shared from tracker <a href="'. $expected_url .'">Bugs from project Tuleap</a>');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
          parent::tearDown();
     }
 
-    public function testForSharedFieldsItDisplaysOriginalTrackerAndProjectName() {
+    public function testForSharedFieldsItDisplaysOriginalTrackerAndProjectName()
+    {
         $admin = $this->GivenAnAdminWithOriginalProjectAndTracker('Tuleap', 'Bugs');
         $result = $admin->fetchCustomHelpForShared();
         $this->assertPattern("%Bugs%", $result);
@@ -40,7 +43,8 @@ class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
         $this->assertPattern('%<a href="'. TRACKER_BASE_URL .'/\?tracker=101&amp;func=admin-formElement-update&amp;formElement=666"%', $result);
     }
 
-    public function GivenAnAdminWithOriginalProjectAndTracker($projectName, $trackerName) {
+    public function GivenAnAdminWithOriginalProjectAndTracker($projectName, $trackerName)
+    {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getPublicName')->andReturns($projectName);
 
@@ -56,7 +60,8 @@ class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
         return new Tracker_FormElement_View_Admin($element, array());
     }
 
-    public function testSharedUsageShouldDisplayAllTrackershatShareMe() {
+    public function testSharedUsageShouldDisplayAllTrackershatShareMe()
+    {
         $element = $this->GivenAnElementWithManyCopies();
         $admin   = new Tracker_FormElement_View_Admin($element, array());
         $content = $admin->fetchSharedUsage();
@@ -64,7 +69,8 @@ class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
         $this->assertPattern('/Saucisse/', $content);
     }
 
-    private function GivenAnElementWithManyCopies() {
+    private function GivenAnElementWithManyCopies()
+    {
         $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
         $project = \Mockery::spy(\Project::class);
@@ -96,15 +102,18 @@ class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
 
 class FakeFormElement extends Tracker_FormElement_Field_String {
 
-    public static function getFactoryIconUseIt() {
+    public static function getFactoryIconUseIt()
+    {
         // just here to avoid undesired behaviour in test
     }
 
-    public static function getFactoryLabel() {
+    public static function getFactoryLabel()
+    {
 
     }
 
-    public function setSharedCopies($fields) {
+    public function setSharedCopies($fields)
+    {
         $this->sharedCopies = $fields;
     }
 }

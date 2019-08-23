@@ -25,7 +25,8 @@ require_once __DIR__ . '/../../../../src/www/include/utils.php';
 
 class DateHelperTest extends TuleapTestCase {
 
-    public function test_distanceOfTimeInWords() {
+    public function test_distanceOfTimeInWords()
+    {
         $expected = array(
             0 => array( //'less than a minute', 'less than 5 seconds'),     // 0 second
                 array('include_utils', 'less_1_minute'),
@@ -110,18 +111,21 @@ class DateHelperTest extends TuleapTestCase {
         }
     }
 
-    public function testFormatDateFormatsTheDateAccordingToLanguage() {
+    public function testFormatDateFormatsTheDateAccordingToLanguage()
+    {
         $dayOnly = true;
         $this->assertPattern('#2011-\d+\d+#', $this->formatDate($dayOnly, 'Y-m-d'));
         $this->assertPattern('#2011/\d+/\d+#', $this->formatDate($dayOnly, "Y/d/m"));
     }
 
-    public function testFormatDateCanReturnTheTimeAsWell() {
+    public function testFormatDateCanReturnTheTimeAsWell()
+    {
         $dayOnly = false;
         $this->assertPattern('#2011-\d+-\d+ \d+:\d+#', $this->formatDate($dayOnly, "Y-m-d h:i"));
     }
 
-    private function formatDate($dayOnly, $format) {
+    private function formatDate($dayOnly, $format)
+    {
         $lang = new MockBaseLanguage();
         $lang->setReturnValue('getText', $format);
         $firstOfDecember2011_12_01 = 1322752769;
@@ -131,23 +135,27 @@ class DateHelperTest extends TuleapTestCase {
 
 class DateHelp_FutureOrPastTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $GLOBALS['Language'] = mock('BaseLanguage');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         unset($GLOBALS['Language']);
         parent::tearDown();
     }
 
-    public function testDateInPast() {
+    public function testDateInPast()
+    {
         expect($GLOBALS['Language'])->getText()->count(2);
         expect($GLOBALS['Language'])->getText('include_utils', 'time_ago', '*')->at(1);
         DateHelper::timeAgoInWords($_SERVER['REQUEST_TIME'] - 500);
     }
 
-    public function testDateInFuture() {
+    public function testDateInFuture()
+    {
         expect($GLOBALS['Language'])->getText()->count(2);
         expect($GLOBALS['Language'])->getText('include_utils', 'time_in_future', '*')->at(1);
         DateHelper::timeAgoInWords($_SERVER['REQUEST_TIME'] + 500);
@@ -158,17 +166,20 @@ class DateHelp_FutureOrPastTest extends TuleapTestCase {
 class DateHelper_DistanceTest extends TuleapTestCase {
     private $today_at_midnight;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->today_at_midnight = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
     }
 
-    public function itComputesTheTimestamp2DaysAgoAtMidnight() {
+    public function itComputesTheTimestamp2DaysAgoAtMidnight()
+    {
         $expected_time = strtotime('-2 days', $this->today_at_midnight);
         $this->assertEqual($expected_time, DateHelper::getTimestampAtMidnight("-2 days"));
     }
 
-    public function itComputesTheTimestamp3DaysInTheFutureAtMidnight() {
+    public function itComputesTheTimestamp3DaysInTheFutureAtMidnight()
+    {
         $expected_time = strtotime('+3 days', $this->today_at_midnight);
         $this->assertEqual($expected_time, DateHelper::getTimestampAtMidnight("+3 days"));
     }

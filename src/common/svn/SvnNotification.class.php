@@ -25,7 +25,8 @@ class SvnNotification {
      *
      * @return SvnNotificationDao
      */
-    public function _getDao() {
+    public function _getDao()
+    {
         if (!isset($this->_dao)) {
             $this->_dao = new SvnNotificationDao(CodendiDataAccess::instance());
         }
@@ -41,7 +42,8 @@ class SvnNotification {
      *
      * @return bool
      */
-    function setSvnMailingList($projectId, $mailingList, $path) {
+    function setSvnMailingList($projectId, $mailingList, $path)
+    {
         $dao = $this->_getDao();
         return $dao->setSvnMailingList($projectId, $mailingList, $path);
     }
@@ -54,7 +56,8 @@ class SvnNotification {
      *
      * @return String
      */
-    function getSvnMailingList($projectId, $path) {
+    function getSvnMailingList($projectId, $path)
+    {
         $dao = $this->_getDao();
         $dar = $dao->getSvnMailingList($projectId, $path);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
@@ -72,7 +75,8 @@ class SvnNotification {
      *
      * @return DataAccessResult
      */
-    function getSvnEventNotificationDetails($projectId) {
+    function getSvnEventNotificationDetails($projectId)
+    {
         $dao = $this->_getDao();
         $dar = $dao->getSvnMailingList($projectId);
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
@@ -90,7 +94,8 @@ class SvnNotification {
      *
      * @return void
      */
-    function removeSvnNotification($projectId, $selectedPaths) {
+    function removeSvnNotification($projectId, $selectedPaths)
+    {
         if (is_array($selectedPaths) && !empty($selectedPaths)) {
             $dao = $this->_getDao();
             $paths = array();

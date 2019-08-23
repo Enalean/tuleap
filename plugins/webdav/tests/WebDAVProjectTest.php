@@ -29,7 +29,8 @@ class WebDAVProjectTest extends TuleapTestCase {
     /**
      * Testing when The project have no active services
      */
-    function testGetChildrenNoServices() {
+    function testGetChildrenNoServices()
+    {
         $webDAVProject = \Mockery::mock(\WebDAVProject::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $utils = \Mockery::spy(\WebDAVUtils::class);
@@ -55,7 +56,8 @@ class WebDAVProjectTest extends TuleapTestCase {
     /**
      * Testing when the service doesn't exist
      */
-    function testGetChildFailWithNotExist() {
+    function testGetChildFailWithNotExist()
+    {
         $webDAVProject = \Mockery::mock(\WebDAVProject::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $utils = \Mockery::spy(\WebDAVUtils::class);

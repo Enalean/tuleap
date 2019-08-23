@@ -35,7 +35,8 @@ $usage_options .= 'u:'; // give me a user
 $usage_options .= 'i:'; // give me the archive path to import
 $usage_options .= 'o:'; // give me the output path of the csv file
 
-function usage() {
+function usage()
+{
     global $argv;
 
     echo <<< EOT

@@ -21,17 +21,20 @@
 
 class b201205041624_add_titles_column extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
         Add new columns in plugin_agiledashboard_planning: backlog_title, plan_title
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_agiledashboard_planning
                     ADD backlog_title varchar(255) NOT NULL,
                     ADD plan_title varchar(255) NOT NULL
@@ -46,7 +49,8 @@ EOT;
         $this->db->dbh->exec($sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->columnNameExists('plugin_agiledashboard_planning', 'backlog_title')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('An error occured while adding column backlog_title to plugin_agiledashboard_planning');
         }

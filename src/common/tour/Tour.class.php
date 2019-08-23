@@ -45,14 +45,16 @@ class Tuleap_Tour {
      */
     public $template;
 
-    public function __construct($name, array $steps) {
+    public function __construct($name, array $steps)
+    {
         $this->name  = $name;
         $this->steps = $steps;
 
         $this->initTemplate();
     }
 
-    private function initTemplate() {
+    private function initTemplate()
+    {
         $this->template = '<div class="popover tour">
         <div class="arrow"></div>
         <h3 class="popover-title"></h3>

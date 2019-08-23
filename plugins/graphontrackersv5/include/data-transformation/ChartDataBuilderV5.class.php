@@ -24,12 +24,14 @@ abstract class ChartDataBuilderV5 {
     protected $chart;
     protected $artifacts;
 
-    function __construct($chart, $artifacts) {
+    function __construct($chart, $artifacts)
+    {
         $this->chart     = $chart;
         $this->artifacts = $artifacts;
     }
 
-    function buildProperties($engine) {
+    function buildProperties($engine)
+    {
         $engine->title       = $this->chart->getTitle();
         $engine->description = $this->chart->getDescription();
         $engine->height      = $this->chart->getHeight();
@@ -39,7 +41,8 @@ abstract class ChartDataBuilderV5 {
     /**
      * @return string or array (r,g,b) color from $data if exist, else a null triple
      */
-    protected function getColor(array $data) {
+    protected function getColor(array $data)
+    {
         if (isset($data['tlp_color_name'])) {
             return $data['tlp_color_name'];
         }
@@ -51,11 +54,13 @@ abstract class ChartDataBuilderV5 {
         return array($data['red'], $data['green'], $data['blue']);
     }
 
-    protected function getTracker() {
+    protected function getTracker()
+    {
         return TrackerFactory::instance()->getTrackerById($this->chart->renderer->report->tracker_id);
     }
 
-    protected function displayNoFieldError() {
+    protected function displayNoFieldError()
+    {
         $error_message = $GLOBALS['Language']->getText(
             'plugin_graphontrackersv5',
             'field_not_found',

@@ -40,7 +40,8 @@ class AgileDashboard_KanbanColumnManager {
         $this->kanban_actions_checker                       = $kanban_actions_checker;
     }
 
-    public function createColumn(PFUser $user, AgileDashboard_Kanban $kanban, $label) {
+    public function createColumn(PFUser $user, AgileDashboard_Kanban $kanban, $label)
+    {
         $this->kanban_actions_checker->checkUserCanAddColumns($user, $kanban);
 
         $tracker  = $this->kanban_actions_checker->getTrackerForKanban($kanban);
@@ -49,7 +50,8 @@ class AgileDashboard_KanbanColumnManager {
         return $semantic->addOpenValue($label);
     }
 
-    public function reorderColumns(PFUser $user, AgileDashboard_Kanban $kanban, array $column_ids) {
+    public function reorderColumns(PFUser $user, AgileDashboard_Kanban $kanban, array $column_ids)
+    {
         $this->kanban_actions_checker->checkUserCanReorderColumns($user, $kanban);
 
         $tracker  = $this->kanban_actions_checker->getTrackerForKanban($kanban);
@@ -60,7 +62,8 @@ class AgileDashboard_KanbanColumnManager {
         return $semantic->getField()->getBind()->getValueDao()->reorder($column_ids);
     }
 
-    public function deleteColumn(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column) {
+    public function deleteColumn(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column)
+    {
         $this->kanban_actions_checker->checkUserCanDeleteColumn($user, $kanban, $column);
 
         $tracker  = $this->kanban_actions_checker->getTrackerForKanban($kanban);
@@ -81,24 +84,28 @@ class AgileDashboard_KanbanColumnManager {
         return true;
     }
 
-    public function updateWipLimit(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column, $wip_limit) {
+    public function updateWipLimit(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column, $wip_limit)
+    {
         $this->kanban_actions_checker->checkUserCanAdministrate($user, $kanban);
 
         return $this->column_dao->setColumnWipLimit($column->getKanbanId(), $column->getId(), $wip_limit);
     }
 
-    public function updateLabel(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column, $label) {
+    public function updateLabel(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column, $label)
+    {
         $this->kanban_actions_checker->checkUserCanAdministrate($user, $kanban);
         $this->kanban_actions_checker->checkUserCanEditColumnLabel($user, $kanban);
 
         return $this->formelement_field_list_bind_static_value_dao->updateLabel($column->getId(), $label);
     }
 
-    private function hideColumnFromTrackerFieldStaticValues(AgileDashboard_KanbanColumn $column, Tracker_Semantic_Status $semantic) {
+    private function hideColumnFromTrackerFieldStaticValues(AgileDashboard_KanbanColumn $column, Tracker_Semantic_Status $semantic)
+    {
         return $this->formelement_field_list_bind_static_value_dao->hideValue($column->getId());
     }
 
-    private function checkAllColumnsAreProvided(Tracker_Semantic_Status $semantic, array $column_ids) {
+    private function checkAllColumnsAreProvided(Tracker_Semantic_Status $semantic, array $column_ids)
+    {
         $all_open_values     = $semantic->getOpenValues();
         $values_not_provided = array_diff($all_open_values, $column_ids);
         $values_not_open     = array_diff($column_ids, $all_open_values);

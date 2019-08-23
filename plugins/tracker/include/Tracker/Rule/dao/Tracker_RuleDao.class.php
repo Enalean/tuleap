@@ -23,7 +23,8 @@
  */
 class Tracker_RuleDao extends DataAccessObject {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_rule_list';
     }
@@ -31,7 +32,8 @@ class Tracker_RuleDao extends DataAccessObject {
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function searchAll() {
+    function searchAll()
+    {
         $sql = "SELECT *
                 FROM tracker_rule JOIN tracker_rule_list
                 ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)";
@@ -42,7 +44,8 @@ class Tracker_RuleDao extends DataAccessObject {
     * Searches Tracker_Rule by TrackerId
     * @return DataAccessResult
     */
-    function searchByTrackerId($tracker_id) {
+    function searchByTrackerId($tracker_id)
+    {
         $sql = sprintf("SELECT id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id
                         FROM tracker_rule JOIN tracker_rule_list
                         ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
@@ -55,7 +58,8 @@ class Tracker_RuleDao extends DataAccessObject {
     * create a row in the table tracker_rule and in tracker_rule_list
     * @return true or id(auto_increment) if there is no error
     */
-    function create($tracker_id, $source_field_id, $source_value_id, $target_field_id, $rule_type, $target_value_id) {
+    function create($tracker_id, $source_field_id, $source_value_id, $target_field_id, $rule_type, $target_value_id)
+    {
 
         $sql_insert_rule = sprintf("INSERT INTO tracker_rule (tracker_id, rule_type)
                             VALUES (%s, %s)",
@@ -79,7 +83,8 @@ class Tracker_RuleDao extends DataAccessObject {
     * Searches Tracker_Rule by tracker_id
     * @return DataAccessResult
     */
-    function searchByTrackerIdWithOrder($tracker_id) {
+    function searchByTrackerIdWithOrder($tracker_id)
+    {
        //$sql = sprintf("SELECT ar.id, ar.source_field_id, ar.source_value_id, ar.target_field_id, ar.rule_type, ar.target_value_id ".
        //               " FROM tracker_rule AS ar ".
        //               "   INNER JOIN tracker_field_usage AS afu1 ON (ar.source_field_id = afu1.field_id AND ar.group_artifact_id = afu1.group_artifact_id) ".
@@ -101,7 +106,8 @@ class Tracker_RuleDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function deleteById($id) {
+    function deleteById($id)
+    {
         $sql_delete_list = sprintf("DELETE FROM tracker_rule_list WHERE tracker_rule_id = %s",
         $this->da->quoteSmart($id));
         $this->update($sql_delete_list);
@@ -111,7 +117,8 @@ class Tracker_RuleDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    function deleteRulesBySourceTarget($tracker_id, $field_source_id, $field_target_id) {
+    function deleteRulesBySourceTarget($tracker_id, $field_source_id, $field_target_id)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $field_source_id = $this->da->escapeInt($field_source_id);
         $field_target_id = $this->da->escapeInt($field_target_id);
@@ -139,7 +146,8 @@ class Tracker_RuleDao extends DataAccessObject {
         $this->commit();
     }
 
-    function searchBySourceTarget($tracker_id, $field_source_id, $field_target_id) {
+    function searchBySourceTarget($tracker_id, $field_source_id, $field_target_id)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $field_source_id = $this->da->escapeInt($field_source_id);
         $field_target_id = $this->da->escapeInt($field_target_id);
@@ -152,7 +160,8 @@ class Tracker_RuleDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchInvolvedFieldsByTrackerId($tracker_id) {
+    function searchInvolvedFieldsByTrackerId($tracker_id)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT DISTINCT tracker_rule_list.source_field_id, tracker_rule_list.target_field_id
                 FROM tracker_rule JOIN tracker_rule_list

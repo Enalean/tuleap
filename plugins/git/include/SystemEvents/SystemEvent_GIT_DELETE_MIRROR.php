@@ -30,7 +30,8 @@ class SystemEvent_GIT_DELETE_MIRROR extends SystemEvent {
         $this->gitolite_driver  = $gitolite_driver;
     }
 
-    public function process() {
+    public function process()
+    {
 
         $deletion_is_done = $this->gitolite_driver->deleteMirror(
             $this->getMirrorOldHostnameFromParameters()
@@ -44,19 +45,22 @@ class SystemEvent_GIT_DELETE_MIRROR extends SystemEvent {
         $this->error("Something went wrong while deleting mirror");
     }
 
-    private function getMirrorIdFromParameters() {
+    private function getMirrorIdFromParameters()
+    {
         $parameters    = $this->getParametersAsArray();
 
         return $parameters[0];
     }
 
-    private function getMirrorOldHostnameFromParameters() {
+    private function getMirrorOldHostnameFromParameters()
+    {
         $parameters    = $this->getParametersAsArray();
 
         return $parameters[1];
     }
 
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         return 'Mirror: '.$this->getMirrorIdFromParameters();
     }
 }

@@ -20,7 +20,8 @@
  */
 
 class CardControllerBuilderRequestDataException extends Exception {
-    public function __construct() {
+    public function __construct()
+    {
         $message = 'Invalid/missing data (no cardwall for this planning_id)';
         parent::__construct($message);
     }

@@ -26,20 +26,24 @@ class AgileDashboardConfigurationResponse {
     /** @var bool */
     private $redirect_to_home_on_success;
 
-    public function __construct(Project $project, $redirect_to_home_on_success) {
+    public function __construct(Project $project, $redirect_to_home_on_success)
+    {
         $this->project                     = $project;
         $this->redirect_to_home_on_success = $redirect_to_home_on_success;
     }
 
-    public function missingKanbanTitle() {
+    public function missingKanbanTitle()
+    {
         $this->notifyErrorAndRedirectToAdmin('kanban');
     }
 
-    public function missingScrumTitle() {
+    public function missingScrumTitle()
+    {
         $this->notifyErrorAndRedirectToAdmin('scrum');
     }
 
-    public function kanbanConfigurationUpdated() {
+    public function kanbanConfigurationUpdated()
+    {
         if ($this->redirect_to_home_on_success) {
             $this->redirectToHome();
             return;
@@ -48,7 +52,8 @@ class AgileDashboardConfigurationResponse {
         $this->redirectToAdmin('kanban');
     }
 
-    public function scrumConfigurationUpdated() {
+    public function scrumConfigurationUpdated()
+    {
         if ($this->redirect_to_home_on_success) {
             $this->redirectToHome();
             return;
@@ -57,48 +62,59 @@ class AgileDashboardConfigurationResponse {
         $this->redirectToAdmin('scrum');
     }
 
-    public function kanbanActivated() {
+    public function kanbanActivated()
+    {
         $this->info($GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_activated'));
     }
 
-    public function scrumActivated() {
+    public function scrumActivated()
+    {
         $this->info($GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_activated'));
     }
 
-    public function emptyKanbanTitle() {
+    public function emptyKanbanTitle()
+    {
         $this->warn($GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_title_empty'));
     }
 
-    public function emptyScrumTitle() {
+    public function emptyScrumTitle()
+    {
         $this->warn($GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_title_empty'));
     }
 
-    public function kanbanTitleChanged() {
+    public function kanbanTitleChanged()
+    {
         $this->info($GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_title_changed'));
     }
 
-    public function scrumTitleChanged() {
+    public function scrumTitleChanged()
+    {
         $this->info($GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_title_changed'));
     }
 
-    private function notifyErrorAndRedirectToAdmin($pane) {
+    private function notifyErrorAndRedirectToAdmin($pane)
+    {
         $this->error($GLOBALS['Language']->getText('plugin_agiledashboard', 'invalid_request'));
         $this->redirectToAdmin($pane);
     }
 
-    private function info($message) {
+    private function info($message)
+    {
         $GLOBALS['Response']->addFeedback(Feedback::INFO, $message);
     }
 
-    private function warn($message) {
+    private function warn($message)
+    {
         $GLOBALS['Response']->addFeedback(Feedback::WARN, $message);
     }
 
-    private function error($message) {
+    private function error($message)
+    {
         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $message);
     }
 
-    private function redirectToAdmin($pane) {
+    private function redirectToAdmin($pane)
+    {
         $query_parts = array(
             'group_id' => $this->project->getId(),
             'action'   => 'admin',
@@ -107,7 +123,8 @@ class AgileDashboardConfigurationResponse {
         $GLOBALS['Response']->redirect('/plugins/agiledashboard/?'. http_build_query($query_parts));
     }
 
-    private function redirectToHome() {
+    private function redirectToHome()
+    {
         $query_parts = array(
             'group_id' => $this->project->getId()
         );

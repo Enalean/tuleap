@@ -19,7 +19,8 @@
 class SVN_Immutable_Tags_DAO extends DataAccessObject
 {
 
-    public function getImmutableTagsWhitelistForProject($project_id) {
+    public function getImmutableTagsWhitelistForProject($project_id)
+    {
         $project_id = $this->da->escapeInt($project_id);
 
         $sql = "SELECT whitelist
@@ -29,7 +30,8 @@ class SVN_Immutable_Tags_DAO extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function saveImmutableTagsForProject($project_id, $whitelist, $path) {
+    public function saveImmutableTagsForProject($project_id, $whitelist, $path)
+    {
         $project_id = $this->da->escapeInt($project_id);
         $whitelist  = $this->da->quoteSmart($whitelist);
         $path       = $this->da->quoteSmart($path);
@@ -40,7 +42,8 @@ class SVN_Immutable_Tags_DAO extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function getImmutableTagsPathForProject($project_id) {
+    public function getImmutableTagsPathForProject($project_id)
+    {
         $project_id = $this->da->escapeInt($project_id);
 
         $sql = "SELECT paths

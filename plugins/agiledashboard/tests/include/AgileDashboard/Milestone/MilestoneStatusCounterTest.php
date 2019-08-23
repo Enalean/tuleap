@@ -27,7 +27,8 @@ abstract class AgileDashboard_Milestone_MilestoneStatusCounterBaseTest extends T
     protected $artifact_factory;
     protected $user;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->backlog_dao      = mock('AgileDashboard_BacklogItemDao');
         $this->artifact_dao     = mock('Tracker_ArtifactDao');
@@ -43,12 +44,14 @@ abstract class AgileDashboard_Milestone_MilestoneStatusCounterBaseTest extends T
 
 class AgileDashboard_Milestone_MilestoneStatusCounterTest extends AgileDashboard_Milestone_MilestoneStatusCounterBaseTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         stub($this->artifact_factory)->getArtifactById()->returns(aMockArtifact()->allUsersCanView()->build());
     }
 
-    public function itDoesntFetchAnythingWhenNoMilestoneId() {
+    public function itDoesntFetchAnythingWhenNoMilestoneId()
+    {
         expect($this->backlog_dao)->getBacklogArtifacts()->never();
         $result = $this->counter->getStatus($this->user, null);
         $this->assertEqual($result, array(
@@ -57,7 +60,8 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends AgileDashboard
         ));
     }
 
-    public function itReturnsZeroOpenClosedWhenNoArtifacts() {
+    public function itReturnsZeroOpenClosedWhenNoArtifacts()
+    {
         stub($this->backlog_dao)->getBacklogArtifacts(12)->returnsEmptyDar();
         $result = $this->counter->getStatus($this->user, 12);
         $this->assertEqual($result, array(
@@ -66,13 +70,15 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends AgileDashboard
         ));
     }
 
-    public function itDoesntTryToFetchChildrenWhenNoBacklog() {
+    public function itDoesntTryToFetchChildrenWhenNoBacklog()
+    {
         stub($this->backlog_dao)->getBacklogArtifacts()->returnsEmptyDar();
         expect($this->artifact_dao)->getChildrenForArtifacts()->never();
         $this->counter->getStatus($this->user, 12);
     }
 
-    public function itFetchesTheStatusOfReturnedArtifacts() {
+    public function itFetchesTheStatusOfReturnedArtifacts()
+    {
         stub($this->backlog_dao)->getBacklogArtifacts(12)->returnsDar(array('id' => 35), array('id' => 36));
         stub($this->artifact_dao)->getArtifactsStatusByIds(array(35, 36))->returnsDar(
             array('id' => 36, 'status' => Tracker_Artifact::STATUS_OPEN),
@@ -86,7 +92,8 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends AgileDashboard
         ));
     }
 
-    public function itFetchesTheStatusOfReturnedArtifactsAtSublevel() {
+    public function itFetchesTheStatusOfReturnedArtifactsAtSublevel()
+    {
         // Level 0
         stub($this->backlog_dao)->getBacklogArtifacts(12)->returnsDar(array('id' => 35), array('id' => 36));
         stub($this->artifact_dao)->getArtifactsStatusByIds(array(35, 36))->returnsDar(
@@ -116,7 +123,8 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends AgileDashboard
 
 class AgileDashboard_Milestone_MilestoneStatusCounter_PermissionsTest extends AgileDashboard_Milestone_MilestoneStatusCounterBaseTest {
 
-    public function itDoesntCountBacklogElementNotReadable() {
+    public function itDoesntCountBacklogElementNotReadable()
+    {
         stub($this->artifact_factory)->getArtifactById(35)->returns(aMockArtifact()->build()); // userCanView will return false by default
         stub($this->artifact_factory)->getArtifactById(36)->returns(aMockArtifact()->allUsersCanView()->build());
 
@@ -132,7 +140,8 @@ class AgileDashboard_Milestone_MilestoneStatusCounter_PermissionsTest extends Ag
         ));
     }
 
-    public function itDoesntCountSubElementsNotReadable() {
+    public function itDoesntCountSubElementsNotReadable()
+    {
         stub($this->artifact_factory)->getArtifactById(36)->returns(aMockArtifact()->allUsersCanView()->build());
         stub($this->artifact_factory)->getArtifactById(37)->returns(aMockArtifact()->build()); // userCanView will return false by default
         stub($this->artifact_factory)->getArtifactById(38)->returns(aMockArtifact()->allUsersCanView()->build());

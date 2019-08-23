@@ -29,7 +29,8 @@ class ProviderManager {
      */
     private $dao;
 
-    public function __construct(ProviderDao $dao) {
+    public function __construct(ProviderDao $dao)
+    {
         $this->dao = $dao;
     }
 
@@ -37,7 +38,8 @@ class ProviderManager {
      * @return Provider
      * @throws ProviderNotFoundException
      */
-    public function getById($id) {
+    public function getById($id)
+    {
         $row = $this->dao->searchById($id);
         if ($row === false) {
             throw new ProviderNotFoundException();
@@ -149,7 +151,8 @@ class ProviderManager {
     /**
      * @throws ProviderDataAccessException
      */
-    public function remove(Provider $provider) {
+    public function remove(Provider $provider)
+    {
         $is_deleted = $this->dao->deleteById($provider->getId());
         if (! $is_deleted) {
             throw new ProviderDataAccessException();
@@ -159,7 +162,8 @@ class ProviderManager {
     /**
      * @return Provider[]
      */
-    public function getProvidersUsableToLogIn() {
+    public function getProvidersUsableToLogIn()
+    {
         $providers = array();
         $rows      = $this->dao->searchProvidersUsableToLogIn();
         if ($rows === false) {
@@ -176,7 +180,8 @@ class ProviderManager {
     /**
      * @return Provider[]
      */
-    public function getProviders() {
+    public function getProviders()
+    {
         $providers = array();
         $rows      = $this->dao->searchProviders();
         if ($rows === false) {
@@ -201,7 +206,8 @@ class ProviderManager {
     /**
      * @return Provider
      */
-    private function instantiateFromRow(array $row) {
+    private function instantiateFromRow(array $row)
+    {
         return new Provider(
             $row['id'],
             $row['name'],

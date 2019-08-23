@@ -119,7 +119,8 @@ class Cache
         $this->user_ids[$user["username"]] = $user["id"];
     }
 
-    public function getUserIds(){
+    public function getUserIds()
+    {
         return $this->user_ids;
     }
 }

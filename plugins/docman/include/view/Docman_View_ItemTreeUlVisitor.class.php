@@ -43,7 +43,8 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
      */
     private $get_action_on_icon;
 
-    function __construct($view, $params = null) {
+    function __construct($view, $params = null)
+    {
         $this->view                = $view;
         $this->get_action_on_icon = new Docman_View_GetActionOnIconVisitor();
         $this->get_class_for_link  = new Docman_View_GetClassForLinkVisitor();
@@ -58,22 +59,27 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
         }
     }
 
-    function toHtml() {
+    function toHtml()
+    {
         return $this->html;
     }
 
-    function getJavascript() {
+    function getJavascript()
+    {
         return $this->js;
     }
 
-    function _canDisplayItem($item) {
+    function _canDisplayItem($item)
+    {
         return true;
     }
-    function _canDisplaySubItems($item) {
+    function _canDisplaySubItems($item)
+    {
         return true;
     }
 
-    function visitFolder(Docman_Folder $item, $params = array()) {
+    function visitFolder(Docman_Folder $item, $params = array())
+    {
         $li_displayed = $this->_displayItem($item, $params);
         if($this->_canDisplaySubItems($item)) {
             $items = $item->getAllItems();
@@ -100,27 +106,33 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
         }
         return '';
     }
-    function visitDocument($item, $params = array()) {
+    function visitDocument($item, $params = array())
+    {
         $params['popup_doc'] = true;
         $li_displayed = $this->_displayItem($item, $params);
         if($li_displayed) {
             $this->html .= '</li>'."\n";
         }
     }
-    public function visitWiki(Docman_Wiki $item, $params = array()) {
+    public function visitWiki(Docman_Wiki $item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
-    public function visitLink(Docman_Link $item, $params = array()) {
+    public function visitLink(Docman_Link $item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
-    public function visitFile(Docman_File $item, $params = array()) {
+    public function visitFile(Docman_File $item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array()) {
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitEmpty(Docman_Empty $item, $params = array()) {
+    public function visitEmpty(Docman_Empty $item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 
@@ -131,7 +143,8 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
 
 
     //{{{
-    function _displayItem(&$item, $params) {
+    function _displayItem(&$item, $params)
+    {
         $li_displayed = false;
         if($this->stripFirstNode && !$this->firstNodeStripped) {
             $this->firstNodeStripped=true;

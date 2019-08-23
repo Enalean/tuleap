@@ -20,7 +20,8 @@
  */
 
 class CardControllerBuilderRequestPlanningIdException extends Exception {
-    public function __construct() {
+    public function __construct()
+    {
         $message = 'Invalid/missing planning id (planning_id)';
         parent::__construct($message);
     }

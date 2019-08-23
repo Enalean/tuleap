@@ -128,20 +128,24 @@ class WikiPlugin__WikiTranslation
 extends WikiPlugin
 {
 
-    function getName() {
+    function getName()
+    {
         return _("_WikiTranslation");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Show translations of various words or pages");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.17 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array_merge
             (
              PageList::supportedArgs(),
@@ -164,7 +168,8 @@ extends WikiPlugin
                     ));
     }
 
-    function init_locale($lang) {
+    function init_locale($lang)
+    {
         if ($lang != $this->lang)
             update_locale($lang);
         if ($lang == 'en') {
@@ -184,7 +189,8 @@ extends WikiPlugin
     }
 
     // reverse translation:
-    function translate_to_en($text, $lang=false) {
+    function translate_to_en($text, $lang=false)
+    {
         if (!$lang) $lang = $this->lang; // current locale
         if ($lang == 'en') return $text;
 
@@ -210,7 +216,8 @@ extends WikiPlugin
      * setlocale() switching with the gettext extension is by far too slow.
      * So use the hash regardless if gettext is loaded or not.
      */
-    function fast_translate($text, $to_lang, $from_lang=false) {
+    function fast_translate($text, $to_lang, $from_lang=false)
+    {
         if (!$from_lang) $from_lang = $this->lang; // current locale
         if ($from_lang == $to_lang) return $text;
         // setup hash from en => to_lang
@@ -226,7 +233,8 @@ extends WikiPlugin
     }
 
     //FIXME! There's something wrong.
-    function translate($text, $to_lang, $from_lang=false) {
+    function translate($text, $to_lang, $from_lang=false)
+    {
         if (!$from_lang) $from_lang = $this->lang; // current locale
         if ($from_lang == $to_lang) return $text;
         // Speed up hash lookup. Not needed for gettext module
@@ -254,7 +262,8 @@ extends WikiPlugin
         return $result;
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $this->args = $this->getArgs($argstr, $request);
         extract($this->args);
         $this->request = &$request;
@@ -394,7 +403,8 @@ extends WikiPlugin
 };
 
 class _PageList_Column_customlang extends _PageList_Column {
-    function __construct($field, $from_lang, $plugin) {
+    function __construct($field, $from_lang, $plugin)
+    {
         $this->_field = $field;
         $this->_from_lang = $from_lang;
         $this->_plugin = $plugin;
@@ -409,7 +419,8 @@ class _PageList_Column_customlang extends _PageList_Column {
         $this->_PageList_Column_base($this->_field);
     }
 
-    function _getValue($page, &$revision_handle) {
+    function _getValue($page, &$revision_handle)
+    {
         if (is_object($page)) $text = $page->getName();
         else $text = $page;
         $trans = $this->_plugin->fast_translate($text, $this->_field,

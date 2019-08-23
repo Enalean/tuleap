@@ -58,7 +58,8 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN  extends SystemEvent {
      *
      * @see src/common/system_event/SystemEvent::process()
      */
-    public function process() {
+    public function process()
+    {
         $user_ids    = $this->getParametersAsArray();
         $project_ids = array();
 
@@ -95,7 +96,8 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN  extends SystemEvent {
      *
      * @param bool $with_link With link
      */
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         return  $this->parameters;
     }
 
@@ -104,7 +106,8 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN  extends SystemEvent {
      *
      * @return UserManager
      */
-    protected function getUserManager() {
+    protected function getUserManager()
+    {
         return $this->user_manager;
     }
 
@@ -113,7 +116,8 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN  extends SystemEvent {
      *
      * @return BackendSVN
      */
-    protected function getBackendSVN() {
+    protected function getBackendSVN()
+    {
         return $this->backend_svn;
     }
 

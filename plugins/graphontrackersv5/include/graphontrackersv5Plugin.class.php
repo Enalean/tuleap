@@ -50,7 +50,8 @@ class GraphOnTrackersV5Plugin extends Plugin
      *
      * @param int $id plugin id
      */
-    function __construct($id) {
+    function __construct($id)
+    {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
 
@@ -84,7 +85,8 @@ class GraphOnTrackersV5Plugin extends Plugin
     /**
      * @see Plugin::getDependencies()
      */
-    public function getDependencies() {
+    public function getDependencies()
+    {
         return array('tracker');
     }
 
@@ -99,7 +101,8 @@ class GraphOnTrackersV5Plugin extends Plugin
      *
      * @return void
      */
-    public function tracker_report_renderer_instance($params) {
+    public function tracker_report_renderer_instance($params)
+    {
         if ($params['type'] == self::RENDERER_TYPE) {
             require_once('GraphOnTrackersV5_Renderer.class.php');
             $params['instance'] = new GraphOnTrackersV5_Renderer(
@@ -130,7 +133,8 @@ class GraphOnTrackersV5Plugin extends Plugin
     /**
      * This hook ask to create a new instance of a renderer from XML
      */
-    public function importRendererFromXmlEvent(ImportRendererFromXmlEvent $event) {
+    public function importRendererFromXmlEvent(ImportRendererFromXmlEvent $event)
+    {
         if ($event->getType() === self::RENDERER_TYPE) {
             $event->setRowKey('charts', $event->getXml()->charts);
             $event->setRowKey('mapping', $event->getXmlMapping());
@@ -146,7 +150,8 @@ class GraphOnTrackersV5Plugin extends Plugin
      * @param string type the type of the new renderer
      * @param Report report the report
      */
-    public function tracker_report_add_renderer($params) {
+    public function tracker_report_add_renderer($params)
+    {
         if ($params['type'] == self::RENDERER_TYPE) {
             //Nothing to do for now
         }
@@ -160,7 +165,8 @@ class GraphOnTrackersV5Plugin extends Plugin
      * @param string type the type of the new renderer
      * @param Report report the report
      */
-    public function tracker_report_create_renderer($params) {
+    public function tracker_report_create_renderer($params)
+    {
         if ($params['type'] == self::RENDERER_TYPE) {
             //Nothing to do for now
         }
@@ -171,7 +177,8 @@ class GraphOnTrackersV5Plugin extends Plugin
      *
      * @param array types Output parameter. Expected format: $types['my_type'] => 'Label of the type'
      */
-    public function tracker_report_renderer_types($params) {
+    public function tracker_report_renderer_types($params)
+    {
         $params['types'][self::RENDERER_TYPE] = $GLOBALS['Language']->getText('plugin_tracker_report','charts');
     }
 
@@ -180,7 +187,8 @@ class GraphOnTrackersV5Plugin extends Plugin
      *
      * @param array types Output parameter. Expected format: $types['my_type'] => 'Label of the type'
      */
-    public function trackers_get_renderers($params) {
+    public function trackers_get_renderers($params)
+    {
         if ($params['renderer_type'] == 'plugin_graphontrackersv5') {
             require_once('GraphOnTrackersV5_Renderer.class.php');
             $params['renderers'][$params['renderer_key']] = new GraphOnTrackersV5_Renderer(
@@ -202,7 +210,8 @@ class GraphOnTrackersV5Plugin extends Plugin
      *
      * @param \Tuleap\Widget\Event\GetWidget $get_widget_event
      */
-    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event) {
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
+    {
         switch ($get_widget_event->getName()) {
             case 'my_plugin_graphontrackersv5_chart':
                 require_once('GraphOnTrackersV5_Widget_MyChart.class.php');
@@ -236,7 +245,8 @@ class GraphOnTrackersV5Plugin extends Plugin
     /**
      * function to get plugin info
      */
-    function getPluginInfo() {
+    function getPluginInfo()
+    {
         if (!is_a($this->pluginInfo, 'GraphOnTrackersV5PluginInfo')) {
             require_once('GraphOnTrackersV5PluginInfo.class.php');
             $this->pluginInfo = new GraphOnTrackersV5PluginInfo($this);
@@ -274,7 +284,8 @@ class GraphOnTrackersV5Plugin extends Plugin
         return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/') === 0;
     }
 
-    function graphontrackersv5_load_chart_factories($params) {
+    function graphontrackersv5_load_chart_factories($params)
+    {
         require_once('GraphOnTrackersV5_Renderer.class.php');
         require_once('data-access/GraphOnTrackersV5_Chart_Bar.class.php');
         require_once('data-access/GraphOnTrackersV5_Chart_Pie.class.php');

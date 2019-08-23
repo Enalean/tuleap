@@ -76,43 +76,53 @@ class HudsonBuild {
         throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_error', array($hudson_build_url)));
     }
 
-    function getDom() {
+    function getDom()
+    {
         return $this->dom_build;
     }
 
-    function getBuildStyle() {
+    function getBuildStyle()
+    {
         return $this->dom_build->getName();
     }
 
-    function isBuilding() {
+    function isBuilding()
+    {
         return ($this->dom_build->building == "true");
     }
 
-    function getUrl() {
+    function getUrl()
+    {
         return (string) $this->dom_build->url;
     }
 
-    function getResult() {
+    function getResult()
+    {
         return (string) $this->dom_build->result;
     }
 
-    function getNumber() {
+    function getNumber()
+    {
         return (int) $this->dom_build->number;
     }
 
-    function getDuration() {
+    function getDuration()
+    {
         return (int) $this->dom_build->duration;
     }
 
-    function getTimestamp() {
+    function getTimestamp()
+    {
         return (int) $this->dom_build->timestamp;
     }
 
-    function getBuildTime() {
+    function getBuildTime()
+    {
         return format_date($GLOBALS['Language']->getText('system', 'datefmt'), substr($this->getTimestamp(), 0, -3));
     }
 
-    function getStatusIcon() {
+    function getStatusIcon()
+    {
         $color = 'red';
         if ($this->getResult() == 'SUCCESS') {
             $color = 'blue';

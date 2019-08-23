@@ -56,7 +56,8 @@ class WikiPage {
     /*
      * Constructor
      */
-    function __construct($id=0, $pagename='') {
+    function __construct($id=0, $pagename='')
+    {
         $this->empty = null;
 
         if($id != 0) {
@@ -85,7 +86,8 @@ class WikiPage {
         $this->wiki_dao = new WikiDao();
     }
 
-    private function setGid($project_id) {
+    private function setGid($project_id)
+    {
         self::$gid     = $project_id;
         $this->wrapper = new WikiPageWrapper($project_id);
     }
@@ -95,11 +97,13 @@ class WikiPage {
         self::$gid = $project_id;
     }
 
-    public function isReferenced() {
+    public function isReferenced()
+    {
         return $this->referenced;
     }
 
-    public function getLastVersionId() {
+    public function getLastVersionId()
+    {
         $res = db_query(
             'SELECT version
             FROM wiki_version
@@ -115,7 +119,8 @@ class WikiPage {
         return $results['version'];
     }
 
-    public function getMetadata() {
+    public function getMetadata()
+    {
         if ($this->isEmpty()) {
             return array('mtime' => time());
         }
@@ -135,7 +140,8 @@ class WikiPage {
         return $current_revision_metadata + $content + $summary;
     }
 
-    private function convertAuthorIdToUserId(array &$current_revision_metadata) {
+    private function convertAuthorIdToUserId(array &$current_revision_metadata)
+    {
         $last_author_id = null;
 
         if (isset($current_revision_metadata['author'])) {
@@ -150,7 +156,8 @@ class WikiPage {
         $current_revision_metadata['author_id'] = $last_author_id;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $metadata = $this->getMetadata();
 
         if (isset($metadata['content'])) {
@@ -164,7 +171,8 @@ class WikiPage {
      *
      * @return string
      */
-    private function getSummaryForCurrentRevision() {
+    private function getSummaryForCurrentRevision()
+    {
         $summary_content = $this->wrapper->getRequest()->getPage($this->pagename)
             ->getCurrentRevision()->get('summary');
 
@@ -178,11 +186,13 @@ class WikiPage {
     /**
      * @return int
      */
-    public function getCurrentVersion() {
+    public function getCurrentVersion()
+    {
         return $this->wrapper->getRequest()->getPage($this->pagename)->getCurrentRevision()->getVersion();
     }
 
-    private function getLastVersionContent() {
+    private function getLastVersionContent()
+    {
         $res = db_query(
             'SELECT content
             FROM wiki_version
@@ -198,7 +208,8 @@ class WikiPage {
         return $results['content'];
     }
 
-    private function findPageId() {
+    private function findPageId()
+    {
         $res = db_query(' SELECT id FROM wiki_page'.
                         ' WHERE group_id="'.db_ei(self::$gid).'"'.
                         ' AND pagename="'.db_es($this->pagename).'"');
@@ -212,7 +223,8 @@ class WikiPage {
     }
 
 
-    private function initFromDb() {
+    private function initFromDb()
+    {
         $res = db_query(' SELECT id, pagename, group_id FROM wiki_page'.
                         ' WHERE id="'.db_ei($this->id).'"');
         if(db_numrows($res) > 1) {
@@ -230,7 +242,8 @@ class WikiPage {
     /**
      * @todo transfer to Wrapper
      */
-    function isEmpty() {
+    function isEmpty()
+    {
         // If this value is already computed, return now !
         if($this->empty != null) {
             return $this->empty;
@@ -252,14 +265,16 @@ class WikiPage {
         return $this->empty;
     }
 
-    public function permissionExist() {
+    public function permissionExist()
+    {
         if (permission_exist(Wiki_PermissionsManager::WIKI_PERMISSION_READ, $this->id))
         return true;
         else
         return false;
     }
 
-    private function isWikiPageReferenced() {
+    private function isWikiPageReferenced()
+    {
         $referenced = false;
 
         //Check for Docman Perms
@@ -275,7 +290,8 @@ class WikiPage {
         return $referenced;
     }
 
-    public function isAutorized($uid) {
+    public function isAutorized($uid)
+    {
         if($this->referenced == true) {
             $userCanAccess = false;
             $eM = EventManager::instance();
@@ -298,7 +314,8 @@ class WikiPage {
         return true;
     }
 
-    public function setPermissions($groups) {
+    public function setPermissions($groups)
+    {
         global $feedback;
 
         list ($ret, $feedback) = permission_process_selection_form(
@@ -311,7 +328,8 @@ class WikiPage {
         return $ret;
     }
 
-    public function resetPermissions() {
+    public function resetPermissions()
+    {
         return permission_clear_all(
             self::$gid,
             Wiki_PermissionsManager::WIKI_PERMISSION_READ,
@@ -322,17 +340,20 @@ class WikiPage {
     /**
      * @todo transfer to Wrapper
      */
-    function exist() {
+    function exist()
+    {
         return($this->id != 0);
     }
 
-    public function log($user_id) {
+    public function log($user_id)
+    {
         $sql = "INSERT INTO wiki_log(user_id,group_id,pagename,time) "
             ."VALUES ('".db_ei($user_id)."','".db_ei(self::$gid)."','".db_es($this->pagename)."','".db_ei(time())."')";
         db_query($sql);
     }
 
-    public function render($lite=false, $full_screen=false) {
+    public function render($lite=false, $full_screen=false)
+    {
         $wpw = new WikiPageWrapper(self::$gid);
         $wpw->render($lite, $full_screen);
     }
@@ -340,28 +361,32 @@ class WikiPage {
     /**
      * @return int Page identifier
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
      * @return string Page name
      */
-    public function getPagename() {
+    public function getPagename()
+    {
         return $this->pagename;
     }
 
     /**
      * @return int Group Identifier
      */
-    public function getGid() {
+    public function getGid()
+    {
         return self::$gid;
     }
 
     /**
      * @return bool
      */
-    public function delete() {
+    public function delete()
+    {
         if ($this->exist()) {
             if($this->wiki_dao->deleteWikiPage($this->id)
                 && $this->wiki_dao->deleteWikiPageVersion($this->id)
@@ -381,7 +406,8 @@ class WikiPage {
     /**
      * @return string[] List of pagename
      */
-    public function getAllAdminPages() {
+    public function getAllAdminPages()
+    {
         $admin_pages_db_escaped = [];
         foreach (self::getDefaultPages() as $admin_page) {
             $admin_pages_db_escaped[] = '"' . db_es($admin_page) . '"';
@@ -405,7 +431,8 @@ class WikiPage {
     /**
      * @return string[] List of pagename
      */
-    public function getAllInternalPages() {
+    public function getAllInternalPages()
+    {
         $default_pages_db_escaped = [];
         foreach (self::getDefaultPages() as $default_page) {
             $default_pages_db_escaped[] = '"' . db_es($default_page) . '"';
@@ -450,7 +477,8 @@ class WikiPage {
         return $allPages;
     }
 
-    public function getAllIndexablePages($project_id) {
+    public function getAllIndexablePages($project_id)
+    {
         $this->setGid($project_id);
 
         $indexable_pages = array();
@@ -460,7 +488,8 @@ class WikiPage {
         return $indexable_pages;
     }
 
-    private function getIndexablePageFromAllUserPages(array &$indexable_pages) {
+    private function getIndexablePageFromAllUserPages(array &$indexable_pages)
+    {
         $all_internal_pages = array_merge($this->getAllUserPages(), $this->wrapper->getProjectEmptyLinks());
 
         foreach ($all_internal_pages as $internal_page_name) {
@@ -472,7 +501,8 @@ class WikiPage {
         }
     }
 
-    private function getIndexablePageFromDefaultAndAdminPages(array &$indexable_pages) {
+    private function getIndexablePageFromDefaultAndAdminPages(array &$indexable_pages)
+    {
         $default_pages_used = array_merge($this->getAllInternalPages(), $this->getAdminPages());
 
         foreach ($default_pages_used as $default_page_name) {
@@ -492,7 +522,8 @@ class WikiPage {
    *
    * @return string[] List of pagename
    */
-    public static function getDefaultPages() {
+    public static function getDefaultPages()
+    {
         return array
             ( // Plugin documentation pages
              "AddCommentPlugin","AppendTextPlugin","AuthorHistoryPlugin"
@@ -572,7 +603,8 @@ class WikiPage {
    * @see getDefaultPages
    * @return string[] List of pagename
    */
-    public static function getAdminPages() {
+    public static function getAdminPages()
+    {
         return array(
             "HomePage" ,"PhpWikiAdministration","WikiAdminSelect"
             ,"PhpWikiAdministration/Remove"

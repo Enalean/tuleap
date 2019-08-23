@@ -26,7 +26,8 @@
  */
 class HTML_Element_Selectbox_TrackerFields_Selectboxes extends HTML_Element_Selectbox {
 
-    public function __construct($label, $name, $value, $with_none = false, $onchange = "", $with_user = true, $desc="") {
+    public function __construct($label, $name, $value, $with_none = false, $onchange = "", $with_user = true, $desc="")
+    {
         parent::__construct($label, $name, $value, $with_none, $onchange, $desc);
 
         $at  = new ArtifactType($GLOBALS['ath']->Group,$GLOBALS['ath']->getID(),false);

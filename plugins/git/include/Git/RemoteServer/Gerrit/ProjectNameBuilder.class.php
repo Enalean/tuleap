@@ -24,7 +24,8 @@
  */
 class Git_RemoteServer_Gerrit_ProjectNameBuilder {
 
-    public function getGerritProjectName(GitRepository $repository) {
+    public function getGerritProjectName(GitRepository $repository)
+    {
         $project = $repository->getProject()->getUnixName();
         $repo    = $repository->getFullName();
 

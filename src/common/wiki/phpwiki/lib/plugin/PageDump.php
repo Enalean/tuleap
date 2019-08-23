@@ -33,19 +33,23 @@ extends WikiPlugin
 {
     var $MessageId;
 
-    function getName() {
+    function getName()
+    {
         return _("PageDump");
     }
-    function getDescription() {
+    function getDescription()
+    {
         return _("View a single page dump online.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.18 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('s'    => false,
                      'page' => '[pagename]',
                      //'encoding' => 'binary', // 'binary', 'quoted-printable'
@@ -55,7 +59,8 @@ extends WikiPlugin
                      'download' => false);
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         extract($this->getArgs($argstr, $request));
         // allow plugin-form
         if (!empty($s))
@@ -208,7 +213,8 @@ extends WikiPlugin
     // function handle_plugin_args_cruft(&$argstr, &$args) {
     // }
 
-    function generateMessageId($mailified) {
+    function generateMessageId($mailified)
+    {
         $array = explode("\n", $mailified);
         // Extract lastmodifed from mailified document for Content-Id
         // and/or Message-Id header, NOT from DB (page could have been
@@ -235,7 +241,8 @@ extends WikiPlugin
             . "@". rawurlencode(SERVER_NAME);
     }
 
-    function fixup_headers(&$mailified) {
+    function fixup_headers(&$mailified)
+    {
         $return = explode("\n", $mailified);
 
         // Leave message intact for backing up, just add Message-Id header before transmitting.
@@ -248,7 +255,8 @@ extends WikiPlugin
         $mailified = implode("\n", array_values($return));
     }
 
-    function fixup_headers_forcvs(&$mailified) {
+    function fixup_headers_forcvs(&$mailified)
+    {
         $array = explode("\n", $mailified);
 
         // Massage headers to prepare for developer checkin to CVS.

@@ -24,7 +24,8 @@
 // @see http://nat.truemesh.com/archives/000727.html
 require_once __DIR__.'/../bootstrap.php';
 
-function anArtifact() {
+function anArtifact()
+{
     return new Test_Artifact_Builder();
 }
 
@@ -43,52 +44,62 @@ class Test_Artifact_Builder {
     private $submitted_by_user;
     private $status;
 
-    public function withId($id) {
+    public function withId($id)
+    {
         $this->id = $id;
         return $this;
     }
 
-    public function withStatus($status) {
+    public function withStatus($status)
+    {
         $this->status = $status;
         return $this;
     }
 
-    public function withTracker(Tracker $tracker) {
+    public function withTracker(Tracker $tracker)
+    {
         $this->tracker    = $tracker;
         return $this->withTrackerId($tracker->getId());
     }
 
-    public function withTrackerId($tracker_id) {
+    public function withTrackerId($tracker_id)
+    {
         $this->tracker_id = $tracker_id;
         return $this;
     }
 
-    public function withSubmittedBy($submitted_by) {
+    public function withSubmittedBy($submitted_by)
+    {
         $this->submitted_by = $submitted_by;
         return $this;
     }
 
-    public function withSubmittedOn($submitted_on) {
+    public function withSubmittedOn($submitted_on)
+    {
         $this->submitted_on = $submitted_on;
         return $this;
     }
 
-    public function withFormElementFactory(Tracker_FormElementFactory $factory) {
+    public function withFormElementFactory(Tracker_FormElementFactory $factory)
+    {
         $this->formElementFactory = $factory;
         return $this;
     }
 
-    public function withChangesets(array $changesets) {
+    public function withChangesets(array $changesets)
+    {
         $this->changesets = $changesets;
         return $this;
     }
 
-    public function withHierarchyFactory($hierarchy_factory) {
+    public function withHierarchyFactory($hierarchy_factory)
+    {
         $this->hierarchy_factory = $hierarchy_factory;
         return $this;
     }
 
-    public function withParent(Tracker_Artifact $parent) {
+    public function withParent(Tracker_Artifact $parent)
+    {
         if (!isset($this->ancestors)) {
             $this->ancestors = array();
         }
@@ -96,32 +107,38 @@ class Test_Artifact_Builder {
         return $this;
     }
 
-    public function withParentWithoutPermissionChecking(Tracker_Artifact $parent) {
+    public function withParentWithoutPermissionChecking(Tracker_Artifact $parent)
+    {
         $this->parent_without_permission_checking = $parent;
         return $this;
     }
 
-    public function withoutParentWithoutPermissionChecking() {
+    public function withoutParentWithoutPermissionChecking()
+    {
         $this->parent_without_permission_checking = Tracker_Artifact::NO_PARENT;
         return $this;
     }
 
-    public function withoutParent() {
+    public function withoutParent()
+    {
         $this->ancestors = array();
         return $this;
     }
 
-    public function withTitle($title) {
+    public function withTitle($title)
+    {
         $this->title = $title;
         return $this;
     }
 
-    public function withSubmitter(PFUser $user) {
+    public function withSubmitter(PFUser $user)
+    {
         $this->submitted_by_user = $user;
         return $this;
     }
 
-    public function build() {
+    public function build()
+    {
         $artifact = new Tracker_Artifact($this->id, $this->tracker_id, $this->submitted_by, $this->submitted_on, null);
         if ($this->tracker) {
             $artifact->setTracker($this->tracker);

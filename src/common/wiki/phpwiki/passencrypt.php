@@ -57,7 +57,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * http://www.php.net/manual/en/function.srand.php
  * http://www.php.net/manual/en/function.mt-srand.php
  */
-function better_srand($seed = '') {
+function better_srand($seed = '')
+{
     static $wascalled = FALSE;
     if (!$wascalled) {
         if ($seed === '') {
@@ -76,7 +77,8 @@ function better_srand($seed = '') {
     }
 }
 
-function rand_ascii($length = 1) {
+function rand_ascii($length = 1)
+{
     better_srand();
     $s = "";
     for ($i = 1; $i <= $length; $i++) {
@@ -95,7 +97,8 @@ function rand_ascii($length = 1) {
 // suitable for user passwords.
 // Sequence of random ASCII numbers, letters and some special chars.
 // Note: There exist other algorithms for easy-to-remember passwords.
-function random_good_password ($minlength = 5, $maxlength = 8) {
+function random_good_password($minlength = 5, $maxlength = 8)
+{
     $newpass = '';
     // assume ASCII ordering (not valid on EBCDIC systems!)
     $valid_chars = "!#%&+-.0123456789=@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";

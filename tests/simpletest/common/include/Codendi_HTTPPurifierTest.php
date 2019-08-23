@@ -26,11 +26,13 @@
  */
 class Codendi_HTTPPurifierTest extends TuleapTestCase {
 
-    function UnitTestCase($name = 'Codendi_HTTPPurifier test') {
+    function UnitTestCase($name = 'Codendi_HTTPPurifier test')
+    {
         $this->UnitTestCase($name);
     }
 
-    function testPurify() {
+    function testPurify()
+    {
         $p =& Codendi_HTTPPurifier::instance();
         $this->assertEqual('a', $p->purify("a"));
         $this->assertEqual('a', $p->purify("a\n"));

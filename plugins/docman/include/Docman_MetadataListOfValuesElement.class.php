@@ -31,7 +31,8 @@ class Docman_MetadataListOfValuesElement {
     var $rank;
     var $status;
 
-    function __construct() {
+    function __construct()
+    {
         $this->id = null;
         $this->name = null;
         $this->description = null;
@@ -39,42 +40,53 @@ class Docman_MetadataListOfValuesElement {
         $this->status = null;
     }
 
-    function setId($v) {
+    function setId($v)
+    {
         $this->id = $v;
     }
-    function getId() {
+    function getId()
+    {
         return $this->id;
     }
 
-    function setName($v) {
+    function setName($v)
+    {
         $this->name = $v;
     }
-    function getName() {
+    function getName()
+    {
         return $this->name;
     }
 
-    function setDescription($v) {
+    function setDescription($v)
+    {
         $this->description = $v;
     }
-    function getDescription() {
+    function getDescription()
+    {
         return $this->description;
     }
 
-    function setRank($v) {
+    function setRank($v)
+    {
         $this->rank = $v;
     }
-    function getRank() {
+    function getRank()
+    {
         return $this->rank;
     }
 
-    function setStatus($v) {
+    function setStatus($v)
+    {
         $this->status = $v;
     }
-    function getStatus() {
+    function getStatus()
+    {
         return $this->status;
     }
 
-    function initFromRow($row) {
+    function initFromRow($row)
+    {
         if(isset($row['value_id'])) $this->id = $row['value_id'];
         if(isset($row['name'])) $this->name = $row['name'];
         if(isset($row['description'])) $this->description = $row['description'];

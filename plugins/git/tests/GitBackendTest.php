@@ -32,7 +32,8 @@ Mock::generate('SystemEventManager');
 
 class GitBackendTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->http_request = mock('HTTPRequest');
         HTTPRequest::setInstance($this->http_request);
@@ -44,14 +45,16 @@ class GitBackendTest extends TuleapTestCase {
         $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         @unlink($this->fixturesPath.'/tmp/hooks/post-receive');
         HTTPRequest::clearInstance();
 
         parent::tearDown();
     }
 
-    public function testAddMailingShowRev() {
+    public function testAddMailingShowRev()
+    {
         stub($this->http_request)->getServerUrl()->returns('https://localhost');
 
         $prj = new MockProject($this);
@@ -75,7 +78,8 @@ class GitBackendTest extends TuleapTestCase {
         $backend->setUpMailingHook($repo);
     }
 
-    public function testArchiveCreatesATarGz() {
+    public function testArchiveCreatesATarGz()
+    {
         $this->GivenThereIsARepositorySetUp();
 
         $project = new MockProject();
@@ -95,7 +99,8 @@ class GitBackendTest extends TuleapTestCase {
         $this->ThenCleanTheWorkspace();
     }
 
-    private function GivenThereIsARepositorySetUp() {
+    private function GivenThereIsARepositorySetUp()
+    {
         // Copy the reference to save time & create symlink because
         // git is very sensitive to path you are using. Just symlinking
         // spots bugs
@@ -108,7 +113,8 @@ class GitBackendTest extends TuleapTestCase {
         mkdir($this->backupDir);
     }
 
-    private function ThenCleanTheWorkspace() {
+    private function ThenCleanTheWorkspace()
+    {
         system('rm -rf '. $this->_glAdmDirRef);
         system('rm -rf '. $this->backupDir);
         chdir($this->cwd);

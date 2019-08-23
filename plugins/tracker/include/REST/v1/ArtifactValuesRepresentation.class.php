@@ -56,7 +56,8 @@ class ArtifactValuesRepresentation {
     /**
      * @return array
      */
-    public function toArray() {
+    public function toArray()
+    {
         $array_representation = array();
 
         $array_representation['field_id'] = $this->field_id;

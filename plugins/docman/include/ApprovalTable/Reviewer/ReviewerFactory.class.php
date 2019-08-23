@@ -34,7 +34,8 @@ class Docman_ApprovalTableReviewerFactory {
     var $warn;
     private $notificationManager = null;
 
-    function __construct($table, $item, $notificationManager = null) {
+    function __construct($table, $item, $notificationManager = null)
+    {
         $this->table = $table;
         $this->item  = $item;
         $this->reviewerCache = null;
@@ -53,11 +54,13 @@ class Docman_ApprovalTableReviewerFactory {
     /**
      * @return Docman_ApprovalTable
      */
-    public function getTable() {
+    public function getTable()
+    {
         return $this->table;
     }
 
-    function createReviewerFromRow($row) {
+    function createReviewerFromRow($row)
+    {
         $reviewer = new Docman_ApprovalReviewer();
         $reviewer->initFromRow($row);
         return $reviewer;
@@ -71,7 +74,8 @@ class Docman_ApprovalTableReviewerFactory {
      * - table enabled.
      * - notification not disabled.
      */
-    function notifyReviewers() {
+    function notifyReviewers()
+    {
         $res = false;
 
         if($this->table !== null
@@ -92,7 +96,8 @@ class Docman_ApprovalTableReviewerFactory {
         return $res;
     }
 
-    function appendReviewerList() {
+    function appendReviewerList()
+    {
         if($this->table !== null) {
             $dao = $this->_getDao();
             $dar = $dao->getReviewerList($this->table->getId());
@@ -112,7 +117,8 @@ class Docman_ApprovalTableReviewerFactory {
      *
      * It contains: all dynamic ugroups plus project members and admins.
      */
-    function getUgroupsAllowedForTable($groupId) {
+    function getUgroupsAllowedForTable($groupId)
+    {
         /** @psalm-suppress DeprecatedFunction */
         $res = ugroup_db_get_existing_ugroups($groupId, array($GLOBALS['UGROUP_PROJECT_MEMBERS'],
                                                               $GLOBALS['UGROUP_PROJECT_ADMIN']));
@@ -133,7 +139,8 @@ class Docman_ApprovalTableReviewerFactory {
      *
      * @return Docman_ApprovalReviewer
      */
-    function getReviewer($userId) {
+    function getReviewer($userId)
+    {
         $reviewer = null;
         $dao = $this->_getDao();
         $dar = $dao->getReviewerById($this->table->getId(), $userId);
@@ -148,7 +155,8 @@ class Docman_ApprovalTableReviewerFactory {
     /**
      * @return Docman_ApprovalReviewer[]
      */
-    public function getReviewerListForLatestVersion() {
+    public function getReviewerListForLatestVersion()
+    {
         $list = array();
         if ($this->reviewerCache === null) {
             $this->reviewerCache = array();
@@ -168,7 +176,8 @@ class Docman_ApprovalTableReviewerFactory {
      * Return true if given userid is member of the current table or not.
      * There is a cache for this information (the membership of users).
      */
-    function isReviewer($userId) {
+    function isReviewer($userId)
+    {
         if($this->reviewerCache === null) {
             $dao = $this->_getDao();
             $dar = $dao->getReviewerList($this->table->getId());
@@ -190,7 +199,8 @@ class Docman_ApprovalTableReviewerFactory {
      *
      * @access: private
      */
-    function _addUser($userId) {
+    function _addUser($userId)
+    {
         $dPm = Docman_PermissionsManager::instance($this->item->getGroupId());
         $um = $this->_getUserManager();
         $user = $um->getUserById($userId);
@@ -224,7 +234,8 @@ class Docman_ApprovalTableReviewerFactory {
      *   Codendi user.
      * @return int number of users added.
      */
-    function addUsers($userArray) {
+    function addUsers($userArray)
+    {
         $nbUserAdded = 0;
         foreach($userArray as $user) {
             $added = false;
@@ -246,7 +257,8 @@ class Docman_ApprovalTableReviewerFactory {
      *
      * @return true if at least one user was added to the list.
      */
-    function addUgroup($ugroupId) {
+    function addUgroup($ugroupId)
+    {
         $nbUserAdded = 0;
         $nbMembers = 0;
 
@@ -273,7 +285,8 @@ class Docman_ApprovalTableReviewerFactory {
     /**
      * Update user rank in the reviewer list.
      */
-    function updateUser($userId, $rank) {
+    function updateUser($userId, $rank)
+    {
         $dao = $this->_getDao();
         return $dao->updateUser($this->table->getId(), $userId, $rank);
     }
@@ -281,7 +294,8 @@ class Docman_ApprovalTableReviewerFactory {
     /**
      * Delete user from reviewer list.
      */
-    function delUser($userId) {
+    function delUser($userId)
+    {
         $dao = $this->_getDao();
         $deleted = $dao->delUser($this->table->getId(), $userId);
         if($deleted) {
@@ -296,7 +310,8 @@ class Docman_ApprovalTableReviewerFactory {
     /**
      * Delete all the member of the table
      */
-    function deleteTable() {
+    function deleteTable()
+    {
         $dao = $this->_getDao();
         return $dao->truncateTable($this->table->getId());
     }
@@ -304,7 +319,8 @@ class Docman_ApprovalTableReviewerFactory {
     /**
      * Update user review.
      */
-    function updateReview($review) {
+    function updateReview($review)
+    {
         $dao = $this->_getDao();
         $updated = $dao->updateReview($this->table->getId(),
                                   $review->getId(),
@@ -321,12 +337,14 @@ class Docman_ApprovalTableReviewerFactory {
         return false;
     }
 
-    function newTableCopy($newTableId) {
+    function newTableCopy($newTableId)
+    {
         $dao = $this->_getDao();
         return $dao->copyReviews($this->table->getId(), $newTableId);
     }
 
-    function newTableReset($newTableId) {
+    function newTableReset($newTableId)
+    {
         $dao = $this->_getDao();
         return $dao->copyReviewers($this->table->getId(), $newTableId);
     }
@@ -334,7 +352,8 @@ class Docman_ApprovalTableReviewerFactory {
     /**
      * Return all the review where the user doesn't commit himself yet.
      */
-    /*static*/ function getAllPendingReviewsForUser($userId) {
+    /*static*/ function getAllPendingReviewsForUser($userId)
+    {
         $reviewsArray = array();
         $dao = Docman_ApprovalTableReviewerFactory::_getDao();
         $dar = $dao->getAllReviewsForUserByState($userId, PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
@@ -357,7 +376,8 @@ class Docman_ApprovalTableReviewerFactory {
      * Return all the approval table not deleted and not closed where the user
      * is the table owner.
      */
-    /*static*/ function getAllApprovalTableForUser($userId) {
+    /*static*/ function getAllApprovalTableForUser($userId)
+    {
         $reviewsArray = array();
         $dao = Docman_ApprovalTableReviewerFactory::_getDao();
         $dar = $dao->getAllApprovalTableForUser($userId);
@@ -393,7 +413,8 @@ class Docman_ApprovalTableReviewerFactory {
     }
 
     // Class accessor
-    function _getDao() {
+    function _getDao()
+    {
         $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
         return $dao;
     }
@@ -403,12 +424,14 @@ class Docman_ApprovalTableReviewerFactory {
         return new Codendi_Mail();
     }
 
-    function _getUserManager() {
+    function _getUserManager()
+    {
         $um = UserManager::instance();
         return $um;
     }
 
-    function _getApprovalTableNotificationCycle() {
+    function _getApprovalTableNotificationCycle()
+    {
         $atsm = new Docman_ApprovalTableNotificationCycle(
             new MailNotificationBuilder(
                 new MailBuilder(
@@ -440,7 +463,8 @@ class Docman_ApprovalTableReviewerFactory {
         return $atsm;
     }
 
-    function setNotificationManager($notificationManager) {
+    function setNotificationManager($notificationManager)
+    {
         $this->notificationManager = $notificationManager;
     }
 }

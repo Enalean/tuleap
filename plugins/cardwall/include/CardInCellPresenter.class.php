@@ -28,14 +28,16 @@ class Cardwall_CardInCellPresenter {
      */
     private $card_presenter;
 
-    public function __construct(Tracker_CardPresenter $presenter, $card_field_id, $swimline_id = null, array $swimline_field_values = array()) {
+    public function __construct(Tracker_CardPresenter $presenter, $card_field_id, $swimline_id = null, array $swimline_field_values = array())
+    {
         $this->swimline_id           = $swimline_id;
         $this->swimline_field_values = $swimline_field_values;
         $this->card_field_id         = $card_field_id;
         $this->card_presenter        = $presenter;
     }
 
-    public function getDropIntoClasses() {
+    public function getDropIntoClasses()
+    {
         $classes = array();
         foreach (array_unique($this->swimline_field_values) as $id) {
             $classes[] = 'drop-into-'.$this->swimline_id.'-'.$id;
@@ -43,11 +45,13 @@ class Cardwall_CardInCellPresenter {
         return $classes;
     }
 
-    public function getDropIntoClass() {
+    public function getDropIntoClass()
+    {
         return implode(' ', $this->getDropIntoClasses());
     }
 
-    public function getDropIntoIds() {
+    public function getDropIntoIds()
+    {
         $ids = array();
         foreach (array_unique($this->swimline_field_values) as $id) {
             $ids[] = $id;
@@ -55,19 +59,23 @@ class Cardwall_CardInCellPresenter {
         return $ids;
     }
 
-    public function getCardFieldId() {
+    public function getCardFieldId()
+    {
         return $this->card_field_id;
     }
 
-    public function getCardPresenter() {
+    public function getCardPresenter()
+    {
         return $this->card_presenter;
     }
 
-    public function getArtifact() {
+    public function getArtifact()
+    {
         return $this->card_presenter->getArtifact();
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->card_presenter->getId();
     }
 }

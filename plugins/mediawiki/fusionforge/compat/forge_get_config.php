@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function forge_get_config($key, $scope = 'core') {
+function forge_get_config($key, $scope = 'core')
+{
     $conf_variables_mapping = array(
         'web_host'          => 'sys_default_domain',
         'forge_name'        => 'sys_name',

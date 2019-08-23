@@ -42,48 +42,59 @@ class Tracker_Chart_Burndown
     private $graph_data_human_dates      = array();
     private $graph_data_remaining_effort = array();
 
-    public function __construct(GraphOnTrackersV5_Burndown_Data $burndown_data) {
+    public function __construct(GraphOnTrackersV5_Burndown_Data $burndown_data)
+    {
         $this->burndown_data = $burndown_data;
         $this->start_date    = $burndown_data->getTimePeriod()->getStartDate();
     }
 
-    public function setStartDate($start_date) {
+    public function setStartDate($start_date)
+    {
         $this->start_date = round($start_date);
     }
 
-    public function setStartDateInDays($start_date) {
+    public function setStartDateInDays($start_date)
+    {
         $this->start_date = $start_date;
     }
 
-    public function setDuration($duration) {
+    public function setDuration($duration)
+    {
         $this->duration = $duration;
     }
 
-    public function setTitle($title) {
+    public function setTitle($title)
+    {
         $this->title = $title;
     }
 
-    public function setDescription($description) {
+    public function setDescription($description)
+    {
         $this->description = $description;
     }
 
-    public function setWidth($width) {
+    public function setWidth($width)
+    {
         $this->width = $width;
     }
 
-    public function setHeight($height) {
+    public function setHeight($height)
+    {
         $this->height = $height;
     }
 
-    public function getGraphDataHumanDates() {
+    public function getGraphDataHumanDates()
+    {
         return $this->graph_data_human_dates;
     }
 
-    public function getGraphDataRemainingEffort() {
+    public function getGraphDataRemainingEffort()
+    {
         return $this->graph_data_remaining_effort;
     }
 
-    public function getGraphDataIdealBurndown() {
+    public function getGraphDataIdealBurndown()
+    {
         return $this->graph_data_ideal_burndown;
     }
 
@@ -137,7 +148,8 @@ class Tracker_Chart_Burndown
         return $data;
     }
 
-    protected function getFirstEffortNotNull( array $remaining_effort) {
+    protected function getFirstEffortNotNull( array $remaining_effort)
+    {
         foreach($remaining_effort as $effort) {
             if (is_array($effort) && ($sum_of_effort = floatval(array_sum($effort))) > 0) {
                 return $sum_of_effort;
@@ -178,7 +190,8 @@ class Tracker_Chart_Burndown
     /**
      * @return Chart
      */
-    public function buildGraph() {
+    public function buildGraph()
+    {
         $this->prepareDataForGraph($this->getComputedData());
 
         $graph = new Chart($this->width, $this->height);
@@ -212,7 +225,8 @@ class Tracker_Chart_Burndown
         return $graph;
     }
 
-    public function display() {
+    public function display()
+    {
         $this->buildGraph()->stroke();
     }
 

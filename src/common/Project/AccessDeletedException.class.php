@@ -18,7 +18,8 @@
  */
 
 class Project_AccessDeletedException extends Project_AccessException {
-    public function __construct(Project $project) {
+    public function __construct(Project $project)
+    {
         parent::__construct($GLOBALS['Language']->getText('include_exit', 'project_status_'.$project->getStatus()));
     }
 }

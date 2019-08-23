@@ -46,7 +46,8 @@ class PreCommitBaseTest extends TuleapTestCase {
     private $project_id;
     private $repository;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->immutable_tag_factory = mock('Tuleap\SVN\Admin\ImmutableTagFactory');
         $this->dao                   = mock('Tuleap\SVN\Admin\ImmutableTagDao');
         $this->commit_info_enhancer  = mock('Tuleap\SVN\Commit\CommitInfoEnhancer');
@@ -61,7 +62,8 @@ class PreCommitBaseTest extends TuleapTestCase {
         $this->mockRepository();
     }
 
-    private function assertCommitIsAllowed() {
+    private function assertCommitIsAllowed()
+    {
         $paths = func_get_args();
         try {
             $this->preCommit($paths);
@@ -71,7 +73,8 @@ class PreCommitBaseTest extends TuleapTestCase {
         }
     }
 
-    private function assertCommitIsDenied() {
+    private function assertCommitIsDenied()
+    {
         $paths = func_get_args();
         try {
             $this->preCommit($paths);
@@ -81,7 +84,8 @@ class PreCommitBaseTest extends TuleapTestCase {
         }
     }
 
-    private function preCommit(array $paths) {
+    private function preCommit(array $paths)
+    {
         $svn_look = safe_mock('Tuleap\SVN\Commit\SVNLook');
         stub($svn_look)->getMessageFromTransaction()->returns(array("COMMIT MSG"));
         stub($svn_look)->getTransactionPath()->returns($paths);
@@ -100,14 +104,16 @@ class PreCommitBaseTest extends TuleapTestCase {
         $pre_commit->assertCommitToTagIsAllowed();
     }
 
-    private function mockRepository() {
+    private function mockRepository()
+    {
         $this->repository = mock('Tuleap\SVN\Repository\Repository');
         stub($this->repository)->getId()->returns(1);
         stub($this->repository)->getName()->returns($this->repository_name);
         stub($this->repository_manager)->getRepositoryFromSystemPath($this->system_path)->returns($this->repository);
     }
 
-    public function testCommitToTagIsAllowed() {
+    public function testCommitToTagIsAllowed()
+    {
         $immutable_tags = stub("Tuleap\SVN\Admin\ImmutableTag")->getPaths()->returns(array());
 
         stub($this->immutable_tag_factory)->getByRepositoryId()->returns($immutable_tags);
@@ -163,7 +169,8 @@ class PreCommitBaseTest extends TuleapTestCase {
         $this->assertCommitIsAllowed('A   trunk/toto', 'A   tags/moduleA/v1/toto');
     }
 
-    public function testCommitToTagIsDeniedInModule() {
+    public function testCommitToTagIsDeniedInModule()
+    {
         $immutable_tag = stub("Tuleap\SVN\Admin\ImmutableTag")->getPaths()->returns(array('/*/tags/'));
         stub("Tuleap\SVN\Admin\ImmutableTagDao")->searchByRepositoryId()->returns(array($this->repository));
         stub($this->immutable_tag_factory)->getByRepositoryId($this->repository)->returns($immutable_tag);
@@ -329,7 +336,8 @@ class PreCommitReferenceTest extends TuleapTestCase
         $Language = mock('BaseLanguage');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         global $Language;
         unset($Language);
         ForgeConfig::restore();
@@ -337,7 +345,8 @@ class PreCommitReferenceTest extends TuleapTestCase
         parent::tearDown();
     }
 
-    private function preCommit(){
+    private function preCommit()
+    {
         $this->hook = new PreCommit(
             $this->repo_path,
             $this->transaction,

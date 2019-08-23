@@ -25,7 +25,8 @@ require_once 'bootstrap.php';
 
 class BuildItemMappingVisitorTest extends TuleapTestCase {
 
-    function testCompareFolderChildrenOk() {
+    function testCompareFolderChildrenOk()
+    {
         // Src (reference)
         $fld140 = new Docman_Folder(array('item_id' => 140, 'title' => 'Project documentation', 'rank' => 0));
         $fld150 = new Docman_Folder(array('item_id' => 150, 'title' => 'Folder 1', 'rank' => -2));
@@ -52,7 +53,8 @@ class BuildItemMappingVisitorTest extends TuleapTestCase {
     /**
      * Same test as above (testCompareFolderChildrenOk) but ranks inversion between item 36 & 40  (here 40 appears befor 36).
      */
-    function testCompareFolderChildrenRankIssue() {
+    function testCompareFolderChildrenRankIssue()
+    {
         // Src (reference)
         $fld140 = new Docman_Folder(array('item_id' => 140, 'title' => 'Project documentation', 'rank' => 0));
         $fld150 = new Docman_Folder(array('item_id' => 150, 'title' => 'Folder 1', 'rank' => -2));
@@ -77,7 +79,8 @@ class BuildItemMappingVisitorTest extends TuleapTestCase {
     /**
      * Test when there are more items in the source tree (reference) than the destination one.
      */
-    function testCompareFolderChildrenMoreSrcThanDst() {
+    function testCompareFolderChildrenMoreSrcThanDst()
+    {
         // Src (reference)
         $fld140 = new Docman_Folder(array('item_id' => 140, 'title' => 'Project documentation', 'rank' => 0));
         $fld150 = new Docman_Folder(array('item_id' => 150, 'title' => 'Folder 1', 'rank' => -2));
@@ -106,7 +109,8 @@ class BuildItemMappingVisitorTest extends TuleapTestCase {
     /**
      * Test when there are more items in the destination tree than the source one.
      */
-    function testCompareFolderChildrenMoreDstThanSrc() {
+    function testCompareFolderChildrenMoreDstThanSrc()
+    {
         // Src (reference)
         $fld140 = new Docman_Folder(array('item_id' => 140, 'title' => 'Project documentation', 'rank' => 0));
         $fld150 = new Docman_Folder(array('item_id' => 150, 'title' => 'Folder 1', 'rank' => -2));
@@ -155,7 +159,8 @@ class BuildItemMappingVisitorTest extends TuleapTestCase {
      * |   `-- Folder 1.2 (115)
      * `-- Folder 2 (135)
      */
-    function testSimpleTree() {
+    function testSimpleTree()
+    {
         // Nodes definition
         $fld140 = new Docman_Folder(array('item_id' => 140, 'title' => 'Project documentation'));
         $fld150 = new Docman_Folder(array('item_id' => 150, 'title' => 'Folder 1'));
@@ -230,7 +235,8 @@ class BuildItemMappingVisitorTest extends TuleapTestCase {
     /**
      * Same example, item 40 is not readable
      */
-    function testSimpleTreePermissionDenied() {
+    function testSimpleTreePermissionDenied()
+    {
         // Nodes definition
         $fld140 = new Docman_Folder(array('item_id' => 140, 'title' => 'Project documentation'));
         $fld150 = new Docman_Folder(array('item_id' => 150, 'title' => 'Folder 1'));
@@ -315,7 +321,8 @@ class BuildItemMappingVisitorTest extends TuleapTestCase {
      * `-- 135 Folder 1               `-- 40 Folder 1
      *     `-- 173 Folder test             `-- 56 Folder test
      */
-    function testSeveralFoldersWithSameName() {
+    function testSeveralFoldersWithSameName()
+    {
         // Nodes definition
         $fld140 = new Docman_Folder(array('item_id' => 140, 'title' => 'Project documentation', 'rank' => 0));
         $fld150 = new Docman_Folder(array('item_id' => 150, 'title' => 'Folder 1', 'rank' => -2));

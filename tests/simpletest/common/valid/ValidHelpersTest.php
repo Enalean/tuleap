@@ -27,11 +27,13 @@ Mock::generatePartial('Valid', 'Valid_For_Inheritance', array());
 
 class ValidHelperTest extends TuleapTestCase {
 
-    function UnitTestCase($name = 'ValidFactory test') {
+    function UnitTestCase($name = 'ValidFactory test')
+    {
         $this->UnitTestCase($name);
     }
 
-    function testUInt() {
+    function testUInt()
+    {
         $v = new Valid_UInt();
         $v->disableFeedback();
 
@@ -47,7 +49,8 @@ class ValidHelperTest extends TuleapTestCase {
         $this->assertFalse($v->validate('toto'));
     }
 
-    function testValidFactory() {
+    function testValidFactory()
+    {
         $v = new Valid_For_Inheritance($this);
 
         //Does not work in php4 :(
@@ -63,7 +66,8 @@ class ValidHelperTest extends TuleapTestCase {
         $this->assertEqual($w->getKey(), $key);
     }
 
-    public function itValidatesHTTPURI() {
+    public function itValidatesHTTPURI()
+    {
         $validator = new Valid_HTTPURI();
 
         $this->assertTrue($validator->validate('http://example.com/'));
@@ -75,7 +79,8 @@ class ValidHelperTest extends TuleapTestCase {
         $this->assertFalse($validator->validate('Stringhttp://'));
     }
 
-    public function itValidatesHTTPSURI() {
+    public function itValidatesHTTPSURI()
+    {
         $validator = new Valid_HTTPSURI();
 
         $this->assertTrue($validator->validate('https://example.com/'));

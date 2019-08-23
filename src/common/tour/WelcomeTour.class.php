@@ -22,7 +22,8 @@ class Tuleap_Tour_WelcomeTour extends Tuleap_Tour {
 
     public const TOUR_NAME = 'tuleap-welcome-tour';
 
-    public function __construct(PFUser $user) {
+    public function __construct(PFUser $user)
+    {
         $hp        = Codendi_HTMLPurifier::instance();
         $user_name = $hp->purify($user->getRealName());
 

@@ -20,17 +20,20 @@
 
 class b201206221322_populate_artifact_priority extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Populate artifact priority
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->executeQuery("SET @curr_rank = 0");
         $this->executeQuery("SET @succ_rank = 0");
         $sql = "INSERT INTO tracker_artifact_priority (curr_id, succ_id, rank)
@@ -56,7 +59,8 @@ EOT;
         $this->executeQuery($sql);
     }
 
-    private function executeQuery($sql) {
+    private function executeQuery($sql)
+    {
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while populate artifact prioritis: '.implode(', ', $this->db->dbh->errorInfo()));

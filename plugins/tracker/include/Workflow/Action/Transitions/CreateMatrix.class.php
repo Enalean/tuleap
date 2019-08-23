@@ -26,13 +26,15 @@ class Tracker_Workflow_Action_Transitions_CreateMatrix extends Tracker_Workflow_
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;
 
-    public function __construct(Tracker $tracker, WorkflowFactory $workflow_factory, Tracker_FormElementFactory $form_element_factory) {
+    public function __construct(Tracker $tracker, WorkflowFactory $workflow_factory, Tracker_FormElementFactory $form_element_factory)
+    {
         parent::__construct($tracker);
         $this->workflow_factory     = $workflow_factory;
         $this->form_element_factory = $form_element_factory;
     }
 
-    private function processEnabled(Workflow $workflow, $switch_to_is_used) {
+    private function processEnabled(Workflow $workflow, $switch_to_is_used)
+    {
         $should_change_activation = (bool)$switch_to_is_used != (bool)$workflow->isUsed();
         if ($should_change_activation && $this->workflow_factory->updateActivation((int)$workflow->workflow_id, $switch_to_is_used)) {
             $feedback_key = 'workflow_'. ($switch_to_is_used ? 'enabled' : 'disabled');
@@ -44,7 +46,8 @@ class Tracker_Workflow_Action_Transitions_CreateMatrix extends Tracker_Workflow_
         }
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    {
         $workflow = $this->workflow_factory->getWorkflowByTrackerId($this->tracker->id);
         $this->processEnabled($workflow, $request->get('is_used'));
 
@@ -111,7 +114,8 @@ class Tracker_Workflow_Action_Transitions_CreateMatrix extends Tracker_Workflow_
         );
     }
 
-    private function addTransition(Workflow $workflow, $transition, $field_value_from, $field_value_to) {
+    private function addTransition(Workflow $workflow, $transition, $field_value_from, $field_value_to)
+    {
         $i=0;
         if ( ! $workflow->isTransitionExist($field_value_from, $field_value_to)) {
             if ($this->workflow_factory->addTransition((int)$workflow->workflow_id, $transition)) {

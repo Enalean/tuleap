@@ -24,7 +24,8 @@ class LDAP_SyncReminderNotificationManager {
     private $userManager;
     private $projectManager;
 
-    function __construct(ProjectManager $projectManager, UserManager $userManager){
+    function __construct(ProjectManager $projectManager, UserManager $userManager)
+    {
         $this->userManager  = $userManager;
         $this->ldapSyncMail = new LDAP_SyncMail($projectManager);
         $this->projectManager  = $projectManager;
@@ -35,7 +36,8 @@ class LDAP_SyncReminderNotificationManager {
      *
      * @return Array
      */
-    private function getUsersToBeDeleted() {
+    private function getUsersToBeDeleted()
+    {
         $suspendedUsers     = array();
         $suspendedUsersList = $this->getLDAPDirectoryCleanUpDao()->getUsersDeletedTomorrow();
         foreach ($suspendedUsersList as $suspendedUser) {
@@ -54,7 +56,8 @@ class LDAP_SyncReminderNotificationManager {
      *
      * @return void
      */
-    public function processReminder(PFUser $user) {
+    public function processReminder(PFUser $user)
+    {
         $to = '';
         if ($user->getStatus() == 'S') {
             $adminsEmails = $this->ldapSyncMail->getNotificationRecipients($user);
@@ -72,7 +75,8 @@ class LDAP_SyncReminderNotificationManager {
      *
      * @return void
      */
-    public function processReminders() {
+    public function processReminders()
+    {
         $suspendedUsersList = $this->getUsersToBeDeleted();
         foreach ($suspendedUsersList as $suspendedUser) {
             $this->processReminder($suspendedUser);
@@ -84,7 +88,8 @@ class LDAP_SyncReminderNotificationManager {
      *
      * @return LDAP_DirectoryCleanUpDao
      */
-    private function getLDAPDirectoryCleanUpDao() {
+    private function getLDAPDirectoryCleanUpDao()
+    {
         return new LDAP_DirectoryCleanUpDao(CodendiDataAccess::instance());
     }
 
@@ -97,7 +102,8 @@ class LDAP_SyncReminderNotificationManager {
      *
      * @return String
      */
-    private function getBody($unixProjectName, $user) {
+    private function getBody($unixProjectName, $user)
+    {
         $server_url       = HTTPRequest::instance()->getServerUrl();
         $project_url      = $server_url.'/projects/'.urlencode($unixProjectName);
         $project = $this->projectManager->getProjectByUnixName($unixProjectName);
@@ -114,7 +120,8 @@ class LDAP_SyncReminderNotificationManager {
      *
      * @return String
      */
-    private function getSubject($projectName, $user) {
+    private function getSubject($projectName, $user)
+    {
         return  $GLOBALS['Language']->getText('plugin_ldap','ldap_sync_reminder_mail_notification_subject', array($user->getRealName(), $projectName));
     }
 }

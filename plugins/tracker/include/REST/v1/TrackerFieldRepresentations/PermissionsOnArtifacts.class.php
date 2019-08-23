@@ -31,7 +31,8 @@ class PermissionsOnArtifacts {
      */
     public $ugroup_representations;
 
-    public function build($project_id, $is_used_by_default, array $ugroups) {
+    public function build($project_id, $is_used_by_default, array $ugroups)
+    {
         $ugroup_representations = array();
 
         foreach ($ugroups as $user_group) {

@@ -23,11 +23,13 @@
 
 class Docman_HtmlFilterFactory {
 
-    function __construct() {
+    function __construct()
+    {
 
     }
 
-    function getFromFilter($filter) {
+    function getFromFilter($filter)
+    {
         $f = null;
         if(is_a($filter, 'Docman_FilterDateAdvanced')) {
             $f = new Docman_HtmlFilterDateAdvanced($filter);
@@ -59,17 +61,20 @@ class Docman_HtmlFilter {
     var $filter;
     var $hp;
 
-    function __construct($filter) {
+    function __construct($filter)
+    {
         $this->filter = $filter;
         $this->hp = Codendi_HTMLPurifier::instance();
     }
 
-    function _fieldName() {
+    function _fieldName()
+    {
         $html = $this->hp->purify($this->filter->md->getName());
         return $html;
     }
 
-    function _valueSelectorHtml($formName) {
+    function _valueSelectorHtml($formName)
+    {
         $html = '';
         $value = $this->filter->getValue();
         if($value !== null) {
@@ -79,7 +84,8 @@ class Docman_HtmlFilter {
         return $html;
     }
 
-    function toHtml($formName, $trashLinkBase) {
+    function toHtml($formName, $trashLinkBase)
+    {
         $trashLink = '';
         if($trashLinkBase) {
             $trashLink = $trashLinkBase.$this->filter->md->getLabel();
@@ -106,11 +112,13 @@ class Docman_HtmlFilter {
 
 class Docman_HtmlFilterDate extends Docman_HtmlFilter {
 
-    function __construct($filter) {
+    function __construct($filter)
+    {
         parent::__construct($filter);
     }
 
-    function _valueSelectorHtml($formName) {
+    function _valueSelectorHtml($formName)
+    {
         $html = '';
         $html .= html_select_operator($this->filter->getFieldOperatorName(), $this->filter->getOperator());
         $html .= html_field_date($this->filter->getFieldValueName(),
@@ -127,11 +135,13 @@ class Docman_HtmlFilterDate extends Docman_HtmlFilter {
 class Docman_HtmlFilterDateAdvanced
 extends Docman_HtmlFilterDate {
 
-    function __construct($filter) {
+    function __construct($filter)
+    {
         parent::__construct($filter);
     }
 
-    function _valueSelectorHtml($formName) {
+    function _valueSelectorHtml($formName)
+    {
         $html = '';
 
         $html .= $GLOBALS['Language']->getText('plugin_docman', 'filters_html_date_start');
@@ -160,17 +170,20 @@ extends Docman_HtmlFilterDate {
 
 class Docman_HtmlFilterList extends Docman_HtmlFilter {
 
-    function __construct($filter) {
+    function __construct($filter)
+    {
         parent::__construct($filter);
     }
 
-    function buildSelectBox($vals, $txts) {
+    function buildSelectBox($vals, $txts)
+    {
         // Purifying is disabled as $txts already contains purified strings
         $html = html_build_select_box_from_arrays($vals, $txts, $this->filter->md->getLabel(), $this->filter->getValue(), false, '', true, $GLOBALS['Language']->getText('global', 'any'), false, '', CODENDI_PURIFIER_DISABLED);
         return $html;
     }
 
-    function _valueSelectorHtml($formName=0) {
+    function _valueSelectorHtml($formName=0)
+    {
         $vIter = $this->filter->md->getListOfValueIterator();
         $vIter->rewind();
         while($vIter->valid()) {
@@ -193,11 +206,13 @@ class Docman_HtmlFilterList extends Docman_HtmlFilter {
 class Docman_HtmlFilterListAdvanced
 extends Docman_HtmlFilterList {
 
-    function __construct($filter) {
+    function __construct($filter)
+    {
         parent::__construct($filter);
     }
 
-    function buildSelectBox($vals, $txts) {
+    function buildSelectBox($vals, $txts)
+    {
         // Purifying is disabled as $txts already contains purified strings
         $html = html_build_select_box_from_arrays($vals, $txts, $this->filter->md->getLabel(), $this->filter->getValue(), false, '', true, $GLOBALS['Language']->getText('global', 'any'), false, '', CODENDI_PURIFIER_DISABLED);
         return $html;
@@ -207,11 +222,13 @@ extends Docman_HtmlFilterList {
 
 class Docman_HtmlFilterText extends Docman_HtmlFilter {
 
-    function __construct($filter) {
+    function __construct($filter)
+    {
         parent::__construct($filter);
     }
 
-    function _valueSelectorHtml($formName=0) {
+    function _valueSelectorHtml($formName=0)
+    {
         $html = '';
         $html .= '<input type="text" name="'.$this->filter->md->getLabel().'" value="'.$this->hp->purify($this->filter->getValue()).'" class="text_field"/>';
         return $html;

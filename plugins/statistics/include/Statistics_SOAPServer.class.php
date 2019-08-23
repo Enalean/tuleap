@@ -40,7 +40,8 @@ class Statistics_SOAPServer {
      */
     private $project_quota_manager;
 
-    public function __construct(SOAPRequestValidator $soap_request_validator, Statistics_DiskUsageManager $disk_usage_manager, ProjectQuotaManager $project_quota_manager) {
+    public function __construct(SOAPRequestValidator $soap_request_validator, Statistics_DiskUsageManager $disk_usage_manager, ProjectQuotaManager $project_quota_manager)
+    {
         $this->soap_request_validator = $soap_request_validator;
         $this->disk_usage_manager     = $disk_usage_manager;
         $this->project_quota_manager  = $project_quota_manager;
@@ -83,7 +84,8 @@ class Statistics_SOAPServer {
      *
      * @return ArrayOfStatistics
      */
-    function getProjectDiskStats($sessionKey, $group_id) {
+    function getProjectDiskStats($sessionKey, $group_id)
+    {
         try {
             $user = $this->soap_request_validator->continueSession($sessionKey);
             $this->assertUserCanAccessProject($user, $group_id);
@@ -95,7 +97,8 @@ class Statistics_SOAPServer {
         }
     }
 
-    private function getDiskStatsForUser(PFUser $user, $group_id) {
+    private function getDiskStatsForUser(PFUser $user, $group_id)
+    {
         $disk_stats = array(
             'services' => array(),
             'total'    => $this->disk_usage_manager->returnTotalProjectSize($group_id),
@@ -109,12 +112,14 @@ class Statistics_SOAPServer {
         return $disk_stats;
     }
 
-    private function assertUserCanAccessProject(PFUser $user, $group_id) {
+    private function assertUserCanAccessProject(PFUser $user, $group_id)
+    {
         $project = $this->soap_request_validator->getProjectById($group_id, 'statistics');
         $this->soap_request_validator->assertUserCanAccessProject($user, $project);
     }
 
-    private function getAllowedQuotaInBytes($group_id) {
+    private function getAllowedQuotaInBytes($group_id)
+    {
         $allowed_quota_in_GB = $this->project_quota_manager->getProjectCustomQuota($group_id);
         if (! $allowed_quota_in_GB) {
             $allowed_quota_in_GB = $this->disk_usage_manager->getProperty('allowed_quota');
@@ -122,11 +127,13 @@ class Statistics_SOAPServer {
         return $this->gigabytesToBytes($allowed_quota_in_GB);
     }
 
-    private function gigabytesToBytes($gigabytes) {
+    private function gigabytesToBytes($gigabytes)
+    {
         return $gigabytes * 1024 * 1024 * 1024;
     }
 
-    private function userHasAdminPrivileges($user, $group_id){
+    private function userHasAdminPrivileges($user, $group_id)
+    {
         return ($user->isSuperUser() || $user->isMember($group_id, 'A'));
     }
 }

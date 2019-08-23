@@ -33,7 +33,8 @@ class Tracker_Artifact_MailGateway_CitationStripperTest extends TuleapTestCase {
         $this->citation_stripper = new Tracker_Artifact_MailGateway_CitationStripper();
     }
 
-    public function itStripsCitationFromTextContent() {
+    public function itStripsCitationFromTextContent()
+    {
         $parsed_text_content          = file_get_contents($this->fixtures_dir .'/expected_followup.text.txt');
         $text_content_witout_citation = file_get_contents($this->fixtures_dir .'/expected_followup_without_citation.text.txt');
 
@@ -43,7 +44,8 @@ class Tracker_Artifact_MailGateway_CitationStripperTest extends TuleapTestCase {
         );
     }
 
-    public function itStripsCitationFromHTMLContent() {
+    public function itStripsCitationFromHTMLContent()
+    {
         $parsed_text_content          = file_get_contents($this->fixtures_dir .'/expected_followup.html.txt');
         $text_content_witout_citation = file_get_contents($this->fixtures_dir .'/expected_followup_without_citation.html.txt');
 
@@ -53,7 +55,8 @@ class Tracker_Artifact_MailGateway_CitationStripperTest extends TuleapTestCase {
         );
     }
 
-    public function itStripsCitationFromFrenchOutlook() {
+    public function itStripsCitationFromFrenchOutlook()
+    {
         $parsed_text_content          = file_get_contents($this->fixtures_dir .'/outlook_quote_fr.txt');
         $text_content_witout_citation = file_get_contents($this->fixtures_dir .'/expected_followup_outlook_quote_fr.txt');
 
@@ -63,7 +66,8 @@ class Tracker_Artifact_MailGateway_CitationStripperTest extends TuleapTestCase {
         );
     }
 
-    public function itStripsCitationFromEnglishOutlook() {
+    public function itStripsCitationFromEnglishOutlook()
+    {
         $parsed_text_content          = file_get_contents($this->fixtures_dir .'/outlook_quote_en.txt');
         $text_content_witout_citation = file_get_contents($this->fixtures_dir .'/expected_followup_outlook_quote_en.txt');
 

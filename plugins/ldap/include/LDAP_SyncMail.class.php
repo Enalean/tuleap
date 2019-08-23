@@ -38,7 +38,8 @@ class LDAP_SyncMail {
      *
      * @return Array
      */
-    private function getProjectsForUser(PFUser $user) {
+    private function getProjectsForUser(PFUser $user)
+    {
         return $this->projectManager->getActiveProjectsForUser($user);
     }
 
@@ -49,7 +50,8 @@ class LDAP_SyncMail {
      *
      * @return Array
      */
-    public function getNotificationRecipients(PFUser $user) {
+    public function getNotificationRecipients(PFUser $user)
+    {
         $projectList = $this->getProjectsForUser($user);
         $recipient   = array();
         foreach ($projectList as $project) {
@@ -75,7 +77,8 @@ class LDAP_SyncMail {
      *
      * @return bool
      */
-    public function notifyProjectsAdmins($recipients, $unixProjectName, $user, $subject, $body) {
+    public function notifyProjectsAdmins($recipients, $unixProjectName, $user, $subject, $body)
+    {
         $notificationStatus = true;
         try {
             $mail = $this->prepareMail($recipients, $unixProjectName, $subject, $body);
@@ -100,7 +103,8 @@ class LDAP_SyncMail {
      *
      * @return Codendi_Mail
      */
-    protected function prepareMail($recipients, $unixProjectName, $subject,$body) {
+    protected function prepareMail($recipients, $unixProjectName, $subject,$body)
+    {
         $mail = new Codendi_Mail();
         $mail->setFrom($GLOBALS['sys_noreply']);
         if (empty($recipients)) {

@@ -164,7 +164,8 @@ abstract class Tracker_Artifact_MailGateway_MailGateway {
     }
 
     /** @return Tracker_Artifact_Changeset|null */
-    private function addFollowUp(PFUser $user, Tracker_Artifact $artifact, $body) {
+    private function addFollowUp(PFUser $user, Tracker_Artifact $artifact, $body)
+    {
         $this->logger->debug("Receiving new follow-up comment from ". $user->getUserName());
 
         if (! $artifact->userCanUpdate($user)) {
@@ -183,7 +184,8 @@ abstract class Tracker_Artifact_MailGateway_MailGateway {
     }
 
     /** @return Tracker_Artifact|false */
-    private function createArtifact(PFUser $user, Tracker $tracker, $title, $body) {
+    private function createArtifact(PFUser $user, Tracker $tracker, $title, $body)
+    {
         $this->logger->debug("Receiving new artifact from ". $user->getUserName());
 
         if (! $tracker->userCanSubmitArtifact($user)) {

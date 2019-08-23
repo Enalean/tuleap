@@ -33,7 +33,8 @@ class UserMembershipRepresentation {
      */
     public $user_groups = array();
 
-    public function build($username, array $groups) {
+    public function build($username, array $groups)
+    {
         $this->username    = $username;
         $this->user_groups = $groups;
     }

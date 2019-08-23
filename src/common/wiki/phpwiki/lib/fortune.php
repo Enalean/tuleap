@@ -11,7 +11,8 @@ Main methods to use:
 */
 class Fortune {
 
-    function quoteFromDir($dir) {
+    function quoteFromDir($dir)
+    {
         $amount = 0;
         $index = 0;
 
@@ -47,7 +48,8 @@ class Fortune {
     /*
      Reads the number of quotes in the file.
     */
-    function getNumberOfQuotes($file) {
+    function getNumberOfQuotes($file)
+    {
         $fd = fopen($file, "rb");
         $this->readLong($fd); // Just move over the first long. Might as well be fseek.
         $len =  $this->readLong($fd);
@@ -57,7 +59,8 @@ class Fortune {
     /*
      Picks quote number $index from the dat-file in $file.
     */
-    function getExactQuote($file, $index) {
+    function getExactQuote($file, $index)
+    {
         if (is_file($file) == false) {
             echo "Input must be a file!<br/>";
             return;
@@ -88,7 +91,8 @@ class Fortune {
     /*
      Returns a random quote from $file.
     */
-    function getRandomQuote($file) {
+    function getRandomQuote($file)
+    {
         $number = $this->getNumberOfQuotes($file);
 
         $index = rand(0, $number - 1);
@@ -99,7 +103,8 @@ class Fortune {
     /*
      Reads a quote from the specified index.
     */
-    function getQuote($fd, $index) {
+    function getQuote($fd, $index)
+    {
         fseek($fd, $index);
         $line=""; $res = "";
         do {
@@ -113,7 +118,8 @@ class Fortune {
     /*
      Gets indexes from the file pointed to by the filedescriptor $fd.
     */
-    function getIndices($fd) {
+    function getIndices($fd)
+    {
         fseek($fd, 24, SEEK_SET);
         $i = 0;
 
@@ -124,7 +130,8 @@ class Fortune {
         return $res;
     }
 
-    function readLong($fd) {
+    function readLong($fd)
+    {
         $res = fread($fd, 4);
         $l = ord($res[3]);
         $l += ord($res[2]) << 8;
@@ -134,7 +141,8 @@ class Fortune {
     }
 
 
-    function createIndexFile($file) {
+    function createIndexFile($file)
+    {
         $fd = @fopen($file, "r");
         if ($fd == false) {
             echo "File error!";
@@ -187,7 +195,8 @@ class Fortune {
         fclose($fd);
     }
 
-    function writeLong($fd, $l) {
+    function writeLong($fd, $l)
+    {
         fwrite($fd, chr ( ($l >> 24) & 255));
         fwrite($fd, chr ( ($l >> 16) & 255));
         fwrite($fd, chr ( ($l >> 8) & 255));

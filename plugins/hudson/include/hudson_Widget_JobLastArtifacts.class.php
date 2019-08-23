@@ -62,7 +62,8 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget
         $this->job_builder = $job_builder;
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         $title = '';
         if ($this->job) {
             $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_lastartifacts', array($this->job->getName()));
@@ -74,7 +75,8 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget
         return $purifier->purify($title);
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_lastartifacts');
     }
 

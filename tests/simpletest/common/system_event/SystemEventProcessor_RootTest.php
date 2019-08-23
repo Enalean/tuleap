@@ -58,12 +58,14 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
 
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         parent::tearDown();
     }
 
-    public function itFetchesEventsForRoot() {
+    public function itFetchesEventsForRoot()
+    {
         $category = SystemEvent::DEFAULT_QUEUE;
 
         $types = array('some_type');
@@ -74,7 +76,8 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
         $this->processor->execute($category);
     }
 
-    public function itCatchExceptionsInSystemEvents() {
+    public function itCatchExceptionsInSystemEvents()
+    {
         $system_event = partial_mock('SysteEvent_For_Testing_Purpose', array('process', 'notify', 'verbalizeParameters'));
 
         $types = array('some_type');
@@ -92,14 +95,16 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
         $this->assertEqual($system_event->getLog(), 'Something wrong happened');
     }
 
-    public function itProcessApplicationOwnerEvents() {
+    public function itProcessApplicationOwnerEvents()
+    {
         $command   = '/usr/bin/tuleap process-system-events '.SystemEvent::OWNER_APP;
         expect($this->processor)->launchAs($this->sys_http_user, $command)->once();
         $category = SystemEvent::DEFAULT_QUEUE;
         $this->processor->execute($category);
     }
 
-    public function itCatchesExceptionsThrownInPostActions() {
+    public function itCatchesExceptionsThrownInPostActions()
+    {
         stub($this->processor)->launchAs()->throws(new Exception('Something weird happend'));
 
         expect($this->logger)->error()->once();
@@ -108,7 +113,8 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
         $this->processor->execute($category);
     }
 
-    public function itRestoreOwnerShipOnGeneratedCacheFiles() {
+    public function itRestoreOwnerShipOnGeneratedCacheFiles()
+    {
         expect($this->site_cache)->restoreOwnership()->once();
 
         $this->processor->execute(SystemEvent::DEFAULT_QUEUE);

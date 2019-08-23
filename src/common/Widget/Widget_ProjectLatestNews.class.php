@@ -48,7 +48,8 @@ class Widget_ProjectLatestNews extends Widget {
      *
      * @return String
      */
-    function getTitle() {
+    function getTitle()
+    {
         return $GLOBALS['Language']->getText('include_project_home', 'latest_news');
     }
 
@@ -57,7 +58,8 @@ class Widget_ProjectLatestNews extends Widget {
      *
      * @return String
      */
-    function getContent() {
+    function getContent()
+    {
         return $this->content;
     }
 
@@ -66,7 +68,8 @@ class Widget_ProjectLatestNews extends Widget {
      *
      * @return bool
      */
-    function isAvailable() {
+    function isAvailable()
+    {
         return $this->content ? true : false;
     }
 
@@ -77,7 +80,8 @@ class Widget_ProjectLatestNews extends Widget {
      *
      * @return bool
      */
-    private function canBeUsedByProject(Project $project) {
+    private function canBeUsedByProject(Project $project)
+    {
         return $project->usesNews();
     }
 
@@ -86,7 +90,8 @@ class Widget_ProjectLatestNews extends Widget {
      *
      * @return String
      */
-    function getDescription() {
+    function getDescription()
+    {
         return $GLOBALS['Language']->getText('widget_description_project_latest_news', 'description');
     }
 
@@ -95,7 +100,8 @@ class Widget_ProjectLatestNews extends Widget {
      *
      * @return HTTPRequest
      */
-    private function getHTTPRequest() {
+    private function getHTTPRequest()
+    {
         return HTTPRequest::instance();
     }
 
@@ -104,7 +110,8 @@ class Widget_ProjectLatestNews extends Widget {
      *
      * @return ProjectManager
      */
-    private function getProjectManager() {
+    private function getProjectManager()
+    {
         return ProjectManager::instance();
     }
 

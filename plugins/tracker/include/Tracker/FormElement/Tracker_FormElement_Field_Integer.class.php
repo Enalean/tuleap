@@ -57,11 +57,13 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return $html;
     }
 
-    public function getCriteriaWhere($criteria) {
+    public function getCriteriaWhere($criteria)
+    {
         return '';
     }
 
-    public function getQueryFrom() {
+    public function getQueryFrom()
+    {
         $R1 = 'R1_'. $this->id;
         $R2 = 'R2_'. $this->id;
 
@@ -70,11 +72,13 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->id ." )";
     }
 
-    protected function buildMatchExpression($field_name, $criteria_value) {
+    protected function buildMatchExpression($field_name, $criteria_value)
+    {
         return parent::buildMatchExpression($field_name, $criteria_value);
     }
 
-    protected function getCriteriaDao() {
+    protected function getCriteriaDao()
+    {
         return new Tracker_Report_Criteria_Int_ValueDao();
     }
 
@@ -83,42 +87,49 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return true;
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    {
         return $value;
     }
 
-    protected function getValueDao() {
+    protected function getValueDao()
+    {
         return new Tracker_FormElement_Field_Value_IntegerDao();
     }
-    protected function getDao() {
+    protected function getDao()
+    {
         return new Tracker_FormElement_Field_IntegerDao();
     }
 
     /**
      * @return the label of the field (mainly used in admin part)
      */
-    public static function getFactoryLabel() {
+    public static function getFactoryLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','integer');
     }
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
-    public static function getFactoryDescription() {
+    public static function getFactoryDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','integer_description');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconUseIt() {
+    public static function getFactoryIconUseIt()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/ui-text-field-int.png');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconCreate() {
+    public static function getFactoryIconCreate()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/ui-text-field-int--plus.png');
     }
 
@@ -129,7 +140,8 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
      * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         $html = '';
         if ($value) {
             $html .= $value->getInteger();
@@ -140,7 +152,8 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
     /**
      * @return string the i18n error message to display if the value submitted by the user is not valid
      */
-    protected function getValidatorErrorMessage() {
+    protected function getValidatorErrorMessage()
+    {
         return $this->getLabel() . ' ' . $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_integer_value');
     }
 
@@ -153,7 +166,8 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
-    public function getChangesetValue($changeset, $value_id, $has_changed) {
+    public function getChangesetValue($changeset, $value_id, $has_changed)
+    {
         $changeset_value = null;
         if ($row = $this->getValueDao()->searchById($value_id, $this->id)->getRow()) {
             $int_row_value = $row['value'];
@@ -165,7 +179,8 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return $changeset_value;
     }
 
-    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+    public function accept(Tracker_FormElement_FieldVisitor $visitor)
+    {
         return $visitor->visitInteger($this);
     }
 

@@ -31,7 +31,8 @@ class Tracker_FormElement_Field_ArtifactLink_UpdateLinkingDirectionCommand imple
     /** @var SourceOfAssociationCollection */
     private $source_of_association;
 
-    public function __construct(SourceOfAssociationCollection $source_of_association) {
+    public function __construct(SourceOfAssociationCollection $source_of_association)
+    {
         $this->source_of_association = $source_of_association;
     }
 

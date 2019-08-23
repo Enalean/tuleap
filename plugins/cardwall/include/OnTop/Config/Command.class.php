@@ -25,7 +25,8 @@ abstract class Cardwall_OnTop_Config_Command {
      */
     protected $tracker;
 
-    public function __construct(Tracker $tracker) {
+    public function __construct(Tracker $tracker)
+    {
         $this->tracker = $tracker;
     }
 

@@ -30,11 +30,13 @@ class Search_SearchWiki {
     private $dao;
 
 
-    public function __construct(WikiDao $dao) {
+    public function __construct(WikiDao $dao)
+    {
         $this->dao = $dao;
     }
 
-    public function search(Search_SearchQuery $query) {
+    public function search(Search_SearchQuery $query)
+    {
         if ($query->getProject()->isError()) {
             return;
         }
@@ -47,11 +49,13 @@ class Search_SearchWiki {
         ));
     }
 
-    public function getRedirectUrl($project_id, $page_name, $words) {
+    public function getRedirectUrl($project_id, $page_name, $words)
+    {
         return '/wiki/index.php?group_id=' . $project_id . '&pagename=' . $page_name . '&s=' . urlencode($words);
     }
 
-    public function getSearchPageName($project_id) {
+    public function getSearchPageName($project_id)
+    {
         $search_page = self::SEARCH_PAGENAME_EN;
         if ($this->dao->searchLanguage($project_id) == 'fr_FR') {
             $search_page = self::SEARCH_PAGENAME_FR;
@@ -60,7 +64,8 @@ class Search_SearchWiki {
         return $search_page;
     }
 
-    public function getFacets($project_id, $words = '') {
+    public function getFacets($project_id, $words = '')
+    {
         return new Search_SearchTypePresenter(
             Search_SearchWiki::NAME,
             $GLOBALS['Language']->getText('project_admin_editservice', 'service_wiki_lbl_key'),

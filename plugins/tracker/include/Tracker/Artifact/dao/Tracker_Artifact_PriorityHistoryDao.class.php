@@ -21,7 +21,8 @@
  */
 class Tracker_Artifact_PriorityHistoryDao extends DataAccessObject {
 
-    public function logPriorityChange($moved_artifact_id, $artifact_higher_id, $artifact_lower_id, $context_id, $project_id, $priority_updated_by, $priority_updated_on, $old_global_rank) {
+    public function logPriorityChange($moved_artifact_id, $artifact_higher_id, $artifact_lower_id, $context_id, $project_id, $priority_updated_by, $priority_updated_on, $old_global_rank)
+    {
         $moved_artifact_id   = $this->da->escapeInt($moved_artifact_id);
         $artifact_higher_id  = $this->da->escapeInt($artifact_higher_id);
         $artifact_lower_id   = $this->da->escapeInt($artifact_lower_id);
@@ -39,7 +40,8 @@ class Tracker_Artifact_PriorityHistoryDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    public function getArtifactPriorityHistory($artifact_id) {
+    public function getArtifactPriorityHistory($artifact_id)
+    {
         $artifact_id  = $this->da->escapeInt($artifact_id);
 
         $sql = "SELECT *
@@ -49,7 +51,8 @@ class Tracker_Artifact_PriorityHistoryDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function deletePriorityChangesHistory($artifact_id) {
+    public function deletePriorityChangesHistory($artifact_id)
+    {
         $artifact_id  = $this->da->escapeInt($artifact_id);
 
         $sql = "DELETE

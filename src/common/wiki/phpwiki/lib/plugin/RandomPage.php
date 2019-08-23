@@ -30,20 +30,24 @@ require_once('lib/PageList.php');
 class WikiPlugin_RandomPage
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("RandomPage");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("Displays a list of randomly chosen pages or redirects to a random page.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.13 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array_merge
             (
              PageList::supportedArgs(),
@@ -55,7 +59,8 @@ extends WikiPlugin
                    'info'         => ''));
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         extract($args);
 
@@ -98,7 +103,8 @@ extends WikiPlugin
         return $pagelist;
     }
 
-    function default_exclude() {
+    function default_exclude()
+    {
         // Some useful default pages to exclude.
         $default_exclude = 'RandomPage,HomePage,AllPages,RecentChanges,RecentEdits,FullRecentChanges';
         foreach (explode(",", $default_exclude) as $e) {

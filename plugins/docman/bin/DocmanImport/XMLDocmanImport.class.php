@@ -100,7 +100,8 @@ class XMLDocmanImport {
      * @param string $password Password
      * @param Logger $logger   Logger
      */
-    public function __construct($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, Logger $logger) {
+    public function __construct($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, Logger $logger)
+    {
         $xml_security = new XML_Security();
         $xml_security->enableExternalLoadOfEntities();
 
@@ -127,14 +128,16 @@ class XMLDocmanImport {
         $this->logger->info("Connected to $wsdl as $login.");
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         $this->soap->logout($this->hash);
     }
 
     /**
      * Loads and checks an XML document
      */
-    protected function loadXML($rootPath) {
+    protected function loadXML($rootPath)
+    {
         $archiveName = basename($rootPath);
         $this->dataBaseDir = $rootPath.'/'.$archiveName;
 
@@ -182,7 +185,8 @@ class XMLDocmanImport {
     /**
      * Compare two item nodes using folder, document and alphabetical order
      */
-    private static function compareItemNodes($node1, $node2) {
+    private static function compareItemNodes($node1, $node2)
+    {
         if (($node1['type'] == 'folder') && ($node2['type'] != 'folder')) {
             return -1;
         } else if (($node2['type'] == 'folder') && ($node1['type'] != 'folder')) {
@@ -197,7 +201,8 @@ class XMLDocmanImport {
     /**
      * Reorder an array of item nodes
      */
-    private function reorderItemNodes(array $nodes) {
+    private function reorderItemNodes(array $nodes)
+    {
         if (isset($this->reorder) && ($this->reorder == true)) {
             usort($nodes, array('XMLDocmanImport', 'compareItemNodes'));
         }
@@ -207,7 +212,8 @@ class XMLDocmanImport {
     /**
      * Import an item to the specified parent folder
      */
-    public function importPath($xmlDoc, $parentId, $path) {
+    public function importPath($xmlDoc, $parentId, $path)
+    {
 
         // If the parentId is not defined, import into the root folder
         if ($parentId === null) {
@@ -231,7 +237,8 @@ class XMLDocmanImport {
      * Retrieves the ugroups of this project, and build the map that make the correspondance between
      * the group name and the group ID. The members are also retrieved.
      */
-    private function buildUgroupMap () {
+    private function buildUgroupMap()
+    {
         $this->logger->info("Retrieving ugroups... ");
         try {
             $ugroups = $this->soap->getGroupUgroups($this->hash, $this->groupId);
@@ -255,7 +262,8 @@ class XMLDocmanImport {
      * Retrieve the metadata of this project, and build the map that make the correspondance between
      * the metadata name and the metadata label. For list of values, the values are also retrieved.
      */
-    private function buildMetadataMap() {
+    private function buildMetadataMap()
+    {
         $this->logger->info("Retrieving metadata definition... ");
 
         $hardCodedMetadataLabels = array('title', 'description', 'owner' , 'create_date', 'update_date' , 'status', 'obsolescence_date');
@@ -297,7 +305,8 @@ class XMLDocmanImport {
         $this->logger->info("Done.");
     }
 
-    private function buildUserMap() {
+    private function buildUserMap()
+    {
 
         $userIdentifiers = array();
         foreach (array_unique($this->doc->xpath('//author | //owner')) as $userIdentifier) {
@@ -362,7 +371,8 @@ class XMLDocmanImport {
     /**
      * Appends the given message to the description node of the item
      */
-    private function addImportMessageOnItem($item, $message) {
+    private function addImportMessageOnItem($item, $message)
+    {
         $appendText = "Import information: $message";
 
         if ($this->importMessageMetadata == '') {
@@ -390,18 +400,21 @@ class XMLDocmanImport {
     /**
      * Appends a text to a node
      */
-    private function appendTextToNode(SimpleXMLElement $node, $text) {
+    private function appendTextToNode(SimpleXMLElement $node, $text)
+    {
         $domNode = dom_import_simplexml($node);
         $dom = $domNode->ownerDocument;
         $textNode = $dom->createTextNode($text);
         $domNode->appendChild($textNode);
     }
 
-    protected function printSoapResponseAndThrow(SoapFault $e) {
+    protected function printSoapResponseAndThrow(SoapFault $e)
+    {
         throw new Exception("Response: ".$this->soap->__getLastResponse()."\n".$e);
     }
 
-    private function checkHardCodedMetadataUsage() {
+    private function checkHardCodedMetadataUsage()
+    {
         if ($this->doc->xpath('//item/properties/obsolescence_date') != null && !in_array('obsolescence_date', $this->hardCodedMetadata)) {
             throw new Exception("The Obsolescence Date property is not used on the target project.");
         }
@@ -414,7 +427,8 @@ class XMLDocmanImport {
     /**
      * Checks if the metadata used in the XML document reference metadata defined in the propdefs node of the document
      */
-    private function checkMetadataUsage() {
+    private function checkMetadataUsage()
+    {
         $propertyList = $this->doc->xpath('//item/properties/property');
 
         // Check the values set to the properties
@@ -480,7 +494,8 @@ class XMLDocmanImport {
     /**
      * Checks if the permissions defined in the XML document reference ugroups defined in the ugroups node of the document
      */
-    private function checkUgroupsUsage() {
+    private function checkUgroupsUsage()
+    {
         $permissions = $this->doc->xpath('//item/permissions/permission');
 
         foreach ($permissions as $permission) {
@@ -497,7 +512,8 @@ class XMLDocmanImport {
     /**
      * Checks the definition of the ugroups
      */
-    private function checkUgroupDefinition() {
+    private function checkUgroupDefinition()
+    {
         $ugroups = $this->doc->xpath('/docman/ugroups/ugroup');
 
         $errorMsg = '';
@@ -534,7 +550,8 @@ class XMLDocmanImport {
      * Checks the metadata definitions. The definitions in the XML document must correspond on the server.
      * The type is checked using the metadata name. If this is a list, the allowed values are also checked.
      */
-    private function checkMetadataDefinition() {
+    private function checkMetadataDefinition()
+    {
         // Retrieve the metadata definition in the XML document
         $propdefs = $this->doc->xpath('/docman/propdefs/propdef');
 
@@ -603,7 +620,8 @@ class XMLDocmanImport {
     /**
      * Converts a type code to a string
      */
-    private static function typeCodeToString($type) {
+    private static function typeCodeToString($type)
+    {
         switch ($type) {
             case PLUGIN_DOCMAN_METADATA_TYPE_STRING: return 'string';
             case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:   return 'text';
@@ -616,7 +634,8 @@ class XMLDocmanImport {
     /**
      * Converts a string to a type code
      */
-    private static function typeStringToCode($type) {
+    private static function typeStringToCode($type)
+    {
         switch ($type) {
             case 'string': return PLUGIN_DOCMAN_METADATA_TYPE_STRING;
             case 'text':   return PLUGIN_DOCMAN_METADATA_TYPE_TEXT;
@@ -629,7 +648,8 @@ class XMLDocmanImport {
     /**
      * Returns the node that corresponds to the given unix-like path
      */
-    protected function findPath($path) {
+    protected function findPath($path)
+    {
         // Transform "Unix path" to XPath
         $xpath = '/docman'.preg_replace('/\/([^\/]+)/', '/item[properties/title="$1"]', $path);
         $nodeList = $this->doc->xpath($xpath);
@@ -651,7 +671,8 @@ class XMLDocmanImport {
      * @param $userNode A node containing a user (author, owner)
      * @return string   The user identifier formatted as "type:value" for this node
      */
-    private static function userNodeToIdentifier($userNode) {
+    private static function userNodeToIdentifier($userNode)
+    {
         if ((string)$userNode == '') {
             return null;
         } else {
@@ -669,7 +690,8 @@ class XMLDocmanImport {
      * @param $userNode A node containing a user (author, owner)
      * @return string   The username according to the userMap
      */
-    private function userNodeToUsername($userNode) {
+    private function userNodeToUsername($userNode)
+    {
         if ((string)$userNode == '' || !isset($this->userMap[self::userNodeToIdentifier($userNode)])) {
             return null;
         } else {
@@ -681,7 +703,8 @@ class XMLDocmanImport {
      * Parse a date given as an ISO8601 date or a timestamp
      * @return The corresponding timestamp
      */
-    private function parseDate($s) {
+    private function parseDate($s)
+    {
         if (is_numeric($s)) {
             return $s;
         } else {
@@ -692,7 +715,8 @@ class XMLDocmanImport {
     /**
      * Returns an array containing the properties for an item (metadata + permissions)
      */
-    protected function getItemInformation(SimpleXMLElement $node) {
+    protected function getItemInformation(SimpleXMLElement $node)
+    {
         $information = array(
                           (string) $node->properties->title,
                           (string) $node->properties->description,
@@ -723,7 +747,8 @@ class XMLDocmanImport {
     /**
      * Returns an array containing the data of a version
      */
-    protected function getVersionInformation(SimpleXMLElement $node) {
+    protected function getVersionInformation(SimpleXMLElement $node)
+    {
         $version = array(
                        (string)$node->content,
                        (string)$node->label,
@@ -741,7 +766,8 @@ class XMLDocmanImport {
      * @param SimpleXMLElement $node     The node to process
      * @param int              $parentId The parent folder ID where the node will be imported
      */
-    protected function recurseOnNode(SimpleXMLElement $node, $parentId) {
+    protected function recurseOnNode(SimpleXMLElement $node, $parentId)
+    {
 
         list(
              $title,
@@ -839,7 +865,8 @@ class XMLDocmanImport {
     /**
      * Extract real metadata information in one <property> node
      */
-    private function extractOneMetadata(SimpleXMLElement $property, array &$metadata) {
+    private function extractOneMetadata(SimpleXMLElement $property, array &$metadata)
+    {
         $propTitle = (string)$property['title'];
         $dstMetadataLabel = $this->metadataMap[$propTitle]['label'];
 
@@ -867,7 +894,8 @@ class XMLDocmanImport {
     /**
      * Extract a permission in one <permission> node
      */
-    private function extractOnePermission(SimpleXMLElement $permission, array &$permissions) {
+    private function extractOnePermission(SimpleXMLElement $permission, array &$permissions)
+    {
         $ugroup_id = (string)$permission['ugroup'];
         switch ((string)$permission) {
             case 'read':    $type = 'PLUGIN_DOCMAN_READ'; break;
@@ -881,7 +909,8 @@ class XMLDocmanImport {
 
     }
 
-    protected function askWhatToDo($e) {
+    protected function askWhatToDo($e)
+    {
         self::printException($e);
 
         if ($this->autoRetry == true && $this->retryCounter-- > 0) {
@@ -909,18 +938,21 @@ class XMLDocmanImport {
         return $retry;
     }
 
-    protected function initRetryCounter() {
+    protected function initRetryCounter()
+    {
         $this->retryCounter = 5;
     }
 
-    private function printException($e) {
+    private function printException($e)
+    {
         $this->logger->error($e->__toString());
     }
 
     /**
      * Creates a folder
      */
-    private function createFolder($parentId, $title, $description, $ordering, $status, array $permissions, array $metadata, $owner, $createDate, $updateDate) {
+    private function createFolder($parentId, $title, $description, $ordering, $status, array $permissions, array $metadata, $owner, $createDate, $updateDate)
+    {
         $this->initRetryCounter();
         do {
             $retry = false;
@@ -940,7 +972,8 @@ class XMLDocmanImport {
     /**
      * Creates an empty document
      */
-    private function createEmpty($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $owner, $createDate, $updateDate) {
+    private function createEmpty($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $owner, $createDate, $updateDate)
+    {
         $this->initRetryCounter();
         do {
             $retry = false;
@@ -960,7 +993,8 @@ class XMLDocmanImport {
     /**
      * Creates a wiki page
      */
-    private function createWiki($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $pagename, $owner, $createDate, $updateDate) {
+    private function createWiki($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $pagename, $owner, $createDate, $updateDate)
+    {
         $this->initRetryCounter();
         do {
             $retry = false;
@@ -980,7 +1014,8 @@ class XMLDocmanImport {
     /**
      * Creates a link
      */
-    private function createLink($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $url, $owner, $createDate, $updateDate) {
+    private function createLink($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $url, $owner, $createDate, $updateDate)
+    {
         $this->initRetryCounter();
         do {
             $retry = false;
@@ -1000,7 +1035,8 @@ class XMLDocmanImport {
     /**
      * Creates an embedded file
      */
-    private function createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file, $author, $date, $owner, $createDate, $updateDate) {
+    private function createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file, $author, $date, $owner, $createDate, $updateDate)
+    {
         $this->initRetryCounter();
         do {
             $retry = false;
@@ -1022,7 +1058,8 @@ class XMLDocmanImport {
     /**
      * Creates a file
      */
-    private function createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file, $fileName, $fileType, $author, $date, $owner, $createDate, $updateDate) {
+    private function createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file, $fileName, $fileType, $author, $date, $owner, $createDate, $updateDate)
+    {
         $infoStr = "Creating file              '$title' ($file, $fileName, $fileType)";
 
         $fullPath = $this->dataBaseDir.'/'.$file;
@@ -1089,7 +1126,8 @@ class XMLDocmanImport {
         }
     }
 
-    private function adjustChunkSize() {
+    private function adjustChunkSize()
+    {
         $this->logger->warn("Request entity too large, need to adjust upload chunk size");
         $this->chunk_size = floor($this->chunk_size / 2);
         if ($this->chunk_size > 1000) {
@@ -1110,7 +1148,8 @@ class XMLDocmanImport {
      *
      * @return true if they are the same
      */
-    private function checkChecksum($item_id, $filename) {
+    private function checkChecksum($item_id, $filename)
+    {
 
         $local_checksum = md5_file($filename);
 
@@ -1130,7 +1169,8 @@ class XMLDocmanImport {
     /**
      * Create a new file version
      */
-    protected function createFileVersion($itemId, $label, $changeLog, $file, $fileName, $fileType, $author, $date) {
+    protected function createFileVersion($itemId, $label, $changeLog, $file, $fileName, $fileType, $author, $date)
+    {
         $infoStr = "                      Version '$label' ($file, $fileName, $fileType)";
 
         $fullPath = $this->dataBaseDir.'/'.$file;
@@ -1191,7 +1231,8 @@ class XMLDocmanImport {
         }
     }
 
-    protected function createEmbeddedFileVersion($itemId, $label, $changeLog, $file, $author, $date) {
+    protected function createEmbeddedFileVersion($itemId, $label, $changeLog, $file, $author, $date)
+    {
         $this->initRetryCounter();
         do {
             $retry = false;

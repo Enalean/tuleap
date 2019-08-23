@@ -33,7 +33,8 @@ Mock::generate('PermissionsManager');
 
 abstract class Git_Backend_GitoliteCommonTest extends TuleapTestCase {
 
-    protected function _GivenAGitRepoWithNameAndNamespace($name, $namespace) {
+    protected function _GivenAGitRepoWithNameAndNamespace($name, $namespace)
+    {
         $repository = new GitRepository();
         $repository->setName($name);
         $repository->setNamespace($namespace);
@@ -46,7 +47,8 @@ abstract class Git_Backend_GitoliteCommonTest extends TuleapTestCase {
         return $repository;
     }
 
-    protected function _GivenABackendGitolite() {
+    protected function _GivenABackendGitolite()
+    {
         $driver             = mock('Git_GitoliteDriver');
         $dao                = \Mockery::spy(GitDao::class);
         $permissionsManager = mock('PermissionsManager');
@@ -65,7 +67,8 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
 
     private   $forkPermissions;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->fixtureRenamePath = $this->getTmpDir() . '/rename';
 
@@ -74,13 +77,15 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $this->forkPermissions = array();
     }
 
-    function getPartialMock($className, $methods) {
+    function getPartialMock($className, $methods)
+    {
         $partialName = $className.'Partial'.uniqid();
         Mock::generatePartial($className, $partialName, $methods);
         return new $partialName($this);
     }
 
-    public function testRenameProjectOk() {
+    public function testRenameProjectOk()
+    {
         $project = $this->getPartialMock('Project', array('getUnixName'));
         $project->setReturnValue('getUnixName', 'legacy');
 
@@ -105,7 +110,8 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $this->assertTrue(is_dir($this->fixtureRenamePath .'/newone'));
     }
 
-    public function itSavesForkInfoIntoDB() {
+    public function itSavesForkInfoIntoDB()
+    {
         $name  = 'tuleap';
         $old_namespace = '';
         $new_namespace = 'u/johanm/ericsson';
@@ -132,7 +138,8 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $this->assertEqual(667, $backend->fork($old_repo, $new_repo, $this->forkPermissions));
     }
 
-    public function testFork_clonesRepository() {
+    public function testFork_clonesRepository()
+    {
         $name  = 'tuleap';
         $old_namespace = '';
         $new_namespace = 'u/johanm/ericsson';
@@ -160,7 +167,8 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $backend->forkOnFilesystem($old_repo, $new_repo);
     }
 
-    public function testFork_clonesRepositoryFromOneProjectToAnotherSucceed() {
+    public function testFork_clonesRepositoryFromOneProjectToAnotherSucceed()
+    {
         $repo_name        = 'tuleap';
         $old_project_name = 'garden';
         $new_project_name = 'gpig';
@@ -192,7 +200,8 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $backend->forkOnFilesystem($old_repo, $new_repo, $this->forkPermissions);
     }
 
-    public function testForkWithTargetPathAlreadyExistingShouldNotFork() {
+    public function testForkWithTargetPathAlreadyExistingShouldNotFork()
+    {
         $name  = 'tuleap';
         $old_namespace = '';
         $new_namespace = 'u/johanm/ericsson';
@@ -223,7 +232,8 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $backend->fork($old_repo, $new_repo, $this->forkPermissions);
     }
 
-    public function testClonePermsWithPersonalFork() {
+    public function testClonePermsWithPersonalFork()
+    {
         $old_repo_id = 110;
         $new_repo_id = 220;
 
@@ -245,7 +255,8 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $backend->clonePermissions($old, $new);
     }
 
-    public function testClonePermsCrossProjectFork() {
+    public function testClonePermsCrossProjectFork()
+    {
         $old_repo_id = 110;
         $old_project = new MockProject();
         $old_project->setReturnValue('getId', 1);
@@ -275,7 +286,8 @@ class Git_Backend_Gitolite_disconnectFromGerrit extends TuleapTestCase {
 
     private $repo_id = 123;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->repository = aGitRepository()->withId($this->repo_id)->build();
         $this->dao        = \Mockery::spy(GitDao::class);

@@ -18,15 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 class b201603031145_clean_ldap_ugroup_removed extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return 'Clean LDAP bindings to removed user groups';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = 'DELETE plugin_ldap_ugroup.* FROM plugin_ldap_ugroup LEFT JOIN ugroup USING(ugroup_id) WHERE ugroup.ugroup_id IS NULL;';
 
         $res = $this->db->dbh->exec($sql);

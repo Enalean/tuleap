@@ -222,7 +222,8 @@ class MilestoneResource extends AuthenticatedResource {
     /**
      * @url OPTIONS
      */
-    public function options() {
+    public function options()
+    {
         Header::allowOptions();
     }
 
@@ -240,7 +241,8 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    protected function putSubmilestones($id, array $ids) {
+    protected function putSubmilestones($id, array $ids)
+    {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
@@ -308,7 +310,8 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    protected function patchSubmilestones($id, ?array $add = null) {
+    protected function patchSubmilestones($id, ?array $add = null)
+    {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
@@ -381,7 +384,8 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getId($id) {
+    public function getId($id)
+    {
         $this->checkAccess();
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
@@ -412,7 +416,8 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function optionsId($id) {
+    public function optionsId($id)
+    {
         Header::allowOptionsGet();
     }
 
@@ -424,7 +429,8 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function optionsMilestones($id) {
+    public function optionsMilestones($id)
+    {
         $this->sendAllowHeaderForSubmilestones();
     }
 
@@ -608,14 +614,16 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function optionsContent($id) {
+    public function optionsContent($id)
+    {
         $this->sendAllowHeaderForContent();
     }
 
     /**
      * @throws RestException 403
      */
-    private function checkIfUserCanChangePrioritiesInMilestone(Planning_Milestone $milestone, PFUser $user) {
+    private function checkIfUserCanChangePrioritiesInMilestone(Planning_Milestone $milestone, PFUser $user)
+    {
         if (! $this->milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user)) {
             throw new RestException(403, "User is not allowed to update this milestone because he can't change items' priorities");
         }
@@ -635,7 +643,8 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    protected function putContent($id, array $ids) {
+    protected function putContent($id, array $ids)
+    {
         $current_user = $this->getCurrentUser();
         $milestone    = $this->getMilestoneById($current_user, $id);
 
@@ -711,7 +720,8 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws RestException 404
      * @throws RestException 409
      */
-    protected function patchContent($id, ?OrderRepresentation $order = null, ?array $add = null) {
+    protected function patchContent($id, ?OrderRepresentation $order = null, ?array $add = null)
+    {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
@@ -799,7 +809,8 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function optionsBacklog($id) {
+    public function optionsBacklog($id)
+    {
         $this->sendAllowHeaderForBacklog();
     }
 
@@ -869,7 +880,8 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    protected function putBacklog($id, array $ids) {
+    protected function putBacklog($id, array $ids)
+    {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
@@ -941,7 +953,8 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws RestException 404
      * @throws RestException 409
      */
-    protected function patchBacklog($id, ?OrderRepresentation $order = null, ?array $add = null) {
+    protected function patchBacklog($id, ?OrderRepresentation $order = null, ?array $add = null)
+    {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
@@ -1003,7 +1016,8 @@ class MilestoneResource extends AuthenticatedResource {
         }
     }
 
-    private function filterOutAddedElements(OrderRepresentation $order, ?array $to_add = null) {
+    private function filterOutAddedElements(OrderRepresentation $order, ?array $to_add = null)
+    {
         $ids_to_validate = array_merge($order->ids, array($order->compared_to));
         if (is_array($to_add)) {
             return array_diff($ids_to_validate, $to_add);
@@ -1012,7 +1026,8 @@ class MilestoneResource extends AuthenticatedResource {
         }
     }
 
-    private function linkToMilestoneParent(Planning_Milestone $milestone, PFUser $user, array $to_add) {
+    private function linkToMilestoneParent(Planning_Milestone $milestone, PFUser $user, array $to_add)
+    {
         foreach ($to_add as $artifact_id_to_add) {
             $artifact_added = $this->tracker_artifact_factory->getArtifactById($artifact_id_to_add);
 
@@ -1043,7 +1058,8 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    protected function postBacklog($id, BacklogItemReference $item) {
+    protected function postBacklog($id, BacklogItemReference $item)
+    {
         $user        = $this->getCurrentUser();
         $milestone   = $this->getMilestoneById($user, $id);
 
@@ -1069,7 +1085,8 @@ class MilestoneResource extends AuthenticatedResource {
         $this->sendAllowHeaderForBacklog();
     }
 
-    private function getBacklogItemAsArtifact($user, $artifact_id) {
+    private function getBacklogItemAsArtifact($user, $artifact_id)
+    {
         $artifact = $this->tracker_artifact_factory->getArtifactById($artifact_id);
 
         if (! $artifact) {
@@ -1093,7 +1110,8 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function optionsCardwall($id) {
+    public function optionsCardwall($id)
+    {
         $this->sendAllowHeadersForCardwall();
     }
 
@@ -1110,7 +1128,8 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getCardwall($id) {
+    public function getCardwall($id)
+    {
         $this->checkAccess();
 
         $cardwall  = null;
@@ -1143,7 +1162,8 @@ class MilestoneResource extends AuthenticatedResource {
      *
      * @return \Tuleap\Tracker\REST\Artifact\BurndownRepresentation
      */
-    public function optionsBurndown($id) {
+    public function optionsBurndown($id)
+    {
         $this->sendAllowHeadersForBurndown();
     }
 
@@ -1159,7 +1179,8 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getBurndown($id) {
+    public function getBurndown($id)
+    {
         $this->checkAccess();
 
         $burndown  = null;
@@ -1183,7 +1204,8 @@ class MilestoneResource extends AuthenticatedResource {
         return $burndown;
     }
 
-    private function getMilestoneById(PFUser $user, $id) {
+    private function getMilestoneById(PFUser $user, $id)
+    {
         try {
             $milestone = $this->milestone_factory->getValidatedBareMilestoneByArtifactId($user, $id);
         } catch (\MilestonePermissionDeniedException $e) {
@@ -1202,11 +1224,13 @@ class MilestoneResource extends AuthenticatedResource {
         return $milestone;
     }
 
-    private function getCurrentUser() {
+    private function getCurrentUser()
+    {
         return UserManager::instance()->getCurrentUser();
     }
 
-    private function getMilestoneContentItems($milestone, $backlog) {
+    private function getMilestoneContentItems($milestone, $backlog)
+    {
         return $this->backlog_item_collection_factory->getOpenAndClosedCollection(
             $this->getCurrentUser(),
             $milestone,
@@ -1215,43 +1239,52 @@ class MilestoneResource extends AuthenticatedResource {
         );
     }
 
-    private function checkContentLimit($limit) {
+    private function checkContentLimit($limit)
+    {
         if (! $this->limitValueIsAcceptable($limit)) {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }
     }
 
-    private function limitValueIsAcceptable($limit) {
+    private function limitValueIsAcceptable($limit)
+    {
         return $limit <= self::MAX_LIMIT;
     }
 
-    private function sendAllowHeaderForContent() {
+    private function sendAllowHeaderForContent()
+    {
         Header::allowOptionsGetPutPatch();
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size) {
+    private function sendPaginationHeaders($limit, $offset, $size)
+    {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
-    private function sendAllowHeaderForBacklog() {
+    private function sendAllowHeaderForBacklog()
+    {
         Header::allowOptionsGetPutPostPatch();
     }
 
-    private function sendAllowHeaderForSubmilestones() {
+    private function sendAllowHeaderForSubmilestones()
+    {
         Header::allowOptionsGetPut();
     }
 
-    private function sendAllowHeadersForMilestone($milestone) {
+    private function sendAllowHeadersForMilestone($milestone)
+    {
         $date = $milestone->getLastModifiedDate();
         Header::allowOptionsGet();
         Header::lastModified($date);
     }
 
-    private function sendAllowHeadersForCardwall(){
+    private function sendAllowHeadersForCardwall()
+    {
         Header::allowOptionsGet();
     }
 
-    private function sendAllowHeadersForBurndown(){
+    private function sendAllowHeadersForBurndown()
+    {
         Header::allowOptionsGet();
     }
 

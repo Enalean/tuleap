@@ -23,11 +23,13 @@ class User_ForgeUserGroupUsersFactory {
     /** @var User_ForgeUserGroupUsersDao */
     private $users_dao;
 
-    public function __construct(User_ForgeUserGroupUsersDao $users_dao) {
+    public function __construct(User_ForgeUserGroupUsersDao $users_dao)
+    {
         $this->users_dao = $users_dao;
     }
 
-    public function getAllUsersFromForgeUserGroup(User_ForgeUGroup $user_group) {
+    public function getAllUsersFromForgeUserGroup(User_ForgeUGroup $user_group)
+    {
         $rows = $this->users_dao->getUsersByForgeUserGroupId($user_group->getId());
 
         if (! $rows) {
@@ -37,7 +39,8 @@ class User_ForgeUserGroupUsersFactory {
         return $rows->instanciateWith(array($this, 'instantiateFromRow'));
     }
 
-    public function instantiateFromRow(array $row) {
+    public function instantiateFromRow(array $row)
+    {
         return new PFUser($row);
     }
 }

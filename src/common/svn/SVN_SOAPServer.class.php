@@ -33,8 +33,10 @@ class SVN_SOAPServer {
      */
     private $svn_repository_listing;
 
-    public function __construct(SOAPRequestValidator $soap_request_validator,
-                                SVN_RepositoryListing $svn_repository_listing) {
+    public function __construct(
+        SOAPRequestValidator $soap_request_validator,
+        SVN_RepositoryListing $svn_repository_listing
+    ) {
         $this->soap_request_validator = $soap_request_validator;
         $this->svn_repository_listing = $svn_repository_listing;
     }
@@ -57,7 +59,8 @@ class SVN_SOAPServer {
      *
      * @return ArrayOfString The list of directories
      */
-    public function getSvnPath($sessionKey, $group_id, $path) {
+    public function getSvnPath($sessionKey, $group_id, $path)
+    {
         try {
             $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
@@ -100,7 +103,8 @@ class SVN_SOAPServer {
      *
      * @return ArrayOfSvnPathDetails The detailed list of directories
      */
-    public function getSvnPathsWithLogDetails($sessionKey, $group_id, $path, $sort) {
+    public function getSvnPathsWithLogDetails($sessionKey, $group_id, $path, $sort)
+    {
         try {
             $data = array();
             $current_user = $this->soap_request_validator->continueSession($sessionKey);
@@ -165,7 +169,8 @@ class SVN_SOAPServer {
      *
      * @return ArrayOfRevision The list of revisions
      */
-    public function getSvnLog($sessionKey, $group_id, $limit, $author_id) {
+    public function getSvnLog($sessionKey, $group_id, $limit, $author_id)
+    {
         try {
             $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSvnLog');
@@ -192,7 +197,8 @@ class SVN_SOAPServer {
      *
      * @return ArrayOfCommiter
      */
-    public function getSvnStatsUsers($sessionKey, $group_id, $start_date, $end_date) {
+    public function getSvnStatsUsers($sessionKey, $group_id, $start_date, $end_date)
+    {
         try {
             $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsUser');
@@ -218,7 +224,8 @@ class SVN_SOAPServer {
      *
      * @return ArrayOfSvnPathInfo
      */
-    public function getSvnStatsFiles($sessionKey, $group_id, $start_date, $end_date, $limit) {
+    public function getSvnStatsFiles($sessionKey, $group_id, $start_date, $end_date, $limit)
+    {
         try {
             $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsFiles');
@@ -233,7 +240,8 @@ class SVN_SOAPServer {
         }
     }
 
-    private function getUser($author_id) {
+    private function getUser($author_id)
+    {
         if (! $author_id) {
             $no_user_in_particular = new PFUser(array('user_name' => ''));
             return $no_user_in_particular;

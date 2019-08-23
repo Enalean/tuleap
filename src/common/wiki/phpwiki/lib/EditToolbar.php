@@ -12,7 +12,8 @@
 
 class EditToolbar {
 
-    function __construct() {
+    function __construct()
+    {
         global $WikiTheme;
 
         $this->tokens = array();
@@ -125,11 +126,13 @@ function undo_save() {
         $this->tokens['EDIT_TOOLBAR'] = $this->_generate();
     }
 
-    function getTokens () {
+    function getTokens()
+    {
         return $this->tokens;
     }
 
-    function _generate () {
+    function _generate()
+    {
         global $WikiTheme;
 
         $toolbar = "document.writeln(\"<div class=\\\"edit-toolbar\\\" id=\\\"toolbar\\\">\");\n";
@@ -260,7 +263,8 @@ function undo_save() {
     }
 
     //TODO: make the result cached
-    function categoriesPulldown() {
+    function categoriesPulldown()
+    {
         global $WikiTheme;
 
         require_once('lib/TextSearchQuery.php');
@@ -288,7 +292,8 @@ function undo_save() {
     }
 
     //TODO: Make the result cached. Esp. the args are expensive
-    function pluginPulldown() {
+    function pluginPulldown()
+    {
         global $WikiTheme;
 
         $plugin_dir = 'lib/plugin';
@@ -333,7 +338,8 @@ function undo_save() {
         return '';
     }
 
-    function pagesPulldown($query, $case_exact=false, $regex='auto') {
+    function pagesPulldown($query, $case_exact=false, $regex='auto')
+    {
         require_once('lib/TextSearchQuery.php');
         $dbi = $GLOBALS['request']->_dbi;
         $page_iter = $dbi->titleSearch(new TextSearchQuery($query, $case_exact, $regex));
@@ -357,7 +363,8 @@ function undo_save() {
     }
 
     //TODO: make the result cached
-    function templatePulldown($query, $case_exact=false, $regex='auto') {
+    function templatePulldown($query, $case_exact=false, $regex='auto')
+    {
         require_once('lib/TextSearchQuery.php');
         $dbi = $GLOBALS['request']->_dbi;
         $page_iter = $dbi->titleSearch(new TextSearchQuery($query, $case_exact, $regex));

@@ -34,13 +34,15 @@ class Git_AdminMirrorAddPresenter extends Git_AdminMirrorPresenter{
 
     public $add_a_mirror = true;
 
-    public function __construct($title, CSRFSynchronizerToken $csrf) {
+    public function __construct($title, CSRFSynchronizerToken $csrf)
+    {
         parent::__construct($title, $csrf);
 
         $this->btn_submit = $GLOBALS['Language']->getText('global', 'btn_submit');
     }
 
-    public function add_mirror() {
+    public function add_mirror()
+    {
         return dgettext('tuleap-git', 'Add mirror');
     }
 }

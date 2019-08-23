@@ -45,7 +45,8 @@ class ArtifactReference {
      */
     private $artifact;
 
-    public function build(Tracker_Artifact $artifact, $format = '') {
+    public function build(Tracker_Artifact $artifact, $format = '')
+    {
         $this->id  = JsonCast::toInt($artifact->getId());
         $this->uri = ArtifactRepresentation::ROUTE . '/' . $this->id;
 
@@ -59,7 +60,8 @@ class ArtifactReference {
         $this->artifact = $artifact;
     }
 
-    public function getArtifact() {
+    public function getArtifact()
+    {
         return $this->artifact;
     }
 }

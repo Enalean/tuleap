@@ -20,7 +20,8 @@
 
 class Tracker_Permission_PermissionManager {
 
-    public function save(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter) {
+    public function save(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter)
+    {
         $tracker = $permission_setter->getTracker();
 
         if ($this->checkPermissionValidity($request, $tracker)) {
@@ -35,7 +36,8 @@ class Tracker_Permission_PermissionManager {
         }
     }
 
-    private function getChainOfResponsability() {
+    private function getChainOfResponsability()
+    {
         $anonymous_command  = new Tracker_Permission_ChainOfResponsibility_PermissionsOfAnonymous();
         $registered_command = new Tracker_Permission_ChainOfResponsibility_PermissionsOfRegistered();
         $ugroup_command     = new Tracker_Permission_ChainOfResponsibility_PermissionsOfAllGroups();
@@ -46,7 +48,8 @@ class Tracker_Permission_PermissionManager {
         return $anonymous_command;
     }
 
-    private function checkPermissionValidity(Tracker_Permission_PermissionRequest $request, Tracker $tracker) {
+    private function checkPermissionValidity(Tracker_Permission_PermissionRequest $request, Tracker $tracker)
+    {
         if ($request->containsPermissionType(Tracker_Permission_Command::PERMISSION_ASSIGNEE) != null && $tracker->getContributorField() === null) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,

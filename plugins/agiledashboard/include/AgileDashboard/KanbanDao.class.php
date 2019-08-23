@@ -52,7 +52,8 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function duplicateColumns($old_kanban_id, $new_kanban_id, array $field_mapping) {
+    private function duplicateColumns($old_kanban_id, $new_kanban_id, array $field_mapping)
+    {
         $value_mapping = array();
         foreach ($field_mapping as $mapping) {
             $value_mapping += $mapping['values'];
@@ -74,14 +75,16 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function convertValueIdToWhenThenStatement(&$new_value_id, $old_value_id) {
+    private function convertValueIdToWhenThenStatement(&$new_value_id, $old_value_id)
+    {
         $new_value_id = $this->da->escapeInt($new_value_id);
         $old_value_id = $this->da->escapeInt($old_value_id);
 
         $new_value_id = "WHEN $old_value_id THEN $new_value_id";
     }
 
-    public function create($kanban_name, $tracker_kanban) {
+    public function create($kanban_name, $tracker_kanban)
+    {
         $tracker_kanban = $this->da->escapeInt($tracker_kanban);
         $kanban_name    = $this->da->quoteSmart($kanban_name);
 
@@ -91,7 +94,8 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
 
-    public function save($kanban_id, $kanban_name) {
+    public function save($kanban_id, $kanban_name)
+    {
         $kanban_id   = $this->da->escapeInt($kanban_id);
         $kanban_name = $this->da->quoteSmart($kanban_name);
 
@@ -102,7 +106,8 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function delete($kanban_id) {
+    public function delete($kanban_id)
+    {
         $kanban_id   = $this->da->escapeInt($kanban_id);
 
         $this->startTransaction();
@@ -131,7 +136,8 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         $this->commit();
     }
 
-    public function getKanbanByTrackerId($tracker_kanban) {
+    public function getKanbanByTrackerId($tracker_kanban)
+    {
         $tracker_kanban = $this->da->escapeInt($tracker_kanban);
 
         $sql = "SELECT kanban_config.*, tracker.group_id
@@ -143,7 +149,8 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getKanbanById($kanban_id) {
+    public function getKanbanById($kanban_id)
+    {
         $kanban_id = $this->da->escapeInt($kanban_id);
 
         $sql = "SELECT kanban_config.*, tracker.group_id
@@ -155,7 +162,8 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getTrackersWithKanbanUsageAndHierarchy($project_id) {
+    public function getTrackersWithKanbanUsageAndHierarchy($project_id)
+    {
         $project_id = $this->da->escapeInt($project_id);
 
         $sql = "SELECT tracker.id,
@@ -186,7 +194,8 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getKanbansForProject($project_id) {
+    public function getKanbansForProject($project_id)
+    {
         $project_id = $this->da->escapeInt($project_id);
 
         $sql = "SELECT kanban_config.*, tracker.group_id

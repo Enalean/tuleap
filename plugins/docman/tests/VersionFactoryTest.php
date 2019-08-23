@@ -33,7 +33,8 @@ Mock::generate('Docman_File');
 
 class Docman_VersionFactoryTest extends TuleapTestCase {
 
-    function testPurgeDeletedVersionsWithNoVersions() {
+    function testPurgeDeletedVersionsWithNoVersions()
+    {
         $dao = mock('Docman_VersionDao');
         expect($dao)->listVersionsToPurge()->once();
         stub($dao)->listVersionsToPurge()->returnsEmptyDar();
@@ -44,7 +45,8 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
         $this->assertTrue($versionFactory->PurgeDeletedVersions(1234567890));
     }
 
-    function testPurgeDeletedVersions() {
+    function testPurgeDeletedVersions()
+    {
         $dao = mock('Docman_VersionDao');
         expect($dao)->listVersionsToPurge()->once();
         stub($dao)->listVersionsToPurge()->returnsDar(
@@ -69,7 +71,8 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
         $this->assertTrue($versionFactory->PurgeDeletedVersions(1234567890));
     }
 
-    function testPurgeDeletedVersionFileNotFound() {
+    function testPurgeDeletedVersionFileNotFound()
+    {
         $versionFactory = M::mock(Docman_VersionFactory::class)->makePartial();
 
         $version = new Docman_Version(array('id'        => null,
@@ -88,7 +91,8 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
         $this->assertFalse($versionFactory->PurgeDeletedVersion($version));
     }
 
-    function testPurgeDeletedVersion() {
+    function testPurgeDeletedVersion()
+    {
         $dao = new MockDocman_VersionDao($this);
         $dao->setReturnValue('setPurgeDate', true);
 
@@ -114,7 +118,8 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
         $this->assertFalse(file_exists($version->getPath()));
     }
 
-    public function itDoesNotRemoveLocalFileIfPurgeFails() {
+    public function itDoesNotRemoveLocalFileIfPurgeFails()
+    {
         $dao = new MockDocman_VersionDao($this);
         $dao->setReturnValue('setPurgeDate', true);
 
@@ -141,7 +146,8 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
         unlink($version->getPath());
     }
 
-    function testRestoreOneVersion() {
+    function testRestoreOneVersion()
+    {
         $filePath       = $this->getTmpDir().'/version.test';
         touch($filePath);
         $dao            = mock('Docman_VersionDao');
@@ -176,7 +182,8 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
         unlink($filePath);
     }
 
-    function testRestoreOneVersionButFileIsDeleted() {
+    function testRestoreOneVersionButFileIsDeleted()
+    {
         $filePath       = $this->getTmpDir().'/version.test';
         $dao            = mock('Docman_VersionDao');
         $versionFactory = M::mock(Docman_VersionFactory::class, ['_getVersionDao' => $dao])->makePartial();
@@ -197,7 +204,8 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
         $this->assertFalse($versionFactory->restore($version));
     }
 
-    function testRestoreOneVersionAlreadyPurged() {
+    function testRestoreOneVersionAlreadyPurged()
+    {
         $filePath       = $this->getTmpDir().'/version.test';
         $dao            = mock('Docman_VersionDao');
         $versionFactory = M::mock(Docman_VersionFactory::class, ['_getVersionDao' => $dao])->makePartial();

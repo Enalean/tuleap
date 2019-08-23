@@ -39,11 +39,13 @@ class Widget_MyArtifacts extends Widget {
         }
     }
 
-    function getTitle() {
+    function getTitle()
+    {
         return $GLOBALS['Language']->getText('my_index', 'my_arts');
     }
 
-    function updatePreferences(Codendi_Request $request) {
+    function updatePreferences(Codendi_Request $request)
+    {
         $request->valid(new Valid_String('cancel'));
         $vShow = new Valid_WhiteList('show', array('A', 'S', 'N', 'AS'));
         $vShow->required();
@@ -106,10 +108,12 @@ class Widget_MyArtifacts extends Widget {
             ';
     }
 
-    function isAjax() {
+    function isAjax()
+    {
         return true;
     }
-    function getContent() {
+    function getContent()
+    {
         $html_my_artifacts = '<table style="width:100%">';
         if ($atf = new ArtifactTypeFactory(false)) {
             $my_artifacts = $atf->getMyArtifacts(UserManager::instance()->getCurrentUser()->getId(), $this->_artifact_show);
@@ -125,7 +129,8 @@ class Widget_MyArtifacts extends Widget {
         return $html_my_artifacts;
     }
 
-    private function getPriorityColorsKey() {
+    private function getPriorityColorsKey()
+    {
         $html = '<P class="small"><B>' . $GLOBALS['Language']->getText('include_utils', 'prio_colors') . '</B><BR>
 		<table border=0><tr>';
 
@@ -137,7 +142,8 @@ class Widget_MyArtifacts extends Widget {
         return $html;
     }
 
-    function _display_artifacts($list_trackers, $print_box_begin) {
+    function _display_artifacts($list_trackers, $print_box_begin)
+    {
         $request = HTTPRequest::instance();
 
         $vItemId = new Valid_UInt('hide_item_id');
@@ -317,10 +323,12 @@ class Widget_MyArtifacts extends Widget {
 
         return $ajax_url;
     }
-    function getCategory() {
+    function getCategory()
+    {
         return _('Trackers');
     }
-    function getDescription() {
+    function getDescription()
+    {
         return $GLOBALS['Language']->getText('widget_description_my_artifacts','description');
     }
 }

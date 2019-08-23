@@ -27,7 +27,8 @@ class Tracker_FormElement_Container_Column_Group
         return $this->fetchGroup($columns, 'fetchArtifactInGroup', [$artifact, $submitted_values]);
     }
 
-    public function fetchArtifactForOverlay($columns, Tracker_Artifact $artifact) {
+    public function fetchArtifactForOverlay($columns, Tracker_Artifact $artifact)
+    {
         return $this->fetchGroupNoColumns($columns, 'fetchArtifactInGroup', array($artifact));
     }
 
@@ -61,11 +62,13 @@ class Tracker_FormElement_Container_Column_Group
         return $this->fetchGroup($columns, 'fetchAdminInGroup', [$tracker]);
     }
 
-    public function fetchMailArtifact($columns, $recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
+    public function fetchMailArtifact($columns, $recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false)
+    {
         return $this->fetchMailGroup($columns, 'fetchMailArtifactInGroup', array($recipient, $artifact, $format, $ignore_perms), $format);
     }
 
-    protected function fetchGroup($columns, $method, $params) {
+    protected function fetchGroup($columns, $method, $params)
+    {
         $output = '';
         if (is_array($columns) && $columns) {
             $cells = array();
@@ -84,7 +87,8 @@ class Tracker_FormElement_Container_Column_Group
         return $output;
     }
 
-    protected function fetchMailGroup($columns, $method, $params, $format = 'html') {
+    protected function fetchMailGroup($columns, $method, $params, $format = 'html')
+    {
         $output = '';
         if (is_array($columns) && $columns) {
             foreach ($columns as $c) {
@@ -100,7 +104,8 @@ class Tracker_FormElement_Container_Column_Group
         return $output;
     }
 
-    private function fetchGroupNoColumns($columns, $method, $params) {
+    private function fetchGroupNoColumns($columns, $method, $params)
+    {
         if (is_array($columns) && $columns) {
             $rows = array();
             foreach ($columns as $column) {

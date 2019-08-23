@@ -18,15 +18,18 @@
 
 class b201603080951_create_tracker_artifactlink_natures_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add plugin_tracker_artifactlink_natures table';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE plugin_tracker_artifactlink_natures (
                     shortname     VARCHAR(255) NOT NULL PRIMARY KEY,
                     forward_label VARCHAR(255) NOT NULL,
@@ -36,7 +39,8 @@ class b201603080951_create_tracker_artifactlink_natures_table extends ForgeUpgra
         $this->db->createTable('plugin_tracker_artifactlink_natures', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('plugin_tracker_artifactlink_natures')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('Table plugin_tracker_artifactlink_natures not created');
         }

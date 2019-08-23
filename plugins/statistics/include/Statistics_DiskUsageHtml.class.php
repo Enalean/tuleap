@@ -25,7 +25,8 @@ use Tuleap\Chart\ColorsForCharts;
 
 class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
 
-    protected function _displayEvolutionData($row) {
+    protected function _displayEvolutionData($row)
+    {
         echo '<td>'.$this->sizeReadable($row['start_size']).'</td>';
         echo '<td>'.$this->sizeReadable($row['end_size']).'</td>';
         echo '<td>'.$this->sizeReadable($row['evolution']).'</td>';
@@ -39,7 +40,8 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
     /**
      * Apply a jpgraph compliant color modifier on color and return a css rgb() rule
      */
-    function applyColorModifier($color) {
+    function applyColorModifier($color)
+    {
         $jpgraphRgb = new RGB();
         $newColor   = $jpgraphRgb->color($color.':1.5');
         // Unset alpha channel
@@ -61,7 +63,8 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
      * @param bool $colored
      *
      */
-    public function getServiceEvolutionForPeriod($startDate , $endDate, $groupId = NULL, $colored = false) {
+    public function getServiceEvolutionForPeriod($startDate , $endDate, $groupId = NULL, $colored = false)
+    {
         $res = $this->_dum->returnServiceEvolutionForPeriod($startDate , $endDate, $groupId);
         if ($res) {
             $services = $this->_dum->getProjectServices();
@@ -113,7 +116,8 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
      * @param int $groupId Id of the project we want retrieve its disk usage
      *
      */
-    public function getTotalProjectSize($groupId) {
+    public function getTotalProjectSize($groupId)
+    {
         $totalSize = $this->_dum->returnTotalProjectSize($groupId);
 
         $allowedQuota = $this->_dum->getProperty('allowed_quota');

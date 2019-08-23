@@ -26,33 +26,40 @@ class Git_Gitolite_GitModifications {
 
     private $files_to_remove;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->files_to_add    = array();
         $this->files_to_move   = array();
         $this->files_to_remove = array();
     }
 
-    public function add($file) {
+    public function add($file)
+    {
         $this->files_to_add[] = $file;
     }
 
-    public function move($old_file, $new_file) {
+    public function move($old_file, $new_file)
+    {
         $this->files_to_move[$old_file] = $new_file;
     }
 
-    public function remove($file) {
+    public function remove($file)
+    {
         $this->files_to_remove[] = $file;
     }
 
-    public function toAdd() {
+    public function toAdd()
+    {
         return $this->files_to_add;
     }
 
-    public function toMove() {
+    public function toMove()
+    {
         return $this->files_to_move;
     }
 
-    public function toRemove() {
+    public function toRemove()
+    {
         return $this->files_to_remove;
     }
 }

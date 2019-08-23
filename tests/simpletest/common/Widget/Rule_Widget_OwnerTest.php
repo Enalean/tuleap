@@ -25,11 +25,13 @@
 
 class Rule_Widget_OwnerTest extends TuleapTestCase {
 
-    function UnitTestCase($name = 'Rule_Widget_Owner test') {
+    function UnitTestCase($name = 'Rule_Widget_Owner test')
+    {
         $this->UnitTestCase($name);
     }
 
-    function testOk() {
+    function testOk()
+    {
         $r = new Rule_Widget_Owner();
         $this->assertTrue($r->isValid("u102"));
         $this->assertTrue($r->isValid("g1023"));
@@ -37,7 +39,8 @@ class Rule_Widget_OwnerTest extends TuleapTestCase {
         $this->assertTrue($r->isValid("g1"));
     }
 
-    function testBadFormat() {
+    function testBadFormat()
+    {
         $r = new Rule_Widget_Owner();
         $this->assertFalse($r->isValid("uw102"));
         $this->assertFalse($r->isValid("10asd"));

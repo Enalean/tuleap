@@ -24,7 +24,7 @@ require_once('lib/WikiDB.php');
 
 class WikiDB_SQL extends WikiDB
 {
-    public function __construct ()
+    public function __construct()
     {
         include_once __DIR__ . '/backend/PearDB_mysql.php';
         $backend = new WikiDB_backend_PearDB_mysql();
@@ -36,7 +36,8 @@ class WikiDB_SQL extends WikiDB
      * Determine whether page exists (in non-default form).
      * @see WikiDB::isWikiPage for the slow generic version
      */
-    function isWikiPage ($pagename) {
+    function isWikiPage($pagename)
+    {
         $pagename = (string) $pagename;
         if ($pagename === '') return false;
         //if (empty($this->_iwpcache)) {  $this->_iwpcache = array();  }
@@ -47,11 +48,16 @@ class WikiDB_SQL extends WikiDB
     }
 
     // adds surrounding quotes
-    function quote ($s) { return $this->_backend->_dbh->quoteSmart($s); }
+    function quote($s)
+    {
+        return $this->_backend->_dbh->quoteSmart($s); }
     // no surrounding quotes because we know it's a string
-    function qstr ($s) {  return $this->_backend->_dbh->escapeSimple($s); }
+    function qstr($s)
+    {
+        return $this->_backend->_dbh->escapeSimple($s); }
 
-    function isOpen () {
+    function isOpen()
+    {
         global $request;
         if (!$request->_dbi) return false;
         return is_resource($this->_backend->connection());
@@ -59,7 +65,8 @@ class WikiDB_SQL extends WikiDB
 
     // SQL result: for simple select or create/update queries
     // returns the database specific resource type
-    function genericSqlQuery($sql, $args=false) {
+    function genericSqlQuery($sql, $args=false)
+    {
         if ($args)
             $result = $this->_backend->_dbh->query($sql, $args);
         else
@@ -75,7 +82,8 @@ class WikiDB_SQL extends WikiDB
 
     // SQL iter: for simple select or create/update queries
     // returns the generic iterator object (count,next)
-    function genericSqlIter($sql, $field_list = NULL) {
+    function genericSqlIter($sql, $field_list = NULL)
+    {
         $result = $this->genericSqlQuery($sql);
         return new WikiDB_backend_PearDB_generic_iter($this->_backend, $result);
     }

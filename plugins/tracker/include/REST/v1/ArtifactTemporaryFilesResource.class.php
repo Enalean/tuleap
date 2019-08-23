@@ -82,7 +82,8 @@ class ArtifactTemporaryFilesResource {
      *
      * @throws RestException 400
      */
-    protected function get($limit  = self::PAGINATION_DEFAULT_LIMIT, $offset = self::PAGINATION_DEFAULT_OFFSET) {
+    protected function get($limit  = self::PAGINATION_DEFAULT_LIMIT, $offset = self::PAGINATION_DEFAULT_OFFSET)
+    {
         if ($limit > self::PAGINATION_MAX_LIMIT) {
             throw new RestException(400);
         }
@@ -115,7 +116,8 @@ class ArtifactTemporaryFilesResource {
      * @throws RestException 404
      * @throws RestException 406
      */
-    protected function getId($id, $offset = 0, $limit = self::DEFAULT_LIMIT) {
+    protected function getId($id, $offset = 0, $limit = self::DEFAULT_LIMIT)
+    {
         $this->checkLimitValue($limit);
 
         $chunk = $this->getTemporaryFileContent($id, $offset, $limit);
@@ -133,7 +135,8 @@ class ArtifactTemporaryFilesResource {
      * @throws RestException 401
      * @throws RestException 404
      */
-    private function getTemporaryFileContent($id, $offset, $limit) {
+    private function getTemporaryFileContent($id, $offset, $limit)
+    {
         $file = $this->getFile($id);
 
         try {
@@ -147,7 +150,8 @@ class ArtifactTemporaryFilesResource {
     /**
      * @throws RestException 404
      */
-    private function getTemporaryFileSize($id) {
+    private function getTemporaryFileSize($id)
+    {
         return $this->getFile($id)->getSize();
     }
 
@@ -175,7 +179,8 @@ class ArtifactTemporaryFilesResource {
      * @throws RestException 406
      * @throws RestException 403
      */
-    protected function post($name, $mimetype, $content, $description = null) {
+    protected function post($name, $mimetype, $content, $description = null)
+    {
         try {
             $this->file_manager->validateChunkSize($this->user, $content);
 
@@ -224,7 +229,8 @@ class ArtifactTemporaryFilesResource {
      * @return \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation
      * @throws RestException 406
      */
-    protected function putId($id, $content, $offset) {
+    protected function putId($id, $content, $offset)
+    {
         $this->checkFileIsTemporary($id);
 
         $file = $this->getFile($id);
@@ -249,7 +255,8 @@ class ArtifactTemporaryFilesResource {
     /**
      * @url OPTIONS
      */
-    public function options() {
+    public function options()
+    {
         $this->sendAllowHeadersForArtifactFiles();
     }
 
@@ -259,7 +266,8 @@ class ArtifactTemporaryFilesResource {
      * @throws RestException 401
      * @throws RestException 404
      */
-    public function optionsId($id) {
+    public function optionsId($id)
+    {
         $this->sendAllowHeadersForArtifactFilesId();
     }
 
@@ -268,7 +276,8 @@ class ArtifactTemporaryFilesResource {
      * @param TemporaryFile $file
      * @return FileInfoRepresentation
      */
-    private function buildFileRepresentation(TemporaryFile $file) {
+    private function buildFileRepresentation(TemporaryFile $file)
+    {
         $reference = new FileInfoRepresentation();
         return $reference->build(
             $file->getId(),
@@ -287,7 +296,8 @@ class ArtifactTemporaryFilesResource {
      * @return TemporaryFile
      * @throws RestException
      */
-    private function getFile($id) {
+    private function getFile($id)
+    {
         try {
             $file = $this->file_manager->getFile($id);
 
@@ -303,7 +313,8 @@ class ArtifactTemporaryFilesResource {
     /**
      * @throws RestException 401
      */
-    private function checkTemporaryFileBelongsToCurrentUser(TemporaryFile $file) {
+    private function checkTemporaryFileBelongsToCurrentUser(TemporaryFile $file)
+    {
         $creator_id = $file->getCreatorId();
 
         if ($creator_id != $this->user->getId()) {
@@ -323,7 +334,8 @@ class ArtifactTemporaryFilesResource {
      *
      * @param string $id Id of the file
      */
-    protected function deleteId($id) {
+    protected function deleteId($id)
+    {
         $this->checkFileIsTemporary($id);
         $this->sendAllowHeadersForArtifactFilesId();
 
@@ -346,32 +358,38 @@ class ArtifactTemporaryFilesResource {
         $this->sendAllowHeadersForArtifactFiles();
     }
 
-    private function sendAllowHeadersForArtifactFiles() {
+    private function sendAllowHeadersForArtifactFiles()
+    {
         Header::allowOptionsGetPost();
         $this->sendSizeHeaders();
     }
 
-    private function sendAllowHeadersForArtifactFilesId() {
+    private function sendAllowHeadersForArtifactFilesId()
+    {
         Header::allowOptionsGetPutDelete();
         $this->sendSizeHeaders();
     }
 
-    private function sendSizeHeaders() {
+    private function sendSizeHeaders()
+    {
         Header::sendQuotaHeader($this->file_manager->getQuota());
         Header::sendDiskUsage($this->file_manager->getDiskUsage($this->user));
         Header::sendMaxFileChunkSizeHeaders($this->file_manager->getMaximumChunkSize());
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size) {
+    private function sendPaginationHeaders($limit, $offset, $size)
+    {
         Header::sendPaginationHeaders($limit, $offset, $size, $this->file_manager->getMaximumChunkSize());
     }
 
-    private function removeTemporaryFile($id) {
+    private function removeTemporaryFile($id)
+    {
         $file = $this->getFile($id);
         $this->file_manager->removeTemporaryFile($file);
     }
 
-    private function checkFileIsTemporary($id) {
+    private function checkFileIsTemporary($id)
+    {
         if (! $this->file_manager->isFileIdTemporary($id)) {
             $this->raiseError(404);
         }
@@ -380,13 +398,15 @@ class ArtifactTemporaryFilesResource {
     /**
      * @throws RestException 406
      */
-    private function checkLimitValue($limit) {
+    private function checkLimitValue($limit)
+    {
         if ($limit > self::DEFAULT_LIMIT) {
             throw new LimitOutOfBoundsException(self::DEFAULT_LIMIT);
         }
     }
 
-    private function raiseError($status_code, $message = null) {
+    private function raiseError($status_code, $message = null)
+    {
         $this->sendAllowHeadersForArtifactFiles();
 
         throw new RestException($status_code, $message);

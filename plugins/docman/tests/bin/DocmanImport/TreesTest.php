@@ -26,7 +26,8 @@ require_once(__DIR__.'/../../../bin/DocmanImport/Trees.class.php');
  */
 class TreesTest extends TuleapTestCase {
 
-    public function testNodeListToTree() {
+    public function testNodeListToTree()
+    {
         $nodes = array();
         $tree = Trees::nodeListToTree($nodes);
         $this->assertNull($tree);
@@ -53,7 +54,8 @@ class TreesTest extends TuleapTestCase {
         $this->assertEqual(array(0 => array(1 => array(3 => null), 2 => array(4 => null, 5 => null))), $tree);
     }
 
-    public function testMergeTag() {
+    public function testMergeTag()
+    {
         $tree1 = array(0 => null);
         $res = Trees::mergeTag($tree1, $tree1);
         $this->assertEqual(array('(root)' => null), $res);

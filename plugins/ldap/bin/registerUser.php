@@ -31,7 +31,8 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
  * @param array $argv
  * @return array
  */
-function extract_params($argv) {
+function extract_params($argv)
+{
     $arguments = array();
     for($i = 1; $i < count($argv); ++$i) {
         $arg = $argv[$i];

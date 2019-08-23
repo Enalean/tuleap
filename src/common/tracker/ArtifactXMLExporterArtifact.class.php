@@ -50,7 +50,8 @@ class ArtifactXMLExporterArtifact {
     /** @var ArtifactCommentXMLExporter */
     private $comment_exporter;
 
-    public function __construct(ArtifactXMLExporterDao $dao, ArtifactAttachmentXMLExporter $attachment_exporter, ArtifactXMLNodeHelper $node_helper, Logger $logger) {
+    public function __construct(ArtifactXMLExporterDao $dao, ArtifactAttachmentXMLExporter $attachment_exporter, ArtifactXMLNodeHelper $node_helper, Logger $logger)
+    {
         $this->dao                 = $dao;
         $this->logger              = $logger;
         $this->node_helper         = $node_helper;
@@ -59,7 +60,8 @@ class ArtifactXMLExporterArtifact {
         $this->comment_exporter    = new ArtifactCommentXMLExporter($this->node_helper);
     }
 
-    public function exportArtifact($tracker_id, array $artifact_row) {
+    public function exportArtifact($tracker_id, array $artifact_row)
+    {
         $artifact_id   = (int)$artifact_row['artifact_id'];
         $this->logger->info("Export artifact: ".$artifact_id);
         $artifact_node = $this->node_helper->createElement('artifact');
@@ -77,7 +79,8 @@ class ArtifactXMLExporterArtifact {
         return $artifact_node;
     }
 
-    private function addAllChangesets(DOMElement $artifact_node, $tracker_id, $artifact_id, array $artifact) {
+    private function addAllChangesets(DOMElement $artifact_node, $tracker_id, $artifact_id, array $artifact)
+    {
         $this->initial_changeset = $this->getBareChangeset($artifact['submitted_by'], 0, $artifact['open_date']);
         $artifact_node->appendChild($this->initial_changeset);
 
@@ -123,7 +126,8 @@ class ArtifactXMLExporterArtifact {
         }
     }
 
-    private function getCurrentFieldsValues($tracker_id, $artifact_id, array $artifact_row) {
+    private function getCurrentFieldsValues($tracker_id, $artifact_id, array $artifact_row)
+    {
         $fields_values = array(
             array(
                 'field_name'     => 'summary',
@@ -176,7 +180,8 @@ class ArtifactXMLExporterArtifact {
         return array_filter($fields_values);
     }
 
-    private function updateInitialChangesetVersusCurrentStatus($tracker_id, $artifact_id, array $current_fields_values) {
+    private function updateInitialChangesetVersusCurrentStatus($tracker_id, $artifact_id, array $current_fields_values)
+    {
         foreach ($current_fields_values as $field_value) {
             try {
                 $this->updateInitialChangeset(
@@ -194,7 +199,8 @@ class ArtifactXMLExporterArtifact {
         }
     }
 
-    private function updateInitialChangeset($tracker_id, $artifact_id, $field_name, $display_type, $data_type, $value_function, $value) {
+    private function updateInitialChangeset($tracker_id, $artifact_id, $field_name, $display_type, $data_type, $value_function, $value)
+    {
         if (! isset($this->field_initial_changeset[$field_name])) {
             $this->field_factory->appendValueByType(
                 $this->initial_changeset,
@@ -212,7 +218,8 @@ class ArtifactXMLExporterArtifact {
         }
     }
 
-    private function addLastChangesetIfNoHistoryRecorded(DOMElement $artifact_node, $tracker_id, $artifact_id, array $current_fields_values) {
+    private function addLastChangesetIfNoHistoryRecorded(DOMElement $artifact_node, $tracker_id, $artifact_id, array $current_fields_values)
+    {
         foreach ($current_fields_values as $field_value) {
             try {
                 $this->appendMissingValues($tracker_id, $artifact_id, $field_value);
@@ -225,7 +232,8 @@ class ArtifactXMLExporterArtifact {
         }
     }
 
-    private function appendMissingValues($tracker_id, $artifact_id, $field_value) {
+    private function appendMissingValues($tracker_id, $artifact_id, $field_value)
+    {
         if (! $this->isLastRecoredValueEqualsToCurrentValue($field_value)) {
             $this->field_factory->appendValueByType(
                 $this->getLastChangesetForTruncatedHistory(),
@@ -244,14 +252,16 @@ class ArtifactXMLExporterArtifact {
         return false;
     }
 
-    private function getLastChangesetForTruncatedHistory() {
+    private function getLastChangesetForTruncatedHistory()
+    {
         if (! $this->last_changeset_for_truncated_history) {
             $this->last_changeset_for_truncated_history = $this->getBareChangeset('migration-tv3-to-tv5', 1, $_SERVER['REQUEST_TIME']);
         }
         return $this->last_changeset_for_truncated_history;
     }
 
-    private function isLastRecoredValueEqualsToCurrentValue(array $field_value) {
+    private function isLastRecoredValueEqualsToCurrentValue(array $field_value)
+    {
         if (isset($this->last_history_recorded[$field_value['field_name']])) {
             $field = $this->field_factory->getField(
                 $field_value['field_name'],
@@ -268,7 +278,8 @@ class ArtifactXMLExporterArtifact {
         return true;
     }
 
-    private function getBareChangeset($submitted_by, $is_anonymous, $submitted_on) {
+    private function getBareChangeset($submitted_by, $is_anonymous, $submitted_on)
+    {
         $changeset_node = $this->node_helper->createElement('changeset');
         $this->node_helper->appendSubmittedBy($changeset_node, $submitted_by, $is_anonymous);
         $this->node_helper->appendSubmittedOn($changeset_node, $submitted_on);
@@ -276,7 +287,8 @@ class ArtifactXMLExporterArtifact {
         return $changeset_node;
     }
 
-    private function createOrReuseChangeset(DOMElement $previous_changeset, $submitted_by, $is_anonymous, $submitted_on) {
+    private function createOrReuseChangeset(DOMElement $previous_changeset, $submitted_by, $is_anonymous, $submitted_on)
+    {
         if ($this->isHistoryDateInReuseRange(simplexml_import_dom($previous_changeset), $submitted_on)) {
             return $previous_changeset;
         } else {
@@ -284,11 +296,13 @@ class ArtifactXMLExporterArtifact {
         }
     }
 
-    private function isHistoryDateInReuseRange(SimpleXMLElement $previous_changeset, $submitted_on) {
+    private function isHistoryDateInReuseRange(SimpleXMLElement $previous_changeset, $submitted_on)
+    {
         return (string)$previous_changeset->submitted_on == date('c', $submitted_on);
     }
 
-    private function getChangeset(DOMElement $previous_changeset, $tracker_id, $artifact_id, array $row) {
+    private function getChangeset(DOMElement $previous_changeset, $tracker_id, $artifact_id, array $row)
+    {
         $changeset_node = $this->createOrReuseChangeset($previous_changeset, $row['submitted_by'], $row['is_anonymous'], $row['date']);
 
         if ($row['field_name'] == 'comment') {
@@ -313,7 +327,8 @@ class ArtifactXMLExporterArtifact {
         return $changeset_node;
     }
 
-    private function fixDataWithArtifactSpecialValues(array &$row) {
+    private function fixDataWithArtifactSpecialValues(array &$row)
+    {
         if ($this->isCloseDate($row)) {
             $row['new_value'] = $row['date'];
         }
@@ -323,7 +338,8 @@ class ArtifactXMLExporterArtifact {
         }
     }
 
-    private function isFloatFieldWithNonFloatValue(array $row) {
+    private function isFloatFieldWithNonFloatValue(array $row)
+    {
         if ($row['data_type'] === '3' && $row['display_type'] === 'TF') {
             return ! is_numeric($row['new_value']);
         }
@@ -331,7 +347,8 @@ class ArtifactXMLExporterArtifact {
         return false;
     }
 
-    private function isIntFieldWithNonIntValue(array $row) {
+    private function isIntFieldWithNonIntValue(array $row)
+    {
         if ($row['data_type'] === '2' && $row['display_type'] === 'TF') {
             return ! is_numeric($row['new_value']);
         }
@@ -339,15 +356,18 @@ class ArtifactXMLExporterArtifact {
         return false;
     }
 
-    private function isCloseDate(array $row) {
+    private function isCloseDate(array $row)
+    {
         return $row['field_name'] == 'close_date' && $this->isACloseDateHistoryEntry($row);
     }
 
-    private function isACloseDateHistoryEntry(array $row) {
+    private function isACloseDateHistoryEntry(array $row)
+    {
         return $row['old_value'] === '0' && $row['new_value'] === '';
     }
 
-    private function addPermissionOnArtifactAtTheVeryEnd(DOMElement $artifact_node, $artifact_id) {
+    private function addPermissionOnArtifactAtTheVeryEnd(DOMElement $artifact_node, $artifact_id)
+    {
         $field = new ArtifactPermissionsXMLExporter($this->node_helper, $this->dao);
         $field->appendNode($artifact_node, $artifact_id);
     }

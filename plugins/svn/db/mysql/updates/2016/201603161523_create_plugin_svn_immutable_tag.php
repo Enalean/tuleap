@@ -18,15 +18,18 @@
 
 class b201603161523_create_plugin_svn_immutable_tag extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Create table plugin_svn_immutable_tag for SVN plugin';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE plugin_svn_immutable_tag (
                   repository_id INT(11) PRIMARY KEY,
                   paths TEXT NOT NULL,

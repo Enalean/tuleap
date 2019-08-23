@@ -25,7 +25,8 @@ use Exception;
 
 class IdsFromBodyAreNotUniqueException extends Exception {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('There are duplicated ids');
     }
 

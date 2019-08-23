@@ -37,12 +37,14 @@ class Git_SystemEventManager {
     /** @var GitRepositoryFactory */
     private $repository_factory;
 
-    public function __construct(SystemEventManager $system_event_manager, GitRepositoryFactory $repository_factory) {
+    public function __construct(SystemEventManager $system_event_manager, GitRepositoryFactory $repository_factory)
+    {
         $this->system_event_manager = $system_event_manager;
         $this->repository_factory   = $repository_factory;
     }
 
-    public function queueProjectsConfigurationUpdate(array $project_ids) {
+    public function queueProjectsConfigurationUpdate(array $project_ids)
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_PROJECTS_UPDATE::NAME,
             implode(SystemEvent::PARAMETER_SEPARATOR, $project_ids),
@@ -51,7 +53,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueRepositoryUpdate(GitRepository $repository) {
+    public function queueRepositoryUpdate(GitRepository $repository)
+    {
         if ($repository->getBackend() instanceof Git_Backend_Gitolite &&
             ! $this->isRepositoryUpdateAlreadyQueued($repository)
         ) {
@@ -64,7 +67,8 @@ class Git_SystemEventManager {
         }
     }
 
-    public function queueRepositoryDeletion(GitRepository $repository) {
+    public function queueRepositoryDeletion(GitRepository $repository)
+    {
         if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
             $this->system_event_manager->createEvent(
                 SystemEvent_GIT_REPO_DELETE::NAME,
@@ -82,7 +86,8 @@ class Git_SystemEventManager {
         }
     }
 
-    public function queueRemoteProjectDeletion(GitRepository $repository) {
+    public function queueRemoteProjectDeletion(GitRepository $repository)
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME,
             $repository->getId(). SystemEvent::PARAMETER_SEPARATOR . $repository->getRemoteServerId(),
@@ -91,7 +96,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueRemoteProjectReadOnly(GitRepository $repository) {
+    public function queueRemoteProjectReadOnly(GitRepository $repository)
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME,
             $repository->getId(). SystemEvent::PARAMETER_SEPARATOR . $repository->getRemoteServerId(),
@@ -100,7 +106,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueRepositoryFork(GitRepository $old_repository, GitRepository $new_repository) {
+    public function queueRepositoryFork(GitRepository $old_repository, GitRepository $new_repository)
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_REPO_FORK::NAME,
             $old_repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $new_repository->getId(),
@@ -109,7 +116,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueGitShellAccess(GitRepository $repository, $type) {
+    public function queueGitShellAccess(GitRepository $repository, $type)
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_LEGACY_REPO_ACCESS::NAME,
             $repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $type,
@@ -118,7 +126,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueMigrateToGerrit(GitRepository $repository, $remote_server_id, $gerrit_template_id, PFUser $requester) {
+    public function queueMigrateToGerrit(GitRepository $repository, $remote_server_id, $gerrit_template_id, PFUser $requester)
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_GERRIT_MIGRATION::NAME,
             $repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $remote_server_id . SystemEvent::PARAMETER_SEPARATOR . $gerrit_template_id . SystemEvent::PARAMETER_SEPARATOR . $requester->getId(),
@@ -127,7 +136,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueGerritReplicationKeyUpdate(Git_RemoteServer_GerritServer $server) {
+    public function queueGerritReplicationKeyUpdate(Git_RemoteServer_GerritServer $server)
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME,
             $server->getId(),
@@ -136,7 +146,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueUserRenameUpdate($old_user_name, IHaveAnSSHKey $new_user) {
+    public function queueUserRenameUpdate($old_user_name, IHaveAnSSHKey $new_user)
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_USER_RENAME::NAME,
             $old_user_name . SystemEvent::PARAMETER_SEPARATOR . $new_user->getId(),
@@ -145,11 +156,13 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueGrokMirrorGitoliteAdminUpdate() {
+    public function queueGrokMirrorGitoliteAdminUpdate()
+    {
         $this->queueGrokMirrorManifest(new GitRepositoryGitoliteAdmin());
     }
 
-    public function queueGrokMirrorManifest(GitRepository $repository) {
+    public function queueGrokMirrorManifest(GitRepository $repository)
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE::NAME,
             $repository->getId(),
@@ -158,7 +171,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueGrokMirrorManifestFollowingAGitPush(GitRepository $repository) {
+    public function queueGrokMirrorManifestFollowingAGitPush(GitRepository $repository)
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH::NAME,
             $repository->getId(),
@@ -167,7 +181,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueGrokMirrorManifestRepoDelete($repository_path) {
+    public function queueGrokMirrorManifestRepoDelete($repository_path)
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE::NAME,
             $repository_path,
@@ -176,7 +191,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueGrokMirrorManifestCheck() {
+    public function queueGrokMirrorManifestCheck()
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK::NAME,
             '',
@@ -185,7 +201,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueEditSSHKey($user_id, $original_keys) {
+    public function queueEditSSHKey($user_id, $original_keys)
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_EDIT_SSH_KEYS::NAME,
             $user_id . SystemEvent::PARAMETER_SEPARATOR . $original_keys,
@@ -194,7 +211,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueDumpAllSSHKeys() {
+    public function queueDumpAllSSHKeys()
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_DUMP_ALL_SSH_KEYS::NAME,
             '',
@@ -203,7 +221,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueRepositoryRestore(GitRepository $repository) {
+    public function queueRepositoryRestore(GitRepository $repository)
+    {
         if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
             $this->system_event_manager->createEvent(
                 SystemEvent_GIT_REPO_RESTORE::NAME,
@@ -214,7 +233,8 @@ class Git_SystemEventManager {
         }
     }
 
-    public function queueDumpOfAllMirroredRepositories() {
+    public function queueDumpOfAllMirroredRepositories()
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES::NAME,
             '',
@@ -223,7 +243,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueUpdateMirror($mirror_id, $old_hostname) {
+    public function queueUpdateMirror($mirror_id, $old_hostname)
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_UPDATE_MIRROR::NAME,
             $mirror_id . SystemEvent::PARAMETER_SEPARATOR . $old_hostname,
@@ -232,7 +253,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueDeleteMirror($mirror_id, $old_hostname) {
+    public function queueDeleteMirror($mirror_id, $old_hostname)
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_DELETE_MIRROR::NAME,
             $mirror_id . SystemEvent::PARAMETER_SEPARATOR . $old_hostname,
@@ -241,7 +263,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueRegenerateGitoliteConfig($project_id) {
+    public function queueRegenerateGitoliteConfig($project_id)
+    {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME,
             $project_id,
@@ -250,7 +273,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueProjectIsSuspended($project_id) {
+    public function queueProjectIsSuspended($project_id)
+    {
         $this->system_event_manager->createEvent(
             ProjectIsSuspended::NAME,
             $project_id,
@@ -271,26 +295,31 @@ class Git_SystemEventManager {
         );
     }
 
-    public function isRepositoryUpdateAlreadyQueued(GitRepository $repository) {
+    public function isRepositoryUpdateAlreadyQueued(GitRepository $repository)
+    {
         return $this->system_event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(
             SystemEvent_GIT_REPO_UPDATE::NAME,
             $repository->getId()
         );
     }
 
-    public function isRepositoryMigrationToGerritOnGoing(GitRepository $repository) {
+    public function isRepositoryMigrationToGerritOnGoing(GitRepository $repository)
+    {
         return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent_GIT_GERRIT_MIGRATION::NAME, $repository->getId());
     }
 
-    public function isProjectDeletionOnGerritOnGoing(GitRepository $repository) {
+    public function isProjectDeletionOnGerritOnGoing(GitRepository $repository)
+    {
         return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME, $repository->getId());
     }
 
-    public function isProjectSetReadOnlyOnGerritOnGoing(GitRepository $repository) {
+    public function isProjectSetReadOnlyOnGerritOnGoing(GitRepository $repository)
+    {
         return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME, $repository->getId());
     }
 
-    public function getTypes() {
+    public function getTypes()
+    {
         return array(
             SystemEvent_GIT_REPO_UPDATE::NAME,
             SystemEvent_GIT_REPO_DELETE::NAME,
@@ -312,7 +341,8 @@ class Git_SystemEventManager {
         );
     }
 
-    public function getGrokMirrorTypes() {
+    public function getGrokMirrorTypes()
+    {
         return array(
             SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE::NAME,
             SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH::NAME,
@@ -329,7 +359,8 @@ class Git_SystemEventManager {
      *   events)
      * So it's better to make them run in the default queue like before
      */
-    public function getTypesForDefaultQueue() {
+    public function getTypesForDefaultQueue()
+    {
         $types = array(
             ParseGitolite3Logs::NAME,
             MigrateToTuleapSSHKeyManagement::NAME

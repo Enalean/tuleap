@@ -31,7 +31,8 @@ class KanbanArchiveInfoRepresentation {
      */
     public $is_open;
 
-    public function build($label, $is_open) {
+    public function build($label, $is_open)
+    {
         $this->label   = $label;
         $this->is_open = $is_open;
     }

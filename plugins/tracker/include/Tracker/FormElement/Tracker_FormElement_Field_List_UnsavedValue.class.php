@@ -23,19 +23,23 @@ class Tracker_FormElement_Field_List_UnsavedValue extends Tracker_FormElement_Fi
 
     protected $label;
 
-    public function __construct($id) {
+    public function __construct($id)
+    {
         parent::__construct($id);
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->getLabel();
     }
 
-    public function getLabel() {
+    public function getLabel()
+    {
         return $this->getId();
     }
 
-    public function getJsonId() {
+    public function getJsonId()
+    {
         return '!'. $this->getId();
     }
 }

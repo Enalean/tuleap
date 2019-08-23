@@ -57,23 +57,28 @@ class ProjectCreationData
      *
      * @return bool
      */
-    public function projectShouldInheritFromTemplate() {
+    public function projectShouldInheritFromTemplate()
+    {
         return $this->inherit_from_template;
     }
 
-    public function getFullName() {
+    public function getFullName()
+    {
         return $this->full_name;
     }
 
-    public function setFullName($name) {
+    public function setFullName($name)
+    {
         $this->full_name = $name;
     }
 
-    public function getUnixName() {
+    public function getUnixName()
+    {
         return $this->unix_name;
     }
 
-    public function setUnixName($name) {
+    public function setUnixName($name)
+    {
         $this->unix_name = $name;
     }
 
@@ -82,7 +87,8 @@ class ProjectCreationData
         return $this->access;
     }
 
-    public function isTest() {
+    public function isTest()
+    {
         return $this->is_test;
     }
 
@@ -96,15 +102,18 @@ class ProjectCreationData
         $this->is_template = true;
     }
 
-    public function getShortDescription() {
+    public function getShortDescription()
+    {
         return $this->short_description;
     }
 
-    public function getTemplateId() {
+    public function getTemplateId()
+    {
         return $this->built_from_template;
     }
 
-    public function getTroveData() {
+    public function getTroveData()
+    {
         return $this->trove_data;
     }
 
@@ -112,7 +121,8 @@ class ProjectCreationData
      * @param $group_desc_id int id of the description field to return
      * @return the value of the field requested, null if the field isnt set
      */
-    public function getField($group_desc_id) {
+    public function getField($group_desc_id)
+    {
         if(!isset($this->data_fields['form_' . $group_desc_id])) {
             return null;
         }
@@ -123,7 +133,8 @@ class ProjectCreationData
      * @return array with:
      *     is_used => boolean telling if the service is used
      */
-    public function getServiceInfo($service_id) {
+    public function getServiceInfo($service_id)
+    {
         return isset($this->data_services[$service_id]) ?
             $this->data_services[$service_id] :
             null;
@@ -150,7 +161,8 @@ class ProjectCreationData
         return $instance;
     }
 
-    private function fromForm(array $data) {
+    private function fromForm(array $data)
+    {
         $project = isset($data['project']) ? $data['project'] : array();
 
         $this->unix_name           = isset($project['form_unix_name'])         ? $project['form_unix_name']         : null;
@@ -214,8 +226,8 @@ class ProjectCreationData
         $template_id,
         ?XML_RNGValidator $xml_validator = null,
         ?ServiceManager $service_manager = null,
-        ?ProjectManager $project_manager = null)
-    {
+        ?ProjectManager $project_manager = null
+    ) {
         if(empty($xml_validator)) {
             $xml_validator = new XML_RNGValidator();
         }
@@ -283,8 +295,8 @@ class ProjectCreationData
         SimpleXMLElement $xml,
         $template_id,
         ?ServiceManager $service_manager = null,
-        ?ProjectManager $project_manager = null)
-    {
+        ?ProjectManager $project_manager = null
+    ) {
         $template = $project_manager->getProject($template_id);
         $services_by_name = array();
         foreach($service_manager->getListOfAllowedServicesForProject($template) as $service) {

@@ -24,17 +24,20 @@
 
 class b201510131700_create_plugin_statistics_aggregation_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Creating plugin_statistics_aggregator table
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE plugin_statistics_aggregator (
                     project_id INT(11) NOT NULL,
                     day DATE NOT NULL,
@@ -47,7 +50,8 @@ EOT;
         $this->db->createTable('plugin_statistics_aggregator', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (! $this->db->tableNameExists('plugin_statistics_aggregator')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_statistics_aggregator table is missing');
         }

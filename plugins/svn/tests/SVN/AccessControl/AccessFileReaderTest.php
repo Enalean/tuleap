@@ -33,7 +33,8 @@ class AccessFileReaderTest extends TuleapTestCase {
     /** @var AccessFileReader */
     private $reader;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $fixtures_dir = __DIR__ .'/_fixtures';
 
@@ -42,21 +43,24 @@ class AccessFileReaderTest extends TuleapTestCase {
         $this->reader = new AccessFileReader();
     }
 
-    public function itReadsTheDefaultBlock() {
+    public function itReadsTheDefaultBlock()
+    {
         $this->assertPattern(
             '/le default/',
             $this->reader->readDefaultBlock($this->repository)
         );
     }
 
-    public function itReadsTheContentBlock() {
+    public function itReadsTheContentBlock()
+    {
         $this->assertPattern(
             '/le content/',
             $this->reader->readContentBlock($this->repository)
         );
     }
 
-    public function itDoesNotContainDelimiters() {
+    public function itDoesNotContainDelimiters()
+    {
         $this->assertNoPattern(
             '/# BEGIN CODENDI DEFAULT SETTINGS/',
             $this->reader->readDefaultBlock($this->repository)

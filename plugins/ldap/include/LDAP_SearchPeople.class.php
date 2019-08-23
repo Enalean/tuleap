@@ -26,7 +26,8 @@ class LDAP_SearchPeople extends Search_SearchPeople {
     /** @var LDAP */
     private $ldap;
 
-    public function __construct(UserManager $manager, LDAP $ldap) {
+    public function __construct(UserManager $manager, LDAP $ldap)
+    {
         $this->manager = $manager;
         $this->ldap    = $ldap;
     }
@@ -52,7 +53,8 @@ class LDAP_SearchPeople extends Search_SearchPeople {
         );
     }
 
-    private function getMatchingUsers(Search_SearchQuery $query, $limit) {
+    private function getMatchingUsers(Search_SearchQuery $query, $limit)
+    {
         $users = array();
         $ldap_result_iterator  = $this->ldap->searchUser($query->getWords());
         if ($ldap_result_iterator !== false && $ldap_result_iterator->count() > 0) {
@@ -69,7 +71,8 @@ class LDAP_SearchPeople extends Search_SearchPeople {
         return $users;
     }
 
-    private function getUserPresenter(LDAPResult $ldap_result) {
+    private function getUserPresenter(LDAPResult $ldap_result)
+    {
         $directory_uri = $this->buildLinkToDirectory($ldap_result, $ldap_result->getCommonName());
         $user          = $this->manager->getUserByLdapId($ldap_result->getEdUid());
         if ($user) {

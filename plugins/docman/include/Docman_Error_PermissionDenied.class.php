@@ -30,15 +30,18 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
      *
      * @return void
      */
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
     }
 
-    function getType() {
+    function getType()
+    {
         return 'docman_permission_denied';
     }
 
-    function getTextBase() {
+    function getTextBase()
+    {
         return 'plugin_docman';
     }
 
@@ -49,7 +52,8 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
      *
      * @return Array
      */
-    function returnBuildInterfaceParam() {
+    function returnBuildInterfaceParam()
+    {
         $param = array();
         $param['name']   = 'msg_docman_access';
         $param['func']   = 'docman_access_request';
@@ -69,7 +73,8 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
      *
      * @return String
      */
-    function urlTransform($url) {
+    function urlTransform($url)
+    {
         $query = $this->urlQueryToArray($url);
         if (!isset($query['action'])) {
             $url = $url.'&action=details&section=permissions';
@@ -96,7 +101,8 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
      *
      * @return String
      */
-    function getRedirectLink($urlData, $language) {
+    function getRedirectLink($urlData, $language)
+    {
         return $this->urlTransform($urlData);
 
     }
@@ -108,7 +114,8 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
      *
      * @return Array
      */
-    function urlQueryToArray($url) {
+    function urlQueryToArray($url)
+    {
         $params = array();
         $query  = explode('&', parse_url($url, PHP_URL_QUERY));
         foreach($query as $tok) {
@@ -126,7 +133,8 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
      *
      * @return Array
      */
-    function extractReceiver($project, $url) {
+    function extractReceiver($project, $url)
+    {
         $query = $this->urlQueryToArray($url);
         if (isset($query['id'])) {
             $id = $query['id'];
@@ -165,7 +173,8 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
      *
      * @return Docman_PermissionsManager
      */
-    function _getPermissionManagerInstance($groupId) {
+    function _getPermissionManagerInstance($groupId)
+    {
         return Docman_PermissionsManager::instance($groupId);
     }
 
@@ -174,7 +183,8 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
      *
      * @return Docman_ItemFactory
      */
-    function _getItemFactoryInstance($groupId) {
+    function _getItemFactoryInstance($groupId)
+    {
         return Docman_ItemFactory::instance($groupId);
     }
 

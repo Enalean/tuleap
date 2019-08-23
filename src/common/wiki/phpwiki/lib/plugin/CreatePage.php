@@ -36,20 +36,24 @@ rcs_id('$Id: CreatePage.php,v 1.7 2004/09/06 10:22:15 rurban Exp $');
 class WikiPlugin_CreatePage
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("CreatePage");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Create a Wiki page by the provided name.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.7 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('s'            => false,
                      'initial_content' => '',
                      'template'     => false,
@@ -60,7 +64,8 @@ extends WikiPlugin
                      );
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         extract($this->getArgs($argstr, $request));
         if (!$s)
             return '';

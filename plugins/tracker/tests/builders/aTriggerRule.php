@@ -21,7 +21,8 @@
 /**
  * @return Test_Tracker_Workflow_Trigger_TriggerRuleBuilder
  */
-function aTriggerRule() {
+function aTriggerRule()
+{
     return new Test_Tracker_Workflow_Trigger_TriggerRuleBuilder();
 }
 
@@ -32,12 +33,14 @@ class Test_Tracker_Workflow_Trigger_TriggerRuleBuilder {
     private $condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
     private $triggering_fields = array();
 
-    public function withId($id) {
+    public function withId($id)
+    {
         $this->id = $id;
         return $this;
     }
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->target = mock('Tracker_Workflow_Trigger_FieldValue');
     }
 
@@ -45,7 +48,8 @@ class Test_Tracker_Workflow_Trigger_TriggerRuleBuilder {
      * @param Tracker_Workflow_Trigger_FieldValue $target
      * @return Test_Tracker_Workflow_Trigger_TriggerRuleBuilder
      */
-    public function applyValue(Tracker_Workflow_Trigger_FieldValue $target) {
+    public function applyValue(Tracker_Workflow_Trigger_FieldValue $target)
+    {
         $this->target = $target;
         return $this;
     }
@@ -54,7 +58,8 @@ class Test_Tracker_Workflow_Trigger_TriggerRuleBuilder {
      * @param Tracker_Workflow_Trigger_FieldValue $trigger
      * @return Test_Tracker_Workflow_Trigger_TriggerRuleBuilder
      */
-    public function childHas(Tracker_Workflow_Trigger_FieldValue $trigger) {
+    public function childHas(Tracker_Workflow_Trigger_FieldValue $trigger)
+    {
         $this->triggering_fields[] = $trigger;
         return $this;
     }
@@ -62,7 +67,8 @@ class Test_Tracker_Workflow_Trigger_TriggerRuleBuilder {
     /**
      * @return Test_Tracker_Workflow_Trigger_TriggerRuleBuilder
      */
-    public function whenAtLeastOne() {
+    public function whenAtLeastOne()
+    {
         $this->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE;
         return $this;
     }
@@ -70,7 +76,8 @@ class Test_Tracker_Workflow_Trigger_TriggerRuleBuilder {
     /**
      * @return Test_Tracker_Workflow_Trigger_TriggerRuleBuilder
      */
-    public function whenAllOf() {
+    public function whenAllOf()
+    {
         $this->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
         return $this;
     }
@@ -78,7 +85,8 @@ class Test_Tracker_Workflow_Trigger_TriggerRuleBuilder {
     /**
      * @return Tracker_Workflow_Trigger_TriggerRule
      */
-    public function build() {
+    public function build()
+    {
         return new Tracker_Workflow_Trigger_TriggerRule(
             $this->id,
             $this->target,

@@ -55,7 +55,8 @@ Mock::generate('PFUser');
 
 class DocmanActionsTest extends TuleapTestCase {
 
-    function testCannotDeleteVersionOnNonFile() {
+    function testCannotDeleteVersionOnNonFile()
+    {
         // Definition acceptance criteria:
         // test is complete if there is an error and the error message is the right one
         $ctrl           = new MockDocman_Controller($this);
@@ -89,7 +90,8 @@ class DocmanActionsTest extends TuleapTestCase {
         $actions->deleteVersion();
     }
 
-    function testCanDeleteVersionOfFile() {
+    function testCanDeleteVersionOfFile()
+    {
         // Definition acceptance criteria:
         // test is complete if there is an info flash message that tells version is deleted
         $ctrl           = new MockDocman_Controller($this);
@@ -133,7 +135,8 @@ class DocmanActionsTest extends TuleapTestCase {
         $actions->deleteVersion();
     }
 
-    function testCannotDeleteLastVersion() {
+    function testCannotDeleteLastVersion()
+    {
         // Definition acceptance criteria:
         // test is complete if there is an error and the error message is the right one
         $ctrl           = new MockDocman_Controller($this);
@@ -171,7 +174,8 @@ class DocmanActionsTest extends TuleapTestCase {
         $actions->deleteVersion();
     }
 
-    function testCannotDeleteNonExistantVersion() {
+    function testCannotDeleteNonExistantVersion()
+    {
         // Definition acceptance criteria:
         // test is complete if there is an info flash message that tells version is deleted
         $ctrl           = new MockDocman_Controller($this);
@@ -215,7 +219,8 @@ class DocmanActionsTest extends TuleapTestCase {
         $actions->deleteVersion();
     }
 
-    function testRemove_monitoringNothingToDelete() {
+    function testRemove_monitoringNothingToDelete()
+    {
         $notificationsManager                  = new MockDocman_NotificationsManager();
         $controller                            = new MockDocman_Controller();
         $controller->feedback                  = new MockFeedback();
@@ -228,7 +233,8 @@ class DocmanActionsTest extends TuleapTestCase {
         $notificationsManager->expectNever('removeUser');
     }
 
-    function testRemove_monitoringNotifDoesNotExist() {
+    function testRemove_monitoringNotifDoesNotExist()
+    {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
         $user1 = mock('PFUser');
@@ -259,7 +265,8 @@ class DocmanActionsTest extends TuleapTestCase {
         $notificationsManager->expectNever('removeUser');
     }
 
-    function testRemove_monitoringError() {
+    function testRemove_monitoringError()
+    {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
         $userManager = new MockUserManager();
@@ -292,7 +299,8 @@ class DocmanActionsTest extends TuleapTestCase {
         $notificationsManager->expectCallCount('removeUser', 3);
     }
 
-    function testRemove_monitoringSuccess() {
+    function testRemove_monitoringSuccess()
+    {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
         $userManager = new MockUserManager();
@@ -323,7 +331,8 @@ class DocmanActionsTest extends TuleapTestCase {
         $notificationsManager->expectCallCount('removeUser', 6);
     }
 
-    function testAdd_monitoringNoOneToAdd() {
+    function testAdd_monitoringNoOneToAdd()
+    {
         $controller                 = new MockDocman_Controller();
         $notificationsManager       = new MockDocman_NotificationsManager();
         $actions                    = new Docman_ActionsTest();
@@ -334,7 +343,8 @@ class DocmanActionsTest extends TuleapTestCase {
         $notificationsManager->expectNever('addUser');
     }
 
-    function testAdd_monitoringNotifAlreadyExist() {
+    function testAdd_monitoringNotifAlreadyExist()
+    {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
         $notificationsManager = new MockDocman_NotificationsManager();
@@ -359,7 +369,8 @@ class DocmanActionsTest extends TuleapTestCase {
         $notificationsManager->expectNever('addUser');
     }
 
-    function testAdd_monitoringError() {
+    function testAdd_monitoringError()
+    {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
         $notificationsManager = new MockDocman_NotificationsManager();
@@ -388,7 +399,8 @@ class DocmanActionsTest extends TuleapTestCase {
         $notificationsManager->expectCallCount('addUser', 2);
     }
 
-    function testAdd_monitoringNoUserPermissions() {
+    function testAdd_monitoringNoUserPermissions()
+    {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
         $notificationsManager = new MockDocman_NotificationsManager();
@@ -420,7 +432,8 @@ class DocmanActionsTest extends TuleapTestCase {
         $notificationsManager->expectCallCount('addUser', 1);
     }
 
-    function testAdd_monitoringSuccess() {
+    function testAdd_monitoringSuccess()
+    {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
         $user = mock('PFUser');

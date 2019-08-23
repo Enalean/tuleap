@@ -24,13 +24,15 @@ require_once('HTML_Element_Input_Hidden.class.php');
  * Define a html input checkbox field
  */
 class HTML_Element_Input_Checkbox extends HTML_Element_Input {
-    public function  __construct($label, $name, $value) {
+    public function __construct($label, $name, $value)
+    {
         parent::__construct($label, $name, $value);
         if ($this->value) {
             $this->params['checked'] = 'checked';
         }
     }
-    public function render() {
+    public function render()
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html  = '<label class="checkbox inline">';
         $html .= $this->renderValue();
@@ -38,17 +40,21 @@ class HTML_Element_Input_Checkbox extends HTML_Element_Input {
         $html .= '</label>';
         return $html;
     }
-    public function renderValue() {
+    public function renderValue()
+    {
         $hf = new HTML_Element_Input_Hidden('', $this->name, 0, '');
         $html = $hf->render();
         $html .= parent::renderValue();
         return $html;
     }
-    protected function getInputType() { return 'checkbox'; }
+    protected function getInputType()
+    {
+        return 'checkbox'; }
     /**
      * The value for a checkbox is always 1
      */
-    public function getValue() {
+    public function getValue()
+    {
         return 1;
     }
 }

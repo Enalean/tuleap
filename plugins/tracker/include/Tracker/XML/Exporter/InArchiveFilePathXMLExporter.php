@@ -25,7 +25,8 @@ class Tracker_XML_Exporter_InArchiveFilePathXMLExporter implements Tracker_XML_E
      *
      * @return string
      */
-    public function getPath(Tracker_FileInfo $file_info) {
+    public function getPath(Tracker_FileInfo $file_info)
+    {
         return Tuleap\Project\XML\ArchiveInterface::DATA_DIR .
                DIRECTORY_SEPARATOR .
                Tracker_XML_Exporter_ArtifactAttachmentExporter::FILE_PREFIX .

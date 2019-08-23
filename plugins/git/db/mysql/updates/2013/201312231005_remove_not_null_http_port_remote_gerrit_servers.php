@@ -26,7 +26,8 @@ class b201312231005_remove_not_null_http_port_remote_gerrit_servers extends Forg
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Removes NOT NULL statement on http_port for git remote servers.
 EOT;
@@ -37,7 +38,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -46,7 +48,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = "alter table plugin_git_remote_servers MODIFY http_port INT(11) UNSIGNED DEFAULT 80";
         $res = $this->db->dbh->exec($sql);
 

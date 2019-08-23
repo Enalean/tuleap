@@ -25,38 +25,44 @@ require_once dirname(__FILE__) .'/bootstrap.php';
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 
 class Cardwall_ArtifactNodeTreeProvider4Tests extends Cardwall_RendererBoardBuilder {
-    public function getCards(array $artifact_ids, $swimline_id) {
+    public function getCards(array $artifact_ids, $swimline_id)
+    {
         return parent::getCards($artifact_ids, $swimline_id);
     }
 
-    public function wrapInAThreeLevelArtifactTree(array $cards, $swimline_id) {
+    public function wrapInAThreeLevelArtifactTree(array $cards, $swimline_id)
+    {
         return parent::wrapInAThreeLevelArtifactTree($cards, $swimline_id);
     }
 }
 
 class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->node_factory     = mock('Cardwall_CardInCellPresenterNodeFactory');
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
         $this->provider = new Cardwall_ArtifactNodeTreeProvider4Tests($this->node_factory, $this->artifact_factory);
     }
 
-    public function itCreatesTwoLevelsEvenIfNoArtifactIdsAreGiven() {
+    public function itCreatesTwoLevelsEvenIfNoArtifactIdsAreGiven()
+    {
         $root_node = $this->provider->wrapInAThreeLevelArtifactTree(array(), 'whatever');
 
         $this->assertTrue($root_node->hasChildren());
         $this->assertFalse($root_node->getChild(0)->hasChildren());
     }
 
-    public function itHasASwimlineId() {
+    public function itHasASwimlineId()
+    {
         $root_node = $this->provider->wrapInAThreeLevelArtifactTree(array(), 'Dat Id');
 
         $this->assertEqual($root_node->getChild(0)->getId(), 'Dat Id');
     }
 
-    public function itCreatesAThreeLevelTreeBecauseItMustLookLikeTheNodeTreeFromAMilestone() {
+    public function itCreatesAThreeLevelTreeBecauseItMustLookLikeTheNodeTreeFromAMilestone()
+    {
         $artifact4 = aMockArtifact()->withId(4)->build();
 
         $root_node = $this->provider->wrapInAThreeLevelArtifactTree(array(new ArtifactNode($artifact4)), 'whatever');

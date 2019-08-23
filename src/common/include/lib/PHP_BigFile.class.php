@@ -49,7 +49,8 @@ class PHP_BigFile {
     /**
      * @return string the stream url to use with fopen & co
      */
-    public static function stream($file) {
+    public static function stream($file)
+    {
         return self::PROTOCOL .'://'. $file;
     }
 
@@ -59,7 +60,8 @@ class PHP_BigFile {
      * @throw RuntimeException if we cannot register the protocol
      * @return void
      */
-    public static function register() {
+    public static function register()
+    {
         if (!stream_wrapper_register(self::PROTOCOL, self::class)) {
             throw new RuntimeException('Unable to register '. self::class .' protocol');
         }
@@ -74,7 +76,8 @@ class PHP_BigFile {
      *
      * @return int the size of the file $file
      */
-    public static function getSize($file) {
+    public static function getSize($file)
+    {
         $filename = escapeshellarg($file);
         return (int) trim(`stat -c%s $filename`);
     }
@@ -87,7 +90,8 @@ class PHP_BigFile {
      *
      * @return string the md5sum of the file $file
      */
-    public static function getMd5Sum($file) {
+    public static function getMd5Sum($file)
+    {
         //if filename containing spaces
         $filename = escapeshellarg($file);
         return trim(`md5sum $filename| awk '{ print $1 }'`);
@@ -104,7 +108,8 @@ class PHP_BigFile {
      *
      * @return bool true if $file is a file
      */
-    public static function isFile($file) {
+    public static function isFile($file)
+    {
         $filename = escapeshellarg($file);
         exec("[ -f $filename ]", $tmp, $ret);
         return $ret == 0;
@@ -123,7 +128,8 @@ class PHP_BigFile {
      *
      * @return bool true on success or false on failure
      */
-    public function stream_open($path, $mode, $options, &$opened_path) {
+    public function stream_open($path, $mode, $options, &$opened_path)
+    {
         $this->path   = preg_replace('`^'. preg_quote(self::PROTOCOL .'://') .'`', '', $path);
         $this->offset = 0;
         $this->mode   = $mode;
@@ -185,7 +191,8 @@ class PHP_BigFile {
      *
      * @return string If there are less than count bytes available, return as many as are available. If no more data is available, return either FALSE or an empty string.
      */
-    public function stream_read($count) {
+    public function stream_read($count)
+    {
         if ($this->filesize < PHP_INT_MAX) {
             // PHP 5.1 doesn't seems to like file_get_contents (bus error after 24MB)...
             // Note: it works with PHP 5.2.9 at least.
@@ -207,7 +214,8 @@ class PHP_BigFile {
      *
      * @return string If there are less than count bytes available, return as many as are available. If no more data is available, return either FALSE or an empty string.
      */
-    public function bigRead($count) {
+    public function bigRead($count)
+    {
         // ruby
         //$cmd = "ruby -e \"print File.read(". escapeshellarg($this->path) .", $count, $this->offset) || ''\"";
 
@@ -231,7 +239,8 @@ class PHP_BigFile {
      *
      * @return Return the number of bytes that were successfully stored, or 0 if none could be stored.
      */
-    public function stream_write($data) {
+    public function stream_write($data)
+    {
         $sizeToWrite = strlen($data);
         if ($this->offset + $sizeToWrite <= PHP_INT_MAX) {
             $written = file_put_contents($this->path, $data, FILE_APPEND);
@@ -249,7 +258,8 @@ class PHP_BigFile {
      *
      * @return Return the number of bytes that were successfully stored, or 0 if none could be stored.
      */
-    public function bigwrite($data) {
+    public function bigwrite($data)
+    {
         $cmd = 'perl -e "use MIME::Base64; open FH, '. escapeshellarg('>>'.$this->path) .'; print syswrite(FH, decode_base64(\''.base64_encode($data).'\')); close FH;"';
         //echo $cmd.PHP_EOL;
         $c   = `$cmd`;
@@ -263,7 +273,8 @@ class PHP_BigFile {
      *
      * @return Should return TRUE if the read/write position is at the end of the stream and if no more data is available to be read, or FALSE otherwise.
      */
-    public function stream_eof() {
+    public function stream_eof()
+    {
         //echo "$this->offset > $this->filesize\n";
         return $this->offset >= $this->filesize;
     }
@@ -275,7 +286,8 @@ class PHP_BigFile {
      *
      * @return int Should return the current position of the stream.
      */
-    public function stream_tell() {
+    public function stream_tell()
+    {
         return $this->offset;
     }
 
@@ -293,7 +305,8 @@ class PHP_BigFile {
      *
      * @return bool Return TRUE if the position was updated, FALSE otherwise
      */
-    public function stream_seek($offset, $whence = SEEK_SET) {
+    public function stream_seek($offset, $whence = SEEK_SET)
+    {
         switch ($whence) {
             case SEEK_SET:
                 if ($offset < $this->filesize && $offset >= 0) {
@@ -334,7 +347,8 @@ class PHP_BigFile {
      *
      * @return array @see http://php.net/stat
      */
-    public function stream_stat() {
+    public function stream_stat()
+    {
         return stat($this->path);
     }
 

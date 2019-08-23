@@ -32,7 +32,8 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function searchAll() {
+    function searchAll()
+    {
         $sql = "SELECT * FROM permissions";
         return $this->retrieve($sql);
     }
@@ -46,7 +47,8 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
      *
      * @return DataAccessResult
      */
-    function searchUgroupByObjectIdAndPermissionType($objectId, $permissionType, $withName=true){
+    function searchUgroupByObjectIdAndPermissionType($objectId, $permissionType, $withName=true)
+    {
         $fields = '';
         $joins  = '';
         if ($withName) {
@@ -61,7 +63,8 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
         return $this->retrieve($sql);
     }
 
-    public function getUgroupsByObjectIdAndPermissionType($object_id, $permission_type) {
+    public function getUgroupsByObjectIdAndPermissionType($object_id, $permission_type)
+    {
         $object_id       = $this->da->quoteSmart($object_id, array('force_string' => true));
         $permission_type = $this->da->quoteSmart($permission_type);
 
@@ -83,7 +86,8 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
      *
      * @return DataAccessResult
      */
-    public function searchDefaults($permissionType, $withName=true) {
+    public function searchDefaults($permissionType, $withName=true)
+    {
         $fields = '';
         $joins  = '';
         if ($withName) {
@@ -143,7 +147,8 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
     *
     * @return bool
     */
-    function clonePermissions($source, $target, $perms, $toGroupId=0) {
+    function clonePermissions($source, $target, $perms, $toGroupId=0)
+    {
         $sql = sprintf("DELETE FROM permissions ".
                         " WHERE object_id = %s ".
                         "   AND permission_type IN (%s) ",
@@ -246,14 +251,16 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
      *
      * @return bool
      */
-    function clearPermission($permissionType, $objectId) {
+    function clearPermission($permissionType, $objectId)
+    {
         $sql = ' DELETE FROM permissions '.
                ' WHERE object_id = '.$this->da->quoteSmart($objectId, array('force_string' => true)).
                ' AND permission_type = '.$this->da->quoteSmart($permissionType);
         return $this->update($sql);
     }
 
-    public function isThereAnExplicitWikiServicePermission($ugroup_id) {
+    public function isThereAnExplicitWikiServicePermission($ugroup_id)
+    {
         $ugroup_id  = $this->da->escapeInt($ugroup_id);
 
         $sql =
@@ -266,7 +273,8 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
         return $this->retrieveFirstRow($sql);
     }
 
-    public function doAllWikiServiceItemsHaveExplicitPermissions($project_id) {
+    public function doAllWikiServiceItemsHaveExplicitPermissions($project_id)
+    {
         $project_id = $this->da->escapeInt($project_id);
 
         $sql =
@@ -282,7 +290,8 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
         return ! $results;
     }
 
-    public function isThereADefaultWikiServicePermissionThatUsesUgroup($ugroup_id) {
+    public function isThereADefaultWikiServicePermissionThatUsesUgroup($ugroup_id)
+    {
         $ugroup_id  = $this->da->escapeInt($ugroup_id);
 
         $sql =
@@ -295,7 +304,8 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
         return (bool) $this->retrieveFirstRow($sql);
     }
 
-    public function disableRestrictedAccess() {
+    public function disableRestrictedAccess()
+    {
         $public_ugroup_id       = $this->da->escapeInt(ProjectUGroup::REGISTERED);
         $unrestricted_ugroup_id = $this->da->escapeInt(ProjectUGroup::AUTHENTICATED);
 
@@ -307,7 +317,8 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
         return $this->update($sql);
     }
 
-    public function disableRestrictedAccessForObjectId(array $permission_type, $object_id) {
+    public function disableRestrictedAccessForObjectId(array $permission_type, $object_id)
+    {
         $public_ugroup_id       = $this->da->escapeInt(ProjectUGroup::REGISTERED);
         $unrestricted_ugroup_id = $this->da->escapeInt(ProjectUGroup::AUTHENTICATED);
         $object_id              = $this->da->quoteSmart($object_id, array('force_string' => true));
@@ -323,7 +334,8 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
         return $this->update($sql);
     }
 
-    public function addHistory($group_id, $permission_type, $object_id) {
+    public function addHistory($group_id, $permission_type, $object_id)
+    {
         permission_add_history($group_id, $permission_type, $object_id);
     }
 }

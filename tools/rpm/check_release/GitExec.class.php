@@ -19,20 +19,23 @@
  */
 class GitExec {
 
-    public function hasChangedSince($path, $version) {
+    public function hasChangedSince($path, $version)
+    {
         $return_code;
         $output;
         exec("git diff --quiet $version -- $path", $output, $return_code);
         return $return_code;
     }
 
-    public function fileContent($path, $version) {
+    public function fileContent($path, $version)
+    {
         $output;
         exec("git show $version:$path", $output);
         return implode(PHP_EOL, $output);
     }
 
-    public function lsRemote($remote) {
+    public function lsRemote($remote)
+    {
         $output;
         exec("git ls-remote $remote", $output);
         return $output;

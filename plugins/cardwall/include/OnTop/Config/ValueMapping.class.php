@@ -30,31 +30,37 @@ class Cardwall_OnTop_Config_ValueMapping {
      */
     private $column_id;
 
-    public function __construct(Tracker_FormElement_Field_List_Value $value, $column_id) {
+    public function __construct(Tracker_FormElement_Field_List_Value $value, $column_id)
+    {
         $this->value     = $value;
         $this->column_id = $column_id;
     }
 
-    public function getValueId() {
+    public function getValueId()
+    {
         return $this->value->getId();
     }
 
-    public function getXMLValueId() {
+    public function getXMLValueId()
+    {
         return $this->value->getXMLId();
     }
 
-    public function getValueLabel() {
+    public function getValueLabel()
+    {
         return $this->value->getLabel();
     }
 
     /**
      * @return Tracker_FormElement_Field_List_Value
      */
-    public function getValue() {
+    public function getValue()
+    {
         return $this->value;
     }
 
-    public function getColumnId() {
+    public function getColumnId()
+    {
         return $this->column_id;
     }
 
@@ -65,15 +71,18 @@ class Cardwall_OnTop_Config_ValueMapping {
      *
      * @return bool
      */
-    public function matchStatusLabel($artifact_status_label) {
+    public function matchStatusLabel($artifact_status_label)
+    {
         return $this->matchLabel($artifact_status_label) || $this->matchNone($artifact_status_label);
     }
 
-    private function matchLabel($artifact_status_label) {
+    private function matchLabel($artifact_status_label)
+    {
         return $this->getValueLabel() == $artifact_status_label;
     }
 
-    private function matchNone($artifact_status_label) {
+    private function matchNone($artifact_status_label)
+    {
         return $artifact_status_label === null && $this->getValueId() == 100;
     }
 }

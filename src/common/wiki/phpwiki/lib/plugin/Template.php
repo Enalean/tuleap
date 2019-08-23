@@ -58,20 +58,24 @@ rcs_id('$Id: Template.php,v 1.4 2005/09/11 13:30:22 rurban Exp $');
 class WikiPlugin_Template
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("Template");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Parametrized page inclusion.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.4 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array(
                      'page'    => false, // the page to include
                      'vars'    => false,
@@ -81,7 +85,8 @@ extends WikiPlugin
                      );
     }
 
-    function getWikiPageLinks($argstr, $basepage) {
+    function getWikiPageLinks($argstr, $basepage)
+    {
         extract($this->getArgs($argstr));
         if ($page) {
             // Expand relative page names.
@@ -92,7 +97,8 @@ extends WikiPlugin
         return array($page->name);
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         extract($this->getArgs($argstr, $request));
         if ($page) {
             // Expand relative page names.

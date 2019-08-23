@@ -40,7 +40,8 @@ class WebDAVDocmanFileTest extends TuleapTestCase {
     /**
      * Test when the file doesn't exist on the filesystem
      */
-    function testGetNotFound() {
+    function testGetNotFound()
+    {
         $webDAVDocmanFile = new WebDAVDocmanFileTestVersion($this);
 
         $version = new MockDocman_Version();
@@ -56,7 +57,8 @@ class WebDAVDocmanFileTest extends TuleapTestCase {
     /**
      * Test when the file is too big
      */
-    function testGetBigFile() {
+    function testGetBigFile()
+    {
         $webDAVDocmanFile = new WebDAVDocmanFileTestVersion($this);
 
         $webDAVDocmanFile->setReturnValue('getSize', 2);
@@ -75,7 +77,8 @@ class WebDAVDocmanFileTest extends TuleapTestCase {
     /**
      * Test when the file download succeede
      */
-    function testGetSucceede() {
+    function testGetSucceede()
+    {
         $webDAVDocmanFile = new WebDAVDocmanFileTestVersion($this);
 
         $webDAVDocmanFile->setReturnValue('getSize', 1);
@@ -90,7 +93,8 @@ class WebDAVDocmanFileTest extends TuleapTestCase {
         $webDAVDocmanFile->get();
     }
 
-    function testPutNoWriteEnabled() {
+    function testPutNoWriteEnabled()
+    {
         $webDAVDocmanFile = new WebDAVDocmanFileTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', false);
@@ -101,7 +105,8 @@ class WebDAVDocmanFileTest extends TuleapTestCase {
         $webDAVDocmanFile->put($data);
     }
 
-    function testPutBigFile() {
+    function testPutBigFile()
+    {
         $webDAVDocmanFile = new WebDAVDocmanFileTestVersion();
 
         $utils = new MockWebDAVUtils();
@@ -122,7 +127,8 @@ class WebDAVDocmanFileTest extends TuleapTestCase {
         $webDAVDocmanFile->put($data);
     }
 
-    function testPutSucceed() {
+    function testPutSucceed()
+    {
         $webDAVDocmanFile = new WebDAVDocmanFileTestVersion();
 
         $utils = new MockWebDAVUtils();
@@ -142,7 +148,8 @@ class WebDAVDocmanFileTest extends TuleapTestCase {
         $webDAVDocmanFile->put($data);
     }
 
-    function testSetNameFile() {
+    function testSetNameFile()
+    {
         $webDAVDocmanFile = new WebDAVDocmanFileTestVersion();
         $item = new Docman_File();
         $webDAVDocmanFile->setReturnValue('getItem', $item);
@@ -150,7 +157,8 @@ class WebDAVDocmanFileTest extends TuleapTestCase {
         $webDAVDocmanFile->setName('newName');
     }
 
-    function testSetNameEmbeddedFile() {
+    function testSetNameEmbeddedFile()
+    {
         $webDAVDocmanFile = new WebDAVDocmanDocumentTestVersion();
 
         $utils = new MockWebDAVUtils();

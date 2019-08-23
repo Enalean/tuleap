@@ -64,7 +64,8 @@ EOT;
         break;
 }
 
-function get_all_attachment_ids() {
+function get_all_attachment_ids()
+{
     $attachments = array();
 
     $file_ids = array();
@@ -94,7 +95,8 @@ function get_all_attachment_ids() {
     return $attachments;
 }
 
-function dump_attachments(array $attachments) {
+function dump_attachments(array $attachments)
+{
     echo "----- Start Dump -----\n";
     foreach ($attachments as $attachment_id => $artifact_type_id) {
         $parent_path = ArtifactFile::getParentDirectoryForArtifactTypeId($artifact_type_id);
@@ -114,7 +116,8 @@ function dump_attachments(array $attachments) {
     echo "----- Dump completed -----\n";
 }
 
-function check_attachments(array $attachments) {
+function check_attachments(array $attachments)
+{
     echo "----- Start Check -----\n";
     foreach ($attachments as $attachment_id => $artifact_type_id) {
         $parent_path = ArtifactFile::getParentDirectoryForArtifactTypeId($artifact_type_id);
@@ -143,7 +146,8 @@ function check_attachments(array $attachments) {
     echo "----- Check completed -----\n";
 }
 
-function delete_equal_attachments(array $attachments) {
+function delete_equal_attachments(array $attachments)
+{
     echo "----- Start Purge -----\n";
     foreach ($attachments as $attachment_id => $artifact_type_id) {
         $parent_path = ArtifactFile::getParentDirectoryForArtifactTypeId($artifact_type_id);
@@ -167,7 +171,8 @@ function delete_equal_attachments(array $attachments) {
     echo "----- Purge completed -----\n";
 }
 
-function error($str) {
+function error($str)
+{
     echo "*** ERROR: $str\n";
 }
 

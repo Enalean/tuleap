@@ -48,7 +48,8 @@ class ImgData_Balls extends ImgData {
     protected $imgdata_large, $imgdata_small, $imgdata_xsmall ;
 
 
-    function GetImg($aMark,$aIdx) {
+    function GetImg($aMark,$aIdx)
+    {
         switch( $aMark ) {
             case MARK_IMG_SBALL:
             case MARK_IMG_BALL:
@@ -70,7 +71,8 @@ class ImgData_Balls extends ImgData {
         return parent::GetImg($aMark,$aIdx);
     }
 
-    function __construct() {
+    function __construct()
+    {
 
         //==========================================================
         // File: bl_red.png

@@ -33,7 +33,8 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
     protected $as_of_date;
     protected $summary;
 
-    public function loadFromSession() {
+    public function loadFromSession()
+    {
         $this->report_session = self::getSession($this->renderer->report->id, $this->renderer->id);
         $chart_in_session = $this->report_session->get($this->id);
         if (isset($chart_in_session['field_start']) && $chart_in_session['field_start'] !== '') {
@@ -51,7 +52,8 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         }
     }
 
-    public function loadFromDb() {
+    public function loadFromDb()
+    {
         $arr = $this->getDao()->searchById($this->id)->getRow();
         $this->field_start      = $arr['field_start'];
         $this->field_due        = $arr['field_due'];
@@ -66,7 +68,8 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         $this->summary          = $arr['summary'];
     }
 
-    public function registerInSession() {
+    public function registerInSession()
+    {
         parent::registerInSession();
         $this->report_session->set("$this->id.field_start",      $this->field_start);
         $this->report_session->set("$this->id.field_due",        $this->field_due);
@@ -78,11 +81,13 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         $this->report_session->set("$this->id.summary",          $this->summary);
     }
 
-    protected function getDao() {
+    protected function getDao()
+    {
         return new GraphOnTrackersV5_Chart_GanttDao();
     }
 
-    public static function create($graphic_report, $id, $rank, $title, $description, $width, $height) {
+    public static function create($graphic_report, $id, $rank, $title, $description, $width, $height)
+    {
         $session = self::getSession($graphic_report->report->id, $graphic_report->id);
 
         $session->set("$id.field_start",      '');
@@ -99,37 +104,77 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         return $c;
     }
 
-    public function setSession($graphic_report, $title, $description, $width, $height) {
+    public function setSession($graphic_report, $title, $description, $width, $height)
+    {
         //TODO
     }
 
-    public function getField_start() { return $this->field_start; }
-    public function setField_start($field_start) { return $this->field_start = $field_start; }
-    public function getField_due() { return $this->field_due; }
-    public function setField_due($field_due) { return $this->field_due = $field_due; }
-    public function getField_finish() { return $this->field_finish; }
-    public function setField_finish($field_finish) { return $this->field_finish = $field_finish; }
-    public function getField_percentage() { return $this->field_percentage; }
-    public function setField_percentage($field_percentage) { return $this->field_percentage = $field_percentage; }
-    public function getField_righttext() { return $this->field_righttext; }
-    public function setField_righttext($field_righttext) { return $this->field_righttext = $field_righttext; }
-    public function getScale() { return $this->scale; }
-    public function setScale($scale) { return $this->scale = $scale; }
-    public function getAs_of_date() { return $this->as_of_date; }
-    public function setAs_of_date($as_of_date) { return $this->as_of_date = $as_of_date; }
-    public function getSummary() { return $this->summary; }
-    public function setSummary($summary) { return $this->summary = $summary; }
-    public static function getDefaultHeight(){return 0; }
-    public static function getDefaultWidth(){return 0;  }
+    public function getField_start()
+    {
+        return $this->field_start; }
+    public function setField_start($field_start)
+    {
+        return $this->field_start = $field_start; }
+    public function getField_due()
+    {
+        return $this->field_due; }
+    public function setField_due($field_due)
+    {
+        return $this->field_due = $field_due; }
+    public function getField_finish()
+    {
+        return $this->field_finish; }
+    public function setField_finish($field_finish)
+    {
+        return $this->field_finish = $field_finish; }
+    public function getField_percentage()
+    {
+        return $this->field_percentage; }
+    public function setField_percentage($field_percentage)
+    {
+        return $this->field_percentage = $field_percentage; }
+    public function getField_righttext()
+    {
+        return $this->field_righttext; }
+    public function setField_righttext($field_righttext)
+    {
+        return $this->field_righttext = $field_righttext; }
+    public function getScale()
+    {
+        return $this->scale; }
+    public function setScale($scale)
+    {
+        return $this->scale = $scale; }
+    public function getAs_of_date()
+    {
+        return $this->as_of_date; }
+    public function setAs_of_date($as_of_date)
+    {
+        return $this->as_of_date = $as_of_date; }
+    public function getSummary()
+    {
+        return $this->summary; }
+    public function setSummary($summary)
+    {
+        return $this->summary = $summary; }
+    public static function getDefaultHeight()
+    {
+        return 0; }
+    public static function getDefaultWidth()
+    {
+        return 0;  }
 
-    protected function getEngine() {
+    protected function getEngine()
+    {
         return new GraphOnTrackersV5_Engine_Gantt();
     }
-    protected function getChartDataBuilder($artifacts) {
+    protected function getChartDataBuilder($artifacts)
+    {
         return new GraphOnTrackersV5_Chart_GanttDataBuilder($this,$artifacts);
     }
 
-    public function getProperties() {
+    public function getProperties()
+    {
         $parent_properties=parent::getProperties();
         unset($parent_properties['dimensions']);
         return array_merge($parent_properties,
@@ -155,7 +200,8 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         ));
     }
 
-    public function createDb($id) {
+    public function createDb($id)
+    {
 
         $field_start = $this->getField_start();
         if (!is_string($field_start) && !is_int($field_start) && $field_start) {
@@ -202,7 +248,8 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         );
     }
 
-    public function updateDb() {
+    public function updateDb()
+    {
         return $this->getDao()->save(
             $this->id,
             $this->getField_start(),
@@ -216,7 +263,8 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         );
     }
 
-    protected function updateSpecificProperties($row) {
+    protected function updateSpecificProperties($row)
+    {
 
         $session = self::getSession($this->renderer->report->id, $this->renderer->id);
 
@@ -242,7 +290,8 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         return true;
     }
 
-    function userCanVisualize(){
+    function userCanVisualize()
+    {
         $ff = Tracker_FormElementFactory::instance();
         $artifact_field_start = $ff->getFormElementById($this->field_start);
         $artifact_field_finish = $ff->getFormElementById($this->field_finish);
@@ -259,11 +308,13 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         }
     }
 
-    public function getChartType() {
+    public function getChartType()
+    {
         return 'gantt';
     }
 
-    public function getSpecificRow() {
+    public function getSpecificRow()
+    {
         return array(
             'field_start'      => $this->getField_start(),
             'field_due'        => $this->getField_due(),
@@ -282,7 +333,8 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
      * @param SimpleXMLElement $xml characterising the chart
      * @param array $formsMapping associating xml IDs to real fields
      */
-    public function setSpecificPropertiesFromXML($xml, $formsMapping){
+    public function setSpecificPropertiesFromXML($xml, $formsMapping)
+    {
         if (isset($formsMapping[(string)$xml['start']])) {
             $this->setField_start($formsMapping[(string)$xml['start']]);
         }
@@ -314,7 +366,8 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
      *
      * @return array containing the properties
      */
-    public function arrayOfSpecificProperties() {
+    public function arrayOfSpecificProperties()
+    {
         return array(
             'field_start'      => $this->getField_start(),
             'field_due'        => $this->getField_due(),
@@ -327,7 +380,8 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         );
     }
 
-    public function exportToXml(SimpleXMLElement $root, $formsMapping) {
+    public function exportToXml(SimpleXMLElement $root, $formsMapping)
+    {
         parent::exportToXML($root, $formsMapping);
         if ($this->scale) {
             $root->addAttribute('scale', $this->scale);

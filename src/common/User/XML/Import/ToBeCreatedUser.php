@@ -28,7 +28,8 @@ class ToBeCreatedUser extends ActionToBeTakenForUser {
     public const ACTION = 'create';
 
     /** @return array */
-    public function getCSVData() {
+    public function getCSVData()
+    {
         return array(
             $this->username,
             self::ACTION .':'. PFUser::STATUS_SUSPENDED,
@@ -41,7 +42,8 @@ class ToBeCreatedUser extends ActionToBeTakenForUser {
         );
     }
 
-    public function isActionAllowed($action) {
+    public function isActionAllowed($action)
+    {
         return in_array($action, self::$ALLOWED_ACTIONS);
     }
 }

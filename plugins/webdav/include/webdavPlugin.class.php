@@ -32,7 +32,8 @@ class WebDAVPlugin extends Plugin {
      *
      * @return void
      */
-    function __construct($id) {
+    function __construct($id)
+    {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->addHook('url_verification_instance', 'urlVerification', false);
@@ -45,7 +46,8 @@ class WebDAVPlugin extends Plugin {
      *
      * @see src/common/plugin/Plugin#getPluginInfo()
      */
-    function getPluginInfo() {
+    function getPluginInfo()
+    {
 
         if (!$this->pluginInfo instanceof WebDAVPluginInfo) {
             $this->pluginInfo = new WebDAVPluginInfo($this);
@@ -66,7 +68,8 @@ class WebDAVPlugin extends Plugin {
      *
      * @return void
      */
-    function urlVerification(&$params) {
+    function urlVerification(&$params)
+    {
         if (! $this->urlIsWebDav($params['server_param'])) {
             return;
         }
@@ -75,7 +78,8 @@ class WebDAVPlugin extends Plugin {
         $params['url_verification'] = new Webdav_URLVerification($webdavHost);
     }
 
-    private function urlIsWebDav(array $server) {
+    private function urlIsWebDav(array $server)
+    {
         $webdav_host     = $this->getPluginInfo()->getPropertyValueForName('webdav_host');
         $webdav_base_uri = $this->getPluginInfo()->getPropertyValueForName('webdav_base_uri');
         $http_host       = HTTPRequest::instance()->getFromServer('HTTP_HOST');
@@ -88,7 +92,8 @@ class WebDAVPlugin extends Plugin {
      *
      * @return Sabre_DAV_Server
      */
-    function getServer() {
+    function getServer()
+    {
 
         // Authentication
         $auth = new WebDAVAuthentication();

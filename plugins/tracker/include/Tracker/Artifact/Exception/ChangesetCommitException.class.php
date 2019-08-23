@@ -20,7 +20,8 @@
  */
 class Tracker_ChangesetCommitException extends Tracker_Exception {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('Error while commiting all the changes');
     }
 }

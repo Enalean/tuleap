@@ -32,7 +32,8 @@ class WillBeCreatedUser_processTest extends TuleapTestCase {
     /** @var Logger */
     private $logger;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->user_manager = mock('UserManager');
@@ -47,7 +48,8 @@ class WillBeCreatedUser_processTest extends TuleapTestCase {
         );
     }
 
-    public function itCreatesANewUserInDatabase() {
+    public function itCreatesANewUserInDatabase()
+    {
         stub($this->user_manager)->createAccount()->returns(aUser()->build());
 
         expect($this->user_manager)->createAccount()->once();
@@ -55,7 +57,8 @@ class WillBeCreatedUser_processTest extends TuleapTestCase {
         $this->user->process($this->user_manager, $this->logger);
     }
 
-    public function itThrowsAnExceptionIfUserCannotBeCreated() {
+    public function itThrowsAnExceptionIfUserCannotBeCreated()
+    {
         stub($this->user_manager)->createAccount()->returns(false);
 
         $this->expectException('User\XML\Import\UserCannotBeCreatedException');

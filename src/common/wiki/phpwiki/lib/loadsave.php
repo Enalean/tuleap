@@ -27,7 +27,8 @@ require_once("lib/Template.php");
 /**
  * ignore fatal errors during dump
  */
-function _dump_error_handler(&$error) {
+function _dump_error_handler(&$error)
+{
     if ($error->isFatal()) {
         $error->errno = E_USER_WARNING;
         return true;
@@ -125,7 +126,7 @@ function EndLoadDump(&$request)
  *
  * Also see http://www.faqs.org/rfcs/rfc2822.html
  */
-function MailifyPage ($page, $nversions = 1)
+function MailifyPage($page, $nversions = 1)
 {
     $current = $page->getCurrentRevision();
     $head = '';
@@ -176,7 +177,7 @@ function MailifyPage ($page, $nversions = 1)
  * @param $pagename string Pagename.
  * @return string Filename for page.
  */
-function FilenameForPage ($pagename)
+function FilenameForPage($pagename)
 {
     $enc = rawurlencode($pagename);
     return preg_replace('/^\./', '%2e', $enc);
@@ -189,7 +190,7 @@ function FilenameForPage ($pagename)
  * is included in the zip file; otherwise all archived versions are
  * included as well.
  */
-function MakeWikiZip (&$request)
+function MakeWikiZip(&$request)
 {
     if ($request->getArg('include') == 'all') {
         $zipname         = WIKI_NAME . _("FullDump") . date('Ymd-Hi') . '.zip';
@@ -257,7 +258,8 @@ function MakeWikiZip (&$request)
     $ErrorManager->popErrorHandler();
 }
 
-function _copyMsg($page, $smallmsg) {
+function _copyMsg($page, $smallmsg)
+{
     if (!isa($GLOBALS['request'], 'MockRequest')) {
         if ($page) $msg = HTML(HTML::br(), HTML($page), HTML::small($smallmsg));
         else $msg = HTML::small($smallmsg);
@@ -276,7 +278,7 @@ function _copyMsg($page, $smallmsg) {
  *
  * However, the actual wiki page data should be unaffected.
  */
-function MakeWikiZipHtml (&$request)
+function MakeWikiZipHtml(&$request)
 {
     $request->_TemplatesProcessed = array();
     $zipname = "wikihtml.zip";
@@ -402,7 +404,7 @@ function MakeWikiZipHtml (&$request)
 //
 ////////////////////////////////////////////////////////////////
 
-function SavePage (&$request, &$pageinfo, $source, $filename)
+function SavePage(&$request, &$pageinfo, $source, $filename)
 {
     static $overwite_all = false;
     $pagedata    = $pageinfo['pagedata'];    // Page level meta-data.
@@ -563,7 +565,7 @@ function SavePage (&$request, &$pageinfo, $source, $filename)
 }
 
 // action=revert (by diff)
-function RevertPage (&$request)
+function RevertPage(&$request)
 {
     $mesg = HTML::dd();
     $pagename = $request->getArg('pagename');
@@ -599,7 +601,8 @@ function RevertPage (&$request)
     flush();
 }
 
-function _tryinsertInterWikiMap($content) {
+function _tryinsertInterWikiMap($content)
+{
     $goback = false;
     if (strpos($content, "<verbatim>")) {
         //$error_html = " The newly loaded pgsrc already contains a verbatim block.";
@@ -695,7 +698,8 @@ function ParseSerializedPage($text, $default_pagename, $user)
     return $pageinfo;
 }
 
-function SortByPageVersion ($a, $b) {
+function SortByPageVersion($a, $b)
+{
     return $a['version'] - $b['version'];
 }
 
@@ -704,7 +708,7 @@ function SortByPageVersion ($a, $b) {
  * because the sql passwords are in plaintext there. And the webserver must be able to read it.
  * Detected by Santtu Jarvi.
  */
-function LoadFile (&$request, $filename, $text = false, $mtime = false)
+function LoadFile(&$request, $filename, $text = false, $mtime = false)
 {
     if (preg_match("/config$/", dirname($filename))             // our or other config
         and preg_match("/config.*\.ini/", basename($filename))) // backups and other versions also
@@ -758,7 +762,8 @@ function LoadFile (&$request, $filename, $text = false, $mtime = false)
     }
 }
 
-function LoadDir (&$request, $dirname, $files = false, $exclude = false) {
+function LoadDir(&$request, $dirname, $files = false, $exclude = false)
+{
     $fileset = new LimitedFileSet($dirname, $files, $exclude);
 
     if (!$files and ($skiplist = $fileset->getSkippedFiles())) {
@@ -784,7 +789,8 @@ function LoadDir (&$request, $dirname, $files = false, $exclude = false) {
     }
 }
 
-function LoadZip (&$request, $zipfile, $files = false, $exclude = false) {
+function LoadZip(&$request, $zipfile, $files = false, $exclude = false)
+{
     $zip = new ZipReader($zipfile);
     $timeout = (! $request->getArg('start_debug')) ? 20 : 120;
     while (list ($fn, $data, $attrib) = $zip->readFile()) {
@@ -804,14 +810,16 @@ function LoadZip (&$request, $zipfile, $files = false, $exclude = false) {
 }
 
 class LimitedFileSet extends fileSet {
-    function __construct($dirname, $_include, $exclude) {
+    function __construct($dirname, $_include, $exclude)
+    {
         $this->_includefiles = $_include;
         $this->_exclude = $exclude;
         $this->_skiplist = array();
         parent::__construct($dirname);
     }
 
-    function _filenameSelector($fn) {
+    function _filenameSelector($fn)
+    {
         $incl = &$this->_includefiles;
         $excl = &$this->_exclude;
 
@@ -824,13 +832,14 @@ class LimitedFileSet extends fileSet {
         }
     }
 
-    function getSkippedFiles () {
+    function getSkippedFiles()
+    {
         return $this->_skiplist;
     }
 }
 
 
-function IsZipFile ($filename_or_fd)
+function IsZipFile($filename_or_fd)
 {
     // See if it looks like zip file
     if (is_string($filename_or_fd))
@@ -850,7 +859,7 @@ function IsZipFile ($filename_or_fd)
 }
 
 
-function LoadAny (&$request, $file_or_dir, $files = false, $exclude = false)
+function LoadAny(&$request, $file_or_dir, $files = false, $exclude = false)
 {
     // Try urlencoded filename for accented characters.
     if (!file_exists($file_or_dir)) {
@@ -900,7 +909,7 @@ function LoadAny (&$request, $file_or_dir, $files = false, $exclude = false)
     }
 }
 
-function RakeSandboxAtUserRequest (&$request)
+function RakeSandboxAtUserRequest(&$request)
 {
     $source = $request->getArg('source');
     $finder = new FileFinder;
@@ -927,7 +936,7 @@ function RakeSandboxAtUserRequest (&$request)
  * - Todo: theme-specific pages:
  *   blog - HomePage, ADMIN_USER/Blogs
  */
-function SetupWiki (&$request)
+function SetupWiki(&$request)
 {
     global $GenericPages, $LANG;
 
@@ -1014,7 +1023,7 @@ function SetupWiki (&$request)
     EndLoadDump($request);
 }
 
-function LoadPostFile (&$request)
+function LoadPostFile(&$request)
 {
     $upload = $request->getUploadedFile('file');
 

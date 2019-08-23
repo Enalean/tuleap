@@ -23,8 +23,9 @@ class Tracker_Workflow_Trigger_FieldValue {
     private $value;
 
     public function __construct(
-            Tracker_FormElement_Field_List $field,
-            Tracker_FormElement_Field_List_BindValue $value) {
+        Tracker_FormElement_Field_List $field,
+        Tracker_FormElement_Field_List_BindValue $value
+    ) {
         $this->field = $field;
         $this->value = $value;
     }
@@ -32,21 +33,24 @@ class Tracker_Workflow_Trigger_FieldValue {
     /**
      * @return Tracker_FormElement_Field_List
      */
-    public function getField() {
+    public function getField()
+    {
         return $this->field;
     }
 
     /**
      * @return Tracker_FormElement_Field_List_BindValue
      */
-    public function getValue() {
+    public function getValue()
+    {
         return $this->value;
     }
 
     /**
      * @return Array
      */
-    public function fetchFormattedForJson() {
+    public function fetchFormattedForJson()
+    {
         return array(
             'tracker_name' => $this->getField()->getTracker()->getName(),
             'field_id' => $this->getField()->getId(),
@@ -61,7 +65,8 @@ class Tracker_Workflow_Trigger_FieldValue {
      *
      * @return Array
      */
-    public function getFieldData() {
+    public function getFieldData()
+    {
         return array(
             $this->getField()->getId() => $this->getValue()->getId()
         );
@@ -73,7 +78,8 @@ class Tracker_Workflow_Trigger_FieldValue {
      * @param Tracker_Artifact $artifact
      * @return bool
      */
-    public function isSetForArtifact(Tracker_Artifact $artifact) {
+    public function isSetForArtifact(Tracker_Artifact $artifact)
+    {
         $artifact_value = $artifact->getValue($this->getField());
         if ($artifact_value && $artifact_value->getValue() == array($this->getValue()->getId())) {
             return true;
@@ -88,7 +94,8 @@ class Tracker_Workflow_Trigger_FieldValue {
      *
      * @return String
      */
-    public function getAsChangesetComment($condition) {
+    public function getAsChangesetComment($condition)
+    {
         return $GLOBALS['Language']->getText(
             'workflow_trigger_rules_processor',
             'rule_comment_'.$condition,

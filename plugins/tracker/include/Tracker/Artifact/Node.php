@@ -23,7 +23,8 @@
  */
 class ArtifactNode extends TreeNode {
 
-    public function __construct(Tracker_Artifact $artifact, ?array $data = null) {
+    public function __construct(Tracker_Artifact $artifact, ?array $data = null)
+    {
         parent::__construct($data, $artifact->getId());
         $this->setObject($artifact);
     }
@@ -31,7 +32,8 @@ class ArtifactNode extends TreeNode {
     /**
      * @return Tracker_Artifact
      */
-    public function getArtifact() {
+    public function getArtifact()
+    {
         return $this->getObject();
     }
 

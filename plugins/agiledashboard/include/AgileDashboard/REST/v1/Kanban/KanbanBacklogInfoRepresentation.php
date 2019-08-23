@@ -36,7 +36,8 @@ class KanbanBacklogInfoRepresentation {
      */
     public $user_can_add_in_place;
 
-    public function build($label, $is_open, $user_can_add_in_place) {
+    public function build($label, $is_open, $user_can_add_in_place)
+    {
         $this->label   = $label;
         $this->is_open = $is_open;
 

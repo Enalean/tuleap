@@ -31,7 +31,8 @@ class Docman_MetadataSqlQueryChunk {
     var $mdv;
     var $mdId;
 
-    function __construct($md) {
+    function __construct($md)
+    {
         $this->mdv = 'mdv_'.$md->getLabel();
         $this->mdId = $md->getId();
 
@@ -64,19 +65,23 @@ class Docman_MetadataSqlQueryChunk {
         }
     }
 
-    function getFrom() {
+    function getFrom()
+    {
         return '';
     }
 
-    function getWhere() {
+    function getWhere()
+    {
         return '';
     }
 
-    function getOrderBy() {
+    function getOrderBy()
+    {
         return '';
     }
 
-    function _getMdvJoin($label=null) {
+    function _getMdvJoin($label=null)
+    {
         if($label !== null) {
             $mdv = 'mdv_'.$label;
             $fieldId = substr($label, 6);

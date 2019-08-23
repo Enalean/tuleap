@@ -24,7 +24,8 @@
 class Statistics_DiskUsageOutput {
     protected $_dum;
 
-    public function __construct(Statistics_DiskUsageManager $dum) {
+    public function __construct(Statistics_DiskUsageManager $dum)
+    {
         $this->_dum = $dum;
     }
 

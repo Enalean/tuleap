@@ -38,7 +38,8 @@ class ArtifactUserMultiListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExpo
         $this->current_value_exporter = $current_value_exporter;
     }
 
-    public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row) {
+    public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)
+    {
         $values = explode(',', $row['new_value']);
 
         $field_node = $this->getNode(self::TV5_TYPE, $row);
@@ -52,7 +53,8 @@ class ArtifactUserMultiListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExpo
         $changeset_node->appendChild($field_node);
     }
 
-    protected function getValueLabel($value) {
+    protected function getValueLabel($value)
+    {
         if ($this->valueIsSystemValueNone($value)) {
             return '';
         }
@@ -60,20 +62,24 @@ class ArtifactUserMultiListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExpo
         return $value;
     }
 
-    public function getCurrentFieldValue(array $field_value_row, $tracker_id) {
+    public function getCurrentFieldValue(array $field_value_row, $tracker_id)
+    {
         return $this->current_value_exporter->getCurrentFieldValue($field_value_row, $tracker_id);
     }
 
-    private function valueIsSystemValueNone($value) {
+    private function valueIsSystemValueNone($value)
+    {
         return $value === self::SYS_VALUE_NONE_EN  ||
                $value === self::SYS_VALUE_NONE_FR;
     }
 
-    public function getFieldValueIndex() {
+    public function getFieldValueIndex()
+    {
         return self::LABEL_VALUES_INDEX;
     }
 
-    public function isValueEqual($value1, $value2) {
+    public function isValueEqual($value1, $value2)
+    {
         $value1 = explode(',', $value1);
         $value2 = explode(',', $value2);
 

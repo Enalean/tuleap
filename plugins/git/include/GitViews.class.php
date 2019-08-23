@@ -132,7 +132,8 @@ class GitViews extends PluginViews {
         $this->header_renderer->renderDefaultHeader($this->request, $this->user, $this->project);
     }
 
-    public function footer() {
+    public function footer()
+    {
         $GLOBALS['HTML']->footer(array());
     }
 
@@ -177,7 +178,8 @@ class GitViews extends PluginViews {
     /**
      * CONFIRM PRIVATE
      */
-    public function confirmPrivate() {
+    public function confirmPrivate()
+    {
         $params = $this->getData();
         $repository   = $params['repository'];
         $repoId       = $repository->getId();
@@ -212,7 +214,8 @@ class GitViews extends PluginViews {
     /**
      * TREE VIEW
      */
-    public function index() {
+    public function index()
+    {
         $params = $this->getData();
 
         $this->_tree($params);
@@ -221,7 +224,8 @@ class GitViews extends PluginViews {
         }
     }
 
-    protected function forkRepositories() {
+    protected function forkRepositories()
+    {
         $params = $this->getData();
 
         echo '<h1>'. dgettext('tuleap-git', 'Fork repositories') .'</h1>';
@@ -397,11 +401,13 @@ class GitViews extends PluginViews {
         return $mirrored_repositories_presenters;
     }
 
-    private function generateMassUpdateCSRF() {
+    private function generateMassUpdateCSRF()
+    {
         return new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=admin-mass-update');
     }
 
-    private function getAdminMassUpdateMirrorPresenters() {
+    private function getAdminMassUpdateMirrorPresenters()
+    {
         $mirrors           = $this->mirror_data_mapper->fetchAllForProject($this->project);
         $mirror_presenters = array();
 
@@ -417,7 +423,8 @@ class GitViews extends PluginViews {
      *
      * @return void
      */
-    protected function forkRepositoriesPermissions() {
+    protected function forkRepositoriesPermissions()
+    {
         $params = $this->getData();
 
         if ($params['scope'] == 'project') {
@@ -453,11 +460,13 @@ class GitViews extends PluginViews {
         return new AccessRightsPresenterOptionsBuilder($user_group_factory, PermissionsManager::instance());
     }
 
-    private function getGitRepositoryFactory() {
+    private function getGitRepositoryFactory()
+    {
         return new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
     }
 
-    private function fetchCopyToAnotherProject() {
+    private function fetchCopyToAnotherProject()
+    {
         $html = '';
         $userProjectOptions = $this->getUserProjectsAsOptions($this->user, ProjectManager::instance(), $this->groupId);
         if ($userProjectOptions) {
@@ -478,7 +487,8 @@ class GitViews extends PluginViews {
         return $html;
     }
 
-    public function getUserProjectsAsOptions(PFUser $user, ProjectManager $manager, $currentProjectId) {
+    public function getUserProjectsAsOptions(PFUser $user, ProjectManager $manager, $currentProjectId)
+    {
         $purifier   = Codendi_HTMLPurifier::instance();
         $html       = '';
         $option     = '<option value="%d" title="%s">%s</option>';

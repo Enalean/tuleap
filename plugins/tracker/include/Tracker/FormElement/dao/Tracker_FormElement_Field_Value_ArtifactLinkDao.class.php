@@ -20,7 +20,8 @@
 */
 
 class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElement_Field_ValueDao {
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_changeset_value_artifactlink';
     }
@@ -58,7 +59,8 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         return $this->retrieve($sql);
     }
 
-    public function searchIsChildReverseLinksById($artifact_id) {
+    public function searchIsChildReverseLinksById($artifact_id)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $is_child    = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
 
@@ -75,7 +77,8 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         return $this->retrieve($sql);
     }
 
-    public function create($changeset_value_id, $nature, array $artifact_ids, $keyword, $group_id) {
+    public function create($changeset_value_id, $nature, array $artifact_ids, $keyword, $group_id)
+    {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $nature             = $nature ? $this->da->quoteSmart($nature) : 'NULL';
         $keyword            = $this->da->quoteSmart($keyword);
@@ -94,7 +97,8 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         return $this->update($sql);
     }
 
-    public function keep($from, $to) {
+    public function keep($from, $to)
+    {
         $from = $this->da->escapeInt($from);
         $to   = $this->da->escapeInt($to);
         $sql = "INSERT INTO $this->table_name(changeset_value_id, nature, artifact_id, keyword, group_id)
@@ -104,7 +108,8 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         return $this->update($sql);
     }
 
-    public function createNoneValue($tracker_id, $field_id) {
+    public function createNoneValue($tracker_id, $field_id)
+    {
         $changeset_value_ids = $this->createNoneChangesetValue($tracker_id, $field_id);
         if ( $changeset_value_ids === false ) {
             return false;
@@ -113,7 +118,8 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         return true;
     }
 
-    public function updateItemName ($group_id, $oldKeyword, $keyword) {
+    public function updateItemName($group_id, $oldKeyword, $keyword)
+    {
         $group_id = $this->da->quoteSmart($group_id);
         $keyword= $this->da->quoteSmart($keyword);
         $oldKeyword= $this->da->quoteSmart($oldKeyword);
@@ -123,7 +129,8 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         return $this->update($sql);
     }
 
-    public function deleteReference($artifact_id) {
+    public function deleteReference($artifact_id)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $sql = "DELETE FROM $this->table_name
                 WHERE artifact_id = $artifact_id";

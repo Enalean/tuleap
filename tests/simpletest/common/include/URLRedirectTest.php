@@ -59,7 +59,8 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
         $this->assertEqual('/account/login.php?return_to=%2Fmy%2F', $login_url_from_register_page);
     }
 
-    public function itNotRedirectToUntrustedWebsite() {
+    public function itNotRedirectToUntrustedWebsite()
+    {
         $this->assertEqual(
             '/my/redirect.php?return_to=/',
             $this->url_redirect->makeReturnToUrl('/my/redirect.php', 'http://evil.example.com/')
@@ -70,7 +71,8 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
         );
     }
 
-    public function itNotRedirectToUntrustedCode() {
+    public function itNotRedirectToUntrustedCode()
+    {
         $this->assertEqual(
             '/my/redirect.php?return_to=/',
             $this->url_redirect->makeReturnToUrl('/my/redirect.php', 'javascript:alert(1)')

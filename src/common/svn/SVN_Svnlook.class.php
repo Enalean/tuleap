@@ -24,12 +24,14 @@ class SVN_Svnlook
     private $timeout = '/usr/bin/timeout 5s';
     private $svnlook = '/usr/bin/svnlook';
 
-    public function getDirectoryListing(Project $project, $svn_path) {
+    public function getDirectoryListing(Project $project, $svn_path)
+    {
         $command = 'tree --non-recursive --full-paths '.escapeshellarg($project->getSVNRootPath()).' '.escapeshellarg($svn_path);
         return $this->execute($command);
     }
 
-    public function getTree(Project $project) {
+    public function getTree(Project $project)
+    {
         $command = 'tree --full-paths '.escapeshellarg($project->getSVNRootPath());
         return $this->execute($command);
     }
@@ -39,7 +41,8 @@ class SVN_Svnlook
      *
      * @return array
      */
-    public function getPathLastHistory(Project $project, $svn_path) {
+    public function getPathLastHistory(Project $project, $svn_path)
+    {
         $command = 'history --limit 1 '.escapeshellarg($project->getSVNRootPath()).' '.escapeshellarg($svn_path);
         return $this->execute($command);
     }
@@ -54,7 +57,8 @@ class SVN_Svnlook
      *
      * @return array
      */
-    public function getTransactionPath(Project $project, $transaction) {
+    public function getTransactionPath(Project $project, $transaction)
+    {
         $command = 'changed -t ' . escapeshellarg($transaction) . ' ' .escapeshellarg($project->getSVNRootPath());
         return $this->execute($command);
     }
@@ -74,12 +78,14 @@ class SVN_Svnlook
      *
      * @return array
      */
-    public function getInfo(Project $project, $revision) {
+    public function getInfo(Project $project, $revision)
+    {
         $command = 'info -r ' . escapeshellarg($revision) . ' ' . escapeshellarg($project->getSVNRootPath());
         return $this->execute($command);
     }
 
-    private function execute($command) {
+    private function execute($command)
+    {
         $output  = array();
         $ret_val = 1;
         exec("$this->timeout $this->svnlook $command 2>&1", $output, $ret_val);

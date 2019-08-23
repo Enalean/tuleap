@@ -4,7 +4,8 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 
-function viewvc_utils_track_browsing($group_id, $type) {
+function viewvc_utils_track_browsing($group_id, $type)
+{
     $query_string = getStringFromServer('QUERY_STRING');
     $request_uri = getStringFromServer('REQUEST_URI');
 

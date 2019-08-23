@@ -27,7 +27,8 @@ class Tracker_Report_SessionTest extends TuleapTestCase {
     protected $report_id;
     protected $tracker_report_session;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->report_id = 111;
         //$this->tracker_report_session = new Mock_Tracker_Report_Session($this);
@@ -37,27 +38,31 @@ class Tracker_Report_SessionTest extends TuleapTestCase {
         //$this->tracker_report_session->setReturnReference('getSessionNamespace', $_SESSION['Tracker_Report_SessionTest']['trackers']['reports']['report_'.$this->report_id]);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         unset($_SESSION['Tracker_Report_SessionTest']);
         unset($this->tracker_report_session);
         parent::tearDown();
     }
 
-    public function test_removeCriterion() {
+    public function test_removeCriterion()
+    {
         $session = &$this->tracker_report_session->getSessionNamespace();
         $session['criteria']['1'] = array('tintinlachipo');
         $this->tracker_report_session->removeCriterion('1');
         $this->assertEqual( $session['criteria']['1']['is_removed'], 1 );
     }
 
-    public function test_removeCriterion_notFound() {
+    public function test_removeCriterion_notFound()
+    {
         $session = &$this->tracker_report_session->getSessionNamespace();
         $session['criteria']['1'] = 'tintinlachipo';
         $this->tracker_report_session->removeCriterion('0');
         $this->assertTrue( $session['criteria']['1'] === 'tintinlachipo');
     }
 
-    public function test_storeCriterion_noOpts() {
+    public function test_storeCriterion_noOpts()
+    {
         $session = &$this->tracker_report_session->getSessionNamespace();
         $this->tracker_report_session->storeCriterion('4', array('tintin'=>'lachipo', 'kiki'=>'labrouette') );
         $this->assertTrue(isset($session['criteria']['4']['value']));
@@ -65,7 +70,8 @@ class Tracker_Report_SessionTest extends TuleapTestCase {
         $this->assertEqual($session['criteria']['4']['is_removed'], 0);
     }
 
-    public function test_storeCriterion_withOpts() {
+    public function test_storeCriterion_withOpts()
+    {
         $session = &$this->tracker_report_session->getSessionNamespace();
         $this->tracker_report_session->storeCriterion('4', array('tintin'=>'lachipo', 'kiki'=>'labrouette') , $opts=array('is_advanced'=>1));
         $this->assertTrue(isset($session['criteria']['4']['value']));
@@ -75,7 +81,8 @@ class Tracker_Report_SessionTest extends TuleapTestCase {
         $this->assertEqual($session['criteria']['4']['is_removed'], 0);
     }
 
-    public function itStoresAdditionalCriterion() {
+    public function itStoresAdditionalCriterion()
+    {
         $session = &$this->tracker_report_session->getSessionNamespace();
         $additional_criterion = new Tracker_Report_AdditionalCriterion('agiledashboard_milestone', array('tintin'=>'lachipo', 'kiki'=>'labrouette'));
         $this->tracker_report_session->storeAdditionalCriterion($additional_criterion);
@@ -85,14 +92,16 @@ class Tracker_Report_SessionTest extends TuleapTestCase {
         );
     }
 
-    public function test_getCriterion() {
+    public function test_getCriterion()
+    {
          $session = &$this->tracker_report_session->getSessionNamespace();
          $session['criteria']['1'] = 'tintinlachipo';
          $criterion = $this->tracker_report_session->getCriterion(1);
          $this->assertEqual($criterion, 'tintinlachipo');
     }
 
-    public function test_updateCriterion_emptyValue_emptyOpts() {
+    public function test_updateCriterion_emptyValue_emptyOpts()
+    {
         $session = &$this->tracker_report_session->getSessionNamespace();
         $session[1]['value']       = 'tutu';
         $session[1]['is_advanced'] = 1;
@@ -101,7 +110,8 @@ class Tracker_Report_SessionTest extends TuleapTestCase {
         $this->assertTrue( $session[1]['is_advanced'], 1);
     }
 
-    public function test_updateCriterion_emptyValue_withOpts() {
+    public function test_updateCriterion_emptyValue_withOpts()
+    {
         $session = &$this->tracker_report_session->getSessionNamespace();
         $session[1]['value']       = 'tutu';
         $session[1]['is_advanced'] = 1;
@@ -110,7 +120,8 @@ class Tracker_Report_SessionTest extends TuleapTestCase {
         $this->assertTrue( $session[1]['is_advanced'], 0);
     }
 
-    public function test_changeSessionNamespace_Relative_DoesntExist() {
+    public function test_changeSessionNamespace_Relative_DoesntExist()
+    {
          $session = &$this->tracker_report_session->getSessionNamespace();
          //$session = array ('fifi'=>array('riri'=>array('loulou'=>array ('oncle' => 'picsou'))));
          $this->tracker_report_session->changeSessionNamespace('fifi.riri');
@@ -120,7 +131,8 @@ class Tracker_Report_SessionTest extends TuleapTestCase {
          $this->assertEqual($new_session, array('fifi'=>array('riri'=>array())));
     }
 
-    public function test_updateCriterion_withValue_withOpts() {
+    public function test_updateCriterion_withValue_withOpts()
+    {
         $session = &$this->tracker_report_session->getSessionNamespace();
         $session[1]['value']       = 'tutu';
         $session[1]['is_advanced'] = 1;
@@ -129,7 +141,8 @@ class Tracker_Report_SessionTest extends TuleapTestCase {
         $this->assertTrue( $session[1]['is_advanced'], 0);
     }
 
-    public function test_copy_NewRenderers() {
+    public function test_copy_NewRenderers()
+    {
         $this->tracker_report_session->changeSessionNamespace('.');
         $session   = &$this->tracker_report_session->getSessionNamespace();
         $charts    = array('1'=>array('titi','toto','tata'), '2'=>array('titi','toto','tata') );
@@ -149,7 +162,8 @@ class Tracker_Report_SessionTest extends TuleapTestCase {
         $this->assertTrue(isset($_SESSION['trackers']['reports']['2']['renderers'][-3]['charts'][-2]) );
     }
 
-    public function test_copy_RenderersWithNewCharts() {
+    public function test_copy_RenderersWithNewCharts()
+    {
         $this->tracker_report_session->changeSessionNamespace('.');
         $session   = &$this->tracker_report_session->getSessionNamespace();
         $charts    = array('2'=>array('titi','toto','tata'), '-1'=>array('titi','toto','tata') );

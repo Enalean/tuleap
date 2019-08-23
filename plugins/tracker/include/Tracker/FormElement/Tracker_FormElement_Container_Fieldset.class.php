@@ -45,7 +45,8 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
      *
      * @return void
      */
-    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
+    {
         switch ($request->get('func')) {
             case 'toggle-collapse':
                 $current_user = $request->getCurrentUser();
@@ -136,13 +137,15 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         return $html;
     }
 
-    protected function fetchArtifactSuffix() {
+    protected function fetchArtifactSuffix()
+    {
         $html = '</div>';
         $html .= '</fieldset>';
         return $html;
     }
 
-    protected function fetchMailArtifactPrefix($format) {
+    protected function fetchMailArtifactPrefix($format)
+    {
         $label = $this->getLabel();
         if ($format == 'text') {
             return $label . PHP_EOL . str_pad('', strlen($label), '-') . PHP_EOL;
@@ -158,7 +161,8 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         }
     }
 
-    protected function fetchMailArtifactSuffix($format) {
+    protected function fetchMailArtifactSuffix($format)
+    {
         if ($format == 'text') {
             return PHP_EOL;
         } else {
@@ -166,7 +170,8 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         }
     }
 
-    public function fetchAdmin($tracker) {
+    public function fetchAdmin($tracker)
+    {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
         $html .= '<fieldset class="tracker-admin-container tracker-admin-fieldset" id="tracker-admin-formElements_'. $this->id .'"><legend title="'. $hp->purify($this->getDescription(), CODENDI_PURIFIER_CONVERT_HTML) .'"><label>';
@@ -209,7 +214,8 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
      *
      * @return string label, the name if the name is not internationalized, or the localized text if so
      */
-    function getLabel() {
+    function getLabel()
+    {
         global $Language;
         if ($this->isLabelMustBeLocalized()) {
             return $Language->getText('plugin_tracker_common_fieldset', $this->label);
@@ -225,7 +231,8 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
      *
      * @return string description, the description text if the description is not internationalized, or the localized text if so
      */
-    function getDescriptionText() {
+    function getDescriptionText()
+    {
         global $Language;
         if ($this->isDescriptionMustBeLocalized()) {
             return $Language->getText('plugin_tracker_common_fieldset', $this->description);
@@ -261,28 +268,32 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
     /**
      * @return the label of the field (mainly used in admin part)
      */
-    public static function getFactoryLabel() {
+    public static function getFactoryLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','fieldset');
     }
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
-    public static function getFactoryDescription() {
+    public static function getFactoryDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','fieldset_description');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconUseIt() {
+    public static function getFactoryIconUseIt()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/application-form.png');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconCreate() {
+    public static function getFactoryIconCreate()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/application-form--plus.png');
     }
 
@@ -290,12 +301,14 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
      * Display the html field in the admin ui
      * @return string html
      */
-    protected function fetchAdminFormElement() {
+    protected function fetchAdminFormElement()
+    {
         $html = '';
         return $html;
     }
 
-    public function isCollapsed() {
+    public function isCollapsed()
+    {
         $current_user = UserManager::instance()->getCurrentUser();
 
         return $current_user->getPreference('fieldset_'. $this->getId());
@@ -306,7 +319,8 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
      *
      * @return int The id.
      */
-    function getID() {
+    function getID()
+    {
         return $this->id;
     }
 

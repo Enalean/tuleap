@@ -20,7 +20,8 @@
 
 class Cardwall_OnTop_ColumnDao extends DataAccessObject {
 
-    public function searchColumnsByTrackerId($tracker_id) {
+    public function searchColumnsByTrackerId($tracker_id)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
                 FROM plugin_cardwall_on_top_column
@@ -29,7 +30,8 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function createWithcolor($tracker_id, $label, $red, $green, $blue) {
+    public function createWithcolor($tracker_id, $label, $red, $green, $blue)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $label      = $this->da->quoteSmart($label);
         $red        = $this->da->escapeInt($red, CODENDI_DB_NULL);
@@ -42,7 +44,8 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
 
-    public function createWithTLPColor($tracker_id, $label, $tlp_color_name) {
+    public function createWithTLPColor($tracker_id, $label, $tlp_color_name)
+    {
         $tracker_id     = $this->da->escapeInt($tracker_id);
         $label          = $this->da->quoteSmart($label);
         $tlp_color_name = $this->da->quoteSmart($tlp_color_name);
@@ -53,7 +56,8 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
 
-    public function create($tracker_id, $label) {
+    public function create($tracker_id, $label)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $label      = $this->da->quoteSmart($label);
 
@@ -63,7 +67,8 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
 
-    public function save($tracker_id, $id, $label, $red, $green, $blue) {
+    public function save($tracker_id, $id, $label, $red, $green, $blue)
+    {
         $id         = $this->da->escapeInt($id);
         $tracker_id = $this->da->escapeInt($tracker_id);
         $label      = $this->da->quoteSmart($label);
@@ -83,7 +88,8 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject {
         }
     }
 
-    public function delete($tracker_id, $id) {
+    public function delete($tracker_id, $id)
+    {
         $id         = $this->da->escapeInt($id);
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "DELETE FROM plugin_cardwall_on_top_column

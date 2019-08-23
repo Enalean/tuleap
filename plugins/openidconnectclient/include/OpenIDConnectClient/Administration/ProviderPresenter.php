@@ -57,39 +57,48 @@ class ProviderPresenter {
         $this->colors_presenters                              = $colors_presenters;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->provider->getId();
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->provider->getName();
     }
 
-    public function getAuthorizationEndpoint() {
+    public function getAuthorizationEndpoint()
+    {
         return $this->provider->getAuthorizationEndpoint();
     }
 
-    public function getTokenEndpoint() {
+    public function getTokenEndpoint()
+    {
         return $this->provider->getTokenEndpoint();
     }
 
-    public function getUserInfoEndpoint() {
+    public function getUserInfoEndpoint()
+    {
         return $this->provider->getUserInfoEndpoint();
     }
 
-    public function getClientId() {
+    public function getClientId()
+    {
         return $this->provider->getClientId();
     }
 
-    public function getClientSecret() {
+    public function getClientSecret()
+    {
         return $this->provider->getClientSecret();
     }
 
-    public function getIcon() {
+    public function getIcon()
+    {
         return $this->provider->getIcon();
     }
 
-    public function getColor() {
+    public function getColor()
+    {
         return $this->provider->getColor();
     }
 

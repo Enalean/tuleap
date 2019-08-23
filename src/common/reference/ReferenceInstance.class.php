@@ -35,21 +35,30 @@ class ReferenceInstance {
      * Constructor
      * Note that we need a valid reference parameter
      */
-    function __construct($match,$ref,$value) {
+    function __construct($match,$ref,$value)
+    {
         $this->reference = $ref;
         $this->match = $match;
         $this->value = $value;
     }
 
     /** Accessors */
-    function getMatch() { return $this->match;}
+    function getMatch()
+    {
+        return $this->match;}
 
     /**
      * @return Reference
      */
-    function getReference() { return $this->reference;}
-    function getGotoLink() { return $this->gotoLink;}
-    function getValue() { return $this->value;}
+    function getReference()
+    {
+        return $this->reference;}
+    function getGotoLink()
+    {
+        return $this->gotoLink;}
+    function getValue()
+    {
+        return $this->value;}
 
     /**
      @return string full link (with http://servername...) if needed.
@@ -62,7 +71,8 @@ class ReferenceInstance {
     /**
      * Compute GotoLink according to the extracted match.
      */
-    function computeGotoLink($keyword,$value,$group_id) {
+    function computeGotoLink($keyword,$value,$group_id)
+    {
         // If no group_id from context, the default is "100".
         // Don't use it in the link...
         $group_param = '';

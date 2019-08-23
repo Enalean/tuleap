@@ -30,7 +30,8 @@ class Cardwall_OnTop_ConfigFactory {
      */
     private $element_factory;
 
-    function __construct(TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory) {
+    function __construct(TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory)
+    {
         $this->tracker_factory = $tracker_factory;
         $this->element_factory = $element_factory;
     }
@@ -40,7 +41,8 @@ class Cardwall_OnTop_ConfigFactory {
      *
      * @return \Cardwall_OnTop_Config
      */
-    public function getOnTopConfigByTrackerId($tracker_id) {
+    public function getOnTopConfigByTrackerId($tracker_id)
+    {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         return $this->getOnTopConfig($tracker);
     }
@@ -50,7 +52,8 @@ class Cardwall_OnTop_ConfigFactory {
      *
      * @return \Cardwall_OnTop_Config
      */
-    public function getOnTopConfig(Tracker $tracker) {
+    public function getOnTopConfig(Tracker $tracker)
+    {
 
         $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao(), $this->getOnTopDao());
 
@@ -82,7 +85,8 @@ class Cardwall_OnTop_ConfigFactory {
      *
      * @return Cardwall_OnTop_Config | null
      */
-    public function getOnTopConfigByPlanning(Planning $planning) {
+    public function getOnTopConfigByPlanning(Planning $planning)
+    {
         $tracker = $planning->getPlanningTracker();
         if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
             return $this->getOnTopConfig($tracker);
@@ -93,14 +97,16 @@ class Cardwall_OnTop_ConfigFactory {
     /**
      * @return bool
      */
-    public function isOnTopConfigEnabledForPlanning(Tracker $tracker) {
+    public function isOnTopConfigEnabledForPlanning(Tracker $tracker)
+    {
         return $this->getOnTopDao()->isEnabled($tracker->getId());
     }
 
     /**
      * @return Cardwall_OnTop_Config_Updater
      */
-    public function getOnTopConfigUpdater(Tracker $tracker) {
+    public function getOnTopConfigUpdater(Tracker $tracker)
+    {
         $tracker_factory  = $this->tracker_factory;
         $element_factory  = $this->element_factory;
         $config           = $this->getOnTopConfig($tracker);
@@ -122,28 +128,32 @@ class Cardwall_OnTop_ConfigFactory {
     /**
      * @return Cardwall_OnTop_Dao
      */
-    private function getOnTopDao() {
+    private function getOnTopDao()
+    {
         return new Cardwall_OnTop_Dao();
     }
 
     /**
      * @return Cardwall_OnTop_ColumnDao
      */
-    private function getOnTopColumnDao() {
+    private function getOnTopColumnDao()
+    {
         return new Cardwall_OnTop_ColumnDao();
     }
 
     /**
      * @return Cardwall_OnTop_ColumnMappingFieldDao
      */
-    private function getOnTopColumnMappingFieldDao() {
+    private function getOnTopColumnMappingFieldDao()
+    {
         return new Cardwall_OnTop_ColumnMappingFieldDao();
     }
 
     /**
      * @return Cardwall_OnTop_ColumnMappingFieldValueDao
      */
-    private function getOnTopColumnMappingFieldValueDao() {
+    private function getOnTopColumnMappingFieldValueDao()
+    {
         return new Cardwall_OnTop_ColumnMappingFieldValueDao();
     }
 

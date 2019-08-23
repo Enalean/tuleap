@@ -18,15 +18,18 @@
 
 class b201509020939_drop_priority_plugin_hook extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return "Drop priority_plugin_hook table";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = 'DROP TABLE priority_plugin_hook';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

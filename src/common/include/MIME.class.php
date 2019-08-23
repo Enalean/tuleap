@@ -32,7 +32,8 @@ class MIME {
     /**
      * A private constructor; prevents direct creation of object
      */
-    private function __construct() {
+    private function __construct()
+    {
         $this->XDG_DATA_DIRS = explode(':', (isset($_ENV['XDG_DATA_DIRS'])?$_ENV['XDG_DATA_DIRS']:'/usr/local/share/:/usr/share/'));
     }
 
@@ -40,7 +41,8 @@ class MIME {
      * Singleton
      * @return MIME
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$_instance)) {
             $c = self::class;
             self::$_instance = new $c;
@@ -52,7 +54,8 @@ class MIME {
      * tries to determine the mimetype of the given file
      * if the second variable is false, the file won't be opened and magic checking will be skipped
      */
-    function type($filename, $openfile = true) {
+    function type($filename, $openfile = true)
+    {
         $mimetype = '';
         $matchlen = 0;
 
@@ -196,7 +199,8 @@ class MIME {
     /**
      * apply the magic rules recursivily -- helper function for type()
      */
-    private function applyRecursiveMagic(MIME_MagicRule $rule, $fp) {
+    private function applyRecursiveMagic(MIME_MagicRule $rule, $fp)
+    {
         fseek($fp, $rule->start_offset);
         $data = fread($fp, strlen($rule->value) + $rule->range_length);
         if(strstr($data, $rule->value) !== false) {
@@ -217,7 +221,8 @@ class MIME {
     /**
      * gets the textual description of the mimetype, optionally in the specified language
      */
-    function description($mimetype, $language = 'en') {
+    function description($mimetype, $language = 'en')
+    {
         $this->description = '';
         $this->lang = $language;
         $this->read = false;
@@ -253,7 +258,8 @@ class MIME {
     /**
      * helper function for description()
      */
-    private function description_StartElement($parser, $name, $attrs) {
+    private function description_StartElement($parser, $name, $attrs)
+    {
         $this->read = false;
         if($name == 'COMMENT') {
             if(!isset($attrs['XML:LANG']) || $attrs['XML:LANG'] == $this->lang) {
@@ -265,14 +271,16 @@ class MIME {
     /**
      * helper function for description()
      */
-    private function description_EndElement($parser, $name) {
+    private function description_EndElement($parser, $name)
+    {
         $this->read = false;
     }
 
     /**
      * helper function for description()
      */
-    private function description_Data($parser, $data) {
+    private function description_Data($parser, $data)
+    {
         if($this->read == true) {
             $this->description = $data;
         }

@@ -28,7 +28,8 @@ class TreeNodeMapper {
     /** @var TreeNodeCallback */
     private $function;
 
-    public function __construct(TreeNodeCallback $function) {
+    public function __construct(TreeNodeCallback $function)
+    {
         $this->function = $function;
     }
 
@@ -39,7 +40,8 @@ class TreeNodeMapper {
      *
      * @return TreeNode
      */
-    public function map(TreeNode $node) {
+    public function map(TreeNode $node)
+    {
         $new_node = $this->function->apply($node);
         $children = array_map(array($this, 'map'), $node->getChildren());
         $new_node->setChildren($children);

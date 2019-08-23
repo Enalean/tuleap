@@ -38,7 +38,8 @@ class BackendSystem extends Backend {
      *
      * @return true on success, false otherwise
      */
-    public function refreshUserCache() {
+    public function refreshUserCache()
+    {
         if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $this->log('No homedir_prefix, refreshUserCache skipped', Backend::LOG_INFO);
             return true;
@@ -52,7 +53,8 @@ class BackendSystem extends Backend {
      *
      * @return null
      */
-    public function setNeedRefreshUserCache() {
+    public function setNeedRefreshUserCache()
+    {
         $this->needRefreshUserCache = true;
     }
 
@@ -61,7 +63,8 @@ class BackendSystem extends Backend {
      *
      * @return bool
      */
-    public function getNeedRefreshUserCache() {
+    public function getNeedRefreshUserCache()
+    {
         return $this->needRefreshUserCache;
     }
 
@@ -74,7 +77,8 @@ class BackendSystem extends Backend {
      *
      * @return true on success, false otherwise
      */
-    public function refreshGroupCache() {
+    public function refreshGroupCache()
+    {
         if (! ForgeConfig::areUnixGroupsAvailableOnSystem()) {
             $this->log('No grpdir_prefix, refreshGroupCache skipped', Backend::LOG_INFO);
             return true;
@@ -88,7 +92,8 @@ class BackendSystem extends Backend {
      *
      * @return null
     */
-    public function setNeedRefreshGroupCache() {
+    public function setNeedRefreshGroupCache()
+    {
         $this->needRefreshGroupCache = true;
     }
 
@@ -97,7 +102,8 @@ class BackendSystem extends Backend {
      *
      * @return bool
      */
-    public function getNeedRefreshGroupCache() {
+    public function getNeedRefreshGroupCache()
+    {
         return $this->needRefreshGroupCache;
     }
 
@@ -108,7 +114,8 @@ class BackendSystem extends Backend {
      *
      * @return null
      */
-    public function flushNscdAndFsCache() {
+    public function flushNscdAndFsCache()
+    {
         $this->refreshGroupCache();
         $this->refreshUserCache();
         clearstatcache();
@@ -121,7 +128,8 @@ class BackendSystem extends Backend {
      *
      * @return null
      */
-    public function userHomeSanityCheck(PFUser $user) {
+    public function userHomeSanityCheck(PFUser $user)
+    {
         if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $this->log('No homedir_prefix, userHomeSanityCheck skipped', Backend::LOG_INFO);
             return true;
@@ -145,7 +153,8 @@ class BackendSystem extends Backend {
      *
      * @return true if directory is successfully created, false otherwise
      */
-    public function createUserHome(PFUser $user) {
+    public function createUserHome(PFUser $user)
+    {
         if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $this->log('No homedir_prefix, createUserHome skipped', Backend::LOG_INFO);
             return true;
@@ -178,7 +187,8 @@ class BackendSystem extends Backend {
      *
      * @return bool
      */
-    public function userHomeExists($username) {
+    public function userHomeExists($username)
+    {
         return (is_dir(ForgeConfig::get('homedir_prefix')."/".$username));
     }
 
@@ -189,7 +199,8 @@ class BackendSystem extends Backend {
      *
      * @return bool
      */
-    private function isUserHomeOwnedByUser(PFUser $user) {
+    private function isUserHomeOwnedByUser(PFUser $user)
+    {
         $stat = stat($user->getUnixHomeDir());
         if ($stat) {
             if ($stat['uid'] != $user->getRealUnixUID()) {
@@ -206,7 +217,8 @@ class BackendSystem extends Backend {
      *
      * @return null
      */
-    private function setUserHomeOwnership(PFUser $user) {
+    private function setUserHomeOwnership(PFUser $user)
+    {
         $no_filter_file_extension = array();
         $this->recurseChownChgrp(
             $user->getUnixHomeDir(),
@@ -224,7 +236,8 @@ class BackendSystem extends Backend {
      *
      * @return true if directory is successfully created, false otherwise
      */
-    public function createProjectHome($group_id) {
+    public function createProjectHome($group_id)
+    {
         $project = $this->getProjectManager()->getProject($group_id);
         if (! $project || $project->isDeleted()) {
             return false;
@@ -405,7 +418,8 @@ class BackendSystem extends Backend {
      *
      * @return true if directory is successfully archived, false otherwise
      */
-    public function archiveUserHome($user_id) {
+    public function archiveUserHome($user_id)
+    {
         if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $this->log('No homedir_prefix, archiveUserHome skipped', Backend::LOG_INFO);
             return true;
@@ -434,7 +448,8 @@ class BackendSystem extends Backend {
      *
      * @return true if directory is successfully archived, false otherwise
      */
-    public function archiveProjectHome($group_id) {
+    public function archiveProjectHome($group_id)
+    {
         if (! ForgeConfig::areUnixGroupsAvailableOnSystem()) {
             $this->log('No grpdir_prefix, archiveProjectHome skipped', Backend::LOG_INFO);
             return true;
@@ -470,7 +485,8 @@ class BackendSystem extends Backend {
      *
      * @return bool
      */
-    function archiveProjectFtp($group_id) {
+    function archiveProjectFtp($group_id)
+    {
         if (! is_dir(ForgeConfig::get('ftp_anon_dir_prefix'))) {
             $this->log('No ftp_anon_dir_prefix, archiveProjectFtp skipped', Backend::LOG_INFO);
             return true;
@@ -523,7 +539,8 @@ class BackendSystem extends Backend {
      *
      * @return bool always true
      */
-    public function dumpSSHKeys() {
+    public function dumpSSHKeys()
+    {
         if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $sshkey_dumper = new User_SSHKeyDumper($this);
             $user_manager  = $this->getUserManager();
@@ -543,7 +560,8 @@ class BackendSystem extends Backend {
      *
      * @return bool if the ssh key was written
      */
-    public function dumpSSHKeysForUser(PFUser $user, $original_keys) {
+    public function dumpSSHKeysForUser(PFUser $user, $original_keys)
+    {
         $sshkey_dumper = new User_SSHKeyDumper($this);
         return $sshkey_dumper->writeSSHKeys($user);
     }
@@ -555,7 +573,8 @@ class BackendSystem extends Backend {
      *
      * @return true is repository already exists, false otherwise
      */
-    public function projectHomeExists($project) {
+    public function projectHomeExists($project)
+    {
         $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
         $home_dir=ForgeConfig::get('grpdir_prefix')."/".$unix_group_name;
         if (is_dir($home_dir)) {
@@ -577,7 +596,8 @@ class BackendSystem extends Backend {
      *
      * @return bool
      */
-    public function isProjectNameAvailable($name) {
+    public function isProjectNameAvailable($name)
+    {
         if (! ForgeConfig::areUnixGroupsAvailableOnSystem()) {
             return true;
         }
@@ -608,7 +628,8 @@ class BackendSystem extends Backend {
      *
      * @return bool false if repository or file  or link already exists, true otherwise
      */
-    function isUserNameAvailable($name) {
+    function isUserNameAvailable($name)
+    {
         if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {
             return true;
         }
@@ -625,7 +646,8 @@ class BackendSystem extends Backend {
      *
      * @return bool
      */
-    public function renameProjectHomeDirectory($project, $newName) {
+    public function renameProjectHomeDirectory($project, $newName)
+    {
         if (! ForgeConfig::areUnixGroupsAvailableOnSystem()) {
             $this->log('No grpdir_prefix, renameProjectHomeDirectory skipped', Backend::LOG_INFO);
             return true;
@@ -658,7 +680,8 @@ class BackendSystem extends Backend {
      *
      * @return bool
      */
-    public function renameFileReleasedDirectory($project, $newName) {
+    public function renameFileReleasedDirectory($project, $newName)
+    {
         if (is_dir($GLOBALS['ftp_frs_dir_prefix'].'/'.$project->getUnixName(false))) {
             return rename($GLOBALS['ftp_frs_dir_prefix'].'/'.$project->getUnixName(false), $GLOBALS['ftp_frs_dir_prefix'].'/'.$newName);
         } else {
@@ -674,7 +697,8 @@ class BackendSystem extends Backend {
      *
      * @return bool
      */
-    public function renameAnonFtpDirectory($project, $newName) {
+    public function renameAnonFtpDirectory($project, $newName)
+    {
         if (! is_dir(ForgeConfig::get('ftp_anon_dir_prefix'))) {
             $this->log('No ftp_anon_dir_prefix, renameAnonFtpDirectory skipped', Backend::LOG_INFO);
             return true;
@@ -695,7 +719,8 @@ class BackendSystem extends Backend {
      *
      * @return bool
      */
-    public function renameUserHomeDirectory($user, $newName) {
+    public function renameUserHomeDirectory($user, $newName)
+    {
         if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $this->log('No homedir_prefix, renameUserHomeDirectory skipped', Backend::LOG_INFO);
             return true;
@@ -709,7 +734,8 @@ class BackendSystem extends Backend {
      *
      * @return FRSFileFactory
      */
-    protected function getFRSFileFactory() {
+    protected function getFRSFileFactory()
+    {
         return new FRSFileFactory();
     }
 
@@ -718,7 +744,8 @@ class BackendSystem extends Backend {
      *
      * @return WikiAttachment
      */
-    protected function getWikiAttachment() {
+    protected function getWikiAttachment()
+    {
         return new WikiAttachment();
     }
 

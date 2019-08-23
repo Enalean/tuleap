@@ -24,7 +24,8 @@ class Tracker_Workflow_Action_Transitions_Details extends Tracker_Workflow_Actio
      /** @var TransitionFactory */
     private $transition_factory;
 
-    public function __construct(Tracker $tracker, TransitionFactory $transition_factory) {
+    public function __construct(Tracker $tracker, TransitionFactory $transition_factory)
+    {
         parent::__construct($tracker);
         $this->transition_factory = $transition_factory;
     }

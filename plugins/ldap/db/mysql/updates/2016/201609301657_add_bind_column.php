@@ -19,15 +19,18 @@
  */
 
 class b201609301657_add_bind_column extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return 'Add bind option for project members';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_ldap_project_group ADD COLUMN bind_option varchar(255) NOT NULL default 'bind'";
 
         $res = $this->db->dbh->exec($sql);

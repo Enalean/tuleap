@@ -34,7 +34,8 @@ abstract class RestrictedResourceDao extends DataAccessObject {
     abstract public function searchAllowedProjectsOnResource($resource_id);
 
 
-    public function allowProjectOnResource($resource_id, $project_id) {
+    public function allowProjectOnResource($resource_id, $project_id)
+    {
         $resource_id = $this->da->escapeInt($resource_id);
         $project_id  = $this->da->escapeInt($project_id);
 
@@ -43,7 +44,8 @@ abstract class RestrictedResourceDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function revokeAllProjectsFromResource($resource_id) {
+    public function revokeAllProjectsFromResource($resource_id)
+    {
         $resource_id = $this->da->escapeInt($resource_id);
 
         $sql = "DELETE FROM " . $this->getResourceAllowedProjectsTableName() . "
@@ -52,7 +54,8 @@ abstract class RestrictedResourceDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function revokeProjectsFromResource($resource_id, $project_ids) {
+    public function revokeProjectsFromResource($resource_id, $project_ids)
+    {
         $resource_id = $this->da->escapeInt($resource_id);
         $project_ids = $this->da->escapeIntImplode($project_ids);
 

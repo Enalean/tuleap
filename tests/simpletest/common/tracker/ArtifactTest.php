@@ -34,7 +34,8 @@ require_once __DIR__ . '/../../../../src/www/include/utils.php';
 class ArtifactTest extends TuleapTestCase {
 
 
-    public function testAddDependenciesSimple() {
+    public function testAddDependenciesSimple()
+    {
         $a = new ArtifactTestVersion($this);
         $a->setReturnValue('insertDependency', true);
         $a->setReturnValue('validArtifact', true);
@@ -43,7 +44,8 @@ class ArtifactTest extends TuleapTestCase {
         $this->assertTrue($a->addDependencies("171", $changes, false), "It should be possible to add a dependency like 171");
     }
 
-    public function testAddWrongDependency() {
+    public function testAddWrongDependency()
+    {
         $a = new ArtifactTestVersion($this);
         $a->setReturnValue('insertDependency', true);
         $a->setReturnValue('validArtifact', false);
@@ -54,7 +56,8 @@ class ArtifactTest extends TuleapTestCase {
 
     }
 
-    public function testAddDependenciesDouble() {
+    public function testAddDependenciesDouble()
+    {
         $a = new ArtifactTestVersion($this);
         $a->setReturnValue('insertDependency', true);
         $a->setReturnValue('validArtifact', true);
@@ -65,7 +68,8 @@ class ArtifactTest extends TuleapTestCase {
         $this->assertTrue($a->addDependencies("171, 171", $changes, false), "It should be possible to add two identical dependencies in the same time, without getting an exception");
     }
 
-    public function testFormatFollowUp() {
+    public function testFormatFollowUp()
+    {
         $art = new ArtifactTestVersion($this);
 
         $txtContent = 'testing the feature';

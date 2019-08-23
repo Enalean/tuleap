@@ -28,7 +28,8 @@ class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase {
     protected $epic_id     = 2;
     protected $epic2_id    = 3;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         '
@@ -58,7 +59,8 @@ class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase {
         $this->event_listener = new Planning_ArtifactParentsSelectorEventListener($this->artifact_factory, $this->selector, $this->request);
     }
 
-    private function getArtifact($id, Tracker $tracker) {
+    private function getArtifact($id, Tracker $tracker)
+    {
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($id);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
@@ -66,7 +68,8 @@ class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase {
         return $artifact;
     }
 
-    public function itRetrievesThePossibleParentsForANewArtifactLink() {
+    public function itRetrievesThePossibleParentsForANewArtifactLink()
+    {
         $label            = '';
         $possible_parents = '';
         $display_selector = true;
@@ -87,7 +90,8 @@ class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase {
         $this->assertEqual($display_selector, true);
     }
 
-    public function itRetrievesThePossibleParentsForChildMilestone() {
+    public function itRetrievesThePossibleParentsForChildMilestone()
+    {
         $label            = '';
         $possible_parents = '';
         $display_selector = true;
@@ -108,7 +112,8 @@ class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase {
         $this->assertEqual($display_selector, true);
     }
 
-    public function itRetrievesNothingIfThereIsNoChildMilestoneNorNewArtifactLink() {
+    public function itRetrievesNothingIfThereIsNoChildMilestoneNorNewArtifactLink()
+    {
         $label            = 'untouched';
         $possible_parents = 'untouched';
         $display_selector = 'untouched';
@@ -128,7 +133,8 @@ class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase {
         $this->assertEqual($display_selector, 'untouched');
     }
 
-    public function itAsksForNoSelectorIfWeLinkToAParent() {
+    public function itAsksForNoSelectorIfWeLinkToAParent()
+    {
         $label            = '';
         $possible_parents = '';
         $display_selector = true;

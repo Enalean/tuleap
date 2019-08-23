@@ -32,38 +32,46 @@ class LDAP_SearchPeopleResultPresenter {
     /** @var string */
     private $directory_uri;
 
-    public function __construct($real_name, $avatar, $directory_uri, $user_name = null) {
+    public function __construct($real_name, $avatar, $directory_uri, $user_name = null)
+    {
         $this->real_name     = $real_name;
         $this->avatar        = $avatar;
         $this->directory_uri = $directory_uri;
         $this->user_name     = $user_name;
     }
 
-    public function user_name() {
+    public function user_name()
+    {
         return $this->user_name;
     }
 
-    public function real_name() {
+    public function real_name()
+    {
         return $this->real_name;
     }
 
-    public function is_local() {
+    public function is_local()
+    {
         return $this->user_name !== null;
     }
 
-    public function user_uri() {
+    public function user_uri()
+    {
         return '/users/' . $this->user_name;
     }
 
-    public function has_directory_uri() {
+    public function has_directory_uri()
+    {
         return $this->directory_uri != '';
     }
 
-    public function directory_uri() {
+    public function directory_uri()
+    {
         return $this->directory_uri;
     }
 
-    public function avatar() {
+    public function avatar()
+    {
         return $this->avatar;
     }
 

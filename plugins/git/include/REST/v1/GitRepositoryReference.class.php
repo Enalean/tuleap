@@ -27,7 +27,8 @@ use GitRepository;
 
 class GitRepositoryReference extends GitRepositoryReferenceBase {
 
-    public function build(GitRepository $repository) {
+    public function build(GitRepository $repository)
+    {
         $this->id  = JsonCast::toInt($repository->getId());
         $this->uri = self::ROUTE . '/' . $this->id;
     }

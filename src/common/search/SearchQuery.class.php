@@ -30,7 +30,8 @@ class Search_SearchQuery {
     private $is_ajax;
     private $number_of_results;
 
-    public function __construct(Codendi_Request $request) {
+    public function __construct(Codendi_Request $request)
+    {
         $this->project        = $request->getProject();
         $this->words          = $request->get('words');
         $this->offset         = intval($request->getValidated('offset', 'uint', 0));
@@ -41,47 +42,58 @@ class Search_SearchQuery {
         $this->type_of_search = $request->get('type_of_search');
     }
 
-    public function isValid() {
+    public function isValid()
+    {
         return strlen($this->words) > 2;
     }
 
-    public function getTypeOfSearch() {
+    public function getTypeOfSearch()
+    {
         return $this->type_of_search;
     }
 
-    public function getWords() {
+    public function getWords()
+    {
         return $this->words;
     }
 
-    public function getOffset() {
+    public function getOffset()
+    {
         return $this->offset;
     }
 
-    public function getExact() {
+    public function getExact()
+    {
         return $this->exact;
     }
 
-    public function getProject() {
+    public function getProject()
+    {
         return $this->project;
     }
 
-    public function getForumId() {
+    public function getForumId()
+    {
         return $this->forum_id;
     }
 
-    public function getTrackerV3Id() {
+    public function getTrackerV3Id()
+    {
         return $this->trackerv3id;
     }
 
-    public function isAjax() {
+    public function isAjax()
+    {
         return $this->is_ajax;
     }
 
-    public function setNumberOfResults($number_of_results) {
+    public function setNumberOfResults($number_of_results)
+    {
         $this->number_of_results = $number_of_results;
     }
 
-    public function getNumberOfResults() {
+    public function getNumberOfResults()
+    {
         return $this->number_of_results;
     }
 

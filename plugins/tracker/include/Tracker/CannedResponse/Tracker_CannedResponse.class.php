@@ -33,7 +33,8 @@ class Tracker_CannedResponse {
      * @param string  $title   The title
      * @param string  $body    The body
      */
-    public function __construct($id, $tracker, $title, $body) {
+    public function __construct($id, $tracker, $title, $body)
+    {
         $this->id      = $id;
         $this->tracker = $tracker;
         $this->title   = $title;
@@ -45,7 +46,8 @@ class Tracker_CannedResponse {
      *
      * @return string The title
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->title;
     }
 
@@ -54,7 +56,8 @@ class Tracker_CannedResponse {
      *
      * @return string The body
      */
-    public function getBody() {
+    public function getBody()
+    {
         return $this->body;
     }
 
@@ -65,7 +68,8 @@ class Tracker_CannedResponse {
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root) {
+    public function exportToXml(SimpleXMLElement $root)
+    {
         // if old ids are important, modify code here
         if (false) {
             $root->addAttribute('id', $this->id);

@@ -20,7 +20,8 @@
 
 class User_ForgeUserGroupPermissionsDao extends DataAccessObject {
 
-    public function permissionExistsForUGroup($user_group_id, $permission_id) {
+    public function permissionExistsForUGroup($user_group_id, $permission_id)
+    {
         $user_group_id = $this->da->escapeInt($user_group_id);
         $permission_id = $this->da->escapeInt($permission_id);
 
@@ -32,7 +33,8 @@ class User_ForgeUserGroupPermissionsDao extends DataAccessObject {
         return $this->retrieve($sql)->count() > 0;
     }
 
-    public function addPermission($user_group_id, $permission_id) {
+    public function addPermission($user_group_id, $permission_id)
+    {
         $user_group_id = $this->da->escapeInt($user_group_id);
         $permission_id = $this->da->escapeInt($permission_id);
 
@@ -44,7 +46,8 @@ class User_ForgeUserGroupPermissionsDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function deletePersmissionForUGroup($user_group_id, $permission_id) {
+    public function deletePersmissionForUGroup($user_group_id, $permission_id)
+    {
         $user_group_id = $this->da->escapeInt($user_group_id);
         $permission_id = $this->da->escapeInt($permission_id);
 
@@ -55,7 +58,8 @@ class User_ForgeUserGroupPermissionsDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function getPermissionsForForgeUGroup($user_group_id) {
+    public function getPermissionsForForgeUGroup($user_group_id)
+    {
         $user_group_id = $this->da->escapeInt($user_group_id);
 
         $sql = "SELECT permission_id FROM ugroup_forge_permission
@@ -64,7 +68,8 @@ class User_ForgeUserGroupPermissionsDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function doesUserHavePermission($user_id, $permission_id) {
+    public function doesUserHavePermission($user_id, $permission_id)
+    {
         $user_id       = $this->da->escapeInt($user_id);
         $permission_id = $this->da->escapeInt($permission_id);
 

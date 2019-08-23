@@ -43,7 +43,8 @@ class ArtifactFieldValuePermissionsOnArtifactFullRepresentation {
      */
     public $granted_groups = array();
 
-    public function build($id, $type, $label, array $granted_groups) {
+    public function build($id, $type, $label, array $granted_groups)
+    {
         $this->field_id       = JsonCast::toInt($id);
         $this->type           = $type;
         $this->label          = $label;

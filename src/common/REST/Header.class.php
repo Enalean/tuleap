@@ -61,44 +61,53 @@ class Header {
      *
      * @param int $timestamp
      */
-    public static function lastModified($timestamp) {
+    public static function lastModified($timestamp)
+    {
         $time = new DateTime();
         $time->setTimestamp($timestamp);
         $time->setTimezone(new DateTimeZone('GMT'));
         self::sendHeader(self::LAST_MODIFIED, $time->format(self::RFC1123));
     }
 
-    public static function ETag($hash) {
+    public static function ETag($hash)
+    {
         self::sendHeader(self::ETAG, $hash);
     }
 
-    public static function Location($uri) {
+    public static function Location($uri)
+    {
         $route = 'https://' . ForgeConfig::get('sys_default_domain') . $uri;
 
         self::sendHeader(self::LOCATION, $route);
     }
 
-    public static function allowOptions() {
+    public static function allowOptions()
+    {
         self::sendAllowHeaders(array(self::OPTIONS));
     }
 
-    public static function allowOptionsGet() {
+    public static function allowOptionsGet()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET));
     }
 
-    public static function allowOptionsPostDelete() {
+    public static function allowOptionsPostDelete()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::POST, self::DELETE));
     }
 
-    public static function allowOptionsDelete() {
+    public static function allowOptionsDelete()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::DELETE));
     }
 
-    public static function allowOptionsGetPut() {
+    public static function allowOptionsGetPut()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT));
     }
 
-    public static function allowOptionsGetPutPost() {
+    public static function allowOptionsGetPutPost()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::POST));
     }
 
@@ -107,15 +116,18 @@ class Header {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::POST, self::DELETE));
     }
 
-    public static function allowOptionsGetPutPostPatch() {
+    public static function allowOptionsGetPutPostPatch()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::POST, self::PATCH));
     }
 
-    public static function allowOptionsGetPutPatch() {
+    public static function allowOptionsGetPutPatch()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::PATCH));
     }
 
-    public static function allowOptionsGetPutDelete() {
+    public static function allowOptionsGetPutDelete()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::DELETE));
     }
 
@@ -124,31 +136,38 @@ class Header {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::DELETE, self::PATCH));
     }
 
-    public static function allowOptionsPut() {
+    public static function allowOptionsPut()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::PUT));
     }
 
-    public static function allowOptionsPost() {
+    public static function allowOptionsPost()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::POST));
     }
 
-    public static function allowOptionsPostPut() {
+    public static function allowOptionsPostPut()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::POST, self::PUT));
     }
 
-    public static function allowOptionsGetPost() {
+    public static function allowOptionsGetPost()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::POST));
     }
 
-    public static function allowOptionsGetPatch() {
+    public static function allowOptionsGetPatch()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PATCH));
     }
 
-    public static function allowOptionsGetPatchDelete() {
+    public static function allowOptionsGetPatchDelete()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PATCH, self::DELETE));
     }
 
-    public static function allowOptionsPatchDelete() {
+    public static function allowOptionsPatchDelete()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::PATCH, self::DELETE));
     }
 
@@ -162,42 +181,50 @@ class Header {
         self::sendAllowHeaders([self::OPTIONS, self::GET, self::POST, self::DELETE]);
     }
 
-    public static function allowOptionsPatch() {
+    public static function allowOptionsPatch()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::PATCH));
     }
 
-    public static function allowOptionsPostPatch() {
+    public static function allowOptionsPostPatch()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::POST, self::PATCH));
     }
 
-    public static function allowOptionsGetPostPatch() {
+    public static function allowOptionsGetPostPatch()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::POST, self::PATCH));
     }
 
-    public static function allowOptionsGetPostPatchDelete() {
+    public static function allowOptionsGetPostPatchDelete()
+    {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::POST, self::PATCH, self::DELETE));
     }
 
-    private static function sendAllowHeaders($methods) {
+    private static function sendAllowHeaders($methods)
+    {
         $methods = implode(', ', $methods);
         self::sendHeader(self::ALLOW, $methods);
         self::sendHeader(self::CORS_ALLOW_METHODS, $methods);
     }
 
-    public static function sendPaginationHeaders($limit, $offset, $size, $max_limit) {
+    public static function sendPaginationHeaders($limit, $offset, $size, $max_limit)
+    {
         self::sendHeader(self::X_PAGINATION_LIMIT, $limit);
         self::sendHeader(self::X_PAGINATION_OFFSET, $offset);
         self::sendHeader(self::X_PAGINATION_SIZE, $size);
         self::sendHeader(self::X_PAGINATION_LIMIT_MAX, $max_limit);
     }
 
-    public static function sendOptionsPaginationHeaders($limit, $offset, $max_limit) {
+    public static function sendOptionsPaginationHeaders($limit, $offset, $max_limit)
+    {
         self::sendHeader(self::X_PAGINATION_LIMIT, $limit);
         self::sendHeader(self::X_PAGINATION_OFFSET, $offset);
         self::sendHeader(self::X_PAGINATION_LIMIT_MAX, $max_limit);
     }
 
-    public static function sendMaxFileChunkSizeHeaders($size) {
+    public static function sendMaxFileChunkSizeHeaders($size)
+    {
         self::sendHeader(self::X_UPLOAD_MAX_FILE_CHUNKSIZE, $size);
     }
 
@@ -207,15 +234,18 @@ class Header {
         self::sendHeader(self::X_RATELIMIT_REMAINING, $remaining_calls);
     }
 
-    public function sendQuotaHeader($quota) {
+    public function sendQuotaHeader($quota)
+    {
         self::sendHeader(self::X_QUOTA, $quota);
     }
 
-    public function sendDiskUsage($disk_usage) {
+    public function sendDiskUsage($disk_usage)
+    {
         self::sendHeader(self::X_DISK_USAGE, $disk_usage);
     }
 
-    private static function sendHeader($name, $value) {
+    private static function sendHeader($name, $value)
+    {
         header($name .': '. $value);
     }
 }

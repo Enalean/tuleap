@@ -20,11 +20,13 @@
 
 class Tracker_CannedResponseManager {
     protected $tracker;
-    public function __construct($tracker) {
+    public function __construct($tracker)
+    {
         $this->tracker = $tracker;
     }
 
-    public function process(TrackerManager $tracker_manager, $request, $current_user) {
+    public function process(TrackerManager $tracker_manager, $request, $current_user)
+    {
         if ($request->get('create')) {
             if ($request->existAndNonEmpty('title') && $request->existAndNonEmpty('body')) {
                 if (Tracker_CannedResponseFactory::instance()->create($this->tracker, $request->get('title'), $request->get('body'))) {
@@ -54,7 +56,8 @@ class Tracker_CannedResponseManager {
         $this->displayAdminAllResponses($tracker_manager, $request, $current_user);
     }
 
-    protected function displayAdminAllResponses(TrackerManager $tracker_manager, $request, $current_user) {
+    protected function displayAdminAllResponses(TrackerManager $tracker_manager, $request, $current_user)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayAdminItemHeader($tracker_manager, 'editcanned');
 
@@ -116,7 +119,8 @@ class Tracker_CannedResponseManager {
         $this->tracker->displayFooter($tracker_manager);
     }
 
-    protected function displayAdminResponse(TrackerManager $tracker_manager, $request, $current_user) {
+    protected function displayAdminResponse(TrackerManager $tracker_manager, $request, $current_user)
+    {
         if ($response = Tracker_CannedResponseFactory::instance()->getCannedResponse($this->tracker, (int)$request->get('edit'))) {
             $hp = Codendi_HTMLPurifier::instance();
             $this->tracker->displayAdminItemHeader($tracker_manager, 'editcanned', array(array(

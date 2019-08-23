@@ -25,7 +25,8 @@ class Tracker_FormElement_View_Admin_StaticField extends Tracker_FormElement_Vie
      *
      * @return string html
      */
-    public function fetchAdminFormPermissionLink() {
+    public function fetchAdminFormPermissionLink()
+    {
         return '';
     }
 }

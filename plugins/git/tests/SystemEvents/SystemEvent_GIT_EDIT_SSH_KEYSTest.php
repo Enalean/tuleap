@@ -33,7 +33,8 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase {
     private $user_manager;
     private $sshkey_dumper;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->user                 = mock('PFUser');
@@ -46,7 +47,8 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase {
         stub($this->user_manager)->getUserById(105)->returns($this->user);
     }
 
-    public function testItLogsAnErrorIfNoUserIsPassed() {
+    public function testItLogsAnErrorIfNoUserIsPassed()
+    {
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '', '', '', '', '', '', '');
         $event->injectDependencies(
             $this->user_manager,
@@ -61,7 +63,8 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase {
         $event->process();
     }
 
-    public function testItLogsAnErrorIfUserIsInvalid() {
+    public function testItLogsAnErrorIfUserIsInvalid()
+    {
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', 'me', '', '', '', '', '', '');
         $event->injectDependencies(
             $this->user_manager,
@@ -76,7 +79,8 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase {
         $event->process();
     }
 
-    public function itTransformsEmptyKeyStringIntoArrayBeforeSendingToGitUserManager() {
+    public function itTransformsEmptyKeyStringIntoArrayBeforeSendingToGitUserManager()
+    {
         $original_keys = array();
         $new_keys = array();
 
@@ -101,7 +105,8 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase {
         $event->process();
     }
 
-    public function itTransformsNonEmptyKeyStringIntoArrayBeforeSendingToGitUserManager() {
+    public function itTransformsNonEmptyKeyStringIntoArrayBeforeSendingToGitUserManager()
+    {
         $new_keys      = array();
         $original_keys = array(
             'abcdefg',
@@ -129,7 +134,8 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase {
          $event->process();
     }
 
-    public function itWarnsAdminsWhenSSHKeySynchFails() {
+    public function itWarnsAdminsWhenSSHKeySynchFails()
+    {
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '105::', '', '', '', '', '', '');
         $event->injectDependencies(
             $this->user_manager,

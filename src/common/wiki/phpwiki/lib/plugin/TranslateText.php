@@ -41,20 +41,24 @@ require_once("lib/plugin/_WikiTranslation.php");
 class WikiPlugin_TranslateText
 extends WikiPlugin__WikiTranslation
 {
-    function getName() {
+    function getName()
+    {
         return _("TranslateText");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Define a translation for a specified text");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.5 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return
             array( 'lang'      => false,
                    'pagename'  => '[pagename]',
@@ -62,7 +66,8 @@ extends WikiPlugin__WikiTranslation
                  );
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         extract($this->getArgs($argstr, $request));
         if (!$lang)
             return $this->error(

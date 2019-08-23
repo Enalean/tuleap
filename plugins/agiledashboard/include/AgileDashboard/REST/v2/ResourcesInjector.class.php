@@ -26,11 +26,13 @@ use Tuleap\Project\REST\ProjectResourceReference;
  */
 class AgileDashboard_REST_v2_ResourcesInjector {
 
-    public function populate(Luracast\Restler\Restler $restler) {
+    public function populate(Luracast\Restler\Restler $restler)
+    {
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v2\\BacklogResource',  BacklogRepresentation::ROUTE);
     }
 
-    public function declareProjectPlanningResource(array &$resources, Project $project) {
+    public function declareProjectPlanningResource(array &$resources, Project $project)
+    {
         $routes = array(
             BacklogRepresentation::BACKLOG_ROUTE,
         );

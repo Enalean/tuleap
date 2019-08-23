@@ -22,31 +22,36 @@ require_once 'GerritREST_Base.php';
 
 class Git_Driver_GerritREST_projectExistsTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_projectExistsTest {
 
-    public function itReturnsFalseIfParentProjectDoNotExists() {
+    public function itReturnsFalseIfParentProjectDoNotExists()
+    {
         stub($this->guzzle_client)->get()->throws(new Guzzle\Http\Exception\ClientErrorResponseException());
 
         $this->assertFalse($this->driver->doesTheParentProjectExist($this->gerrit_server, $this->project_name));
     }
 
-    public function itReturnsTrueIfParentProjectExists() {
+    public function itReturnsTrueIfParentProjectExists()
+    {
         stub($this->guzzle_client)->get()->returns($this->getGuzzleRequestWithTextResponse(''));
 
         $this->assertTrue($this->driver->doesTheParentProjectExist($this->gerrit_server, $this->project_name));
     }
 
-    public function itReturnsTrueIfTheProjectExists() {
+    public function itReturnsTrueIfTheProjectExists()
+    {
         stub($this->guzzle_client)->get()->returns($this->getGuzzleRequestWithTextResponse(''));
 
         $this->assertTrue($this->driver->doesTheProjectExist($this->gerrit_server, $this->project_name));
     }
 
-    public function itReturnsFalseIfTheProjectDoesNotExist() {
+    public function itReturnsFalseIfTheProjectDoesNotExist()
+    {
         stub($this->guzzle_client)->get()->throws(new Guzzle\Http\Exception\ClientErrorResponseException());
 
         $this->assertfalse($this->driver->doesTheProjectExist($this->gerrit_server, $this->project_name));
     }
 
-    public function itCallsTheRightOptions() {
+    public function itCallsTheRightOptions()
+    {
         $url = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
             .'/a/projects/'. urlencode($this->project_name);

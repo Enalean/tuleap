@@ -23,7 +23,8 @@ require_once dirname(__FILE__).'/../bootstrap.php';
 
 class SystemEvent_GIT_GERRIT_PROJECT_READONLYTest extends TuleapTestCase {
 
-    public function itMakesGerritProjectReadOnly() {
+    public function itMakesGerritProjectReadOnly()
+    {
         $repository_factory = mock('GitRepositoryFactory');
         $server_factory     = mock('Git_RemoteServer_GerritServerFactory');
         $driver             = mock('Git_Driver_Gerrit');

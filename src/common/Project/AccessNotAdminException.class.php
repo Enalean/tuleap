@@ -18,7 +18,8 @@
  */
 
 class Project_AccessNotAdminException extends Project_AccessException {
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct($GLOBALS['Language']->getText('include_exit', 'perm_denied'));
     }
 }

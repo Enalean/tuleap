@@ -26,7 +26,8 @@ class b201510011503_fill_Mediawiki_version_table extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Fill plugin_mediawiki_version table
 EOT;
@@ -37,7 +38,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -46,7 +48,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $projects_table_mapping = array();
         $sql                    = "SELECT * FROM plugin_mediawiki_database";
         $res                    = $this->queryDB($sql, 'An error occured while looking for all mediawiki databases');
@@ -60,21 +63,24 @@ EOT;
         $this->fillProjectsMediawikiVersions($projects_table_mapping);
     }
 
-    private function fillProjectsMediawikiVersions(array $projects_table_mapping) {
+    private function fillProjectsMediawikiVersions(array $projects_table_mapping)
+    {
         foreach ($projects_table_mapping as $project_id => $database) {
             $version = $this->getProjectMediawikiVersion($database, $project_id);
             $this->fillProjectMediawikiVersion($project_id, $version);
         }
     }
 
-    private function fillProjectMediawikiVersion($project_id, $version) {
+    private function fillProjectMediawikiVersion($project_id, $version)
+    {
         $sql = "REPLACE INTO plugin_mediawiki_version (project_id, mw_version)
                 VALUES ($project_id, $version)";
 
         $this->execDB($sql, "An error occured while trying to insert mediawiki version $version in project $project_id");
     }
 
-    private function getProjectMediawikiVersion($database, $project_id) {
+    private function getProjectMediawikiVersion($database, $project_id)
+    {
         $sql = "SHOW TABLES IN $database LIKE 'mwsites'";
         $res = $this->queryDB($sql, "An error occured while getting mediawiki version of project $project_id");
 
@@ -85,7 +91,8 @@ EOT;
         return self::MW_123_VERSION;
     }
 
-    private function queryDB($sql, $message) {
+    private function queryDB($sql, $message)
+    {
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message.implode(', ', $this->db->dbh->errorInfo()));
@@ -94,7 +101,8 @@ EOT;
         return $res;
     }
 
-    private function execDB($sql, $message) {
+    private function execDB($sql, $message)
+    {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message.implode(', ', $this->db->dbh->errorInfo()));

@@ -19,15 +19,18 @@
  */
 
 class b201602151330_create_unlinked_account_table extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return 'Create table plugin_openidconnectclient_unlinked_account for OpenID Connect Client plugin';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = 'CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_unlinked_account (
                   id VARCHAR(32) NOT NULL,
                   provider_id INT(11) UNSIGNED NOT NULL,

@@ -29,16 +29,19 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
 
     var $force;
     var $token;
-    function __construct($item, $url, $controller, $force, $token) {
+    function __construct($item, $url, $controller, $force, $token)
+    {
         parent::__construct($item, $url, false, true, $controller);
         $this->force    = $force;
         $this->token = $token;
     }
-    function getContent($params = []) {
+    function getContent($params = [])
+    {
         return $this->item->accept($this);
     }
 
-    function _getApprovalTable() {
+    function _getApprovalTable()
+    {
         $html = '';
 
         $atf = Docman_ApprovalTableFactoriesFactory::getFromItem($this->item);
@@ -52,7 +55,8 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         return $html;
     }
 
-    function _getReleaseLock() {
+    function _getReleaseLock()
+    {
         $content = '';
         $dPm = Docman_PermissionsManager::instance($this->item->getGroupId());
         if($dPm->getLockFactory()->itemIsLocked($this->item)) {
@@ -64,25 +68,31 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         return $content;
     }
 
-    function visitFolder($item, $params = array()) {
+    function visitFolder($item, $params = array())
+    {
         return "";
     }
-    function visitDocument($item, $params = array()) {
+    function visitDocument($item, $params = array())
+    {
         return "";
     }
-    function visitWiki($item, $params = array()) {
+    function visitWiki($item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 
-    function visitLink($item, $params = array()) {
+    function visitLink($item, $params = array())
+    {
         return $this->visitVersionnedItem($item, $params);
     }
 
-    function visitFile($item, $params = array()) {
+    function visitFile($item, $params = array())
+    {
         return $this->visitVersionnedItem($item, $params);
     }
 
-    private function visitVersionnedItem($item, $params = array()) {
+    private function visitVersionnedItem($item, $params = array())
+    {
         $label = '';
         if (isset($this->_controller->_viewParams['label'])) {
             $label = $this->_controller->_viewParams['label'];
@@ -149,11 +159,13 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         return $content;
     }
 
-    function visitEmbeddedFile($item, $params = array()) {
+    function visitEmbeddedFile($item, $params = array())
+    {
         return $this->visitFile($item, $params);
     }
 
-    function visitEmpty($item, $params = array()) {
+    function visitEmpty($item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 }

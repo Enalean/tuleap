@@ -24,7 +24,8 @@ $datetime_msg = 'yyyy-mm-dd hh:mm:ss';
 
 require_once __DIR__ . '/../../include/utils.php';
 
-function tocsv($string, $csv_separator) {
+function tocsv($string, $csv_separator)
+{
 
     // Escape the double quote character by doubling it
     $string = str_replace('"', '""', $string);
@@ -45,7 +46,8 @@ function tocsv($string, $csv_separator) {
  *
  * @return string the CSV separator defined by the user or "," by default if the user didn't defined it
  */
-function get_csv_separator() {
+function get_csv_separator()
+{
     if ($u_separator = user_get_preference("user_csv_separator")) {
     } else {
         $u_separator = PFUser::DEFAULT_CSV_SEPARATOR;
@@ -68,7 +70,8 @@ function get_csv_separator() {
     return $separator;
 }
 
-function build_csv_header($col_list, $lbl_list) {
+function build_csv_header($col_list, $lbl_list)
+{
     $line      = '';
     $separator = get_csv_separator();
     foreach ($col_list as $col) {
@@ -80,7 +83,8 @@ function build_csv_header($col_list, $lbl_list) {
     return $line;
 }
 
-function build_csv_record($col_list, $record) {
+function build_csv_record($col_list, $record)
+{
     $line      = '';
     $separator = get_csv_separator();
     foreach ($col_list as $col) {
@@ -90,7 +94,8 @@ function build_csv_record($col_list, $record) {
     return $line;
 }
 
-function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val,$mand_list=false){
+function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val,$mand_list=false)
+{
     global $Language;
 
     $title_arr=array();
@@ -112,7 +117,8 @@ function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val,$mand
     echo '</table>';
 }
 
-function pick_a_record_at_random($result, $numrows, $col_list) {
+function pick_a_record_at_random($result, $numrows, $col_list)
+{
 
     /* return a record from a result set at random using the column
          list passed as an argument */
@@ -134,7 +140,8 @@ function pick_a_record_at_random($result, $numrows, $col_list) {
     return $record;
 }
 
-function prepare_textarea($textarea) {
+function prepare_textarea($textarea)
+{
     // Turn all HTML entities in ASCII and remove all \r characters
     // because even MS Office apps don't like it in text cells (Excel)
     return( str_replace(chr(13),"",util_unconvert_htmlspecialchars($textarea)) );
@@ -149,7 +156,8 @@ function prepare_textarea($textarea) {
  * @param array $record array 'field_name' => 'field_value'
  * @param string $export type of export ('csv' or 'database' : for date format, csv will take user preference, wheareas for database the format will be mysql format.)
  */
-function prepare_artifact_record($at,$fields,$group_artifact_id, &$record, $export) {
+function prepare_artifact_record($at,$fields,$group_artifact_id, &$record, $export)
+{
 
     global $datetime_fmt,$sys_lf,$Language;
     /* $record:
@@ -223,7 +231,8 @@ function prepare_artifact_record($at,$fields,$group_artifact_id, &$record, $expo
     $record['cc'] = implode(',', $cc);
 }
 
-function prepare_artifact_history_record($at, $art_field_fact, &$record) {
+function prepare_artifact_history_record($at, $art_field_fact, &$record)
+{
 
     global $datetime_fmt;
 
@@ -263,7 +272,8 @@ function prepare_artifact_history_record($at, $art_field_fact, &$record) {
 
 }
 
-function prepare_historic_value(&$record, $field, $group_artifact_id, $name) {
+function prepare_historic_value(&$record, $field, $group_artifact_id, $name)
+{
     if ( $field->isSelectBox() ) {
         $record[$name] = $field->getValue($group_artifact_id, $record[$name]);
 
@@ -289,7 +299,8 @@ function prepare_historic_value(&$record, $field, $group_artifact_id, $name) {
 
 }
 
-function project_export_makesalt($type=CRYPT_SALT_LENGTH) {
+function project_export_makesalt($type=CRYPT_SALT_LENGTH)
+{
     switch($type) {
         case 12:
             $saltlen=8; $saltprefix='$1$'; $saltsuffix='$'; break;
@@ -311,7 +322,8 @@ function project_export_makesalt($type=CRYPT_SALT_LENGTH) {
          *  @return: the same row with values transformed for database export
          */
 
-function prepare_access_logs_record($group_id, &$record) {
+function prepare_access_logs_record($group_id, &$record)
+{
 
     if (isset($record['time'])) {
         $time = $record['time'];

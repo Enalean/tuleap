@@ -67,75 +67,87 @@ class HTTPRequestTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    function testGet() {
+    function testGet()
+    {
         $r = new HTTPRequest();
         $this->assertEqual($r->get('exists'), '1');
         $this->assertFalse($r->get('does_not_exist'));
     }
 
-    function testExist() {
+    function testExist()
+    {
         $r = new HTTPRequest();
         $this->assertTrue($r->exist('exists'));
         $this->assertFalse($r->exist('does_not_exist'));
     }
 
-    function testExistAndNonEmpty() {
+    function testExistAndNonEmpty()
+    {
         $r = new HTTPRequest();
         $this->assertTrue($r->existAndNonEmpty('exists'));
         $this->assertFalse($r->existAndNonEmpty('exists_empty'));
         $this->assertFalse($r->existAndNonEmpty('does_not_exist'));
     }
 
-    function testQuotes() {
+    function testQuotes()
+    {
         $r = new HTTPRequest();
         $this->assertIdentical($r->get('quote'), "l'avion");
     }
 
-    function testServerGet() {
+    function testServerGet()
+    {
         $r = new HTTPRequest();
         $this->assertEqual($r->getFromServer('server_exists'), '1');
         $this->assertFalse($r->getFromServer('does_not_exist'));
     }
 
-    function testServerQuotes() {
+    function testServerQuotes()
+    {
         $r = new HTTPRequest();
         $this->assertIdentical($r->getFromServer('server_quote'), "l'avion du server");
     }
 
-    function testSingleton() {
+    function testSingleton()
+    {
         $this->assertEqual(
                 HTTPRequest::instance(),
                 HTTPRequest::instance());
         $this->assertIsA(HTTPRequest::instance(), 'HTTPRequest');
     }
 
-    function testArray() {
+    function testArray()
+    {
         $r = new HTTPRequest();
         $this->assertIdentical($r->get('array'), array('quote_1' => "l'avion", 'quote_2' => array('quote_3' => "l'oiseau")));
     }
 
-    function testValidKeyTrue() {
+    function testValidKeyTrue()
+    {
         $v = new MockRule($this);
         $v->setReturnValue('isValid', true);
         $r = new HTTPRequest();
         $this->assertTrue($r->validKey('testkey', $v));
     }
 
-    function testValidKeyFalse() {
+    function testValidKeyFalse()
+    {
         $v = new MockRule($this);
         $v->setReturnValue('isValid', false);
         $r = new HTTPRequest();
         $this->assertFalse($r->validKey('testkey', $v));
     }
 
-    function testValidKeyScalar() {
+    function testValidKeyScalar()
+    {
         $v = new MockRule($this);
         $v->expectOnce('isValid', array('testvalue'));
         $r = new HTTPRequest();
         $r->validKey('testkey', $v);
     }
 
-    function testValid() {
+    function testValid()
+    {
         $v = new MockValid($this);
         $v->setReturnValue('getKey', 'testkey');
         $v->setReturnValue('validate', true);
@@ -144,7 +156,8 @@ class HTTPRequestTest extends TuleapTestCase {
         $r->valid($v);
     }
 
-    function testValidTrue() {
+    function testValidTrue()
+    {
         $v = new MockValid($this);
         $v->setReturnValue('getKey', 'testkey');
         $v->setReturnValue('validate', true);
@@ -152,7 +165,8 @@ class HTTPRequestTest extends TuleapTestCase {
         $this->assertTrue($r->valid($v));
     }
 
-    function testValidFalse() {
+    function testValidFalse()
+    {
         $v = new MockValid($this);
         $v->setReturnValue('getKey', 'testkey');
         $v->setReturnValue('validate', false);
@@ -160,7 +174,8 @@ class HTTPRequestTest extends TuleapTestCase {
         $this->assertFalse($r->valid($v));
     }
 
-    function testValidScalar() {
+    function testValidScalar()
+    {
         $v = new MockValid($this);
         $v->setReturnValue('getKey', 'testkey');
         $v->expectAtLeastOnce('getKey');
@@ -169,7 +184,8 @@ class HTTPRequestTest extends TuleapTestCase {
         $r->valid($v);
     }
 
-    function testValidArray() {
+    function testValidArray()
+    {
         $v = new MockValid($this);
         $v->setReturnValue('getKey', 'testkey_array');
         $v->setReturnValue('validate', true);
@@ -178,7 +194,8 @@ class HTTPRequestTest extends TuleapTestCase {
         $r->validArray($v);
     }
 
-    function testValidArrayTrue() {
+    function testValidArrayTrue()
+    {
         $v = new MockValid($this);
         $v->setReturnValue('getKey', 'testkey_array');
         $v->setReturnValue('validate', true);
@@ -186,7 +203,8 @@ class HTTPRequestTest extends TuleapTestCase {
         $this->assertTrue($r->validArray($v));
     }
 
-    function testValidArrayFalse() {
+    function testValidArrayFalse()
+    {
         $v = new MockValid($this);
         $v->setReturnValue('getKey', 'testkey_array');
         $v->setReturnValue('validate', false);
@@ -194,7 +212,8 @@ class HTTPRequestTest extends TuleapTestCase {
         $this->assertFalse($r->validArray($v));
     }
 
-    function testValidArrayScalar() {
+    function testValidArrayScalar()
+    {
         $v = new MockValid($this);
         $v->setReturnValue('getKey', 'testkey_array');
         $v->expectAtLeastOnce('getKey');
@@ -206,7 +225,8 @@ class HTTPRequestTest extends TuleapTestCase {
         $r->validArray($v);
     }
 
-    function testValidArrayArgNotArray() {
+    function testValidArrayArgNotArray()
+    {
         $v = new MockValid($this);
         $v->setReturnValue('getKey', 'testkey');
         $v->expectAtLeastOnce('getKey');
@@ -214,7 +234,8 @@ class HTTPRequestTest extends TuleapTestCase {
         $this->assertFalse($r->validArray($v));
     }
 
-    function testValidArrayArgEmptyArrayRequired() {
+    function testValidArrayArgEmptyArrayRequired()
+    {
         $v = new MockValid($this);
         $v->required();
         $v->expectAtLeastOnce('required');
@@ -226,7 +247,8 @@ class HTTPRequestTest extends TuleapTestCase {
         $this->assertFalse($r->validArray($v));
     }
 
-    function testValidArrayArgEmptyArrayNotRequired() {
+    function testValidArrayArgEmptyArrayNotRequired()
+    {
         $v = new MockValid($this);
         $v->expectNever('required');
         $v->setReturnValue('getKey', 'testkey_array_empty');
@@ -237,7 +259,8 @@ class HTTPRequestTest extends TuleapTestCase {
         $this->assertTrue($r->validArray($v));
     }
 
-    function testValidArrayArgNotEmptyArrayRequired() {
+    function testValidArrayArgNotEmptyArrayRequired()
+    {
         $v = new MockValid($this);
         $v->expectAtLeastOnce('required');
         $v->required();
@@ -247,7 +270,8 @@ class HTTPRequestTest extends TuleapTestCase {
         $this->assertFalse($r->validArray($v));
     }
 
-    function testValidArrayFirstArgFalse() {
+    function testValidArrayFirstArgFalse()
+    {
         $v = new MockValid($this);
         $v->addRule(new Rule_Int());
         $v->addRule(new Rule_GreaterOrEqual(0));
@@ -259,7 +283,8 @@ class HTTPRequestTest extends TuleapTestCase {
         $this->assertFalse($r->validArray($v));
     }
 
-    function testValidArrayMiddleArgFalse() {
+    function testValidArrayMiddleArgFalse()
+    {
         $v = new MockValid($this);
         $v->addRule(new Rule_Int());
         $v->addRule(new Rule_GreaterOrEqual(0));
@@ -271,7 +296,8 @@ class HTTPRequestTest extends TuleapTestCase {
         $this->assertFalse($r->validArray($v));
     }
 
-    function testValidArrayLastArgFalse() {
+    function testValidArrayLastArgFalse()
+    {
         $v = new MockValid($this);
         $v->addRule(new Rule_Int());
         $v->addRule(new Rule_GreaterOrEqual(0));
@@ -283,7 +309,8 @@ class HTTPRequestTest extends TuleapTestCase {
         $this->assertFalse($r->validArray($v));
     }
 
-    function testValidInArray() {
+    function testValidInArray()
+    {
         $v = new MockValid($this);
         $v->setReturnValue('getKey', 'key1');
         $v->expectAtLeastOnce('getKey');
@@ -292,13 +319,15 @@ class HTTPRequestTest extends TuleapTestCase {
         $r->validInArray('testarray', $v);
     }
 
-    function testValidFileNoFileValidator() {
+    function testValidFileNoFileValidator()
+    {
         $v = new MockValid($this);
         $r = new HTTPRequest();
         $this->assertFalse($r->validFile($v));
     }
 
-    function testValidFileOk() {
+    function testValidFileOk()
+    {
         $v = new Valid_FileTest($this);
         $v->setReturnValue('getKey', 'file1');
         $v->expectAtLeastOnce('getKey');
@@ -307,7 +336,8 @@ class HTTPRequestTest extends TuleapTestCase {
         $r->validFile($v);
     }
 
-    function testGetValidated() {
+    function testGetValidated()
+    {
         $v1 = new MockValid($this);
         $v1->setReturnValue('getKey', 'testkey');
         $v1->setReturnValue('validate', true);
@@ -355,7 +385,8 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
     private $msg_ie_deprecated        = 'ie warning message';
     private $msg_ie_deprecated_button = 'disable ie warning';
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->preserveServer('HTTP_USER_AGENT');
 
@@ -373,46 +404,53 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
         ForgeConfig::set('codendi_dir', '/usr/share/tuleap');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         UserManager::clearInstance();
         ForgeConfig::restore();
         parent::tearDown();
     }
 
-    public function testNoNoticesWhenNoUserAgent() {
+    public function testNoNoticesWhenNoUserAgent()
+    {
         unset($_SERVER['HTTP_USER_AGENT']);
         $this->request->getBrowser();
     }
 
-    public function testIE9CompatibilityModeIsDeprected() {
+    public function testIE9CompatibilityModeIsDeprected()
+    {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)';
         $browser = $this->request->getBrowser();
 
         $this->assertPattern('/ie warning message/', $browser->getDeprecatedMessage());
     }
 
-    public function testIE10CompatibilityModeIsDeprected() {
+    public function testIE10CompatibilityModeIsDeprected()
+    {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/6.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)';
         $browser = $this->request->getBrowser();
 
         $this->assertPattern('/ie warning message/', $browser->getDeprecatedMessage());
     }
 
-    public function testIE11CompatibilityModeIsDeprected() {
+    public function testIE11CompatibilityModeIsDeprected()
+    {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)';
         $browser = $this->request->getBrowser();
 
         $this->assertPattern('/ie warning message/', $browser->getDeprecatedMessage());
     }
 
-    public function testIE9IsDeprecated() {
+    public function testIE9IsDeprecated()
+    {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)';
         $browser = $this->request->getBrowser();
 
         $this->assertPattern('/ie warning message/', $browser->getDeprecatedMessage());
     }
 
-    public function testFirefoxIsNotDeprecated() {
+    public function testFirefoxIsNotDeprecated()
+    {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:27.0) Gecko/20100101 Firefox/27.0';
         $browser = $this->request->getBrowser();
 
@@ -421,21 +459,24 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
         $browser->getDeprecatedMessage();
     }
 
-    public function testIE8IsDeprecated() {
+    public function testIE8IsDeprecated()
+    {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; GTB7.4; InfoPath.2; SV1; .NET CLR 3.3.69573; WOW64; en-US)';
         $browser = $this->request->getBrowser();
 
         $this->assertPattern('/ie warning message/', $browser->getDeprecatedMessage());
     }
 
-    public function testIE7IsDeprecated() {
+    public function testIE7IsDeprecated()
+    {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
         $browser = $this->request->getBrowser();
 
         $this->assertPattern('/ie warning message/', $browser->getDeprecatedMessage());
     }
 
-    public function testIE7IsDeprecatedButUserChoseToNotDisplayTheWarning() {
+    public function testIE7IsDeprecatedButUserChoseToNotDisplayTheWarning()
+    {
         stub($this->user)->getPreference(PFUser::PREFERENCE_DISABLE_IE7_WARNING)->returns(1);
 
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
@@ -444,7 +485,8 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
         $this->assertNoPattern('/ie warning message/', $browser->getDeprecatedMessage());
     }
 
-    public function itDisplaysOkButtonToDisableIE7Warning() {
+    public function itDisplaysOkButtonToDisableIE7Warning()
+    {
         stub($this->user)->isAnonymous()->returns(false);
 
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
@@ -453,7 +495,8 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
         $this->assertPattern('/disable ie warning/', $browser->getDeprecatedMessage());
     }
 
-    public function itDoesNotDisplayOkButtonForAnonymousUser() {
+    public function itDoesNotDisplayOkButtonForAnonymousUser()
+    {
         stub($this->user)->isAnonymous()->returns(true);
 
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
@@ -466,7 +509,8 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
 abstract class HTTPRequest_getServerURLTests extends TuleapTestCase {
     protected $request;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->preserveServer('HTTPS');
         $this->preserveServer('HTTP_X_FORWARDED_PROTO');
@@ -480,7 +524,8 @@ abstract class HTTPRequest_getServerURLTests extends TuleapTestCase {
         $this->request = new HTTPRequest();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         ForgeConfig::restore();
         parent::tearDown();
     }
@@ -489,7 +534,8 @@ abstract class HTTPRequest_getServerURLTests extends TuleapTestCase {
 // Tests inspired from From Symfony\Component\HttpFoundation\Tests\IpUtilsTest @ 3.2-dev
 class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerURLTests {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $_SERVER['HTTPS']       = 'on';
@@ -507,14 +553,16 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
         parent::tearDown();
     }
 
-    public function itDoesntTakeHostWhenForwardedProtoIsSetByAnUntrustedProxy() {
+    public function itDoesntTakeHostWhenForwardedProtoIsSetByAnUntrustedProxy()
+    {
         $_SERVER['HTTP_HOST']              = 'h4cker.backhat';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
 
         $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
     }
 
-    public function itTrustsProxy() {
+    public function itTrustsProxy()
+    {
         $_SERVER['HTTP_HOST']              = 'woof.bzh';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '192.168.1.1';
@@ -523,7 +571,8 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
         $this->assertEqual('https://woof.bzh', $this->request->getServerUrl());
     }
 
-    public function itAllowsCIDRNotation() {
+    public function itAllowsCIDRNotation()
+    {
         $_SERVER['HTTP_HOST']              = 'woof.bzh';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '192.168.1.1';
@@ -532,7 +581,8 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
         $this->assertEqual('https://woof.bzh', $this->request->getServerUrl());
     }
 
-    public function itAllowsCIDRNotationWithSlash24() {
+    public function itAllowsCIDRNotationWithSlash24()
+    {
         $_SERVER['HTTP_HOST']              = 'woof.bzh';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '192.168.1.1';
@@ -541,7 +591,8 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
         $this->assertEqual('https://woof.bzh', $this->request->getServerUrl());
     }
 
-    public function itDoesntAllowsNotMatchingCIDRNotation() {
+    public function itDoesntAllowsNotMatchingCIDRNotation()
+    {
         $_SERVER['HTTP_HOST']              = 'woof.bzh';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '192.168.1.1';
@@ -550,7 +601,8 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
         $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
     }
 
-    public function itDoesntAllowsInvalidSubnet() {
+    public function itDoesntAllowsInvalidSubnet()
+    {
         $_SERVER['HTTP_HOST']              = 'woof.bzh';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '192.168.1.1';
@@ -559,7 +611,8 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
         $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
     }
 
-    public function itAllowsWhenAtLeastOneSubnetMatches() {
+    public function itAllowsWhenAtLeastOneSubnetMatches()
+    {
         $_SERVER['HTTP_HOST']              = 'woof.bzh';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '192.168.1.1';
@@ -568,7 +621,8 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
         $this->assertEqual('https://woof.bzh', $this->request->getServerUrl());
     }
 
-    public function itDoesntAllowsWhenNoSubnetMatches() {
+    public function itDoesntAllowsWhenNoSubnetMatches()
+    {
         $_SERVER['HTTP_HOST']              = 'woof.bzh';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '192.168.1.1';
@@ -577,7 +631,8 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
         $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
     }
 
-    public function itDoesntAllowsInvalidCIDRNotation() {
+    public function itDoesntAllowsInvalidCIDRNotation()
+    {
         $_SERVER['HTTP_HOST']              = 'woof.bzh';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '1.2.3.4';
@@ -586,7 +641,8 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
         $this->assertEqual('https://meow.bzh', $this->request->getServerUrl());
     }
 
-    public function itAllowsWithExtremCIDRNotation1() {
+    public function itAllowsWithExtremCIDRNotation1()
+    {
         $_SERVER['HTTP_HOST']              = 'woof.bzh';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '1.2.3.4';
@@ -595,7 +651,8 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
         $this->assertEqual('https://woof.bzh', $this->request->getServerUrl());
     }
 
-    public function itAllowsWithExtremCIDRNotation2() {
+    public function itAllowsWithExtremCIDRNotation2()
+    {
         $_SERVER['HTTP_HOST']              = 'woof.bzh';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '1.2.3.4';
@@ -608,7 +665,8 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
 
 class HTTPRequest_getServerURLSSLTests extends HTTPRequest_getServerURLTests {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->request->setTrustedProxies(array('17.18.19.20'));
@@ -616,36 +674,42 @@ class HTTPRequest_getServerURLSSLTests extends HTTPRequest_getServerURLTests {
         ForgeConfig::set('sys_default_domain', 'example.com');
     }
 
-    public function itReturnsHttpsWhenHTTPSIsTerminatedBySelf() {
+    public function itReturnsHttpsWhenHTTPSIsTerminatedBySelf()
+    {
         $_SERVER['HTTPS'] = 'on';
 
         $this->assertEqual('https://example.com', $this->request->getServerUrl());
     }
 
-    public function itReturnsHttpWhenHTTPSIsNotEnabled() {
+    public function itReturnsHttpWhenHTTPSIsNotEnabled()
+    {
         $this->assertEqual('http://example.com', $this->request->getServerUrl());
     }
 
-    public function itReturnsHTTPSWhenReverseProxyTerminateSSLAndCommunicateInClearWithTuleap() {
+    public function itReturnsHTTPSWhenReverseProxyTerminateSSLAndCommunicateInClearWithTuleap()
+    {
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
 
         $this->assertEqual('https://example.com', $this->request->getServerUrl());
     }
 
-    public function itReturnsHTTPWhenReverseProxyDoesntTerminateSSLAndCommunicateInClearWithTuleap() {
+    public function itReturnsHTTPWhenReverseProxyDoesntTerminateSSLAndCommunicateInClearWithTuleap()
+    {
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
 
         $this->assertEqual('http://example.com', $this->request->getServerUrl());
     }
 
-    public function itReturnsHTTPWhenReverseProxyDoesntTerminateSSLAndCommunicateInSSLWithTuleap() {
+    public function itReturnsHTTPWhenReverseProxyDoesntTerminateSSLAndCommunicateInSSLWithTuleap()
+    {
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
 
         $this->assertEqual('http://example.com', $this->request->getServerUrl());
     }
 
-    public function itReturnsHTTPSWhenEverythingIsSSL() {
+    public function itReturnsHTTPSWhenEverythingIsSSL()
+    {
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
 
@@ -672,7 +736,8 @@ class HTTPRequest_getServerURLSSLTests extends HTTPRequest_getServerURLTests {
 
 class HTTPRequest_getServerURL_ConfigFallbackTests extends HTTPRequest_getServerURLTests {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->request->setTrustedProxies(array('17.18.19.20'));
@@ -680,7 +745,8 @@ class HTTPRequest_getServerURL_ConfigFallbackTests extends HTTPRequest_getServer
         ForgeConfig::set('sys_https_host', 'example.ssl.test');
     }
 
-    public function itReturnsHostNameOfProxyWhenBehindAProxy() {
+    public function itReturnsHostNameOfProxyWhenBehindAProxy()
+    {
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['HTTP_HOST'] = 'meow.test';
 
@@ -693,13 +759,15 @@ class HTTPRequest_getServerURL_ConfigFallbackTests extends HTTPRequest_getServer
         $this->assertEqual('http://example.clear.test', $this->request->getServerUrl());
     }
 
-    public function itReturnsTheConfiguredHTTPSNameWhenInHTTPS() {
+    public function itReturnsTheConfiguredHTTPSNameWhenInHTTPS()
+    {
         $_SERVER['HTTPS'] = 'on';
 
         $this->assertEqual('https://example.ssl.test', $this->request->getServerUrl());
     }
 
-    public function itReturnsTheDefaultDomainNameWhenInHTTPButNothingConfiguredAsHTTPSHost() {
+    public function itReturnsTheDefaultDomainNameWhenInHTTPButNothingConfiguredAsHTTPSHost()
+    {
         $_SERVER['HTTPS'] = 'on';
         ForgeConfig::set('sys_https_host', '');
 

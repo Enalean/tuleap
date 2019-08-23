@@ -21,7 +21,8 @@ require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_List_OpenValueTest extends TuleapTestCase {
 
-    public function testJSon() {
+    public function testJSon()
+    {
         $id          = 123;
         $label       = 'Reopen';
         $value = new Tracker_FormElement_Field_List_OpenValue($id, $label);

@@ -17,20 +17,24 @@
  */
 
 class b201503271456_add_forgeconfig extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return "Add table to store forge configuration";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->createTable();
         $this->populateTable();
     }
 
-    private function createTable() {
+    private function createTable()
+    {
         $sql = "CREATE TABLE forgeconfig (
             name VARCHAR(255) NOT NULL,
             value VARCHAR(255) NOT NULL DEFAULT '',
@@ -42,7 +46,8 @@ class b201503271456_add_forgeconfig extends ForgeUpgrade_Bucket {
         }
     }
 
-    private function populateTable() {
+    private function populateTable()
+    {
         $access_mode = $this->getCurrentAccessMode();
         $sql = "REPLACE INTO forgeconfig (name, value) VALUES ('access_mode', '$access_mode')";
         $res = $this->db->dbh->exec($sql);
@@ -51,7 +56,8 @@ class b201503271456_add_forgeconfig extends ForgeUpgrade_Bucket {
         }
     }
 
-    private function getCurrentAccessMode() {
+    private function getCurrentAccessMode()
+    {
         include($this->getLocalIncPath());
         $variables_in_localinc = get_defined_vars();
 
@@ -69,7 +75,8 @@ class b201503271456_add_forgeconfig extends ForgeUpgrade_Bucket {
         return $access_mode;
     }
 
-    private function getLocalIncPath() {
+    private function getLocalIncPath()
+    {
         $default_path = '/etc/tuleap/conf/local.inc';
         $centos5_path = '/etc/codendi/conf/local.inc';
         $local_inc    = getenv('TULEAP_LOCAL_INC') ? getenv('TULEAP_LOCAL_INC') : getenv('CODENDI_LOCAL_INC');

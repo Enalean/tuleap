@@ -26,7 +26,8 @@ class b201112150858_add_repository_scope extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add the column repository_scope in plugin_git.
 EOT;
@@ -37,7 +38,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -46,7 +48,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = 'ALTER TABLE plugin_git 
                     ADD repository_scope varchar(1) NULL';
         $res = $this->db->dbh->exec($sql);
@@ -67,7 +70,8 @@ EOT;
      *
      * @return void
      */
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->columnNameExists('plugin_git', 'repository_scope')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column repository_scope in table plugin_git is missing');
         }

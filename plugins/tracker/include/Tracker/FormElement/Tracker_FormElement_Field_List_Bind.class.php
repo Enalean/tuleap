@@ -51,7 +51,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     /** @var Tracker_FormElement_Field */
     protected $field;
 
-    public function __construct($field, $default_values, $decorators) {
+    public function __construct($field, $default_values, $decorators)
+    {
         $this->field          = $field;
         $this->default_values = $default_values;
         $this->decorators     = $decorators;
@@ -62,11 +63,13 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @return array (123 => 1, 234 => 1, 345 => 1)
      */
-    public function getDefaultValues() {
+    public function getDefaultValues()
+    {
         return $this->default_values;
     }
 
-    public function getDefaultRESTValues() {
+    public function getDefaultRESTValues()
+    {
         $bind_values = $this->getBindValues(array_keys($this->getDefaultValues()));
 
         $rest_array = array();
@@ -85,7 +88,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     /**
      * @return Tracker_FormElement_Field_List_BindDecorator[]
      */
-    public function getDecorators() {
+    public function getDecorators()
+    {
         return $this->decorators;
     }
 
@@ -117,7 +121,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         return array_key_exists($value_id, $this->getAllValues());
     }
 
-    public function fetchFormattedForJson() {
+    public function fetchFormattedForJson()
+    {
         $values = array();
         foreach($this->getAllValues() as $value) {
             $values[] = $value->fetchFormattedForJson();
@@ -125,7 +130,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         return $values;
     }
 
-    public function getRESTBindingProperties() {
+    public function getRESTBindingProperties()
+    {
         $bind_factory = new Tracker_FormElement_Field_List_BindFactory();
         $bind_type = $bind_factory->getType($this);
         return array(
@@ -191,7 +197,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     /**
      * @return string
      */
-    public function formatCardValue($value, Tracker_CardDisplayPreferences $display_preferences) {
+    public function formatCardValue($value, Tracker_CardDisplayPreferences $display_preferences)
+    {
         return $this->formatChangesetValue($value);
     }
 
@@ -206,14 +213,16 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      * Classes that format with a link (i.e. userBind) must override this.
      * @return string
      */
-    public function formatChangesetValueWithoutLink($value) {
+    public function formatChangesetValueWithoutLink($value)
+    {
         return $this->formatChangesetValue($value);
     }
 
     /**
      * @return string
      */
-    public function formatArtifactValue($value_id) {
+    public function formatArtifactValue($value_id)
+    {
         if ($value_id && $value_id != self::NONE_VALUE) {
             return $this->formatCriteriaValue($value_id);
         } else {
@@ -224,7 +233,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     /**
      * @return string
      */
-    public function formatMailArtifactvalue ($value_id) {
+    public function formatMailArtifactvalue($value_id)
+    {
         return $this->formatMailCriteriaValue($value_id);
     }
 
@@ -235,7 +245,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      * @param array $criteria_value array of criteria_value (which are array)
      * @return string
      */
-    public function getCriteriaFrom($criteria_value) {
+    public function getCriteriaFrom($criteria_value)
+    {
         //Only filter query if criteria is valuated
         if ($criteria_value) {
             $a = 'A_'. $this->field->id;
@@ -268,7 +279,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      * @return string
      * @see getCriteriaFrom
      */
-    public function getCriteriaWhere($criteria_value) {
+    public function getCriteriaWhere($criteria_value)
+    {
         //Only filter query if criteria is valuated
         if ($criteria_value) {
             $a = 'A_'. $this->field->id;
@@ -315,7 +327,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      * @return string
      * @see getQuerySelect
      */
-    public function getQuerySelectWithDecorator() {
+    public function getQuerySelectWithDecorator()
+    {
         return $this->getQuerySelect();
     }
 
@@ -336,7 +349,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      * @return string
      * @see getQueryFrom
      */
-    public function getQueryFromWithDecorator($changesetvalue_table = 'tracker_changeset_value_list') {
+    public function getQueryFromWithDecorator($changesetvalue_table = 'tracker_changeset_value_list')
+    {
         return $this->getQueryFrom($changesetvalue_table);
     }
 
@@ -345,7 +359,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @return Tracker_FormElement_Field_List
      */
-    public function getField() {
+    public function getField()
+    {
         return $this->field;
     }
 
@@ -381,7 +396,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      */
     public abstract function getQueryGroupby();
 
-    public function fetchDecoratorsAsJavascript() {
+    public function fetchDecoratorsAsJavascript()
+    {
         $html = '';
         if (is_array($this->decorators) && count($this->decorators)) {
             $html .= '<script type="text/javascript">'.PHP_EOL;
@@ -394,7 +410,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         return $html;
     }
 
-    public function getSelectOptionStyles($value_id) {
+    public function getSelectOptionStyles($value_id)
+    {
         $default_styles = ['classes' => '', 'inline-styles' => ''];
 
         if (count($this->decorators)) {
@@ -428,7 +445,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @return bool true if we want to redirect
      */
-    public function process($params, $no_redirect = false) {
+    public function process($params, $no_redirect = false)
+    {
         if (isset($params['decorator'])) {
             foreach ($params['decorator'] as $value_id => $hexacolor) {
                 if ($hexacolor) {
@@ -486,14 +504,16 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     /**
      * @return Tracker_FormElement_Field_List_Bind_DefaultvalueDao
      */
-    protected function getDefaultValueDao() {
+    protected function getDefaultValueDao()
+    {
         if (!$this->default_value_dao) {
             $this->default_value_dao = new Tracker_FormElement_Field_List_Bind_DefaultvalueDao();
         }
         return $this->default_value_dao;
     }
 
-    public function setDefaultValueDao(Tracker_FormElement_Field_List_Bind_DefaultvalueDao $dao) {
+    public function setDefaultValueDao(Tracker_FormElement_Field_List_Bind_DefaultvalueDao $dao)
+    {
         $this->default_value_dao = $dao;
     }
 
@@ -621,7 +641,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @return string[]
      */
-    public function getRecipients(Tracker_Artifact_ChangesetValue_List $changeset_value) {
+    public function getRecipients(Tracker_Artifact_ChangesetValue_List $changeset_value)
+    {
         return array();
     }
 
@@ -630,7 +651,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @return bool
      */
-    public function isNotificationsSupported() {
+    public function isNotificationsSupported()
+    {
         return false;
     }
 
@@ -668,7 +690,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     /**
      * @psalm-param ListValueBinding $value
      */
-    protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
+    protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value)
+    {
         $representation = new FieldValueRepresentation();
         $values = array(
             self::REST_ID_KEY    => $value->getId(),
@@ -678,7 +701,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         return $representation;
     }
 
-    public function getRESTAvailableValues() {
+    public function getRESTAvailableValues()
+    {
         $rest_values = array();
         foreach($this->getAllValues() as $value) {
             $rest_values[] = $this->getRESTBindValue($value);
@@ -690,11 +714,13 @@ abstract class Tracker_FormElement_Field_List_Bind implements
 
     public abstract function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field);
 
-    public function getFieldDataFromRESTValue($value) {
+    public function getFieldDataFromRESTValue($value)
+    {
         return intval($value);
     }
 
-    public function addValue($new_value) {
+    public function addValue($new_value)
+    {
         return;
     }
 

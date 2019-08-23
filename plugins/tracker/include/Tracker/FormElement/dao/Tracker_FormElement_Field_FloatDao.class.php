@@ -23,12 +23,14 @@
  */
 class Tracker_FormElement_Field_FloatDao extends Tracker_FormElement_SpecificPropertiesDao {
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_field_float';
     }
 
-    public function save($field_id, $row) {
+    public function save($field_id, $row)
+    {
         $field_id  = $this->da->escapeInt($field_id);
 
         if (isset($row['maxchars']) && (int)$row['maxchars']) {
@@ -62,7 +64,8 @@ class Tracker_FormElement_Field_FloatDao extends Tracker_FormElement_SpecificPro
      *
      * @return bool true if ok, false otherwise
      */
-    public function duplicate($from_field_id, $to_field_id) {
+    public function duplicate($from_field_id, $to_field_id)
+    {
         $from_field_id  = $this->da->escapeInt($from_field_id);
         $to_field_id  = $this->da->escapeInt($to_field_id);
 

@@ -27,7 +27,8 @@ class ProjectHierarchyDao extends DataAccessObject {
      * @param int $parent_group_id
      * @return bool
      */
-    public function addParentProject($group_id, $parent_group_id) {
+    public function addParentProject($group_id, $parent_group_id)
+    {
         $group_id        = $this->da->escapeInt($group_id);
         $parent_group_id = $this->da->escapeInt($parent_group_id);
 
@@ -42,7 +43,8 @@ class ProjectHierarchyDao extends DataAccessObject {
      * @param int $parent_group_id
      * @return bool
      */
-    public function updateParentProject($group_id, $parent_group_id) {
+    public function updateParentProject($group_id, $parent_group_id)
+    {
         $group_id        = $this->da->escapeInt($group_id);
         $parent_group_id = $this->da->escapeInt($parent_group_id);
 
@@ -57,7 +59,8 @@ class ProjectHierarchyDao extends DataAccessObject {
      * @param int $group_id
      * @return bool
      */
-    public function removeParentProject($group_id) {
+    public function removeParentProject($group_id)
+    {
         $group_id = $this->da->escapeInt($group_id);
 
         $sql = "DELETE FROM project_parent
@@ -70,7 +73,8 @@ class ProjectHierarchyDao extends DataAccessObject {
      * @param int $group_id
      * @return DataAccessResult
      */
-    public function getParentProject($group_id) {
+    public function getParentProject($group_id)
+    {
         $group_id = $this->da->escapeInt($group_id);
 
         $sql = "SELECT groups.*
@@ -85,7 +89,8 @@ class ProjectHierarchyDao extends DataAccessObject {
      * @param int $group_id
      * @return DataAccessResult
      */
-    public function getChildProjects($group_id) {
+    public function getChildProjects($group_id)
+    {
         $group_id = $this->da->escapeInt($group_id);
 
         $sql = "SELECT groups.*

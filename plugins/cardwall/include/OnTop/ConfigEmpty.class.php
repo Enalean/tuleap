@@ -24,19 +24,23 @@
 class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
 {
 
-    public function getTracker() {
+    public function getTracker()
+    {
         return null;
     }
 
-    public function isEnabled() {
+    public function isEnabled()
+    {
         return false;
     }
 
-    public function enable() {
+    public function enable()
+    {
         return false;
     }
 
-    public function disable() {
+    public function disable()
+    {
         return false;
     }
 
@@ -46,7 +50,8 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
      * @param Tracker $tracker
      * @return Cardwall_OnTop_Config_ColumnCollection
      */
-    public function getDashboardColumns() {
+    public function getDashboardColumns()
+    {
         return false;
     }
 
@@ -54,7 +59,8 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
      * Get Columns from the values of a $field
      * @return Cardwall_OnTop_Config_ColumnCollection
      */
-    public function getRendererColumns(Tracker_FormElement_Field_List $cardwall_field) {
+    public function getRendererColumns(Tracker_FormElement_Field_List $cardwall_field)
+    {
         return false;
     }
 
@@ -63,11 +69,13 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
         return;
     }
 
-    public function getMappings() {
+    public function getMappings()
+    {
         return false;
     }
 
-    public function getTrackers() {
+    public function getTrackers()
+    {
         return false;
     }
 
@@ -76,17 +84,21 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
      *
      * @return Cardwall_OnTop_Config_TrackerMapping
      */
-    public function getMappingFor(Tracker $mapping_tracker) {
+    public function getMappingFor(Tracker $mapping_tracker)
+    {
         return null;
     }
 
-    private function isMappedTo($tracker, $artifact_status, Cardwall_Column $column) {
+    private function isMappedTo($tracker, $artifact_status, Cardwall_Column $column)
+    {
         return false;
     }
 
-    public function isInColumn(Tracker_Artifact                                     $artifact,
-                               Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
-                               Cardwall_Column                                      $column) {
+    public function isInColumn(
+        Tracker_Artifact                                     $artifact,
+        Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
+        Cardwall_Column                                      $column
+    ) {
         return false;
     }
 
@@ -98,17 +110,22 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
      *
      * @return Cardwall_MappingCollection
      */
-    public function getCardwallMappings(array $fields, Cardwall_OnTop_Config_ColumnCollection $cardwall_columns) {
+    public function getCardwallMappings(array $fields, Cardwall_OnTop_Config_ColumnCollection $cardwall_columns)
+    {
         return false;
     }
 
-    private function fillMappingsByDuckType(Cardwall_MappingCollection             $mappings,
-                                            array                                  $fields,
-                                            Cardwall_OnTop_Config_ColumnCollection $columns) {
+    private function fillMappingsByDuckType(
+        Cardwall_MappingCollection             $mappings,
+        array                                  $fields,
+        Cardwall_OnTop_Config_ColumnCollection $columns
+    ) {
         return false;
     }
 
-    public function fillMappingsWithOnTopMappings(Cardwall_MappingCollection             $mappings,
-                                                  Cardwall_OnTop_Config_ColumnCollection $columns) {
+    public function fillMappingsWithOnTopMappings(
+        Cardwall_MappingCollection             $mappings,
+        Cardwall_OnTop_Config_ColumnCollection $columns
+    ) {
     }
 }

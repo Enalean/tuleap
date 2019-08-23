@@ -105,18 +105,21 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
     /**
      * @return GitRepository|null
      */
-    public function getRepository() {
+    public function getRepository()
+    {
         return $this->repository;
     }
 
     /**
      * @return string
      */
-    public function getParameters() {
+    public function getParameters()
+    {
         return isset($this->matches['parameters']) ? $this->matches['parameters'] : '';
     }
 
-    private function setIsFriendly() {
+    private function setIsFriendly()
+    {
         if (! preg_match($this->friendly_url_pattern, $this->uri, $this->matches)) {
             return;
         }
@@ -132,7 +135,8 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
         $this->is_friendly = true;
     }
 
-    private function setIsStandard() {
+    private function setIsStandard()
+    {
         if (! preg_match($this->standard_url_pattern, $this->uri, $this->matches)) {
             return;
         }
@@ -145,7 +149,8 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
         $this->is_standard = true;
     }
 
-    private function setIsSmartHTTP() {
+    private function setIsSmartHTTP()
+    {
         $uri = $this->uri;
         $params_position = strpos($uri, '?');
         if ($params_position !== false) {
@@ -177,11 +182,13 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
         $this->is_smart_http = true;
     }
 
-    public function getPathInfo() {
+    public function getPathInfo()
+    {
         return $this->path_info;
     }
 
-    public function getQueryString() {
+    public function getQueryString()
+    {
         return $this->query_string;
     }
 
@@ -198,7 +205,8 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
     /**
      * @return GitRepository|null
      */
-    private function getRepositoryFromStandardURL() {
+    private function getRepositoryFromStandardURL()
+    {
         $repository_id          = $this->matches['repository_id'];
         $repository_id_is_a_int = preg_match('/^([0-9]+)$/', $repository_id);
 
@@ -216,7 +224,8 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
     /**
      * @return Project
      */
-    private function getProjectFromStandardURL() {
+    private function getProjectFromStandardURL()
+    {
         return $this->project_manager->getProject($this->matches['project_id']);
     }
 

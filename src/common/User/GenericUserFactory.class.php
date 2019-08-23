@@ -38,7 +38,8 @@ class GenericUserFactory {
      */
     private $project_manager;
 
-    public function __construct(UserManager $userManager, ProjectManager $project_manager, GenericUserDao $dao) {
+    public function __construct(UserManager $userManager, ProjectManager $project_manager, GenericUserDao $dao)
+    {
         $this->user_manager = $userManager;
         $this->project_manager = $project_manager;
         $this->dao = $dao;
@@ -47,7 +48,8 @@ class GenericUserFactory {
     /**
      * @return GenericUser
      */
-    public function update(GenericUser $user) {
+    public function update(GenericUser $user)
+    {
         $this->user_manager->updateDb($user);
 
         return $user;
@@ -58,7 +60,8 @@ class GenericUserFactory {
      * @param int $group_id
      * @return GenericUser|null
      */
-    public function fetch($group_id) {
+    public function fetch($group_id)
+    {
         if ($row = $this->dao->fetch($group_id)->getRow()){
             $pfuser = $this->user_manager->getUserById($row['user_id']);
 
@@ -76,7 +79,8 @@ class GenericUserFactory {
      * @param string $password
      * @return GenericUser
      */
-    public function create($group_id, $password) {
+    public function create($group_id, $password)
+    {
         $generic_user = $this->generateGenericUser($group_id, new PFUser());
         $generic_user->setPassword($password);
 
@@ -90,12 +94,14 @@ class GenericUserFactory {
      * @param int $group_id
      * @return GenericUser
      */
-    private function generateGenericUser($group_id, PFUser $user) {
+    private function generateGenericUser($group_id, PFUser $user)
+    {
         $project = $this->project_manager->getProject($group_id);
         return $this->getGenericUser($project, $user);
     }
 
-    public function getGenericUser(Project $project, PFUser $user) {
+    public function getGenericUser(Project $project, PFUser $user)
+    {
         return new GenericUser($project, $user, ForgeConfig::get(self::CONFIG_KEY_SUFFIX));
     }
 }

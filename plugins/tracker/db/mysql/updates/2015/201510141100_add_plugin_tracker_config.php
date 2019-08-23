@@ -17,20 +17,24 @@
  */
 
 class b201510141100_add_plugin_tracker_config extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return "Add table to store plugin tracker configuration";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->createTable();
         $this->populateTable();
     }
 
-    private function createTable() {
+    private function createTable()
+    {
         $this->exec(
             "CREATE TABLE plugin_tracker_config (
                 name VARCHAR(255) NOT NULL,
@@ -41,7 +45,8 @@ class b201510141100_add_plugin_tracker_config extends ForgeUpgrade_Bucket {
         );
     }
 
-    private function populateTable() {
+    private function populateTable()
+    {
         if ($this->isEmailgatewayActivated()) {
             $this->exec(
                 "REPLACE INTO plugin_tracker_config (name, value) VALUES ('emailgateway_mode', 'token')",
@@ -50,7 +55,8 @@ class b201510141100_add_plugin_tracker_config extends ForgeUpgrade_Bucket {
         }
     }
 
-    private function isEmailgatewayActivated() {
+    private function isEmailgatewayActivated()
+    {
         include($this->getLocalIncPath());
         $variables_in_localinc = get_defined_vars();
 
@@ -59,7 +65,8 @@ class b201510141100_add_plugin_tracker_config extends ForgeUpgrade_Bucket {
             && $variables_in_localinc['sys_enable_reply_by_mail'] == true;
     }
 
-    private function getLocalIncPath() {
+    private function getLocalIncPath()
+    {
         $default_path = '/etc/tuleap/conf/local.inc';
         $centos5_path = '/etc/codendi/conf/local.inc';
         $local_inc    = getenv('TULEAP_LOCAL_INC') ? getenv('TULEAP_LOCAL_INC') : getenv('CODENDI_LOCAL_INC');
@@ -75,7 +82,8 @@ class b201510141100_add_plugin_tracker_config extends ForgeUpgrade_Bucket {
         return $local_inc;
     }
 
-    private function exec($sql, $error_message) {
+    private function exec($sql, $error_message)
+    {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);

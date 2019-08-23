@@ -32,7 +32,8 @@ class Git_Widget_ProjectPushes extends Widget {
      *
      * @return Void
      */
-    public function __construct($pluginPath) {
+    public function __construct($pluginPath)
+    {
         $this->pluginPath = $pluginPath;
         // TODO: Make weeks number as a widget preferences stored by project.
         parent::__construct('plugin_git_project_pushes');
@@ -43,7 +44,8 @@ class Git_Widget_ProjectPushes extends Widget {
      *
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return dgettext('tuleap-git', 'Last Git pushes');
     }
 
@@ -52,7 +54,8 @@ class Git_Widget_ProjectPushes extends Widget {
      *
      * @return string html
      */
-    public function getContent() {
+    public function getContent()
+    {
         $request = HTTPRequest::instance();
         $groupId = $request->get('group_id');
         $plugin = PluginManager::instance()->getPluginByName('git');
@@ -71,7 +74,8 @@ class Git_Widget_ProjectPushes extends Widget {
      *
      * @return string
      */
-    function getCategory() {
+    function getCategory()
+    {
         return _('Source code management');
     }
 
@@ -80,7 +84,8 @@ class Git_Widget_ProjectPushes extends Widget {
      *
      * @return String
      */
-    function getDescription() {
+    function getDescription()
+    {
         return dgettext('tuleap-git', 'Display last Git pushes of the project.');
     }
 }

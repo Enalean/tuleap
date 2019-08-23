@@ -23,7 +23,8 @@ require_once dirname(__FILE__) .'/../../../../../../tests/simpletest/common/incl
 
 class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->tracker_id = 666;
@@ -34,7 +35,8 @@ class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends TuleapTestCase {
         $this->command = new Cardwall_OnTop_Config_Command_UpdateColumns($tracker, $this->dao);
     }
 
-    public function itUpdatesAllColumns() {
+    public function itUpdatesAllColumns()
+    {
         $request = aRequest()->with('column', array(
             12 => array('label' => 'Todo', 'bgcolor' => '#000000'),
             13 => array('label' => ''),

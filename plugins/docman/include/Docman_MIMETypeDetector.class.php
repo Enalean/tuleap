@@ -55,7 +55,8 @@ class Docman_MIMETypeDetector {
      *
      * @return bool True if the file is an office one
      */
-    public function isAnOfficeFile($filename) {
+    public function isAnOfficeFile($filename)
+    {
         return $this->getRightOfficeType($filename) != null;
     }
 
@@ -64,7 +65,8 @@ class Docman_MIMETypeDetector {
      *
      * @return string The mime type corresponding to the extension
      */
-    public function getRightOfficeType($filename) {
+    public function getRightOfficeType($filename)
+    {
         $file_extension = '.' . pathinfo($filename, PATHINFO_EXTENSION);
 
         if (isset($this->office_types[$file_extension])) {

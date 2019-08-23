@@ -40,7 +40,8 @@ class FieldListStaticValueRepresentation {
      */
     public $is_hidden;
 
-    public function build(Tracker_FormElement_Field_List_Value $value) {
+    public function build(Tracker_FormElement_Field_List_Value $value)
+    {
         $this->id               = JsonCast::toInt($value->getId());
         $this->label            = $value->getLabel();
         $this->is_hidden        = (bool)$value->isHidden();

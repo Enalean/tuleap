@@ -47,7 +47,8 @@ if (! $request->getCurrentUser()->isSuperUser() && !$is_register_page_accessible
     );
 }
 
-function register_valid($mail_confirm_code, array &$errors)    {
+function register_valid($mail_confirm_code, array &$errors)
+{
     global $Language;
 
     $request = HTTPRequest::instance();
@@ -149,7 +150,8 @@ function register_valid($mail_confirm_code, array &$errors)    {
  * Function to get errors with its key
  * to display errors for each element
 **/
-function getFieldError($field_key, array $errors) {
+function getFieldError($field_key, array $errors)
+{
     if(isset($errors[$field_key])) {
         return $errors[$field_key];
     }
@@ -157,7 +159,8 @@ function getFieldError($field_key, array $errors) {
 }
 
 
-function display_account_form($register_error, array $errors)    {
+function display_account_form($register_error, array $errors)
+{
     global $Language;
 
     $request  = HTTPRequest::instance();

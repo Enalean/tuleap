@@ -29,7 +29,8 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
      */
     private $layout;
 
-    public function __construct(Tracker $tracker, EventManager $event_manager, Tracker_IDisplayTrackerLayout $layout) {
+    public function __construct(Tracker $tracker, EventManager $event_manager, Tracker_IDisplayTrackerLayout $layout)
+    {
         parent::__construct($tracker, $event_manager);
         $this->layout = $layout;
     }
@@ -41,7 +42,8 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
         );
     }
 
-    protected function displayHeader() {
+    protected function displayHeader()
+    {
         $breadcrumbs = array(
             array(
                 'title' => 'New artifact',
@@ -53,7 +55,8 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
         echo $this->fetchSubmitInstructions();
     }
 
-    private function fetchNewArtifactForm(Codendi_Request $request, PFUser $current_user) {
+    private function fetchNewArtifactForm(Codendi_Request $request, PFUser $current_user)
+    {
         $html = '';
 
         $html .= $this->fetchFormElements($request);
@@ -73,7 +76,8 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
         return $html;
     }
 
-    protected function displayFooter() {
+    protected function displayFooter()
+    {
         $this->tracker->displayFooter($this->layout);
     }
 }

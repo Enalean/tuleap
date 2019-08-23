@@ -15,19 +15,23 @@ rcs_id('$Id: GoTo.php,v 1.4 2004/07/08 20:30:07 rurban Exp $');
 class WikiPlugin_GoTo
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("GoTo");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("Go to or create page.");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('size' => 32);
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $request->setArg('action',false);
         $args = $this->getArgs($argstr, $request);
         extract($args);

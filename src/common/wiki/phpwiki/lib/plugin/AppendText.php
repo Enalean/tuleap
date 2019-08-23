@@ -32,20 +32,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class WikiPlugin_AppendText
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("AppendText");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Append text to any page in this wiki.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.7 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('page'     => '[pagename]',
                      's'        => '',  // Text to append.
                      'before'   => '',  // Add before (ignores after if defined)
@@ -54,13 +58,15 @@ extends WikiPlugin
                      );
     }
 
-    function _fallback($addtext, $oldtext, $notfound, &$message) {
+    function _fallback($addtext, $oldtext, $notfound, &$message)
+    {
         $message->pushContent(sprintf(_("%s not found"), $notfound).". ".
                               _("Appending at the end.")."\n");
         return $oldtext . "\n" . $addtext;
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
 
         $args = $this->getArgs($argstr, $request);
         $pagename = $args['page'];

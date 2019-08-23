@@ -26,11 +26,13 @@ class TrackerXmlFieldsMapping_FromAnotherPlatform implements TrackerXmlFieldsMap
      */
     private $xml_mapping;
 
-    public function __construct(array $xml_mapping) {
+    public function __construct(array $xml_mapping)
+    {
         $this->xml_mapping = $xml_mapping;
     }
 
-    public function getNewValueId($old_value_id) {
+    public function getNewValueId($old_value_id)
+    {
         $old_reference = $this->getOldValueReferenceFromOldValueId($old_value_id);
 
         if (isset($this->xml_mapping[$old_reference])) {
@@ -42,7 +44,8 @@ class TrackerXmlFieldsMapping_FromAnotherPlatform implements TrackerXmlFieldsMap
         throw new TrackerXmlFieldsMapping_ValueNotFoundException($old_value_id, $old_reference);
     }
 
-    private function getOldValueReferenceFromOldValueId($old_value_id) {
+    private function getOldValueReferenceFromOldValueId($old_value_id)
+    {
         return Tracker_FormElement_Field_List_Value::XML_ID_PREFIX . $old_value_id;
     }
 
@@ -59,7 +62,8 @@ class TrackerXmlFieldsMapping_FromAnotherPlatform implements TrackerXmlFieldsMap
         throw new TrackerXmlFieldsMapping_ValueNotFoundException($old_value_id, $old_reference);
     }
 
-    private function getOldValueReferenceFromOldOpenValueId($old_value_id) {
+    private function getOldValueReferenceFromOldOpenValueId($old_value_id)
+    {
         return str_replace(Tracker_FormElement_Field_List_BindValue::BIND_PREFIX, Tracker_FormElement_Field_List_Value::XML_ID_PREFIX, $old_value_id);
     }
 }

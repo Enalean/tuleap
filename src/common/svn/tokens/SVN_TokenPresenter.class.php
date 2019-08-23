@@ -31,7 +31,8 @@ class SVN_TokenPresenter {
 
     public $comment;
 
-    public function __construct(SVN_Token $svn_token) {
+    public function __construct(SVN_Token $svn_token)
+    {
         $this->id             = $svn_token->getId();
         $this->generated_date = format_date(
             $GLOBALS['Language']->getText('system', 'datefmt'),
@@ -51,7 +52,8 @@ class SVN_TokenPresenter {
         }
     }
 
-    private function setDateForUser(SVN_Token $svn_token) {
+    private function setDateForUser(SVN_Token $svn_token)
+    {
         if (! $svn_token->getLastUsage()) {
             $this->last_used_on = $this->getDefaultLastUsedOn();
         } else {
@@ -62,15 +64,18 @@ class SVN_TokenPresenter {
         }
     }
 
-    private function getDefaultLastUsedOn() {
+    private function getDefaultLastUsedOn()
+    {
         return $GLOBALS['Language']->getText('svn_tokens', 'default_last_used_on');
     }
 
-    private function getDefaultUsedBy() {
+    private function getDefaultUsedBy()
+    {
         return $GLOBALS['Language']->getText('svn_tokens', 'default_last_used_by');
     }
 
-    private function getDefaultComment() {
+    private function getDefaultComment()
+    {
         return $GLOBALS['Language']->getText('svn_tokens', 'default_comment', array($this->generated_date));
     }
 }

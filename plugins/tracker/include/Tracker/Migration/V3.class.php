@@ -27,14 +27,16 @@ class Tracker_Migration_V3 {
     /** @var TrackerFactory */
     private $tracker_factory;
 
-    public function __construct(TrackerFactory $tracker_factory) {
+    public function __construct(TrackerFactory $tracker_factory)
+    {
         $this->tracker_factory = $tracker_factory;
     }
 
     /**
      * @return Tracker (only the structure)
      */
-    public function createTV5FromTV3(Project $project, $name, $description, $itemname, ArtifactType $tv3) {
+    public function createTV5FromTV3(Project $project, $name, $description, $itemname, ArtifactType $tv3)
+    {
         $dao = new Tracker_Migration_V3_Dao();
         $logger = new BackendLogger(ForgeConfig::get('codendi_log').'/'.Tracker_Migration_MigrationManager::LOG_FILE);
 

@@ -25,42 +25,49 @@
 require_once 'bootstrap.php';
 
 class Tracker_FormElement_Field_RadiobuttonHTMLTest extends Tracker_FormElement_Field_Radiobutton {
-    public function __construct() {
+    public function __construct()
+    {
         $id = $tracker_id = $parent_id = $name = $label = $description = $use_it = $scope = $required = $notifications = $rank = null;
         parent::__construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank);
     }
 
-    public function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected) {
+    public function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected)
+    {
         return parent::fetchFieldValue($value, $name, $is_selected);
     }
 }
 
 class Tracker_FormElement_Field_RadiobuttonTest extends TuleapTestCase {
 
-    public function itIsNotNoneWhenArrayContainsAValue() {
+    public function itIsNotNoneWhenArrayContainsAValue()
+    {
         $field = aRadiobuttonField()->build();
         $this->assertFalse($field->isNone(array('1' => '555')));
     }
 
-    public function itHasNoChangesWhenSubmittedValuesAreTheSameAsStored() {
+    public function itHasNoChangesWhenSubmittedValuesAreTheSameAsStored()
+    {
         $previous = stub('Tracker_Artifact_ChangesetValue_List')->getValue()->returns(array(5123));
         $field = aRadiobuttonField()->build();
         $this->assertFalse($field->hasChanges(mock('Tracker_Artifact'), $previous, array('5123')));
     }
 
-    public function itDetectsChangesEvenWhenCSVImportValueIsNull() {
+    public function itDetectsChangesEvenWhenCSVImportValueIsNull()
+    {
         $previous = stub('Tracker_Artifact_ChangesetValue_List')->getValue()->returns(array(5123));
         $field = aRadiobuttonField()->build();
         $this->assertTrue($field->hasChanges(mock('Tracker_Artifact'), $previous, null));
     }
 
-    public function itHasChangesWhenSubmittedValuesContainsDifferentValues() {
+    public function itHasChangesWhenSubmittedValuesContainsDifferentValues()
+    {
         $previous = stub('Tracker_Artifact_ChangesetValue_List')->getValue()->returns(array('5123'));
         $field = aRadiobuttonField()->build();
         $this->assertTrue($field->hasChanges(mock('Tracker_Artifact'), $previous, array('5122')));
     }
 
-    public function itReplaceCSVNullValueByNone() {
+    public function itReplaceCSVNullValueByNone()
+    {
         $field = aRadiobuttonField()->build();
         $this->assertEqual(
             $field->getFieldDataFromCSVValue(null, null),

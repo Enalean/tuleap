@@ -25,7 +25,8 @@
  */
 class Rule_Widget_Owner
 extends Rule {
-    function isValid($val) {
+    function isValid($val)
+    {
         return (preg_match('/^([a-z][0-9]+)$/', $val) === 1);
     }
 }

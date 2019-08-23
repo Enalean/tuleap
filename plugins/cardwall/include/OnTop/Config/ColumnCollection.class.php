@@ -28,14 +28,16 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
      */
     private $columns;
 
-    public function __construct(array $columns = array()) {
+    public function __construct(array $columns = array())
+    {
         $this->columns = $columns;
     }
 
     /**
      * @see ArrayAccess
      */
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value)
+    {
         if (is_null($offset)) {
             $this->columns[] = $value;
         } else {
@@ -46,39 +48,45 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
     /**
      * @see ArrayAccess
      */
-    public function offsetExists($offset) {
+    public function offsetExists($offset)
+    {
         return isset($this->columns[$offset]);
     }
 
     /**
      * @see ArrayAccess
      */
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset)
+    {
         unset($this->columns[$offset]);
     }
 
     /**
      * @see ArrayAccess
      */
-    public function offsetGet($offset) {
+    public function offsetGet($offset)
+    {
         return isset($this->columns[$offset]) ? $this->columns[$offset] : null;
     }
 
     /**
      * @see IteratorAggregate
      */
-    public function getIterator() {
+    public function getIterator()
+    {
         return new ArrayIterator($this->columns);
     }
 
     /**
      * @see Countable
      */
-    public function count() {
+    public function count()
+    {
         return count($this->columns);
     }
 
-    public function getColumnById($id) {
+    public function getColumnById($id)
+    {
         foreach ($this->columns as $column) {
             if ($column->id == $id) {
                 return $column;
@@ -86,7 +94,8 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
         }
     }
 
-    public function getColumnByLabel($label) {
+    public function getColumnByLabel($label)
+    {
         foreach ($this->columns as $column) {
             if ($column->label == $label) {
                 return $column;
@@ -94,7 +103,8 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
         }
     }
 
-    public function getRestValue() {
+    public function getRestValue()
+    {
         $column_representations = array();
         foreach ($this->columns as $column) {
             $column_representation = new AgileDashboard_ColumnRepresentation();

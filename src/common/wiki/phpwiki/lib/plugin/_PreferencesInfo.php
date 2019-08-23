@@ -27,26 +27,31 @@ rcs_id('$Id: _PreferencesInfo.php,v 1.3 2004/02/17 12:11:36 rurban Exp $');
 class WikiPlugin__PreferencesInfo
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("PreferencesInfo");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return sprintf(_("Get preferences information for current user %s."),
                        '[userid]');
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.3 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('page' => '[pagename]',
                      'userid' => '[userid]');
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         // $user = &$request->getUser();
         return Template('userprefs', $args);

@@ -48,7 +48,8 @@ abstract class Transition_PostAction
      * @param Transition $transition The transition the post action belongs to
      * @param int $id Id of the post action
      */
-    public function __construct(Transition $transition, $id) {
+    public function __construct(Transition $transition, $id)
+    {
         $this->transition = $transition;
         $this->id         = $id;
     }
@@ -58,7 +59,8 @@ abstract class Transition_PostAction
      *
      * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
@@ -67,7 +69,8 @@ abstract class Transition_PostAction
      *
      * @return string
      */
-    public function getCssClasses() {
+    public function getCssClasses()
+    {
         return 'workflow_action '.$this->getCssClass();
     }
 
@@ -76,7 +79,8 @@ abstract class Transition_PostAction
      *
      * @return string
      */
-    public function getCssClass() {
+    public function getCssClass()
+    {
         return 'workflow_action_'.$this->getShortName();
     }
 
@@ -85,7 +89,8 @@ abstract class Transition_PostAction
      *
      * @return Transition
      */
-    public function getTransition() {
+    public function getTransition()
+    {
         return $this->transition;
     }
 
@@ -101,7 +106,8 @@ abstract class Transition_PostAction
      *
      * @return void
      */
-    protected function addFeedback($level, $pagename, $category, $args) {
+    protected function addFeedback($level, $pagename, $category, $args)
+    {
         $feedback = $GLOBALS['Language']->getText($pagename, $category, $args);
         $GLOBALS['Response']->addUniqueFeedback($level, $feedback);
     }
@@ -114,7 +120,8 @@ abstract class Transition_PostAction
      *
      * @return void
      */
-    public function before(array &$fields_data, PFUser $current_user) {
+    public function before(array &$fields_data, PFUser $current_user)
+    {
     }
 
     /**
@@ -123,7 +130,8 @@ abstract class Transition_PostAction
      * @param Tracker_Artifact_Changeset $changeset
      * @return void
      */
-    public function after(Tracker_Artifact_Changeset $changeset) {
+    public function after(Tracker_Artifact_Changeset $changeset)
+    {
     }
 
     /**

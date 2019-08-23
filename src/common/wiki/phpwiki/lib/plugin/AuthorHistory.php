@@ -65,20 +65,24 @@ require_once('lib/PageList.php');
 class WikiPlugin_AuthorHistory
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("AuthorHistory");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return sprintf(_("List all page revisions edited by one user with diff links, or show a PageHistory-like list of a single page for only one user."));
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.6 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         global $request;
         return array('exclude'      => '',
                      'noheader'     => false,
@@ -93,7 +97,8 @@ extends WikiPlugin
     // info=mtime,hits,summary,version,author,locked,minor
     // exclude arg allows multiple pagenames exclude=HomePage,RecentChanges
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $this->_args = $this->getArgs($argstr, $request);
         extract($this->_args);
         //trigger_error("1 p= $page a= $author");

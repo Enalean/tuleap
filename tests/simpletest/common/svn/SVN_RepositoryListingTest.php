@@ -19,7 +19,8 @@
 
 class SVN_RepositoryListing_getSvnPathTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->svnlook = mock('SVN_Svnlook');
         $this->svn_perms_mgr = mock('SVN_PermissionsManager');
@@ -27,7 +28,8 @@ class SVN_RepositoryListing_getSvnPathTest extends TuleapTestCase {
         $this->svn_repo_listing = new SVN_RepositoryListing($this->svn_perms_mgr, $this->svnlook, $this->user_manager);
     }
 
-    public function itShowsOnlyTheDirectoryContents() {
+    public function itShowsOnlyTheDirectoryContents()
+    {
         $user     = mock('PFUser');
         $project  = stub('Project')->getUnixName()->returns('gpig');
         $svn_path = '/my/Project/tags';
@@ -43,7 +45,8 @@ class SVN_RepositoryListing_getSvnPathTest extends TuleapTestCase {
         $this->assertEqual(array_values($tags), array('1.0', '2.0'));
     }
 
-    public function itEnsuresUserCannotAccessPathSheIsNotAllowedToSee() {
+    public function itEnsuresUserCannotAccessPathSheIsNotAllowedToSee()
+    {
         $user     = mock('PFUser');
         $project  = stub('Project')->getUnixName()->returns('gpig');
         $svn_path = '/my/Project/tags';
@@ -62,7 +65,8 @@ class SVN_RepositoryListing_getSvnPathTest extends TuleapTestCase {
 
 class SVN_RepositoryListing_getSvnPathWithLogDetailsTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->order = 'ASC';
         $this->svnlook = mock('SVN_Svnlook');
@@ -83,7 +87,8 @@ class SVN_RepositoryListing_getSvnPathWithLogDetailsTest extends TuleapTestCase 
     }
 
 
-    public function itReturnsLastRevisionDetails() {
+    public function itReturnsLastRevisionDetails()
+    {
         $path           = '/my/Project/tags';
         $author_1       = 'rantanplan';
         $author_1_id    = 458;
@@ -143,7 +148,8 @@ class SVN_RepositoryListing_getSvnPathWithLogDetailsTest extends TuleapTestCase 
         $this->assertEqual($path_info_soap_2['path'], '/my/Project/tags/2.0/');
     }
 
-    public function itReturnsLastRevisionDetailsEvenWhenExactSameTimestamp() {
+    public function itReturnsLastRevisionDetailsEvenWhenExactSameTimestamp()
+    {
         $path           = '/my/Project/tags';
         $author_1       = 'rantanplan';
         $author_1_id    = 458;
@@ -203,7 +209,8 @@ class SVN_RepositoryListing_getSvnPathWithLogDetailsTest extends TuleapTestCase 
         $this->assertEqual($path_info_soap_2['path'], '/my/Project/tags/2.0/');
     }
 
-    public function itReturnsAnEmptyArrayIfEmptyRepository() {
+    public function itReturnsAnEmptyArrayIfEmptyRepository()
+    {
         $svnlook = mock('SVN_Svnlook');
         $svn_repo_listing = new SVN_RepositoryListing($this->svn_perms_mgr, $svnlook, $this->user_manager);
 

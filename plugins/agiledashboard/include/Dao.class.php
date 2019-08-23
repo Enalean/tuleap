@@ -21,7 +21,8 @@
 class AgileDashboard_Dao extends DataAccessObject {
 
 
-    public function getProjectsWithADActivated() {
+    public function getProjectsWithADActivated()
+    {
         $sql = "SELECT group_id, is_used AS result
                 FROM service
                 WHERE short_name = 'plugin_agiledashboard'

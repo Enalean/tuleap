@@ -37,12 +37,14 @@ class Git_Hook_ExtractCrossReferences {
      */
     private $reference_manager;
 
-    public function __construct(Git_Exec $git_exec, ReferenceManager $reference_manager) {
+    public function __construct(Git_Exec $git_exec, ReferenceManager $reference_manager)
+    {
         $this->git_exec = $git_exec;
         $this->reference_manager = $reference_manager;
     }
 
-    public function execute(Git_Hook_PushDetails $push_details, $commit_sha1) {
+    public function execute(Git_Hook_PushDetails $push_details, $commit_sha1)
+    {
         $rev_id = $push_details->getRepository()->getFullName().'/'.$commit_sha1;
         $text   = $this->git_exec->catFile($commit_sha1);
         $this->reference_manager->extractCrossRef(

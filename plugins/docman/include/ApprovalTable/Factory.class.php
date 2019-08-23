@@ -39,7 +39,8 @@ abstract class Docman_ApprovalTableFactory {
     var $table;
     var $customizable;
 
-    function __construct(Docman_Item $item) {
+    function __construct(Docman_Item $item)
+    {
         $this->item = $item;
         $this->table = null;
         $this->customizable = true;
@@ -48,7 +49,8 @@ abstract class Docman_ApprovalTableFactory {
     /**
      * Return the ApprovalTableReviewerFactory that correspond to the item.
      */
-    static function getReviewerFactoryFromItem($item) {
+    static function getReviewerFactoryFromItem($item)
+    {
         $appTableFactory = Docman_ApprovalTableFactoriesFactory::getFromItem($item);
         if($appTableFactory !== null) {
             $table = $appTableFactory->getTable();
@@ -72,7 +74,8 @@ abstract class Docman_ApprovalTableFactory {
     /**
      * Create a new empty approbal table in database.
      */
-    function newTableEmpty($userId) {
+    function newTableEmpty($userId)
+    {
         $table = $this->newTable();
         $this->_updateTableWithLastId($table);
         $table->setOwner($userId);
@@ -91,7 +94,8 @@ abstract class Docman_ApprovalTableFactory {
     /**
      * Create a new table object based on $row content.
      */
-    function createTableFromRow($row) {
+    function createTableFromRow($row)
+    {
         $table = $this->newTable();
         $table->initFromRow($row);
         return $table;
@@ -106,14 +110,16 @@ abstract class Docman_ApprovalTableFactory {
      * Return true if their is an approval table for the item the approval
      * table is based on.
      */
-    function tableExistsForItem() {
+    function tableExistsForItem()
+    {
         return ($this->getTable() !== null);
     }
 
     /**
      * Delete the approval table and all the reviewers that belong to.
      */
-    function deleteTable() {
+    function deleteTable()
+    {
         $deleted = false;
         $table = $this->getTable();
         if($table !== null) {
@@ -132,7 +138,8 @@ abstract class Docman_ApprovalTableFactory {
     /**
      * Update table in database
      */
-    protected function _updateTable($table) {
+    protected function _updateTable($table)
+    {
         $dao = $this->_getDao();
         return $dao->updateTable($table->getId(),
                                  $table->getDescription(),
@@ -149,7 +156,8 @@ abstract class Docman_ApprovalTableFactory {
      * - notificationOccurence
      * - description
      */
-    function updateTable($status, $notification, $notificationOccurence, $description, $owner) {
+    function updateTable($status, $notification, $notificationOccurence, $description, $owner)
+    {
         $table = $this->getTable();
         if($table !== null) {
             $table->setStatus($status);
@@ -166,7 +174,8 @@ abstract class Docman_ApprovalTableFactory {
      * Return an ApprovalTable object. If the parameter is 'true' (default),
      * it appends the list of reviewers to the table.
      */
-    function getTable($withReviewers = true) {
+    function getTable($withReviewers = true)
+    {
         if($this->table === null) {
             $this->table = $this->_getTable();
             if($this->table !== null) {
@@ -187,20 +196,24 @@ abstract class Docman_ApprovalTableFactory {
     abstract function userAccessedSinceLastUpdate($user);
 
 
-    function getReviewStateName($state) {
+    function getReviewStateName($state)
+    {
         return $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.$state);
     }
 
-    function getNotificationTypeName($type) {
+    function getNotificationTypeName($type)
+    {
         return $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_'.$type);
     }
 
     // Class accessor
-    protected function _getDao() {
+    protected function _getDao()
+    {
         return new Docman_ApprovalTableItemDao(CodendiDataAccess::instance());
     }
 
-    function _getReviewerFactory($table, $item) {
+    function _getReviewerFactory($table, $item)
+    {
         return new Docman_ApprovalTableReviewerFactory($table, $item);
     }
 }

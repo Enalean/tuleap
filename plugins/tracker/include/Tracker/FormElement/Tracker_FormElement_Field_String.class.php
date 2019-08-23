@@ -41,7 +41,8 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
         ),
     );
 
-    protected function getDao() {
+    protected function getDao()
+    {
         return new Tracker_FormElement_Field_StringDao();
     }
 
@@ -54,7 +55,8 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
-    public function getChangesetValue($changeset, $value_id, $has_changed) {
+    public function getChangesetValue($changeset, $value_id, $has_changed)
+    {
 
         $changeset_value = null;
         if ($row = $this->getValueDao()->searchById($value_id, $this->id)->getRow()) {
@@ -77,7 +79,8 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      * (The field itself will be deleted later)
      * @return bool true if success
      */
-    public function delete() {
+    public function delete()
+    {
         return $this->getDao()->delete($this->id);
     }
 
@@ -87,7 +90,8 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      *
      * @return string html
      */
-    protected function fetchSubmitValue(array $submitted_values) {
+    protected function fetchSubmitValue(array $submitted_values)
+    {
         $html  = '';
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $hp    = Codendi_HTMLPurifier::instance();
@@ -106,7 +110,8 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      *
      * @return string html
      */
-    protected function fetchSubmitValueMasschange() {
+    protected function fetchSubmitValueMasschange()
+    {
         $html = '';
         $value = $GLOBALS['Language']->getText('global','unchanged');
 
@@ -131,7 +136,8 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         $value = $value ? $value->getValue() : '';
 
         if ($value === '') {
@@ -178,7 +184,8 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      * Display the html field in the admin ui
      * @return string html
      */
-    protected function fetchAdminFormElement() {
+    protected function fetchAdminFormElement()
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $value = '';
@@ -195,28 +202,32 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
     /**
      * @return the label of the field (mainly used in admin part)
      */
-    public static function getFactoryLabel() {
+    public static function getFactoryLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','string');
     }
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
-    public static function getFactoryDescription() {
+    public static function getFactoryDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','string_description');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconUseIt() {
+    public static function getFactoryIconUseIt()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/ui-text-field.png');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconCreate() {
+    public static function getFactoryIconCreate()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/ui-text-field--plus.png');
     }
 
@@ -227,7 +238,8 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      * @param Tracker_Artifact_ChangesetValue_String $value The ChangesetValue_String
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($value) {
@@ -241,7 +253,8 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      * Ugly legacy hack to display fields in columns
      * @return bool
      */
-    public function takesTwoColumns() {
+    public function takesTwoColumns()
+    {
         return $this->getProperty('size') > 40;
     }
 
@@ -297,14 +310,16 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
         return true;
     }
 
-    protected function getRuleNoCr() {
+    protected function getRuleNoCr()
+    {
         return new Rule_NoCr();
     }
 
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changesetvalue, $new_value) {
+    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changesetvalue, $new_value)
+    {
         return $previous_changesetvalue->getText() !== (string) $new_value;
     }
 
@@ -324,19 +339,23 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      *
      * @return mixed The default value for this field, or null if no default value defined
      */
-    public function getDefaultValue() {
+    public function getDefaultValue()
+    {
         return $this->getProperty('default_value');
     }
 
-    public function getRestFieldData($value) {
+    public function getRestFieldData($value)
+    {
         return $this->getFieldData($value);
     }
 
-    public function isEmpty($value, Tracker_Artifact $artifact) {
+    public function isEmpty($value, Tracker_Artifact $artifact)
+    {
         return trim($value) == '';
     }
 
-    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+    public function accept(Tracker_FormElement_FieldVisitor $visitor)
+    {
         return $visitor->visitString($this);
     }
 }

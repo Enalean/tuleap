@@ -45,33 +45,40 @@ class Legend {
 
     //---------------
     // CONSTRUCTOR
-    function __construct() {
+    function __construct()
+    {
         // Empty
     }
     //---------------
     // PUBLIC METHODS
-    function Hide($aHide=true) {
+    function Hide($aHide=true)
+    {
         $this->hide=$aHide;
     }
 
-    function SetHColMargin($aXMarg) {
+    function SetHColMargin($aXMarg)
+    {
         $this->xmargin = $aXMarg;
     }
 
-    function SetVColMargin($aSpacing) {
+    function SetVColMargin($aSpacing)
+    {
         $this->ylinespacing = $aSpacing ;
     }
 
-    function SetLeftMargin($aXMarg) {
+    function SetLeftMargin($aXMarg)
+    {
         $this->xlmargin = $aXMarg;
     }
 
     // Synonym
-    function SetLineSpacing($aSpacing) {
+    function SetLineSpacing($aSpacing)
+    {
         $this->ylinespacing = $aSpacing ;
     }
 
-    function SetShadow($aShow='gray',$aWidth=4) {
+    function SetShadow($aShow='gray',$aWidth=4)
+    {
         if( is_string($aShow) ) {
             $this->shadow_color = $aShow;
             $this->shadow=true;
@@ -82,63 +89,76 @@ class Legend {
         $this->shadow_width = $aWidth;
     }
 
-    function SetMarkAbsSize($aSize) {
+    function SetMarkAbsSize($aSize)
+    {
         $this->mark_abs_vsize = $aSize ;
         $this->mark_abs_hsize = $aSize ;
     }
 
-    function SetMarkAbsVSize($aSize) {
+    function SetMarkAbsVSize($aSize)
+    {
         $this->mark_abs_vsize = $aSize ;
     }
 
-    function SetMarkAbsHSize($aSize) {
+    function SetMarkAbsHSize($aSize)
+    {
         $this->mark_abs_hsize = $aSize ;
     }
 
-    function SetLineWeight($aWeight) {
+    function SetLineWeight($aWeight)
+    {
         $this->weight = $aWeight;
     }
 
-    function SetFrameWeight($aWeight) {
+    function SetFrameWeight($aWeight)
+    {
         $this->frameweight = $aWeight;
     }
 
-    function SetLayout($aDirection=LEGEND_VERT) {
+    function SetLayout($aDirection=LEGEND_VERT)
+    {
         $this->layout_n = $aDirection==LEGEND_VERT ? 1 : 99 ;
     }
 
-    function SetColumns($aCols) {
+    function SetColumns($aCols)
+    {
         $this->layout_n = $aCols ;
     }
 
-    function SetReverse($f=true) {
+    function SetReverse($f=true)
+    {
         $this->reverse = $f ;
     }
 
     // Set color on frame around box
-    function SetColor($aFontColor,$aColor='black') {
+    function SetColor($aFontColor,$aColor='black')
+    {
         $this->font_color=$aFontColor;
         $this->color=$aColor;
     }
 
-    function SetFont($aFamily,$aStyle=FS_NORMAL,$aSize=10) {
+    function SetFont($aFamily,$aStyle=FS_NORMAL,$aSize=10)
+    {
         $this->font_family = $aFamily;
         $this->font_style = $aStyle;
         $this->font_size = $aSize;
     }
 
-    function SetPos($aX,$aY,$aHAlign='right',$aVAlign='top') {
+    function SetPos($aX,$aY,$aHAlign='right',$aVAlign='top')
+    {
         $this->Pos($aX,$aY,$aHAlign,$aVAlign);
     }
 
-    function SetAbsPos($aX,$aY,$aHAlign='right',$aVAlign='top') {
+    function SetAbsPos($aX,$aY,$aHAlign='right',$aVAlign='top')
+    {
         $this->xabspos=$aX;
         $this->yabspos=$aY;
         $this->halign=$aHAlign;
         $this->valign=$aVAlign;
     }
 
-    function Pos($aX,$aY,$aHAlign='right',$aVAlign='top') {
+    function Pos($aX,$aY,$aHAlign='right',$aVAlign='top')
+    {
         if( !($aX<1 && $aY<1) ) {
             JpGraphError::RaiseL(25120);//(" Position for legend must be given as percentage in range 0-1");
         }
@@ -148,33 +168,40 @@ class Legend {
         $this->valign=$aVAlign;
     }
 
-    function SetFillColor($aColor) {
+    function SetFillColor($aColor)
+    {
         $this->fill_color=$aColor;
     }
 
-    function Clear() {
+    function Clear()
+    {
         $this->txtcol = array();
     }
 
-    function Add($aTxt,$aColor,$aPlotmark='',$aLinestyle=0,$csimtarget='',$csimalt='',$csimwintarget='') {
+    function Add($aTxt,$aColor,$aPlotmark='',$aLinestyle=0,$csimtarget='',$csimalt='',$csimwintarget='')
+    {
         $this->txtcol[]=array($aTxt,$aColor,$aPlotmark,$aLinestyle,$csimtarget,$csimalt,$csimwintarget);
     }
 
-    function GetCSIMAreas() {
+    function GetCSIMAreas()
+    {
         return $this->csimareas;
     }
 
-    function SetBackgroundGradient($aFrom='navy',$aTo='silver',$aGradType=2) {
+    function SetBackgroundGradient($aFrom='navy',$aTo='silver',$aGradType=2)
+    {
         $this->bkg_gradtype=$aGradType;
         $this->bkg_gradfrom = $aFrom;
         $this->bkg_gradto = $aTo;
     }
 
-    function HasItems() {
+    function HasItems()
+    {
         return (boolean)(count($this->txtcol));
     }
 
-    function Stroke($aImg) {
+    function Stroke($aImg)
+    {
         // Constant
         $fillBoxFrameWeight=1;
 

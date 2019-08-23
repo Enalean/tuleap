@@ -155,7 +155,8 @@ class KanbanRepresentation {
         }
     }
 
-    private function getTracker(AgileDashboard_Kanban $kanban) {
+    private function getTracker(AgileDashboard_Kanban $kanban)
+    {
         return TrackerFactory::instance()->getTrackerById($kanban->getTrackerId());
     }
 }

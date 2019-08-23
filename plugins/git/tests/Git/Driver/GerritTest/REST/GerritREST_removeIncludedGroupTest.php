@@ -22,7 +22,8 @@ require_once 'GerritREST_Base.php';
 
 class Git_Driver_GerritREST_removeIncludedGroupTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_removeIncludedGroupTest {
 
-    public function itRemovesAllIncludedGroups() {
+    public function itRemovesAllIncludedGroups()
+    {
         $groupname = "parent group";
 
         $url_get_members = $this->gerrit_server_host

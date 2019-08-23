@@ -28,7 +28,8 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
     public const MESSAGE_MOVED_FROM = 'moved_from'; // X has been moved from
     public const MESSAGE_MOVED_TO   = 'moved_to';   // X has been moved to
 
-    function somethingHappen($event, $params) {
+    function somethingHappen($event, $params)
+    {
         if ($event == 'plugin_docman_event_move') {
             if ($params['item']->getParentId() != $params['parent']->getId()) {
                 $params['path'] = $this->_getDocmanPath();
@@ -43,7 +44,8 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
     }
 
     var $do_not_send_notifications_to;
-    function _buildMessagesForUsers(&$users, $type, $params) {
+    function _buildMessagesForUsers(&$users, $type, $params)
+    {
         if ($users) {
             $um = $this->_getUserManager();
             while($users->valid()) {
@@ -60,7 +62,8 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
             }
         }
     }
-    function _buildMessage($params, $user, $type) {
+    function _buildMessage($params, $user, $type)
+    {
         $params['old_parent'] = $this->_item_factory->getItemFromDb($params['item']->getParentId());
         $this->_addMessage(
             $user,
@@ -73,7 +76,8 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
             $this->getMessageLink($type, $params)
         );
     }
-    function _getMessageForUser($user, $message_type, $params) {
+    function _getMessageForUser($user, $message_type, $params)
+    {
         $msg = '';
         $dpm = $this->_getPermissionsManager();
         switch($message_type) {
@@ -146,7 +150,8 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
         return $msg;
     }
 
-    protected function getMessageLink($type, $params) {
+    protected function getMessageLink($type, $params)
+    {
         switch ($type) {
             case self::MESSAGE_MOVED:
             case self::MESSAGE_MOVED_TO:

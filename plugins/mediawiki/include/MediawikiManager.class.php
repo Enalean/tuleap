@@ -28,7 +28,8 @@ class MediawikiManager {
     /** @var MediawikiDao */
     private $dao;
 
-    public function __construct(MediawikiDao $dao) {
+    public function __construct(MediawikiDao $dao)
+    {
         $this->dao = $dao;
     }
 
@@ -46,7 +47,8 @@ class MediawikiManager {
     {
         return $this->dao;
     }
-    public function saveCompatibilityViewOption(Project $project, $compatibility_view_option) {
+    public function saveCompatibilityViewOption(Project $project, $compatibility_view_option)
+    {
         $project_id                = $project->getID();
         $enable_compatibility_view = $compatibility_view_option ? $compatibility_view_option : 0;
 
@@ -56,7 +58,8 @@ class MediawikiManager {
     /**
      * @return int[]
      */
-    public function getReadAccessControl(Project $project) {
+    public function getReadAccessControl(Project $project)
+    {
         $ugroup_ids = $this->getAccessControl($project, self::READ_ACCESS);
 
         if (! $ugroup_ids) {
@@ -77,7 +80,8 @@ class MediawikiManager {
     /**
      * @return int[]
      */
-    private function getDefaultReadAccessControl(Project $project) {
+    private function getDefaultReadAccessControl(Project $project)
+    {
         if ($project->isPublic()) {
             return array(ProjectUGroup::REGISTERED);
         }
@@ -88,7 +92,8 @@ class MediawikiManager {
     /**
      * @return int[]
      */
-    public function getWriteAccessControl(Project $project) {
+    public function getWriteAccessControl(Project $project)
+    {
         $ugroup_ids =  $this->getAccessControl($project, self::WRITE_ACCESS);
 
         if (! $ugroup_ids) {
@@ -109,14 +114,16 @@ class MediawikiManager {
     /**
      * @return int[]
      */
-    private function getDefaultWriteAccessControl() {
+    private function getDefaultWriteAccessControl()
+    {
         return array(ProjectUGroup::PROJECT_MEMBERS);
     }
 
     /**
      * @return array
      */
-    private function getAccessControl(Project $project, $access) {
+    private function getAccessControl(Project $project, $access)
+    {
         $result     = $this->dao->getAccessControl($project->getID(), $access);
         $ugroup_ids = array();
 
@@ -139,15 +146,18 @@ class MediawikiManager {
         return $ugroup_ids;
     }
 
-    public function saveReadAccessControl(Project $project, array $ugroup_ids) {
+    public function saveReadAccessControl(Project $project, array $ugroup_ids)
+    {
         return $this->saveAccessControl($project, self::READ_ACCESS, $ugroup_ids);
     }
 
-    public function saveWriteAccessControl(Project $project, array $ugroup_ids) {
+    public function saveWriteAccessControl(Project $project, array $ugroup_ids)
+    {
         return $this->saveAccessControl($project, self::WRITE_ACCESS, $ugroup_ids);
     }
 
-    private function saveAccessControl(Project $project, $access, array $ugroup_ids) {
+    private function saveAccessControl(Project $project, $access, array $ugroup_ids)
+    {
         return $this->dao->saveAccessControl($project->getID(), $access, $ugroup_ids);
     }
 
@@ -161,7 +171,8 @@ class MediawikiManager {
         }
     }
 
-    public function updateSiteAccess($old_value) {
+    public function updateSiteAccess($old_value)
+    {
         if ($old_value == ForgeAccess::ANONYMOUS) {
             $this->dao->updateAllAnonymousToRegistered();
         }
@@ -173,7 +184,8 @@ class MediawikiManager {
     /**
      * @return bool
      */
-    public function isCompatibilityViewEnabled(Project $project) {
+    public function isCompatibilityViewEnabled(Project $project)
+    {
         $plugin_has_view_enabled = (bool) forge_get_config('enable_compatibility_view', 'mediawiki');
         $result                  = $this->dao->getCompatibilityViewUsage($project->getID());
 
@@ -184,25 +196,30 @@ class MediawikiManager {
         return ($plugin_has_view_enabled && (bool) $result['enable_compatibility_view']);
     }
 
-    public function instanceUsesProjectID(Project $project) {
+    public function instanceUsesProjectID(Project $project)
+    {
         return is_dir(forge_get_config('projects_path', 'mediawiki') . "/". $project->getID());
     }
 
-    private function restrictedUserCanRead(PFUser $user, Project $project) {
+    private function restrictedUserCanRead(PFUser $user, Project $project)
+    {
         return in_array(ProjectUGroup::AUTHENTICATED, $this->getReadAccessControl($project)) || in_array(ProjectUGroup::ANONYMOUS, $this->getReadAccessControl($project));
     }
 
-    private function restrictedUserCanWrite(PFUser $user, Project $project) {
+    private function restrictedUserCanWrite(PFUser $user, Project $project)
+    {
         return in_array(ProjectUGroup::AUTHENTICATED, $this->getWriteAccessControl($project)) || in_array(ProjectUGroup::ANONYMOUS, $this->getWriteAccessControl($project));
     }
 
-    private function getUpgroupsPermissionsManager() {
+    private function getUpgroupsPermissionsManager()
+    {
         return new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
         );
     }
 
-    private function hasDelegatedAccess(PFUser $user) {
+    private function hasDelegatedAccess(PFUser $user)
+    {
         return $this->getUpgroupsPermissionsManager()->doesUserHavePermission(
             $user,
             new MediawikiAdminAllProjects()
@@ -213,7 +230,8 @@ class MediawikiManager {
      * @param Project $project
      * @return bool true if user can read
      */
-    public function userCanRead(PFUser $user, Project $project) {
+    public function userCanRead(PFUser $user, Project $project)
+    {
         if ($this->hasDelegatedAccess($user)) {
             return true;
         }
@@ -235,7 +253,8 @@ class MediawikiManager {
      * @param Project $project
      * @return bool true if user can write
      */
-    public function userCanWrite(PFUser $user, Project $project) {
+    public function userCanWrite(PFUser $user, Project $project)
+    {
         if ($this->hasDelegatedAccess($user)) {
             return true;
         }
@@ -252,7 +271,8 @@ class MediawikiManager {
         return !empty($common_ugroups_ids);
     }
 
-    private function userIsRestrictedAndNotProjectMember(PFUser $user, Project $project) {
+    private function userIsRestrictedAndNotProjectMember(PFUser $user, Project $project)
+    {
         return $project->allowsRestricted() && $user->isRestricted() && ! $user->isMember($project->getID());
     }
 }

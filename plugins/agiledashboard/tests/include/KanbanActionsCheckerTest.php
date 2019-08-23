@@ -22,7 +22,8 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class AgileDashboard_KanbanActionsCheckerTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->field_string = stub('Tracker_FormElement_Field_String')->getId()->returns(201);
@@ -44,13 +45,15 @@ class AgileDashboard_KanbanActionsCheckerTest extends TuleapTestCase {
         Tracker_Semantic_Title::setInstance($this->semantic_title, $this->tracker);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
 
         Tracker_Semantic_Title::clearInstances();
     }
 
-    public function itRaisesAnExceptionIfAnotherFieldIsRequired() {
+    public function itRaisesAnExceptionIfAnotherFieldIsRequired()
+    {
         stub($this->field_string)->isRequired()->returns(true);
         stub($this->field_text)->isRequired()->returns(false);
         stub($this->field_int)->isRequired()->returns(false);
@@ -70,7 +73,8 @@ class AgileDashboard_KanbanActionsCheckerTest extends TuleapTestCase {
 
     }
 
-    public function itRaisesAnExceptionIfNoSemanticTitle() {
+    public function itRaisesAnExceptionIfNoSemanticTitle()
+    {
         stub($this->field_string)->isRequired()->returns(true);
         stub($this->field_text)->isRequired()->returns(false);
         stub($this->field_int)->isRequired()->returns(false);
@@ -89,7 +93,8 @@ class AgileDashboard_KanbanActionsCheckerTest extends TuleapTestCase {
         $add_in_place = $checker->checkUserCanAddInPlace($this->user, $kanban);
     }
 
-    public function itRaisesAnExceptionIfTheMandatoryFieldIsNotTheSemanticTitle() {
+    public function itRaisesAnExceptionIfTheMandatoryFieldIsNotTheSemanticTitle()
+    {
         stub($this->field_string)->isRequired()->returns(false);
         stub($this->field_text)->isRequired()->returns(false);
         stub($this->field_int)->isRequired()->returns(false);
@@ -108,7 +113,8 @@ class AgileDashboard_KanbanActionsCheckerTest extends TuleapTestCase {
         $add_in_place = $checker->checkUserCanAddInPlace($this->user, $kanban);
     }
 
-    public function itRaisesAnExceptionIfTheUserCannotSubmitArtifact() {
+    public function itRaisesAnExceptionIfTheUserCannotSubmitArtifact()
+    {
         stub($this->field_string)->isRequired()->returns(true);
         stub($this->field_text)->isRequired()->returns(false);
         stub($this->field_int)->isRequired()->returns(false);

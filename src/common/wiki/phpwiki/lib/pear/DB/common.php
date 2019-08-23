@@ -368,7 +368,8 @@ class DB_common extends PEAR
      * @see DB_common::quoteSmart()
      * @access public
      */
-    function escapeSimple($str) {
+    function escapeSimple($str)
+    {
         return str_replace("'", "''", $str);
     }
 
@@ -465,9 +466,13 @@ class DB_common extends PEAR
      * @access public
      * @see PEAR_Error
      */
-    function raiseError($code = DB_ERROR, $mode = null, $options = null,
-                         $userinfo = null, $nativecode = null)
-    {
+    function raiseError(
+        $code = DB_ERROR,
+        $mode = null,
+        $options = null,
+        $userinfo = null,
+        $nativecode = null
+    ) {
         // The error is yet a DB error object
         if (is_object($code)) {
             // because we the static PEAR::raiseError, our global
@@ -1241,10 +1246,11 @@ class DB_common extends PEAR
      *
      * @access public
      */
-    function getRow($query,
-                     $params = array(),
-                     $fetchmode = DB_FETCHMODE_DEFAULT)
-    {
+    function getRow(
+        $query,
+        $params = array(),
+        $fetchmode = DB_FETCHMODE_DEFAULT
+    ) {
         // compat check, the params and fetchmode parameters used to
         // have the opposite order
         if (!is_array($params)) {
@@ -1433,9 +1439,13 @@ class DB_common extends PEAR
      *
      * @access public
      */
-    function getAssoc($query, $force_array = false, $params = array(),
-                       $fetchmode = DB_FETCHMODE_DEFAULT, $group = false)
-    {
+    function getAssoc(
+        $query,
+        $force_array = false,
+        $params = array(),
+        $fetchmode = DB_FETCHMODE_DEFAULT,
+        $group = false
+    ) {
         settype($params, 'array');
         if (sizeof($params) > 0) {
             $sth = $this->prepare($query);
@@ -1540,10 +1550,11 @@ class DB_common extends PEAR
      *
      * @access public
      */
-    function getAll($query,
-                     $params = array(),
-                     $fetchmode = DB_FETCHMODE_DEFAULT)
-    {
+    function getAll(
+        $query,
+        $params = array(),
+        $fetchmode = DB_FETCHMODE_DEFAULT
+    ) {
         // compat check, the params and fetchmode parameters used to
         // have the opposite order
         if (!is_array($params)) {

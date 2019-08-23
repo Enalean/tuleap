@@ -29,11 +29,13 @@ class Search_SearchProject {
     private $dao;
 
 
-    public function __construct(ProjectDao $dao) {
+    public function __construct(ProjectDao $dao)
+    {
         $this->dao = $dao;
     }
 
-    public function search(Search_SearchQuery $query, Search_SearchResults $search_results) {
+    public function search(Search_SearchQuery $query, Search_SearchResults $search_results)
+    {
         $user = UserManager::instance()->getCurrentUser();
         if ($user->isRestricted()) {
             $dao_results = $this->dao->searchGlobalPaginatedForRestrictedUsers($query->getWords(), $query->getOffset(), $query->getExact(), $user->getId(), $query->getNumberOfResults());
@@ -49,7 +51,8 @@ class Search_SearchProject {
         return $this->getSearchProjectResultPresenter($dao_results, $query->getWords(), $maybe_more_results);
     }
 
-    private function getSearchProjectResultPresenter(LegacyDataAccessResultInterface $results, $words, $maybe_more_results) {
+    private function getSearchProjectResultPresenter(LegacyDataAccessResultInterface $results, $words, $maybe_more_results)
+    {
         return new Search_SearchResultsPresenter(
             new Search_SearchResultsIntroPresenter($results, $words),
             $this->getResultsPresenters($results),
@@ -58,7 +61,8 @@ class Search_SearchProject {
         );
     }
 
-    private function getResultsPresenters(LegacyDataAccessResultInterface $results) {
+    private function getResultsPresenters(LegacyDataAccessResultInterface $results)
+    {
         $results_presenters = array();
 
         foreach ($results as $result) {

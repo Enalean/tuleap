@@ -267,7 +267,8 @@ class ArtifactLinkValueSaver {
      *
      * @return boolean
      */
-    private function updateCrossReferences(PFUser $user, Tracker_Artifact $artifact, array $submitted_value) {
+    private function updateCrossReferences(PFUser $user, Tracker_Artifact $artifact, array $submitted_value)
+    {
         $update_ok = true;
 
         foreach ($this->getAddedArtifactIds($submitted_value) as $added_artifact_id) {
@@ -280,11 +281,13 @@ class ArtifactLinkValueSaver {
         return $update_ok;
     }
 
-    private function canLinkArtifacts(Tracker_Artifact $src_artifact, Tracker_Artifact $artifact_to_link) {
+    private function canLinkArtifacts(Tracker_Artifact $src_artifact, Tracker_Artifact $artifact_to_link)
+    {
         return ($src_artifact->getId() != $artifact_to_link->getId()) && $artifact_to_link->getTracker();
     }
 
-    private function getAddedArtifactIds(array $values) {
+    private function getAddedArtifactIds(array $values)
+    {
         $ids = array();
         foreach ($values['list_of_artifactlinkinfo'] as $artifactlinkinfo) {
             $ids[] = (int) $artifactlinkinfo->getArtifactId();
@@ -293,14 +296,16 @@ class ArtifactLinkValueSaver {
         return $ids;
     }
 
-    private function getRemovedArtifactIds(array $values) {
+    private function getRemovedArtifactIds(array $values)
+    {
         if (array_key_exists('removed_values', $values)) {
             return array_map('intval', array_keys($values['removed_values']));
         }
         return array();
     }
 
-    private function insertCrossReference(PFUser $user, Tracker_Artifact $source_artifact, $target_artifact_id) {
+    private function insertCrossReference(PFUser $user, Tracker_Artifact $source_artifact, $target_artifact_id)
+    {
         return $this->reference_manager->insertBetweenTwoArtifacts(
             $source_artifact,
             $this->artifact_factory->getArtifactById($target_artifact_id),
@@ -308,7 +313,8 @@ class ArtifactLinkValueSaver {
         );
     }
 
-    private function removeCrossReference(PFUser $user, Tracker_Artifact $source_artifact, $target_artifact_id) {
+    private function removeCrossReference(PFUser $user, Tracker_Artifact $source_artifact, $target_artifact_id)
+    {
         return $this->reference_manager->removeBetweenTwoArtifacts(
             $source_artifact,
             $this->artifact_factory->getArtifactById($target_artifact_id),

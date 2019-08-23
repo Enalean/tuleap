@@ -33,7 +33,8 @@ class FRSLogDao extends DataAccessObject
      *
      * @return bool
      */
-    function addLog($userID, $projectID, $itemID, $actionID) {
+    function addLog($userID, $projectID, $itemID, $actionID)
+    {
         $sql = ' INSERT INTO frs_log '.
                ' (time, user_id, group_id, item_id, action_id) '.
                ' VALUES ( '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).', '.

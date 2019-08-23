@@ -34,7 +34,8 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
      *
      * @return void
      */
-    function somethingHappen($event, $params) {
+    function somethingHappen($event, $params)
+    {
         $um = $this->_getUserManager();
         $users = new ArrayIterator($params['listeners']);
         if ($users) {
@@ -59,7 +60,8 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     *
     * @return void
     */
-    function _buildMessage($event, $params, $user) {
+    function _buildMessage($event, $params, $user)
+    {
         $type = '';
         switch($event) {
             case 'plugin_docman_add_monitoring':
@@ -91,7 +93,8 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     *
     * @return String
     */
-    function _getMessageForUser($user, $message_type, $params) {
+    function _getMessageForUser($user, $message_type, $params)
+    {
         $msg = '';
         $separator = "\n\n--------------------------------------------------------------------\n";
         $itemUrl = $this->getMessageLink($message_type, $params);
@@ -116,7 +119,8 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
         return $msg;
     }
 
-    protected function getMessageLink($type, $params) {
+    protected function getMessageLink($type, $params)
+    {
         switch ($type) {
             case self::MESSAGE_ADDED:
             case self::MESSAGE_REMOVED:

@@ -24,7 +24,8 @@ class Tracker_DateReminder_Role_Submitter implements Tracker_DateReminder_Role {
      *
      * @return String
      */
-    public function getIdentifier() {
+    public function getIdentifier()
+    {
         return self::IDENTIFIER;
     }
 
@@ -33,7 +34,8 @@ class Tracker_DateReminder_Role_Submitter implements Tracker_DateReminder_Role {
      *
      * @return String
      */
-    function getLabel() {
+    function getLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_date_reminder','role_SUBMITTER');
     }
 
@@ -44,7 +46,8 @@ class Tracker_DateReminder_Role_Submitter implements Tracker_DateReminder_Role {
      *
      * @return Array of PFUser
      */
-    function getRecipientsFromArtifact(Tracker_Artifact $artifact) {
+    function getRecipientsFromArtifact(Tracker_Artifact $artifact)
+    {
         $recipients = array();
         $userManager = $artifact->getUserManager();
         $userId = $artifact->getSubmittedBy();

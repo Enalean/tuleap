@@ -32,7 +32,8 @@ class SystemEventProcessApplicationOwnerDefaultQueue implements SystemEventProce
         return 'tuleap_process_system_event_'.SystemEvent::OWNER_APP;
     }
 
-    public function getQueue() {
+    public function getQueue()
+    {
         return SystemEvent::APP_OWNER_QUEUE;
     }
 

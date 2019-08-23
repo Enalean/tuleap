@@ -33,7 +33,8 @@ Mock::generate('PFUser');
 
 class Tracker_FormElement_Field_List_Bind_UsersValueTest extends TuleapTestCase {
 
-    public function testGetLabel() {
+    public function testGetLabel()
+    {
         $uh = new MockUserHelper();
         $uh->setReturnValue('getDisplayNameFromUserId', 'John Smith', array(123));
 
@@ -44,7 +45,8 @@ class Tracker_FormElement_Field_List_Bind_UsersValueTest extends TuleapTestCase 
         $this->assertEqual($bv->getLabel(), 'John Smith');
     }
 
-    public function testGetUser() {
+    public function testGetUser()
+    {
         $u = mock('PFUser');
 
         $uh = new MockUserManager();
@@ -63,7 +65,8 @@ class Tracker_FormElement_Field_List_Bind_UsersValue_fetchJSONTest extends Tulea
     public $user_manager;
     public $user;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->user_manager = mock('UserManager');
         $this->user         = mock('PFUser');
@@ -73,13 +76,15 @@ class Tracker_FormElement_Field_List_Bind_UsersValue_fetchJSONTest extends Tulea
         stub($this->user_manager)->getUserById()->returns($this->user);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         UserManager::clearInstance();
         parent::tearDown();
     }
 
 
-    public function itReturnsTheUserNameAsWell() {
+    public function itReturnsTheUserNameAsWell()
+    {
         $value = new Tracker_FormElement_Field_List_Bind_UsersValue(12, 'neo', 'Thomas A. Anderson (neo)');
         $json = $value->fetchFormattedForJson();
         $this->assertEqual($json, array(
@@ -91,7 +96,8 @@ class Tracker_FormElement_Field_List_Bind_UsersValue_fetchJSONTest extends Tulea
         ));
     }
 
-    public function itReturnsNullForGetJsonIfUserIsNone() {
+    public function itReturnsNullForGetJsonIfUserIsNone()
+    {
         $value = new Tracker_FormElement_Field_List_Bind_UsersValue(100, 'none', 'none');
         $json = $value->getJsonValue();
         $this->assertNull($json);

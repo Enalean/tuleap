@@ -71,7 +71,8 @@ class TrackerFactoryTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    public function testImpossibleToCreateTrackerWhenProjectHasAReferenceEqualsShortname() {
+    public function testImpossibleToCreateTrackerWhenProjectHasAReferenceEqualsShortname()
+    {
         $tracker_factory = new TrackerFactoryTestVersion2();
         $dao = new MockTrackerDao();
         $dao->setReturnValue('duplicate', 999);
@@ -100,7 +101,8 @@ class TrackerFactoryTest extends TuleapTestCase {
         $this->assertFalse($tracker_factory->create($project_id,$group_id_template,$id_template,$name,$description,$itemname));
     }
 
-    public function testImpossibleToCreateTrackerWithAlreadyUsedName() {
+    public function testImpossibleToCreateTrackerWithAlreadyUsedName()
+    {
         $tracker_factory = new TrackerFactoryTestVersion2();
         $dao = new MockTrackerDao();
         $dao->setReturnValue('duplicate', 999);
@@ -129,7 +131,8 @@ class TrackerFactoryTest extends TuleapTestCase {
         $this->assertFalse($tracker_factory->create($project_id,$group_id_template,$id_template,$name,$description,$itemname));
     }
 
-    public function testImpossibleToCreateTrackerWithAlreadyUsedShortName() {
+    public function testImpossibleToCreateTrackerWithAlreadyUsedShortName()
+    {
         $tracker_factory = new TrackerFactoryTestVersion2();
         $dao = new MockTrackerDao();
         $dao->setReturnValue('duplicate', 999);
@@ -159,7 +162,8 @@ class TrackerFactoryTest extends TuleapTestCase {
     }
 
 
-    public function testGetPossibleChildrenShouldNotContainSelf() {
+    public function testGetPossibleChildrenShouldNotContainSelf()
+    {
         $current_tracker   = aTracker()->withId(1)->withName('Stories')->build();
         $expected_children = array(
             '2' => aTracker()->withId(2)->withName('Bugs')->build(),
@@ -185,7 +189,8 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
      */
     private $tracker_factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->tracker_factory   = TestHelper::getPartialMock('TrackerFactory',
                       array('create',
@@ -268,7 +273,8 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         $this->tracker_factory->duplicate(100, 999, null);
     }
 
-    private function GivenADuplicatableTracker($tracker_id) {
+    private function GivenADuplicatableTracker($tracker_id)
+    {
         $t1 = new MockTracker();
         $t1->setReturnValue('mustBeInstantiatedForNewProjects', true);
         $t1->setReturnValue('getId', $tracker_id);

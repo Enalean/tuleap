@@ -198,7 +198,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      *
      * @return Project
      */
-    public function create($shortName, $publicName, array $data) {
+    public function create($shortName, $publicName, array $data)
+    {
         $creationData = $this->getProjectCreationData($shortName, $publicName, $data);
 
         return $this->build($creationData);
@@ -219,7 +220,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return $this->processProjectCreation($creation_data);
     }
 
-    private function fakeGroupIdIntoHTTPParams($group_id){
+    private function fakeGroupIdIntoHTTPParams($group_id)
+    {
         $_REQUEST['group_id'] = $_GET['group_id'] = $group_id;
         $request = HTTPRequest::instance();
         $request->params['group_id'] = $_REQUEST['group_id'];
@@ -252,7 +254,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      *
      * @param  data ProjectCreationData
      */
-    protected function createProject(ProjectCreationData $data) {
+    protected function createProject(ProjectCreationData $data)
+    {
         $admin_user = $this->user_manager->getCurrentUser();
 
         $group_id = $this->createGroupEntry($data);
@@ -351,7 +354,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     /**
      * @return int, the group id created
      */
-    private function createGroupEntry($data){
+    private function createGroupEntry($data)
+    {
         srand((double)microtime()*1000000);
         $random_num=rand(0,1000000);
 
@@ -399,7 +403,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
     // insert descriptions
     // insert trove categories
-    private function setCategories($data, $group_id) {
+    private function setCategories($data, $group_id)
+    {
         $fields_factory = new DescriptionFieldsFactory(new DescriptionFieldsDao());
         $descfieldsinfos = $fields_factory->getAllDescriptionFields();
 
@@ -425,7 +430,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     // define a module
-    private function initFileModule($group_id){
+    private function initFileModule($group_id)
+    {
         $result=db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','".$this->project_manager->getProject($group_id)->getUnixName()."')");
         if (!$result) {
             list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
@@ -435,7 +441,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
     // make the current user a project admin as well as admin
     // on all Tuleap services
-    private function setProjectAdmin($group_id, PFUser $user) {
+    private function setProjectAdmin($group_id, PFUser $user)
+    {
         $result=db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags,news_flags) VALUES ("
             . $user->getId() . ","
             . $group_id . ","
@@ -511,7 +518,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     //Add the import of the message to requester from the parent project if defined
-    private function setMessageToRequesterFromTemplate($group_id, $template_id) {
+    private function setMessageToRequesterFromTemplate($group_id, $template_id)
+    {
         $dar = $this->project_manager->getMessageToRequesterForAccessProject($template_id);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
@@ -524,7 +532,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
     }
 
-    private function initForumModuleFromTemplate($group_id, $template_id) {
+    private function initForumModuleFromTemplate($group_id, $template_id)
+    {
         $sql = "SELECT forum_name, is_public, description FROM forum_group_list WHERE group_id=$template_id ";
         $result=db_query($sql);
         while ($arr = db_fetch_array($result)) {
@@ -536,7 +545,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
     }
 
-    private function initCVSModuleFromTemplate($group_id, $template_id) {
+    private function initCVSModuleFromTemplate($group_id, $template_id)
+    {
         $sql = "SELECT cvs_tracker, cvs_watch_mode, cvs_preamble, cvs_is_private FROM groups WHERE group_id=$template_id ";
         $result = db_query($sql);
         $arr = db_fetch_array($result);
@@ -553,7 +563,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
     }
 
-    private function initSVNModuleFromTemplate($group_id, $template_id) {
+    private function initSVNModuleFromTemplate($group_id, $template_id)
+    {
         $current_timestamp = db_escape_int($_SERVER['REQUEST_TIME']);
 
         $sql = "INSERT INTO svn_accessfile_history (version_number, group_id, version_date)
@@ -622,7 +633,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     // Generic Trackers Creation
-    private function initTrackerV3ModuleFromTemplate(Group $group, Group $template_group, $ugroup_mapping) {
+    private function initTrackerV3ModuleFromTemplate(Group $group, Group $template_group, $ugroup_mapping)
+    {
         $group_id = $group->getID();
         $tracker_mapping = array();
         $report_mapping  = array();
@@ -667,7 +679,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     // Clone wiki from the template
-    private function initWikiModuleFromTemplate($group_id, $template_id) {
+    private function initWikiModuleFromTemplate($group_id, $template_id)
+    {
         $clone = new WikiCloner($template_id, $group_id);
 
         // check if the template project has a wiki initialised
@@ -684,7 +697,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     // Copy Truncated email option
-    private function copyEmailOptionsFromTemplate($group_id, $template_id) {
+    private function copyEmailOptionsFromTemplate($group_id, $template_id)
+    {
         $sql = "UPDATE groups AS g1
                 JOIN groups AS g2
                   ON g2.group_id = ".db_ei($template_id)."

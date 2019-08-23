@@ -30,7 +30,8 @@ extends Docman_View_Extra {
     var $srcGo;
     var $dstGo;
 
-    function _title($params) {
+    function _title($params)
+    {
         $pm = ProjectManager::instance();
         $this->srcGo = $pm->getProject($params['sSrcGroupId']);
         $this->dstGo = $pm->getProject($params['group_id']);
@@ -39,7 +40,8 @@ extends Docman_View_Extra {
     }
 
 
-    function getImportForm($sthToImport) {
+    function getImportForm($sthToImport)
+    {
         $html = '';
         if($sthToImport) {
             $html .= '<form name="" method="post" action="?">';
@@ -61,7 +63,8 @@ extends Docman_View_Extra {
     /**
      * Build page
      */
-    function _content($params) {
+    function _content($params)
+    {
         $html = '';
 
         // True if there is sth to import in dst project.

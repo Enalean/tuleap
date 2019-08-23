@@ -58,7 +58,8 @@ class WebDAVFRSTest extends TuleapTestCase {
     /**
      * Testing when The project have no packages
      */
-    function testGetChildrenNoPackages() {
+    function testGetChildrenNoPackages()
+    {
         $webDAVFRS = new WebDAVFRSTestVersion($this);
         $webDAVFRS->setReturnValue('getPackageList', array());
         $this->assertEqual($webDAVFRS->getChildren(), array());
@@ -67,7 +68,8 @@ class WebDAVFRSTest extends TuleapTestCase {
     /**
      * Testing when the user can't read packages
      */
-    function testGetChildrenUserCanNotRead() {
+    function testGetChildrenUserCanNotRead()
+    {
         $webDAVFRS = new WebDAVFRSTestVersion($this);
 
         $package = new MockWebDAVFRSPackage();
@@ -83,7 +85,8 @@ class WebDAVFRSTest extends TuleapTestCase {
     /**
      * Testing when the user can read packages
      */
-    function testGetChildrenUserCanRead() {
+    function testGetChildrenUserCanRead()
+    {
         $webDAVFRS = new WebDAVFRSTestVersion($this);
 
         $package = new MockWebDAVFRSPackage();
@@ -100,7 +103,8 @@ class WebDAVFRSTest extends TuleapTestCase {
     /**
      * Testing when the package doesn't exist
      */
-    function testGetChildFailWithNotExist() {
+    function testGetChildFailWithNotExist()
+    {
         $webDAVFRS = new WebDAVFRSTestVersion($this);
 
         $FRSPackage = new MockFRSPackage();
@@ -119,7 +123,8 @@ class WebDAVFRSTest extends TuleapTestCase {
     /**
      * Testing when the user can't read the package
      */
-    function testGetChildFailWithUserCanNotRead() {
+    function testGetChildFailWithUserCanNotRead()
+    {
         $webDAVFRS = new WebDAVFRSTestVersion($this);
 
         $FRSPackage = new MockFRSPackage();
@@ -140,7 +145,8 @@ class WebDAVFRSTest extends TuleapTestCase {
     /**
      * Testing when the package exist and user can read
      */
-    function testSucceedGetChild() {
+    function testSucceedGetChild()
+    {
         $webDAVFRS = new WebDAVFRSTestVersion($this);
 
         $FRSPackage = new MockFRSPackage();
@@ -159,7 +165,8 @@ class WebDAVFRSTest extends TuleapTestCase {
     /**
      * Testing creation of package when user is not admin
      */
-    function testCreateDirectoryFailWithUserNotAdmin() {
+    function testCreateDirectoryFailWithUserNotAdmin()
+    {
         $webDAVFRS = new WebDAVFRSTestVersion($this);
 
         $webDAVFRS->setReturnValue('userCanWrite', false);
@@ -171,7 +178,8 @@ class WebDAVFRSTest extends TuleapTestCase {
     /**
      * Testing creation of package when the name already exist
      */
-    function testCreateDirectoryFailWithNameExist() {
+    function testCreateDirectoryFailWithNameExist()
+    {
         $webDAVFRS = new WebDAVFRSTestVersion($this);
 
         $webDAVFRS->setReturnValue('userCanWrite', true);
@@ -188,7 +196,8 @@ class WebDAVFRSTest extends TuleapTestCase {
     /**
      * Testing creation of package succeed
      */
-    function testCreateDirectorysucceed() {
+    function testCreateDirectorysucceed()
+    {
         $webDAVFRS = new WebDAVFRSTestVersion($this);
 
         $webDAVFRS->setReturnValue('userCanWrite', true);

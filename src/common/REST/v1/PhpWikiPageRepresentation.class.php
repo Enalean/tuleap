@@ -42,7 +42,8 @@ class PhpWikiPageRepresentation {
      */
     public $name;
 
-    public function build(WikiPage $page) {
+    public function build(WikiPage $page)
+    {
         $this->id   = (int) $page->getId();
         $this->uri  = self::ROUTE .'/'. $this->id;
         $this->name = $page->getPagename();

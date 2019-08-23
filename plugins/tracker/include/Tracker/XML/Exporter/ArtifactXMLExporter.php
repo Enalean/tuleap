@@ -25,7 +25,8 @@ class Tracker_XML_Exporter_ArtifactXMLExporter {
      */
     private $changeset_exporter;
 
-    public function __construct(Tracker_XML_Exporter_ChangesetXMLExporter $changeset_exporter) {
+    public function __construct(Tracker_XML_Exporter_ChangesetXMLExporter $changeset_exporter)
+    {
         $this->changeset_exporter = $changeset_exporter;
     }
 

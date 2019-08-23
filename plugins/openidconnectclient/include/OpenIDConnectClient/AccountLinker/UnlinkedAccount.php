@@ -37,21 +37,25 @@ class UnlinkedAccount {
     private $provider_id;
     private $user_identifier;
 
-    public function __construct($id, $provider_id, $user_identifier) {
+    public function __construct($id, $provider_id, $user_identifier)
+    {
         $this->id              = $id;
         $this->provider_id     = $provider_id;
         $this->user_identifier = $user_identifier;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getProviderId() {
+    public function getProviderId()
+    {
         return $this->provider_id;
     }
 
-    public function getUserIdentifier() {
+    public function getUserIdentifier()
+    {
         return $this->user_identifier;
     }
 

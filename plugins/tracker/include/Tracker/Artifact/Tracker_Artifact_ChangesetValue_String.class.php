@@ -29,25 +29,29 @@ class Tracker_Artifact_ChangesetValue_String extends Tracker_Artifact_ChangesetV
     /**
      * @return mixed
      */
-    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
+    {
         return $visitor->visitString($this);
     }
 
     /**
      * @see Tracker_Artifact_ChangesetValue_Text::fetchHtmlMailDiff()
      */
-    protected function fetchHtmlMailDiff($formated_diff, $artifact_id, $changeset_id) {
+    protected function fetchHtmlMailDiff($formated_diff, $artifact_id, $changeset_id)
+    {
         return $formated_diff;
     }
 
     /**
      * @see Tracker_Artifact_ChangesetValue_Text::fetchDiffInFollowUp()
      */
-    protected function fetchDiffInFollowUp($formated_diff) {
+    protected function fetchDiffInFollowUp($formated_diff)
+    {
         return '<div class="diff">'. $formated_diff .'</div>';
     }
 
-    protected function getFullRESTRepresentation($value) {
+    protected function getFullRESTRepresentation($value)
+    {
         $artifact_field_value_full_representation = new ArtifactFieldValueFullRepresentation();
         $artifact_field_value_full_representation->build(
             $this->field->getId(),

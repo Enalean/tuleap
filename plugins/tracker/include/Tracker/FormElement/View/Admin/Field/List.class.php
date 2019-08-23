@@ -24,7 +24,8 @@ class Tracker_FormElement_View_Admin_Field_List extends Tracker_FormElement_View
      *
      * @return string html
      */
-    public function fetchAfterAdminEditForm() {
+    public function fetchAfterAdminEditForm()
+    {
         return $this->formElement->getBind()->fetchAdminEditForm();
     }
 
@@ -34,7 +35,8 @@ class Tracker_FormElement_View_Admin_Field_List extends Tracker_FormElement_View
      *
      * @return string html
      */
-    public function fetchAfterAdminCreateForm() {
+    public function fetchAfterAdminCreateForm()
+    {
         $bf = new Tracker_FormElement_Field_List_BindFactory();
         $html = '';
         $html .= '<tr valign="top"><td colspan="2">';

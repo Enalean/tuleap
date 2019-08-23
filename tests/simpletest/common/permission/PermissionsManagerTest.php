@@ -23,7 +23,8 @@ Mock::generate('PermissionsDao');
 
 class PermissionsManagerTest extends TuleapTestCase {
 
-    function testDuplicatePermissionsPassParamters() {
+    function testDuplicatePermissionsPassParamters()
+    {
         $source           = 123;
         $target           = 234;
         $permission_types = array('STUFF_READ');
@@ -39,7 +40,8 @@ class PermissionsManagerTest extends TuleapTestCase {
         $permissionsManager->duplicatePermissions($source, $target, $permission_types, $ugroup_mapping, $duplicate_type);
     }
 
-    function testDuplicateSameProjectShouldNotHaveUgroupMapping() {
+    function testDuplicateSameProjectShouldNotHaveUgroupMapping()
+    {
         $source           = 123;
         $target           = 234;
         $permission_types = array('STUFF_READ');
@@ -52,7 +54,8 @@ class PermissionsManagerTest extends TuleapTestCase {
         $permissionsManager->duplicateWithStatic($source, $target, $permission_types);
     }
 
-    function testDuplicateNewProjectShouldHaveUgroupMapping() {
+    function testDuplicateNewProjectShouldHaveUgroupMapping()
+    {
         $source           = 123;
         $target           = 234;
         $permission_types = array('STUFF_READ');
@@ -67,7 +70,8 @@ class PermissionsManagerTest extends TuleapTestCase {
         $permissionsManager->duplicateWithStaticMapping($source, $target, $permission_types, $ugroup_mapping);
     }
 
-    function testDuplicateOtherProjectShouldNotHaveUgroupMapping() {
+    function testDuplicateOtherProjectShouldNotHaveUgroupMapping()
+    {
         $source           = 123;
         $target           = 234;
         $permission_types = array('STUFF_READ');
@@ -88,7 +92,8 @@ class PermissionsManager_getAuthorizedUGroupIdsForProjectTest extends TuleapTest
     private $permission_type;
     private $object_id;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->project             = mock('Project');
         $this->permission_type     = 'FOO';
@@ -97,39 +102,45 @@ class PermissionsManager_getAuthorizedUGroupIdsForProjectTest extends TuleapTest
         ForgeConfig::store();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
         ForgeConfig::restore();
     }
 
-    public function itReturnsTheListOfStaticGroups() {
+    public function itReturnsTheListOfStaticGroups()
+    {
         $this->stubAuthorizedUgroups(array('ugroup_id' => 102));
 
         $this->assertAuthorizedUGroupIdsForProjectEqual(array(102));
     }
 
-    public function itReturnsProjectMembersWhenProjectIsPrivateAndUGroupIsAnonymous() {
+    public function itReturnsProjectMembersWhenProjectIsPrivateAndUGroupIsAnonymous()
+    {
         stub($this->project)->isPublic()->returns(false);
         $this->stubAuthorizedUgroups(array('ugroup_id' => ProjectUGroup::ANONYMOUS));
 
         $this->assertAuthorizedUGroupIdsForProjectEqual(array(ProjectUGroup::PROJECT_MEMBERS));
     }
 
-    public function itReturnsProjectMembersWhenProjectIsPrivateAndUGroupIsAuthenticated() {
+    public function itReturnsProjectMembersWhenProjectIsPrivateAndUGroupIsAuthenticated()
+    {
         stub($this->project)->isPublic()->returns(false);
         $this->stubAuthorizedUgroups(array('ugroup_id' => ProjectUGroup::AUTHENTICATED));
 
         $this->assertAuthorizedUGroupIdsForProjectEqual(array(ProjectUGroup::PROJECT_MEMBERS));
     }
 
-    public function itReturnsProjectMembersWhenProjectIsPrivateAndUGroupIsRegistered() {
+    public function itReturnsProjectMembersWhenProjectIsPrivateAndUGroupIsRegistered()
+    {
         stub($this->project)->isPublic()->returns(false);
         $this->stubAuthorizedUgroups(array('ugroup_id' => ProjectUGroup::REGISTERED));
 
         $this->assertAuthorizedUGroupIdsForProjectEqual(array(ProjectUGroup::PROJECT_MEMBERS));
     }
 
-    public function itReturnsRegisteredUsersWhenPlatformIsRegularProjectIsPublicAndUGroupIsAnonymous() {
+    public function itReturnsRegisteredUsersWhenPlatformIsRegularProjectIsPublicAndUGroupIsAnonymous()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         stub($this->project)->isPublic()->returns(true);
         $this->stubAuthorizedUgroups(array('ugroup_id' => ProjectUGroup::ANONYMOUS));
@@ -137,7 +148,8 @@ class PermissionsManager_getAuthorizedUGroupIdsForProjectTest extends TuleapTest
         $this->assertAuthorizedUGroupIdsForProjectEqual(array(ProjectUGroup::REGISTERED));
     }
 
-    public function itReturnsRegisteredUsersWhenPlatformIsRegularProjectIsPublicAndUGroupIsRegisteredUsers() {
+    public function itReturnsRegisteredUsersWhenPlatformIsRegularProjectIsPublicAndUGroupIsRegisteredUsers()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         stub($this->project)->isPublic()->returns(true);
         $this->stubAuthorizedUgroups(array('ugroup_id' => ProjectUGroup::REGISTERED));
@@ -145,7 +157,8 @@ class PermissionsManager_getAuthorizedUGroupIdsForProjectTest extends TuleapTest
         $this->assertAuthorizedUGroupIdsForProjectEqual(array(ProjectUGroup::REGISTERED));
     }
 
-    public function itReturnsRegisteredUsersWhenPlatformIsRegularProjectIsPublicAndUGroupIsAuthenticatedUsers() {
+    public function itReturnsRegisteredUsersWhenPlatformIsRegularProjectIsPublicAndUGroupIsAuthenticatedUsers()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         stub($this->project)->isPublic()->returns(true);
         $this->stubAuthorizedUgroups(array('ugroup_id' => ProjectUGroup::AUTHENTICATED));
@@ -153,7 +166,8 @@ class PermissionsManager_getAuthorizedUGroupIdsForProjectTest extends TuleapTest
         $this->assertAuthorizedUGroupIdsForProjectEqual(array(ProjectUGroup::REGISTERED));
     }
 
-    public function itReturnsProjectMembersWhenPlatformIsRegularProjectIsPublicAndUGroupIsProjectMembers() {
+    public function itReturnsProjectMembersWhenPlatformIsRegularProjectIsPublicAndUGroupIsProjectMembers()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         stub($this->project)->isPublic()->returns(true);
         $this->stubAuthorizedUgroups(array('ugroup_id' => ProjectUGroup::PROJECT_MEMBERS));
@@ -164,7 +178,8 @@ class PermissionsManager_getAuthorizedUGroupIdsForProjectTest extends TuleapTest
 
 
 
-    public function itReturnsAnonymousWhenPlatformIsAllowedToAnonymousProjectIsPublicAndUGroupIsAnonymous() {
+    public function itReturnsAnonymousWhenPlatformIsAllowedToAnonymousProjectIsPublicAndUGroupIsAnonymous()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         stub($this->project)->isPublic()->returns(true);
         $this->stubAuthorizedUgroups(array('ugroup_id' => ProjectUGroup::ANONYMOUS));
@@ -172,7 +187,8 @@ class PermissionsManager_getAuthorizedUGroupIdsForProjectTest extends TuleapTest
         $this->assertAuthorizedUGroupIdsForProjectEqual(array(ProjectUGroup::ANONYMOUS));
     }
 
-    public function itReturnsRegisteredWhenPlatformIsAllowedToAnonymousProjectIsPublicAndUGroupIsAuthenticated() {
+    public function itReturnsRegisteredWhenPlatformIsAllowedToAnonymousProjectIsPublicAndUGroupIsAuthenticated()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         stub($this->project)->isPublic()->returns(true);
         $this->stubAuthorizedUgroups(array('ugroup_id' => ProjectUGroup::AUTHENTICATED));
@@ -180,7 +196,8 @@ class PermissionsManager_getAuthorizedUGroupIdsForProjectTest extends TuleapTest
         $this->assertAuthorizedUGroupIdsForProjectEqual(array(ProjectUGroup::REGISTERED));
     }
 
-    public function itReturnsRegisteredWhenPlatformIsAllowedToAnonymousProjectIsPublicAndUGroupIsRegistered() {
+    public function itReturnsRegisteredWhenPlatformIsAllowedToAnonymousProjectIsPublicAndUGroupIsRegistered()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         stub($this->project)->isPublic()->returns(true);
         $this->stubAuthorizedUgroups(array('ugroup_id' => ProjectUGroup::REGISTERED));
@@ -192,7 +209,8 @@ class PermissionsManager_getAuthorizedUGroupIdsForProjectTest extends TuleapTest
 
 
 
-    public function itReturnsRegisteredWhenPlatformIsRestrictedProjectIsPublicAndUGroupIsAnonymous() {
+    public function itReturnsRegisteredWhenPlatformIsRestrictedProjectIsPublicAndUGroupIsAnonymous()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         stub($this->project)->isPublic()->returns(true);
         $this->stubAuthorizedUgroups(array('ugroup_id' => ProjectUGroup::ANONYMOUS));
@@ -200,7 +218,8 @@ class PermissionsManager_getAuthorizedUGroupIdsForProjectTest extends TuleapTest
         $this->assertAuthorizedUGroupIdsForProjectEqual(array(ProjectUGroup::REGISTERED));
     }
 
-    public function itReturnsRegisteredWhenPlatformIsRestrictedProjectIsPublicAndUGroupIsRegistered() {
+    public function itReturnsRegisteredWhenPlatformIsRestrictedProjectIsPublicAndUGroupIsRegistered()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         stub($this->project)->isPublic()->returns(true);
         $this->stubAuthorizedUgroups(array('ugroup_id' => ProjectUGroup::REGISTERED));
@@ -208,7 +227,8 @@ class PermissionsManager_getAuthorizedUGroupIdsForProjectTest extends TuleapTest
         $this->assertAuthorizedUGroupIdsForProjectEqual(array(ProjectUGroup::REGISTERED));
     }
 
-    public function itReturnsAuthenticatedWhenPlatformIsRestrictedProjectIsPublicAndUGroupIsAnonymous() {
+    public function itReturnsAuthenticatedWhenPlatformIsRestrictedProjectIsPublicAndUGroupIsAnonymous()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         stub($this->project)->isPublic()->returns(true);
         stub($this->project)->allowsRestricted()->returns(true);
@@ -217,7 +237,8 @@ class PermissionsManager_getAuthorizedUGroupIdsForProjectTest extends TuleapTest
         $this->assertAuthorizedUGroupIdsForProjectEqual(array(ProjectUGroup::AUTHENTICATED));
     }
 
-    public function itReturnsAuthenticatedWhenPlatformIsRestrictedProjectIsPublicAndUGroupIsAuthenticated() {
+    public function itReturnsAuthenticatedWhenPlatformIsRestrictedProjectIsPublicAndUGroupIsAuthenticated()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         stub($this->project)->isPublic()->returns(true);
         stub($this->project)->allowsRestricted()->returns(true);
@@ -228,11 +249,13 @@ class PermissionsManager_getAuthorizedUGroupIdsForProjectTest extends TuleapTest
 
 
 
-    private function stubAuthorizedUgroups($groups) {
+    private function stubAuthorizedUgroups($groups)
+    {
         stub($this->permissions_manager)->getAuthorizedUgroups($this->object_id, $this->permission_type, false)->returnsDar($groups);
     }
 
-    private function assertAuthorizedUGroupIdsForProjectEqual($groups) {
+    private function assertAuthorizedUGroupIdsForProjectEqual($groups)
+    {
         $this->assertEqual($this->permissions_manager->getAuthorizedUGroupIdsForProject($this->project, $this->object_id, $this->permission_type), $groups);
     }
 }
@@ -245,7 +268,8 @@ abstract class PermissionsManager_savePermissionsTest extends TuleapTestCase {
     protected $permissions_dao;
     protected $project_id;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->project_id          = 404;
         $this->project             = stub('Project')->getId()->returns($this->project_id);
@@ -257,30 +281,35 @@ abstract class PermissionsManager_savePermissionsTest extends TuleapTestCase {
         ForgeConfig::store();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
         unset($GLOBALS['Response']);
         ForgeConfig::restore();
     }
 
-    protected function expectPermissionsOnce($ugroup) {
+    protected function expectPermissionsOnce($ugroup)
+    {
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, $ugroup)->once();
     }
 
-    protected function savePermissions($ugroups) {
+    protected function savePermissions($ugroups)
+    {
         $this->permissions_manager->savePermissions($this->project, $this->object_id, $this->permission_type, $ugroups);
     }
 }
 
 class PermissionsManager_savePermissions_CommonTest extends PermissionsManager_savePermissionsTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         stub($this->permissions_dao)->clearPermission()->returns(true);
         stub($this->permissions_dao)->addPermission()->returns(true);
     }
 
-    public function itSavesTheValueForStaticUGroupId() {
+    public function itSavesTheValueForStaticUGroupId()
+    {
         expect($this->permissions_dao)->clearPermission($this->permission_type, $this->object_id)->once();
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, 104)->once();
         expect($this->permissions_dao)->addHistory($this->project_id, $this->permission_type, $this->object_id)->once();
@@ -288,7 +317,8 @@ class PermissionsManager_savePermissions_CommonTest extends PermissionsManager_s
         $this->savePermissions(array(104));
     }
 
-    public function itSavesTheValueForSeveralStaticUGroupIds() {
+    public function itSavesTheValueForSeveralStaticUGroupIds()
+    {
         expect($this->permissions_dao)->clearPermission($this->permission_type, $this->object_id)->once();
         expect($this->permissions_dao)->addPermission()->count(2);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, 104)->at(0);
@@ -298,7 +328,8 @@ class PermissionsManager_savePermissions_CommonTest extends PermissionsManager_s
         $this->savePermissions(array(104, 201));
     }
 
-    public function itSavesOnlyOneInstanceOfGroups() {
+    public function itSavesOnlyOneInstanceOfGroups()
+    {
         expect($this->permissions_dao)->addPermission()->count(2);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, 104)->at(0);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, 201)->at(1);
@@ -309,7 +340,8 @@ class PermissionsManager_savePermissions_CommonTest extends PermissionsManager_s
 
 class PermissionsManager_savePermissions_PlatformForAnonymousProjectPrivateTest extends PermissionsManager_savePermissionsTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         stub($this->permissions_dao)->clearPermission()->returns(true);
         stub($this->permissions_dao)->addPermission()->returns(true);
@@ -317,31 +349,36 @@ class PermissionsManager_savePermissions_PlatformForAnonymousProjectPrivateTest 
         stub($this->project)->isPublic()->returns(false);
     }
 
-    public function itSavesProjectMembersWhenSelectedAnonymous() {
+    public function itSavesProjectMembersWhenSelectedAnonymous()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->savePermissions(array(ProjectUGroup::ANONYMOUS));
     }
 
-    public function itSavesProjectMembersWhenSelectedAuthenticated() {
+    public function itSavesProjectMembersWhenSelectedAuthenticated()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->savePermissions(array(ProjectUGroup::AUTHENTICATED));
     }
 
-    public function itSavesProjectMembersSelectedRegistered() {
+    public function itSavesProjectMembersSelectedRegistered()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->savePermissions(array(ProjectUGroup::REGISTERED));
     }
 
-    public function itSavesProjectMembersSelectedProjectMembers() {
+    public function itSavesProjectMembersSelectedProjectMembers()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS));
     }
 
-    public function itSavesProjectMembersAndStaticGroup() {
+    public function itSavesProjectMembersAndStaticGroup()
+    {
         expect($this->permissions_dao)->addPermission()->count(2);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, ProjectUGroup::PROJECT_MEMBERS)->at(0);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, 104)->at(1);
@@ -352,7 +389,8 @@ class PermissionsManager_savePermissions_PlatformForAnonymousProjectPrivateTest 
 
 class PermissionsManager_savePermissions_PlatformForAnonymousProjectPublicTest extends PermissionsManager_savePermissionsTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         stub($this->permissions_dao)->clearPermission()->returns(true);
         stub($this->permissions_dao)->addPermission()->returns(true);
@@ -360,49 +398,57 @@ class PermissionsManager_savePermissions_PlatformForAnonymousProjectPublicTest e
         stub($this->project)->isPublic()->returns(true);
     }
 
-    public function itSavesAnonymousSelectedAnonymous() {
+    public function itSavesAnonymousSelectedAnonymous()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::ANONYMOUS);
 
         $this->savePermissions(array(ProjectUGroup::ANONYMOUS));
     }
 
-    public function itSavesRegisteredWhenSelectedAuthenticated() {
+    public function itSavesRegisteredWhenSelectedAuthenticated()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions(array(ProjectUGroup::AUTHENTICATED));
     }
 
-    public function itSavesRegisteredWhenSelectedRegistered() {
+    public function itSavesRegisteredWhenSelectedRegistered()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions(array(ProjectUGroup::REGISTERED));
     }
 
-    public function itSavesProjectMembersWhenSelectedProjectMembers() {
+    public function itSavesProjectMembersWhenSelectedProjectMembers()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS));
     }
 
-    public function itSavesOnlyAnonymousWhenPresentWithOtherProjectMembersProjectAdminsAndStaticGroup() {
+    public function itSavesOnlyAnonymousWhenPresentWithOtherProjectMembersProjectAdminsAndStaticGroup()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::ANONYMOUS);
 
         $this->savePermissions(array(ProjectUGroup::ANONYMOUS, ProjectUGroup::PROJECT_ADMIN, 104));
     }
 
-    public function itSavesOnlyRegisteredWhenPresentWithOtherProjectMembersProjectAdminsAndStaticGroup() {
+    public function itSavesOnlyRegisteredWhenPresentWithOtherProjectMembersProjectAdminsAndStaticGroup()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions(array(ProjectUGroup::REGISTERED, ProjectUGroup::PROJECT_ADMIN, 104));
     }
 
-    public function itSavesOnlyRegisteredWhenPresentWithAuthenticatedProjectAdminsAndStaticGroup() {
+    public function itSavesOnlyRegisteredWhenPresentWithAuthenticatedProjectAdminsAndStaticGroup()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions(array(ProjectUGroup::AUTHENTICATED, ProjectUGroup::PROJECT_ADMIN, 104));
     }
 
-    public function itSavesMembersAndStaticWhenPresentWithMembersProjectAdminsAndStaticGroup() {
+    public function itSavesMembersAndStaticWhenPresentWithMembersProjectAdminsAndStaticGroup()
+    {
         expect($this->permissions_dao)->addPermission()->count(2);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, ProjectUGroup::PROJECT_MEMBERS)->at(0);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, 104)->at(1);
@@ -410,7 +456,8 @@ class PermissionsManager_savePermissions_PlatformForAnonymousProjectPublicTest e
         $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, 104));
     }
 
-    public function itSavesAdminsAndStaticWhenPresentWithProjectAdminsAndStaticGroup() {
+    public function itSavesAdminsAndStaticWhenPresentWithProjectAdminsAndStaticGroup()
+    {
         expect($this->permissions_dao)->addPermission()->count(2);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, ProjectUGroup::PROJECT_ADMIN)->at(0);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, 104)->at(1);
@@ -418,7 +465,8 @@ class PermissionsManager_savePermissions_PlatformForAnonymousProjectPublicTest e
         $this->savePermissions(array(ProjectUGroup::PROJECT_ADMIN, 104));
     }
 
-    public function itSavesSVNAdminWikiAdminAndStatic() {
+    public function itSavesSVNAdminWikiAdminAndStatic()
+    {
         expect($this->permissions_dao)->addPermission()->count(3);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, ProjectUGroup::SVN_ADMIN)->at(0);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, ProjectUGroup::WIKI_ADMIN)->at(1);
@@ -427,7 +475,8 @@ class PermissionsManager_savePermissions_PlatformForAnonymousProjectPublicTest e
         $this->savePermissions(array(ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, 104));
     }
 
-    public function itSavesProjectMembersWhenSVNAdminWikiAdminAndProjectMembers() {
+    public function itSavesProjectMembersWhenSVNAdminWikiAdminAndProjectMembers()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->savePermissions(array(ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, ProjectUGroup::PROJECT_MEMBERS));
@@ -436,7 +485,8 @@ class PermissionsManager_savePermissions_PlatformForAnonymousProjectPublicTest e
 
 class PermissionsManager_savePermissions_PlatformRegularProjectPrivateTest extends PermissionsManager_savePermissionsTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         stub($this->permissions_dao)->clearPermission()->returns(true);
         stub($this->permissions_dao)->addPermission()->returns(true);
@@ -444,31 +494,36 @@ class PermissionsManager_savePermissions_PlatformRegularProjectPrivateTest exten
         stub($this->project)->isPublic()->returns(false);
     }
 
-    public function itSavesProjectMembersWhenSelectedAnonymous() {
+    public function itSavesProjectMembersWhenSelectedAnonymous()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->savePermissions(array(ProjectUGroup::ANONYMOUS));
     }
 
-    public function itSavesProjectMembersWhenSelectedAuthenticated() {
+    public function itSavesProjectMembersWhenSelectedAuthenticated()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->savePermissions(array(ProjectUGroup::AUTHENTICATED));
     }
 
-    public function itSavesProjectMembersSelectedRegistered() {
+    public function itSavesProjectMembersSelectedRegistered()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->savePermissions(array(ProjectUGroup::REGISTERED));
     }
 
-    public function itSavesProjectMembersSelectedProjectMembers() {
+    public function itSavesProjectMembersSelectedProjectMembers()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS));
     }
 
-    public function itSavesProjectMembersProjectAdminsAndStaticGroup() {
+    public function itSavesProjectMembersProjectAdminsAndStaticGroup()
+    {
         expect($this->permissions_dao)->addPermission()->count(2);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, ProjectUGroup::PROJECT_MEMBERS)->at(0);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, 104)->at(1);
@@ -479,7 +534,8 @@ class PermissionsManager_savePermissions_PlatformRegularProjectPrivateTest exten
 
 class PermissionsManager_savePermissions_PlatformForRegularProjectPublicTest extends PermissionsManager_savePermissionsTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         stub($this->permissions_dao)->clearPermission()->returns(true);
         stub($this->permissions_dao)->addPermission()->returns(true);
@@ -487,25 +543,29 @@ class PermissionsManager_savePermissions_PlatformForRegularProjectPublicTest ext
         stub($this->project)->isPublic()->returns(true);
     }
 
-    public function itSavesAnonymousSelectedAnonymous() {
+    public function itSavesAnonymousSelectedAnonymous()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions(array(ProjectUGroup::ANONYMOUS));
     }
 
-    public function itSavesRegisteredWhenSelectedAuthenticated() {
+    public function itSavesRegisteredWhenSelectedAuthenticated()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions(array(ProjectUGroup::AUTHENTICATED));
     }
 
-    public function itSavesRegisteredWhenSelectedRegistered() {
+    public function itSavesRegisteredWhenSelectedRegistered()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions(array(ProjectUGroup::REGISTERED));
     }
 
-    public function itSavesProjectMembersWhenSelectedProjectMembers() {
+    public function itSavesProjectMembersWhenSelectedProjectMembers()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS));
@@ -514,7 +574,8 @@ class PermissionsManager_savePermissions_PlatformForRegularProjectPublicTest ext
 
 class PermissionsManager_savePermissions_PlatformForRestrictedProjectUnrestrictedTest extends PermissionsManager_savePermissionsTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         stub($this->permissions_dao)->clearPermission()->returns(true);
         stub($this->permissions_dao)->addPermission()->returns(true);
@@ -523,49 +584,57 @@ class PermissionsManager_savePermissions_PlatformForRestrictedProjectUnrestricte
         stub($this->project)->allowsRestricted()->returns(true);
     }
 
-    public function itSavesAuthenticatedSelectedAnonymous() {
+    public function itSavesAuthenticatedSelectedAnonymous()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::AUTHENTICATED);
 
         $this->savePermissions(array(ProjectUGroup::ANONYMOUS));
     }
 
-    public function itSavesAuthenticatedWhenSelectedAuthenticated() {
+    public function itSavesAuthenticatedWhenSelectedAuthenticated()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::AUTHENTICATED);
 
         $this->savePermissions(array(ProjectUGroup::AUTHENTICATED));
     }
 
-    public function itSavesRegisteredWhenSelectedRegistered() {
+    public function itSavesRegisteredWhenSelectedRegistered()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions(array(ProjectUGroup::REGISTERED));
     }
 
-    public function itSavesProjectMembersWhenSelectedProjectMembers() {
+    public function itSavesProjectMembersWhenSelectedProjectMembers()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS));
     }
 
-    public function itSavesOnlyAuthenticatedWhenPresentWithOtherProjectMembersProjectAdminsAndStaticGroup() {
+    public function itSavesOnlyAuthenticatedWhenPresentWithOtherProjectMembersProjectAdminsAndStaticGroup()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::AUTHENTICATED);
 
         $this->savePermissions(array(ProjectUGroup::ANONYMOUS, ProjectUGroup::PROJECT_ADMIN, 104));
     }
 
-    public function itSavesOnlyRegisteredWhenPresentWithOtherProjectMembersProjectAdminsAndStaticGroup() {
+    public function itSavesOnlyRegisteredWhenPresentWithOtherProjectMembersProjectAdminsAndStaticGroup()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions(array(ProjectUGroup::REGISTERED, ProjectUGroup::PROJECT_ADMIN, 104));
     }
 
-    public function itSavesOnlyAuthenticatedWhenPresentWithAuthenticatedProjectAdminsAndStaticGroup() {
+    public function itSavesOnlyAuthenticatedWhenPresentWithAuthenticatedProjectAdminsAndStaticGroup()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::AUTHENTICATED);
 
         $this->savePermissions(array(ProjectUGroup::AUTHENTICATED, ProjectUGroup::PROJECT_ADMIN, 104));
     }
 
-    public function itSavesMembersAndStaticWhenPresentWithMembersProjectAdminsAndStaticGroup() {
+    public function itSavesMembersAndStaticWhenPresentWithMembersProjectAdminsAndStaticGroup()
+    {
         expect($this->permissions_dao)->addPermission()->count(2);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, ProjectUGroup::PROJECT_MEMBERS)->at(0);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, 104)->at(1);
@@ -573,7 +642,8 @@ class PermissionsManager_savePermissions_PlatformForRestrictedProjectUnrestricte
         $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, 104));
     }
 
-    public function itSavesAdminsAndStaticWhenPresentWithProjectAdminsAndStaticGroup() {
+    public function itSavesAdminsAndStaticWhenPresentWithProjectAdminsAndStaticGroup()
+    {
         expect($this->permissions_dao)->addPermission()->count(2);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, ProjectUGroup::PROJECT_ADMIN)->at(0);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, 104)->at(1);
@@ -581,7 +651,8 @@ class PermissionsManager_savePermissions_PlatformForRestrictedProjectUnrestricte
         $this->savePermissions(array(ProjectUGroup::PROJECT_ADMIN, 104));
     }
 
-    public function itSavesSVNAdminWikiAdminAndStatic() {
+    public function itSavesSVNAdminWikiAdminAndStatic()
+    {
         expect($this->permissions_dao)->addPermission()->count(3);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, ProjectUGroup::SVN_ADMIN)->at(0);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, ProjectUGroup::WIKI_ADMIN)->at(1);
@@ -590,13 +661,15 @@ class PermissionsManager_savePermissions_PlatformForRestrictedProjectUnrestricte
         $this->savePermissions(array(ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, 104));
     }
 
-    public function itSavesProjectMembersWhenSVNAdminWikiAdminAndProjectMembers() {
+    public function itSavesProjectMembersWhenSVNAdminWikiAdminAndProjectMembers()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->savePermissions(array(ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, ProjectUGroup::PROJECT_MEMBERS));
     }
 
-    public function itSavesAuthenticatedWhenAuthenticatedAndRegisteredAndProjectMembersAreSelected() {
+    public function itSavesAuthenticatedWhenAuthenticatedAndRegisteredAndProjectMembersAreSelected()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::AUTHENTICATED);
 
         $this->savePermissions(array(ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED, ProjectUGroup::PROJECT_MEMBERS));
@@ -605,7 +678,8 @@ class PermissionsManager_savePermissions_PlatformForRestrictedProjectUnrestricte
 
 class PermissionsManager_savePermissions_PlatformForRestrictedProjectPublicTest extends PermissionsManager_savePermissionsTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         stub($this->permissions_dao)->clearPermission()->returns(true);
         stub($this->permissions_dao)->addPermission()->returns(true);
@@ -614,43 +688,50 @@ class PermissionsManager_savePermissions_PlatformForRestrictedProjectPublicTest 
         stub($this->project)->allowsRestricted()->returns(false);
     }
 
-    public function itSavesRegisteredSelectedAnonymous() {
+    public function itSavesRegisteredSelectedAnonymous()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions(array(ProjectUGroup::ANONYMOUS));
     }
 
-    public function itSavesRegisteredWhenSelectedAuthenticated() {
+    public function itSavesRegisteredWhenSelectedAuthenticated()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions(array(ProjectUGroup::AUTHENTICATED));
     }
 
-    public function itSavesRegisteredWhenSelectedRegistered() {
+    public function itSavesRegisteredWhenSelectedRegistered()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions(array(ProjectUGroup::REGISTERED));
     }
 
-    public function itSavesProjectMembersWhenSelectedProjectMembers() {
+    public function itSavesProjectMembersWhenSelectedProjectMembers()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS));
     }
 
-    public function itSavesOnlyRegisteredWhenPresentWithOtherProjectMembersProjectAdminsAndStaticGroup() {
+    public function itSavesOnlyRegisteredWhenPresentWithOtherProjectMembersProjectAdminsAndStaticGroup()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions(array(ProjectUGroup::ANONYMOUS, ProjectUGroup::PROJECT_ADMIN, 104));
     }
 
-    public function itSavesOnlyRegisteredWhenPresentWithAuthenticatedProjectAdminsAndStaticGroup() {
+    public function itSavesOnlyRegisteredWhenPresentWithAuthenticatedProjectAdminsAndStaticGroup()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::REGISTERED);
 
         $this->savePermissions(array(ProjectUGroup::AUTHENTICATED, ProjectUGroup::PROJECT_ADMIN, 104));
     }
 
-    public function itSavesMembersAndStaticWhenPresentWithMembersProjectAdminsAndStaticGroup() {
+    public function itSavesMembersAndStaticWhenPresentWithMembersProjectAdminsAndStaticGroup()
+    {
         expect($this->permissions_dao)->addPermission()->count(2);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, ProjectUGroup::PROJECT_MEMBERS)->at(0);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, 104)->at(1);
@@ -658,7 +739,8 @@ class PermissionsManager_savePermissions_PlatformForRestrictedProjectPublicTest 
         $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, 104));
     }
 
-    public function itSavesAdminsAndStaticWhenPresentWithProjectAdminsAndStaticGroup() {
+    public function itSavesAdminsAndStaticWhenPresentWithProjectAdminsAndStaticGroup()
+    {
         expect($this->permissions_dao)->addPermission()->count(2);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, ProjectUGroup::PROJECT_ADMIN)->at(0);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, 104)->at(1);
@@ -666,7 +748,8 @@ class PermissionsManager_savePermissions_PlatformForRestrictedProjectPublicTest 
         $this->savePermissions(array(ProjectUGroup::PROJECT_ADMIN, 104));
     }
 
-    public function itSavesSVNAdminWikiAdminAndStatic() {
+    public function itSavesSVNAdminWikiAdminAndStatic()
+    {
         expect($this->permissions_dao)->addPermission()->count(3);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, ProjectUGroup::SVN_ADMIN)->at(0);
         expect($this->permissions_dao)->addPermission($this->permission_type, $this->object_id, ProjectUGroup::WIKI_ADMIN)->at(1);
@@ -675,7 +758,8 @@ class PermissionsManager_savePermissions_PlatformForRestrictedProjectPublicTest 
         $this->savePermissions(array(ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, 104));
     }
 
-    public function itSavesProjectMembersWhenSVNAdminWikiAdminAndProjectMembers() {
+    public function itSavesProjectMembersWhenSVNAdminWikiAdminAndProjectMembers()
+    {
         $this->expectPermissionsOnce(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->savePermissions(array(ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, ProjectUGroup::PROJECT_MEMBERS));
@@ -684,12 +768,14 @@ class PermissionsManager_savePermissions_PlatformForRestrictedProjectPublicTest 
 
 class PermissionsManager_savePermissions_SaveDaoTest extends PermissionsManager_savePermissionsTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         stub($this->permissions_dao)->getDa()->returns(mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class));
     }
 
-    public function itThrowsExceptionWhenClearFailed() {
+    public function itThrowsExceptionWhenClearFailed()
+    {
         stub($this->permissions_dao)->clearPermission()->returns(false);
 
         $this->expectException('PermissionDaoException');
@@ -697,7 +783,8 @@ class PermissionsManager_savePermissions_SaveDaoTest extends PermissionsManager_
         $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS, 104));
     }
 
-    public function itThrowsExceptionWhenAddFailed() {
+    public function itThrowsExceptionWhenAddFailed()
+    {
         stub($this->permissions_dao)->clearPermission()->returns(true);
         stub($this->permissions_dao)->addPermission()->returnsAt(1, false);
 
@@ -711,14 +798,16 @@ class PermissionsManager_savePermissions_FeebackOverlapingTest extends Permissio
 
     private $normalizer;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->normalizer = new PermissionsNormalizer();
         stub($this->permissions_dao)->clearPermission()->returns(true);
         stub($this->permissions_dao)->addPermission()->returns(true);
     }
 
-    public function itInformsThatProjectMembersIsSavedWhenSVNAdminWikiAdminAndProjectMembers() {
+    public function itInformsThatProjectMembersIsSavedWhenSVNAdminWikiAdminAndProjectMembers()
+    {
         $override_collection = new PermissionsNormalizerOverrideCollection();
 
         $this->normalizer->getNormalizedUGroupIds(
@@ -730,7 +819,8 @@ class PermissionsManager_savePermissions_FeebackOverlapingTest extends Permissio
         $this->assertEqual($override_collection->getOverrideBy(ProjectUGroup::PROJECT_MEMBERS), array(ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN));
     }
 
-    public function itInformsThatAnonymousOverlapProjectMembers() {
+    public function itInformsThatAnonymousOverlapProjectMembers()
+    {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         stub($this->project)->isPublic()->returns(true);
 

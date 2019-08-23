@@ -19,7 +19,8 @@
  */
 
 class TreeNodeTest extends TuleapTestCase {
-    public function itMayWrapAnObject() {
+    public function itMayWrapAnObject()
+    {
         $object = mock('stdClass');
         $node   = new TreeNode();
 
@@ -30,12 +31,14 @@ class TreeNodeTest extends TuleapTestCase {
 
 class TreeNode_FlattenChildrenTest extends TuleapTestCase {
 
-    public function itReturnsAnEmptyArrayWhenNoChildren() {
+    public function itReturnsAnEmptyArrayWhenNoChildren()
+    {
         $node = new TreeNode();
         $this->assertIdentical(array(), $node->flattenChildren());
     }
 
-    public function itReturnsTheChildrenWhenNoSubChildren() {
+    public function itReturnsTheChildrenWhenNoSubChildren()
+    {
         $child1 = new TreeNode();
         $child2 = new TreeNode();
         $node = new TreeNode();
@@ -46,7 +49,8 @@ class TreeNode_FlattenChildrenTest extends TuleapTestCase {
         $this->assertEqual(array($child1, $child2), $node->flattenChildren());
     }
 
-    public function itReturnsTheChildrenAndSubChildrenAsAFlatList() {
+    public function itReturnsTheChildrenAndSubChildrenAsAFlatList()
+    {
         $child1 = new TreeNode();
         $subchild1 = new TreeNode();
         $child1->addChild($subchild1);
@@ -61,7 +65,8 @@ class TreeNode_FlattenChildrenTest extends TuleapTestCase {
 
 class TreeNode_AddChildrenTest extends TuleapTestCase {
 
-    public function itBuildsATreeInline() {
+    public function itBuildsATreeInline()
+    {
         $root       = new TreeNode();
         $node_1     = new TreeNode();
         $node_1_1   = new TreeNode();
@@ -89,14 +94,16 @@ class TreeNode_AddChildrenTest extends TuleapTestCase {
 
 class TreeNode_SetChildrenTest extends TuleapTestCase {
 
-    public function itAddsTheGivenChildren() {
+    public function itAddsTheGivenChildren()
+    {
         $root       = new TreeNode();
         $children   = array(new TreeNode(), new TreeNode());
         $root->setChildren($children);
         $this->assertEqual($children, $root->getChildren());
     }
 
-    public function itSetsTheParentNodeOfTheChildren() {
+    public function itSetsTheParentNodeOfTheChildren()
+    {
         $root       = new TreeNode();
         $node_1     = new TreeNode();
         $node_2     = new TreeNode();

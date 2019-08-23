@@ -22,7 +22,8 @@
 
 class Docman_MetadataHtmlFactory {
 
-    function getFromMetadata($md, $formParams) {
+    function getFromMetadata($md, $formParams)
+    {
         $mdh = null;
 
         switch($md->getLabel()) {
@@ -56,7 +57,8 @@ class Docman_MetadataHtmlFactory {
         return $mdh;
     }
 
-    function buildFieldArray($mdIter, $mdla, $whitelist, $formName, $themePath) {
+    function buildFieldArray($mdIter, $mdla, $whitelist, $formName, $themePath)
+    {
         $fields = array();
         $formParams = array('form_name' => $formName,
                             'theme_path' => $themePath);
@@ -73,7 +75,8 @@ class Docman_MetadataHtmlFactory {
 }
 
 class Docman_ValidateMetadataIsNotEmpty extends Docman_Validator {
-    function __construct(&$md) {
+    function __construct(&$md)
+    {
         $msg = $GLOBALS['Language']->getText('plugin_docman', 'md_error_empty_gen', array($md->getName()));
         if($md !== null) {
             $val = $md->getValue();
@@ -88,7 +91,8 @@ class Docman_ValidateMetadataIsNotEmpty extends Docman_Validator {
 }
 
 class Docman_ValidateMetadataListIsNotEmpty extends Docman_Validator {
-    function __construct(&$metadata) {
+    function __construct(&$metadata)
+    {
         $msg = $GLOBALS['Language']->getText('plugin_docman', 'md_error_empty_gen', array($metadata->getName()));
 
         if ($metadata !== null) {
@@ -113,7 +117,8 @@ class Docman_ValidateMetadataListIsNotEmpty extends Docman_Validator {
         }
     }
 
-    private function metadataIsRequieredAndAtLeastOneValueIsSelected(Docman_ListMetadata $metadata, array $selectedElements) {
+    private function metadataIsRequieredAndAtLeastOneValueIsSelected(Docman_ListMetadata $metadata, array $selectedElements)
+    {
         if ($metadata->isEmptyAllowed()) {
             return true;
         } elseif (count($selectedElements) > 1) {
@@ -140,7 +145,8 @@ class Docman_MetadataHtml {
     var $formParams;
     var $hp;
 
-    function __construct(&$md, $formParams) {
+    function __construct(&$md, $formParams)
+    {
         $this->md = $md;
         $this->hp = Codendi_HTMLPurifier::instance();
         $this->formParams = $formParams;
@@ -151,7 +157,8 @@ class Docman_MetadataHtml {
      *
      * @return string
      */
-    function getLabel($show_mandatory_information = true) {
+    function getLabel($show_mandatory_information = true)
+    {
         $desc = $this->md->getDescription();
         $html = '';
         $html .= '<span title="'. $this->hp->purify($desc) .'">';
@@ -174,7 +181,8 @@ class Docman_MetadataHtml {
      *
      * @return string
      */
-    function _getFieldName() {
+    function _getFieldName()
+    {
         $lbl = $this->md->getLabel();
         if($this->md->isSpecial()) {
             $name  = 'item['.$lbl.']';
@@ -190,7 +198,8 @@ class Docman_MetadataHtml {
      *
      * @return string
      */
-    function getField() {
+    function getField()
+    {
         if($this->md->canChangeValue()) {
             $html = $this->_getField();
         }
@@ -205,7 +214,8 @@ class Docman_MetadataHtml {
      *
      * @return string
      */
-    function getValue() {
+    function getValue()
+    {
         return $this->md->getValue();
     }
 
@@ -214,7 +224,8 @@ class Docman_MetadataHtml {
      *
      * @return string
      */
-    function &getValidator() {
+    function &getValidator()
+    {
         $validator = null;
         if(/*$show_mandatory_information && */$this->md->canChangeValue() && !$this->md->isEmptyAllowed()) {
             $validator = new Docman_ValidateMetadataIsNotEmpty($this->md);
@@ -228,12 +239,14 @@ class Docman_MetadataHtml {
  */
 class Docman_MetadataHtmlText extends Docman_MetadataHtml {
 
-    function getValue() {
+    function getValue()
+    {
         $value = $this->hp->purify($this->md->getValue(), CODENDI_PURIFIER_BASIC, $this->md->getGroupId());
         return $value;
     }
 
-    function _getField() {
+    function _getField()
+    {
         $name  = $this->_getFieldName();
         $value = $this->md->getValue();
         if($value === null) {
@@ -250,12 +263,14 @@ class Docman_MetadataHtmlText extends Docman_MetadataHtml {
  */
 class Docman_MetadataHtmlString extends Docman_MetadataHtml {
 
-    function getValue() {
+    function getValue()
+    {
         $value = $this->hp->purify($this->md->getValue(), CODENDI_PURIFIER_BASIC, $this->md->getGroupId());
         return $value;
     }
 
-    function _getField() {
+    function _getField()
+    {
         $value = $this->md->getValue();
         if($value === null) {
             $value = $this->md->getDefaultValue();
@@ -271,7 +286,8 @@ class Docman_MetadataHtmlString extends Docman_MetadataHtml {
  */
 class Docman_MetadataHtmlDate extends Docman_MetadataHtml {
 
-    function _getField() {
+    function _getField()
+    {
         $field = '';
 
         $selected = $this->md->getValue();
@@ -298,7 +314,8 @@ class Docman_MetadataHtmlDate extends Docman_MetadataHtml {
         return $field;
     }
 
-    function getValue() {
+    function getValue()
+    {
         $v = $this->md->getValue();
         if($v != null && $v != '' && $v != 0) {
             $html_purifier = Codendi_HTMLPurifier::instance();
@@ -316,7 +333,8 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
     /**
      * static
      */
-    function _getElementName($e, $hideNone=false) {
+    function _getElementName($e, $hideNone=false)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $name = '';
         switch($e->getId()) {
@@ -346,7 +364,8 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
     }
 
 
-    function getValue($hideNone=false) {
+    function getValue($hideNone=false)
+    {
         $vIter = $this->md->getValue();
 
         $html = '';
@@ -367,7 +386,8 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
         return $html;
     }
 
-    function _getField() {
+    function _getField()
+    {
         $html = '';
         // First is their any value already selected
         $selectedElements = array();
@@ -419,7 +439,8 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
         return $html;
     }
 
-    function &getValidator() {
+    function &getValidator()
+    {
         $validator = null;
         if(/*$show_mandatory_information && */$this->md->canChangeValue() && !$this->md->isEmptyAllowed()) {
             $validator = new Docman_ValidateMetadataListIsNotEmpty($this->md);
@@ -435,7 +456,8 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
  */
 class Docman_MetadataHtmlObsolescence extends Docman_MetadataHtml {
 
-    function getValue() {
+    function getValue()
+    {
         $v = $this->md->getValue();
         switch($v) {
             case PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT:
@@ -446,7 +468,8 @@ class Docman_MetadataHtmlObsolescence extends Docman_MetadataHtml {
         }
     }
 
-    function _getField() {
+    function _getField()
+    {
         $labels = array(PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT => $GLOBALS['Language']->getText('plugin_docman','md_html_validity_permanent'),
                         3 => $GLOBALS['Language']->getText('plugin_docman','md_html_validity_3_months'),
                         6 => $GLOBALS['Language']->getText('plugin_docman','md_html_validity_6_months'),
@@ -499,7 +522,8 @@ class Docman_MetadataHtmlObsolescence extends Docman_MetadataHtml {
  */
 class Docman_MetadataHtmlOwner extends Docman_MetadataHtmlString {
 
-    function getValue() {
+    function getValue()
+    {
         $v = $this->md->getValue();
         if($v != null && $v != '') {
             $hp = Codendi_HTMLPurifier::instance();
@@ -511,7 +535,8 @@ class Docman_MetadataHtmlOwner extends Docman_MetadataHtmlString {
         }
     }
 
-    function _getField() {
+    function _getField()
+    {
         $name  = $this->_getFieldName();
         $value = $this->md->getValue();
         if($value === null) {

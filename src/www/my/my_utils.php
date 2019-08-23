@@ -26,7 +26,8 @@ Output:
   $hide_flag: true if the section must be hidden, false otherwise
 
 */
-function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide, $dashboard_id) {
+function my_hide_url($svc, $db_item_id, $item_id, $count, $hide, $dashboard_id)
+{
 
     global $Language;
 
@@ -75,7 +76,8 @@ function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide, $dashboard_id)
     return array($hide_now, $count-$old_count, $hide_url);
 }
 
-function my_hide($svc, $db_item_id, $item_id, $hide) {
+function my_hide($svc, $db_item_id, $item_id, $hide)
+{
     $pref_name = 'my_hide_'.$svc.$db_item_id;
     $old_pref_value = user_get_preference($pref_name);
     list($old_hide,$old_count) = explode('|', $old_pref_value);
@@ -94,7 +96,8 @@ function my_hide($svc, $db_item_id, $item_id, $hide) {
 }
 
 /* second case */
-function my_format_as_flag2($assignee, $submitter) {
+function my_format_as_flag2($assignee, $submitter)
+{
     $AS_flag = '';
     if ($assignee) $AS_flag = 'A';
 
@@ -105,18 +108,21 @@ function my_format_as_flag2($assignee, $submitter) {
     return $AS_flag;
 }
 
-function my_item_count($total, $new) {
+function my_item_count($total, $new)
+{
     global $Language;
     return '['.$total.($new ? ", <b>".$Language->getText('my_utils', 'new_items', array($new))."</b>]" : ']');
 }
 
-function my_check_bookmark_URL($bookmark_url, $redirect_url) {
+function my_check_bookmark_URL($bookmark_url, $redirect_url)
+{
     if (my_has_URL_invalid_content($bookmark_url)) {
         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('bookmark_add', 'invalid_uri'));
         $GLOBALS['Response']->redirect($redirect_url);
     }
 }
 
-function my_has_URL_invalid_content($bookmark_url) {
+function my_has_URL_invalid_content($bookmark_url)
+{
     return URL::getScheme($bookmark_url) === 'javascript';
 }

@@ -19,13 +19,15 @@
  */
 
 require_once __DIR__.'/../bootstrap.php';
-function aPostActionFactory() {
+function aPostActionFactory()
+{
     return new Test_Transition_PostActionFactoryBuilder();
 }
 
 class Test_Transition_PostActionFactoryBuilder {
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->factory = TestHelper::getPartialMock('Transition_PostActionFactory',
                                                     array('getDao',
                                                           'getFormElementFactory'));
@@ -43,27 +45,32 @@ class Test_Transition_PostActionFactoryBuilder {
         }
     }
 
-    public function withFormElementFactory(Tracker_FormElementFactory $form_element_factory) {
+    public function withFormElementFactory(Tracker_FormElementFactory $form_element_factory)
+    {
         $this->form_element_factory = $form_element_factory;
         return $this;
     }
 
-    public function withFieldDateDao(Transition_PostAction_Field_DateDao $dao) {
+    public function withFieldDateDao(Transition_PostAction_Field_DateDao $dao)
+    {
         $this->daos['field_date'] = $dao;
         return $this;
     }
 
-    public function withFieldIntDao(Transition_PostAction_Field_IntDao $dao) {
+    public function withFieldIntDao(Transition_PostAction_Field_IntDao $dao)
+    {
         $this->daos['field_int'] = $dao;
         return $this;
     }
 
-    public function withFieldFloatDao(Transition_PostAction_Field_FloatDao $dao) {
+    public function withFieldFloatDao(Transition_PostAction_Field_FloatDao $dao)
+    {
         $this->daos['field_float'] = $dao;
         return $this;
     }
 
-    public function build() {
+    public function build()
+    {
         stub($this->factory)->getFormElementFactory()->returns($this->form_element_factory);
         foreach($this->daos as $short_name => $dao) {
             stub($this->factory)->getDao($short_name)->returns($dao);

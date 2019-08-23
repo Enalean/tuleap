@@ -20,15 +20,18 @@
 
 class b201603211122_add_is_child_into_existing_data extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add _is_child nature into existing artifact links #2';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "UPDATE tracker_changeset_value_artifactlink AS artlink
                     INNER JOIN tracker_artifact AS child_art
                         ON (child_art.id = artlink.artifact_id)

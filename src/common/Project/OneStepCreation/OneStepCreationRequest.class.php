@@ -128,7 +128,8 @@ class Project_OneStepCreation_OneStepCreationRequest {
      *
      * @return array
      */
-    public function getProjectValues() {
+    public function getProjectValues()
+    {
         return array(
             'project' => array_merge(
                 array(
@@ -148,7 +149,8 @@ class Project_OneStepCreation_OneStepCreationRequest {
         );
     }
 
-    private function getTroveCatDataForProjectRequest() {
+    private function getTroveCatDataForProjectRequest()
+    {
         $trove_data = array();
 
         if (count($this->trove_cats) > 0) {
@@ -167,7 +169,8 @@ class Project_OneStepCreation_OneStepCreationRequest {
     /**
      * @return PFUser
      */
-    public function getCurrentUser() {
+    public function getCurrentUser()
+    {
         return $this->request->getCurrentUser();
     }
 
@@ -175,7 +178,8 @@ class Project_OneStepCreation_OneStepCreationRequest {
      *
      * @return string
      */
-    public function getFormSubmissionPath() {
+    public function getFormSubmissionPath()
+    {
         return $this->form_submission_path;
     }
 
@@ -183,7 +187,8 @@ class Project_OneStepCreation_OneStepCreationRequest {
      *
      * @return string
      */
-    public function getUnixName() {
+    public function getUnixName()
+    {
         return $this->unix_name;
     }
 
@@ -191,7 +196,8 @@ class Project_OneStepCreation_OneStepCreationRequest {
      *
      * @return string
      */
-    public function getFullName() {
+    public function getFullName()
+    {
         return $this->full_name;
     }
 
@@ -199,7 +205,8 @@ class Project_OneStepCreation_OneStepCreationRequest {
      *
      * @return string
      */
-    public function getShortDescription() {
+    public function getShortDescription()
+    {
         return $this->short_description;
     }
 
@@ -207,7 +214,8 @@ class Project_OneStepCreation_OneStepCreationRequest {
      *
      * @return int
      */
-    public function getTemplateId() {
+    public function getTemplateId()
+    {
         return $this->templateId;
     }
 
@@ -215,7 +223,8 @@ class Project_OneStepCreation_OneStepCreationRequest {
      *
      * @return bool
      */
-    public function isPublic() {
+    public function isPublic()
+    {
         return $this->is_public;
     }
 
@@ -223,7 +232,8 @@ class Project_OneStepCreation_OneStepCreationRequest {
      *
      * @return bool
      */
-    public function userCanSelectProjectPrivacy() {
+    public function userCanSelectProjectPrivacy()
+    {
         return $this->user_can_choose_project_privacy;
     }
 
@@ -231,14 +241,16 @@ class Project_OneStepCreation_OneStepCreationRequest {
      *
      * @return type
      */
-    public function getTosApproval() {
+    public function getTosApproval()
+    {
         return $this->term_of_service_approval;
     }
 
     /**
      * @return string
      */
-    public function getCustomProjectDescription($id) {
+    public function getCustomProjectDescription($id)
+    {
         if (isset($this->custom_descriptions[Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX . $id])) {
             return $this->custom_descriptions[Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX . $id];
         }
@@ -247,7 +259,8 @@ class Project_OneStepCreation_OneStepCreationRequest {
     /**
      * @return string
      */
-    public function getTroveCat($id) {
+    public function getTroveCat($id)
+    {
         if (isset($this->trove_cats[$id])) {
             return $this->trove_cats[$id];
         }
@@ -351,7 +364,8 @@ class Project_OneStepCreation_OneStepCreationRequest {
     /**
      * @return array
      */
-    private function getServices() {
+    private function getServices()
+    {
         $services = array();
         $project = $this->project_manager->getProject($this->getTemplateId());
         foreach($project->getServices() as $service) {

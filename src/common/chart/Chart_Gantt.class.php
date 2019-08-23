@@ -39,7 +39,8 @@ class Chart_Gantt extends Chart{
     *
     * @return void
     */
-    public function __construct($aWidth = 0, $aHeight = 0, $aCachedName = "", $aTimeOut = 0, $aInline = true) {
+    public function __construct($aWidth = 0, $aHeight = 0, $aCachedName = "", $aTimeOut = 0, $aInline = true)
+    {
         parent::__construct($aWidth, $aHeight, $aCachedName, $aTimeOut, $aInline);
 
         $header_color = $this->colors_for_charts->getGanttHeaderColor();
@@ -71,7 +72,8 @@ class Chart_Gantt extends Chart{
      *
      * @return string
      */
-    protected function getGraphClass() {
+    protected function getGraphClass()
+    {
         return 'GanttGraph';
     }
 
@@ -81,7 +83,8 @@ class Chart_Gantt extends Chart{
      * @return string
      * @see Layout->getGanttLateBarColor
      */
-    public function getLateBarColor() {
+    public function getLateBarColor()
+    {
         return $this->colors_for_charts->getGanttLateBarColor();
     }
 
@@ -91,7 +94,8 @@ class Chart_Gantt extends Chart{
      * @return string
      * @see Layout->getGanttErrorBarColor
      */
-    public function getErrorBarColor() {
+    public function getErrorBarColor()
+    {
         return $this->colors_for_charts->getGanttErrorBarColor();
     }
 
@@ -101,7 +105,8 @@ class Chart_Gantt extends Chart{
      * @return string
      * @see Layout->getGanttGreenBarColor
      */
-    public function getGreenBarColor() {
+    public function getGreenBarColor()
+    {
         return $this->colors_for_charts->getGanttGreenBarColor();
     }
 
@@ -111,7 +116,8 @@ class Chart_Gantt extends Chart{
      * @return string
      * @see Layout->getGanttTodayLineColor
      */
-    public function getTodayLineColor() {
+    public function getTodayLineColor()
+    {
         return $this->colors_for_charts->getGanttTodayLineColor();
     }
 

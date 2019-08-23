@@ -28,7 +28,8 @@ abstract class GitPermissionsManagerTest extends TuleapTestCase {
     protected $git_permissions_dao;
     protected $git_system_event_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->permissions_manager = mock('PermissionsManager');
         PermissionsManager::setInstance($this->permissions_manager);
@@ -42,7 +43,8 @@ abstract class GitPermissionsManagerTest extends TuleapTestCase {
         );
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
         PermissionsManager::clearInstance();
     }
@@ -50,7 +52,8 @@ abstract class GitPermissionsManagerTest extends TuleapTestCase {
 
 class GitPermissionsManager_SiteAccessUpdateTest extends GitPermissionsManagerTest {
 
-    public function testWhenSwitchingFromAnonymousToRegularItUpdatesAllProjectsThatWereUsingAnonymous() {
+    public function testWhenSwitchingFromAnonymousToRegularItUpdatesAllProjectsThatWereUsingAnonymous()
+    {
         stub($this->git_permissions_dao)->getAllProjectsWithAnonymousRepositories()->returns([['group_id' => 101], ['group_id' => 104]]);
 
         expect($this->git_permissions_dao)->updateAllAnonymousAccessToRegistered()->once();
@@ -60,7 +63,8 @@ class GitPermissionsManager_SiteAccessUpdateTest extends GitPermissionsManagerTe
         $this->git_permissions_manager->updateSiteAccess(ForgeAccess::ANONYMOUS, ForgeAccess::REGULAR);
     }
 
-    public function testWhenSwitchingFromAnonymousToRegularItDoesNothingWhenNoProjectsWereUsingAnonymous() {
+    public function testWhenSwitchingFromAnonymousToRegularItDoesNothingWhenNoProjectsWereUsingAnonymous()
+    {
         stub($this->git_permissions_dao)->getAllProjectsWithAnonymousRepositories()->returns([]);
 
         expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate()->never();
@@ -69,7 +73,8 @@ class GitPermissionsManager_SiteAccessUpdateTest extends GitPermissionsManagerTe
         $this->git_permissions_manager->updateSiteAccess(ForgeAccess::ANONYMOUS, ForgeAccess::REGULAR);
     }
 
-    public function testWhenSwitchingFromRegularToAnonymousItDoesNothing() {
+    public function testWhenSwitchingFromRegularToAnonymousItDoesNothing()
+    {
         expect($this->git_permissions_dao)->getAllProjectsWithAnonymousRepositories()->never();
         expect($this->git_permissions_dao)->getAllProjectsWithUnrestrictedRepositories()->never();
         expect($this->git_permissions_dao)->updateAllAnonymousAccessToRegistered()->never();
@@ -79,7 +84,8 @@ class GitPermissionsManager_SiteAccessUpdateTest extends GitPermissionsManagerTe
         $this->git_permissions_manager->updateSiteAccess(ForgeAccess::REGULAR, ForgeAccess::ANONYMOUS);
     }
 
-    public function testWhenSwitchingFromAnonymousToRestrictedItUpdatesAllProjectsThatWereUsingAnonymous() {
+    public function testWhenSwitchingFromAnonymousToRestrictedItUpdatesAllProjectsThatWereUsingAnonymous()
+    {
         stub($this->git_permissions_dao)->getAllProjectsWithAnonymousRepositories()->returns([['group_id' => 101], ['group_id' => 104]]);
 
         expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate(array(101, 104))->once();
@@ -88,7 +94,8 @@ class GitPermissionsManager_SiteAccessUpdateTest extends GitPermissionsManagerTe
         $this->git_permissions_manager->updateSiteAccess(ForgeAccess::ANONYMOUS, ForgeAccess::RESTRICTED);
     }
 
-    public function testWhenSwitchingFromRestrictedToAnonymousItUpdatesAllProjectThatWereUsingUnRestricted() {
+    public function testWhenSwitchingFromRestrictedToAnonymousItUpdatesAllProjectThatWereUsingUnRestricted()
+    {
         stub($this->git_permissions_dao)->getAllProjectsWithUnrestrictedRepositories()->returns([['group_id' => 102], ['group_id' => 107]]);
 
         expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate(array(102, 107))->once();
@@ -97,7 +104,8 @@ class GitPermissionsManager_SiteAccessUpdateTest extends GitPermissionsManagerTe
         $this->git_permissions_manager->updateSiteAccess(ForgeAccess::RESTRICTED, ForgeAccess::ANONYMOUS);
     }
 
-    public function testWhenSwitchingFromRestrictedToRegularItUpdatesAllProjectThatWereUsingUnRestricted() {
+    public function testWhenSwitchingFromRestrictedToRegularItUpdatesAllProjectThatWereUsingUnRestricted()
+    {
         stub($this->git_permissions_dao)->getAllProjectsWithUnrestrictedRepositories()->returns([['group_id' => 102], ['group_id' => 107]]);
 
         expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate(array(102, 107))->once();
@@ -106,7 +114,8 @@ class GitPermissionsManager_SiteAccessUpdateTest extends GitPermissionsManagerTe
         $this->git_permissions_manager->updateSiteAccess(ForgeAccess::RESTRICTED, ForgeAccess::REGULAR);
     }
 
-    public function testWhenSwitchingFromRestrictedToRegularItDoesNothingWhenNoProjectsWereUsingAuthenticated() {
+    public function testWhenSwitchingFromRestrictedToRegularItDoesNothingWhenNoProjectsWereUsingAuthenticated()
+    {
         stub($this->git_permissions_dao)->getAllProjectsWithUnrestrictedRepositories()->returns([]);
 
         expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate()->never();
@@ -115,7 +124,8 @@ class GitPermissionsManager_SiteAccessUpdateTest extends GitPermissionsManagerTe
         $this->git_permissions_manager->updateSiteAccess(ForgeAccess::RESTRICTED, ForgeAccess::REGULAR);
     }
 
-    public function testWhenSwitchingFromRegularToRestrictedItDoesNothing() {
+    public function testWhenSwitchingFromRegularToRestrictedItDoesNothing()
+    {
         expect($this->git_permissions_dao)->getAllProjectsWithAnonymousRepositories()->never();
         expect($this->git_permissions_dao)->getAllProjectsWithUnrestrictedRepositories()->never();
         expect($this->git_permissions_dao)->updateAllAnonymousAccessToRegistered()->never();
@@ -130,47 +140,54 @@ class GitPermissionsManager_ProjectAccessUpdateTest extends GitPermissionsManage
 
     private $project;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->project = aMockProject()->withId(102)->build();
     }
 
-    public function testWhenSwitchingFromPublicToPrivateItSetsProjectMembersForAllPublicRepositories() {
+    public function testWhenSwitchingFromPublicToPrivateItSetsProjectMembersForAllPublicRepositories()
+    {
         expect($this->git_permissions_dao)->disableAnonymousRegisteredAuthenticated(102)->once();
         expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate(array(102))->once();
 
         $this->git_permissions_manager->updateProjectAccess($this->project, Project::ACCESS_PUBLIC, Project::ACCESS_PRIVATE);
     }
 
-    public function testWhenSwitchingFromPublicToUnrestrictedItDoesNothing() {
+    public function testWhenSwitchingFromPublicToUnrestrictedItDoesNothing()
+    {
         expect($this->git_permissions_dao)->disableAnonymousRegisteredAuthenticated()->never();
         expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate()->never();
 
         $this->git_permissions_manager->updateProjectAccess($this->project, Project::ACCESS_PUBLIC, Project::ACCESS_PUBLIC_UNRESTRICTED);
     }
 
-    public function testWhenSwitchingFromPrivateToPublicItDoesNothing() {
+    public function testWhenSwitchingFromPrivateToPublicItDoesNothing()
+    {
         expect($this->git_permissions_dao)->disableAnonymousRegisteredAuthenticated()->never();
         expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate()->never();
 
         $this->git_permissions_manager->updateProjectAccess($this->project, Project::ACCESS_PRIVATE, Project::ACCESS_PUBLIC);
     }
 
-    public function testWhenSwitchingFromPrivateToUnrestrictedItDoesNothing() {
+    public function testWhenSwitchingFromPrivateToUnrestrictedItDoesNothing()
+    {
         expect($this->git_permissions_dao)->disableAnonymousRegisteredAuthenticated()->never();
         expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate()->never();
 
         $this->git_permissions_manager->updateProjectAccess($this->project, Project::ACCESS_PRIVATE, Project::ACCESS_PUBLIC);
     }
 
-    public function testWhenSwitchingFromUnrestrictedToPublicItRemoveAccessToAuthenticated() {
+    public function testWhenSwitchingFromUnrestrictedToPublicItRemoveAccessToAuthenticated()
+    {
         expect($this->git_permissions_dao)->disableAuthenticated(102)->once();
         expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate(array(102))->once();
 
         $this->git_permissions_manager->updateProjectAccess($this->project, Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PUBLIC);
     }
 
-    public function testWhenSwitchingFromUnrestrictedToPrivateItSetsProjectMembersForAllPublicRepositories() {
+    public function testWhenSwitchingFromUnrestrictedToPrivateItSetsProjectMembersForAllPublicRepositories()
+    {
         expect($this->git_permissions_dao)->disableAnonymousRegisteredAuthenticated(102)->once();
         expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate(array(102))->once();
 

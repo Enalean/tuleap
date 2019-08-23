@@ -37,7 +37,8 @@ class Git_ReferenceManager {
      */
     private $reference_manager;
 
-    public function __construct(GitRepositoryFactory $repository_factory, ReferenceManager $reference_manager) {
+    public function __construct(GitRepositoryFactory $repository_factory, ReferenceManager $reference_manager)
+    {
         $this->repository_factory = $repository_factory;
         $this->reference_manager  = $reference_manager;
     }
@@ -49,7 +50,8 @@ class Git_ReferenceManager {
      * @param String $value
      * @return Reference
      */
-    public function getReference(Project $project, $keyword, $value) {
+    public function getReference(Project $project, $keyword, $value)
+    {
         $reference = false;
         list($repository_name, $sha1) = $this->splitRepositoryAndSha1($value);
         $repository = $this->repository_factory->getRepositoryByPath($project->getId(), $project->getUnixName().'/'.$repository_name.'.git');
@@ -63,7 +65,8 @@ class Git_ReferenceManager {
         return $reference;
     }
 
-    private function splitRepositoryAndSha1($value) {
+    private function splitRepositoryAndSha1($value)
+    {
         $last_slash_position  = strrpos($value, '/');
         $repository_name      = substr($value, 0, $last_slash_position);
         $sha1                 = substr($value, $last_slash_position + 1);

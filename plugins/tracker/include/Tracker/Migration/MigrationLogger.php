@@ -24,7 +24,8 @@
 
 class Tracker_Migration_MigrationLogger extends BrokerLogger {
 
-    public function __construct(BackendLogger $backend_logger, Tracker_Migration_MailLogger $mail_logger) {
+    public function __construct(BackendLogger $backend_logger, Tracker_Migration_MailLogger $mail_logger)
+    {
         parent::__construct(
             array(
                 $backend_logger,

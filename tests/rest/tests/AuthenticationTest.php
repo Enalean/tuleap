@@ -24,13 +24,15 @@
  */
 class AuthenticationTest extends RestBase {
 
-    public function testOPTIONSIsReadableByAnonymous() {
+    public function testOPTIONSIsReadableByAnonymous()
+    {
         $response = $this->client->options('projects')->send();
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testPublicGETResourceIsReadableByAnonymous() {
+    public function testPublicGETResourceIsReadableByAnonymous()
+    {
         $response = $this->client->get('projects')->send();
 
         $this->assertEquals(200, $response->getStatusCode());

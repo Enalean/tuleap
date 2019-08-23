@@ -22,23 +22,28 @@ class Tracker_XML_Importer_ArtifactImportedMapping {
 
     private $mapping = array();
 
-    public function add($source_id, $target_id) {
+    public function add($source_id, $target_id)
+    {
         $this->mapping[$source_id] = $target_id;
     }
 
-    public function get($source_id) {
+    public function get($source_id)
+    {
         return $this->mapping[$source_id];
     }
 
-    public function containsSource($source_id) {
+    public function containsSource($source_id)
+    {
         return array_key_exists($source_id, $this->mapping);
     }
 
-    public function getOriginal($target_id) {
+    public function getOriginal($target_id)
+    {
         return array_search($target_id, $this->mapping);
     }
 
-    public function getMapping() {
+    public function getMapping()
+    {
         return $this->mapping;
     }
 }

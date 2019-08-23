@@ -51,13 +51,15 @@ class SOAP_WSDLMethodGenerator {
         'userinfo'                 => 'tns:UserInfo',
     );
 
-    public function __construct(ReflectionMethod $method) {
+    public function __construct(ReflectionMethod $method)
+    {
         $this->method = $method;
         $this->augmentDoc2SoapTypes();
         $this->parseDocComment();
     }
 
-    private function augmentDoc2SoapTypes() {
+    private function augmentDoc2SoapTypes()
+    {
         EventManager::instance()->processEvent(
             Event::WSDL_DOC2SOAP_TYPES,
             array(
@@ -71,7 +73,8 @@ class SOAP_WSDLMethodGenerator {
      *
      * @return String
      */
-    public function getComment() {
+    public function getComment()
+    {
         return $this->comment;
     }
 
@@ -80,7 +83,8 @@ class SOAP_WSDLMethodGenerator {
      *
      * @return String
      */
-    public function getHTMLFormattedComment() {
+    public function getHTMLFormattedComment()
+    {
         return nl2br(trim($this->comment));
     }
 
@@ -89,7 +93,8 @@ class SOAP_WSDLMethodGenerator {
      *
      * @return Array of String
      */
-    public function getParameters() {
+    public function getParameters()
+    {
         return $this->parameters;
     }
 
@@ -98,14 +103,16 @@ class SOAP_WSDLMethodGenerator {
      *
      * @return Array
      */
-    public function getReturnType() {
+    public function getReturnType()
+    {
         return $this->returnType;
     }
 
     /**
      * Loop arround the method comment and parse it
      */
-    private function parseDocComment() {
+    private function parseDocComment()
+    {
         foreach ($this->getCommentLines() as $line) {
             $line = $this->removeCommentsBorders($line);
             $this->parseDescription($line);
@@ -121,7 +128,8 @@ class SOAP_WSDLMethodGenerator {
      *
      * @return String
      */
-    private function removeCommentsBorders($line) {
+    private function removeCommentsBorders($line)
+    {
         $line = trim($line);
         $line = preg_replace('%^/\*\*%', '', $line);
         $line = preg_replace('%^\*/%', '', $line);
@@ -134,7 +142,8 @@ class SOAP_WSDLMethodGenerator {
      *
      * @param String $line
      */
-    private function parseDescription($line) {
+    private function parseDescription($line)
+    {
         if ($this->lineDoesntContainPhpDoc($line)) {
             $this->comment .= trim($line).PHP_EOL;
         }
@@ -147,7 +156,8 @@ class SOAP_WSDLMethodGenerator {
      *
      * @return bool
      */
-    private function lineDoesntContainPhpDoc($line) {
+    private function lineDoesntContainPhpDoc($line)
+    {
         return ($this->isNotPresentInLine($line, '@return') &&
                 $this->isNotPresentInLine($line, '@todo') &&
                 $this->isNotPresentInLine($line, '@see'));
@@ -161,7 +171,8 @@ class SOAP_WSDLMethodGenerator {
      *
      * @return bool
      */
-    private function isNotPresentInLine($line, $token) {
+    private function isNotPresentInLine($line, $token)
+    {
         return strpos($line, $token) === false;
     }
 
@@ -170,7 +181,8 @@ class SOAP_WSDLMethodGenerator {
      *
      * @param String $line
      */
-    private function parseParameters($line) {
+    private function parseParameters($line)
+    {
         $matches = array();
         if (preg_match('%@param[ \t]+([^ \t]*)[ \t]+([^ \t]*)[ \t]+.*%', $line, $matches)) {
             $this->parameters[$this->docParamToSoap($matches[2])] = $this->docTypeToSoap($matches[1]);
@@ -182,7 +194,8 @@ class SOAP_WSDLMethodGenerator {
      *
      * @param String $line
      */
-    private function parseReturnType($line) {
+    private function parseReturnType($line)
+    {
         if (preg_match('%@return[ \t]+([^ \t]*)%', $line, $matches)) {
             $this->returnType = array($this->method->getName() => $this->docTypeToSoap($matches[1]));
         }
@@ -193,14 +206,16 @@ class SOAP_WSDLMethodGenerator {
      *
      * @return Array of String
      */
-    private function getCommentLines() {
+    private function getCommentLines()
+    {
         return explode(PHP_EOL, $this->method->getDocComment());
     }
 
     /**
      * Transform phpdoc param name to a soap name
      */
-    private function docParamToSoap($paramName) {
+    private function docParamToSoap($paramName)
+    {
         return substr($paramName, 1);
     }
 
@@ -211,7 +226,8 @@ class SOAP_WSDLMethodGenerator {
      *
      * @return String
      */
-    private function docTypeToSoap($docType) {
+    private function docTypeToSoap($docType)
+    {
         if (isset($this->doc2soap_types[strtolower($docType)])) {
             return $this->doc2soap_types[strtolower($docType)];
         }

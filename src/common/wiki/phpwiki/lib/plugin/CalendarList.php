@@ -48,15 +48,18 @@ if (!defined('PLUGIN_CALENDARLIST_LAST_N'))
 class WikiPlugin_CalendarList
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("CalendarList");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("CalendarList");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('prefix'       => '[pagename]',
                      'date_format'  => '%Y-%m-%d',
                      'order'         => PLUGIN_CALENDARLIST_ORDER, // normal or reverse (report sequence)
@@ -82,7 +85,8 @@ extends WikiPlugin
      * @param string $basepage The pagename the plugin is invoked from.
      * @return array List of pagenames linked to (or false).
      */
-    function getWikiPageLinks ($argstr, $basepage) {
+    function getWikiPageLinks($argstr, $basepage)
+    {
         if (isset($this->_links))
             return $this->_links;
         else {
@@ -92,7 +96,8 @@ extends WikiPlugin
         }
     }
 
-    function _count_events($dbi, $n = 7, $direction = 1) {
+    function _count_events($dbi, $n = 7, $direction = 1)
+    {
         //    This is used by the last_n/next_n options to determine the date that
         //    accounts for the number of N events in the past/future.
         //    RETURNS: date of N-th event or the last item found
@@ -114,7 +119,8 @@ extends WikiPlugin
         return $timeTMP;
     }
 
-    function _date($dbi, $time) {
+    function _date($dbi, $time)
+    {
         $args = &$this->args;
         $date_string = strftime($args['date_format'], $time);
 
@@ -143,7 +149,8 @@ extends WikiPlugin
         return $a;
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $this->args = $this->getArgs($argstr, $request);
         $args       = &$this->args;
         $this->_links = array();

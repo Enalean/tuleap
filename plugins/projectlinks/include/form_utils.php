@@ -248,9 +248,10 @@ function form_Start($serviceURI = "")
 }
 
 //=============================================================================
-function form_End($SubmitLegend = DEFAULT_SUBMIT_BUTTON,
-    $HaveResetButton = FORM_HAVE_RESET_BUTTON)
-{
+function form_End(
+    $SubmitLegend = DEFAULT_SUBMIT_BUTTON,
+    $HaveResetButton = FORM_HAVE_RESET_BUTTON
+) {
     global $gInForm, $gFormName, $gFormUsedDateBox, $gFormHiddenParams,
         $gValidationCollection, $gFormSectionLevel, $gFormGroupLevel,
         $gPageDateCodeWritten, $gFormCaptions, $Language;
@@ -712,7 +713,6 @@ define("NO_BLANK_ROW_PREFIX", false);
 define("BLANK_ROW_PREFIX", true);
 
 function form_genSelectBoxFromSQL($ParamName, $Caption, $SQLstr, $DefaultValue = "", $PrefixWithBlankItem = NO_BLANK_ROW_PREFIX, $SubmitOnChange = NO_SUBMIT_ON_CHANGE)
-// the SQL first field should be in the index (value for the select box) - other fields are concatenated to form the text
 {
     $db_res = db_query($SQLstr);
     $optionsList = array();

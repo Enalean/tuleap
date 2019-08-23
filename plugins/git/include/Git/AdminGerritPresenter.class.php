@@ -77,7 +77,8 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
 
     public $gerrit_label_replication_password_edit;
 
-    public function __construct($title, CSRFSynchronizerToken $csrf_token, array $list_of_gerrits) {
+    public function __construct($title, CSRFSynchronizerToken $csrf_token, array $list_of_gerrits)
+    {
         parent::__construct($title, $csrf_token);
 
         $this->list_of_servers               = $list_of_gerrits;

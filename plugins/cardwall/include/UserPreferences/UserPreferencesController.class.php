@@ -21,11 +21,13 @@
 
 class Cardwall_UserPreferences_UserPreferencesController extends MVC2_PluginController {
 
-    public function __construct($request) {
+    public function __construct($request)
+    {
         parent::__construct('agiledashboard', $request);
     }
 
-    public function toggleUserDisplay() {
+    public function toggleUserDisplay()
+    {
         $this->getCurrentUser()->togglePreference(
             Cardwall_UserPreferences_UserPreferencesDisplayUser::ASSIGNED_TO_USERNAME_PREFERENCE_NAME.$this->request->get('tracker_id'),
             Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_AVATARS,
@@ -41,7 +43,8 @@ class Cardwall_UserPreferences_UserPreferencesController extends MVC2_PluginCont
         ));
     }
 
-    public function toggleAutostack() {
+    public function toggleAutostack()
+    {
         $this->getCurrentUser()->togglePreference(
             $this->request->get('name'),
             Cardwall_UserPreferences_UserPreferencesAutostack::STACK,

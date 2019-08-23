@@ -23,7 +23,8 @@ class b201309301112_add_housekeeping_table extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add plugin_git_housekeeping table
 EOT;
@@ -34,7 +35,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -43,7 +45,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_housekeeping(
                     allow_git_gc TINYINT(1) NOT NULL
                 )';
@@ -53,7 +56,8 @@ EOT;
         $this->execDB($sql, 'An error occured while disabling allow_git_gc.');
     }
 
-    private function execDB($sql, $message) {
+    private function execDB($sql, $message)
+    {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message.implode(', ', $this->db->dbh->errorInfo()));

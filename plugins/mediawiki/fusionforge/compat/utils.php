@@ -23,7 +23,8 @@
  *
  * @return string
  */
-function normalized_urlprefix() {
+function normalized_urlprefix()
+{
     $prefix = forge_get_config('url_prefix') ;
     $prefix = preg_replace ("/^\//", "", $prefix) ;
     $prefix = preg_replace ("/\/$/", "", $prefix) ;
@@ -39,7 +40,8 @@ function normalized_urlprefix() {
  * @param       string  $prefix (optional) : 'http' or 'https' to force it
  * @return    string    URL prefix
  */
-function util_url_prefix($prefix = '') {
+function util_url_prefix($prefix = '')
+{
     if ($prefix == 'http' || $prefix == 'https' ) {
         return $prefix . '://';
     }
@@ -58,7 +60,8 @@ function util_url_prefix($prefix = '') {
  * @param       string  $prefix (optional) : 'http' or 'https' to force it
  * @return    string base URL
  */
-function util_make_base_url($prefix = '') {
+function util_make_base_url($prefix = '')
+{
     $url = util_url_prefix($prefix);
     $url .= forge_get_config('web_host') ;
     if (forge_get_config('https_port') && (forge_get_config('https_port') != 443)) {
@@ -74,7 +77,8 @@ function util_make_base_url($prefix = '') {
  * @param       string  $prefix (optional) : 'http' or 'https' to force it
  * @return    string    URL
  */
-function util_make_url($path = '', $prefix = '') {
+function util_make_url($path = '', $prefix = '')
+{
     $url = util_make_base_url($prefix).util_make_uri($path) ;
     return $url;
 }
@@ -85,7 +89,8 @@ function util_make_url($path = '', $prefix = '') {
  * @param string $path
  * @return string URI
  */
-function util_make_uri($path) {
+function util_make_uri($path)
+{
     $path = preg_replace('/^\//', '', $path);
     $uri = normalized_urlprefix();
     $uri .= $path;

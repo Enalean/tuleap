@@ -123,7 +123,8 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
     private $team_tracker_id        = 6;
     private $requirement_tracker_id = 7;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->user_story_tracker  = stub('Tracker')->getId()->returns($this->user_story_tracker_id);

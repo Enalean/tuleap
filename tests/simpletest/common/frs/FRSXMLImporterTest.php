@@ -23,13 +23,15 @@ use Tuleap\FRS\UploadedLinksUpdater;
 
 class FRSPackageFactoryMock extends FRSPackageFactory {
     // bypass it for the tests as it calls global functions which access to the db
-    function setDefaultPermissions(FRSPackage $package) {
+    function setDefaultPermissions(FRSPackage $package)
+    {
     }
 }
 
 class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory {
 
-    function __construct(){
+    function __construct()
+    {
         parent::__construct();
         $this->fileforge = '/bin/true';
     }
@@ -44,7 +46,8 @@ class FRSXMLImporterTest extends TuleapTestCase
     protected $link_dao;
     protected $frs_permission_creator;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->package_factory = new FRSPackageFactoryMock();
         $this->release_factory = partial_mock('FRSReleaseFactory', array('getFRSReleaseFromDb'));
         $this->file_factory = new FRSXMLImporterTest_FRSFileFactory();
@@ -108,7 +111,8 @@ class FRSXMLImporterTest extends TuleapTestCase
         $GLOBALS['ftp_frs_dir_prefix'] = parent::getTmpDir();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $GLOBALS['Language'] = null;
         FRSPackageFactory::clearInstance();
         ProjectManager::clearInstance();
@@ -127,7 +131,8 @@ class FRSXMLImporterTest extends TuleapTestCase
         }
     }
 
-    public function itShouldImportOnePackageWithDefaultValues() {
+    public function itShouldImportOnePackageWithDefaultValues()
+    {
         $pm = ProjectManager::instance();
         $project = $pm->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
         $xml = <<<XML
@@ -175,7 +180,8 @@ XML;
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
     }
 
-    public function itShouldImportOnePackageWithOneRelease() {
+    public function itShouldImportOnePackageWithOneRelease()
+    {
         $pm = ProjectManager::instance();
         $project = $pm->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
         $xml = <<<XML
@@ -221,7 +227,8 @@ XML;
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
     }
 
-    public function itShouldImportOnePackageWithOneReleaseLinkedToAnArtifact() {
+    public function itShouldImportOnePackageWithOneReleaseLinkedToAnArtifact()
+    {
         $pm = ProjectManager::instance();
         $project = $pm->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
         $xml = <<<XML
@@ -259,7 +266,8 @@ XML;
         $this->assertEqual($frs_mapping[47], 'A101');
     }
 
-    public function itShouldImportOnePackageWithOneReleaseWithOneFile() {
+    public function itShouldImportOnePackageWithOneReleaseWithOneFile()
+    {
         $extraction_path = sys_get_temp_dir();
         $temp_file = tempnam($extraction_path, 'thefile_');
         fwrite(fopen($temp_file, 'w+'), 'such file, wow');
@@ -439,7 +447,8 @@ XML;
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, $extraction_path, $frs_mapping);
     }
 
-    private function getDefaultPackage($name) {
+    private function getDefaultPackage($name)
+    {
         return array(
             'package_id' => null,
             'group_id' => 123,

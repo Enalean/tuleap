@@ -30,7 +30,8 @@ class NatureValidatorTest extends TuleapTestCase {
     private $validator;
     private $dao;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->dao = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao');
@@ -38,43 +39,51 @@ class NatureValidatorTest extends TuleapTestCase {
         $this->validator = new NatureValidator($this->dao);
     }
 
-    public function itThrowsAnExceptionIfShortnameDoesNotRespectFormat() {
+    public function itThrowsAnExceptionIfShortnameDoesNotRespectFormat()
+    {
         $this->expectException($this->expected_exception);
 
         $this->validator->checkShortname("_fixed_in");
     }
 
-    public function itThrowsAnExceptionIfShortnameIsEmpty() {
+    public function itThrowsAnExceptionIfShortnameIsEmpty()
+    {
         $this->expectException($this->expected_exception);
 
         $this->validator->checkShortname("");
     }
 
-    public function itThrowsAnExceptionIfForwardLabelIsEmpty() {
+    public function itThrowsAnExceptionIfForwardLabelIsEmpty()
+    {
         $this->expectException($this->expected_exception);
 
         $this->validator->checkForwardLabel("");
     }
 
-    public function itThrowsAnExceptionIfSReverseLabelIsEmpty() {
+    public function itThrowsAnExceptionIfSReverseLabelIsEmpty()
+    {
         $this->expectException($this->expected_exception);
 
         $this->validator->checkReverseLabel("");
     }
 
-    public function itDoesNotComplainIfShortnameIsValid() {
+    public function itDoesNotComplainIfShortnameIsValid()
+    {
         $this->validator->checkShortname("fixed_in");
     }
 
-    public function itDoesNothComplainIfForwardLabelIsValid() {
+    public function itDoesNothComplainIfForwardLabelIsValid()
+    {
         $this->validator->checkForwardLabel("Fixed In");
     }
 
-    public function itDoesNothComplainIfReverseLabelIsValid() {
+    public function itDoesNothComplainIfReverseLabelIsValid()
+    {
         $this->validator->checkReverseLabel("Fixed");
     }
 
-    public function itThrowsAnExceptionIfNatureIsAlreadyUsed() {
+    public function itThrowsAnExceptionIfNatureIsAlreadyUsed()
+    {
         stub($this->dao)->isOrHasBeenUsed()->returns(true);
 
         $this->expectException('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\UnableToDeleteNatureException');

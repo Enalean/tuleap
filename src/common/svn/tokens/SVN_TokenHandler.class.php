@@ -41,7 +41,8 @@ class SVN_TokenHandler {
         $this->password_handler        = $password_handler;
     }
 
-    public function getSVNTokensForUser(PFUser $user) {
+    public function getSVNTokensForUser(PFUser $user)
+    {
         $rows       = $this->token_dao->getSVNTokensForUser($user->getId());
         $svn_tokens = array();
 
@@ -52,7 +53,8 @@ class SVN_TokenHandler {
         return $svn_tokens;
     }
 
-    public function generateSVNTokenForUser(PFUser $user, $comment) {
+    public function generateSVNTokenForUser(PFUser $user, $comment)
+    {
         $token          = $this->generateRandomToken();
         $token_computed = $this->password_handler->computeUnixPassword($token);
 
@@ -63,15 +65,18 @@ class SVN_TokenHandler {
         }
     }
 
-    public function deleteSVNTokensForUser(PFUser $user, $svn_token_ids) {
+    public function deleteSVNTokensForUser(PFUser $user, $svn_token_ids)
+    {
         return $this->token_dao->deleteSVNTokensForUser($user->getId(), $svn_token_ids);
     }
 
-    private function generateRandomToken() {
+    private function generateRandomToken()
+    {
         return $this->random_number_generator->getNumber();
     }
 
-    private function instantiateFromRow(PFUser $user, $svn_token_data) {
+    private function instantiateFromRow(PFUser $user, $svn_token_data)
+    {
         return new SVN_Token(
             $user,
             $svn_token_data['id'],

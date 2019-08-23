@@ -82,13 +82,15 @@ class Tracker_XML_Exporter_ChildrenXMLExporter_BaseTest extends TuleapTestCase
         );
     }
 
-    public function itDoesNothingIfCollectorIsEmpty() {
+    public function itDoesNothingIfCollectorIsEmpty()
+    {
         expect($this->file_updater)->update()->never();
 
         $this->exporter->exportChildren($this->artifact_xml);
     }
 
-    public function itExportsOneChild() {
+    public function itExportsOneChild()
+    {
         $this->collector->addChild($this->artifact_id_1, 'whatever');
 
         expect($this->file_updater)->update(\Mockery::on(function (SimpleXMLElement $xml_artifact) {
@@ -98,7 +100,8 @@ class Tracker_XML_Exporter_ChildrenXMLExporter_BaseTest extends TuleapTestCase
         $this->exporter->exportChildren($this->artifact_xml);
     }
 
-    public function itExportsTwoChildren() {
+    public function itExportsTwoChildren()
+    {
         $this->collector->addChild($this->artifact_id_1, 'whatever');
         $this->collector->addChild($this->artifact_id_2, 'whatever');
 
@@ -112,7 +115,8 @@ class Tracker_XML_Exporter_ChildrenXMLExporter_BaseTest extends TuleapTestCase
         $this->exporter->exportChildren($this->artifact_xml);
     }
 
-    public function itDoesNotFailWhenChildDoesNotExistAnymore() {
+    public function itDoesNotFailWhenChildDoesNotExistAnymore()
+    {
         $this->unknown_artifact_id = 666;
         $this->collector->addChild($this->unknown_artifact_id, 'whatever');
 

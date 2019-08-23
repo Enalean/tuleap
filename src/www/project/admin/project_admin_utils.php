@@ -27,7 +27,8 @@
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 
-function project_admin_header($params, $current_pane_shortname) {
+function project_admin_header($params, $current_pane_shortname)
+{
     global $group_id;
 
     $params['toptab'] ='admin';
@@ -45,7 +46,8 @@ function project_admin_header($params, $current_pane_shortname) {
 
 */
 
-function project_admin_footer($params) {
+function project_admin_footer($params)
+{
     TemplateRendererFactory::build()
         ->getRenderer(ForgeConfig::get('tuleap_dir') . '/src/templates/project')
         ->renderToPage('end-project-admin-content', array());
@@ -64,7 +66,8 @@ function project_admin_footer($params) {
  *
  * @return String
  */
-function build_grouphistory_filter ($event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
+function build_grouphistory_filter($event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null)
+{
     $data_access = CodendiDataAccess::instance();
     $filter      = '';
     if (!empty($by)) {
@@ -110,7 +113,8 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
  *
  * @return Array
  */
-function get_history_entries() {
+function get_history_entries()
+{
     $subEvents = array('event_permission' => array('perm_reset_for_field',
                                                    'perm_granted_for_field',
                                                    'perm_reset_for_tracker',
@@ -181,7 +185,8 @@ function get_history_entries() {
  *
  * @return string html
  */
-function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1) {
+function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
+{
     global $Language;
     $html = '';
 
@@ -264,7 +269,8 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
  *
  * @return void
  */
-function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
+function show_grouphistory($group_id, $offset, $limit, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null)
+{
     /*
      show the group_history rows that are relevant to
      this group_id
@@ -368,7 +374,8 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
  *
  * @return void
  */
-function export_grouphistory ($group_id, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
+function export_grouphistory($group_id, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null)
+{
     global $Language;
 
     header ('Content-Type: text/csv');

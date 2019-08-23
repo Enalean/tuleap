@@ -23,7 +23,8 @@ class Docman_ApprovalTableFactoriesFactory
     /**
      * Return the right ApprovalTableFactory depending of the item.
      */
-    static function getFromItem($item, $version=null) {
+    static function getFromItem($item, $version=null)
+    {
         $appTableFactory = null;
         if($item instanceof Docman_File) {
             $appTableFactory = new Docman_ApprovalTableFileFactory($item, $version);
@@ -43,11 +44,13 @@ class Docman_ApprovalTableFactoriesFactory
         return $appTableFactory;
     }
 
-    public function getSpecificFactoryFromItem($item, $version=null) {
+    public function getSpecificFactoryFromItem($item, $version=null)
+    {
         return self::getFromItem($item, $version);
     }
 
-    public function getReviewerFactory(Docman_ApprovalTable $table, Docman_Item $item) {
+    public function getReviewerFactory(Docman_ApprovalTable $table, Docman_Item $item)
+    {
         return new Docman_ApprovalTableReviewerFactory($table, $item);
     }
 }

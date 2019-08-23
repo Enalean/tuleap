@@ -26,27 +26,31 @@ class Tracker_FormElement_DateFormatterTest extends TuleapTestCase {
     /** @var Tracker_FormElement_DateFormatter */
     private $date_formatter;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->field          = aMockDateWithoutTimeField()->withId(07)->build();
         $this->date_formatter = new Tracker_FormElement_DateFormatter($this->field);
     }
 
-    public function itFormatsTimestampInRightFormat() {
+    public function itFormatsTimestampInRightFormat()
+    {
         $timestamp = 1409752174;
         $expected  = '2014-09-03';
 
         $this->assertEqual($expected, $this->date_formatter->formatDate($timestamp));
     }
 
-    public function itValidatesWellFormedValue() {
+    public function itValidatesWellFormedValue()
+    {
         $value    = '2014-09-03';
 
         $this->assertTrue($this->date_formatter->validate($value));
     }
 
-    public function itDoesNotValidateNotWellFormedValue() {
+    public function itDoesNotValidateNotWellFormedValue()
+    {
         $value    = '2014/09/03';
 
         $this->assertFalse($this->date_formatter->validate($value));

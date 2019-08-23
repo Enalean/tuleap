@@ -27,7 +27,8 @@ class Tracker_PermissionsDao extends DataAccessObject {
     /**
      * @return int[]
      */
-    public function getAuthorizedStaticUgroupIds($tracker_id) {
+    public function getAuthorizedStaticUgroupIds($tracker_id)
+    {
         $tracker_id             = $this->da->escapeInt($tracker_id);
         $dynamic_upper_boundary = $this->da->escapeInt(ProjectUGroup::DYNAMIC_UPPER_BOUNDARY);
 
@@ -69,7 +70,8 @@ class Tracker_PermissionsDao extends DataAccessObject {
      *
      * @return int
      */
-    public function extractUgroupID(array $row) {
+    public function extractUgroupID(array $row)
+    {
         return $row['ugroup_id'];
     }
 }

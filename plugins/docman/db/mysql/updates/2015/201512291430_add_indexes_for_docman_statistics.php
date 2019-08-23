@@ -18,20 +18,24 @@
 
 class b201512291430_add_indexes_for_docman_statistics extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add missing indexes to speed up statistics generation';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->addIndex('plugin_docman_item', 'idx_create_date', 'create_date');
         $this->addIndex('plugin_docman_item', 'idx_delete_date', 'delete_date');
     }
 
-    private function addIndex($table_name, $index_name, $column_name) {
+    private function addIndex($table_name, $index_name, $column_name)
+    {
         $sql = "ALTER TABLE $table_name ADD INDEX $index_name ($column_name)";
         $this->db->addIndex($table_name, $index_name, $sql);
     }

@@ -34,7 +34,8 @@ class ArtifactImportHtml extends ArtifactImport {
    *
    *      @return bool success.
    */
-    function __construct($ath,$art_field_fact,$group) {
+    function __construct($ath,$art_field_fact,$group)
+    {
         return parent::__construct($ath,$art_field_fact,$group);
     }
 
@@ -44,7 +45,8 @@ class ArtifactImportHtml extends ArtifactImport {
    *
    *
    */
-    function displayParse($csv_filename) {
+    function displayParse($csv_filename)
+    {
         global $Language;
 
         if (!file_exists($csv_filename) || !is_readable($csv_filename)) {
@@ -82,7 +84,8 @@ class ArtifactImportHtml extends ArtifactImport {
     }
 
 
-    function showErrors() {
+    function showErrors()
+    {
         echo $this->getErrorMessage()." <br>\n";
     }
 
@@ -93,7 +96,8 @@ class ArtifactImportHtml extends ArtifactImport {
  *                        all the fields parsed from $data
  * @param $artifacts_data: array containing the records for each artifact to be imported
  */
-    function showParseResults($parsed_labels,$artifacts_data) {
+    function showParseResults($parsed_labels,$artifacts_data)
+    {
         global $Language;
         $hp = Codendi_HTMLPurifier::instance();
         $this->getImportUser($sub_user_id,$sub_user_name);
@@ -244,7 +248,8 @@ class ArtifactImportHtml extends ArtifactImport {
    *
    *
    */
-    function displayImport($parsed_labels,$artifacts_data,$aid_column,$count_artifacts) {
+    function displayImport($parsed_labels,$artifacts_data,$aid_column,$count_artifacts)
+    {
         global $Language;
 
         $notify = false;
@@ -270,7 +275,8 @@ class ArtifactImportHtml extends ArtifactImport {
    *
    *
    */
-    function displayShowFormat() {
+    function displayShowFormat()
+    {
         global $Language;
 
       // project_export_utils is using $at instead of $ath
@@ -336,7 +342,8 @@ class ArtifactImportHtml extends ArtifactImport {
    *
    *
    */
-    function displayCSVInput($atid,$user_id) {
+    function displayCSVInput($atid,$user_id)
+    {
         global $Language,$sys_max_size_upload;
 
         $this->ath->header(array ('title'=>$Language->getText('tracker_import','art_import').' '.$this->ath->getID(). ' - ' . $this->ath->getName(),'pagename'=>'tracker',

@@ -26,25 +26,30 @@ class Search_SearchResultsIntroPresenter {
     private $words;
     private $purifier;
 
-    public function __construct($results, $words) {
+    public function __construct($results, $words)
+    {
         $this->results  = $results;
         $this->words    = $words;
         $this->purifier = Codendi_HTMLPurifier::instance();
     }
 
-    public function has_results() {
+    public function has_results()
+    {
         return count($this->results) > 0;
     }
 
-    public function no_match_found_string() {
+    public function no_match_found_string()
+    {
         return $GLOBALS['Language']->getText('search_index', 'no_match_found', $this->purifier->purify($this->words));
     }
 
-    public function search_result_title() {
+    public function search_result_title()
+    {
         return $GLOBALS['Language']->getText('search_index', 'search_res', array($this->words, $this->getNumberRowsReturned()));
     }
 
-    private function getNumberRowsReturned() {
+    private function getNumberRowsReturned()
+    {
         return count($this->results);
     }
 }

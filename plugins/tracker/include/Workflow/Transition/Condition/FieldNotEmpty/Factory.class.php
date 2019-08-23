@@ -24,13 +24,15 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory {
     private $dao;
     private $element_factory;
 
-    public function __construct(Workflow_Transition_Condition_FieldNotEmpty_Dao $dao, Tracker_FormElementFactory $element_factory) {
+    public function __construct(Workflow_Transition_Condition_FieldNotEmpty_Dao $dao, Tracker_FormElementFactory $element_factory)
+    {
         $this->dao             = $dao;
         $this->element_factory = $element_factory;
     }
 
     /** @return bool */
-    public function isFieldUsedInConditions(Tracker_FormElement_Field $field) {
+    public function isFieldUsedInConditions(Tracker_FormElement_Field $field)
+    {
         return $this->dao->isFieldUsed($field->getId());
     }
 
@@ -63,7 +65,8 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory {
     /**
      * Duplicate the conditions
      */
-    public function duplicate(Transition $from_transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type) {
+    public function duplicate(Transition $from_transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type)
+    {
         $this->dao->duplicate($from_transition->getId(), $new_transition_id, $field_mapping);
     }
 }

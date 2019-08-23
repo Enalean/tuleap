@@ -25,7 +25,8 @@ $GLOBALS['TROVE_BROWSELIMIT'] = 20;
 
 
 // adds a group to a trove node
-function trove_setnode($group_id,$trove_cat_id,$rootnode=0) {
+function trove_setnode($group_id,$trove_cat_id,$rootnode=0)
+{
     // verify we were passed information
     if ((!$group_id) || (!$trove_cat_id)) return 1;
 
@@ -78,7 +79,8 @@ function trove_setnode($group_id,$trove_cat_id,$rootnode=0) {
     return 0;
 }
 
-function trove_getrootcat($trove_cat_id) {
+function trove_getrootcat($trove_cat_id)
+{
     $parent = 1;
     $current_cat = $trove_cat_id;
 
@@ -95,7 +97,8 @@ function trove_getrootcat($trove_cat_id) {
 }
 
 // return boolean true when project is categorized
-function trove_project_categorized($group_id) {
+function trove_project_categorized($group_id)
+{
     $res_trovecat = db_query('SELECT NULL '
         .'FROM trove_cat,trove_group_link '
         .'WHERE trove_cat.trove_cat_id=trove_group_link.trove_cat_id '
@@ -108,7 +111,8 @@ function trove_project_categorized($group_id) {
 }
 
 // returns a full path for a trove category
-function trove_getfullpath($node) {
+function trove_getfullpath($node)
+{
     $currentcat = $node;
     $first = 1;
     $return = '';
@@ -124,7 +128,8 @@ function trove_getfullpath($node) {
     return $return;
 }
 
-function trove_get_visibility_for_user($field, PFUser $user) {
+function trove_get_visibility_for_user($field, PFUser $user)
+{
     if (ForgeConfig::areRestrictedUsersAllowed() && $user->isRestricted()) {
         return $field.' = "'.db_es(Project::ACCESS_PUBLIC_UNRESTRICTED).'"';
     } else {

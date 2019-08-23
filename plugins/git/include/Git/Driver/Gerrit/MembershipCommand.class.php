@@ -40,13 +40,15 @@ abstract class Git_Driver_Gerrit_MembershipCommand {
         $this->ugroup             = $ugroup;
     }
 
-    public function getUGroup() {
+    public function getUGroup()
+    {
         return $this->ugroup;
     }
 
     abstract public function execute(Git_RemoteServer_GerritServer $server);
 
-    protected function getDriver(Git_RemoteServer_GerritServer $server) {
+    protected function getDriver(Git_RemoteServer_GerritServer $server)
+    {
         return $this->driver_factory->getDriver($server);
     }
 }

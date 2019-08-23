@@ -41,7 +41,8 @@ class BaseLanguageFactory {
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->languages           = array();
         $this->supported_languages = ForgeConfig::get('sys_supported_languages');
         $this->default_language    = ForgeConfig::get('sys_lang');
@@ -54,7 +55,8 @@ class BaseLanguageFactory {
      *
      * @return void
      */
-    public function cacheBaseLanguage(BaseLanguage $language) {
+    public function cacheBaseLanguage(BaseLanguage $language)
+    {
         $this->languages[$language->defaultLanguage] = $language;
     }
 
@@ -65,7 +67,8 @@ class BaseLanguageFactory {
      *
      * @return BaseLanguage
      */
-    public function getBaseLanguage($locale) {
+    public function getBaseLanguage($locale)
+    {
         if (strpos($this->supported_languages, $locale) === false) {
             $locale = $this->default_language;
         }
@@ -83,7 +86,8 @@ class BaseLanguageFactory {
      *
      * @return BaseLanguage
      */
-    protected function createBaseLanguage($locale) {
+    protected function createBaseLanguage($locale)
+    {
         $currentlocale = setlocale(LC_ALL, '0');
         $language = new BaseLanguage($this->supported_languages, $locale);
         $language->loadLanguage($locale);

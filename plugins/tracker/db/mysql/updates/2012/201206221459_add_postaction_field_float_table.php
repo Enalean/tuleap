@@ -20,15 +20,18 @@
 
 class b201206221459_add_postaction_field_float_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add post actions field float table.';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_float (
                     id            INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                     transition_id INT(11) NOT NULL,
@@ -40,7 +43,8 @@ class b201206221459_add_postaction_field_float_table extends ForgeUpgrade_Bucket
         $this->db->createTable('tracker_workflow_transition_postactions_field_float', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('tracker_workflow_transition_postactions_field_float')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_workflow_transition_postactions_field_float table is missing');
         }

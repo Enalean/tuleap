@@ -53,17 +53,20 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent {
         $this->logger                   = $logger;
     }
 
-    private function getUserIdFromParameters() {
+    private function getUserIdFromParameters()
+    {
         $parameters = $this->getParametersAsArray();
         return intval($parameters[0]);
     }
 
-    private function getOriginalSSHKeys() {
+    private function getOriginalSSHKeys()
+    {
         $parameters = $this->getParametersAsArray();
         return $parameters[1];
     }
 
-    private function getUserFromParameters() {
+    private function getUserFromParameters()
+    {
         $user = $this->user_manager->getUserById($this->getUserIdFromParameters());
         if ($user == null) {
             throw new UserNotExistException();
@@ -71,7 +74,8 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent {
         return $user;
     }
 
-    public function process() {
+    public function process()
+    {
         $user_id = $this->getUserIdFromParameters();
         $this->logger->debug('Dump key for user '.$user_id);
 
@@ -99,12 +103,14 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent {
         }
     }
 
-    private function updateGitolite(PFUser $user, InvalidKeysCollector $invalid_keys_collector) {
+    private function updateGitolite(PFUser $user, InvalidKeysCollector $invalid_keys_collector)
+    {
         $this->logger->debug('Update ssh keys in Gitolite');
         $this->sshkey_dumper->dumpSSHKeys($user, $invalid_keys_collector);
     }
 
-    private function updateGerrit(PFUser $user) {
+    private function updateGerrit(PFUser $user)
+    {
         $this->logger->debug('Update ssh keys in Gerrit');
         $this->git_user_account_manager->synchroniseSSHKeys(
             $this->getKeysFromString($this->getOriginalSSHKeys()),
@@ -113,14 +119,16 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent {
         );
     }
 
-    private function getKeysFromString($keys_as_string) {
+    private function getKeysFromString($keys_as_string)
+    {
         $user = new PFUser();
         $user->setAuthorizedKeys($keys_as_string);
 
         return array_filter($user->getAuthorizedKeysArray());
     }
 
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         if ($with_link) {
             $user = $this->getUserFromParameters();
             if ($user) {

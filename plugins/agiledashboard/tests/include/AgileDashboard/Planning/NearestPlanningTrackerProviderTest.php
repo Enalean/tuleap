@@ -22,7 +22,8 @@ require_once __DIR__.'/../../../bootstrap.php';
 class AgileDashboard_Planning_NearestPlanningTrackerProviderTest extends TuleapTestCase {
 
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         /*
@@ -54,11 +55,13 @@ class AgileDashboard_Planning_NearestPlanningTrackerProviderTest extends TuleapT
         $this->provider = new AgileDashboard_Planning_NearestPlanningTrackerProvider($this->planning_factory);
     }
 
-    public function itRetrievesTheNearestPlanningTracker() {
+    public function itRetrievesTheNearestPlanningTracker()
+    {
         $this->assertEqual($this->provider->getNearestPlanningTracker($this->task_tracker, $this->hierarchy_factory), $this->sprint_tracker);
     }
 
-    public function itReturnsNullWhenNoPlanningMatches() {
+    public function itReturnsNullWhenNoPlanningMatches()
+    {
         $this->assertEqual($this->provider->getNearestPlanningTracker($this->epic_tracker, $this->hierarchy_factory), null);
     }
 }

@@ -31,7 +31,8 @@ Mock::generate('GitRepositoryFactory');
 
 class GitTest extends TuleapTestCase  {
 
-    public function testTheDelRouteExecutesDeleteRepositoryWithTheIndexView() {
+    public function testTheDelRouteExecutesDeleteRepositoryWithTheIndexView()
+    {
         $usermanager = new MockUserManager();
         $request     = aRequest()->with('repo_id', 1)->build();
 
@@ -51,7 +52,8 @@ class GitTest extends TuleapTestCase  {
         $git->request();
     }
 
-    public function testDispatchToForkRepositoriesIfRequestsPersonal() {
+    public function testDispatchToForkRepositoriesIfRequestsPersonal()
+    {
         $git = TestHelper::getPartialMock('Git', array('_doDispatchForkRepositories', 'addView'));
         $request = new Codendi_Request(array('choose_destination' => 'personal'));
         $git->setRequest($request);
@@ -68,7 +70,8 @@ class GitTest extends TuleapTestCase  {
 
     }
 
-    public function testDispatchToForkRepositoriesIfRequestsPersonalAndNonMember() {
+    public function testDispatchToForkRepositoriesIfRequestsPersonalAndNonMember()
+    {
         $git = TestHelper::getPartialMock('Git', array('_doDispatchForkRepositories', 'addView'));
         $request = new Codendi_Request(array('choose_destination' => 'personal'));
         $git->setRequest($request);
@@ -85,7 +88,8 @@ class GitTest extends TuleapTestCase  {
 
     }
 
-    public function testDispatchToForkCrossProjectIfRequestsProject() {
+    public function testDispatchToForkCrossProjectIfRequestsProject()
+    {
         $git = TestHelper::getPartialMock('Git', array('_doDispatchForkCrossProject', 'addView'));
         $request = new Codendi_Request(array('choose_destination' => 'project'));
         $git->setRequest($request);
@@ -110,7 +114,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
     protected $project_unix_name = 'gitproject';
     protected $repository;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->user         = mock('PFUser');
         $this->admin        = mock('PFUser');
@@ -136,11 +141,13 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         $_SERVER['REQUEST_URI'] = '/plugins/tests/';
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $_SERVER['REQUEST_URI'] = $this->previous_request_uri;
     }
 
-    protected function getGit($request, $factory, $template_factory = null) {
+    protected function getGit($request, $factory, $template_factory = null)
+    {
         $template_factory = $template_factory?$template_factory:$this->template_factory;
 
         $git_plugin            = \Mockery::mock(GitPlugin::class);
@@ -220,7 +227,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         $git->request();
     }
 
-    protected function assertItNeedsAValidRepoId($factory) {
+    protected function assertItNeedsAValidRepoId($factory)
+    {
         stub($this->user_manager)->getCurrentUser()->returns($this->admin);
         $request     = new HTTPRequest();
         $repo_id     = 999;
@@ -238,7 +246,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
 
 class Git_DisconnectFromGerritRouteTest extends Git_RouteBaseTestCase {
 
-    public function itDispatchTo_disconnectFromGerrit_withRepoManagementView() {
+    public function itDispatchTo_disconnectFromGerrit_withRepoManagementView()
+    {
         stub($this->user_manager)->getCurrentUser()->returns($this->admin);
         $request = aRequest()->with('repo_id', $this->repo_id)->build();
         $repo    = mock('GitRepository');
@@ -250,13 +259,15 @@ class Git_DisconnectFromGerritRouteTest extends Git_RouteBaseTestCase {
         $git->request();
     }
 
-    public function itIsForbiddenForNonProjectAdmins() {
+    public function itIsForbiddenForNonProjectAdmins()
+    {
         $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns(null);
 
         $this->assertItIsForbiddenForNonProjectAdmins($factory);
     }
 
-    public function itNeedsAValidRepoId() {
+    public function itNeedsAValidRepoId()
+    {
         $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns(null);
 
         $this->assertItNeedsAValidRepoId($factory);
@@ -307,11 +318,13 @@ class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase
         $git->request();
     }
 
-    public function itIsForbiddenForNonProjectAdmins() {
+    public function itIsForbiddenForNonProjectAdmins()
+    {
         $this->assertItIsForbiddenForNonProjectAdmins($this->factory);
     }
 
-    public function itNeedsAValidRepoId() {
+    public function itNeedsAValidRepoId()
+    {
         $this->assertItNeedsAValidRepoId($this->factory);
     }
 
@@ -373,7 +386,8 @@ class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase
         $git->request();
     }
 
-    protected function getGit($request, $factory, $template_factory = null) {
+    protected function getGit($request, $factory, $template_factory = null)
+    {
         $git = parent::getGit($request, $factory, $template_factory);
         $git->setAction('migrate_to_gerrit');
         return $git;

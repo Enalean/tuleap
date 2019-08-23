@@ -22,8 +22,14 @@
 
 require_once("$IP/includes/db/DatabasePostgres.php");
 class DatabaseForge extends DatabasePostgres {
-    function __construct($server=false, $user=false, $password=false,
-        $dbName=false, $failFunction=false, $flags=0) {
+    function __construct(
+        $server=false,
+        $user=false,
+        $password=false,
+        $dbName=false,
+        $failFunction=false,
+        $flags=0
+    ) {
         global $wgDBtype;
 
         $wgDBtype = "postgres";
@@ -31,7 +37,8 @@ class DatabaseForge extends DatabasePostgres {
          $password, $dbName, $failFunction, $flags);
     }
 
-    function fieldInfo($table, $field) {
+    function fieldInfo($table, $field)
+    {
         switch ($table) {
             case 'interwiki':
                   $table = 'plugin_mediawiki_interwiki';
@@ -49,7 +56,8 @@ class DatabaseForge extends DatabasePostgres {
         return $v;
     }
 
-    function open($server, $user, $password, $dbName) {
+    function open($server, $user, $password, $dbName)
+    {
         $v = DatabasePostgres::open($server, $user, $password, $dbName);
 
         global $wgDBmwschema;
@@ -65,7 +73,8 @@ class DatabaseForge extends DatabasePostgres {
         return $v;
     }
 
-    function query($sql, $fname='', $tempIgnore=false) {
+    function query($sql, $fname='', $tempIgnore=false)
+    {
      /* ugh! */
         $chk = "ALTER TABLE interwiki ";
         $csz = strlen($chk);
@@ -76,7 +85,8 @@ class DatabaseForge extends DatabasePostgres {
         return DatabasePostgres::query($sql, $fname,$tempIgnore);
     }
 
-    function tableName($name, $format='quoted') {
+    function tableName($name, $format='quoted')
+    {
         global $wgDBmwschema;
 
         switch ($name) {

@@ -102,7 +102,8 @@ abstract class SystemEvent {
      * @param string $end_date
      * @param string $log
      */
-    function __construct($id, $type, $owner, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log) {
+    function __construct($id, $type, $owner, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log)
+    {
         $this->id           = $id;
         $this->type         = $type;
         $this->owner        = $owner;
@@ -117,19 +118,23 @@ abstract class SystemEvent {
 
     // Getters
 
-    function getId() {
+    function getId()
+    {
         return $this->id;
     }
 
-    function getType() {
+    function getType()
+    {
         return $this->type;
     }
 
-    function getOwner() {
+    function getOwner()
+    {
         return $this->owner;
     }
 
-    function getParameters() {
+    function getParameters()
+    {
         return $this->parameters;
     }
 
@@ -152,7 +157,8 @@ abstract class SystemEvent {
      *
      * @return string
      */
-    public function verbalizeUserId($user_id, $with_link) {
+    public function verbalizeUserId($user_id, $with_link)
+    {
         $txt = '#'. $user_id;
         if ($with_link) {
             $txt = '<a href="/admin/usergroup.php?user_id='. $user_id .'">'. $txt .'</a>';
@@ -168,7 +174,8 @@ abstract class SystemEvent {
      *
      * @return string
      */
-    public function verbalizeProjectId($group_id, $with_link) {
+    public function verbalizeProjectId($group_id, $with_link)
+    {
         $txt = '#'. $group_id;
         if ($with_link) {
             $txt = '<a href="/admin/groupedit.php?group_id='. $group_id .'">'. $txt .'</a>';
@@ -176,43 +183,53 @@ abstract class SystemEvent {
         return $txt;
     }
 
-    function getParametersAsArray() {
+    function getParametersAsArray()
+    {
         return explode(self::PARAMETER_SEPARATOR, $this->parameters);
     }
 
-    function getPriority() {
+    function getPriority()
+    {
         return $this->priority;
     }
 
-    function getStatus() {
+    function getStatus()
+    {
         return $this->status;
     }
 
-    function getLog() {
+    function getLog()
+    {
         return $this->log;
     }
 
-    function setStatus($status) {
+    function setStatus($status)
+    {
         $this->status=$status;
     }
 
-    function setLog($log) {
+    function setLog($log)
+    {
         $this->log=$log;
     }
 
-    function setParameters($params) {
+    function setParameters($params)
+    {
         $this->parameters = $params;
     }
 
-    function getCreateDate() {
+    function getCreateDate()
+    {
         return $this->create_date;
     }
 
-    function getProcessDate() {
+    function getProcessDate()
+    {
         return $this->process_date;
     }
 
-    function getEndDate() {
+    function getEndDate()
+    {
         return $this->end_date;
     }
 
@@ -244,11 +261,13 @@ abstract class SystemEvent {
         return $duration->format($format);
     }
 
-    public function setProcessDate($process_date) {
+    public function setProcessDate($process_date)
+    {
         $this->process_date = is_numeric($process_date) ? date('Y-m-d H:i:s', $process_date) : $process_date;
     }
 
-    public function setEndDate($end_date) {
+    public function setEndDate($end_date)
+    {
         $this->end_date = is_numeric($end_date) ? date('Y-m-d H:i:s', $end_date) : $end_date;
     }
 
@@ -264,18 +283,21 @@ abstract class SystemEvent {
     /**
      * A few functions to parse the parameters string
      */
-    function getIdFromParam() {
+    function getIdFromParam()
+    {
         if ($this->int_ok($this->parameters)) {
             return $this->parameters;
         } else return 0;
     }
 
-    public function getParameter($index) {
+    public function getParameter($index)
+    {
         $params = $this->getParametersAsArray();
         return isset($params[$index]) && $params[$index] !== '' ? $params[$index] : null;
     }
 
-    public function getRequiredParameter($index) {
+    public function getRequiredParameter($index)
+    {
         $param = $this->getParameter($index);
         if ($param === null) {
             throw new SystemEventMissingParameterException('Missing parameter n°'. (int)$index);
@@ -286,7 +308,8 @@ abstract class SystemEvent {
     /**
      * Error functions
      */
-    function setErrorBadParam() {
+    function setErrorBadParam()
+    {
         $this->error("Bad parameter for event ".$this->getType().": ".$this->getParameters());
         return 0;
     }
@@ -296,7 +319,8 @@ abstract class SystemEvent {
      * Process stored event
      * Virtual method redeclared in children
      */
-    function process() {
+    function process()
+    {
         return null;
     }
 
@@ -304,11 +328,13 @@ abstract class SystemEvent {
      * This function allows one to call all listeners (e.g. plugins) of an event related to the current processed system event
      * @param string $eventName
      */
-    protected function callSystemEventListeners( $eventName ) {
+    protected function callSystemEventListeners( $eventName )
+    {
         EventManager::instance()->processEvent( $eventName , $this->getParametersAsArray() );
     }
 
-    public function logException(Exception $exception) {
+    public function logException(Exception $exception)
+    {
         $this->error($exception->getMessage());
     }
 
@@ -317,7 +343,8 @@ abstract class SystemEvent {
      * @param string $status the status
      * @param string $msg the message to log
      */
-    private function logStatus($status, $msg) {
+    private function logStatus($status, $msg)
+    {
         $this->setStatus($status);
         $this->setLog($msg);
     }
@@ -327,7 +354,8 @@ abstract class SystemEvent {
      * and log the msg
      * @param string $msg the message to log
      */
-    protected function error($msg) {
+    protected function error($msg)
+    {
         $this->logStatus(self::STATUS_ERROR, $msg);
     }
 
@@ -336,7 +364,8 @@ abstract class SystemEvent {
      * and log the msg
      * @param string $msg the message to log. default is 'OK'
      */
-    protected function done($msg = 'OK') {
+    protected function done($msg = 'OK')
+    {
         $this->logStatus(self::STATUS_DONE, $msg);
     }
 
@@ -345,7 +374,8 @@ abstract class SystemEvent {
      * and log the msg
      * @param string $msg the message to log.
      */
-    protected function warning($msg) {
+    protected function warning($msg)
+    {
         $this->logStatus(self::STATUS_WARNING, $msg);
     }
 
@@ -354,7 +384,8 @@ abstract class SystemEvent {
      * @param int $group_id the id of the project
      * @return Project
      */
-    protected function getProject($group_id) {
+    protected function getProject($group_id)
+    {
         if (!$group_id) {
             return $this->setErrorBadParam();
         }
@@ -373,7 +404,8 @@ abstract class SystemEvent {
      * @param int $user_id the id of the User
      * @return PFUser
      */
-    protected function getUser($user_id) {
+    protected function getUser($user_id)
+    {
         if (!$user_id) {
             return $this->setErrorBadParam();
         }
@@ -391,14 +423,16 @@ abstract class SystemEvent {
      *
      * @return EventManager
      */
-    protected function getEventManager() {
+    protected function getEventManager()
+    {
         return EventManager::instance();
     }
 
     /**
      * Notify people that listen to the status of the event
      */
-    public function notify(?SystemEventsFollowersDao $dao = null) {
+    public function notify(?SystemEventsFollowersDao $dao = null)
+    {
         if(is_null($dao)) {
             $dao = new SystemEventsFollowersDao(CodendiDataAccess::instance());
         }
@@ -436,7 +470,8 @@ End Date:     {$this->getEndDate()}
      *
      * @return Backend
      */
-    protected function getBackend($type) {
+    protected function getBackend($type)
+    {
         return Backend::instance($type);
     }
 
@@ -445,7 +480,8 @@ End Date:     {$this->getEndDate()}
      *
      * @return string suitable to be enclosed as parameter
      */
-    public static function encode($data) {
+    public static function encode($data)
+    {
         return str_replace(self::PARAMETER_SEPARATOR, self::PARAMETER_SEPARATOR_ESCAPE, json_encode(array('data' => $data)));
     }
 
@@ -454,7 +490,8 @@ End Date:     {$this->getEndDate()}
      *
      * @return mixed data
      */
-    public static function decode($string) {
+    public static function decode($string)
+    {
         $decode = json_decode(str_replace(self::PARAMETER_SEPARATOR_ESCAPE, self::PARAMETER_SEPARATOR, $string), true);
         if (isset($decode['data'])) {
             return $decode['data'];

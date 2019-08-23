@@ -60,7 +60,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
     /**
      * Testing when the folder have no childrens
      */
-    function testGetChildListNoChildrens() {
+    function testGetChildListNoChildrens()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
 
         $utils = new MockWebDAVUtils();
@@ -78,7 +79,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
     /**
      * Testing when the User can't access/read the child node
      */
-    function testGetChildListUserCanNotAccess() {
+    function testGetChildListUserCanNotAccess()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
 
         $item = new MockDocman_Item();
@@ -98,7 +100,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
     /**
      * Testing when the folder contain a duplicate name
      */
-    function testGetChildListDuplicateName() {
+    function testGetChildListDuplicateName()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
         $webDAVDocmanFolder->setReturnValue('getProject', Mockery::spy(Project::class));
 
@@ -126,7 +129,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
     /**
      * Testing when the folder contain some items
      */
-    function testGetChildListFilled() {
+    function testGetChildListFilled()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
         $webDAVDocmanFolder->setReturnValue('getProject', Mockery::spy(Project::class));
 
@@ -154,7 +158,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
     /**
      * Testing when the folder have no childrens
      */
-    function testGetChildrenNoChildrens() {
+    function testGetChildrenNoChildrens()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion2($this);
 
         $webDAVDocmanFolder->setReturnValue('getChildList', array());
@@ -165,7 +170,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
     /**
      * Testing when the folder contain a duplicate name
      */
-    function testGetChildrenDuplicateName() {
+    function testGetChildrenDuplicateName()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion2($this);
 
         $webDAVDocmanFolder->setReturnValue('getChildList', array('SomeName' => 'duplicate'));
@@ -176,7 +182,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
     /**
      * Testing when the folder contain some items
      */
-    function testGetChildrenFilled() {
+    function testGetChildrenFilled()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
         $webDAVDocmanFolder->setReturnValue('getProject', Mockery::spy(Project::class));
 
@@ -204,7 +211,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
     /**
      * Testing when the folder have no childrens
      */
-    function testGetChildNotFound() {
+    function testGetChildNotFound()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
 
         $utils = new MockWebDAVUtils();
@@ -223,7 +231,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
     /**
      * Testing when the item is duplicated
      */
-    function testGetChildDuplicatedSameCase() {
+    function testGetChildDuplicatedSameCase()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion3($this);
 
         $item1 = new MockDocman_Folder();
@@ -250,7 +259,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
     /**
      * Testing when the item is duplicated
      */
-    function testGetChildDuplicatedDifferentCase() {
+    function testGetChildDuplicatedDifferentCase()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion3($this);
 
         $item1 = new MockDocman_Folder();
@@ -277,7 +287,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
     /**
      * Testing when the folder have childrens
      */
-    function testGetChildSuccess() {
+    function testGetChildSuccess()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion3($this);
 
         $item = new MockDocman_Item();
@@ -302,7 +313,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
         $this->assertEqual($webDAVDocmanFolder->getChild('SomeName'), $folder);
     }
 
-    function testCreateDirectoryNoWriteEnabled() {
+    function testCreateDirectoryNoWriteEnabled()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', false);
@@ -312,7 +324,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
         $webDAVDocmanFolder->createDirectory('name');
     }
 
-    function testCreateDirectorySuccess() {
+    function testCreateDirectorySuccess()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
 
         $utils = new MockWebDAVUtils();
@@ -330,7 +343,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
     }
 
 
-    function testDeleteDirectoryNoWriteEnabled() {
+    function testDeleteDirectoryNoWriteEnabled()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', false);
@@ -340,7 +354,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
         $webDAVDocmanFolder->delete();
     }
 
-    function testSetNameNoWriteEnabled() {
+    function testSetNameNoWriteEnabled()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', false);
@@ -350,7 +365,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
         $webDAVDocmanFolder->setName('newName');
     }
 
-    function testSetNameSuccess() {
+    function testSetNameSuccess()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
 
         $utils = new MockWebDAVUtils();
@@ -367,7 +383,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
         $webDAVDocmanFolder->setName('newName');
     }
 
-    function testCreateFileNoWriteEnabled() {
+    function testCreateFileNoWriteEnabled()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', false);
@@ -378,7 +395,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
         $webDAVDocmanFolder->createFile('name', $data);
     }
 
-    function testCreateFileBigFile() {
+    function testCreateFileBigFile()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
 
         $utils = new MockWebDAVUtils();
@@ -399,7 +417,8 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
         $webDAVDocmanFolder->createFile('name', $data);
     }
 
-    function testCreateFileSucceed() {
+    function testCreateFileSucceed()
+    {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
 
         $utils = new MockWebDAVUtils();

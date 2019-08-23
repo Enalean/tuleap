@@ -65,20 +65,25 @@ else
 class WikiPlugin_SyntaxHighlighter
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("SyntaxHighlighter");
     }
-    function getDescription () {
+    function getDescription()
+    {
         return _("Source code syntax highlighter (via http://www.andre-simon.de)");
     }
-    function managesValidators() {
+    function managesValidators()
+    {
         return true;
     }
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.7 $");
     }
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array(
                      'syntax' => null, // required argument
                      'style'  => null, // optional argument ["ansi", "gnu", "kr", "java", "linux"]
@@ -87,7 +92,8 @@ extends WikiPlugin
                      'wrap'   => 0,
                      );
     }
-    function handle_plugin_args_cruft(&$argstr, &$args) {
+    function handle_plugin_args_cruft(&$argstr, &$args)
+    {
         $this->source = $argstr;
     }
 
@@ -125,7 +131,8 @@ extends WikiPlugin
         }
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         extract($this->getArgs($argstr, $request));
         $source = $this->source;
         if (empty($syntax)) {

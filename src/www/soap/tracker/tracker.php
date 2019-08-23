@@ -1229,7 +1229,8 @@ if (defined('NUSOAP')) {
  * @param int $group_id the ID of the group we want to retrieve the list of trackers
  * @return array the array of SOAPTrackerDesc that belongs to the project identified by $group_id, or a soap fault if group_id does not match with a valid project.
  */
-    function getTrackerList($sessionKey, $group_id) {
+    function getTrackerList($sessionKey, $group_id)
+    {
         if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
@@ -1265,7 +1266,8 @@ if (defined('NUSOAP')) {
  * @param array of Object{ArtifactType} $at_arr the array of artifactTypes to convert.
  * @return array the SOAPArrayOfTrackerDesc corresponding to the array of ArtifactTypes Object (light)
  */
-    function trackerlist_to_soap($at_arr) {
+    function trackerlist_to_soap($at_arr)
+    {
         global $ath;
         $user_id = UserManager::instance()->getCurrentUser()->getId();
         $return = array();
@@ -1318,7 +1320,8 @@ if (defined('NUSOAP')) {
         return $return;
     }
 
-    function artifactreportsdesc_to_soap($artifactreportsdesc) {
+    function artifactreportsdesc_to_soap($artifactreportsdesc)
+    {
         $return = array();
         if (is_array($artifactreportsdesc) && count($artifactreportsdesc)) {
             foreach ($artifactreportsdesc as $arid => $artifactreportdesc){
@@ -1346,7 +1349,8 @@ if (defined('NUSOAP')) {
  * @param int $group_artifact_id the ID of the tracker we want to retrieve the structure
  * @return the SOAPArtifactType of the tracker $group_artifact_id that belongs to the project identified by $group_id, or a soap fault if group_id does not match with a valid project or if $group_artifact_id doesn't exist is not a tracker of the project.
  */
-    function getArtifactType($sessionKey, $group_id, $group_artifact_id) {
+    function getArtifactType($sessionKey, $group_id, $group_artifact_id)
+    {
         if (session_continue($sessionKey)) {
             $user_id = UserManager::instance()->getCurrentUser()->getId();
             try {
@@ -1386,7 +1390,8 @@ if (defined('NUSOAP')) {
  * @param int $group_id the ID of the group we want to retrieve the array of trackers
  * @return array the array of SOAPArtifactType that belongs to the project identified by $group_id, or a soap fault if group_id does not match with a valid project.
  */
-    function getArtifactTypes($sessionKey, $group_id) {
+    function getArtifactTypes($sessionKey, $group_id)
+    {
         if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
@@ -1417,7 +1422,8 @@ if (defined('NUSOAP')) {
  * @param Object{ArtifactType} $at the artifactType to convert.
  * @return the SOAPArtifactType corresponding to the ArtifactType Object
  */
-    function artifacttype_to_soap($at) {
+    function artifacttype_to_soap($at)
+    {
         global $ath;
         $user_id = UserManager::instance()->getCurrentUser()->getId();
         $return = array();
@@ -1562,7 +1568,8 @@ if (defined('NUSOAP')) {
         return $return;
     }
 
-    function artifacttypes_to_soap($at_arr) {
+    function artifacttypes_to_soap($at_arr)
+    {
         $return = array();
         for ($i=0; $i<count($at_arr); $i++) {
             if ($at_arr[$i]->isError()) {
@@ -1574,7 +1581,8 @@ if (defined('NUSOAP')) {
         return $return;
     }
 
-    function artifactrule_to_soap($rule) {
+    function artifactrule_to_soap($rule)
+    {
         $return = array();
         $return['rule_id'] = $rule->id;
         $return['group_artifact_id'] = $rule->group_artifact_id;
@@ -1585,7 +1593,8 @@ if (defined('NUSOAP')) {
         return $return;
     }
 
-    function artifactrules_to_soap($artifact_type) {
+    function artifactrules_to_soap($artifact_type)
+    {
         $return = array();
         $arm = new ArtifactRulesManager();
         $rules = $arm->getAllRulesByArtifactTypeWithOrder($artifact_type->getID());
@@ -1615,7 +1624,8 @@ if (defined('NUSOAP')) {
  * @return the SOAPArtifactQueryResult that match the criteria $criteria and belong to the project $group_id and the tracker $group_artifact_id,
  *          or a soap fault if group_id does not match with a valid project, or if group_artifact_id does not match with a valid tracker.
  */
-    function getArtifacts($sessionKey,$group_id,$group_artifact_id, $criteria, $offset, $max_rows) {
+    function getArtifacts($sessionKey,$group_id,$group_artifact_id, $criteria, $offset, $max_rows)
+    {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
@@ -1673,7 +1683,8 @@ if (defined('NUSOAP')) {
  * @return the SOAPArtifactFromReportResult that match the criteria $criteria and belong to the project $group_id and the tracker $group_artifact_id,
  *          or a soap fault if group_id does not match with a valid project, or if group_artifact_id does not match with a valid tracker.
  */
-    function getArtifactsFromReport($sessionKey,$group_id,$group_artifact_id, $report_id, $criteria, $offset, $max_rows, $sort_criteria) {
+    function getArtifactsFromReport($sessionKey,$group_id,$group_artifact_id, $report_id, $criteria, $offset, $max_rows, $sort_criteria)
+    {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
@@ -1734,7 +1745,8 @@ if (defined('NUSOAP')) {
  *          or a soap fault if group_id does not match with a valid project, or if group_artifact_id does not match with a valid tracker,
  *          or if artifact_id is not a valid artifact of this tracker.
  */
-    function getArtifactById($sessionKey,$group_id,$group_artifact_id, $artifact_id) {
+    function getArtifactById($sessionKey,$group_id,$group_artifact_id, $artifact_id)
+    {
         global $art_field_fact, $ath;
         if (session_continue($sessionKey)){
             try {
@@ -1783,7 +1795,8 @@ if (defined('NUSOAP')) {
  * @param Object{Artifact} $artifact the artifact to convert.
  * @return array the SOAPArtifact corresponding to the Artifact Object
  */
-    function artifact_to_soap($artifact) {
+    function artifact_to_soap($artifact)
+    {
         global $art_field_fact;
 
         $return = array();
@@ -1858,7 +1871,8 @@ if (defined('NUSOAP')) {
         return $return;
     }
 
-    function artifacts_to_soap($at_arr) {
+    function artifacts_to_soap($at_arr)
+    {
         $return = array();
         foreach ($at_arr as $atid => $artifact) {
             $return[] = artifact_to_soap($artifact);
@@ -1866,7 +1880,8 @@ if (defined('NUSOAP')) {
         return $return;
     }
 
-    function artifact_query_result_to_soap($artifacts, $total_artifacts_number) {
+    function artifact_query_result_to_soap($artifacts, $total_artifacts_number)
+    {
         $return = array();
         $return['total_artifacts_number'] = $total_artifacts_number;
         if ($total_artifacts_number == 0 && $artifacts == false) {
@@ -1886,7 +1901,8 @@ if (defined('NUSOAP')) {
  * @param Object{Artifact} $artifact the artifact to convert.
  * @return array the SOAPArtifactReport corresponding to the Artifact Object
  */
-    function artifact_report_to_soap($artifact) {
+    function artifact_report_to_soap($artifact)
+    {
         global $art_field_fact;
 
         $return = array();
@@ -1916,7 +1932,8 @@ if (defined('NUSOAP')) {
         return $return;
     }
 
-    function artifacts_report_to_soap($at_arr) {
+    function artifacts_report_to_soap($at_arr)
+    {
         $return = array();
         foreach ($at_arr as $atid => $artifact) {
             $return[] = artifact_report_to_soap($artifact);
@@ -1924,7 +1941,8 @@ if (defined('NUSOAP')) {
         return $return;
     }
 
-    function artifact_report_result_to_soap($artifacts, $total_artifacts_number) {
+    function artifact_report_result_to_soap($artifacts, $total_artifacts_number)
+    {
         $return = array();
         $return['total_artifacts_number'] = $total_artifacts_number;
         if ($total_artifacts_number == 0 && $artifacts == false) {
@@ -1935,7 +1953,8 @@ if (defined('NUSOAP')) {
         return $return;
     }
 
-    function setArtifactData($status_id, $close_date, $summary, $details, $severity, $extra_fields) {
+    function setArtifactData($status_id, $close_date, $summary, $details, $severity, $extra_fields)
+    {
         global $art_field_fact;
 
         $data = array();
@@ -1995,7 +2014,8 @@ if (defined('NUSOAP')) {
  *              - the given values are breaking a field dependency rule
  *              - the artifact creation failed.
  */
-    function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
+    function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields)
+    {
         global $art_field_fact, $ath;
 
         if (session_continue($sessionKey)) {
@@ -2125,7 +2145,8 @@ if (defined('NUSOAP')) {
         }
     }
 
-    function objectToArray($object) {
+    function objectToArray($object)
+    {
         foreach ($object as $key => $value) {
             $array[$key] = $value;
         }
@@ -2152,7 +2173,8 @@ if (defined('NUSOAP')) {
  *              - the given values are breaking a field dependency rule
  *              - the artifact creation failed.
  */
-    function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
+    function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields)
+    {
         global $art_field_fact, $ath;
 
         if (session_continue($sessionKey)) {
@@ -2223,7 +2245,8 @@ if (defined('NUSOAP')) {
  *              - the given values are breaking a field dependency rule
  *              - the artifact modification failed.
  */
-    function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
+    function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields)
+    {
         global $art_field_fact, $ath;
         if (session_continue($sessionKey)) {
             try {
@@ -2312,7 +2335,8 @@ if (defined('NUSOAP')) {
  *              - the given values are breaking a field dependency rule
  *              - the artifact modification failed.
  */
-    function updateArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
+    function updateArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields)
+    {
         global $art_field_fact, $ath;
         if (session_continue($sessionKey)) {
             try {
@@ -2375,7 +2399,8 @@ if (defined('NUSOAP')) {
  *              - group_artifact_id does not match with a valid tracker,
  *              - the artifact_id does not match with a valid artifact
  */
-    function getArtifactFollowups($sessionKey, $group_id, $group_artifact_id, $artifact_id) {
+    function getArtifactFollowups($sessionKey, $group_id, $group_artifact_id, $artifact_id)
+    {
         global $art_field_fact;
         if (session_continue($sessionKey)){
             try {
@@ -2413,7 +2438,8 @@ if (defined('NUSOAP')) {
         }
     }
 
-    function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id, $artifact) {
+    function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id, $artifact)
+    {
         $return = array();
         $rows = db_numrows($followups_res);
         for ($i=0; $i < $rows; $i++) {
@@ -2447,7 +2473,8 @@ if (defined('NUSOAP')) {
  *              - group_id does not match with a valid project,
  *              - group_artifact_id does not match with a valid tracker
  */
-    function getArtifactCannedResponses($sessionKey, $group_id, $group_artifact_id) {
+    function getArtifactCannedResponses($sessionKey, $group_id, $group_artifact_id)
+    {
         if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
@@ -2468,7 +2495,8 @@ if (defined('NUSOAP')) {
         }
     }
 
-    function artifactcannedresponses_to_soap($cannedresponses_res, $group_artifact_id) {
+    function artifactcannedresponses_to_soap($cannedresponses_res, $group_artifact_id)
+    {
         $return = array();
         $rows = db_numrows($cannedresponses_res);
         for ($i=0; $i < $rows; $i++) {
@@ -2493,7 +2521,8 @@ if (defined('NUSOAP')) {
  *              - group_id does not match with a valid project,
  *              - group_artifact_id does not match with a valid tracker
  */
-    function getArtifactReports($sessionKey, $group_id, $group_artifact_id) {
+    function getArtifactReports($sessionKey, $group_id, $group_artifact_id)
+    {
         $user_id = UserManager::instance()->getCurrentUser()->getId();
         if (session_continue($sessionKey)) {
             try {
@@ -2525,7 +2554,8 @@ if (defined('NUSOAP')) {
         }
     }
 
-    function artifactreports_to_soap($artifactreports) {
+    function artifactreports_to_soap($artifactreports)
+    {
         $return = array();
         if (is_array($artifactreports) && count($artifactreports)) {
             foreach ($artifactreports as $arid => $artifactreport){
@@ -2576,7 +2606,8 @@ if (defined('NUSOAP')) {
  *              - group_artifact_id does not match with a valid tracker
  *              - artifact_id does not match with a valid artifact
  */
-    function getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id,$set_bin_data = false) {
+    function getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id,$set_bin_data = false)
+    {
         global $art_field_fact;
 
         if (session_continue($sessionKey)) {
@@ -2631,7 +2662,8 @@ if (defined('NUSOAP')) {
  *              - artifact_id does not match with a valid artifact
  *              - file_id does not match with the given artifact_id
  */
-    function getArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id, $file_id) {
+    function getArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id, $file_id)
+    {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
@@ -2674,7 +2706,8 @@ if (defined('NUSOAP')) {
         }
     }
 
-    function artifactfiles_to_soap($attachedfiles_arr, $set_bin_data = false) {
+    function artifactfiles_to_soap($attachedfiles_arr, $set_bin_data = false)
+    {
         $return = array();
         $rows=db_numrows($attachedfiles_arr);
         for ($i=0; $i<$rows; $i++) {
@@ -2694,7 +2727,8 @@ if (defined('NUSOAP')) {
         return $return;
     }
 
-    function artifactfile_to_soap($file_id, Artifact $artifact, $set_bin_data) {
+    function artifactfile_to_soap($file_id, Artifact $artifact, $set_bin_data)
+    {
         $return = null;
         $attachedfiles_arr = $artifact->getAttachedFiles();
         $rows = db_numrows($attachedfiles_arr);
@@ -2737,7 +2771,8 @@ if (defined('NUSOAP')) {
  *              - group_artifact_id does not match with a valid tracker
  *              - artifact_id does not match with a valid artifact
  */
-    function getArtifactDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
+    function getArtifactDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id)
+    {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
@@ -2776,7 +2811,8 @@ if (defined('NUSOAP')) {
         }
     }
 
-    function dependencies_to_soap($artifact_type, $dependencies) {
+    function dependencies_to_soap($artifact_type, $dependencies)
+    {
         $return = array();
         $rows=db_numrows($dependencies);
         for ($i=0; $i<$rows; $i++) {
@@ -2813,7 +2849,8 @@ if (defined('NUSOAP')) {
  *              - group_artifact_id does not match with a valid tracker
  *              - artifact_id does not match with a valid artifact
  */
-    function getArtifactInverseDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
+    function getArtifactInverseDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id)
+    {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
@@ -2855,7 +2892,8 @@ if (defined('NUSOAP')) {
 /**
  * We keep the order of the relation in the database, even if we are getting the inverse.
  */
-    function inverse_dependencies_to_soap($artifact_type, $artifact_id, $inverse_dependencies) {
+    function inverse_dependencies_to_soap($artifact_type, $artifact_id, $inverse_dependencies)
+    {
         $return = array();
         $rows=db_numrows($inverse_dependencies);
         for ($i=0; $i<$rows; $i++) {
@@ -2895,7 +2933,8 @@ if (defined('NUSOAP')) {
  *              - artifact_id does not match with a valid artifact
  *              - the file attachment to the artifact failed
  */
-    function addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$encoded_data,$description,$filename,$filetype) {
+    function addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$encoded_data,$description,$filename,$filetype)
+    {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
@@ -2972,7 +3011,8 @@ if (defined('NUSOAP')) {
  *              - file_id does not match with a valid attached file
  *              - the file deletion failed
  */
-    function deleteArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$file_id) {
+    function deleteArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$file_id)
+    {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
@@ -3034,7 +3074,8 @@ if (defined('NUSOAP')) {
  *              - artifact_id does not match with a valid artifact
  *              - the add failed
  */
-    function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id, $is_dependent_on_artifact_ids){
+    function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id, $is_dependent_on_artifact_ids)
+    {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
@@ -3095,7 +3136,8 @@ if (defined('NUSOAP')) {
  *              - artifact_history_id does not match with a valid comment,
  *              - the comment modification failed.
  */
-    function updateArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $artifact_id, $artifact_history_id, $comment) {
+    function updateArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $artifact_id, $artifact_history_id, $comment)
+    {
         global $art_field_fact, $changes;
         if (session_continue($sessionKey)){
             try {
@@ -3165,7 +3207,8 @@ if (defined('NUSOAP')) {
  *              - the comment deletion failed.
  */
 
-    function deleteArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $artifact_id, $artifact_history_id) {
+    function deleteArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $artifact_id, $artifact_history_id)
+    {
         global $art_field_fact, $changes;
         if (session_continue($sessionKey)){
             try {
@@ -3224,7 +3267,8 @@ if (defined('NUSOAP')) {
  *              - dependent_on_artifact_id does not match with a valid artifact or is not a valid dependency
  *              - the delete failed
  */
-    function deleteArtifactDependency($sessionKey, $group_id, $group_artifact_id, $artifact_id, $dependent_on_artifact_id) {
+    function deleteArtifactDependency($sessionKey, $group_id, $group_artifact_id, $artifact_id, $dependent_on_artifact_id)
+    {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
@@ -3283,7 +3327,8 @@ if (defined('NUSOAP')) {
  * - artifact_id does not match with a valid artifact
  * - the add failed
  */
-    function addArtifactFollowup($sessionKey, $group_id,$group_artifact_id,$artifact_id,$body, $comment_type_id, $format) {
+    function addArtifactFollowup($sessionKey, $group_id,$group_artifact_id,$artifact_id,$body, $comment_type_id, $format)
+    {
         global $art_field_fact, $ath;
         if (session_continue($sessionKey)) {
             try {
@@ -3341,7 +3386,8 @@ if (defined('NUSOAP')) {
  * @return int the ID of the artifact containing the same summary in the tracker, or
  *              -1 if the summary does not exist in this tracker.
  */
-    function existArtifactSummary($sessionKey, $group_artifact_id, $summary) {
+    function existArtifactSummary($sessionKey, $group_artifact_id, $summary)
+    {
         if (session_continue($sessionKey)) {
             $res=db_query("SELECT group_id FROM artifact_group_list WHERE group_artifact_id = ".db_ei($group_artifact_id));
             if ($res && db_numrows($res) > 0) {
@@ -3387,7 +3433,8 @@ if (defined('NUSOAP')) {
  *              - group_artifact_id does not match with a valid tracker
  *              - artifact_id does not match with a valid artifact
  */
-    function getArtifactCCList($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
+    function getArtifactCCList($sessionKey,$group_id,$group_artifact_id,$artifact_id)
+    {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
@@ -3426,7 +3473,8 @@ if (defined('NUSOAP')) {
         }
     }
 
-    function artifactCC_to_soap($group_id,$group_artifact_id,$artifact_id, $artifact_cc_list) {
+    function artifactCC_to_soap($group_id,$group_artifact_id,$artifact_id, $artifact_cc_list)
+    {
         $return = array();
         $rows=db_numrows($artifact_cc_list);
         for ($i=0; $i<$rows; $i++) {
@@ -3454,7 +3502,8 @@ if (defined('NUSOAP')) {
  * @param string $cc_list the list of emails or logins to add
  * @param string $cc_comment the optional comment
  */
-    function addArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_id, $cc_list, $cc_comment) {
+    function addArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_id, $cc_list, $cc_comment)
+    {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
@@ -3504,7 +3553,8 @@ if (defined('NUSOAP')) {
  * @param int $artifact_id the artifact we want to delete the CC
  * @param int $artifact_cc_id the id of the artifact_cc to delete
  */
-    function deleteArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_id, $artifact_cc_id) {
+    function deleteArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_id, $artifact_cc_id)
+    {
         global $art_field_fact;
 
         if (session_continue($sessionKey)) {
@@ -3559,7 +3609,8 @@ if (defined('NUSOAP')) {
  *              - group_artifact_id does not match with a valid tracker
  *              - artifact_id does not match with a valid artifact
  */
-    function getArtifactHistory($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
+    function getArtifactHistory($sessionKey,$group_id,$group_artifact_id,$artifact_id)
+    {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
@@ -3598,7 +3649,8 @@ if (defined('NUSOAP')) {
         }
     }
 
-    function history_to_soap($group_id,$group_artifact_id,$history) {
+    function history_to_soap($group_id,$group_artifact_id,$history)
+    {
         global $art_field_fact;
 
         $return = array();

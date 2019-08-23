@@ -23,7 +23,8 @@
 
 use Tuleap\PHPWiki\WikiPage;
 
-function exit_wiki_empty() {
+function exit_wiki_empty()
+{
     GLOBAL $HTML;
     global $group_id;
 
@@ -43,7 +44,8 @@ function exit_wiki_empty() {
  * Generate url to Expend/Collapse a part of a page
  * @see my_hide_url
  */
-function hide_url ($svc, $db_item_id, $defaultHide=false, $hide=null) {
+function hide_url($svc, $db_item_id, $defaultHide=false, $hide=null)
+{
     $pref_name = 'hide_'.$svc.$db_item_id;
 
     if(empty($hide)) {
@@ -82,11 +84,13 @@ function hide_url ($svc, $db_item_id, $defaultHide=false, $hide=null) {
     return array($hide_now, $hide_url, $hide_img);
 }
 
-function wiki_display_header() {
+function wiki_display_header()
+{
     $GLOBALS['wiki_view']->header();
 }
 
-function wiki_display_footer() {
+function wiki_display_footer()
+{
     $GLOBALS['wiki_view']->footer();
 }
 
@@ -103,7 +107,8 @@ class WikiViews extends Views {
   /**
    * WikiView - Constructor
    */
-    function WikiView(&$controler, $id=0, $view=null) {
+    function WikiView(&$controler, $id=0, $view=null)
+    {
         parent::view($controler, $view);
 
         $this->gid = (int) $id;
@@ -125,7 +130,8 @@ class WikiViews extends Views {
   /**
    * displayMenu - Public pure virtual
    */
-    function displayMenu() {
+    function displayMenu()
+    {
 
     }
 
@@ -134,7 +140,8 @@ class WikiViews extends Views {
    *
    * Display Wiki Service header
    */
-    function header() {
+    function header()
+    {
         $this->html_params['stylesheet'][] = '/wiki/themes/Codendi/phpwiki-codendi.css';
         $this->html_params['service_name'] = 'wiki';
         $this->html_params['project_id']   = $this->gid;
@@ -145,7 +152,8 @@ class WikiViews extends Views {
     /**
     * pagePerms - public View
     */
-    function _pagePerms($postUrl='') {
+    function _pagePerms($postUrl='')
+    {
         $wp = new WikiPage($_REQUEST['id']);
         $pagename = $wp->getPagename();
 

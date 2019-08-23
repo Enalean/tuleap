@@ -22,7 +22,8 @@
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../../../src/www/project/export/project_export_utils.php';
 
-function csv_output($string) {
+function csv_output($string)
+{
     echo $string;
 }
 

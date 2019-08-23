@@ -39,7 +39,8 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
      *
      * @param Plugin $plugin The plugin
      */
-    public function __construct(Plugin $plugin) {
+    public function __construct(Plugin $plugin)
+    {
         parent::__construct('projectlinkshomepage');
         $this->pluginPath = $plugin->getPluginPath();
         $this->themePath  = $plugin->getThemePath();
@@ -51,7 +52,8 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
      * @see src/common/Widget/Widget#getTitle()
      * @return String
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $GLOBALS['Language']->getText('plugin_plinks', 'project_links');
     }
 
@@ -66,7 +68,8 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
      * @see src/common/Widget/Widget#getContent()
      * @return String
      */
-    function getContent() {
+    function getContent()
+    {
         $request = HTTPRequest::instance();
         $groupId = $request->get('group_id');
 
@@ -108,7 +111,8 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
      * @param  String $sql The SQL to get the links
      * @return String
      */
-    function getLinksByLinkType($way, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $dar) {
+    function getLinksByLinkType($way, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $dar)
+    {
         $html = '';
         if ($dar->rowCount() > 0) {
             $linkTypeCmdId   = 'plugin_project_links_type_'.$way;
@@ -139,7 +143,8 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
      * @param  String $res One row of link
      * @return String
      */
-    function getLinks($way, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $dar) {
+    function getLinks($way, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $dar)
+    {
         $html = '';
         $previousLinkName = '';
         $ulClosed = true;
@@ -181,7 +186,8 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
      * @param  array $row One row for a link
      * @return String
      */
-    function getOneLink(array $row) {
+    function getOneLink(array $row)
+    {
         $url = str_replace('$projname', $row['unix_group_name'], $row['uri_plus']);
         $ic = '';
         if ($row['type'] == 2) {
@@ -198,7 +204,8 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
      *
      * @return ProjectLinksDao
      */
-    function getProjectLinksDao() {
+    function getProjectLinksDao()
+    {
         include_once 'ProjectLinksDao.class.php';
         return new ProjectLinksDao(CodendiDataAccess::instance());
     }

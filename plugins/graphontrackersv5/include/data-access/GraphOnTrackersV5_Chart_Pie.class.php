@@ -26,7 +26,8 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
 {
     protected $field_base;
 
-    public function loadFromSession() {
+    public function loadFromSession()
+    {
         $this->report_session = self::getSession($this->renderer->report->id, $this->renderer->id);
         $chart_in_session = $this->report_session->get($this->id);
         if (isset($chart_in_session['field_base']) && $chart_in_session['field_base'] !== '') {
@@ -37,21 +38,25 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
         }
     }
 
-    public function loadFromDb() {
+    public function loadFromDb()
+    {
         $arr = $this->getDao()->searchById($this->id)->getRow();
         $this->field_base  = $arr['field_base'];
     }
 
-    public function registerInSession() {
+    public function registerInSession()
+    {
         parent::registerInSession();
         $this->report_session->set("$this->id.field_base", $this->field_base);
     }
 
-    protected function getDao() {
+    protected function getDao()
+    {
         return new GraphOnTrackersV5_Chart_PieDao();
     }
 
-    public static function create($graphic_report, $id, $rank, $title, $description, $width, $height) {
+    public static function create($graphic_report, $id, $rank, $title, $description, $width, $height)
+    {
         $session = self::getSession($graphic_report->report->id, $graphic_report->id);
         $session->set("$id.field_base", 0);
         $c = new GraphOnTrackersV5_Chart_Pie($graphic_report, $id, $rank, $title, $description, $width, $height);
@@ -59,17 +64,24 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
         return $c;
     }
 
-    public function getField_base() { return $this->field_base; }
-    public function setField_base($field_base) { return $this->field_base = $field_base; }
+    public function getField_base()
+    {
+        return $this->field_base; }
+    public function setField_base($field_base)
+    {
+        return $this->field_base = $field_base; }
 
-    protected function getEngine() {
+    protected function getEngine()
+    {
         return new GraphOnTrackersV5_Engine_Pie();
     }
-    protected function getChartDataBuilder($artifacts) {
+    protected function getChartDataBuilder($artifacts)
+    {
         return new GraphOnTrackersV5_Chart_PieDataBuilder($this,$artifacts);
     }
 
-    public function getProperties() {
+    public function getProperties()
+    {
         return array_merge(parent::getProperties(),
             array(
                 'field_base' => new HTML_Element_Selectbox_TrackerFields_SelectboxesV5(
@@ -80,7 +92,8 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
         ));
     }
 
-    public function createDb($id) {
+    public function createDb($id)
+    {
         $field_base = $this->getField_base();
         if (!is_string($field_base) && !is_int($field_base) && $field_base) {
             $field_base = $field_base->getid();
@@ -88,11 +101,13 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
         return $this->getDao()->save($id, $field_base);
     }
 
-    public function updateDb() {
+    public function updateDb()
+    {
         return $this->getDao()->save($this->id, $this->getField_base());
     }
 
-    protected function updateSpecificProperties($row) {
+    protected function updateSpecificProperties($row)
+    {
         $session = self::getSession($this->renderer->report->id, $this->renderer->id);
 
         $session->set("$this->id.field_base", $row['field_base']);
@@ -103,7 +118,8 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
         return true;
     }
 
-    function userCanVisualize(){
+    function userCanVisualize()
+    {
         $ff = Tracker_FormElementFactory::instance();
         $artifact_field_base = $ff->getFormElementById($this->field_base);
         if ($artifact_field_base && $artifact_field_base->userCanRead()) {
@@ -114,17 +130,20 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
     }
 
 
-    public function getChartType() {
+    public function getChartType()
+    {
         return 'pie';
     }
 
-    public function getSpecificRow() {
+    public function getSpecificRow()
+    {
         return array(
             'field_base'  => $this->getField_base(),
         );
     }
 
-    public function getGraphicReport() {
+    public function getGraphicReport()
+    {
         return $this->graphic_report;
     }
 
@@ -133,7 +152,8 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
      *
      * @return array containing the properties
      */
-    public function arrayOfSpecificProperties() {
+    public function arrayOfSpecificProperties()
+    {
         return array(
             'field_base'  => $this->getField_base(),
         );
@@ -145,13 +165,15 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
      * @param SimpleXMLElement $xml characterising the chart
      * @param array $formsMapping associating xml IDs to real fields
      */
-    public function setSpecificPropertiesFromXML($xml, $formsMapping){
+    public function setSpecificPropertiesFromXML($xml, $formsMapping)
+    {
         if (isset($formsMapping[(string)$xml['base']])) {
             $this->setField_base($formsMapping[(string)$xml['base']]);
         }
     }
 
-    public function exportToXml(SimpleXMLElement $root, $formsMapping) {
+    public function exportToXml(SimpleXMLElement $root, $formsMapping)
+    {
         parent::exportToXML($root, $formsMapping);
         if ($mapping = (string)array_search($this->field_base, $formsMapping)) {
             $root->addAttribute('base', $mapping);

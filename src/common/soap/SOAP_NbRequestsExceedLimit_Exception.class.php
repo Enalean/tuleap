@@ -18,7 +18,8 @@
  */
 
 class SOAP_NbRequestsExceedLimit_Exception extends Exception {
-    public function __construct($message = 'The number of SOAP call exceeded quota.') {
+    public function __construct($message = 'The number of SOAP call exceeded quota.')
+    {
         parent::__construct($message, '4000');
     }
 }

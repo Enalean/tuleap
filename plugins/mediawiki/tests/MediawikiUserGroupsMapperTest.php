@@ -33,7 +33,8 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
     /** @var Project */
     private $project;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->dao             = mock('MediawikiDao');
@@ -42,7 +43,8 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
         $this->project         = mock('Project');
     }
 
-    public function itAddsProjectMembersAsBots() {
+    public function itAddsProjectMembersAsBots()
+    {
         stub($this->dao)->getMediawikiUserGroupMapping()->returnsDar(
             array('group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS)
         );
@@ -64,7 +66,8 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
         $this->mapper->saveMapping($new_mapping, $this->project);
     }
 
-    public function itRemovesRegisteredUsersFromBot() {
+    public function itRemovesRegisteredUsersFromBot()
+    {
         stub($this->dao)->getMediawikiUserGroupMapping()->returnsDar(
             array('group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS),
             array('group_id' => '104', 'ugroup_id' => '2', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER),
@@ -88,7 +91,8 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
         $this->mapper->saveMapping($new_mapping, $this->project);
     }
 
-    public function itIgnoresAnonymousModifications() {
+    public function itIgnoresAnonymousModifications()
+    {
         stub($this->dao)->getMediawikiUserGroupMapping()->returnsDar(
             array('group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS)
         );
@@ -106,7 +110,8 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
         $this->mapper->saveMapping($new_mapping, $this->project);
     }
 
-    public function itIgnoresUserModifications() {
+    public function itIgnoresUserModifications()
+    {
         stub($this->dao)->getMediawikiUserGroupMapping()->returnsDar(
             array('group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS),
             array('group_id' => '104', 'ugroup_id' => '2', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER)
@@ -125,7 +130,8 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
         $this->mapper->saveMapping($new_mapping, $this->project);
     }
 
-    public function itCallsRemoveAndAddDAOMethodsDuringSave() {
+    public function itCallsRemoveAndAddDAOMethodsDuringSave()
+    {
         stub($this->dao)->getMediawikiUserGroupMapping()->returnsDar(
             array(
                 'group_id'      => 104,
@@ -178,7 +184,8 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
         $this->mapper->saveMapping($new_mapping, $this->project);
     }
 
-    public function itReturnsTrueIfCurrentMappingEqualsDefaultOneForPublicProject() {
+    public function itReturnsTrueIfCurrentMappingEqualsDefaultOneForPublicProject()
+    {
         $current_mapping = array (
             array(
                 'group_id'      => 104,
@@ -214,7 +221,8 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
         $this->assertTrue($is_default);
     }
 
-    public function itReturnsFalseIfCurrentMappingNotEqualsDefaultOneForPublicProject() {
+    public function itReturnsFalseIfCurrentMappingNotEqualsDefaultOneForPublicProject()
+    {
         $current_mapping = array (
             array(
                 'group_id'      => 104,
@@ -245,7 +253,8 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
         $this->assertFalse($is_default);
     }
 
-    public function itReturnsTrueIfCurrentMappingEqualsDefaultOneForPrivateProject() {
+    public function itReturnsTrueIfCurrentMappingEqualsDefaultOneForPrivateProject()
+    {
         $current_mapping = array (
             array(
                 'group_id'      => 104,
@@ -271,7 +280,8 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
         $this->assertTrue($is_default);
     }
 
-    public function itReturnsFalseIfCurrentMappingNotEqualsDefaultOneForPrivateProject() {
+    public function itReturnsFalseIfCurrentMappingNotEqualsDefaultOneForPrivateProject()
+    {
         $current_mapping = array (
             array(
                 'group_id'      => 104,
@@ -295,7 +305,8 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
 
 class MediawikiUserGroupsMapper_DefineGroupsTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->tuleap_user    = stub('PFUser')->getId()->returns(101);
@@ -305,7 +316,8 @@ class MediawikiUserGroupsMapper_DefineGroupsTest extends TuleapTestCase {
         $this->mapper         = new MediawikiUserGroupsMapper($this->dao, $this->forge_pems_dao);
     }
 
-    public function itReturnsRightMediawikiGroupsFromDatabase() {
+    public function itReturnsRightMediawikiGroupsFromDatabase()
+    {
         stub($this->dao)->getMediawikiGroupsForUser($this->tuleap_user, $this->project)->returnsEmptyDar();
         stub($this->dao)->getMediawikiGroupsMappedForUGroups($this->tuleap_user, $this->project)->returnsDar(
             array('real_name' => 'sysop'),
@@ -325,7 +337,8 @@ class MediawikiUserGroupsMapper_DefineGroupsTest extends TuleapTestCase {
         ));
     }
 
-    public function itSetAnonymousUsersAsAnonymous() {
+    public function itSetAnonymousUsersAsAnonymous()
+    {
         stub($this->tuleap_user)->isAnonymous()->returns(true);
         stub($this->dao)->getMediawikiGroupsForUser($this->tuleap_user, $this->project)->returnsEmptyDar();
 
@@ -340,7 +353,8 @@ class MediawikiUserGroupsMapper_DefineGroupsTest extends TuleapTestCase {
         ));
     }
 
-    public function itSetAnonymousWhenNothingIsAvailable() {
+    public function itSetAnonymousWhenNothingIsAvailable()
+    {
         stub($this->dao)->getMediawikiGroupsForUser($this->tuleap_user, $this->project)->returnsEmptyDar();
         stub($this->dao)->getMediawikiGroupsMappedForUGroups($this->tuleap_user, $this->project)->returnsEmptyDar();
 
@@ -355,7 +369,8 @@ class MediawikiUserGroupsMapper_DefineGroupsTest extends TuleapTestCase {
         ));
     }
 
-    public function itReturnsUnconsistantMediawikiGroupsToBeDeleted() {
+    public function itReturnsUnconsistantMediawikiGroupsToBeDeleted()
+    {
         stub($this->tuleap_user)->isMember(202, 'A')->returns(true);
         stub($this->dao)->getMediawikiGroupsMappedForUGroups($this->tuleap_user, $this->project)->returnsEmptyDar();
         stub($this->dao)->getMediawikiGroupsForUser($this->tuleap_user, $this->project)->returnsDar(
@@ -367,7 +382,8 @@ class MediawikiUserGroupsMapper_DefineGroupsTest extends TuleapTestCase {
         $this->assertEqual($mediawiki_groups['removed'], array('ForgeRole:forge_admin'));
     }
 
-    public function itRevokesGroupsTheUserIsNoLongerMemberOf() {
+    public function itRevokesGroupsTheUserIsNoLongerMemberOf()
+    {
         stub($this->tuleap_user)->isMember(202, 'A')->returns(true);
         stub($this->dao)->getMediawikiGroupsForUser($this->tuleap_user, $this->project)->returnsDar(
             array('ug_group' => 'bureaucrat')
@@ -379,7 +395,8 @@ class MediawikiUserGroupsMapper_DefineGroupsTest extends TuleapTestCase {
         $this->assertEqual($mediawiki_groups['removed'], array('bureaucrat'));
     }
 
-    public function itDoesntAddGroupsTheUserAlreadyHave() {
+    public function itDoesntAddGroupsTheUserAlreadyHave()
+    {
         stub($this->tuleap_user)->isMember(202, 'A')->returns(true);
         stub($this->dao)->getMediawikiGroupsForUser($this->tuleap_user, $this->project)->returnsDar(
             array('ug_group' => '*')

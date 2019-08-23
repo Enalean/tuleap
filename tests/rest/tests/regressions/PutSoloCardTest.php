@@ -47,7 +47,7 @@ class Regressions_PutSoloCardTest extends RestBase
     }
 
     private function getSprintPlanningId()
-        {
+    {
         $project_plannings = $this->getResponse($this->client->get("projects/$this->project_private_member_id/plannings"))->json();
         foreach ($project_plannings as $planning) {
             if ($planning['label'] == 'Sprint Planning') {

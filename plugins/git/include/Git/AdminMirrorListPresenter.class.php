@@ -33,7 +33,8 @@ class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
     public $btn_close;
     public $base_url;
 
-    public function __construct($title, CSRFSynchronizerToken $csrf, array $list_of_mirrors) {
+    public function __construct($title, CSRFSynchronizerToken $csrf, array $list_of_mirrors)
+    {
         parent::__construct($title, $csrf);
 
         $this->list_of_mirrors                        = $list_of_mirrors;
@@ -47,51 +48,63 @@ class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
         $this->base_url                               = GIT_BASE_URL;
     }
 
-    public function getTemplate() {
+    public function getTemplate()
+    {
         return self::TEMPLATE;
     }
 
-    public function mirror_section_title() {
+    public function mirror_section_title()
+    {
         return dgettext('tuleap-git', 'Git mirror administration');
     }
 
-    public function url_label() {
+    public function url_label()
+    {
         return dgettext('tuleap-git', 'SSH Host');
     }
 
-    public function hostname_label() {
+    public function hostname_label()
+    {
         return dgettext('tuleap-git', 'Hostname');
     }
 
-    public function owner_label() {
+    public function owner_label()
+    {
         return dgettext('tuleap-git', 'Owner');
     }
 
-    public function ssh_key_label() {
+    public function ssh_key_label()
+    {
         return dgettext('tuleap-git', 'Owner\'s SSH Key');
     }
 
-    public function pwd_label() {
+    public function pwd_label()
+    {
         return dgettext('tuleap-git', 'Owner\'s Password');
     }
 
-    public function mirrored_repo_label() {
+    public function mirrored_repo_label()
+    {
         return dgettext('tuleap-git', 'Repositories on this mirror');
     }
 
-    public function manage_allowed_projects_label() {
+    public function manage_allowed_projects_label()
+    {
         return dgettext('tuleap-git', 'Manage allowed projects');
     }
 
-    public function list_of_mirrors_is_empty() {
+    public function list_of_mirrors_is_empty()
+    {
         return count($this->list_of_mirrors) === 0;
     }
 
-    public function dump_mirrored_repositories_label() {
+    public function dump_mirrored_repositories_label()
+    {
         return dgettext('tuleap-git', 'Rewrite mirrored repositories configuration');
     }
 
-    public function dump_mirrored_repositories_text() {
+    public function dump_mirrored_repositories_text()
+    {
         return dgettext('tuleap-git', 'A system event will be queued to dump the mirrored repositories configuration. This dump will rewrite the gitolite configuration according to the hostnames of each mirror and the hostname define for this server in the .gitolite.rc file. Do you want to continue?');
     }
 

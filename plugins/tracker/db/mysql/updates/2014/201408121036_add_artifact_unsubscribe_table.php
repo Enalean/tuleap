@@ -18,15 +18,18 @@
 
 class b201408121036_add_artifact_unsubscribe_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add table for unsubscribe option in artifact';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS tracker_artifact_unsubscribe (
                     artifact_id int(11) NOT NULL,
                     user_id int(11) NOT NULL,
@@ -35,7 +38,8 @@ class b201408121036_add_artifact_unsubscribe_table extends ForgeUpgrade_Bucket {
         $this->db->createTable('tracker_artifact_unsubscribe', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('tracker_artifact_unsubscribe')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_artifact_unsubscribe');
         }

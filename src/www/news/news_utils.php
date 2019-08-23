@@ -41,7 +41,8 @@ require_once __DIR__ . '/../project/admin/ugroup_utils.php';
 require_once __DIR__ . '/../forum/forum_utils.php';
 
 
-function news_header($params) {
+function news_header($params)
+{
     global $HTML,$group_id,$news_name,$news_id,$Language;
 
     \Tuleap\Project\ServiceInstrumentation::increment('news');
@@ -87,11 +88,13 @@ function news_header($params) {
     }
 }
 
-function news_footer($params) {
+function news_footer($params)
+{
     site_project_footer($params);
 }
 
-function news_show_latest($group_id = '', $limit = 10, $show_projectname = true, $allow_submit = true, $hide_nb_comments = false, $tail_headlines = 0) {
+function news_show_latest($group_id = '', $limit = 10, $show_projectname = true, $allow_submit = true, $hide_nb_comments = false, $tail_headlines = 0)
+{
     global $sys_news_group, $Language;
 
     $return  = "";
@@ -177,7 +180,8 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
     return $return;
 }
 
-function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_projectname, $hide_nb_comments) {
+function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_projectname, $hide_nb_comments)
+{
     global $Language;
     $purifier  = Codendi_HTMLPurifier::instance();
     $uh        = new UserHelper();
@@ -230,7 +234,8 @@ function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_project
     return $html;
 }
 
-function get_news_name($id) {
+function get_news_name($id)
+{
     /*
         Takes an ID and returns the corresponding forum name
     */
@@ -243,7 +248,8 @@ function get_news_name($id) {
     }
 }
 
-function get_news_name_from_forum_id($id) {
+function get_news_name_from_forum_id($id)
+{
     /*
         Takes an ID and returns the corresponding forum name
     */
@@ -256,7 +262,8 @@ function get_news_name_from_forum_id($id) {
     }
 }
 
-function news_submit($group_id, $summary, $details, $private_news, $send_news_to, $promote_news = 0) {
+function news_submit($group_id, $summary, $details, $private_news, $send_news_to, $promote_news = 0)
+{
 
     /*
         Takes Summary and Details, and submit the corresponding news, in the right project, with the right permissions
@@ -294,7 +301,8 @@ function news_submit($group_id, $summary, $details, $private_news, $send_news_to
     }
 }
 
-function news_check_permission($forum_id,$group_id) {
+function news_check_permission($forum_id,$group_id)
+{
     /*
         Takes a forum_id and checks if user is authorized to read the piece of news associated to this forum_id
     */
@@ -324,7 +332,8 @@ function news_check_permission($forum_id,$group_id) {
 /**
  * insert for this forum_id a news_read permission for project members only
  */
-function news_insert_permissions($forum_id,$group_id) {
+function news_insert_permissions($forum_id,$group_id)
+{
 
     global $Language,$UGROUP_PROJECT_MEMBERS;
 
@@ -338,7 +347,8 @@ function news_insert_permissions($forum_id,$group_id) {
     }
 }
 
-function news_update_permissions($forum_id,$is_private,$group_id) {
+function news_update_permissions($forum_id,$is_private,$group_id)
+{
 
     global $Language,$UGROUP_PROJECT_MEMBERS;
 
@@ -363,7 +373,8 @@ function news_update_permissions($forum_id,$is_private,$group_id) {
 
 }
 
-function news_read_permissions($forum_id) {
+function news_read_permissions($forum_id)
+{
 
     /*
         Takes forum_id and reads the permission of the corresponding news. Returns a result set.
@@ -372,7 +383,8 @@ function news_read_permissions($forum_id) {
     return permission_db_authorized_ugroups('NEWS_READ',$forum_id);
 }
 
-function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$details) {
+function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$details)
+{
     global $Language;
 
     $pm = ProjectManager::instance();
@@ -402,7 +414,8 @@ function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$detail
     }
 }
 
-function news_send_to_ugroups($ugroups, $summary, $details, $group_id) {
+function news_send_to_ugroups($ugroups, $summary, $details, $group_id)
+{
     $hp      = Codendi_HTMLPurifier::instance();
     $pm      = ProjectManager::instance();
     $project = $pm->getProject($group_id);
@@ -430,7 +443,8 @@ function news_send_to_ugroups($ugroups, $summary, $details, $group_id) {
     }
 }
 
-function news_fetch_ugroups($project) {
+function news_fetch_ugroups($project)
+{
     $ugroup_manager   = new UGroupManager();
     $hp               = Codendi_HTMLPurifier::instance();
     $excluded_ugroups = array(

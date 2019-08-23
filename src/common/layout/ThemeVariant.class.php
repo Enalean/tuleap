@@ -57,7 +57,8 @@ class ThemeVariant {
         }
     }
 
-    public function getVariantForUser(PFUser $user) {
+    public function getVariantForUser(PFUser $user)
+    {
         $variant = $user->getPreference(self::PREFERENCE_NAME);
         if (! $variant || ! $this->isAllowed($variant)) {
             $variant = $this->default;
@@ -66,19 +67,23 @@ class ThemeVariant {
         return $variant;
     }
 
-    public function getAllowedVariants() {
+    public function getAllowedVariants()
+    {
         return $this->allowed;
     }
 
-    public function isAllowed($variant) {
+    public function isAllowed($variant)
+    {
         return in_array($variant, $this->allowed);
     }
 
-    public function getDefault() {
+    public function getDefault()
+    {
         return $this->default;
     }
 
-    private function unsetInvalidThemes() {
+    private function unsetInvalidThemes()
+    {
         foreach ($this->allowed as $index => $item) {
             if (! in_array($item, FlamingParrot_Theme::getVariants())) {
                 unset($this->allowed[$index]);

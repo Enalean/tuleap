@@ -61,7 +61,8 @@ class ContinuousIntegrationCollector {
         $this->factory            = $factory;
     }
 
-    public function collect(Project $project, $job_id) {
+    public function collect(Project $project, $job_id)
+    {
         $job_ids      = $this->getJobIdsThatTriggerCommit($project);
         $job          = $this->getJob($job_id);
         $repositories = $this->getRepositories($project, $job);
@@ -86,7 +87,8 @@ class ContinuousIntegrationCollector {
         }
     }
 
-    private function getPath($job) {
+    private function getPath($job)
+    {
         if ($job !== null) {
             return $job->getPath();
         }
@@ -94,7 +96,8 @@ class ContinuousIntegrationCollector {
         return '';
     }
 
-    private function getJob($job_id) {
+    private function getJob($job_id)
+    {
         if ($job_id !== null) {
             return $this->factory->getJobById($job_id);
         }
@@ -102,11 +105,13 @@ class ContinuousIntegrationCollector {
         return null;
     }
 
-    private function doesJobTriggerCommit(array $job_ids, $job_id) {
+    private function doesJobTriggerCommit(array $job_ids, $job_id)
+    {
         return $job_id !== null && array_key_exists($job_id, $job_ids);
     }
 
-    private function getJobIdsThatTriggerCommit(Project $project) {
+    private function getJobIdsThatTriggerCommit(Project $project)
+    {
         $used = array();
 
         foreach ($this->getJobIds($project) as $job_id) {
@@ -116,7 +121,8 @@ class ContinuousIntegrationCollector {
         return $used;
     }
 
-    private function getRepositories(Project $project, $job) {
+    private function getRepositories(Project $project, $job)
+    {
         $repositories_presenter = array();
 
         foreach ($this->repository_manager->getRepositoriesInProject($project) as $repository) {
@@ -130,7 +136,8 @@ class ContinuousIntegrationCollector {
         return $repositories_presenter;
     }
 
-    private function isRepositorySelected(Repository $repository, $job) {
+    private function isRepositorySelected(Repository $repository, $job)
+    {
         if ($job === null) {
             return false;
         }
@@ -138,7 +145,8 @@ class ContinuousIntegrationCollector {
         return $job->getRepositoryId() === $repository->getId();
     }
 
-    private function getJobIds(Project $project) {
+    private function getJobIds(Project $project)
+    {
         return $this->dao->getJobIds($project);
     }
 }

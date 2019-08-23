@@ -28,7 +28,8 @@ class Tracker_TreeNode_CardPresenterNode extends NodeDuplicator {
      */
     private $presenter;
 
-    public function __construct(TreeNode $node, Tracker_CardPresenter $presenter) {
+    public function __construct(TreeNode $node, Tracker_CardPresenter $presenter)
+    {
         parent::__construct($node);
         $this->presenter = $presenter;
     }
@@ -36,7 +37,8 @@ class Tracker_TreeNode_CardPresenterNode extends NodeDuplicator {
     /**
      * @return Tracker_CardPresenter
      */
-    public function getCardPresenter() {
+    public function getCardPresenter()
+    {
         return $this->presenter;
     }
 }

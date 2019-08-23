@@ -18,15 +18,18 @@
 
 class b201508241048_add_truncated_emails_column extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return "Modify table groups to store truncated emails usage";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = 'ALTER TABLE groups ADD COLUMN truncated_emails TINYINT(1) NOT NULL DEFAULT 0';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

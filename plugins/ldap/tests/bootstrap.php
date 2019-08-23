@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/../include/ldapPlugin.class.php';
 
-function aLDAPResultIterator() {
+function aLDAPResultIterator()
+{
     return new LDAPResultIterator_BuilderForTest();
 }
 
@@ -29,7 +30,8 @@ class LDAPResultIterator_BuilderForTest {
     private $info = array('count' => 0);
     private $params;
 
-    public function withInfo(array $info) {
+    public function withInfo(array $info)
+    {
         $this->info = array(
             'count' => count($info),
         );
@@ -57,12 +59,14 @@ class LDAPResultIterator_BuilderForTest {
         return $this;
     }
 
-    public function withParams(array $params) {
+    public function withParams(array $params)
+    {
         $this->params = $params;
         return $this;
     }
 
-    public function build() {
+    public function build()
+    {
         return new LDAPResultIterator($this->info, $this->params);
     }
 }
@@ -71,7 +75,8 @@ class LDAPResultExpectation extends SimpleExpectation {
 
     private $expected;
 
-    public function __construct($expected_cn) {
+    public function __construct($expected_cn)
+    {
         parent::__construct();
         $this->expected = $expected_cn;
     }

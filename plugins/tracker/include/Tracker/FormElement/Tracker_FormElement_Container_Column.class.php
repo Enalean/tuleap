@@ -58,11 +58,13 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', $artifact, $submitted_values, []);
     }
 
-    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
+    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false)
+    {
         return $this->fetchWithColumnGroup('fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
     }
 
-    public function fetchMailArtifactInGroup($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
+    public function fetchMailArtifactInGroup($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false)
+    {
         return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
     }
 
@@ -114,10 +116,12 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      *
      * @return string html
      */
-    public function fetchAdmin($tracker) {
+    public function fetchAdmin($tracker)
+    {
         return $this->fetchWithColumnGroup('fetchAdmin', array($tracker));
     }
-    public function fetchAdminInGroup($tracker) {
+    public function fetchAdminInGroup($tracker)
+    {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
         $html .= $this->fetchColumnPrefix('class="tracker-admin-container tracker-admin-column" id="tracker-admin-formElements_'. $this->id .'" style="min-width:200px; min-height:80px; border:1px dashed #ccc; margin: 1px; padding: 4px;"');
@@ -151,7 +155,8 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         return $html;
     }
 
-    protected function fetchWithColumnGroup($method, $params = array()) {
+    protected function fetchWithColumnGroup($method, $params = array())
+    {
         $html = '';
         //Fetch only if it has not been already done
         if (!$this->hasBeenDisplayed()) {
@@ -170,26 +175,31 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         return $html;
     }
 
-    protected function fetchArtifactPrefix() {
+    protected function fetchArtifactPrefix()
+    {
         return $this->fetchColumnPrefix();
     }
 
-    protected function fetchArtifactSuffix() {
+    protected function fetchArtifactSuffix()
+    {
         return $this->fetchColumnSuffix();
     }
 
-    protected function fetchMailArtifactPrefix($format) {
+    protected function fetchMailArtifactPrefix($format)
+    {
         return '';
     }
 
-    protected function fetchMailArtifactSuffix($format) {
+    protected function fetchMailArtifactSuffix($format)
+    {
         return '';
     }
 
     /**
      * Close th table if needed
      */
-    protected function fetchColumnSuffix() {
+    protected function fetchColumnSuffix()
+    {
         $html = '</div>';
         return $html;
     }
@@ -197,7 +207,8 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     /**
      * Open the table if needed
      */
-    protected function fetchColumnPrefix($htmlparams = '') {
+    protected function fetchColumnPrefix($htmlparams = '')
+    {
         $html = '<div '. $htmlparams .'>';
         return $html;
     }
@@ -205,28 +216,32 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     /**
      * @return the label of the field (mainly used in admin part)
      */
-    public static function getFactoryLabel() {
+    public static function getFactoryLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','column');
     }
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
-    public static function getFactoryDescription() {
+    public static function getFactoryDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','column_description');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconUseIt() {
+    public static function getFactoryIconUseIt()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/layout-2.png');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconCreate() {
+    public static function getFactoryIconCreate()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/layout-2--plus.png');
     }
 
@@ -234,7 +249,8 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      * Display the html field in the admin ui
      * @return string html
      */
-    protected function fetchAdminFormElement() {
+    protected function fetchAdminFormElement()
+    {
         $html = '';
         return $html;
     }

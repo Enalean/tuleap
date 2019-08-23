@@ -65,39 +65,48 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
         $this->hidden_fieldsets_detector = $hidden_fieldsets_detector;
     }
 
-    public function artifact_links_title() {
+    public function artifact_links_title()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'artifact_links_title');
     }
 
-    public function artifact_links_readonly() {
+    public function artifact_links_readonly()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'artifact_links_readonly', array($this->artifact_uri));
     }
 
-    public function no_artifact_links() {
+    public function no_artifact_links()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'no_artifact_links');
     }
 
-    public function add_followup_placeholder() {
+    public function add_followup_placeholder()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'add_followup_placeholder');
     }
 
-    public function followups_title() {
+    public function followups_title()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'followups_title');
     }
 
-    public function javascript_rules() {
+    public function javascript_rules()
+    {
         return $this->artifact->getTracker()->displayRulesAsJavascript();
     }
 
-    public function submit() {
+    public function submit()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'submit');
     }
 
-    public function cancel() {
+    public function cancel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'cancel');
     }
 
-    public function user_is_logged_in() {
+    public function user_is_logged_in()
+    {
         return $this->user->isLoggedIn();
     }
 

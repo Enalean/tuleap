@@ -36,7 +36,8 @@ class Git_Driver_GerritLegacy_DeletePluginTest extends TuleapTestCase implements
      */
     private $ssh;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
 
@@ -45,14 +46,16 @@ class Git_Driver_GerritLegacy_DeletePluginTest extends TuleapTestCase implements
         $this->driver = new Git_Driver_GerritLegacy($this->ssh, $this->logger);
     }
 
-    public function itReturnsFalseIfPluginIsNotInstalled() {
+    public function itReturnsFalseIfPluginIsNotInstalled()
+    {
         stub($this->ssh)->execute()->returns("");
         $enabled = $this->driver->isDeletePluginEnabled($this->gerrit_server);
 
         $this->assertFalse($enabled);
     }
 
-    public function itReturnsFalseIfPluginIsInstalledAndNotEnabled() {
+    public function itReturnsFalseIfPluginIsInstalledAndNotEnabled()
+    {
         stub($this->ssh)->execute()->returns("Name                           Version    Status
                                         ----------------------------------------------------
                                         deleteproject                  1.1-SNAPSHOT DISABLED
@@ -62,7 +65,8 @@ class Git_Driver_GerritLegacy_DeletePluginTest extends TuleapTestCase implements
         $this->assertFalse($enabled);
     }
 
-    public function itReturnsTrueIfPluginIsInstalledAndEnabled() {
+    public function itReturnsTrueIfPluginIsInstalledAndEnabled()
+    {
         stub($this->ssh)->execute()->returns("Name                           Version    Status
                                         ----------------------------------------------------
                                         deleteproject                  1.1-SNAPSHOT ENABLED
@@ -72,7 +76,8 @@ class Git_Driver_GerritLegacy_DeletePluginTest extends TuleapTestCase implements
         $this->assertTrue($enabled);
     }
 
-    public function itThrowsAProjectDeletionExceptionIfThereAreOpenChanges() {
+    public function itThrowsAProjectDeletionExceptionIfThereAreOpenChanges()
+    {
         $exception = new Git_Driver_Gerrit_RemoteSSHCommandFailure(1, '', 'error');
         stub($this->ssh)->execute()->throws($exception);
 

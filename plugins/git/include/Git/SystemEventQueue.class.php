@@ -27,19 +27,23 @@ class Git_SystemEventQueue extends SystemEventQueue {
 
     public const NAME = 'git';
 
-    public function __construct(Logger $logger) {
+    public function __construct(Logger $logger)
+    {
         $this->logger = $logger;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return self::NAME;
     }
 
-    public function getLabel() {
+    public function getLabel()
+    {
         return dgettext('tuleap-git', 'Git');
     }
 
-    public function getLogger() {
+    public function getLogger()
+    {
         return $this->logger;
     }
 }

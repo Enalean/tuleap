@@ -58,7 +58,8 @@ class UsersToBeImportedCollectionBuilder {
     }
 
     /** @return UsersToBeImportedCollection */
-    public function build(ArchiveInterface $archive) {
+    public function build(ArchiveInterface $archive)
+    {
         $collection = new UsersToBeImportedCollection();
 
         foreach ($this->getXMLFromArchive($archive) as $user) {
@@ -70,7 +71,8 @@ class UsersToBeImportedCollectionBuilder {
     }
 
     /** @return UsersToBeImportedCollection */
-    public function buildWithoutEmail(ArchiveInterface $archive) {
+    public function buildWithoutEmail(ArchiveInterface $archive)
+    {
         $collection = new UsersToBeImportedCollection();
 
         foreach ($this->getXMLFromArchive($archive) as $user) {
@@ -87,7 +89,8 @@ class UsersToBeImportedCollectionBuilder {
      * @return SimpleXMLElement
      * @throws UsersXMLNotFoundException
      */
-    private function getXMLFromArchive(ArchiveInterface $archive) {
+    private function getXMLFromArchive(ArchiveInterface $archive)
+    {
         $xml_contents = $archive->getUsersXML();
         if (! $xml_contents) {
             throw new UsersXMLNotFoundException();
@@ -101,7 +104,8 @@ class UsersToBeImportedCollectionBuilder {
         return $xml_element;
     }
 
-    private function instantiateUserToBeImportedWithoutEmail(SimpleXMLElement $xml_user) {
+    private function instantiateUserToBeImportedWithoutEmail(SimpleXMLElement $xml_user)
+    {
         $tuleap_user = $this->getExistingUserFromXML($xml_user);
 
         if ($tuleap_user) {
@@ -118,7 +122,8 @@ class UsersToBeImportedCollectionBuilder {
 
     }
 
-    private function instantiateUserToBeImported(SimpleXMLElement $user) {
+    private function instantiateUserToBeImported(SimpleXMLElement $user)
+    {
         $existing_user = $this->getExistingUserFromXML($user);
 
         if (! $existing_user) {
@@ -142,7 +147,8 @@ class UsersToBeImportedCollectionBuilder {
         return $this->instantiateMatchingUser($existing_user, $user);
     }
 
-    private function instantiateUserByMail(SimpleXMLElement $user) {
+    private function instantiateUserByMail(SimpleXMLElement $user)
+    {
         $matching_users = $this->user_manager->getAllUsersByEmail((string) $user->email);
 
         if (empty($matching_users)) {
@@ -165,7 +171,8 @@ class UsersToBeImportedCollectionBuilder {
     }
 
     /** @return \PFUser */
-    private function getExistingUserFromXML(SimpleXMLElement $user) {
+    private function getExistingUserFromXML(SimpleXMLElement $user)
+    {
         $ldap_id = (string) $user->ldapid;
 
         $existing_user = null;
@@ -180,7 +187,8 @@ class UsersToBeImportedCollectionBuilder {
         return $existing_user;
     }
 
-    private function instantiateMatchingUser(PFUser $user, SimpleXMLElement $xml_user) {
+    private function instantiateMatchingUser(PFUser $user, SimpleXMLElement $xml_user)
+    {
         if ($user->isAlive()) {
             $to_be_imported_user = new AlreadyExistingUser($user, (string) $xml_user->id, (string) $xml_user->ldapid);
         } else {

@@ -59,7 +59,8 @@ class AgileDashboard_CardRepresentation {
      */
     public $values = array();
 
-    public function build(Cardwall_CardInCellPresenter $card, $column_id, $planning_id, PFUser $user) {
+    public function build(Cardwall_CardInCellPresenter $card, $column_id, $planning_id, PFUser $user)
+    {
         $this->id           = $planning_id . '_' . $card->getId();
         $this->label        = $card->getArtifact()->getTitle();
         $this->uri          = self::ROUTE . '/' . $this->id;
@@ -92,14 +93,16 @@ class AgileDashboard_CardRepresentation {
         }
     }
 
-    private function getProjectReference(Project $project) {
+    private function getProjectReference(Project $project)
+    {
         $project_reference = new Tuleap\Project\REST\ProjectReference();
         $project_reference->build($project);
 
         return $project_reference;
     }
 
-    private function getArtifactReference(Tracker_Artifact $artifact) {
+    private function getArtifactReference(Tracker_Artifact $artifact)
+    {
         $artifact_reference = new \Tuleap\Tracker\REST\Artifact\ArtifactReference();
         $artifact_reference->build($artifact);
 
@@ -114,7 +117,8 @@ class AgileDashboard_CardRepresentation {
      * @param Closure $function
      * @return array
      */
-    private function mapAndFilter(array $collection, Closure $function) {
+    private function mapAndFilter(array $collection, Closure $function)
+    {
         return array_values(
             array_filter(
                 array_map(
@@ -125,7 +129,8 @@ class AgileDashboard_CardRepresentation {
         );
     }
 
-    private function getFieldsValuesFilter(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+    private function getFieldsValuesFilter(PFUser $user, Tracker_Artifact_Changeset $changeset)
+    {
         return function (Cardwall_CardFieldPresenter $field_presenter) use ($user, $changeset) {
             if ($field_presenter->getTrackerField()->userCanRead($user)) {
                 return $field_presenter->getTrackerField()->getRESTValue($user, $changeset);
@@ -134,7 +139,8 @@ class AgileDashboard_CardRepresentation {
         };
     }
 
-    private function getCardStatus(Cardwall_CardInCellPresenter $card) {
+    private function getCardStatus(Cardwall_CardInCellPresenter $card)
+    {
         $semantic = Tracker_Semantic_Status::load($card->getArtifact()->getTracker());
 
         return $semantic->getNormalizedStatusLabel($card->getArtifact());

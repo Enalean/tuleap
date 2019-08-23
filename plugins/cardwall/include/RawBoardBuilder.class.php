@@ -91,14 +91,16 @@ class Cardwall_RawBoardBuilder
      *
      * @return Cardwall_UserPreferences_UserPreferencesDisplayUser
      */
-    public function getDisplayPreferences(Planning_Milestone $milestone, PFUser $user) {
+    public function getDisplayPreferences(Planning_Milestone $milestone, PFUser $user)
+    {
         $pref_name = Cardwall_UserPreferences_UserPreferencesDisplayUser::ASSIGNED_TO_USERNAME_PREFERENCE_NAME . $milestone->getTrackerId();
         $display_avatars = $user->isAnonymous() || ! $user->getPreference($pref_name);
 
         return new Cardwall_UserPreferences_UserPreferencesDisplayUser($display_avatars);
     }
 
-    private function getMappingCollection(Planning $planning, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, Cardwall_OnTop_Config $config) {
+    private function getMappingCollection(Planning $planning, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, Cardwall_OnTop_Config $config)
+    {
         $trackers_used_on_cardwall = array();
 
         foreach ($planning->getBacklogTrackers() as $backlog_tracker) {
@@ -111,7 +113,8 @@ class Cardwall_RawBoardBuilder
         );
     }
 
-    private function getIndexedStatusFieldsOf(array $trackers, $field_provider) {
+    private function getIndexedStatusFieldsOf(array $trackers, $field_provider)
+    {
         $status_fields = array();
 
         foreach ($trackers as $tracker) {
@@ -121,7 +124,8 @@ class Cardwall_RawBoardBuilder
         return $indexed_status_fields;
     }
 
-    private function indexById(array $fields) {
+    private function indexById(array $fields)
+    {
         $indexed_array = array();
         foreach ($fields as $field) {
             $indexed_array[$field->getId()] = $field;

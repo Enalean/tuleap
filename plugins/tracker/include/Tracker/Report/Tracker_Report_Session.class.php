@@ -24,7 +24,8 @@ class Tracker_Report_Session extends Codendi_Session {
     protected $report_namespace;
 
 
-    public function __construct($report_id) {
+    public function __construct($report_id)
+    {
         parent::__construct();
         $this->report_id         = $report_id;
         $this->report_namespace  = $report_id;
@@ -38,12 +39,14 @@ class Tracker_Report_Session extends Codendi_Session {
         $this->session_namespace_path = ".trackers.reports.$this->report_namespace";
     }
 
-    public function hasChanged() {
+    public function hasChanged()
+    {
         //return $this->get('has_changed');
         return $this->session['trackers']['reports'][$this->report_namespace]['has_changed'];
     }
 
-    public function setHasChanged($has_changed = true) {
+    public function setHasChanged($has_changed = true)
+    {
         //$this->set('has_changed', $has_changed);
         $this->session['trackers']['reports'][$this->report_namespace]['has_changed'] = $has_changed;
     }
@@ -53,7 +56,8 @@ class Tracker_Report_Session extends Codendi_Session {
      * @param int $id report id to copy
      * @param int $new_id destination report id
      */
-    public function copy($id, $new_id) {
+    public function copy($id, $new_id)
+    {
         $previous_session_namespace_path = $this->getSessionNamespacePath();
         //going up to session root
         $this->changeSessionNamespace(".");
@@ -98,7 +102,8 @@ class Tracker_Report_Session extends Codendi_Session {
      * remove a criterion (field) from session
      * @param <type> $field_id
      */
-    public function removeCriterion($field_id) {
+    public function removeCriterion($field_id)
+    {
         $this->set("criteria.$field_id.is_removed", 1);
     }
 
@@ -111,7 +116,8 @@ class Tracker_Report_Session extends Codendi_Session {
      * @param array $opts
      * @todo empty value may allow to set options only?
      */
-    public function storeCriterion($field_id, $value, $opts=array()) {
+    public function storeCriterion($field_id, $value, $opts=array())
+    {
         $this->set("criteria.{$field_id}.value", $value);
         if ( isset($opts['is_advanced']) ) {
             $this->set("criteria.{$field_id}.is_advanced", $opts['is_advanced']);
@@ -121,7 +127,8 @@ class Tracker_Report_Session extends Codendi_Session {
         }
     }
 
-    public function storeAdditionalCriterion(Tracker_Report_AdditionalCriterion $additional_criterion) {
+    public function storeAdditionalCriterion(Tracker_Report_AdditionalCriterion $additional_criterion)
+    {
         $key = $additional_criterion->getKey();
         $this->set("additional_criteria.{$key}.value", $additional_criterion->getValue());
     }
@@ -131,7 +138,8 @@ class Tracker_Report_Session extends Codendi_Session {
      * NOTICE: Do not set value if empty
      *
      */
-    public function updateCriterion($field_id, $value, $opts=array()) {
+    public function updateCriterion($field_id, $value, $opts=array())
+    {
         if ( !empty($value) || is_array($value) ) {
             $this->set("criteria.{$field_id}.value", $value);
         }
@@ -143,12 +151,14 @@ class Tracker_Report_Session extends Codendi_Session {
         }
     }
 
-    public function &getCriteria() {
+    public function &getCriteria()
+    {
         $criteria = &$this->get('criteria');
         return $criteria;
     }
 
-    public function getAdditionalCriteria() {
+    public function getAdditionalCriteria()
+    {
         return $this->get('additional_criteria');
     }
 
@@ -157,7 +167,8 @@ class Tracker_Report_Session extends Codendi_Session {
      * @param int $field_id
      * @return mixed array or false if the criterion does not exist
      */
-    public function &getCriterion($field_id) {
+    public function &getCriterion($field_id)
+    {
         $criterion = &$this->get("criteria.{$field_id}");
         return $criterion;
     }
@@ -166,7 +177,8 @@ class Tracker_Report_Session extends Codendi_Session {
     * remove a renderer from session
     * @param int $renderer_id
     */
-    public function removeRenderer($renderer_id) {
+    public function removeRenderer($renderer_id)
+    {
         $renderers =& $this->get('renderers');
         if (isset($renderers[$renderer_id])) {
             unset($renderers[$renderer_id]);
@@ -177,7 +189,8 @@ class Tracker_Report_Session extends Codendi_Session {
     * rename a renderer in session
     * @param int $renderer_id
     */
-    public function renameRenderer($renderer_id, $name, $description) {
+    public function renameRenderer($renderer_id, $name, $description)
+    {
         $renderers =& $this->get("renderers.$renderer_id");
         if ($renderers) {
             $renderers['name'] = $name;
@@ -189,13 +202,15 @@ class Tracker_Report_Session extends Codendi_Session {
     * move a renderer in session
     * @param int $renderer_id
     */
-    public function moveRenderer($renderers_rank) {
+    public function moveRenderer($renderers_rank)
+    {
         foreach($renderers_rank as $rank => $renderer_id) {
             $this->set("renderers.{$renderer_id}.rank", $rank);
         }
     }
 
-    public function storeRenderer($renderer_id, $data, $opts=array() ) {
+    public function storeRenderer($renderer_id, $data, $opts=array() )
+    {
         $this->set("renderers.{$renderer_id}", $data);
 
     }

@@ -21,17 +21,20 @@
 
 class b201108311456_add_image_renderer extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add table to store image widget
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS widget_image (
                   id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
                   owner_id int(11) unsigned NOT NULL default '0',
@@ -43,7 +46,8 @@ EOT;
         $this->db->createTable('widget_image', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('widget_image')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('widget_image table is missing');
         }

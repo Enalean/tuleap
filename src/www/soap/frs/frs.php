@@ -479,7 +479,8 @@ if (defined('NUSOAP')) {
  * @param int $group_id the ID of the group we want to retrieve the array of packages
  * @return array the array of SOAPFRSPackage that belongs to the project identified by $group_id, or a soap fault if group_id does not match with a valid project.
  */
-    function getPackages($sessionKey,$group_id) {
+    function getPackages($sessionKey,$group_id)
+    {
         if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
@@ -505,7 +506,8 @@ if (defined('NUSOAP')) {
  * @param Object{FRSPackage} $package the package to convert.
  * @return array the SOAPFRSPackage corresponding to the FRSPackage Object
  */
-    function package_to_soap($package) {
+    function package_to_soap($package)
+    {
         // check if current user is allowed to see this package
         if ($package->userCanRead()) {
             return array(
@@ -520,7 +522,8 @@ if (defined('NUSOAP')) {
         return null;
     }
 
-    function packages_to_soap(&$pkg_arr) {
+    function packages_to_soap(&$pkg_arr)
+    {
         $return = array();
         foreach ($pkg_arr as $package) {
             $return[] = package_to_soap($package);
@@ -543,7 +546,8 @@ if (defined('NUSOAP')) {
  *              - the user does not have the permissions to create a package
  *              - the package creation failed.
  */
-    function addPackage($sessionKey,$group_id,$package_name,$status_id,$rank=0,$approve_license=true) {
+    function addPackage($sessionKey,$group_id,$package_name,$status_id,$rank=0,$approve_license=true)
+    {
         if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
@@ -586,7 +590,8 @@ if (defined('NUSOAP')) {
  * @param int $package_id the ID of the package we want to retrieve the array of releases
  * @return array the array of SOAPFRSRelease that belongs to the project identified by $group_id, in the package $package_id, or a soap fault if group_id does not match with a valid project or if package_id does not match with group_id.
  */
-    function getReleases($sessionKey,$group_id,$package_id) {
+    function getReleases($sessionKey,$group_id,$package_id)
+    {
         if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
@@ -623,7 +628,8 @@ if (defined('NUSOAP')) {
  * @param Object{FRSRelease} $release the release to convert.
  * @return array the SOAPFRSRelease corresponding to the FRSRelease Object
  */
-    function release_to_soap($release) {
+    function release_to_soap($release)
+    {
         // check if the user can view
         if ($release->userCanRead()) {
             return array(
@@ -640,7 +646,8 @@ if (defined('NUSOAP')) {
         return null;
     }
 
-    function releases_to_soap($release_arr) {
+    function releases_to_soap($release_arr)
+    {
         $return = array();
         foreach ($release_arr as $release) {
             $soap_release = release_to_soap($release);
@@ -670,7 +677,8 @@ if (defined('NUSOAP')) {
  *              - the user does not have the permissions to create a release
  *              - the release creation failed.
  */
-    function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$status_id,$release_date) {
+    function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$status_id,$release_date)
+    {
         if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
@@ -739,7 +747,8 @@ if (defined('NUSOAP')) {
  *              - the user does not have the permissions to update a release
  *              - the release creation failed.
  */
-    function updateRelease($sessionKey, $group_id, $package_id, $release_id, $notes, $changes, $status_id) {
+    function updateRelease($sessionKey, $group_id, $package_id, $release_id, $notes, $changes, $status_id)
+    {
         if (! session_continue($sessionKey)) {
             return new SoapFault(invalid_session_fault,'Invalid Session','updateRelease');
         }
@@ -791,7 +800,8 @@ if (defined('NUSOAP')) {
  * @return array the array of SOAPFRSFile that belongs to the project identified by $group_id, in the package $package_id, in the release $release_id
  *         or a soap fault if group_id does not match with a valid project or if package_id does not match with group_id, or if release_id does not match with package_id.
  */
-    function getFiles($sessionKey,$group_id,$package_id,$release_id) {
+    function getFiles($sessionKey,$group_id,$package_id,$release_id)
+    {
         if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
@@ -839,7 +849,8 @@ if (defined('NUSOAP')) {
  * @return array FRSFile that belongs to the project identified by $group_id, in the package $package_id, in the release $release_id, with the ID $file_id
  *         or a soap fault if group_id does not match with a valid project or if package_id does not match with group_id, or if release_id does not match with package_id, or if file_id does not match with release_id.
  */
-    function getFileInfo($sessionKey, $group_id, $package_id, $release_id, $file_id) {
+    function getFileInfo($sessionKey, $group_id, $package_id, $release_id, $file_id)
+    {
         if (session_continue($sessionKey)) {
 
             try {
@@ -891,7 +902,8 @@ if (defined('NUSOAP')) {
  * @param Object{FRSFile} $file the file to convert.
  * @return array the SOAPFRSFile corresponding to the FRSFile Object
  */
-    function file_to_soap(FRSFile $file) {
+    function file_to_soap(FRSFile $file)
+    {
         $return = null;
         // for the moment, no permissions on files
         $return = array(
@@ -911,7 +923,8 @@ if (defined('NUSOAP')) {
         return $return;
     }
 
-    function files_to_soap($files_arr) {
+    function files_to_soap($files_arr)
+    {
         $return = array();
         foreach ($files_arr as $file) {
             $return[] = file_to_soap($file);
@@ -935,7 +948,8 @@ if (defined('NUSOAP')) {
  *              - file_id does not match with release_id, or
  *              - the file is not present on the server
  */
-    function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
+    function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id)
+    {
         if (session_continue($sessionKey)) {
 
             try {
@@ -1003,7 +1017,8 @@ if (defined('NUSOAP')) {
  *              - file_id does not match with release_id, or
  *              - the file is not present on the server
  */
-    function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$offset,$size) {
+    function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$offset,$size)
+    {
         if (session_continue($sessionKey)) {
 
             try {
@@ -1078,7 +1093,8 @@ if (defined('NUSOAP')) {
  *              - the user does not have the permissions to create a file
  *              - the file creation failed.
  */
-    function addFile($sessionKey, $group_id, $package_id, $release_id, $filename, $base64_contents, $type_id, $processor_id, $reference_md5, $comment) {
+    function addFile($sessionKey, $group_id, $package_id, $release_id, $filename, $base64_contents, $type_id, $processor_id, $reference_md5, $comment)
+    {
         if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
@@ -1144,7 +1160,8 @@ if (defined('NUSOAP')) {
  * - the user does not have permissions to delete this file
  * - the system was not able to update the file.
  */
-    function updateFileComment($sessionKey, $group_id, $package_id, $release_id, $file_id, $comment) {
+    function updateFileComment($sessionKey, $group_id, $package_id, $release_id, $file_id, $comment)
+    {
         if (session_continue($sessionKey)) {
             try {
                 $project_manager = ProjectManager::instance();
@@ -1206,7 +1223,8 @@ if (defined('NUSOAP')) {
  *              - the sessionKey is not valid,
  *              - the file creation failed.
  */
-    function addFileChunk($sessionKey, $filename, $contents, $first_chunk) {
+    function addFileChunk($sessionKey, $filename, $contents, $first_chunk)
+    {
         if (! session_continue($sessionKey)) {
             return new SoapFault(invalid_session_fault,'Invalid Session', 'addFileChunk');
         }
@@ -1267,7 +1285,8 @@ if (defined('NUSOAP')) {
  *              - the md5 comparison failed
  *              - the file creation failed.
  */
-    function addUploadedFile($sessionKey, $group_id, $package_id, $release_id, $filename, $type_id, $processor_id, $reference_md5, $comment) {
+    function addUploadedFile($sessionKey, $group_id, $package_id, $release_id, $filename, $type_id, $processor_id, $reference_md5, $comment)
+    {
         if (session_continue($sessionKey)) {
 
             try {
@@ -1329,7 +1348,8 @@ if (defined('NUSOAP')) {
  *              - group_id does not match with a valid project,
  *              - the user does not have the permissions to see the incoming directory (must be project admin, file admin or super user)
  */
-    function getUploadedFiles($sessionKey, $group_id) {
+    function getUploadedFiles($sessionKey, $group_id)
+    {
         if (session_continue($sessionKey)) {
 
             try {
@@ -1366,7 +1386,8 @@ if (defined('NUSOAP')) {
  * - the user does not have permissions to delete this file
  * - the system was not able to delete the file.
  */
-    function deleteFile($sessionKey, $group_id, $package_id, $release_id, $file_id) {
+    function deleteFile($sessionKey, $group_id, $package_id, $release_id, $file_id)
+    {
         if (session_continue($sessionKey)) {
 
             try {
@@ -1426,7 +1447,8 @@ if (defined('NUSOAP')) {
  *                 - the user does not have permissions to delete packages
  *                 - the system was not able to delete the packages.
  */
-    function deleteEmptyPackage($sessionKey, $group_id, $package_id, $cleanup_all) {
+    function deleteEmptyPackage($sessionKey, $group_id, $package_id, $cleanup_all)
+    {
         if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
@@ -1482,7 +1504,8 @@ if (defined('NUSOAP')) {
  *                 - the user does not have permissions to delete releases
  *                 - the system was not able to delete the releases.
  */
-    function deleteEmptyRelease($sessionKey, $group_id, $package_id, $release_id, $cleanup_all) {
+    function deleteEmptyRelease($sessionKey, $group_id, $package_id, $release_id, $cleanup_all)
+    {
         if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();

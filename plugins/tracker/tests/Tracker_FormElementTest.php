@@ -26,7 +26,8 @@ Mock::generate('Tracker_FormElementFactory');
 
 class Tracker_FormElementTest extends TuleapTestCase {
 
-    function testGetOriginalProjectAndOriginalTracker() {
+    function testGetOriginalProjectAndOriginalTracker()
+    {
         $project = new MockProject();
         $tracker = new MockTracker();
         $tracker->setReturnValue('getProject', $project);
@@ -39,22 +40,26 @@ class Tracker_FormElementTest extends TuleapTestCase {
         $this->assertEqual($project, $element->getOriginalProject());
     }
 
-    function testGetOriginalFieldIdShouldReturnTheFieldId() {
+    function testGetOriginalFieldIdShouldReturnTheFieldId()
+    {
         $original = $this->GivenAFormElementWithIdAndOriginalField(112, null);
         $element = $this->GivenAFormElementWithIdAndOriginalField(null, $original);
         $this->assertEqual($element->getOriginalFieldId(), 112);
     }
 
-    function testGetOriginalFieldIdShouldReturn0IfNoOriginalField() {
+    function testGetOriginalFieldIdShouldReturn0IfNoOriginalField()
+    {
         $element = $this->GivenAFormElementWithIdAndOriginalField(null, null);
         $this->assertEqual($element->getOriginalFieldId(), 0);
     }
 
-    protected function GivenAFormElementWithIdAndOriginalField($id, $originalField) {
+    protected function GivenAFormElementWithIdAndOriginalField($id, $originalField)
+    {
         return new Tracker_FormElement_StaticField_Separator($id, null, null, null, null, null, null, null, null, null, null, $originalField);
     }
 
-    public function testDisplayUpdateFormShouldDisplayAForm() {
+    public function testDisplayUpdateFormShouldDisplayAForm()
+    {
         $formElement = $this->GivenAFormElementWithIdAndOriginalField(null, null);
 
         $factory = new MockTracker_FormElementFactory();
@@ -69,7 +74,8 @@ class Tracker_FormElementTest extends TuleapTestCase {
         $this->assertPattern('%</form>%', $content);
     }
 
-    private function WhenIDisplayAdminFormElement($formElement) {
+    private function WhenIDisplayAdminFormElement($formElement)
+    {
         $GLOBALS['Language']->setReturnValue('getText', 'Update', array('plugin_tracker_include_type', 'upd_label', '*'));
 
         $tracker_manager = mock('TrackerManager');
@@ -90,14 +96,16 @@ class Tracker_FormElementJsonTest extends TuleapTestCase {
     private $user;
     private $form_element;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->form_element = aStringField()->withId(300)->withLabel("My field")->withName('my_field')->build();
 
         $this->user = aUser()->build();
     }
 
-    public function itHasAllFieldElementsInJsonReadyArray() {
+    public function itHasAllFieldElementsInJsonReadyArray()
+    {
         $this->assertEqual(
             $this->form_element->fetchFormattedForJson(),
             array(
@@ -115,7 +123,8 @@ class Tracker_FormElement_UserPermissionsTest extends TuleapTestCase {
     private $form_element;
     private $workflow_user;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->form_element = aStringField()->withId(300)->withLabel("My field")->withName('my_field')->build();
 
@@ -123,22 +132,26 @@ class Tracker_FormElement_UserPermissionsTest extends TuleapTestCase {
         $this->workflow_user = new Tracker_Workflow_WorkflowUser();
     }
 
-    public function itGrantsReadAccessToWorkflowUser() {
+    public function itGrantsReadAccessToWorkflowUser()
+    {
         $this->assertTrue($this->form_element->userCanRead($this->workflow_user));
     }
 
-    public function itGrantsUpdateAccessToWorkflowUser() {
+    public function itGrantsUpdateAccessToWorkflowUser()
+    {
         $this->assertTrue($this->form_element->userCanUpdate($this->workflow_user));
     }
 
-    public function itGrantsSubmitAccessToWorkflowUser() {
+    public function itGrantsSubmitAccessToWorkflowUser()
+    {
         $this->assertTrue($this->form_element->userCanSubmit($this->workflow_user));
     }
 }
 
 class Tracker_FormElement__ExportPermissionsToXmlTest extends TuleapTestCase {
 
-    public function testPermissionsExport() {
+    public function testPermissionsExport()
+    {
         $ugroups = array(
             'UGROUP_1' => 1,
             'UGROUP_2' => 2,

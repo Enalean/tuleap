@@ -24,7 +24,8 @@ require_once('HTML_Element.class.php');
  * Define a generic html input field
  */
 abstract class HTML_Element_Input extends HTML_Element {
-    protected function renderValue() {
+    protected function renderValue()
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '<input type="'. $this->getInputType() .'" 
                          id="'. $this->id .'" 

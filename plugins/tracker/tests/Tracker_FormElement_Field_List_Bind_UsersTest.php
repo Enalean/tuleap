@@ -41,13 +41,15 @@ Mock::generate('Tracker_FormElement_Field_List_Bind_UsersValue');
 
 class Tracker_FormElement_Field_List_Bind_UsersTest extends TuleapTestCase {
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
         UserManager::clearInstance();
         Spotter::clearInstance();
     }
 
-    function testGetFieldData() {
+    function testGetFieldData()
+    {
         $bv1 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
         $bv1->setReturnValue('getUsername', 'john.smith');
         $bv2 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
@@ -59,7 +61,8 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends TuleapTestCase {
         $this->assertEqual('108', $f->getFieldData('john.smith', false));
     }
 
-    function testGetFieldDataMultiple() {
+    function testGetFieldDataMultiple()
+    {
         $bv1 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
         $bv1->setReturnValue('getUsername', 'john.smith');
         $bv2 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
@@ -76,7 +79,8 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends TuleapTestCase {
         $this->assertEqual($res, $f->getFieldData('john.smith,tom.brown', true));
     }
 
-    public function testGetRecipients() {
+    public function testGetRecipients()
+    {
         //$recipients = array();
         //foreach ($changeset_value->getBindValues() as $user_value) {
         //    $recipients[] = $user_value->getUser()->getUserName();
@@ -108,7 +112,8 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends TuleapTestCase {
         $this->assertEqual($users->getRecipients($changeset_value), array('u1', 'u2'));
     }
 
-    public function testFormatChangesetValueNoneValue() {
+    public function testFormatChangesetValueNoneValue()
+    {
         $field = new Tracker_FormElement_Field_List_Bind_UsersTestVersion();
         $field2 = new Tracker_FormElement_Field_List_Bind_UsersTestVersion();
         $field3 = new Tracker_FormElement_Field_List_Bind_UsersTestVersion();

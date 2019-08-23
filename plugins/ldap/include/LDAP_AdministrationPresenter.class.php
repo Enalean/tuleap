@@ -22,23 +22,28 @@ class LDAP_AdministrationPresenter {
 
     public $plugin_id;
 
-    public function __construct($plugin_id) {
+    public function __construct($plugin_id)
+    {
         $this->plugin_id = $plugin_id;
     }
 
-    public function open_ldap_value() {
+    public function open_ldap_value()
+    {
         return LDAP::SERVER_TYPE_OPEN_LDAP;
     }
 
-    public function active_directory_value() {
+    public function active_directory_value()
+    {
         return LDAP::SERVER_TYPE_ACTIVE_DIRECTORY;
     }
 
-    public function open_ldap_label() {
+    public function open_ldap_label()
+    {
         return LDAP::SERVER_TYPE_OPEN_LDAP;
     }
 
-    public function active_directory_label() {
+    public function active_directory_label()
+    {
         return LDAP::SERVER_TYPE_ACTIVE_DIRECTORY;
     }
 }

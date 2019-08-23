@@ -25,7 +25,8 @@ class b201308051707_correct_plugin_git_service_short_name extends ForgeUpgrade_B
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Correct the wrong plugin Git reference service short name
 EOT;
@@ -36,7 +37,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -45,7 +47,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql    = "UPDATE reference
                    SET service_short_name = 'plugin_git'
                    WHERE id = 30

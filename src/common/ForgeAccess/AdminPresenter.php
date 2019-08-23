@@ -141,7 +141,8 @@ class ForgeAccess_AdminPresenter
         $this->platform_access_control_label = $GLOBALS['Language']->getText('admin_main', 'platform_access_control');
     }
 
-    private function isLocalIncObsolete() {
+    private function isLocalIncObsolete()
+    {
         include($this->localinc_path);
         $variables_in_local_inc = get_defined_vars();
 

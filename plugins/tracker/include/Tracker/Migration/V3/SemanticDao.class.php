@@ -20,7 +20,8 @@
 
 class Tracker_Migration_V3_SemanticDao extends DataAccessObject {
 
-    public function create($tv5_id) {
+    public function create($tv5_id)
+    {
         $tv5_id = $this->da->escapeInt($tv5_id);
         $this->createTitle($tv5_id);
         $this->createStatus($tv5_id);
@@ -28,7 +29,8 @@ class Tracker_Migration_V3_SemanticDao extends DataAccessObject {
         $this->createTooltip($tv5_id);
     }
 
-    private function createTitle($tv5_id) {
+    private function createTitle($tv5_id)
+    {
         $sql = "INSERT INTO tracker_semantic_title (tracker_id, field_id)
                 SELECT tracker_id, id
                 FROM tracker_field
@@ -37,7 +39,8 @@ class Tracker_Migration_V3_SemanticDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    private function createStatus($tv5_id) {
+    private function createStatus($tv5_id)
+    {
         //open = 1
         $sql = "INSERT INTO tracker_semantic_status(tracker_id, field_id, open_value_id)
                 SELECT tracker_id, f.id, v.id
@@ -48,7 +51,8 @@ class Tracker_Migration_V3_SemanticDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    private function createContributor($tv5_id) {
+    private function createContributor($tv5_id)
+    {
         $sql = "INSERT INTO tracker_semantic_contributor (tracker_id, field_id)
                 SELECT tracker_id, id
                 FROM tracker_field
@@ -58,7 +62,8 @@ class Tracker_Migration_V3_SemanticDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    private function createTooltip($tv5_id) {
+    private function createTooltip($tv5_id)
+    {
         $sql = "INSERT INTO tracker_tooltip(tracker_id, field_id, rank)
                 SELECT tracker_id, id, 1
                 FROM tracker_field

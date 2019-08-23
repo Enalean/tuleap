@@ -25,7 +25,8 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
  */
 abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Field {
 
-    protected function buildMatchExpression($field_name, $criteria_value) {
+    protected function buildMatchExpression($field_name, $criteria_value)
+    {
         $expr = '';
         $matches = array();
         // If it is sourrounded by /.../ then assume a regexp
@@ -47,7 +48,8 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
         return $this->getCriteriaDao()->getDa()->quoteSmart($string);
     }
 
-    public function fetchCriteriaValue($criteria) {
+    public function fetchCriteriaValue($criteria)
+    {
         $html = '<input type="text" name="criteria['. $this->id .']" id="tracker_report_criteria_'. $this->id .'" value="';
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
             $hp = Codendi_HTMLPurifier::instance();
@@ -57,14 +59,16 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
         return $html;
     }
 
-    public function fetchAdvancedCriteriaValue($criteria) {
+    public function fetchAdvancedCriteriaValue($criteria)
+    {
         return null;
     }
 
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public function getQueryGroupby() {
+    public function getQueryGroupby()
+    {
         $R1 = 'R1_'. $this->id;
         $R2 = 'R2_'. $this->id;
         return "$R2.value";
@@ -75,7 +79,8 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
      * @param mixed $value the value of the field
      * @return string
      */
-    public function fetchRawValue($value) {
+    public function fetchRawValue($value)
+    {
         return $value;
     }
 
@@ -84,7 +89,8 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
      * @param Tracker_Artifact_Changeset $changeset
      * @return string
      */
-    public function fetchRawValueFromChangeset($changeset) {
+    public function fetchRawValueFromChangeset($changeset)
+    {
         $value = '';
         if ($v = $changeset->getValue($this)) {
             if ($row = $this->getValueDao()->searchById($v->getId(), $this->id)->getRow()) {
@@ -110,7 +116,8 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
      *
      * @return mixed The values or null if there are no specific available values
      */
-    public function getRESTAvailableValues() {
+    public function getRESTAvailableValues()
+    {
         return null;
     }
 }

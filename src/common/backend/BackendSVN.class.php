@@ -39,14 +39,16 @@ class BackendSVN extends Backend {
      *
      * @return UGroupDao
      */
-    protected function getUGroupDao() {
+    protected function getUGroupDao()
+    {
         return new UGroupDao(CodendiDataAccess::instance());
     }
 
     /**
      * @return UGroupManager
      */
-    protected function getUGroupManager() {
+    protected function getUGroupManager()
+    {
         return new UGroupManager($this->getUGroupDao());
     }
 
@@ -57,7 +59,8 @@ class BackendSVN extends Backend {
      *
      * @return ProjectUGroup
      */
-    protected function getUGroupFromRow($row) {
+    protected function getUGroupFromRow($row)
+    {
         return new ProjectUGroup($row);
     }
     /**
@@ -65,14 +68,16 @@ class BackendSVN extends Backend {
      *
      * @return ServiceDao
      */
-    function _getServiceDao() {
+    function _getServiceDao()
+    {
         return new ServiceDao(CodendiDataAccess::instance());
     }
 
     /**
       * Protected for testing purpose
       */
-    protected function getSvnDao() {
+    protected function getSvnDao()
+    {
         return new SVN_DAO();
     }
 
@@ -81,7 +86,8 @@ class BackendSVN extends Backend {
      *
      * @return ForgeConfig
      */
-    protected function getConfig($var) {
+    protected function getConfig($var)
+    {
         return ForgeConfig::get($var);
     }
 
@@ -93,7 +99,8 @@ class BackendSVN extends Backend {
      *
      * @return bool true if repo is successfully created, false otherwise
      */
-    public function createProjectSVN($group_id) {
+    public function createProjectSVN($group_id)
+    {
         $project=$this->getProjectManager()->getProject($group_id);
         if ($this->createRepository($group_id, $project->getSVNRootPath())) {
             if ($this->updateHooksForProjectRepository($project)) {
@@ -107,7 +114,8 @@ class BackendSVN extends Backend {
         return false;
     }
 
-    public function updateHooksForProjectRepository(Project $project) {
+    public function updateHooksForProjectRepository(Project $project)
+    {
         return $this->updateHooks(
             $project,
             $project->getSVNRootPath(),
@@ -170,7 +178,8 @@ class BackendSVN extends Backend {
         }
     }
 
-    private function createRepository($group_id, $system_path) {
+    private function createRepository($group_id, $system_path)
+    {
         $project=$this->getProjectManager()->getProject($group_id);
         if (!$project) {
             return false;
@@ -191,7 +200,8 @@ class BackendSVN extends Backend {
         return true;
     }
 
-    private function createSVNAccessFile ($group_id, $system_path) {
+    private function createSVNAccessFile($group_id, $system_path)
+    {
         if (!$this->updateSVNAccess($group_id, $system_path)) {
             $this->log("Can't update SVN access file", Backend::LOG_ERROR);
             return false;
@@ -200,7 +210,8 @@ class BackendSVN extends Backend {
         return true;
     }
 
-    private function forceUpdateApacheConf() {
+    private function forceUpdateApacheConf()
+    {
         $this->setSVNApacheConfNeedUpdate();
     }
 
@@ -209,7 +220,8 @@ class BackendSVN extends Backend {
      * @param Project
      * @return true is repository already exists, false otherwise
      */
-    function repositoryExists(Project $project) {
+    function repositoryExists(Project $project)
+    {
         return is_dir($project->getSVNRootPath());
     }
 
@@ -282,7 +294,8 @@ class BackendSVN extends Backend {
      *
      * @return bool true on success or false on failure
      */
-    public function updateHooks(Project $project, $system_path, $can_change_svn_log, $hook_commit_path, $post_commit_file, $post_commit_launcher, $pre_commit_file) {
+    public function updateHooks(Project $project, $system_path, $can_change_svn_log, $hook_commit_path, $post_commit_file, $post_commit_launcher, $pre_commit_file)
+    {
         $unix_group_name=$project->getUnixNameMixedCase(); // May contain upper-case letters
         if ($project->isSVNTracked()) {
             $filename = "$system_path/hooks/post-commit";
@@ -383,7 +396,8 @@ class BackendSVN extends Backend {
      *
      * @return SVNAccessFile
      */
-    protected function _getSVNAccessFile() {
+    protected function _getSVNAccessFile()
+    {
         return new SVNAccessFile();
     }
 
@@ -396,7 +410,8 @@ class BackendSVN extends Backend {
      *
      * @return bool true on success or false on failure
      */
-    public function updateSVNAccess($group_id, $system_path, $ugroup_name = null, $ugroup_old_name = null) {
+    public function updateSVNAccess($group_id, $system_path, $ugroup_name = null, $ugroup_old_name = null)
+    {
         $project = $this->getProjectManager()->getProject($group_id);
 
         $svn_access_file = $this->_getSVNAccessFile();
@@ -407,7 +422,8 @@ class BackendSVN extends Backend {
         return $this->updateSVNAccessFile($system_path, $custom_perms, $project);
     }
 
-    public function updateSVNAccessForRepository(Project $project, $system_path, $ugroup_name, $ugroup_old_name, $svn_dir) {
+    public function updateSVNAccessForRepository(Project $project, $system_path, $ugroup_name, $ugroup_old_name, $svn_dir)
+    {
         $svn_access_file = $this->_getSVNAccessFile();
 
         $contents     = $this->getCustomPermission($system_path, $svn_access_file, $project);
@@ -416,7 +432,8 @@ class BackendSVN extends Backend {
         return $this->updateSVNAccessFile($system_path, $custom_perms, $project);
     }
 
-    public function updateCustomSVNAccessForRepository(Project $project, $system_path, $ugroup_name, $ugroup_old_name, $svn_dir, $contents) {
+    public function updateCustomSVNAccessForRepository(Project $project, $system_path, $ugroup_name, $ugroup_old_name, $svn_dir, $contents)
+    {
         $svn_access_file = $this->_getSVNAccessFile();
 
         $custom_perms = $this->getCustomPermissionForRepository($project, $svn_access_file, $contents, $ugroup_name, $ugroup_old_name, $svn_dir);
@@ -424,15 +441,18 @@ class BackendSVN extends Backend {
         return $this->updateSVNAccessFile($system_path, $custom_perms, $project);
     }
 
-    private function getSvnAccessFile($system_path) {
+    private function getSvnAccessFile($system_path)
+    {
         return $system_path."/.SVNAccessFile";
     }
 
-    private function getDefaultBlocEnd() {
+    private function getDefaultBlocEnd()
+    {
         return "# END CODENDI DEFAULT SETTINGS\n";
     }
 
-    private function getCustomPermission($system_path, SVNAccessFile $svn_access_file, Project $project) {
+    private function getCustomPermission($system_path, SVNAccessFile $svn_access_file, Project $project)
+    {
         $contents = '';
         if (is_file($this->getSvnAccessFile($system_path))) {
             $svnaccess_array = file($this->getSvnAccessFile($system_path));
@@ -451,7 +471,8 @@ class BackendSVN extends Backend {
         return $contents;
     }
 
-    private function getDefaultBlock(Project $project) {
+    private function getDefaultBlock(Project $project)
+    {
         $default_block = '';
         $default_block .= $this->getSVNAccessGroups($project);
         $default_block .= $this->getSVNAccessRootPathDef($project);
@@ -459,20 +480,23 @@ class BackendSVN extends Backend {
         return $default_block;
     }
 
-    private function getCustomPermissionForProject(Project $project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name) {
+    private function getCustomPermissionForProject(Project $project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name)
+    {
         $svn_access_file->setRenamedGroup($ugroup_name, $ugroup_old_name);
         $svn_access_file->setPlatformBlock($this->getDefaultBlock($project));
         return $svn_access_file->parseGroupLines($project, $contents);
     }
 
-    private function getCustomPermissionForRepository($project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name, $svn_dir) {
+    private function getCustomPermissionForRepository($project, SVNAccessFile $svn_access_file, $contents, $ugroup_name, $ugroup_old_name, $svn_dir)
+    {
         $svn_access_file->setRenamedGroup($ugroup_name, $ugroup_old_name);
         $svn_access_file->setPlatformBlock($this->getDefaultBlock($project));
 
         return $svn_access_file->parseGroupLinesByRepositories($svn_dir, $contents);
     }
 
-    private function updateSVNAccessFile($system_path, $custom_perms, Project $project) {
+    private function updateSVNAccessFile($system_path, $custom_perms, Project $project)
+    {
         if (!$project) {
             return false;
         }
@@ -522,7 +546,8 @@ class BackendSVN extends Backend {
      *
      * @return void
      */
-    public function checkSVNAccessPresence($group_id) {
+    public function checkSVNAccessPresence($group_id)
+    {
         $project = $this->getProjectManager()->getProject($group_id);
         if (!$project) {
             return false;
@@ -547,7 +572,8 @@ class BackendSVN extends Backend {
      * @param Project $project
      * @return String
      */
-    function getSVNAccessGroups($project) {
+    function getSVNAccessGroups($project)
+    {
         $conf = "[groups]\n";
         $conf .= $this->getSVNAccessProjectMembers($project);
         $conf .= $this->getSVNAccessUserGroupMembers($project);
@@ -564,7 +590,8 @@ class BackendSVN extends Backend {
      *
      * @return String
      */
-    function getSVNAccessProjectMembers($project) {
+    function getSVNAccessProjectMembers($project)
+    {
         $list  = "";
         $first = true;
         foreach ($project->getMembersUserNames($this->getProjectManager()) as $member) {
@@ -628,7 +655,8 @@ class BackendSVN extends Backend {
      *
      * @return String
      */
-    function getSVNAccessRootPathDef($project) {
+    function getSVNAccessRootPathDef($project)
+    {
         $conf = "[/]\n";
         if (!$project->isPublic() || $project->isSVNPrivate()) {
             $conf .= "* = \n";
@@ -650,7 +678,8 @@ class BackendSVN extends Backend {
      *
      * @return bool
      */
-    public function updateSVNAccessForGivenMember($user) {
+    public function updateSVNAccessForGivenMember($user)
+    {
         $projects = $user->getAllProjects();
         if (isset($projects)) {
             foreach ($projects as $groupId) {
@@ -668,7 +697,8 @@ class BackendSVN extends Backend {
      *
      * @return bool
      */
-    public function updateProjectSVNAccessFile(Project $project) {
+    public function updateProjectSVNAccessFile(Project $project)
+    {
         if ($this->repositoryExists($project)) {
             return $this->updateSVNAccess($project->getID(), $project->getSVNRootPath());
         }
@@ -680,7 +710,8 @@ class BackendSVN extends Backend {
      *
      * @return void
      */
-    public function setSVNApacheConfNeedUpdate() {
+    public function setSVNApacheConfNeedUpdate()
+    {
         $this->SVNApacheConfNeedUpdate = true;
     }
 
@@ -689,7 +720,8 @@ class BackendSVN extends Backend {
      *
      * @return bool
      */
-    public function getSVNApacheConfNeedUpdate() {
+    public function getSVNApacheConfNeedUpdate()
+    {
         return $this->SVNApacheConfNeedUpdate;
     }
 
@@ -699,7 +731,8 @@ class BackendSVN extends Backend {
      *
      * @return bool true on success or false on failure
      */
-    public function generateSVNApacheConf() {
+    public function generateSVNApacheConf()
+    {
         $svn_root_file = ForgeConfig::get('svn_root_file');
         $svn_root_file_old = $svn_root_file.".old";
         $svn_root_file_new = $svn_root_file.".new";
@@ -726,7 +759,8 @@ class BackendSVN extends Backend {
     /**
      * public for testing purpose
      */
-    public function getApacheConf() {
+    public function getApacheConf()
+    {
         $list_repositories = $this->getSvnDao()->searchSvnRepositories();
         $factory           = $this->getSVNApacheAuthFactory();
 
@@ -735,7 +769,8 @@ class BackendSVN extends Backend {
         return $conf->getFullConf();
     }
 
-    protected function getSVNApacheAuthFactory() {
+    protected function getSVNApacheAuthFactory()
+    {
         return new SVN_Apache_Auth_Factory(
             EventManager::instance(),
             $this->getSVNCacheParameters()
@@ -749,7 +784,8 @@ class BackendSVN extends Backend {
      *
      * @return bool true on success or false on failure
      */
-    public function archiveProjectSVN($group_id) {
+    public function archiveProjectSVN($group_id)
+    {
         $project=$this->getProjectManager()->getProject($group_id);
         if (!$project) {
             return false;
@@ -776,7 +812,8 @@ class BackendSVN extends Backend {
      *
      * @return bool true if success
      */
-    public function setSVNPrivacy(Project $project, $is_private) {
+    public function setSVNPrivacy(Project $project, $is_private)
+    {
         $perms   = $is_private ? 0770 : 0775;
         $svnroot = $project->getSVNRootPath();
         return is_dir($svnroot) && $this->chmod($svnroot, $perms);
@@ -790,7 +827,8 @@ class BackendSVN extends Backend {
      *
      * @return bool true if success
      */
-    public function checkSVNMode(Project $project) {
+    public function checkSVNMode(Project $project)
+    {
         $svnroot = $project->getSVNRootPath();
         $is_private = !$project->isPublic() || $project->isSVNPrivate();
         if ($is_private) {
@@ -852,7 +890,8 @@ class BackendSVN extends Backend {
      *
      * @return false if repository or file  or link already exists, true otherwise
      */
-    function isNameAvailable($name) {
+    function isNameAvailable($name)
+    {
         $path = $GLOBALS['svn_prefix']."/".$name;
         return (!$this->fileExists($path));
     }
@@ -865,11 +904,13 @@ class BackendSVN extends Backend {
      *
      * @return bool
      */
-    public function renameSVNRepository(Project $project, $newName) {
+    public function renameSVNRepository(Project $project, $newName)
+    {
         return rename($project->getSVNRootPath(), $GLOBALS['svn_prefix'].'/'.$newName);
     }
 
-    private function enableCommitMessageUpdate($project_svnroot, $hooks_path) {
+    private function enableCommitMessageUpdate($project_svnroot, $hooks_path)
+    {
         $hook_names = array('pre-revprop-change', 'post-revprop-change');
         $hook_error = array();
 
@@ -885,7 +926,8 @@ class BackendSVN extends Backend {
         }
     }
 
-    private function buildExceptionMessage(array $hook_error) {
+    private function buildExceptionMessage(array $hook_error)
+    {
         if (count($hook_error) > 1) {
             $exception_message = 'Files '. implode(', ', $hook_error) .' already exist';
         } else {
@@ -895,7 +937,8 @@ class BackendSVN extends Backend {
         return $exception_message;
     }
 
-    private function enableHook($project_svnroot, $hook_name, $source_tool) {
+    private function enableHook($project_svnroot, $hook_name, $source_tool)
+    {
         $path = $this->getHookPath($project_svnroot, $hook_name);
 
         if (file_exists($path) && ! $this->isLinkToTool($source_tool, $path)) {
@@ -912,23 +955,27 @@ class BackendSVN extends Backend {
         return true;
     }
 
-    private function isLinkToTool($tool_reference_path, $path) {
+    private function isLinkToTool($tool_reference_path, $path)
+    {
         return is_link($path) && realpath($tool_reference_path) == realpath(readlink($path));
     }
 
-    private function disableCommitMessageUpdate($project_svnroot) {
+    private function disableCommitMessageUpdate($project_svnroot)
+    {
         $this->deleteHook($project_svnroot, 'pre-revprop-change');
         $this->deleteHook($project_svnroot, 'post-revprop-change');
     }
 
-    private function deleteHook($project_svnroot, $hook_name) {
+    private function deleteHook($project_svnroot, $hook_name)
+    {
         $path = $this->getHookPath($project_svnroot, $hook_name);
         if (is_link($path)) {
             unlink($path);
         }
     }
 
-    private function getHookPath($project_svnroot, $hook_name) {
+    private function getHookPath($project_svnroot, $hook_name)
+    {
         return $project_svnroot.'/hooks/'.$hook_name;
     }
 

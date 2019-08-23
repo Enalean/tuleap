@@ -44,7 +44,8 @@ class Tracker_UgroupMappingBuilder {
     /**
      * @return int[] array(102 => 324, 106 => 325, <template_ugroup_id> => <target_ugroup_id>, …)
      */
-    public function getMapping(Tracker $template_tracker, Project $target_project) {
+    public function getMapping(Tracker $template_tracker, Project $target_project)
+    {
         $template_ugroups = $this->permissions_retriever->getListOfInvolvedStaticUgroups($template_tracker);
         $target_ugroups   = $this->ugroup_manager->getStaticUGroups($target_project);
 

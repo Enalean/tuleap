@@ -29,26 +29,31 @@ class Search_SearchProjectResultPresenter {
     /** @var  string */
     private $project_description;
 
-    public function __construct(array $result) {
+    public function __construct(array $result)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $this->project_name        = util_unconvert_htmlspecialchars($result['group_name']);
         $this->project_unix_name   = $result['unix_group_name'];
         $this->project_description = $hp->purify($result['short_description'], CODENDI_PURIFIER_BASIC, $result['group_id']);
     }
 
-    public function project_name() {
+    public function project_name()
+    {
         return $this->project_name;
     }
 
-    public function project_uri() {
+    public function project_uri()
+    {
         return '/projects/' . $this->project_unix_name;
     }
 
-    public function project_unix_name() {
+    public function project_unix_name()
+    {
         return $this->project_unix_name;
     }
 
-    public function project_description() {
+    public function project_description()
+    {
         return $this->project_description;
     }
 

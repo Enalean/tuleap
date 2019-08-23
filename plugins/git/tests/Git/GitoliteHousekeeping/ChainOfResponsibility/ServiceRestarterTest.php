@@ -22,7 +22,8 @@ require_once dirname(__FILE__).'/../../../bootstrap.php';
 
 class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarterTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->response         = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingResponse');
         $this->backend_service  = mock('BackendService');
@@ -30,14 +31,16 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarterTest extend
         $this->command = new Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarter($this->response, $this->backend_service);
     }
 
-    public function itRestartsTheService() {
+    public function itRestartsTheService()
+    {
         expect($this->response)->info('Restarting service')->once();
         expect($this->backend_service)->start()->once();
 
         $this->command->execute();
     }
 
-    public function itEndsWithSuccess() {
+    public function itEndsWithSuccess()
+    {
         expect($this->response)->success()->once();
 
         $this->command->execute();

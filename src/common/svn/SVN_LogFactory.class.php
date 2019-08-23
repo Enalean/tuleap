@@ -36,7 +36,8 @@ class SVN_LogFactory {
      *
      * @param Project $project
      */
-    public function __construct(Project $project) {
+    public function __construct(Project $project)
+    {
         $this->project = $project;
     }
 
@@ -48,7 +49,8 @@ class SVN_LogFactory {
      *
      * @return array
      */
-    public function getRevisions($limit, PFUser $author) {
+    public function getRevisions($limit, PFUser $author)
+    {
         $raw_revisions = $this->getRawRevisions($limit, $author);
         $revisions     = array();
 
@@ -72,7 +74,8 @@ class SVN_LogFactory {
      *
      * @return Array
      */
-    public function getCommiters(TimeInterval $interval) {
+    public function getCommiters(TimeInterval $interval)
+    {
         $stats = array();
         $dao   = $this->getDao();
         $dar   = $dao->searchCommiters($this->project->getID(), $interval);
@@ -82,7 +85,8 @@ class SVN_LogFactory {
         return $stats;
     }
 
-    public function getTopModifiedFiles(PFUser $user, TimeInterval $interval, $limit) {
+    public function getTopModifiedFiles(PFUser $user, TimeInterval $interval, $limit)
+    {
         $where_forbidden = $this->getForbiddenPaths($user);
 
         $stats = array();
@@ -101,7 +105,8 @@ class SVN_LogFactory {
      *
      * @return string
      */
-    protected function getForbiddenPaths(PFUser $user) {
+    protected function getForbiddenPaths(PFUser $user)
+    {
         $forbidden = svn_utils_get_forbidden_paths($user->getName(), $this->project->getSVNRootPath());
         $where_forbidden = "";
         foreach ($forbidden as $no_access => $v) {
@@ -114,7 +119,8 @@ class SVN_LogFactory {
      * Same as getRawRevisionsAndCount(), but retrieves only the revisions,
      * without the revisions count.
      */
-    private function getRawRevisions($limit, PFUser $author) {
+    private function getRawRevisions($limit, PFUser $author)
+    {
         list($raw_revisions, $count) = $this->getRawRevisionsAndCount($limit, $author);
         return $raw_revisions;
     }
@@ -124,7 +130,8 @@ class SVN_LogFactory {
      *
      * Wraps svn_get_revisions for testing purpose.
      */
-    public function getRawRevisionsAndCount($limit, PFUser $author) {
+    public function getRawRevisionsAndCount($limit, PFUser $author)
+    {
         return svn_get_revisions($this->project,
                                  0,
                                  $limit,
@@ -136,7 +143,8 @@ class SVN_LogFactory {
                                  false);
     }
 
-    protected function getDao() {
+    protected function getDao()
+    {
         return new SVN_LogDao();
     }
 }

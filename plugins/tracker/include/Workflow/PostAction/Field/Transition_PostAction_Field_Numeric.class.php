@@ -38,7 +38,8 @@ abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction
      * @param Tracker_FormElement_Field    $field      The field the post action should modify
      * @param int|float $value The value to set
      */
-    public function __construct(Transition $transition, $id, $field, $value) {
+    public function __construct(Transition $transition, $id, $field, $value)
+    {
         parent::__construct($transition, $id, $field);
         $this->value = $value;
     }
@@ -48,14 +49,16 @@ abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction
      *
      * @return bool
      */
-    public function isDefined() {
+    public function isDefined()
+    {
         return $this->getField() && ($this->value !== null);
     }
 
     /**
      * @return int|float The value set on the field by the post action.
      */
-    public function getValue() {
+    public function getValue()
+    {
         return $this->value;
     }
 
@@ -67,7 +70,8 @@ abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction
      *
      * @return void
      */
-    public function before(array &$fields_data, PFUser $current_user) {
+    public function before(array &$fields_data, PFUser $current_user)
+    {
         // Do something only if the value and the float field are properly defined
         if ($this->isDefined()) {
             $field = $this->getField();

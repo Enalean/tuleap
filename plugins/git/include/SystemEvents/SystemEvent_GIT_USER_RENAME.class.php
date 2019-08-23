@@ -31,7 +31,8 @@ class SystemEvent_GIT_USER_RENAME extends SystemEvent {
     /** @var UserManager */
     private $user_manager;
 
-    public function process() {
+    public function process()
+    {
         $old_user_name = $this->getParameter(0);
         $new_user_id   = $this->getParameter(1);
 
@@ -51,11 +52,13 @@ class SystemEvent_GIT_USER_RENAME extends SystemEvent {
     /**
      * @return string a human readable representation of parameters
      */
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         return $this->parameters;
     }
 
-    public function injectDependencies(Dumper $ssh_key_dumper, UserManager $user_manager) {
+    public function injectDependencies(Dumper $ssh_key_dumper, UserManager $user_manager)
+    {
         $this->ssh_key_dumper = $ssh_key_dumper;
         $this->user_manager   = $user_manager;
     }

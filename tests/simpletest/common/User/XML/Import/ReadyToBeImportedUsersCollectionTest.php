@@ -27,7 +27,8 @@ class ReadyToBeImportedUsersCollection_getUserByXxxTest extends TuleapTestCase {
     /** @var UsersToBeImportedCollection */
     private $collection;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->user = mock('User\XML\Import\ReadyToBeImportedUser');
@@ -40,46 +41,53 @@ class ReadyToBeImportedUsersCollection_getUserByXxxTest extends TuleapTestCase {
         $this->collection->add($this->user, $this->id, $this->username, $this->ldap_id);
     }
 
-    public function itRetrievesUserByUserName() {
+    public function itRetrievesUserByUserName()
+    {
         $this->assertEqual(
             $this->collection->getUserByUserName($this->username),
             $this->user
         );
     }
 
-    public function itThrowsAnExceptionWhenUsernameNotFound() {
+    public function itThrowsAnExceptionWhenUsernameNotFound()
+    {
         $this->expectException('User\XML\Import\UserNotFoundException');
 
         $this->collection->getUserByUserName('unknown');
     }
 
-    public function itRetrievesUserById() {
+    public function itRetrievesUserById()
+    {
         $this->assertEqual(
             $this->collection->getUserById($this->id),
             $this->user
         );
     }
 
-    public function itThrowsAnExceptionWhenIdNotFound() {
+    public function itThrowsAnExceptionWhenIdNotFound()
+    {
         $this->expectException('User\XML\Import\UserNotFoundException');
 
         $this->collection->getUserById(66);
     }
 
-    public function itRetrievesUserByLdapId() {
+    public function itRetrievesUserByLdapId()
+    {
         $this->assertEqual(
             $this->collection->getUserByLdapId($this->ldap_id),
             $this->user
         );
     }
 
-    public function itThrowsAnExceptionWhenLdapIdNotFound() {
+    public function itThrowsAnExceptionWhenLdapIdNotFound()
+    {
         $this->expectException('User\XML\Import\UserNotFoundException');
 
         $this->collection->getUserById('unknown');
     }
 
-    public function itDoesNotIndexByLdapIdWhenNoLdapId() {
+    public function itDoesNotIndexByLdapIdWhenNoLdapId()
+    {
         $user = mock('User\XML\Import\ReadyToBeImportedUser');
 
         $id       = 108;

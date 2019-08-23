@@ -25,11 +25,13 @@ class Tracker_FormElement_DateFormatter {
     /** @var Tracker_FormElement_Field_Date */
     protected $field;
 
-    public function __construct(Tracker_FormElement_Field_Date $field) {
+    public function __construct(Tracker_FormElement_Field_Date $field)
+    {
         $this->field = $field;
     }
 
-    public function getFormat() {
+    public function getFormat()
+    {
         return self::DATE_FORMAT;
     }
 
@@ -69,13 +71,15 @@ class Tracker_FormElement_DateFormatter {
         return $formatted_value;
     }
 
-    public function fetchSubmitValue(array $submitted_values, array $errors) {
+    public function fetchSubmitValue(array $submitted_values, array $errors)
+    {
         $value = $this->field->getValueFromSubmitOrDefault($submitted_values);
 
         return $this->getDatePicker($value, $errors);
     }
 
-    public function validate($value) {
+    public function validate($value)
+    {
         $is_valid = true;
         if ($value) {
             $rule     = new Rule_Date();
@@ -94,29 +98,34 @@ class Tracker_FormElement_DateFormatter {
         return $is_valid;
     }
 
-    public function fetchSubmitValueMasschange() {
+    public function fetchSubmitValueMasschange()
+    {
         return $this->getDatePicker(
             $GLOBALS['Language']->getText('global','unchanged'),
             array()
         );
     }
 
-    public function getFieldDataForCSVPreview(array $date_explode) {
+    public function getFieldDataForCSVPreview(array $date_explode)
+    {
         return $date_explode[0] . '-' . $date_explode[1] . '-' . $date_explode[2];
     }
 
     /**
      * Format a timestamp into Y-m-d format
      */
-    public function formatDate($timestamp) {
+    public function formatDate($timestamp)
+    {
         return format_date(self::DATE_FORMAT, (float)$timestamp, '');
     }
 
-    public function formatDateForDisplay($timestamp) {
+    public function formatDateForDisplay($timestamp)
+    {
         return format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), (float) $timestamp, '');
     }
 
-    protected function getDatePicker($value, array $errors) {
+    protected function getDatePicker($value, array $errors)
+    {
         return $GLOBALS['HTML']->getBootstrapDatePicker(
             "tracker_admin_field_". $this->field->getId(),
             'artifact['. $this->field->getId() .']',

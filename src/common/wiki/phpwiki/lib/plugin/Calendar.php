@@ -36,20 +36,24 @@ if (!defined('SECONDS_PER_DAY'))
 class WikiPlugin_Calendar
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("Calendar");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("Calendar");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.30 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('prefix'           => '[pagename]' . SUBPAGE_SEPARATOR,
                      'date_format'      => '%Y-%m-%d',
                      'year'             => '',
@@ -68,7 +72,8 @@ extends WikiPlugin
      * @param string $basepage The pagename the plugin is invoked from.
      * @return array List of pagenames linked to (or false).
      */
-    function getWikiPageLinks ($argstr, $basepage) {
+    function getWikiPageLinks($argstr, $basepage)
+    {
         if (isset($this->_links))
             return $this->_links;
         else {
@@ -78,7 +83,8 @@ extends WikiPlugin
         }
     }
 
-    private function header($pagename, $time) {
+    private function header($pagename, $time)
+    {
         $args = &$this->args;
 
         $t = localtime($time - SECONDS_PER_DAY, 1);
@@ -113,7 +119,8 @@ extends WikiPlugin
     }
 
 
-    private function daynames($start_wday) {
+    private function daynames($start_wday)
+    {
         $time  = mktime(12, 0, 0, 1, 1, 2001);
         $t     = localtime($time, 1);
         $time += (7 + $start_wday - $t['tm_wday']) * SECONDS_PER_DAY;
@@ -133,7 +140,8 @@ extends WikiPlugin
         return $row;
     }
 
-    private function date($dbi, $time) {
+    private function date($dbi, $time)
+    {
         $args = &$this->args;
 
         $page_for_date = $args['prefix'] . strftime($args['date_format'],
@@ -171,7 +179,8 @@ extends WikiPlugin
         return $td;
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $this->args = $this->getArgs($argstr, $request);
         $args       = &$this->args;
         $this->_links = array();

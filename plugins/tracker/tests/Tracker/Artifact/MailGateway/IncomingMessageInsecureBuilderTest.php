@@ -33,13 +33,15 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
     private $tracker_factory;
     private $artifact_factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->user_manager     = mock('UserManager');
         $this->tracker_factory  = mock('TrackerFactory');
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
     }
 
-    public function itDoesNotAcceptInvalidFromHeader() {
+    public function itDoesNotAcceptInvalidFromHeader()
+    {
         stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
         stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
 
@@ -58,7 +60,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $incoming_message_builder->build($incoming_mail);
     }
 
-    public function itDoesNotAcceptInvalidToHeader() {
+    public function itDoesNotAcceptInvalidToHeader()
+    {
         stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
         stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
 
@@ -81,7 +84,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         } catch (Tracker_Artifact_MailGateway_TrackerIdMissingException $e) {}
     }
 
-    public function itFindsUserAndTrackerToHeader() {
+    public function itFindsUserAndTrackerToHeader()
+    {
         stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
         stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
 
@@ -105,7 +109,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $this->assertNotNull($tracker);
     }
 
-    public function itFindsUserAndTrackerCcHeader() {
+    public function itFindsUserAndTrackerCcHeader()
+    {
         stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
         stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
 
@@ -129,7 +134,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $this->assertNotNull($tracker);
     }
 
-    public function itFindsUserAndTrackerMultipleUsers() {
+    public function itFindsUserAndTrackerMultipleUsers()
+    {
         stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
         stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
@@ -152,7 +158,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $this->assertNotNull($tracker);
     }
 
-    public function itFindsArtifactToHeader() {
+    public function itFindsArtifactToHeader()
+    {
         $artifact_mock = stub('Tracker_Artifact')->getTracker()->returns(mock('Tracker'));
         stub($this->artifact_factory)->getArtifactById(self::ARTIFACT_ID)->returns($artifact_mock);
         stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
@@ -175,7 +182,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $this->assertNotNull($artifact);
     }
 
-    public function itFindsArtifactCcHeader() {
+    public function itFindsArtifactCcHeader()
+    {
         $artifact_mock = stub('Tracker_Artifact')->getTracker()->returns(mock('Tracker'));
         stub($this->artifact_factory)->getArtifactById(self::ARTIFACT_ID)->returns($artifact_mock);
         stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
@@ -198,7 +206,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $this->assertNotNull($artifact);
     }
 
-    public function itFindsArtifactMultipleUsers() {
+    public function itFindsArtifactMultipleUsers()
+    {
         $artifact_mock = stub('Tracker_Artifact')->getTracker()->returns(mock('Tracker'));
         stub($this->artifact_factory)->getArtifactById(self::ARTIFACT_ID)->returns($artifact_mock);
         stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
@@ -221,7 +230,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $this->assertNotNull($artifact);
     }
 
-    public function itRejectsUnknownMail() {
+    public function itRejectsUnknownMail()
+    {
         stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
         stub($this->user_manager)->getAllUsersByEmail()->returns([]);
 
@@ -242,7 +252,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $incoming_message_builder->build($incoming_mail);
     }
 
-    public function itRejectsMailWithMultipleUsers() {
+    public function itRejectsMailWithMultipleUsers()
+    {
         stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
         stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser'), mock('PFUser')));
 
@@ -263,7 +274,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $incoming_message_builder->build($incoming_mail);
     }
 
-    public function itRejectsUnknownTracker() {
+    public function itRejectsUnknownTracker()
+    {
         stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
         stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
 
@@ -284,7 +296,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $incoming_message_builder->build($incoming_mail);
     }
 
-    public function itRejectsUnknownArtifact() {
+    public function itRejectsUnknownArtifact()
+    {
         stub($this->artifact_factory)->getArtifactById(self::TRACKER_ID)->returns(mock('Tracker_Artifact'));
         stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
 

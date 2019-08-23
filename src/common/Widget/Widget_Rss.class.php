@@ -40,10 +40,12 @@ abstract class Widget_Rss extends Widget
         $this->setOwner($owner_id, $owner_type);
     }
 
-    function getTitle() {
+    function getTitle()
+    {
         return $this->rss_title ?: 'RSS Reader';
     }
-    function getContent() {
+    function getContent()
+    {
         if (! $this->rss_url) {
             return '';
         }
@@ -68,7 +70,8 @@ abstract class Widget_Rss extends Widget
 
         return $content . '</table>';
     }
-    function isAjax() {
+    function isAjax()
+    {
         return true;
     }
 
@@ -152,7 +155,8 @@ abstract class Widget_Rss extends Widget
         $res = db_query($sql);
         return db_insertid($res);
     }
-    function loadContent($id) {
+    function loadContent($id)
+    {
         $sql = "SELECT * FROM widget_rss WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
@@ -163,7 +167,8 @@ abstract class Widget_Rss extends Widget
         }
     }
 
-    function create(Codendi_Request $request) {
+    function create(Codendi_Request $request)
+    {
         $content_id = false;
         $vUrl = new Valid_String('url');
         $vUrl->setErrorMessage("Can't add empty rss url");
@@ -186,7 +191,8 @@ abstract class Widget_Rss extends Widget
         }
         return $content_id;
     }
-    function updatePreferences(Codendi_Request $request) {
+    function updatePreferences(Codendi_Request $request)
+    {
         $done = false;
         $vContentId = new Valid_UInt('content_id');
         $vContentId->required();
@@ -213,11 +219,13 @@ abstract class Widget_Rss extends Widget
         }
         return $done;
     }
-    function destroy($id) {
+    function destroy($id)
+    {
         $sql = 'DELETE FROM widget_rss WHERE id = '. $id .' AND owner_id = '. $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
         db_query($sql);
     }
-    function isUnique() {
+    function isUnique()
+    {
         return false;
     }
 

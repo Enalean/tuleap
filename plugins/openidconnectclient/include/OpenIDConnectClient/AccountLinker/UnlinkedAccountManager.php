@@ -33,7 +33,8 @@ class UnlinkedAccountManager {
      */
     private $random_number_generator;
 
-    public function __construct(UnlinkedAccountDao $dao, RandomNumberGenerator $random_number_generator) {
+    public function __construct(UnlinkedAccountDao $dao, RandomNumberGenerator $random_number_generator)
+    {
         $this->dao                     = $dao;
         $this->random_number_generator = $random_number_generator;
     }
@@ -42,7 +43,8 @@ class UnlinkedAccountManager {
      * @return UnlinkedAccount
      * @throws UnlinkedAccountNotFoundException
      */
-    public function getbyId($id) {
+    public function getbyId($id)
+    {
         $row = $this->dao->searchById($id);
         if ($row === false) {
             throw new UnlinkedAccountNotFoundException();
@@ -54,7 +56,8 @@ class UnlinkedAccountManager {
      * @return UnlinkedAccount
      * @throws UnlinkedAccountDataAccessException
      */
-    public function create($provider_id, $user_identifier) {
+    public function create($provider_id, $user_identifier)
+    {
         $id       = $this->random_number_generator->getNumber();
         $is_saved = $this->dao->save($id, $provider_id, $user_identifier);
         if (! $is_saved) {
@@ -66,7 +69,8 @@ class UnlinkedAccountManager {
     /**
      * @throws UnlinkedAccountDataAccessException
      */
-    public function removeById($id) {
+    public function removeById($id)
+    {
         $is_deleted = $this->dao->deleteById($id);
         if (! $is_deleted) {
             throw new UnlinkedAccountDataAccessException();
@@ -76,7 +80,8 @@ class UnlinkedAccountManager {
     /**
      * @return UnlinkedAccount
      */
-    private function instantiateFromRow(array $row) {
+    private function instantiateFromRow(array $row)
+    {
         return new UnlinkedAccount(
             $row['id'],
             $row['provider_id'],

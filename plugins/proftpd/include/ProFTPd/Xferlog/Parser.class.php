@@ -28,7 +28,8 @@ class Parser {
      *
      * @return Entry
      */
-    public function extract($line) {
+    public function extract($line)
+    {
         $pattern = '/^
             (?P<current_time>.*)
             \s

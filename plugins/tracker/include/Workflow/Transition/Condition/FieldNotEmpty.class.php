@@ -32,7 +32,8 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
     /** @var Workflow_Transition_Condition_FieldNotEmpty_Dao */
     private $dao;
 
-    public function __construct(Transition $transition, Workflow_Transition_Condition_FieldNotEmpty_Dao $dao, ?Tracker_Artifact $artifact = null) {
+    public function __construct(Transition $transition, Workflow_Transition_Condition_FieldNotEmpty_Dao $dao, ?Tracker_Artifact $artifact = null)
+    {
         parent::__construct($transition);
         $this->dao                = $dao;
         $this->formElementFactory = Tracker_FormElementFactory::instance();
@@ -150,7 +151,8 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         return $is_valid;
     }
 
-    private function getFieldValue($fields_data, Tracker_Artifact $artifact, Tracker_FormElement_Field $field) {
+    private function getFieldValue($fields_data, Tracker_Artifact $artifact, Tracker_FormElement_Field $field)
+    {
         $field_id = $field->getId();
         if (isset($fields_data[$field_id])) {
             return $fields_data[$field_id];
@@ -158,7 +160,8 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         return $this->getFieldValueFromLastChangeset($artifact, $field);
     }
 
-    private function getFieldValueFromLastChangeset(Tracker_Artifact $artifact, Tracker_FormElement_Field $field) {
+    private function getFieldValueFromLastChangeset(Tracker_Artifact $artifact, Tracker_FormElement_Field $field)
+    {
         $value = null;
         $last_changeset = $artifact->getLastChangeset();
         if ($last_changeset) {

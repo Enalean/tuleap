@@ -38,7 +38,8 @@ class UserHelper {
      * Constructor
      * @todo make it protected (singleton powaaa)
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->_username_display = $this->_getCurrentUserUsernameDisplayPreference();
         $this->_cache_by_id = array();
         $this->_cache_by_username = array();
@@ -50,7 +51,8 @@ class UserHelper {
      *
      * @return UserHelper
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$_instance)) {
             $c = self::class;
             self::$_instance = new $c;
@@ -68,10 +70,12 @@ class UserHelper {
         self::$_instance = null;
     }
 
-    function _getCurrentUserUsernameDisplayPreference() {
+    function _getCurrentUserUsernameDisplayPreference()
+    {
         return $this->_getUserManager()->getCurrentUser()->getPreference("username_display");
     }
-    function _getUserManager() {
+    function _getUserManager()
+    {
         return UserManager::instance();
     }
     /**
@@ -88,7 +92,8 @@ class UserHelper {
      * @param  user_name  string
      * @param  realname  string
      */
-    function getDisplayName($user_name, $realname) {
+    function getDisplayName($user_name, $realname)
+    {
         $name = '';
         switch($this->_username_display) {
             case self::PREFERENCES_LOGIN_AND_NAME:
@@ -115,7 +120,8 @@ class UserHelper {
      * Username display preference: see getDisplayName()
      *
      */
-    function getDisplayNameSQLQuery() {
+    function getDisplayNameSQLQuery()
+    {
         $name = '';
         switch($this->_username_display) {
             case self::PREFERENCES_LOGIN_AND_NAME:
@@ -141,7 +147,8 @@ class UserHelper {
      *
      * @return string
      */
-    function getUserFilter($by) {
+    function getUserFilter($by)
+    {
         $filter       = '';
         $user_manager = $this->_getUserManager();
         $usersIds     = $user_manager->getUserIdsList($by);
@@ -163,7 +170,8 @@ class UserHelper {
      * Username display preference: see getDisplayName()
      *
      */
-    function getDisplayNameSQLOrder() {
+    function getDisplayNameSQLOrder()
+    {
         $order = '';
         switch($this->_username_display) {
             case self::PREFERENCES_LOGIN_AND_NAME:
@@ -193,7 +201,8 @@ class UserHelper {
      *
      * @see getDisplayName
      */
-    function getDisplayNameFromUser($user) {
+    function getDisplayNameFromUser($user)
+    {
         if ($user == null) {
             return null;
         } elseif ($user->isNone()) {
@@ -212,7 +221,8 @@ class UserHelper {
      * @see getDisplayName
      * @return string
      */
-    function getDisplayNameFromUserId($user_id) {
+    function getDisplayNameFromUserId($user_id)
+    {
         $um = $this->_getUserManager();
         if ($um->isUserLoadedById($user_id)) {
             $user = $um->getUserById($user_id);
@@ -239,7 +249,8 @@ class UserHelper {
      * @param string the user_name of the user to display
      * @see getDisplayName
      */
-    function getDisplayNameFromUserName($user_name) {
+    function getDisplayNameFromUserName($user_name)
+    {
         if ($this->_isUserNameNone($user_name)) {
             return $user_name;
         } else {
@@ -270,7 +281,8 @@ class UserHelper {
      *
      * @return string
      */
-    public function getLinkOnUserFromUserId($user_id) {
+    public function getLinkOnUserFromUserId($user_id)
+    {
         return $this->getLinkOnUser($this->_getUserManager()->getUserById($user_id));
     }
 
@@ -281,7 +293,8 @@ class UserHelper {
      *
      * @return String
      */
-    public function getLinkOnUser(PFUser $user) {
+    public function getLinkOnUser(PFUser $user)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         if($user && !$user->isNone()) {
             return '<a href="'.$this->getUserUrl($user).'">'.$hp->purify($this->getDisplayNameFromUser($user), CODENDI_PURIFIER_CONVERT_HTML).'</a>';
@@ -291,7 +304,8 @@ class UserHelper {
         }
     }
 
-    public function getUserUrl(PFUser $user) {
+    public function getUserUrl(PFUser $user)
+    {
         return "/users/".urlencode($user->getName());
     }
 
@@ -300,14 +314,16 @@ class UserHelper {
      *
      * @param  user_name
      */
-    function _isUserNameNone($user_name) {
+    function _isUserNameNone($user_name)
+    {
         return $user_name == $GLOBALS['Language']->getText('global', 'none');
     }
 
     /**
      * Returns the user dao
      */
-    function _getUserDao() {
+    function _getUserDao()
+    {
         $dao = new UserDao(CodendiDataAccess::instance());
         return $dao;
     }

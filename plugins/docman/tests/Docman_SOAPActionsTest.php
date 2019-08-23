@@ -133,7 +133,8 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
     /**
      * Nominal case: getFileMD5sum is called with a correct file ID
      */
-    public function testGetFileMD5sumNominal() {
+    public function testGetFileMD5sumNominal()
+    {
         $action = $this->action;
 
         $params = array(
@@ -154,7 +155,8 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
     /**
      * Nominal case: getFileMD5sum is called with a correct file ID for a given version
      */
-    public function testGetFileMD5sumGivenVersionNominal() {
+    public function testGetFileMD5sumGivenVersionNominal()
+    {
         $action = $this->action;
 
         $params = array(
@@ -175,7 +177,8 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
     }
 
 
-    public function testGetFileMD5sumAllVersions() {
+    public function testGetFileMD5sumAllVersions()
+    {
         $action = $this->action;
 
         $params = array(
@@ -193,7 +196,8 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
     /**
      * Error case: getFileMD5sum with no item ID
      */
-    public function testGetFileMD5sumNoItemError() {
+    public function testGetFileMD5sumNoItemError()
+    {
         $action = $this->action;
 
         $params = array();
@@ -210,7 +214,8 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
     /**
      * Error case: getFileMD5sum is called with an incorrect ID
      */
-    public function testGetFileMD5sumItemNotFoundError() {
+    public function testGetFileMD5sumItemNotFoundError()
+    {
         $action = $this->action;
 
         $params = array('item_id' => 0);
@@ -228,7 +233,8 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
     /**
      * update test with item owner changed
      */
-    public function testUpdate() {
+    public function testUpdate()
+    {
         $action = $this->action;
 
         $params = array(
@@ -255,7 +261,8 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
     /**
      * New version
      */
-    public function test_new_version_update() {
+    public function test_new_version_update()
+    {
         $action = $this->action;
 
         $this->lockFactory->setReturnValue('itemIsLocked', false);
@@ -281,7 +288,8 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
     /**
      * New version with version date
      */
-    public function test_new_version_no_update() {
+    public function test_new_version_no_update()
+    {
         $action = $this->action;
 
         $params = array(
@@ -308,7 +316,8 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
     /**
      * Item creation
      */
-    public function testCreateItem() {
+    public function testCreateItem()
+    {
         $action = $this->action;
 
         $params = array(
@@ -347,7 +356,8 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
     /**
      * Item creation, without dates
      */
-    public function testCreateItemNoDates() {
+    public function testCreateItemNoDates()
+    {
         $action = $this->action;
 
         $params = array(
@@ -380,7 +390,8 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
     /**
      * AppendFileChunk test
      */
-    public function testAppendFileChunk() {
+    public function testAppendFileChunk()
+    {
         $action = $this->action;
 
         $params = array('group_id'=> 10, 'item_id'=> 128000, 'chunk_offset' => 10, 'chunk_size' => 64, 'upload_content' => 'abcdef');
@@ -405,7 +416,8 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
     /**
      * Test: getTreeInfo with no parameters supplied
      */
-    public function testGetTreeInfoError() {
+    public function testGetTreeInfoError()
+    {
         $action = $this->action;
 
         $request = new MockSOAPRequest();
@@ -416,7 +428,8 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
         $action->getTreeInfo();
     }
 
-    public function testGetFileChunk() {
+    public function testGetFileChunk()
+    {
         $action = $this->action;
 
         $params = array('group_id'=> 10, 'item_id'=> 128000, 'chunk_offset' => 10, 'chunk_size' => 64, 'version_number' => 2);

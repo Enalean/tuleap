@@ -20,7 +20,8 @@ class RGB {
     public $rgb_table;
     public $img;
 
-    function __construct($aImg=null) {
+    function __construct($aImg=null)
+    {
         $this->img = $aImg;
 
         // Conversion array between color names and RGB
@@ -478,7 +479,8 @@ class RGB {
     // This function translates this to a native RGB format and returns an
     // RGB triple.
 
-    function Color($aColor) {
+    function Color($aColor)
+    {
         if (is_string($aColor)) {
             $matches = array();
             // this regex will parse a color string and fill the $matches array as such:
@@ -541,7 +543,8 @@ class RGB {
 
     // Compare two colors
     // return true if equal
-    function Equal($aCol1,$aCol2) {
+    function Equal($aCol1,$aCol2)
+    {
         $c1 = $this->Color($aCol1);
         $c2 = $this->Color($aCol2);
         return $c1[0]==$c2[0] && $c1[1]==$c2[1] && $c1[2]==$c2[2] ;
@@ -549,7 +552,8 @@ class RGB {
 
     // Allocate a new color in the current image
     // Return new color index, -1 if no more colors could be allocated
-    function Allocate($aColor,$aAlpha=0.0) {
+    function Allocate($aColor,$aAlpha=0.0)
+    {
         list ($r, $g, $b, $a) = $this->color($aColor);
         // If alpha is specified in the color string then this
         // takes precedence over the second argument
@@ -567,7 +571,8 @@ class RGB {
     // to handle the case where the color might be specified as an array of colros as well.
     // In that case we must be able to find out if an array of values should be interpretated as
     // a single color (specifeid as an RGB triple)
-    static function tryHexConversion($aColor) {
+    static function tryHexConversion($aColor)
+    {
         if( is_array( $aColor ) ) {
             if( count( $aColor ) == 3 ) {
                 if( is_numeric($aColor[0]) && is_numeric($aColor[1]) && is_numeric($aColor[2]) ) {
@@ -589,7 +594,8 @@ class RGB {
     // The $aDynamicRange specified how much of the dynamic range we shold use
     // a value of 1.0 give the full dyanmic range and a lower value give more dark
     // colors. In the extreme of 0.0 then all colors will be black.
-    static function GetSpectrum($aVal,$aDynamicRange=1.0) {
+    static function GetSpectrum($aVal,$aDynamicRange=1.0)
+    {
         if( $aVal < 0 || $aVal > 1.0001 ) {
             return array(0,0,0); // Invalid case - just return black
         }

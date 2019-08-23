@@ -23,7 +23,8 @@ class Admin_Homepage_HeadlinePresenter {
     public $headline;
     public $language_id;
 
-    public function __construct($language_id, $headline) {
+    public function __construct($language_id, $headline)
+    {
         $this->language_id = $language_id;
         $this->headline    = $headline;
     }

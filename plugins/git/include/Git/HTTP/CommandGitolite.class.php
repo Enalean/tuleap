@@ -22,7 +22,8 @@ class Git_HTTP_CommandGitolite extends Git_HTTP_Command {
 
     protected $gitolite_home = '/usr/com/gitolite';
 
-    public function __construct(PFO_User $user, Git_HTTP_Command $command) {
+    public function __construct(PFO_User $user, Git_HTTP_Command $command)
+    {
         parent::__construct();
 
         $gitolite_user_info = posix_getpwnam('gitolite');
@@ -40,11 +41,13 @@ class Git_HTTP_CommandGitolite extends Git_HTTP_Command {
         $this->appendToEnv('SERVER_PORT');
     }
 
-    protected function sudo($command) {
+    protected function sudo($command)
+    {
         return 'sudo -E -u gitolite '.$command;
     }
 
-    public function getCommand() {
+    public function getCommand()
+    {
         return $this->sudo('/usr/bin/gl-auth-command');
     }
 }

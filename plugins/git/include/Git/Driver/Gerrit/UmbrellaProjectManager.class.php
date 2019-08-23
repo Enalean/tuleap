@@ -44,7 +44,7 @@ class Git_Driver_Gerrit_UmbrellaProjectManager {
         UGroupManager $ugroup_manager,
         ProjectManager $project_manager,
         Git_Driver_Gerrit_MembershipManager $membership_manager,
-     Git_Driver_Gerrit_GerritDriverFactory $driver_factory
+        Git_Driver_Gerrit_GerritDriverFactory $driver_factory
     ) {
         $this->ugroup_manager     = $ugroup_manager;
         $this->project_manager    = $project_manager;
@@ -57,7 +57,8 @@ class Git_Driver_Gerrit_UmbrellaProjectManager {
      * @param Git_RemoteServer_GerritServer[] $gerrit_servers
      * @param Project $project
      */
-    public function recursivelyCreateUmbrellaProjects(array $gerrit_servers, Project $project) {
+    public function recursivelyCreateUmbrellaProjects(array $gerrit_servers, Project $project)
+    {
         $parent_project = $this->project_manager->getParentProject($project->getID());
 
         $this->createProjectOnServers($gerrit_servers, $project);
@@ -77,7 +78,8 @@ class Git_Driver_Gerrit_UmbrellaProjectManager {
      * @param type $project_name
      * @param type $parent_project_name
      */
-    private function setProjectInheritanceOnServers(array $gerrit_servers, Project $project, Project $parent_project) {
+    private function setProjectInheritanceOnServers(array $gerrit_servers, Project $project, Project $parent_project)
+    {
         foreach ($gerrit_servers as $gerrit_server) {
             $this->driver_factory
                 ->getDriver($gerrit_server)
@@ -93,7 +95,8 @@ class Git_Driver_Gerrit_UmbrellaProjectManager {
      * @param array $gerrit_servers
      * @param Project $project
      */
-    private function resetProjectInheritanceOnServers(array $gerrit_servers, Project $project) {
+    private function resetProjectInheritanceOnServers(array $gerrit_servers, Project $project)
+    {
         foreach ($gerrit_servers as $gerrit_server) {
             $this->driver_factory
                 ->getDriver($gerrit_server)
@@ -108,7 +111,8 @@ class Git_Driver_Gerrit_UmbrellaProjectManager {
      * @param array $gerrit_servers
      * @param Project $project
      */
-    private function createProjectOnServers(array $gerrit_servers, Project $project) {
+    private function createProjectOnServers(array $gerrit_servers, Project $project)
+    {
         $ugroups      = $this->ugroup_manager->getUGroups($project);
         $admin_ugroup = $this->getAdminUGroup($ugroups);
         $project_name = $project->getUnixName();
@@ -129,7 +133,8 @@ class Git_Driver_Gerrit_UmbrellaProjectManager {
      * @param ProjectUGroup[] $ugroups
      * @return null | ProjectUGroup
      */
-    private function getAdminUGroup(array $ugroups) {
+    private function getAdminUGroup(array $ugroups)
+    {
         foreach ($ugroups as $ugroup) {
             if ($ugroup->getId() == ProjectUGroup::PROJECT_ADMIN) {
                 return $ugroup;

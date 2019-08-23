@@ -391,7 +391,8 @@ class ArtifactsResource extends AuthenticatedResource {
      *
      * @throws RestException 403
      */
-    public function getId($id, $values_format = self::VALUES_DEFAULT, $tracker_structure_format = self::DEFAULT_TRACKER_STRUCTURE) {
+    public function getId($id, $values_format = self::VALUES_DEFAULT, $tracker_structure_format = self::DEFAULT_TRACKER_STRUCTURE)
+    {
         $this->checkAccess();
 
         $user     = $this->user_manager->getCurrentUser();
@@ -549,7 +550,8 @@ class ArtifactsResource extends AuthenticatedResource {
      *
      * @param int $id Id of the artifact
      */
-    public function optionsArtifactChangesets($id) {
+    public function optionsArtifactChangesets($id)
+    {
         $this->sendAllowHeadersForChangesets();
     }
 
@@ -599,7 +601,8 @@ class ArtifactsResource extends AuthenticatedResource {
      *
      * @param int $id Id of the artifact
      */
-    public function optionsId($id) {
+    public function optionsId($id)
+    {
         $this->sendAllowHeadersForArtifact();
     }
 
@@ -628,7 +631,8 @@ class ArtifactsResource extends AuthenticatedResource {
      *
      * @throws RestException 403
      */
-    protected function putId($id, array $values, ?ChangesetCommentRepresentation $comment = null) {
+    protected function putId($id, array $values, ?ChangesetCommentRepresentation $comment = null)
+    {
         $user     = $this->user_manager->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
 
@@ -668,7 +672,8 @@ class ArtifactsResource extends AuthenticatedResource {
     /**
      * @url OPTIONS
      */
-    public function options() {
+    public function options()
+    {
         Header::allowOptionsGetPost();
     }
 
@@ -1124,7 +1129,8 @@ class ArtifactsResource extends AuthenticatedResource {
      * @throws Project_AccessException 403
      * @throws RestException 404
      */
-    private function getArtifactById(PFUser $user, $id) {
+    private function getArtifactById(PFUser $user, $id)
+    {
         $artifact = $this->artifact_factory->getArtifactById($id);
         if ($artifact) {
             if (! $artifact->userCanView($user)) {
@@ -1137,31 +1143,38 @@ class ArtifactsResource extends AuthenticatedResource {
         throw new RestException(404);
     }
 
-    private function sendAllowHeadersForChangesets() {
+    private function sendAllowHeadersForChangesets()
+    {
         Header::allowOptionsGet();
     }
 
-    private function sendAllowHeadersForLinkNatures() {
+    private function sendAllowHeadersForLinkNatures()
+    {
         Header::allowOptionsGet();
     }
 
-    private function sendAllowHeadersForLinkedArtifacts() {
+    private function sendAllowHeadersForLinkedArtifacts()
+    {
         Header::allowOptionsGet();
     }
 
-    private function sendAllowHeadersForArtifact() {
+    private function sendAllowHeadersForArtifact()
+    {
         Header::allowOptionsGetPutDeletePatch();
     }
 
-    private function sendLastModifiedHeader(Tracker_Artifact $artifact) {
+    private function sendLastModifiedHeader(Tracker_Artifact $artifact)
+    {
         Header::lastModified($artifact->getLastUpdateDate());
     }
 
-    private function sendETagHeader(Tracker_Artifact $artifact) {
+    private function sendETagHeader(Tracker_Artifact $artifact)
+    {
         Header::eTag($artifact->getVersionIdentifier());
     }
 
-    private function sendLocationHeader($uri) {
+    private function sendLocationHeader($uri)
+    {
         $uri_with_api_version = '/api/v1/' . $uri;
 
         Header::Location($uri_with_api_version);
@@ -1177,8 +1190,7 @@ class ArtifactsResource extends AuthenticatedResource {
         array $values,
         array $values_by_field,
         $from_artifact
-    )
-    {
+    ) {
         $nb_sources_to_create_artifact = 0;
         if (!empty($values)) {
             $nb_sources_to_create_artifact++;

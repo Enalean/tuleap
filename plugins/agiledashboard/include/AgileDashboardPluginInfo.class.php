@@ -23,7 +23,8 @@
  */
 class AgileDashboardPluginInfo extends PluginInfo {
 
-    function __construct($plugin) {
+    function __construct($plugin)
+    {
         parent::__construct($plugin);
         $this->setPluginDescriptor(new AgileDashboardPluginDescriptor());
     }

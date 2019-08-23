@@ -28,42 +28,50 @@ class HTML_Table {
     private $table_classes = array();
     private $body          = '';
 
-    public function __construct() {
+    public function __construct()
+    {
     }
 
-    public function setColumnsTitle(array $titles) {
+    public function setColumnsTitle(array $titles)
+    {
         $this->titles = $titles;
         return $this;
     }
 
-    public function addColumnTitle($title) {
+    public function addColumnTitle($title)
+    {
         $this->titles[] = $title;
         return $this;
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
         return $this;
     }
 
-    public function setBody($body) {
+    public function setBody($body)
+    {
         $this->body = $body;
         return $this;
     }
 
-    public function addTableClass($class) {
+    public function addTableClass($class)
+    {
         $this->table_classes[] = $class;
         return $this;
     }
 
-    public function render() {
+    public function render()
+    {
         return '<table'.$this->getTableAttributes().'>
                  '.$this->renderHead().'
                  '.$this->renderBody().'
                 </table>';
     }
 
-    private function getTableAttributes() {
+    private function getTableAttributes()
+    {
         $attributes = array();
         if (count($this->table_classes)) {
             $attributes[] = 'class="'.implode(' ', $this->table_classes).'"';
@@ -77,7 +85,8 @@ class HTML_Table {
         return '';
     }
 
-    private function renderHead() {
+    private function renderHead()
+    {
         if (count($this->titles)) {
             return '  <thead>
                         <tr>
@@ -88,14 +97,16 @@ class HTML_Table {
         return '';
     }
 
-    private function renderBody() {
+    private function renderBody()
+    {
         if ($this->body) {
             return '<tbody>'.$this->body.'</tbody>';
         }
         return;
     }
 
-    protected function setTableClasses(array $classes) {
+    protected function setTableClasses(array $classes)
+    {
         $this->table_classes = $classes;
         return $this;
     }

@@ -33,7 +33,8 @@ use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
 
 class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
 {
-    public function getCriteriaFrom($criteria) {
+    public function getCriteriaFrom($criteria)
+    {
         //Only filter query if field  is used
         if($this->isUsed()) {
             //Only filter query if criteria is valuated
@@ -60,23 +61,28 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return '';
     }
 
-    public function getCriteriaWhere($criteria) {
+    public function getCriteriaWhere($criteria)
+    {
         return '';
     }
 
-    public function getQuerySelect() {
+    public function getQuerySelect()
+    {
         return '';
     }
 
-    public function getQueryFrom() {
+    public function getQueryFrom()
+    {
         return '';
     }
 
-    protected function getCriteriaDao() {
+    protected function getCriteriaDao()
+    {
         return new Tracker_Report_Criteria_File_ValueDao();
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    {
         $html = '';
         $submitter_needed = true;
         $html .= $this->fetchAllAttachment($artifact_id, $this->getChangesetValues($changeset_id), $submitter_needed, array());
@@ -93,11 +99,13 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return string
      */
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
+    {
         return $this->fetchAllAttachmentForCSV($artifact_id, $this->getChangesetValues($changeset_id));
     }
 
-    public function fetchCriteriaValue($criteria) {
+    public function fetchCriteriaValue($criteria)
+    {
         $html = '<input type="text" name="criteria['. $this->id .']" id="tracker_report_criteria_'. $this->id .'" value="';
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
             $hp = Codendi_HTMLPurifier::instance();
@@ -112,7 +120,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      * @param mixed $value the value of the field
      * @return string
      */
-    public function fetchRawValue($value) {
+    public function fetchRawValue($value)
+    {
         return $value;
     }
 
@@ -121,7 +130,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      * @param Tracker_Artifact_Changeset $changeset
      * @return string
      */
-    public function fetchRawValueFromChangeset($changeset) {
+    public function fetchRawValueFromChangeset($changeset)
+    {
         $value = '';
         if ($v = $changeset->getValue($this)) {
             assert($v instanceof Tracker_Artifact_ChangesetValue_File);
@@ -142,7 +152,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $value;
     }
 
-    protected function getValueDao() {
+    protected function getValueDao()
+    {
         return new Tracker_FormElement_Field_Value_FileDao();
     }
 
@@ -174,7 +185,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $this->fetchArtifactReadOnly($artifact, $submitted_values);
     }
 
-    public function fetchSubmitForOverlay(array $submitted_values) {
+    public function fetchSubmitForOverlay(array $submitted_values)
+    {
         return '';
     }
 
@@ -221,7 +233,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         $html = '';
         $submitter_needed = true;
         $html .= $this->fetchAllAttachment($artifact->id, $value, $submitter_needed, array());
@@ -240,7 +253,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return string html
      */
-    protected function fetchSubmitValue(array $submitted_values) {
+    protected function fetchSubmitValue(array $submitted_values)
+    {
         $html = '';
         $html .= '<div class="add-attachement">';
         $html .= '<p>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file') .'</p>';
@@ -271,7 +285,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return string html
      */
-    protected function fetchSubmitValueMasschange() {
+    protected function fetchSubmitValueMasschange()
+    {
         return '';  // deactivate mass change for file fields (see issue described in rev #15855)
     }
 
@@ -284,7 +299,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return string html
      */
-    public function fetchFollowUp($artifact, $from, $to) {
+    public function fetchFollowUp($artifact, $from, $to)
+    {
         $html = '';
         //Retrieve all the values for the changeset
         $to_values = $this->getChangesetValues($to['changeset_id']);
@@ -371,7 +387,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $html;
     }
 
-    public function getFileHTMLUrl(Tracker_FileInfo $file_info) {
+    public function getFileHTMLUrl(Tracker_FileInfo $file_info)
+    {
         $artifact = $this->getFileInfoFactory()->getArtifactByFileInfoId($file_info->getId());
         if (!$artifact) {
             return;
@@ -380,7 +397,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return TRACKER_BASE_URL . '/attachments/' . $this->getFilenameSlug($file_info);
     }
 
-    public function getFileHTMLPreviewUrl(Tracker_FileInfo $file_info) {
+    public function getFileHTMLPreviewUrl(Tracker_FileInfo $file_info)
+    {
         if (! $file_info->isImage()) {
             return;
         }
@@ -402,7 +420,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return (int) $file_info->getId() . '-' . rawurlencode($file_info->getFilename());
     }
 
-    private function getVisioningAttributeForLink($fileinfo, $read_only, $lytebox_id) {
+    private function getVisioningAttributeForLink($fileinfo, $read_only, $lytebox_id)
+    {
         if (! $fileinfo->isImage()) {
             return '';
         }
@@ -427,7 +446,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $html;
     }
 
-    protected function fetchAllAttachmentForCSV($artifact_id, $values) {
+    protected function fetchAllAttachmentForCSV($artifact_id, $values)
+    {
         $txt = '';
         if (count($values)) {
             $filenames = array();
@@ -439,7 +459,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $txt;
     }
 
-    protected function fetchAllAttachmentTitleAndDescription($values) {
+    protected function fetchAllAttachmentTitleAndDescription($values)
+    {
         $html = '';
         if($values) {
             $purifier = Codendi_HTMLPurifier::instance();
@@ -478,7 +499,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return String
      */
-    protected function fetchMailAllAttachment($artifact_id, $values, $format) {
+    protected function fetchMailAllAttachment($artifact_id, $values, $format)
+    {
         $output = '';
         if (!count($values) ) {
             return '';
@@ -534,7 +556,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     /**
      * @return array
      */
-    protected function getChangesetValues($changeset_id) {
+    protected function getChangesetValues($changeset_id)
+    {
         $da = CodendiDataAccess::instance();
         if (!$this->file_values_by_changeset) {
             $this->file_values_by_changeset = array();
@@ -556,7 +579,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return isset($this->file_values_by_changeset[$changeset_id]) ? $this->file_values_by_changeset[$changeset_id] : array();
     }
 
-    public function previewAttachment($attachment_id) {
+    public function previewAttachment($attachment_id)
+    {
         if ($fileinfo = $this->getTrackerFileInfoFactory()->getById($attachment_id)) {
             if ($fileinfo->isImage() && file_exists($fileinfo->getThumbnailPath())) {
                 header('Content-type: '. $fileinfo->getFiletype());
@@ -566,7 +590,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         exit();
     }
 
-    public function showAttachment($attachment_id) {
+    public function showAttachment($attachment_id)
+    {
         if ($fileinfo = $this->getTrackerFileInfoFactory()->getById($attachment_id)) {
             if ($fileinfo->fileExists()) {
                 $http = Codendi_HTTPPurifier::instance();
@@ -590,7 +615,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         exit();
     }
 
-    public function getRootPath() {
+    public function getRootPath()
+    {
         return $this->getGlobalTrackerRootPath() . $this->getId();
     }
 
@@ -599,7 +625,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return string html
      */
-    protected function fetchAdminFormElement() {
+    protected function fetchAdminFormElement()
+    {
         $html = '';
         $html .= '<div>';
         $html .= '<p>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file').'</p>';
@@ -615,28 +642,32 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     /**
      * @return the label of the field (mainly used in admin part)
      */
-    public static function getFactoryLabel() {
+    public static function getFactoryLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','file');
     }
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
-    public static function getFactoryDescription() {
+    public static function getFactoryDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','file_description');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconUseIt() {
+    public static function getFactoryIconUseIt()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/attach.png');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconCreate() {
+    public static function getFactoryIconCreate()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/attach--plus.png');
     }
 
@@ -648,7 +679,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         $html = '';
         if ($value) {
             $files_info = $value->getFiles();
@@ -685,7 +717,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return bool true if the value is considered ok
      */
-    protected function validate(Tracker_Artifact $artifact, $value) {
+    protected function validate(Tracker_Artifact $artifact, $value)
+    {
         return true;
     }
 
@@ -697,7 +730,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return bool true if the value is considered ok
      */
-    public function isValid(Tracker_Artifact $artifact, $value) {
+    public function isValid(Tracker_Artifact $artifact, $value)
+    {
         $this->has_errors = false;
 
         if (is_array($value)) {
@@ -707,7 +741,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return !$this->has_errors;
     }
 
-    private function checkAllFilesHaveBeenSuccessfullyUploaded($value) {
+    private function checkAllFilesHaveBeenSuccessfullyUploaded($value)
+    {
         $rule = new Rule_File();
         foreach($value as $i => $attachment) {
             if ($this->isAttachmentNeedsToBeValidated($i, $attachment)) {
@@ -727,7 +762,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     /**
      * @return bool
      */
-    private function isAttachmentNeedsToBeValidated($attachment_index, array $attachment) {
+    private function isAttachmentNeedsToBeValidated($attachment_index, array $attachment)
+    {
         if ($attachment_index === 'delete' || isset($attachment['tus-uploaded-id'])) {
             return false;
         }
@@ -746,7 +782,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return bool true on success or false on failure
      */
-    public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $value) {
+    public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $value)
+    {
         $this->has_errors = false;
 
         if (is_array($value) &&
@@ -766,7 +803,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return bool true if success
      */
-    public function checkThatAtLeastOneFileIsUploaded($files) {
+    public function checkThatAtLeastOneFileIsUploaded($files)
+    {
         $r = new Rule_File();
         $a_file_is_sent = false;
         foreach ($files as $action => $attachment) {
@@ -790,7 +828,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return void
      */
-    public function augmentDataFromRequest(&$fields_data) {
+    public function augmentDataFromRequest(&$fields_data)
+    {
         if (!isset($fields_data[$this->getId()]) || !is_array($fields_data[$this->getId()])) {
             $fields_data[$this->getId()] = array();
         }
@@ -817,7 +856,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return array or null if not found
      */
-    protected function getSubmittedInfoFromFILES() {
+    protected function getSubmittedInfoFromFILES()
+    {
         return isset($_FILES['artifact']) ? $_FILES['artifact'] : null;
     }
 
@@ -827,7 +867,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return array Array of file info
      */
-    protected function extractFilesFromRequest() {
+    protected function extractFilesFromRequest()
+    {
         if (!$this->files_info_from_request) {
         }
         return $this->files_info_from_request;
@@ -870,7 +911,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value) {
+    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
+    {
         //"old" and "new" value are irrelevant in this context.
         //We just have to know if there is at least one file successfully uploaded
         return $this->checkThatAtLeastOneFileIsUploaded($new_value) || !empty($new_value['delete']);
@@ -882,7 +924,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return bool
      */
-    public function takesTwoColumns() {
+    public function takesTwoColumns()
+    {
         return true;
     }
 
@@ -915,7 +958,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return Tracker_FileInfoDao
      */
-    protected function getFileInfoDao() {
+    protected function getFileInfoDao()
+    {
         return new Tracker_FileInfoDao();
     }
 
@@ -924,7 +968,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return Tracker_FileInfoFactory
      */
-    protected function getFileInfoFactory() {
+    protected function getFileInfoFactory()
+    {
         return new Tracker_FileInfoFactory(
             $this->getFileInfoDao(),
             Tracker_FormElementFactory::instance(),
@@ -938,7 +983,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return mixed The values or null if there are no specific available values
      */
-    public function getRESTAvailableValues() {
+    public function getRESTAvailableValues()
+    {
         return null;
     }
 
@@ -954,7 +1000,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return array();
     }
 
-    public function getFieldDataFromRESTValue(array $rest_value, ?Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValue(array $rest_value, ?Tracker_Artifact $artifact = null)
+    {
         //Transform array to object
         $value = json_decode(json_encode($rest_value), FALSE);
 
@@ -970,11 +1017,13 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $builder->buildFieldDataFromREST($value, $this, $artifact);
     }
 
-    public function getFieldDataFromRESTValueByField($value, ?Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValueByField($value, ?Tracker_Artifact $artifact = null)
+    {
         throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
     }
 
-    private function validateDataFromREST($data) {
+    private function validateDataFromREST($data)
+    {
         if (! property_exists($data, 'value') || ! is_array($data->value)){
             throw new Tracker_FormElement_InvalidFieldException('Invalid format for file field "'.$data->field_id.'". '
                 . ' Correct format is {"field_id" : 425, "value" : [457, 258]}');
@@ -984,7 +1033,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     /**
      * @return Tracker_Artifact_Attachment_TemporaryFileManager
      */
-    private function getTemporaryFileManager() {
+    private function getTemporaryFileManager()
+    {
         return new Tracker_Artifact_Attachment_TemporaryFileManager(
             $this->getUserManager(),
             new Tracker_Artifact_Attachment_TemporaryFileManagerDao(),
@@ -993,7 +1043,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         );
     }
 
-    private function getUserManager() {
+    private function getUserManager()
+    {
         return UserManager::instance();
     }
 
@@ -1006,11 +1057,13 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         );
     }
 
-    protected function getTemporaryFileManagerDao() {
+    protected function getTemporaryFileManagerDao()
+    {
         return new Tracker_Artifact_Attachment_TemporaryFileManagerDao();
     }
 
-    public function deleteChangesetValue(Tracker_Artifact_Changeset $changeset, $changeset_value_id) {
+    public function deleteChangesetValue(Tracker_Artifact_Changeset $changeset, $changeset_value_id)
+    {
         $values = $this->getChangesetValue($changeset, $changeset_value_id, false);
         foreach($values as $fileinfo) {
             $fileinfo->delete();
@@ -1018,11 +1071,13 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         parent::deleteChangesetValue($changeset, $changeset_value_id);
     }
 
-    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+    public function accept(Tracker_FormElement_FieldVisitor $visitor)
+    {
         return $visitor->visitFile($this);
     }
 
-    protected function isPreviousChangesetEmpty(Tracker_Artifact $artifact, $value) {
+    protected function isPreviousChangesetEmpty(Tracker_Artifact $artifact, $value)
+    {
         $last_changeset = $artifact->getLastChangeset();
 
         if ($last_changeset &&
@@ -1034,7 +1089,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return true;
     }
 
-    private function areAllFilesDeletedFromPreviousChangeset($last_changeset, $value) {
+    private function areAllFilesDeletedFromPreviousChangeset($last_changeset, $value)
+    {
         $files = $last_changeset->getValue($this)->getFiles();
         if (isset($value['delete']) && (count($files) == count($value['delete']))) {
             return true;
@@ -1042,7 +1098,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return false;
     }
 
-    public function isEmpty($value, $artifact) {
+    public function isEmpty($value, $artifact)
+    {
         $is_empty = !$this->checkThatAtLeastOneFileIsUploaded($value);
         if ($is_empty) {
             $is_empty = $this->isPreviousChangesetEmpty($artifact, $value);
@@ -1064,7 +1121,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      * @return FileInfoForTusUploadedFileReadyToBeAttachedProvider
      */
     protected function getFileInfoForTusUploadedFileReadyToBeAttachedProvider(FileOngoingUploadDao $ongoing_upload_dao
-    ): FileInfoForTusUploadedFileReadyToBeAttachedProvider {
+    ): FileInfoForTusUploadedFileReadyToBeAttachedProvider
+    {
         return new FileInfoForTusUploadedFileReadyToBeAttachedProvider(
             new FileBeingUploadedInformationProvider(
                 new UploadPathAllocator(

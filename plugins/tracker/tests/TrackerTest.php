@@ -58,7 +58,8 @@ class TrackerTest extends TuleapTestCase {
 
     private $all_trackers_admin_user;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -238,7 +239,8 @@ class TrackerTest extends TuleapTestCase {
         );
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         WorkflowFactory::clearInstance();
         UserManager::clearInstance();
         unset($this->site_admin_user);
@@ -252,7 +254,8 @@ class TrackerTest extends TuleapTestCase {
     }
 
     // New artifact permissions
-    public function testPermsNewArtifactSiteAdmin() {
+    public function testPermsNewArtifactSiteAdmin()
+    {
         $request_new_artifact = \Mockery::spy(\Codendi_Request::class);
         $request_new_artifact->shouldReceive('get')->with('func')->andReturns('new-artifact');
 
@@ -268,7 +271,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->site_admin_user);
     }
 
-    public function testPermsNewArtifactProjectAdmin() {
+    public function testPermsNewArtifactProjectAdmin()
+    {
         $request_new_artifact = \Mockery::spy(\Codendi_Request::class);
         $request_new_artifact->shouldReceive('get')->with('func')->andReturns('new-artifact');
 
@@ -284,7 +288,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->project_admin_user);
     }
 
-    public function testPermsNewArtifactTrackerAdmin() {
+    public function testPermsNewArtifactTrackerAdmin()
+    {
         $request_new_artifact = \Mockery::spy(\Codendi_Request::class);
         $request_new_artifact->shouldReceive('get')->with('func')->andReturns('new-artifact');
 
@@ -300,7 +305,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->all_trackers_admin_user);
     }
 
-    public function testPermsNewArtifactProjectMember() {
+    public function testPermsNewArtifactProjectMember()
+    {
         $request_new_artifact = \Mockery::spy(\Codendi_Request::class);
         $request_new_artifact->shouldReceive('get')->with('func')->andReturns('new-artifact');
 
@@ -316,7 +322,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->project_member_user);
     }
 
-    public function testPermsNewArtifactRegisteredUser() {
+    public function testPermsNewArtifactRegisteredUser()
+    {
         $request_new_artifact = \Mockery::spy(\Codendi_Request::class);
         $request_new_artifact->shouldReceive('get')->with('func')->andReturns('new-artifact');
 
@@ -332,7 +339,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->registered_user);
     }
 
-    public function testUserCannotCreateArtifactIfTheyDoNotHaveSubmitPermissionsOnAtLeastOneField() {
+    public function testUserCannotCreateArtifactIfTheyDoNotHaveSubmitPermissionsOnAtLeastOneField()
+    {
         $request_new_artifact = \Mockery::spy(\Codendi_Request::class);
         $request_new_artifact->shouldReceive('get')->with('func')->andReturns('new-artifact');
 
@@ -352,7 +360,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->registered_user);
     }
 
-    public function testUserCanCreateArtifactEvenIfTheyDoNotHaveSubmitPermissionsOnAllRequiredFields() {
+    public function testUserCanCreateArtifactEvenIfTheyDoNotHaveSubmitPermissionsOnAllRequiredFields()
+    {
         $request_new_artifact = \Mockery::spy(\Codendi_Request::class);
         $request_new_artifact->shouldReceive('get')->with('func')->andReturns('new-artifact');
 
@@ -373,7 +382,8 @@ class TrackerTest extends TuleapTestCase {
     }
 
     // Delete tracker permissions
-    public function testPermsDeleteTrackerSiteAdmin() {
+    public function testPermsDeleteTrackerSiteAdmin()
+    {
         $request_delete_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_delete_tracker->shouldReceive('get')->with('func')->andReturns('delete');
 
@@ -381,7 +391,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tf->shouldReceive('markAsDeleted')->once();
         $this->tracker->process($this->tracker_manager, $request_delete_tracker, $this->site_admin_user);
     }
-    public function testPermsDeleteTrackerProjectAdmin() {
+    public function testPermsDeleteTrackerProjectAdmin()
+    {
         $request_delete_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_delete_tracker->shouldReceive('get')->with('func')->andReturns('delete');
 
@@ -389,7 +400,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tf->shouldReceive('markAsDeleted')->once();
         $this->tracker->process($this->tracker_manager, $request_delete_tracker, $this->project_admin_user);
     }
-    public function testPermsDeleteTrackerTrackerAdmin() {
+    public function testPermsDeleteTrackerTrackerAdmin()
+    {
         $request_delete_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_delete_tracker->shouldReceive('get')->with('func')->andReturns('delete');
 
@@ -397,7 +409,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tf->shouldReceive('markAsDeleted')->never();
         $this->tracker->process($this->tracker_manager, $request_delete_tracker, $this->all_trackers_admin_user);
     }
-    public function testPermsDeleteTrackerProjectMember() {
+    public function testPermsDeleteTrackerProjectMember()
+    {
         $request_delete_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_delete_tracker->shouldReceive('get')->with('func')->andReturns('delete');
 
@@ -405,7 +418,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tf->shouldReceive('markAsDeleted')->never();
         $this->tracker->process($this->tracker_manager, $request_delete_tracker, $this->project_member_user);
     }
-    public function testPermsDeleteTrackerRegisteredUser() {
+    public function testPermsDeleteTrackerRegisteredUser()
+    {
         $request_delete_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_delete_tracker->shouldReceive('get')->with('func')->andReturns('delete');
 
@@ -415,7 +429,8 @@ class TrackerTest extends TuleapTestCase {
     }
 
     // Tracker admin permissions
-    public function testPermsAdminTrackerSiteAdmin() {
+    public function testPermsAdminTrackerSiteAdmin()
+    {
         $request_admin_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_tracker->shouldReceive('get')->with('func')->andReturns('admin');
 
@@ -423,7 +438,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->shouldReceive('displayAdmin')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_tracker, $this->site_admin_user);
     }
-    public function testPermsAdminTrackerProjectAdmin() {
+    public function testPermsAdminTrackerProjectAdmin()
+    {
         $request_admin_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_tracker->shouldReceive('get')->with('func')->andReturns('admin');
 
@@ -431,7 +447,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->shouldReceive('displayAdmin')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_tracker, $this->project_admin_user);
     }
-    public function testPermsAdminTrackerTrackerAdmin() {
+    public function testPermsAdminTrackerTrackerAdmin()
+    {
         $request_admin_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_tracker->shouldReceive('get')->with('func')->andReturns('admin');
 
@@ -441,7 +458,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->shouldReceive('displayAdmin')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_tracker, $this->all_trackers_admin_user);
     }
-    public function testPermsAdminTrackerTracker1Admin() {
+    public function testPermsAdminTrackerTracker1Admin()
+    {
         $request_admin_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_tracker->shouldReceive('get')->with('func')->andReturns('admin');
 
@@ -451,7 +469,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->shouldReceive('displayAdmin')->never();
         $this->tracker2->process($this->tracker_manager, $request_admin_tracker, $this->tracker1_admin_user);
     }
-    public function testPermsAdminTrackerTracker2Admin() {
+    public function testPermsAdminTrackerTracker2Admin()
+    {
         $request_admin_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_tracker->shouldReceive('get')->with('func')->andReturns('admin');
 
@@ -461,7 +480,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->shouldReceive('displayAdmin')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_tracker, $this->tracker2_admin_user);
     }
-    public function testPermsAdminTrackerProjectMember() {
+    public function testPermsAdminTrackerProjectMember()
+    {
         $request_admin_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_tracker->shouldReceive('get')->with('func')->andReturns('admin');
 
@@ -469,7 +489,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->shouldReceive('displayAdmin')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_tracker, $this->project_member_user);
     }
-    public function testPermsAdminTrackerRegisteredUser() {
+    public function testPermsAdminTrackerRegisteredUser()
+    {
         $request_admin_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_tracker->shouldReceive('get')->with('func')->andReturns('admin');
 
@@ -489,7 +510,8 @@ class TrackerTest extends TuleapTestCase {
     }
 
     // Tracker admin edit option permissions
-    public function testPermsAdminEditOptionsTrackerSiteAdmin() {
+    public function testPermsAdminEditOptionsTrackerSiteAdmin()
+    {
         $request_admin_editoptions_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_editoptions_tracker->shouldReceive('get')->with('func')->andReturns('admin-editoptions');
 
@@ -497,7 +519,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->shouldReceive('displayAdminOptions')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->site_admin_user);
     }
-    public function testPermsAdminEditOptionsTrackerProjectAdmin() {
+    public function testPermsAdminEditOptionsTrackerProjectAdmin()
+    {
         $request_admin_editoptions_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_editoptions_tracker->shouldReceive('get')->with('func')->andReturns('admin-editoptions');
 
@@ -505,7 +528,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->shouldReceive('displayAdminOptions')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->project_admin_user);
     }
-    public function testPermsAdminEditOptionsTrackerTrackerAdmin() {
+    public function testPermsAdminEditOptionsTrackerTrackerAdmin()
+    {
         $request_admin_editoptions_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_editoptions_tracker->shouldReceive('get')->with('func')->andReturns('admin-editoptions');
 
@@ -515,7 +539,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->shouldReceive('displayAdminOptions')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->all_trackers_admin_user);
     }
-    public function testPermsAdminEditOptionsTrackerTracker1Admin() {
+    public function testPermsAdminEditOptionsTrackerTracker1Admin()
+    {
         $request_admin_editoptions_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_editoptions_tracker->shouldReceive('get')->with('func')->andReturns('admin-editoptions');
 
@@ -525,7 +550,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->shouldReceive('displayAdminOptions')->never();
         $this->tracker2->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->tracker1_admin_user);
     }
-    public function testPermsAdminEditOptionsTrackerTracker2Admin() {
+    public function testPermsAdminEditOptionsTrackerTracker2Admin()
+    {
         $request_admin_editoptions_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_editoptions_tracker->shouldReceive('get')->with('func')->andReturns('admin-editoptions');
 
@@ -535,7 +561,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->shouldReceive('displayAdminOptions')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->tracker2_admin_user);
     }
-    public function testPermsAdminEditOptionsTrackerProjectMember() {
+    public function testPermsAdminEditOptionsTrackerProjectMember()
+    {
         $request_admin_editoptions_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_editoptions_tracker->shouldReceive('get')->with('func')->andReturns('admin-editoptions');
 
@@ -543,7 +570,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->shouldReceive('displayAdminOptions')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->project_member_user);
     }
-    public function testPermsAdminEditOptionsTrackerRegisteredUser() {
+    public function testPermsAdminEditOptionsTrackerRegisteredUser()
+    {
         $request_admin_editoptions_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_editoptions_tracker->shouldReceive('get')->with('func')->andReturns('admin-editoptions');
 
@@ -553,7 +581,8 @@ class TrackerTest extends TuleapTestCase {
     }
 
     // Tracker "admin perms" permissions
-    public function testPermsAdminPermsTrackerSiteAdmin() {
+    public function testPermsAdminPermsTrackerSiteAdmin()
+    {
         $request_admin_perms_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms');
 
@@ -561,7 +590,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->shouldReceive('displayAdminPerms')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker, $this->site_admin_user);
     }
-    public function testPermsAdminPermsTrackerProjectAdmin() {
+    public function testPermsAdminPermsTrackerProjectAdmin()
+    {
         $request_admin_perms_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms');
 
@@ -569,7 +599,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->shouldReceive('displayAdminPerms')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker, $this->project_admin_user);
     }
-    public function testPermsAdminPermsTrackerTrackerAdmin() {
+    public function testPermsAdminPermsTrackerTrackerAdmin()
+    {
         $request_admin_perms_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms');
 
@@ -579,7 +610,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->shouldReceive('displayAdminPerms')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker, $this->all_trackers_admin_user);
     }
-    public function testPermsAdminPermsTrackerTracker1Admin() {
+    public function testPermsAdminPermsTrackerTracker1Admin()
+    {
         $request_admin_perms_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms');
 
@@ -589,7 +621,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->shouldReceive('displayAdminPerms')->never();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker, $this->tracker1_admin_user);
     }
-    public function testPermsAdminPermsTrackerTracker2Admin() {
+    public function testPermsAdminPermsTrackerTracker2Admin()
+    {
         $request_admin_perms_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms');
 
@@ -599,7 +632,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->shouldReceive('displayAdminPerms')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker, $this->tracker2_admin_user);
     }
-    public function testPermsAdminPermsTrackerProjectMember() {
+    public function testPermsAdminPermsTrackerProjectMember()
+    {
         $request_admin_perms_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms');
 
@@ -607,7 +641,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->shouldReceive('displayAdminPerms')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker, $this->project_member_user);
     }
-    public function testPermsAdminPermsTrackerRegisteredUser() {
+    public function testPermsAdminPermsTrackerRegisteredUser()
+    {
         $request_admin_perms_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms');
 
@@ -617,7 +652,8 @@ class TrackerTest extends TuleapTestCase {
     }
 
     // Tracker "admin perms tracker" permissions
-    public function testPermsAdminPermsTrackerTrackerSiteAdmin() {
+    public function testPermsAdminPermsTrackerTrackerSiteAdmin()
+    {
         $request_admin_perms_tracker_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_tracker_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-tracker');
 
@@ -625,7 +661,8 @@ class TrackerTest extends TuleapTestCase {
         expect($this->permission_controller)->process()->once();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->site_admin_user);
     }
-    public function testPermsAdminPermsTrackerTrackerProjectAdmin() {
+    public function testPermsAdminPermsTrackerTrackerProjectAdmin()
+    {
         $request_admin_perms_tracker_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_tracker_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-tracker');
 
@@ -633,7 +670,8 @@ class TrackerTest extends TuleapTestCase {
         expect($this->permission_controller)->process()->once();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->project_admin_user);
     }
-    public function testPermsAdminPermsTrackerTrackerTrackerAdmin() {
+    public function testPermsAdminPermsTrackerTrackerTrackerAdmin()
+    {
         $request_admin_perms_tracker_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_tracker_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-tracker');
 
@@ -643,7 +681,8 @@ class TrackerTest extends TuleapTestCase {
         expect($this->permission_controller2)->process()->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->all_trackers_admin_user);
     }
-    public function testPermsAdminPermsTrackerTrackerTracker1Admin() {
+    public function testPermsAdminPermsTrackerTrackerTracker1Admin()
+    {
         $request_admin_perms_tracker_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_tracker_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-tracker');
 
@@ -653,7 +692,8 @@ class TrackerTest extends TuleapTestCase {
         expect($this->permission_controller2)->process()->never();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->tracker1_admin_user);
     }
-    public function testPermsAdminPermsTrackerTrackerTracker2Admin() {
+    public function testPermsAdminPermsTrackerTrackerTracker2Admin()
+    {
         $request_admin_perms_tracker_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_tracker_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-tracker');
 
@@ -663,7 +703,8 @@ class TrackerTest extends TuleapTestCase {
         expect($this->permission_controller2)->process()->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->tracker2_admin_user);
     }
-    public function testPermsAdminPermsTrackerTrackerProjectMember() {
+    public function testPermsAdminPermsTrackerTrackerProjectMember()
+    {
         $request_admin_perms_tracker_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_tracker_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-tracker');
 
@@ -671,7 +712,8 @@ class TrackerTest extends TuleapTestCase {
         expect($this->permission_controller)->process()->never();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->project_member_user);
     }
-    public function testPermsAdminPermsTrackerTrackerRegisteredUser() {
+    public function testPermsAdminPermsTrackerTrackerRegisteredUser()
+    {
         $request_admin_perms_tracker_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_tracker_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-tracker');
 
@@ -681,7 +723,8 @@ class TrackerTest extends TuleapTestCase {
     }
 
     // Tracker "admin form elements" permissions
-    public function testPermsAdminFormElementTrackerSiteAdmin() {
+    public function testPermsAdminFormElementTrackerSiteAdmin()
+    {
         $request_admin_formelement_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_formelement_tracker->shouldReceive('get')->with('func')->andReturns('admin-formElements');
 
@@ -689,7 +732,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->shouldReceive('displayAdminFormElements')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_formelement_tracker, $this->site_admin_user);
     }
-    public function testPermsAdminFormElementTrackerProjectAdmin() {
+    public function testPermsAdminFormElementTrackerProjectAdmin()
+    {
         $request_admin_formelement_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_formelement_tracker->shouldReceive('get')->with('func')->andReturns('admin-formElements');
 
@@ -697,7 +741,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->shouldReceive('displayAdminFormElements')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_formelement_tracker, $this->project_admin_user);
     }
-    public function testPermsAdminFormElementTrackerTrackerAdmin() {
+    public function testPermsAdminFormElementTrackerTrackerAdmin()
+    {
         $request_admin_formelement_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_formelement_tracker->shouldReceive('get')->with('func')->andReturns('admin-formElements');
 
@@ -707,7 +752,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->shouldReceive('displayAdminFormElements')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_formelement_tracker, $this->all_trackers_admin_user);
     }
-    public function testPermsAdminFormElementTrackerTracker1Admin() {
+    public function testPermsAdminFormElementTrackerTracker1Admin()
+    {
         $request_admin_formelement_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_formelement_tracker->shouldReceive('get')->with('func')->andReturns('admin-formElements');
 
@@ -717,7 +763,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->shouldReceive('displayAdminFormElements')->never();
         $this->tracker2->process($this->tracker_manager, $request_admin_formelement_tracker, $this->tracker1_admin_user);
     }
-    public function testPermsAdminFormElementTrackerTracker2Admin() {
+    public function testPermsAdminFormElementTrackerTracker2Admin()
+    {
         $request_admin_formelement_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_formelement_tracker->shouldReceive('get')->with('func')->andReturns('admin-formElements');
 
@@ -727,7 +774,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->shouldReceive('displayAdminFormElements')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_formelement_tracker, $this->tracker2_admin_user);
     }
-    public function testPermsAdminFormElementTrackerProjectMember() {
+    public function testPermsAdminFormElementTrackerProjectMember()
+    {
         $request_admin_formelement_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_formelement_tracker->shouldReceive('get')->with('func')->andReturns('admin-formElements');
 
@@ -735,7 +783,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->shouldReceive('displayAdminFormElements')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_formelement_tracker, $this->project_member_user);
     }
-    public function testPermsAdminFormElementTrackerRegisteredUser() {
+    public function testPermsAdminFormElementTrackerRegisteredUser()
+    {
         $request_admin_formelement_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_formelement_tracker->shouldReceive('get')->with('func')->andReturns('admin-formElements');
 
@@ -745,7 +794,8 @@ class TrackerTest extends TuleapTestCase {
     }
 
     // Tracker "admin semantic" permissions
-    public function testPermsAdminSemanticTrackerSiteAdmin() {
+    public function testPermsAdminSemanticTrackerSiteAdmin()
+    {
         $request_admin_semantic_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_semantic_tracker->shouldReceive('get')->with('func')->andReturns('admin-semantic');
 
@@ -753,7 +803,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tsm->shouldReceive('process')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_semantic_tracker, $this->site_admin_user);
     }
-    public function testPermsAdminSemanticTrackerProjectAdmin() {
+    public function testPermsAdminSemanticTrackerProjectAdmin()
+    {
         $request_admin_semantic_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_semantic_tracker->shouldReceive('get')->with('func')->andReturns('admin-semantic');
 
@@ -761,7 +812,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tsm->shouldReceive('process')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_semantic_tracker, $this->project_admin_user);
     }
-    public function testPermsAdminSemanticTrackerTrackerAdmin() {
+    public function testPermsAdminSemanticTrackerTrackerAdmin()
+    {
         $request_admin_semantic_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_semantic_tracker->shouldReceive('get')->with('func')->andReturns('admin-semantic');
 
@@ -770,7 +822,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker1->process($this->tracker_manager, $request_admin_semantic_tracker, $this->all_trackers_admin_user);
         $this->tracker2->process($this->tracker_manager, $request_admin_semantic_tracker, $this->all_trackers_admin_user);
     }
-    public function testPermsAdminSemanticTrackerTracker1Admin() {
+    public function testPermsAdminSemanticTrackerTracker1Admin()
+    {
         $request_admin_semantic_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_semantic_tracker->shouldReceive('get')->with('func')->andReturns('admin-semantic');
 
@@ -779,7 +832,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker1->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker1_admin_user);
         $this->tracker2->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker1_admin_user);
     }
-    public function testPermsAdminSemanticTrackerTracker2Admin() {
+    public function testPermsAdminSemanticTrackerTracker2Admin()
+    {
         $request_admin_semantic_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_semantic_tracker->shouldReceive('get')->with('func')->andReturns('admin-semantic');
 
@@ -788,7 +842,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tsm->shouldReceive('process')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker2_admin_user);
     }
-    public function testPermsAdminSemanticTrackerProjectMember() {
+    public function testPermsAdminSemanticTrackerProjectMember()
+    {
         $request_admin_semantic_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_semantic_tracker->shouldReceive('get')->with('func')->andReturns('admin-semantic');
 
@@ -796,7 +851,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tsm->shouldReceive('process')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_semantic_tracker, $this->project_member_user);
     }
-    public function testPermsAdminSemanticTrackerRegisteredUser() {
+    public function testPermsAdminSemanticTrackerRegisteredUser()
+    {
         $request_admin_semantic_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_semantic_tracker->shouldReceive('get')->with('func')->andReturns('admin-semantic');
 
@@ -806,7 +862,8 @@ class TrackerTest extends TuleapTestCase {
     }
 
     // Tracker "admin canned" permissions
-    public function testPermsAdminCannedTrackerSiteAdmin() {
+    public function testPermsAdminCannedTrackerSiteAdmin()
+    {
         $request_admin_canned_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_canned_tracker->shouldReceive('get')->with('func')->andReturns('admin-canned');
 
@@ -814,7 +871,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tcrm->shouldReceive('process')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_canned_tracker, $this->site_admin_user);
     }
-    public function testPermsAdminCannedTrackerProjectAdmin() {
+    public function testPermsAdminCannedTrackerProjectAdmin()
+    {
         $request_admin_canned_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_canned_tracker->shouldReceive('get')->with('func')->andReturns('admin-canned');
 
@@ -822,7 +880,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tcrm->shouldReceive('process')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_canned_tracker, $this->project_admin_user);
     }
-    public function testPermsAdminCannedTrackerTrackerAdmin() {
+    public function testPermsAdminCannedTrackerTrackerAdmin()
+    {
         $request_admin_canned_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_canned_tracker->shouldReceive('get')->with('func')->andReturns('admin-canned');
 
@@ -831,7 +890,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker1->process($this->tracker_manager, $request_admin_canned_tracker, $this->all_trackers_admin_user);
         $this->tracker2->process($this->tracker_manager, $request_admin_canned_tracker, $this->all_trackers_admin_user);
     }
-    public function testPermsAdminCannedTrackerTracker1Admin() {
+    public function testPermsAdminCannedTrackerTracker1Admin()
+    {
         $request_admin_canned_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_canned_tracker->shouldReceive('get')->with('func')->andReturns('admin-canned');
 
@@ -840,7 +900,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker1->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker1_admin_user);
         $this->tracker2->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker1_admin_user);
     }
-    public function testPermsAdminCannedTrackerTracker2Admin() {
+    public function testPermsAdminCannedTrackerTracker2Admin()
+    {
         $request_admin_canned_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_canned_tracker->shouldReceive('get')->with('func')->andReturns('admin-canned');
 
@@ -849,7 +910,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tcrm->shouldReceive('process')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker2_admin_user);
     }
-    public function testPermsAdminCannedTrackerProjectMember() {
+    public function testPermsAdminCannedTrackerProjectMember()
+    {
         $request_admin_canned_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_canned_tracker->shouldReceive('get')->with('func')->andReturns('admin-canned');
 
@@ -857,7 +919,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tcrm->shouldReceive('process')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_canned_tracker, $this->project_member_user);
     }
-    public function testPermsAdminCannedTrackerRegisteredUser() {
+    public function testPermsAdminCannedTrackerRegisteredUser()
+    {
         $request_admin_canned_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_canned_tracker->shouldReceive('get')->with('func')->andReturns('admin-canned');
 
@@ -867,7 +930,8 @@ class TrackerTest extends TuleapTestCase {
     }
 
     // Tracker "admin workflow" permissions
-    public function testPermsAdminWorkflowTrackerSiteAdmin() {
+    public function testPermsAdminWorkflowTrackerSiteAdmin()
+    {
         $request_admin_workflow_tracker = \Mockery::spy(\HTTPRequest::class);
         $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
@@ -875,7 +939,8 @@ class TrackerTest extends TuleapTestCase {
         $this->wm->shouldReceive('process')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->site_admin_user);
     }
-    public function testPermsAdminWorkflowTrackerProjectAdmin() {
+    public function testPermsAdminWorkflowTrackerProjectAdmin()
+    {
         $request_admin_workflow_tracker = \Mockery::spy(\HTTPRequest::class);
         $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
@@ -883,7 +948,8 @@ class TrackerTest extends TuleapTestCase {
         $this->wm->shouldReceive('process')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->project_admin_user);
     }
-    public function testPermsAdminWorkflowTrackerTrackerAdmin() {
+    public function testPermsAdminWorkflowTrackerTrackerAdmin()
+    {
         $request_admin_workflow_tracker = \Mockery::spy(\HTTPRequest::class);
         $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
@@ -892,7 +958,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker1->process($this->tracker_manager, $request_admin_workflow_tracker, $this->all_trackers_admin_user);
         $this->tracker2->process($this->tracker_manager, $request_admin_workflow_tracker, $this->all_trackers_admin_user);
     }
-    public function testPermsAdminWorkflowTrackerTracker1Admin() {
+    public function testPermsAdminWorkflowTrackerTracker1Admin()
+    {
         $request_admin_workflow_tracker = \Mockery::spy(\HTTPRequest::class);
         $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
@@ -901,7 +968,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker1->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker1_admin_user);
         $this->tracker2->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker1_admin_user);
     }
-    public function testPermsAdminWorkflowTrackerTracker2Admin() {
+    public function testPermsAdminWorkflowTrackerTracker2Admin()
+    {
         $request_admin_workflow_tracker = \Mockery::spy(\HTTPRequest::class);
         $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
@@ -910,7 +978,8 @@ class TrackerTest extends TuleapTestCase {
         $this->wm->shouldReceive('process')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker2_admin_user);
     }
-    public function testPermsAdminWorkflowTrackerProjectMember() {
+    public function testPermsAdminWorkflowTrackerProjectMember()
+    {
         $request_admin_workflow_tracker = \Mockery::spy(\HTTPRequest::class);
         $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
@@ -918,7 +987,8 @@ class TrackerTest extends TuleapTestCase {
         $this->wm->shouldReceive('process')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->project_member_user);
     }
-    public function testPermsAdminWorkflowTrackerRegisteredUser() {
+    public function testPermsAdminWorkflowTrackerRegisteredUser()
+    {
         $request_admin_workflow_tracker = \Mockery::spy(\HTTPRequest::class);
         $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
@@ -927,7 +997,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->registered_user);
     }
 
-    public function testHasUnknownAidCreateMode() {
+    public function testHasUnknownAidCreateMode()
+    {
         $header = array('summary', 'details');
         $lines = array(
                     array('summary 1', 'details 1'),
@@ -939,7 +1010,8 @@ class TrackerTest extends TuleapTestCase {
         $this->assertFalse($this->tracker->hasUnknownAid($header, $lines));
     }
 
-    public function testHasUnknownAidUpdateModeNoError() {
+    public function testHasUnknownAidUpdateModeNoError()
+    {
         $header = array('aid','summary', 'details');
         $lines = array(
                     array('1','summary 1', 'details 1'),
@@ -968,7 +1040,8 @@ class TrackerTest extends TuleapTestCase {
         $this->assertFalse($this->tracker->hasUnknownAid($header, $lines));
     }
 
-    public function testHasUnknownAidUpdateModeError() {
+    public function testHasUnknownAidUpdateModeError()
+    {
         $header = array('aid','summary', 'details');
         $lines = array(
                     array('1','summary 1', 'details 1'),
@@ -999,7 +1072,8 @@ class TrackerTest extends TuleapTestCase {
         $this->assertTrue($this->tracker->hasUnknownAid($header, $lines));
     }
 
-    public function testIsValidCSVWrongSeparator() {
+    public function testIsValidCSVWrongSeparator()
+    {
         $lines = array(
                     array('aid;summary;details'),
                     array('1;summary 1;details 1'),
@@ -1016,7 +1090,8 @@ class TrackerTest extends TuleapTestCase {
         $tracker->isValidCSV($lines, $separator);
     }
 
-    public function testIsValidCSVGoodSeparator() {
+    public function testIsValidCSVGoodSeparator()
+    {
         $lines = array(
                     array('aid', 'summary', 'details'),
                     array('1', 'summary 1', 'details 1'),
@@ -1034,7 +1109,8 @@ class TrackerTest extends TuleapTestCase {
         $tracker->isValidCSV($lines, $separator);
     }
 
-    public function testCreateFormElementDispatchesToOrdinaryFieldCreation() {
+    public function testCreateFormElementDispatchesToOrdinaryFieldCreation()
+    {
         $data = array('type' => 'string');
 
         list($tracker, $factory, $sharedFactory, $user) = $this->GivenATrackerAndItsFactories();
@@ -1044,7 +1120,8 @@ class TrackerTest extends TuleapTestCase {
         $tracker->createFormElement($data['type'], $data, $user);
     }
 
-    public function testCreateFormElementDispatchesToSharedField() {
+    public function testCreateFormElementDispatchesToSharedField()
+    {
         $data = array('type' => 'shared');
 
         list($tracker, $factory, $sharedFactory, $user) = $this->GivenATrackerAndItsFactories();
@@ -1054,7 +1131,8 @@ class TrackerTest extends TuleapTestCase {
         $tracker->createFormElement($data['type'], $data, $user);
     }
 
-    private function GivenATrackerAndItsFactories() {
+    private function GivenATrackerAndItsFactories()
+    {
         $tracker = new Tracker(null, null, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
         $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
         $tracker->setFormElementFactory($factory);
@@ -1072,7 +1150,8 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
     private $workflow_factory;
     private $hierarchy;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         $this->tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -1110,7 +1189,8 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
         stub($this->tracker)->getWebhookXMLExporter()->returns($webhook_xml_exporter);
     }
 
-    public function testPermissionsExport() {
+    public function testPermissionsExport()
+    {
         stub($this->tracker)->getPermissionsByUgroupId()->returns(array(
             1   => array('PERM_1'),
             3   => array('PERM_2'),
@@ -1149,7 +1229,8 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
         $this->assertEqual((string)$xml->permissions->permission[2]['type'], 'PERM_3');
     }
 
-    public function itExportsTheTrackerID() {
+    public function itExportsTheTrackerID()
+    {
         stub($this->formelement_factory)->getUsedFormElementForTracker()->returns(array());
         stub($this->workflow_factory)->getGlobalRulesManager()->returns(\Mockery::spy(\Tracker_RulesManager::class));
         stub($this->tracker)->getProjectUgroups()->returns([]);
@@ -1162,7 +1243,8 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
         $this->assertEqual((string)$attributes['id'], 'T110');
     }
 
-    public function itExportsNoParentIfNotInAHierarchy() {
+    public function itExportsNoParentIfNotInAHierarchy()
+    {
         stub($this->formelement_factory)->getUsedFormElementForTracker()->returns(array());
         stub($this->workflow_factory)->getGlobalRulesManager()->returns(\Mockery::spy(\Tracker_RulesManager::class));
         stub($this->tracker)->getProjectUgroups()->returns([]);
@@ -1175,7 +1257,8 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
         $this->assertEqual((string)$attributes['parent_id'], "0");
     }
 
-    public function itExportsTheParentId() {
+    public function itExportsTheParentId()
+    {
         stub($this->workflow_factory)->getGlobalRulesManager()->returns(\Mockery::spy(\Tracker_RulesManager::class));
         stub($this->formelement_factory)->getUsedFormElementForTracker()->returns(array());
         stub($this->tracker)->getProjectUgroups()->returns([]);
@@ -1190,7 +1273,8 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
         $this->assertEqual((string)$attributes['parent_id'], "T9001");
     }
 
-    public function itExportsTheTrackerColor() {
+    public function itExportsTheTrackerColor()
+    {
         stub($this->formelement_factory)->getUsedFormElementForTracker()->returns(array());
         stub($this->workflow_factory)->getGlobalRulesManager()->returns(\Mockery::spy(\Tracker_RulesManager::class));
         stub($this->tracker)->getProjectUgroups()->returns([]);
@@ -1207,7 +1291,8 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
 
 class Tracker_WorkflowTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         $this->tracker_id = 12;
@@ -1218,21 +1303,24 @@ class Tracker_WorkflowTest extends TuleapTestCase {
         stub($this->tracker)->getWorkflowFactory()->returns($this->workflow_factory);
     }
 
-    public function itHasADefaultWorkflow() {
+    public function itHasADefaultWorkflow()
+    {
         $workflow = aWorkflow()->withTrackerId($this->tracker_id)->build();
         stub($this->workflow_factory)->getWorkflowByTrackerId()->returns(false);
         stub($this->workflow_factory)->getWorkflowWithoutTransition()->returns($workflow);
         $this->assertEqual($this->tracker->getWorkflow(), $workflow);
     }
 
-    public function itAlwaysHaveTheSameDefaultWorkflow() {
+    public function itAlwaysHaveTheSameDefaultWorkflow()
+    {
         stub($this->workflow_factory)->getWorkflowByTrackerId()->returns(false);
         stub($this->workflow_factory)->getWorkflowWithoutTransition()->returns(aWorkflow()->withTrackerId(12)->build());
         stub($this->workflow_factory)->getWorkflowWithoutTransition()->returns(aWorkflow()->withTrackerId(33)->build());
         $this->assertEqual($this->tracker->getWorkflow(), $this->tracker->getWorkflow());
     }
 
-    public function itHasAWorkflowFromTheFactoryWhenThereAreTransitions() {
+    public function itHasAWorkflowFromTheFactoryWhenThereAreTransitions()
+    {
         $workflow = aWorkflow()->withTrackerId($this->tracker_id)->build();
         stub($this->workflow_factory)->getWorkflowByTrackerId($this->tracker_id)->returns($workflow);
         $this->assertEqual($this->tracker->getWorkflow(), $workflow);
@@ -1245,7 +1333,8 @@ class Tracker_getParentTest extends TuleapTestCase {
     private $tracker;
     private $tracker_factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         $this->tracker_factory = \Mockery::spy(\TrackerFactory::class);
@@ -1253,38 +1342,44 @@ class Tracker_getParentTest extends TuleapTestCase {
         stub($this->tracker)->getTrackerFactory()->returns($this->tracker_factory);
     }
 
-    public function itReturnsNullWhenItHasNoParentFromAccessor() {
+    public function itReturnsNullWhenItHasNoParentFromAccessor()
+    {
         $tracker = aTracker()->build();
         $tracker->setParent(null);
         $this->assertEqual($tracker->getParent(), null);
     }
 
-    public function itReturnsParentWhenParentWasSetByAccessor() {
+    public function itReturnsParentWhenParentWasSetByAccessor()
+    {
         $parent  = aTracker()->build();
         $tracker = aTracker()->build();
         $tracker->setParent($parent);
         $this->assertEqual($tracker->getParent(), $parent);
     }
 
-    public function itReturnsNullWhenItHasNoParentFromDb() {
+    public function itReturnsNullWhenItHasNoParentFromDb()
+    {
         stub($this->tracker)->getParentId()->returns(null);
         $this->assertEqual($this->tracker->getParent(), null);
     }
 
-    public function itReturnsNullWhenParentNotFoundInDb() {
+    public function itReturnsNullWhenParentNotFoundInDb()
+    {
         stub($this->tracker_factory)->getTrackerById(15)->returns(null);
         stub($this->tracker)->getParentId()->returns(15);
         $this->assertEqual($this->tracker->getParent(), null);
     }
 
-    public function itReturnsParentWhenFetchedFromDb() {
+    public function itReturnsParentWhenFetchedFromDb()
+    {
         $parent  = aTracker()->build();
         stub($this->tracker_factory)->getTrackerById(15)->returns($parent);
         stub($this->tracker)->getParentId()->returns(15);
         $this->assertEqual($this->tracker->getParent(), $parent);
     }
 
-    public function itDoesntFetchParentTwiceWhenThereIsParent() {
+    public function itDoesntFetchParentTwiceWhenThereIsParent()
+    {
         $parent  = aTracker()->build();
         expect($this->tracker_factory)->getTrackerById(15)->once();
         stub($this->tracker_factory)->getTrackerById(15)->returns($parent);
@@ -1294,7 +1389,8 @@ class Tracker_getParentTest extends TuleapTestCase {
         $this->tracker->getParent();
     }
 
-    public function itDoesntFetchParentTwiceWhenOrphan() {
+    public function itDoesntFetchParentTwiceWhenOrphan()
+    {
         expect($this->tracker_factory)->getTrackerById(15)->once();
         stub($this->tracker_factory)->getTrackerById(15)->returns(null);
         stub($this->tracker)->getParentId()->returns(15);

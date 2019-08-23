@@ -59,7 +59,8 @@ extends DataAccessObject
      *
      * @return bool
      */
-    function linkGroupLdap($ugroupId, $ldapGroupDn, $bindOption, $synchroPolicy) {
+    function linkGroupLdap($ugroupId, $ldapGroupDn, $bindOption, $synchroPolicy)
+    {
         $synchroPolicy = $this->da->quoteSmart($synchroPolicy);
         $sql = 'INSERT INTO plugin_ldap_ugroup (ugroup_id, ldap_group_dn, synchro_policy, bind_option)'.
             ' VALUES ('.db_ei($ugroupId).',"'.db_es($ldapGroupDn).'",'.$synchroPolicy.', "'.db_es($bindOption).'")';
@@ -163,7 +164,8 @@ extends DataAccessObject
      *
      * @return bool
      */
-    function isSynchronizedUgroup($ugroup_id) {
+    function isSynchronizedUgroup($ugroup_id)
+    {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql = "SELECT * FROM plugin_ldap_ugroup
                 WHERE ugroup_id = ".$ugroup_id." and synchro_policy = ".$this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
@@ -181,7 +183,8 @@ extends DataAccessObject
      *
      * @return bool
      */
-    function isMembersPreserving($ugroup_id) {
+    function isMembersPreserving($ugroup_id)
+    {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql = 'SELECT * FROM plugin_ldap_ugroup
                 WHERE ugroup_id = '.$ugroup_id.' and bind_option = '.$this->da->quoteSmart(LDAP_GroupManager::PRESERVE_MEMBERS_OPTION);
@@ -199,7 +202,8 @@ extends DataAccessObject
      *
      * @return bool
      */
-    public function isMembersUpdateAllowed($ugroup_id) {
+    public function isMembersUpdateAllowed($ugroup_id)
+    {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql       = "SELECT * FROM plugin_ldap_ugroup
                       WHERE ugroup_id = ".$ugroup_id."

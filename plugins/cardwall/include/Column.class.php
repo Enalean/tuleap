@@ -53,7 +53,8 @@ class Cardwall_Column {
      */
     private $is_header_a_tlp_color;
 
-    public function __construct($id, $label, $header_color) {
+    public function __construct($id, $label, $header_color)
+    {
         $this->id           = $id;
         $this->label        = $label;
         $this->header_color = $header_color;
@@ -62,31 +63,37 @@ class Cardwall_Column {
             && strpos($header_color, '#') === false;
     }
 
-    public function setAutostack($value) {
+    public function setAutostack($value)
+    {
         $this->autostack = $value;
         return $this;
     }
 
-    public function isAutostacked() {
+    public function isAutostacked()
+    {
         return $this->autostack;
     }
 
-    public function autostack() {
+    public function autostack()
+    {
         if ($this->autostack) {
             return ' checked="checked"';
         }
     }
 
-    public function setAutostackPreference($name) {
+    public function setAutostackPreference($name)
+    {
         $this->autostack_preference = $name;
         return $this;
     }
 
-    public function autostack_preference() {
+    public function autostack_preference()
+    {
         return $this->autostack_preference;
     }
 
-    public function autostack_title() {
+    public function autostack_title()
+    {
         return $GLOBALS['Language']->getText('plugin_cardwall', 'column_autostack');
     }
 
@@ -98,7 +105,8 @@ class Cardwall_Column {
      *
      * @return bool
      */
-    public function canContainStatus($artifact_status, ?Cardwall_OnTop_Config_TrackerMapping $tracker_mapping = null) {
+    public function canContainStatus($artifact_status, ?Cardwall_OnTop_Config_TrackerMapping $tracker_mapping = null)
+    {
         $is_mapped = false;
         if ($tracker_mapping) {
             $is_mapped = $tracker_mapping->isMappedTo($this, $artifact_status);
@@ -106,36 +114,42 @@ class Cardwall_Column {
         return $is_mapped || $this->matchesStatus($artifact_status);
     }
 
-    private function matchesStatus($artifact_status) {
+    private function matchesStatus($artifact_status)
+    {
         return $this->matchesLabel($artifact_status) || $this->matchesTheNoneColumn($artifact_status);
     }
 
-    private function matchesLabel($artifact_status) {
+    private function matchesLabel($artifact_status)
+    {
         return $artifact_status === $this->label;
     }
 
-    private function matchesTheNoneColumn($artifact_status) {
+    private function matchesTheNoneColumn($artifact_status)
+    {
         return ($artifact_status === null || $artifact_status === 'None') && $this->id == 100;
     }
 
     /**
      * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
      * @return string
      */
-    public function getLabel() {
+    public function getLabel()
+    {
         return $this->label;
     }
 
     /**
      * @return string
      */
-    public function getHeadercolor() {
+    public function getHeadercolor()
+    {
         return $this->header_color;
     }
 

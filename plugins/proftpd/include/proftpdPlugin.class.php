@@ -32,7 +32,8 @@ require_once __DIR__.'/../vendor/autoload.php';
 class proftpdPlugin extends Plugin {
     public const SERVICE_SHORTNAME = 'plugin_proftpd';
 
-    public function __construct($id) {
+    public function __construct($id)
+    {
         parent::__construct($id);
         bindtextdomain('tuleap-proftpd', __DIR__.'/../site-content');
 
@@ -50,18 +51,21 @@ class proftpdPlugin extends Plugin {
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
     }
 
-    public function getPluginInfo() {
+    public function getPluginInfo()
+    {
         if (! is_a($this->pluginInfo, 'ProftpdPluginInfo')) {
             $this->pluginInfo = new ProftpdPluginInfo($this);
         }
         return $this->pluginInfo;
     }
 
-    public function process(HTTPRequest $request) {
+    public function process(HTTPRequest $request)
+    {
         $this->getRouter()->route($request);
     }
 
-    private function getRouter() {
+    private function getRouter()
+    {
         return new Tuleap\ProFTPd\ProftpdRouter(
             array(
                 $this->getExplorerController(),
@@ -70,7 +74,8 @@ class proftpdPlugin extends Plugin {
         );
     }
 
-    private function getExplorerController() {
+    private function getExplorerController()
+    {
         return new Tuleap\ProFTPd\Explorer\ExplorerController(
             new Tuleap\ProFTPd\Directory\DirectoryParser($this->getPluginInfo()->getPropVal('proftpd_base_directory')),
             $this->getPermissionsManager(),
@@ -78,25 +83,29 @@ class proftpdPlugin extends Plugin {
         );
     }
 
-    private function getAdminController() {
+    private function getAdminController()
+    {
         return new Tuleap\ProFTPd\Admin\AdminController(
             $this->getPermissionsManager(),
             $this->getProftpdSystemEventManager()
         );
     }
 
-    private function getPermissionsManager() {
+    private function getPermissionsManager()
+    {
         return new Tuleap\ProFTPd\Admin\PermissionsManager(
             PermissionsManager::instance(),
             new UGroupManager()
         );
     }
 
-    public function getServiceShortname() {
+    public function getServiceShortname()
+    {
         return self::SERVICE_SHORTNAME;
     }
 
-    public function register_project_creation($params) {
+    public function register_project_creation($params)
+    {
         $project_template = ProjectManager::instance()->getProject($params['template_id']);
         $project          = ProjectManager::instance()->getProject($params['group_id']);
 
@@ -113,7 +122,8 @@ class proftpdPlugin extends Plugin {
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\ProFTPd\ServiceProFTPd::class;
     }
 
-    public function cssfile($params) {
+    public function cssfile($params)
+    {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
@@ -121,12 +131,14 @@ class proftpdPlugin extends Plugin {
         }
     }
 
-    public function getHooksAndCallbacks() {
+    public function getHooksAndCallbacks()
+    {
         $this->addHook('logs_daily');
         return parent::getHooksAndCallbacks();
     }
 
-    public function logs_daily($params) {
+    public function logs_daily($params)
+    {
         $dao = new Tuleap\ProFTPd\Xferlog\Dao();
 
         $project = $this->getProject($params['group_id']);
@@ -139,36 +151,42 @@ class proftpdPlugin extends Plugin {
         }
     }
 
-    public function service_is_used($params) {
+    public function service_is_used($params)
+    {
         if ($params['shortname'] == self::SERVICE_SHORTNAME && $params['is_used']) {
             $project = $this->getProject($params['group_id']);
             $this->createDirectory($project);
         }
     }
 
-    public function approve_pending_project($params) {
+    public function approve_pending_project($params)
+    {
         $project = $this->getProject($params['group_id']);
         if ($project->usesService($this->getServiceShortname())) {
             $this->createDirectory($project);
         }
     }
 
-    private function getProject($group_id) {
+    private function getProject($group_id)
+    {
         $project_manager = ProjectManager::instance();
 
         return $project_manager->getProject($group_id);
     }
 
-    private function createDirectory(Project $project) {
+    private function createDirectory(Project $project)
+    {
         $this->getProftpdSystemEventManager()->queueDirectoryCreate($project->getUnixName());
         $this->getProftpdSystemEventManager()->queueACLUpdate($project->getUnixName());
     }
 
-    public function system_event_get_types_for_default_queue($params) {
+    public function system_event_get_types_for_default_queue($params)
+    {
         $params['types'] = array_merge($params['types'], $this->getProftpdSystemEventManager()->getTypes());
     }
 
-    public function rename_project ($params) {
+    public function rename_project($params)
+    {
         $project             = $params['project'];
         $base_sftp_dir       = $this->getPluginInfo()->getPropVal('proftpd_base_directory');
         $old_repository_path = $base_sftp_dir  . DIRECTORY_SEPARATOR . $project->getUnixName();
@@ -182,14 +200,16 @@ class proftpdPlugin extends Plugin {
     /**
      * This callback make SystemEvent manager knows about proftpd plugin System Events
      */
-    public function get_system_event_class($params) {
+    public function get_system_event_class($params)
+    {
         $this->getProftpdSystemEventManager()->instanciateEvents(
             $params['type'],
             $params['dependencies']
         );
     }
 
-    private function getProftpdSystemEventManager() {
+    private function getProftpdSystemEventManager()
+    {
         return new \Tuleap\ProFTPd\SystemEventManager(
             SystemEventManager::instance(),
             Backend::instance(),
@@ -202,7 +222,8 @@ class proftpdPlugin extends Plugin {
     /**
      * @see Event::GET_FTP_INCOMING_DIR
      */
-    public function get_ftp_incoming_dir($params) {
+    public function get_ftp_incoming_dir($params)
+    {
         $project = $params['project'];
 
         if ($this->isPluginUsedInProject($project)) {

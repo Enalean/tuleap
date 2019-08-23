@@ -32,41 +32,48 @@ class TruncateLevelLogger implements Logger {
         Logger::ERROR => 30,
     );
 
-    public function __construct(Logger $logger, $level) {
+    public function __construct(Logger $logger, $level)
+    {
         $this->logger = $logger;
         $this->setLevel($level);
     }
 
-    private function setLevel($min_level) {
+    private function setLevel($min_level)
+    {
         $min_weight = $this->level_weight[$min_level];
         foreach ($this->level_weight as $level_label => $weight) {
             $this->should_log[$level_label] = $weight >= $min_weight;
         }
     }
 
-    public function debug($message) {
+    public function debug($message)
+    {
         if ($this->should_log[Logger::DEBUG]) {
             $this->logger->debug($message);
         }
     }
 
-    public function info($message) {
+    public function info($message)
+    {
         if ($this->should_log[Logger::INFO]) {
             $this->logger->info($message);
         }
     }
 
-    public function warn($message, ?Exception $exception = null) {
+    public function warn($message, ?Exception $exception = null)
+    {
         if ($this->should_log[Logger::WARN]) {
             $this->logger->warn($message, $exception);
         }
     }
 
-    public function error($message, ?Exception $exception = null) {
+    public function error($message, ?Exception $exception = null)
+    {
         $this->logger->error($message, $exception);
     }
 
-    public function log($message, $level = null) {
+    public function log($message, $level = null)
+    {
         switch ($level) {
             case Logger::DEBUG:
                 $this->debug($message);

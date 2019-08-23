@@ -36,16 +36,19 @@ class Feedback {
     public const ERROR = 'error';
     public const DEBUG = 'debug';
 
-    function __construct() {
+    function __construct()
+    {
         $this->logs = array();
         $this->setFormatter(new FeedbackFormatter());
     }
 
-    function setFormatter(FeedbackFormatter $formatter) {
+    function setFormatter(FeedbackFormatter $formatter)
+    {
         $this->formatter = $formatter;
     }
 
-    function log($level, $msg, $purify=CODENDI_PURIFIER_CONVERT_HTML) {
+    function log($level, $msg, $purify=CODENDI_PURIFIER_CONVERT_HTML)
+    {
         if(!is_array($msg)) {
             $msg = array($msg);
         }
@@ -62,11 +65,13 @@ class Feedback {
         return $this->logs;
     }
 
-    function fetch() {
+    function fetch()
+    {
         return $this->formatter->format($this->logs);
     }
 
-    function fetchAsPlainText() {
+    function fetchAsPlainText()
+    {
            $txt = '';
         foreach($this->logs as $log) {
             $txt .= $log['level'] .': '. $log['msg'] ."\n";
@@ -77,7 +82,8 @@ class Feedback {
     /**
      * @return array of error messages
      */
-    function fetchErrors() {
+    function fetchErrors()
+    {
         $errors = array();
         foreach ($this->logs as $log) {
             if ($log['level'] == self::ERROR) {
@@ -88,11 +94,13 @@ class Feedback {
         return $errors;
     }
 
-    function display() {
+    function display()
+    {
         echo $this->htmlContent();
     }
 
-    public function htmlContent() {
+    public function htmlContent()
+    {
         return '<div id="feedback" data-test="feedback">'.$this->fetch().'</div>';
     }
 

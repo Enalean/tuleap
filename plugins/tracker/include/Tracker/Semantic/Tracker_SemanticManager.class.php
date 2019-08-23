@@ -29,11 +29,13 @@ class Tracker_SemanticManager
     /** @var Tracker */
     protected $tracker;
 
-    public function __construct(Tracker $tracker) {
+    public function __construct(Tracker $tracker)
+    {
         $this->tracker = $tracker;
     }
 
-    public function process(TrackerManager $tracker_manager, $request, $current_user) {
+    public function process(TrackerManager $tracker_manager, $request, $current_user)
+    {
         if ($request->existAndNonEmpty('semantic')) {
             $semantics = $this->getSemantics();
             if (isset($semantics[$request->get('semantic')])) {
@@ -43,7 +45,8 @@ class Tracker_SemanticManager
         $this->displayAdminSemantic($tracker_manager, $request, $current_user);
     }
 
-    public function displayAdminSemantic(TrackerManager $tracker_manager, $request, $current_user) {
+    public function displayAdminSemantic(TrackerManager $tracker_manager, $request, $current_user)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayWarningArtifactByEmailSemantic();
         $this->tracker->displayAdminItemHeader($tracker_manager, 'editsemantic');
@@ -66,7 +69,8 @@ class Tracker_SemanticManager
         $this->tracker->displayFooter($tracker_manager);
     }
 
-    public function displaySemanticHeader(Tracker_Semantic $semantic, TrackerManager $tracker_manager) {
+    public function displaySemanticHeader(Tracker_Semantic $semantic, TrackerManager $tracker_manager)
+    {
         $this->tracker->displayAdminItemHeader(
             $tracker_manager,
             'editsemantic',
@@ -85,7 +89,8 @@ class Tracker_SemanticManager
         );
     }
 
-    public function displaySemanticFooter(Tracker_Semantic $semantic, TrackerManager $tracker_manager) {
+    public function displaySemanticFooter(Tracker_Semantic $semantic, TrackerManager $tracker_manager)
+    {
         $this->tracker->displayFooter($tracker_manager);
         die();
     }
@@ -97,7 +102,8 @@ class Tracker_SemanticManager
      *
      * @return bool returns true if the field is used in semantics, false otherwise
      */
-    public function isUsedInSemantics(Tracker_FormElement_Field $field) {
+    public function isUsedInSemantics(Tracker_FormElement_Field $field)
+    {
         $semantics = $this->getSemantics();
         foreach ($semantics as $semantic) {
             if ($semantic->isUsedInSemantics($field)) {
@@ -110,7 +116,8 @@ class Tracker_SemanticManager
     /**
      * @return Tracker_SemanticCollection
      */
-    public function getSemantics() {
+    public function getSemantics()
+    {
         $semantics = new Tracker_SemanticCollection();
 
         $semantics->add(Tracker_Semantic_Title::load($this->tracker));
@@ -138,7 +145,8 @@ class Tracker_SemanticManager
      *
      * @param Tracker_SemanticCollection $semantics
      */
-    private function addOtherSemantics(Tracker_SemanticCollection $semantics) {
+    private function addOtherSemantics(Tracker_SemanticCollection $semantics)
+    {
          EventManager::instance()->processEvent(
             TRACKER_EVENT_MANAGE_SEMANTICS,
             array(
@@ -156,14 +164,16 @@ class Tracker_SemanticManager
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    {
         $semantics = $this->getSemantics();
         foreach ($semantics as $semantic) {
             $semantic->exportToXML($root, $xmlMapping);
         }
     }
 
-    public function exportToREST(PFUser $user) {
+    public function exportToREST(PFUser $user)
+    {
         $results        = [];
         $semantic_order = $this->getSemanticOrder();
         $semantics      = $this->getSemantics();
@@ -177,7 +187,8 @@ class Tracker_SemanticManager
         return array_filter($results);
     }
 
-    protected function getSemanticOrder() {
+    protected function getSemanticOrder()
+    {
         $order = array('title', 'description', 'status', 'contributor', SemanticTimeframe::NAME);
         EventManager::instance()->processEvent(
             TRACKER_EVENT_GET_SEMANTICS_NAMES,

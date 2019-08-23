@@ -37,7 +37,8 @@ class SVN_Apache_SvnrootConf
 
     private $apacheConfHeaders = array();
 
-    function __construct(SVN_Apache_Auth_Factory $authFactory, $projects) {
+    function __construct(SVN_Apache_Auth_Factory $authFactory, $projects)
+    {
         $this->authFactory = $authFactory;
         $this->projects    = $projects;
     }
@@ -47,7 +48,8 @@ class SVN_Apache_SvnrootConf
      *
      * @return String
      */
-    public function getFullConf() {
+    public function getFullConf()
+    {
         $conf = '';
         foreach ($this->projects as $row) {
             $auth = $this->authFactory->get($row);
@@ -58,13 +60,15 @@ class SVN_Apache_SvnrootConf
         return $this->getApacheConfHeaders().$conf;
     }
 
-    private function collectApacheConfHeaders(SVN_Apache $auth) {
+    private function collectApacheConfHeaders(SVN_Apache $auth)
+    {
         $headers = $auth->getHeaders();
         $key     = md5($headers);
         $this->apacheConfHeaders[$key] = $headers;
     }
 
-    private function getApacheConfHeaders() {
+    private function getApacheConfHeaders()
+    {
         $log_file_path = ForgeConfig::get(self::CONFIG_SVN_LOG_PATH);
         $headers  = '';
         $headers .= "# " . $GLOBALS['sys_name'] . " SVN repositories\n";

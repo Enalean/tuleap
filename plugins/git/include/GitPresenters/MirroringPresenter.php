@@ -30,40 +30,49 @@ class GitPresenters_MirroringPresenter {
      */
     public $mirror_presenters;
 
-    public function __construct(GitRepository $repository, array $mirror_presenters) {
+    public function __construct(GitRepository $repository, array $mirror_presenters)
+    {
         $this->repository        = $repository;
         $this->mirror_presenters = $mirror_presenters;
     }
 
-    public function repository_id() {
+    public function repository_id()
+    {
         return $this->repository->getId();
     }
 
-    public function project_id() {
+    public function project_id()
+    {
         return $this->repository->getProjectId();
     }
 
-    public function mirroring_title() {
+    public function mirroring_title()
+    {
         return dgettext('tuleap-git', 'Mirroring');
     }
 
-    public function mirroring_info() {
+    public function mirroring_info()
+    {
         return sprintf(dgettext('tuleap-git', 'Select the mirrors where you want to replicate the repository <b>%1$s</b>:'), $this->repository->getName());
     }
 
-    public function mirroring_mirror_name() {
+    public function mirroring_mirror_name()
+    {
         return dgettext('tuleap-git', 'Name');
     }
 
-    public function mirroring_mirror_url() {
+    public function mirroring_mirror_url()
+    {
         return dgettext('tuleap-git', 'Identifier');
     }
 
-    public function mirroring_mirror_used() {
+    public function mirroring_mirror_used()
+    {
         return dgettext('tuleap-git', 'Used by this repository?');
     }
 
-    public function mirroring_update_mirroring() {
+    public function mirroring_update_mirroring()
+    {
         return dgettext('tuleap-git', 'Update mirroring of this repository');
     }
 

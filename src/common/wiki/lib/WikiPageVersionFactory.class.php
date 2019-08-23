@@ -22,7 +22,8 @@
 class WikiPageVersionFactory {
 
     /** @return WikiPageVersion */
-    public function getInstanceFromRow($row) {
+    public function getInstanceFromRow($row)
+    {
         return new WikiPageVersion(
             $row['id'],
             $row['version'],

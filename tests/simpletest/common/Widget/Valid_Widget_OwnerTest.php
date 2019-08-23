@@ -25,11 +25,13 @@
 
 class Valid_Widget_OwnerTest extends TuleapTestCase {
 
-    function UnitTestCase($name = 'Valid_Widget_Owner test') {
+    function UnitTestCase($name = 'Valid_Widget_Owner test')
+    {
         $this->UnitTestCase($name);
     }
 
-    function testOk() {
+    function testOk()
+    {
         $v = new Valid_Widget_Owner();
 
         $this->assertTrue($v->validate("u102"));
@@ -38,7 +40,8 @@ class Valid_Widget_OwnerTest extends TuleapTestCase {
         $this->assertTrue($v->validate("g1"));
     }
 
-    function testSpecialChars() {
+    function testSpecialChars()
+    {
         $v = new Valid_Widget_Owner();
 
         $this->assertFalse($v->validate("u102\n"));
@@ -50,7 +53,8 @@ class Valid_Widget_OwnerTest extends TuleapTestCase {
         $this->assertFalse($v->validate("u102\0u102"));
     }
 
-    function testSqlInjections() {
+    function testSqlInjections()
+    {
         $v = new Valid_Widget_Owner();
 
         $this->assertFalse($v->validate("u102--"));
@@ -58,7 +62,8 @@ class Valid_Widget_OwnerTest extends TuleapTestCase {
         $this->assertFalse($v->validate("--"));
     }
 
-    function testHTMLInjections() {
+    function testHTMLInjections()
+    {
         $v = new Valid_Widget_Owner();
 
         $this->assertFalse($v->validate("<script>alert(1);</script>"));

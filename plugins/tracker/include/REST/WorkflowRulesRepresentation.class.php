@@ -34,7 +34,8 @@ class WorkflowRulesRepresentation {
      */
     public $lists;
 
-    public function build(array $dates, array $lists) {
+    public function build(array $dates, array $lists)
+    {
         $this->dates = $dates;
         $this->lists = $lists;
     }

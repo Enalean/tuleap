@@ -53,10 +53,10 @@ class Tracker_Artifact_MailGateway_RecipientFactory {
     private $host;
 
     public function __construct(
-            Tracker_ArtifactFactory $artifact_factory,
-            UserManager $user_manager,
-            $salt,
-            $host
+        Tracker_ArtifactFactory $artifact_factory,
+        UserManager $user_manager,
+        $salt,
+        $host
     ) {
         $this->artifact_factory = $artifact_factory;
         $this->user_manager     = $user_manager;
@@ -67,7 +67,8 @@ class Tracker_Artifact_MailGateway_RecipientFactory {
     /**
      * @return Tracker_Artifact_MailGateway_RecipientFactory
      */
-    public static function build() {
+    public static function build()
+    {
         $dao = new MailGatewaySaltDao();
         $row = $dao->searchMailSalt()->getRow();
 
@@ -88,7 +89,8 @@ class Tracker_Artifact_MailGateway_RecipientFactory {
      *
      * @return Tracker_Artifact_MailGateway_Recipient
      */
-    public function getFromEmail($email) {
+    public function getFromEmail($email)
+    {
         preg_match(self::EMAIL_PATTERN, $email, $email_parts);
         $artifact = $this->getArtifact((int)$email_parts[self::ARTIFACT_ID_INDEX]);
         $user     = $this->getUser((int)$email_parts[self::USER_ID_INDEX]);
@@ -127,7 +129,8 @@ class Tracker_Artifact_MailGateway_RecipientFactory {
             "@" . $this->host;
     }
 
-    private function getArtifact($artifact_id) {
+    private function getArtifact($artifact_id)
+    {
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
         if (! $artifact) {
             throw new Tracker_Artifact_MailGateway_ArtifactDoesNotExistException();
@@ -136,7 +139,8 @@ class Tracker_Artifact_MailGateway_RecipientFactory {
         return $artifact;
     }
 
-    private function getUser($user_id) {
+    private function getUser($user_id)
+    {
         $user = $this->user_manager->getUserById($user_id);
         if (! $user) {
             throw new Tracker_Artifact_MailGateway_RecipientUserDoesNotExistException();

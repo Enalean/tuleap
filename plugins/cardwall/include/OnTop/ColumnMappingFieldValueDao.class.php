@@ -21,7 +21,8 @@
 
 class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject {
 
-    public function searchMappingFieldValues($cardwall_tracker_id) {
+    public function searchMappingFieldValues($cardwall_tracker_id)
+    {
         $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
         $sql = "SELECT *
                 FROM plugin_cardwall_on_top_column_mapping_field_value
@@ -29,7 +30,8 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function save($cardwall_tracker_id, $tracker_id, $field_id, $value_id, $column_id) {
+    public function save($cardwall_tracker_id, $tracker_id, $field_id, $value_id, $column_id)
+    {
         $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
         $tracker_id          = $this->da->escapeInt($tracker_id);
         if ($field_id === null) {
@@ -44,7 +46,8 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject {
         }
     }
 
-    public function deleteForColumn($cardwall_tracker_id, $column_id) {
+    public function deleteForColumn($cardwall_tracker_id, $column_id)
+    {
         $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
         $column_id           = $this->da->escapeInt($column_id);
         $sql = "DELETE FROM plugin_cardwall_on_top_column_mapping_field_value
@@ -53,7 +56,8 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function deleteAllFieldValues($cardwall_tracker_id, $tracker_id, $field_id, $column_id) {
+    public function deleteAllFieldValues($cardwall_tracker_id, $tracker_id, $field_id, $column_id)
+    {
         $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
         $tracker_id          = $this->da->escapeInt($tracker_id);
         $field_id            = $this->da->escapeInt($field_id);
@@ -66,7 +70,8 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function delete($cardwall_tracker_id, $tracker_id) {
+    public function delete($cardwall_tracker_id, $tracker_id)
+    {
         $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
         $tracker_id          = $this->da->escapeInt($tracker_id);
         $sql = "DELETE FROM plugin_cardwall_on_top_column_mapping_field_value
@@ -75,7 +80,8 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function duplicate($from_cardwall_tracker_id, $to_cardwall_tracker_id, array $tracker_mapping, array $field_mapping, array $column_mapping) {
+    public function duplicate($from_cardwall_tracker_id, $to_cardwall_tracker_id, array $tracker_mapping, array $field_mapping, array $column_mapping)
+    {
         $from_cardwall_tracker_id = $this->da->escapeInt($from_cardwall_tracker_id);
         $to_cardwall_tracker_id   = $this->da->escapeInt($to_cardwall_tracker_id);
 
@@ -108,12 +114,14 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    private function associativeToSQLCase(array $mapping, $field_name) {
+    private function associativeToSQLCase(array $mapping, $field_name)
+    {
         $when_then = $this->associativeToSQLWhenThen($mapping);
         return $this->getSQLCase($field_name, $when_then);
     }
 
-    private function associativeToSQLWhenThen(array $mapping) {
+    private function associativeToSQLWhenThen(array $mapping)
+    {
         $stmt = '';
         foreach ($mapping as $from => $to) {
             $from  = $this->da->escapeInt($from);
@@ -123,7 +131,8 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject {
         return $stmt;
     }
 
-    private function getSQLCase($field_name, $when_then) {
+    private function getSQLCase($field_name, $when_then)
+    {
         $stmt = " CASE $field_name
                   $when_then
                   ELSE NULL

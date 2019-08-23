@@ -44,11 +44,13 @@ $UserPreferences = array(
                          'doubleClickEdit' => new _UserPreference_bool(), // 1.3.11
                          );
 
-function WikiUserClassname() {
+function WikiUserClassname()
+{
     return 'WikiUser';
 }
 
-function UpgradeUser ($olduser, $user) {
+function UpgradeUser($olduser, $user)
+{
     if (isa($user,'WikiUser') and isa($olduser,'WikiUser')) {
         // populate the upgraded class with the values from the old object
         foreach (get_object_vars($olduser) as $k => $v) {
@@ -75,7 +77,8 @@ class WikiUser {
      * @param mixed $userid String of username or WikiUser object.
      * @param int $authlevel Authorization level.
      */
-    function __construct (&$request, $userid = false, $authlevel = false) {
+    function __construct(&$request, $userid = false, $authlevel = false)
+    {
         $this->_request = &$request;
         $this->_dbi = &$this->_request->getDbh();
 
@@ -106,7 +109,8 @@ class WikiUser {
     * Does not seem to be set - jbw
     * @return string The method of authentication.
     */
-    function auth_how() {
+    function auth_how()
+    {
         return $this->_authhow;
     }
 
@@ -117,7 +121,8 @@ class WikiUser {
      * userid is a string returns true, else false.
      * @return bool If valid level and username string true, else false
      */
-    function _ok () {
+    function _ok()
+    {
         if ((in_array($this->_level, array(WIKIAUTH_BOGO,
                                            WIKIAUTH_USER,
                                            WIKIAUTH_ADMIN))
@@ -128,45 +133,54 @@ class WikiUser {
         return false;
     }
 
-    function UserName() {
+    function UserName()
+    {
         return $this->_userid;
     }
 
-    function getId () {
+    function getId()
+    {
         return ( $this->isSignedIn()
                  ? $this->_userid
                  : $this->_request->get('REMOTE_ADDR') ); // FIXME: globals
     }
 
-    function getAuthenticatedId() {
+    function getAuthenticatedId()
+    {
         return ( $this->isAuthenticated()
                  ? $this->_userid
                  : $this->_request->get('REMOTE_ADDR') ); // FIXME: globals
     }
 
-    function isSignedIn () {
+    function isSignedIn()
+    {
         return $this->_level >= WIKIAUTH_BOGO;
     }
 
-    function isAuthenticated () {
+    function isAuthenticated()
+    {
         return $this->_level >= WIKIAUTH_BOGO;
     }
 
-    function isAdmin () {
+    function isAdmin()
+    {
         return $this->_level == WIKIAUTH_ADMIN;
     }
 
-    function hasAuthority ($require_level) {
+    function hasAuthority($require_level)
+    {
         return $this->_level >= $require_level;
     }
 
-    function isValidName ($userid = false) {
+    function isValidName($userid = false)
+    {
         if (!$userid)
             $userid = $this->_userid;
         return preg_match("/^[\w\.@\-]+$/",$userid) and strlen($userid) < 32;
     }
 
-    function AuthCheck ($postargs) {
+    function AuthCheck($postargs)
+    {
         // Normalize args, and extract.
         $keys = array('userid', 'passwd', 'require_level', 'login', 'logout',
                       'cancel');
@@ -196,8 +210,12 @@ class WikiUser {
         return $user;
     }
 
-    function PrintLoginForm (&$request, $args, $fail_message = false,
-                             $seperate_page = true) {
+    function PrintLoginForm(
+        &$request,
+        $args,
+        $fail_message = false,
+        $seperate_page = true
+    ) {
         include_once('lib/Template.php');
         // Call update_locale in case the system's default language is not 'en'.
         // (We have no user pref for lang at this point yet, no one is logged in.)
@@ -225,12 +243,14 @@ class WikiUser {
     /**
      * Check password.
      */
-    function _pwcheck ($userid, $passwd) {
+    function _pwcheck($userid, $passwd)
+    {
         return false;
     }
 
     // Todo: try our WikiDB backends.
-    function getPreferences() {
+    function getPreferences()
+    {
         // Restore saved preferences.
         $prefs = $this->_request->getSessionVar('wiki_prefs');
 
@@ -250,7 +270,8 @@ class WikiUser {
     // but not persistent. Get persistency with a homepage or DB Prefs
     //
     // Return the number of changed entries
-    function setPreferences($prefs, $id_only = false) {
+    function setPreferences($prefs, $id_only = false)
+    {
         if (!is_object($prefs)) {
             $prefs = new UserPreferences($prefs);
         }
@@ -308,14 +329,16 @@ class WikiUser {
 
     // check for homepage with user flag.
     // can be overriden from the auth backends
-    function exists() {
+    function exists()
+    {
         $homepage = $this->homePage();
         return ($this->_userid && $homepage && $homepage->get('pref'));
     }
 
     // doesn't check for existance!!! hmm.
     // how to store metadata in not existing pages? how about versions?
-    function homePage() {
+    function homePage()
+    {
         if (!$this->_userid)
             return false;
         if (!empty($this->_homepage)) {
@@ -326,12 +349,14 @@ class WikiUser {
         }
     }
 
-    function hasHomePage() {
+    function hasHomePage()
+    {
         return !$this->homePage();
     }
 
     // create user by checking his homepage
-    function createUser ($pref, $createDefaultHomepage = true) {
+    function createUser($pref, $createDefaultHomepage = true)
+    {
         if ($this->exists())
             return;
         if ($createDefaultHomepage) {
@@ -349,7 +374,8 @@ class WikiUser {
     }
 
     // create user and default user homepage
-    function createHomepage ($pref) {
+    function createHomepage($pref)
+    {
         $pagename = $this->_userid;
         include "lib/loadsave.php";
 
@@ -384,13 +410,15 @@ class WikiUser {
         }
     }
 
-    function tryAuthBackends() {
+    function tryAuthBackends()
+    {
         return ''; // crypt('') will never be ''
     }
 
     // Auth backends must store the crypted password where?
     // Not in the preferences.
-    function checkPassword($passwd) {
+    function checkPassword($passwd)
+    {
         $prefs = $this->getPreferences();
         $stored_passwd = $prefs->get('passwd'); // crypted
         if (empty($prefs->_prefs['passwd']))    // not stored in the page
@@ -412,13 +440,15 @@ class WikiUser {
             return false;
     }
 
-    function changePassword($newpasswd, $passwd2 = false) {
+    function changePassword($newpasswd, $passwd2 = false)
+    {
         trigger_error(sprintf("Attempt to change an external password for '%s'. Not allowed!",
             $this->_userid), E_USER_ERROR);
         return false;
     }
 
-    function mayChangePass() {
+    function mayChangePass()
+    {
         // on external DBAuth maybe. on IMAP or LDAP not
         // on internal DBAuth yes
         if (in_array($this->_authmethod, array('IMAP', 'LDAP')))
@@ -444,29 +474,36 @@ function createUser ($userid, $pref) {
 
 class _UserPreference
 {
-    function __construct ($default_value) {
+    function __construct($default_value)
+    {
         $this->default_value = $default_value;
     }
 
-    function sanify ($value) {
+    function sanify($value)
+    {
         return (string)$value;
     }
 
-    function update ($value) {
+    function update($value)
+    {
     }
 }
 
 class _UserPreference_numeric
 extends _UserPreference
 {
-    function __construct ($default, $minval = false,
-                                      $maxval = false) {
+    function __construct(
+        $default,
+        $minval = false,
+        $maxval = false
+    ) {
         parent::__construct((double)$default);
         $this->_minval = (double)$minval;
         $this->_maxval = (double)$maxval;
     }
 
-    function sanify ($value) {
+    function sanify($value)
+    {
         $value = (double)$value;
         if ($this->_minval !== false && $value < $this->_minval)
             $value = $this->_minval;
@@ -479,12 +516,14 @@ extends _UserPreference
 class _UserPreference_int
 extends _UserPreference_numeric
 {
-    function __construct ($default, $minval = false, $maxval = false) {
+    function __construct($default, $minval = false, $maxval = false)
+    {
         parent::__construct((int)$default, (int)$minval,
                                        (int)$maxval);
     }
 
-    function sanify ($value) {
+    function sanify($value)
+    {
         return (int)parent::sanify((int)$value);
     }
 }
@@ -492,11 +531,13 @@ extends _UserPreference_numeric
 class _UserPreference_bool
 extends _UserPreference
 {
-    function __construct ($default = false) {
+    function __construct($default = false)
+    {
         parent::__construct((bool)$default);
     }
 
-    function sanify ($value) {
+    function sanify($value)
+    {
         if (is_array($value)) {
             /* This allows for constructs like:
              *
@@ -520,12 +561,14 @@ extends _UserPreference
 class _UserPreference_language
 extends _UserPreference
 {
-    function __construct ($default = DEFAULT_LANGUAGE) {
+    function __construct($default = DEFAULT_LANGUAGE)
+    {
         parent::__construct($default);
     }
 
     // FIXME: check for valid locale
-    function sanify ($value) {
+    function sanify($value)
+    {
         // Revert to DEFAULT_LANGUAGE if user does not specify
         // language in UserPreferences or chooses <system language>.
         if ($value == '' or empty($value))
@@ -538,31 +581,36 @@ extends _UserPreference
 class _UserPreference_theme
 extends _UserPreference
 {
-    function __construct ($default = THEME) {
+    function __construct($default = THEME)
+    {
         parent::__construct($default);
     }
 
-    function sanify ($value) {
+    function sanify($value)
+    {
         if (findFile($this->_themefile($value), true))
             return $value;
         return $this->default_value;
     }
 
-    function update ($newvalue) {
+    function update($newvalue)
+    {
         global $WikiTheme;
         include_once($this->_themefile($newvalue));
         if (empty($WikiTheme))
             include_once($this->_themefile(THEME));
     }
 
-    function _themefile ($theme) {
+    function _themefile($theme)
+    {
         return "themes/$theme/themeinfo.php";
     }
 }
 
 // don't save default preferences for efficiency.
 class UserPreferences {
-    function __construct ($saved_prefs = false) {
+    function __construct($saved_prefs = false)
+    {
         $this->_prefs = array();
 
         if (isa($saved_prefs, 'UserPreferences') && $saved_prefs->_prefs) {
@@ -574,7 +622,8 @@ class UserPreferences {
         }
     }
 
-    function _getPref ($name) {
+    function _getPref($name)
+    {
         global $UserPreferences;
         if (!isset($UserPreferences[$name])) {
             if ($name == 'passwd2') return false;
@@ -584,7 +633,8 @@ class UserPreferences {
         return $UserPreferences[$name];
     }
 
-    function get ($name) {
+    function get($name)
+    {
         if (isset($this->_prefs[$name]))
             return $this->_prefs[$name];
         if (!($pref = $this->_getPref($name)))
@@ -592,7 +642,8 @@ class UserPreferences {
         return $pref->default_value;
     }
 
-    function set ($name, $value) {
+    function set($name, $value)
+    {
         if (!($pref = $this->_getPref($name)))
             return false;
 
@@ -611,10 +662,12 @@ class UserPreferences {
             $this->_prefs[$name] = $newvalue;
     }
 
-    function pack ($nonpacked) {
+    function pack($nonpacked)
+    {
         return serialize($nonpacked);
     }
-    function unpack ($packed) {
+    function unpack($packed)
+    {
         if (!$packed)
             return false;
         if (substr($packed,0,2) == "O:") {
@@ -626,7 +679,8 @@ class UserPreferences {
         return false;
     }
 
-    function hash () {
+    function hash()
+    {
         return wikihash($this->_prefs);
     }
 }

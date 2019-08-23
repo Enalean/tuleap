@@ -33,7 +33,8 @@ function addBuddy($user, $buddy, $dbi)
     addPageTextData($user, $dbi, $buddy, $START_DELIM, $DELIM);
 }
 
-function getBuddies($fromUser, $dbi, $thePage = ""){
+function getBuddies($fromUser, $dbi, $thePage = "")
+{
     $START_DELIM = $thePage . _("Buddies:");
 
     $buddies_array = getPageTextData($fromUser, $dbi, $START_DELIM);
@@ -43,7 +44,8 @@ function getBuddies($fromUser, $dbi, $thePage = ""){
     return $buddies_array;
 }
 
-function CoAgreement($dbi, $page, $users, $active_userid){
+function CoAgreement($dbi, $page, $users, $active_userid)
+{
     //Returns a "yes" 1, "no" -1, or "unsure" 0 for whether
     //the group agrees on the page based on their ratings
     $cur_page = $page;
@@ -83,7 +85,8 @@ function CoAgreement($dbi, $page, $users, $active_userid){
     }
 }
 
-function MinMisery($dbi, $page, $users, $active_userid){
+function MinMisery($dbi, $page, $users, $active_userid)
+{
     //Returns the minimum rating for the page
     //from all the users.
 
@@ -105,7 +108,8 @@ function MinMisery($dbi, $page, $users, $active_userid){
     return $min;
 }
 
-function AverageRating($dbi, $page, $users, $active_userid){
+function AverageRating($dbi, $page, $users, $active_userid)
+{
     //Returns the average rating for the page
     //from all the users.
 

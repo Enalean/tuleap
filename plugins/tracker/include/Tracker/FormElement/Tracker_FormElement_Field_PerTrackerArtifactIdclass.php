@@ -24,25 +24,29 @@
 
 class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement_Field_ArtifactId {
 
-    public function getCriteriaWhere($criteria) {
+    public function getCriteriaWhere($criteria)
+    {
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
             return $this->buildMatchExpression("artifact.per_tracker_artifact_id", $criteria_value);
         }
         return '';
     }
 
-    public function getQuerySelect() {
+    public function getQuerySelect()
+    {
         return "a.per_tracker_artifact_id AS `". $this->name ."`";
     }
 
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public function getQueryGroupby() {
+    public function getQueryGroupby()
+    {
         return "a.per_tracker_artifact_id";
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    {
         $from_aid_content = "";
         if ($from_aid != null) {
             $from_aid_content = "&from_aid=$from_aid";
@@ -51,7 +55,8 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
         return '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact_id )).'" $from_aid_content>'. $value .'</a>';
     }
 
-    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
+    {
         $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation';
         $artifact_field_value_full_representation = new $classname_with_namespace;
         $artifact_field_value_full_representation->build(
@@ -71,7 +76,8 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         return '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">'. (int)$artifact->getPerTrackerArtifactId().'</a>';
     }
 
@@ -109,7 +115,8 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
      * Display the html field in the admin ui
      * @return string html
      */
-    protected function fetchAdminFormElement() {
+    protected function fetchAdminFormElement()
+    {
         $html = '';
         $html .= '<a href="#'.TRACKER_BASE_URL.'/?aid=123" onclick="return false;">3</a>';
         return $html;
@@ -118,28 +125,32 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
     /**
      * @return the label of the field (mainly used in admin part)
      */
-    public static function getFactoryLabel() {
+    public static function getFactoryLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactInTrackerId_label');
     }
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
-    public static function getFactoryDescription() {
+    public static function getFactoryDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactInTrackerId_description');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconUseIt() {
+    public static function getFactoryIconUseIt()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/ui-perTrackerId.png');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconCreate() {
+    public static function getFactoryIconCreate()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/ui-perTrackerId--plus.png');
     }
 
@@ -151,7 +162,8 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
      * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         $html = '';
         $html .= $artifact->getPerTrackerArtifactId();
         return $html;

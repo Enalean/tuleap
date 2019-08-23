@@ -27,12 +27,14 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
     private $cache_canbedeleted_values = array();
     private $cache_canbehidden_values = array();
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_field_list_bind_static_value';
     }
 
-    public function searchById($id) {
+    public function searchById($id)
+    {
         $id  = $this->da->escapeInt($id);
         $sql = "SELECT *
                 FROM $this->table_name
@@ -40,7 +42,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->retrieve($sql);
     }
 
-    public function searchByFieldId($field_id, $is_rank_alpha) {
+    public function searchByFieldId($field_id, $is_rank_alpha)
+    {
         $field_id  = $this->da->escapeInt($field_id);
         $sql = "SELECT *
                 FROM $this->table_name
@@ -48,7 +51,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                 ORDER BY ". ($is_rank_alpha ? 'label' : 'rank');
         return $this->retrieve($sql);
     }
-    public function duplicate($from_value_id, $to_field_id, $by_reference) {
+    public function duplicate($from_value_id, $to_field_id, $by_reference)
+    {
         $from_value_id  = $this->da->escapeInt($from_value_id);
         $to_field_id    = $this->da->escapeInt($to_field_id);
         if ($by_reference) {
@@ -66,7 +70,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->updateAndGetLastId($sql);
     }
 
-    public function create($field_id, $label, $description, $rank, $is_hidden) {
+    public function create($field_id, $label, $description, $rank, $is_hidden)
+    {
         $field_id     = $this->da->escapeInt($field_id);
         $label        = $this->da->quoteSmart($label);
         $description  = $this->da->quoteSmart($description);
@@ -78,7 +83,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->updateAndGetLastId($sql);
     }
 
-    public function propagateCreation($field, $original_value_id) {
+    public function propagateCreation($field, $original_value_id)
+    {
         $field_id     = $this->da->escapeInt($field->id);
         $original_value_id     = $this->da->escapeInt($original_value_id);
 
@@ -92,7 +98,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->retrieve($sql);
     }
 
-    public function hideValue($id) {
+    public function hideValue($id)
+    {
         $id  = $this->da->escapeInt($id);
 
         $sql = "UPDATE $this->table_name
@@ -103,7 +110,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->update($sql);
     }
 
-    public function updateLabel($id, $label) {
+    public function updateLabel($id, $label)
+    {
         $id    = $this->da->escapeInt($id);
         $label = $this->da->quoteSmart($label);
 
@@ -115,7 +123,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->update($sql);
     }
 
-    public function save($id, $field_id, $label, $description, $rank, $is_hidden) {
+    public function save($id, $field_id, $label, $description, $rank, $is_hidden)
+    {
         $id           = $this->da->escapeInt($id);
         $field_id     = $this->da->escapeInt($field_id);
         $label        = $this->da->quoteSmart($label);
@@ -133,7 +142,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->update($sql);
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $id       = $this->da->escapeInt($id);
         $sql = "DELETE FROM $this->table_name
                 WHERE id = $id
@@ -142,7 +152,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->update($sql);
     }
 
-    public function searchChangesetValues($changeset_id, $field_id, $is_rank_alpha) {
+    public function searchChangesetValues($changeset_id, $field_id, $is_rank_alpha)
+    {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $field_id     = $this->da->escapeInt($field_id);
         $sql = "SELECT f.id
@@ -157,13 +168,15 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->retrieve($sql);
     }
 
-    public function canValueBeHiddenWithoutCheckingSemanticStatus(Tracker_FormElement_Field $field, $value_id) {
+    public function canValueBeHiddenWithoutCheckingSemanticStatus(Tracker_FormElement_Field $field, $value_id)
+    {
         $collection = new CanValueBeHiddenStatementsCollection($field);
 
         return $this->isValueHiddenable($field->getId(), $value_id, $collection);
     }
 
-    public function canValueBeHidden(Tracker_FormElement_Field $field, $value_id) {
+    public function canValueBeHidden(Tracker_FormElement_Field $field, $value_id)
+    {
         $field_id = $this->da->escapeInt($field->getId());
 
         $semantic_status_statement = "
@@ -182,7 +195,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->isValueHiddenable($field_id, $value_id, $collection);
     }
 
-    private function isValueHiddenable($field_id, $value_id, CanValueBeHiddenStatementsCollection $collection) {
+    private function isValueHiddenable($field_id, $value_id, CanValueBeHiddenStatementsCollection $collection)
+    {
         $field_id = $this->da->escapeInt($field_id);
 
         $additionnal_unions = $collection->asUnion();
@@ -253,7 +267,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return ! isset($this->cache_canbehidden_values[$field_id][$value_id]);
     }
 
-    public function canValueBeDeleted(Tracker_FormElement_Field $field, $value_id) {
+    public function canValueBeDeleted(Tracker_FormElement_Field $field, $value_id)
+    {
         $field_id = $this->da->escapeInt($field->getId());
         $value_id = $this->da->escapeInt($value_id);
 
@@ -291,7 +306,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->canValueBeHidden($field, $value_id) && ! isset($this->cache_canbedeleted_values[$field_id][$value_id]);
     }
 
-    public function updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id) {
+    public function updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id)
+    {
         $field_id              = $this->da->escapeInt($field_id);
         $old_original_value_id = $this->da->escapeInt($old_original_value_id);
         $new_original_value_id = $this->da->escapeInt($new_original_value_id);
@@ -340,7 +356,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->update($sql);
     }
 
-    public function searchValueByLabel($field_id, $label) {
+    public function searchValueByLabel($field_id, $label)
+    {
         $field_id = $this->da->escapeInt($field_id);
         $label    = $this->da->quoteSmart($label);
 

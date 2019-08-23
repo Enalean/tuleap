@@ -46,14 +46,16 @@ class Docman_MetadataValueFactory {
     /**
      * Constructor
      */
-    function __construct($groupId) {
+    function __construct($groupId)
+    {
         $this->groupId = $groupId;
     }
 
     /**
      * Return Docman_MetadataValueDao reference.
      */
-    function getDao() {
+    function getDao()
+    {
         static $_plugin_docman_metadata_value_dao_instance;
         if(!$_plugin_docman_metadata_value_dao_instance) {
             $_plugin_docman_metadata_value_dao_instance = new Docman_MetadataValueDao(CodendiDataAccess::instance());
@@ -65,7 +67,8 @@ class Docman_MetadataValueFactory {
      * Create and set-up a MetadataValue object.
      * @deprecated use MetadataValueObjectFactory::createNewMetadataValue
      */
-    function newMetadataValue($itemId, $fieldId, $type, $value) {
+    function newMetadataValue($itemId, $fieldId, $type, $value)
+    {
         return $this->getMetadataTypeObjectFactory()->createMetadataValueObjectWithCorrectValue((int)$itemId, (int)$fieldId, (int)$type, $value);
     }
 
@@ -127,7 +130,8 @@ class Docman_MetadataValueFactory {
     /**
      * Update an existing MetadataValue record.
      */
-    function updateFromRow($id, $row) {
+    function updateFromRow($id, $row)
+    {
         $mdFactory = new Docman_MetadataFactory($this->groupId);
         $updator   = $this->getMetadataUpdator();
 
@@ -161,13 +165,15 @@ class Docman_MetadataValueFactory {
      * For each metadata in '$recurseArray', apply the metadata value of
      * '$srcItemId' item on items in '$itemIdArray'.
      */
-    function massUpdateFromRow($srcItemId, $recurseArray, $itemIdArray) {
+    function massUpdateFromRow($srcItemId, $recurseArray, $itemIdArray)
+    {
         foreach($recurseArray as $mdLabel) {
             $this->massUpdate($srcItemId, $mdLabel, $itemIdArray);
         }
     }
 
-    function massUpdate($srcItemId, $mdLabel, $itemIdArray) {
+    function massUpdate($srcItemId, $mdLabel, $itemIdArray)
+    {
         $mdFactory = new Docman_MetadataFactory($this->groupId);
         if($mdFactory->isRealMetadata($mdLabel)) {
             $md  = $mdFactory->getFromLabel($mdLabel);
@@ -184,7 +190,8 @@ class Docman_MetadataValueFactory {
      * If an item is only assigned to the deleted value, it is automaticaly
      * defaulted to '100'
      */
-    function deleteLove($mdId, $loveId) {
+    function deleteLove($mdId, $loveId)
+    {
         $dao = $this->getDao();
         $deleted = $dao->deleteLove($loveId);
         if($deleted) {
@@ -196,7 +203,8 @@ class Docman_MetadataValueFactory {
     /**
      * Ensure there is no item w/o a value for '$mdId' metadata
      */
-    function updateOrphansLoveItem($mdId) {
+    function updateOrphansLoveItem($mdId)
+    {
         $dao = $this->getDao();
         return $dao->updateOrphansLoveItem($mdId);
     }
@@ -204,7 +212,8 @@ class Docman_MetadataValueFactory {
     /**
      * Return true if a value already exist for a given (itme, field).
      */
-    function exist($itemId, $fieldId) {
+    function exist($itemId, $fieldId)
+    {
         $exist = false;
         $dao   = $this->getDao();
         $dar   = $dao->exist($itemId, $fieldId);
@@ -227,7 +236,8 @@ class Docman_MetadataValueFactory {
      *
      * @deprecated use DocmanMetadataInputValidator::validateInput
      */
-    public function validateInput(&$md, &$value) {
+    public function validateInput(&$md, &$value)
+    {
         $validator = new DocmanMetadataInputValidator();
         $value = $validator->validateInput($md, $value);
     }
@@ -235,7 +245,8 @@ class Docman_MetadataValueFactory {
     /**
      * @param $string
      */
-    public function setError($string) {
+    public function setError($string)
+    {
         $this->error_state = true;
         $this->error_message = $string;
     }
@@ -243,7 +254,8 @@ class Docman_MetadataValueFactory {
     /**
      * @return string
      */
-    public function getErrorMessage() {
+    public function getErrorMessage()
+    {
         if ($this->error_state) {
             return $this->error_message;
         } else {
@@ -254,7 +266,8 @@ class Docman_MetadataValueFactory {
     /**
      * @return bool
      */
-    public function isError() {
+    public function isError()
+    {
         return $this->error_state;
     }
 

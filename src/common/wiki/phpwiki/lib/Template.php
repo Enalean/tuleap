@@ -12,7 +12,8 @@ class Template
     /**
      * name optionally of form "theme/template" to include parent templates in children
      */
-    function __construct ($name, $request, $args = false) {
+    function __construct($name, $request, $args = false)
+    {
         global $WikiTheme;
 
         $this->_request = $request;
@@ -68,7 +69,8 @@ class Template
         return preg_replace('/<\?=(.*?)\?>/s', '<?php $this->_print(\1);?>', $template);
     }
 
-    function _printPlugin ($pi) {
+    function _printPlugin($pi)
+    {
         include_once("lib/WikiPlugin.php");
         static $loader;
 
@@ -78,7 +80,8 @@ class Template
         $this->_print($loader->expandPI($pi, $this->_request, $this, $this->_basepage));
     }
 
-    function _print ($val) {
+    function _print($val)
+    {
         if (isa($val, 'Template')) {
             $this->_expandSubtemplate($val);
         } else {
@@ -86,7 +89,8 @@ class Template
         }
     }
 
-    function _expandSubtemplate (&$template) {
+    function _expandSubtemplate(&$template)
+    {
         // FIXME: big hack!
         //if (!$template->_request)
         //    $template->_request = &$this->_request;
@@ -111,12 +115,14 @@ class Template
      *
      * @param $replacement string Replacement HTML text.
      */
-    function replace($varname, $value) {
+    function replace($varname, $value)
+    {
         $this->_locals[$varname] = $value;
     }
 
 
-    function printExpansion ($defaults = false) {
+    function printExpansion($defaults = false)
+    {
         if (!is_array($defaults)) // HTML object or template object
             $defaults = array('CONTENT' => $defaults);
         $this->_vars = array_merge($defaults, $this->_locals);
@@ -144,7 +150,8 @@ class Template
     // Find a way to do template expansion less memory intensive and faster.
     // 1.3.4 needed no memory at all for dumphtml, now it needs +15MB.
     // Smarty? As before?
-    function getExpansion ($defaults = false) {
+    function getExpansion($defaults = false)
+    {
         ob_start();
         $this->printExpansion($defaults);
         $xml = ob_get_contents();
@@ -152,17 +159,20 @@ class Template
         return $xml;
     }
 
-    function printXML () {
+    function printXML()
+    {
         $this->printExpansion();
     }
 
-    function asXML () {
+    function asXML()
+    {
         return $this->getExpansion();
     }
 
 
     // Debugging:
-    function _dump_template () {
+    function _dump_template()
+    {
         $lines = explode("\n", $this->_munge_input($this->_tmpl));
         $pre = HTML::pre();
         $n = 1;
@@ -171,7 +181,8 @@ class Template
         $pre->printXML();
     }
 
-    function _errorHandler($error) {
+    function _errorHandler($error)
+    {
         //if (!preg_match('/: eval\(\)\'d code$/', $error->errfile))
     //    return false;
 
@@ -211,12 +222,14 @@ class Template
  *   new Template(...)
  * </pre>
  */
-function Template($name, $args = false) {
+function Template($name, $args = false)
+{
     global $request;
     return new Template($name, $request, $args);
 }
 
-function alreadyTemplateProcessed($name) {
+function alreadyTemplateProcessed($name)
+{
     global $request;
     return !empty($request->_TemplatesProcessed[$name]) ? true : false;
 }
@@ -231,7 +244,8 @@ function alreadyTemplateProcessed($name) {
  *
  * @return string HTML expansion of template.
  */
-function GeneratePage($content, $title, $page_revision = false, $args = false) {
+function GeneratePage($content, $title, $page_revision = false, $args = false)
+{
     global $request;
 
     if (!is_array($args))
@@ -251,7 +265,8 @@ function GeneratePage($content, $title, $page_revision = false, $args = false) {
 /**
  * For dumping pages as html to a file.
  */
-function GeneratePageasXML($content, $title, $page_revision = false, $args = false) {
+function GeneratePageasXML($content, $title, $page_revision = false, $args = false)
+{
     global $request;
 
     if (!is_array($args))

@@ -34,7 +34,8 @@ class MailManager
      *
      * @return Array of Array of User
      */
-    public function getMailPreferencesByEmail($addresses) {
+    public function getMailPreferencesByEmail($addresses)
+    {
         $default = Codendi_Mail_Interface::FORMAT_HTML;
         $res     = array('html' => array(), 'text' => array());
         $um      = $this->getUserManager();
@@ -66,7 +67,8 @@ class MailManager
      *
      * @return String
      */
-    public function getMailPreferencesByUser(PFUser $user) {
+    public function getMailPreferencesByUser(PFUser $user)
+    {
         if ($user->getPreference(Codendi_Mail_Interface::PREF_FORMAT) == Codendi_Mail_Interface::FORMAT_TEXT) {
             return Codendi_Mail_Interface::FORMAT_TEXT;
         }
@@ -78,7 +80,8 @@ class MailManager
      *
      * @return Array
      */
-    public function getAllMailFormats() {
+    public function getAllMailFormats()
+    {
         return array(Codendi_Mail_Interface::FORMAT_TEXT, Codendi_Mail_Interface::FORMAT_HTML);
     }
 
@@ -89,7 +92,8 @@ class MailManager
      *
      * @return String
      */
-    protected function getConfig($var) {
+    protected function getConfig($var)
+    {
         return ForgeConfig::get($var);
     }
 
@@ -98,7 +102,8 @@ class MailManager
      *
      * @return UserManager
      */
-    protected function getUserManager() {
+    protected function getUserManager()
+    {
         return UserManager::instance();
     }
 }

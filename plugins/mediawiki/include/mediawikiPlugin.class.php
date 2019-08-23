@@ -56,7 +56,8 @@ class MediaWikiPlugin extends Plugin {
 
     public const SERVICE_SHORTNAME = 'plugin_mediawiki';
 
-    public function __construct ($id=0) {
+    public function __construct($id=0)
+    {
         parent::__construct($id);
         $this->setName("mediawiki");
         $this->text = "Mediawiki" ; // To show in the tabs, use...
@@ -135,7 +136,8 @@ class MediaWikiPlugin extends Plugin {
         bindtextdomain('tuleap-mediawiki', __DIR__ . '/../site-content');
     }
 
-    public function getServiceShortname() {
+    public function getServiceShortname()
+    {
         return self::SERVICE_SHORTNAME;
     }
 
@@ -188,7 +190,8 @@ class MediaWikiPlugin extends Plugin {
         );
     }
 
-    public function layout_search_entry($params) {
+    public function layout_search_entry($params)
+    {
         $project = $this->getProjectFromRequest();
         if ($this->isSearchEntryAvailable($project)) {
             $params['search_entries'][] = array(
@@ -206,7 +209,8 @@ class MediaWikiPlugin extends Plugin {
         /**
          * @see Event::SEARCH_TYPE
          */
-    public function search_type($params) {
+    public function search_type($params)
+    {
         $query   = $params['query'];
         $project = $query->getProject();
 
@@ -220,7 +224,8 @@ class MediaWikiPlugin extends Plugin {
         /**
          * @see Event::SEARCH_TYPES_PRESENTERS
          */
-    public function search_types_presenters($params) {
+    public function search_types_presenters($params)
+    {
         if ($this->isSearchEntryAvailable($params['project'])) {
             $params['project_presenters'][] = new Search_SearchTypePresenter(
                 $this->getName(),
@@ -234,26 +239,31 @@ class MediaWikiPlugin extends Plugin {
     /**
      * @see Event::PROCCESS_SYSTEM_CHECK
      */
-    public function proccess_system_check($params) {
+    public function proccess_system_check($params)
+    {
         $this->getMediawikiMLEBExtensionManager()->activateMLEBForCompatibleProjects($params['logger']);
     }
 
-    private function getMediawikiSearchURI(Project $project, $words) {
+    private function getMediawikiSearchURI(Project $project, $words)
+    {
         return $this->getPluginPath().'/wiki/'. $project->getUnixName() .'/index.php?title=Special%3ASearch&search=' . urlencode($words) . '&go=Go';
     }
 
-    private function isSearchEntryAvailable(?Project $project = null) {
+    private function isSearchEntryAvailable(?Project $project = null)
+    {
         if ($project && ! $project->isError()) {
             return $project->usesService(self::SERVICE_SHORTNAME);
         }
         return false;
     }
 
-    private function isSearchEntrySelected($type_of_search) {
+    private function isSearchEntrySelected($type_of_search)
+    {
         return ($type_of_search == $this->getName()) || $this->isMediawikiUrl();
     }
 
-    private function isMediawikiUrl() {
+    private function isMediawikiUrl()
+    {
         return preg_match('%'.$this->getPluginPath().'/wiki/.*%', $_SERVER['REQUEST_URI']);
     }
 
@@ -261,7 +271,8 @@ class MediaWikiPlugin extends Plugin {
          *
          * @return Project | null
          */
-    private function getProjectFromRequest() {
+    private function getProjectFromRequest()
+    {
         $matches = array();
         preg_match('%'.$this->getPluginPath().'/wiki/([^/]+)/.*%', $_SERVER['REQUEST_URI'], $matches);
         if (isset($matches[1])) {
@@ -278,7 +289,8 @@ class MediaWikiPlugin extends Plugin {
         return null;
     }
 
-    public function cssFile($params) {
+    public function cssFile($params)
+    {
         // Only show the stylesheet if we're actually in the Mediawiki pages.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0) {
@@ -286,7 +298,8 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
-    public function showImage(Codendi_Request $request) {
+    public function showImage(Codendi_Request $request)
+    {
         $project = $this->getProjectFromRequest();
         $user    = $request->getCurrentUser();
 
@@ -332,19 +345,22 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
-    function process() {
+    function process()
+    {
         echo '<h1>Mediawiki</h1>';
         echo $this->getPluginInfo()->getpropVal('answer');
     }
 
-    function &getPluginInfo() {
+    function &getPluginInfo()
+    {
         if (!is_a($this->pluginInfo, 'MediaWikiPluginInfo')) {
             $this->pluginInfo = new MediaWikiPluginInfo($this);
         }
         return $this->pluginInfo;
     }
 
-    public function service_replace_template_name_in_link($params) {
+    public function service_replace_template_name_in_link($params)
+    {
         $params['link'] = preg_replace(
             '#/plugins/mediawiki/wiki/'.preg_quote($params['template']['name'], '#').'(/|$)#',
             '/plugins/mediawiki/wiki/'. $params['project']->getUnixName().'$1',
@@ -353,7 +369,8 @@ class MediaWikiPlugin extends Plugin {
     }
 
 
-    public function register_project_creation($params) {
+    public function register_project_creation($params)
+    {
         if ($this->serviceIsUsedInTemplate($params['template_id'])) {
             $mediawiki_instantiater = $this->getInstantiater($params['group_id']);
             if ($mediawiki_instantiater) {
@@ -375,7 +392,8 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
-    private function doesUserHavePermission(PFUser $user) {
+    private function doesUserHavePermission(PFUser $user)
+    {
         $forge_user_manager = $this->getForgeUserGroupPermissionsManager();
 
         return $forge_user_manager->doesUserHavePermission(
@@ -387,7 +405,8 @@ class MediaWikiPlugin extends Plugin {
     /**
      * @return User_ForgeUserGroupPermissionsManager
      */
-    private function getForgeUserGroupPermissionsManager() {
+    private function getForgeUserGroupPermissionsManager()
+    {
         return new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
         );
@@ -403,18 +422,21 @@ class MediaWikiPlugin extends Plugin {
     /**
      * @see Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED
      */
-    public function get_services_allowed_for_restricted($params) {
+    public function get_services_allowed_for_restricted($params)
+    {
         $params['allowed_services'][] = $this->getServiceShortname();
     }
 
-    private function serviceIsUsedInTemplate($project_id) {
+    private function serviceIsUsedInTemplate($project_id)
+    {
         $project_manager = ProjectManager::instance();
         $project         = $project_manager->getProject($project_id);
 
         return $project->usesService(self::SERVICE_SHORTNAME);
     }
 
-    public function service_is_used($params) {
+    public function service_is_used($params)
+    {
         if ($params['shortname'] == 'plugin_mediawiki' && $params['is_used']) {
             $mediawiki_instantiater = $this->getInstantiater($params['group_id']);
             if ($mediawiki_instantiater) {
@@ -423,7 +445,8 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
-    private function getInstantiater($group_id) {
+    private function getInstantiater($group_id)
+    {
         $project_manager = ProjectManager::instance();
         $project = $project_manager->getProject($group_id);
 
@@ -440,11 +463,13 @@ class MediaWikiPlugin extends Plugin {
         );
     }
 
-    private function getMediawikiLanguageManager() {
+    private function getMediawikiLanguageManager()
+    {
         return new MediawikiLanguageManager(new MediawikiLanguageDao());
     }
 
-    public function plugin_statistics_service_usage($params) {
+    public function plugin_statistics_service_usage($params)
+    {
         $dao             = $this->getDao();
         $project_manager = ProjectManager::instance();
         $start_date      = $params['start_date'];
@@ -466,7 +491,8 @@ class MediaWikiPlugin extends Plugin {
         $params['csv_exporter']->buildDatas($number_of_page_since_a_date, "Number of created Mediawiki pages since start date");
     }
 
-    public function project_admin_ugroup_deletion($params) {
+    public function project_admin_ugroup_deletion($params)
+    {
         $project = $this->getProjectFromParams($params);
         $dao     = $this->getDao();
 
@@ -476,11 +502,13 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
-    public function project_admin_remove_user($params) {
+    public function project_admin_remove_user($params)
+    {
         $this->updateUserGroupMapping($params);
     }
 
-    public function project_admin_ugroup_remove_user($params) {
+    public function project_admin_ugroup_remove_user($params)
+    {
         $this->updateUserGroupMapping($params);
     }
 
@@ -494,15 +522,18 @@ class MediaWikiPlugin extends Plugin {
         );
     }
 
-    public function project_admin_change_user_permissions($params) {
+    public function project_admin_change_user_permissions($params)
+    {
         $this->updateUserGroupMapping($params);
     }
 
-    public function project_admin_remove_user_from_project_ugroups($params) {
+    public function project_admin_remove_user_from_project_ugroups($params)
+    {
         $this->updateUserGroupMapping($params);
     }
 
-    private function updateUserGroupMapping($params) {
+    private function updateUserGroupMapping($params)
+    {
         $user    = $this->getUserFromParams($params);
         $project = $this->getProjectFromParams($params);
         $dao     = $this->getDao();
@@ -512,7 +543,8 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
-    public function systemevent_user_rename($params) {
+    public function systemevent_user_rename($params)
+    {
         $user            = $params['user'];
         $projects        = ProjectManager::instance()->getAllProjectsButDeleted();
         foreach ($projects as $project) {
@@ -522,19 +554,22 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
-    private function getUserFromParams($params) {
+    private function getUserFromParams($params)
+    {
         $user_id  = $params['user_id'];
 
         return UserManager::instance()->getUserById($user_id);
     }
 
-    private function getProjectFromParams($params) {
+    private function getProjectFromParams($params)
+    {
         $group_id = $params['group_id'];
 
         return ProjectManager::instance()->getProject($group_id);
     }
 
-    private function getDao() {
+    private function getDao()
+    {
         return new MediawikiDao($this->getCentralDatabaseNameProperty());
     }
 
@@ -546,7 +581,8 @@ class MediaWikiPlugin extends Plugin {
     /**
      * @return MediawikiManager
      */
-    public function getMediawikiManager() {
+    public function getMediawikiManager()
+    {
         return new MediawikiManager($this->getDao());
     }
 
@@ -555,7 +591,8 @@ class MediaWikiPlugin extends Plugin {
         $params['classnames'][$this->getServiceShortname()] = ServiceMediawiki::class;
     }
 
-    public function rename_project($params) {
+    public function rename_project($params)
+    {
         $project         = $params['project'];
         $project_manager = ProjectManager::instance();
         $new_link        = '/plugins/mediawiki/wiki/'. $params['new_name'];
@@ -569,7 +606,8 @@ class MediaWikiPlugin extends Plugin {
         $this->clearMediawikiCache($project);
     }
 
-    private function updateMediawikiDirectory(Project $project) {
+    private function updateMediawikiDirectory(Project $project)
+    {
         $logger         = new BackendLogger();
         $project_id_dir = forge_get_config('projects_path', 'mediawiki') . "/". $project->getID() ;
 
@@ -587,7 +625,8 @@ class MediaWikiPlugin extends Plugin {
         return false;
     }
 
-    private function clearMediawikiCache(Project $project) {
+    private function clearMediawikiCache(Project $project)
+    {
         $logger = $this->getBackendLogger();
 
         $delete = $this->getDao()->clearPageCacheForProject($project);
@@ -596,7 +635,8 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
-    public function get_projectid_from_url($params) {
+    public function get_projectid_from_url($params)
+    {
         $url = $params['url'];
 
         if (strpos($url,'/plugins/mediawiki/wiki/') === 0) {
@@ -645,11 +685,13 @@ class MediaWikiPlugin extends Plugin {
         $params['time_to_collect'][self::SERVICE_SHORTNAME] += $time;
     }
 
-    public function plugin_statistics_disk_usage_service_label($params) {
+    public function plugin_statistics_disk_usage_service_label($params)
+    {
         $params['services'][self::SERVICE_SHORTNAME] = 'Mediawiki';
     }
 
-    public function plugin_statistics_color($params) {
+    public function plugin_statistics_color($params)
+    {
         if ($params['service'] == self::SERVICE_SHORTNAME) {
             $params['color'] = 'lightsalmon';
         }
@@ -670,14 +712,16 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
-    public function system_event_get_types_for_default_queue(array &$params) {
+    public function system_event_get_types_for_default_queue(array &$params)
+    {
         $params['types'] = array_merge($params['types'], array(
             SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME,
             SystemEvent_MEDIAWIKI_TO_CENTRAL_DB::NAME
         ));
     }
 
-    public function getSystemEventClass($params) {
+    public function getSystemEventClass($params)
+    {
         switch($params['type']) {
             case SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME:
                 $params['class'] = 'SystemEvent_MEDIAWIKI_SWITCH_TO_123';
@@ -704,15 +748,18 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
-    private function getMediawikiMigrator() {
+    private function getMediawikiMigrator()
+    {
         return new Mediawiki_Migration_MediawikiMigrator();
     }
 
-    private function getProjectManager() {
+    private function getProjectManager()
+    {
         return ProjectManager::instance();
     }
 
-    public function permission_get_name($params) {
+    public function permission_get_name($params)
+    {
         if (!$params['name']) {
             switch($params['permission_type']) {
                 case MediawikiManager::READ_ACCESS:
@@ -744,18 +791,21 @@ class MediaWikiPlugin extends Plugin {
     /**
      * @see Event::SITE_ACCESS_CHANGE
      */
-    public function site_access_change($params) {
+    public function site_access_change($params)
+    {
         $this->getMediawikiManager()->updateSiteAccess($params['old_value']);
     }
 
-    private function getMediawikiVersionManager() {
+    private function getMediawikiVersionManager()
+    {
         return new MediawikiVersionManager(new MediawikiVersionDao());
     }
 
     /**
      * @return MediawikiMLEBExtensionManager
      */
-    private function getMediawikiMLEBExtensionManager() {
+    private function getMediawikiMLEBExtensionManager()
+    {
         return new MediawikiMLEBExtensionManager(
             $this->getMediawikiMigrator(),
             new \Tuleap\Mediawiki\MediawikiExtensionDAO(),

@@ -20,7 +20,8 @@
 require_once('bootstrap.php');
 class Tracker_FormElement_Field_List_Bind_StaticValueTest extends TuleapTestCase {
 
-    public function testGetLabel() {
+    public function testGetLabel()
+    {
         $id          = 123;
         $label       = 'Reopen';
         $description = 'The artifact has been re-opened';

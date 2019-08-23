@@ -30,7 +30,8 @@ abstract class SVN_Apache {
      *
      * @param Array $project
      */
-    public function __construct($project) {
+    public function __construct($project)
+    {
         $this->project = $project;
     }
 
@@ -39,7 +40,8 @@ abstract class SVN_Apache {
      *
      * @return String
      */
-    public function getHeaders() {
+    public function getHeaders()
+    {
         return '';
     }
 
@@ -48,7 +50,8 @@ abstract class SVN_Apache {
      *
      * @return String
      */
-    public function getConf($public_path, $system_path) {
+    public function getConf($public_path, $system_path)
+    {
         $conf = '';
         $conf .= "<Location $public_path>\n";
         $conf .= "    DAV svn\n";
@@ -77,7 +80,8 @@ abstract class SVN_Apache {
      *
      * @return String
      */
-    protected function getCommonAuthentication($projectName) {
+    protected function getCommonAuthentication($projectName)
+    {
         $conf = '';
         $conf .= "    Require valid-user\n";
         $conf .= "    AuthType Basic\n";
@@ -86,7 +90,8 @@ abstract class SVN_Apache {
     }
 
 
-    protected function getRepositoryAuthorization($svn_dir) {
+    protected function getRepositoryAuthorization($svn_dir)
+    {
         $conf = "    AuthzSVNAccessFile ".$svn_dir."/.SVNAccessFile\n";
         return $conf;
     }
@@ -98,7 +103,8 @@ abstract class SVN_Apache {
      *
      * @return String
      */
-    protected function escapeStringForApacheConf($str) {
+    protected function escapeStringForApacheConf($str)
+    {
         return strtr($str, "\"", "'");
     }
 }

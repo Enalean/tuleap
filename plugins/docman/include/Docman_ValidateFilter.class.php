@@ -21,11 +21,13 @@
  */
 
 class Docman_ValidateFilterFactory {
-    function __construct() {
+    function __construct()
+    {
 
     }
 
-    function getFromFilter($filter) {
+    function getFromFilter($filter)
+    {
         $f = null;
         if(is_a($filter, 'Docman_FilterDate')) {
             $f = new Docman_ValidateFilterDate($filter);
@@ -40,28 +42,33 @@ class Docman_ValidateFilter {
     var $message;
     var $isValid;
 
-    function __construct($filter) {
+    function __construct($filter)
+    {
         $this->filter = $filter;
         $this->message = '';
         $this->isValid = null;
     }
 
-    function validate() {
+    function validate()
+    {
         return $this->isValid;
     }
 
-    function getMessage() {
+    function getMessage()
+    {
         return $this->message;
     }
 }
 
 class Docman_ValidateFilterDate extends Docman_ValidateFilter {
 
-    function __construct($filter) {
+    function __construct($filter)
+    {
         parent::__construct($filter);
     }
 
-    function validate() {
+    function validate()
+    {
         if($this->isValid === null) {
             $this->isValid = false;
             if($this->filter->getValue() == '') {

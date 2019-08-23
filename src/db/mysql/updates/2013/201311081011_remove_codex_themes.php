@@ -20,15 +20,18 @@
  * Add rest_authentication_token table
  */
 class b201311081011_remove_codex_themes extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return "Remove CodeX and CodeX themes from user preferences";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "UPDATE user SET theme = '' WHERE theme IN ('CodeX', 'CodeXTab')";
 
         $res = $this->db->dbh->exec($sql);

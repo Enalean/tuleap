@@ -27,7 +27,8 @@ class Tracker_XML_Updater_FieldChange_FieldChangeDateXMLUpdaterTest extends Tule
     /** @var SimpleXMLElement */
     private $field_change_xml;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->updater          = new Tracker_XML_Updater_FieldChange_FieldChangeDateXMLUpdater();
         $this->field_change_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
@@ -37,7 +38,8 @@ class Tracker_XML_Updater_FieldChange_FieldChangeDateXMLUpdaterTest extends Tule
         );
     }
 
-    public function itUpdatesTheNodeValueWithSubmittedValue() {
+    public function itUpdatesTheNodeValueWithSubmittedValue()
+    {
         $this->updater->update(
             $this->field_change_xml,
             '2014-04-28'

@@ -32,7 +32,8 @@ class WikiAttachmentTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    function testGetFilesystemName() {
+    function testGetFilesystemName()
+    {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('toto.txt');
         $this->assertEqual('toto.txt', $wa->getFilesystemName());
@@ -45,7 +46,8 @@ class WikiAttachmentTest extends TuleapTestCase {
         $this->assertEqual('titi.txt', $wa->getFilesystemName());
     }
 
-    function testCreateNoFilesystemName() {
+    function testCreateNoFilesystemName()
+    {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('testing.txt');
         $wa->basedir = $this->getTmpDir();
@@ -59,7 +61,8 @@ class WikiAttachmentTest extends TuleapTestCase {
         rmdir($wa->basedir.'/testing.txt');
     }
 
-    function testCreateFolderAlreadyExistNoFilesystemName() {
+    function testCreateFolderAlreadyExistNoFilesystemName()
+    {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('toto.txt');
         $wa->basedir = $this->getTmpDir();
@@ -73,7 +76,8 @@ class WikiAttachmentTest extends TuleapTestCase {
         $this->assertTrue($wa->exist());
     }
 
-    function testCreateFolderAlreadyExistWithFilesystemName() {
+    function testCreateFolderAlreadyExistWithFilesystemName()
+    {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('testing.txt');
         $wa->initFilesystemName();
@@ -90,7 +94,8 @@ class WikiAttachmentTest extends TuleapTestCase {
         rmdir($wa->basedir.'/'.$wa->getFilesystemName());
     }
 
-    function testCreateWithFilesystemName() {
+    function testCreateWithFilesystemName()
+    {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('testing.txt');
         $wa->initFilesystemName();
@@ -106,7 +111,8 @@ class WikiAttachmentTest extends TuleapTestCase {
         rmdir($wa->basedir.'/'.$wa->getFilesystemName());
     }
 
-    function testPurgeAttachmentSucceeded() {
+    function testPurgeAttachmentSucceeded()
+    {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('testing.txt');
         $wa->initFilesystemName();
@@ -123,7 +129,8 @@ class WikiAttachmentTest extends TuleapTestCase {
         $this->assertFalse($wa->exist());
     }
 
-    function testPurgeAttachmentDBFailure() {
+    function testPurgeAttachmentDBFailure()
+    {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('testing.txt');
         $wa->initFilesystemName();
@@ -141,7 +148,8 @@ class WikiAttachmentTest extends TuleapTestCase {
         $this->assertFalse($wa->exist());
     }
 
-    function testDeleteAttachmntSuccess() {
+    function testDeleteAttachmntSuccess()
+    {
         $wa = new WikiAttachmentTestVersion();
         $wa->setReturnValue('isActive', true);
 
@@ -152,7 +160,8 @@ class WikiAttachmentTest extends TuleapTestCase {
         $this->assertTrue($wa->deleteAttachment());
     }
 
-    function testDeleteAttachmentNotActive() {
+    function testDeleteAttachmentNotActive()
+    {
         $wa = new WikiAttachmentTestVersion();
         $wa->setReturnValue('isActive', false);
 
@@ -162,7 +171,8 @@ class WikiAttachmentTest extends TuleapTestCase {
         $this->assertFalse($wa->deleteAttachment());
     }
 
-    function testDeleteAttachmentDBFailure() {
+    function testDeleteAttachmentDBFailure()
+    {
         $wa = new WikiAttachmentTestVersion();
         $wa->setReturnValue('isActive', true);
 
@@ -173,7 +183,8 @@ class WikiAttachmentTest extends TuleapTestCase {
         $this->assertFalse($wa->deleteAttachment());
     }
 
-    function testRestoreDeletedAttachmentActiveFileFailure() {
+    function testRestoreDeletedAttachmentActiveFileFailure()
+    {
         $wa = new WikiAttachmentTestVersionRestoreDeleted();
         $wa->setReturnValue('isActive', true);
         $wa->setReturnValue('exist', true);
@@ -184,7 +195,8 @@ class WikiAttachmentTest extends TuleapTestCase {
         $this->assertFalse($wa->restoreDeletedAttachment(1));
     }
 
-    function testRestoreDeletedAttachmentFileSystemFailure() {
+    function testRestoreDeletedAttachmentFileSystemFailure()
+    {
         $wa = new WikiAttachmentTestVersionRestoreDeleted();
         $wa->setReturnValue('isActive', False);
         $wa->setReturnValue('exist', False);
@@ -195,7 +207,8 @@ class WikiAttachmentTest extends TuleapTestCase {
         $this->assertFalse($wa->restoreDeletedAttachment(1));
     }
 
-    function testRestoreDeletedAttachmentDaoFailure() {
+    function testRestoreDeletedAttachmentDaoFailure()
+    {
         $wa = new WikiAttachmentTestVersionRestoreDeleted();
         $wa->setReturnValue('isActive', False);
         $wa->setReturnValue('exist', true);
@@ -206,7 +219,8 @@ class WikiAttachmentTest extends TuleapTestCase {
         $this->assertFalse($wa->restoreDeletedAttachment(1));
     }
 
-    function testRestoreDeletedAttachmentSuccess() {
+    function testRestoreDeletedAttachmentSuccess()
+    {
         $wa = new WikiAttachmentTestVersionRestoreDeleted();
         $wa->setReturnValue('isActive', False);
         $wa->setReturnValue('exist', true);

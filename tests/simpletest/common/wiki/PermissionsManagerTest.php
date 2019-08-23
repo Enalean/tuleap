@@ -32,7 +32,8 @@ class Wiki_PermissionsManagerTest extends TuleapTestCase {
     /** @var WikiPage */
     private $wiki_page;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->project   = stub('Project')->getUnixName()->returns('perceval');
@@ -52,7 +53,8 @@ class Wiki_PermissionsManagerTest extends TuleapTestCase {
         );
     }
 
-    public function itReturnsPageRights() {
+    public function itReturnsPageRights()
+    {
         stub($this->permission_manager)->getAuthorizedUgroupIds(101, 'WIKIPAGE_READ')->returns(array(
             '3', '4', '14', '107'
         ));
@@ -73,7 +75,8 @@ class Wiki_PermissionsManagerTest extends TuleapTestCase {
         );
     }
 
-    public function itReturnsServiceRightsIfPageRightsAreWeeker() {
+    public function itReturnsServiceRightsIfPageRightsAreWeeker()
+    {
         stub($this->permission_manager)->getAuthorizedUgroupIds(101, 'WIKIPAGE_READ')->returns(array(
             '3'
         ));
@@ -94,7 +97,8 @@ class Wiki_PermissionsManagerTest extends TuleapTestCase {
         );
     }
 
-    public function itReturnsMixedServiceAndPageRights() {
+    public function itReturnsMixedServiceAndPageRights()
+    {
         stub($this->permission_manager)->getAuthorizedUgroupIds(101, 'WIKIPAGE_READ')->returns(array(
             '107', '108', '4'
         ));
@@ -115,7 +119,8 @@ class Wiki_PermissionsManagerTest extends TuleapTestCase {
         );
     }
 
-    public function itDoesNotReturnNonMemberUgroupsIfProjectIsPrivate() {
+    public function itDoesNotReturnNonMemberUgroupsIfProjectIsPrivate()
+    {
         stub($this->permission_manager)->getAuthorizedUgroupIds(101, 'WIKIPAGE_READ')->returns(array(
             '2'
         ));
@@ -136,7 +141,8 @@ class Wiki_PermissionsManagerTest extends TuleapTestCase {
         );
     }
 
-    public function itAlwaysReturnsWikiAndProjectAdminGroups() {
+    public function itAlwaysReturnsWikiAndProjectAdminGroups()
+    {
         stub($this->permission_manager)->getAuthorizedUgroupIds(101, 'WIKIPAGE_READ')->returns(array(
             '107'
         ));

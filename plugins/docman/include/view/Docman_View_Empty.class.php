@@ -27,7 +27,8 @@ require_once('Docman_View_Browse.class.php');
 
 class Docman_View_Empty extends Docman_View_Display {
 
-    function _content($params) {
+    function _content($params)
+    {
         $item = $params['item'];
 
         $dPm = Docman_PermissionsManager::instance($item->getGroupId());

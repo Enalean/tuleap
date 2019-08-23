@@ -21,7 +21,8 @@
 class Tracker_Permission_PermissionRequestTest extends TuleapTestCase {
     protected $minimal_ugroup_list;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->minimal_ugroup_list = array(
             ProjectUGroup::ANONYMOUS,
@@ -31,7 +32,8 @@ class Tracker_Permission_PermissionRequestTest extends TuleapTestCase {
         );
     }
 
-    public function itHasPermissionsBasedOnGroupIds() {
+    public function itHasPermissionsBasedOnGroupIds()
+    {
         $request = aRequest()
             ->with(
                 Tracker_Permission_Command::PERMISSION_PREFIX.ProjectUGroup::ANONYMOUS,
@@ -49,7 +51,8 @@ class Tracker_Permission_PermissionRequestTest extends TuleapTestCase {
         $this->assertEqual($set_permission_request->getPermissionType(ProjectUGroup::REGISTERED), Tracker_Permission_Command::PERMISSION_FULL);
     }
 
-    public function itRevokesPermissions() {
+    public function itRevokesPermissions()
+    {
         $request = aRequest()
             ->with(
                 Tracker_Permission_Command::PERMISSION_PREFIX.ProjectUGroup::ANONYMOUS,

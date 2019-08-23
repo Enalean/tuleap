@@ -26,7 +26,8 @@ class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase {
     private $git_exec;
     private $symlink_repo;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->symlink_repo = '/tmp/tuleap-git-exec-test_'.rand(0, 99999999);
@@ -38,19 +39,22 @@ class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase {
         $this->git_exec = new Git_Exec($this->fixture_dir);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
         system("rm -rf $this->fixture_dir");
         unlink($this->symlink_repo);
     }
 
-    public function testThereIsSomethingToCommitWhenStuffIsAdded() {
+    public function testThereIsSomethingToCommitWhenStuffIsAdded()
+    {
         touch("$this->fixture_dir/toto");
         $this->git_exec->add("$this->fixture_dir/toto");
         $this->assertTrue($this->git_exec->isThereAnythingToCommit());
     }
 
-    public function testThereIsSomethingToCommitWhenStuffIsRemoved() {
+    public function testThereIsSomethingToCommitWhenStuffIsRemoved()
+    {
         touch("$this->fixture_dir/toto");
         $this->git_exec->add("$this->fixture_dir/toto");
         $this->git_exec->commit("add stuff");
@@ -58,7 +62,8 @@ class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase {
         $this->assertTrue($this->git_exec->isThereAnythingToCommit());
     }
 
-    public function testThereIsSomethingToCommitWhenStuffIsMoved() {
+    public function testThereIsSomethingToCommitWhenStuffIsMoved()
+    {
         touch("$this->fixture_dir/toto");
         $this->git_exec->add("$this->fixture_dir/toto");
         $this->git_exec->commit("add stuff");
@@ -66,7 +71,8 @@ class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase {
         $this->assertTrue($this->git_exec->isThereAnythingToCommit());
     }
 
-    public function itMovesTheFilesInSymlinkedRepo() {
+    public function itMovesTheFilesInSymlinkedRepo()
+    {
         $file_orig_path = $this->symlink_repo.'/file1';
         $file_dest_path = $this->symlink_repo.'/file with spaces';
         file_put_contents($file_orig_path, 'bla');
@@ -80,23 +86,27 @@ class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase {
         $this->assertEqual(file_get_contents($file_dest_path), 'bla');
     }
 
-    public function testThereIsNothingToCommitOnEmptyRepository() {
+    public function testThereIsNothingToCommitOnEmptyRepository()
+    {
         $this->assertFalse($this->git_exec->isThereAnythingToCommit());
     }
 
-    public function testThereIsNothingToCommitOnAlreadyCommitedRepo() {
+    public function testThereIsNothingToCommitOnAlreadyCommitedRepo()
+    {
         touch("$this->fixture_dir/toto");
         $this->git_exec->add("$this->fixture_dir/toto");
         $this->git_exec->commit("add stuff");
         $this->assertFalse($this->git_exec->isThereAnythingToCommit());
     }
 
-    public function testThereIsNothingToCommitWhenNewFilesAreNotAdded() {
+    public function testThereIsNothingToCommitWhenNewFilesAreNotAdded()
+    {
         touch("$this->fixture_dir/toto");
         $this->assertFalse($this->git_exec->isThereAnythingToCommit());
     }
 
-    public function testThereIsNothingToCommitWhenContentDoesntChange() {
+    public function testThereIsNothingToCommitWhenContentDoesntChange()
+    {
         file_put_contents("$this->fixture_dir/toto", "stuff");
         $this->git_exec->add("$this->fixture_dir/toto");
         $this->git_exec->commit("add stuff");
@@ -104,7 +114,8 @@ class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase {
         $this->assertFalse($this->git_exec->isThereAnythingToCommit());
     }
 
-    public function itDoesntRaiseAnErrorWhenTryingToRemoveAnUntrackedFile() {
+    public function itDoesntRaiseAnErrorWhenTryingToRemoveAnUntrackedFile()
+    {
         file_put_contents("$this->fixture_dir/toto", "stuff");
         $this->git_exec->rm("$this->fixture_dir/toto");
     }
@@ -115,7 +126,8 @@ class Git_Exec_ObjectExists extends TuleapTestCase {
     private $git_exec;
     private $symlink_repo;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->symlink_repo = '/tmp/tuleap-git-exec-test_'.rand(0, 99999999);
@@ -127,13 +139,15 @@ class Git_Exec_ObjectExists extends TuleapTestCase {
         $this->git_exec = new Git_Exec($this->fixture_dir);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
         system("rm -rf $this->fixture_dir");
         unlink($this->symlink_repo);
     }
 
-    public function itReturnsTrueWhenTheRevExists() {
+    public function itReturnsTrueWhenTheRevExists()
+    {
         file_put_contents("$this->fixture_dir/toto", "stuff");
         $this->git_exec->add("$this->fixture_dir/toto");
         $this->git_exec->commit("add stuff");
@@ -143,7 +157,8 @@ class Git_Exec_ObjectExists extends TuleapTestCase {
         $this->assertEqual(true, $res);
     }
 
-    public function itReturnsFalseWhenTheRevDoesNotExist() {
+    public function itReturnsFalseWhenTheRevDoesNotExist()
+    {
         $res = $this->git_exec->doesObjectExists('this_is_not_a_rev');
 
         $this->assertEqual(false, $res);

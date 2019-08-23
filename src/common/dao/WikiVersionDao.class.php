@@ -20,7 +20,8 @@
 
 class WikiVersionDao extends DataAccessObject {
 
-    public function getAllVersionForGivenPage($page_id) {
+    public function getAllVersionForGivenPage($page_id)
+    {
         $page_id = $this->da->escapeInt($page_id);
 
         $sql = "SELECT id, version, content
@@ -30,7 +31,8 @@ class WikiVersionDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getSpecificVersionForGivenPage($page_id, $version_id) {
+    public function getSpecificVersionForGivenPage($page_id, $version_id)
+    {
         $page_id    = $this->da->escapeInt($page_id);
         $version_id = $this->da->escapeInt($version_id);
 

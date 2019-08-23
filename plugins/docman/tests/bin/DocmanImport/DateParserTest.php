@@ -22,7 +22,8 @@ require_once(__DIR__.'/../../../bin/DocmanImport/DateParser.class.php');
 
 class DateParserTest extends TuleapTestCase {
 
-    public function testParseIso8601 () {
+    public function testParseIso8601()
+    {
         $currentTimeStamp = time();
         $curentIsoDate = date('c', $currentTimeStamp);
         $this->assertEqual($currentTimeStamp, DateParser::parseIso8601($curentIsoDate));

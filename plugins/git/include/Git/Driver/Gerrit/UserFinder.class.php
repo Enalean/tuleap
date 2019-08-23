@@ -30,14 +30,16 @@ class Git_Driver_Gerrit_UserFinder {
     /** @var PermissionsManager */
     private $permissions_manager;
 
-    public function __construct(PermissionsManager $permissions_manager, UGroupManager $ugroup_manager) {
+    public function __construct(PermissionsManager $permissions_manager, UGroupManager $ugroup_manager)
+    {
         $this->permissions_manager = $permissions_manager;
         $this->ugroup_manager      = $ugroup_manager;
     }
 
 
     /** @return bool */
-    public function areRegisteredUsersAllowedTo($permission_type, GitRepository $repository) {
+    public function areRegisteredUsersAllowedTo($permission_type, GitRepository $repository)
+    {
         if ($permission_type == Git::SPECIAL_PERM_ADMIN) {
             return false;
         }
@@ -60,7 +62,8 @@ class Git_Driver_Gerrit_UserFinder {
      *
      * @return array
      */
-    public function getUgroups($repository_id, $permission_type) {
+    public function getUgroups($repository_id, $permission_type)
+    {
         if ($permission_type == Git::SPECIAL_PERM_ADMIN) {
             return array(ProjectUGroup::PROJECT_ADMIN);
         }

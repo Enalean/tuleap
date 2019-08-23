@@ -35,7 +35,8 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase {
 
     private $tracker_mappings;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->importer = new AgileDashboard_XMLImporter();
@@ -78,7 +79,8 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase {
         );
     }
 
-    public function itReturnsAnEmptyArrayIfNoPlanningsExist() {
+    public function itReturnsAnEmptyArrayIfNoPlanningsExist()
+    {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
                  <agiledashboard />';
         $xml_object = new SimpleXMLElement($xml);
@@ -88,7 +90,8 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase {
         $this->assertTrue(is_array($data));
     }
 
-    public function itReturnsAnArrayForEachPlanning() {
+    public function itReturnsAnArrayForEachPlanning()
+    {
         $data = $this->importer->toArray($this->xml_object, $this->tracker_mappings);
 
         $this->assertTrue(is_array($data));
@@ -97,7 +100,8 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase {
         $this->assertCount($data[AgileDashboard_XMLExporter::NODE_PLANNINGS], 2);
     }
 
-    public function itReturnsAnArrayOfPlanningParameterValuesForAPlanning() {
+    public function itReturnsAnArrayOfPlanningParameterValuesForAPlanning()
+    {
         $data = $this->importer->toArray($this->xml_object, $this->tracker_mappings);
         $plannings = $data[AgileDashboard_XMLExporter::NODE_PLANNINGS];
 
@@ -110,7 +114,8 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase {
         $this->assertTrue(array_key_exists(PlanningParameters::BACKLOG_TRACKER_IDS, $a_planning));
     }
 
-    public function itReturnsCorrectTrackerIdsForAPlanning() {
+    public function itReturnsCorrectTrackerIdsForAPlanning()
+    {
         $data = $this->importer->toArray($this->xml_object, $this->tracker_mappings);
         $plannings = $data[AgileDashboard_XMLExporter::NODE_PLANNINGS];
         $a_planning = $plannings[0];
@@ -122,7 +127,8 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase {
         $this->assertEqual($a_planning[PlanningParameters::PLANNING_TRACKER_ID], 154);
     }
 
-    public function itReturnsSeveralBacklogTrackers() {
+    public function itReturnsSeveralBacklogTrackers()
+    {
         $data = $this->importer->toArray($this->xml_object, $this->tracker_mappings);
         $plannings = $data[AgileDashboard_XMLExporter::NODE_PLANNINGS];
         $a_planning = $plannings[1];
@@ -130,7 +136,8 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase {
         $this->assertEqual($a_planning[PlanningParameters::BACKLOG_TRACKER_IDS], array(8, 96));
     }
 
-    public function itThrowsAnExceptionIfTrackerMappingsAreInvalid() {
+    public function itThrowsAnExceptionIfTrackerMappingsAreInvalid()
+    {
         $tracker_mappings = array();
 
         $this->expectException('AgileDashboard_XMLImporterInvalidTrackerMappingsException');

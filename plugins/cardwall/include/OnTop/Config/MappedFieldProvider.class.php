@@ -36,14 +36,17 @@ class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProvide
      */
     private $config;
 
-    public function __construct(Cardwall_OnTop_Config                         $config,
-                         Cardwall_FieldProviders_SemanticStatusFieldRetriever $semantic_status_provider) {
+    public function __construct(
+        Cardwall_OnTop_Config                         $config,
+        Cardwall_FieldProviders_SemanticStatusFieldRetriever $semantic_status_provider
+    ) {
 
         $this->semantic_status_provider = $semantic_status_provider;
         $this->config                   = $config;
     }
 
-    public function getField(Tracker $tracker) {
+    public function getField(Tracker $tracker)
+    {
 
         $mapping = $this->config->getMappingFor($tracker);
         if ($mapping) {

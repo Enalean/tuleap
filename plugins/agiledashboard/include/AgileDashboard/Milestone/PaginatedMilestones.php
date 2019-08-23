@@ -28,16 +28,19 @@ class AgileDashboard_Milestone_PaginatedMilestones {
     private $total_size;
 
 
-    public function __construct(array $milestones, $total_size) {
+    public function __construct(array $milestones, $total_size)
+    {
         $this->milestones = $milestones;
         $this->total_size = $total_size;
     }
 
-    public function getMilestones() {
+    public function getMilestones()
+    {
         return $this->milestones;
     }
 
-    public function getTotalSize() {
+    public function getTotalSize()
+    {
         return $this->total_size;
     }
 

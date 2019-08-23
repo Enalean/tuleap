@@ -20,20 +20,24 @@
  * Modify svn accessfile history table
  */
 class b201405061202_modify_svn_accessfile_history_table extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return "svn accessfile history table";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->addIndexonGroupId();
         $this->removeUnusedSha1ContentColumn();
     }
 
-    private function addIndexonGroupId() {
+    private function addIndexonGroupId()
+    {
         $sql = "ALTER TABLE svn_accessfile_history
                 ADD INDEX idx_svn_accessfile_group_id(group_id)";
 
@@ -43,7 +47,8 @@ class b201405061202_modify_svn_accessfile_history_table extends ForgeUpgrade_Buc
         }
     }
 
-    private function removeUnusedSha1ContentColumn() {
+    private function removeUnusedSha1ContentColumn()
+    {
         $sql = "ALTER TABLE svn_accessfile_history
                 DROP COLUMN sha1_content";
 

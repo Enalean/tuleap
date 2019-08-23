@@ -34,22 +34,26 @@ class Git_Driver_GerritLegacy_manageProjectsTest extends Git_Driver_GerritLegacy
      */
     protected $ssh;
 
-    public function itExecutesTheCreateCommandForProjectOnTheGerritServer() {
+    public function itExecutesTheCreateCommandForProjectOnTheGerritServer()
+    {
         expect($this->ssh)->execute($this->gerrit_server, "gerrit create-project --parent firefox firefox/jean-claude/dusse")->once();
         $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
     }
 
-    public function itExecutesTheCreateCommandForParentProjectOnTheGerritServer() {
+    public function itExecutesTheCreateCommandForParentProjectOnTheGerritServer()
+    {
         expect($this->ssh)->execute($this->gerrit_server, "gerrit create-project --permissions-only firefox --owner firefox/project_admins")->once();
         $this->driver->createProjectWithPermissionsOnly($this->gerrit_server, $this->project, 'firefox/project_admins');
     }
 
-    public function itReturnsTheNameOfTheCreatedProject() {
+    public function itReturnsTheNameOfTheCreatedProject()
+    {
         $project_name = $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
         $this->assertEqual($project_name, "firefox/jean-claude/dusse");
     }
 
-    public function _itCallsTheRealThing() {
+    public function _itCallsTheRealThing()
+    {
         $r = new GitRepository();
         $r->setName('dusse');
         $r->setNamespace('jean_claude');
@@ -61,7 +65,8 @@ class Git_Driver_GerritLegacy_manageProjectsTest extends Git_Driver_GerritLegacy
         $driver->createProject($r);
     }
 
-    public function itRaisesAGerritDriverExceptionOnProjectCreation() {
+    public function itRaisesAGerritDriverExceptionOnProjectCreation()
+    {
         $std_err = 'fatal: project "someproject" exists';
         $command = "gerrit create-project --parent firefox firefox/jean-claude/dusse";
         stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_GerritLegacy::EXIT_CODE, '', $std_err));
@@ -73,14 +78,16 @@ class Git_Driver_GerritLegacy_manageProjectsTest extends Git_Driver_GerritLegacy
         }
     }
 
-    public function itDoesntTransformExceptionsThatArentRelatedToGerrit() {
+    public function itDoesntTransformExceptionsThatArentRelatedToGerrit()
+    {
         $std_err = 'some gerrit exception';
         $this->expectException('Git_Driver_Gerrit_RemoteSSHCommandFailure');
         stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(255,'',$std_err));
         $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
     }
 
-    public function itInformsAboutProjectInitialization() {
+    public function itInformsAboutProjectInitialization()
+    {
         $remote_project = "firefox/jean-claude/dusse";
         expect($this->logger)->info("Gerrit: Project $remote_project successfully initialized")->once();
         $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);

@@ -33,7 +33,8 @@ class Tracker_Semantic_TitleFactory implements IBuildSemanticFromXML, IDuplicate
      *
      * @return Tracker_Semantic_TitleFactory an instance of the factory
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$instance)) {
             $c = self::class;
             self::$instance = new $c;
@@ -41,7 +42,8 @@ class Tracker_Semantic_TitleFactory implements IBuildSemanticFromXML, IDuplicate
         return self::$instance;
     }
 
-    public function getByTracker(Tracker $tracker) {
+    public function getByTracker(Tracker $tracker)
+    {
         return Tracker_Semantic_Title::load($tracker);
     }
 
@@ -58,7 +60,8 @@ class Tracker_Semantic_TitleFactory implements IBuildSemanticFromXML, IDuplicate
      *
      * @return Tracker_Semantic_TitleDao The dao
      */
-    public function getDao() {
+    public function getDao()
+    {
         return new Tracker_Semantic_TitleDao();
     }
 
@@ -71,7 +74,8 @@ class Tracker_Semantic_TitleFactory implements IBuildSemanticFromXML, IDuplicate
      *
      * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping) {
+    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping)
+    {
         $row = $this->getDao()->searchByTrackerId($from_tracker_id)->getRow();
         if ($row) {
             $from_title_field_id = $row['field_id'];

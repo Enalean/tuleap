@@ -29,19 +29,23 @@ class ParentOfArtifactCollection {
     private $artifacts = array();
     private $is_graph;
 
-    public function addArtifacts($artifacts) {
+    public function addArtifacts($artifacts)
+    {
         $this->artifacts[] = $artifacts;
     }
 
-    public function setIsGraph($is_graph) {
+    public function setIsGraph($is_graph)
+    {
         $this->is_graph = $is_graph;
     }
 
-    public function getArtifacts() {
+    public function getArtifacts()
+    {
         return $this->artifacts;
     }
 
-    public function isGraph(){
+    public function isGraph()
+    {
         return $this->is_graph;
     }
 }

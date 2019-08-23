@@ -34,7 +34,8 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
      *
      * @return string
      */
-    public function getShortName() {
+    public function getShortName()
+    {
         return self::SHORT_NAME;
     }
 
@@ -43,7 +44,8 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
      *
      * @return string
      */
-    public static function getLabel() {
+    public static function getLabel()
+    {
         return $GLOBALS['Language']->getText('workflow_admin', 'post_action_change_value_int_field');
     }
 
@@ -52,7 +54,8 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
      *
      * @return string html
      */
-    public function fetch() {
+    public function fetch()
+    {
         $purifier    = Codendi_HTMLPurifier::instance();
         $html        = '';
         $input_value = '<input type="text" name="workflow_postaction_field_int_value['. $purifier->purify($this->id) .
@@ -88,7 +91,8 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
     /**
      * @see Transition_PostAction
      */
-    public function process(Codendi_Request $request) {
+    public function process(Codendi_Request $request)
+    {
         if ($request->getInArray('remove_postaction', $this->id)) {
             $this->getDao()->deletePostAction($this->id);
         } else {
@@ -120,7 +124,8 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    {
         if ($this->getFieldId()) {
             $child = $root->addChild(Transition_PostAction_Field_Int::XML_TAG_NAME);
              $child->addAttribute('value', $this->getValue());
@@ -131,7 +136,8 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
     /**
      * @return \Transition_PostAction_Field_IntDao
      */
-    protected function getDao() {
+    protected function getDao()
+    {
         return new Transition_PostAction_Field_IntDao();
     }
 

@@ -31,27 +31,31 @@ abstract class Cardwall_OnTop_Config_TrackerMappingField extends Cardwall_OnTop_
      */
     private $value_mappings;
 
-    public function __construct(Tracker $tracker, array $available_fields, array $value_mappings, Tracker_FormElement_Field $field) {
+    public function __construct(Tracker $tracker, array $available_fields, array $value_mappings, Tracker_FormElement_Field $field)
+    {
         parent::__construct($tracker, $available_fields);
         $this->value_mappings   = $value_mappings;
         $this->field            = $field;
     }
 
-    public function getField() {
+    public function getField()
+    {
         return $this->field;
     }
 
     /**
      * @return array of Cardwall_OnTop_Config_ValueMapping
      */
-    public function getValueMappings() {
+    public function getValueMappings()
+    {
         return $this->value_mappings;
     }
 
     /**
      * @return string
      */
-    public function getSelectedValueLabel(Cardwall_Column $column, $default = '') {
+    public function getSelectedValueLabel(Cardwall_Column $column, $default = '')
+    {
         foreach ($this->value_mappings as $mapping) {
             if ($mapping->getColumnId() == $column->getId()) {
                 return $mapping->getValue()->getLabel();

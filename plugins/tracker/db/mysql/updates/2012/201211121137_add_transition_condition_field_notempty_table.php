@@ -20,15 +20,18 @@
 
 class b201211121137_add_transition_condition_field_notempty_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add a table not empty field condition on transitions';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE  tracker_workflow_transition_condition_field_notempty(
                     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                     transition_id INT(11) NOT NULL,
@@ -37,7 +40,8 @@ class b201211121137_add_transition_condition_field_notempty_table extends ForgeU
         $this->createTable('tracker_workflow_transition_condition_field_notempty', $sql);
     }
 
-    private function createTable($name, $sql) {
+    private function createTable($name, $sql)
+    {
         $result = $this->db->createTable($name, $sql);
 
         if ($result === false) {

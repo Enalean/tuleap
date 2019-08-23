@@ -20,15 +20,18 @@
 
 class b201603231358_add_nature_index_for_artifact_link_changeset extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add index on nature into tracker_changeset_value_artifactlink';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER table tracker_changeset_value_artifactlink DROP INDEX idx_reverse";
 
         $res = $this->db->dbh->exec($sql);

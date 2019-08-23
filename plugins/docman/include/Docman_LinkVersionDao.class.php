@@ -23,7 +23,8 @@ class Docman_LinkVersionDao extends DataAccessObject {
     /**
      * @return DataAccessResult
      */
-    function searchByItemId($item_id) {
+    function searchByItemId($item_id)
+    {
         $item_id = $this->da->escapeInt($item_id);
 
         $sql = "SELECT * FROM plugin_docman_link_version
@@ -36,7 +37,8 @@ class Docman_LinkVersionDao extends DataAccessObject {
     /**
      * @return DataAccessResult
      */
-    function searchByNumber($item_id, $number) {
+    function searchByNumber($item_id, $number)
+    {
         $item_id = $this->da->escapeInt($item_id);
         $number  = $this->da->escapeInt($number);
 
@@ -47,7 +49,8 @@ class Docman_LinkVersionDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function createNewLinkVersion(Docman_Link $link, $label, $changelog, $date) {
+    public function createNewLinkVersion(Docman_Link $link, $label, $changelog, $date)
+    {
         $label     = $this->da->quoteSmart($label);
         $changelog = $this->da->quoteSmart($changelog);
         $date      = $this->da->escapeInt($date);
@@ -79,7 +82,8 @@ class Docman_LinkVersionDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    private function getNextVersionNumber($item_id) {
+    private function getNextVersionNumber($item_id)
+    {
         $item_id = $this->da->quoteSmart($item_id);
 
         $sql    = "SELECT MAX(number) as num FROM plugin_docman_link_version WHERE item_id = $item_id";

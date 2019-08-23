@@ -44,7 +44,8 @@ class ExtractorTest extends TuleapTestCase {
      */
     private $repository_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->project            = stub('Project')->getID()->returns(101);
@@ -52,7 +53,8 @@ class ExtractorTest extends TuleapTestCase {
         $this->extractor          = new Extractor($this->repository_manager);
     }
 
-    public function itReturnsFalseIfReferenceDoesNotProvideRepositoryName() {
+    public function itReturnsFalseIfReferenceDoesNotProvideRepositoryName()
+    {
         $keyword = 'svn';
         $value   = '1';
 
@@ -61,7 +63,8 @@ class ExtractorTest extends TuleapTestCase {
         $this->assertFalse($this->extractor->getReference($this->project, $keyword, $value));
     }
 
-    public function itReturnsFalseIfTheProjectDoesNotUseTheSubversionPlugin() {
+    public function itReturnsFalseIfTheProjectDoesNotUseTheSubversionPlugin()
+    {
         $keyword = 'svn';
         $value   = 'repo01/1';
 
@@ -70,7 +73,8 @@ class ExtractorTest extends TuleapTestCase {
         $this->assertFalse($this->extractor->getReference($this->project, $keyword, $value));
     }
 
-    public function itReturnsFalseIfTheProvidedRepositoryIsNotInTheCurrentProject() {
+    public function itReturnsFalseIfTheProvidedRepositoryIsNotInTheCurrentProject()
+    {
         $keyword = 'svn';
         $value   = 'repo02/1';
 
@@ -82,7 +86,8 @@ class ExtractorTest extends TuleapTestCase {
         $this->assertFalse($this->extractor->getReference($this->project, $keyword, $value));
     }
 
-    public function itBuildsASubversionPluginReference() {
+    public function itBuildsASubversionPluginReference()
+    {
         $keyword    = 'svn';
         $value      = 'repo01/1';
         $repository = stub('Tuleap\SVN\Repository\Repository')->getFullName()->returns('project01/repo01');

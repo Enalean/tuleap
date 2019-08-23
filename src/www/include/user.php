@@ -26,27 +26,32 @@ $USER_RES=array();
 
 
 //Deprecated. Use User->isLoggedIn() instead
-function user_isloggedin() {
+function user_isloggedin()
+{
     return UserManager::instance()->getCurrentUser()->isLoggedIn();
 }
 
 //Deprecated. Use User->isRestricted() instead
-function user_isrestricted() {
+function user_isrestricted()
+{
     return UserManager::instance()->getCurrentUser()->isRestricted();
 }
 
 //Deprecated. Use User->isSuperUser() instead
-function user_is_super_user() {
+function user_is_super_user()
+{
     return UserManager::instance()->getCurrentUser()->isSuperUser();
 }
 
 //Deprecated. Use User->isMember() instead
-function user_ismember($group_id,$type=0) {
+function user_ismember($group_id,$type=0)
+{
     return UserManager::instance()->getCurrentUser()->isMember($group_id,$type);
 }
 
 //Deprecated. Use User->getName() instead
-function user_getname($user_id = 0) {
+function user_getname($user_id = 0)
+{
     global $USER_NAMES,$Language;
     // use current user if one is not passed in
     if (!$user_id) {
@@ -75,7 +80,8 @@ function user_getname($user_id = 0) {
 
 //quick hack - this entire library needs a rewrite similar to groups library
 //Deprecated. Use User->getRealName() instead
-function user_getrealname($user_id) {
+function user_getrealname($user_id)
+{
     global $Language;
         $result = user_get_result_set($user_id);
     if ($result && db_numrows($result) > 0) {
@@ -88,7 +94,8 @@ function user_getrealname($user_id) {
 // LJ - Added here because we use the real e-mail addresse
 // on Codendi - No e-mail aliases like on SF
 //Deprecated. Use User->getEmail() instead
-function user_getemail($user_id) {
+function user_getemail($user_id)
+{
     global $Language;
         $result = user_get_result_set($user_id);
     if ($result && db_numrows($result) > 0) {
@@ -98,7 +105,8 @@ function user_getemail($user_id) {
     }
 }
 
-function user_getid_from_email($email) {
+function user_getid_from_email($email)
+{
     global $Language;
     $result = db_query("SELECT user_id FROM user WHERE email='".db_es($email)."'");
     if ($result && db_numrows($result) > 0) {
@@ -109,7 +117,8 @@ function user_getid_from_email($email) {
 }
 
 //Deprectaed. Use User->getEmail() and UserManager->getUserByUserName() instead
-function user_getemail_from_unix($user_name) {
+function user_getemail_from_unix($user_name)
+{
     global $Language;
         $result = user_get_result_set_from_unix($user_name);
     if ($result && db_numrows($result) > 0) {
@@ -120,7 +129,8 @@ function user_getemail_from_unix($user_name) {
 }
 
 //Deprecated. Use UserManager->getUserById() instead and don't use db_result in all code
-function user_get_result_set($user_id) {
+function user_get_result_set($user_id)
+{
     //create a common set of user result sets,
     //so it doesn't have to be fetched each time
 
@@ -134,7 +144,8 @@ function user_get_result_set($user_id) {
 }
 
 //Deprecated. Use UserManager->getUserByUserName() instead and don't use db_result in all code
-function user_get_result_set_from_unix($user_name) {
+function user_get_result_set_from_unix($user_name)
+{
     //create a common set of user result sets,
     //so it doesn't have to be fetched each time
 
@@ -144,7 +155,8 @@ function user_get_result_set_from_unix($user_name) {
     $USER_RES["_".$user_id."_"] = $res;
     return $USER_RES["_".$user_id."_"];
 }
-function user_get_result_set_from_email($email) {
+function user_get_result_set_from_email($email)
+{
     //create a common set of user result sets,
     //so it doesn't have to be fetched each time
 
@@ -157,7 +169,8 @@ function user_get_result_set_from_email($email) {
 }
 
 //Deprecated. Use user->getTimezone() instead
-function user_get_timezone() {
+function user_get_timezone()
+{
     $current_user = UserManager::instance()->getCurrentUser();
     if ($current_user->isLoggedIn()) {
         return $current_user->getTimezone();
@@ -167,7 +180,8 @@ function user_get_timezone() {
 }
 
 //Deprecated. Use User->setPreference() instead.
-function user_set_preference($preference_name,$value) {
+function user_set_preference($preference_name,$value)
+{
     GLOBAL $user_pref;
     if (user_isloggedin()) {
         $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
@@ -191,7 +205,8 @@ function user_set_preference($preference_name,$value) {
 }
 
 //Deprecated. Use User->getPreference() instead.
-function user_get_preference($preference_name) {
+function user_get_preference($preference_name)
+{
     GLOBAL $user_pref;
     if (user_isloggedin()) {
         $preference_name=strtolower(trim($preference_name));
@@ -234,7 +249,8 @@ function user_get_preference($preference_name) {
 }
 
 //Deprecated. Use User->delPreference() instead.
-function user_del_preference($preference_name) {
+function user_del_preference($preference_name)
+{
     GLOBAL $user_pref;
     if (user_isloggedin()) {
         if ($user_pref && array_key_exists($preference_name, $user_pref)) {
@@ -257,7 +273,8 @@ function user_del_preference($preference_name) {
     }
 }
 
-function user_display_choose_password($page,$user_id = false) {
+function user_display_choose_password($page,$user_id = false)
+{
     $purifier = Codendi_HTMLPurifier::instance();
     ?>
     <table><tr valign='top'><td>

@@ -63,57 +63,70 @@ class Presenter {
         $this->csrf_token                                                 = $csrf_token;
     }
 
-    public function title() {
+    public function title()
+    {
         return dgettext('tuleap-openidconnectclient', 'OpenID Connect');
     }
 
-    public function title_provider_configuration() {
+    public function title_provider_configuration()
+    {
         return dgettext('tuleap-openidconnectclient', 'OpenID Connect providers');
     }
 
-    public function name() {
+    public function name()
+    {
         return dgettext('tuleap-openidconnectclient', 'Name');
     }
 
-    public function authorization_endpoint() {
+    public function authorization_endpoint()
+    {
         return dgettext('tuleap-openidconnectclient', 'Authorization endpoint');
     }
 
-    public function token_endpoint() {
+    public function token_endpoint()
+    {
         return dgettext('tuleap-openidconnectclient', 'Token endpoint');
     }
 
-    public function userinfo_endpoint() {
+    public function userinfo_endpoint()
+    {
         return dgettext('tuleap-openidconnectclient', 'User information endpoint');
     }
 
-    public function client_id() {
+    public function client_id()
+    {
         return dgettext('tuleap-openidconnectclient', 'Client ID');
     }
 
-    public function client_secret() {
+    public function client_secret()
+    {
         return dgettext('tuleap-openidconnectclient', 'Client secret');
     }
 
-    public function client_help() {
+    public function client_help()
+    {
         return dgettext('tuleap-openidconnectclient', 'Following information have to be generated on the OpenID Connect provider side. You\'ll need to give a callback url to do that, here it is:');
     }
 
-    public function callback_url() {
+    public function callback_url()
+    {
         $host = urlencode(ForgeConfig::get('sys_default_domain'));
 
         return strtolower('https://' . $host . OPENIDCONNECTCLIENT_BASE_URL . '/');
     }
 
-    public function icon() {
+    public function icon()
+    {
         return dgettext('tuleap-openidconnectclient', 'Icon');
     }
 
-    public function color() {
+    public function color()
+    {
         return dgettext('tuleap-openidconnectclient', 'Color');
     }
 
-    public function preview() {
+    public function preview()
+    {
         return dgettext('tuleap-openidconnectclient', 'Preview of the login page button');
     }
 
@@ -142,35 +155,43 @@ class Presenter {
         return dgettext('tuleap-openidconnectclient', 'You can only enable this provider as unique authentication method if you are yourself linked to it.');
     }
 
-    public function add_new_provider() {
+    public function add_new_provider()
+    {
         return dgettext('tuleap-openidconnectclient', 'Add provider');
     }
 
-    public function update_provider() {
+    public function update_provider()
+    {
         return dgettext('tuleap-openidconnectclient', 'Edit provider');
     }
 
-    public function https_placeholder() {
+    public function https_placeholder()
+    {
         return dgettext('tuleap-openidconnectclient', 'https://');
     }
 
-    public function btn_cancel() {
+    public function btn_cancel()
+    {
         return dgettext('tuleap-openidconnectclient', 'Cancel');
     }
 
-    public function btn_create() {
+    public function btn_create()
+    {
         return dgettext('tuleap-openidconnectclient', 'Create the provider');
     }
 
-    public function btn_delete() {
+    public function btn_delete()
+    {
         return dgettext('tuleap-openidconnectclient', 'Delete');
     }
 
-    public function btn_edit() {
+    public function btn_edit()
+    {
         return $GLOBALS['Language']->getText('global', 'btn_edit');
     }
 
-    public function btn_update() {
+    public function btn_update()
+    {
         return dgettext('tuleap-openidconnectclient', 'Update the provider');
     }
 

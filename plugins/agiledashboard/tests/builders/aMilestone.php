@@ -22,7 +22,8 @@ require_once dirname(__FILE__).'/../../include/Planning/ArtifactMilestone.class.
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/anArtifact.php';
 require_once 'aPlanning.php';
 
-function aMilestone() {
+function aMilestone()
+{
     return new Test_Planning_MilestoneBuilder();
 }
 
@@ -61,31 +62,37 @@ class Test_Planning_MilestoneBuilder {
         $this->scrum_mono_milestone_checker = mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker');
     }
 
-    public function withinTheSameProjectAs(Planning_Milestone $other_milestone) {
+    public function withinTheSameProjectAs(Planning_Milestone $other_milestone)
+    {
         $this->project = $other_milestone->getProject();
         return $this;
     }
 
-    public function withArtifact(Tracker_Artifact $artifact) {
+    public function withArtifact(Tracker_Artifact $artifact)
+    {
         $this->artifact = $artifact;
         return $this;
     }
 
-    public function withGroup($project) {
+    public function withGroup($project)
+    {
         $this->project = $project;
         return $this;
     }
 
-    public function withPlanningId($planning_id) {
+    public function withPlanningId($planning_id)
+    {
         $this->withPlanning(aPlanning()->withId($planning_id)->build());
         return $this;
     }
 
-    public function withXRef($xref) {
+    public function withXRef($xref)
+    {
         $this->artifact->withXRef($xref);
     }
 
-    public function withPlanning(Planning $planning) {
+    public function withPlanning(Planning $planning)
+    {
         $this->planning = $planning;
         return $this;
     }

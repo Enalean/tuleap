@@ -42,15 +42,18 @@ rcs_id('$Id: EditMetaData.php,v 1.11 2004/06/01 16:48:11 rurban Exp $');
 class WikiPlugin_EditMetaData
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("EditMetaData");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return sprintf(_("Edit metadata for %s"), '[pagename]');
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.11 $");
     }
@@ -60,13 +63,15 @@ extends WikiPlugin
     //  page - page whose metadata is editted
 
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('page'       => '[pagename]'
                     );
     }
 
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $this->_args = $this->getArgs($argstr, $request);
         extract($this->_args);
         if (!$page)

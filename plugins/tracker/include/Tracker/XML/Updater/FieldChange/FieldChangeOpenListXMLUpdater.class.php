@@ -23,7 +23,8 @@ class Tracker_XML_Updater_FieldChange_FieldChangeOpenListXMLUpdater extends Trac
      * @param SimpleXMLElement $field_change_xml
      * @param string            $submitted_value
      */
-    public function update(SimpleXMLElement $field_change_xml, $submitted_value) {
+    public function update(SimpleXMLElement $field_change_xml, $submitted_value)
+    {
         $this->removeExistingValuesNodes($field_change_xml);
 
         $submitted_value = explode(',', $submitted_value);

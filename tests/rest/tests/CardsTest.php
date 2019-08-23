@@ -25,12 +25,14 @@ use Tuleap\REST\CardsBase;
  */
 class CardsTest extends CardsBase
 {
-    public function testOPTIONSCards() {
+    public function testOPTIONSCards()
+    {
         $response = $this->getResponse($this->client->options('cards'));
         $this->assertEquals(array('OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testPUTCardsWithId() {
+    public function testPUTCardsWithId()
+    {
         $card_id        = REST_TestDataBuilder::PLANNING_ID .'_'.$this->story_artifact_ids[1];
         $test_label     = "Ieatlaughingcow";
         $test_column_id = 2;
@@ -68,7 +70,8 @@ class CardsTest extends CardsBase
         '));
     }
 
-    private function findCardInCardwall($cardwall, $id) {
+    private function findCardInCardwall($cardwall, $id)
+    {
         foreach ($cardwall['swimlanes'] as $swimlane) {
             foreach ($swimlane['cards'] as $card) {
                 if ($card['id'] == $id) {
@@ -78,7 +81,8 @@ class CardsTest extends CardsBase
         }
     }
 
-    public function testOPTIONSCardsWithId() {
+    public function testOPTIONSCardsWithId()
+    {
         $response = $this->getResponse($this->client->options('cards/'.$this->sprint_artifact_ids[1] .'_'.$this->story_artifact_ids[1]));
         $this->assertEquals(array('OPTIONS', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
     }

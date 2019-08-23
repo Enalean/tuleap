@@ -35,7 +35,8 @@ class MGraph {
 
 
     // Create a new instane of the combined graph
-    function __construct($aWidth=NULL,$aHeight=NULL,$aCachedName='',$aTimeOut=0,$aInline=true) {
+    function __construct($aWidth=NULL,$aHeight=NULL,$aCachedName='',$aTimeOut=0,$aInline=true)
+    {
         $this->iWidth = $aWidth;
         $this->iHeight = $aHeight;
 
@@ -75,24 +76,28 @@ class MGraph {
     }
 
     // Specify background fill color for the combined graph
-    function SetFillColor($aColor) {
+    function SetFillColor($aColor)
+    {
         $this->iFillColor = $aColor;
     }
 
     // Add a frame around the combined graph
-    function SetFrame($aFlg,$aColor='black',$aWeight=1) {
+    function SetFrame($aFlg,$aColor='black',$aWeight=1)
+    {
         $this->iDoFrame = $aFlg;
         $this->iFrameColor = $aColor;
         $this->iFrameWeight = $aWeight;
     }
 
     // Specify a background image blend
-    function SetBackgroundImageMix($aMix) {
+    function SetBackgroundImageMix($aMix)
+    {
         $this->background_image_mix = $aMix ;
     }
 
     // Specify a background image
-    function SetBackgroundImage($aFileName,$aCenter_aX=NULL,$aY=NULL) {
+    function SetBackgroundImage($aFileName,$aCenter_aX=NULL,$aY=NULL)
+    {
         // Second argument can be either a boolean value or
         // a numeric
         $aCenter=TRUE;
@@ -126,7 +131,8 @@ class MGraph {
         $this->background_image_y = $aY;
     }
 
-    function _strokeBackgroundImage() {
+    function _strokeBackgroundImage()
+    {
         if( $this->background_image == '' ) return;
 
         $bkgimg = Graph::LoadBkgImage('',$this->background_image);
@@ -161,15 +167,18 @@ class MGraph {
         imagecopymerge($this->img,$bkgimg,$x,$y,0,0,$bw,$bh,$this->background_image_mix);
     }
 
-    function AddMix($aGraph,$x=0,$y=0,$mix=100,$fx=0,$fy=0,$w=0,$h=0) {
+    function AddMix($aGraph,$x=0,$y=0,$mix=100,$fx=0,$fy=0,$w=0,$h=0)
+    {
         $this->_gdImgHandle($aGraph->Stroke( _IMG_HANDLER),$x,$y,$fx=0,$fy=0,$w,$h,$mix);
     }
 
-    function Add($aGraph,$x=0,$y=0,$fx=0,$fy=0,$w=0,$h=0) {
+    function Add($aGraph,$x=0,$y=0,$fx=0,$fy=0,$w=0,$h=0)
+    {
         $this->_gdImgHandle($aGraph->Stroke( _IMG_HANDLER),$x,$y,$fx=0,$fy=0,$w,$h);
     }
 
-    function _gdImgHandle($agdCanvas,$x,$y,$fx=0,$fy=0,$w=0,$h=0,$mix=100) {
+    function _gdImgHandle($agdCanvas,$x,$y,$fx=0,$fy=0,$w=0,$h=0,$mix=100)
+    {
         if( $w == 0 ) {
             $w = @imagesx($agdCanvas);
         }
@@ -184,24 +193,28 @@ class MGraph {
         $this->iGraphs[$this->iCnt++] = array($agdCanvas,$x,$y,$fx,$fy,$w,$h,$mix);
     }
 
-    function SetMargin($lm,$rm,$tm,$bm) {
+    function SetMargin($lm,$rm,$tm,$bm)
+    {
         $this->lm = $lm;
         $this->rm = $rm;
         $this->tm = $tm;
         $this->bm = $bm;
     }
 
-    function SetExpired($aFlg=true) {
+    function SetExpired($aFlg=true)
+    {
         $this->expired = $aFlg;
     }
 
-    function SetImgFormat($aFormat,$aQuality=75) {
+    function SetImgFormat($aFormat,$aQuality=75)
+    {
         $this->image_format = $aFormat;
         $this->image_quality = $aQuality;
     }
 
     // Set the shadow around the whole image
-    function SetShadow($aShowShadow=true,$aShadowWidth=4,$aShadowColor='gray@0.3') {
+    function SetShadow($aShowShadow=true,$aShadowWidth=4,$aShadowColor='gray@0.3')
+    {
         $this->doshadow = $aShowShadow;
         $this->shadow_color = $aShadowColor;
         $this->shadow_width = $aShadowWidth;
@@ -209,7 +222,8 @@ class MGraph {
         $this->footer->iRightMargin += $aShadowWidth;
     }
 
-    function StrokeTitle($image,$w,$h) {
+    function StrokeTitle($image,$w,$h)
+    {
         // Stroke title
         if( $this->title->t !== '' ) {
 
@@ -268,7 +282,8 @@ class MGraph {
         }
     }
 
-    function Stroke($aFileName='') {
+    function Stroke($aFileName='')
+    {
         // Find out the necessary size for the container image
         $w=0; $h=0;
         for($i=0; $i < $this->iCnt; ++$i ) {

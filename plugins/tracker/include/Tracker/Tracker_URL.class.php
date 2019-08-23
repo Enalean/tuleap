@@ -29,7 +29,8 @@ class Tracker_URL extends URL {
      *
      * @return Tracker_Dispatchable_Interface
      */
-    function getDispatchableFromRequest(Codendi_Request $request, PFUser $user) {
+    function getDispatchableFromRequest(Codendi_Request $request, PFUser $user)
+    {
         if ((int)$request->get('aid')) {
             if ($artifact = $this->getArtifactFactory()->getArtifactByid($request->get('aid'))) {
                 return $artifact;
@@ -85,7 +86,8 @@ class Tracker_URL extends URL {
      *
      * @return int
      */
-    function getGroupIdFromUrl($requestUri) {
+    function getGroupIdFromUrl($requestUri)
+    {
         $request = HTTPRequest::instance();
         $user    = UserManager::instance()->getCurrentUser();
 
@@ -111,19 +113,23 @@ class Tracker_URL extends URL {
     /**
      * @return TrackerFactory
      */
-    protected function getTrackerFactory() {
+    protected function getTrackerFactory()
+    {
         return TrackerFactory::instance();
     }
 
-    protected function getTracker_FormElementFactory() {
+    protected function getTracker_FormElementFactory()
+    {
         return Tracker_FormElementFactory::instance();
     }
 
-    protected function getArtifactFactory() {
+    protected function getArtifactFactory()
+    {
         return Tracker_ArtifactFactory::instance();
     }
 
-    protected function getArtifactReportFactory() {
+    protected function getArtifactReportFactory()
+    {
         return Tracker_ReportFactory::instance();
     }
 }

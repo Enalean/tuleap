@@ -18,15 +18,18 @@
 
 class b20140514_add_index_for_last_changeset_id_tracker_id extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add Index on last changeset id and tracker id';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         if (! $this->indexNameExists('tracker_artifact', 'idx_changeset_tracker')) {
             $sql = 'ALTER TABLE tracker_artifact ADD INDEX idx_changeset_tracker(last_changeset_id, tracker_id)';
             $res = $this->db->dbh->exec($sql);
@@ -39,7 +42,8 @@ class b20140514_add_index_for_last_changeset_id_tracker_id extends ForgeUpgrade_
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (! $this->indexNameExists('tracker_artifact', 'idx_changeset_tracker')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException("tracker_artifact has no idx_changeset_tracker index");
         }
@@ -53,7 +57,8 @@ class b20140514_add_index_for_last_changeset_id_tracker_id extends ForgeUpgrade_
      *
      * @return bool
      */
-    private function indexNameExists($tableName, $index) {
+    private function indexNameExists($tableName, $index)
+    {
         $sql = 'SHOW INDEX FROM '.$tableName.' WHERE Key_name LIKE '.$this->db->dbh->quote($index);
         $res = $this->db->dbh->query($sql);
         if ($res && $res->fetch() !== false) {

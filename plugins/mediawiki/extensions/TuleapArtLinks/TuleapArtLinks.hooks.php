@@ -20,7 +20,8 @@
 
 class TuleapArtLinksHooks {
 
-    public static function onOutputPageBeforeHTML(OutputPage $out, &$text ) {
+    public static function onOutputPageBeforeHTML(OutputPage $out, &$text )
+    {
         global $wgTuleapArtLinksGroupId;
 
         $reference_manager = ReferenceManager::instance();

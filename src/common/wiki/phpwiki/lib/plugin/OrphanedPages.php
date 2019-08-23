@@ -31,20 +31,24 @@ require_once('lib/PageList.php');
 class WikiPlugin_OrphanedPages
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("OrphanedPages");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("List pages which are not linked to by any other page.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.10 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('noheader'      => false,
                      'include_empty' => false,
                      'exclude'       => '',
@@ -58,7 +62,8 @@ extends WikiPlugin
     // info=mtime,hits,summary,version,author,locked,minor,markup or all
     // exclude arg allows multiple pagenames exclude=HomePage,RecentChanges
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         extract($args);
 

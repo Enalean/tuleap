@@ -20,7 +20,8 @@
 
 class Git_RemoteServer_NotFoundException extends Exception {
 
-    public function __construct($id) {
+    public function __construct($id)
+    {
         parent::__construct("No server found with the id: $id");
     }
 }

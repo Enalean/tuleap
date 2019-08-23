@@ -24,14 +24,16 @@
 // @see http://nat.truemesh.com/archives/000727.html
 require_once __DIR__.'/../bootstrap.php';
 
-function anArtifactDar() {
+function anArtifactDar()
+{
     return new Test_ArtifactDar_Builder();
 }
 
 class Test_ArtifactDar_Builder {
     private $row;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->row = array(
             'id' => '',
             'tracker_id' => '',
@@ -41,22 +43,26 @@ class Test_ArtifactDar_Builder {
         );
     }
 
-    public function withId($id) {
+    public function withId($id)
+    {
         $this->row['id'] = $id;
         return $this;
     }
 
-    public function withTrackerId($tracker_id) {
+    public function withTrackerId($tracker_id)
+    {
         $this->row['tracker_id'] = $tracker_id;
         return $this;
     }
 
-    public function withTitle($title) {
+    public function withTitle($title)
+    {
         $this->row['title'] = $title;
         return $this;
     }
 
-    public function build() {
+    public function build()
+    {
         return $this->row;
     }
 }

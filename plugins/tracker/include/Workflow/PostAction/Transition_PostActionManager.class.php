@@ -33,7 +33,8 @@ class Transition_PostActionManager {
      *
      * @return void
      */
-    public function process(Transition $transition, Codendi_Request $request, PFUser $current_user) {
+    public function process(Transition $transition, Codendi_Request $request, PFUser $current_user)
+    {
         $tpaf = $this->getPostActionFactory();
 
         // Create new post-action
@@ -52,7 +53,8 @@ class Transition_PostActionManager {
      *
      * @return Transition_PostActionFactory
      */
-    public function getPostActionFactory() {
+    public function getPostActionFactory()
+    {
         return new Transition_PostActionFactory();
     }
 }

@@ -36,23 +36,28 @@ class Tracker_ColorPresenterCollection implements Iterator {
         }
     }
 
-    public function current() {
+    public function current()
+    {
         return current($this->colors);
     }
 
-    public function key() {
+    public function key()
+    {
         return key($this->colors);
     }
 
-    public function next() {
+    public function next()
+    {
         return next($this->colors);
     }
 
-    public function rewind() {
+    public function rewind()
+    {
         reset($this->colors);
     }
 
-    public function valid() {
+    public function valid()
+    {
         return current($this->colors) !== false;
     }
 }

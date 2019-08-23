@@ -29,7 +29,8 @@ class Tracker_REST_Artifact_ArtifactCreator {
     /** @var TrackerFactory */
     private $tracker_factory;
 
-    public function __construct(Tracker_REST_Artifact_ArtifactValidator $artifact_validator, Tracker_ArtifactFactory $artifact_factory, TrackerFactory $tracker_factory) {
+    public function __construct(Tracker_REST_Artifact_ArtifactValidator $artifact_validator, Tracker_ArtifactFactory $artifact_factory, TrackerFactory $tracker_factory)
+    {
         $this->artifact_validator  = $artifact_validator;
         $this->artifact_factory    = $artifact_factory;
         $this->tracker_factory     = $tracker_factory;
@@ -43,7 +44,8 @@ class Tracker_REST_Artifact_ArtifactCreator {
      * @return Tuleap\Tracker\REST\Artifact\ArtifactReference
      * @throws \Luracast\Restler\RestException
      */
-    public function create(PFUser $user, Tuleap\Tracker\REST\TrackerReference $tracker_reference, array $values) {
+    public function create(PFUser $user, Tuleap\Tracker\REST\TrackerReference $tracker_reference, array $values)
+    {
         $tracker     = $this->getTracker($tracker_reference);
         $fields_data = $this->artifact_validator->getFieldsDataOnCreate($values, $tracker);
         $fields_data = $this->artifact_validator->getUsedFieldsWithDefaultValue($tracker, $fields_data, $user);
@@ -63,7 +65,8 @@ class Tracker_REST_Artifact_ArtifactCreator {
      * @return Tuleap\Tracker\REST\Artifact\ArtifactReference
      * @throws \Luracast\Restler\RestException
      */
-    public function createWithValuesIndexedByFieldName(PFUser $user, Tuleap\Tracker\REST\TrackerReference $tracker_reference, array $values) {
+    public function createWithValuesIndexedByFieldName(PFUser $user, Tuleap\Tracker\REST\TrackerReference $tracker_reference, array $values)
+    {
         $tracker     = $this->getTracker($tracker_reference);
         $fields_data = $this->artifact_validator->getFieldsDataOnCreateFromValuesByField($values, $tracker);
         $fields_data = $this->artifact_validator->getUsedFieldsWithDefaultValue($tracker, $fields_data, $user);
@@ -75,7 +78,8 @@ class Tracker_REST_Artifact_ArtifactCreator {
         );
     }
 
-    private function getTracker(Tuleap\Tracker\REST\TrackerReference $tracker_reference) {
+    private function getTracker(Tuleap\Tracker\REST\TrackerReference $tracker_reference)
+    {
         $tracker = $this->tracker_factory->getTrackerById($tracker_reference->id);
         if (! $tracker) {
             throw new \Luracast\Restler\RestException(404, 'Tracker not found');
@@ -83,7 +87,8 @@ class Tracker_REST_Artifact_ArtifactCreator {
         return $tracker;
     }
 
-    private function returnReferenceOrError($artifact, $format) {
+    private function returnReferenceOrError($artifact, $format)
+    {
         if ($artifact) {
             $reference = new Tuleap\Tracker\REST\Artifact\ArtifactReference();
             $reference->build($artifact, $format);
@@ -96,7 +101,8 @@ class Tracker_REST_Artifact_ArtifactCreator {
         }
     }
 
-    public function checkUserCanSubmit(PFUser $user, Tracker $tracker) {
+    public function checkUserCanSubmit(PFUser $user, Tracker $tracker)
+    {
         if (! $tracker->userCanSubmitArtifact($user)) {
             throw new \Luracast\Restler\RestException(403, $GLOBALS['Language']->getText('plugin_tracker', 'submit_at_least_one_field'));
         }

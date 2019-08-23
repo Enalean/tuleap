@@ -24,7 +24,8 @@ require_once('HTML_Element_Input_Text.class.php');
  * Define a html input date field, with the calendar widget
  */
 class HTML_Element_Input_Date extends HTML_Element_Input_Text {
-    public function  __construct($label, $name, $value, $desc="") {
+    public function __construct($label, $name, $value, $desc="")
+    {
         //provide a readable date
         $value = ($value != 0 ? date("Y-m-d",$value) : '');
 

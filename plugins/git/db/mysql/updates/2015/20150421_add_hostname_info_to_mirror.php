@@ -20,17 +20,20 @@
 
 class b20150421_add_hostname_info_to_mirror extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add a hostname column in plugin_git_mirrors table
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_git_mirrors ADD hostname VARCHAR(255) NULL";
 
         $res = $this->db->dbh->exec($sql);
@@ -40,7 +43,8 @@ EOT;
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (! $this->db->columnNameExists('plugin_git_mirrors', 'hostname')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column hostname in table plugin_git_mirrors is missing');
         }

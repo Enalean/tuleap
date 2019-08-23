@@ -21,7 +21,8 @@
 class CrossReferenceManager {
     private $dao;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->dao = new CrossReferenceDao();
     }
 
@@ -36,7 +37,8 @@ class CrossReferenceManager {
      *
      * @return bool
      */
-    public function deleteEntity($id, $nature, $group_id) {
+    public function deleteEntity($id, $nature, $group_id)
+    {
         return $this->dao->deleteEntity($id, $nature, $group_id);
     }
 }

@@ -24,7 +24,8 @@
  */
 
 class UserLogDao extends DataAccessObject {
-    function getFoundRows() {
+    function getFoundRows()
+    {
         $sql = 'SELECT FOUND_ROWS() as nb';
         $dar = $this->retrieve($sql);
         if($dar && !$dar->isError() && $dar->rowCount() == 1) {
@@ -41,7 +42,8 @@ class UserLogDao extends DataAccessObject {
      * @param int $offset From where the result will be displayed.
      * @param int $count  How many results are returned.
      */
-    public function search($start, $end, $offset, $count) {
+    public function search($start, $end, $offset, $count)
+    {
         $sql = 'SELECT SQL_CALC_FOUND_ROWS *'.
             ' FROM plugin_userlog_request'.
             ' WHERE time >= '.$this->da->escapeInt($start).

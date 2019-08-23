@@ -87,39 +87,48 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter //phpcs:igno
         $this->progress_presenter           = $progress_presenter;
     }
 
-    public function isDisplayAvatarSelected() {
+    public function isDisplayAvatarSelected()
+    {
         return $this->is_display_avatar_selected;
     }
 
-    public function isUserLoggedIn() {
+    public function isUserLoggedIn()
+    {
         return $this->switch_display_username_url;
     }
 
-    public function milestone_title() {
+    public function milestone_title()
+    {
         return $this->milestone->getArtifactTitle();
     }
 
-    public function milestone_edit_url() {
+    public function milestone_edit_url()
+    {
         return '/plugins/tracker/?aid='.$this->milestone->getArtifactId();
     }
 
-    public function go_to_fullscreen() {
+    public function go_to_fullscreen()
+    {
         return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_go_to_fullscreen');
     }
 
-    public function milestone_has_dates_info() {
+    public function milestone_has_dates_info()
+    {
         return ($this->milestone->getStartDate() != null && $this->milestone->getEndDate() != null);
     }
 
-    public function milestone_no_date_info() {
+    public function milestone_no_date_info()
+    {
         return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_no_date_info');
     }
 
-    public function milestone_no_initial_effort_info() {
+    public function milestone_no_initial_effort_info()
+    {
         return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_no_initial_effort_info');
     }
 
-    public function milestone_days_to_go() {
+    public function milestone_days_to_go()
+    {
         if ($this->milestone_days_remaining() <= 1) {
             return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_day_to_go');
         }
@@ -162,7 +171,8 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter //phpcs:igno
         return $this->returnRelevantProgressBarValue($completion);
     }
 
-    private function returnRelevantProgressBarValue($value) {
+    private function returnRelevantProgressBarValue($value)
+    {
         if ($value < 0) {
             return 0;
         }
@@ -170,7 +180,8 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter //phpcs:igno
         return $value;
     }
 
-    public function milestone_days_remaining() {
+    public function milestone_days_remaining()
+    {
         return max($this->milestone->getDaysUntilEnd(), 0);
     }
 }

@@ -61,7 +61,8 @@ extends DataAccessObject
         $this->update($sql);
     }
 
-    function hasLdapAuthByName($groupName) {
+    function hasLdapAuthByName($groupName)
+    {
         $sql = 'SELECT NULL'.
             ' FROM plugin_ldap_svn_repository'.
             ' JOIN groups USING (group_id)'.

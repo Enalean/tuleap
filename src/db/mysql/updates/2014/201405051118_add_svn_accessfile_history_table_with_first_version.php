@@ -20,20 +20,24 @@
  * Add svn accessfile history table with first version for each project
  */
 class b201405051118_add_svn_accessfile_history_table_with_first_version extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return "Add svn accessfile history table with first version for each project";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->createSvnAccessfileHistoryTable();
         $this->createFirstVersionInSvnAccessfileHistoryTable();
     }
 
-    private function createSvnAccessfileHistoryTable() {
+    private function createSvnAccessfileHistoryTable()
+    {
         $sql = "CREATE TABLE svn_accessfile_history (
                     id INT(11) AUTO_INCREMENT,
                     version_number INT(11) NOT NULL,
@@ -50,7 +54,8 @@ class b201405051118_add_svn_accessfile_history_table_with_first_version extends 
         }
     }
 
-    private function createFirstVersionInSvnAccessfileHistoryTable() {
+    private function createFirstVersionInSvnAccessfileHistoryTable()
+    {
         $sql = "INSERT INTO svn_accessfile_history (version_number, group_id, content, sha1_content, version_date)
                     SELECT 1, group_id, svn_accessfile, SHA1(svn_accessfile), CURRENT_TIMESTAMP
                     FROM groups";

@@ -20,7 +20,8 @@
 
 class Docman_SystemCheckDao extends DataAccessObject {
 
-    public function getActiveProjectUnixNamesThatUseDocman() {
+    public function getActiveProjectUnixNamesThatUseDocman()
+    {
 
         $sql = "SELECT DISTINCT LOWER(groups.unix_group_name) AS shortname
                 FROM groups

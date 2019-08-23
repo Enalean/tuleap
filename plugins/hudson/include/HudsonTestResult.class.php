@@ -72,16 +72,20 @@ class HudsonTestResult {
         throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_error', array($hudson_test_result_url)));
     }
 
-    public function getFailCount() {
+    public function getFailCount()
+    {
         return (int) $this->dom_job->failCount;
     }
-    public function getPassCount() {
+    public function getPassCount()
+    {
         return (int) $this->dom_job->passCount;
     }
-    public function getSkipCount() {
+    public function getSkipCount()
+    {
         return (int) $this->dom_job->skipCount;
     }
-    public function getTotalCount() {
+    public function getTotalCount()
+    {
         return $this->getFailCount() + $this->getPassCount() + $this->getSkipCount();
     }
 }

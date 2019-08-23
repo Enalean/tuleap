@@ -32,24 +32,29 @@ require_once('lib/Template.php');
 class WikiPlugin__AuthInfo
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("AuthInfo");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("Display general and user specific auth information.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.19 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('userid' => '');
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         extract($args);
         if (empty($userid) or $userid == $request->_user->UserName()) {
@@ -117,7 +122,8 @@ extends WikiPlugin
         return $html;
     }
 
-    function _showhash ($heading, $hash, $depth = 0) {
+    function _showhash($heading, $hash, $depth = 0)
+    {
         static $seen = array();
         static $maxdepth = 0;
         $rows = array();
@@ -177,7 +183,8 @@ extends WikiPlugin
         return $rows;
     }
 
-    function _buildConstHash($constants) {
+    function _buildConstHash($constants)
+    {
         $hash = array();
         foreach ($constants as $c) {
             $hash[$c] = defined($c) ? constant($c) : '<empty>';

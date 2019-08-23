@@ -195,7 +195,8 @@ if (defined('NUSOAP')) {
  * Returns an array containing all the permissions for the specified item.
  * The ugroups that have no permission defined in the request take the permission of the parent folder.
  */
-function _get_permissions_as_array($group_id, $item_id, $permissions) {
+function _get_permissions_as_array($group_id, $item_id, $permissions)
+{
     $permissions_array = array();
 
     $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
@@ -261,7 +262,8 @@ function _get_permissions_as_array($group_id, $item_id, $permissions) {
  *         )
  * )
  */
-function _get_metadata_as_array($metadata) {
+function _get_metadata_as_array($metadata)
+{
     $metadata_array = array();
 
     foreach ($metadata as $m) {
@@ -282,7 +284,8 @@ function _get_metadata_as_array($metadata) {
 /**
  * Returns the constant value associated to the requested status
  */
-function _get_status_value($status) {
+function _get_status_value($status)
+{
     switch ($status) {
         case 'draft' : $value = PLUGIN_DOCMAN_ITEM_STATUS_DRAFT; break;
         case 'approved' : $value = PLUGIN_DOCMAN_ITEM_STATUS_APPROVED; break;
@@ -296,7 +299,8 @@ function _get_status_value($status) {
 /**
  * Returns the user ID corresponding to the given user name, or null if it doesn't exist
  */
-function _getUserIdByUserName($userName) {
+function _getUserIdByUserName($userName)
+{
     $user = UserManager::instance()->getUserByUserName($userName);
     if ($user == null) {
         return null;
@@ -313,7 +317,8 @@ function _getUserIdByUserName($userName) {
  * @param array        $params       Request parameters
  * @return mixed                   Request response
  */
-function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array()) {
+function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array())
+{
     $actor ="_makeDocmanRequest ($action)";
 
     if (session_continue($sessionKey)) {
@@ -352,7 +357,8 @@ function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array()) 
 /**
  * Returns an array containing the common item params needed by docman actions
  */
-function _buildItemParams($group_id, $perm_item_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date) {
+function _buildItemParams($group_id, $perm_item_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date)
+{
     $params = array();
 
     if ($title !== null)       $params['item']['title'] = $title;
@@ -371,7 +377,8 @@ function _buildItemParams($group_id, $perm_item_id, $title, $description, $statu
 /**
  * This function is like the PHP function array_merge_recursive but prevents returning null when one of the arrays is null
  */
-function _safe_array_merge_recursive($array1, $array2) {
+function _safe_array_merge_recursive($array1, $array2)
+{
     if ($array1 === null) {
         $array1 = array();
     }
@@ -400,7 +407,8 @@ function _safe_array_merge_recursive($array1, $array2) {
  * @param string       $update_date       Update date
  * @param Array        $extraParams       Extra parameters array
  */
-function _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array()) {
+function _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array())
+{
 
     $params = _buildItemParams($group_id, $parent_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date);
     $params['item']['parent_id'] = $parent_id;
@@ -412,7 +420,8 @@ function _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $descript
 /**
  * Creates a docman document
  */
-function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array()) {
+function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array())
+{
     if ($obsolescence_date !== null) $extraParams['item']['obsolescence_date'] = $obsolescence_date;
     return _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
 }
@@ -420,7 +429,8 @@ function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $desc
 /**
  * Updates a docman item
  */
-function _updateDocmanItem($sessionKey, $group_id, $item_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array()) {
+function _updateDocmanItem($sessionKey, $group_id, $item_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array())
+{
 
     $params = _buildItemParams($group_id, $item_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date);
     $params['item']['id'] = $item_id;
@@ -441,7 +451,8 @@ function _updateDocmanItem($sessionKey, $group_id, $item_id, $title, $descriptio
 /**
  * Updates a docman document
  */
-function _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array()) {
+function _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array())
+{
     if ($obsolescence_date !== null) {
         $extraParams['item']['obsolescence_date'] = $obsolescence_date;
     }
@@ -451,7 +462,8 @@ function _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $descri
 /**
 * Returns the document object that is at the top of the docman given a group object.
 */
-function getRootFolder($sessionKey,$group_id) {
+function getRootFolder($sessionKey,$group_id)
+{
     return _makeDocmanRequest($sessionKey, $group_id, 'getRootFolder');
 }
 $soapFunctions[] = array('getRootFolder', 'Returns the document object id that is at the top of the docman given a group object');
@@ -460,13 +472,15 @@ $soapFunctions[] = array('getRootFolder', 'Returns the document object id that i
 /**
 * Lists the contents of a folder
 */
-function listFolder($sessionKey,$group_id,$item_id) {
+function listFolder($sessionKey,$group_id,$item_id)
+{
     $params = array('id' => $item_id, 'report' => 'List');
     return _makeDocmanRequest($sessionKey, $group_id, 'show', $params);
 }
 $soapFunctions[] = array('listFolder', 'List folder contents', 'tns:ArrayOfDocman_Item');
 
-function operatorToValue($operator) {
+function operatorToValue($operator)
+{
     if ($operator == '=') {
         return 0;
     } else if ($operator == '<') {
@@ -476,7 +490,8 @@ function operatorToValue($operator) {
     }
 }
 
-function isValidOperator($operator) {
+function isValidOperator($operator)
+{
     if($operator == '<' ||
        $operator == '>' ||
        $operator == '=') {
@@ -488,7 +503,8 @@ function isValidOperator($operator) {
 /**
  * Returns all the items that match given criterias
  */
-function searchDocmanItem($sessionKey, $group_id, $item_id, $criterias) {
+function searchDocmanItem($sessionKey, $group_id, $item_id, $criterias)
+{
     $params = array('id' => $item_id);
     foreach($criterias as $criteria) {
 
@@ -505,7 +521,8 @@ $soapFunctions[] = array('searchDocmanItem', 'Returns all the items that match g
 /**
  * Returns the the content of a file (or embedded file) base64 encoded
  */
-function getDocmanFileContents($sessionKey, $group_id, $item_id, $version_number) {
+function getDocmanFileContents($sessionKey, $group_id, $item_id, $version_number)
+{
     $params = array('item_id' => $item_id);
     if ($version_number >= 0) {
         $params['version_number'] = $version_number;
@@ -517,7 +534,8 @@ $soapFunctions[] = array('getDocmanFileContents', 'Returns the content of a file
 /**
  * Returns the MD5 checksum of the file (last version) corresponding to the provided item ID.
  */
-function getDocmanFileMD5sum($sessionKey, $group_id, $item_id, $version_number) {
+function getDocmanFileMD5sum($sessionKey, $group_id, $item_id, $version_number)
+{
     $params = array('item_id' => $item_id, 'version' => $version_number);
     return _makeDocmanRequest($sessionKey, $group_id, 'getFileMD5sum', $params);
 }
@@ -527,7 +545,8 @@ $soapFunctions[] = array('getDocmanFileMD5sum', 'Returns the MD5 checksum of the
 /**
  * Returns the MD5 checksum of the file (all versions) corresponding to the provided item ID.
  */
-function getDocmanFileAllVersionsMD5sum($sessionKey, $group_id, $item_id) {
+function getDocmanFileAllVersionsMD5sum($sessionKey, $group_id, $item_id)
+{
     $params = array('item_id' => $item_id, 'all_versions' => true);
     return _makeDocmanRequest($sessionKey, $group_id, 'getFileMD5sum', $params);
 }
@@ -537,7 +556,8 @@ $soapFunctions[] = array('getDocmanFileAllVersionsMD5sum', 'Returns the MD5 chec
 /**
  * Returns the metadata of the given project
  */
-function getDocmanProjectMetadata($sessionKey, $group_id) {
+function getDocmanProjectMetadata($sessionKey, $group_id)
+{
 
     $result = _makeDocmanRequest($sessionKey, $group_id, 'getProjectMetadata');
     if ($result instanceof SoapFault) {
@@ -559,7 +579,8 @@ $soapFunctions[] = array('getDocmanProjectMetadata', 'Returns the metadata of th
 /**
  * Returns the tree information of the given project
  */
-function getDocmanTreeInfo($sessionKey, $group_id, $parent_id) {
+function getDocmanTreeInfo($sessionKey, $group_id, $parent_id)
+{
     return _makeDocmanRequest($sessionKey, $group_id, 'getTreeInfo', array('parent_id' => $parent_id));
 }
 $soapFunctions[] = array('getDocmanTreeInfo', 'Returns the tree information of the given project', 'tns:ArrayOfItemInfo');
@@ -568,7 +589,8 @@ $soapFunctions[] = array('getDocmanTreeInfo', 'Returns the tree information of t
 /**
  * Creates a docman folder
  */
-function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $create_date, $update_date) {
+function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $create_date, $update_date)
+{
     return _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, $permissions, $metadata, $owner, $create_date, $update_date);
 }
 $soapFunctions[] = array('createDocmanFolder', 'Create a folder');
@@ -625,7 +647,8 @@ $soapFunctions[] = array('createDocmanFile', 'Creates a docman file');
 /**
  * Creates a docman embedded file
  */
-function createDocmanEmbeddedFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $author, $date, $owner, $create_date, $update_date) {
+function createDocmanEmbeddedFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $author, $date, $owner, $create_date, $update_date)
+{
 
     $extraParams = array(
         'content' => $content,
@@ -641,7 +664,8 @@ $soapFunctions[] = array('createDocmanEmbeddedFile', 'Creates a docman embedded 
 /**
  * Creates a docman wiki page
  */
-function createDocmanWikiPage($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date) {
+function createDocmanWikiPage($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date)
+{
     $extraParams['item']['wiki_page'] = $content;
     return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
 }
@@ -651,7 +675,8 @@ $soapFunctions[] = array('createDocmanWikiPage', 'Creates a docman wiki page');
 /**
  * Creates a docman link
  */
-function createDocmanLink($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date) {
+function createDocmanLink($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date)
+{
     $extraParams['item']['link_url'] = $content;
     return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_LINK, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
 }
@@ -661,7 +686,8 @@ $soapFunctions[] = array('createDocmanLink', 'Creates a docman link');
 /**
  * Creates a docman embedded file
  */
-function createDocmanEmptyDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $owner, $create_date, $update_date) {
+function createDocmanEmptyDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $owner, $create_date, $update_date)
+{
     return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $permissions, $metadata, $owner, $create_date, $update_date);
 }
 $soapFunctions[] = array('createDocmanEmptyDocument', 'Creates a docman empty document');
@@ -708,7 +734,8 @@ $soapFunctions[] = array('createDocmanFileVersion', 'Creates a docman file versi
 /**
  * Creates a docman embedded file version
  */
-function createDocmanEmbeddedFileVersion($sessionKey, $group_id, $item_id, $label, $changelog, $content, $author, $date) {
+function createDocmanEmbeddedFileVersion($sessionKey, $group_id, $item_id, $label, $changelog, $content, $author, $date)
+{
 
     $params = array(
         'id'        => $item_id,
@@ -726,7 +753,8 @@ $soapFunctions[] = array('createDocmanEmbeddedFileVersion', 'Creates a docman em
 /**
  * Appends a chunk of data to the last version of a file
  */
-function appendDocmanFileChunk($sessionKey, $group_id, $item_id, $content, $chunk_offset, $chunk_size) {
+function appendDocmanFileChunk($sessionKey, $group_id, $item_id, $content, $chunk_offset, $chunk_size)
+{
 
     $params = array(
         'item_id'        => $item_id,
@@ -743,7 +771,8 @@ $soapFunctions[] = array('appendDocmanFileChunk', 'Appends a chunk of data to th
 /**
  * Moves an item
  */
-function moveDocmanItem($sessionKey, $group_id, $item_id, $new_parent) {
+function moveDocmanItem($sessionKey, $group_id, $item_id, $new_parent)
+{
     return _makeDocmanRequest($sessionKey, $group_id, 'move_here', array('item_to_move' => $item_id, 'id' => $new_parent));
 }
 $soapFunctions[] = array('moveDocmanItem', 'Moves an item in a new folder', 'xsd:boolean');
@@ -753,7 +782,8 @@ $soapFunctions[] = array('moveDocmanItem', 'Moves an item in a new folder', 'xsd
 /**
  * Download a file given its item_id and version
  */
-function getDocmanFileChunk($sessionKey, $group_id, $item_id, $version_number, $chunk_offset, $chunk_size) {
+function getDocmanFileChunk($sessionKey, $group_id, $item_id, $version_number, $chunk_offset, $chunk_size)
+{
         $params = array(
         'item_id'        => $item_id,
         'version_number' => $version_number,
@@ -772,7 +802,8 @@ $soapFunctions[] = array('getDocmanFileChunk', 'Returns a part (chunk) of the co
 /**
  * Deletes a docman item
  */
-function deleteDocmanItem($sessionKey, $group_id, $item_id) {
+function deleteDocmanItem($sessionKey, $group_id, $item_id)
+{
     return _makeDocmanRequest($sessionKey, $group_id, 'delete', array('id' => $item_id));
 }
 $soapFunctions[] = array('deleteDocmanItem', 'Delete an item (document or folder)');
@@ -781,7 +812,8 @@ $soapFunctions[] = array('deleteDocmanItem', 'Delete an item (document or folder
 /**
  * Enables the monitoring of an item by a user
  */
-function monitorDocmanItem($sessionKey, $group_id, $item_id) {
+function monitorDocmanItem($sessionKey, $group_id, $item_id)
+{
     return _makeDocmanRequest($sessionKey, $group_id, 'monitor', array('id' => $item_id, 'monitor' => true));
 }
 $soapFunctions[] = array('monitorDocmanItem', 'Enables the monitoring of an item by a user', 'xsd:boolean');
@@ -790,7 +822,8 @@ $soapFunctions[] = array('monitorDocmanItem', 'Enables the monitoring of an item
 /**
  * Updates a docman folder
  */
-function updateDocmanFolder($sessionKey, $group_id, $item_id, $title, $description, $status, $permissions, $metadata, $owner, $create_date, $update_date) {
+function updateDocmanFolder($sessionKey, $group_id, $item_id, $title, $description, $status, $permissions, $metadata, $owner, $create_date, $update_date)
+{
     return _updateDocmanItem($sessionKey, $group_id, $item_id, $title, $description, $status, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, $permissions, $metadata, $owner, $create_date, $update_date);
 }
 $soapFunctions[] = array('updateDocmanFolder', 'Updates a docman folder');
@@ -799,7 +832,8 @@ $soapFunctions[] = array('updateDocmanFolder', 'Updates a docman folder');
 /**
  * Updates a docman file
  */
-function updateDocmanFile($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $permissions, $metadata, $owner, $create_date, $update_date) {
+function updateDocmanFile($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $permissions, $metadata, $owner, $create_date, $update_date)
+{
     return _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_FILE, $permissions, $metadata, $owner, $create_date, $update_date);
 }
 $soapFunctions[] = array('updateDocmanFile', 'Updates a docman file');
@@ -808,7 +842,8 @@ $soapFunctions[] = array('updateDocmanFile', 'Updates a docman file');
 /**
  * Updates a docman embedded file
  */
-function updateDocmanEmbeddedFile($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $permissions, $metadata, $owner, $create_date, $update_date) {
+function updateDocmanEmbeddedFile($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $permissions, $metadata, $owner, $create_date, $update_date)
+{
     return _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $permissions, $metadata, $owner, $create_date, $update_date);
 }
 $soapFunctions[] = array('updateDocmanEmbeddedFile', 'Updates a docman embedded file');
@@ -817,7 +852,8 @@ $soapFunctions[] = array('updateDocmanEmbeddedFile', 'Updates a docman embedded 
 /**
  * Updates a docman wiki page
  */
-function updateDocmanWikiPage($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date) {
+function updateDocmanWikiPage($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date)
+{
     if ($content !== null) $extraParams['item']['wiki_page'] = $content;
     return _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
 }
@@ -827,7 +863,8 @@ $soapFunctions[] = array('updateDocmanWikiPage', 'Updates a docman wiki page');
 /**
  * Updates a docman link
  */
-function updateDocmanLink($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date) {
+function updateDocmanLink($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date)
+{
     if ($content !== null) $extraParams['item']['link_url'] = $content;
     return _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_LINK, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
 }
@@ -837,7 +874,8 @@ $soapFunctions[] = array('updateDocmanLink', 'Updates a docman link');
 /**
  * Updates a docman empty document
  */
-function updateDocmanEmptyDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $permissions, $metadata, $owner, $create_date, $update_date) {
+function updateDocmanEmptyDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $permissions, $metadata, $owner, $create_date, $update_date)
+{
     return _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $permissions, $metadata, $owner, $create_date, $update_date);
 }
 $soapFunctions[] = array('updateDocmanEmptyDocument', 'Updates a docman empty document');
@@ -879,7 +917,8 @@ if (defined('NUSOAP')) {
 /**
  * Registers a function on the soap server. The parameters of the function are retrieved by reflexion.
  */
-function _registerFunction($name, $doc, $response = 'xsd:int') {
+function _registerFunction($name, $doc, $response = 'xsd:int')
+{
     if (defined('NUSOAP')) {
         // WSDL generation
         $function = new ReflectionFunction($name);
@@ -920,7 +959,8 @@ function _registerFunction($name, $doc, $response = 'xsd:int') {
 /**
  * Registers all the functions defined in the $soapFunctions array
  */
-function _registerFunctions($functions) {
+function _registerFunctions($functions)
+{
     if (is_array($functions)) {
         foreach ($functions as $function) {
             if (isset($function[2])) {

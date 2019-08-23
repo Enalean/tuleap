@@ -21,7 +21,8 @@ require_once __DIR__.'/../../../bootstrap.php';
 
 class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         /*
@@ -110,7 +111,8 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest exten
         );
     }
 
-    public function itReturnsEmptyArrayWhenNoNearestPlanningTracker() {
+    public function itReturnsEmptyArrayWhenNoNearestPlanningTracker()
+    {
         stub($this->nearest_planning_tracker_provider)->getNearestPlanningTracker($this->task_tracker, $this->hierarchy_factory)->returns(null);
 
         stub($this->dao)->getAllMilestoneByTrackers(array($this->release_tracker_id, $this->sprint_tracker_id))->never();
@@ -118,7 +120,8 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest exten
         $this->assertEqual($this->provider->getSelectboxOptions($this->task_tracker, '*', $this->user), array());
     }
 
-    public function itDoesNotSearchOnProductTrackerSinceThereIsNoPlanning() {
+    public function itDoesNotSearchOnProductTrackerSinceThereIsNoPlanning()
+    {
         stub($this->nearest_planning_tracker_provider)->getNearestPlanningTracker($this->task_tracker, $this->hierarchy_factory)->returns($this->sprint_tracker);
 
         stub($this->release_tracker)->userCanView($this->user)->returns(true);

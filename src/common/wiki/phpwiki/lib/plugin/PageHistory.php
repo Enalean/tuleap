@@ -26,7 +26,8 @@ require_once('lib/plugin/RecentChanges.php');
 class _PageHistory_PageRevisionIter
 extends WikiDB_PageRevisionIterator
 {
-    function __construct($rev_iter, $params) {
+    function __construct($rev_iter, $params)
+    {
 
         $this->_iter = $rev_iter;
 
@@ -47,7 +48,8 @@ extends WikiDB_PageRevisionIterator
             $this->_limit = $limit;
     }
 
-    function next() {
+    function next()
+    {
         if (!$this->_iter)
             return false;
 
@@ -71,7 +73,8 @@ extends WikiDB_PageRevisionIterator
     }
 
 
-    function free() {
+    function free()
+    {
         if ($this->_iter)
             $this->_iter->free();
         $this->_iter = false;
@@ -82,22 +85,26 @@ extends WikiDB_PageRevisionIterator
 class _PageHistory_HtmlFormatter
 extends _RecentChanges_HtmlFormatter
 {
-    function include_versions_in_URLs() {
+    function include_versions_in_URLs()
+    {
         return true;
     }
 
-    function title() {
+    function title()
+    {
         return array(fmt("PageHistory for %s",
                          WikiLink($this->_args['page'])),
                      "\n",
                      $this->rss_icon());
     }
 
-    function empty_message () {
+    function empty_message()
+    {
         return _("No revisions found");
     }
 
-    function description() {
+    function description()
+    {
         $button = HTML::input(array('type'  => 'submit',
                                     'value' => _("compare revisions"),
                                     'class' => 'wikiaction'));
@@ -111,7 +118,8 @@ extends _RecentChanges_HtmlFormatter
     }
 
 
-    function format ($changes) {
+    function format($changes)
+    {
         $this->_itemcount = 0;
 
         $pagename = $this->_args['page'];
@@ -158,19 +166,21 @@ extends _RecentChanges_HtmlFormatter
             diffCkBoxes[i].onclick = diffCkBox_onclick;'));
     }
 
-    function diffLink ($rev) {
+    function diffLink($rev)
+    {
         return HTML::input(array('type'  => 'checkbox',
                                  'name'  => 'versions[]',
                                  'value' => $rev->getVersion()));
     }
 
-    function pageLink ($rev, $text_link=false)
+    function pageLink($rev, $text_link=false)
     {
         $text = fmt("Version %d", $rev->getVersion());
         return _RecentChanges_HtmlFormatter::pageLink($rev, $text);
     }
 
-    function format_revision ($rev) {
+    function format_revision($rev)
+    {
         $class = 'rc-' . $this->importance($rev);
 
         $time = $this->time($rev);
@@ -199,19 +209,23 @@ extends _RecentChanges_HtmlFormatter
 class _PageHistory_RssFormatter
 extends _RecentChanges_RssFormatter
 {
-    function include_versions_in_URLs() {
+    function include_versions_in_URLs()
+    {
         return true;
     }
 
-    function image_properties () {
+    function image_properties()
+    {
         return false;
     }
 
-    function textinput_properties () {
+    function textinput_properties()
+    {
         return false;
     }
 
-    function channel_properties () {
+    function channel_properties()
+    {
         global $request;
 
         $rc_url = WikiURL($request->getArg('pagename'), false, 'absurl');
@@ -227,7 +241,8 @@ extends _RecentChanges_RssFormatter
     }
 
 
-    function item_properties ($rev) {
+    function item_properties($rev)
+    {
         if (!($title = $this->summary($rev)))
             $title = sprintf(_("Version %d"), $rev->getVersion());
 
@@ -246,20 +261,24 @@ extends _RecentChanges_RssFormatter
 class WikiPlugin_PageHistory
 extends WikiPlugin_RecentChanges
 {
-    function getName () {
+    function getName()
+    {
         return _("PageHistory");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return sprintf(_("List PageHistory for %s"),'[pagename]');
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.30 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('days'         => false,
                      'show_minor'   => true,
                      'show_major'   => true,
@@ -268,26 +287,30 @@ extends WikiPlugin_RecentChanges
                      'format'       => false);
     }
 
-    function getDefaultFormArguments() {
+    function getDefaultFormArguments()
+    {
         $dflts = WikiPlugin_RecentChanges::getDefaultFormArguments();
         $dflts['textinput'] = 'page';
         return $dflts;
     }
 
-    function getMostRecentParams ($args) {
+    function getMostRecentParams($args)
+    {
         $params = WikiPlugin_RecentChanges::getMostRecentParams($args);
         $params['include_all_revisions'] = true;
         return $params;
     }
 
-    function getChanges ($dbi, $args) {
+    function getChanges($dbi, $args)
+    {
         $page = $dbi->getPage($args['page']);
         $iter = $page->getAllRevisions();
         $params = $this->getMostRecentParams($args);
         return new _PageHistory_PageRevisionIter($iter, $params);
     }
 
-    function format ($changes, $args) {
+    function format($changes, $args)
+    {
         global $WikiTheme;
         $format = $args['format'];
 
@@ -303,7 +326,8 @@ extends WikiPlugin_RecentChanges
         return $fmt->format($changes);
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         $pagename = $args['page'];
         if (empty($pagename))

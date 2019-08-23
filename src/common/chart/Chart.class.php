@@ -51,7 +51,8 @@ class Chart
     *
     * @return void
     */
-    public function __construct($aWidth = 600, $aHeight = 400, $aCachedName = "", $aTimeOut = 0, $aInline = true) {
+    public function __construct($aWidth = 600, $aHeight = 400, $aCachedName = "", $aTimeOut = 0, $aInline = true)
+    {
         $this->width  = $aWidth;
         $this->height = $aHeight;
 
@@ -99,7 +100,8 @@ class Chart
      *
      * @return string
      */
-    protected function getGraphClass() {
+    protected function getGraphClass()
+    {
         return 'Graph';
     }
 
@@ -111,7 +113,8 @@ class Chart
      *
      * @return mixed
      */
-    public function __get($name) {
+    public function __get($name)
+    {
         return $this->jpgraph_instance->$name;
     }
 
@@ -124,7 +127,8 @@ class Chart
      *
      * @return mixed the $value
      */
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         return $this->jpgraph_instance->$name = $value;
     }
 
@@ -136,7 +140,8 @@ class Chart
      *
      * @return bool
      */
-    public function __isset($name) {
+    public function __isset($name)
+    {
         return isset($this->jpgraph_instance->$name);
     }
 
@@ -148,7 +153,8 @@ class Chart
      *
      * @return bool
      */
-    public function __unset($name) {
+    public function __unset($name)
+    {
         unset($this->jpgraph_instance->$name);
     }
 
@@ -161,7 +167,8 @@ class Chart
      *
      * @return mixed
      */
-    public function __call($method, $args) {
+    public function __call($method, $args)
+    {
         try{
             $result = call_user_func_array(array($this->jpgraph_instance, $method), $args);
         }
@@ -200,7 +207,8 @@ class Chart
      *
      * @return int
      */
-    public function getFont() {
+    public function getFont()
+    {
         return FF_USERFONT;
     }
 
@@ -210,7 +218,8 @@ class Chart
      * @return string
      * @see Layout->getChartMainColor
      */
-    public function getMainColor() {
+    public function getMainColor()
+    {
         return $this->colors_for_charts->getChartMainColor();
     }
 
@@ -220,7 +229,8 @@ class Chart
      * @return array
      * @see Layout->getChartColors
      */
-    public function getThemedColors() {
+    public function getThemedColors()
+    {
         return $this->colors_for_charts->getChartColors();
     }
 
@@ -234,7 +244,8 @@ class Chart
      *
      * @return int
      */
-    public function getTopMargin() {
+    public function getTopMargin()
+    {
         return 20 + $this->jpgraph_instance->title->getTextHeight($this->jpgraph_instance->img) + $this->jpgraph_instance->subtitle->getTextHeight($this->jpgraph_instance->img);
     }
 
@@ -245,7 +256,8 @@ class Chart
      *
      * @return Void
      */
-    public function displayMessage($msg) {
+    public function displayMessage($msg)
+    {
         //ttf from jpgraph
         $ttf = new TTF();
         Chart_TTFFactory::setUserFont($ttf);

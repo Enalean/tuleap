@@ -20,17 +20,20 @@
 
 class b201012140821_improve_frs_file extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add fields to the table frs_file for verification of upload/download integrity and to store releaser.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = 'ALTER TABLE frs_file ADD computed_md5 VARCHAR(32)';
         if ($this->db->tableNameExists('frs_file')) {
             $res = $this->db->dbh->exec($sql);
@@ -80,7 +83,8 @@ EOT;
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->columnNameExists('frs_file', 'computed_md5')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('computed_md5 not created in frs_file');
         }

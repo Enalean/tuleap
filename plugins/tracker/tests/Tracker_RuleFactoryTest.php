@@ -30,7 +30,8 @@ Mock::generate('Tracker_FormElement_Field_List');
 
 class Tracker_RuleFactoryTest extends TuleapTestCase {
 
-    public function testImportListRules() {
+    public function testImportListRules()
+    {
         $xmlstr = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
     <rules>
@@ -91,7 +92,8 @@ XML;
         $this->assertEqual($rules['list_rules'][1], $list_rule_expected2);
     }
 
-    public function testImportDateRules() {
+    public function testImportDateRules()
+    {
         $xmlstr = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
     <rules>
@@ -146,7 +148,8 @@ XML;
         $this->assertEqual($rules['date_rules'][1], $date_rule_expected2);
     }
 
-    public function testDuplicateCallsListAndDateDuplicate() {
+    public function testDuplicateCallsListAndDateDuplicate()
+    {
         $from_tracker_id = 10;
         $to_tracker_id   = 53;
         $field_mapping   = array();
@@ -167,7 +170,8 @@ XML;
         $rule_factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
 
-    public function testGetListOrDateFactoriesReturnNewInstancesWhenNotSet() {
+    public function testGetListOrDateFactoriesReturnNewInstancesWhenNotSet()
+    {
         $list_dao = mock('Tracker_Rule_List_Dao');
         $date_dao = mock('Tracker_Rule_Date_Dao');
         $rule_dao = mock('Tracker_RuleDao');
@@ -180,7 +184,8 @@ XML;
         $this->assertIsA($factory->getDateFactory(), 'Tracker_Rule_Date_Factory');
     }
 
-    public function testSaveObjectCallsDateAndListFactoryInsertMethods() {
+    public function testSaveObjectCallsDateAndListFactoryInsertMethods()
+    {
         $rule_dao = mock('Tracker_RuleDao');
         $list = mock('Tracker_Rule_List');
         $date = mock('Tracker_Rule_Date');
@@ -212,7 +217,8 @@ XML;
         $factory->saveObject($rules, $tracker);
     }
 
-    public function testSaveObjectCallsDateInsertMethodWhenNoListRulesAreInArray() {
+    public function testSaveObjectCallsDateInsertMethodWhenNoListRulesAreInArray()
+    {
         $rule_dao = mock('Tracker_RuleDao');
         $date = mock('Tracker_Rule_Date');
 
@@ -234,7 +240,8 @@ XML;
         $factory->saveObject($rules, $tracker);
     }
 
-    public function testSaveObjectCallsListInsertMethodWhenNoDateRulesAreInArray() {
+    public function testSaveObjectCallsListInsertMethodWhenNoDateRulesAreInArray()
+    {
         $rule_dao = mock('Tracker_RuleDao');
         $list = mock('Tracker_Rule_List');
 

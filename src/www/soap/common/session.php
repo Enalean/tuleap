@@ -108,7 +108,8 @@ if (defined('NUSOAP')) {
  * @param string $passwd the password associated with the loginname $loginname
  * @return array the SOAPSession if the loginname and the password are matching and if the version of the API is matching, a soap fault otherwise
  */
-    function login($loginname, $passwd) {
+    function login($loginname, $passwd)
+    {
         global $Language;
 
         $user = UserManager::instance()->login($loginname, $passwd);
@@ -133,7 +134,8 @@ if (defined('NUSOAP')) {
  *
  * @return string the user session_hash
  */
-    function loginAs($admin_session_hash, $username) {
+    function loginAs($admin_session_hash, $username)
+    {
         $server = new User_SOAPServer(UserManager::instance());
         return $server->loginAs($admin_session_hash, $username);
     }
@@ -146,7 +148,8 @@ if (defined('NUSOAP')) {
  * @param string $session_hash the session hash that identify the session to retrieve
  * @return array the SOAPSession if the session_hash identify a valid session, or a soap fault otherwise
  */
-    function retrieveSession($session_hash) {
+    function retrieveSession($session_hash)
+    {
         global $Language;
         if (session_continue($session_hash)) {
             $user = UserManager::instance()->getCurrentUser();
@@ -167,7 +170,8 @@ if (defined('NUSOAP')) {
  *
  * @return string the version of this Codendi WS API
  */
-    function getAPIVersion() {
+    function getAPIVersion()
+    {
         return constant('CODENDI_WS_API_VERSION');
     }
 
@@ -176,7 +180,8 @@ if (defined('NUSOAP')) {
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  */
-    function logout($sessionKey) {
+    function logout($sessionKey)
+    {
         global $session_hash;
         if (session_continue($sessionKey)){
             UserManager::instance()->logout();

@@ -35,16 +35,19 @@ extends WikiPlugin
 {
     var $bool_args;
 
-    function getName () {
+    function getName()
+    {
         return _("UserPreferences");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.35 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         global $request;
         $pagename = $request->getArg('pagename');
         $user = $request->getUser();
@@ -63,7 +66,8 @@ extends WikiPlugin
         return $prefs;
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         $user = $request->_user;
         if (isa($request,'MockRequest'))

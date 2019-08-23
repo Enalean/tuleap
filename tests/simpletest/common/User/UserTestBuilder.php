@@ -26,11 +26,13 @@
  *
  * @return \UserTestBuilder
  */
-function aUser() {
+function aUser()
+{
     return new UserTestBuilder();
 }
 
-function anAnonymousUser() {
+function anAnonymousUser()
+{
     return aUser()->withId(0);
 }
 
@@ -38,69 +40,82 @@ class UserTestBuilder {
     private $params = array('language_id' => 'en_US');
     private $language;
 
-    function withUserName($name) {
+    function withUserName($name)
+    {
         $this->params['user_name'] = $name;
         return $this;
     }
 
-    function withRealName($realname) {
+    function withRealName($realname)
+    {
         $this->params['realname'] = $realname;
         return $this;
     }
 
-    function withEmail($email) {
+    function withEmail($email)
+    {
         $this->params['email'] = $email;
         return $this;
     }
 
-    function withId($id) {
+    function withId($id)
+    {
         $this->params['user_id'] = $id;
         return $this;
     }
 
-    function withAuthorizedKeysArray(array $keys) {
+    function withAuthorizedKeysArray(array $keys)
+    {
         $this->params['authorized_keys'] = implode(PFUser::SSH_KEY_SEPARATOR, $keys);
         return $this;
     }
 
-    function withUnixStatus($status) {
+    function withUnixStatus($status)
+    {
         $this->params['unix_status'] = $status;
         return $this;
     }
 
-    function withLdapId($id) {
+    function withLdapId($id)
+    {
         $this->params['ldap_id'] = $id;
         return $this;
     }
 
-    function withPassword($hashed_password) {
+    function withPassword($hashed_password)
+    {
         $password_handler         = PasswordHandlerFactory::getPasswordHandler();
         $this->params['password'] = $password_handler->computeHashPassword($hashed_password);
         $this->params['user_pw']  = md5($hashed_password);
         return $this;
     }
 
-    function withStatus($status) {
+    function withStatus($status)
+    {
         $this->params['status'] = $status;
         return $this;
     }
 
-    function withLastPasswordUpdate($timestamp) {
+    function withLastPasswordUpdate($timestamp)
+    {
         $this->params['last_pwd_update'] = $timestamp;
         return $this;
     }
 
-    function withLang($lang) {
+    function withLang($lang)
+    {
         $this->params['language_id'] = $lang;
         return $this;
     }
 
-    function withLanguage(BaseLanguage $language) {
+    function withLanguage(BaseLanguage $language)
+    {
         $this->language = $language;
         return $this;
     }
 
-    function build() {
+    function build()
+    {
         $user = new PFUser($this->params);
         if ($this->language !== null) {
             $user->setLanguage($this->language);

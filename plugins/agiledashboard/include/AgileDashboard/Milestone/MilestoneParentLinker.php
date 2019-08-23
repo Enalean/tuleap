@@ -38,7 +38,8 @@ class MilestoneParentLinker {
         $this->backlog_factory   = $backlog_factory;
     }
 
-    public function linkToMilestoneParent(Planning_Milestone $milestone, PFUser $user, Tracker_Artifact $artifact_added) {
+    public function linkToMilestoneParent(Planning_Milestone $milestone, PFUser $user, Tracker_Artifact $artifact_added)
+    {
         $this->milestone_factory->addMilestoneAncestors($user, $milestone);
 
         $parent_milestone = $milestone->getParent();
@@ -63,7 +64,8 @@ class MilestoneParentLinker {
         }
     }
 
-    private function getBacklogTrackers(Planning_Milestone $milestone) {
+    private function getBacklogTrackers(Planning_Milestone $milestone)
+    {
         return $this->backlog_factory->getBacklog($milestone)->getDescendantTrackers();
     }
 

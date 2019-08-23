@@ -26,7 +26,8 @@ class Tracker_FormElement_DateTimeFormatterTest extends TuleapTestCase {
     /** @var Tracker_FormElement_DateTimeFormatter */
     private $date_formatter;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->field          = aMockDateWithoutTimeField()->withId(07)->build();
@@ -38,57 +39,66 @@ class Tracker_FormElement_DateTimeFormatterTest extends TuleapTestCase {
         UserManager::setInstance($user_manager);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
 
         UserManager::clearInstance();
     }
 
-    public function itFormatsTimestampInRightFormat() {
+    public function itFormatsTimestampInRightFormat()
+    {
         $timestamp = 1409752174;
         $expected  = '2014-09-03 15:49';
 
         $this->assertEqual($expected, $this->date_formatter->formatDate($timestamp));
     }
 
-    public function itFormatsTimestampInRightFormatForHoursBeforeNoon() {
+    public function itFormatsTimestampInRightFormatForHoursBeforeNoon()
+    {
         $timestamp = 1409708974;
         $expected  = '2014-09-03 03:49';
 
         $this->assertEqual($expected, $this->date_formatter->formatDate($timestamp));
     }
 
-    public function itValidatesWellFormedValue() {
+    public function itValidatesWellFormedValue()
+    {
         $value    = '2014-09-03 03:49';
 
         $this->assertTrue($this->date_formatter->validate($value));
     }
 
-    public function itDoesNotValidateNotWellFormedDate() {
+    public function itDoesNotValidateNotWellFormedDate()
+    {
         $value    = '2014/09/03 03:49';
 
         $this->assertFalse($this->date_formatter->validate($value));
     }
 
-    public function itDoesNotValidateNotWellFormedTime() {
+    public function itDoesNotValidateNotWellFormedTime()
+    {
         $value    = '2014-09-03 03-49-34';
 
         $this->assertFalse($this->date_formatter->validate($value));
     }
 
-    public function itDoesNotValidateDateIfNoSpaceBetweenDateAndTime() {
+    public function itDoesNotValidateDateIfNoSpaceBetweenDateAndTime()
+    {
         $value    = '2014-09-0303:49';
 
         $this->assertFalse($this->date_formatter->validate($value));
     }
 
-    public function itDoesNotValidateDateIfNoTime() {
+    public function itDoesNotValidateDateIfNoTime()
+    {
         $value    = '2014-09-03';
 
         $this->assertFalse($this->date_formatter->validate($value));
     }
 
-    public function itReturnsWellFormedDateForCSVWihoutSecondsEvenIfGiven() {
+    public function itReturnsWellFormedDateForCSVWihoutSecondsEvenIfGiven()
+    {
         $date_exploded = array(
             '2014',
             '09',
@@ -103,7 +113,8 @@ class Tracker_FormElement_DateTimeFormatterTest extends TuleapTestCase {
         $this->assertEqual($expected, $this->date_formatter->getFieldDataForCSVPreview($date_exploded));
     }
 
-    public function itReturnsWellFormedDateForCSV() {
+    public function itReturnsWellFormedDateForCSV()
+    {
         $date_exploded = array(
             '2014',
             '09',

@@ -34,19 +34,23 @@
 class WikiPlugin_HtmlConverter extends WikiPlugin
 {
 
-    function getName () {
+    function getName()
+    {
         return "HtmlConverter";
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return _("Convert HTML markup into wiki markup. (Version 0.5)");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array();
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
 
         /* plugin not yet has arguments - save for later (copied from UpLoad)
         $args = $this->getArgs($argstr, $request);
@@ -92,7 +96,8 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
         return $result;
     }
 
-    function _processA(&$file) {
+    function _processA(&$file)
+    {
 
         $file = preg_replace(
         "!<a([[:space:]]+)href([[:space:]]*)=([[:space:]]*)\"([-/.a-zA-Z0-9_~#@%$?&=:\200-\377\(\)[:space:]]+)\"([^>]*)>!Di", "{{\\4}}", $file);
@@ -100,14 +105,16 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
         $file = preg_replace("!{{([-/a-zA-Z0-9._~#@%$?&=:\200-\377\(\)[:space:]]+)}}([^<]+)</a>!Di", "[ \\2 | \\1 ]", $file);
     }
 
-    function _processIMG(&$file) {
+    function _processIMG(&$file)
+    {
 
         $img_regexp = "_<img\s+src\s*=\s*\"([-/.a-zA-Z0-9\_~#@%$?&=:\200-\377\(\)\s]+)\"[^>]*>_";
 
         $file = preg_replace( $img_regexp, "\n\n[Upload:\\1]", $file);
     }
 
-    function _processUL( &$file) {
+    function _processUL( &$file)
+    {
 
      // put any <li>-Tag in a new line to indent correctly and strip trailing white space (including new-lines)
         $file = str_replace( "<li", "\n<li", $file);
@@ -126,7 +133,8 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
         }
     }
 
-    function _process( $file_name) {
+    function _process( $file_name)
+    {
         $result = HTML();
         $file = file_get_contents( $file_name);
         $file = html_entity_decode( $file);

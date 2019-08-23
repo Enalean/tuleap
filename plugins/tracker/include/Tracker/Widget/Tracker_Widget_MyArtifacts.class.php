@@ -34,7 +34,8 @@ class Tracker_Widget_MyArtifacts extends Widget {
 
     protected $artifact_show;
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct(self::ID);
         $this->artifact_show = user_get_preference(self::PREF_SHOW);
         if($this->artifact_show === false) {
@@ -43,7 +44,8 @@ class Tracker_Widget_MyArtifacts extends Widget {
         }
     }
 
-    function getTitle() {
+    function getTitle()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'my_arts') . ' [' . $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', strtolower($this->artifact_show)) . ']';
     }
 
@@ -107,11 +109,13 @@ class Tracker_Widget_MyArtifacts extends Widget {
             ';
     }
 
-    function isAjax() {
+    function isAjax()
+    {
         return true;
     }
 
-    function getContent() {
+    function getContent()
+    {
         $html_my_artifacts = '';
 
         $taf = Tracker_ArtifactFactory::instance();
@@ -167,7 +171,8 @@ class Tracker_Widget_MyArtifacts extends Widget {
         return $html_my_artifacts;
     }
 
-    function _display_artifacts($artifacts) {
+    function _display_artifacts($artifacts)
+    {
         $hp = Codendi_HTMLPurifier::instance();
 
         $html_my_artifacts = '';
@@ -212,11 +217,13 @@ class Tracker_Widget_MyArtifacts extends Widget {
         return $ajax_url;
     }
 
-    function getCategory() {
+    function getCategory()
+    {
         return dgettext('tuleap-tracker', 'Trackers');
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts','description');
     }
 

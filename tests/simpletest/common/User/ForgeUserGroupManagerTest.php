@@ -41,7 +41,8 @@ class User_ForgeUserGroupFactory_UpdateUserGroupTest extends TuleapTestCase {
         );
     }
 
-    public function itThrowsExceptionIfUGroupNotFound() {
+    public function itThrowsExceptionIfUGroupNotFound()
+    {
         $this->expectException('User_UserGroupNotFoundException');
 
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
@@ -51,7 +52,8 @@ class User_ForgeUserGroupFactory_UpdateUserGroupTest extends TuleapTestCase {
         $this->manager->updateUserGroup($ugroup);
     }
 
-    public function itReturnsTrueIfThereAreNoModifications() {
+    public function itReturnsTrueIfThereAreNoModifications()
+    {
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
 
         stub($this->dao)->getForgeUGroup(45)->returns(array(
@@ -64,7 +66,8 @@ class User_ForgeUserGroupFactory_UpdateUserGroupTest extends TuleapTestCase {
         $this->assertTrue($update);
     }
 
-    public function itUpdates() {
+    public function itUpdates()
+    {
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
 
         stub($this->dao)->getForgeUGroup(45)->returns(array(
@@ -79,7 +82,8 @@ class User_ForgeUserGroupFactory_UpdateUserGroupTest extends TuleapTestCase {
         $this->assertTrue($update);
     }
 
-    public function itThrowsAnExceptionIfUGroupNameAlreadyExists() {
+    public function itThrowsAnExceptionIfUGroupNameAlreadyExists()
+    {
         $this->expectException('User_UserGroupNameInvalidException');
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
 

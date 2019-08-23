@@ -35,7 +35,8 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
     /** @var GitRepository */
     private $gitshell_repository;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->system_event_manager = mock('SystemEventManager');
         $this->git_system_event_manager = new Git_SystemEventManager($this->system_event_manager, mock('GitRepositoryFactory'));
@@ -51,7 +52,8 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
         stub($this->gitshell_repository)->getBackend()->returns(mock('GitBackend'));
     }
 
-    public function itCreatesRepositoryUpdateEvent() {
+    public function itCreatesRepositoryUpdateEvent()
+    {
         expect($this->system_event_manager)->createEvent(
             SystemEvent_GIT_REPO_UPDATE::NAME,
             54,
@@ -62,13 +64,15 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
         $this->git_system_event_manager->queueRepositoryUpdate($this->gitolite_repository);
     }
 
-    public function itDoesntCreateRepositoryUpdateEventForGitShellRepositories() {
+    public function itDoesntCreateRepositoryUpdateEventForGitShellRepositories()
+    {
         expect($this->system_event_manager)->createEvent()->never();
 
         $this->git_system_event_manager->queueRepositoryUpdate($this->gitshell_repository);
     }
 
-    public function itCreatesRepositoryDeletionEvent() {
+    public function itCreatesRepositoryDeletionEvent()
+    {
         $repository = mock('GitRepository');
         stub($repository)->getId()->returns(54);
         stub($repository)->getProjectId()->returns(116);
@@ -83,7 +87,8 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
         $this->git_system_event_manager->queueRepositoryDeletion($repository);
     }
 
-    public function itCreatesRepositoryDeletionEventForRootWhenRepositoryIsGitShell() {
+    public function itCreatesRepositoryDeletionEventForRootWhenRepositoryIsGitShell()
+    {
         $repository = mock('GitRepository');
         stub($repository)->getId()->returns(54);
         stub($repository)->getProjectId()->returns(116);
@@ -98,7 +103,8 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
         $this->git_system_event_manager->queueRepositoryDeletion($repository);
     }
 
-    public function itCreatesRepositoryForkEvent() {
+    public function itCreatesRepositoryForkEvent()
+    {
         $old_repository = stub('GitRepository')->getId()->returns(554);
         $new_repository = stub('GitRepository')->getId()->returns(667);
 
@@ -112,7 +118,8 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
         $this->git_system_event_manager->queueRepositoryFork($old_repository, $new_repository);
     }
 
-    public function itCreatesRepositoryAccessEvent() {
+    public function itCreatesRepositoryAccessEvent()
+    {
         $repository = stub('GitRepository')->getId()->returns(54);
 
         expect($this->system_event_manager)->createEvent(
@@ -125,7 +132,8 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
         $this->git_system_event_manager->queueGitShellAccess($repository, 'private');
     }
 
-    public function itCreatesGerritMigrationEvent() {
+    public function itCreatesGerritMigrationEvent()
+    {
         $repository           = stub('GitRepository')->getId()->returns(54);
         $remote_server_id     = 3;
         $migrate_access_right = true;
@@ -141,7 +149,8 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
         $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, $migrate_access_right, $requester);
     }
 
-    public function itCreatesGerritReplicationKeyUpdateEvent() {
+    public function itCreatesGerritReplicationKeyUpdateEvent()
+    {
         $server = stub('Git_RemoteServer_GerritServer')->getId()->returns(9);
 
         expect($this->system_event_manager)->createEvent(

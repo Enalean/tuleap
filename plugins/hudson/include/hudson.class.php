@@ -24,7 +24,8 @@
 class hudson extends Controler
 {
 
-    function request() {
+    function request()
+    {
         $request = HTTPRequest::instance();
         $vgi = new Valid_GroupId();
         $vgi->required();

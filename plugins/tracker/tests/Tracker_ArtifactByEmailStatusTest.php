@@ -23,14 +23,16 @@ class Tracker_ArtifactByEmailStatusTest extends TuleapTestCase {
     private $tracker;
     private $tracker_plugin_conf;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->tracker             = mock('Tracker');
         $this->tracker_plugin_conf = mock('Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig');
     }
 
-    public function itAcceptsArtifactByInsecureEmailWhenSemanticIsDefined() {
+    public function itAcceptsArtifactByInsecureEmailWhenSemanticIsDefined()
+    {
         stub($this->tracker_plugin_conf)->isInsecureEmailgatewayEnabled()->returns(true);
         stub($this->tracker)->isEmailgatewayEnabled()->returns(true);
 
@@ -47,7 +49,8 @@ class Tracker_ArtifactByEmailStatusTest extends TuleapTestCase {
         $this->assertTrue($tracker_artifactbyemailstatus->canCreateArtifact($this->tracker));
     }
 
-    public function itAcceptsArtifactByInsecureEmailWhenRequiredFieldsAreValid() {
+    public function itAcceptsArtifactByInsecureEmailWhenRequiredFieldsAreValid()
+    {
         stub($this->tracker_plugin_conf)->isInsecureEmailgatewayEnabled()->returns(true);
         stub($this->tracker_plugin_conf)->isTokenBasedEmailgatewayEnabled()->returns(false);
         stub($this->tracker_plugin_conf)->isInsecureEmailgatewayEnabled()->returns(true);
@@ -62,7 +65,8 @@ class Tracker_ArtifactByEmailStatusTest extends TuleapTestCase {
         $this->assertTrue($tracker_artifactbyemailstatus->canCreateArtifact($this->tracker));
     }
 
-    public function itDoesNotAcceptArtifactByInsecureEmailWhenRequiredFieldsAreInvalid() {
+    public function itDoesNotAcceptArtifactByInsecureEmailWhenRequiredFieldsAreInvalid()
+    {
         stub($this->tracker_plugin_conf)->isInsecureEmailgatewayEnabled()->returns(true);
         stub($this->tracker_plugin_conf)->isTokenBasedEmailgatewayEnabled()->returns(false);
         stub($this->tracker_plugin_conf)->isInsecureEmailgatewayEnabled()->returns(true);
@@ -82,7 +86,8 @@ class Tracker_ArtifactByEmailStatusTest extends TuleapTestCase {
         $this->assertFalse($tracker_artifactbyemailstatus->canCreateArtifact($this->tracker));
     }
 
-    public function itDoesNotCreateArtifactInTokenMode() {
+    public function itDoesNotCreateArtifactInTokenMode()
+    {
         stub($this->tracker_plugin_conf)->isTokenBasedEmailgatewayEnabled()->returns(true);
         stub($this->tracker)->isEmailgatewayEnabled()->returns(true);
 
@@ -90,7 +95,8 @@ class Tracker_ArtifactByEmailStatusTest extends TuleapTestCase {
         $this->assertFalse($tracker_artifactbyemailstatus->canCreateArtifact($this->tracker));
     }
 
-    public function itUpdatesArtifactInTokenMode() {
+    public function itUpdatesArtifactInTokenMode()
+    {
         stub($this->tracker_plugin_conf)->isTokenBasedEmailgatewayEnabled()->returns(true);
         stub($this->tracker_plugin_conf)->isInsecureEmailgatewayEnabled()->returns(false);
         stub($this->tracker)->isEmailgatewayEnabled()->returns(true);
@@ -129,7 +135,8 @@ class Tracker_ArtifactByEmailStatusTest extends TuleapTestCase {
         $this->assertFalse($tracker_artifactbyemailstatus->canUpdateArtifactInTokenMode($this->tracker));
     }
 
-    public function itUpdatesArtifactInInsecureMode() {
+    public function itUpdatesArtifactInInsecureMode()
+    {
         stub($this->tracker_plugin_conf)->isTokenBasedEmailgatewayEnabled()->returns(false);
         stub($this->tracker_plugin_conf)->isInsecureEmailgatewayEnabled()->returns(true);
         stub($this->tracker)->isEmailgatewayEnabled()->returns(true);
@@ -138,7 +145,8 @@ class Tracker_ArtifactByEmailStatusTest extends TuleapTestCase {
         $this->assertTrue($tracker_artifactbyemailstatus->canUpdateArtifactInInsecureMode($this->tracker));
     }
 
-    public function itDoesNotUpdateArtifactInInsecureModeWhenTrackerEmailGatewayIsDisabled() {
+    public function itDoesNotUpdateArtifactInInsecureModeWhenTrackerEmailGatewayIsDisabled()
+    {
         stub($this->tracker_plugin_conf)->isTokenBasedEmailgatewayEnabled()->returns(false);
         stub($this->tracker_plugin_conf)->isInsecureEmailgatewayEnabled()->returns(true);
         stub($this->tracker)->isEmailgatewayEnabled()->returns(false);
@@ -147,7 +155,8 @@ class Tracker_ArtifactByEmailStatusTest extends TuleapTestCase {
         $this->assertFalse($tracker_artifactbyemailstatus->canUpdateArtifactInInsecureMode($this->tracker));
     }
 
-    public function itDoesNotUpdateArtifactInInsecureModeWhenTokenModeIsEnabled() {
+    public function itDoesNotUpdateArtifactInInsecureModeWhenTokenModeIsEnabled()
+    {
         stub($this->tracker_plugin_conf)->isTokenBasedEmailgatewayEnabled()->returns(true);
         stub($this->tracker_plugin_conf)->isInsecureEmailgatewayEnabled()->returns(false);
         stub($this->tracker)->isEmailgatewayEnabled()->returns(false);
@@ -156,7 +165,8 @@ class Tracker_ArtifactByEmailStatusTest extends TuleapTestCase {
         $this->assertFalse($tracker_artifactbyemailstatus->canUpdateArtifactInInsecureMode($this->tracker));
     }
 
-    public function itChecksFieldValidity() {
+    public function itChecksFieldValidity()
+    {
         stub($this->tracker_plugin_conf)->isInsecureEmailgatewayEnabled()->returns(true);
         stub($this->tracker)->isEmailgatewayEnabled()->returns(true);
 
@@ -181,7 +191,8 @@ class Tracker_ArtifactByEmailStatusTest extends TuleapTestCase {
         $this->assertFalse($tracker_artifactbyemailstatus->isRequiredFieldsConfigured($this->tracker));
     }
 
-    public function itChecksSemantic() {
+    public function itChecksSemantic()
+    {
         stub($this->tracker_plugin_conf)->isInsecureEmailgatewayEnabled()->returns(true);
         stub($this->tracker)->isEmailgatewayEnabled()->returns(true);
 

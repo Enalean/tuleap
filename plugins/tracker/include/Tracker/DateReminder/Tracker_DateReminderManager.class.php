@@ -33,7 +33,8 @@ class Tracker_DateReminderManager {
      *
      * @return Void
      */
-    public function __construct(Tracker $tracker) {
+    public function __construct(Tracker $tracker)
+    {
         $this->tracker = $tracker;
     }
 
@@ -42,7 +43,8 @@ class Tracker_DateReminderManager {
      *
      * @return Tracker
      */
-    public function getTracker() {
+    public function getTracker()
+    {
         return $this->tracker;
     }
 
@@ -51,7 +53,8 @@ class Tracker_DateReminderManager {
      *
      * @return Void
      */
-    public function process() {
+    public function process()
+    {
         $logger = new BackendLogger();
         if (! ($this->tracker->isNotificationStopped()|| $this->tracker->isDeleted())) {
             $remiderFactory = $this->getDateReminderRenderer()->getDateReminderFactory();
@@ -133,7 +136,8 @@ class Tracker_DateReminderManager {
      *
      * @return Tracker_DateReminderRenderer
      */
-    public function getDateReminderRenderer() {
+    public function getDateReminderRenderer()
+    {
         return new Tracker_DateReminderRenderer($this->tracker);
     }
 
@@ -145,7 +149,8 @@ class Tracker_DateReminderManager {
      *
      * @return Void
      */
-    protected function sendReminderNotification(Tracker_DateReminder $reminder, Tracker_Artifact $artifact) {
+    protected function sendReminderNotification(Tracker_DateReminder $reminder, Tracker_Artifact $artifact)
+    {
         $tracker    = $this->getTracker();
 
         // 1. Get the recipients list
@@ -176,7 +181,8 @@ class Tracker_DateReminderManager {
      *
      * return Array
      */
-    protected function buildMessage(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, &$messages, $user) {
+    protected function buildMessage(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, &$messages, $user)
+    {
         $mailManager = new MailManager();
 
         $recipient = $user->getEmail();
@@ -217,7 +223,8 @@ class Tracker_DateReminderManager {
      *
      * @return Void
      */
-    protected function sendReminder(Tracker_Artifact $artifact, $recipients, $headers, $subject, $htmlBody, $txtBody) {
+    protected function sendReminder(Tracker_Artifact $artifact, $recipients, $headers, $subject, $htmlBody, $txtBody)
+    {
         $hp             = Codendi_HTMLPurifier::instance();
         $breadcrumbs    = array();
         $project        = $this->getTracker()->getProject();
@@ -273,7 +280,8 @@ class Tracker_DateReminderManager {
      *
      * @return String
      */
-    public function getSubject($reminder, $artifact, $recipient) {
+    public function getSubject($reminder, $artifact, $recipient)
+    {
         $s = "[" . $this->tracker->getName()."] ".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','subject', array($reminder->getField()->getLabel(), $reminder->getFieldValue($artifact), $artifact->getTitle()));
         return $s;
     }
@@ -288,7 +296,8 @@ class Tracker_DateReminderManager {
      *
      * @return String
      */
-    protected function getBodyText(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, $recipient, BaseLanguage $language) {
+    protected function getBodyText(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, $recipient, BaseLanguage $language)
+    {
         $protocol = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
         $link     = ' <'.$protocol.'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId() .'>';
 
@@ -312,7 +321,8 @@ class Tracker_DateReminderManager {
      *
      * @return String
      */
-    protected function getBodyHtml(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, $recipient, BaseLanguage $language) {
+    protected function getBodyHtml(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, $recipient, BaseLanguage $language)
+    {
         $format   = Codendi_Mail_Interface::FORMAT_HTML;
         $hp       = Codendi_HTMLPurifier::instance();
         $protocol = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
@@ -341,7 +351,8 @@ class Tracker_DateReminderManager {
      *
      * @return Array
      */
-    public function getArtifactsByreminder(Tracker_DateReminder $reminder) {
+    public function getArtifactsByreminder(Tracker_DateReminder $reminder)
+    {
         $time_string = '-';
         if ($reminder->getNotificationType() == 0) {
             $time_string = '+';

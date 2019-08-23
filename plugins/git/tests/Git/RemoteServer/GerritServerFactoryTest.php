@@ -50,7 +50,8 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
     private $dar_1;
     private $dar_2;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->dar_1 = array(
             'id'                   => $this->server_id,
@@ -126,7 +127,8 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
 
     }
 
-    public function itThrowsAnExceptionIfThereIsNoSuchServer() {
+    public function itThrowsAnExceptionIfThereIsNoSuchServer()
+    {
         $unexisting_server_id   = 34;
         $repo = aGitRepository()->withRemoteServerId($unexisting_server_id)->build();
         try {
@@ -137,7 +139,8 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         }
     }
 
-    public function itReturnsAGerritServer() {
+    public function itReturnsAGerritServer()
+    {
         $repo   = aGitRepository()->withRemoteServerId($this->server_id)->build();
 
         $server = $this->factory->getServer($repo);
@@ -145,13 +148,15 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         $this->assertIsA($server, 'Git_RemoteServer_GerritServer');
     }
 
-    public function itGetsAllServers() {
+    public function itGetsAllServers()
+    {
         $servers = $this->factory->getServers();
         $this->assertIsA($servers[$this->server_id], 'Git_RemoteServer_GerritServer');
         $this->assertIsA($servers[$this->alternate_server_id], 'Git_RemoteServer_GerritServer');
     }
 
-    public function itGetsAllServersForAGivenProject() {
+    public function itGetsAllServersForAGivenProject()
+    {
         stub($this->project_manager)->getChildProjects()->returns(array());
         $project = stub('Project')->getId()->returns(458);
         $this->dao->shouldReceive('searchAllByProjectId')->with(458)->andReturn([$this->dar_1])->once();
@@ -159,7 +164,8 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         $this->assertIsA($servers[$this->server_id], 'Git_RemoteServer_GerritServer');
     }
 
-    public function itReturnsChildServers() {
+    public function itReturnsChildServers()
+    {
         $parent     = aMockProject()->withId(369)->build();
         $child1      = aMockProject()->withId(933)->build();
         $child2      = aMockProject()->withId(934)->build();
@@ -179,7 +185,8 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         $this->assertEqual($servers[$this->alternate_server_id]->getId(), $this->alternate_server_id);
     }
 
-    public function itReturnsAllProjectChildren() {
+    public function itReturnsAllProjectChildren()
+    {
         $parent      = aMockProject()->withId(369)->build();
         $child1      = aMockProject()->withId(933)->build();
         $child2      = aMockProject()->withId(934)->build();
@@ -194,7 +201,8 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         $this->factory->getServersForProject($parent);
     }
 
-    public function itReturnsOnlyOneServerEvenWhenThereAreSeveral() {
+    public function itReturnsOnlyOneServerEvenWhenThereAreSeveral()
+    {
         $parent     = aMockProject()->withId(369)->build();
         $child      = aMockProject()->withId(933)->build();
 
@@ -209,7 +217,8 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
     }
 
 
-    public function itSavesAnExistingServer() {
+    public function itSavesAnExistingServer()
+    {
         $this->main_gerrit_server->setLogin('new_login');
         expect($this->dao)->save(
             $this->server_id,
@@ -227,13 +236,15 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         $this->factory->save($this->main_gerrit_server);
     }
 
-    public function itTriggersKeyUpdateEventOnSave() {
+    public function itTriggersKeyUpdateEventOnSave()
+    {
         $this->main_gerrit_server->setLogin('new_login');
         expect($this->system_event_manager)->queueGerritReplicationKeyUpdate($this->main_gerrit_server)->once();
         $this->factory->save($this->main_gerrit_server);
     }
 
-    public function itSetsIdOfNewServerOnSave() {
+    public function itSetsIdOfNewServerOnSave()
+    {
         $new_server = new Git_RemoteServer_GerritServer(
             0,
             $this->host,
@@ -253,17 +264,20 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         $this->assertEqual($new_server->getId(), 113);
     }
 
-    public function itDeletesAnExistingServer() {
+    public function itDeletesAnExistingServer()
+    {
         expect($this->dao)->delete($this->alternate_server_id)->once();
         $this->factory->delete($this->alternate_gerrit_server);
     }
 
-    public function itTriggersKeyUpdateEventOnDelete() {
+    public function itTriggersKeyUpdateEventOnDelete()
+    {
         expect($this->system_event_manager)->queueGerritReplicationKeyUpdate($this->alternate_gerrit_server)->once();
         $this->factory->delete($this->alternate_gerrit_server);
     }
 
-    public function itDoesNotDeleteUsedServer() {
+    public function itDoesNotDeleteUsedServer()
+    {
         expect($this->dao)->delete($this->server_id)->never();
         $this->factory->delete($this->main_gerrit_server);
     }

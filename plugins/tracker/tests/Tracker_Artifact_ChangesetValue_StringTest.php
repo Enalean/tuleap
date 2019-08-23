@@ -22,7 +22,8 @@ require_once 'bootstrap.php';
 
 class Tracker_Artifact_ChangesetValue_String_RESTTest extends TuleapTestCase {
 
-    public function itReturnsTheRESTValue() {
+    public function itReturnsTheRESTValue()
+    {
         $field = mockery_stub(\Tracker_FormElement_Field_String::class)->getName()->returns('field_string');
         $user  = aUser()->withId(101)->build();
 

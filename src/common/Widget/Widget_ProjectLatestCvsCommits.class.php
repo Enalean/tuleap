@@ -32,13 +32,16 @@ class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits {
         parent::__construct('projectlatestcvscommits', 'cvs_get_revisions');
     }
 
-    function getTitle() {
+    function getTitle()
+    {
         return $GLOBALS['Language']->getText('include_project_home','latest_cvs_commit');
     }
-    function _getLinkToCommit($data) {
+    function _getLinkToCommit($data)
+    {
         return '/cvs/index.php?func=detailcommit&amp;group_id='.$this->group_id.'&amp;commit_id='.$data['id'];
     }
-    function _getLinkToMore() {
+    function _getLinkToMore()
+    {
         return '/cvs/?func=browse&group_id='.$this->group_id;
     }
 
@@ -47,7 +50,8 @@ class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits {
         return $project->usesCvs();
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return $GLOBALS['Language']->getText('widget_description_project_latest_cvs_commits','description');
     }
 }

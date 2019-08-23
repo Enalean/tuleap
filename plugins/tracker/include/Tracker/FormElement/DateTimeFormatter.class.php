@@ -22,11 +22,13 @@
 class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateFormatter {
     public const DATE_TIME_FORMAT = 'Y-m-d H:i';
 
-    public function __construct(Tracker_FormElement_Field_Date $field) {
+    public function __construct(Tracker_FormElement_Field_Date $field)
+    {
         parent::__construct($field);
     }
 
-    public function validate($value) {
+    public function validate($value)
+    {
         $is_valid = true;
         if ($value) {
             $rule     = new Rule_Date_Time();
@@ -45,7 +47,8 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
         return $is_valid;
     }
 
-    private function getUserDateFormatPreference() {
+    private function getUserDateFormatPreference()
+    {
         $user_preference = UserManager::instance()->getCurrentUser()->getPreference('user_csv_dateformat');
         $format          = '';
 
@@ -64,20 +67,24 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
         return $format;
     }
 
-    public function getFieldDataForCSVPreview(array $date_explode) {
+    public function getFieldDataForCSVPreview(array $date_explode)
+    {
         return $date_explode[0] . '-' . $date_explode[1] . '-' . $date_explode[2]
             . ' ' . $date_explode[3].':'.$date_explode[4];
     }
 
-    public function formatDate($timestamp) {
+    public function formatDate($timestamp)
+    {
         return format_date(self::DATE_TIME_FORMAT, (float)$timestamp, '');
     }
 
-    public function formatDateForDisplay($timestamp) {
+    public function formatDateForDisplay($timestamp)
+    {
         return format_date($GLOBALS['Language']->getText('system', 'datefmt_time'), (float) $timestamp, '');
     }
 
-    protected function getDatePicker($value, array $errors) {
+    protected function getDatePicker($value, array $errors)
+    {
         return $GLOBALS['HTML']->getBootstrapDatePicker(
             "tracker_admin_field_". $this->field->getId(),
             'artifact['. $this->field->getId() .']',

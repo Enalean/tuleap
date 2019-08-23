@@ -30,7 +30,8 @@ class SourceOfAssociationDetectorTest extends TuleapTestCase {
     private $release;
     private $sprint;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $release_tracker = aTracker()->withId(123)->build();
@@ -46,11 +47,13 @@ class SourceOfAssociationDetectorTest extends TuleapTestCase {
         $this->detector = new SourceOfAssociationDetector($hierarchy_factory);
     }
 
-    public function itSaysThatReleaseIsASourceOfAssociation() {
+    public function itSaysThatReleaseIsASourceOfAssociation()
+    {
         $this->assertTrue($this->detector->isChild($this->release, $this->sprint));
     }
 
-    public function itSaysThatSprintIsNotASourceOfAssociation() {
+    public function itSaysThatSprintIsNotASourceOfAssociation()
+    {
         $this->assertFalse($this->detector->isChild($this->sprint, $this->release));
     }
 }

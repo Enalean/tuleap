@@ -17,7 +17,8 @@
  */
 
 class AgileDashboard_KanbanColumnNotRemovableException extends Exception {
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct("This column can't be removed from this kanban");
     }
 }

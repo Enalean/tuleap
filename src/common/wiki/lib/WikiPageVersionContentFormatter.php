@@ -33,11 +33,13 @@ class WikiPageVersionContentFormatter {
     /** @var WikiPageWrapper */
     private $wrapper;
 
-    public function __construct($project_id) {
+    public function __construct($project_id)
+    {
         $this->wrapper = new WikiPageWrapper($project_id);
     }
 
-    public function getFormattedContent(WikiPage $wiki_page, WikiPageVersion $version) {
+    public function getFormattedContent(WikiPage $wiki_page, WikiPageVersion $version)
+    {
         $request = $this->wrapper->getRequest();
         $request->initializeTheme();
 

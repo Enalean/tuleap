@@ -25,29 +25,35 @@ class GitPresenters_AdminMassUdpdateMirroringPresenter {
      */
     public $mirror_presenters;
 
-    public function __construct(array $mirror_presenters) {
+    public function __construct(array $mirror_presenters)
+    {
         $this->mirror_presenters = $mirror_presenters;
     }
 
-    public function has_more_than_one_mirror() {
+    public function has_more_than_one_mirror()
+    {
         return count($this->mirror_presenters) > 1;
     }
 
-    public function percent_width() {
+    public function percent_width()
+    {
         $remaining_percent = 80;
 
         return $remaining_percent / count($this->mirror_presenters);
     }
 
-    public function mirroring_title() {
+    public function mirroring_title()
+    {
         return dgettext('tuleap-git', 'Mirroring');
     }
 
-    public function mirroring_mirror_name() {
+    public function mirroring_mirror_name()
+    {
         return dgettext('tuleap-git', 'Name');
     }
 
-    public function mirroring_mirror_url() {
+    public function mirroring_mirror_url()
+    {
         return dgettext('tuleap-git', 'URL');
     }
 }

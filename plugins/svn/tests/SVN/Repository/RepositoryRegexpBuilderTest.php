@@ -28,7 +28,8 @@ class RepositoryRegexpBuilderTest extends TuleapTestCase {
 
     private $regexp;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->regexp = new RepositoryRegexpBuilder();
     }

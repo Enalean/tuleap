@@ -63,19 +63,23 @@ class ResourcesPatcher {
         $this->priority_manager->enableExceptionsOnError();
     }
 
-    public function startTransaction() {
+    public function startTransaction()
+    {
         $this->priority_manager->startTransaction();
     }
 
-    public function commit() {
+    public function commit()
+    {
         $this->priority_manager->commit();
     }
 
-    public function rollback() {
+    public function rollback()
+    {
         $this->priority_manager->rollback();
     }
 
-    public function updateArtifactPriorities(OrderRepresentationBase $order, $context, $project_id) {
+    public function updateArtifactPriorities(OrderRepresentationBase $order, $context, $project_id)
+    {
         if ($order->direction === OrderRepresentationBase::BEFORE) {
             $this->priority_manager->moveListOfArtifactsBefore($order->ids, $order->compared_to, $context, $project_id);
         } else {
@@ -111,7 +115,8 @@ class ResourcesPatcher {
         return $to_add;
     }
 
-    private function getArtifact($id) {
+    private function getArtifact($id)
+    {
         $artifact = $this->artifact_factory->getArtifactById($id);
 
         if (! $artifact) {

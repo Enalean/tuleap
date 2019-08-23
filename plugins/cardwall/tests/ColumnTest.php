@@ -24,7 +24,8 @@ class Cardwall_Column_isInColumnTest extends TuleapTestCase {
 
 
     //TODO move this to the configTest file
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         $tracker = aMockeryTracker()->withId(33)->build();
@@ -44,47 +45,55 @@ class Cardwall_Column_isInColumnTest extends TuleapTestCase {
         $this->config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
     }
 
-    public function itIsInTheCellIfTheLabelMatches() {
+    public function itIsInTheCellIfTheLabelMatches()
+    {
         stub($this->field)->getFirstValueFor($this->artifact->getLastChangeset())->returns('ongoing');
         $column   = $this->newCardwall_Column(0, 'ongoing');
         $this->assertIn($column);
     }
 
-    public function itIsNotInTheCellIfTheLabelDoesntMatch() {
+    public function itIsNotInTheCellIfTheLabelDoesntMatch()
+    {
         stub($this->field)->getFirstValueFor($this->artifact->getLastChangeset())->returns('ongoing');
         $column   = $this->newCardwall_Column(0, 'done');
         $this->assertNotIn($column);
     }
 
-    public function itIsInTheCellIfItHasNoStatusAndTheColumnHasId100() {
+    public function itIsInTheCellIfItHasNoStatusAndTheColumnHasId100()
+    {
         $null_status = null;
         stub($this->field)->getFirstValueFor($this->artifact->getLastChangeset())->returns($null_status);
         $column   = $this->newCardwall_Column(100, 'done');
         $this->assertIn($column);
     }
 
-    public function itIsNotInTheCellIfItHasNoStatus() {
+    public function itIsNotInTheCellIfItHasNoStatus()
+    {
         $null_status = null;
         stub($this->field)->getFirstValueFor($this->artifact->getLastChangeset())->returns($null_status);
         $column   = $this->newCardwall_Column(123, 'done');
         $this->assertNotIn($column);
     }
 
-    public function itIsNotInTheCellIfHasANonMatchingLabelTheColumnIdIs100() {
+    public function itIsNotInTheCellIfHasANonMatchingLabelTheColumnIdIs100()
+    {
         stub($this->field)->getFirstValueFor($this->artifact->getLastChangeset())->returns('ongoing');
         $column   = $this->newCardwall_Column(100, 'done');
         $this->assertNotIn($column);
     }
 
-    private function assertIn($column) {
+    private function assertIn($column)
+    {
          $this->assertTrue($this->config->isInColumn($this->artifact, $this->field_provider, $column));
     }
 
-    private function assertNotIn($column) {
+    private function assertNotIn($column)
+    {
          $this->assertFalse($this->config->isInColumn($this->artifact, $this->field_provider, $column));
     }
 
-    public function newCardwall_Column($id, $label) {
+    public function newCardwall_Column($id, $label)
+    {
         $header_color = 0;
         return new Cardwall_Column($id, $label, $header_color);
     }
@@ -95,7 +104,8 @@ class Cardwall_Column_canContainStatusTest extends TuleapTestCase {
 
     private $column;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -104,10 +114,12 @@ class Cardwall_Column_canContainStatusTest extends TuleapTestCase {
         $this->column = new Cardwall_Column($id, $label, $header_color);
     }
 
-    public function itReturnsTrueOnNoneColumnIfStatusIsNone() {
+    public function itReturnsTrueOnNoneColumnIfStatusIsNone()
+    {
         $this->assertTrue($this->column->canContainStatus('None'));
     }
-    public function itReturnsTrueOnNoneColumnIfStatusIsNull() {
+    public function itReturnsTrueOnNoneColumnIfStatusIsNull()
+    {
         $this->assertTrue($this->column->canContainStatus(null));
     }
 }

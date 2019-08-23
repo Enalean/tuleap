@@ -39,26 +39,32 @@ rcs_id('$Id: RdfDefinition.php,v 1.6 2004/09/14 10:33:39 rurban Exp $');
 class WikiPlugin_RdfDefinition
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("RdfDefinition");
     }
-    function getDescription() {
+    function getDescription()
+    {
         return _("Define the RDF vocabulary for a wiki subset.");
     }
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.6 $");
     }
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array(
                      'pages' => false,        // define affected pageset here?
                      );
     }
-    function handle_plugin_args_cruft(&$argstr, &$args) {
+    function handle_plugin_args_cruft(&$argstr, &$args)
+    {
         $this->source = $argstr;
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         // just a list of valid predicates
         // comments?
         ;

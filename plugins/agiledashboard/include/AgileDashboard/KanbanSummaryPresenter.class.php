@@ -34,35 +34,42 @@ class AgileDashboard_Presenter_KanbanSummaryPresenter {
         $this->kanban_item_dao = $kanban_item_dao;
     }
 
-    public function name() {
+    public function name()
+    {
         return $this->kanban->getName();
     }
 
-    public function id() {
+    public function id()
+    {
         return $this->kanban->getId();
     }
 
-    public function count_open_kanban_items() {
+    public function count_open_kanban_items()
+    {
         return $this->kanban_item_dao->getOpenItemIds(
             $this->kanban->getTrackerId()
         )->count();
     }
 
-    public function count_closed_kanban_items() {
+    public function count_closed_kanban_items()
+    {
         return $this->kanban_item_dao->getKanbanArchiveItemIds(
             $this->kanban->getTrackerId()
         )->count();
     }
 
-    public function open() {
+    public function open()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','open');
     }
 
-    public function closed() {
+    public function closed()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','closed');
     }
 
-    public function cardwall() {
+    public function cardwall()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'cardwall');
     }
 }

@@ -20,7 +20,8 @@
 
 class SVN_Apache_ModPerlTest extends TuleapTestCase
 {
-    private function setConfForGuineaPigProject() {
+    private function setConfForGuineaPigProject()
+    {
         return array('unix_group_name' => 'gpig',
                      'public_path'     => '/svnroot/gpig',
                      'system_path'     => '/svnroot/gpig',
@@ -31,17 +32,20 @@ class SVN_Apache_ModPerlTest extends TuleapTestCase
     /**
      * @return SVN_Apache_ModPerl
      */
-    private function GivenAnApacheAuthenticationConfForGuineaPigProject() {
+    private function GivenAnApacheAuthenticationConfForGuineaPigProject()
+    {
         return new SVN_Apache_ModPerl(mock('Tuleap\SvnCore\Cache\Parameters'), $this->setConfForGuineaPigProject());
     }
 
-    public function testGetSVNApacheConfHeadersShouldInsertModPerl() {
+    public function testGetSVNApacheConfHeadersShouldInsertModPerl()
+    {
         $conf = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
 
         $this->assertPattern('/PerlLoadModule Apache::Tuleap/', $conf->getHeaders());
     }
 
-    public function testGetApacheAuthShouldContainsDefaultValues() {
+    public function testGetApacheAuthShouldContainsDefaultValues()
+    {
         $mod  = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
         $project_db_row = $this->setConfForGuineaPigProject();
         $conf = $mod->getConf($project_db_row["public_path"], $project_db_row["system_path"]);
@@ -51,7 +55,8 @@ class SVN_Apache_ModPerlTest extends TuleapTestCase
         $this->assertPattern('/AuthName "Subversion Authorization \(Guinea Pig\)"/', $conf);
     }
 
-    public function testGetApacheAuthShouldSetupPerlAccess() {
+    public function testGetApacheAuthShouldSetupPerlAccess()
+    {
         $mod  = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
         $project_db_row = $this->setConfForGuineaPigProject();
         $conf = $mod->getConf($project_db_row["public_path"], $project_db_row["system_path"]);
@@ -60,7 +65,8 @@ class SVN_Apache_ModPerlTest extends TuleapTestCase
         $this->assertPattern('/TuleapDSN/', $conf);
     }
 
-    public function testGetApacheAuthShouldNotReferenceAuthMysql() {
+    public function testGetApacheAuthShouldNotReferenceAuthMysql()
+    {
         $mod  = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
         $project_db_row = $this->setConfForGuineaPigProject();
         $conf = $mod->getConf($project_db_row["public_path"], $project_db_row["system_path"]);

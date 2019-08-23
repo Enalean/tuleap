@@ -128,7 +128,8 @@ abstract class LDAP_GroupManager
      *
      * @return Void
      */
-    public function setGroupDn($groupDn) {
+    public function setGroupDn($groupDn)
+    {
         $this->groupDn = $groupDn;
     }
 
@@ -137,7 +138,8 @@ abstract class LDAP_GroupManager
      *
      * @return String
      */
-    public function getGroupDn() {
+    public function getGroupDn()
+    {
         if ($this->groupDn === null) {
             $lri = $this->getLdap()->searchGroup($this->groupName);
             if ($lri && count($lri) === 1) {
@@ -158,7 +160,8 @@ abstract class LDAP_GroupManager
      *
      * @return void
      */
-    public function bindWithLdap($option = self::BIND_OPTION, $synchroPolicy = self::NO_SYNCHRONIZATION, $displayFeedback = true) {
+    public function bindWithLdap($option = self::BIND_OPTION, $synchroPolicy = self::NO_SYNCHRONIZATION, $displayFeedback = true)
+    {
         if ($this->getGroupDn()) {
             $this->bindWithLdapGroup($option, $synchroPolicy);
             $this->syncMembersWithLdap($option);
@@ -181,7 +184,8 @@ abstract class LDAP_GroupManager
      * @param string $option tells whether it is a complete bind with the ldap group or user wants to preserve
      * @return bool
      */
-    protected function syncMembersWithLdap($option) {
+    protected function syncMembersWithLdap($option)
+    {
         $toAdd = $this->getUsersToBeAdded($option);
         if ($toAdd) {
             foreach($toAdd as $userId) {
@@ -203,7 +207,8 @@ abstract class LDAP_GroupManager
         return true;
     }
 
-    private function resetUsersCollections() {
+    private function resetUsersCollections()
+    {
         $this->usersToAdd       = null;
         $this->usersToRemove    = null;
         $this->usersNotImpacted = null;
@@ -246,7 +251,8 @@ abstract class LDAP_GroupManager
      * @param string $option 'bind' or 'preserve_members'.
      * @return Array
      */
-    public function getUsersToBeAdded($option) {
+    public function getUsersToBeAdded($option)
+    {
         if ($this->usersToAdd === null) {
             $this->diffDbAndDirectory($option);
         }
@@ -260,7 +266,8 @@ abstract class LDAP_GroupManager
      * @param string $option 'bind' or 'preserve_members'.
      * @return Array
      */
-    public function getUsersToBeRemoved($option) {
+    public function getUsersToBeRemoved($option)
+    {
         if ($this->usersToRemove === null) {
             $this->diffDbAndDirectory($option);
         }
@@ -274,7 +281,8 @@ abstract class LDAP_GroupManager
      * @param string $option 'bind' or 'preserve_members'.
      * @return Array
      */
-    public function getUsersNotImpacted($option) {
+    public function getUsersNotImpacted($option)
+    {
         if ($this->usersNotImpacted === null) {
             $this->diffDbAndDirectory($option);
         }

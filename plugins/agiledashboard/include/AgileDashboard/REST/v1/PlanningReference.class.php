@@ -27,7 +27,8 @@ use Tuleap\REST\v1\PlanningReferenceBase;
  */
 class PlanningReference extends PlanningReferenceBase {
 
-    public function build(Planning $planning) {
+    public function build(Planning $planning)
+    {
         $this->id  = JsonCast::toInt($planning->getId());
         $this->uri = PlanningRepresentation::ROUTE . '/' . $this->id;
     }

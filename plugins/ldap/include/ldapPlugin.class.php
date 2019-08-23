@@ -72,7 +72,8 @@ class LdapPlugin extends Plugin {
         bindTextDomain('tuleap-ldap', LDAP_SITE_CONTENT_DIR);
     }
 
-    public function getHooksAndCallbacks() {
+    public function getHooksAndCallbacks()
+    {
         // Layout
         $this->addHook('display_newaccount', 'forbidIfLdapAuth', false);
         $this->addHook('before_register', 'before_register', false);
@@ -175,7 +176,8 @@ class LdapPlugin extends Plugin {
     /**
      * @return LdapPluginInfo
      */
-    function getPluginInfo() {
+    function getPluginInfo()
+    {
         if (! $this->pluginInfo instanceof LdapPluginInfo) {
             $this->pluginInfo = new LdapPluginInfo($this);
         }
@@ -185,14 +187,16 @@ class LdapPlugin extends Plugin {
     /**
      * @return LDAP
      */
-    public function getLdap() {
+    public function getLdap()
+    {
         if (!isset($this->ldapInstance)) {
             $this->ldapInstance = $this->instanciateLDAP();
         }
         return $this->ldapInstance;
     }
 
-    private function instanciateLDAP() {
+    private function instanciateLDAP()
+    {
         return new LDAP(
             $this->getLDAPParams(),
             $this->getLogger()
@@ -210,7 +214,8 @@ class LdapPlugin extends Plugin {
     /**
      * @return LDAP
      */
-    public function getLDAPWrite() {
+    public function getLDAPWrite()
+    {
         if (! isset($this->ldap_write_instance)) {
             $ldap_params = $this->getLDAPParams();
             if (isset($ldap_params['server_type']) && $ldap_params['server_type'] == LDAP::SERVER_TYPE_ACTIVE_DIRECTORY ) {
@@ -224,7 +229,8 @@ class LdapPlugin extends Plugin {
         return $this->ldap_write_instance;
     }
 
-    private function hasLDAPWrite() {
+    private function hasLDAPWrite()
+    {
         try {
             $this->getLDAPWrite();
             return true;
@@ -234,7 +240,8 @@ class LdapPlugin extends Plugin {
         return false;
     }
 
-    private function getLDAPParams() {
+    private function getLDAPParams()
+    {
         $ldap_params = array();
         $keys = $this->getPluginInfo()->propertyDescriptors->getKeys()->iterator();
         foreach ($keys as $k) {
@@ -249,7 +256,8 @@ class LdapPlugin extends Plugin {
      *
      * @return LDAP_UserManager
      */
-    public function getLdapUserManager() {
+    public function getLdapUserManager()
+    {
         if (!isset($this->_ldapUmInstance)) {
             $this->_ldapUmInstance = new LDAP_UserManager($this->getLdap(), LDAP_UserSync::instance());
         }
@@ -266,7 +274,8 @@ class LdapPlugin extends Plugin {
      *
      * @return void
      */
-    function layout_search_entry($params) {
+    function layout_search_entry($params)
+    {
         $params['search_entries'][] = array(
             'value'    => 'people_ldap',
             'label'    => $GLOBALS['Language']->getText('plugin_ldap', 'people_ldap'),
@@ -288,7 +297,8 @@ class LdapPlugin extends Plugin {
      *
      * @return void
      */
-    function ajax_search_user($params) {
+    function ajax_search_user($params)
+    {
         if($this->isLDAPUserManagementEnabled() && !$params['codendiUserOnly']) {
             $params['pluginAnswered'] = true;
 
@@ -331,7 +341,8 @@ class LdapPlugin extends Plugin {
     /**
      * @see Event::SEARCH_TYPE
      */
-    public function search_type($params) {
+    public function search_type($params)
+    {
         $query  = $params['query'];
         $result = $params['results'];
 
@@ -342,7 +353,8 @@ class LdapPlugin extends Plugin {
         }
     }
 
-    public function getSearchTemplateRenderer() {
+    public function getSearchTemplateRenderer()
+    {
         return TemplateRendererFactory::build()->getRenderer(
             array(
                 dirname(__FILE__).'/../templates',
@@ -360,7 +372,8 @@ class LdapPlugin extends Plugin {
      *                 $params['auth_user_id']
      *                 $params['auth_user_status']
      */
-    function authenticate($params) {
+    function authenticate($params)
+    {
         if ($this->isLdapAuthType()) {
             try {
                 $params['auth_success'] = false;
@@ -386,7 +399,8 @@ class LdapPlugin extends Plugin {
      * account was automatically created and user must complete his
      * registeration.
      */
-    function account_redirect_after_login($params) {
+    function account_redirect_after_login($params)
+    {
         if ($this->isLdapAuthType()) {
             $ldapUserDao = new LDAP_UserDao(CodendiDataAccess::instance());
             if(!$ldapUserDao->alreadyLoggedInOnce(UserManager::instance()->getCurrentUser()->getId())) {
@@ -406,7 +420,8 @@ class LdapPlugin extends Plugin {
      * @params $params $params['user'] IN
      *                 $params['allow_codendi_login'] IN/OUT
      */
-    function allowCodendiLogin($params) {
+    function allowCodendiLogin($params)
+    {
         if ($this->isLdapAuthType()) {
 
             if ($params['user']->getLdapId() != null) {
@@ -442,7 +457,8 @@ class LdapPlugin extends Plugin {
      *  IN  $params['ident']
      *  IN/OUT  $params['user'] User object if found or null.
      */
-    function user_manager_find_user($params) {
+    function user_manager_find_user($params)
+    {
         if ($this->isLDAPUserManagementEnabled()) {
             $ldap = $this->getLdap();
             // First, test if its provided by autocompleter: "Common Name (login name)"
@@ -559,7 +575,8 @@ class LdapPlugin extends Plugin {
      *  OUT $params['entry_value']
      *  OUT $params['entry_change']
      */
-    function accountPiEntry($params) {
+    function accountPiEntry($params)
+    {
         if($this->isLdapAuthType()) {
             $ldapUm = $this->getLdapUserManager();
             $lr = $ldapUm->getLdapFromUserId($params['user']->getId());
@@ -580,7 +597,8 @@ class LdapPlugin extends Plugin {
     /**
      * Hook
      */
-    function buildLinkToDirectory(LDAPResult $lr, $value='') {
+    function buildLinkToDirectory(LDAPResult $lr, $value='')
+    {
         if($value === '') {
             $value = $lr->getLogin();
         }
@@ -598,7 +616,8 @@ class LdapPlugin extends Plugin {
     /**
      * Hook
      */
-    function cancelChange($params) {
+    function cancelChange($params)
+    {
         if($this->isLdapAuthType()) {
             exit_permission_denied();
         }
@@ -607,7 +626,8 @@ class LdapPlugin extends Plugin {
     /**
      * Hook
      */
-    function cancelChangeAndUserLdap($params) {
+    function cancelChangeAndUserLdap($params)
+    {
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
         if($this->isLdapAuthType() && $user->getLdapId() != '') {
@@ -618,20 +638,23 @@ class LdapPlugin extends Plugin {
     }
 
 
-    function before_register($params) {
+    function before_register($params)
+    {
         if ($this->isLdapAuthType() && ! $this->hasLDAPWrite()) {
             util_return_to('/account/login.php');
         }
     }
 
-    function warnNoPwChange($params) {
+    function warnNoPwChange($params)
+    {
         global $Language;
         if($this->isLdapAuthType()) {
             $params['additional_password_messages'][] = '<div class="tlp-alert-warning">' . $Language->getText('admin_user_changepw','ldap_warning') . '</div>';
         }
     }
 
-    function addLdapInput($params) {
+    function addLdapInput($params)
+    {
         global $Language;
         if ($this->isLdapAuthType()) {
             echo $Language->getText('admin_usergroup','ldap_id').': <INPUT TYPE="TEXT" NAME="ldap_id" VALUE="'.$params['row_user']['ldap_id'].'" SIZE="35" MAXLENGTH="55">
@@ -648,7 +671,8 @@ class LdapPlugin extends Plugin {
      *
      * @return void
      */
-    function updateLdapID($params) {
+    function updateLdapID($params)
+    {
         global $Language;
         if ($this->isLdapAuthType()) {
             $request = HTTPRequest::instance();
@@ -674,7 +698,8 @@ class LdapPlugin extends Plugin {
      *
      * @return void
      */
-    function forbidIfLdapAuth($params) {
+    function forbidIfLdapAuth($params)
+    {
         if ($this->isLdapAuthType()) {
             if (! $this->hasLDAPWrite()) {
                 $params['allow'] = false;
@@ -691,7 +716,8 @@ class LdapPlugin extends Plugin {
      *
      * @return void
      */
-    function forbidIfLdapAuthAndUserLdap($params) {
+    function forbidIfLdapAuthAndUserLdap($params)
+    {
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
         if ($this->isLdapAuthType()&& $user->getLdapId() != '') {
@@ -701,7 +727,8 @@ class LdapPlugin extends Plugin {
         }
     }
 
-    public function project_admin_ugroup_deletion($params) {
+    public function project_admin_ugroup_deletion($params)
+    {
         $ldap_usergroup_manager = $this->getLdapUserGroupManager();
         $ldap_usergroup_manager->setId($params['ugroup_id']);
 
@@ -711,7 +738,8 @@ class LdapPlugin extends Plugin {
     /**
      * @see Event::SVN_INTRO
      */
-    public function svn_intro($params) {
+    public function svn_intro($params)
+    {
         $ldap_project_manager = new LDAP_ProjectManager();
 
         if ($this->isLdapAuthType() &&
@@ -733,7 +761,8 @@ class LdapPlugin extends Plugin {
      * $params['project_svnroot']
      * $params['username']
      */
-    function svn_check_access_username($params) {
+    function svn_check_access_username($params)
+    {
         $svnProjectManager = new LDAP_ProjectManager();
         if($this->isLdapAuthType()
            && isset($params['project_svnroot'])
@@ -857,7 +886,8 @@ class LdapPlugin extends Plugin {
      *
      * @return Void
      */
-    function ugroup_update_users_allowed(array $params) {
+    function ugroup_update_users_allowed(array $params)
+    {
         if ($params['ugroup_id']) {
             $ldapUserGroupManager = $this->getLdapUserGroupManager();
             if (!$ldapUserGroupManager->isMembersUpdateAllowed($params['ugroup_id'])) {
@@ -888,14 +918,16 @@ class LdapPlugin extends Plugin {
      *
      * @return void
      */
-    function backend_factory_get_svn(array $params) {
+    function backend_factory_get_svn(array $params)
+    {
         if ($this->isLdapAuthType()) {
             $params['base']  = 'LDAP_BackendSVN';
             $params['setup'] = array($this->getLdap());
         }
     }
 
-    public function svn_apache_auth($params) {
+    public function svn_apache_auth($params)
+    {
         if ($this->isLdapAuthType()) {
             $ldapProjectManager = new LDAP_ProjectManager();
             if ($ldapProjectManager->hasSVNLDAPAuth($params['project_info']['group_id'])) {
@@ -996,7 +1028,8 @@ class LdapPlugin extends Plugin {
         }
     }
 
-    private function isLdapAuthType() {
+    private function isLdapAuthType()
+    {
         return ForgeConfig::get('sys_auth_type') === ForgeConfig::AUTH_TYPE_LDAP;
     }
 
@@ -1007,15 +1040,18 @@ class LdapPlugin extends Plugin {
      *
      * @return bool
      */
-    protected function isDailySyncEnabled() {
+    protected function isDailySyncEnabled()
+    {
         return $this->isParamEnabled('daily_sync');
     }
 
-    protected function isLDAPUserManagementEnabled() {
+    protected function isLDAPUserManagementEnabled()
+    {
         return $this->isParamEnabled('user_management');
     }
 
-    protected function isLDAPGroupsUsageEnabled() {
+    protected function isLDAPGroupsUsageEnabled()
+    {
         return $this->isParamEnabled('grp_enabled');
     }
 
@@ -1026,7 +1062,8 @@ class LdapPlugin extends Plugin {
      *
      * @return bool
      */
-    protected function isParamEnabled($key) {
+    protected function isParamEnabled($key)
+    {
         $value = $this->getLDAP()->getLDAPParam($key);
         if ($value === null || $value == 1) {
             return true;
@@ -1034,11 +1071,13 @@ class LdapPlugin extends Plugin {
         return false;
     }
 
-    public function system_event_get_types_for_default_queue($params) {
+    public function system_event_get_types_for_default_queue($params)
+    {
         $params['types'][] = 'PLUGIN_LDAP_UPDATE_LOGIN';
     }
 
-    public function get_system_event_class($params) {
+    public function get_system_event_class($params)
+    {
         switch($params['type']) {
             case 'PLUGIN_LDAP_UPDATE_LOGIN' :
                 include_once dirname(__FILE__).'/system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php';
@@ -1053,13 +1092,15 @@ class LdapPlugin extends Plugin {
         }
     }
 
-    public function get_ldap_login_name_for_user($params) {
+    public function get_ldap_login_name_for_user($params)
+    {
         if ($this->isLdapAuthType()) {
             $params['ldap_user'] = $this->getLdapUserManager()->getLDAPUserFromUser($params['user']);
         }
     }
 
-    public function login_presenter($params) {
+    public function login_presenter($params)
+    {
         if ($this->isLdapAuthType()) {
             include_once dirname(__FILE__).'/LoginPresenter.class.php';
             $params['authoritative'] = true;
@@ -1070,7 +1111,8 @@ class LdapPlugin extends Plugin {
     /**
      * @see Event::USER_MANAGER_UPDATE_DB
      */
-    public function user_manager_update_db(array $params) {
+    public function user_manager_update_db(array $params)
+    {
         try {
             $this->getLDAPUserWrite()->updateWithPreviousUser($params['old_user'], $params['new_user']);
         } catch (LDAP_Exception_NoWriteException $exception) {
@@ -1084,7 +1126,8 @@ class LdapPlugin extends Plugin {
      *
      * @see Event::USER_MANAGER_CREATE_ACCOUNT
      */
-    public function user_manager_create_account(array $params) {
+    public function user_manager_create_account(array $params)
+    {
         try {
             $this->getLDAPUserWrite()->updateWithUser($params['user']);
         } catch (LDAP_Exception_NoWriteException $exception) {
@@ -1094,7 +1137,8 @@ class LdapPlugin extends Plugin {
         }
     }
 
-    private function getLDAPUserWrite() {
+    private function getLDAPUserWrite()
+    {
         return new LDAP_UserWrite(
             $this->getLDAPWrite(),
             UserManager::instance(),
@@ -1107,7 +1151,8 @@ class LdapPlugin extends Plugin {
     /**
      * @see GIT_EVENT_PLATFORM_CAN_USE_GERRIT
      */
-    public function git_event_platform_can_use_gerrit($params) {
+    public function git_event_platform_can_use_gerrit($params)
+    {
         $ldap_params = $this->getLDAPParams();
 
         $platform_uses_ldap_for_authentication = $this->isLdapAuthType();
@@ -1118,7 +1163,8 @@ class LdapPlugin extends Plugin {
         }
     }
 
-    public function getAdministrationOptions() {
+    public function getAdministrationOptions()
+    {
         $this->updateAdministrationOptions();
 
         if (! file_exists($this->getConfigFilePath())) {
@@ -1128,7 +1174,8 @@ class LdapPlugin extends Plugin {
         }
     }
 
-    private function updateAdministrationOptions() {
+    private function updateAdministrationOptions()
+    {
         $request   = HTTPRequest::instance();
         $ldap_type = $request->getValidated('ldap_type', 'string', false);
 
@@ -1148,11 +1195,13 @@ class LdapPlugin extends Plugin {
         }
     }
 
-    private function getEtcDir() {
+    private function getEtcDir()
+    {
         return $GLOBALS['sys_custompluginsroot'] .'ldap/etc/';
     }
 
-    private function getConfigFilePath() {
+    private function getConfigFilePath()
+    {
         return $this->getEtcDir().'ldap.inc';
     }
 
@@ -1168,7 +1217,8 @@ class LdapPlugin extends Plugin {
     /**
      * @return bool
      * */
-    private function isGroupSyncAdminNotificationsEnabled() {
+    private function isGroupSyncAdminNotificationsEnabled()
+    {
         return $this->getLdap()->getLDAPParam('grp_sync_admin_notifications_enabled');
     }
 

@@ -26,7 +26,8 @@ class b201312171433_remove_git_foreign_keys extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Removes foreign keys that reference remote servers in the plugin git tables.
 EOT;
@@ -37,7 +38,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -46,7 +48,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_git DROP FOREIGN KEY remote_server_idx";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

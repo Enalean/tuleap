@@ -34,7 +34,8 @@ class ColorPresenter {
     public $is_selected;
 
 
-    public function __construct($color, $is_selected) {
+    public function __construct($color, $is_selected)
+    {
         $this->color       = $color;
         $this->is_selected = $is_selected;
     }

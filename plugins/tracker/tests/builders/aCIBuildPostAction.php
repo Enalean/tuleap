@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../bootstrap.php';
 
-function aCIBuildPostAction() {
+function aCIBuildPostAction()
+{
     return new Test_Transition_PostAction_CIBuild_Builder();
 }
 
@@ -28,36 +29,43 @@ class Test_Transition_PostAction_CIBuild_Builder {
 
     private $id;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->transition = aTransition()->build();
     }
 
-    public function withId($id) {
+    public function withId($id)
+    {
         $this->id = $id;
         return $this;
     }
 
-    public function withTransition(Transition $transition) {
+    public function withTransition(Transition $transition)
+    {
         $this->transition = $transition;
         return $this;
     }
 
-    public function withTransitionId($transition_id) {
+    public function withTransitionId($transition_id)
+    {
         $this->transition = aTransition()->withId($transition_id)->build();
         return $this;
     }
 
-    public function withValue($value) {
+    public function withValue($value)
+    {
         $this->value = $value;
         return $this;
     }
 
-    public function withCIClient($ci_client) {
+    public function withCIClient($ci_client)
+    {
         $this->ci_client = $ci_client;
         return $this;
     }
 
-    public function build() {
+    public function build()
+    {
         return new Transition_PostAction_CIBuild(
             $this->transition,
             $this->id,

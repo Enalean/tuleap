@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function send_new_project_email(Project $project) {
+function send_new_project_email(Project $project)
+{
     $ugroup_manager = new UGroupManager();
     $admin_ugroup   = $ugroup_manager->getProjectAdminsUGroup($project);
 
@@ -37,7 +38,8 @@ function send_new_project_email(Project $project) {
     return true;
 }
 
-function send_new_user_email($to, $login, $confirm_hash) {
+function send_new_user_email($to, $login, $confirm_hash)
+{
     //needed by new_user_email.txt
     $base_url  = HTTPRequest::instance()->getServerUrl();
     $presenter = new MailPresenterFactory();
@@ -60,7 +62,8 @@ function send_admin_new_user_email($to, $login)
     return $mail->send();
 }
 
-function send_new_user_email_notification($to, $login) {
+function send_new_user_email_notification($to, $login)
+{
     //needed by new_user_email.txt
     $base_url  = HTTPRequest::instance()->getServerUrl();
     $presenter = new MailPresenterFactory();
@@ -71,7 +74,8 @@ function send_new_user_email_notification($to, $login) {
     return $mail->send();
 }
 
-function send_approval_new_user_email($to, $login) {
+function send_approval_new_user_email($to, $login)
+{
     //needed by new_user_email.txt
     $base_url  = HTTPRequest::instance()->getServerUrl();
     $presenter = new MailPresenterFactory();

@@ -17,7 +17,8 @@ class ArtifactCannedHtml extends ArtifactCanned {
      *
      *  @param $artifact_type - the ArtifactType object embedding this ArtifactCanned sets
      */
-    function __construct(&$artifact_type) {
+    function __construct(&$artifact_type)
+    {
         return parent::__construct($artifact_type);
     }
 
@@ -26,7 +27,8 @@ class ArtifactCannedHtml extends ArtifactCanned {
      *
      *  @return void
      */
-    function displayCreateForm(){
+    function displayCreateForm()
+    {
         global $Language;
 
         echo '<h3>'.$Language->getText('tracker_include_canned','create_response').'</h3>';
@@ -58,7 +60,8 @@ class ArtifactCannedHtml extends ArtifactCanned {
      *
      *  @return void
      */
-    function displayUpdateForm() {
+    function displayUpdateForm()
+    {
         global $Language;
         echo "<P>";
         $atid = $this->ArtifactType->getID();
@@ -93,7 +96,8 @@ class ArtifactCannedHtml extends ArtifactCanned {
      *
      *  @return void
      */
-    function displayCannedResponses() {
+    function displayCannedResponses()
+    {
         global $Language;
         $group_id = $this->ArtifactType->Group->getID();
         $atid = $this->ArtifactType->getID();

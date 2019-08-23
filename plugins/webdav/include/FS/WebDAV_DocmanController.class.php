@@ -31,40 +31,51 @@
  */
 class WebDAV_DocmanController extends Docman_Controller {
 
-    public function __construct(DocmanPlugin $plugin, WebDAV_Request $request) {
+    public function __construct(DocmanPlugin $plugin, WebDAV_Request $request)
+    {
         parent::__construct($plugin, $plugin->getPluginPath(), $plugin->getThemePath(), $request);
     }
 
-    public function actionsManagement() {
+    public function actionsManagement()
+    {
         $action = new Docman_Actions($this);
         $action->process($this->action, $this->_actionParams);
     }
 
-    public function viewsManagement() {
+    public function viewsManagement()
+    {
     }
 
-    public function _includeView() {
+    public function _includeView()
+    {
     }
 
-    public function _set_deleteView_errorPerms() {
+    public function _set_deleteView_errorPerms()
+    {
     }
 
-    public function _set_redirectView() {
+    public function _set_redirectView()
+    {
     }
 
-    public function _setView($view) {
+    public function _setView($view)
+    {
     }
 
-    public function _set_moveView_errorPerms() {
+    public function _set_moveView_errorPerms()
+    {
     }
 
-    public function _set_createItemView_errorParentDoesNotExist(&$item, $get_show_view) {
+    public function _set_createItemView_errorParentDoesNotExist(&$item, $get_show_view)
+    {
     }
 
-    public function _set_createItemView_afterCreate($view) {
+    public function _set_createItemView_afterCreate($view)
+    {
     }
 
-    public function _set_doesnot_belong_to_project_error($item, $group) {
+    public function _set_doesnot_belong_to_project_error($item, $group)
+    {
     }
 }
 ?>

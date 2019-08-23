@@ -28,7 +28,8 @@
     *
     * @param  description
     */
-    function __construct($description) {
+    function __construct($description)
+    {
         $this->description = $description;
     }
 
@@ -38,7 +39,8 @@
     * @return bool true if the password is valid
     *
     */
-    /* abstract */ function validate($pwd) {
+    /* abstract */ function validate($pwd)
+    {
         return false;
     }
 
@@ -48,7 +50,8 @@
     * @return string descrption of the validator
     *
     */
-    function description() {
+    function description()
+    {
         return $this->description;
     }
 

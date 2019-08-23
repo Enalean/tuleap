@@ -79,7 +79,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * Constuctor
      * @param string $root the root of the theme : '/themes/Tuleap/'
      */
-    public function __construct($root) {
+    public function __construct($root)
+    {
         // Constructor for parent class...
         parent::__construct($root);
 
@@ -104,7 +105,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         $this->purifier = Codendi_HTMLPurifier::instance();
     }
 
-    function iframe($url, $html_options = array()) {
+    function iframe($url, $html_options = array())
+    {
         $url_purified = $this->purifier->purify($this->uri_sanitizer->sanitizeForHTMLAttribute($url));
 
         $html = '<div class="iframe_showonly"><a href="'. $url_purified .'" title="'.$GLOBALS['Language']->getText('global', 'show_frame') .'">'.$GLOBALS['Language']->getText('global', 'show_frame').' '. $this->getImage('ic/plain-arrow-down.png') .'</a></div>';
@@ -116,7 +118,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         echo $html;
     }
 
-    function selectRank($id, $rank, $items, $html_options) {
+    function selectRank($id, $rank, $items, $html_options)
+    {
         $html = '';
         $html .= '<select ';
         foreach($html_options as $key => $value) {
@@ -131,7 +134,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         return $html;
     }
 
-    protected function selectRank_optgroup($id, $items, $prefix = '', $value_prefix = '') {
+    protected function selectRank_optgroup($id, $items, $prefix = '', $value_prefix = '')
+    {
         $html      = '';
         $optgroups = '';
         $purifier  = Codendi_HTMLPurifier::instance();
@@ -191,7 +195,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      *
      * @return void
      */
-    function includeJavascriptFile($file) {
+    function includeJavascriptFile($file)
+    {
         $this->javascript[] = array('file' => $file);
         return $this;
     }
@@ -208,38 +213,45 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      *
      * @return void
      */
-    function includeJavascriptSnippet($snippet) {
+    function includeJavascriptSnippet($snippet)
+    {
         $this->javascript[] = array('snippet' => $snippet);
         return $this;
     }
 
-    protected function includeJavascriptPolyfills() {
+    protected function includeJavascriptPolyfills()
+    {
     }
 
     /**
      * @return PFUser
      */
-    protected function getUser() {
+    protected function getUser()
+    {
         return UserManager::instance()->getCurrentUser();
     }
 
-    public function addUserAutocompleteOn($element_id, $multiple=false) {
+    public function addUserAutocompleteOn($element_id, $multiple=false)
+    {
         $jsbool = $multiple ? "true" : "false";
         $js = "new UserAutoCompleter('".$element_id."', '".util_get_dir_image_theme()."', ".$jsbool.");";
         $this->includeFooterJavascriptSnippet($js);
     }
 
-    function includeCalendarScripts() {
+    function includeCalendarScripts()
+    {
         $this->includeJavascriptSnippet("var useLanguage = '". substr($this->getUser()->getLocale(), 0, 2) ."';");
         $this->includeJavascriptFile("/scripts/datepicker/datepicker.js");
         return $this;
     }
 
-    function addFeed($title, $href) {
+    function addFeed($title, $href)
+    {
         $this->feeds[] = array('title' => $title, 'href' => $href);
     }
 
-    function _getFeedback() {
+    function _getFeedback()
+    {
         $feedback = '';
         if (trim($GLOBALS['feedback']) !== '') {
             $feedback = '<H3><span class="feedback">'.$GLOBALS['feedback'].'</span></H3>';
@@ -291,7 +303,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         echo '</div>';
     }
 
-    public function getDropdownPanel($id, $content) {
+    public function getDropdownPanel($id, $content)
+    {
         $html = '';
         $html .= '<table id="'. $id .'" class="dropdown_panel"><tr><td>';
         $html .= $content;
@@ -305,7 +318,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @see Widget_Static
      * @deprecated You should consider using Widget_Static instead
      */
-    function box1_top($title,$echoout=1,$bgcolor='',$cols=2){
+    function box1_top($title,$echoout=1,$bgcolor='',$cols=2)
+    {
             $return = '<TABLE class="boxtable" cellspacing="1" cellpadding="5" width="100%" border="0">
                         <TR class="boxtitle" align="center">
                                 <TD colspan="'.$cols.'"><SPAN class=titlebar>'.$title.'</SPAN></TD>
@@ -325,7 +339,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @see Widget_Static
      * @deprecated You should consider using Widget_Static instead
      */
-    function box1_middle($title,$bgcolor='',$cols=2) {
+    function box1_middle($title,$bgcolor='',$cols=2)
+    {
             return '
                                 </TD>
                         </TR>
@@ -343,7 +358,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @see Widget_Static
      * @deprecated You should consider using Widget_Static instead
      */
-    function box1_bottom($echoout=1) {
+    function box1_bottom($echoout=1)
+    {
             $return = '
                 </TD>
                         </TR>
@@ -359,7 +375,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
     /**
      * This is a generic header method shared by header() and pv_header()
      */
-    private function generic_header($params) {
+    private function generic_header($params)
+    {
         if (!$this->is_rendered_through_service && isset($GLOBALS['group_id']) && $GLOBALS['group_id']) {
             $pm = ProjectManager::instance();
             $project = $pm->getProject($GLOBALS['group_id']);
@@ -379,7 +396,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         echo '</head>';
     }
 
-    private function shouldIncludeFatCombined(array $params) {
+    private function shouldIncludeFatCombined(array $params)
+    {
         return ! isset($params[self::INCLUDE_FAT_COMBINED]) || $params[self::INCLUDE_FAT_COMBINED] == true;
     }
 
@@ -439,7 +457,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         </script>';
     }
 
-    protected function includeSubsetOfCombined() {
+    protected function includeSubsetOfCombined()
+    {
         echo $this->include_asset->getHTMLSnippet('tuleap_subset.js');
     }
 
@@ -451,7 +470,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @see includeFooterJavascriptFile
      * @see includeFooterJavascriptSnippet
      */
-    function displayFooterJavascriptElements() {
+    function displayFooterJavascriptElements()
+    {
         foreach ($this->javascript_in_footer as $js) {
             if (isset($js['file'])) {
                 echo '<script type="text/javascript" src="'. $js['file'] .'"></script>'."\n";
@@ -474,7 +494,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      *
      * @param String $file Path to CSS file
      */
-    public function addStylesheet($file) {
+    public function addStylesheet($file)
+    {
         $this->stylesheets[] = $file;
     }
 
@@ -483,7 +504,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      *
      * @return Array of CSS file path
      */
-    public function getAllStyleSheets() {
+    public function getAllStyleSheets()
+    {
         return $this->stylesheets;
     }
 
@@ -495,7 +517,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
     /**
      * Display all the stylesheets for the current page
      */
-    public function displayStylesheetElements($params) {
+    public function displayStylesheetElements($params)
+    {
         $this->displayCommonStylesheetElements($params);
 
         // Stylesheet external files
@@ -523,7 +546,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         </style>';
     }
 
-    protected function displayCommonStylesheetElements($params) {
+    protected function displayCommonStylesheetElements($params)
+    {
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-tuleap-22d39b3.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-tuleap-responsive-22d39b3.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/animate.min.css" />';
@@ -540,7 +564,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
     /**
      * Display all the syndication feeds (rss for now) for the current page
      */
-    public function displaySyndicationElements() {
+    public function displaySyndicationElements()
+    {
         $hp = Codendi_HTMLPurifier::instance();
 
         //Basic feeds
@@ -559,7 +584,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @param string $href the href of the feed
      * @return string the <link> tag for the feed
      */
-    function getRssFeed($title, $href) {
+    function getRssFeed($title, $href)
+    {
         return '<link rel="alternate" title="'. $title .'" href="'. $href .'" type="application/rss+xml" />';
     }
 
@@ -574,7 +600,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @param string $maxlength the optional maxlength the input element, default is 10
      * @return string The calendar picker
      */
-    function getDatePicker($id, $name, $value, $size = 10, $maxlength = 10) {
+    function getDatePicker($id, $name, $value, $size = 10, $maxlength = 10)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         return '<span style="white-space:nowrap;"><input type="text"
                        class="highlight-days-67 format-y-m-d divider-dash no-transparency"
@@ -643,7 +670,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         return $html;
     }
 
-    function warning_for_services_which_configuration_is_not_inherited($group_id, $service_top_tab) {
+    function warning_for_services_which_configuration_is_not_inherited($group_id, $service_top_tab)
+    {
         $pm = ProjectManager::instance();
         $project=$pm->getProject($group_id);
         if ($project->isTemplate()) {
@@ -665,7 +693,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         }
     }
 
-    function generic_footer($params) {
+    function generic_footer($params)
+    {
 
         global $Language;
 
@@ -684,7 +713,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         echo '</html>';
     }
 
-    function pv_header($params) {
+    function pv_header($params)
+    {
         $this->generic_header($params);
         echo '
 <body class="bg_help">
@@ -697,7 +727,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         }
     }
 
-    function pv_footer($params) {
+    function pv_footer($params)
+    {
         echo $this->displayFooterJavascriptElements();
         echo "\n</body></html>";
     }
@@ -705,7 +736,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
     /**
      * @return string
      */
-    protected function getClassnamesForBodyTag($params = array()) {
+    protected function getClassnamesForBodyTag($params = array())
+    {
         $body_class = isset($params['body_class']) ? $params['body_class'] : array();
 
         if ($this->getUser()->useLabFeatures()) {
@@ -718,7 +750,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
     /**
      * This method generates header for pages embbeded in overlay like LiteWindow
      */
-    public function overlay_header() {
+    public function overlay_header()
+    {
         $this->includeCalendarScripts();
         echo '<!DOCTYPE html>
               <html>
@@ -734,18 +767,21 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         echo $this->getNotificationPlaceholder();
     }
 
-    public function getNotificationPlaceholder() {
+    public function getNotificationPlaceholder()
+    {
         return '<div id="notification-placeholder"></div>';
     }
 
-    function feedback($feedback) {
+    function feedback($feedback)
+    {
         return '';
     }
 
     /**
      * This method generates footer for pages embbeded in overlay like LiteWindow
      */
-    public function overlay_footer() {
+    public function overlay_footer()
+    {
         echo '         </div>
                      </div>
                  '.$this->displayFooterJavascriptElements().'
@@ -753,7 +789,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
              </html>';
     }
 
-    function footer(array $params) {
+    function footer(array $params)
+    {
         if (!isset($params['showfeedback']) || $params['showfeedback']) {
             echo $this->_getFeedback();
         }
@@ -777,11 +814,13 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         $this->generic_footer($params);
     }
 
-    function menu_entry($link, $title) {
+    function menu_entry($link, $title)
+    {
             print "\t".'<A class="menus" href="'.$link.'">'.$title.'</A> &nbsp;<img src="'.util_get_image_theme("point1.png").'" alt=" " width="7" height="7"><br>';
     }
 
-    protected function getSearchEntries() {
+    protected function getSearchEntries()
+    {
         $em      = EventManager::instance();
         $request = HTTPRequest::instance();
 
@@ -855,7 +894,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         return array($search_entries, $selected_entry, $hidden);
     }
 
-    private function forceSelectedOption(array $search_entries) {
+    private function forceSelectedOption(array $search_entries)
+    {
         foreach ($search_entries as $key => $search_entry) {
             if (! isset($search_entry['selected'])) {
                 $search_entries[$key]['selected'] = false;
@@ -865,7 +905,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         return $search_entries;
     }
 
-    private function getSelectedOption(array $search_entries) {
+    private function getSelectedOption(array $search_entries)
+    {
         $selected_option = $search_entries[0];
 
         foreach ($search_entries as $key => $search_entry) {
@@ -877,7 +918,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         return $selected_option;
     }
 
-    public function getSearchBox() {
+    public function getSearchBox()
+    {
         $request = HTTPRequest::instance();
 
         $type_of_search = $request->get('type_of_search');
@@ -921,7 +963,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
     /**
      * Echo the search box
      */
-    function searchBox() {
+    function searchBox()
+    {
         echo "\t<CENTER>\n".$this->getSearchBox()."\t</CENTER>\n";
     }
 
@@ -931,7 +974,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @param $index the index (id) of the priority : 1
      * @return string 'priora'
      */
-    function getPriorityColor($index) {
+    function getPriorityColor($index)
+    {
         if (isset($this->bgpri[$index])) {
             return $this->bgpri[$index];
         } else {
@@ -944,7 +988,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      *
      * @return EventManager
      */
-    protected function getEventManager() {
+    protected function getEventManager()
+    {
         return EventManager::instance();
     }
 
@@ -956,13 +1001,15 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @param String $js_variable_name
      * @param Mixed $object
      */
-    public function appendJsonEncodedVariable($js_variable_name, $object) {
+    public function appendJsonEncodedVariable($js_variable_name, $object)
+    {
         $this->includeFooterJavascriptSnippet(
             $js_variable_name.' = '.json_encode($object).';'
         );
     }
 
-    protected function getVersion() {
+    protected function getVersion()
+    {
         if ($this->version === null) {
             $this->version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
         }

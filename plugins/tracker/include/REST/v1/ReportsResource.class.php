@@ -73,7 +73,8 @@ class ReportsResource extends AuthenticatedResource
      *
      * @param string $id Id of the report
      */
-    public function optionsId($id) {
+    public function optionsId($id)
+    {
         Header::allowOptionsGet();
     }
 
@@ -91,7 +92,8 @@ class ReportsResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getId($id) {
+    public function getId($id)
+    {
         $this->checkAccess();
         $user   = UserManager::instance()->getCurrentUser();
         $report = $this->getReportById($user, $id);
@@ -114,7 +116,8 @@ class ReportsResource extends AuthenticatedResource
      *
      * @param string $id Id of the report
      */
-    public function optionsArtifacts($id) {
+    public function optionsArtifacts($id)
+    {
         Header::allowOptionsGet();
     }
 
@@ -188,7 +191,8 @@ class ReportsResource extends AuthenticatedResource
     /**
      * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation[]
      */
-    private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values) {
+    private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values)
+    {
         $builder = $this->builder;
 
         $build_artifact_representation = function (?Tracker_Artifact $artifact) use (
@@ -216,7 +220,8 @@ class ReportsResource extends AuthenticatedResource
     }
 
     /** @return Tracker_Report */
-    private function getReportById(\PFUser $user, $id) {
+    private function getReportById(\PFUser $user, $id)
+    {
         $store_in_session = false;
         $report = Tracker_ReportFactory::instance()->getReportById(
             $id,
@@ -238,7 +243,8 @@ class ReportsResource extends AuthenticatedResource
         return $report;
     }
 
-    private function checkLimitValue($limit) {
+    private function checkLimitValue($limit)
+    {
         if ($limit > self::MAX_LIMIT) {
             throw new LimitOutOfBoundsException(self::MAX_LIMIT);
         }

@@ -34,11 +34,13 @@ class Tracker_Rule_List_View {
      *
      *  @param Tracker_Rule_List $artifact_rule object
      */
-    public function __construct($rule) {
+    public function __construct($rule)
+    {
             $this->rule = $rule;
     }
 
-    function display() {
+    function display()
+    {
         echo $this->fetch();
     }
 
@@ -46,7 +48,8 @@ class Tracker_Rule_List_View {
      * @return a representation of an artifact rule
      * #id@tracker_id source_field(source_value) => target_field(target_value_1, target_value_2)
      */
-    function fetch() {
+    function fetch()
+    {
         $output  = '#'. $this->rule->id;
         $output .= '@'. $this->rule->tracker_id;
         $output .= ' '. $this->rule->source_field;
@@ -56,7 +59,8 @@ class Tracker_Rule_List_View {
         return $output;
     }
 
-    function fetchJavascript() {
+    function fetchJavascript()
+    {
         $output  = '{id:'. (int)$this->rule->id .', ';
         $output .= 'tracker_id:'. (int)$this->rule->tracker_id .', ';
         $output .= 'source_field:'. (int)$this->rule->source_field .', ';

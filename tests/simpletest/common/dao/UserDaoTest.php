@@ -20,7 +20,8 @@
 
 class UserDaoTest extends TuleapTestCase {
 
-    function testReplaceStringInList() {
+    function testReplaceStringInList()
+    {
         $da  = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         $dao = new UserDao($da);
 

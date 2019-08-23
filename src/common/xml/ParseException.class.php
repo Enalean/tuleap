@@ -24,26 +24,31 @@ class XML_ParseException extends Exception {
     private $indented_xml;
     private $rng_path;
 
-    public function __construct($rng_path, array $errors, array $indented_xml) {
+    public function __construct($rng_path, array $errors, array $indented_xml)
+    {
         $this->rng_path     = $rng_path;
         $this->errors       = $errors;
         $this->indented_xml = $indented_xml;
         parent::__construct('XML parse errors');
     }
 
-    public function getRngPath() {
+    public function getRngPath()
+    {
         return $this->rng_path;
     }
 
-    public function getErrors() {
+    public function getErrors()
+    {
         return $this->errors;
     }
 
-    public function getSourceXMLForError(XML_ParseError $error) {
+    public function getSourceXMLForError(XML_ParseError $error)
+    {
         return $this->indented_xml[$error->getLine()-1];
     }
 
-    public function getIndentedXml() {
+    public function getIndentedXml()
+    {
         $output = array();
         $line_no = 1;
         foreach ($this->indented_xml as $line) {
@@ -53,7 +58,8 @@ class XML_ParseException extends Exception {
         return implode(PHP_EOL, $output);
     }
 
-    public function getFileLines() {
+    public function getFileLines()
+    {
         return $this->indented_xml;
     }
 }

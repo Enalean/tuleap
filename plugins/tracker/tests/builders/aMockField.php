@@ -22,21 +22,25 @@ require_once __DIR__.'/../bootstrap.php';
 
 class MockFieldBuilder {
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
     }
 
-    public function withId($id) {
+    public function withId($id)
+    {
         stub($this->field)->getId()->returns($id);
         return $this;
     }
 
-    public function withTracker(Tracker $tracker) {
+    public function withTracker(Tracker $tracker)
+    {
         stub($this->field)->getTracker()->returns($tracker);
         return $this;
     }
 
-    public function withValueForChangesetId($value_id, $changeset_id) {
+    public function withValueForChangesetId($value_id, $changeset_id)
+    {
         $bind = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_Static::class);
 
         stub($this->field)->getBind()->returns($bind);
@@ -45,21 +49,25 @@ class MockFieldBuilder {
         return $this;
     }
 
-    public function withLabel($label) {
+    public function withLabel($label)
+    {
         stub($this->field)->getLabel()->returns($label);
         return $this;
     }
 
-    public function withName($name) {
+    public function withName($name)
+    {
         stub($this->field)->getName()->returns($name);
         return $this;
     }
 
-    public function build() {
+    public function build()
+    {
         return $this->field;
     }
 }
 
-function aMockField() {
+function aMockField()
+{
     return new MockFieldBuilder();
 }

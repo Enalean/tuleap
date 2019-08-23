@@ -34,14 +34,16 @@ class MailEnhancer {
      * @param string $header_name
      * @param string $header_value
      */
-    public function addHeader($header_name, $header_value) {
+    public function addHeader($header_name, $header_value)
+    {
         $this->additional_headers[strtolower($header_name)] = $header_value;
     }
 
     /**
      * @return Array
      */
-    private function getAdditionalHeaders() {
+    private function getAdditionalHeaders()
+    {
         return $this->additional_headers;
     }
 
@@ -49,29 +51,34 @@ class MailEnhancer {
      * @param string $property_name
      * @param mixed  $property_value
      */
-    public function addPropertiesToLookAndFeel($property_name, $property_value) {
+    public function addPropertiesToLookAndFeel($property_name, $property_value)
+    {
         $this->additional_properties[$property_name] = $property_value;
     }
 
     /**
      * @return Array
      */
-    private function getAdditionalPropertiesForLookAndFeel() {
+    private function getAdditionalPropertiesForLookAndFeel()
+    {
         return $this->additional_properties;
     }
 
     /**
      * @param int $id
      */
-    public function setMessageId($id) {
+    public function setMessageId($id)
+    {
         $this->message_id = $id;
     }
 
-    private function getMessageId() {
+    private function getMessageId()
+    {
         return $this->message_id;
     }
 
-    public function enhanceMail(Codendi_Mail $mail) {
+    public function enhanceMail(Codendi_Mail $mail)
+    {
         $headers   = $this->getAdditionalHeaders();
         $from_mail = null;
 

@@ -28,7 +28,8 @@ class Docman_ApprovalReviewer {
     var $comment;
     var $version;
 
-    function __construct() {
+    function __construct()
+    {
         $this->reviewerId = null;
         $this->rank = null;
         $this->reviewDate = null;
@@ -37,49 +38,62 @@ class Docman_ApprovalReviewer {
         $this->version = null;
     }
 
-    function setId($v) {
+    function setId($v)
+    {
         $this->reviewerId = $v;
     }
-    function getId() {
+    function getId()
+    {
         return $this->reviewerId;
     }
 
-    function setRank($v) {
+    function setRank($v)
+    {
         $this->rank = $v;
     }
-    function getRank() {
+    function getRank()
+    {
         return $this->rank;
     }
 
-    function setReviewDate($v) {
+    function setReviewDate($v)
+    {
         $this->reviewDate = $v;
     }
-    function getReviewDate() {
+    function getReviewDate()
+    {
         return $this->reviewDate;
     }
 
-    function setState($v) {
+    function setState($v)
+    {
         $this->state = $v;
     }
-    function getState() {
+    function getState()
+    {
         return $this->state;
     }
 
-    function setComment($v) {
+    function setComment($v)
+    {
         $this->comment = $v;
     }
-    function getComment() {
+    function getComment()
+    {
         return $this->comment;
     }
 
-    function setVersion($v) {
+    function setVersion($v)
+    {
         $this->version = $v;
     }
-    function getVersion() {
+    function getVersion()
+    {
         return $this->version;
     }
 
-    function initFromRow($row) {
+    function initFromRow($row)
+    {
         if(isset($row['reviewer_id'])) $this->reviewerId = $row['reviewer_id'];
         if(isset($row['rank'])) $this->rank = $row['rank'];
         if(isset($row['date'])) $this->reviewDate = $row['date'];

@@ -40,7 +40,8 @@ class Contour {
      * contour plot.
      * @return an instance of the contour algorithm
      */
-    function __construct($aMatrix,$aIsobars=10, $aColors=null) {
+    function __construct($aMatrix,$aIsobars=10, $aColors=null)
+    {
 
         $this->nbrRows = count($aMatrix);
         $this->nbrCols = count($aMatrix[0]);
@@ -86,7 +87,8 @@ class Contour {
      * @param $aFlg If true the the vertice in input data matrice position (0,0) corresponds to the top left
      * corner of teh plot otherwise it will correspond to the bottom left corner (a horizontal flip)
      */
-    function SetInvert($aFlg=true) {
+    function SetInvert($aFlg=true)
+    {
         $this->invert = $aFlg;
     }
 
@@ -95,7 +97,8 @@ class Contour {
      *
      * @return array(min_value,max_value)
      */
-    function getMinMaxVal() {
+    function getMinMaxVal()
+    {
         $min = $this->dataPoints[0][0];
         $max = $this->dataPoints[0][0];
         for ($i = 0; $i < $this->nbrRows; $i++) {
@@ -109,7 +112,8 @@ class Contour {
      * Reset the two matrices that keeps track on where the isobars crosses the
      * horizontal and vertical edges
      */
-    function resetEdgeMatrices() {
+    function resetEdgeMatrices()
+    {
         for ($k = 0; $k < 2; $k++) {
             for ($i = 0; $i <= $this->nbrRows; $i++) {
                 for ($j = 0; $j <= $this->nbrCols; $j++) {
@@ -127,7 +131,8 @@ class Contour {
      * @param $aIsobar Isobar value
      * @return true if the isobar is crossing this edge
      */
-    function isobarHCrossing($aRow,$aCol,$aIsobar) {
+    function isobarHCrossing($aRow,$aCol,$aIsobar)
+    {
 
         if( $aCol >= $this->nbrCols-1 ) {
             JpGraphError::RaiseL(28003,$aCol);
@@ -153,7 +158,8 @@ class Contour {
      * @param $aIsobar Isobar value
      * @return true if the isobar is crossing this edge
      */
-    function isobarVCrossing($aRow,$aCol,$aIsobar) {
+    function isobarVCrossing($aRow,$aCol,$aIsobar)
+    {
 
         if( $aRow >= $this->nbrRows-1) {
             JpGraphError::RaiseL(28005,$aRow);
@@ -177,7 +183,8 @@ class Contour {
      *
      * @param $aIsobar The value of the isobar to be checked
      */
-    function determineIsobarEdgeCrossings($aIsobar) {
+    function determineIsobarEdgeCrossings($aIsobar)
+    {
 
         $ib = $this->isobarValues[$aIsobar];
 
@@ -209,7 +216,8 @@ class Contour {
      * @param $ib The isobar value
      * @return unknown_type
      */
-    function getCrossingCoord($aRow,$aCol,$aEdgeDir,$aIsobarVal) {
+    function getCrossingCoord($aRow,$aCol,$aEdgeDir,$aIsobarVal)
+    {
 
         // In order to avoid numerical problem when two vertices are very close
         // we have to check and avoid dividing by close to zero denumerator.
@@ -247,7 +255,8 @@ class Contour {
      * This has no visible affect but it makes the code sooooo much cleaner.
      *
      */
-    function adjustDataPointValues() {
+    function adjustDataPointValues()
+    {
 
         $ni = count($this->isobarValues);
         for ($k = 0; $k < $ni; $k++) {
@@ -268,7 +277,8 @@ class Contour {
      * @param $aBW
      * @return unknown_type
      */
-    function UseHighContrastColor($aFlg=true,$aBW=false) {
+    function UseHighContrastColor($aFlg=true,$aBW=false)
+    {
         $this->highcontrast = $aFlg;
         $this->highcontrastbw = $aBW;
     }
@@ -277,7 +287,8 @@ class Contour {
      * Calculate suitable colors for each defined isobar
      *
      */
-    function CalculateColors() {
+    function CalculateColors()
+    {
         if ( $this->highcontrast ) {
             if ( $this->highcontrastbw ) {
                 for ($ib = 0; $ib < $this->nbrIsobars; $ib++) {
@@ -311,7 +322,8 @@ class Contour {
      *
      * @return array( $isobarCoord, $isobarValues, $isobarColors )
      */
-    function getIsobars() {
+    function getIsobars()
+    {
 
         $this->adjustDataPointValues();
 
@@ -412,7 +424,8 @@ class ContourPlot extends Plot {
      * @param $aHighContrastBW Use only black colors for contours
      * @return an instance of the contour plot algorithm
      */
-    function __construct($aDataMatrix, $aIsobar=10, $aFactor=1, $aInvert=false, $aIsobarColors=array()) {
+    function __construct($aDataMatrix, $aIsobar=10, $aFactor=1, $aInvert=false, $aIsobarColors=array())
+    {
 
         $this->dataMatrix = $aDataMatrix;
         $this->flipData = $aInvert;
@@ -444,7 +457,8 @@ class ContourPlot extends Plot {
      * @param $aFlg
      *
      */
-    function SetInvert($aFlg=true) {
+    function SetInvert($aFlg=true)
+    {
         $this->flipData = $aFlg;
     }
 
@@ -454,7 +468,8 @@ class ContourPlot extends Plot {
      * @param $aColorArray
      *
      */
-    function SetIsobarColors($aColorArray) {
+    function SetIsobarColors($aColorArray)
+    {
         $this->manualIsobarColors = $aColorArray;
     }
 
@@ -464,7 +479,8 @@ class ContourPlot extends Plot {
      * @param $aFlg true if the legend should be shown
      *
      */
-    function ShowLegend($aFlg=true) {
+    function ShowLegend($aFlg=true)
+    {
         $this->showLegend = $aFlg;
     }
 
@@ -473,21 +489,24 @@ class ContourPlot extends Plot {
      * @param $aFlg true if the legend should start with the lowest isobar on top
      * @return unknown_type
      */
-    function Invertlegend($aFlg=true) {
+    function Invertlegend($aFlg=true)
+    {
         $this->invertLegend = $aFlg;
     }
 
     /* Internal method. Give the min value to be used for the scaling
      *
      */
-    function Min() {
+    function Min()
+    {
         return array(0,0);
     }
 
     /* Internal method. Give the max value to be used for the scaling
      *
      */
-    function Max() {
+    function Max()
+    {
         return array(count($this->dataMatrix[0])-1,count($this->dataMatrix)-1);
     }
 
@@ -495,7 +514,8 @@ class ContourPlot extends Plot {
      * Internal ramewrok method to setup the legend to be used for this plot.
      * @param $aGraph The parent graph class
      */
-    function Legend($aGraph) {
+    function Legend($aGraph)
+    {
 
         if( ! $this->showLegend )
             return;
@@ -519,7 +539,8 @@ class ContourPlot extends Plot {
      *  @see Plot#PreScaleSetup($aGraph)
      *
      */
-    function PreScaleSetup($aGraph) {
+    function PreScaleSetup($aGraph)
+    {
         $xn = count($this->dataMatrix[0])-1;
         $yn = count($this->dataMatrix)-1;
 
@@ -536,7 +557,8 @@ class ContourPlot extends Plot {
      * @param $aFlg True, to use high contrast color
      * @param $aBW True, Use only black and white color schema
      */
-    function UseHighContrastColor($aFlg=true,$aBW=false) {
+    function UseHighContrastColor($aFlg=true,$aBW=false)
+    {
         $this->highcontrast = $aFlg;
         $this->highcontrastbw = $aBW;
         $this->contour->UseHighContrastColor($this->highcontrast,$this->highcontrastbw);
@@ -549,7 +571,8 @@ class ContourPlot extends Plot {
      * @param $xscale Instance of the xscale to use
      * @param $yscale Instance of the yscale to use
      */
-    function Stroke($img,$xscale,$yscale) {
+    function Stroke($img,$xscale,$yscale)
+    {
 
         if( count($this->manualIsobarColors) > 0 ) {
             $this->contourColor = $this->manualIsobarColors;

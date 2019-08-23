@@ -31,7 +31,8 @@ class ArtifactRuleValue extends ArtifactRule {
 
     var $target_value;
 
-    function __construct($id, $group_artifact_id, $source_field, $source_value, $target_field, $target_value) {
+    function __construct($id, $group_artifact_id, $source_field, $source_value, $target_field, $target_value)
+    {
         parent::__construct($id, $group_artifact_id, $source_field, $source_value, $target_field);
         $this->target_value = $target_value;
     }
@@ -46,13 +47,15 @@ class ArtifactRuleValue extends ArtifactRule {
     *
     * @return bool
     */
-    function applyTo($group_artifact_id, $source_field, $source_value, $target_field, $target_value) {
+    function applyTo($group_artifact_id, $source_field, $source_value, $target_field, $target_value)
+    {
         $can_apply_to = $this->canApplyTo($group_artifact_id, $source_field, $source_value, $target_field, $target_value);
         $pass = $can_apply_to && $target_value == $this->target_value;
         return $pass;
     }
 
-    function canApplyTo($group_artifact_id, $source_field, $source_value, $target_field, $target_value) {
+    function canApplyTo($group_artifact_id, $source_field, $source_value, $target_field, $target_value)
+    {
         $match = $group_artifact_id == $this->group_artifact_id &&
             $source_field == $this->source_field &&
             $source_value == $this->source_value &&
@@ -60,7 +63,8 @@ class ArtifactRuleValue extends ArtifactRule {
         return $match;
     }
 
-    function getTargetValueId() {
+    function getTargetValueId()
+    {
         return $this->target_value;
     }
 }

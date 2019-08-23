@@ -42,13 +42,15 @@ class LDAP_DirectorySynchronization {
     /** @var Logger */
     private $logger;
 
-    public function __construct(LDAP $ldap, Logger $logger) {
+    public function __construct(LDAP $ldap, Logger $logger)
+    {
         $this->ldapTime = 0;
         $this->ldap     = $ldap;
         $this->logger   = $logger;
     }
 
-    public function syncAll() {
+    public function syncAll()
+    {
         $sql = 'SELECT u.user_id, user_name, email, ldap_id, status, realname, ldap_uid
         FROM user u
          JOIN plugin_ldap_user ldap_user ON (ldap_user.user_id = u.user_id)
@@ -71,7 +73,8 @@ class LDAP_DirectorySynchronization {
         }
     }
 
-    public function ldapSync($row, $users_are_suspendable = true) {
+    public function ldapSync($row, $users_are_suspendable = true)
+    {
         $ldap_query = $this->ldap->getLDAPParam('eduid').'='.$row['ldap_id'];
         $userSync = $this->getLdapUserSync();
         $attributes = $userSync->getSyncAttributes($this->ldap);
@@ -141,7 +144,8 @@ class LDAP_DirectorySynchronization {
      *
      * @return void
      */
-    public function remindAdminsBeforeCleanUp() {
+    public function remindAdminsBeforeCleanUp()
+    {
         if ($retentionPeriod = $this->ldap->getLDAPParam('daily_sync_retention_period')) {
             $projectManager = $this->getProjectManager();
             $userManager    = $this->getUserManager();
@@ -154,34 +158,41 @@ class LDAP_DirectorySynchronization {
      *
      * @return LDAP_SyncReminderNotificationManager
      */
-    protected function getLdapSyncReminderNotificationManager($projectManager, $userManager) {
+    protected function getLdapSyncReminderNotificationManager($projectManager, $userManager)
+    {
         return new LDAP_SyncReminderNotificationManager($projectManager, $userManager);
     }
 
-    public function getElapsedLdapTime() {
+    public function getElapsedLdapTime()
+    {
         return $this->ldapTime;
     }
 
-    protected function getUserManager() {
+    protected function getUserManager()
+    {
         return UserManager::instance();
     }
 
-    public function getLdapUserManager() {
+    public function getLdapUserManager()
+    {
         if (!isset($this->lum)) {
             $this->lum = new LDAP_UserManager($this->ldap, LDAP_UserSync::instance());
         }
         return $this->lum;
     }
 
-    protected function getLdapUserSync() {
+    protected function getLdapUserSync()
+    {
         return LDAP_UserSync::instance();
     }
 
-    protected function getLdapSyncNotificationManager(ProjectManager $projectManager, $retentionPeriod){
+    protected function getLdapSyncNotificationManager(ProjectManager $projectManager, $retentionPeriod)
+    {
         return new LDAP_SyncNotificationManager($projectManager, $retentionPeriod);
     }
 
-    protected function getProjectManager() {
+    protected function getProjectManager()
+    {
         return ProjectManager::instance();
     }
 
@@ -193,7 +204,8 @@ class LDAP_DirectorySynchronization {
         );
     }
 
-    private function getEventManager() {
+    private function getEventManager()
+    {
         return EventManager::instance();
     }
 

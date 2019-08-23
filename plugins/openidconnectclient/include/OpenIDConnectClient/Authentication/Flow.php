@@ -80,7 +80,8 @@ class Flow
     /**
      * @return string
      */
-    private function getRedirectUri() {
+    private function getRedirectUri()
+    {
         return 'https://'. ForgeConfig::get('sys_https_host') . '/plugins/openidconnectclient/';
     }
 

@@ -20,7 +20,8 @@
 
 class TreeNode_InjectPaddingInTreeNodeVisitorTest extends TuleapTestCase {
 
-    function ItInjectsPadding() {
+    function ItInjectsPadding()
+    {
         $root = new TreeNode();
         $node1 = new TreeNode();
         $node2 = new TreeNode();

@@ -36,7 +36,8 @@ class Rest_TokenManager {
     /** @var  UserManager */
     private $user_manager;
 
-    public function __construct(Rest_TokenDao $token_dao, Rest_TokenFactory $token_factory, UserManager $user_manager) {
+    public function __construct(Rest_TokenDao $token_dao, Rest_TokenFactory $token_factory, UserManager $user_manager)
+    {
         $this->token_dao     = $token_dao;
         $this->token_factory = $token_factory;
         $this->user_manager  = $user_manager;
@@ -47,7 +48,8 @@ class Rest_TokenManager {
      * @return PFUser or null if the user is not found
      * @throws Rest_Exception_InvalidTokenException
      */
-    public function checkToken(Rest_Token $token) {
+    public function checkToken(Rest_Token $token)
+    {
 
         if ( $this->token_factory->doesTokenExist($token->getUserId(), $token->getTokenValue()) ) {
             return $this->user_manager->getUserById($token->getUserId());
@@ -56,7 +58,8 @@ class Rest_TokenManager {
         throw new Rest_Exception_InvalidTokenException();
     }
 
-    public function expireToken(Rest_Token $token) {
+    public function expireToken(Rest_Token $token)
+    {
         if ($this->checkToken($token)) {
             return $this->token_dao->deleteToken($token->getTokenValue());
         }
@@ -64,23 +67,27 @@ class Rest_TokenManager {
         throw new Rest_Exception_InvalidTokenException();
     }
 
-    public function expireOldTokens() {
+    public function expireOldTokens()
+    {
         $timestamp = $this->computeExpirationTimestamp();
         return $this->token_dao->deleteTokensOlderThan($timestamp);
     }
 
-    private function computeExpirationTimestamp() {
+    private function computeExpirationTimestamp()
+    {
         return $_SERVER['REQUEST_TIME'] - self::TOKENS_EXPIRATION_TIME;
     }
 
-    public function expireAllTokensForUser(PFUser $user) {
+    public function expireAllTokensForUser(PFUser $user)
+    {
         return $this->token_dao->deleteAllTokensForUser($user->getId());
     }
 
     /**
      * @return Rest_Token
      */
-    public function generateTokenForUser(PFUser $user) {
+    public function generateTokenForUser(PFUser $user)
+    {
         $number_generator = new RandomNumberGenerator();
         $token            = $number_generator->getNumber();
         $this->token_dao->addTokenForUserId($user->getId(), $token, $_SERVER['REQUEST_TIME']);

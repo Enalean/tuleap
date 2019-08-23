@@ -37,7 +37,8 @@ class ArtifactNotificationSubscriberTest extends TuleapTestCase {
     /** @var Tracker_ArtifactDao */
     private $artifact_dao;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->artifact     = stub('Tracker_Artifact')->getId()->returns(201);
@@ -52,7 +53,8 @@ class ArtifactNotificationSubscriberTest extends TuleapTestCase {
         );
     }
 
-    public function itsubscribeUser() {
+    public function itsubscribeUser()
+    {
         stub($this->artifact)->userCanView($this->user)->returns(true);
 
         expect($this->artifact_dao)->deleteUnsubscribeNotification(201, 101)->once();
@@ -60,7 +62,8 @@ class ArtifactNotificationSubscriberTest extends TuleapTestCase {
         $this->artifact_subscriber->subscribeUser($this->user, $this->request);
     }
 
-    public function itUnsubscribeUser() {
+    public function itUnsubscribeUser()
+    {
         stub($this->artifact)->userCanView($this->user)->returns(true);
 
         expect($this->artifact_dao)->createUnsubscribeNotification(201, 101)->once();

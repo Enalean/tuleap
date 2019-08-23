@@ -36,7 +36,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private $url_query;
 
-    public function __construct(Tracker $tracker, Tracker_Rule_Date_Factory $rule_date_factory, CSRFSynchronizerToken $token) {
+    public function __construct(Tracker $tracker, Tracker_Rule_Date_Factory $rule_date_factory, CSRFSynchronizerToken $token)
+    {
         parent::__construct($tracker);
         $this->rule_date_factory    = $rule_date_factory;
         $this->token                = $token;
@@ -48,14 +49,16 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         );
     }
 
-    private function shouldAddUpdateOrDeleteRules(Codendi_Request $request) {
+    private function shouldAddUpdateOrDeleteRules(Codendi_Request $request)
+    {
         $should_delete_rules = is_array($request->get(self::PARAMETER_REMOVE_RULES));
         $should_update_rules = is_array($request->get(self::PARAMETER_UPDATE_RULES));
 
         return $should_delete_rules || $should_update_rules || $this->shouldAddRule($request);
     }
 
-    private function shouldAddRule(Codendi_Request $request) {
+    private function shouldAddRule(Codendi_Request $request)
+    {
         $source_field_id = $this->getFieldIdFromAddRequest($request, self::PARAMETER_SOURCE_FIELD);
         $target_field_id = $this->getFieldIdFromAddRequest($request, self::PARAMETER_TARGET_FIELD);
 
@@ -75,7 +78,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         return $fields_exist && $fields_are_different && $exist_comparator && $fields_have_good_type;
     }
 
-    private function checkFieldsAreDifferent($source_field, $target_field) {
+    private function checkFieldsAreDifferent($source_field, $target_field)
+    {
         $fields_are_different = $source_field !== $target_field;
         if (! $fields_are_different) {
             $error_msg = $GLOBALS['Language']->getText('workflow_admin', 'same_field');
@@ -84,35 +88,40 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         return $fields_are_different;
     }
 
-    private function getFieldIdFromAddRequest(Codendi_Request $request, $source_or_target) {
+    private function getFieldIdFromAddRequest(Codendi_Request $request, $source_or_target)
+    {
         $add = $request->get(self::PARAMETER_ADD_RULE);
         if (is_array($add) && isset($add[$source_or_target])) {
             return (int)$add[$source_or_target];
         }
     }
 
-    private function getComparatorFromAddRequest(Codendi_Request $request) {
+    private function getComparatorFromAddRequest(Codendi_Request $request)
+    {
         $add = $request->get(self::PARAMETER_ADD_RULE);
         if (is_array($add)) {
             return $this->getComparatorFromRequestParameter($add);
         }
     }
 
-    private function getComparatorFromRequestParameter(array $param) {
+    private function getComparatorFromRequestParameter(array $param)
+    {
         $rule = new Rule_WhiteList(Tracker_Rule_Date::$allowed_comparators);
         if (isset($param[self::PARAMETER_COMPARATOR]) && $rule->isValid($param[self::PARAMETER_COMPARATOR])) {
             return $param[self::PARAMETER_COMPARATOR];
         }
     }
 
-    private function fieldsAreDateOnes($source_field_id, $target_field_id) {
+    private function fieldsAreDateOnes($source_field_id, $target_field_id)
+    {
         $source_field_is_date = (bool)$this->rule_date_factory->getUsedDateFieldById($this->tracker, $source_field_id);
         $target_field_is_date = (bool)$this->rule_date_factory->getUsedDateFieldById($this->tracker, $target_field_id);
 
         return $source_field_is_date && $target_field_is_date;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    {
         if ($this->shouldAddUpdateOrDeleteRules($request)) {
             // Verify CSRF Protection
             $this->token->check();
@@ -123,13 +132,15 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         }
     }
 
-    private function addUpdateOrDeleteRules(Codendi_Request $request) {
+    private function addUpdateOrDeleteRules(Codendi_Request $request)
+    {
         $this->updateRules($request);
         $this->removeRules($request);
         $this->addRule($request);
     }
 
-    private function updateRules(Codendi_Request $request) {
+    private function updateRules(Codendi_Request $request)
+    {
         $rules_to_update = $request->get(self::PARAMETER_UPDATE_RULES);
         if (! is_array($rules_to_update)) {
             return;
@@ -146,7 +157,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         }
     }
 
-    private function updateARule($rule_id, array $new_values) {
+    private function updateARule($rule_id, array $new_values)
+    {
         $rule = $this->rule_date_factory->getRule($this->tracker, (int)$rule_id);
         list($source_field, $target_field, $comparator) = $this->getFieldsAndComparatorFromRequestParameter($new_values);
         if ($this->shouldUpdateTheRule($rule, $source_field, $target_field, $comparator)) {
@@ -157,7 +169,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         }
     }
 
-    private function shouldUpdateTheRule($rule, $source_field, $target_field, $comparator) {
+    private function shouldUpdateTheRule($rule, $source_field, $target_field, $comparator)
+    {
         return $rule
             && $source_field
             && $target_field
@@ -171,7 +184,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     /** @return array (source_field, target_field, comparator) */
-    private function getFieldsAndComparatorFromRequestParameter(array $param) {
+    private function getFieldsAndComparatorFromRequestParameter(array $param)
+    {
         $source_field = null;
         $target_field = null;
         if (isset($param[self::PARAMETER_SOURCE_FIELD])) {
@@ -184,7 +198,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         return array($source_field, $target_field, $comparator);
     }
 
-    private function removeRules(Codendi_Request $request) {
+    private function removeRules(Codendi_Request $request)
+    {
         $remove_rules = $request->get(self::PARAMETER_REMOVE_RULES);
         $nb_deleted = 0;
         if (is_array($remove_rules)) {
@@ -200,7 +215,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         }
     }
 
-    private function addRule(Codendi_Request $request) {
+    private function addRule(Codendi_Request $request)
+    {
         if ($this->shouldAddRule($request)) {
             $add_values = $request->get(self::PARAMETER_ADD_RULE);
             list($source_field, $target_field, $comparator) = $this->getFieldsAndComparatorFromRequestParameter($add_values);
@@ -215,7 +231,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         }
     }
 
-    private function displayPane(Tracker_IDisplayTrackerLayout $layout) {
+    private function displayPane(Tracker_IDisplayTrackerLayout $layout)
+    {
         $this->displayHeader($layout);
         echo '<div class="workflow_rules">';
         echo '<h3>'. $GLOBALS['Language']->getText('workflow_admin','title_define_global_date_rules') .'</h3>';
@@ -231,7 +248,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         $this->displayFooter($layout);
     }
 
-    private function displayRules() {
+    private function displayRules()
+    {
         $fields = $this->getListOfDateFieldLabels();
         $rules  = $this->getRules();
         echo '<table class="workflow_existing_rules">';
@@ -257,20 +275,24 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         echo '</table>';
     }
 
-    private function getRules() {
+    private function getRules()
+    {
         return $this->rule_date_factory->searchByTrackerId($this->tracker->getId());
     }
 
-    private function displayComparatorSelector($name, $selected = null) {
+    private function displayComparatorSelector($name, $selected = null)
+    {
         $comparators = array_combine(Tracker_Rule_Date::$allowed_comparators, Tracker_Rule_Date::$allowed_comparators);
         echo html_build_select_box_from_array($comparators, $name, $selected);
     }
 
-    private function displayFieldSelector(array $fields, $name, $selected) {
+    private function displayFieldSelector(array $fields, $name, $selected)
+    {
         echo html_build_select_box_from_array($fields, $name, $selected);
     }
 
-    private function displayAdd() {
+    private function displayAdd()
+    {
         $fields   = $this->getListOfDateFieldLabelsPlusPleaseChoose();
         $selected = $this->default_value;
         echo '<p class="add_new_rule">';
@@ -286,7 +308,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         echo '</p>';
     }
 
-    private function getListOfDateFieldLabelsPlusPleaseChoose() {
+    private function getListOfDateFieldLabelsPlusPleaseChoose()
+    {
         $labels = array(
             $this->default_value => $GLOBALS['Language']->getText('global', 'please_choose_dashed')
         );
@@ -294,7 +317,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         return $labels + $this->getListOfDateFieldLabels();
     }
 
-    private function getListOfDateFieldLabels() {
+    private function getListOfDateFieldLabels()
+    {
         $labels = array();
         $form_elements = $this->rule_date_factory->getUsedDateFields($this->tracker);
         foreach ($form_elements as $form_element) {

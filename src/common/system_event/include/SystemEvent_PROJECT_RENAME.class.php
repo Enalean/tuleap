@@ -34,7 +34,8 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent {
      *
      * @return void
      */
-    public function setLog($log) {
+    public function setLog($log)
+    {
         if (!isset($this->log) || $this->log == '') {
             $this->log = $log;
         } else {
@@ -51,7 +52,8 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent {
      *
      * @return string
      */
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         $txt = '';
         list($group_id, $new_name) = $this->getParametersAsArray();
         $txt .= 'project: '. $this->verbalizeProjectId($group_id, $with_link).' new name: '.$new_name;
@@ -63,7 +65,8 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent {
      *
      * @return bool
      */
-    public function process() {
+    public function process()
+    {
         list($group_id, $new_name) = $this->getParametersAsArray();
 
         $renameState = true;
@@ -166,7 +169,8 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent {
      *
      * @return bool
      */
-    protected function updateDB($project, $new_name) {
+    protected function updateDB($project, $new_name)
+    {
         $pm = ProjectManager::instance();
         return $pm->renameProject($project, $new_name);
     }

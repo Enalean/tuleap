@@ -20,12 +20,14 @@
 class Planning_MilestoneSelectorController extends MVC2_PluginController {
     private $milestone_factory;
 
-    public function __construct(Codendi_Request $request, Planning_MilestoneFactory $milestone_factory) {
+    public function __construct(Codendi_Request $request, Planning_MilestoneFactory $milestone_factory)
+    {
         parent::__construct('agiledashboard', $request);
         $this->milestone_factory = $milestone_factory;
     }
 
-    public function show() {
+    public function show()
+    {
         $milestone = $this->milestone_factory->getLastMilestoneCreated(
             $this->request->getCurrentUser(),
             $this->request->getValidated('planning_id', 'uint', 0)

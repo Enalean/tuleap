@@ -28,7 +28,8 @@ class SystemEvent_EDIT_SSH_KEYS extends SystemEvent {
      *
      * @return string
      */
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         $txt = '';
         $txt .= 'user: '. $this->verbalizeUserId($this->getParameter(0), $with_link);
         return $txt;
@@ -41,7 +42,8 @@ class SystemEvent_EDIT_SSH_KEYS extends SystemEvent {
      *
      * @return bool
      */
-    public function process() {
+    public function process()
+    {
         $user_id = $this->getParameter(0);
         if (! $this->int_ok($user_id)) {
             $user_id = 0;

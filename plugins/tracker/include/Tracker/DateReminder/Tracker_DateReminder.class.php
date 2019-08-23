@@ -53,7 +53,8 @@ class Tracker_DateReminder {
     *
     * @return Void
     */
-    public function __construct($reminderId, $trackerId, $fieldId, $ugroups, $roles, $notificationType, $distance, $status) {
+    public function __construct($reminderId, $trackerId, $fieldId, $ugroups, $roles, $notificationType, $distance, $status)
+    {
         $this->reminderId       = $reminderId;
         $this->trackerId        = $trackerId;
         $this->fieldId          = $fieldId;
@@ -69,7 +70,8 @@ class Tracker_DateReminder {
      *
      * @return String
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->reminderId;
     }
 
@@ -80,7 +82,8 @@ class Tracker_DateReminder {
      *
      * @return Void
      */
-    protected function setField(Tracker_FormElement_Field $field) {
+    protected function setField(Tracker_FormElement_Field $field)
+    {
         $this->field   = $field;
         $this->fieldId = $field->getId();
     }
@@ -90,7 +93,8 @@ class Tracker_DateReminder {
      *
      * @return int
      */
-    public function getTrackerId() {
+    public function getTrackerId()
+    {
         return $this->trackerId;
     }
 
@@ -99,7 +103,8 @@ class Tracker_DateReminder {
      *
      * @return int
      */
-    public function getFieldId() {
+    public function getFieldId()
+    {
         return $this->fieldId;
     }
 
@@ -108,7 +113,8 @@ class Tracker_DateReminder {
      *
      * @return Tracker_FormElement_Field
      */
-    public function getField() {
+    public function getField()
+    {
         if (!$this->field) {
             $this->field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId());
         }
@@ -120,7 +126,8 @@ class Tracker_DateReminder {
      *
      * @return Tracker
      */
-    public function getTracker() {
+    public function getTracker()
+    {
         return TrackerFactory::instance()->getTrackerByid($this->getTrackerId());
     }
 
@@ -129,7 +136,8 @@ class Tracker_DateReminder {
      *
      * @return int
      */
-    public function getNotificationType() {
+    public function getNotificationType()
+    {
         return $this->notificationType;
     }
 
@@ -138,7 +146,8 @@ class Tracker_DateReminder {
      *
      * @return int
      */
-    public function getDistance() {
+    public function getDistance()
+    {
         return $this->distance;
     }
 
@@ -149,7 +158,8 @@ class Tracker_DateReminder {
      *
      * @return Mixed
      */
-    public function getUgroups($asArray = false) {
+    public function getUgroups($asArray = false)
+    {
         $ugroups = $this->ugroups;
         if ($asArray) {
             $ugroups = explode(',', $this->ugroups);
@@ -163,7 +173,8 @@ class Tracker_DateReminder {
      *
      * @return Array
      */
-    public function getRoles() {
+    public function getRoles()
+    {
         return $this->roles;
     }
 
@@ -172,7 +183,8 @@ class Tracker_DateReminder {
      *
      * @return int
      */
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->status;
     }
 
@@ -183,7 +195,8 @@ class Tracker_DateReminder {
      *
      * @return Void
      */
-    protected function setTracker($trackerId) {
+    protected function setTracker($trackerId)
+    {
         $this->trackerId = $trackerId;
     }
 
@@ -194,7 +207,8 @@ class Tracker_DateReminder {
      *
      * @return Void
      */
-    protected function setNotificationType($notificationType) {
+    protected function setNotificationType($notificationType)
+    {
         $this->notificationType = $notificationType;
     }
 
@@ -205,7 +219,8 @@ class Tracker_DateReminder {
      *
      * @return Void
      */
-    protected function setUgroups($ugroups) {
+    protected function setUgroups($ugroups)
+    {
         $this->ugroups = $ugroups;
     }
 
@@ -216,7 +231,8 @@ class Tracker_DateReminder {
      *
      * @return Void
      */
-    protected function setRoles($roles) {
+    protected function setRoles($roles)
+    {
         $this->roles = $roles;
     }
 
@@ -227,7 +243,8 @@ class Tracker_DateReminder {
      *
      * @return Array
      */
-    public function getRecipients(Tracker_Artifact $artifact) {
+    public function getRecipients(Tracker_Artifact $artifact)
+    {
         $recipients    = array();
         $ugroups       = $this->getUgroups(true);
         $roles         = $this->getRoles();
@@ -247,7 +264,8 @@ class Tracker_DateReminder {
      *
      * @return Array
      */
-    private function getRecipientsFromUgroups() {
+    private function getRecipientsFromUgroups()
+    {
         $recipients = array();
         $uGroupManager = new UGroupManager();
         $ugroups       = $this->getUgroups(true);
@@ -272,7 +290,8 @@ class Tracker_DateReminder {
      *
      * @return Array
      */
-    private function getRecipientsFromRoles(Tracker_Artifact $artifact) {
+    private function getRecipientsFromRoles(Tracker_Artifact $artifact)
+    {
         $recipients = array();
         $roles      = $this->getRoles();
         foreach ($roles as $userRole) {
@@ -286,7 +305,8 @@ class Tracker_DateReminder {
      *
      * @return String
      */
-    public function getReminderStatusLabel() {
+    public function getReminderStatusLabel()
+    {
         if ($this->getStatus() == self::ENABLED) {
             $reminderStatusLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_enabled');
         } else {
@@ -300,7 +320,8 @@ class Tracker_DateReminder {
      *
      * @return String
      */
-    public function getNotificationTypeLabel() {
+    public function getNotificationTypeLabel()
+    {
         if ($this->getNotificationType() == self::AFTER) {
             $notificationTypeLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after');
         } else {
@@ -314,7 +335,8 @@ class Tracker_DateReminder {
      *
      * @return String
      */
-    public function getUgroupsLabel() {
+    public function getUgroupsLabel()
+    {
         $ugroupsLabel   = '';
         $ugroupManager  = $this->getUGroupManager();
         $ugroups        = explode(',', $this->ugroups);
@@ -331,7 +353,8 @@ class Tracker_DateReminder {
      *
      * @return String
      */
-    public function getRolesLabel() {
+    public function getRolesLabel()
+    {
         $rolesLabel   = '';
         $roles        = $this->getRoles();
         foreach ($roles as $role) {
@@ -347,7 +370,8 @@ class Tracker_DateReminder {
      *
      * @return date
      */
-    public function getFieldValue(Tracker_Artifact $artifact) {
+    public function getFieldValue(Tracker_Artifact $artifact)
+    {
         $field = $this->getField();
         return $field->getLastValue($artifact);
     }
@@ -357,7 +381,8 @@ class Tracker_DateReminder {
      *
      * @return UGroupManager
      */
-    protected function getUGroupManager() {
+    protected function getUGroupManager()
+    {
         return new UGroupManager();
     }
 

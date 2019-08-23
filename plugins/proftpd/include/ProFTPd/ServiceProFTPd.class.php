@@ -31,7 +31,8 @@ class ServiceProFTPd extends Service {
         return 'fa-tlp-folder-globe';
     }
 
-    public function renderInPage(HTTPRequest $request, $title, $template, $presenter = null) {
+    public function renderInPage(HTTPRequest $request, $title, $template, $presenter = null)
+    {
         $this->displayServiceHeader($request, $title);
 
         if ($presenter) {
@@ -42,11 +43,13 @@ class ServiceProFTPd extends Service {
         exit;
     }
 
-    private function getRenderer() {
+    private function getRenderer()
+    {
         return TemplateRendererFactory::build()->getRenderer(dirname(PROFTPD_BASE_DIR).'/templates');
     }
 
-    private function displayServiceHeader(HTTPRequest $request, $title) {
+    private function displayServiceHeader(HTTPRequest $request, $title)
+    {
         $toolbar = array();
         if ($this->userIsAdmin($request)) {
             $toolbar[] = array(
@@ -68,7 +71,8 @@ class ServiceProFTPd extends Service {
      * @param HTTPRequest $request
      * @return bool
      */
-    private function userIsAdmin(HTTPRequest $request) {
+    private function userIsAdmin(HTTPRequest $request)
+    {
         return $request->getProject()->userIsAdmin($request->getCurrentUser());
     }
 }

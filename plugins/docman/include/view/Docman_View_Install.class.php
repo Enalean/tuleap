@@ -10,7 +10,8 @@
 require_once('Docman_View_ProjectHeader.class.php');
 
 class Docman_View_Install extends Docman_View_ProjectHeader {
-    /* protected */ function _content($params) {
+    /* protected */ function _content($params)
+    {
         echo '<form action="'. $params['default_url'] .'" method="POST">';
         echo '<p>Do you want to install the docman now ?</p>';
         echo '<input type="hidden" name="action" value="install" />';

@@ -158,7 +158,8 @@ define('FF_DEFAULT', FF_DV_SANSSERIF);
 class LanguageConv {
     private $g2312 = null ;
 
-    function Convert($aTxt,$aFF) {
+    function Convert($aTxt,$aFF)
+    {
         if( LANGUAGE_GREEK ) {
             if( GREEK_FROM_WINDOWS ) {
                 $unistring = LanguageConv::gr_win2uni($aTxt);
@@ -202,7 +203,8 @@ class LanguageConv {
     }
 
     // Translate iso encoding to unicode
-    public static function iso2uni ($isoline){
+    public static function iso2uni($isoline)
+    {
         $uniline='';
         for ($i=0; $i < strlen($isoline); $i++){
             $thischar=substr($isoline,$i,1);
@@ -213,7 +215,8 @@ class LanguageConv {
     }
 
     // Translate greek iso encoding to unicode
-    public static function gr_iso2uni ($isoline) {
+    public static function gr_iso2uni($isoline)
+    {
         $uniline='';
         for ($i=0; $i < strlen($isoline); $i++) {
             $thischar=substr($isoline,$i,1);
@@ -224,7 +227,8 @@ class LanguageConv {
     }
 
     // Translate greek win encoding to unicode
-    public static function gr_win2uni ($winline) {
+    public static function gr_win2uni($winline)
+    {
         $uniline='';
         for ($i=0; $i < strlen($winline); $i++) {
             $thischar=substr($winline,$i,1);
@@ -239,7 +243,8 @@ class LanguageConv {
         return $uniline;
     }
 
-    public static function heb_iso2uni($isoline) {
+    public static function heb_iso2uni($isoline)
+    {
         $isoline = hebrev($isoline);
         $o = '';
 
@@ -260,7 +265,8 @@ class LanguageConv {
 class TTF {
     private $font_files,$style_names;
 
-    function __construct() {
+    function __construct()
+    {
 
             // String names for font styles to be used in error messages
         $this->style_names=array(
@@ -456,7 +462,8 @@ class TTF {
     //---------------
     // PUBLIC METHODS
     // Create the TTF file from the font specification
-    function File($family,$style=FS_NORMAL) {
+    function File($family,$style=FS_NORMAL)
+    {
         $fam = @$this->font_files[$family];
         if( !$fam ) {
             JpGraphError::RaiseL(25046,$family);//("Specified TTF font family (id=$family) is unknown or does not exist. Please note that TTF fonts are not distributed with JpGraph for copyright reasons. You can find the MS TTF WEB-fonts (arial, courier etc) for download at http://corefonts.sourceforge.net/");
@@ -505,7 +512,8 @@ class TTF {
         return $font_file;
     }
 
-    function SetUserFont($aNormal,$aBold='',$aItalic='',$aBoldIt='') {
+    function SetUserFont($aNormal,$aBold='',$aItalic='',$aBoldIt='')
+    {
         $this->font_files[FF_USERFONT] =
             array(FS_NORMAL     => $aNormal,
                   FS_BOLD => $aBold,
@@ -513,7 +521,8 @@ class TTF {
                   FS_BOLDITALIC => $aBoldIt ) ;
     }
 
-    function SetUserFont1($aNormal,$aBold='',$aItalic='',$aBoldIt='') {
+    function SetUserFont1($aNormal,$aBold='',$aItalic='',$aBoldIt='')
+    {
         $this->font_files[FF_USERFONT1] =
             array(FS_NORMAL     => $aNormal,
                   FS_BOLD => $aBold,
@@ -521,7 +530,8 @@ class TTF {
                   FS_BOLDITALIC => $aBoldIt ) ;
     }
 
-    function SetUserFont2($aNormal,$aBold='',$aItalic='',$aBoldIt='') {
+    function SetUserFont2($aNormal,$aBold='',$aItalic='',$aBoldIt='')
+    {
         $this->font_files[FF_USERFONT2] =
             array(FS_NORMAL     => $aNormal,
                   FS_BOLD => $aBold,
@@ -529,7 +539,8 @@ class TTF {
                   FS_BOLDITALIC => $aBoldIt ) ;
     }
 
-    function SetUserFont3($aNormal,$aBold='',$aItalic='',$aBoldIt='') {
+    function SetUserFont3($aNormal,$aBold='',$aItalic='',$aBoldIt='')
+    {
         $this->font_files[FF_USERFONT3] =
             array(FS_NORMAL     => $aNormal,
                   FS_BOLD => $aBold,
@@ -547,7 +558,8 @@ class TTF {
 //              mathematical and greek symbols.
 //=============================================================================
 class  SymChar {
-    static function Get($aSymb,$aCapital=FALSE) {
+    static function Get($aSymb,$aCapital=FALSE)
+    {
         $iSymbols = array(
         /* Greek */
         array('alpha','03B1','0391'),

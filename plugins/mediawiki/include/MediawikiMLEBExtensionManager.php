@@ -50,11 +50,13 @@ class MediawikiMLEBExtensionManager {
         $this->language_manager = $language_manager;
     }
 
-    public function isMLEBExtensionInstalled() {
+    public function isMLEBExtensionInstalled()
+    {
         return is_dir(forge_get_config('extension_mleb_path', 'mediawiki'));
     }
 
-    public function isMLEBExtensionAvailableForProject(Project $project) {
+    public function isMLEBExtensionAvailableForProject(Project $project)
+    {
         return $this->isMLEBExtensionInstalled()
             && $this->version_manager->getVersionForProject($project) == MediawikiVersionManager::MEDIAWIKI_123_VERSION
             && $this->getMLEBUsageForProject($project)
@@ -66,7 +68,8 @@ class MediawikiMLEBExtensionManager {
         return $this->extension_dao->isMLEBActivatedForProjectID($project->getID());
     }
 
-    public function activateMLEBForProject(Project $project) {
+    public function activateMLEBForProject(Project $project)
+    {
         if (! $this->isMLEBExtensionInstalled()) {
             return;
         }
@@ -80,7 +83,8 @@ class MediawikiMLEBExtensionManager {
         return $this->extension_dao->saveMLEBActivationForProjectID($project->getID());
     }
 
-    public function activateMLEBForCompatibleProjects(Logger $logger) {
+    public function activateMLEBForCompatibleProjects(Logger $logger)
+    {
         foreach ($this->getProjectsEligibleToMLEBExtensionActivation() as $project) {
             if ($this->activateMLEBForProject($project)) {
                 $project_id = $project->getID();
@@ -89,7 +93,8 @@ class MediawikiMLEBExtensionManager {
         }
     }
 
-    private function runUpdate(Project $project) {
+    private function runUpdate(Project $project)
+    {
         $this->migrator->runUpdateScript($project);
     }
 

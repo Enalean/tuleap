@@ -42,7 +42,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     private $user_helper;
 
 
-    public function __construct($field, $value_function, $default_values, $decorators) {
+    public function __construct($field, $value_function, $default_values, $decorators)
+    {
         parent::__construct($field, $default_values, $decorators);
 
         if ( !empty($value_function) ) {
@@ -67,20 +68,23 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @return array of value_functions
      */
-    public function getValueFunction() {
+    public function getValueFunction()
+    {
         return $this->value_function;
     }
 
     /**
      * @return string
      */
-    protected function format($value) {
+    protected function format($value)
+    {
         return $value->getLabel();
     }
     /**
      * @return string
      */
-    public function formatCriteriaValue($value_id) {
+    public function formatCriteriaValue($value_id)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         return  $hp->purify($this->format($this->getValue($value_id)), CODENDI_PURIFIER_CONVERT_HTML);
     }
@@ -88,7 +92,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @return string
      */
-    public function formatMailCriteriaValue($value_id) {
+    public function formatMailCriteriaValue($value_id)
+    {
         return $this->format($this->getValue($value_id));
     }
 
@@ -97,7 +102,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return string
      */
-    public function formatChangesetValue($value) {
+    public function formatChangesetValue($value)
+    {
         if ($value->getId() == 100) {
             return '';
         } else {
@@ -108,14 +114,16 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @return string
      */
-    public function formatCardValue($value, Tracker_CardDisplayPreferences $display_preferences) {
+    public function formatCardValue($value, Tracker_CardDisplayPreferences $display_preferences)
+    {
         return $value->fetchCard($display_preferences);
     }
 
     /**
      * @return string
      */
-    public function formatChangesetValueForCSV($value) {
+    public function formatChangesetValueForCSV($value)
+    {
         if ($value->getId() == 100) {
             return '';  // NULL value for CSV
         } else {
@@ -126,14 +134,16 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @return string
      */
-    public function formatChangesetValueWithoutLink($value) {
+    public function formatChangesetValueWithoutLink($value)
+    {
         return Codendi_HTMLPurifier::instance()->purify($value->getLabel());
     }
 
     /**
      * @return array
      */
-    public function getChangesetValues($changeset_id) {
+    public function getChangesetValues($changeset_id)
+    {
         $uh = UserHelper::instance();
         $values = array();
         foreach($this->getDao()->searchChangesetValues($changeset_id, $this->field->id, $uh->getDisplayNameSQLQuery(), $uh->getDisplayNameSQLOrder()) as $row) {
@@ -170,7 +180,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return array | null The values or null if there are no specific available values
      */
-    public function getRESTAvailableValues() {
+    public function getRESTAvailableValues()
+    {
         $ugroups = array();
 
         foreach ($this->value_function as $ugroup) {
@@ -193,7 +204,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return array, the list of all ugroups with id and name
      */
-    protected function getRESTBindingList() {
+    protected function getRESTBindingList()
+    {
         $ugroups = array();
         foreach($this->value_function as $ugroup) {
             if ($ugroup) {
@@ -243,7 +255,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
      */
-    protected function getAllValuesByUGroupList($ugroups, $keyword = null) {
+    protected function getAllValuesByUGroupList($ugroups, $keyword = null)
+    {
         if ($this->values === null) {
             $this->values = $this->getUsersValueByKeywordAndIds($ugroups, $keyword, array());
         }
@@ -277,7 +290,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
      */
-    public function getAllValues($keyword = null) {
+    public function getAllValues($keyword = null)
+    {
         return $this->getAllValuesByUGroupList($this->value_function, $keyword = null);
     }
 
@@ -291,7 +305,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return Tracker_FormElement_Field_List_Bind_UsersValue|null
      */
-    protected function getAdditionnalValue($value_id) {
+    protected function getAdditionnalValue($value_id)
+    {
         if (!isset($this->additionnal_values[$value_id])) {
             $this->additionnal_values[$value_id] = null;
             if ($user = $this->userManager->getUserById($value_id)) {
@@ -308,7 +323,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return Tracker_FormElement_Field_List_BindValue
      */
-    public function getValueFromRow($row) {
+    public function getValueFromRow($row)
+    {
         return new Tracker_FormElement_Field_List_Bind_UsersValue($row['id'], $row['user_name'], $row['full_name']);
     }
 
@@ -323,7 +339,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *                  'join_on_id' => 'user.user_id',
      *              }
      */
-    public function getBindtableSqlFragment() {
+    public function getBindtableSqlFragment()
+    {
         return array(
             'select'     => "user.user_name,
                              user.realname,
@@ -342,7 +359,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return mixed the field data corresponding to the value for artifact submision (user_id)
      */
-    public function getFieldData($submitted_value, $is_multiple) {
+    public function getFieldData($submitted_value, $is_multiple)
+    {
         $values = $this->getAllValues();
         if ($is_multiple) {
             $return = array();
@@ -374,7 +392,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      * @return string
      * @see getQueryFrom
      */
-    public function getQuerySelect() {
+    public function getQuerySelect()
+    {
         $R1 = 'R1_'. $this->field->id;
         $R2 = 'R2_'. $this->field->id;
         $R3 = 'R3_'. $this->field->id;
@@ -390,7 +409,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return string
      */
-    public function getQueryFrom($changesetvalue_table = 'tracker_changeset_value_list') {
+    public function getQueryFrom($changesetvalue_table = 'tracker_changeset_value_list')
+    {
         $R1 = 'R1_'. $this->field->id;
         $R2 = 'R2_'. $this->field->id;
         $R3 = 'R3_'. $this->field->id;
@@ -403,7 +423,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * Get the "order by" statement to retrieve field values
      */
-    public function getQueryOrderby() {
+    public function getQueryOrderby()
+    {
         $uh = UserHelper::instance();
         $R1 = 'R1_'. $this->field->id;
         $R2 = 'R2_'. $this->field->id;
@@ -413,7 +434,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public function getQueryGroupby() {
+    public function getQueryGroupby()
+    {
         $R1 = 'R1_'. $this->field->id;
         $R2 = 'R2_'. $this->field->id;
         return "$R2.user_id";
@@ -446,7 +468,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *               - selectbox: count group by
      *               - multiselectbox: all (else it breaks other computations)
      */
-    public function getQuerySelectAggregate($functions) {
+    public function getQuerySelectAggregate($functions)
+    {
         $R1  = 'R1_'. $this->field->id;
         $R2  = 'R2_'. $this->field->id;
         $same     = array();
@@ -484,7 +507,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      * @param mixed $value the value of the field
      * @return string
      */
-    public function fetchRawValue($value) {
+    public function fetchRawValue($value)
+    {
         return $this->format($this->getValue($value));
     }
 
@@ -493,7 +517,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      * @param Tracker_Artifact_Changeset $changeset
      * @return string
      */
-    public function fetchRawValueFromChangeset($changeset) {
+    public function fetchRawValueFromChangeset($changeset)
+    {
         $value = '';
         $values_array = array();
         if ($v = $changeset->getValue($this->field)) {
@@ -505,15 +530,18 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return implode(",", $values_array);
     }
 
-    public function getDao() {
+    public function getDao()
+    {
         return new Tracker_FormElement_Field_List_Bind_UsersDao();
     }
 
-    private function getOpenValueDao() {
+    private function getOpenValueDao()
+    {
         return new Tracker_FormElement_Field_List_OpenValueDao();
     }
 
-    public function getValueDao() {
+    public function getValueDao()
+    {
         return new UserDao();
     }
 
@@ -524,7 +552,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return string html
      */
-    public static function fetchAdminCreateForm($field) {
+    public static function fetchAdminCreateForm($field)
+    {
         return self::fetchSelectUsers('formElement_data[bind][value_function][]', $field, array());
     }
 
@@ -533,7 +562,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return string html
      */
-    public function fetchAdminEditForm() {
+    public function fetchAdminEditForm()
+    {
         $html = '';
         $html .= '<h3>'. 'Bind to users' .'</h3>';
         $html .= self::fetchSelectUsers('bind[value_function][]', $this->field, $this->value_function);
@@ -544,7 +574,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return $html;
     }
 
-    protected static function fetchSelectUsers($select_name, $field, $value_function) {
+    protected static function fetchSelectUsers($select_name, $field, $value_function)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<input type="hidden" name="'. $select_name .'" value="" />';
@@ -621,7 +652,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return void
      */
-    public function process($params, $no_redirect = false) {
+    public function process($params, $no_redirect = false)
+    {
         foreach ($params as $key => $value) {
             switch ($key) {
                 case 'value_function':
@@ -672,7 +704,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return true if Tracler is ok
      */
-    public function testImport() {
+    public function testImport()
+    {
         if(parent::testImport()){
             if (static::class == 'Tracker_FormElement_Field_Text') {
                 if (!(isset($this->default_properties['rows']) && isset($this->default_properties['cols']))) {
@@ -697,7 +730,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @Return array the BindValue(s)
      */
-    public function getBindValues($bindvalue_ids = null) {
+    public function getBindValues($bindvalue_ids = null)
+    {
         $values = $this->getAllValues();
         if ($bindvalue_ids === null) {
             return $values;
@@ -748,7 +782,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return void
      */
-    public function saveObject() {
+    public function saveObject()
+    {
         $dao = new Tracker_FormElement_Field_List_Bind_UsersDao();
         $dao->save($this->field->getId(), $this->getValueFunction());
         parent::saveObject();
@@ -761,7 +796,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return string[]
      */
-    public function getRecipients(Tracker_Artifact_ChangesetValue_List $changeset_value) {
+    public function getRecipients(Tracker_Artifact_ChangesetValue_List $changeset_value)
+    {
         $recipients = array();
         foreach ($changeset_value->getListValues() as $user_value) {
             if ($user_value->getId() != 100) {
@@ -776,11 +812,13 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return bool
      */
-    public function isNotificationsSupported() {
+    public function isNotificationsSupported()
+    {
         return true;
     }
 
-    public function isValid($value) {
+    public function isValid($value)
+    {
         if ($value) {
             $values = explode(',', $value);
             foreach ($values as $v) {
@@ -802,20 +840,24 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @see Tracker_FormElement_Field_Shareable
      */
-    public function fixOriginalValueIds(array $value_mapping) {
+    public function fixOriginalValueIds(array $value_mapping)
+    {
         // Nothing to do: user value ids stay the same accross projects.
     }
 
-    public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value) {
+    public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value)
+    {
         // returns an empty array as it doesn't make sense with Users
         return array();
     }
 
-    public function getType() {
+    public function getType()
+    {
         return self::TYPE;
     }
 
-    protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
+    protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value)
+    {
         $user_representation = new UserRepresentation();
         $user_representation->build($value);
 
@@ -825,7 +867,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return $representation;
     }
 
-    public function getDefaultRESTValues() {
+    public function getDefaultRESTValues()
+    {
         $bind_values = $this->getBindValuesForIds(array_keys($this->getDefaultValues()));
 
         $rest_array = array();
@@ -838,7 +881,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return $rest_array;
     }
 
-    public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field) {
+    public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field)
+    {
         if (isset($rest_data['id']) && is_numeric($rest_data['id'])) {
             $id   = (int) $rest_data['id'];
             $user = $this->getValue($id);
@@ -873,7 +917,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return Tracker_FormElement_Field_OpenList::BIND_PREFIX.$user->getId();
     }
 
-    public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value) {
+    public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value)
+    {
         $user_manager = UserManager::instance();
         $class_user_representation = '\\Tuleap\\User\\REST\\UserRepresentation';
         $user_representation       = new $class_user_representation;

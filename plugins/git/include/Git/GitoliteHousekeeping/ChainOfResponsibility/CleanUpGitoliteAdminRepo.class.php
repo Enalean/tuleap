@@ -46,7 +46,8 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo ex
         $this->remote_admin_repository = $remote_admin_repository;
     }
 
-    public function execute() {
+    public function execute()
+    {
         $admin_dir  = 'admin';
         $backup_dir = $this->gitolite_var_path .'/admin.old';
         if (is_dir($backup_dir)) {
@@ -65,11 +66,13 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo ex
     /**
      * Used by unit tests to bypass the fact that clone must be done by codendiadm
      */
-    public function clearExecuteAs() {
+    public function clearExecuteAs()
+    {
         $this->execute_as = null;
     }
 
-    private function executeCmd($cmd) {
+    private function executeCmd($cmd)
+    {
         if ($this->execute_as) {
             $cmd = "su -c '$cmd' - $this->execute_as";
         }

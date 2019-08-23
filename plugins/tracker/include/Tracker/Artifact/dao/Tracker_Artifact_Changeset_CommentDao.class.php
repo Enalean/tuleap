@@ -20,12 +20,14 @@
  */
 
 class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject {
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_changeset_comment';
     }
 
-    public function searchLastVersion($changeset_id) {
+    public function searchLastVersion($changeset_id)
+    {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $sql = "SELECT * FROM $this->table_name
                 WHERE changeset_id = $changeset_id
@@ -76,7 +78,8 @@ class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject {
         return $id;
     }
 
-    public function delete($changeset_id) {
+    public function delete($changeset_id)
+    {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $sql = "DELETE
                 FROM $this->table_name

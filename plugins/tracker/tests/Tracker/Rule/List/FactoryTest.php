@@ -35,7 +35,8 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
     /** @var XML_Security */
     protected $xml_security;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->list_rule_dao = mock('Tracker_Rule_List_Dao');
@@ -45,13 +46,15 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
         $this->xml_security->enableExternalLoadOfEntities();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->xml_security->disableExternalLoadOfEntities();
 
         parent::tearDown();
     }
 
-    public function testCreateRuleListGeneratesANewObjectThatContainsAllValuesPassed() {
+    public function testCreateRuleListGeneratesANewObjectThatContainsAllValuesPassed()
+    {
         stub($this->list_rule_dao)->insert()->returns(true);
 
         $source_field_id = 10;
@@ -71,7 +74,8 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
         $this->assertEqual($list_rule->getTargetValue(), $target_value);
     }
 
-    public function testSearchByIdReturnsNullIfNoEntryIsFoundByTheDao() {
+    public function testSearchByIdReturnsNullIfNoEntryIsFoundByTheDao()
+    {
         stub($this->list_rule_dao)->searchById()->returns(false);
         $list_rule = $this->list_rule_factory
                 ->searchById(999);
@@ -79,7 +83,8 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
         $this->assertNull($list_rule);
     }
 
-    public function testSearchByIdReturnsANewObjectIfOneEntryIsFoundByTheDao() {
+    public function testSearchByIdReturnsANewObjectIfOneEntryIsFoundByTheDao()
+    {
         $data = array(
             'source_field_id'   => 46345,
             'target_field_id'   => 465,
@@ -95,7 +100,8 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
         $this->assertNotNull($list_rule);
     }
 
-    public function testSearchByTrackerIdReturnsNullIfNoEntryIsFoundByTheDao() {
+    public function testSearchByTrackerIdReturnsNullIfNoEntryIsFoundByTheDao()
+    {
         stub($this->list_rule_dao)->searchByTrackerId()->returnsEmptyDar();
         $list_rule = $this->list_rule_factory
                 ->searchByTrackerId(999);
@@ -104,7 +110,8 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
         $this->assertCount($list_rule, 0);
     }
 
-    public function testSearchByTrackerIdReturnsAnArrayOfASingleObjectIfOneEntryIsFoundByTheDao() {
+    public function testSearchByTrackerIdReturnsAnArrayOfASingleObjectIfOneEntryIsFoundByTheDao()
+    {
         $data_access_result = mock('DataAccessResult');
 
         $data = array(
@@ -128,7 +135,8 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
         $this->assertCount($list_rules, 1);
     }
 
-    public function testDuplicateDoesNotInsertWhenNoRulesExist() {
+    public function testDuplicateDoesNotInsertWhenNoRulesExist()
+    {
         $from_tracker_id = 56;
         $to_tracker_id   = 789;
         $field_mapping   = array(
@@ -153,7 +161,8 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
         $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
 
-    public function testDuplicateInsertsANewRule() {
+    public function testDuplicateInsertsANewRule()
+    {
         $from_tracker_id = 56;
         $to_tracker_id   = 789;
 
@@ -221,7 +230,8 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
         $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
 
-    function testExport() {
+    function testExport()
+    {
         $xml = simplexml_load_file(dirname(__FILE__) . '/../../../_fixtures/ImportTrackerRulesTest.xml');
 
         $f1 = stub('Tracker_FormElement_Field_List')->getId()->returns(102);

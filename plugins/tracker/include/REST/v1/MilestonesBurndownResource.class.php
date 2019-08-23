@@ -27,11 +27,13 @@ use Luracast\Restler\RestException;
 
 class MilestonesBurndownResource {
 
-    public function options() {
+    public function options()
+    {
         Header::allowOptionsGet();
     }
 
-    public function get(PFUser $user, Planning_Milestone $milestone) {
+    public function get(PFUser $user, Planning_Milestone $milestone)
+    {
         $artifact = $milestone->getArtifact();
         $field    = $artifact->getABurndownField($user);
         if (! $field) {
@@ -42,7 +44,8 @@ class MilestonesBurndownResource {
         return $rest->value;
     }
 
-    public function hasBurndown(PFUser $user, Planning_Milestone $milestone) {
+    public function hasBurndown(PFUser $user, Planning_Milestone $milestone)
+    {
         $artifact = $milestone->getArtifact();
         $field    = $artifact->getABurndownField($user);
         if (! $field) {

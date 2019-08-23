@@ -78,7 +78,8 @@ class FRSRelease {
      */
     protected $group_id;
 
-    function __construct($data_array = null) {
+    function __construct($data_array = null)
+    {
         $this->release_id       = null;
         $this->package_id       = null;
         $this->name             = null;
@@ -99,85 +100,104 @@ class FRSRelease {
         return (int) $this->release_id;
     }
 
-    function setReleaseID($release_id) {
+    function setReleaseID($release_id)
+    {
         $this->release_id = (int) $release_id;
     }
 
-    function getPackageID() {
+    function getPackageID()
+    {
         return $this->package_id;
     }
 
-    function setPackageID($package_id) {
+    function setPackageID($package_id)
+    {
         $this->package_id = (int) $package_id;
     }
 
-    function getName() {
+    function getName()
+    {
         return $this->name;
     }
 
-    function setName($name) {
+    function setName($name)
+    {
         $this->name = $name;
     }
 
-    function getNotes() {
+    function getNotes()
+    {
         return $this->notes;
     }
 
-    function setNotes($notes) {
+    function setNotes($notes)
+    {
         $this->notes = $notes;
     }
 
-    function getChanges() {
+    function getChanges()
+    {
         return $this->changes;
     }
 
-    function setChanges($changes) {
+    function setChanges($changes)
+    {
         $this->changes = $changes;
     }
 
-    function getStatusID() {
+    function getStatusID()
+    {
         return $this->status_id;
     }
 
-    function setStatusID($status_id) {
+    function setStatusID($status_id)
+    {
         $this->status_id = $status_id;
     }
 
-    function getPreformatted() {
+    function getPreformatted()
+    {
         return $this->preformatted;
     }
 
-    function setPreformatted($preformatted) {
+    function setPreformatted($preformatted)
+    {
         $this->preformatted = $preformatted;
     }
 
-    function getReleaseDate() {
+    function getReleaseDate()
+    {
         return $this->release_date;
     }
 
-    function setReleaseDate($release_date) {
+    function setReleaseDate($release_date)
+    {
         $this->release_date = $release_date;
     }
 
-    function getReleasedBy() {
+    function getReleasedBy()
+    {
         return $this->released_by;
     }
 
-    function setReleasedBy($released_by) {
+    function setReleasedBy($released_by)
+    {
         $this->released_by = $released_by;
     }
 
     /**
      * @return Project
      */
-    public function getProject() {
+    public function getProject()
+    {
         if (!isset($this->project)) {
             $this->project = $this->_getProjectManager()->getProject($this->getGroupID());
         }
         return $this->project;
     }
 
-    function setProject($project) {
+    function setProject($project)
+    {
         $this->project = $project;
     }
 
@@ -185,7 +205,8 @@ class FRSRelease {
      * Determines if the release is active or not
      * @return bool true if the release is active, false otherwise
      */
-    function isActive() {
+    function isActive()
+    {
         $release_factory = new FRSReleaseFactory();
         return $this->getStatusID() == $release_factory->STATUS_ACTIVE;
     }
@@ -194,7 +215,8 @@ class FRSRelease {
      * Determines if the release is hidden or not
      * @return bool true if the release is hidden, false otherwise
      */
-    function isHidden() {
+    function isHidden()
+    {
         $release_factory = new FRSReleaseFactory();
         return $this->getStatusID() == $release_factory->STATUS_HIDDEN;
     }
@@ -203,7 +225,8 @@ class FRSRelease {
      * Determines if the release is deleted or not
      * @return bool true if the release is boolean, false otherwise
      */
-    function isDeleted() {
+    function isDeleted()
+    {
         $release_factory = new FRSReleaseFactory();
         return $this->getStatusID() == $release_factory->STATUS_DELETED;
     }
@@ -212,21 +235,24 @@ class FRSRelease {
      * Determines if the release notes and changes are preformatted or not
      * @return bool true if the release notes and changes are preformatted, false otherwise
      */
-    function isPreformatted() {
+    function isPreformatted()
+    {
         return $this->getPreformatted() == 1;
     }
 
     /**
      * Set group id
      */
-    function setGroupID($group_id) {
+    function setGroupID($group_id)
+    {
         $this->group_id = $group_id;
     }
 
     /**
      * Returns the group ID the release belongs to
      */
-    function getGroupID() {
+    function getGroupID()
+    {
         if (!isset($this->group_id)) {
             if (isset($this->project)) {
                 $this->group_id = $this->project->getID();
@@ -246,7 +272,8 @@ class FRSRelease {
         return $this->_getFRSPackageFactory()->getFRSPackageFromDb($this->getPackageID());
     }
 
-    function initFromArray($array) {
+    function initFromArray($array)
+    {
         if (isset($array['release_id']))      $this->setReleaseID($array['release_id']);
         if (isset($array['package_id']))      $this->setPackageID($array['package_id']);
         if (isset($array['name']))            $this->setName($array['name']);
@@ -258,7 +285,8 @@ class FRSRelease {
         if (isset($array['released_by']))     $this->setReleasedBy($array['released_by']);
     }
 
-    function toArray() {
+    function toArray()
+    {
         $array = array();
         $array['release_id']   = $this->getReleaseID();
         $array['package_id']   = $this->getPackageID();
@@ -285,7 +313,8 @@ class FRSRelease {
      *
      *    return    array    Array of FRSFile Objects.
      */
-    function &getFiles() {
+    function &getFiles()
+    {
         if (!is_array($this->release_files) || count($this->release_files) < 1) {
             $this->release_files=array();
             $frsff = new FRSFileFactory();
@@ -294,7 +323,8 @@ class FRSRelease {
         return $this->release_files;
     }
 
-    public function userCanRead($user_id = 0) {
+    public function userCanRead($user_id = 0)
+    {
         $release_factory = new FRSReleaseFactory();
 
         return $release_factory->userCanRead($this->getGroupID(), $this->getPackageID(), $this->getReleaseID(), $user_id);
@@ -304,7 +334,8 @@ class FRSRelease {
      * Returns the HTML content for tooltip when hover a reference with the nature release
      * @returns string HTML content for release tooltip
      */
-    function getReferenceTooltip() {
+    function getReferenceTooltip()
+    {
         $html_purifier = Codendi_HTMLPurifier::instance();
         $tooltip = '';
         $package_id = $this->getPackageID();
@@ -332,7 +363,8 @@ class FRSRelease {
      *
      * @return FRSPackageFactory
      */
-    function _getFRSPackageFactory() {
+    function _getFRSPackageFactory()
+    {
         return FRSPackageFactory::instance();
     }
 
@@ -341,7 +373,8 @@ class FRSRelease {
      *
      * @return ProjectManager
      */
-    function _getProjectManager() {
+    function _getProjectManager()
+    {
         return ProjectManager::instance();
     }
 }

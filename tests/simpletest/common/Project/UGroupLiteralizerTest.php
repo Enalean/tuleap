@@ -24,7 +24,8 @@ class UGroupLiteralizerTest extends TuleapTestCase {
     protected $user;
     public const PERMISSIONS_TYPE = 'PLUGIN_DOCMAN_%';
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->user   = mock('PFUser');
         $user_manager = mock('UserManager');
@@ -33,12 +34,14 @@ class UGroupLiteralizerTest extends TuleapTestCase {
         $this->ugroup_literalizer = new UGroupLiteralizer();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         UserManager::clearInstance();
         parent::tearDown();
     }
 
-    public function itIsProjectMember() {
+    public function itIsProjectMember()
+    {
         stub($this->user)->getStatus()->returns('A');
         $userProjects = array(
                 array('group_id'=>101, 'unix_group_name'=>'gpig1')
@@ -50,7 +53,8 @@ class UGroupLiteralizerTest extends TuleapTestCase {
         $this->assertUserGroupsForUser(array('site_active','gpig1_project_members'));
     }
 
-    public function itIsProjectAdmin() {
+    public function itIsProjectAdmin()
+    {
         stub($this->user)->getStatus()->returns('A');
         $userProjects = array(
                 array('group_id'=>102, 'unix_group_name'=>'gpig2')
@@ -62,7 +66,8 @@ class UGroupLiteralizerTest extends TuleapTestCase {
         $this->assertUserGroupsForUser(array('site_active','gpig2_project_members', 'gpig2_project_admin'));
     }
 
-    public function itIsMemberOfAStaticUgroup() {
+    public function itIsMemberOfAStaticUgroup()
+    {
         stub($this->user)->getStatus()->returns('A');
         stub($this->user)->getProjects()->returns(array());
         stub($this->user)->isMember()->returns(false);
@@ -71,7 +76,8 @@ class UGroupLiteralizerTest extends TuleapTestCase {
         $this->assertUserGroupsForUser(array('site_active','ug_304'));
     }
 
-    public function itIsRestricted() {
+    public function itIsRestricted()
+    {
         stub($this->user)->getStatus()->returns('R');
         stub($this->user)->getProjects()->returns(array());
         stub($this->user)->isMember()->returns(false);
@@ -81,7 +87,8 @@ class UGroupLiteralizerTest extends TuleapTestCase {
     }
 
 
-    public function itIsNeitherRestrictedNorActive() {
+    public function itIsNeitherRestrictedNorActive()
+    {
         stub($this->user)->getStatus()->returns('Not exists');
         stub($this->user)->getProjects()->returns(array());
         stub($this->user)->isMember()->returns(false);
@@ -90,24 +97,28 @@ class UGroupLiteralizerTest extends TuleapTestCase {
         $this->assertUserGroupsForUser(array());
     }
 
-    private function assertUserGroupsForUser(array $expected) {
+    private function assertUserGroupsForUser(array $expected)
+    {
         $this->assertEqual($expected, $this->ugroup_literalizer->getUserGroupsForUserName('john_do'));
         $this->assertEqual($expected, $this->ugroup_literalizer->getUserGroupsForUser($this->user));
     }
 
-    public function itCanTransformAnArrayWithUGroupMembersConstantIntoString() {
+    public function itCanTransformAnArrayWithUGroupMembersConstantIntoString()
+    {
         $ugroup_ids = array(ProjectUGroup::PROJECT_MEMBERS);
         $expected   = array('@gpig_project_members');
         $this->assertUgroupIdsToString($ugroup_ids, $expected);
     }
 
-    public function itDoesntIncludeTwiceProjectMemberIfSiteActive() {
+    public function itDoesntIncludeTwiceProjectMemberIfSiteActive()
+    {
         $ugroup_ids = array(ProjectUGroup::REGISTERED, ProjectUGroup::PROJECT_MEMBERS);
         $expected   = array('@site_active', '@gpig_project_members');
         $this->assertUgroupIdsToString($ugroup_ids, $expected);
     }
 
-    private function assertUgroupIdsToString($ugroup_ids, $expected) {
+    private function assertUgroupIdsToString($ugroup_ids, $expected)
+    {
         $project = mock('Project');
         stub($project)->getUnixName()->returns('gpig');
 
@@ -115,7 +126,8 @@ class UGroupLiteralizerTest extends TuleapTestCase {
         $this->assertEqual($expected, $result);
     }
 
-    public function itCanReturnUgroupIdsFromAnItemAndItsPermissionTypes() {
+    public function itCanReturnUgroupIdsFromAnItemAndItsPermissionTypes()
+    {
         $object_id = 100;
         $expected  = array(ProjectUGroup::PROJECT_MEMBERS);
         $project   = mock('Project');

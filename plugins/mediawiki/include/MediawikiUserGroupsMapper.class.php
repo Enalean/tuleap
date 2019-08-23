@@ -65,7 +65,8 @@ class MediawikiUserGroupsMapper {
     /** User_ForgeUserGroupPermissionsDao */
     private $forge_permissions_dao;
 
-    public function __construct(MediawikiDao $dao, User_ForgeUserGroupPermissionsDao $forge_permissions_dao) {
+    public function __construct(MediawikiDao $dao, User_ForgeUserGroupPermissionsDao $forge_permissions_dao)
+    {
         $this->dao = $dao;
         $this->forge_permissions_dao = $forge_permissions_dao;
     }
@@ -75,7 +76,8 @@ class MediawikiUserGroupsMapper {
      * @param array $new_mapping_list
      * @param Project $project
      */
-    public function saveMapping(array $new_mapping_list, Project $project) {
+    public function saveMapping(array $new_mapping_list, Project $project)
+    {
         $current_mapping_list = $this->getCurrentUserGroupMapping($project);
         $mappings_to_remove   = $this->getUserGroupMappingsDiff($current_mapping_list, $new_mapping_list);
         $mappings_to_add      = $this->getUserGroupMappingsDiff($new_mapping_list, $current_mapping_list);
@@ -88,7 +90,8 @@ class MediawikiUserGroupsMapper {
         $this->dao->resetUserGroups($project);
     }
 
-    private function getUserGroupMappingsDiff($group_mapping1, $group_mapping2) {
+    private function getUserGroupMappingsDiff($group_mapping1, $group_mapping2)
+    {
         $list = array();
 
         foreach (self::$MEDIAWIKI_MODIFIABLE_GROUP_NAMES as $mw_group_name) {
@@ -105,19 +108,22 @@ class MediawikiUserGroupsMapper {
         return $list;
     }
 
-    private function removeMediawikiUserGroupMapping(Project $project, array $mappings_to_remove, $mw_group_name) {
+    private function removeMediawikiUserGroupMapping(Project $project, array $mappings_to_remove, $mw_group_name)
+    {
         foreach($mappings_to_remove[$mw_group_name] as $ugroup_id) {
             $this->dao->removeMediawikiUserGroupMapping($project, $mw_group_name, $ugroup_id);
         }
     }
 
-    private function addMediawikiUserGroupMapping(Project $project, array $mappings_to_add, $mw_group_name) {
+    private function addMediawikiUserGroupMapping(Project $project, array $mappings_to_add, $mw_group_name)
+    {
         foreach($mappings_to_add[$mw_group_name] as $ugroup_id) {
             $this->dao->addMediawikiUserGroupMapping($project, $mw_group_name, $ugroup_id);
         }
     }
 
-    public function getCurrentUserGroupMapping($project) {
+    public function getCurrentUserGroupMapping($project)
+    {
         $list = array();
         $data_result = $this->dao->getMediawikiUserGroupMapping($project);
 
@@ -133,7 +139,8 @@ class MediawikiUserGroupsMapper {
         return $list;
     }
 
-    public function isDefaultMapping(Project $project) {
+    public function isDefaultMapping(Project $project)
+    {
         $current_mapping = $this->getCurrentUserGroupMapping($project);
 
         if ($project->isPublic()) {
@@ -148,7 +155,8 @@ class MediawikiUserGroupsMapper {
         return $this->checkThereIsNoMappingsChanges($added_groups, $removed_groups);
     }
 
-    private function checkThereIsNoMappingsChanges(array $added_groups, array $removed_groups) {
+    private function checkThereIsNoMappingsChanges(array $added_groups, array $removed_groups)
+    {
 
         foreach (self::$MEDIAWIKI_GROUPS_NAME as $group_name) {
             if (! (empty($added_groups[$group_name]) && empty($removed_groups[$group_name]))) {
@@ -159,7 +167,8 @@ class MediawikiUserGroupsMapper {
         return true;
     }
 
-    public function getDefaultMappingsForProject(Project $project) {
+    public function getDefaultMappingsForProject(Project $project)
+    {
         if ($project->isPublic()) {
             return self::$DEFAULT_MAPPING_PUBLIC_PROJECT;
         } else {
@@ -167,7 +176,8 @@ class MediawikiUserGroupsMapper {
         }
     }
 
-    public function defineUserMediawikiGroups(PFUser $user, Group $project) {
+    public function defineUserMediawikiGroups(PFUser $user, Group $project)
+    {
         $mediawiki_groups = new MediawikiGroups($this->dao->getMediawikiGroupsForUser($user, $project));
         $this->addGroupsAccordingToMapping($mediawiki_groups, $user, $project);
         return $mediawiki_groups->getAddedRemoved();
@@ -177,7 +187,8 @@ class MediawikiUserGroupsMapper {
      * This method will add missing permissions for a user
      *
      */
-    private function addGroupsAccordingToMapping(MediawikiGroups $mediawiki_groups, PFUser $user, Group $project) {
+    private function addGroupsAccordingToMapping(MediawikiGroups $mediawiki_groups, PFUser $user, Group $project)
+    {
         $mediawiki_groups->add('*');
         if ($user->isAnonymous()) {
             return;
@@ -194,7 +205,8 @@ class MediawikiUserGroupsMapper {
         }
     }
 
-    private function doesUserHaveSpecialAdminPermissions(PFUser $user) {
+    private function doesUserHaveSpecialAdminPermissions(PFUser $user)
+    {
         return $this->forge_permissions_dao->doesUserHavePermission(
             $user->getId(),
             MediawikiAdminAllProjects::ID

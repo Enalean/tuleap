@@ -31,7 +31,8 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest extends Tuleap
     /** @var Tracker_FormElementFactory */
     protected $factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->fields_data = array();
         $this->submitter   = aUser()->withId(74)->build();
@@ -71,7 +72,8 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest extends Tuleap
         $this->submitted_on = $_SERVER['REQUEST_TIME'];
     }
 
-    protected function getFields() {
+    protected function getFields()
+    {
         return array();
     }
 }
@@ -132,7 +134,8 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_DefaultValueTest extend
 
     private $field;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->field = mock('Tracker_FormElement_Field_Selectbox');
         stub($this->field)->getId()->returns(123);
         stub($this->field)->isSubmitable()->returns(true);
@@ -142,11 +145,13 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_DefaultValueTest extend
         stub($this->changeset_dao)->create()->returns(123);
     }
 
-    protected function getFields() {
+    protected function getFields()
+    {
         return array($this->field);
     }
 
-    public function itSavesTheDefaultValueWhenFieldIsSubmittedButCannotSubmit() {
+    public function itSavesTheDefaultValueWhenFieldIsSubmittedButCannotSubmit()
+    {
         stub($this->field)->userCanSubmit()->returns(false);
         stub($this->field)->getDefaultValue()->returns('default value');
 
@@ -157,7 +162,8 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_DefaultValueTest extend
         $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on, $this->url_mapping);
     }
 
-    public function itIgnoresTheDefaultValueWhenFieldIsSubmittedAndCanSubmit() {
+    public function itIgnoresTheDefaultValueWhenFieldIsSubmittedAndCanSubmit()
+    {
         stub($this->field)->userCanSubmit()->returns(true);
         stub($this->field)->getDefaultValue()->returns('default value');
 
@@ -168,7 +174,8 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_DefaultValueTest extend
         $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on, $this->url_mapping);
     }
 
-    public function itBypassPermsWhenWorkflowBypassPerms() {
+    public function itBypassPermsWhenWorkflowBypassPerms()
+    {
         stub($this->field)->userCanSubmit()->returns(false);
         stub($this->field)->getDefaultValue()->returns('default value');
         stub($this->workflow)->bypassPermissions($this->field)->returns(true);

@@ -24,11 +24,13 @@
 
 class SystemEventPurger {
 
-    public function __construct(SystemEventDao $dao) {
+    public function __construct(SystemEventDao $dao)
+    {
         $this->dao = $dao;
     }
 
-    public function purgeSystemEventsDataOlderThanOneYear() {
+    public function purgeSystemEventsDataOlderThanOneYear()
+    {
         return $this->dao->purgeDataOlderThanOneYear();
     }
 }

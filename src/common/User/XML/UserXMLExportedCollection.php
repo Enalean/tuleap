@@ -35,19 +35,22 @@ class UserXMLExportedCollection {
      */
     private $xml_validator;
 
-    public function __construct(XML_RNGValidator $xml_validator, XML_SimpleXMLCDATAFactory $cdata_factory) {
+    public function __construct(XML_RNGValidator $xml_validator, XML_SimpleXMLCDATAFactory $cdata_factory)
+    {
         $this->xml_validator = $xml_validator;
         $this->cdata_factory = $cdata_factory;
     }
 
-    public function add(PFUser $user) {
+    public function add(PFUser $user)
+    {
         if (! isset($this->users[$user->getId()])) {
             $this->users[$user->getId()] = $user;
         }
     }
 
     /** @return string */
-    public function toXML() {
+    public function toXML()
+    {
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
                                              <users />');
 
@@ -75,7 +78,8 @@ class UserXMLExportedCollection {
      *
      * @return String
      */
-    private function convertToXml(SimpleXMLElement $xml_element) {
+    private function convertToXml(SimpleXMLElement $xml_element)
+    {
         $dom = dom_import_simplexml($xml_element)->ownerDocument;
         $dom->formatOutput = true;
 

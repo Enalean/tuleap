@@ -32,7 +32,8 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         /** @psalm-suppress NullArgument */
         parent::__construct(null, null, null, null, null);
     }
@@ -45,7 +46,8 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
      *
      * @return Tracker_Artifact_ChangesetValue, or null if not found
      */
-    public function getValue(Tracker_FormElement_Field $field) {
+    public function getValue(Tracker_FormElement_Field $field)
+    {
         return null;
     }
 
@@ -54,7 +56,8 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
      *
      * @return array of Tracker_Artifact_ChangesetValue, or empty array if not found
      */
-    public function getValues() {
+    public function getValues()
+    {
         return null;
     }
 
@@ -63,7 +66,8 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
      *
      * @return string
      */
-    public function fetchFollowUp($diff_to_previous) {
+    public function fetchFollowUp($diff_to_previous)
+    {
         return '';
     }
 
@@ -74,7 +78,8 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
      *
      * @return bool true if the user can edit
      */
-    public function userCanEdit(?PFUser $user = null) {
+    public function userCanEdit(?PFUser $user = null)
+    {
         return false;
     }
 
@@ -97,7 +102,8 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
      *
      * @return void
      */
-    public function delete(PFUser $user) {
+    public function delete(PFUser $user)
+    {
     }
 
     /**
@@ -105,7 +111,8 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
      *
      * @return Tracker_Artifact_Changeset_Comment The comment of this changeset, or null if no comments
      */
-    public function getComment() {
+    public function getComment()
+    {
         return null;
     }
 
@@ -116,7 +123,8 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
      *
      * @return bool true if there are changes in fields_data regarding this changeset, false if nothing has changed
      */
-    public function hasChanges($fields_data) {
+    public function hasChanges($fields_data)
+    {
         return true;
     }
 
@@ -141,11 +149,13 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
     * @param String $diff
     *
     */
-    public function displayDiff($diff, $format, $field) {
+    public function displayDiff($diff, $format, $field)
+    {
         return false;
     }
 
-    public function getTracker() {
+    public function getTracker()
+    {
         return null;
     }
 

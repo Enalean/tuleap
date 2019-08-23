@@ -37,7 +37,8 @@ class Search_SearchController {
     /** @var PluginManager */
     private $plugin_manager;
 
-    public function __construct(EventManager $event_manager) {
+    public function __construct(EventManager $event_manager)
+    {
         $this->event_manager = $event_manager;
         $this->renderer = TemplateRendererFactory::build()->getRenderer(
             array(
@@ -55,7 +56,8 @@ class Search_SearchController {
         $this->plugin_manager = PluginManager::instance();
     }
 
-    public function index(Codendi_Request $request) {
+    public function index(Codendi_Request $request)
+    {
         if (! $request->get('type_of_search')) {
             $request->set('type_of_search', Search_SearchProject::NAME);
         }
@@ -63,7 +65,8 @@ class Search_SearchController {
         $this->results($request);
     }
 
-    public function error(Codendi_Request $request, Search_SearchQuery $query) {
+    public function error(Codendi_Request $request, Search_SearchQuery $query)
+    {
         $empty_result = new Search_SearchResults();
 
         $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => array('search-page')));
@@ -71,7 +74,8 @@ class Search_SearchController {
         $GLOBALS['HTML']->footer(array('without_content' => true));
     }
 
-    public function ajaxResults(Codendi_Request $request) {
+    public function ajaxResults(Codendi_Request $request)
+    {
         $query = new Search_SearchQuery($request);
         $query->setNumberOfResults(Search_SearchPlugin::RESULTS_PER_QUERY);
 
@@ -93,7 +97,8 @@ class Search_SearchController {
         echo json_encode($output);
     }
 
-    public function results(Codendi_Request $request) {
+    public function results(Codendi_Request $request)
+    {
         $query = new Search_SearchQuery($request);
         $query->setNumberOfResults(Search_SearchPlugin::RESULTS_PER_QUERY);
 
@@ -109,13 +114,15 @@ class Search_SearchController {
         }
     }
 
-    private function renderResults(Search_SearchQuery $query, $results) {
+    private function renderResults(Search_SearchQuery $query, $results)
+    {
         $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => array('search-page')));
         $this->renderer->renderToPage('site-search', $this->getSearchPresenter($query, $results));
         $GLOBALS['HTML']->footer(array('without_content' => true));
     }
 
-    private function getSearchPresenter(Search_SearchQuery $query, $results) {
+    private function getSearchPresenter(Search_SearchQuery $query, $results)
+    {
         $project_search_types   = array();
         $site_search_types      = array();
         $redirect_to_services   = true;
@@ -158,7 +165,8 @@ class Search_SearchController {
         );
     }
 
-    private function getAdditionnalProjectWidePresentersIfNeeded(Project $project, $words, $redirect_to_services) {
+    private function getAdditionnalProjectWidePresentersIfNeeded(Project $project, $words, $redirect_to_services)
+    {
         $additionnal_presenters = array();
 
         if ($project->usesService('wiki')) {
@@ -174,7 +182,8 @@ class Search_SearchController {
         return $additionnal_presenters;
     }
 
-    private function getSiteWidePane($site_search_types = array()) {
+    private function getSiteWidePane($site_search_types = array())
+    {
         $search_types = array(
             new Search_SearchTypePresenter(
                 Search_SearchProject::NAME,
@@ -197,7 +206,8 @@ class Search_SearchController {
      * @param Search_SearchQuery $query
      * @return Search_SearchResults
      */
-    private function doSearch(Search_SearchQuery $query) {
+    private function doSearch(Search_SearchQuery $query)
+    {
         $reference_manager = ReferenceManager::instance();
         $references = $reference_manager->extractReferences(
             $query->getWords(),

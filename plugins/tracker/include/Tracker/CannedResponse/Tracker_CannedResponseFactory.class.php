@@ -24,7 +24,8 @@ class Tracker_CannedResponseFactory {
     /**
      * Constructor
      */
-    protected function __construct() {
+    protected function __construct()
+    {
     }
 
     /**
@@ -37,7 +38,8 @@ class Tracker_CannedResponseFactory {
      *
      * @return Tracker_ResponseFactory An instance of canned response factory
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$instance)) {
             $c = self::class;
             self::$instance = new $c;
@@ -52,7 +54,8 @@ class Tracker_CannedResponseFactory {
      *
      * @return Tracker_CannedResponse
      */
-    public function getInstanceFromRow($row) {
+    public function getInstanceFromRow($row)
+    {
         return new Tracker_CannedResponse($row['id'],
                                           $row['tracker'],
                                           $row['title'],
@@ -66,7 +69,8 @@ class Tracker_CannedResponseFactory {
      *
      * @return Tracker_CannedResponse
      */
-    public function getInstanceFromXML($xml) {
+    public function getInstanceFromXML($xml)
+    {
         return new Tracker_CannedResponse(0, null, (string)$xml->title, (string)$xml->body);
     }
 
@@ -77,7 +81,8 @@ class Tracker_CannedResponseFactory {
      *
      * @return array
      */
-    public function getCannedResponses($tracker) {
+    public function getCannedResponses($tracker)
+    {
         $responses = array();
         foreach ($this->getDao()->searchByTrackerId($tracker->id) as $row) {
             $row['tracker'] = $tracker;
@@ -94,7 +99,8 @@ class Tracker_CannedResponseFactory {
      *
      * @return CannedResponse or null if not found
      */
-    public function getCannedResponse($tracker, $id) {
+    public function getCannedResponse($tracker, $id)
+    {
         $response = null;
         if ($row = $this->getDao()->searchById($tracker->id, $id)->getRow()) {
             $row['tracker'] = $tracker;
@@ -112,7 +118,8 @@ class Tracker_CannedResponseFactory {
      *
      * @return int the id of the canned response. False if error
      */
-    public function create($tracker, $title, $body) {
+    public function create($tracker, $title, $body)
+    {
         return $this->getDao()->create($tracker->id, $title, $body);
     }
 
@@ -126,7 +133,8 @@ class Tracker_CannedResponseFactory {
      *
      * @return bool true if success, false otherwise
      */
-    public function update($id, $tracker, $title, $body) {
+    public function update($id, $tracker, $title, $body)
+    {
         $ok = false;
         if ($canned = $this->getCannedResponse($tracker, $id)) {
             if (trim($title) && trim($body)) {
@@ -145,7 +153,8 @@ class Tracker_CannedResponseFactory {
      *
      * @return bool true if success
      */
-    public function delete($id) {
+    public function delete($id)
+    {
         return $this->getDao()->delete($id);
     }
 
@@ -157,7 +166,8 @@ class Tracker_CannedResponseFactory {
      *
      * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id) {
+    public function duplicate($from_tracker_id, $to_tracker_id)
+    {
         $tf = $this->getTrackerFactory();
         $from_tracker = $tf->getTrackerById($from_tracker_id);
         $to_tracker = $tf->getTrackerById($to_tracker_id);
@@ -175,7 +185,8 @@ class Tracker_CannedResponseFactory {
      *
      * @return int the id of the new CannedResponse
      */
-    public function saveObject($trackerId, $response) {
+    public function saveObject($trackerId, $response)
+    {
         return $this->getDao()->create($trackerId, $response->title, $response->body);
     }
 
@@ -184,7 +195,8 @@ class Tracker_CannedResponseFactory {
      *
      * @return Tracker_CannedResponseDao
      */
-    protected function getDao() {
+    protected function getDao()
+    {
         return new Tracker_CannedResponseDao();
     }
 
@@ -193,7 +205,8 @@ class Tracker_CannedResponseFactory {
      *
      * @return TrackerFactory An instance of tracker Factory
      */
-    public function getTrackerFactory() {
+    public function getTrackerFactory()
+    {
         return TrackerFactory::instance();
     }
 

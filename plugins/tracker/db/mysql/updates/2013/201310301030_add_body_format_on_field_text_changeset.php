@@ -20,15 +20,18 @@
 
 class b201310301030_add_body_format_on_field_text_changeset extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add body format column on tracker_changeset_value_text';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE tracker_changeset_value_text
                     ADD COLUMN body_format varchar(16) NOT NULL default 'text';";
         $result = $this->db->dbh->exec($sql);

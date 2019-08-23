@@ -30,7 +30,8 @@ abstract class Tracker_Permission_PermissionManager_BaseTest extends TuleapTestC
     protected $project_id;
     protected $permissions;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->minimal_ugroup_list = array(
             ProjectUGroup::ANONYMOUS,
@@ -70,7 +71,8 @@ abstract class Tracker_Permission_PermissionManager_BaseTest extends TuleapTestC
 
 class Tracker_Permission_PermissionManager_SubmitterOnlyTest extends Tracker_Permission_PermissionManager_BaseTest {
 
-    public function itDoesNothingTryingToGrantAnonymousSubmittedOnly() {
+    public function itDoesNothingTryingToGrantAnonymousSubmittedOnly()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY
         ));
@@ -81,7 +83,8 @@ class Tracker_Permission_PermissionManager_SubmitterOnlyTest extends Tracker_Per
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itGrantsRegisteredSubmittedOnly() {
+    public function itGrantsRegisteredSubmittedOnly()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY
         ));
@@ -92,7 +95,8 @@ class Tracker_Permission_PermissionManager_SubmitterOnlyTest extends Tracker_Per
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itCannotGrantRegisterSubmittedOnlyWhenAnonymousHasFullAccess() {
+    public function itCannotGrantRegisterSubmittedOnlyWhenAnonymousHasFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS  => Tracker_Permission_Command::PERMISSION_FULL,
             ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY
@@ -104,7 +108,8 @@ class Tracker_Permission_PermissionManager_SubmitterOnlyTest extends Tracker_Per
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itRaisesAWarningWhenTryingToGrantRegisteredSubmittedOnlyWithAnonymousHasFullAccess() {
+    public function itRaisesAWarningWhenTryingToGrantRegisteredSubmittedOnlyWithAnonymousHasFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS  => Tracker_Permission_Command::PERMISSION_FULL,
             ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY
@@ -119,7 +124,8 @@ class Tracker_Permission_PermissionManager_SubmitterOnlyTest extends Tracker_Per
         $this->permission_manager->save($request, $permission_setter);
     }
 
-    public function itGrantsProjectMembersSubmittedOnly() {
+    public function itGrantsProjectMembersSubmittedOnly()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY
         ));
@@ -130,7 +136,8 @@ class Tracker_Permission_PermissionManager_SubmitterOnlyTest extends Tracker_Per
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itRevokesPreviousPermissionWhenGrantsProjectMembersSubmittedOnly() {
+    public function itRevokesPreviousPermissionWhenGrantsProjectMembersSubmittedOnly()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY
         ));
@@ -149,7 +156,8 @@ class Tracker_Permission_PermissionManager_SubmitterOnlyTest extends Tracker_Per
 
 class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends Tracker_Permission_PermissionManager_BaseTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $permissions = array(
@@ -172,7 +180,8 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
         $this->permission_setter  = new Tracker_Permission_PermissionSetter($this->tracker, $permissions, $this->permissions_manager);
     }
 
-    public function itWarnsWhenAnonymousHaveFullAccess() {
+    public function itWarnsWhenAnonymousHaveFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS  => Tracker_Permission_Command::PERMISSION_FULL,
             ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_FULL,
@@ -184,7 +193,8 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
     }
 
 
-    public function itWarnsTwiceWhenAnonymousHaveFullAccess() {
+    public function itWarnsTwiceWhenAnonymousHaveFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS       => Tracker_Permission_Command::PERMISSION_FULL,
             ProjectUGroup::REGISTERED      => Tracker_Permission_Command::PERMISSION_SUBMITTER,
@@ -198,7 +208,8 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itDoesntGrantFullAccessToRegisteredWhenAnonymousHaveFullAccess() {
+    public function itDoesntGrantFullAccessToRegisteredWhenAnonymousHaveFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS  => Tracker_Permission_Command::PERMISSION_FULL,
             ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_FULL,
@@ -210,7 +221,8 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itDoesntGrantSubmitterOnlyToRegisteredWhenAnonymousHaveFullAccess() {
+    public function itDoesntGrantSubmitterOnlyToRegisteredWhenAnonymousHaveFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
            ProjectUGroup::ANONYMOUS  => Tracker_Permission_Command::PERMISSION_FULL,
            ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
@@ -222,7 +234,8 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itDoesntGrantFullAccessToProjectMembersWhenAnonymousHaveFullAccess() {
+    public function itDoesntGrantFullAccessToProjectMembersWhenAnonymousHaveFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS       => Tracker_Permission_Command::PERMISSION_FULL,
             ProjectUGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_FULL,
@@ -234,7 +247,8 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itDoesntGrantSubmitterToProjectMembersWhenAnonymousHaveFullAccess() {
+    public function itDoesntGrantSubmitterToProjectMembersWhenAnonymousHaveFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS       => Tracker_Permission_Command::PERMISSION_FULL,
             ProjectUGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_SUBMITTER,
@@ -246,7 +260,8 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itDoesntGrantAssigneeToProjectMembersWhenAnonymousHaveFullAccess() {
+    public function itDoesntGrantAssigneeToProjectMembersWhenAnonymousHaveFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS       => Tracker_Permission_Command::PERMISSION_FULL,
             ProjectUGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_ASSIGNEE,
@@ -258,7 +273,8 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itDoesntGrantAssigneeAndSubmitterToProjectMembersWhenAnonymousHaveFullAccess() {
+    public function itDoesntGrantAssigneeAndSubmitterToProjectMembersWhenAnonymousHaveFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS       => Tracker_Permission_Command::PERMISSION_FULL,
             ProjectUGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_ASSIGNEE_AND_SUBMITTER,
@@ -270,7 +286,8 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itDoesntGrantSubmitterOnlyToProjectMembersWhenAnonymousHaveFullAccess() {
+    public function itDoesntGrantSubmitterOnlyToProjectMembersWhenAnonymousHaveFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS       => Tracker_Permission_Command::PERMISSION_FULL,
             ProjectUGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
@@ -282,7 +299,8 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itRevokesPreExistingPermission() {
+    public function itRevokesPreExistingPermission()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS       => Tracker_Permission_Command::PERMISSION_FULL,
             ProjectUGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
@@ -301,7 +319,8 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
         $this->permission_manager->save($request, $permission_setter);
     }
 
-    public function itRevokesAdminPermission() {
+    public function itRevokesAdminPermission()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS     => Tracker_Permission_Command::PERMISSION_FULL,
             ProjectUGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_NONE,
@@ -324,7 +343,8 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
 class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends Tracker_Permission_PermissionManager_BaseTest {
     private $some_ugroupid = 369;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $permissions = array(
@@ -356,7 +376,8 @@ class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends 
     }
 
 
-    public function itWarnsWhenRegisteredHaveFullAccess() {
+    public function itWarnsWhenRegisteredHaveFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS       => Tracker_Permission_Command::PERMISSION_NONE,
             ProjectUGroup::REGISTERED      => Tracker_Permission_Command::PERMISSION_FULL,
@@ -368,7 +389,8 @@ class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends 
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itWarnsTwiceWhenRegisteredHaveFullAccess() {
+    public function itWarnsTwiceWhenRegisteredHaveFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS       => Tracker_Permission_Command::PERMISSION_NONE,
             ProjectUGroup::REGISTERED      => Tracker_Permission_Command::PERMISSION_FULL,
@@ -383,7 +405,8 @@ class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends 
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itDoesntGrantFullAccessToProjectMembersWhenAnonymousHaveFullAccess() {
+    public function itDoesntGrantFullAccessToProjectMembersWhenAnonymousHaveFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS        => Tracker_Permission_Command::PERMISSION_NONE,
             ProjectUGroup::REGISTERED       => Tracker_Permission_Command::PERMISSION_FULL,
@@ -396,7 +419,8 @@ class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends 
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itDoesntGrantSubmitterToProjectMembersWhenRegisteredHaveFullAccess() {
+    public function itDoesntGrantSubmitterToProjectMembersWhenRegisteredHaveFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS        => Tracker_Permission_Command::PERMISSION_NONE,
             ProjectUGroup::REGISTERED       => Tracker_Permission_Command::PERMISSION_FULL,
@@ -409,7 +433,8 @@ class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends 
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itDoesntGrantAssigneeToProjectMembersWhenRegisteredHaveFullAccess() {
+    public function itDoesntGrantAssigneeToProjectMembersWhenRegisteredHaveFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS        => Tracker_Permission_Command::PERMISSION_NONE,
             ProjectUGroup::REGISTERED       => Tracker_Permission_Command::PERMISSION_FULL,
@@ -422,7 +447,8 @@ class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends 
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itDoesntGrantAssigneeAndSubmitterToProjectMembersWhenRegisteredHaveFullAccess() {
+    public function itDoesntGrantAssigneeAndSubmitterToProjectMembersWhenRegisteredHaveFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS        => Tracker_Permission_Command::PERMISSION_NONE,
             ProjectUGroup::REGISTERED       => Tracker_Permission_Command::PERMISSION_FULL,
@@ -435,7 +461,8 @@ class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends 
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itDoesntGrantSubmitterOnlyToProjectMembersWhenRegisteredHaveFullAccess() {
+    public function itDoesntGrantSubmitterOnlyToProjectMembersWhenRegisteredHaveFullAccess()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS        => Tracker_Permission_Command::PERMISSION_NONE,
             ProjectUGroup::REGISTERED       => Tracker_Permission_Command::PERMISSION_FULL,
@@ -451,7 +478,8 @@ class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends 
 
 class Tracker_Permission_PermissionManager_CheckRequestValidityTest extends Tracker_Permission_PermissionManager_BaseTest {
 
-    public function itDisplaysAFeedbackErrorIfAssignedToSemanticIsNotDefined() {
+    public function itDisplaysAFeedbackErrorIfAssignedToSemanticIsNotDefined()
+    {
         stub($this->tracker)->getContributorField()->returns(null);
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS        => Tracker_Permission_Command::PERMISSION_NONE,
@@ -466,7 +494,8 @@ class Tracker_Permission_PermissionManager_CheckRequestValidityTest extends Trac
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itDoesNotDisplayAFeedbackErrorIfAssignedToSemanticIsDefined() {
+    public function itDoesNotDisplayAFeedbackErrorIfAssignedToSemanticIsDefined()
+    {
         stub($this->tracker)->getContributorField()->returns(aMockField()->build());
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS        => Tracker_Permission_Command::PERMISSION_NONE,
@@ -480,7 +509,8 @@ class Tracker_Permission_PermissionManager_CheckRequestValidityTest extends Trac
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-    public function itDoesNotApplyPermissionsOnProjectAdmins() {
+    public function itDoesNotApplyPermissionsOnProjectAdmins()
+    {
         $request = new Tracker_Permission_PermissionRequest(array(
             ProjectUGroup::ANONYMOUS        => Tracker_Permission_Command::PERMISSION_NONE,
             ProjectUGroup::REGISTERED       => Tracker_Permission_Command::PERMISSION_NONE,

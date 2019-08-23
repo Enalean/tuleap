@@ -25,7 +25,8 @@ class Tracker_FormElement_View_Admin_StaticField_Separator extends Tracker_FormE
      *
      * @return string html
      */
-    public function fetchDescriptionForUpdate() {
+    public function fetchDescriptionForUpdate()
+    {
         return '';
     }
 
@@ -34,11 +35,13 @@ class Tracker_FormElement_View_Admin_StaticField_Separator extends Tracker_FormE
      *
      * @return string html
      */
-    public function fetchDescriptionForShared() {
+    public function fetchDescriptionForShared()
+    {
         return '';
     }
 
-    protected function fetchCustomHelp() {
+    protected function fetchCustomHelp()
+    {
         $html = '';
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'separator_label_help');

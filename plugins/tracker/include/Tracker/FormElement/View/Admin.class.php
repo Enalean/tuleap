@@ -36,12 +36,14 @@ class Tracker_FormElement_View_Admin {
      */
     protected $allUsedElements;
 
-    public function __construct(Tracker_FormElement $formElement, $allUsedElements) {
+    public function __construct(Tracker_FormElement $formElement, $allUsedElements)
+    {
         $this->formElement     = $formElement;
         $this->allUsedElements = $allUsedElements;
     }
 
-    public function fetchTypeNotModifiable() {
+    public function fetchTypeNotModifiable()
+    {
         $html = '';
         $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label>';
         $html .= '<img width="16" height="16" alt="" src="'. $this->formElement->getFactoryIconUseIt() .'" style="vertical-align:middle"/> '. $this->formElement->getFactoryLabel();
@@ -50,7 +52,8 @@ class Tracker_FormElement_View_Admin {
         return $html;
     }
 
-    public function fetchTypeForUpdate() {
+    public function fetchTypeForUpdate()
+    {
         $html = '';
         $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label>';
         $html .= '<img width="16" height="16" alt="" src="'. $this->formElement->getFactoryIconUseIt() .'" style="vertical-align:middle"/> '. $this->formElement->getFactoryLabel();
@@ -59,7 +62,8 @@ class Tracker_FormElement_View_Admin {
         return $html;
     }
 
-    public function fetchNameForUpdate() {
+    public function fetchNameForUpdate()
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<p>';
@@ -74,7 +78,8 @@ class Tracker_FormElement_View_Admin {
      *
      * @return string html
      */
-    public function fetchLabelForUpdate() {
+    public function fetchLabelForUpdate()
+    {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
         $html    .= '<p>';
@@ -91,7 +96,8 @@ class Tracker_FormElement_View_Admin {
      *
      * @return string html
      */
-    public function fetchDescriptionForUpdate() {
+    public function fetchDescriptionForUpdate()
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<p>';
@@ -103,7 +109,8 @@ class Tracker_FormElement_View_Admin {
         return $html;
     }
 
-    public function fetchNameForShared() {
+    public function fetchNameForShared()
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<p>';
@@ -118,7 +125,8 @@ class Tracker_FormElement_View_Admin {
      *
      * @return string html
      */
-    public function fetchLabelForShared() {
+    public function fetchLabelForShared()
+    {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
         $html    .= '<p>';
@@ -135,7 +143,8 @@ class Tracker_FormElement_View_Admin {
      *
      * @return string html
      */
-    public function fetchDescriptionForShared() {
+    public function fetchDescriptionForShared()
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<p>';
@@ -145,11 +154,13 @@ class Tracker_FormElement_View_Admin {
         return $html;
     }
 
-    protected function fetchCustomHelp() {
+    protected function fetchCustomHelp()
+    {
         return '';
     }
 
-    public function fetchCustomHelpForShared() {
+    public function fetchCustomHelpForShared()
+    {
         $originalTrackerName = $this->formElement->getOriginalTracker()->getName();
         $originalProjectName = $this->formElement->getOriginalProject()->getPublicName();
         $originalEditUrl     = $this->formElement->getOriginalField()->getAdminEditUrl();
@@ -161,7 +172,8 @@ class Tracker_FormElement_View_Admin {
         return $html;
     }
 
-    public function fetchRanking() {
+    public function fetchRanking()
+    {
         $html = '';
         $html .= '<p>';
         $html .= '<label for="formElement_rank">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'rank_screen').': <font color="red">*</font></label>';
@@ -196,7 +208,8 @@ class Tracker_FormElement_View_Admin {
      *
      * @return string html
      */
-    public function fetchAdminSpecificProperties() {
+    public function fetchAdminSpecificProperties()
+    {
         $html = '';
         foreach ($this->formElement->getProperties() as $key => $property) {
             $html .= '<p>';
@@ -215,7 +228,8 @@ class Tracker_FormElement_View_Admin {
      * @see fetchAdminSpecificProperties
      * @return string html
      */
-    protected function fetchAdminSpecificProperty($key, $property) {
+    protected function fetchAdminSpecificProperty($key, $property)
+    {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
         switch ($property['type']) {
@@ -293,7 +307,8 @@ class Tracker_FormElement_View_Admin {
      *
      * @return string html
      */
-    public function fetchAfterAdminEditForm() {
+    public function fetchAfterAdminEditForm()
+    {
         return '';
     }
 
@@ -303,11 +318,13 @@ class Tracker_FormElement_View_Admin {
      *
      * @return string html
      */
-    public function fetchAfterAdminCreateForm() {
+    public function fetchAfterAdminCreateForm()
+    {
         return '';
     }
 
-    public function fetchAdminButton($name) {
+    public function fetchAdminButton($name)
+    {
         $html  = '';
         $html .= '<p>';
         $html .= '<input type="submit" name="'. $name .'" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
@@ -320,7 +337,8 @@ class Tracker_FormElement_View_Admin {
      *
      * @return string html
      */
-    public function fetchAdminFormPermissionLink() {
+    public function fetchAdminFormPermissionLink()
+    {
         $tracker = $this->formElement->getTracker();
         if (! $tracker) {
             throw new LogicException('FormElement without tracker');
@@ -337,7 +355,8 @@ class Tracker_FormElement_View_Admin {
         return $html;
     }
 
-    public function fetchSharedUsage() {
+    public function fetchSharedUsage()
+    {
         $html = '';
         $fields = $this->formElement->getSharedTargets();
         if ($fields) {

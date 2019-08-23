@@ -38,24 +38,30 @@ require_once('lib/WikiPluginCached.php');
 class WikiPlugin_LinkDatabase
 extends WikiPluginCached
 {
-    function getName () {
+    function getName()
+    {
         return _("LinkDatabase");
     }
-    function getPluginType() {
+    function getPluginType()
+    {
         return PLUGIN_CACHED_HTML;
     }
-    function getDescription () {
+    function getDescription()
+    {
         return _("List all pages with all links in various formats for some Java Visualization tools");
     }
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.7 $");
     }
-    function getExpire($dbi, $argarray, $request) {
+    function getExpire($dbi, $argarray, $request)
+    {
         return '+900'; // 15 minutes
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array_merge
             (
              PageList::supportedArgs(),
@@ -68,11 +74,13 @@ extends WikiPluginCached
                    ));
     }
 
-    function getHtml($dbi, $argarray, $request, $basepage) {
+    function getHtml($dbi, $argarray, $request, $basepage)
+    {
         $this->run($dbi, WikiPluginCached::glueArgs($argarray), $request, $basepage);
     }
 
-    function run($dbi, $argstr, $request, $basepage) {
+    function run($dbi, $argstr, $request, $basepage)
+    {
         global $WikiTheme;
         $args = $this->getArgs($argstr, $request);
         $caption = _("All pages with all links in this wiki (%d total):");
@@ -173,7 +181,8 @@ extends WikiPluginCached
 };
 
 class _PageList_Column_LinkDatabase_links extends _PageList_Column {
-    function _getValue($page, &$revision_handle) {
+    function _getValue($page, &$revision_handle)
+    {
         $out = HTML();
         $links = $page->getPageLinks();
         while ($link = $links->next()) {

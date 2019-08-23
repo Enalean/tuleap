@@ -44,20 +44,24 @@ rcs_id('$Id: OldStyleTable.php,v 1.11 2005/09/14 05:56:21 rurban Exp $');
 class WikiPlugin_OldStyleTable
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("OldStyleTable");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Layout tables using the old markup style.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.11 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array(
                      'caption'     => '',
                      'cellpadding' => '1',
@@ -67,11 +71,13 @@ extends WikiPlugin
                      );
     }
 
-    function handle_plugin_args_cruft($argstr, $args) {
+    function handle_plugin_args_cruft($argstr, $args)
+    {
         return;
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         global $WikiTheme;
         include_once('lib/InlineParser.php');
 
@@ -117,7 +123,8 @@ extends WikiPlugin
         return $table;
     }
 
-    function _parse_row ($line, $basepage) {
+    function _parse_row($line, $basepage)
+    {
         $brkt_link = "\\[ .*? [^]\s] .*? \\]";
         $cell_content  = "(?: [^[] | ".ESCAPE_CHAR."\\[ | $brkt_link )*?";
 

@@ -20,7 +20,8 @@
 
 class Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter {
 
-    protected function getFieldChangeType() {
+    protected function getFieldChangeType()
+    {
         return 'permissions_on_artifact';
     }
 
@@ -45,7 +46,8 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXML
         );
     }
 
-    private function isUsed(Tracker_Artifact_ChangesetValue $changeset_value) {
+    private function isUsed(Tracker_Artifact_ChangesetValue $changeset_value)
+    {
         $ugroup_ids = $changeset_value->getPerms();
 
         if (count($ugroup_ids) === 1 && (int) $ugroup_ids[0] === ProjectUGroup::ANONYMOUS ) {

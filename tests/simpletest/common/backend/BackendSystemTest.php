@@ -40,7 +40,8 @@ Mock::generatePartial('BackendSystem', 'BackendTestVersion', array('getUserManag
 
 class BackendSystemTest extends TuleapTestCase {
 
-    function setUp() {
+    function setUp()
+    {
         parent::setUp();
         $GLOBALS['codendi_shell_skel']        = dirname(__FILE__) . '/_fixtures/etc/skel_codendi';
         $GLOBALS['tmp_dir']                   = $this->getTmpDir() . '/var/tmp';
@@ -64,19 +65,22 @@ class BackendSystemTest extends TuleapTestCase {
     }
 
 
-    function tearDown() {
+    function tearDown()
+    {
         Backend::clearInstances();
         ForgeConfig::restore();
 
         parent::tearDown();
     }
 
-    function testConstructor() {
+    function testConstructor()
+    {
         $backend = BackendSystem::instance();
     }
 
 
-    function testCreateUserHome() {
+    function testCreateUserHome()
+    {
         // We use codendiadm uid/gid to avoid chown warnings (because test is not run as root)
         $user = aUser()->withUserName('codendiadm')->build();
 
@@ -93,7 +97,8 @@ class BackendSystemTest extends TuleapTestCase {
 
     }
 
-    function testCreateProjectHome() {
+    function testCreateProjectHome()
+    {
 
         $project = new MockProject($this);
         $project->setReturnValue('getUnixNameMixedCase', 'TestPrj');
@@ -129,7 +134,8 @@ class BackendSystemTest extends TuleapTestCase {
         rmdir($frsdir);
     }
 
-    function testArchiveUserHome() {
+    function testArchiveUserHome()
+    {
         // We use codendiadm uid/gid to avoid chown warnings (because test is not run as root)
         $user = aUser()->withUserName('codendiadm')->build();
 
@@ -152,7 +158,8 @@ class BackendSystemTest extends TuleapTestCase {
         unlink(ForgeConfig::get('sys_project_backup_path')."/codendiadm.tgz");
     }
 
-    function testArchiveProjectHome() {
+    function testArchiveProjectHome()
+    {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj',array(false));
         $project->setReturnValue('getUnixName', 'testproj',array(true));
@@ -186,7 +193,8 @@ class BackendSystemTest extends TuleapTestCase {
         unlink(ForgeConfig::get('sys_project_backup_path')."/TestProj.tgz");
     }
 
-    public function testRenameProjectHomeDirectory() {
+    public function testRenameProjectHomeDirectory()
+    {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProject',array(false));
         $project->setReturnValue('getUnixNameMixedCase', 'TestProject');
@@ -222,7 +230,8 @@ class BackendSystemTest extends TuleapTestCase {
      * Special case when the project rename is just about changing case
      * TestProject -> testproject
      */
-    public function testRenameProjectHomeDirectoryToLowerCase() {
+    public function testRenameProjectHomeDirectoryToLowerCase()
+    {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProject',array(false));
         $project->setReturnValue('getUnixNameMixedCase', 'TestProject');
@@ -253,7 +262,8 @@ class BackendSystemTest extends TuleapTestCase {
      * Special case when the project rename is just about changing case
      * testproject -> TestProject
      */
-    public function testRenameProjectHomeDirectoryToUpperCase() {
+    public function testRenameProjectHomeDirectoryToUpperCase()
+    {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'testproject',array(false));
         $project->setReturnValue('getUnixNameMixedCase', 'testproject');
@@ -287,7 +297,8 @@ class BackendSystemTest extends TuleapTestCase {
     /**
      * testproject -> projecttest
      */
-    public function testRenameProjectHomeDirectoryLowerCase() {
+    public function testRenameProjectHomeDirectoryLowerCase()
+    {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'testproject',array(false));
         $project->setReturnValue('getUnixNameMixedCase', 'testproject');
@@ -314,35 +325,40 @@ class BackendSystemTest extends TuleapTestCase {
         rmdir($GLOBALS['ftp_frs_dir_prefix']."/testproject");
     }
 
-    public function testIsProjectNameAvailableWithExistingFileInProjectHome() {
+    public function testIsProjectNameAvailableWithExistingFileInProjectHome()
+    {
         touch(ForgeConfig::get('grpdir_prefix')."/testproject");
         $backend = new BackendTestVersion($this);
         $this->assertFalse($backend->isProjectNameAvailable('testproject'), 'A file with the same name exists in home/groups/');
         unlink(ForgeConfig::get('grpdir_prefix')."/testproject");
     }
 
-    public function testIsProjectNameAvailableWithExistingFileInProjectHomeWithMixedCase() {
+    public function testIsProjectNameAvailableWithExistingFileInProjectHomeWithMixedCase()
+    {
         touch(ForgeConfig::get('grpdir_prefix')."/testproject");
         $backend = new BackendTestVersion($this);
         $this->assertFalse($backend->isProjectNameAvailable('TestProject'), 'A file with the same name in lowercase exists in home/groups/');
         unlink(ForgeConfig::get('grpdir_prefix')."/testproject");
     }
 
-    public function testIsProjectNameAvailableWithExistingFileInFRS() {
+    public function testIsProjectNameAvailableWithExistingFileInFRS()
+    {
         touch($GLOBALS['ftp_frs_dir_prefix']."/testproject");
         $backend = new BackendTestVersion($this);
         $this->assertFalse($backend->isProjectNameAvailable('testproject'), 'A file with the same name exists in var/lib/codendi/ftp/codendi');
         unlink($GLOBALS['ftp_frs_dir_prefix']."/testproject");
     }
 
-    public function testIsProjectNameAvailableWithExistingFileInAnnoFtp() {
+    public function testIsProjectNameAvailableWithExistingFileInAnnoFtp()
+    {
         touch(ForgeConfig::get('ftp_anon_dir_prefix')."/testproject");
         $backend = new BackendTestVersion($this);
         $this->assertFalse($backend->isProjectNameAvailable('testproject'), 'A file with the same name exists in var/lib/codendi/ftp/pub');
         unlink(ForgeConfig::get('ftp_anon_dir_prefix')."/testproject");
     }
 
-    public function testRenameUserHomeDirectory() {
+    public function testRenameUserHomeDirectory()
+    {
         // We use codendiadm uid/gid to avoid chown warnings (because test is not run as root)
         $user = aUser()->withUserName('codendiadm')->build();
 
@@ -360,7 +376,8 @@ class BackendSystemTest extends TuleapTestCase {
 
     }
 
-    public function testCleanupFrs() {
+    public function testCleanupFrs()
+    {
         $backend = new BackendTestVersion($this);
 
         $daysBefore     = $_SERVER['REQUEST_TIME'] - (24*3600*5);

@@ -23,7 +23,8 @@ class Tracker_Reference extends Reference {
     /**
      * @return Reference
      */
-    public function __construct(Tracker $tracker, $keyword) {
+    public function __construct(Tracker $tracker, $keyword)
+    {
         $base_id    = 0;
         $visibility = 'P';
         $is_used    = 1;

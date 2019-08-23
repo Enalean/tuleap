@@ -23,7 +23,8 @@
 
 class MediaWikiPluginDescriptor extends PluginDescriptor {
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct($GLOBALS['Language']->getText('plugin_mediawiki', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_mediawiki', 'descriptor_description'));
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }

@@ -20,20 +20,24 @@
 
 class b201309191741_remove_burndown_field_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'remove burndown table.';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "DROP TABLE IF EXISTS tracker_field_burndown;";
         $this->db->dropTable('tracker_field_burndown', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if ($this->db->tableNameExists('tracker_field_burndown')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_field_burndown');
         }

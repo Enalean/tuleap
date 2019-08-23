@@ -25,16 +25,19 @@ class Docman_View_ItemRanking {
     var $dropDownName;
     var $selectedValue;
 
-    function __construct() {
+    function __construct()
+    {
         $this->selectedValue = 'beginning';
     }
 
-    function setDropDownName($v) {
+    function setDropDownName($v)
+    {
         $this->dropDownName = $v;
     }
 
 
-    function setSelectedValue($v) {
+    function setSelectedValue($v)
+    {
         if(is_numeric($v)) {
             $this->selectedValue = (int) $v;
         } else {
@@ -42,7 +45,8 @@ class Docman_View_ItemRanking {
         }
     }
 
-    function getDropDownWidget($parentItem) {
+    function getDropDownWidget($parentItem)
+    {
         $itemFactory = Docman_ItemFactory::instance($parentItem->getGroupId());
         $brotherIter = $itemFactory->getChildrenFromParent($parentItem);
 

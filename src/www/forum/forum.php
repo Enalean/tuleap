@@ -12,7 +12,8 @@
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../forum/forum_utils.php';
 
-function forum_show_a_nested_message ($result,$row=0) {
+function forum_show_a_nested_message($result,$row=0)
+{
     /*
 
         accepts a database result handle to display a single message
@@ -69,7 +70,8 @@ function forum_show_a_nested_message ($result,$row=0) {
     return $ret_val;
 }
 
-function forum_show_nested_messages ($thread_id, $msg_id) {
+function forum_show_nested_messages($thread_id, $msg_id)
+{
     global $total_rows,$Language;
 
     $sql="SELECT user.user_name,forum.has_followups,user.realname,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ".

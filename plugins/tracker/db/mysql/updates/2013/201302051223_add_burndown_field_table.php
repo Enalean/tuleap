@@ -20,15 +20,18 @@
 
 class b201302051223_add_burndown_field_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add burndown build table.';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS tracker_field_burndown (
                     field_id int(11) UNSIGNED NOT NULL PRIMARY KEY,
                     use_capacity tinyint(1) NOT NULL
@@ -36,7 +39,8 @@ class b201302051223_add_burndown_field_table extends ForgeUpgrade_Bucket {
         $this->db->createTable('tracker_field_burndown', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('tracker_field_burndown')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_field_burndown');
         }

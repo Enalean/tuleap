@@ -19,7 +19,8 @@
  */
 
 class SvnPluginDescriptor extends PluginDescriptor {
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct(
             $GLOBALS['Language']->getText('plugin_svn', 'descriptor_name'),
             false,

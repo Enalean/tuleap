@@ -27,7 +27,8 @@ Mock::generate('SystemEventManager');
 
 class Rule_ProjectNameIntegrationTest extends TuleapTestCase {
 
-    function testValidNamesAreValid() {
+    function testValidNamesAreValid()
+    {
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserByUserName', null);
 

@@ -44,27 +44,32 @@ rcs_id('$Id: RedirectTo.php,v 1.13 2004/02/17 12:11:36 rurban Exp $');
 class WikiPlugin_RedirectTo
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("RedirectTo");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Redirects to another url or page.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.13 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array( 'href' => '',
                       // 'type' => 'Temp' // or 'Permanent' // so far ignored
                       'page' => false,
                       );
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = ($this->getArgs($argstr, $request));
 
         $href = $args['href'];

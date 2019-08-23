@@ -29,7 +29,8 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
     var $defaultUrl;
     var $controller;
 
-    function _title($params) {
+    function _title($params)
+    {
         $request = HTTPRequest::instance();
         $hp = Codendi_HTMLPurifier::instance();
         if($request->exist('report_id')) {
@@ -39,13 +40,15 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
         }
     }
 
-    private function init($params) {
+    private function init($params)
+    {
         $this->groupId     =  $params['group_id'];
         $this->defaultUrl  =  $params['default_url'];
         $this->controller  = $params['docman'];
     }
 
-    function _getReportTableContent($reportIter, $isAdmin, &$altRowClass) {
+    function _getReportTableContent($reportIter, $isAdmin, &$altRowClass)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $reportIter->rewind();
@@ -77,7 +80,8 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
         return $html;
     }
 
-    function _getReportTable() {
+    function _getReportTable()
+    {
         $html = '';
 
         $um   = UserManager::instance();
@@ -104,7 +108,8 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
         return $html;
     }
 
-    function _getReportSettings($reportId) {
+    function _getReportSettings($reportId)
+    {
         $html = '';
 
         $um   = UserManager::instance();
@@ -199,7 +204,8 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
         return $html;
     }
 
-    function _getImportForm() {
+    function _getImportForm()
+    {
         $GLOBALS['HTML']->includeFooterJavascriptSnippet("new ProjectAutoCompleter('import_search_report_from_group', '".util_get_dir_image_theme()."', false);");
 
         $html = '';
@@ -238,7 +244,8 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
         return $html;
     }
 
-    function _content($params) {
+    function _content($params)
+    {
         $html = '';
 
         $this->init($params);

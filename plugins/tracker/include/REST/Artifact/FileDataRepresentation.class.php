@@ -27,7 +27,8 @@ class FileDataRepresentation {
      */
     public $data;
 
-    public function build($data) {
+    public function build($data)
+    {
         $this->data = $data;
 
         return $this;

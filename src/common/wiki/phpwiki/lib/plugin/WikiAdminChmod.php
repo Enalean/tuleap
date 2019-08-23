@@ -37,20 +37,24 @@ require_once('lib/plugin/WikiAdminSelect.php');
 class WikiPlugin_WikiAdminChmod
 extends WikiPlugin_WikiAdminSelect
 {
-    function getName() {
+    function getName()
+    {
         return _("WikiAdminChmod");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Set individual page permissions.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.14 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array_merge
             (
              PageList::supportedArgs(),
@@ -64,12 +68,14 @@ extends WikiPlugin_WikiAdminSelect
 
     // todo: change permstring to some kind of default ACL hash.
     // See PagePermission class
-    function chmodHelper($permstring) {
+    function chmodHelper($permstring)
+    {
         $perm = array();
         return $perm;
     }
 
-    function chmodPages(&$dbi, &$request, $pages, $permstring) {
+    function chmodPages(&$dbi, &$request, $pages, $permstring)
+    {
         $ul = HTML::ul();
         $count = 0;
         $acl = chmodHelper($permstring);
@@ -95,7 +101,8 @@ extends WikiPlugin_WikiAdminSelect
         }
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
         if (!DEBUG)
             return $this->disabled("WikiAdminChmod not yet enabled. Set DEBUG to try it.");
@@ -174,7 +181,8 @@ extends WikiPlugin_WikiAdminSelect
                           $buttons);
     }
 
-    function chmodForm(&$header, $post_args) {
+    function chmodForm(&$header, $post_args)
+    {
         $header->pushContent(
             HTML::p(HTML::em(
                _("This plugin is currently under development and does not work!"))));
@@ -198,7 +206,8 @@ extends WikiPlugin_WikiAdminSelect
 
 // conflicts with WikiAdminSetAcl
 class _PageList_Column_chmod_perm extends _PageList_Column {
-    function _getValue ($page_handle, &$revision_handle) {
+    function _getValue($page_handle, &$revision_handle)
+    {
         $perm_array = pagePermissions($page_handle->_pagename);
         return pagePermissionsSimpleFormat($perm_array,
                                            $page_handle->get('author'),

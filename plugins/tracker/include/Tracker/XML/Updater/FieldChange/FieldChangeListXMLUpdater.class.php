@@ -24,7 +24,8 @@ class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater implements Track
      * @param SimpleXMLElement $field_change_xml
      * @param mixed            $submitted_value
      */
-    public function update(SimpleXMLElement $field_change_xml, $submitted_value) {
+    public function update(SimpleXMLElement $field_change_xml, $submitted_value)
+    {
         $this->removeExistingValuesNodes($field_change_xml);
 
         if (! is_array($submitted_value)) {
@@ -47,7 +48,8 @@ class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater implements Track
         $value_xml->addAttribute('format', 'id');
     }
 
-    protected function removeExistingValuesNodes($field_change_xml) {
+    protected function removeExistingValuesNodes($field_change_xml)
+    {
         unset($field_change_xml->value);
     }
 }

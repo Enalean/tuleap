@@ -23,7 +23,8 @@
 
 require_once('svn_utils.php');
 
-function svn_data_get_technicians($group_id) {
+function svn_data_get_technicians($group_id)
+{
 
     // Get list of all people who once committed something in the CVS
     // including those who may have been removed from the project since then.
@@ -34,7 +35,8 @@ function svn_data_get_technicians($group_id) {
     return db_query($sql);
 }
 
-function svn_data_update_general_settings($group_id, $svn_tracked, $svn_preamble, $svn_mandatory_ref, $svn_can_change_log) {
+function svn_data_update_general_settings($group_id, $svn_tracked, $svn_preamble, $svn_mandatory_ref, $svn_can_change_log)
+{
 
     $query = "update groups set svn_tracker='".db_ei($svn_tracked).
     "', svn_preamble='".db_es(htmlspecialchars($svn_preamble)).
@@ -49,7 +51,8 @@ function svn_data_update_general_settings($group_id, $svn_tracked, $svn_preamble
 // history if the period argument is not given or if it is given then
 // over the last "period" of time.
 // period is expressed in seconds
-function svn_data_get_svn_history($group_id, $period=false) {
+function svn_data_get_svn_history($group_id, $period=false)
+{
     $date_clause = '';
     if ($period) {
     // All times in svn tables are stored in UTC!!!
@@ -64,7 +67,8 @@ function svn_data_get_svn_history($group_id, $period=false) {
     return($result);
 }
 
-function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='') {
+function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='')
+{
     $order_str = "";
     if ($order) {
         if ($order != 'filename') {

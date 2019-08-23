@@ -29,7 +29,8 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent {
      *
      * @return void
      */
-    public function setLog($log) {
+    public function setLog($log)
+    {
         if (!isset($this->log) || $this->log == '') {
             $this->log = $log;
         } else {
@@ -46,7 +47,8 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent {
      *
      * @return string
      */
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         $txt = '';
         list($project_path, $file_id, $old_path) = $this->getParametersAsArray();
         $txt .= 'project_path: '. $project_path.' -file ID: '.$file_id.' -old file path: '.$old_path;
@@ -58,7 +60,8 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent {
      *
      * @return bool
      */
-    public function process() {
+    public function process()
+    {
         list($project_path, $file_id, $old_path) = $this->getParametersAsArray();
 
         $file_factory = new FRSFileFactory();
@@ -91,7 +94,8 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent {
         return false;
     }
 
-    private function createNecessaryFolders($project_path, $file_path) {
+    private function createNecessaryFolders($project_path, $file_path)
+    {
         $path_parts = explode('/', $file_path);
 
         if (count($path_parts) != 2) {

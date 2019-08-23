@@ -72,15 +72,18 @@ require_once('lib/TextSearchQuery.php');
 class WikiPlugin_WikiBlog
 extends WikiPlugin
 {
-    function getName () {
+    function getName()
+    {
         return _("WikiBlog");
     }
 
-    function getDescription () {
+    function getDescription()
+    {
         return sprintf(_("Show and add blogs for %s"),'[pagename]');
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.23 $");
     }
@@ -106,7 +109,8 @@ extends WikiPlugin
     // - captions for 'show' and 'add' sections
 
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array('pagename'   => '[pagename]',
                      'order'      => 'normal',
                      'mode'       => 'show,add',
@@ -114,7 +118,8 @@ extends WikiPlugin
                     );
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         // allow empty pagenames for ADMIN_USER style blogs: "Blog/day"
         //if (!$args['pagename'])
@@ -150,7 +155,8 @@ extends WikiPlugin
         return $html;
     }
 
-    function add (&$request, $blog, $type='wikiblog') {
+    function add(&$request, $blog, $type='wikiblog')
+    {
         $parent = $blog['pagename'];
         if (empty($parent)) {
             $prefix = "";   // allow empty parent for default "Blog/day"
@@ -270,7 +276,8 @@ extends WikiPlugin
         // Any way to jump back to preview mode???
     }
 
-    function showAll (&$request, $args, $type="wikiblog") {
+    function showAll(&$request, $args, $type="wikiblog")
+    {
         // FIXME: currently blogSearch uses WikiDB->titleSearch to
         // get results, so results are in alphabetical order.
         // When PageTypes fully implemented, could have smarter
@@ -308,7 +315,8 @@ extends WikiPlugin
     }
 
     // all Blogs/Forum/Comment entries are subpages under this pagename, to find them faster.
-    function _blogPrefix($type='wikiblog') {
+    function _blogPrefix($type='wikiblog')
+    {
         if ($type == 'wikiblog')
             $name = "Blog";
         elseif ($type == 'comment')
@@ -318,7 +326,8 @@ extends WikiPlugin
         return $name;
     }
 
-    function _transformOldFormatBlog($rev, $type='wikiblog') {
+    function _transformOldFormatBlog($rev, $type='wikiblog')
+    {
         $page = $rev->getPage();
         $metadata = array();
         foreach (array('ctime', 'creator', 'creator_id') as $key)
@@ -330,7 +339,8 @@ extends WikiPlugin
         return new TransformedText($page, $rev->getPackedContent(), $meta, $type);
     }
 
-    function findBlogs (&$dbi, $parent, $type='wikiblog') {
+    function findBlogs(&$dbi, $parent, $type='wikiblog')
+    {
         $prefix = (empty($parent) ? "" :  $parent . SUBPAGE_SEPARATOR) . $this->_blogPrefix($type);
         $pages = $dbi->titleSearch(new TextSearchQuery("^".$prefix, true, 'posix'));
 
@@ -346,25 +356,29 @@ extends WikiPlugin
         return $blogs;
     }
 
-    function cmp($a, $b) {
+    function cmp($a, $b)
+    {
         return(strcmp($a->get('mtime'),
                       $b->get('mtime')));
     }
 
-    function showForm (&$request, $args, $template='blogform') {
+    function showForm(&$request, $args, $template='blogform')
+    {
         // Show blog-entry form.
         return new Template($template, $request,
                             array('PAGENAME' => $args['pagename']));
     }
 
     // "2004-12" => "December 2004"
-    function _monthTitle($month){
+    function _monthTitle($month)
+    {
         //list($year,$mon) = explode("-",$month);
         return strftime("%B %Y", strtotime($month."-01"));
     }
 
     // "User/Blog/2004-12-13/12:28:50+01:00" => array('month' => "2004-12", ...)
-    function _blog($rev_or_page) {
+    function _blog($rev_or_page)
+    {
         $pagename = $rev_or_page->getName();
         if (preg_match("/^(.*Blog)\/(\d\d\d\d-\d\d)-(\d\d)\/(.*)/", $pagename, $m))
             list(,$prefix,$month,$day,$time) = $m;
@@ -378,7 +392,8 @@ extends WikiPlugin
                      'prefix'  => $prefix);
     }
 
-    function _nonDefaultArgs($args) {
+    function _nonDefaultArgs($args)
+    {
         return array_diff_assoc($args, $this->getDefaultArguments());
     }
 

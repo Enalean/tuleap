@@ -29,7 +29,8 @@ class RestlerCache {
 
     public const RESTLER_CACHE_FILE = 'routes.php';
 
-    public function getAndInitiateCacheDirectory($version) {
+    public function getAndInitiateCacheDirectory($version)
+    {
         $path = $this->getCacheDirectory().DIRECTORY_SEPARATOR.self::PREFIX.$version;
         if (! is_dir($path)) {
             mkdir($path, 0700, true);
@@ -37,7 +38,8 @@ class RestlerCache {
         return $path;
     }
 
-    public function invalidateCache() {
+    public function invalidateCache()
+    {
         foreach (glob($this->getCacheDirectory().DIRECTORY_SEPARATOR.self::PREFIX.'*') as $version_directory) {
             $cache_file = $version_directory.DIRECTORY_SEPARATOR.self::RESTLER_CACHE_FILE;
             if (file_exists($cache_file)) {
@@ -46,7 +48,8 @@ class RestlerCache {
         }
     }
 
-    private function getCacheDirectory() {
+    private function getCacheDirectory()
+    {
         return ForgeConfig::get('codendi_cache_dir').DIRECTORY_SEPARATOR.'restler';
     }
 }

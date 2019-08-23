@@ -29,16 +29,19 @@ abstract class MVC2_PluginController extends MVC2_Controller {
 
     protected $group_id;
 
-    protected function getTemplatesDir() {
+    protected function getTemplatesDir()
+    {
         return ForgeConfig::get('codendi_dir') .'/plugins/'.$this->base_name.'/templates';
     }
 
-    protected function redirect($query_parts) {
+    protected function redirect($query_parts)
+    {
         $redirect = http_build_query($query_parts);
         $GLOBALS['Response']->redirect('/plugins/'.$this->base_name.'/?'.$redirect);
     }
 
-    protected function checkUserIsAdmin() {
+    protected function checkUserIsAdmin()
+    {
         $project = $this->request->getProject();
         $user    = $this->request->getCurrentUser();
         if (! $user->isAdmin($project->getID()) && ! $user->isSuperUser()) {

@@ -84,18 +84,18 @@ class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_A
     private $computed_exporter;
 
     public function __construct(
-           Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter $date_exporter,
-           Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter $file_exporter,
-           Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter $float_exporter,
-           Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter $integer_exporter,
-           Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter $string_exporter,
-           Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter $text_exporter,
-           Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter $perms_exporter,
-           Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter $list_exporter,
-           Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter $open_list_exporter,
-           Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter $artlink_exporter,
-           ChangesetValueComputedXMLExporter $computed_exporter,
-           Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter $unknown_exporter
+        Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter $date_exporter,
+        Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter $file_exporter,
+        Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter $float_exporter,
+        Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter $integer_exporter,
+        Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter $string_exporter,
+        Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter $text_exporter,
+        Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter $perms_exporter,
+        Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter $list_exporter,
+        Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter $open_list_exporter,
+        Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter $artlink_exporter,
+        ChangesetValueComputedXMLExporter $computed_exporter,
+        Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter $unknown_exporter
     ) {
         $this->file_exporter      = $file_exporter;
         $this->date_exporter      = $date_exporter;
@@ -122,43 +122,53 @@ class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_A
         $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value);
     }
 
-    public function visitArtifactLink(Tracker_Artifact_ChangesetValue_ArtifactLink $changeset_value) {
+    public function visitArtifactLink(Tracker_Artifact_ChangesetValue_ArtifactLink $changeset_value)
+    {
         return $this->artlink_exporter;
     }
 
-    public function visitDate(Tracker_Artifact_ChangesetValue_Date $changeset_value) {
+    public function visitDate(Tracker_Artifact_ChangesetValue_Date $changeset_value)
+    {
         return $this->date_exporter;
     }
 
-    public function visitFile(Tracker_Artifact_ChangesetValue_File $changeset_value) {
+    public function visitFile(Tracker_Artifact_ChangesetValue_File $changeset_value)
+    {
         return $this->file_exporter;
     }
 
-    public function visitFloat(Tracker_Artifact_ChangesetValue_Float $changeset_value) {
+    public function visitFloat(Tracker_Artifact_ChangesetValue_Float $changeset_value)
+    {
         return $this->float_exporter;
     }
 
-    public function visitInteger(Tracker_Artifact_ChangesetValue_Integer $changeset_value) {
+    public function visitInteger(Tracker_Artifact_ChangesetValue_Integer $changeset_value)
+    {
         return $this->integer_exporter;
     }
 
-    public function visitList(Tracker_Artifact_ChangesetValue_List $changeset_value) {
+    public function visitList(Tracker_Artifact_ChangesetValue_List $changeset_value)
+    {
         return $this->list_exporter;
     }
 
-    public function visitOpenList(Tracker_Artifact_ChangesetValue_OpenList $changeset_value) {
+    public function visitOpenList(Tracker_Artifact_ChangesetValue_OpenList $changeset_value)
+    {
         return $this->open_list_exporter;
     }
 
-    public function visitPermissionsOnArtifact(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $changeset_value) {
+    public function visitPermissionsOnArtifact(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $changeset_value)
+    {
         return $this->perms_exporter;
     }
 
-    public function visitString(Tracker_Artifact_ChangesetValue_String $changeset_value) {
+    public function visitString(Tracker_Artifact_ChangesetValue_String $changeset_value)
+    {
         return $this->string_exporter;
     }
 
-    public function visitText(Tracker_Artifact_ChangesetValue_Text $changeset_value) {
+    public function visitText(Tracker_Artifact_ChangesetValue_Text $changeset_value)
+    {
         return $this->text_exporter;
     }
 

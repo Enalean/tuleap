@@ -33,7 +33,8 @@ class User_SSHKeyValidatorTest extends TuleapTestCase {
      */
     protected $validator;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->key1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAxo4yIDI6bkSUVgXMZYmBZNDl3ttYUIxaThIX1hjp+Oxjo1yeI+vytb1UvESnu1fAhNB40KpPwL7md+UwfHyo2Jah9PMq6bfrSupAE6NOJQ4xG5W7hP70ih5UZtA9YuZfzDc7JsCpwlF7Fvhc+1u4uRYxuKQ+4SpzxCNkmMAMD9BzjXq0Jt/6MsEz+Txt6xoo+HAZXUnUq/XgqMh1A71zAjz6E1ADsd1vLYekQruy9uzhnq9Q7bi+evS1bvi7/O+csAqpIvN/stBqIzALpoAGY1Ek/YMKxjzNurnRTtwEuvqciaPk4aZGg5UvWL1B+yo7HuG/Je0KSz/+u+1efqLUxw== user@shunt';
@@ -46,7 +47,8 @@ class User_SSHKeyValidatorTest extends TuleapTestCase {
 
 class User_SSHKeyValidator_KeyValidationTest extends User_SSHKeyValidatorTest {
 
-    public function itDoesntRaiseAnErrorWhenTheKeyIsValid() {
+    public function itDoesntRaiseAnErrorWhenTheKeyIsValid()
+    {
         stub($GLOBALS['Response'])->addFeedback()->never();
 
         $this->assertEqual(
@@ -55,7 +57,8 @@ class User_SSHKeyValidator_KeyValidationTest extends User_SSHKeyValidatorTest {
         );
     }
 
-    public function itDoesntRaiseAnErrorWhenAllTheKeysAreValid() {
+    public function itDoesntRaiseAnErrorWhenAllTheKeysAreValid()
+    {
         stub($GLOBALS['Response'])->addFeedback()->never();
 
         $this->assertEqual(
@@ -67,7 +70,8 @@ class User_SSHKeyValidator_KeyValidationTest extends User_SSHKeyValidatorTest {
         );
     }
 
-    public function itRaisesAWarningWhenTheKeyIsInvalid() {
+    public function itRaisesAWarningWhenTheKeyIsInvalid()
+    {
         $keys = array("bla");
 
         stub($GLOBALS['Response'])->addFeedback('warning', '*')->once();
@@ -97,7 +101,8 @@ class User_SSHKeyValidator_KeyValidationTest extends User_SSHKeyValidatorTest {
         $this->assertCount($this->validator->validateAllKeys($keys), 0);
     }
 
-    public function itRaisesAWarningWhenTheKeyIsInvalidAmongValidKeys() {
+    public function itRaisesAWarningWhenTheKeyIsInvalidAmongValidKeys()
+    {
         $keys = array(
             $this->key1,
             "bla",
@@ -109,7 +114,8 @@ class User_SSHKeyValidator_KeyValidationTest extends User_SSHKeyValidatorTest {
         $this->assertEqual(array($this->key1, $this->key2), $this->validator->validateAllKeys($keys));
     }
 
-    public function itRaisesAWarningWhenTheSameKeyIsAddedTwice() {
+    public function itRaisesAWarningWhenTheSameKeyIsAddedTwice()
+    {
         $keys = array(
             $this->key1,
             $this->key1
@@ -123,14 +129,16 @@ class User_SSHKeyValidator_KeyValidationTest extends User_SSHKeyValidatorTest {
 
 class User_SSHKeyValidator_InputManagementTest extends User_SSHKeyValidatorTest {
 
-    public function itUpdatesWithOneKey() {
+    public function itUpdatesWithOneKey()
+    {
         $keys = $this->validator->validateAllKeys(array($this->key1));
 
         $this->assertCount($keys, 1);
         $this->assertEqual($this->key1, $keys[0]);
     }
 
-    public function itUpdatesWithTwoKeys() {
+    public function itUpdatesWithTwoKeys()
+    {
         $keys = $this->validator->validateAllKeys(array(
             $this->key1,
             $this->key2
@@ -141,7 +149,8 @@ class User_SSHKeyValidator_InputManagementTest extends User_SSHKeyValidatorTest 
         $this->assertEqual($this->key2, $keys[1]);
     }
 
-    public function itUpdatesWithAnExtraSpaceAfterFirstKey() {
+    public function itUpdatesWithAnExtraSpaceAfterFirstKey()
+    {
         $keys = $this->validator->validateAllKeys(array(
             $this->key1." ",
             $this->key2
@@ -152,7 +161,8 @@ class User_SSHKeyValidator_InputManagementTest extends User_SSHKeyValidatorTest 
         $this->assertEqual($this->key2, $keys[1]);
     }
 
-    public function itUpdatesWithAnEmptyKey() {
+    public function itUpdatesWithAnEmptyKey()
+    {
         $keys = $this->validator->validateAllKeys(array(
             $this->key1,
             '',

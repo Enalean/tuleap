@@ -43,17 +43,20 @@ class Cardwall_Board {
      * @param Cardwall_OnTop_Config_ColumnCollection $columns
      * @param Cardwall_MappingCollection             $mappings
      */
-    public function __construct(array $swimlines, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_MappingCollection $mappings) {
+    public function __construct(array $swimlines, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_MappingCollection $mappings)
+    {
         $this->swimlines = $swimlines;
         $this->columns   = $columns;
         $this->mappings  = $mappings;
     }
 
-    public function getColumns() {
+    public function getColumns()
+    {
         return $this->columns;
     }
 
-    public function getSwimlines() {
+    public function getSwimlines()
+    {
         return $this->swimlines;
     }
 

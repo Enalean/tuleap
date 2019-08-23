@@ -149,7 +149,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         stub($this->artifact_factory)->getTitleFromRowAsText()->returnsAt(2, 'Story is closed');
     }
 
-    public function itCreatesContentWithOneElementInTodo() {
+    public function itCreatesContentWithOneElementInTodo()
+    {
         stub($this->dao)->getPlannedItemIds()->returns(array());
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
@@ -164,7 +165,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $this->assertEqual($row->id(), $this->open_story_id);
     }
 
-    public function itCreatesContentWithOneElementInDone() {
+    public function itCreatesContentWithOneElementInDone()
+    {
         stub($this->dao)->getPlannedItemIds()->returns(array());
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
@@ -179,7 +181,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $this->assertEqual($row->id(), $this->closed_story_id);
     }
 
-    public function itSetInitialEffortForOpenStories() {
+    public function itSetInitialEffortForOpenStories()
+    {
         stub($this->dao)->getPlannedItemIds()->returns(array());
 
         $field = mock('Tracker_FormElement_Field_Float');
@@ -199,7 +202,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $this->assertEqual($row->points(), 26);
     }
 
-    public function itNotSetInitialEffortForOpenStoriesIfUserCannotRead() {
+    public function itNotSetInitialEffortForOpenStoriesIfUserCannotRead()
+    {
         stub($this->dao)->getPlannedItemIds()->returns(array());
 
         $field = mock('Tracker_FormElement_Field_Float');
@@ -219,7 +223,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $this->assertEqual($row->points(), null);
     }
 
-    public function itCreatesACollectionForOpenAndUnassignedElements() {
+    public function itCreatesACollectionForOpenAndUnassignedElements()
+    {
         $factory = partial_mock(
             'AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory',
             array('getUnplannedOpenCollection',),

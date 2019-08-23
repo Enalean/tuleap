@@ -56,23 +56,28 @@ use UGroupUserDao;
 class TestBackendSVN extends BackendSVN {
     private $tc; ///< @var XMLImporterTest
 
-    public function setUp($test_case) {
+    public function setUp($test_case)
+    {
         $this->tc = $test_case;
     }
 
-    protected function getProjectManager() {
+    protected function getProjectManager()
+    {
         return $this->tc->pm;
     }
 
-    protected function getUGroupDao() {
+    protected function getUGroupDao()
+    {
         return $this->tc->ugdao;
     }
 
-    protected function getUGroupManager() {
+    protected function getUGroupManager()
+    {
         return new UGroupManager($this->tc->ugdao, null, $this->tc->ugudao);
     }
 
-    public function chgrp($path, $uid) {
+    public function chgrp($path, $uid)
+    {
         return true;
     }
 }
@@ -293,7 +298,8 @@ class XMLImporterTest extends TuleapTestCase
         $this->repository_copier           = \Mockery::spy(\Tuleap\SVN\Migration\RepositoryCopier::class);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         global $Language;
         unset($Language);
         ForgeConfig::restore();
@@ -305,7 +311,8 @@ class XMLImporterTest extends TuleapTestCase
         parent::tearDown();
     }
 
-    private function stubRepoCreation($project_id, $repo_id, $event_id){
+    private function stubRepoCreation($project_id, $repo_id, $event_id)
+    {
         stub($this->repodao)->create()
             ->once("Create the repository")
             ->returns($repo_id);
@@ -367,7 +374,8 @@ class XMLImporterTest extends TuleapTestCase
         $this->assertRevision(1, 123, "svn01");
     }
 
-    private function assertFileIsOwnedBy($user, $file) {
+    private function assertFileIsOwnedBy($user, $file)
+    {
         $stat = stat($file);
         $user = posix_getpwnam($user);
         $this->assertIdentical($stat['uid'], $user['uid']);
@@ -538,7 +546,8 @@ XML;
         $this->assertTrue($found, "$svnroot/.SVNAccessFile:\n$accessfile");
     }
 
-    private function assertRevision($expected, $project_id, $repo_name) {
+    private function assertRevision($expected, $project_id, $repo_name)
+    {
         $svn_dir = $this->getSVNDir($project_id, $repo_name);
         $svn_arg = escapeshellarg("file://$svn_dir");
         $cmd_line = "(svn info $svn_arg | grep Revision) 2>&1";
@@ -546,7 +555,8 @@ XML;
         $this->assertEqual("Revision: $expected\n", $last_changed_revision);
     }
 
-    private function getSVNDir($project_id, $repo_name) {
+    private function getSVNDir($project_id, $repo_name)
+    {
         return ForgeConfig::get('sys_data_dir')."/svn_plugin/$project_id/$repo_name";
     }
 }

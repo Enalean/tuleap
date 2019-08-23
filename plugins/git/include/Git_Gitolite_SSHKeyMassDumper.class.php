@@ -30,7 +30,8 @@ class Git_Gitolite_SSHKeyMassDumper implements MassDumper
     private $dumper;
     private $user_manager;
 
-    public function __construct(Git_Gitolite_SSHKeyDumper $dumper, UserManager $user_manager) {
+    public function __construct(Git_Gitolite_SSHKeyDumper $dumper, UserManager $user_manager)
+    {
         $this->dumper       = $dumper;
         $this->user_manager = $user_manager;
     }
@@ -44,7 +45,8 @@ class Git_Gitolite_SSHKeyMassDumper implements MassDumper
         return false;
     }
 
-    private function dumpAllKeys() {
+    private function dumpAllKeys()
+    {
         $dumped_users = array();
         foreach ($this->user_manager->getUsersWithSshKey() as $user) {
             $dumped_users[$user->getUserName()] = true;
@@ -53,7 +55,8 @@ class Git_Gitolite_SSHKeyMassDumper implements MassDumper
         $this->purgeNotDumpedUsers($dumped_users);
     }
 
-    private function purgeNotDumpedUsers(array $dumped_users) {
+    private function purgeNotDumpedUsers(array $dumped_users)
+    {
         foreach (glob($this->dumper->getKeyDirPath().'/*.pub') as $file) {
             $file_name = basename($file);
             if (!$this->isReservedName($file_name)) {
@@ -65,18 +68,21 @@ class Git_Gitolite_SSHKeyMassDumper implements MassDumper
         }
     }
 
-    private function isReservedName($file_name) {
+    private function isReservedName($file_name)
+    {
         if ($this->isAdminKey($file_name) || $this->isGerritKey($file_name)) {
             return true;
         }
         return false;
     }
 
-    private function isAdminKey($file_name) {
+    private function isAdminKey($file_name)
+    {
         return $file_name == 'id_rsa_gl-adm.pub';
     }
 
-    private function isGerritKey($file_name) {
+    private function isGerritKey($file_name)
+    {
         return strpos($file_name, Rule_UserName::RESERVED_PREFIX.Git_RemoteServer_Gerrit_ReplicationSSHKey::KEYNAME_PREFIX) === 0;
     }
 }

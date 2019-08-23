@@ -126,12 +126,14 @@ class AgileDashboard_FirstKanbanCreator
         );
     }
 
-    private function warn($message) {
+    private function warn($message)
+    {
         $GLOBALS['Response']->addFeedback(Feedback::WARN, $message);
     }
 
     /** @return Tracker */
-    private function importTrackerStructure() {
+    private function importTrackerStructure()
+    {
         try {
             return $this->xml_import->createFromXMLFile($this->project, $this->template_path);
         } catch (Exception $exception) {
@@ -141,13 +143,15 @@ class AgileDashboard_FirstKanbanCreator
         }
     }
 
-    private function isFirstKanbanNeeded() {
+    private function isFirstKanbanNeeded()
+    {
         $used_trackers = $this->kanban_manager->getTrackersUsedAsKanban($this->project);
 
         return count($used_trackers) === 0;
     }
 
-    private function isTrackerAlreadyCreated() {
+    private function isTrackerAlreadyCreated()
+    {
         $is_tracker_already_created = $this->tracker_factory->isShortNameExists(
             $this->tracker_itemname,
             $this->project->getId()

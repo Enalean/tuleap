@@ -26,7 +26,8 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
     public const STATUS_OPEN   = 1;
     public const STATUS_CLOSED = 0;
 
-    public function getBacklogArtifacts($milestone_artifact_id) {
+    public function getBacklogArtifacts($milestone_artifact_id)
+    {
         $milestone_artifact_id = $this->da->escapeInt($milestone_artifact_id);
         $sql = "SELECT child_art.*
                 FROM tracker_artifact parent_art
@@ -43,7 +44,8 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getTopBacklogArtifacts(array $backlog_tracker_ids) {
+    public function getTopBacklogArtifacts(array $backlog_tracker_ids)
+    {
         $backlog_tracker_ids = $this->da->escapeIntImplode($backlog_tracker_ids);
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS *
@@ -55,7 +57,8 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getTopBacklogArtifactsWithLimitAndOffset(array $backlog_tracker_ids, $limit, $offset) {
+    public function getTopBacklogArtifactsWithLimitAndOffset(array $backlog_tracker_ids, $limit, $offset)
+    {
         $backlog_tracker_ids = $this->da->escapeIntImplode($backlog_tracker_ids);
         $limit               = $this->da->escapeInt($limit);
         $offset              = $this->da->escapeInt($offset);
@@ -70,7 +73,8 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getOpenUnplannedTopBacklogArtifacts(array $backlog_tracker_ids, $sub_milestone_ids) {
+    public function getOpenUnplannedTopBacklogArtifacts(array $backlog_tracker_ids, $sub_milestone_ids)
+    {
         $backlog_tracker_ids = $this->da->escapeIntImplode($backlog_tracker_ids);
         $sub_milestone_ids   = $this->da->escapeIntImplode($sub_milestone_ids);
 
@@ -106,7 +110,8 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getUnplannedTopBacklogArtifacts(array $backlog_tracker_ids) {
+    public function getUnplannedTopBacklogArtifacts(array $backlog_tracker_ids)
+    {
         $backlog_tracker_ids = $this->da->escapeIntImplode($backlog_tracker_ids);
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS art_1.*
@@ -131,7 +136,8 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getOpenUnplannedTopBacklogArtifactsWithLimitAndOffset(array $backlog_tracker_ids, $limit, $offset) {
+    public function getOpenUnplannedTopBacklogArtifactsWithLimitAndOffset(array $backlog_tracker_ids, $limit, $offset)
+    {
         $backlog_tracker_ids = $this->da->escapeIntImplode($backlog_tracker_ids);
         $limit               = $this->da->escapeInt($limit);
         $offset              = $this->da->escapeInt($offset);
@@ -170,7 +176,8 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getUnplannedTopBacklogArtifactsWithLimitAndOffset(array $backlog_tracker_ids, $limit, $offset) {
+    public function getUnplannedTopBacklogArtifactsWithLimitAndOffset(array $backlog_tracker_ids, $limit, $offset)
+    {
         $backlog_tracker_ids = $this->da->escapeIntImplode($backlog_tracker_ids);
         $limit               = $this->da->escapeInt($limit);
         $offset              = $this->da->escapeInt($offset);
@@ -198,7 +205,8 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getPlannedItemIds(array $milestone_artifact_ids) {
+    public function getPlannedItemIds(array $milestone_artifact_ids)
+    {
         $milestone_artifact_ids = $this->da->escapeIntImplode($milestone_artifact_ids);
 
         $sql = "SELECT GROUP_CONCAT(id) AS ids
@@ -221,7 +229,8 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
         return array();
     }
 
-    public function getArtifactsSemantics(array $artifact_ids, array $semantics) {
+    public function getArtifactsSemantics(array $artifact_ids, array $semantics)
+    {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
 
         $select_fields = array('artifact.id');

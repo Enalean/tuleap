@@ -20,17 +20,20 @@
 
 class b201207171819_add_freestyle_on_top_field extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add field to store wether the cardwall use freestyle columns or not
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_cardwall_on_top
                 ADD COLUMN use_freestyle_columns tinyint(4) default 0 AFTER tracker_id";
         $res = $this->db->dbh->exec($sql);
@@ -40,7 +43,8 @@ EOT;
 
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->columnNameExists('plugin_cardwall_on_top', 'use_freestyle_columns')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('use_freestyle_columns field is missing in plugin_cardwall_on_top table table');
         }

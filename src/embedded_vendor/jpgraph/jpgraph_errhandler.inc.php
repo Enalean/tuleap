@@ -23,7 +23,8 @@ $__jpg_err_locale = DEFAULT_ERR_LOCALE;
 
 class ErrMsgText {
     private $lt=NULL;
-    function __construct() {
+    function __construct()
+    {
         GLOBAL $__jpg_err_locale;
         $file = 'lang/'.$__jpg_err_locale.'.inc.php';
 
@@ -40,7 +41,8 @@ class ErrMsgText {
         $this->lt = $_jpg_messages;
     }
 
-    function Get($errnbr,$a1=null,$a2=null,$a3=null,$a4=null,$a5=null) {
+    function Get($errnbr,$a1=null,$a2=null,$a3=null,$a4=null,$a5=null)
+    {
         GLOBAL $__jpg_err_locale;
         if( !isset($this->lt[$errnbr]) ) {
             return 'Internal error: The specified error message ('.$errnbr.') does not exist in the chosen locale ('.$__jpg_err_locale.')';
@@ -100,48 +102,60 @@ class JpGraphError {
     private static $__iImgFlg = true;
     private static $__iLogFile = '';
     private static $__iTitle = 'JpGraph Error: ';
-    public static function Raise($aMsg,$aHalt=true){
+    public static function Raise($aMsg,$aHalt=true)
+    {
         throw new JpGraphException($aMsg);
     }
-    public static function SetErrLocale($aLoc) {
+    public static function SetErrLocale($aLoc)
+    {
         GLOBAL $__jpg_err_locale ;
         $__jpg_err_locale = $aLoc;
     }
-    public static function RaiseL($errnbr,$a1=null,$a2=null,$a3=null,$a4=null,$a5=null) {
+    public static function RaiseL($errnbr,$a1=null,$a2=null,$a3=null,$a4=null,$a5=null)
+    {
         throw new JpGraphExceptionL($errnbr,$a1,$a2,$a3,$a4,$a5);
     }
-    public static function SetImageFlag($aFlg=true) {
+    public static function SetImageFlag($aFlg=true)
+    {
         self::$__iImgFlg = $aFlg;
     }
-    public static function GetImageFlag() {
+    public static function GetImageFlag()
+    {
         return self::$__iImgFlg;
     }
-    public static function SetLogFile($aFile) {
+    public static function SetLogFile($aFile)
+    {
         self::$__iLogFile = $aFile;
     }
-    public static function GetLogFile() {
+    public static function GetLogFile()
+    {
         return self::$__iLogFile;
     }
-    public static function SetTitle($aTitle) {
+    public static function SetTitle($aTitle)
+    {
         self::$__iTitle = $aTitle;
     }
-    public static function GetTitle() {
+    public static function GetTitle()
+    {
         return self::$__iTitle;
     }
 }
 
 class JpGraphException extends Exception {
     // Redefine the exception so message isn't optional
-    public function __construct($message, $code = 0) {
+    public function __construct($message, $code = 0)
+    {
         // make sure everything is assigned properly
         parent::__construct($message, $code);
     }
     // custom string representation of object
-    public function _toString() {
+    public function _toString()
+    {
         return self::class . ": [{$this->code}]: {$this->message} at " . basename($this->getFile()) . ":" . $this->getLine() . "\n" . $this->getTraceAsString() . "\n";
     }
     // custom representation of error as an image
-    public function Stroke() {
+    public function Stroke()
+    {
         if( JpGraphError::GetImageFlag() ) {
             $errobj = new JpGraphErrObjectImg();
             $errobj->SetTitle(JpGraphError::GetTitle());
@@ -153,7 +167,8 @@ class JpGraphException extends Exception {
         }
         $errobj->Raise($this->getMessage());
     }
-    static public function defaultHandler(Exception $exception) {
+    static public function defaultHandler(Exception $exception)
+    {
         global $__jpg_OldHandler;
         if( $exception instanceof JpGraphException ) {
             $exception->Stroke();
@@ -170,7 +185,8 @@ class JpGraphException extends Exception {
 
 class JpGraphExceptionL extends JpGraphException {
    // Redefine the exception so message isn't optional
-    public function __construct($errcode,$a1=null,$a2=null,$a3=null,$a4=null,$a5=null) {
+    public function __construct($errcode,$a1=null,$a2=null,$a3=null,$a4=null,$a5=null)
+    {
         // make sure everything is assigned properly
         $errtxt = new ErrMsgText();
         JpGraphError::SetTitle('JpGraph Error: '.$errcode);
@@ -192,20 +208,24 @@ class JpGraphErrObject {
     protected $iDest = false;
 
 
-    function __construct() {
+    function __construct()
+    {
         // Empty. Reserved for future use
     }
 
-    function SetTitle($aTitle) {
+    function SetTitle($aTitle)
+    {
         $this->iTitle = $aTitle;
     }
 
-    function SetStrokeDest($aDest) {
+    function SetStrokeDest($aDest)
+    {
         $this->iDest = $aDest;
     }
 
     // If aHalt is true then execution can't continue. Typical used for fatal errors
-    function Raise($aMsg,$aHalt=false) {
+    function Raise($aMsg,$aHalt=false)
+    {
         if( $this->iDest != '' ) {
             if( $this->iDest == 'syslog' ) {
                 error_log($this->iTitle.$aMsg);
@@ -240,12 +260,14 @@ class JpGraphErrObject {
 //==============================================================
 class JpGraphErrObjectImg extends JpGraphErrObject {
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         // Empty. Reserved for future use
     }
 
-    function Raise($aMsg,$aHalt=true) {
+    function Raise($aMsg,$aHalt=true)
+    {
         $img_iconerror =
         'iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAaV'.
         'BMVEX//////2Xy8mLl5V/Z2VvMzFi/v1WyslKlpU+ZmUyMjEh/'.

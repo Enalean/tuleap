@@ -24,19 +24,22 @@ class ArtifactIntegerFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
     public const TV5_TYPE         = 'int';
     public const DEFAULT_VALUE    = 0;
 
-    public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row) {
+    public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)
+    {
         $this->setNewValue($row);
 
         $this->appendStringNode($changeset_node, self::TV5_TYPE, $row);
     }
 
-    public function setNewValue(array &$row) {
+    public function setNewValue(array &$row)
+    {
         if (! $row['new_value']) {
             $row['new_value'] = self::DEFAULT_VALUE;
         }
     }
 
-    public function getFieldValueIndex() {
+    public function getFieldValueIndex()
+    {
         return self::TV3_VALUE_INDEX;
     }
 

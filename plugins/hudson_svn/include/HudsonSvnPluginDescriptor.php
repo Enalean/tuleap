@@ -22,7 +22,8 @@ namespace Tuleap\HudsonSvn\Plugin;
 
 class HudsonSvnPluginDescriptor extends \PluginDescriptor {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct(
             $GLOBALS['Language']->getText('plugin_hudson_svn', 'descriptor_name'),
             false,

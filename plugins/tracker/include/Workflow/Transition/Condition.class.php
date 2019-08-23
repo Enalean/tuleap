@@ -31,7 +31,8 @@ abstract class Workflow_Transition_Condition {
     /** @var Transition */
     protected $transition;
 
-    public function __construct(Transition $transition) {
+    public function __construct(Transition $transition)
+    {
         $this->transition = $transition;
     }
 
@@ -64,7 +65,8 @@ abstract class Workflow_Transition_Condition {
      */
     public abstract function validate($fields_data, Tracker_Artifact $artifact, $comment_body);
 
-    public function getTransition() {
+    public function getTransition()
+    {
         return $this->transition;
     }
 

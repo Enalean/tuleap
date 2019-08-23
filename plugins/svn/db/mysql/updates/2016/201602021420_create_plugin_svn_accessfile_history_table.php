@@ -18,15 +18,18 @@
 
 class b201602021420_create_plugin_svn_accessfile_history_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Create table plugin_svn_accessfile_history for SVN plugin';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE plugin_svn_accessfile_history(
                     id INT(11) UNSIGNED NOT NULL auto_increment PRIMARY KEY,
                     version_number int(11) NOT NULL,

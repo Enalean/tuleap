@@ -18,7 +18,8 @@
  */
 
 class Project_InvalidFullName_Exception extends Exception {
-    function __construct($message) {
+    function __construct($message)
+    {
         parent::__construct($message, 3103);
     }
 }

@@ -39,7 +39,8 @@ class AdminRouter implements DispatchableWithRequest
      */
     private $csrf_token;
 
-    public function __construct(Controller $controller, CSRFSynchronizerToken $csrf_token) {
+    public function __construct(Controller $controller, CSRFSynchronizerToken $csrf_token)
+    {
         $this->controller = $controller;
         $this->csrf_token = $csrf_token;
     }

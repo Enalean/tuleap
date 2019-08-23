@@ -63,7 +63,8 @@ class Cardwall_Form {
      */
     public $submit;
 
-    public function __construct($report_id, $renderer_id, $printer_version, $field, array $selectboxes) {
+    public function __construct($report_id, $renderer_id, $printer_version, $field, array $selectboxes)
+    {
         $this->report_id           = (int)$report_id;
         $this->renderer_id         = (int)$renderer_id;
         $this->printer_version     = (int)$printer_version;

@@ -20,7 +20,9 @@
 
 class Tracker_Permission_ChainOfResponsibility_DoNothing extends Tracker_Permission_Command {
 
-    public function __construct() {}
+    public function __construct()
+    {}
 
-    public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter) {}
+    public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter)
+    {}
 }

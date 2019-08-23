@@ -29,7 +29,8 @@ class Tracker_DateReminderRenderer {
      *
      * @return Void
      */
-    public function __construct(Tracker $tracker) {
+    public function __construct(Tracker $tracker)
+    {
         $this->tracker             = $tracker;
         $this->dateReminderFactory = new Tracker_DateReminderFactory($this->tracker, $this);
     }
@@ -39,7 +40,8 @@ class Tracker_DateReminderRenderer {
      *
      * @return Tracker
      */
-    public function getTracker(){
+    public function getTracker()
+    {
         return $this->tracker;
     }
 
@@ -48,7 +50,8 @@ class Tracker_DateReminderRenderer {
      *
      * @return Tracker_DateReminderFactory
      */
-    public function getDateReminderFactory(){
+    public function getDateReminderFactory()
+    {
         return $this->dateReminderFactory;
     }
 
@@ -86,7 +89,8 @@ class Tracker_DateReminderRenderer {
      *
      * @return String
      */
-    public function editDateReminder($reminderId, CSRFSynchronizerToken $csrf_token) {
+    public function editDateReminder($reminderId, CSRFSynchronizerToken $csrf_token)
+    {
         $output   = '';
         $reminder = $this->dateReminderFactory->getReminder($reminderId);
         if ($reminder) {
@@ -144,7 +148,8 @@ class Tracker_DateReminderRenderer {
      *
      * @return String
      */
-    protected function getAllowedNotifiedForTracker($reminderId = Null) {
+    protected function getAllowedNotifiedForTracker($reminderId = Null)
+    {
         /** @psalm-suppress DeprecatedFunction */
         $res = ugroup_db_get_existing_ugroups($this->tracker->group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'],
                                                                               $GLOBALS['UGROUP_PROJECT_ADMIN']));
@@ -196,7 +201,8 @@ class Tracker_DateReminderRenderer {
      *
      * @return String
      */
-    protected function getTrackerDateFields() {
+    protected function getTrackerDateFields()
+    {
         $purifier          = Codendi_HTMLPurifier::instance();
         $tff               = Tracker_FormElementFactory::instance();
         $trackerDateFields = $tff->getUsedDateFields($this->tracker);
@@ -215,7 +221,8 @@ class Tracker_DateReminderRenderer {
      *
      * @return int
      */
-    public function validateFieldId(HTTPRequest $request) {
+    public function validateFieldId(HTTPRequest $request)
+    {
         $validFieldId = new Valid_UInt('reminder_field_date');
         $validFieldId->required();
         if ($request->valid($validFieldId)) {
@@ -233,7 +240,8 @@ class Tracker_DateReminderRenderer {
      *
      * @return int
      */
-    public function validateDistance(HTTPRequest $request) {
+    public function validateDistance(HTTPRequest $request)
+    {
         $validDistance = new Valid_UInt('distance');
         $validDistance->required();
         if ($request->valid($validDistance)) {
@@ -251,7 +259,8 @@ class Tracker_DateReminderRenderer {
      *
      * @return int
      */
-    public function validateNotificationType(HTTPRequest $request) {
+    public function validateNotificationType(HTTPRequest $request)
+    {
         $validNotificationType = new Valid_UInt('notif_type');
         $validNotificationType->required();
         if ($request->valid($validNotificationType)) {
@@ -269,7 +278,8 @@ class Tracker_DateReminderRenderer {
      *
      * @return int
      */
-    public function validateStatus(HTTPRequest $request) {
+    public function validateStatus(HTTPRequest $request)
+    {
         $validStatus = new Valid_UInt('notif_status');
         $validStatus->required();
         if ($request->valid($validStatus)) {
@@ -288,7 +298,8 @@ class Tracker_DateReminderRenderer {
      *
      * @return Array
      */
-    public function validateReminderUgroups(Array  $selectedUgroups) {
+    public function validateReminderUgroups(Array  $selectedUgroups)
+    {
         $groupId = $this->getTracker()->getGroupId();
         /** @psalm-suppress DeprecatedFunction */
         $ugs       = ugroup_db_get_existing_ugroups($groupId, array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
@@ -317,7 +328,8 @@ class Tracker_DateReminderRenderer {
      *
      * @return Array
      */
-    public function validateReminderRoles(Array $selectedRoles) {
+    public function validateReminderRoles(Array $selectedRoles)
+    {
         $validRoles = array();
         $all_possible_roles = array(
             new Tracker_DateReminder_Role_Submitter(),
@@ -346,7 +358,8 @@ class Tracker_DateReminderRenderer {
      *
      * @return Array
      */
-    public function scindReminderNotifiedPeople(HTTPRequest $request) {
+    public function scindReminderNotifiedPeople(HTTPRequest $request)
+    {
         $vArray = new Valid_Array('reminder_notified');
         $notified = $roles = $ugroups = array();
         if($request->valid($vArray)) {
@@ -375,7 +388,8 @@ class Tracker_DateReminderRenderer {
      *
      * @return Void
      */
-    public function displayAllReminders() {
+    public function displayAllReminders()
+    {
         $titles           = array($GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_send_to'),
                                   $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_when'),
                                   $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_field'),
@@ -444,7 +458,8 @@ class Tracker_DateReminderRenderer {
      *
      * @return Void
      */
-    public function displayDateReminders(HTTPRequest $request, CSRFSynchronizerToken $csrf_token) {
+    public function displayDateReminders(HTTPRequest $request, CSRFSynchronizerToken $csrf_token)
+    {
         $output = '<h2>'.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_title').'</h2>';
         $output .= '<fieldset>';
         if ($request->get('action') == 'delete_reminder') {

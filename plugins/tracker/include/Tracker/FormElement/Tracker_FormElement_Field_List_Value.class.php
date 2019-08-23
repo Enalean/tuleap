@@ -33,16 +33,19 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
      */
     protected $is_hidden = false;
 
-    public function __construct($id, $is_hidden = false) {
+    public function __construct($id, $is_hidden = false)
+    {
         $this->id        = $id;
         $this->is_hidden = $is_hidden;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
         return $this;
     }
@@ -52,7 +55,8 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
      *
      * @return array
      */
-    public function fetchFormattedForJson() {
+    public function fetchFormattedForJson()
+    {
         return array(
             'id'        => $this->getId(),
             'label'     => $this->getLabel(),
@@ -71,7 +75,8 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
      *
      * @return type
      */
-    public function fetchForOpenListJson() {
+    public function fetchForOpenListJson()
+    {
         return array(
             'id'         => $this->getId(),
             'value'      => $this->getJsonId(),
@@ -86,37 +91,45 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
 
     public abstract function getLabel();
 
-    public function fetchFormatted() {
+    public function fetchFormatted()
+    {
         return $this->getLabel();
     }
 
-    public function fetchFormattedForCSV() {
+    public function fetchFormattedForCSV()
+    {
         return $this->getLabel();
     }
 
-    public function isHidden() {
+    public function isHidden()
+    {
         return $this->is_hidden;
     }
 
-    public function getAPIValue() {
+    public function getAPIValue()
+    {
         return $this->getLabel();
     }
 
-    public function getJsonValue() {
+    public function getJsonValue()
+    {
         return $this->getId();
     }
 
-    public function getXMLId() {
+    public function getXMLId()
+    {
         return self::XML_ID_PREFIX.$this->getId();
     }
 
-    public function getFullRESTValue(Tracker_FormElement_Field $field) {
+    public function getFullRESTValue(Tracker_FormElement_Field $field)
+    {
         return array(
             'label' => $this->getLabel()
         );
     }
 
-    public function getRESTId() {
+    public function getRESTId()
+    {
         return intval($this->getId());
     }
 }

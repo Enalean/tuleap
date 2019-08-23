@@ -26,22 +26,26 @@ class DummyTemplateRenderer extends TemplateRenderer {
     /**
      * @see TemplateRenderer
      */
-    public function renderToString($template_name, $presenter) {
+    public function renderToString($template_name, $presenter)
+    {
         return '';
     }
 }
 
 class MockTemplateRendererBuilder {
-    public function __construct() {
+    public function __construct()
+    {
         $this->renderer = mock('DummyTemplateRenderer');
     }
 
-    public function build() {
+    public function build()
+    {
         return $this->renderer;
     }
 }
 
-function aMockTemplateRenderer() {
+function aMockTemplateRenderer()
+{
     return new MockTemplateRendererBuilder();
 }
 ?>

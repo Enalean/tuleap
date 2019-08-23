@@ -46,7 +46,8 @@ class ArtifactFieldValueOpenListRepresentation {
 
     public $bind_type;
 
-    public function build($id, $label, $bind_type, array $bind_value_objects, array $bind_value_ids) {
+    public function build($id, $label, $bind_type, array $bind_value_objects, array $bind_value_ids)
+    {
         $this->field_id           = JsonCast::toInt($id);
         $this->label              = $label;
         $this->bind_type          = $bind_type;

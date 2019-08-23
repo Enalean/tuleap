@@ -55,7 +55,8 @@ class SystemEvent_UGROUP_MODIFY_Test extends TuleapTestCase {
      *
      * @return Void
      */
-    public function testUgroupModifyProcessUgroupModifyFail() {
+    public function testUgroupModifyProcessUgroupModifyFail()
+    {
         $evt = new SystemEvent_UGROUP_MODIFY_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_UGROUP_MODIFY, SystemEvent::OWNER_ROOT, '1', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->setReturnValue('getParametersAsArray', array(1, 2));
@@ -84,7 +85,8 @@ class SystemEvent_UGROUP_MODIFY_Test extends TuleapTestCase {
      *
      * @return Void
      */
-    public function testUgroupModifyProcessSVNFail() {
+    public function testUgroupModifyProcessSVNFail()
+    {
         $evt = new SystemEvent_UGROUP_MODIFY_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_UGROUP_MODIFY, SystemEvent::OWNER_ROOT, '1', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->setReturnValue('getParametersAsArray', array(1, 2));
@@ -114,7 +116,8 @@ class SystemEvent_UGROUP_MODIFY_Test extends TuleapTestCase {
      *
      * @return Void
      */
-    public function testUgroupModifyProcessSuccess() {
+    public function testUgroupModifyProcessSuccess()
+    {
         $evt = new SystemEvent_UGROUP_MODIFY_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_UGROUP_MODIFY, SystemEvent::OWNER_ROOT, '1', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->setReturnValue('getParametersAsArray', array(1, 2));
@@ -138,7 +141,8 @@ class SystemEvent_UGROUP_MODIFY_Test extends TuleapTestCase {
         $this->assertTrue($evt->process());
     }
 
-    public function testUpdateSVNOfBindedUgroups() {
+    public function testUpdateSVNOfBindedUgroups()
+    {
         $evt = new SystemEvent_UGROUP_MODIFY_TestUGroupVersion();
         $evt->__construct('1', SystemEvent::TYPE_UGROUP_MODIFY, SystemEvent::OWNER_ROOT, '1', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->setReturnValue('getParametersAsArray', array(1, 2));
@@ -175,7 +179,8 @@ class SystemEvent_UGROUP_MODIFY_RenameTest extends TuleapTestCase {
     private $system_event;
     private $project;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         EventManager::setInstance(\Mockery::mock(\EventManager::class));
@@ -213,14 +218,16 @@ class SystemEvent_UGROUP_MODIFY_RenameTest extends TuleapTestCase {
         stub(ProjectManager::instance())->getProject('101')->returns($this->project);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         EventManager::clearInstance();
         ProjectManager::clearInstance();
 
         parent::tearDown();
     }
 
-    public function itWarnsOthersThatUGroupHasBeenModified() {
+    public function itWarnsOthersThatUGroupHasBeenModified()
+    {
         expect(EventManager::instance())->processEvent(
             Event::UGROUP_MODIFY,
             array(

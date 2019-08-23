@@ -229,11 +229,13 @@ class GitActions extends PluginActions
         $this->ugroup_manager                = $ugroup_manager;
     }
 
-    public function process($action, $params) {
+    public function process($action, $params)
+    {
         return call_user_func_array(array($this,$action), $params);
     }
 
-    public function deleteRepository( $projectId, $repositoryId ) {
+    public function deleteRepository( $projectId, $repositoryId )
+    {
         $controller   = $this->getController();
         $projectId    = intval($projectId);
         $repositoryId = intval($repositoryId);
@@ -259,7 +261,8 @@ class GitActions extends PluginActions
         $controller->redirect('/plugins/git/?action=index&group_id='.$projectId);
     }
 
-    private function markAsDeleted(GitRepository $repository) {
+    private function markAsDeleted(GitRepository $repository)
+    {
         $repository->markAsDeleted();
         $this->git_system_event_manager->queueRepositoryDeletion($repository);
 
@@ -278,7 +281,8 @@ class GitActions extends PluginActions
      *
      * @return bool true if success false otherwise
      */
-    public function getProjectRepositoryList($projectId, $userId = null) {
+    public function getProjectRepositoryList($projectId, $userId = null)
+    {
         $onlyGitShell = false;
         $scope        = true;
         $dao          = $this->getDao();
@@ -297,7 +301,8 @@ class GitActions extends PluginActions
      * @param PFUser $user
      * @param Project[] $parent_projects
      */
-    public function generateGerritRepositoryAndTemplateList(Project $project, PFUser $user) {
+    public function generateGerritRepositoryAndTemplateList(Project $project, PFUser $user)
+    {
         $repos            = $this->factory->getAllGerritRepositoriesFromProject($project, $user);
         $templates        = $this->template_factory->getAllTemplatesOfProject($project);
         $parent_templates = $this->template_factory->getTemplatesAvailableForParentProjects($project);
@@ -310,7 +315,8 @@ class GitActions extends PluginActions
         ));
     }
 
-    protected function getDao() {
+    protected function getDao()
+    {
         return new GitDao();
     }
 
@@ -323,7 +329,8 @@ class GitActions extends PluginActions
      * @param Project $project
      * @return void if error
      */
-    public function fetchGitConfig($repo_id, PFUser $user, Project $project) {
+    public function fetchGitConfig($repo_id, PFUser $user, Project $project)
+    {
         $git_repo = $this->getGitRepository($repo_id);
 
         try {
@@ -355,7 +362,8 @@ class GitActions extends PluginActions
      * @param Project $project
      * @param PFUser $user
      */
-    public function deleteGerritTemplate($template_id, Project $project, PFUser $user) {
+    public function deleteGerritTemplate($template_id, Project $project, PFUser $user)
+    {
         if (! $this->isUserAdmin($user, $project)) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-git', 'An error occured while trying to delete the template.'));
             return;
@@ -390,7 +398,8 @@ class GitActions extends PluginActions
      * @throws GitRepoNotInProjectException
      * @throws GitRepoNotOnGerritException
      */
-    private function checkRepoValidity($git_repo, $project) {
+    private function checkRepoValidity($git_repo, $project)
+    {
         if($project->isError()) {
             throw new Git_ProjectNotFoundException('unable to get config', 404);
         }
@@ -416,7 +425,8 @@ class GitActions extends PluginActions
      * @param Project $project
      * @return void
      */
-    public function fetchGitTemplate($template_id, PFUser $user, Project $project) {
+    public function fetchGitTemplate($template_id, PFUser $user, Project $project)
+    {
         try {
             $template = $this->template_factory->getTemplate($template_id);
             $this->checkTemplateIsAccessible($template, $project, $user);
@@ -435,7 +445,8 @@ class GitActions extends PluginActions
      *
      * @throws GitUserNotAdminException
      */
-    private function checkUserIsAdmin(Project $project, PFUser $user) {
+    private function checkUserIsAdmin(Project $project, PFUser $user)
+    {
         if(! $this->git_permissions_manager->userIsGitAdmin($user, $project)) {
              throw new GitUserNotAdminException('unable to get template', 401);
         }
@@ -449,7 +460,8 @@ class GitActions extends PluginActions
      * @param PFUser $user
      * @throws Git_TemplateNotInProjectHierarchyException
      */
-    private function checkTemplateIsAccessible(Git_Driver_Gerrit_Template_Template $template, Project $project, PFUser $user) {
+    private function checkTemplateIsAccessible(Git_Driver_Gerrit_Template_Template $template, Project $project, PFUser $user)
+    {
         $template_id = $template->getId();
 
         foreach ($this->template_factory->getTemplatesAvailableForProject($project) as $available_template) {
@@ -471,7 +483,8 @@ class GitActions extends PluginActions
      * @param int $template_id
      * @return void
      */
-    public function updateTemplate(Project $project, PFUser $user, $template_content, $template_id) {
+    public function updateTemplate(Project $project, PFUser $user, $template_content, $template_id)
+    {
         if ($project->isError() || ! $this->checkUserIsAdmin($project, $user)) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-git', 'Invalid Project ID'));
             return;
@@ -511,7 +524,8 @@ class GitActions extends PluginActions
      * @param string $template_name
      * @return void
      */
-    public function createTemplate(Project $project, PFUser $user, $template_content, $template_name) {
+    public function createTemplate(Project $project, PFUser $user, $template_content, $template_name)
+    {
         if (! $this->checkIfProjectIsValid($project) || ! $this->isUserAdmin($user, $project)) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-git', 'Unable to create template'));
             return;
@@ -530,7 +544,8 @@ class GitActions extends PluginActions
         }
     }
 
-    public function getRepositoryDetails($projectId, $repositoryId) {
+    public function getRepositoryDetails($projectId, $repositoryId)
+    {
         $c = $this->getController();
         $projectId    = intval($projectId);
         $repositoryId = intval($repositoryId);
@@ -553,7 +568,8 @@ class GitActions extends PluginActions
         return true;
     }
 
-    public function repoManagement(GitRepository $repository) {
+    public function repoManagement(GitRepository $repository)
+    {
         $this->addData(array('repository'=>$repository));
         $this->displayFeedbacksOnRepoManagement($repository);
         $this->addData(array(
@@ -565,7 +581,8 @@ class GitActions extends PluginActions
         return true;
     }
 
-    private function displayFeedbacksOnRepoManagement(GitRepository $repository) {
+    private function displayFeedbacksOnRepoManagement(GitRepository $repository)
+    {
         $project_creator_status = new Git_Driver_Gerrit_ProjectCreatorStatus(
             new Git_Driver_Gerrit_ProjectCreatorStatusDao()
         );
@@ -582,7 +599,8 @@ class GitActions extends PluginActions
         }
     }
 
-    public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix, $pane) {
+    public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix, $pane)
+    {
         $controller = $this->getController();
 
         if (empty($repositoryId)) {
@@ -611,7 +629,8 @@ class GitActions extends PluginActions
         return true;
     }
 
-    public function notificationAddMail($projectId, $repositoryId, $mails, $pane) {
+    public function notificationAddMail($projectId, $repositoryId, $mails, $pane)
+    {
         $controller = $this->getController();
         $repository = $this->_loadRepository($projectId, $repositoryId);
         if (empty($repositoryId) || empty($mails)) {
@@ -645,7 +664,8 @@ class GitActions extends PluginActions
         return true;
     }
 
-    public function notificationAddUsers($projectId, $repository_id, array $users) {
+    public function notificationAddUsers($projectId, $repository_id, array $users)
+    {
         $controller = $this->getController();
         $repository = $this->_loadRepository($projectId, $repository_id);
         if (empty($repository_id) || empty($users)) {
@@ -683,7 +703,8 @@ class GitActions extends PluginActions
         return $great_success;
     }
 
-    public function notificationAddUgroups($projectId, $repository_id, array $ugroups) {
+    public function notificationAddUgroups($projectId, $repository_id, array $ugroups)
+    {
         $controller = $this->getController();
         $repository = $this->_loadRepository($projectId, $repository_id);
         if (empty($repository_id) || empty($ugroups)) {
@@ -720,7 +741,8 @@ class GitActions extends PluginActions
         return $great_success;
     }
 
-    public function notificationRemoveMail($projectId, $repositoryId, $mails, $pane) {
+    public function notificationRemoveMail($projectId, $repositoryId, $mails, $pane)
+    {
         $controller = $this->getController();
         $repository = $this->_loadRepository($projectId, $repositoryId);
         if (empty($repositoryId) || empty($mails)) {
@@ -840,7 +862,8 @@ class GitActions extends PluginActions
         );
     }
 
-    public function redirectToRepoManagement($projectId, $repositoryId, $pane) {
+    public function redirectToRepoManagement($projectId, $repositoryId, $pane)
+    {
         $redirect_url = GIT_BASE_URL .'/?'. http_build_query(
             array(
                 'action'   => 'repo_management',
@@ -852,7 +875,8 @@ class GitActions extends PluginActions
         $this->getController()->redirect($redirect_url);
     }
 
-    public function redirectToRepoManagementWithMigrationAccessRightInformation($projectId, $repositoryId, $pane) {
+    public function redirectToRepoManagementWithMigrationAccessRightInformation($projectId, $repositoryId, $pane)
+    {
         $redirect_url = GIT_BASE_URL .'/?'. http_build_query(
             array(
                 'action'               => 'repo_management',
@@ -864,7 +888,8 @@ class GitActions extends PluginActions
         $this->getController()->redirect($redirect_url);
     }
 
-    public function confirmPrivate($projectId, $repoId, $repoAccess, $repoDescription) {
+    public function confirmPrivate($projectId, $repoId, $repoAccess, $repoDescription)
+    {
         $c = $this->getController();
         if (empty($repoId) || empty($repoAccess) || empty($repoDescription)) {
             $this->getController()->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
@@ -886,7 +911,8 @@ class GitActions extends PluginActions
         return true;
     }
 
-    public function setPrivate($projectId, $repoId) {
+    public function setPrivate($projectId, $repoId)
+    {
         $c = $this->getController();
         if (empty($repoId)) {
             $this->getController()->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
@@ -1037,7 +1063,8 @@ class GitActions extends PluginActions
      * @param <type> $isPublic
      * @return <type>
      */
-    public static function changeProjectRepositoriesAccess($projectId, $isPrivate, GitDao $dao, GitRepositoryFactory $factory) {
+    public static function changeProjectRepositoriesAccess($projectId, $isPrivate, GitDao $dao, GitRepositoryFactory $factory)
+    {
         //if the project is private, then no changes may be applied to repositories,
         //in other words only if project is set to private, its repositories have to be set to private
         if ( empty($isPrivate) ) {
@@ -1067,12 +1094,14 @@ class GitActions extends PluginActions
      *
      * @return bool
      */
-    public static function renameProject(Project $project, $newName) {
+    public static function renameProject(Project $project, $newName)
+    {
         $r = new GitRepository();
         return $r->renameProject($project, $newName);
     }
 
-    function _loadRepository($projectId, $repositoryId) {
+    function _loadRepository($projectId, $repositoryId)
+    {
         $repository = $this->getGitRepository($repositoryId);
         if ($repository) {
             $this->addData(array('repository'=>$repository));
@@ -1087,7 +1116,8 @@ class GitActions extends PluginActions
     /**
      * Wrapper used for tests to get a new GitRepository
      */
-    function getGitRepository($repositoryId) {
+    function getGitRepository($repositoryId)
+    {
         return $this->factory->getRepositoryById($repositoryId);
     }
 
@@ -1101,7 +1131,8 @@ class GitActions extends PluginActions
      * @param Layout $response        The response object
      * @param array  $forkPermissions Permissions to be applied for the new repository
      */
-    public function fork(array $repos, Project $to_project, $namespace, $scope, PFUser $user, Layout $response, $redirect_url, array $forkPermissions) {
+    public function fork(array $repos, Project $to_project, $namespace, $scope, PFUser $user, Layout $response, $redirect_url, array $forkPermissions)
+    {
         try {
             if ($this->manager->forkRepositories($repos, $to_project, $user, $namespace, $scope, $forkPermissions)) {
 
@@ -1129,14 +1160,16 @@ class GitActions extends PluginActions
      *
      * @return void
      */
-    public function forkRepositoriesPermissions($repos, $project, $namespace, $scope) {
+    public function forkRepositoriesPermissions($repos, $project, $namespace, $scope)
+    {
         $this->addData(array('repos'     => join(',', $repos),
                              'group_id'  => $project,
                              'namespace' => $namespace,
                              'scope'     => $scope));
     }
 
-    public function migrateToGerrit(GitRepository $repository, $remote_server_id, $gerrit_template_id, PFUser $user) {
+    public function migrateToGerrit(GitRepository $repository, $remote_server_id, $gerrit_template_id, PFUser $user)
+    {
         try {
             $this->migration_handler->migrate($repository, $remote_server_id, $gerrit_template_id, $user);
         } catch (Exception $e) {
@@ -1144,11 +1177,13 @@ class GitActions extends PluginActions
         }
     }
 
-    private function redirectToRepo(GitRepository $repository) {
+    private function redirectToRepo(GitRepository $repository)
+    {
         $this->getController()->redirect($this->url_manager->getRepositoryBaseUrl($repository));
     }
 
-    public function disconnectFromGerrit(GitRepository $repository) {
+    public function disconnectFromGerrit(GitRepository $repository)
+    {
         $disconnect_option = $this->request->get(Pane\Gerrit::OPTION_DISCONNECT_GERRIT_PROJECT);
         try {
             $this->migration_handler->disconnect($repository, $disconnect_option);
@@ -1159,7 +1194,8 @@ class GitActions extends PluginActions
         }
     }
 
-    public function updateGitAdminGroups(Project $project, PFUser $user, array $selected_group_ids) {
+    public function updateGitAdminGroups(Project $project, PFUser $user, array $selected_group_ids)
+    {
         if (! $this->checkIfProjectIsValid($project) || ! $this->isUserAdmin($user, $project)) {
             return;
         }
@@ -1190,14 +1226,16 @@ class GitActions extends PluginActions
         $this->redirectToGitHomePageIfUserIsNoMoreGitAdmin($user, $project);
     }
 
-    private function redirectToGitHomePageIfUserIsNoMoreGitAdmin(PFUser $user, Project $project) {
+    private function redirectToGitHomePageIfUserIsNoMoreGitAdmin(PFUser $user, Project $project)
+    {
         if (! $this->isUserAdmin($user, $project)) {
             $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-git', 'Further to an administration permissions update, you no-longer have access to the Git service administration.'));
             $GLOBALS['HTML']->redirect('/plugins/git/?action=index&group_id='. $project->getId());
         }
     }
 
-    private function removeUndesiredUgroupsFromRequest(array $selected_group_ids) {
+    private function removeUndesiredUgroupsFromRequest(array $selected_group_ids)
+    {
         $selected_group_ids = $this->removeNobodyFromSelectGroups($selected_group_ids);
         $selected_group_ids = $this->removeAnonymousFromSelectGroups($selected_group_ids);
         $selected_group_ids = $this->removeRegisteredUsersFromSelectGroups($selected_group_ids);
@@ -1205,19 +1243,23 @@ class GitActions extends PluginActions
         return $selected_group_ids;
     }
 
-    private function removeNobodyFromSelectGroups(array $select_group_ids) {
+    private function removeNobodyFromSelectGroups(array $select_group_ids)
+    {
         return array_diff($select_group_ids, array(ProjectUGroup::NONE));
     }
 
-    private function removeAnonymousFromSelectGroups(array $select_group_ids) {
+    private function removeAnonymousFromSelectGroups(array $select_group_ids)
+    {
         return array_diff($select_group_ids, array(ProjectUGroup::ANONYMOUS));
     }
 
-    private function removeRegisteredUsersFromSelectGroups(array $select_group_ids) {
+    private function removeRegisteredUsersFromSelectGroups(array $select_group_ids)
+    {
         return array_diff($select_group_ids, array(ProjectUGroup::REGISTERED));
     }
 
-    private function checkIfProjectIsValid(Project $project) {
+    private function checkIfProjectIsValid(Project $project)
+    {
         if ($project->isError()) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-git', 'Invalid Project ID'));
             return;
@@ -1226,7 +1268,8 @@ class GitActions extends PluginActions
         return true;
     }
 
-    private function isUserAdmin(PFUser $user, Project $project) {
+    private function isUserAdmin(PFUser $user, Project $project)
+    {
         try {
             $this->checkUserIsAdmin($project, $user);
         } catch (GitUserNotAdminException $e) {
@@ -1236,7 +1279,8 @@ class GitActions extends PluginActions
         return true;
     }
 
-    public function updateMirroring(Project $project, array $repositories, $selected_mirror_ids) {
+    public function updateMirroring(Project $project, array $repositories, $selected_mirror_ids)
+    {
         $current_mirror_ids_per_repository = $this->mirror_data_mapper->getListOfMirrorIdsPerRepositoryForProject($project);
         foreach($repositories as $repository) {
             if (! isset($selected_mirror_ids[$repository->getId()]) || ! is_array($selected_mirror_ids[$repository->getId()])) {
@@ -1279,7 +1323,8 @@ class GitActions extends PluginActions
      *
      * @return array
      */
-    private function getSelectedMirrorIdsFromRequest(array $selected_mirror_ids, $request_key) {
+    private function getSelectedMirrorIdsFromRequest(array $selected_mirror_ids, $request_key)
+    {
         $mirror_ids = array();
         foreach ($selected_mirror_ids[$request_key] as $mirror_id => $should_be_mirrored) {
             if ($should_be_mirrored) {
@@ -1304,11 +1349,13 @@ class GitActions extends PluginActions
             || count(array_diff($current_mirrors, $mirror_ids)) > 0;
     }
 
-    public function setSelectedRepositories($repositories) {
+    public function setSelectedRepositories($repositories)
+    {
         $this->addData(array('repositories' => $repositories));
     }
 
-    public function restoreRepository($repo_id, $project_id) {
+    public function restoreRepository($repo_id, $project_id)
+    {
         $repository = $this->factory->getDeletedRepository($repo_id);
         $url        = '/admin/show_pending_documents.php?group_id='.$project_id;
         (new CSRFSynchronizerToken($url))->check();
@@ -1328,7 +1375,8 @@ class GitActions extends PluginActions
         $GLOBALS['Response']->redirect($url . '&focus=git_repository');
     }
 
-    public function updateDefaultMirroring(Project $project, array $selected_mirror_ids) {
+    public function updateDefaultMirroring(Project $project, array $selected_mirror_ids)
+    {
         $mirror_ids = $this->getSelectedMirrorIdsFromRequest($selected_mirror_ids, $project->getID());
 
         if ($this->mirror_data_mapper->doesAllSelectedMirrorIdsExist($mirror_ids)

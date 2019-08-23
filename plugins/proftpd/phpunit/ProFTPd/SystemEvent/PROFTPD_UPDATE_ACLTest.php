@@ -125,7 +125,8 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase {
         $this->event->process();
     }
 
-    public function testItUsesTheUnixNameInLowerCase() {
+    public function testItUsesTheUnixNameInLowerCase()
+    {
         $this->event->setParameters(strtolower($this->mixed_case_group_unix_name));
         $this->permissions_manager
              ->expects($this->any())
@@ -147,7 +148,8 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase {
         $this->event->process();
     }
 
-    public function testItMarksAsDone() {
+    public function testItMarksAsDone()
+    {
         $this->event->setParameters($this->group_unix_name);
         $this->event->expects($this->once())->method('done');
         $this->event->process();

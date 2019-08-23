@@ -32,14 +32,16 @@ class Tracker_Chart_BurndownView extends Tracker_Chart_Burndown {
      */
     private $burndown_data;
 
-    public function __construct(Tracker_Chart_Data_Burndown $burndown_data) {
+    public function __construct(Tracker_Chart_Data_Burndown $burndown_data)
+    {
         $this->burndown_data = $burndown_data;
     }
 
     /**
      * @return Chart
      */
-    public function buildGraph() {
+    public function buildGraph()
+    {
         $user_timezone = date_default_timezone_get();
         date_default_timezone_set(TimezoneRetriever::getServerTimezone());
 

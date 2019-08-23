@@ -20,11 +20,13 @@
 
 class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly {
 
-    public function getLabel($report = null) {
+    public function getLabel($report = null)
+    {
         return $this->label;
     }
 
-    private function getRenderedAdditionalInformationsForLabel($additional_informations) {
+    private function getRenderedAdditionalInformationsForLabel($additional_informations)
+    {
         $html = $this->getTemplateRenderer()->renderToString(
             'additional_column_title',
             array(
@@ -35,22 +37,26 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return $html;
     }
 
-    private function getTemplateRenderer() {
+    private function getTemplateRenderer()
+    {
         return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/report');
     }
 
-    public function getCriteriaFrom($criteria) {
+    public function getCriteriaFrom($criteria)
+    {
         return ' INNER JOIN tracker_artifact_priority_rank ON artifact.id = tracker_artifact_priority_rank.artifact_id';
     }
 
-    public function getCriteriaWhere($criteria) {
+    public function getCriteriaWhere($criteria)
+    {
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
             return $this->buildMatchExpression('tracker_artifact_priority_rank.rank', $criteria_value);
         }
         return '';
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    {
         $value = $this->getArtifactRank($artifact_id);
 
         if (! $report) {
@@ -65,7 +71,8 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return '<span class="non-displayable" title="' . $GLOBALS['Language']->getText('plugin_tracker_report', 'non_displayable_tooltip') . '">' . $GLOBALS['Language']->getText('plugin_tracker_report', 'non_displayable') . '</span>';
     }
 
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
+    {
         $augmented_value = $this->getAugmentedFieldValue($artifact_id, $report);
         if ($augmented_value) {
             return $augmented_value;
@@ -74,7 +81,8 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return $GLOBALS['Language']->getText('plugin_tracker_report', 'non_displayable');
     }
 
-    private function getAugmentedFieldValue($artifact_id, Tracker_Report $report) {
+    private function getAugmentedFieldValue($artifact_id, Tracker_Report $report)
+    {
         $result = '';
 
         EventManager::instance()->processEvent(
@@ -113,7 +121,8 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     /**
      * @return array the available aggreagate functions for this field. empty array if none or irrelevant.
      */
-    public function getAggregateFunctions() {
+    public function getAggregateFunctions()
+    {
         return array();
     }
 
@@ -142,11 +151,13 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         return '<span>' . $this->getArtifactRank($artifact->getID()) . '</span>';
     }
 
-    private function getArtifactRank($artifact_id) {
+    private function getArtifactRank($artifact_id)
+    {
         return $this->getPriorityManager()->getGlobalRank($artifact_id);
     }
 
@@ -191,35 +202,40 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * Display the html field in the admin ui
      * @return string html
      */
-    protected function fetchAdminFormElement() {
+    protected function fetchAdminFormElement()
+    {
         return '<span>314116</span>';
     }
 
     /**
      * @return the label of the field (mainly used in admin part)
      */
-    public static function getFactoryLabel() {
+    public static function getFactoryLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'priority_label');
     }
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
-    public static function getFactoryDescription() {
+    public static function getFactoryDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'priority_description');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconUseIt() {
+    public static function getFactoryIconUseIt()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/priority.png');
     }
 
     /**
      * @return the path to the icon
      */
-    public static function getFactoryIconCreate() {
+    public static function getFactoryIconCreate()
+    {
         return $GLOBALS['HTML']->getImagePath('ic/priority.png');
     }
 
@@ -230,7 +246,8 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         return $this->getArtifactRank($artifact->getID());
     }
 
@@ -242,7 +259,8 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      *
      * @return bool true if the value is considered ok
      */
-    protected function validate(Tracker_Artifact $artifact, $value) {
+    protected function validate(Tracker_Artifact $artifact, $value)
+    {
         return true;
     }
 
@@ -266,7 +284,8 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return '';
     }
 
-    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+    public function accept(Tracker_FormElement_FieldVisitor $visitor)
+    {
         return $visitor->visitPriority($this);
     }
 
@@ -278,11 +297,13 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      *
      * @return mixed | null if no values
      */
-    public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+    public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
+    {
         return $this->getFullRESTValue($user, $changeset);
     }
 
-    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
+    {
         $artifact_field_value_full_representation = new Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation();
         $artifact_field_value_full_representation->build(
             $this->getId(),
@@ -293,7 +314,8 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return $artifact_field_value_full_representation;
     }
 
-    private function getPriorityManager() {
+    private function getPriorityManager()
+    {
         return new Tracker_Artifact_PriorityManager(
             new Tracker_Artifact_PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
@@ -334,7 +356,8 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      *
      * @return string
      */
-    public function fetchCardValue(Tracker_Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null) {
+    public function fetchCardValue(Tracker_Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null)
+    {
         //return $this->fetchTooltipValue($artifact, $artifact->getLastChangeset()->getValue($this));
 
         $artifact_id  = $artifact->getId();

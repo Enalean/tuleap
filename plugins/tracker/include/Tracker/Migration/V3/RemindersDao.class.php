@@ -20,7 +20,8 @@
 
 class Tracker_Migration_V3_RemindersDao extends DataAccessObject {
 
-    public function create($tv3_id, $tv5_id) {
+    public function create($tv3_id, $tv5_id)
+    {
         $tv3_id = $this->da->escapeInt($tv3_id);
         $tv5_id = $this->da->escapeInt($tv5_id);
 
@@ -56,7 +57,8 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject {
         return count($this->retrieve($sql_v3)) > 0;
     }
 
-    private function getStart($old_date_reminder) {
+    private function getStart($old_date_reminder)
+    {
         $start = $old_date_reminder['notification_start'];
         if ($old_date_reminder['notification_type'] == Tracker_DateReminder::AFTER) {
             $start = -$start;
@@ -64,13 +66,15 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject {
         return $start;
     }
 
-    private function createReminderList($nb_emails, $tv5_id, $field_id, $ugroups, $roles, $notification_type, $start, $frequency) {
+    private function createReminderList($nb_emails, $tv5_id, $field_id, $ugroups, $roles, $notification_type, $start, $frequency)
+    {
         for ($i = 0 ; $i < $nb_emails ; $i++) {
             $this->createReminder($i, $tv5_id, $field_id, $ugroups, $roles, $notification_type, $start, $frequency);
         }
     }
 
-    private function createReminder($i, $tv5_id, $field_id, $ugroups, $roles, $notification_type, $start, $frequency) {
+    private function createReminder($i, $tv5_id, $field_id, $ugroups, $roles, $notification_type, $start, $frequency)
+    {
         $status  = Tracker_DateReminder::ENABLED;
         $ugroups = $this->da->quoteSmart($ugroups);
 
@@ -109,7 +113,8 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject {
      *
      * @return string
      */
-    private function extractUgroups($notified_people) {
+    private function extractUgroups($notified_people)
+    {
         $ugroups = array();
         foreach (explode(',', $notified_people) as $id) {
             $id = trim($id);
@@ -129,7 +134,8 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject {
      *
      * @return Array
      */
-    private function extractTrackerRoles($notified_people) {
+    private function extractTrackerRoles($notified_people)
+    {
         $roles = array();
         foreach (explode(',', $notified_people) as $id) {
             $id = trim($id);

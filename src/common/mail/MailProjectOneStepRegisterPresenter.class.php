@@ -41,75 +41,93 @@ class MailProjectOneStepRegisterPresenter extends MailOutlinePresenter {
     }
 
 
-    public function get_title() {
+    public function get_title()
+    {
         return $GLOBALS['Language']->getText('mail_register_project_one_step', 'title');
     }
 
-    public function get_thanks() {
+    public function get_thanks()
+    {
         return $GLOBALS['Language']->getText('mail_outline', 'thanks', array(ForgeConfig::get('sys_name')));
     }
 
-    public function get_signature() {
+    public function get_signature()
+    {
         return $GLOBALS['Language']->getText('mail_outline', 'signature', array(ForgeConfig::get('sys_name')));
     }
 
-    public function get_project_full_name() {
+    public function get_project_full_name()
+    {
         return $this->project->getPublicName();
     }
 
-    public function get_project_short_name() {
+    public function get_project_short_name()
+    {
         return $this->project->getUnixName();
     }
 
-    public function get_project_summary_page() {
+    public function get_project_summary_page()
+    {
         return HTTPRequest::instance()->getServerUrl().'/projects/'.$this->project->getUnixName();
     }
 
-    public function get_project_full_name_title() {
+    public function get_project_full_name_title()
+    {
         return $GLOBALS['Language']->getText('mail_register_project_one_step', 'full_name');
     }
 
-    public function get_project_short_name_title() {
+    public function get_project_short_name_title()
+    {
         return $GLOBALS['Language']->getText('mail_register_project_one_step', 'short_name');
     }
 
-    public function get_project_summary_page_title() {
+    public function get_project_summary_page_title()
+    {
         return $GLOBALS['Language']->getText('mail_register_project_one_step', 'summary_page');
     }
 
-    public function get_section_one() {
+    public function get_section_one()
+    {
         return $GLOBALS['Language']->getText('mail_register_project_one_step', 'section_one', array($this->getUrlDocumentationSite(), ForgeConfig::get('sys_name')));
     }
 
-    public function get_section_two() {
+    public function get_section_two()
+    {
         return $GLOBALS['Language']->getText('mail_register_project_one_step', 'section_two', array($this->getUrlSummaryLink()));
     }
 
-    public function get_section_three() {
+    public function get_section_three()
+    {
         return $GLOBALS['Language']->getText('mail_register_project_one_step', 'section_three', array($this->getUrlProjectAdministration()));
     }
 
-    public function get_section_four() {
+    public function get_section_four()
+    {
         return $GLOBALS['Language']->getText('mail_register_project_one_step', 'section_four', array(ForgeConfig::get('sys_name')));
     }
 
-    public function get_help() {
+    public function get_help()
+    {
         return $GLOBALS['Language']->getText('mail_outline', 'help', array(ForgeConfig::get('sys_email_admin')));
     }
 
-    public function getUrlSummaryLink() {
+    public function getUrlSummaryLink()
+    {
         return HTTPRequest::instance()->getServerUrl().'/projects/'.$this->project->getUnixName();
     }
 
-    private function getUrlDocumentationSite() {
+    private function getUrlDocumentationSite()
+    {
         return HTTPRequest::instance()->getServerUrl().'/help/';
     }
 
-    public function getUrlProjectAdministration() {
+    public function getUrlProjectAdministration()
+    {
         return HTTPRequest::instance()->getServerUrl().'/project/admin/?group_id='.$this->project->getID();
     }
 
-    public function getMessageText() {
+    public function getMessageText()
+    {
         $message = $this->get_title() . "\n\n"
                . $this->get_project_full_name_title() . " " . $this->get_project_full_name() . "\n"
                . $this->get_project_short_name_title() . " " . $this->get_project_short_name() . "\n"

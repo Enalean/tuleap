@@ -33,7 +33,8 @@ class PatchAddRemoveValidator {
      */
     private $index;
 
-    public function __construct(array $index, IValidateElementsToAdd $add_validator) {
+    public function __construct(array $index, IValidateElementsToAdd $add_validator)
+    {
         $this->index         = $index;
         $this->add_validator = $add_validator;
     }
@@ -41,7 +42,8 @@ class PatchAddRemoveValidator {
     /**
      * @throws ArtifactIsNotInMilestoneContentException
      */
-    public function validate($reference_id, $remove, $add) {
+    public function validate($reference_id, $remove, $add)
+    {
         $remove = $remove != null ? $remove : array();
         $add    = $add    != null ? $add    : array();
 
@@ -60,11 +62,13 @@ class PatchAddRemoveValidator {
         return array_unique(array_merge(array_keys($this->index), $to_add));
     }
 
-    private function getIdsToRemoveThatAreNotInAddArray($remove, $add) {
+    private function getIdsToRemoveThatAreNotInAddArray($remove, $add)
+    {
         return array_diff($remove, $add);
     }
 
-    private function getIdsToAddThatAreNotInRemoveArray($remove, $add) {
+    private function getIdsToAddThatAreNotInRemoveArray($remove, $add)
+    {
         return array_diff($add, $remove);
     }
 }

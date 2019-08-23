@@ -20,7 +20,8 @@
  */
 
 class TrackerFromXmlImportCannotBeCreatedException extends TrackerFromXmlException {
-    public function __construct($tracker_name) {
+    public function __construct($tracker_name)
+    {
         $message = $GLOBALS['Language']->getText('plugin_tracker_import', 'cannot_create', array($tracker_name));
         parent::__construct($message);
     }

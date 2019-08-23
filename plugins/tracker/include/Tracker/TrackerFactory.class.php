@@ -36,7 +36,8 @@ class TrackerFactory {
     /**
      * A protected constructor; prevents direct creation of object
      */
-    protected function __construct() {
+    protected function __construct()
+    {
         $this->trackers = array();
     }
 
@@ -50,7 +51,8 @@ class TrackerFactory {
      *
      * @return TrackerFactory
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$_instance)) {
             $c = self::class;
             self::$_instance = new $c;
@@ -63,18 +65,21 @@ class TrackerFactory {
      *
      * @param TrackerFactory $factory
      */
-    public static function setInstance(TrackerFactory $factory) {
+    public static function setInstance(TrackerFactory $factory)
+    {
         self::$_instance = $factory;
     }
 
     /**
      * Allows clear factory instance for test. DO NOT USE IT IN PRODUCTION!
      */
-    public static function clearInstance() {
+    public static function clearInstance()
+    {
         self::$_instance = null;
     }
 
-    public function clearCaches() {
+    public function clearCaches()
+    {
         $this->trackers = array();
 
         self::clearInstance();
@@ -84,7 +89,8 @@ class TrackerFactory {
      * @param int $id the id of the tracker to retrieve
      * @return Tracker identified by id (null if not found)
      */
-    public function getTrackerById($tracker_id) {
+    public function getTrackerById($tracker_id)
+    {
         if (!isset($this->trackers[$tracker_id])) {
             $this->trackers[$tracker_id] = null;
             if ($row = $this->getDao()->searchById($tracker_id)->getRow()) {
@@ -114,7 +120,8 @@ class TrackerFactory {
      *
      * @return array
      */
-    public function getDeletedTrackers() {
+    public function getDeletedTrackers()
+    {
         $pending_trackers = $this->getDao()->retrieveTrackersMarkAsDeleted();
         $deleted_trackers = array();
 
@@ -134,7 +141,8 @@ class TrackerFactory {
      *
      * @return bool
      */
-    public function restoreDeletedTracker($tracker_id) {
+    public function restoreDeletedTracker($tracker_id)
+    {
         return $this->getDao()->restoreTrackerMarkAsDeleted($tracker_id);
     }
 
@@ -143,7 +151,8 @@ class TrackerFactory {
      *
      * @return Tracker[]
      */
-    public function getTrackersByGroupId($group_id) {
+    public function getTrackersByGroupId($group_id)
+    {
         $trackers = array();
         foreach($this->getDao()->searchByGroupId($group_id) as $row) {
             $tracker_id = $row['id'];
@@ -155,7 +164,8 @@ class TrackerFactory {
     /**
      * @return Tracker[]
      */
-    public function getTrackersByGroupIdUserCanView($group_id, PFUser $user) {
+    public function getTrackersByGroupIdUserCanView($group_id, PFUser $user)
+    {
         $trackers = array();
         foreach($this->getDao()->searchByGroupId($group_id) as $row) {
             $tracker_id = $row['id'];
@@ -189,7 +199,8 @@ class TrackerFactory {
      *
      * @return Children trackers of the given tracker.
      */
-    public function getPossibleChildren($tracker) {
+    public function getPossibleChildren($tracker)
+    {
         $project_id = $tracker->getGroupId();
         $trackers   = $this->getTrackersByGroupId($project_id);
 
@@ -202,7 +213,8 @@ class TrackerFactory {
     /**
      * @return TrackerDao
      */
-    protected function getDao() {
+    protected function getDao()
+    {
         if (!$this->dao) {
             $this->dao = new TrackerDao();
         }
@@ -214,7 +226,8 @@ class TrackerFactory {
      *
      * @return Tracker
      */
-    private function getCachedInstanceFromRow($row) {
+    private function getCachedInstanceFromRow($row)
+    {
         $tracker_id = $row['id'];
         if (!isset($this->trackers[$tracker_id])) {
             $this->trackers[$tracker_id] = $this->getInstanceFromRow($row);
@@ -225,7 +238,8 @@ class TrackerFactory {
     /**
      * /!\ Only for tests
      */
-    public function setCachedInstances($trackers) {
+    public function setCachedInstances($trackers)
+    {
         $this->trackers = $trackers;
     }
 
@@ -233,7 +247,8 @@ class TrackerFactory {
      * @param array the row identifing a tracker
      * @return Tracker
      */
-    public function getInstanceFromRow($row) {
+    public function getInstanceFromRow($row)
+    {
         return new Tracker(
                     $row['id'],
                     $row['group_id'],
@@ -256,63 +271,72 @@ class TrackerFactory {
     /**
      * @return Tracker_CannedResponseFactory
      */
-    protected function getCannedResponseFactory() {
+    protected function getCannedResponseFactory()
+    {
         return Tracker_CannedResponseFactory::instance();
     }
 
     /**
      * @return Tracker_FormElementFactory
      */
-    protected function getFormElementFactory() {
+    protected function getFormElementFactory()
+    {
         return Tracker_FormElementFactory::instance();
     }
 
     /**
      * @return Tracker_SemanticFactory
      */
-    protected function getSemanticFactory() {
+    protected function getSemanticFactory()
+    {
         return Tracker_SemanticFactory::instance();
     }
 
     /**
      * @return Tracker_RuleFactory
      */
-    protected function getRuleFactory() {
+    protected function getRuleFactory()
+    {
         return Tracker_RuleFactory::instance();
     }
 
     /**
      * @return Tracker_ReportFactory
      */
-    protected function getReportFactory() {
+    protected function getReportFactory()
+    {
         return Tracker_ReportFactory::instance();
     }
 
     /**
      * @return WorkflowFactory
      */
-    protected function getWorkflowFactory() {
+    protected function getWorkflowFactory()
+    {
         return WorkflowFactory::instance();
     }
 
     /**
      * @return ReferenceManager
      */
-    protected function getReferenceManager() {
+    protected function getReferenceManager()
+    {
         return ReferenceManager::instance();
     }
 
     /**
      * @return ProjectManager
      */
-    protected function getProjectManager() {
+    protected function getProjectManager()
+    {
         return ProjectManager::instance();
     }
 
     /**
      * Mark the tracker as deleted
      */
-    public function markAsDeleted($tracker_id) {
+    public function markAsDeleted($tracker_id)
+    {
         return $this->getDao()->markAsDeleted($tracker_id);
     }
 
@@ -322,7 +346,8 @@ class TrackerFactory {
      * @param int $group_id th ID of the group
      * @return bool
      */
-    public function isNameExists($name, $group_id) {
+    public function isNameExists($name, $group_id)
+    {
         $tracker_dao = $this->getDao();
         $dar = $tracker_dao->searchByGroupId($group_id);
         while ($row = $dar->getRow()) {
@@ -339,7 +364,8 @@ class TrackerFactory {
     * @param int $group_id the ID of the group
     * @return bool
     */
-    public function isShortNameExists($shortname, $group_id) {
+    public function isShortNameExists($shortname, $group_id)
+    {
         $tracker_dao = $this->getDao();
         return $tracker_dao->isShortNameExists($shortname, $group_id);
     }
@@ -449,7 +475,8 @@ class TrackerFactory {
      *
      * @return mixed array(Tracker object, field_mapping array) or false on failure.
      */
-    function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $ugroup_mapping = false) {
+    function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $ugroup_mapping = false)
+    {
 
         if ($this->validMandatoryInfoOnCreate($name, $description, $itemname, $project_id)) {
 
@@ -549,7 +576,8 @@ class TrackerFactory {
     *
     * @return bool
     */
-    public function duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping, $duplicate_type) {
+    public function duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping, $duplicate_type)
+    {
         $pm = PermissionsManager::instance();
         $permission_type_tracker = array(Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_SUBMITTER_ONLY, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_FULL, Tracker::PERMISSION_NONE);
         //Duplicate tracker permissions
@@ -571,7 +599,8 @@ class TrackerFactory {
      *
      * @return void
      */
-    protected function postCreateActions(Tracker $tracker) {
+    protected function postCreateActions(Tracker $tracker)
+    {
         $keyword   = strtolower($tracker->getItemName());
         $reference = new Tracker_Reference(
             $tracker,
@@ -596,7 +625,8 @@ class TrackerFactory {
      * @param array $ugroup_mapping the ugroup mapping
      *
      */
-    public function duplicate($from_project_id, $to_project_id, $ugroup_mapping) {
+    public function duplicate($from_project_id, $to_project_id, $ugroup_mapping)
+    {
         $tracker_mapping        = array();
         $field_mapping          = array();
         $report_mapping         = array();
@@ -655,7 +685,8 @@ class TrackerFactory {
     /**
      * @return Tracker_Workflow_Trigger_RulesManager
      */
-    public function getTriggerRulesManager() {
+    public function getTriggerRulesManager()
+    {
         $trigger_rule_dao        = new Tracker_Workflow_Trigger_RulesDao();
         $workflow_backend_logger = new WorkflowBackendLogger(new BackendLogger(), ForgeConfig::get('sys_logger_level'));
         $rules_processor         = new Tracker_Workflow_Trigger_RulesProcessor(
@@ -704,14 +735,16 @@ class TrackerFactory {
     /**
      * /!\ Only for tests
      */
-    public function setHierarchyFactory(Tracker_HierarchyFactory $hierarchy_factory) {
+    public function setHierarchyFactory(Tracker_HierarchyFactory $hierarchy_factory)
+    {
         $this->hierarchy_factory = $hierarchy_factory;
     }
 
     /**
      * @return Tracker_HierarchyFactory
      */
-    public function getHierarchyFactory() {
+    public function getHierarchyFactory()
+    {
         if (!$this->hierarchy_factory) {
             $this->hierarchy_factory = Tracker_HierarchyFactory::instance();
         }
@@ -721,7 +754,8 @@ class TrackerFactory {
     /**
      * @return Hierarchy
      */
-    public function getHierarchy(array $tracker_ids) {
+    public function getHierarchy(array $tracker_ids)
+    {
         return $this->getHierarchyFactory()->getHierarchy($tracker_ids);
     }
 
@@ -731,7 +765,8 @@ class TrackerFactory {
      * @param int $tracker_id the id of the tracker
      * @return bool
      */
-    public function saveTrackerDefaultPermission($tracker_id) {
+    public function saveTrackerDefaultPermission($tracker_id)
+    {
         $pm = PermissionsManager::instance();
         if(!$pm->addPermission(Tracker::PERMISSION_FULL, $tracker_id, ProjectUGroup::ANONYMOUS)) {
             return false;
@@ -745,7 +780,8 @@ class TrackerFactory {
      * @param Tracker $tracker object to save
      * @return int id of the newly created tracker
      */
-    public function saveObject($tracker) {
+    public function saveObject($tracker)
+    {
         // create tracker
         $this->getDao()->startTransaction();
         $tracker_id = $this->getDao()->create(
@@ -831,7 +867,8 @@ class TrackerFactory {
      *
      * @return Tracker
      */
-    public function createFromTV3(PFUser $user, $atid, Project $project, $name, $description, $itemname) {
+    public function createFromTV3(PFUser $user, $atid, Project $project, $name, $description, $itemname)
+    {
         $tv3 = new ArtifactType($project, $atid);
         if ($tv3->isError()) {
             throw new Tracker_Exception_Migration_GetTv3Exception($tv3->getErrorMessage());

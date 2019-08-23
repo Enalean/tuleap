@@ -20,22 +20,26 @@
 
 class b201410061451_add_table_plugin_git_repository_mirrors extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add a plugin_git_repository_mirrors table and remove repository_is_mirrored column from the git_plugins table.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->createPluginGitRepositoryMirrors();
         $this->removeIsMirroredColumn();
     }
 
-    private function createPluginGitRepositoryMirrors() {
+    private function createPluginGitRepositoryMirrors()
+    {
         $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_repository_mirrors (
                     repository_id INT(10) NOT NULL,
                     mirror_id INT(10) NOT NULL,
@@ -48,7 +52,8 @@ EOT;
         }
     }
 
-    private function removeIsMirroredColumn() {
+    private function removeIsMirroredColumn()
+    {
         $sql = "INSERT INTO plugin_git_repository_mirrors (repository_id, mirror_id) SELECT r.repository_id, m.id  FROM plugin_git r, plugin_git_mirrors m WHERE r.repository_is_mirrored=1";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

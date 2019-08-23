@@ -97,7 +97,8 @@ class Admin_Homepage_Controller {
         );
     }
 
-    public function update() {
+    public function update()
+    {
         $this->csrf->check();
 
         if ($this->request->get('use_statistics_homepage')) {
@@ -131,11 +132,13 @@ class Admin_Homepage_Controller {
         $this->redirectToIndex();
     }
 
-    public function notSiteAdmin(HTTPRequest $request) {
+    public function notSiteAdmin(HTTPRequest $request)
+    {
         $this->response->redirect($request->getServerUrl());
     }
 
-    private function getTemplateDir() {
+    private function getTemplateDir()
+    {
         return ForgeConfig::get('codendi_dir') .'/src/templates/homepage/';
     }
 
@@ -162,18 +165,21 @@ class Admin_Homepage_Controller {
         return array_values($headlines);
     }
 
-    private function redirectToIndex() {
+    private function redirectToIndex()
+    {
         $this->response->redirect($_SERVER['SCRIPT_NAME']);
     }
 
-    private function removeCustomLogo() {
+    private function removeCustomLogo()
+    {
         $filename = Admin_Homepage_LogoFinder::getCustomPath();
         if (is_file($filename)) {
             unlink($filename);
         }
     }
 
-    private function moveUploadedLogo() {
+    private function moveUploadedLogo()
+    {
         if (! isset($_FILES['logo'])) {
             return;
         }

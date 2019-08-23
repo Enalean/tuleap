@@ -21,7 +21,8 @@
 require_once dirname(__FILE__).'/GerritTestBase.php';
 
 class Git_Driver_GerritLegacy_projectExistsTest extends TuleapTestCase implements Git_Driver_Gerrit_projectExistsTest {
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->ls_project_return = array(
             'All-Projects',
@@ -34,18 +35,21 @@ class Git_Driver_GerritLegacy_projectExistsTest extends TuleapTestCase implement
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
     }
 
-    public function itReturnsTrueIfParentProjectExists() {
+    public function itReturnsTrueIfParentProjectExists()
+    {
         $this->assertTrue($this->gerrit_driver->doesTheParentProjectExist($this->gerrit_server, 'project'));
     }
 
-    public function itReturnsFalseIfParentProjectDoNotExists() {
+    public function itReturnsFalseIfParentProjectDoNotExists()
+    {
         $this->assertFalse($this->gerrit_driver->doesTheParentProjectExist($this->gerrit_server, 'project_not_existing'));
     }
 }
 
 class Git_Driver_Gerrit_Legacy_LsParentProjectsTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
 
@@ -54,12 +58,14 @@ class Git_Driver_Gerrit_Legacy_LsParentProjectsTest extends TuleapTestCase {
         $this->driver = new Git_Driver_GerritLegacy($this->ssh, $this->logger);
     }
 
-    public function itUsesGerritSSHCommandToListParentProjects() {
+    public function itUsesGerritSSHCommandToListParentProjects()
+    {
         expect($this->ssh)->execute($this->gerrit_server, 'gerrit ls-projects --type PERMISSIONS')->once();
         $this->driver->listParentProjects($this->gerrit_server);
     }
 
-    public function itReturnsAllPlatformParentProjects() {
+    public function itReturnsAllPlatformParentProjects()
+    {
         $ls_projects_expected_return = array(
             'project',
             'project/project_members',

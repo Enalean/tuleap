@@ -29,7 +29,8 @@ class Cardwall_OnTop_Config_Command_CreateColumn extends Cardwall_OnTop_Config_C
      */
     private $dao;
 
-    public function __construct(Tracker $tracker, Cardwall_OnTop_ColumnDao $dao) {
+    public function __construct(Tracker $tracker, Cardwall_OnTop_ColumnDao $dao)
+    {
         parent::__construct($tracker);
         $this->dao = $dao;
     }
@@ -37,7 +38,8 @@ class Cardwall_OnTop_Config_Command_CreateColumn extends Cardwall_OnTop_Config_C
     /**
      * @see Cardwall_OnTop_Config_Command::execute()
      */
-    public function execute(Codendi_Request $request) {
+    public function execute(Codendi_Request $request)
+    {
         if ($request->get('new_column')) {
             $this->dao->create($this->tracker->getId(), $request->get('new_column'));
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_added'));

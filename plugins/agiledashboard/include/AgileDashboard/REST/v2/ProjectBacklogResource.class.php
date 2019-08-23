@@ -76,7 +76,8 @@ class ProjectBacklogResource {
      */
     private $parent_tracker_retriever;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->planning_factory             = PlanningFactory::build();
         $tracker_artifact_factory           = Tracker_ArtifactFactory::instance();
         $tracker_form_element_factory       = Tracker_FormElementFactory::instance();
@@ -140,7 +141,8 @@ class ProjectBacklogResource {
     /**
      * Get the backlog with the items that can be planned in a top-milestone of a given project
      */
-    public function get(PFUser $user, Project $project, $limit, $offset) {
+    public function get(PFUser $user, Project $project, $limit, $offset)
+    {
         if (! $this->limitValueIsAcceptable($limit)) {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }
@@ -178,7 +180,8 @@ class ProjectBacklogResource {
         return $backlog->build($contents, $accepted_trackers, $parent_trackers, $has_user_priority_change_permission);
     }
 
-    private function hasUserPriorityChangePermission(PFUser $user, Project $project) {
+    private function hasUserPriorityChangePermission(PFUser $user, Project $project)
+    {
         $root_planning = $this->planning_factory->getRootPlanning($user, $project->getId());
 
         if ($root_planning) {
@@ -188,11 +191,13 @@ class ProjectBacklogResource {
         return false;
     }
 
-    private function limitValueIsAcceptable($limit) {
+    private function limitValueIsAcceptable($limit)
+    {
         return $limit <= self::MAX_LIMIT;
     }
 
-    public function options(PFUser $user, Project $project, $limit, $offset) {
+    public function options(PFUser $user, Project $project, $limit, $offset)
+    {
         $this->sendAllowHeaders();
     }
 
@@ -203,15 +208,18 @@ class ProjectBacklogResource {
         return $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $top_milestone, $backlog_unassigned, false);
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size) {
+    private function sendPaginationHeaders($limit, $offset, $size)
+    {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
-    private function sendAllowHeaders() {
+    private function sendAllowHeaders()
+    {
         Header::allowOptionsGet();
     }
 
-    private function getAcceptedTrackers(PFUser $user, Project $project) {
+    private function getAcceptedTrackers(PFUser $user, Project $project)
+    {
         try {
             $top_milestone = $this->milestone_factory->getVirtualTopMilestone($user, $project);
         } catch (\Planning_NoPlanningsException $e) {

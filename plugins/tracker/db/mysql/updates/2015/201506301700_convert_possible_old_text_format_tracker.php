@@ -18,20 +18,24 @@
 
 class b201506301700_convert_possible_old_text_format_tracker extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Convert field that could contains &lt; and &rt; instead of < and >';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->convertTrackerTable();
         $this->convertTrackerFormElementField();
     }
 
-    private function convertTrackerTable() {
+    private function convertTrackerTable()
+    {
         $sql = 'UPDATE tracker SET name = REPLACE(REPLACE(name, "&gt;", ">"), "&lt;", "<"), description = REPLACE(REPLACE(description, "&gt;", ">"), "&lt;", "<")';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
@@ -39,7 +43,8 @@ class b201506301700_convert_possible_old_text_format_tracker extends ForgeUpgrad
         }
     }
 
-    private function convertTrackerFormElementField() {
+    private function convertTrackerFormElementField()
+    {
         $sql = 'UPDATE tracker_field SET label = REPLACE(REPLACE(label, "&gt;", ">"), "&lt;", "<")';
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

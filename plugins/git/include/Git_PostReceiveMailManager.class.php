@@ -29,7 +29,8 @@ class Git_PostReceiveMailManager {
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->dao = $this->_getDao();
     }
 
@@ -41,7 +42,8 @@ class Git_PostReceiveMailManager {
      *
      * @return bool
      */
-    function addMail($repositoryId, $mail) {
+    function addMail($repositoryId, $mail)
+    {
         try {
             $this->dao->createNotification($repositoryId, $mail);
         } catch (PDOException $e) {
@@ -60,7 +62,8 @@ class Git_PostReceiveMailManager {
      *
      *  @return bool
      */
-    public function removeMailByRepository($repository, $mail) {
+    public function removeMailByRepository($repository, $mail)
+    {
         if ($this->dao->removeNotification($repository->getId(), $mail)) {
             $repository->loadNotifiedMails();
             return $repository->getBackend()->changeRepositoryMailingList($repository);
@@ -80,7 +83,8 @@ class Git_PostReceiveMailManager {
      *
      * @return bool
      */
-    public function markRepositoryAsDeleted(GitRepository $repository) {
+    public function markRepositoryAsDeleted(GitRepository $repository)
+    {
         return $this->dao->removeNotification($repository->getId(), null);
     }
 
@@ -91,7 +95,8 @@ class Git_PostReceiveMailManager {
      *
      * @return array
      */
-    public function getNotificationMailsByRepositoryId($repositoryId) {
+    public function getNotificationMailsByRepositoryId($repositoryId)
+    {
         $dar = $this->dao->searchByRepositoryId($repositoryId);
 
         $mailList = array();
@@ -106,7 +111,8 @@ class Git_PostReceiveMailManager {
      *
      * @return Git_PostReceiveMailDao
      */
-    function _getDao() {
+    function _getDao()
+    {
         if (!$this->dao) {
             $this->dao = new Git_PostReceiveMailDao();
         }
@@ -116,14 +122,16 @@ class Git_PostReceiveMailManager {
     /**
      * Wrapper used for tests to get a new GitDao
      */
-    function _getGitDao() {
+    function _getGitDao()
+    {
         return new GitDao();
     }
 
     /**
      * Wrapper used for tests to get a new GitRepository
      */
-    function _getGitRepository() {
+    function _getGitRepository()
+    {
         return new GitRepository();
     }
 

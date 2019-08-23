@@ -25,7 +25,8 @@ class b201308071113_add_missing_git_references extends ForgeUpgrade_Bucket {
      *
      * @return String
      */
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add the missing git references in projects
 EOT;
@@ -36,7 +37,8 @@ EOT;
      *
      * @return void
      */
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
@@ -45,7 +47,8 @@ EOT;
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         $sql    = "INSERT INTO reference_group (reference_id, group_id, is_active)
                    SELECT 30, service.group_id, 1
                    FROM service

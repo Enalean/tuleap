@@ -52,7 +52,8 @@ class ProjectLinksPlugin extends Plugin {
     }
 
     //========================================================================
-    function getPluginInfo() {
+    function getPluginInfo()
+    {
         if (!($this->pluginInfo instanceof ProjectLinksPluginInfo)) {
             require_once('ProjectLinksPluginInfo.class.php');
             $this->pluginInfo = new ProjectLinksPluginInfo($this);
@@ -61,12 +62,14 @@ class ProjectLinksPlugin extends Plugin {
     }
 
     //========================================================================
-    function _adminURI() {
+    function _adminURI()
+    {
         return $this->getPluginPath()."/projectlinks_admin.php";
     }
 
     //========================================================================
-    function adminPage() {
+    function adminPage()
+    {
         // serve the administration pages for project links
 
         global $Language;
@@ -131,7 +134,8 @@ class ProjectLinksPlugin extends Plugin {
     }
 
     //========================================================================
-    private function adminPageUpdate_Service(HTTPRequest $request) {
+    private function adminPageUpdate_Service(HTTPRequest $request)
+    {
         global $Language, $feedback;
         $group_id = (int) $request->get('group_id');
         switch ($request->get('func')) {
@@ -304,7 +308,8 @@ class ProjectLinksPlugin extends Plugin {
     }
 
     //========================================================================
-    function _icon($icon, $params = NULL) {
+    function _icon($icon, $params = NULL)
+    {
         // returns the HTML to display the named icon
         global $Language;
         switch ($icon) {
@@ -357,7 +362,8 @@ class ProjectLinksPlugin extends Plugin {
     }
 
     //========================================================================
-    function _getLinks($group_id) {
+    function _getLinks($group_id)
+    {
         // returns a record set of project link types belonging to
         //the passed group
         return db_query("SELECT link_type_id, name, reverse_name, description,
@@ -368,7 +374,8 @@ class ProjectLinksPlugin extends Plugin {
     }
 
     //========================================================================
-    function _adminPage_Default($group_id, $project) {
+    function _adminPage_Default($group_id, $project)
+    {
         // show the default configuration page
         global $HTML, $Language;
 
@@ -447,7 +454,8 @@ class ProjectLinksPlugin extends Plugin {
     }
 
     //========================================================================
-    function _adminPage_UpdateLinkType($group_id, $link_type_id) {
+    function _adminPage_UpdateLinkType($group_id, $link_type_id)
+    {
         global $HTML, $Language;
 
         if (isset($link_type_id)) {
@@ -580,7 +588,8 @@ class ProjectLinksPlugin extends Plugin {
     }
 
     //========================================================================
-    function _adminPage_ResyncTemplate($group_id, $template_id) {
+    function _adminPage_ResyncTemplate($group_id, $template_id)
+    {
         // re-synchronise project links and types with originating template
         global $HTML, $Language;
 
@@ -811,7 +820,8 @@ class ProjectLinksPlugin extends Plugin {
     }
 
     //========================================================================
-    function _link_unique_update($group_id, $target_group_id, $link_type_id, $link_id = NULL) {
+    function _link_unique_update($group_id, $target_group_id, $link_type_id, $link_id = NULL)
+    {
         // update link, but check the change would not create a duplicate
         // (same target project and link type)
         global $Language;
@@ -857,7 +867,8 @@ class ProjectLinksPlugin extends Plugin {
      * @param int $group_id Group id
      * @return String
      */
-    function _admin_links_table($link_type_id) {
+    function _admin_links_table($link_type_id)
+    {
         $html = '';
 
         $dao = $this->getProjectLinksDao();
@@ -887,7 +898,8 @@ class ProjectLinksPlugin extends Plugin {
     }
 
     //========================================================================
-    function registerProjectCreation($params) {
+    function registerProjectCreation($params)
+    {
         // called during new project creation to inherit project links and
         // types from a template
         $group_id = $params['group_id'];
@@ -963,7 +975,8 @@ class ProjectLinksPlugin extends Plugin {
     }
 
     //========================================================================
-    function registerProjectAbandon($params) {
+    function registerProjectAbandon($params)
+    {
         // deletes all project link information for the passed group -
         // usually when a user declines to accept a new project at the
         //  final step
@@ -976,7 +989,8 @@ class ProjectLinksPlugin extends Plugin {
         );
     }
 
-    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event) {
+    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
+    {
         if ($get_widget_event->getName() === 'projectlinkshomepage') {
             include_once 'ProjectLinks_Widget_HomePageLinks.class.php';
             $get_widget_event->setWidget(new ProjectLinks_Widget_HomePageLinks($this));
@@ -998,7 +1012,8 @@ class ProjectLinksPlugin extends Plugin {
      *
      * @return ProjectLinksDao
      */
-    function getProjectLinksDao() {
+    function getProjectLinksDao()
+    {
         include_once 'ProjectLinksDao.class.php';
         return new ProjectLinksDao(CodendiDataAccess::instance());
     }

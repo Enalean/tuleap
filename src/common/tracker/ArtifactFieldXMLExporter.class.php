@@ -23,7 +23,8 @@ abstract class ArtifactFieldXMLExporter {
     /** @var ArtifactXMLNodeHelper */
     protected $node_helper;
 
-    public function __construct(ArtifactXMLNodeHelper $node_helper) {
+    public function __construct(ArtifactXMLNodeHelper $node_helper)
+    {
         $this->node_helper = $node_helper;
     }
 
@@ -31,11 +32,13 @@ abstract class ArtifactFieldXMLExporter {
 
     abstract public function getFieldValueIndex();
 
-    public function getCurrentFieldValue(array $field_value_row, $tracker_id) {
+    public function getCurrentFieldValue(array $field_value_row, $tracker_id)
+    {
         return $field_value_row;
     }
 
-    public function isValueEqual($value1, $value2) {
+    public function isValueEqual($value1, $value2)
+    {
         return $value1 == $value2;
     }
 }

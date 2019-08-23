@@ -27,7 +27,8 @@ class Tracker_Report_RendererFactory {
     /**
      * A protected constructor; prevents direct creation of object
      */
-    protected function __construct() {
+    protected function __construct()
+    {
 
     }
 
@@ -36,7 +37,8 @@ class Tracker_Report_RendererFactory {
      *
      * @return EventManager
      */
-    private function getEventManager() {
+    private function getEventManager()
+    {
         return EventManager::instance();
     }
 
@@ -48,7 +50,8 @@ class Tracker_Report_RendererFactory {
     /**
      * @return Tracker_Report_RendererFactory
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$_instance)) {
             self::$_instance = new self();
         }
@@ -63,7 +66,8 @@ class Tracker_Report_RendererFactory {
      * @param Report $report the report of the renderer
      * @return Tracker_Report_Renderer | null
      */
-    public function getReportRendererById($id, $report, $store_in_session = true) {
+    public function getReportRendererById($id, $report, $store_in_session = true)
+    {
         $row = $this->getDao()
                     ->searchById($id)
                     ->getRow();
@@ -87,7 +91,8 @@ class Tracker_Report_RendererFactory {
      *
      * @param array of Tracker_Report_Renderer
      */
-    public function getReportRenderersByReport($report) {
+    public function getReportRenderersByReport($report)
+    {
         $renderers = array();
         //Check that renderers are already in the session
         $renderers_data = $report->report_session->get('renderers');
@@ -112,7 +117,8 @@ class Tracker_Report_RendererFactory {
      *
      * @param array of Tracker_Report_Renderer
      */
-    public function getReportRenderersByReportFromDb($report) {
+    public function getReportRenderersByReportFromDb($report)
+    {
         $renderers = array();
         foreach ($this->getDao()->searchByReportId($report->id) as $row) {
             if ($r = $this->getInstanceFromRow($row, $report)) {
@@ -126,7 +132,8 @@ class Tracker_Report_RendererFactory {
      * @param Report $report the id of the report
      * @param array
      */
-    public function getReportRendererByReportAndId($report, $renderer_id, $store_in_session = true) {
+    public function getReportRendererByReportAndId($report, $renderer_id, $store_in_session = true)
+    {
         $renderer = null;
         $row = null;
         if ($store_in_session) {
@@ -147,7 +154,8 @@ class Tracker_Report_RendererFactory {
      * Delete a renderer
      * @param int $id the id of the renderer to delete
      */
-    public function delete($id) {
+    public function delete($id)
+    {
         return $this->getDao()->delete($id);
     }
 
@@ -157,7 +165,8 @@ class Tracker_Report_RendererFactory {
      * @param string $new_name
      * @param string $new_description
      */
-    public function rename($id, $new_name, $new_description) {
+    public function rename($id, $new_name, $new_description)
+    {
         return $this->getDao()->rename($id, $new_name, $new_description);
     }
 
@@ -170,7 +179,8 @@ class Tracker_Report_RendererFactory {
      *
      * @return bool true on success or false on failure
      */
-    public function move($id, $report, $new_rank) {
+    public function move($id, $report, $new_rank)
+    {
         return $this->getDao()->move($id, $report->id, $new_rank);
     }
 
@@ -180,7 +190,8 @@ class Tracker_Report_RendererFactory {
      * @param string $name
      * @param string $description
      */
-    public function create($report, $name, $description, $type) {
+    public function create($report, $name, $description, $type)
+    {
         $renderer_id = false;
         $type = $type ? $type : Tracker_Report_Renderer::TABLE;
         $types = $this->getTypes();
@@ -209,7 +220,8 @@ class Tracker_Report_RendererFactory {
     }
 
 
-    public function duplicate($from_report, $to_report, $field_mapping) {
+    public function duplicate($from_report, $to_report, $field_mapping)
+    {
         foreach ($this->getDao()->searchByReportId($from_report->id) as $row) {
             if ($id = $this->getDao()->duplicate($row['id'], $to_report->id)) {
                 switch ($row['renderer_type']) {
@@ -237,7 +249,8 @@ class Tracker_Report_RendererFactory {
      * @param string $description
      * @param string $type
      */
-    public function createInSession($report, $name, $description, $type) {
+    public function createInSession($report, $name, $description, $type)
+    {
         $renderer_id = false;
         $type = $type ? $type : Tracker_Report_Renderer::TABLE;
         $types = $this->getTypes();
@@ -280,7 +293,8 @@ class Tracker_Report_RendererFactory {
         return $renderer_id;
     }
 
-    public function saveRenderer($report, $name, $description, $type) {
+    public function saveRenderer($report, $name, $description, $type)
+    {
         $renderer_id = false;
 
         $types = $this->getTypes();
@@ -298,7 +312,8 @@ class Tracker_Report_RendererFactory {
      *
      * @return bool true on success or false on failure
      */
-    public function save(Tracker_Report_Renderer $renderer) {
+    public function save(Tracker_Report_Renderer $renderer)
+    {
         return $this->getDao()->save(
             $renderer->id,
             $renderer->name,
@@ -308,7 +323,8 @@ class Tracker_Report_RendererFactory {
     }
 
 
-    public function getTypes() {
+    public function getTypes()
+    {
         $types = array(Tracker_Report_Renderer::TABLE => $GLOBALS['Language']->getText('plugin_tracker_report','table'));
         $this->getEventManager()
                     ->processEvent('tracker_report_renderer_types',
@@ -323,7 +339,8 @@ class Tracker_Report_RendererFactory {
      *
      * @return bool true on success false on failure
      */
-    public function forceOrder($report, $report_renderers) {
+    public function forceOrder($report, $report_renderers)
+    {
         $this->getDao()->forceOrder($report->id, $report_renderers);
     }
     // }}}
@@ -332,7 +349,8 @@ class Tracker_Report_RendererFactory {
     /**
      * @return Tracker_Report_RendererDao
      */
-    protected function getDao() {
+    protected function getDao()
+    {
         if (!$this->dao) {
             $this->dao = new Tracker_Report_RendererDao();
         }
@@ -343,7 +361,8 @@ class Tracker_Report_RendererFactory {
     /**
      * @return Tracker_Report_RendererTableDao
      */
-    protected function getTableDao() {
+    protected function getTableDao()
+    {
         if (!$this->table_dao) {
             $this->table_dao = new Tracker_Report_Renderer_TableDao();
         }
@@ -362,7 +381,8 @@ class Tracker_Report_RendererFactory {
      *
      * @return Tracker_Report_Renderer null if type is unknown
      */
-    protected function getInstanceFromRow($row, $report, $store_in_session = true) {
+    protected function getInstanceFromRow($row, $report, $store_in_session = true)
+    {
         if ($store_in_session) {
             $this->report_session = new Tracker_Report_Session($report->id);
             $this->report_session->changeSessionNamespace('renderers');

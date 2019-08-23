@@ -33,7 +33,8 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
 
     private $src_dir = '';
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->loadConfiguration();
         $this->mysqli = mysqli_init();
@@ -43,7 +44,8 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         $this->src_dir = realpath(dirname(__FILE__)."/../..");
     }
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::set('DEBUG_MODE', true);
         if (self::$db_initialized == false) {
@@ -54,7 +56,8 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         CodendiDataAccess::clearInstance();
     }
 
-    public function skip() {
+    public function skip()
+    {
         parent::skip();
         if (!$this->mysqli) {
             echo "== (屮ಠ益ಠ)屮 Y U NO CONFIGURE DATABASE? ==\n";
@@ -62,7 +65,8 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         $this->skipUnless($this->mysqli, '== (屮ಠ益ಠ)屮 Y U NO CONFIGURE DATABASE? ==');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         unset($GLOBALS['sys_dbhost']);
         unset($GLOBALS['sys_dbuser']);
         unset($GLOBALS['sys_dbpasswd']);
@@ -75,24 +79,28 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
      * This will prevent drop of the database before tests and avoid become crasy
      * waiting for 50" test execution.
      */
-    protected function markThisTestUnderDevelopment() {
+    protected function markThisTestUnderDevelopment()
+    {
         self::$db_initialized       = true;
         $this->development_on_going = true;
     }
 
-    protected function thisTestIsNotUnderDevelopment() {
+    protected function thisTestIsNotUnderDevelopment()
+    {
         return !$this->development_on_going;
     }
 
     /**
      * Use this method if you need to drop the database after a test
      */
-    protected function resetDatabase() {
+    protected function resetDatabase()
+    {
         self::$db_initialized = false;
     }
 
 
-    protected function truncateTable($table) {
+    protected function truncateTable($table)
+    {
         $this->mysqli->query("TRUNCATE TABLE $table");
     }
 
@@ -101,13 +109,15 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
      *
      * @param String $file
      */
-    protected function mysqlLoadFile($file) {
+    protected function mysqlLoadFile($file)
+    {
         $mysql_cmd = 'mysql -u'.escapeshellarg($GLOBALS['sys_dbuser']).' -p'.escapeshellarg($GLOBALS['sys_dbpasswd']).' '.escapeshellarg($GLOBALS['sys_dbname']);
         $cmd = $mysql_cmd.' < '.escapeshellarg($this->src_dir.'/'.$file);
         system('bash --login -c ' .escapeshellarg($cmd));
     }
 
-    private function loadConfiguration() {
+    private function loadConfiguration()
+    {
         $config_file = 'tests.inc';
         ForgeConfig::loadFromFile(dirname(__FILE__)."/../../src/etc/$config_file.dist");
         ForgeConfig::loadFromFile(dirname($this->getLocalIncPath())."/$config_file");
@@ -117,16 +127,19 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         $GLOBALS['sys_dbname']   = ForgeConfig::get('sys_dbname');
     }
 
-    private function getLocalIncPath() {
+    private function getLocalIncPath()
+    {
         return getenv('CODENDI_LOCAL_INC') ? getenv('CODENDI_LOCAL_INC') : '/etc/tuleap/conf/local.inc';
     }
 
-    private function foraceCreateDatabase() {
+    private function foraceCreateDatabase()
+    {
         $this->mysqli->query("DROP DATABASE IF EXISTS ".$GLOBALS['sys_dbname']);
         $this->mysqli->query("CREATE DATABASE ".$GLOBALS['sys_dbname']);
     }
 
-    protected function initDb() {
+    protected function initDb()
+    {
         $this->foraceCreateDatabase();
         $this->mysqlLoadFile('src/db/mysql/database_structure.sql');
         $this->mysqlLoadFile('src/db/mysql/database_initvalues.sql');

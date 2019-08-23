@@ -23,7 +23,8 @@ require_once __DIR__ . '/../include/pre.php';
 
 $hp = Codendi_HTMLPurifier::instance();
 
-function getReferenceRow($ref, $row_num) {
+function getReferenceRow($ref, $row_num)
+{
     $html = '';
 
     if ($ref->isActive() && $ref->getId() != 100) {
@@ -38,7 +39,8 @@ function getReferenceRow($ref, $row_num) {
     return $html;
 }
 
-function getReferencesTable($groupId) {
+function getReferencesTable($groupId)
+{
     $html = '';
     $html .= '<h3>'.$GLOBALS['Language']->getText('project_showdetails','references').'</h3>';
 

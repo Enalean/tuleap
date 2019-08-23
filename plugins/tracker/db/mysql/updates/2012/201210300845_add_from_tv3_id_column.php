@@ -20,15 +20,18 @@
 
 class b201210300845_add_from_tv3_id_column extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add a column to tracker table to know from which tracker v3 a tracker has been created';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE tracker ADD COLUMN from_tv3_id INT(11) NULL";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

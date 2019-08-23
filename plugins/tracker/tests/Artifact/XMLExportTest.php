@@ -25,7 +25,8 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
     private $user_manager;
     private $formelement_factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->user_manager = mock('UserManager');
@@ -35,14 +36,16 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
         Tracker_FormElementFactory::setInstance($this->formelement_factory);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         UserManager::clearInstance();
         Tracker_FormElementFactory::clearInstance();
 
         parent::tearDown();
     }
 
-    public function itExportsArtifactsInXML() {
+    public function itExportsArtifactsInXML()
+    {
         $user_01 = aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
         $user_02 = aUser()->withId(102)->withLdapId('ldap_02')->withUserName('user_02')->build();
 
@@ -217,7 +220,8 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
 
 class Tracker_Artifact_XMLExport_forceTest extends TuleapTestCase {
 
-    public function itRaisesAnExceptionWhenThresholdIsReached() {
+    public function itRaisesAnExceptionWhenThresholdIsReached()
+    {
         $rng_validator    = new XML_RNGValidator();
         $artifact_factory = stub('Tracker_ArtifactFactory')
             ->getArtifactsByTrackerId()

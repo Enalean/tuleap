@@ -24,22 +24,27 @@ class Docman_Filter {
     var $value;
     var $md;
 
-    function __construct($md) {
+    function __construct($md)
+    {
         $this->value = null;
         $this->md = $md;
     }
 
-    function setValue($v) {
+    function setValue($v)
+    {
         $this->value = $v;
     }
-    function getValue() {
+    function getValue()
+    {
         return $this->value;
     }
 
-    function initFromRow($row) {
+    function initFromRow($row)
+    {
     }
 
-    function getUrlParameters() {
+    function getUrlParameters()
+    {
         $param = array();
         //if($this->value !== null) {
             $param[$this->md->getLabel()] = $this->value;
@@ -47,7 +52,8 @@ class Docman_Filter {
         return $param;
     }
 
-    function _urlMatchDelete($request) {
+    function _urlMatchDelete($request)
+    {
         if($request->exist('del_filter')
            && $this->md->getLabel() == $request->get('del_filter')) {
             return true;
@@ -55,14 +61,16 @@ class Docman_Filter {
         return false;
     }
 
-    function _urlValueIsValid($request) {
+    function _urlValueIsValid($request)
+    {
         if($request->exist($this->md->getLabel())) {
             return true;
         }
         return false;
     }
 
-    function _urlMatchUpdate($request) {
+    function _urlMatchUpdate($request)
+    {
         if($this->_urlValueIsValid($request)) {
             $this->setValue($request->get($this->md->getLabel()));
             return true;
@@ -71,7 +79,8 @@ class Docman_Filter {
     }
 
     // Add new fields
-    function _urlMatchAdd($request) {
+    function _urlMatchAdd($request)
+    {
         if($request->exist('add_filter')
            && $this->md->getLabel() == $request->get('add_filter')) {
             return true;
@@ -79,7 +88,8 @@ class Docman_Filter {
         return false;
     }
 
-    function initOnUrlMatch($request) {
+    function initOnUrlMatch($request)
+    {
         if($this->md !== null) {
             if(!$this->_urlMatchDelete($request)) {
                 if($this->_urlMatchUpdate($request)) {
@@ -101,7 +111,8 @@ class Docman_FilterDate extends Docman_Filter {
     var $field_operator_name;
     var $field_value_name;
 
-    function __construct($md) {
+    function __construct($md)
+    {
         parent::__construct($md);
         $this->operator = null;
         if($md !== null) {
@@ -110,35 +121,42 @@ class Docman_FilterDate extends Docman_Filter {
         }
     }
 
-    function initFromRow($row) {
+    function initFromRow($row)
+    {
         $this->setOperator($row['value_date_op']);
         $this->setValue($row['value_date1']);
     }
 
-    function getFieldOperatorName() {
+    function getFieldOperatorName()
+    {
         return $this->field_operator_name;
     }
 
-    function getFieldValueName() {
+    function getFieldValueName()
+    {
         return $this->field_value_name;
     }
 
-    function setOperator($v) {
+    function setOperator($v)
+    {
         $this->operator = $v;
     }
 
-    function getOperator() {
+    function getOperator()
+    {
         return $this->operator;
     }
 
-    function isValidDateFormat($value) {
+    function isValidDateFormat($value)
+    {
         if(preg_match('/^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})$/', $value, $d)) {
             return true;
         }
         return false;
     }
 
-    function isValidOperator($op) {
+    function isValidOperator($op)
+    {
         if($op == 0 ||
            $op == -1 ||
            $op == 1) {
@@ -147,7 +165,8 @@ class Docman_FilterDate extends Docman_Filter {
         return false;
     }
 
-    function getUrlParameters() {
+    function getUrlParameters()
+    {
         $param = array();
         //if($this->value !== null) {
             $param[$this->field_value_name] = $this->value;
@@ -158,7 +177,8 @@ class Docman_FilterDate extends Docman_Filter {
         return $param;
     }
 
-    function _urlMatchUpdate($request) {
+    function _urlMatchUpdate($request)
+    {
         // Simple date
         if($request->exist($this->getFieldValueName())) {
             $val = $request->get($this->getFieldValueName());
@@ -210,7 +230,8 @@ extends Docman_FilterDate {
     var $valueStart;
     var $valueEnd;
 
-    function __construct($md) {
+    function __construct($md)
+    {
         parent::__construct($md);
 
         $base = $md->getLabel().'_value';
@@ -220,40 +241,49 @@ extends Docman_FilterDate {
         $this->valueEnd   = '';
     }
 
-    function setValueStart($v) {
+    function setValueStart($v)
+    {
         $this->valueStart = $v;
     }
-    function getValueStart() {
+    function getValueStart()
+    {
         return $this->valueStart;
     }
 
-    function setValueEnd($v) {
+    function setValueEnd($v)
+    {
         $this->valueEnd = $v;
     }
-    function getValueEnd() {
+    function getValueEnd()
+    {
         return $this->valueEnd;
     }
 
-    function initFromRow($row) {
+    function initFromRow($row)
+    {
         $this->setValueStart($row['value_date1']);
         $this->setValueEnd($row['value_date2']);
     }
 
-    function getFieldStartValueName() {
+    function getFieldStartValueName()
+    {
         return $this->fieldNameStart;
     }
-    function getFieldEndValueName() {
+    function getFieldEndValueName()
+    {
         return $this->fieldNameEnd;
     }
 
-    function getUrlParameters() {
+    function getUrlParameters()
+    {
         $param = array();
         $param[$this->fieldNameStart] = $this->valueStart;
         $param[$this->fieldNameEnd]   = $this->valueEnd;
         return $param;
     }
 
-    function _urlMatchUpdate($request) {
+    function _urlMatchUpdate($request)
+    {
         $fieldExist = false;
 
         $startValue = false;
@@ -301,28 +331,32 @@ extends Docman_FilterDate {
  */
 class Docman_FilterList extends Docman_Filter {
 
-    function __construct($md) {
+    function __construct($md)
+    {
         $mdFactory = new Docman_MetadataFactory($md->getGroupId());
         $mdFactory->appendMetadataValueList($md, false);
         parent::__construct($md);
         $this->setValue(0);
     }
 
-    function initFromRow($row) {
+    function initFromRow($row)
+    {
         $this->setValue($row['value_love']);
     }
 
     /**
      * @todo: should valid an int
      */
-    function isValidListValue($val) {
+    function isValidListValue($val)
+    {
         if(is_numeric($val)) {
             return true;
         }
         return false;
     }
 
-    function _urlValueIsValid($request) {
+    function _urlValueIsValid($request)
+    {
         if(parent::_urlValueIsValid($request)) {
             if($this->isValidListValue($request->get($this->md->getLabel()))) {
                 return true;
@@ -331,7 +365,8 @@ class Docman_FilterList extends Docman_Filter {
         return false;
     }
 
-    function _urlMatchUpdate($request) {
+    function _urlMatchUpdate($request)
+    {
         if(parent::_urlMatchUpdate($request)) {
             $v = $this->getValue();
 
@@ -355,12 +390,14 @@ class Docman_FilterList extends Docman_Filter {
 class Docman_FilterListAdvanced
 extends Docman_FilterList {
 
-    function __construct($md) {
+    function __construct($md)
+    {
         parent::__construct($md);
         $this->setValue(array());
     }
 
-    function _urlValueIsValid($request) {
+    function _urlValueIsValid($request)
+    {
         if($request->exist($this->md->getLabel())) {
             $val = $request->get($this->md->getLabel());
             if(is_array($val)) {
@@ -378,7 +415,8 @@ extends Docman_FilterList {
         return false;
     }
 
-    function _urlMatchUpdate($request) {
+    function _urlMatchUpdate($request)
+    {
         if(Docman_Filter::_urlMatchUpdate($request)) {
             if(!is_array($this->getValue())) {
                 if($this->getValue() !== null && $this->getValue() != '') {
@@ -399,7 +437,8 @@ extends Docman_FilterList {
         return false;
     }
 
-    function _urlMatchAdd($request) {
+    function _urlMatchAdd($request)
+    {
         if(parent::_urlMatchAdd($request)) {
             $this->setValue(array(0));
             return true;
@@ -407,11 +446,13 @@ extends Docman_FilterList {
         return false;
     }
 
-    function addValue($val) {
+    function addValue($val)
+    {
         $this->value[] = $val;
     }
 
-    function initFromRow($row) {
+    function initFromRow($row)
+    {
         $this->addValue($row['value_love']);
     }
 }
@@ -420,14 +461,16 @@ extends Docman_FilterList {
 * Item type filters
 */
 class Docman_FilterItemTypeAdvanced extends Docman_FilterListAdvanced {
-    function __construct($md) {
+    function __construct($md)
+    {
         Docman_Filter::__construct($md);
         $this->setValue(array());
     }
 }
 
 class Docman_FilterItemType extends Docman_FilterList {
-    function __construct($md) {
+    function __construct($md)
+    {
         Docman_Filter::__construct($md);
         $this->setValue(0);
     }
@@ -438,15 +481,18 @@ class Docman_FilterItemType extends Docman_FilterList {
  */
 class Docman_FilterText extends Docman_Filter {
 
-    function __construct($md) {
+    function __construct($md)
+    {
         parent::__construct($md);
     }
 
-    function initFromRow($row) {
+    function initFromRow($row)
+    {
         $this->setValue($row['value_string']);
     }
 
-    function getUrlParameters() {
+    function getUrlParameters()
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $param = array($this->md->getLabel() => $hp->purify($this->value));
         return $param;
@@ -459,27 +505,32 @@ class Docman_FilterText extends Docman_Filter {
 class Docman_FilterGlobalText extends Docman_FilterText {
     var $dynTextFields;
 
-    function __construct($md, $dynTextFields) {
+    function __construct($md, $dynTextFields)
+    {
         parent::__construct($md);
         $this->dynTextFields = $dynTextFields;
     }
 
-    function initFromRow($row) {
+    function initFromRow($row)
+    {
         $this->setValue($row['value_string']);
     }
 }
 
 class Docman_FilterOwner extends Docman_Filter {
 
-    function __construct($md) {
+    function __construct($md)
+    {
         parent::__construct($md);
     }
 
-    function initFromRow($row) {
+    function initFromRow($row)
+    {
         $this->setValue($row['value_string']);
     }
 
-    function _urlMatchUpdate($request) {
+    function _urlMatchUpdate($request)
+    {
         if(parent::_urlMatchUpdate($request)) {
             $user = UserManager::instance()->findUser($this->getValue());
             if($user) {

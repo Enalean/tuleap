@@ -45,7 +45,8 @@ abstract class Tracker_Semantic {
      *
      * @return void
      */
-    public function setTracker($tracker) {
+    public function setTracker($tracker)
+    {
         $this->tracker = $tracker;
     }
     /**
@@ -53,7 +54,8 @@ abstract class Tracker_Semantic {
      *
      * @return Tracker The tracker
      */
-    public function getTracker() {
+    public function getTracker()
+    {
         return $this->tracker;
     }
 
@@ -61,7 +63,7 @@ abstract class Tracker_Semantic {
      * @return CSRFSynchronizerToken
      */
     protected function getCSRFToken()
-     {
+    {
         return new CSRFSynchronizerToken($this->getUrl());
     }
 
@@ -141,7 +143,8 @@ abstract class Tracker_Semantic {
      *
      * @return string url (for html)
      */
-    public function getUrl() {
+    public function getUrl()
+    {
         $query = http_build_query(array(
                 'tracker'  => $this->tracker->getId(),
                 'func'     => 'admin-semantic',
@@ -157,7 +160,8 @@ abstract class Tracker_Semantic {
      */
     public abstract function save();
 
-    protected function getFieldUserCanRead(PFUser $user) {
+    protected function getFieldUserCanRead(PFUser $user)
+    {
         $field      = $this->getField();
         if ($field && $field->userCanRead($user)) {
             return $field;
@@ -165,7 +169,8 @@ abstract class Tracker_Semantic {
         return null;
     }
 
-    public function exportToREST(PFUser $user) {
+    public function exportToREST(PFUser $user)
+    {
         $field = $this->getFieldUserCanRead($user);
         if (! $field) {
             return false;

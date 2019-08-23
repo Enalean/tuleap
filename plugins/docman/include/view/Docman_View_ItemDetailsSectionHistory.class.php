@@ -27,13 +27,15 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
 
     public $display_access_logs;
 
-    public function __construct($item, $url, $display_access_logs, $logger) {
+    public function __construct($item, $url, $display_access_logs, $logger)
+    {
         parent::__construct($item, $url, 'history', $GLOBALS['Language']->getText('plugin_docman','details_history'));
         $this->logger = $logger;
         $this->display_access_logs = $display_access_logs;
     }
 
-    public function getContent($params = []) {
+    public function getContent($params = [])
+    {
         $content = '';
 
         if ($this->item instanceof Docman_File) {
@@ -49,7 +51,8 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
         return $content;
     }
 
-    private function getFileVersions() {
+    private function getFileVersions()
+    {
         $uh      = UserHelper::instance();
         $content = '<h3>'. $GLOBALS['Language']->getText('plugin_docman','details_history_versions') .'</h3>';
         $version_factory = new Docman_VersionFactory();
@@ -118,7 +121,8 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
         return $content;
     }
 
-    private function getLinkVersions() {
+    private function getLinkVersions()
+    {
         $uh      = UserHelper::instance();
         $content = '<h3>'. $GLOBALS['Language']->getText('plugin_docman','details_history_versions') .'</h3>';
 

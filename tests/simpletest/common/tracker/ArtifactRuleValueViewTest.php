@@ -22,7 +22,8 @@ Mock::generate('ArtifactRuleValue');
 
 class ArtifactRuleValueViewTest extends TuleapTestCase {
 
-    function testFetch() {
+    function testFetch()
+    {
         $rule = new MockArtifactRuleValue($this);
         $rule->id                = 'id';
         $rule->group_artifact_id = 'group_artifact_id';

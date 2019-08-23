@@ -19,12 +19,14 @@
  */
 
 class Tracker_Report_Criteria_Date_ValueDao extends Tracker_Report_Criteria_ValueDao {
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_report_criteria_date_value';
     }
 
-    public function save($id, $value) {
+    public function save($id, $value)
+    {
         $id        = $this->da->escapeInt($id);
 
         if(isset($value['op'])) {

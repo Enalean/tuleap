@@ -39,7 +39,8 @@ class MilestoneContentUpdater {
     /** @var ArtifactLinkUpdater */
     private $artifactlink_updater;
 
-    public function __construct(Tracker_FormElementFactory $form_element_factory, ArtifactLinkUpdater $artifactlink_updater) {
+    public function __construct(Tracker_FormElementFactory $form_element_factory, ArtifactLinkUpdater $artifactlink_updater)
+    {
         $this->form_element_factory     = $form_element_factory;
         $this->artifact_factory         = Tracker_ArtifactFactory::instance();
         $this->artifactlink_updater     = $artifactlink_updater;
@@ -53,7 +54,8 @@ class MilestoneContentUpdater {
      * @param Planning_Milestone $milestone            The milestone
      *
      */
-    public function updateMilestoneContent(array $linked_artifact_ids, PFUser $current_user, Planning_Milestone $milestone) {
+    public function updateMilestoneContent(array $linked_artifact_ids, PFUser $current_user, Planning_Milestone $milestone)
+    {
         $this->artifactlink_updater->update(
             $linked_artifact_ids,
             $milestone->getArtifact(),
@@ -66,7 +68,8 @@ class MilestoneContentUpdater {
         );
     }
 
-    public function appendElementToMilestoneBacklog($linked_artifact_id, PFUser $current_user, Planning_Milestone $milestone) {
+    public function appendElementToMilestoneBacklog($linked_artifact_id, PFUser $current_user, Planning_Milestone $milestone)
+    {
         $linked_artifact_ids = $this->artifactlink_updater->getElementsAlreadyLinkedToArtifact(
             $milestone->getArtifact(),
             $current_user

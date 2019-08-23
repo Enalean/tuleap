@@ -26,7 +26,8 @@ class ToBeMappedUser_isActionAllowedTest extends TuleapTestCase {
     /** @var ToBeMappedUser */
     protected $user;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->user = new ToBeMappedUser(
@@ -40,15 +41,18 @@ class ToBeMappedUser_isActionAllowedTest extends TuleapTestCase {
         );
     }
 
-    public function itReturnsFalseWhenActionIsCreate() {
+    public function itReturnsFalseWhenActionIsCreate()
+    {
         $this->assertFalse($this->user->isActionAllowed('create'));
     }
 
-    public function itReturnsFalseWhenActionIsActivate() {
+    public function itReturnsFalseWhenActionIsActivate()
+    {
         $this->assertFalse($this->user->isActionAllowed('activate'));
     }
 
-    public function itReturnsFalseWhenActionIsMap() {
+    public function itReturnsFalseWhenActionIsMap()
+    {
         $this->assertTrue($this->user->isActionAllowed('map'));
     }
 }

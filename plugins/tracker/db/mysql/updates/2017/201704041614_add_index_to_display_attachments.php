@@ -43,7 +43,8 @@ class b201704041614_add_index_to_display_attachments extends ForgeUpgrade_Bucket
         $this->addIndex('tracker_changeset_value_file', 'reverse_idx', $sql);
     }
 
-    private function indexNameExists($table_name, $index) {
+    private function indexNameExists($table_name, $index)
+    {
         $sql = 'SHOW INDEX FROM '.$table_name.' WHERE Key_name LIKE '.$this->db->dbh->quote($index);
         $res = $this->db->dbh->query($sql);
         if ($res && $res->fetch() !== false) {
@@ -53,7 +54,8 @@ class b201704041614_add_index_to_display_attachments extends ForgeUpgrade_Bucket
         }
     }
 
-    private function addIndex($table_name, $index, $sql) {
+    private function addIndex($table_name, $index, $sql)
+    {
         $this->log->info('Add index '.$table_name);
         if (!$this->indexNameExists($table_name, $index)) {
             $res = $this->db->dbh->exec($sql);

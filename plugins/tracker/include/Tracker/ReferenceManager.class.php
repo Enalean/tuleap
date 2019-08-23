@@ -50,7 +50,8 @@ class Tracker_ReferenceManager {
      *
      * @return CrossReference
      */
-    public function getCrossReferenceBetweenTwoArtifacts(Tracker_Artifact $source_artifact, Tracker_Artifact $target_artifact, PFUser $user) {
+    public function getCrossReferenceBetweenTwoArtifacts(Tracker_Artifact $source_artifact, Tracker_Artifact $target_artifact, PFUser $user)
+    {
         return new CrossReference(
             $source_artifact->getId(),
             $source_artifact->getTracker()->getGroupId(),
@@ -73,7 +74,8 @@ class Tracker_ReferenceManager {
      *
      * @return bool
      */
-    public function insertBetweenTwoArtifacts(Tracker_Artifact $source_artifact, Tracker_Artifact $target_artifact, PFUser $user) {
+    public function insertBetweenTwoArtifacts(Tracker_Artifact $source_artifact, Tracker_Artifact $target_artifact, PFUser $user)
+    {
         return $this->reference_manager->insertCrossReference(
             $this->getCrossReferenceBetweenTwoArtifacts($source_artifact, $target_artifact, $user)
         );
@@ -88,7 +90,8 @@ class Tracker_ReferenceManager {
      *
      * @return bool
      */
-    public function removeBetweenTwoArtifacts(Tracker_Artifact $source_artifact, Tracker_Artifact $target_artifact, PFUser $user) {
+    public function removeBetweenTwoArtifacts(Tracker_Artifact $source_artifact, Tracker_Artifact $target_artifact, PFUser $user)
+    {
         return $this->reference_manager->removeCrossReference(
             $this->getCrossReferenceBetweenTwoArtifacts($source_artifact, $target_artifact, $user)
         );
@@ -97,7 +100,8 @@ class Tracker_ReferenceManager {
     /**
      * @return mixed Tracker_Reference || null
      */
-    public function getReference($keyword, $artifact_id) {
+    public function getReference($keyword, $artifact_id)
+    {
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
         if (! $artifact) {
@@ -110,7 +114,8 @@ class Tracker_ReferenceManager {
     /**
      * @return Tracker_Reference
      */
-    private function getTrackerReference(Tracker_Artifact $artifact, $keyword) {
+    private function getTrackerReference(Tracker_Artifact $artifact, $keyword)
+    {
         $reference = new Tracker_Reference(
             $artifact->getTracker(),
             $keyword

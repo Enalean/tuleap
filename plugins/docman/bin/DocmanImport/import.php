@@ -31,7 +31,8 @@ $usage = "
 Usage: import.php --url=<Tuleap URL> --project=<destination project unix name> --archive=<archive path>
        import.php --help";
 
-function help($console) {
+function help($console)
+{
     global $usage;
 
     $console->info("Imports a set of Tuleap Docman documents to a project

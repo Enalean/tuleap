@@ -25,7 +25,8 @@ class Tracker_Semantic_TitleTest extends TuleapTestCase {
 
     private $xml_security;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->xml_security = new XML_Security();
@@ -39,13 +40,15 @@ class Tracker_Semantic_TitleTest extends TuleapTestCase {
         $this->root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->xml_security->disableExternalLoadOfEntities();
 
         parent::tearDown();
     }
 
-    public function testExport() {
+    public function testExport()
+    {
         $GLOBALS['Language'] = mock('BaseLanguage');
         $GLOBALS['Language']->setReturnValue('getText','Title',array('plugin_tracker_admin_semantic','title_label'));
         $GLOBALS['Language']->setReturnValue('getText','Define the title of an artifact',array('plugin_tracker_admin_semantic','title_description'));
@@ -59,7 +62,8 @@ class Tracker_Semantic_TitleTest extends TuleapTestCase {
         $this->assertEqual((string)$this->xml->field['REF'], (string)$this->root->semantic->field['REF']);
     }
 
-    public function itDoesntExportTheFieldIfNotDefinedInMapping() {
+    public function itDoesntExportTheFieldIfNotDefinedInMapping()
+    {
         $this->semantic_title->exportToXML($this->root, array());
 
         $this->assertCount($this->root->children(), 0);

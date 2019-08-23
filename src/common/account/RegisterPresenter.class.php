@@ -41,7 +41,8 @@ class Account_RegisterPresenter {
     public $legal = '';
     private $extra_plugin_field;
 
-    public function __construct(Account_RegisterPrefillValuesPresenter $prefill_values, $extra_plugin_field) {
+    public function __construct(Account_RegisterPrefillValuesPresenter $prefill_values, $extra_plugin_field)
+    {
         $this->prefill_values         = $prefill_values;
         $this->login                  = $GLOBALS['Language']->getText('account_register', 'login');
         $this->email                  = $GLOBALS['Language']->getText('account_register', 'email');
@@ -74,7 +75,8 @@ class Account_RegisterPresenter {
         }
     }
 
-    public function extra_plugin_field() {
+    public function extra_plugin_field()
+    {
         return $this->extra_plugin_field;
     }
 }

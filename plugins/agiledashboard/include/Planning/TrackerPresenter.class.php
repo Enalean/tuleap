@@ -32,31 +32,37 @@ class Planning_TrackerPresenter {
      */
     private $tracker;
 
-    public function __construct(Planning $planning, Tracker $tracker) {
+    public function __construct(Planning $planning, Tracker $tracker)
+    {
         $this->planning = $planning;
         $this->tracker  = $tracker;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->tracker->getId();
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->tracker->getName();
     }
 
-    public function selectedIfBacklogTracker() {
+    public function selectedIfBacklogTracker()
+    {
         return (in_array($this->tracker->getId(), $this->planning->getBacklogTrackersIds()));
     }
 
-    public function selectedIfPlanningTracker() {
+    public function selectedIfPlanningTracker()
+    {
         return ($this->tracker->getId() == $this->planning->getPlanningTrackerId());
     }
 
     /**
      * @return Tracker
      */
-    public function getTracker() {
+    public function getTracker()
+    {
         return $this->tracker;
     }
 }

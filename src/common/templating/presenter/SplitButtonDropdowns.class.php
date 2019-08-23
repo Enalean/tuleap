@@ -35,30 +35,36 @@ class Templating_Presenter_SplitButtonDropdowns {
      */
     private $options;
 
-    public function __construct($id, $btn_class, Templating_Presenter_ButtonDropdownsOption $default_option, array $options) {
+    public function __construct($id, $btn_class, Templating_Presenter_ButtonDropdownsOption $default_option, array $options)
+    {
         $this->id = $id;
         $this->btn_class = $btn_class;
         $this->default_option = $default_option;
         $this->options = $options;
     }
 
-    public function id() {
+    public function id()
+    {
         return $this->id;
     }
 
-    public function btn_class() {
+    public function btn_class()
+    {
         return $this->btn_class;
     }
 
-    public function default_option() {
+    public function default_option()
+    {
         return $this->default_option;
     }
 
-    public function options() {
+    public function options()
+    {
         return $this->options;
     }
 
-    public function has_options() {
+    public function has_options()
+    {
         return count($this->options) > 0;
     }
 }

@@ -32,11 +32,13 @@ class MediawikiVersionManager {
     /** @var MediawikiVersionDao */
     private $version_dao;
 
-    public function __construct(MediawikiVersionDao $version_dao) {
+    public function __construct(MediawikiVersionDao $version_dao)
+    {
         $this->version_dao = $version_dao;
     }
 
-    public function saveVersionForProject(Project $project, $version) {
+    public function saveVersionForProject(Project $project, $version)
+    {
         if (! in_array($version, self::$AVAILABLE_VERSIONS)) {
             throw new Mediawiki_UnsupportedVersionException();
         }
@@ -44,7 +46,8 @@ class MediawikiVersionManager {
         return $this->version_dao->saveMediawikiVersionForProject($project->getID(), $version);
     }
 
-    public function getVersionForProject(Project $project) {
+    public function getVersionForProject(Project $project)
+    {
         $row = $this->version_dao->getVersionForProject($project->getID());
 
         if (! $row) {

@@ -26,14 +26,16 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_Admin_Metadata extends Docman_View_Extra {
 
-    function _title($params) {
+    function _title($params)
+    {
         echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_title') .'</h2>';
     }
 
     /**
      * List the available metadata
      */
-    function getMetadataTable($mdIter, $groupId, $defaultUrl) {
+    function getMetadataTable($mdIter, $groupId, $defaultUrl)
+    {
         $content = '';
 
         $mdFactory = new Docman_MetadataFactory($groupId);
@@ -108,7 +110,8 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
     /**
      * Return form to create a new metadata
      */
-    function getNewMetadataForm($groupId) {
+    function getNewMetadataForm($groupId)
+    {
         $content = '';
         $content .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_new_title').'</h3>'."\n";
 
@@ -150,7 +153,8 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
     /**
      * Import metadata from a given project
      */
-    function getImportForm($groupId) {
+    function getImportForm($groupId)
+    {
         $GLOBALS['HTML']->includeFooterJavascriptSnippet("new ProjectAutoCompleter('plugin_docman_metadata_import_group', '".util_get_dir_image_theme()."', false);");
         $content = '';
         $content .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_import_title').'</h3>'."\n";
@@ -167,7 +171,8 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
     /**
      * Build page
      */
-    function _content($params) {
+    function _content($params)
+    {
         $content = '';
 
         $content .= $this->getMetadataTable($params['mdIter'], $params['group_id'], $params['default_url']);

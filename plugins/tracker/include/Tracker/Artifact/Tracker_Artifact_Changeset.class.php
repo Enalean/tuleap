@@ -49,7 +49,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      * @param int              $submitted_on The timestamp
      * @param string           $email        The email of the submitter if anonymous mode
      */
-    public function __construct($id, $artifact, $submitted_by, $submitted_on, $email) {
+    public function __construct($id, $artifact, $submitted_by, $submitted_on, $email)
+    {
         $this->id           = $id;
         $this->artifact     = $artifact;
         $this->submitted_by = $submitted_by;
@@ -64,7 +65,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return Tracker_Artifact_ChangesetValue|null
      */
-    public function getValue(Tracker_FormElement_Field $field) {
+    public function getValue(Tracker_FormElement_Field $field)
+    {
         if (! isset($this->values[$field->getId()])) {
             $this->values[$field->getId()] = $this->getChangesetValueFromDB($field);
         }
@@ -76,7 +78,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         return true;
     }
 
-    private function getChangesetValueFromDB(Tracker_FormElement_Field $field) {
+    private function getChangesetValueFromDB(Tracker_FormElement_Field $field)
+    {
         $dar = $this->getValueDao()->searchByFieldId($this->id, $field->getId());
         if ($dar && count($dar)) {
             $row = $dar->getRow();
@@ -85,7 +88,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         return null;
     }
 
-    public function setFieldValue(Tracker_FormElement_Field $field, ?Tracker_Artifact_ChangesetValue $value = null) {
+    public function setFieldValue(Tracker_FormElement_Field $field, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
         $this->values[$field->getId()] = $value;
     }
 
@@ -99,7 +103,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return int The submission date of this changeset (timestamp)
      */
-    public function getSubmittedOn() {
+    public function getSubmittedOn()
+    {
         return $this->submitted_on;
     }
 
@@ -108,7 +113,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return int The user id or 0/null if anonymous
      */
-    public function getSubmittedBy() {
+    public function getSubmittedBy()
+    {
         return $this->submitted_by;
     }
 
@@ -117,7 +123,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return string an email
      */
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->email;
     }
 
@@ -126,14 +133,16 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return Tracker_Artifact_ChangesetValue[] or empty array if not found
      */
-    public function getValues() {
+    public function getValues()
+    {
         if (! $this->values) {
             $this->forceFetchAllValues();
         }
         return $this->values;
     }
 
-    public function forceFetchAllValues() {
+    public function forceFetchAllValues()
+    {
         $this->values = array();
         $factory = $this->getFormElementFactory();
         foreach ($this->getValueDao()->searchById($this->id) as $row) {
@@ -150,7 +159,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return void
      */
-    public function delete(PFUser $user) {
+    public function delete(PFUser $user)
+    {
         if ($this->userCanDeletePermanently($user)) {
             $this->getChangesetDao()->delete($this->id);
             $this->getCommentDao()->delete($this->id);
@@ -158,7 +168,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         }
     }
 
-    protected function deleteValues() {
+    protected function deleteValues()
+    {
         $value_dao = $this->getValueDao();
         $factory = $this->getFormElementFactory();
         foreach ($value_dao->searchById($this->id) as $row) {
@@ -174,7 +185,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return Tracker_Artifact_Changeset_ValueDao The dao
      */
-    protected function getValueDao() {
+    protected function getValueDao()
+    {
         return new Tracker_Artifact_Changeset_ValueDao();
     }
 
@@ -183,15 +195,18 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return Tracker_FormElementFactory The factory
      */
-    protected function getFormElementFactory() {
+    protected function getFormElementFactory()
+    {
         return Tracker_FormElementFactory::instance();
     }
 
-    public function getFollowUpDate() {
+    public function getFollowUpDate()
+    {
         return $this->submitted_on;
     }
 
-    public function getFollowupContent($diff_to_previous) {
+    public function getFollowupContent($diff_to_previous)
+    {
         $html = '';
 
         //The comment
@@ -221,7 +236,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return string html
      */
-    public function fetchFollowUp($diff_to_previous) {
+    public function fetchFollowUp($diff_to_previous)
+    {
         $html = '';
 
         $html .= $this->getAvatar();
@@ -242,7 +258,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         return $html;
     }
 
-    private function fetchChangesetActionButtons() {
+    private function fetchChangesetActionButtons()
+    {
         $html        = '';
         $edit_button = $this->fetchEditButton();
         $mail_button = $this->fetchIncomingMailButton();
@@ -258,7 +275,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         return $html;
     }
 
-    private function fetchEditButton() {
+    private function fetchEditButton()
+    {
         if (! $this->userCanEdit()) {
             return '';
         }
@@ -271,7 +289,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         return $html;
     }
 
-    private function fetchIncomingMailButton() {
+    private function fetchIncomingMailButton()
+    {
         if (! $this->getUserManager()->getCurrentUser()->isSuperUser()) {
             return '';
         }
@@ -292,7 +311,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         return $html;
     }
 
-    public function getImage() {
+    public function getImage()
+    {
         return $GLOBALS['HTML']->getImage(
             'ic/comment.png',
             array(
@@ -308,7 +328,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     /**
      * @return PFUser
      */
-    public function getSubmitter() {
+    public function getSubmitter()
+    {
         if ($this->submitted_by) {
             return UserManager::instance()->getUserById($this->submitted_by);
         } else {
@@ -322,7 +343,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     /**
      * @return string html
      */
-    public function getSubmitterUrl() {
+    public function getSubmitterUrl()
+    {
         if ($this->submitted_by) {
             $submitter = $this->getSubmitter();
             $uh = UserHelper::instance();
@@ -338,28 +360,32 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     /**
      * @return string
      */
-    public function getHTMLAvatar() {
+    public function getHTMLAvatar()
+    {
         return $this->getSubmitter()->fetchHtmlAvatar();
     }
 
     /**
      * @return string
      */
-    public function getAvatarUrl() {
+    public function getAvatarUrl()
+    {
         return $this->getSubmitter()->getAvatarUrl();
     }
 
     /**
      * @return string html
      */
-    public function getDateSubmittedOn() {
+    public function getDateSubmittedOn()
+    {
         return DateHelper::timeAgoInWords($this->submitted_on, false, true);
     }
 
     /**
      * @return string
      */
-    public function getFollowUpClassnames($diff_to_previous) {
+    public function getFollowUpClassnames($diff_to_previous)
+    {
         $classnames = '';
 
         $comment = $this->getComment();
@@ -385,7 +411,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     // display such changesets as if they were only containing changes,
     // so we introduced this function to determine wether we're in this
     // case or not.
-    private function shouldBeDisplayedAsChange($changes, $comment) {
+    private function shouldBeDisplayedAsChange($changes, $comment)
+    {
         if ($comment) {
             // Not comment AND no changes
             return $comment->hasEmptyBody() && ! $changes;
@@ -401,7 +428,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return bool true if the user can delete
      */
-    protected function userCanDeletePermanently(PFUser $user) {
+    protected function userCanDeletePermanently(PFUser $user)
+    {
         // Only tracker admin can edit a comment
         return $this->artifact->getTracker()->userIsAdmin($user);
     }
@@ -413,7 +441,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return bool true if the user can delete
      */
-    protected function userCanDelete(?PFUser $user = null) {
+    protected function userCanDelete(?PFUser $user = null)
+    {
         if (!$user) {
             $user = $this->getUserManager()->getCurrentUser();
         }
@@ -428,7 +457,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return bool true if the user can edit
      */
-    public function userCanEdit(?PFUser $user = null) {
+    public function userCanEdit(?PFUser $user = null)
+    {
         if (!$user) {
             $user = $this->getUserManager()->getCurrentUser();
         }
@@ -445,13 +475,15 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return void
      */
-    public function updateComment($body, $user, $comment_format, $timestamp) {
+    public function updateComment($body, $user, $comment_format, $timestamp)
+    {
         if ($this->updateCommentWithoutNotification($body, $user, $comment_format, $timestamp)) {
             $this->executePostCreationActions();
         }
     }
 
-    public function updateCommentWithoutNotification($body, $user, $comment_format, $timestamp) {
+    public function updateCommentWithoutNotification($body, $user, $comment_format, $timestamp)
+    {
         if ($this->userCanEdit($user)) {
             $commentUpdated = $this->getCommentDao()->createNewVersion(
                 $this->id,
@@ -492,7 +524,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     /**
      * @return ReferenceManager
      */
-    protected function getReferenceManager() {
+    protected function getReferenceManager()
+    {
         return ReferenceManager::instance();
     }
 
@@ -501,7 +534,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return Tracker_Artifact_Changeset_Comment The comment of this changeset, or null if no comments
      */
-    public function getComment() {
+    public function getComment()
+    {
         if (isset($this->latest_comment)) {
             return $this->latest_comment;
         }
@@ -524,7 +558,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @param Tracker_Artifact_Changeset_Comment|-1 $comment
      */
-    public function setLatestComment($comment) {
+    public function setLatestComment($comment)
+    {
         $this->latest_comment = $comment;
     }
 
@@ -533,7 +568,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return Tracker_Artifact_ChangesetDao The Dao
      */
-    protected function getChangesetDao() {
+    protected function getChangesetDao()
+    {
         return new Tracker_Artifact_ChangesetDao();
     }
 
@@ -542,7 +578,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return Tracker_Artifact_Changeset_CommentDao The dao
      */
-    protected function getCommentDao() {
+    protected function getCommentDao()
+    {
         return new Tracker_Artifact_Changeset_CommentDao();
     }
 
@@ -588,7 +625,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return string The field difference between the previous changeset. or false if no changes
      */
-    public function mailDiffToPrevious($format = 'html', $user = null, $ignore_perms = false) {
+    public function mailDiffToPrevious($format = 'html', $user = null, $ignore_perms = false)
+    {
         return $this->diffToPrevious($format, $user, $ignore_perms, true);
     }
 
@@ -597,7 +635,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return string The field difference between the previous changeset. or false if no changes
      */
-    public function modalDiffToPrevious($format = 'html', $user = null, $ignore_perms = false) {
+    public function modalDiffToPrevious($format = 'html', $user = null, $ignore_perms = false)
+    {
         return $this->diffToPrevious($format, $user, $ignore_perms, false, true);
     }
 
@@ -741,7 +780,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return UserManager
      */
-    public function getUserManager() {
+    public function getUserManager()
+    {
         return UserManager::instance();
     }
 
@@ -760,7 +800,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return Tracker_Artifact The artifact of this changeset
      */
-    public function getArtifact() {
+    public function getArtifact()
+    {
         return $this->artifact;
     }
 
@@ -769,11 +810,13 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return int The Id of this changeset
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getRESTValue(PFUser $user, $fields) {
+    public function getRESTValue(PFUser $user, $fields)
+    {
         $comment = $this->getComment();
         if (! $comment) {
             $comment = new Tracker_Artifact_Changeset_CommentNull($this);
@@ -791,7 +834,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         return $changeset_representation;
     }
 
-    private function getRESTFieldValues(PFUser $user) {
+    private function getRESTFieldValues(PFUser $user)
+    {
         $values = array();
         $factory = $this->getFormElementFactory();
 
@@ -845,7 +889,8 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return String
      */
-    public function getUri() {
+    public function getUri()
+    {
         return  TRACKER_BASE_URL.'/?aid='.$this->getArtifact()->getId().'#followup_'.$this->getId();
     }
 

@@ -61,7 +61,8 @@
 include_once (dirname(__FILE__)."/config.php");
 include_once (dirname(__FILE__)."/FileFinder.php");
 
-function IniConfig($file) {
+function IniConfig($file)
+{
 
     // List of all valid config options to be define()d which take "values" (not
     // booleans). Needs to be categorised, and generally made a lot tidier.
@@ -335,7 +336,8 @@ function IniConfig($file) {
 }
 
 // moved from lib/config.php [1ms]
-function fixup_static_configs($file) {
+function fixup_static_configs($file)
+{
     global $FieldSeparator, $charset, $WikiNameRegexp, $AllActionPages;
     global $DBParams, $LANG;
     // init FileFinder to add proper include paths
@@ -458,7 +460,8 @@ function fixup_static_configs($file) {
  * Such as the language, and the virtual and server paths, which might be overridden
  * by startup scripts for wiki farms.
  */
-function fixup_dynamic_configs($file) {
+function fixup_dynamic_configs($file)
+{
     global $WikiNameRegexp;
     global $DBParams, $LANG;
 

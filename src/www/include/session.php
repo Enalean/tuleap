@@ -22,17 +22,20 @@
 
 $G_SESSION=array();
 
-function session_make_url($loc) {
+function session_make_url($loc)
+{
     return HTTPRequest::instance()->getServerUrl(). $loc;
 }
 
-function session_redirect($loc) {
+function session_redirect($loc)
+{
     $GLOBALS['Response']->redirect($loc);
     print("\n\n");
     exit;
 }
 
-function session_require($req) {
+function session_require($req)
+{
     global $Language;
     /*
         Codendi admins always return true
@@ -73,7 +76,8 @@ function session_require($req) {
  *
  * @param string The session key
  */
-function session_continue($sessionKey) {
+function session_continue($sessionKey)
+{
     $user = UserManager::instance()->getCurrentUser($sessionKey);
     return $user->isLoggedIn();
 }

@@ -38,7 +38,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      * @param Tracker                           $tracker    The tracker
      * @param Tracker_FormElement_Field $initial_effort_field The field
      */
-    public function __construct(Tracker $tracker, ?Tracker_FormElement_Field $initial_effort_field = null) {
+    public function __construct(Tracker $tracker, ?Tracker_FormElement_Field $initial_effort_field = null)
+    {
         parent::__construct($tracker);
         $this->initial_effort_field = $initial_effort_field;
     }
@@ -48,7 +49,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      *
      * @return string
      */
-    public function getShortName() {
+    public function getShortName()
+    {
         return self::NAME;
     }
 
@@ -57,7 +59,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      *
      * @return string
      */
-    public function getLabel() {
+    public function getLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','initial_effort_label');
     }
 
@@ -66,7 +69,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      *
      * @return string
      */
-    public function getDescription() {
+    public function getDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','initial_effort_description');
     }
 
@@ -75,7 +79,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      *
      * @return int The Id of the (numeric) field used for initial_effort semantic, or 0 if no field
      */
-    public function getFieldId() {
+    public function getFieldId()
+    {
         if ($this->initial_effort_field) {
             return $this->initial_effort_field->getId();
         } else {
@@ -88,7 +93,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      *
      * @return Tracker_FormElement_Field The (numeric) field used for initial_effort semantic, or null if no field
      */
-    public function getField() {
+    public function getField()
+    {
         return $this->initial_effort_field;
     }
 
@@ -97,7 +103,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      *
      * @return void
      */
-    public function display() {
+    public function display()
+    {
         echo $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','initial_effort_long_desc');
 
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
@@ -122,7 +129,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      *
      * @return void
      */
-    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
+    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    {
         $purify = Codendi_HTMLPurifier::instance();
         $semantic_manager->displaySemanticHeader($this, $tracker_manager);
         $html = '';
@@ -180,7 +188,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      *
      * @return void
      */
-    public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
+    public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    {
         if ($request->exist('update')) {
             $this->getCSRFToken()->check();
             $field_id = $request->get('initial_effort_field_id');
@@ -216,7 +225,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      *
      * @return bool true if success, false otherwise
      */
-    public function save() {
+    public function save()
+    {
         $dao = new AgileDashboard_Semantic_Dao_InitialEffortDao();
         return $dao->save($this->tracker->getId(), $this->getFieldId());
     }
@@ -224,7 +234,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
     /**
      * @return bool
      */
-    public function delete() {
+    public function delete()
+    {
         $dao = new AgileDashboard_Semantic_Dao_InitialEffortDao();
         return $dao->delete($this->tracker->getId());
     }
@@ -236,7 +247,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      *
      * @return AgileDashBoard_Semantic_InitialEffort
      */
-    public static function load(Tracker $tracker) {
+    public static function load(Tracker $tracker)
+    {
         if (!isset(self::$_instances[$tracker->getId()])) {
             $field = self::getFieldFromTracker($tracker);
             self::$_instances[$tracker->getId()] = new AgileDashBoard_Semantic_InitialEffort($tracker, $field);
@@ -248,7 +260,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      * @param Tracker $tracker
      * @return Tracker_FormElement_Field | null
      */
-    private static function getFieldFromTracker(Tracker $tracker) {
+    private static function getFieldFromTracker(Tracker $tracker)
+    {
         $dao      = new AgileDashboard_Semantic_Dao_InitialEffortDao();
         $field    = null;
         $field_id = null;
@@ -271,7 +284,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    {
         if ($this->getFieldId() && in_array($this->getFieldId(), $xmlMapping)) {
              $child = $root->addChild('semantic');
              $child->addAttribute('type', $this->getShortName());
@@ -288,7 +302,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      * @param Tracker_FormElement_Field the field to test if it is used in semantics or not
      * @return bool returns true if the field is used in semantics, false otherwise
      */
-    public function isUsedInSemantics(Tracker_FormElement_Field $field) {
+    public function isUsedInSemantics(Tracker_FormElement_Field $field)
+    {
         return $this->getFieldId() == $field->getId();
     }
 }

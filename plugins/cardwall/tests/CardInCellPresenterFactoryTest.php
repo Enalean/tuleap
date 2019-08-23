@@ -24,7 +24,8 @@
 
 class CardInCellPresenterFactoryTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -38,7 +39,8 @@ class CardInCellPresenterFactoryTest extends TuleapTestCase {
         $this->field_provider = mockery_stub(\Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class)->getField($tracker)->returns($this->field);
     }
 
-    public function itHasACardInCellPresenterWithASemanticStatusFieldId() {
+    public function itHasACardInCellPresenterWithASemanticStatusFieldId()
+    {
         $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, new Cardwall_MappingCollection());
         $cell_presenter = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
 
@@ -48,7 +50,8 @@ class CardInCellPresenterFactoryTest extends TuleapTestCase {
         );
     }
 
-    public function itHasACardInCellPresenterWithSwimLineId() {
+    public function itHasACardInCellPresenterWithSwimLineId()
+    {
         $swimline_id = 112;
         stub($this->card_presenter)->getSwimlineId()->returns($swimline_id);
 
@@ -63,7 +66,8 @@ class CardInCellPresenterFactoryTest extends TuleapTestCase {
         );
     }
 
-    public function itHasACardInCellPresenterWithSwimLineValueCollection() {
+    public function itHasACardInCellPresenterWithSwimLineValueCollection()
+    {
         $swimline_id = 112;
         stub($this->card_presenter)->getSwimlineId()->returns($swimline_id);
 

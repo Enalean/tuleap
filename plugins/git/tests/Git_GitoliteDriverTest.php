@@ -46,7 +46,8 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
     /** @var ProjectManager */
     private $project_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->project_manager   = mock('ProjectManager');
@@ -119,13 +120,15 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         );
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
 
         unset($GLOBALS['sys_data_dir']);
     }
 
-    public function testGitoliteConfUpdate() {
+    public function testGitoliteConfUpdate()
+    {
         stub($this->gitoliterc_reader)->getHostname()->returns(null);
 
         touch($this->_glAdmDir.'/conf/projects/project1.conf');
@@ -137,15 +140,18 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         $this->assertPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
 
-    protected function getGitoliteConf() {
+    protected function getGitoliteConf()
+    {
         return file_get_contents($this->_glAdmDir.'/conf/gitolite.conf');
     }
 
-    protected function getFileConf($filename) {
+    protected function getFileConf($filename)
+    {
         return file_get_contents($this->_glAdmDir.'/conf/'.$filename.'.conf');
     }
 
-    public function itCanRenameProject() {
+    public function itCanRenameProject()
+    {
         $new_name = 'newone';
         stub($this->project_manager)->getProjectByUnixName($new_name)->returns(aMockProject()->withUnixName($new_name)->build());
         $this->gitExec->expectOnce('push');
@@ -167,13 +173,15 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         $this->assertEmptyGitStatus();
     }
 
-    public function itLogsEverytimeItPushes() {
+    public function itLogsEverytimeItPushes()
+    {
         expect($this->logger)->debug()->count(2);
 
         $this->driver->push();
     }
 
-    public function itOnlyIncludeHOSTNAMERelatedConfFileIfHOSTNAMEVariableIsSetInGitoliteRcFile() {
+    public function itOnlyIncludeHOSTNAMERelatedConfFileIfHOSTNAMEVariableIsSetInGitoliteRcFile()
+    {
         stub($this->gitoliterc_reader)->getHostname()->returns("master");
 
         touch($this->_glAdmDir.'/conf/projects/project1.conf');
@@ -217,14 +225,16 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
 
 class Git_GitoliteDriver_ForkTest extends Git_GitoliteTestCase {
 
-    protected function _getFileGroupName($filePath) {
+    protected function _getFileGroupName($filePath)
+    {
         clearstatcache();
         $rootStats = stat($filePath);
         $groupInfo = posix_getgrgid($rootStats[5]);
         return $groupInfo['name'];
     }
 
-    protected function assertNameSpaceFileHasBeenInitialized($repoPath, $namespace, $group) {
+    protected function assertNameSpaceFileHasBeenInitialized($repoPath, $namespace, $group)
+    {
         $namespaceInfoFile = $repoPath.'/tuleap_namespace';
         $this->assertTrue(file_exists($namespaceInfoFile), 'the file (' . $namespaceInfoFile . ') does not exists');
         $this->assertEqual(file_get_contents($namespaceInfoFile), $namespace);
@@ -232,7 +242,8 @@ class Git_GitoliteDriver_ForkTest extends Git_GitoliteTestCase {
 
     }
 
-    protected function assertWritableByGroup($new_root_dir, $group) {
+    protected function assertWritableByGroup($new_root_dir, $group)
+    {
         $this->assertEqual($group, $this->_getFileGroupName($new_root_dir));
         $this->assertEqual($group, $this->_getFileGroupName($new_root_dir .'/hooks/gitolite_hook.sh'));
 
@@ -241,7 +252,8 @@ class Git_GitoliteDriver_ForkTest extends Git_GitoliteTestCase {
         $this->assertPattern('/.*770$/', decoct($rootStats[2]));
     }
 
-    public function assertRepoIsClonedWithHooks($new_root_dir) {
+    public function assertRepoIsClonedWithHooks($new_root_dir)
+    {
         $this->assertTrue(is_dir($new_root_dir), "the new git repo dir ($new_root_dir) wasn't found.");
         $new_repo_HEAD = $new_root_dir . '/HEAD';
         $this->assertTrue(file_exists($new_repo_HEAD), 'the file (' . $new_repo_HEAD . ') does not exists');
@@ -249,11 +261,13 @@ class Git_GitoliteDriver_ForkTest extends Git_GitoliteTestCase {
     }
 
     // JM: Dont understant this test, should it be in _Fork or the miscallaneous part?
-    public function itIsInitializedEvenIfThereIsNoMaster() {
+    public function itIsInitializedEvenIfThereIsNoMaster()
+    {
         $this->assertTrue($this->driver->isInitialized($this->_fixDir.'/headless.git'));
     }
 
-    public function itIsNotInitializedldIfThereIsNoValidDirectory() {
+    public function itIsNotInitializedldIfThereIsNoValidDirectory()
+    {
         $this->assertFalse($this->driver->isInitialized($this->_fixDir));
     }
 }

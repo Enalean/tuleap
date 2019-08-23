@@ -50,7 +50,8 @@ extends XmlParser
      *  dialect: "PhpWiki2", "PhpWiki"
      *  possible more dialects: MediaWiki, kwiki, c2
      */
-    function __construct($dialect = "PhpWiki2", $encoding = '') {
+    function __construct($dialect = "PhpWiki2", $encoding = '')
+    {
         $classname = "HtmlParser_".$dialect;
         if (class_exists($classname))
             $this->dialect = new $classname;
@@ -75,14 +76,16 @@ extends XmlParser
     function parse_url($file, $debug=false)
     */
 
-    function output () {
+    function output()
+    {
         if (is_null($this->root))
             $this->root = $GLOBALS['xml_parser_root'];
         $output = $this->wikify( $this->root );
         return $output;
     }
 
-    function wikify ($node, $parent = null) {
+    function wikify($node, $parent = null)
+    {
         $output = '';
         if( isa($node, 'XmlElement')) {
             $dialect = $this->dialect;
@@ -122,7 +125,8 @@ extends XmlParser
      * element's content list through the C<wikify()> method, and
      * returning the concatenated result.
      */
-    function elem_contents($node) {
+    function elem_contents($node)
+    {
         $output = '';
         if (isa($node,'XmlElement')) {
             foreach ($node->getContent() as $child) {
@@ -143,7 +147,8 @@ extends XmlParser
     // is suitable for inserting into an HTML document, as
     // attribute name/value pairs are specified in attr="value"
     // format.
-    function _elem_attr_str($node, $attrs) {
+    function _elem_attr_str($node, $attrs)
+    {
         $s = '';
         foreach ($node->_attr as $attr => $val) {
             $attr = strtolower($attr);
@@ -158,7 +163,8 @@ extends XmlParser
     // Returns true if the specified HtmlElement has an ancestor element
     // whose element tag equals $tag. This is useful for determining if
     // an element belongs to the specified tag.
-    function _elem_has_ancestor($node, $tag) {
+    function _elem_has_ancestor($node, $tag)
+    {
         if (isset($node->parent)) {
             if ($node->parent->_tag == $tag) return true;
             return $this->_elem_has_ancestor($node->parent, $tag);
@@ -175,7 +181,8 @@ extends XmlParser
     // element and the only child it contains is an IMG tag or an IMG tag
     // contained within a sole A tag (not counting child elements with
     // whitespace text only).
-    function _elem_is_image_div( $node ) {
+    function _elem_is_image_div( $node )
+    {
         // Return false if node is undefined or isn't a DIV at all
         if (!$node or !in_array($node->_tag,array("div","p")))
             return false;
@@ -194,24 +201,28 @@ extends XmlParser
 
     /** preserves tags and content
      */
-    function wikify_default($node) {
+    function wikify_default($node)
+    {
         return $this->wikify_preserve($node);
     }
 
     /** preserves tags and content
     */
-    function wikify_preserve($node) {
+    function wikify_preserve($node)
+    {
         return $node->asXML();
     }
 
-    function log($dummy) {}
+    function log($dummy)
+    {}
 }
 
 
 class HtmlParser_PhpWiki2
 extends HtmlParser
 {
-    function __construct() {
+    function __construct()
+    {
         $this->_handlers =
             array('html'   => '',
                   'head'   => '',
@@ -265,14 +276,17 @@ extends HtmlParser
                   );
     }
 
-    function wikify_table( $node ) {
+    function wikify_table( $node )
+    {
         $this->ident = '';
         return "| \n" . $this->elem_contents($node) . "|\n\n";
     }
-    function wikify_tr( $node ) {
+    function wikify_tr( $node )
+    {
         return "\n| " . $this->elem_contents($node);
     }
-    function wikify_th( $node ) {
+    function wikify_th( $node )
+    {
         $ident = empty($this->ident) ? '' : $this->ident;
         $output = "$ident| ";
         $content = $this->elem_contents($node);
@@ -282,11 +296,13 @@ extends HtmlParser
         return "$output |\n";
     }
 
-    function wikify_list_item( $node ) {
+    function wikify_list_item( $node )
+    {
         return ($this->_elem_has_ancestor($node, 'ol') ? '*' : '#') . " " . trim($this->elem_contents($node)). "\n";
     }
 
-    function wikify_link( $node ) {
+    function wikify_link( $node )
+    {
         $url = $this->absolute_url( $node->getAttr('href') );
         $title = $this->elem_contents($node);
         if (empty($url))
@@ -308,7 +324,8 @@ extends HtmlParser
         return "[ $url | $title ]";
     }
 
-    function wikify_h( $node ) {
+    function wikify_h( $node )
+    {
         $level = substr($node->_tag,1);
         if ($level < 4) {
             $markup = str_repeat('!',4 - $level);
@@ -318,12 +335,14 @@ extends HtmlParser
         return $markup.' '.trim($this->elem_contents($node))."\n\n";
     }
 
-    function wikify_verbatim( $node ) {
+    function wikify_verbatim( $node )
+    {
         $contents = $this->elem_contents( $node );
         return "\n<verbatim>\n$contents\n</verbatim>";
     }
 
-    function wikify_img( $node ) {
+    function wikify_img( $node )
+    {
         $image_url = $this->absolute_url( $node->getAttr('src') );
         $file = basename( $image_url );
         $alignment = $node->getAttr('align');

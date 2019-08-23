@@ -101,7 +101,8 @@ class ForgeAccess_AdminController
         );
     }
 
-    public function update() {
+    public function update()
+    {
         $this->csrf->check();
 
         $updated  = false;
@@ -116,7 +117,8 @@ class ForgeAccess_AdminController
         $this->redirectToIndex();
     }
 
-    public function notSiteAdmin(HTTPRequest $request) {
+    public function notSiteAdmin(HTTPRequest $request)
+    {
         $this->response->redirect($request->getServerUrl());
     }
 
@@ -125,12 +127,14 @@ class ForgeAccess_AdminController
         return ForgeConfig::get('codendi_dir') .'/src/templates/admin/anonymous/';
     }
 
-    private function redirectToIndex() {
+    private function redirectToIndex()
+    {
         $this->response->redirect($_SERVER['SCRIPT_NAME']);
     }
 
     /** @return bool true if updated */
-    private function updateAccessValue() {
+    private function updateAccessValue()
+    {
         $new_access_value = $this->request->get(self::ACCESS_KEY);
         try {
             $this->updateAccess($new_access_value);
@@ -145,12 +149,14 @@ class ForgeAccess_AdminController
     /**
      * @throws UnknownForgeAccessValueException
      */
-    private function updateAccess($new_access_value) {
+    private function updateAccess($new_access_value)
+    {
         $old_access_value = ForgeConfig::get(ForgeAccess::CONFIG);
         $this->manager->updateAccess($new_access_value, $old_access_value);
     }
 
-    private function updateLabels($new_access_value) {
+    private function updateLabels($new_access_value)
+    {
         if ($new_access_value === ForgeAccess::RESTRICTED) {
             $this->manager->updateLabels(
                 trim($this->request->getValidated('ugroup_authenticated_users', 'string', '')),
@@ -163,7 +169,8 @@ class ForgeAccess_AdminController
         return true;
     }
 
-    public function updateAnonymousAccess() {
+    public function updateAnonymousAccess()
+    {
         $this->csrf->check();
 
         $updated  = false;

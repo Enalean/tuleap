@@ -71,10 +71,9 @@ class DocmanWikiVersionCreator
         int $obsolescence_date_timestamp,
         string $title,
         ?string $description
-
     ): void {
         $this->transaction_executor->execute(
-            function() use ($item, $current_user, $representation, $status_id, $obsolescence_date_timestamp, $title, $description) {
+            function () use ($item, $current_user, $representation, $status_id, $obsolescence_date_timestamp, $title, $description) {
                 $next_version_id = (int)$this->version_factory->getNextVersionNumber($item);
 
                 $new_wiki_version_row = [

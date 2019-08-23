@@ -44,7 +44,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
     /**
      * @deprecated
      */
-    public function __construct($da, $result) {
+    public function __construct($da, $result)
+    {
         $this->da     = $da;
         $this->result = $result;
         if (!is_bool($result)) {
@@ -57,7 +58,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
     /**
      * @deprecated
      */
-    public function getResult() {
+    public function getResult()
+    {
         return $this->result;
     }
 
@@ -70,7 +72,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return LegacyDataAccessResultInterface
      */
-    public function instanciateWith($instance_callback) {
+    public function instanciateWith($instance_callback)
+    {
         $this->instance_callback = $instance_callback;
         return $this;
     }
@@ -82,7 +85,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return mixed
      */
-    public function getRow() {
+    public function getRow()
+    {
         $row = $this->current();
         $this->next();
         return $row;
@@ -95,7 +99,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return int
      */
-    public function rowCount() {
+    public function rowCount()
+    {
         return $this->da->numRows($this->result);
     }
 
@@ -106,7 +111,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return mixed
      */
-    public function isError() {
+    public function isError()
+    {
         $error= $this->daIsError();
         if (!empty($error))
             return $error;
@@ -114,7 +120,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
             return false;
     }
 
-    protected function daIsError() {
+    protected function daIsError()
+    {
         return $this->da->isError();
     }
 
@@ -123,7 +130,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      * @deprecated
      * @return array Return the current element
      */
-    public function current() {
+    public function current()
+    {
         if ($this->instance_callback) {
             return call_user_func_array($this->instance_callback, array($this->_row));
         } else {
@@ -138,7 +146,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return void
      */
-    public function next() {
+    public function next()
+    {
         $this->_current++;
         $this->_row = $this->daFetch();
     }
@@ -146,7 +155,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
     /**
      * @deprecated
      */
-    protected function daFetch() {
+    protected function daFetch()
+    {
         return $this->da->fetch($this->result);
     }
 
@@ -157,7 +167,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return bool
      */
-    public function valid() {
+    public function valid()
+    {
         return $this->_row !== false;
     }
 
@@ -168,7 +179,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return void
      */
-    public function rewind() {
+    public function rewind()
+    {
         if ($this->rowCount() > 0) {
             $this->daSeek();
             $this->next();
@@ -179,7 +191,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
     /**
      * @deprecated
      */
-    protected function daSeek() {
+    protected function daSeek()
+    {
         $this->da->dataSeek($this->result, 0);
     }
 
@@ -190,7 +203,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return mixed
      */
-    public function key() {
+    public function key()
+    {
         return $this->_current;
     }
     // }}}
@@ -201,7 +215,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return int the number the global function count() should show
      */
-    public function count() {
+    public function count()
+    {
         return $this->rowCount();
     }
 

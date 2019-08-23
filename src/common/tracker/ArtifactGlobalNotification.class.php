@@ -24,22 +24,28 @@ class ArtifactGlobalNotification {
     /**
     * Constructor
     */
-    function __construct($data) {
+    function __construct($data)
+    {
         $this->data = $data;
     }
-    function getId() {
+    function getId()
+    {
         return $this->data['id'];
     }
-    function getTrackerId() {
+    function getTrackerId()
+    {
         return $this->data['tracker_id'];
     }
-    function getAddresses() {
+    function getAddresses()
+    {
         return $this->data['addresses'];
     }
-    function isAllUpdates() {
+    function isAllUpdates()
+    {
         return $this->data['all_updates'];
     }
-    function isCheckPermissions() {
+    function isCheckPermissions()
+    {
         return $this->data['check_permissions'];
     }
 }

@@ -46,13 +46,15 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      * @param Tracker_FormElement_Field_List $list_field  The field
      * @param array                          $open_values The values with the meaning "Open"
      */
-    public function __construct(Tracker $tracker, ?Tracker_FormElement_Field_List $list_field = null, $open_values = array()) {
+    public function __construct(Tracker $tracker, ?Tracker_FormElement_Field_List $list_field = null, $open_values = array())
+    {
         parent::__construct($tracker);
         $this->list_field  = $list_field;
         $this->open_values = $open_values;
     }
 
-    private function getDao() {
+    private function getDao()
+    {
         return new Tracker_Semantic_StatusDao();
     }
 
@@ -61,7 +63,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      *
      * @return string
      */
-    public function getShortName() {
+    public function getShortName()
+    {
         return self::NAME;
     }
 
@@ -70,7 +73,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      *
      * @return string
      */
-    public function getLabel() {
+    public function getLabel()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','status_label');
     }
 
@@ -79,7 +83,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      *
      * @return string
      */
-    public function getDescription() {
+    public function getDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','status_description');
     }
 
@@ -88,7 +93,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      *
      * @return int The Id of the (SB) field used for status semantic, or 0 if no field
      */
-    public function getFieldId() {
+    public function getFieldId()
+    {
         if ($this->list_field) {
             return $this->list_field->getId();
         } else {
@@ -101,7 +107,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      *
      * @return Tracker_FormElement_Field_List The (list) field used for status semantic, or null if no field
      */
-    public function getField() {
+    public function getField()
+    {
         return $this->list_field;
     }
 
@@ -110,11 +117,13 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      *
      * @return array of int The Id of the open values for this status semantic
      */
-    public function getOpenValues() {
+    public function getOpenValues()
+    {
         return $this->open_values;
     }
 
-    public function isOpen(Tracker_Artifact $artifact) {
+    public function isOpen(Tracker_Artifact $artifact)
+    {
         if (! $this->getField()) {
             return true;
         }
@@ -143,7 +152,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      * @param Tracker_Artifact $artifact
      * @return string
      */
-    public function getNormalizedStatusLabel(Tracker_Artifact $artifact) {
+    public function getNormalizedStatusLabel(Tracker_Artifact $artifact)
+    {
         if ($this->isOpen($artifact)) {
             return self::OPEN;
         }
@@ -157,7 +167,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      * @param Tracker_Artifact $artifact
      * @return string
      */
-    public function getLocalizedStatusLabel(Tracker_Artifact $artifact) {
+    public function getLocalizedStatusLabel(Tracker_Artifact $artifact)
+    {
         return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_'. $this->getNormalizedStatusLabel($artifact));
     }
 
@@ -165,7 +176,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      * @deprecated in favor of getLocalizedStatusLabel
      * @return string
      */
-    public function getStatus(Tracker_Artifact $artifact) {
+    public function getStatus(Tracker_Artifact $artifact)
+    {
         return $this->getLocalizedStatusLabel($artifact);
     }
 
@@ -173,7 +185,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      *
      * @return array
      */
-    private function getOpenLabels() {
+    private function getOpenLabels()
+    {
         $labels = array();
 
         if (! $this->list_field instanceof Tracker_FormElement_Field_List) {
@@ -195,7 +208,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      *
      * @return void
      */
-    public function display() {
+    public function display()
+    {
         if ($this->list_field) {
             $purifier = Codendi_HTMLPurifier::instance();
             echo $GLOBALS['Language']->getText(
@@ -338,7 +352,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      *
      * @return void
      */
-    public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
+    public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    {
         if ($request->exist('update')) {
             $this->getCSRFToken()->check();
             if ($request->get('field_id') == '-1') {
@@ -420,7 +435,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      *
      * @return bool
      */
-    public function save() {
+    public function save()
+    {
         $dao = new Tracker_Semantic_StatusDao();
         $open_values = array();
         foreach($this->open_values as $v) {
@@ -437,7 +453,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     /**
      * @param string $new_value
      */
-    public function addOpenValue($new_value) {
+    public function addOpenValue($new_value)
+    {
         $dao = $this->getDao();
 
         $dao->startTransaction();
@@ -449,7 +466,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         return $new_id;
     }
 
-    public function removeOpenValue($value) {
+    public function removeOpenValue($value)
+    {
         $this->open_values = array_diff($this->open_values, array($value));
         return $this->save();
     }
@@ -462,7 +480,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      *
      * @return Tracker_Semantic_Status
      */
-    public static function load(Tracker $tracker) {
+    public static function load(Tracker $tracker)
+    {
         if (! isset(self::$_instances[$tracker->getId()])) {
             return self::forceLoad($tracker);
         }
@@ -470,7 +489,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         return self::$_instances[$tracker->getId()];
     }
 
-    public static function forceLoad(Tracker $tracker) {
+    public static function forceLoad(Tracker $tracker)
+    {
         $field_id    = null;
         $open_values = array();
         $dao         = new Tracker_Semantic_StatusDao();
@@ -500,7 +520,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    {
         if ($this->getFieldId() && in_array($this->getFieldId(), $xmlMapping)) {
             $child = $root->addChild('semantic');
             $child->addAttribute('type', $this->getShortName());
@@ -524,11 +545,13 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      *
      * @return bool returns true if the field is used in semantics, false otherwise
      */
-    public function isUsedInSemantics(Tracker_FormElement_Field $field) {
+    public function isUsedInSemantics(Tracker_FormElement_Field $field)
+    {
         return $this->getFieldId() == $field->getId();
     }
 
-    public function exportToREST(PFUser $user) {
+    public function exportToREST(PFUser $user)
+    {
         $field = $this->getFieldUserCanRead($user);
         if ($field) {
             $semantic_status_representation = new SemanticStatusRepresentation();
@@ -538,13 +561,15 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         return false;
     }
 
-    public function isFieldBoundToStaticValues() {
+    public function isFieldBoundToStaticValues()
+    {
         $bindType = $this->list_field->getBind()->getType();
 
         return ($bindType == Tracker_FormElement_Field_List_Bind_Static::TYPE);
     }
 
-    public function isBasedOnASharedField() {
+    public function isBasedOnASharedField()
+    {
         return $this->list_field->isTargetSharedField();
     }
 

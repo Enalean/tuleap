@@ -61,7 +61,8 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         	<span class="node-blank">&nbsp;</span>'
     );
 
-    public function __construct($collapsable = false) {
+    public function __construct($collapsable = false)
+    {
         $this->collapsable = $collapsable;
     }
 
@@ -73,7 +74,8 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
      *
      * @see TreeNode_GetStateVisitor::setChildState()
      */
-    protected function setChildState(TreeNode $child, $state) {
+    protected function setChildState(TreeNode $child, $state)
+    {
         parent::setChildState($child, $state);
         $data = $child->getData();
         $data['tree-padding']      = $this->getHtmlPaddingFromStates($child, $state);
@@ -82,7 +84,8 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         $child->setData($data);
     }
 
-    protected function getHtmlPaddingFromStates($child, $states) {
+    protected function getHtmlPaddingFromStates($child, $states)
+    {
         $showTree  = $this->collapsable && $child->hasChildren();
         $html      = '';
         $curIndex  = 0;
@@ -95,7 +98,8 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         return $html;
     }
 
-    protected function getPaddingForAState($state, $showTree) {
+    protected function getPaddingForAState($state, $showTree)
+    {
         if ($showTree) {
             return $this->showTreeTpl[$state];
         } else {

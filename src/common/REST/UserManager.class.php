@@ -130,7 +130,8 @@ class UserManager {
      * We need it to browse the API as we are logged in through the Web UI
      * @throws \User_PasswordExpiredException
      */
-    private function getUserFromCookie() {
+    private function getUserFromCookie()
+    {
         $current_user = $this->user_manager->getCurrentUser();
         if (! $current_user->isAnonymous()) {
             $password_expiration_checker = new User_PasswordExpirationChecker();
@@ -189,7 +190,8 @@ class UserManager {
      * @throws NoAuthenticationHeadersException
      * @throws \Rest_Exception_InvalidTokenException
      */
-    private function getUserFromToken() {
+    private function getUserFromToken()
+    {
         if (! isset($_SERVER[self::PHP_HTTP_TOKEN_HEADER])) {
             throw new NoAuthenticationHeadersException(self::HTTP_TOKEN_HEADER);
         }

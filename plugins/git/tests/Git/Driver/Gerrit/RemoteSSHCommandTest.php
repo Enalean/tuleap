@@ -53,7 +53,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
      */
     protected $ssh;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->ssh = partial_mock(
             'Git_Driver_Gerrit_RemoteSSHCommand',
@@ -79,13 +80,15 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         );
     }
 
-    public function itExecutesTheCreateCommandOnTheRemoteServer() {
+    public function itExecutesTheCreateCommandOnTheRemoteServer()
+    {
         $cmd = '-p 29418 -i /path/to/codendiadm/.ssh/id_rsa gerrit@gerrit.example.com a_remote_command';
         expect($this->ssh)->sshExec($cmd)->once();
         $this->ssh->execute($this->config, 'a_remote_command');
     }
 
-    public function itThrowsAnExceptionWithTheErrorCode() {
+    public function itThrowsAnExceptionWithTheErrorCode()
+    {
         stub($this->ssh)->sshExec()->returns(array('exit_code' => 125, 'std_err' => '', 'std_out' =>''));
         try {
             $this->ssh->execute($this->config, 'someFailingCommand');
@@ -95,7 +98,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         }
     }
 
-    public function itThrowsEnExceptionWithErrorCode_withoutStubbingCallToSystem() {
+    public function itThrowsEnExceptionWithErrorCode_withoutStubbingCallToSystem()
+    {
         $ssh_command = new Git_Driver_Gerrit_RemoteSSHCommand(mock('Logger'));
         try {
             $ssh_command->execute($this->config, 'someFailingCommand');
@@ -105,7 +109,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         }
     }
 
-    public function itRaisesAnErrorThatContainsTheStdErr_withoutStubbingCallToSystem() {
+    public function itRaisesAnErrorThatContainsTheStdErr_withoutStubbingCallToSystem()
+    {
         $ssh_command = new Git_Driver_Gerrit_RemoteSSHCommand(mock('Logger'));
         try {
             $ssh_command->execute($this->config, 'someFailingCommand');
@@ -115,7 +120,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         }
     }
 
-    public function itRaisesAnErrorThatContainsTheStdOut() {
+    public function itRaisesAnErrorThatContainsTheStdOut()
+    {
         stub($this->ssh)->sshExec()->returns(array('exit_code' => 125,
             'std_err' => 'cant access subdirectory toto',
             'std_out' => 'somefile someotherfile
@@ -128,7 +134,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         }
     }
 
-    public function itRaisesAnErrorThatContainsTheStdErr() {
+    public function itRaisesAnErrorThatContainsTheStdErr()
+    {
         stub($this->ssh)->sshExec()->returns(
                   array('exit_code' => 1,
                         'std_out'   => '',
@@ -141,7 +148,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         }
     }
 
-    public function itRemovesTemporaryFiles() {
+    public function itRemovesTemporaryFiles()
+    {
         $ssh_command = new Git_Driver_Gerrit_RemoteSSHCommand(mock('Logger'));
         try {
             $ssh_command->execute($this->config, 'someFailingCommand');
@@ -152,7 +160,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         $this->assertFalse(file_exists($ssh_command->getStdErrFilePath()));
     }
 
-    public function itReturnsStdout(){
+    public function itReturnsStdout()
+    {
         stub($this->ssh)->sshExec()->returns(array('exit_code' => 0, 'std_out' => 'Some successful output'));
         try {
             $result = $this->ssh->execute($this->config, 'Some successful command');
@@ -162,7 +171,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         $this->assertEqual($result, 'Some successful output');
     }
 
-    public function itLogsEveryCommand() {
+    public function itLogsEveryCommand()
+    {
         $expected_result = array('exit_code' => 0, 'std_err' => '', 'std_out' => 'Some successful output');
         stub($this->ssh)->sshExec()->returns($expected_result);
         $cmd = '-p 29418 -i /path/to/codendiadm/.ssh/id_rsa gerrit@gerrit.example.com create-group toto --username johan';
@@ -174,7 +184,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
 
 class RemoteSSHCommandFailureTest extends TuleapTestCase {
 
-    public function itConcatenatesEverythingInGetMessage() {
+    public function itConcatenatesEverythingInGetMessage()
+    {
         $exit_code = 133;
         $std_err   = 'some error';
         $std_out   = 'output for the people';

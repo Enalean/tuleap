@@ -35,7 +35,8 @@ class Statistics_Widget_ProjectStatistics extends Widget {
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('plugin_statistics_projectstatistics');
     }
 
@@ -46,7 +47,8 @@ class Statistics_Widget_ProjectStatistics extends Widget {
      *
      * @see Widget::getTitle()
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $GLOBALS['Language']->getText('plugin_statistics', 'widget_title_projectstatistics');
     }
 
@@ -57,7 +59,8 @@ class Statistics_Widget_ProjectStatistics extends Widget {
      *
      * @see Widget::getContent()
      */
-    public function getContent() {
+    public function getContent()
+    {
         $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
 
@@ -88,7 +91,8 @@ class Statistics_Widget_ProjectStatistics extends Widget {
      *
      * @see Widget::getDescription()
      */
-    function getDescription() {
+    function getDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_statistics', 'widget_desc_projectstatistics');
     }
 
@@ -99,7 +103,8 @@ class Statistics_Widget_ProjectStatistics extends Widget {
      *
      * @see Widget::getCategory()
      */
-    function getCategory() {
+    function getCategory()
+    {
         return dgettext('tuleap-statistics', 'Project statistics');
     }
 }

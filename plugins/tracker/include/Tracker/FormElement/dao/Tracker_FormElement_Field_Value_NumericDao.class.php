@@ -30,7 +30,8 @@ abstract class Tracker_FormElement_Field_Value_NumericDao extends Tracker_FormEl
      *
      * @return Array
      */
-    public function getValueAt($artifact_id, $field_id, $timestamp) {
+    public function getValueAt($artifact_id, $field_id, $timestamp)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $field_id    = $this->da->escapeInt($field_id);
         $timestamp   = $this->da->escapeInt($timestamp);
@@ -53,7 +54,8 @@ abstract class Tracker_FormElement_Field_Value_NumericDao extends Tracker_FormEl
      * @param int $field_id
      * @return Array
      */
-    public function getLastValue($artifact_id, $field_id) {
+    public function getLastValue($artifact_id, $field_id)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $field_id    = $this->da->escapeInt($field_id);
 

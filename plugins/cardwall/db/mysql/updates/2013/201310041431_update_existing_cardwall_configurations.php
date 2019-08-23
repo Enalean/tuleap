@@ -23,17 +23,20 @@
 
 class b201310041431_update_existing_cardwall_configurations extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Creating table plugin_agiledashboard_semantic_initial_effort.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         // clean-out existing unused cardwall custom columns
         $sql = "DELETE FROM plugin_cardwall_on_top_column
                 USING plugin_cardwall_on_top JOIN plugin_cardwall_on_top_column

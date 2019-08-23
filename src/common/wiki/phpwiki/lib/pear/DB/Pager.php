@@ -77,7 +77,7 @@ class DB_Pager extends PEAR
     *    and supply later to the constructor
     * @deprecated
     */
-    function __construct (&$res, $from, $limit, $numrows = null)
+    function __construct(&$res, $from, $limit, $numrows = null)
     {
         $this->res = $res;
         $this->from = $from;

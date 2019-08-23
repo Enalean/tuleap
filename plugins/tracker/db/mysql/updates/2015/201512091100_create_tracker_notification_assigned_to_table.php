@@ -18,15 +18,18 @@
 
 class b201512091100_create_tracker_notification_assigned_to_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return 'Add plugin_tracker_notification_assigned_to table';
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE plugin_tracker_notification_assigned_to (
                     project_id INT(11) NOT NULL PRIMARY KEY
                 ) ENGINE=InnoDB;";
@@ -34,7 +37,8 @@ class b201512091100_create_tracker_notification_assigned_to_table extends ForgeU
         $this->db->createTable('plugin_tracker_notification_assigned_to', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('plugin_tracker_notification_assigned_to')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('Table plugin_tracker_notification_assigned_to not created');
         }

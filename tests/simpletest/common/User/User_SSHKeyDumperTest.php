@@ -26,7 +26,8 @@ class User_SSHKeyDumperTest extends TuleapTestCase {
     private $sshkey_dumper;
     private $backend;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         ForgeConfig::store();
@@ -55,21 +56,24 @@ class User_SSHKeyDumperTest extends TuleapTestCase {
         $this->sshkey_dumper->__construct($this->backend);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         EventManager::clearInstance();
         ForgeConfig::restore();
 
         parent::tearDown();
     }
 
-    public function itDoesntWriteTheKeyWhenUserAsNotAValidUnixAccount() {
+    public function itDoesntWriteTheKeyWhenUserAsNotAValidUnixAccount()
+    {
         stub($this->backend)->log()->never();
         $this->user->setUnixStatus('S');
         $this->sshkey_dumper->writeSSHKeys($this->user);
         $this->assertFalse(is_file($this->toto_home.'/.ssh/authorized_keys'));
     }
 
-    public function itWriteTheKeyInTheAutorizedKeyFile() {
+    public function itWriteTheKeyInTheAutorizedKeyFile()
+    {
         stub($this->backend)->log(new PatternExpectation('/Authorized_keys for '.$this->toto_name.' written/'), 'info')->once();
 
         $this->backend->expectCallCount('chown', 2);
@@ -87,7 +91,8 @@ class User_SSHKeyDumperTest extends TuleapTestCase {
 
     }
 
-    public function itDoesntModifyFilesWhenUserMadeASymlink() {
+    public function itDoesntModifyFilesWhenUserMadeASymlink()
+    {
         // The user tries to compromise the system, it has an SSH account on the
         // server and made a link from its own authorized_keys file onto someoneelse
         // example /home/users/toto/.ssh/authorized_keys -> /root/.ssh/authorized_keys
@@ -103,7 +108,8 @@ class User_SSHKeyDumperTest extends TuleapTestCase {
         $this->assertFalse(is_link($this->foobar_home.'/.ssh/authorized_keys'));
     }
 
-    public function itRaisesAnErrorWhenUserAttemptedToMakeALinkOnSshDir() {
+    public function itRaisesAnErrorWhenUserAttemptedToMakeALinkOnSshDir()
+    {
         // variation of previous test but user did:
         // /home/users/toto/.ssh -> /root/.ssh
         $foobar_ssh = $this->foobar_home.'/.ssh';
@@ -114,7 +120,8 @@ class User_SSHKeyDumperTest extends TuleapTestCase {
         $this->sshkey_dumper->writeSSHKeys($this->user);
     }
 
-    public function itDoesntModifyDirectoriesWhenUserMadeASymlink() {
+    public function itDoesntModifyDirectoriesWhenUserMadeASymlink()
+    {
         // variation of previous test but user did:
         // /home/users/toto/.ssh -> /root/.ssh
         symlink($this->foobar_home.'/.ssh', $this->toto_home.'/.ssh');
@@ -132,7 +139,8 @@ class User_SSHKeyDumperTest extends TuleapTestCase {
         $this->assertEqual('', file_get_contents($this->foobar_home.'/.ssh/authorized_keys'));
     }
 
-    private function getFileModeAsString($filename) {
+    private function getFileModeAsString($filename)
+    {
         return substr(sprintf('%o', fileperms($filename)), -4);
     }
 }

@@ -28,24 +28,29 @@ require_once('lib/PageType.php');
 class WikiPlugin_InterWikiSearch
 extends WikiPlugin
 {
-    function getName() {
+    function getName()
+    {
         return _("InterWikiSearch");
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return _("Perform searches on InterWiki sites listed in InterWikiMap.");
     }
 
-    function getVersion() {
+    function getVersion()
+    {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.8 $");
     }
 
-    function getDefaultArguments() {
+    function getDefaultArguments()
+    {
         return array();
     }
 
-    function run($dbi, $argstr, &$request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage)
+    {
         $args = $this->getArgs($argstr, $request);
         extract($args);
 
@@ -75,18 +80,21 @@ if (defined('DEBUG') && DEBUG) {
     class PageType_searchableInterWikiMap
     extends PageType_interwikimap
     {
-        function format($text) {
+        function format($text)
+        {
             return HTML::div(array('class' => 'wikitext'),
             $this->_transform($this->_getHeader($text)),
             $this->_formatMap(),
             $this->_transform($this->_getFooter($text)));
         }
 
-        function _formatMap() {
+        function _formatMap()
+        {
             return $this->_arrayToTable ($this->_getMap(), $GLOBALS['request']);
         }
 
-        function _arrayToTable ($array, &$request) {
+        function _arrayToTable($array, &$request)
+        {
             $thead = HTML::thead();
             $label[0] = _("Wiki Name");
             $label[1] = _("Search");

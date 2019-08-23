@@ -39,7 +39,8 @@ class ServiceMediawiki extends Service
         exit;
     }
 
-    private function getRenderer() {
+    private function getRenderer()
+    {
         return TemplateRendererFactory::build()->getRenderer(dirname(MEDIAWIKI_BASE_DIR).'/templates');
     }
 
@@ -62,7 +63,8 @@ class ServiceMediawiki extends Service
      * @param HTTPRequest $request
      * @return bool
      */
-    public function userIsAdmin(PFUser $user) {
+    public function userIsAdmin(PFUser $user)
+    {
         $forge_user_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
         );

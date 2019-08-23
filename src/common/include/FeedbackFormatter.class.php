@@ -23,7 +23,8 @@ class FeedbackFormatter {
     /**
      * @return string html
      */
-    function format(array $logs) {
+    function format(array $logs)
+    {
         $html      = '';
         $old_level = null;
         $hp        = Codendi_HTMLPurifier::instance();

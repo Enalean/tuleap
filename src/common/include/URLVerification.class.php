@@ -46,7 +46,8 @@ class URLVerification {
      *
      * @return Array
      */
-    function getUrlChunks() {
+    function getUrlChunks()
+    {
         return $this->urlChunks;
     }
 
@@ -55,7 +56,8 @@ class URLVerification {
      *
      * @return PFUser
      */
-    function getCurrentUser() {
+    function getCurrentUser()
+    {
         return UserManager::instance()->getCurrentUser();
     }
 
@@ -64,7 +66,8 @@ class URLVerification {
      *
      * @return EventManager
      */
-    public function getEventManager() {
+    public function getEventManager()
+    {
         return EventManager::instance();
     }
 
@@ -81,7 +84,8 @@ class URLVerification {
     /**
      * @return PermissionsOverrider_PermissionsOverriderManager
      */
-    protected function getPermissionsOverriderManager() {
+    protected function getPermissionsOverriderManager()
+    {
         return PermissionsOverrider_PermissionsOverriderManager::instance();
     }
 
@@ -97,7 +101,8 @@ class URLVerification {
      *
      * @return bool
      */
-    function isScriptAllowedForAnonymous($server) {
+    function isScriptAllowedForAnonymous($server)
+    {
         // Defaults
         $allowedAnonymous['/account/login.php']          = true;
         $allowedAnonymous['/account/register.php']       = true;
@@ -133,7 +138,8 @@ class URLVerification {
      *
      * @return bool
      */
-    function isException($server) {
+    function isException($server)
+    {
         return preg_match('`^(?:/plugins/[^/]+)?/(?:soap|api)/`', $server['SCRIPT_NAME']);
     }
 
@@ -145,7 +151,8 @@ class URLVerification {
      *
      * @return bool
      */
-    function isValidServerName($server, $host) {
+    function isValidServerName($server, $host)
+    {
 
         return ($server['HTTP_HOST'] == $host);
     }
@@ -174,7 +181,8 @@ class URLVerification {
      *
      * @return String
      */
-    function getRedirectionURL(HTTPRequest $request, $server) {
+    function getRedirectionURL(HTTPRequest $request, $server)
+    {
         $chunks   = $this->getUrlChunks($server);
 
         $location = $this->getRedirectLocation($request, $server, $chunks);
@@ -187,14 +195,16 @@ class URLVerification {
         return $location;
     }
 
-    private function getRedirectLocation(HTTPRequest $request, array $server, array $chunks) {
+    private function getRedirectLocation(HTTPRequest $request, array $server, array $chunks)
+    {
         if (isset($chunks['protocol']) || isset($chunks['host'])) {
             return $this->rewriteProtocol($request, $server, $chunks);
         }
         return '';
     }
 
-    private function rewriteProtocol(HTTPRequest $request, array $server, array $chunks) {
+    private function rewriteProtocol(HTTPRequest $request, array $server, array $chunks)
+    {
         if (isset($chunks['protocol'])) {
             $location = $chunks['protocol']."://";
         } else {
@@ -221,7 +231,8 @@ class URLVerification {
      *
      * @return void
      */
-    public function verifyProtocol(HTTPRequest $request) {
+    public function verifyProtocol(HTTPRequest $request)
+    {
         if (! $request->isSecure() && ForgeConfig::get('sys_https_host')) {
             $this->urlChunks['protocol'] = 'https';
             $this->urlChunks['host']     = ForgeConfig::get('sys_https_host');
@@ -235,7 +246,8 @@ class URLVerification {
      *
      * @return void
      */
-    public function verifyRequest($server) {
+    public function verifyRequest($server)
+    {
         $user = $this->getCurrentUser();
 
         if (
@@ -255,7 +267,8 @@ class URLVerification {
      *
      * @return void
      */
-    function checkRestrictedAccess($server) {
+    function checkRestrictedAccess($server)
+    {
         $user = $this->getCurrentUser();
         if ($user->isRestricted()) {
             $url = $this->getUrl();
@@ -364,7 +377,8 @@ class URLVerification {
      *
      * @return void
      */
-    public function assertValidUrl($server, HTTPRequest $request, ?Project $project = null) {
+    public function assertValidUrl($server, HTTPRequest $request, ?Project $project = null)
+    {
         if (!$this->isException($server)) {
             $this->verifyProtocol($request);
             $this->verifyRequest($server);
@@ -444,7 +458,8 @@ class URLVerification {
      * @throws Project_AccessPrivateException
      * @throws ProjectAccessSuspendedException
      */
-    public function userCanAccessProject(PFUser $user, Project $project) {
+    public function userCanAccessProject(PFUser $user, Project $project)
+    {
         $checker = new ProjectAccessChecker(
             $this->getPermissionsOverriderManager(),
             new RestrictedUserCanAccessUrlOrProjectVerifier($this->getEventManager(), $this->getUrl(), $_SERVER['REQUEST_URI']),
@@ -470,7 +485,8 @@ class URLVerification {
      * @throws Project_AccessNotAdminException
      * @throws ProjectAccessSuspendedException
      */
-    public function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project) {
+    public function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project)
+    {
         if ($this->userCanAccessProject($user, $project)) {
             if (! $user->isAdmin($project->getId())) {
                 throw new Project_AccessNotAdminException();
@@ -511,7 +527,8 @@ class URLVerification {
      *
      * @return Void
      */
-    function exitError($title, $text) {
+    function exitError($title, $text)
+    {
         exit_error($title, $text);
     }
 
@@ -520,7 +537,8 @@ class URLVerification {
      *
      * @return ProjectManager
      */
-    function getProjectManager() {
+    function getProjectManager()
+    {
         return ProjectManager::instance();
     }
 
@@ -531,7 +549,8 @@ class URLVerification {
      *
      * @return void
      */
-    function header($location) {
+    function header($location)
+    {
         header('Location: '.$location);
         exit;
     }

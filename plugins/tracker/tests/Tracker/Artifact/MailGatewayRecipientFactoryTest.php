@@ -24,7 +24,8 @@ class Tracker_Artifact_MailGatewayRecipientFactoryTest extends TuleapTestCase {
 
     private $changeset;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->user      = aUser()->withId(123)->build();
         $this->changeset = stub('Tracker_Artifact_Changeset')->getId()->returns(200);
@@ -46,7 +47,8 @@ class Tracker_Artifact_MailGatewayRecipientFactoryTest extends TuleapTestCase {
         );
     }
 
-    public function itGeneratesAMailGatewayRecipientFromEmail() {
+    public function itGeneratesAMailGatewayRecipientFromEmail()
+    {
         $email = '<101-5a2a341193b34695885091bbf5f75d68-123-200@tuleap.example.com>';
         $recipient = $this->factory->getFromEmail($email);
 
@@ -55,25 +57,29 @@ class Tracker_Artifact_MailGatewayRecipientFactoryTest extends TuleapTestCase {
         $this->assertEqual($recipient->getEmail(), $email);
     }
 
-    public function itThrowsAnAxceptionWhenArtifactDoesNotExist() {
+    public function itThrowsAnAxceptionWhenArtifactDoesNotExist()
+    {
         $email = '<000000-5a2a341193b34695885091bbf5f75d68-123-200@tuleap.example.com>';
         $this->expectException('Tracker_Artifact_MailGateway_ArtifactDoesNotExistException');
         $this->factory->getFromEmail($email);
     }
 
-    public function itThrowsAnAxceptionWhenUserDoesNotExist() {
+    public function itThrowsAnAxceptionWhenUserDoesNotExist()
+    {
         $email = '<101-5a2a341193b34695885091bbf5f75d68-00000-200@tuleap.example.com>';
         $this->expectException('Tracker_Artifact_MailGateway_RecipientUserDoesNotExistException');
         $this->factory->getFromEmail($email);
     }
 
-    public function itThrowsAnAxceptionWhenHashIsInvalid() {
+    public function itThrowsAnAxceptionWhenHashIsInvalid()
+    {
         $email = '<101-invalidhash-123-200@tuleap.example.com>';
         $this->expectException('Tracker_Artifact_MailGateway_RecipientInvalidHashException');
         $this->factory->getFromEmail($email);
     }
 
-    public function itGeneratesAMailGatewayRecipientFromUserAndArtifact() {
+    public function itGeneratesAMailGatewayRecipientFromUserAndArtifact()
+    {
         $email = '101-5a2a341193b34695885091bbf5f75d68-123-200@tuleap.example.com';
         $recipient = $this->factory->getFromUserAndChangeset($this->user, $this->changeset);
 

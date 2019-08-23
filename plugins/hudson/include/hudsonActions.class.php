@@ -77,7 +77,8 @@ class hudsonActions extends Actions {
         }
     }
 
-    public function updateJob() {
+    public function updateJob()
+    {
         $request      = HTTPRequest::instance();
         $job_id       = $request->get('job_id');
         $new_job_url  = $request->get('hudson_job_url');
@@ -113,7 +114,8 @@ class hudsonActions extends Actions {
         }
     }
 
-    function deleteJob() {
+    function deleteJob()
+    {
         $request = HTTPRequest::instance();
         $job_id = $request->get('job_id');
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());

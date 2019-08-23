@@ -26,7 +26,8 @@ class SkinTuleap extends SkinTemplate {
     var $skinname = 'tuleap', $stylename = 'tuleap',
             $template = 'TuleapTemplate', $useHeadElement = true;
 
-    function setupTemplate( $classname, $repository = false, $cache_dir = false ) {
+    function setupTemplate( $classname, $repository = false, $cache_dir = false )
+    {
             $tc = new $classname();
 
             $tc->params = array();
@@ -46,7 +47,8 @@ class SkinTuleap extends SkinTemplate {
     /**
      * @param $out OutputPage
      */
-    function setupSkinUserCss( OutputPage $out ) {
+    function setupSkinUserCss( OutputPage $out )
+    {
             global $wgHandheldStyle;
             /* add Tuleap styles */
         foreach ($GLOBALS['HTML']->getAllStyleSheets() as $sheet) {
@@ -87,7 +89,8 @@ class TuleapTemplate extends BaseTemplate {
      *
      * @access private
      */
-    function execute() {
+    function execute()
+    {
         global $wgHtml5;
      // Suppress warnings to prevent notices about missing indexes in $this->data
         wfSuppressWarnings();
@@ -193,7 +196,8 @@ class TuleapTemplate extends BaseTemplate {
     } // end of execute() method
 
 
-    protected function renderPortals( $sidebar ) {
+    protected function renderPortals( $sidebar )
+    {
         if ( !isset( $sidebar['SEARCH'] ) ) $sidebar['SEARCH'] = true;
         if ( !isset( $sidebar['TOOLBOX'] ) ) $sidebar['TOOLBOX'] = true;
         if ( !isset( $sidebar['LANGUAGES'] ) ) $sidebar['LANGUAGES'] = true;
@@ -218,7 +222,8 @@ class TuleapTemplate extends BaseTemplate {
      * Prints the cactions bar.
      * Shared between MonoBook and Modern
      */
-    function cactions() {
+    function cactions()
+    {
         ?>
     <div id="p-cactions" class="portlet">
         <h5><?php $this->msg('views') ?></h5>
@@ -234,7 +239,8 @@ class TuleapTemplate extends BaseTemplate {
     </div>
         <?php
     }
-    function toolbox() {
+    function toolbox()
+    {
         ?>
     <div class="portlet" id="p-tb">
         <h5><?php $this->msg('toolbox') ?></h5>
@@ -255,7 +261,8 @@ class TuleapTemplate extends BaseTemplate {
         <?php
     }
 
-    function languageBox() {
+    function languageBox()
+    {
         if( $this->data['language_urls'] ) {
             ?>
     <div id="p-lang" class="portlet">
@@ -273,7 +280,8 @@ class TuleapTemplate extends BaseTemplate {
         }
     }
 
-    function customBox( $bar, $cont ) {
+    function customBox( $bar, $cont )
+    {
         $portletAttribs = array( 'class' => 'generated-sidebar portlet', 'id' => Sanitizer::escapeId( "p-$bar" ) );
         $tooltip = Linker::titleAttrib( "p-$bar" );
         if ( $tooltip !== false ) {

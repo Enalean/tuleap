@@ -19,12 +19,14 @@
  */
 
 class Tracker_Report_CriteriaDao extends DataAccessObject {
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_report_criteria';
     }
 
-    function searchById($id) {
+    function searchById($id)
+    {
         $id  = $this->da->escapeInt($id);
         $sql = "SELECT *
                 FROM $this->table_name
@@ -32,7 +34,8 @@ class Tracker_Report_CriteriaDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchByReportId($report_id) {
+    function searchByReportId($report_id)
+    {
         $report_id  = $this->da->escapeInt($report_id);
         $sql = "SELECT *
                 FROM $this->table_name
@@ -41,20 +44,23 @@ class Tracker_Report_CriteriaDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function delete($report_id, $field_id) {
+    function delete($report_id, $field_id)
+    {
         $report_id = $this->da->escapeInt($report_id);
         $field_id  = $this->da->escapeInt($field_id);
         $sql = "DELETE FROM $this->table_name WHERE report_id = $report_id AND field_id = $field_id";
         return $this->update($sql);
     }
 
-    function deleteAll($report_id) {
+    function deleteAll($report_id)
+    {
         $report_id = $this->da->escapeInt($report_id);
         $sql = "DELETE FROM $this->table_name WHERE report_id = $report_id";
         return $this->update($sql);
     }
 
-    function create($report_id, $field_id, $is_advanced=0) {
+    function create($report_id, $field_id, $is_advanced=0)
+    {
         $report_id    = $this->da->escapeInt($report_id);
         $field_id     = $this->da->escapeInt($field_id);
         $rank         = (int)$this->prepareRanking(0, $report_id, 'end', 'id', 'report_id');
@@ -65,7 +71,8 @@ class Tracker_Report_CriteriaDao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
     //TODO : remove this method
-    function toggleAdvanced($report_id, $field_id) {
+    function toggleAdvanced($report_id, $field_id)
+    {
         $report_id = $this->da->escapeInt($report_id);
         $field_id  = $this->da->escapeInt($field_id);
         $sql = "UPDATE $this->table_name
@@ -74,7 +81,8 @@ class Tracker_Report_CriteriaDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function duplicate($from_report_id, $to_report_id, $field_mapping) {
+    function duplicate($from_report_id, $to_report_id, $field_mapping)
+    {
         $from_report_id = $this->da->escapeInt($from_report_id);
         $to_report_id   = $this->da->escapeInt($to_report_id);
         $sql = "INSERT INTO $this->table_name (report_id, field_id, rank, is_advanced)

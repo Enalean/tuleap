@@ -21,17 +21,20 @@
 
 class b201110051717_add_postaction_field_date_table extends ForgeUpgrade_Bucket {
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add post actions field date table.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_date (
                   id int(11) NOT NULL auto_increment PRIMARY KEY,
                   transition_id int(11) NOT NULL,
@@ -42,7 +45,8 @@ EOT;
         $this->db->createTable('tracker_workflow_transition_postactions_field_date', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('tracker_workflow_transition_postactions_field_date')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_workflow_transition_postactions_field_date table is missing');
         }

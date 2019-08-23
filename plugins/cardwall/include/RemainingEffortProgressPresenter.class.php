@@ -25,33 +25,40 @@ class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgre
     private $capacity;
     private $remaining_effort;
 
-    public function __construct($initial_effort, $capacity, $remaining_effort) {
+    public function __construct($initial_effort, $capacity, $remaining_effort)
+    {
         $this->initial_effort    = $initial_effort;
         $this->capacity          = $capacity;
         $this->remaining_effort  = $remaining_effort;
     }
 
-    public function milestone_capacity() {
+    public function milestone_capacity()
+    {
         return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_capacity', floatval($this->capacity));
     }
 
-    public function milestone_progress_info() {
+    public function milestone_progress_info()
+    {
         return '';
     }
 
-    public function milestone_initial_effort_value() {
+    public function milestone_initial_effort_value()
+    {
         return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_initial_effort', $this->initial_effort);
     }
 
-    public function milestone_initial_effort() {
+    public function milestone_initial_effort()
+    {
         return $this->initial_effort;
     }
 
-    public function milestone_has_initial_effort() {
+    public function milestone_has_initial_effort()
+    {
         return $this->initial_effort != 0;
     }
 
-    public function milestone_points_to_go() {
+    public function milestone_points_to_go()
+    {
         if ($this->milestone_remaining_effort() <= 1 ) {
             return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_point_to_go');
         }
@@ -59,7 +66,8 @@ class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgre
         return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_points_to_go');
     }
 
-    public function milestone_remaining_effort() {
+    public function milestone_remaining_effort()
+    {
         if ($this->remaining_effort > 0) {
             return $this->remaining_effort;
         }
@@ -67,7 +75,8 @@ class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgre
         return 0;
     }
 
-    public function initial_effort_completion() {
+    public function initial_effort_completion()
+    {
         if ($this->cannotBeDivided($this->initial_effort)) {
             return 100;
         }
@@ -79,7 +88,8 @@ class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgre
         return $this->returnRelevantProgressBarValue($completion);
     }
 
-    private function returnRelevantProgressBarValue($value) {
+    private function returnRelevantProgressBarValue($value)
+    {
         if ($value < 0) {
             return 0;
         }
@@ -87,15 +97,18 @@ class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgre
         return $value;
     }
 
-    private function cannotBeDivided($number) {
+    private function cannotBeDivided($number)
+    {
         return $number === 0;
     }
 
-    public function milestone_count_style() {
+    public function milestone_count_style()
+    {
         return self::COUNT_STYLE;
     }
 
-    public function count_style_helper() {
+    public function count_style_helper()
+    {
         return '';
     }
 }

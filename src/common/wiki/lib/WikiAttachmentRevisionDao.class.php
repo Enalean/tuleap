@@ -25,7 +25,8 @@ class WikiAttachmentRevisionDao extends DataAccessObject {
      *
      * @return bool success or failure
      */
-    function create($attachmentId, $ownerId, $date, $revision, $type, $size) {
+    function create($attachmentId, $ownerId, $date, $revision, $type, $size)
+    {
         $sql = sprintf('INSERT INTO wiki_attachment_revision SET'
                        .'  attachment_id = %d'
                        .', user_id       = %d'
@@ -44,7 +45,8 @@ class WikiAttachmentRevisionDao extends DataAccessObject {
         return $inserted;
     }
 
-    function log($attachmentId, $revision, $groupId, $userId, $date) {
+    function log($attachmentId, $revision, $groupId, $userId, $date)
+    {
         $sql = sprintf('INSERT INTO wiki_attachment_log SET'
                        .'  user_id                     = %d'
                        .', group_id                    = %d'
@@ -64,7 +66,8 @@ class WikiAttachmentRevisionDao extends DataAccessObject {
     /**
      * Get one revision
      */
-    function getRevision($attachmentId, $revision) {
+    function getRevision($attachmentId, $revision)
+    {
         $sql = sprintf('SELECT * FROM wiki_attachment_revision'
                        .' WHERE attachment_id=%d'
                        .' AND revision=%d',
@@ -77,7 +80,8 @@ class WikiAttachmentRevisionDao extends DataAccessObject {
     /**
      * Fetch all revisions of a given attachment
      */
-    function getAllRevisions($id) {
+    function getAllRevisions($id)
+    {
         $sql = sprintf('SELECT * FROM wiki_attachment_revision'
                        .' WHERE attachment_id=%d'
                        .' ORDER BY date DESC',

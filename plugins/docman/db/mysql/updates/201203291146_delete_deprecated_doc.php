@@ -20,17 +20,20 @@
  */
 
 class b201203291146_delete_deprecated_doc extends ForgeUpgrade_Bucket {
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Remove deprecated documentation and update url
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "UPDATE plugin_docman_item 
                 SET link_url = '/documentation/cli/html/fr_FR/CLI.html'
                 WHERE link_url = '/documentation/cli/html/fr_FR/Codendi_CLI.html'";

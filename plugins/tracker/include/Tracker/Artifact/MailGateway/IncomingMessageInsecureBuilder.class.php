@@ -33,8 +33,11 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
 
     private $artifact_factory;
 
-    public function __construct(UserManager $user_manager, TrackerFactory $tracker_factory,
-                                    Tracker_ArtifactFactory $artifact_factory) {
+    public function __construct(
+        UserManager $user_manager,
+        TrackerFactory $tracker_factory,
+        Tracker_ArtifactFactory $artifact_factory
+    ) {
         $this->user_manager     = $user_manager;
         $this->tracker_factory  = $tracker_factory;
         $this->artifact_factory = $artifact_factory;
@@ -91,7 +94,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
     /**
      * @return Tracker
      */
-    private function getTrackerFromMailHeader($mail_receiver) {
+    private function getTrackerFromMailHeader($mail_receiver)
+    {
         $mail_userpart = $this->extractMailUserParts($mail_receiver);
 
         if (count($mail_userpart) !== 2) {
@@ -111,7 +115,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
     /**
      * @return Tracker_Artifact
      */
-    private function getArtifactFromMailHeader($mail_receiver) {
+    private function getArtifactFromMailHeader($mail_receiver)
+    {
         $mail_userpart = $this->extractMailUserParts($mail_receiver);
 
         if (count($mail_userpart) !== 2) {
@@ -131,7 +136,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
     /**
      * @return array
      */
-    private function extractMailUserParts($mail_receiver) {
+    private function extractMailUserParts($mail_receiver)
+    {
             $mail_splitted = explode('@', $mail_receiver);
             $mail_userpart = explode('+', $mail_splitted[0]);
 
@@ -141,14 +147,16 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
     /**
      * @return bool
      */
-    private function isAFollowUp($mail_header) {
+    private function isAFollowUp($mail_header)
+    {
         return strpos($mail_header, trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE) !== false;
     }
 
     /**
      * @return string
      */
-    private function searchRightMail($address_array) {
+    private function searchRightMail($address_array)
+    {
         $mail_address = '';
         foreach ($address_array as $id => $value) {
             if ((strpos($value,
