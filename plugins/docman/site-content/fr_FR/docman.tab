@@ -1,4 +1,4 @@
-plugin_docman	action_doc_id	Id. document : 
+plugin_docman	action_doc_id	Id. document :
 plugin_docman	action_add	Ajout
 plugin_docman	action_access	Accès
 plugin_docman	action_approval	Table d'approbation
@@ -53,7 +53,7 @@ plugin_docman	approval_reminder_mail_subject	[$1] [Rappel] Merci d'approuver '$2
 plugin_docman	approval_reminder_html_mail_body_header	Vous êtes convié à approuver le document suivant :
 plugin_docman	approval_reminder_html_mail_body_title	Titre :
 plugin_docman	approval_reminder_html_mail_body_group_name	Projet :
-plugin_docman	approval_reminder_html_mail_body_owner_name	Demandeur : 
+plugin_docman	approval_reminder_html_mail_body_owner_name	Demandeur :
 plugin_docman	approval_reminder_html_mail_body_direct_link	Lien direct
 plugin_docman	approval_reminder_html_mail_body_notif_type	Type de notification :
 plugin_docman	approval_reminder_html_mail_body_review_url	Cliquez sur le lien suivant pour approuver ou réprouver le document
@@ -63,7 +63,7 @@ plugin_docman	approval_review_failure	Une erreur est survenue lors de l'enregist
 plugin_docman	approval_useradd_success	L'utilisateur a été ajouté à la table.
 plugin_docman	approval_useradd_err_perm	Impossible d'ajouter les utilisateurs suivants. Pas d'accès au document : $1.
 plugin_docman	approval_useradd_err_db	Impossible d'ajouter les utilisateurs suivants. Erreur interne : $1.
-plugin_docman	approval_useradd_err_notreg	Impossible d'ajouter les utilisateurs suivants. N'existent pas : $1. 
+plugin_docman	approval_useradd_err_notreg	Impossible d'ajouter les utilisateurs suivants. N'existent pas : $1.
 plugin_docman	approval_useradd_warn_double	Déjà dans la table d'approbation : $1.
 plugin_docman	approval_userdel_success	Tous les utilisateurs sélectionnés ont été supprimé de la table d'approbation.
 plugin_docman	approval_userdel_failure	Impossible de supprimer $1 de la table d'approbation.
@@ -241,7 +241,7 @@ plugin_docman	details_actions_update_apptable_copy	Copier la table précédente 
 plugin_docman	details_actions_update_apptable_empty	Créer une nouvelle table vide.
 plugin_docman	details_actions_update_apptable_reset	Réinitialiser le cycle d'approbation (ex. mise à jour majeure).
 plugin_docman	details_actions_update_apptable_help	<p>Si vous décidez de :<ul><li><strong>Copier la table précédente</strong> : une nouvelle table d'approbation sera créée à partir de l'actuelle. Les approbateurs, commentaires et engagements sont conservés.</li><li><strong>Réinitialiser le cycle d'approbation</strong> : similaire à l'option précédente mais seule la structure de la table est conservée (description, type de notification, liste des approbateurs). En fait, la nouvelle table sera identique à l'ancienne à ceci près que les commentaires et engagements des approbateurs seront remis à zero.</li><li><strong>Créer une nouvelle table vide</strong> : recommencer le cycle avec une table totalement nouvelle.</li></ul>Dans tous les cas : Les <strong>approbateurs ne sont pas notifiés automatiquement</strong>.</p>
-plugin_docman	details_actions_update_lock	Garder la réservation : 
+plugin_docman	details_actions_update_lock	Garder la réservation :
 plugin_docman	details_approval	Table d'approbation
 plugin_docman	details_approval_approval_title	Détails du cycle d'approbation
 plugin_docman	details_approval_admin	Admin
@@ -337,7 +337,7 @@ plugin_docman	details_delete_warning_document	<h3>Confirmez la suppression du do
 plugin_docman	details_delete_warning_file	<h3>Confirmez la suppression du document $1</h3><p>Vous êtes sur le point de supprimer un fichier. Avant de confirmer, notez que toutes les versions seront supprimées.</p><p>Êtes-vous sûr de vouloir le supprimer ?</p>
 plugin_docman	details_delete_warning_folder	<h3>Confirmez la suppression du dossier $1</h3><p>Vous êtes sur le point de supprimer un dossier. Avant de confirmer, notez que tous les sous-éléments et leurs versions seront supprimés.</p><p>Êtes-vous sûr de vouloir le supprimer ?</p>
 plugin_docman	details_delete_warning_wiki	<p><em>Veuillez noter que si vous cochez l'option 'Propager la suppression au service wiki', la page wiki référencée par ce document sera également supprimée dans le service wiki.</em></p>
-plugin_docman	details_delete_warning_version	<h3>Confirmez la suppression de la version $2 du document $1</h3><p>Vous êtes sur le point de supprimer une version du fichier.</p><p>Êtes-vous sûr de vouloir la supprimer ?</p>	
+plugin_docman	details_delete_warning_version	<h3>Confirmez la suppression de la version $2 du document $1</h3><p>Vous êtes sur le point de supprimer une version du fichier.</p><p>Êtes-vous sûr de vouloir la supprimer ?</p>
 plugin_docman	details_delete_wiki_impact_on_documents	<p><em> Vous devez aussi noter que si vous cochez l'option 'Propager la suppression au service wiki', les documents suivants seront imacptés:</em></p>
 plugin_docman	details_edit_title	Edition des propriétés de $1
 plugin_docman	details_history	Historique
@@ -459,7 +459,7 @@ plugin_docman	error_report_baditemid	Le dossier associé à ce rapport n'existe 
 plugin_docman	error_settings_updated	Les paramètres ne peuvent pas être mis à jour.
 plugin_docman	error_perms_updated	$1
 plugin_docman	error_upload	Erreur de chargement de fichier.
-plugin_docman	error_upload_nofile	Erreur de chargement de fichier($1). Aucun fichier chargé. 
+plugin_docman	error_upload_nofile	Erreur de chargement de fichier($1). Aucun fichier chargé.
 plugin_docman	error_upload_partial	Erreur de chargement de fichier($1). Le fichier n'a été que partiellement chargé.
 plugin_docman	error_upload_size	Erreur de chargement de fichier($1). Le fichier est trop gros.
 plugin_docman	error_upload_unknown	Erreur de chargement de fichier($1). Code d'erreur inconnu.
@@ -614,7 +614,7 @@ plugin_docman	move_here	déplacer ici.
 plugin_docman	move_position_beginning	Au début
 plugin_docman	move_position_end	A la fin
 plugin_docman	move_position_select	Personnalisée <em>(prochaine étape)</em>
-plugin_docman	move_prefix	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; 
+plugin_docman	move_prefix	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr;
 
 plugin_docman	new_fldsel_title	Nouveau document - Sélection du répertoire parent
 plugin_docman	new_fldsel_location_desc	Merci de sélectionner le répertoire où vous souhaitez que ce document apparaisse.
@@ -688,11 +688,7 @@ plugin_docman	notifications_moved_from	de : \n $1
 plugin_docman	notifications_moved_mail_body_begin	$1 a été modifié par $2\n$3&action=show&id=$4\n\nDéplacé
 plugin_docman	notifications_moved_mail_body_end	\n\n--------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez cet item.\nPour arrêter la surveillance, aller à la page suivante :\n$1&action=details&section=notifications&id=$2
 plugin_docman	notifications_moved_from_mail_body_begin	 $1 a été modifié par $2\n$3&action=show&id=$4\n\n$5 déplacé
-plugin_docman	notif_modified_by	a été modifié par
-plugin_docman	notif_wiki_new_version	Une nouvelle version de la page wiki $1 a été crée par
 plugin_docman	notif_something_happen	Quelque chose a changé !
-plugin_docman	notif_footer_message	Vous recevez cette notification car vous monitorez cet item.
-plugin_docman	notif_footer_message_link	Pour arreter le monitoring, veuillez visiter :
 plugin_docman	notif_footer_message_restore_link	Pour restaurer le monitoring, veuillez visiter :
 
 plugin_docman	obso_warn_email_subject	[$1] Document '$2' sera obsolète dans un mois
@@ -745,7 +741,7 @@ plugin_docman	report_settings_delete_alt	Supprimer le rapport '$1'
 plugin_docman	report_settings_description	Description :
 plugin_docman	report_settings_import_intro	Vous pouvez importer dans ce projet un rapport défini dans un autre projet (parmis vos rapports personnels ou n'importe quel rapport 'projet'). L'import ne fonctionnera que si les propriétés et les valeurs sont les mêmes dans les deux projets (même nom, sensible à la casse). L'import fera de son mieux pour importer le plus de données possible.
 plugin_docman	report_settings_import_sel_prj	Projet :
-plugin_docman	report_settings_import_sel_prj_hint	Entrez le nom ou l'identificateur d'un project ici. 
+plugin_docman	report_settings_import_sel_prj_hint	Entrez le nom ou l'identificateur d'un project ici.
 plugin_docman	report_settings_import_sel_rpt	Rapport :
 plugin_docman	report_settings_import_sel_rpt_id	report_id
 plugin_docman	report_settings_import_title	Importer les rapports d'un autre projet.

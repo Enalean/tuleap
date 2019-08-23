@@ -287,20 +287,29 @@ class Docman_NotificationsManager
         switch($message_type) {
             case self::MESSAGE_MODIFIED:
             case self::MESSAGE_NEWVERSION:
-                $msg .= $params['path']->get($params['item']) .' '.$GLOBALS['Language']->getText('plugin_docman', 'notif_modified_by').' '. $user->getRealName() .".\n";
+                $msg .=
+                    sprintf(
+                        dgettext('plugin-docman', '%s has been modified by %s.'),
+                        $params['path']->get($params['item']),
+                        $user->getRealName()
+                    ) ."\n";
                 $msg .= $this->getMessageLink($message_type, $params) ."\n";
                 break;
             case self::MESSAGE_WIKI_NEWVERSION:
-                $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notif_wiki_new_version', $params['wiki_page']).' ' . $user->getRealName() . ".\n";
+                $msg .= sprintf(
+                    dgettext('plugin-docman',"New version of %s wiki page was created by %s."),
+                    $params['wiki_page'],
+                    $user->getRealName()
+                    ) ."\n";
                 $msg .= $this->getMessageLink($message_type, $params) . "\n";
                 break;
             default:
-                $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notif_something_happen');
+                $msg .= dgettext('plugin-docman', 'Something happen!');
                 break;
         }
         $msg .= "\n\n--------------------------------------------------------------------\n";
-        $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notif_footer_message')."\n";
-        $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notif_footer_message_link')."\n";
+        $msg .= dgettext('plugin-docman', 'You are receiving this message because you are monitoring this item.')."\n";
+        $msg .= dgettext('plugin-docman', 'To stop monitoring, please visit:')."\n";
         $monitoredItem = $this->_getMonitoredItemForUser($user, $params['item']);
         $msg .= $this->_url .'&action=details&section=notifications&id='. $monitoredItem->getId();
 

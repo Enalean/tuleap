@@ -63,7 +63,7 @@ plugin_docman	approval_review_failure	An error occurred on review recording.
 plugin_docman	approval_useradd_success	User successfully added to the approval table.
 plugin_docman	approval_useradd_err_perm	Cannot add following user(s). No access to document: $1.
 plugin_docman	approval_useradd_err_db	Cannot add  following user(s). Internal error: $1.
-plugin_docman	approval_useradd_err_notreg	Cannot add following user(s). Not registered users. $1. 
+plugin_docman	approval_useradd_err_notreg	Cannot add following user(s). Not registered users. $1.
 plugin_docman	approval_useradd_warn_double	Already in this approval table: $1.
 plugin_docman	approval_userdel_success	All selected users were successfully removed from the approval table.
 plugin_docman	approval_userdel_failure	Cannot remove $1 from the approval table.
@@ -241,7 +241,7 @@ plugin_docman	details_actions_update_apptable_copy	Copy the previous approval ta
 plugin_docman	details_actions_update_apptable_empty	Create an new empty table.
 plugin_docman	details_actions_update_apptable_reset	Reset the approval cycle (e.g. for major rewrite).
 plugin_docman	details_actions_update_apptable_help	<p>If you choose to:<ul><li><strong>Copy the previous approval table:</strong> A new approval table will be created from the previous one. Keeps reviewers, comments and commitments.</li><li><strong>Reset the approval cycle:</strong> Only the table structure will be kept (description, notification type, reviewer list.). Actually, the new table will be identical to the previous one, but without reviewer comments and commitements.</li><li><strong>Create an new empty table:</strong> Start over with a completly new approval table.</li></ul>In all cases, There is <strong>no automatic notification</strong> of the reviewers.</p>
-plugin_docman	details_actions_update_lock	Keep the lock: 
+plugin_docman	details_actions_update_lock	Keep the lock:
 plugin_docman	details_approval	Approval Table
 plugin_docman	details_approval_approval_title	Approval cycle details
 plugin_docman	details_approval_admin	Admin
@@ -337,7 +337,7 @@ plugin_docman	details_delete_warning_document	<h3>Confirm deletion of document $
 plugin_docman	details_delete_warning_file	<h3>Confirm deletion of document $1</h3><p>You are going to delete a file. Please note that all versions will be deleted.</p><p>Are you sure that you want to delete this file?</p>
 plugin_docman	details_delete_warning_folder	<h3>Confirm deletion of folder $1</h3><p>You are going to delete a folder. Please note that all sub-items and their versions will be deleted.</p><p>Are you sure that you want to delete this folder?</p>
 plugin_docman	details_delete_warning_wiki	<p><em>Please Note that if you check the 'Cascade deletion to wiki' option, the referenced wiki page will no longer exist in wiki service too.</em></p>
-plugin_docman	details_delete_warning_version	<h3>Confirm deletion of version $2 of document $1</h3><p>You are going to delete a version of file. </p><p>Are you sure that you want to delete this version?</p>	
+plugin_docman	details_delete_warning_version	<h3>Confirm deletion of version $2 of document $1</h3><p>You are going to delete a version of file. </p><p>Are you sure that you want to delete this version?</p>
 plugin_docman	details_delete_wiki_impact_on_documents	<p><em>You should also be aware that the following documents will no longer be valid if you choose to cascade deletion to wiki service:</em></p>
 plugin_docman	details_edit_title	Edit properties of $1
 plugin_docman	details_history	History
@@ -459,7 +459,7 @@ plugin_docman	error_report_baditemid	The folder associated to this report no lon
 plugin_docman	error_settings_updated	Settings cannot be updated.
 plugin_docman	error_perms_updated	$1
 plugin_docman	error_upload	File upload error. Please try again.
-plugin_docman	error_upload_nofile	File upload error($1). No file was uploaded. 
+plugin_docman	error_upload_nofile	File upload error($1). No file was uploaded.
 plugin_docman	error_upload_partial	File upload error($1). The uploaded file was only partially uploaded.
 plugin_docman	error_upload_size	File upload error($1). The uploaded file exceeds the maximum allowed file size.
 plugin_docman	error_upload_unknown	File upload error($1). Unknown error code.
@@ -614,7 +614,7 @@ plugin_docman	move_here	move here.
 plugin_docman	move_position_beginning	At the beginning
 plugin_docman	move_position_end	At the end
 plugin_docman	move_position_select	Custom <em>(requires a second step)</em>
-plugin_docman	move_prefix	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; 
+plugin_docman	move_prefix	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr;
 
 plugin_docman	new_fldsel_title	New document - Parent Folder Selection
 plugin_docman	new_fldsel_location_desc	Please select the folder where you want this new document appears.
@@ -688,11 +688,7 @@ plugin_docman	notifications_moved_from	from: \n $1
 plugin_docman	notifications_moved_mail_body_begin	$1 has been modified by $2\n$3&action=show&id=$4\n\nMoved
 plugin_docman	notifications_moved_mail_body_end	\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$1&action=details&section=notifications&id=$2
 plugin_docman	notifications_moved_from_mail_body_begin	 $1 has been modified by $2\n$3&action=show&id=$4\n\n $5 moved
-plugin_docman	notif_modified_by	has been modified by
-plugin_docman	notif_wiki_new_version	New version of $1 wiki page was created by
 plugin_docman	notif_something_happen	Something happen !
-plugin_docman	notif_footer_message	You are receiving this message because you are monitoring this item.
-plugin_docman	notif_footer_message_link	To stop monitoring, please visit:
 plugin_docman	notif_footer_message_restore_link	To restore monitoring, please visit:
 
 plugin_docman	obso_warn_email_subject	[$1] Document '$2' will be obsolete in one month
