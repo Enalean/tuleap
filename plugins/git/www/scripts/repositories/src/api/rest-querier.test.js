@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,21 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { tlp, mockFetchSuccess } from "tlp-mocks";
+import * as tlp from "tlp";
+import { mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
 import { getRepositoryList, getForkedRepositoryList, postRepository } from "./rest-querier.js";
 
-describe("API querier", () => {
-    beforeEach(() => {
-        tlp.recursiveGet.calls.reset();
-        tlp.recursiveGet.and.stub();
-    });
+jest.mock("tlp");
 
+describe("API querier", () => {
     describe("getRepositoryList", () => {
         it("Given a project id and a callback, then it will recursively get all project repositories and call the callback for each batch", done => {
             const repositories = [{ id: 37 }, { id: 91 }];
-            tlp.recursiveGet.and.callFake((route, config) =>
-                config.getCollectionCallback({ repositories })
-            );
+            const tlpRecursiveGet = jest
+                .spyOn(tlp, "recursiveGet")
+                .mockImplementation((route, config) =>
+                    config.getCollectionCallback({ repositories })
+                );
+
             function displayCallback(result) {
                 expect(result).toEqual(repositories);
                 done();
@@ -40,9 +41,9 @@ describe("API querier", () => {
 
             getRepositoryList(project_id, "push_date", displayCallback);
 
-            expect(tlp.recursiveGet).toHaveBeenCalledWith(
+            expect(tlpRecursiveGet).toHaveBeenCalledWith(
                 "/api/projects/27/git",
-                jasmine.objectContaining({
+                expect.objectContaining({
                     params: {
                         query: '{"scope":"project"}',
                         order_by: "push_date",
@@ -57,9 +58,11 @@ describe("API querier", () => {
     describe("getForkedRepositoryList", () => {
         it("Given a project id, an owner id and a callback, then it will recursively get all forks and call the callback for each batch", done => {
             const repositories = [{ id: 88 }, { id: 57 }];
-            tlp.recursiveGet.and.callFake((route, config) =>
-                config.getCollectionCallback({ repositories })
-            );
+            const tlpRecursiveGet = jest
+                .spyOn(tlp, "recursiveGet")
+                .mockImplementation((route, config) =>
+                    config.getCollectionCallback({ repositories })
+                );
             function displayCallback(result) {
                 expect(result).toEqual(repositories);
                 done();
@@ -69,9 +72,9 @@ describe("API querier", () => {
 
             getForkedRepositoryList(project_id, owner_id, "push_date", displayCallback);
 
-            expect(tlp.recursiveGet).toHaveBeenCalledWith(
+            expect(tlpRecursiveGet).toHaveBeenCalledWith(
                 "/api/projects/5/git",
-                jasmine.objectContaining({
+                expect.objectContaining({
                     params: {
                         query: '{"scope":"individual","owner_id":477}',
                         order_by: "push_date",
@@ -87,7 +90,9 @@ describe("API querier", () => {
         it("Given a project id and a repository name, then it will post the repository to create it", async () => {
             const project_id = 6;
             const repository_name = "martial/rifleshot";
-            mockFetchSuccess(tlp.post);
+
+            const tlpPost = jest.spyOn(tlp, "post");
+            mockFetchSuccess(tlpPost);
 
             await postRepository(project_id, repository_name);
 
@@ -96,8 +101,8 @@ describe("API querier", () => {
                 name: repository_name
             });
 
-            expect(tlp.post).toHaveBeenCalledWith("/api/git/", {
-                headers: jasmine.objectContaining({ "content-type": "application/json" }),
+            expect(tlpPost).toHaveBeenCalledWith("/api/git/", {
+                headers: expect.objectContaining({ "content-type": "application/json" }),
                 body: stringified_body
             });
         });

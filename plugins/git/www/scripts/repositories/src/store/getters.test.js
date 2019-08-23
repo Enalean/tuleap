@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -100,7 +100,7 @@ describe("Store getters", () => {
             expect(result).toEqual({
                 is_folder: true,
                 label: "root",
-                children: jasmine.any(Array)
+                children: expect.any(Array)
             });
 
             expect(result.children.length).toEqual(2);
@@ -108,7 +108,7 @@ describe("Store getters", () => {
             expect(first_folder).toEqual({
                 is_folder: true,
                 label: "sardanapalus",
-                children: jasmine.any(Array)
+                children: expect.any(Array)
             });
             expect(root_repo).toEqual(project_repository_at_root);
 
@@ -117,7 +117,7 @@ describe("Store getters", () => {
             expect(project_path_folder).toEqual({
                 is_folder: true,
                 label: "goatish",
-                children: jasmine.any(Array)
+                children: expect.any(Array)
             });
             expect(other_leaf_repo).toEqual(other_repo_with_path);
 
@@ -140,7 +140,7 @@ describe("Store getters", () => {
             expect(result).toEqual({
                 is_folder: true,
                 label: "root",
-                children: jasmine.any(Array)
+                children: expect.any(Array)
             });
 
             expect(result.children.length).toEqual(1);
@@ -148,7 +148,7 @@ describe("Store getters", () => {
             expect(forks_folder).toEqual({
                 is_folder: true,
                 label: "u",
-                children: jasmine.any(Array)
+                children: expect.any(Array)
             });
 
             expect(forks_folder.children.length).toEqual(1);
@@ -156,7 +156,7 @@ describe("Store getters", () => {
             expect(user_folder).toEqual({
                 is_folder: true,
                 label: "jveloso",
-                children: jasmine.any(Array)
+                children: expect.any(Array)
             });
             const fork_leaf_repo = user_folder.children[0];
             expect(fork_leaf_repo).toEqual(forked_repository);
