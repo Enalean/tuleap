@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018 - Present. All rights reserved.
  *
  *  Tuleap and Enalean names and logos are registrated trademarks owned by
  *  Enalean SAS. All other trademarks or names are properties of their respective
@@ -56,6 +56,13 @@ class TimetrackingQueryCheckerTest extends TestCase
         $this->assertNull($this->checker->checkQuery($json_query));
     }
 
+    public function testPassWhenStartDateEqualsEndDate()
+    {
+        $json_query = ["trackers_id" => [1, 2], "start_date" => "2018-11-20T00:00:00+01", "end_date" => "2018-11-20T00:00:00+01"];
+
+        $this->assertNull($this->checker->checkQuery($json_query));
+    }
+
     public function testItRaiseExeptionWhenBadDates()
     {
         $json_query = ["trackers_id" => [1, 2], "start_date" => "2018-11-20T00:00:00+01", "end_date" => "Banane"];
@@ -74,18 +81,6 @@ class TimetrackingQueryCheckerTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
         $this->expectExceptionMessage('end_date must be greater than start_date');
-
-        $this->checker->checkQuery($json_query);
-    }
-
-
-    public function testItRaiseExeptionWhenStartDateEqualsEndDate()
-    {
-        $json_query = ["trackers_id" => [1, 2], "start_date" => "2018-11-20T00:00:00+01", "end_date" => "2018-11-20T00:00:00+0"];
-
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
-        $this->expectExceptionMessage('There must be one day offset between the both dates');
 
         $this->checker->checkQuery($json_query);
     }

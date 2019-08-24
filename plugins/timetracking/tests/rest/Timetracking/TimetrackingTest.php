@@ -52,6 +52,31 @@ class TimetrackingTest extends TimetrackingBase
         $this->assertEquals($times[0]['date'], '2018-04-01');
     }
 
+    public function testGetTimesForUserForOneDay()
+    {
+        $query = urlencode(
+            json_encode([
+                "start_date" => "2018-04-01T00:00:00+01",
+                "end_date"   => "2018-04-01T00:00:00+01"
+            ])
+        );
+
+        $response = $this->getResponseByName(
+            TimetrackingDataBuilder::USER_TESTER_NAME,
+            $this->client->get("users/".$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?query=$query")
+        );
+        $times_by_artifact = $response->json();
+        $current_artifact_id = key($times_by_artifact);
+        $times               = $times_by_artifact[ $current_artifact_id ];
+
+        $this->assertTrue(count($times_by_artifact) === 2);
+        $this->assertTrue(count($times) === 1);
+        $this->assertEquals($times[0]['artifact']['id'], $current_artifact_id);
+        $this->assertEquals($times[0]['id'], 1);
+        $this->assertEquals($times[0]['minutes'], 600);
+        $this->assertEquals($times[0]['date'], '2018-04-01');
+    }
+
     public function testExceptionWhenStartDateMissing()
     {
         $query = urlencode(
@@ -112,28 +137,6 @@ class TimetrackingTest extends TimetrackingBase
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertStringContainsString(
             'end_date must be greater than start_date',
-            $body['error']['message']
-        );
-    }
-
-    public function testExceptionWhenDayOffsetLessThanOneDay()
-    {
-        $query = urlencode(
-            json_encode([
-                "start_date" => "2018-04-01T00:00:00+01",
-                "end_date"   => "2018-04-01T00:00:00+01"
-            ])
-        );
-
-        $response = $this->getResponseByName(
-            TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->client->get('users/'.$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?query=$query")
-        );
-        $body     = $response->json();
-
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString(
-            'There must be one day offset between the both dates',
             $body['error']['message']
         );
     }
