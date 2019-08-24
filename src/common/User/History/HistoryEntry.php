@@ -45,11 +45,11 @@ class HistoryEntry
      */
     private $color;
     /**
-     * @var Glyph
+     * @var ?Glyph
      */
     private $small_icon;
     /**
-     * @var Glyph
+     * @var ?Glyph
      */
     private $normal_icon;
     /**
@@ -60,6 +60,10 @@ class HistoryEntry
      * @var HistoryQuickLink[]
      */
     private $quick_links;
+    /**
+     * @var string
+     */
+    private $icon_name;
 
     public function __construct(
         $visit_time,
@@ -67,8 +71,9 @@ class HistoryEntry
         $link,
         $title,
         $color,
-        Glyph $small_icon,
-        Glyph $normal_icon,
+        ?Glyph $small_icon,
+        ?Glyph $normal_icon,
+        string $icon_name,
         \Project $project,
         array $quick_links
     ) {
@@ -79,6 +84,7 @@ class HistoryEntry
         $this->color       = $color;
         $this->small_icon  = $small_icon;
         $this->normal_icon = $normal_icon;
+        $this->icon_name   = $icon_name;
         $this->project     = $project;
         $this->quick_links = $quick_links;
     }
@@ -124,7 +130,7 @@ class HistoryEntry
     }
 
     /**
-     * @return Glyph
+     * @return ?Glyph
      */
     public function getSmallIcon()
     {
@@ -132,7 +138,7 @@ class HistoryEntry
     }
 
     /**
-     * @return Glyph
+     * @return ?Glyph
      */
     public function getNormalIcon()
     {
@@ -153,5 +159,10 @@ class HistoryEntry
     public function getQuickLinks()
     {
         return $this->quick_links;
+    }
+
+    public function getIconName(): string
+    {
+        return $this->icon_name;
     }
 }

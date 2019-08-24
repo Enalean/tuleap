@@ -140,6 +140,12 @@ $history-dropdown-item-text-color: #333333;
     text-shadow: none;
 }
 
+.history-item-description-icon {
+    margin: 0 5px 0 0;
+    font-size: 20px;
+    line-height: 23px;
+}
+
 .history-item-description-title {
     max-width: 200px;
     font-size: 14px;
@@ -182,4 +188,68 @@ $history-dropdown-item-text-color: #333333;
 
 .history-item-project-icon {
     margin: 0 3px 0 0;
+}
+
+.history-item.inca-silver > .history-item-description > .history-item-description-icon {
+    color: $inca_silver;
+}
+
+.history-item.chrome-silver > .history-item-description > .history-item-description-icon {
+    color: $chrome_silver;
+}
+
+.history-item.fiesta-red > .history-item-description > .history-item-description-icon {
+    color: $fiesta_red;
+}
+
+.history-item.teddy-brown > .history-item-description > .history-item-description-icon {
+    color: $teddy_brown;
+}
+
+.history-item.clockwork-orange > .history-item-description > .history-item-description-icon {
+    color: $clockwork_orange;
+}
+
+.history-item.red-wine > .history-item-description > .history-item-description-icon {
+    color: $red_wine;
+}
+
+.history-item.acid-green > .history-item-description > .history-item-description-icon {
+    color: $acid_green;
+}
+
+.history-item.army-green > .history-item-description > .history-item-description-icon {
+    color: $army_green;
+}
+
+.history-item.sherwood-green > .history-item-description > .history-item-description-icon {
+    color: $sherwood_green;
+}
+
+.history-item.ocean-turquoise > .history-item-description > .history-item-description-icon {
+    color: $ocean_turquoise;
+}
+
+.history-item.daphne-blue > .history-item-description > .history-item-description-icon {
+    color: $daphne_blue;
+}
+
+.history-item.lake-placid-blue > .history-item-description > .history-item-description-icon {
+    color: $lake_placid_blue;
+}
+
+.history-item.deep-blue > .history-item-description > .history-item-description-icon {
+    color: $deep_blue;
+}
+
+.history-item.plum-crazy > .history-item-description > .history-item-description-icon {
+    color: $plum_crazy;
+}
+
+.history-item.peggy-pink > .history-item-description > .history-item-description-icon {
+    color: $peggy_pink;
+}
+
+.history-item.flamingo-pink > .history-item-description > .history-item-description-icon {
+    color: $flamingo_pink;
 }

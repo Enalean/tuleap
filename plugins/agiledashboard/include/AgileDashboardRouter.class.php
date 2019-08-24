@@ -26,6 +26,7 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
 use Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder;
+use Tuleap\AgileDashboard\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\AgileDashboard\Kanban\ShowKanbanController;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
@@ -262,7 +263,8 @@ class AgileDashboardRouter
                     TrackerFactory::instance(),
                     new AgileDashboard_PermissionsManager(),
                     $this->service_crumb_builder,
-                    new BreadCrumbBuilder($tracker_factory, $this->kanban_factory)
+                    new BreadCrumbBuilder($tracker_factory, $this->kanban_factory),
+                    new RecentlyVisitedKanbanDao()
                 );
                 $this->renderAction($controller, 'showKanban', $request, array(), $header_options);
                 break;

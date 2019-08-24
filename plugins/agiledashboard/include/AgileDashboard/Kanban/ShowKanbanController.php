@@ -31,6 +31,7 @@ use Project;
 use TrackerFactory;
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 class ShowKanbanController extends BaseController
@@ -59,6 +60,10 @@ class ShowKanbanController extends BaseController
      * @var BreadCrumbBuilder
      */
     private $kanban_crumb_builder;
+    /**
+     * @var RecentlyVisitedKanbanDao
+     */
+    private $recently_visited_dao;
 
     public function __construct(
         Codendi_Request $request,
@@ -66,7 +71,8 @@ class ShowKanbanController extends BaseController
         TrackerFactory $tracker_factory,
         AgileDashboard_PermissionsManager $permissions_manager,
         AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
-        BreadCrumbBuilder $kanban_crumb_builder
+        BreadCrumbBuilder $kanban_crumb_builder,
+        RecentlyVisitedKanbanDao $recently_visited_dao
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -76,6 +82,7 @@ class ShowKanbanController extends BaseController
         $this->permissions_manager           = $permissions_manager;
         $this->agile_dashboard_crumb_builder = $agile_dashboard_crumb_builder;
         $this->kanban_crumb_builder          = $kanban_crumb_builder;
+        $this->recently_visited_dao          = $recently_visited_dao;
     }
 
     /**
@@ -111,7 +118,9 @@ class ShowKanbanController extends BaseController
         $user      = $this->request->getCurrentUser();
 
         try {
-            $kanban  = $this->kanban_factory->getKanban($user, $kanban_id);
+            $kanban = $this->kanban_factory->getKanban($user, $kanban_id);
+            $this->recently_visited_dao->save((int) $user->getId(), (int) $kanban_id, (int) $_SERVER['REQUEST_TIME']);
+
             $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
 
             $user_is_kanban_admin = $this->permissions_manager->userCanAdministrate(

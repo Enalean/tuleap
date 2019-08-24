@@ -93,6 +93,7 @@ class VisitRetriever
                     $tracker->getColor()->getName(),
                     $this->glyph_finder->get('tuleap-tracker-small'),
                     $this->glyph_finder->get('tuleap-tracker'),
+                    '',
                     $tracker->getProject(),
                     $collection->getLinks()
                 )

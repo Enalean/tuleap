@@ -63,6 +63,7 @@ use Tracker_Workflow_GlobalRulesViolationException;
 use Tracker_Workflow_Transition_InvalidConditionForTransitionException;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
+use Tuleap\AgileDashboard\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\ReportFilterFromWhereBuilder;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
@@ -1164,6 +1165,9 @@ class KanbanResource extends AuthenticatedResource
 
         $this->checkUserCanUpdateKanban($user, $kanban);
         $this->kanban_dao->delete($id);
+
+        $visited_dao = new RecentlyVisitedKanbanDao();
+        $visited_dao->deleteVisitByKanbanId((int) $id);
 
         Header::allowOptionsGetPatchDelete();
 

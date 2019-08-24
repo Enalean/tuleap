@@ -118,6 +118,12 @@
     margin: 0 5px 0 0;
 }
 
+.history-item-description-icon {
+    margin: 0 5px 0 0;
+    font-size: 20px;
+    line-height: 23px;
+}
+
 .history-item-description-title {
     max-width: 200px;
     font-size: 14px;
@@ -159,4 +165,10 @@
 
 .history-item-project-icon {
     margin: 0 3px 0 0;
+}
+
+@each $color-name, $colors in $tlp-swatch-color-map {
+    .history-item.#{$color-name} > .history-item-description > .history-item-description-icon {
+        color: map-get($colors, 'primary');
+    }
 }
