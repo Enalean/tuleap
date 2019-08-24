@@ -164,19 +164,18 @@ function display_account_form($register_error, array $errors)
     global $Language;
 
     $request  = HTTPRequest::instance();
-    $purifier = Codendi_HTMLPurifier::instance();
 
     $page = $request->get('page');
     if ($register_error) {
         print "<p><blink><b><span class=\"feedback\">$register_error</span></b></blink>";
     }
-    $form_loginname         = $request->exist('form_loginname')?$purifier->purify($request->get('form_loginname')):'';
+    $form_loginname         = $request->exist('form_loginname')?$request->get('form_loginname'):'';
     $form_loginname_error   = getFieldError('form_loginname', $errors);
 
-    $form_realname          = $request->exist('form_realname')?$purifier->purify($request->get('form_realname')):'';
+    $form_realname          = $request->exist('form_realname')?$request->get('form_realname'):'';
     $form_realname_error    = getFieldError('form_realname', $errors);
 
-    $form_email             = $request->exist('form_email')?$purifier->purify($request->get('form_email')):'';
+    $form_email             = $request->exist('form_email')?$request->get('form_email'):'';
     $form_email_error       = getFieldError('form_email', $errors);
 
     $form_pw                = '';
@@ -198,7 +197,7 @@ function display_account_form($register_error, array $errors)
     }
     $timezone_error = getFieldError('timezone', $errors);
 
-    $form_register_purpose          = $request->exist('form_register_purpose')?$purifier->purify($request->get('form_register_purpose')):'';
+    $form_register_purpose          = $request->exist('form_register_purpose')?$request->get('form_register_purpose'):'';
     $form_register_purpose_error    = getFieldError('form_register_purpose', $errors);
 
     $extra_plugin_field = '';
