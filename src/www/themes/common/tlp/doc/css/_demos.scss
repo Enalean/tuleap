@@ -245,7 +245,6 @@
 
 #dropdown-icon-right-example {
     transition: color .25s;
-    color: transparentize($tlp-ui-dimmed, .2);
     cursor: pointer;
 }
 
@@ -259,16 +258,13 @@
 
     > i {
         text-align: center;
-        &:not(:hover) {
-            color: transparentize($tlp-ui-dimmed, .2);
-        }
     }
 
     &::before {
         content: '';
         width: 174px;
         height: 174px;
-        border: 2px solid transparentize($tlp-ui-dimmed, .2);
+        border: 2px solid transparent;
         grid-column: 1 / 5;
         grid-row: 1 / 5;
         margin: 7px 0 0 6px;

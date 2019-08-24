@@ -25,6 +25,7 @@ $nav-margin: 30px;
 @mixin themable(
     $theme-color,
     $tlp-theme-background-color,
+    $tlp-ui-dimmed,
     $tlp-ui-info,
     $tlp-ui-success,
     $tlp-ui-warning,
@@ -142,15 +143,29 @@ $nav-margin: 30px;
         }
     }
 
-    #dropdown-icon-right-example:hover {
-        color: $theme-color;
+    #dropdown-icon-right-example {
+        color: transparentize($tlp-ui-dimmed, .2);
+
+        &:hover {
+            color: $theme-color;
+        }
     }
 
-    .popover-examples-container > i {
-        text-shadow: -5px -5px 0 $tlp-theme-background-color,
-            5px -5px 0 $tlp-theme-background-color,
-            -5px 5px 0 $tlp-theme-background-color,
-            5px 5px 0 $tlp-theme-background-color;
+    .popover-examples-container {
+        &::before {
+            border-color: transparentize($tlp-ui-dimmed, .2);
+        }
+
+        > i {
+            text-shadow: -5px -5px 0 $tlp-theme-background-color,
+                5px -5px 0 $tlp-theme-background-color,
+                -5px 5px 0 $tlp-theme-background-color,
+                5px 5px 0 $tlp-theme-background-color;
+
+            &:not(:hover) {
+                color: transparentize($tlp-ui-dimmed, .2);
+            }
+        }
     }
 }
 
@@ -162,6 +177,7 @@ body {
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
+            $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
             $tlp-ui-warning,
@@ -179,6 +195,7 @@ body {
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
+            $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
             $tlp-ui-warning,
@@ -196,6 +213,7 @@ body {
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
+            $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
             $tlp-ui-warning,
@@ -213,6 +231,7 @@ body {
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
+            $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
             $tlp-ui-warning,
@@ -230,6 +249,7 @@ body {
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
+            $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
             $tlp-ui-warning,
@@ -247,6 +267,7 @@ body {
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
+            $tlp-ui-dimmed,
             $tlp-ui-info,
             $tlp-ui-success,
             $tlp-ui-warning,
