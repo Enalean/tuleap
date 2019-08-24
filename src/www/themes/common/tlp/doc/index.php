@@ -259,7 +259,7 @@ $main_doc_stylesheet = $include_asset_doc->getFileURL('style.css');
 </main>
 <?php echo $tlp_script_tag; ?>
 <script type="text/javascript">
-    const manifest_framework_file = <?php
+    window.manifest_framework_file = <?php
         echo (string) file_get_contents(__DIR__ . '/../dist/manifest.json');
     ?>
 </script>
