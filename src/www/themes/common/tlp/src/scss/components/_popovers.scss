@@ -20,7 +20,9 @@
 $tlp-popover-radius: 3px;
 $tlp-popover-arrow-size: 10px;
 $tlp-popover-shadow: 0 4px 15px rgba(0, 0, 0, .175);
-$tlp-popover-transition: 75ms ease-out;
+$tlp-popover-hover-transition-show: 75ms ease-out 500ms;
+$tlp-popover-hover-transition-hide: 75ms ease-out 250ms;
+$tlp-popover-click-transition: 75ms ease-out;
 
 .tlp-popover {
     display: flex;
@@ -28,9 +30,9 @@ $tlp-popover-transition: 75ms ease-out;
     z-index: 1000;
     flex-direction: column;
     width: 400px;
-    transition: opacity $tlp-popover-transition,
-        transform $tlp-popover-transition,
-        box-shadow $tlp-popover-transition;
+    transition: opacity $tlp-popover-hover-transition-hide,
+        transform $tlp-popover-hover-transition-hide,
+        box-shadow $tlp-popover-hover-transition-hide;
     border-radius: $tlp-popover-radius;
     opacity: 0;
     box-shadow: none;
@@ -38,9 +40,24 @@ $tlp-popover-transition: 75ms ease-out;
 
     &.tlp-popover-shown {
         transform: translateY(0);
+        transition: opacity $tlp-popover-hover-transition-show,
+            transform $tlp-popover-hover-transition-show,
+            box-shadow $tlp-popover-hover-transition-show;
         opacity: 1;
         box-shadow: $tlp-popover-shadow;
         pointer-events: auto;
+    }
+
+    &[x-trigger^='click'] {
+        transition: opacity $tlp-popover-click-transition,
+            transform $tlp-popover-click-transition,
+            box-shadow $tlp-popover-click-transition;
+
+        &.tlp-popover-shown {
+            transition: opacity $tlp-popover-click-transition,
+                transform $tlp-popover-click-transition,
+                box-shadow $tlp-popover-click-transition;
+        }
     }
 }
 

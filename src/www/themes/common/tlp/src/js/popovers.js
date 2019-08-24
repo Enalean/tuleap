@@ -126,6 +126,7 @@ function buildTriggerClickListener(popover_trigger, popover_content, popper) {
             const is_shown = popover_content.classList.contains(CLASS_TLP_POPOVER_SHOWN);
             hideAllShownPopovers();
             if (!is_shown) {
+                popper.popper.setAttribute("x-trigger", "click");
                 showPopover(popover_content, popper);
             }
         }
