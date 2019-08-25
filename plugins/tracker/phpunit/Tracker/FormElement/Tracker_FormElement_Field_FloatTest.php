@@ -23,22 +23,42 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use Response;
+use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Float;
 use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_Value_FloatDao;
 use Tracker_Report_Criteria;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
+use UserManager;
 
 final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 {
     use MockeryPHPUnitIntegration, GlobalLanguageMock;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
+     */
+    private $user_manager;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->user_manager = Mockery::mock(UserManager::class);
+
+        UserManager::setInstance($this->user_manager);
+    }
+
     protected function tearDown() : void
     {
+        UserManager::clearInstance();
         unset($GLOBALS['Response']);
     }
 
@@ -90,7 +110,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $float_field->shouldReceive('isRequired')->andReturn(true);
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = \Mockery::mock(Tracker_Artifact::class);
         $this->assertTrue($float_field->isValid($artifact, 2));
         $this->assertTrue($float_field->isValid($artifact, 789));
         $this->assertTrue($float_field->isValid($artifact, 1.23));
@@ -110,7 +130,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $float_field->shouldReceive('isRequired')->andReturn(true);
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = \Mockery::mock(Tracker_Artifact::class);
         $this->assertTrue($float_field->isValid($artifact, ''));
         $this->assertTrue($float_field->isValid($artifact, null));
     }
@@ -200,5 +220,87 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         ];
 
         $this->assertEquals(3.14, $float_field->getFieldDataFromRESTValueByField($value));
+    }
+
+    public function testItDisplaysTheFloatValueInReadOnly(): void
+    {
+        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $timeframe_helper = Mockery::mock(ArtifactTimeframeHelper::class);
+        $float_field->shouldReceive('getArtifactTimeframeHelper')
+            ->once()
+            ->andReturn($timeframe_helper);
+
+        $timeframe_helper->shouldReceive('artifactHelpShouldBeShownToUser')->once()->andReturnFalse();
+
+        $artifact        = Mockery::mock(Tracker_Artifact::class);
+        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_Float::class);
+        $changeset_value->shouldReceive('getValue')->once()->andReturn(5.1);
+
+        $user = Mockery::mock(PFUser::class);
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+
+        $html_value_read_only = $float_field->fetchArtifactValueReadOnly($artifact, $changeset_value);
+
+        $this->assertSame('5.1', $html_value_read_only);
+    }
+
+    public function testItDisplaysTheFloatValue0InReadOnly(): void
+    {
+        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $timeframe_helper = Mockery::mock(ArtifactTimeframeHelper::class);
+        $float_field->shouldReceive('getArtifactTimeframeHelper')
+            ->once()
+            ->andReturn($timeframe_helper);
+
+        $timeframe_helper->shouldReceive('artifactHelpShouldBeShownToUser')->once()->andReturnFalse();
+
+        $artifact        = Mockery::mock(Tracker_Artifact::class);
+        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_Float::class);
+        $changeset_value->shouldReceive('getValue')->once()->andReturn(0);
+
+        $user = Mockery::mock(PFUser::class);
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+
+        $html_value_read_only = $float_field->fetchArtifactValueReadOnly($artifact, $changeset_value);
+
+        $this->assertSame('0', $html_value_read_only);
+    }
+
+    public function testItDisplaysEmptyMessageIfNoChangesetValue(): void
+    {
+        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $artifact = Mockery::mock(Tracker_Artifact::class);
+
+        $float_field->shouldReceive('getNoValueLabel')->once()->andReturn('Empty');
+
+        $html_value_read_only = $float_field->fetchArtifactValueReadOnly($artifact, null);
+
+        $this->assertSame('Empty', $html_value_read_only);
+    }
+
+    public function testItDisplaysEmptyMessageIfNoChangesetFloatValue(): void
+    {
+        $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $artifact        = Mockery::mock(Tracker_Artifact::class);
+        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_Float::class);
+        $changeset_value->shouldReceive('getValue')->once()->andReturnNull();
+
+        $float_field->shouldReceive('getNoValueLabel')->once()->andReturn('Empty');
+
+        $html_value_read_only = $float_field->fetchArtifactValueReadOnly($artifact, $changeset_value);
+
+        $this->assertSame('Empty', $html_value_read_only);
     }
 }

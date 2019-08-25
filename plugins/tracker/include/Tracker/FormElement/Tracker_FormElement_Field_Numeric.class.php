@@ -1,22 +1,22 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
@@ -303,12 +303,18 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        if ( empty($value) || ! $value->getValue()) {
+        if ($value === null) {
             return $this->getNoValueLabel();
         }
+
+        $numeric_value = $value->getValue();
+        if ($numeric_value === null) {
+            return $this->getNoValueLabel();
+        }
+
         $hp = Codendi_HTMLPurifier::instance();
 
-        $html_value = $hp->purify( "{$value->getValue()}", CODENDI_PURIFIER_CONVERT_HTML);
+        $html_value = $hp->purify($numeric_value, CODENDI_PURIFIER_CONVERT_HTML);
 
         $user              = $this->getCurrentUser();
         $time_frame_helper = $this->getArtifactTimeframeHelper();
