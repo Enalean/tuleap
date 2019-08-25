@@ -60,18 +60,13 @@ class TimetrackingQueryChecker
      */
     public function checkTimePeriodIsValid(string $start_date, string $end_date)
     {
-        $period_start = DateTime::createFromFormat(DateTime::ISO8601, $start_date);
-        $period_end   = DateTime::createFromFormat(DateTime::ISO8601, $end_date);
+        $period_start = DateTime::createFromFormat(DateTime::ATOM, $start_date);
+        $period_end   = DateTime::createFromFormat(DateTime::ATOM, $end_date);
 
         if (! $period_start || ! $period_end) {
             throw new RestException(400, "Please provide valid ISO-8601 dates");
         }
 
-        $period_length = $period_start->diff($period_end);
-
-        if ($period_length->days < 1) {
-            throw new RestException(400, 'There must be one day offset between the both dates');
-        }
         if ($period_start > $period_end) {
             throw new RestException(400, "end_date must be greater than start_date");
         }
