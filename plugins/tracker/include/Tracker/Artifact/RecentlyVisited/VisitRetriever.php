@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\RecentlyVisited;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\User\History\HistoryEntry;
 use Tuleap\User\History\HistoryEntryCollection;
-use Tuleap\User\History\HistoryQuickLink;
 
 class VisitRetriever
 {
@@ -68,10 +67,10 @@ class VisitRetriever
     /**
      * @throws \DataAccessException
      */
-    public function getVisitHistory(HistoryEntryCollection $collection, int $max_length_history): void
+    public function getVisitHistory(HistoryEntryCollection $entry_collection, int $max_length_history): void
     {
         $recently_visited_rows = $this->dao->searchVisitByUserId(
-            $collection->getUser()->getId(),
+            $entry_collection->getUser()->getId(),
             $max_length_history
         );
 
@@ -81,14 +80,11 @@ class VisitRetriever
                 continue;
             }
 
-            $tracker     = $artifact->getTracker();
-            $quick_links = [
-                new HistoryQuickLink(
-                    sprintf(dgettext('tuleap-tracker', '%s tracker'), $tracker->getName()),
-                    $tracker->getUri()
-                )
-            ];
-            $collection->addEntry(
+            $collection = new HistoryQuickLinkCollection($artifact);
+            \EventManager::instance()->processEvent($collection);
+            $tracker = $artifact->getTracker();
+
+            $entry_collection->addEntry(
                 new HistoryEntry(
                     $recently_visited_row['created_on'],
                     $artifact->getXRef(),
@@ -98,7 +94,7 @@ class VisitRetriever
                     $this->glyph_finder->get('tuleap-tracker-small'),
                     $this->glyph_finder->get('tuleap-tracker'),
                     $tracker->getProject(),
-                    $quick_links
+                    $collection->getLinks()
                 )
             );
         }

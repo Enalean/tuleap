@@ -13,28 +13,33 @@
     <script id="history-item-placeholder" type="x-tmpl-mustache">
         {{=<% %>=}}
         {{# entries }}
-            <a href="{{ html_url }}" class="history-item {{ color_name }}">
-                <div class="history-item-icon history-item-icon-{{ color_name }}">{{{ icon }}}</div>
-                <div class="history-item-content">
-                    <div class="history-item-content-description">
-                        <div class="history-item-content-description-info">
-                            <span class="history-item-content-description-info-badge badge tlp-badge-outline tlp-badge-{{ color_name }}">
-                                {{ xref }}
-                            </span>
-                            <span class="history-item-content-description-info-title">{{ title }}</span>
-                        </div>
-                        <div class="history-item-content-description-links">
-                            {{# quick_links }}
-                                <span class="history-item-extra-link history-item-content-description-link" data-href="{{ html_url }}">
-                                    <i class="history-item-content-description-link-icon fa fa-long-arrow-right"></i>{{ name }}
-                                </span>
-                            {{/ quick_links }}
-                        </div>
-                    </div>
-                    <span data-href="/projects/{{ project.shortname }}/" class="history-item-extra-link history-item-content-project">
-                        <i class="fa fa-archive history-item-content-project-icon"></i>
-                        <span class="history-item-content-project-name">{{ project.label }}</span>
+            <a href="{{ html_url }}"
+                class="history-item
+                    {{ color_name }}
+                    {{# has_quick_links }}history-item-with-quicklinks{{/ has_quick_links }}
+                "
+            >
+                <div class="history-item-description">
+                    <span class="history-item-description-badge badge tlp-badge-outline tlp-badge-{{ color_name }}">
+                        {{ xref }}
                     </span>
+                    <span class="history-item-description-title">{{ title }}</span>
+                </div>
+                <span class="history-item-project">
+                    <i class="fa fa-archive history-item-project-icon"></i>
+                    {{ project.label }}
+                </span>
+                <div class="history-item-links">
+                    {{# quick_links }}
+                        <span class="history-item-extra-link history-item-links-link"
+                            data-href="{{ html_url }}"
+                            title="{{ name }}"
+                            role="button"
+                            tabindex="0"
+                        >
+                            <i class="fa {{ icon_name }}"></i>
+                        </span>
+                    {{/ quick_links }}
                 </div>
             </a>
         {{/ entries }}

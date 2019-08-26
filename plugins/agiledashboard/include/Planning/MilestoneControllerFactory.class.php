@@ -25,6 +25,7 @@
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
+use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 
 /**
  * I build MilestoneController
@@ -63,6 +64,10 @@ class Planning_MilestoneControllerFactory
 
     /** @var MilestoneCrumbBuilder */
     private $milestone_crumb_builder;
+    /**
+     * @var VisitRecorder
+     */
+    private $visit_recorder;
 
     public function __construct(
         Plugin $plugin,
@@ -75,7 +80,8 @@ class Planning_MilestoneControllerFactory
         Planning_VirtualTopMilestonePaneFactory $top_milestone_pane_factory,
         AgileDashboardCrumbBuilder $service_crumb_builder,
         VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
-        MilestoneCrumbBuilder $milestone_crumb_builder
+        MilestoneCrumbBuilder $milestone_crumb_builder,
+        VisitRecorder $visit_recorder
     ) {
         $this->plugin                         = $plugin;
         $this->project_manager                = $project_manager;
@@ -88,6 +94,7 @@ class Planning_MilestoneControllerFactory
         $this->service_crumb_builder          = $service_crumb_builder;
         $this->top_milestone_crumb_builder    = $top_milestone_crumb_builder;
         $this->milestone_crumb_builder        = $milestone_crumb_builder;
+        $this->visit_recorder                 = $visit_recorder;
     }
 
     /**
@@ -107,7 +114,8 @@ class Planning_MilestoneControllerFactory
             $this->pane_presenter_builder_factory,
             $this->service_crumb_builder,
             $this->top_milestone_crumb_builder,
-            $this->milestone_crumb_builder
+            $this->milestone_crumb_builder,
+            $this->visit_recorder
         );
     }
 

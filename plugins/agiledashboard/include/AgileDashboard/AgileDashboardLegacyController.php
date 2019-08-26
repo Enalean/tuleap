@@ -33,6 +33,15 @@ use Tuleap\Request\NotFoundException;
 
 class AgileDashboardLegacyController implements DispatchableWithRequest
 {
+    /**
+     * @var AgileDashboardRouterBuilder
+     */
+    private $router_builder;
+
+    public function __construct(AgileDashboardRouterBuilder $router_builder)
+    {
+        $this->router_builder = $router_builder;
+    }
 
     /**
      * Is able to process a request routed by FrontRouter
@@ -53,8 +62,7 @@ class AgileDashboardLegacyController implements DispatchableWithRequest
             $layout->redirect('/');
         }
 
-        $builder = new AgileDashboardRouterBuilder();
-        $router  = $builder->build($request);
+        $router = $this->router_builder->build($request);
 
         $router->route($request);
     }

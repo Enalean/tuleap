@@ -26,6 +26,7 @@ use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 
 /**
  * Handles the HTTP actions related to a planning milestone.
@@ -64,6 +65,10 @@ class Planning_MilestoneController extends BaseController
      * @var MilestoneCrumbBuilder
      */
     private $milestone_crumb_builder;
+    /**
+     * @var VisitRecorder
+     */
+    private $visit_recorder;
 
     /**
      * Instanciates a new controller.
@@ -88,7 +93,8 @@ class Planning_MilestoneController extends BaseController
         AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
         AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
         VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
-        MilestoneCrumbBuilder $milestone_crumb_builder
+        MilestoneCrumbBuilder $milestone_crumb_builder,
+        VisitRecorder $visit_recorder
     ) {
         parent::__construct('agiledashboard', $request);
         $this->milestone_factory              = $milestone_factory;
@@ -98,12 +104,14 @@ class Planning_MilestoneController extends BaseController
         $this->agile_dashboard_crumb_builder  = $agile_dashboard_crumb_builder;
         $this->top_milestone_crumb_builder    = $top_milestone_crumb_builder;
         $this->milestone_crumb_builder        = $milestone_crumb_builder;
+        $this->visit_recorder                 = $visit_recorder;
     }
 
     public function show()
     {
         $this->generateBareMilestone();
         $this->redirectToCorrectPane();
+        $this->recordVisit();
 
         $presenter_data = $this->pane_factory->getPanePresenterData($this->milestone);
         $template_name  = $this->getTemplateName($presenter_data);
@@ -238,5 +246,15 @@ class Planning_MilestoneController extends BaseController
         }
 
         return 'show-flaming-parrot';
+    }
+
+    private function recordVisit(): void
+    {
+        $artifact = $this->milestone->getArtifact();
+        if ($artifact === null) {
+            return;
+        }
+
+        $this->visit_recorder->record($this->getCurrentUser(), $artifact);
     }
 }

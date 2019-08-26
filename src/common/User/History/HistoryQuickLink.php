@@ -30,11 +30,16 @@ class HistoryQuickLink
      * @var string
      */
     private $url;
+    /**
+     * @var string
+     */
+    private $icon_name;
 
-    public function __construct($name, $url)
+    public function __construct($name, $url, string $icon_name)
     {
-        $this->name = $name;
-        $this->url  = $url;
+        $this->name      = $name;
+        $this->url       = $url;
+        $this->icon_name = $icon_name;
     }
 
     /**
@@ -51,5 +56,10 @@ class HistoryQuickLink
     public function getUrl()
     {
         return $this->url;
+    }
+
+    public function getIconName(): string
+    {
+        return $this->icon_name;
     }
 }
