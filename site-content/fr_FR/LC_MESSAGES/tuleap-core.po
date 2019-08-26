@@ -1147,6 +1147,9 @@ msgstr "Publique, incluant les utilisateurs restreints"
 msgid "Public information"
 msgstr "Informations publiques"
 
+msgid "REST Read only administrator"
+msgstr "Administrateur lecture seule via REST"
+
 msgid "REST projects management"
 msgstr "Gestion des projets via REST"
 
@@ -1509,6 +1512,13 @@ msgstr ""
 msgid ""
 "This permission grants the right to manage projects through the REST api"
 msgstr "Cette permission donne le droit de gérer les projets via l'api REST"
+
+msgid ""
+"This permission grants the user the right to see all the platform content "
+"through the REST API (GET/OPTIONS)"
+msgstr ""
+"Cette permission donne le droit de voir (GET/OPTIONS) l'ensemble du contenu "
+"de la plateforme via l'API REST"
 
 msgid "This project doesn't use any services with permissions."
 msgstr "Ce project n'utilise pas de service avec des permissions."

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,10 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeySerializer;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
+use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminUserBuilder;
 use Tuleap\User\PasswordVerifier;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
 use User_LoginManager;
 use User_PasswordExpirationChecker;
 use EventManager;
@@ -63,16 +66,23 @@ class UserManager {
     public const HTTP_ACCESS_KEY_HEADER     = 'X-Auth-AccessKey';
     public const PHP_HTTP_ACCESS_KEY_HEADER = 'HTTP_X_AUTH_ACCESSKEY';
 
+    /**
+     * @var RestReadOnlyAdminUserBuilder
+     */
+    private $read_only_admin_user_builder;
+
     public function __construct(
         \UserManager $user_manager,
         User_LoginManager $login_manager,
         SplitTokenIdentifierTranslator $access_key_identifier_unserializer,
-        AccessKeyVerifier $access_key_verifier
+        AccessKeyVerifier $access_key_verifier,
+        RestReadOnlyAdminUserBuilder $read_only_admin_user_builder
     ) {
         $this->user_manager                       = $user_manager;
         $this->login_manager                      = $login_manager;
         $this->access_key_identifier_unserializer = $access_key_identifier_unserializer;
         $this->access_key_verifier                = $access_key_verifier;
+        $this->read_only_admin_user_builder       = $read_only_admin_user_builder;
     }
 
     public static function build()
@@ -89,7 +99,12 @@ class UserManager {
                 $password_handler
             ),
             new AccessKeySerializer(),
-            new AccessKeyVerifier(new AccessKeyDAO(), new SplitTokenVerificationStringHasher(), $user_manager)
+            new AccessKeyVerifier(new AccessKeyDAO(), new SplitTokenVerificationStringHasher(), $user_manager),
+            new RestReadOnlyAdminUserBuilder(
+                new User_ForgeUserGroupPermissionsManager(
+                    new User_ForgeUserGroupPermissionsDao()
+                )
+            )
         );
     }
 
@@ -112,6 +127,8 @@ class UserManager {
     {
         $user = $this->getUserFromCookie();
         if (! $user->isAnonymous()) {
+            $user = $this->read_only_admin_user_builder->buildReadOnlyAdminUser($user);
+            $this->user_manager->setCurrentUser($user);
             return $user;
         }
         try {
@@ -121,6 +138,8 @@ class UserManager {
         }
         if ($user === null) {
             return $this->user_manager->getUserAnonymous();
+        } else {
+            $user = $this->read_only_admin_user_builder->buildReadOnlyAdminUser($user);
         }
         $this->login_manager->validateAndSetCurrentUser($user);
         return $user;

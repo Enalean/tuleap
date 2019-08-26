@@ -21,15 +21,43 @@ namespace Tuleap\REST;
 
 use Luracast\Restler\iAuthenticate;
 use Luracast\Restler\InvalidAuthCredentials;
+use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminUserBuilder;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
+use UserManager;
 
 class BasicAuthentication implements iAuthenticate
 {
+    /**
+     * @var RestReadOnlyAdminUserBuilder
+     */
+    private $read_only_admin_user_builder;
+
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+
+    public function __construct()
+    {
+        $this->read_only_admin_user_builder = new RestReadOnlyAdminUserBuilder(
+            new User_ForgeUserGroupPermissionsManager(
+                new User_ForgeUserGroupPermissionsDao()
+            )
+        );
+
+        $this->user_manager = UserManager::instance();
+    }
+
     public function __isAllowed() // phpcs:ignore
     {
         if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
-            $current_user = \UserManager::instance()->login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+            $current_user = $this->user_manager->login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
 
             if ($current_user->isLoggedIn()) {
+                $current_user = $this->read_only_admin_user_builder->buildReadOnlyAdminUser($current_user);
+                $this->user_manager->setCurrentUser($current_user);
+
                 return true;
             }
 
