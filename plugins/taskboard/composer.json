@@ -1,0 +1,14 @@
+{
+    "name": "tuleap/plugin-taskboard",
+    "autoload": {
+        "psr-4": {
+            "Tuleap\\Taskboard\\": "include/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "7.3"
+        },
+        "sort-packages": true
+    }
+}

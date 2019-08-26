@@ -32,4 +32,8 @@ foreach (array_diff(scandir($plugins_directory), array('..', '.')) as $plugin_na
     if (is_file($plugin_class_path)) {
         require_once $plugin_class_path;
     }
+    $plugin_class_path = $plugins_directory . $plugin_name . "/include/${plugin_name}Plugin.php";
+    if (is_file($plugin_class_path)) {
+        require_once $plugin_class_path;
+    }
 }

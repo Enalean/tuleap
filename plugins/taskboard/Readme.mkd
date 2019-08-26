@@ -1,0 +1,6 @@
+Taskboard
+=========
+
+Keep track of things that need to get done in a task board.
+
+This plugin is used in Agile Dashboard and will replace the old cardwall view of a milestone.
