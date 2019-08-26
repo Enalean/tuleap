@@ -38,6 +38,7 @@ export default {
             this.$store.dispatch("loadRootFolder");
         }
         this.$store.commit("resetAscendantHierarchy");
+        this.$store.dispatch("removeQuickLook");
     }
 };
 </script>
