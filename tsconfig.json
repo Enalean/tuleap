@@ -45,8 +45,8 @@
           "tlp": [
               "src/www/themes/common/tlp/src/index.d.ts"
           ],
-          "tlp-mocks": [
-              "src/www/themes/common/tlp/mocks/index.d.ts"
+          "tlp-fetch-mocks-helper-jest": [
+              "src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.d.ts"
           ],
           "@tuleap-vue-components/*": [
               "src/www/scripts/vue-components/*"
