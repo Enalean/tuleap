@@ -47,14 +47,13 @@
         var new_stylesheet = document.createElement("link");
         new_stylesheet.rel = "stylesheet";
         new_stylesheet.href = "../dist/" + manifest["tlp-" + color + ".css"];
-        var interval = setInterval(function() {
+        new_stylesheet.onload = function() {
             if (new_stylesheet.sheet.cssRules.length) {
-                clearInterval(interval);
                 stylesheet.remove();
                 stylesheet = new_stylesheet;
                 updateAllHexaColors();
             }
-        }, 10);
+        };
         document.head.insertBefore(new_stylesheet, stylesheet.nextSibling);
     }
 
