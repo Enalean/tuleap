@@ -44,6 +44,7 @@ module.exports = {
             tsConfig: path.resolve(__dirname, "./../../tsconfig.json")
         }
     },
+    snapshotSerializers: ["jest-serializer-vue"],
     testMatch: ["**/?(*.)+(test).{js,ts}"],
     collectCoverageFrom: [
         "**/*.{js,ts,vue}",
