@@ -30,6 +30,10 @@ msgstr ""
 "\"approval_table_action\" pour choisir l'option de la création de la table à "
 "la création de la version (valeurs possibles : copy,reset,empty)"
 
+#, php-format
+msgid "%s has been modified by %s."
+msgstr "%s a été modifié par %s."
+
 msgid ""
 "A document with the same title is already being uploaded, you cannot copy "
 "your document here for now"
@@ -134,6 +138,10 @@ msgstr ""
 "La nouvelle interface est en cours de construction et toutes les "
 "fonctionnalités n'ont pas encore été portées."
 
+#, php-format
+msgid "New version of %s wiki page was created by %s."
+msgstr "Une nouvelle version de la page wiki %s a été créee par %s."
+
 msgid "Not yet"
 msgstr "Pas encore"
 
@@ -151,6 +159,9 @@ msgstr "Enregistrer"
 
 msgid "Settings have been saved successfully"
 msgstr "Les paramètres ont été sauvegardés avec succès"
+
+msgid "Something happen!"
+msgstr "Quelque chose a changé !"
 
 msgid "Switch to new user interface"
 msgstr "Basculer sur la nouvelle interface utilisateur"
@@ -258,6 +269,9 @@ msgstr ""
 "Cette limite empêche un utilisateur de téléverser plus de x fichiers à la "
 "fois."
 
+msgid "To stop monitoring, please visit:"
+msgstr "Pour arrêter le monitoring, veuillez visiter :"
+
 msgid "User, group"
 msgstr "Utilisateur, groupe"
 
@@ -270,6 +284,9 @@ msgstr "Vous n'êtes pas autorisés à écrire dans le dossier ayant pour id '%d
 
 msgid "You are not allowed to write this item."
 msgstr "Vous n'êtes pas autorisé à modifier cet élément."
+
+msgid "You are receiving this message because you are monitoring this item."
+msgstr "Vous recevez cette notification car vous monitorez cet item."
 
 msgid "You cannot delete the root folder."
 msgstr "Vous ne pouvez pas supprimer le dossier racine."

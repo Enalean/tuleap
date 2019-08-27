@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011 - present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -103,7 +104,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
                 $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_added_to_monitoring_list')."\n";
                 $msg .= $itemUrl;
                 $msg .= $separator;
-                $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notif_footer_message_link')."\n";
+                $msg .= dgettext('plugin-docman', 'To stop monitoring, please visit:')."\n";
             break;
             case self::MESSAGE_REMOVED:
                 $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed_from_monitoring_list')."\n";
