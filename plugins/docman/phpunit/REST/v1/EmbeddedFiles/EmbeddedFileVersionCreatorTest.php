@@ -33,6 +33,8 @@ use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreator;
+use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentation;
+use Tuleap\Docman\REST\v1\PostUpdateEventAdder;
 
 class EmbeddedFileVersionCreatorTest extends TestCase
 {
@@ -61,23 +63,29 @@ class EmbeddedFileVersionCreatorTest extends TestCase
      * @var Docman_FileStorage|Mockery\MockInterface
      */
     private $file_storage;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostUpdateEventAdder
+     */
+    private $post_update_event_adder;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->file_storage         = Mockery::mock(Docman_FileStorage::class);
-        $this->version_factory      = Mockery::mock(\Docman_VersionFactory::class);
-        $this->item_factory         = Mockery::mock(\Docman_ItemFactory::class);
-        $this->updator              = Mockery::mock(DocmanItemUpdator::class);
-        $this->transaction_executor = Mockery::mock(DBTransactionExecutor::class);
+        $this->file_storage            = Mockery::mock(Docman_FileStorage::class);
+        $this->version_factory         = Mockery::mock(\Docman_VersionFactory::class);
+        $this->item_factory            = Mockery::mock(\Docman_ItemFactory::class);
+        $this->updator                 = Mockery::mock(DocmanItemUpdator::class);
+        $this->transaction_executor    = Mockery::mock(DBTransactionExecutor::class);
+        $this->post_update_event_adder = Mockery::mock(PostUpdateEventAdder::class);
 
         $this->embedded_updator = new EmbeddedFileVersionCreator(
             $this->file_storage,
             $this->version_factory,
             $this->item_factory,
             $this->updator,
-            $this->transaction_executor
+            $this->transaction_executor,
+            $this->post_update_event_adder
         );
     }
 
@@ -116,6 +124,27 @@ class EmbeddedFileVersionCreatorTest extends TestCase
             $obsolescence_date->getTimestamp(),
             '',
             ''
+        );
+    }
+
+    public function testItShouldCreateAVersionOfEmbeddedFileFromAnEmptyDocument(): void
+    {
+        $item = Mockery::mock(\Docman_Empty::class);
+        $item->shouldReceive('getId')->andReturn(1);
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturn(101);
+
+        $representation          = new EmbeddedPropertiesPOSTPATCHRepresentation();
+        $representation->content = 'We will send Mowgli takes the medal';
+
+        $current_time = new \DateTimeImmutable();
+        $this->transaction_executor->shouldReceive('execute')->once();
+
+        $this->embedded_updator->createEmbeddedFileVersionFromEmpty(
+            $item,
+            $user,
+            $representation,
+            $current_time
         );
     }
 }

@@ -29,7 +29,6 @@ use Docman_ItemFactory;
 use Docman_LockFactory;
 use Docman_Log;
 use Docman_PermissionsManager;
-use Docman_SettingsBo;
 use Docman_VersionFactory;
 use Luracast\Restler\RestException;
 use PermissionsManager;
@@ -45,9 +44,6 @@ use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFileVersionPOSTRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreator;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
-use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
 use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
@@ -480,7 +476,12 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
             new Docman_VersionFactory(),
             new Docman_ItemFactory(),
             $item_updator_builder->build($this->event_manager),
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            new PostUpdateEventAdder(
+                \ProjectManager::instance(),
+                new DocmanItemsEventAdder($this->event_manager),
+                $this->event_manager
+            )
         );
     }
 

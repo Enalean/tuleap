@@ -362,4 +362,76 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
             DocmanDataBuilder::ADMIN_USER_NAME
         );
     }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostVersionEmptyToEmbeddedFile(int $root_id): void
+    {
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $query = json_encode(
+            [
+                'title'       => 'Empty to embedded',
+                'description' => 'A description',
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . '/empties', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $empty_to_update_id = $response->json()['id'];
+
+        $new_content = json_encode(
+            [
+                'content' => 'youhououh content'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_empty_documents/' . $empty_to_update_id . "/embedded_file", null, $new_content)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $updated_item_response = $this->getResponse(
+            $this->client->get('docman_items/' . urlencode((string)$empty_to_update_id)),
+            DocmanDataBuilder::ADMIN_USER_NAME
+        );
+
+        $this->assertEquals(200, $updated_item_response->getStatusCode());
+
+        $updated_item = $updated_item_response->json();
+        $this->assertEquals('embedded', $updated_item['type']);
+        $this->assertEquals('youhououh content', $updated_item['embedded_file_properties']['content']);
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_embedded_files/' . $updated_item['id'])
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->checkItemHasBeenDeleted($updated_item['id']);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testOptionsEmbeddedFileVersion(int $id): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('docman_empty_documents/' . $id . '/embedded_file'),
+            REST_TestDataBuilder::ADMIN_USER_NAME
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+    }
 }

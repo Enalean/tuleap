@@ -24,17 +24,24 @@ namespace Tuleap\Docman\REST\v1;
 
 use DateTimeImmutable;
 use Docman_Empty;
+use Docman_FileStorage;
 use Docman_ItemFactory;
 use Docman_LockFactory;
 use Docman_Log;
 use Docman_PermissionsManager;
+use Docman_VersionFactory;
 use Luracast\Restler\RestException;
 use PermissionsManager;
+use PluginManager;
 use Project;
 use ProjectManager;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
+use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreator;
+use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
@@ -290,6 +297,63 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
     }
 
     /**
+     * @url OPTIONS {id}/embedded_file
+     */
+    public function optionsEmbeddedFileVersion(int $id): void
+    {
+        $this->setVersionHeaders();
+    }
+
+    /**
+     * Create an embedded file document
+     *
+     * @url    POST {id}/embedded_file
+     * @access hybrid
+     *
+     * @param int                                       $id             Id of the file
+     * @param EmbeddedPropertiesPOSTPATCHRepresentation $representation {@from body}
+     *
+     * @status 201
+     *
+     * @throws RestException 400
+     * @throws RestException 403
+     * @trows  I18NRestException 404
+     */
+
+    public function postEmbeddedFileVersion(
+        int $id,
+        EmbeddedPropertiesPOSTPATCHRepresentation $representation
+    ): void {
+        $this->checkAccess();
+        $this->setVersionHeaders();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $this->addAllEvent($item_request->getProject());
+
+        $project      = $item_request->getProject();
+
+        /** @var Docman_Empty $item */
+        $item         = $item_request->getItem();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $validator = new DocumentBeforeModificationValidatorVisitor(
+            $this->getPermissionManager($project),
+            $current_user,
+            $item,
+            new DoesItemHasExpectedTypeVisitor(Docman_Empty::class)
+        );
+        $item->accept($validator);
+
+        $docman_item_version_creator = $this->getEmbeddedFileVersionCreator();
+        $docman_item_version_creator->createEmbeddedFileVersionFromEmpty(
+            $item,
+            $current_user,
+            $representation,
+            new DateTimeImmutable()
+        );
+    }
+    /**
      * @url OPTIONS {id}/metadata
      */
     public function optionsMetadata(int $id): void
@@ -297,7 +361,7 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
         $this->setMetadataHeaders();
     }
 
-    private function setMetadataHeaders()
+    private function setMetadataHeaders(): void
     {
         Header::allowOptionsPut();
     }
@@ -392,5 +456,29 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
+    }
+
+    private function setVersionHeaders(): void
+    {
+        Header::allowOptionsPost();
+    }
+
+    private function getEmbeddedFileVersionCreator(): EmbeddedFileVersionCreator
+    {
+        $docman_plugin        = PluginManager::instance()->getPluginByName('docman');
+        $docman_root          = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
+        $item_updator_builder = new DocmanItemUpdatorBuilder();
+        return new EmbeddedFileVersionCreator(
+            new Docman_FileStorage($docman_root),
+            new Docman_VersionFactory(),
+            new Docman_ItemFactory(),
+            $item_updator_builder->build($this->event_manager),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            new PostUpdateEventAdder(
+                \ProjectManager::instance(),
+                new DocmanItemsEventAdder($this->event_manager),
+                $this->event_manager
+            )
+        );
     }
 }
