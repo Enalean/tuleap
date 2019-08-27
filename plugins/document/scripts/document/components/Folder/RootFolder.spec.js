@@ -52,6 +52,7 @@ describe("RootFolder", () => {
         factory();
 
         expect(store.dispatch).toHaveBeenCalledWith("loadRootFolder");
+        expect(store.dispatch).toHaveBeenCalledWith("removeQuickLook");
         expect(store.commit).toHaveBeenCalledWith("resetAscendantHierarchy");
     });
 
@@ -65,6 +66,7 @@ describe("RootFolder", () => {
         factory();
 
         expect(store.dispatch).toHaveBeenCalledWith("loadRootFolder");
+        expect(store.dispatch).toHaveBeenCalledWith("removeQuickLook");
         expect(store.commit).toHaveBeenCalledWith("resetAscendantHierarchy");
     });
 
@@ -78,6 +80,7 @@ describe("RootFolder", () => {
         factory();
 
         expect(store.dispatch).not.toHaveBeenCalledWith("loadRootFolder");
+        expect(store.dispatch).toHaveBeenCalledWith("removeQuickLook");
         expect(store.commit).toHaveBeenCalledWith("resetAscendantHierarchy");
     });
 });
