@@ -917,7 +917,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $this->assertEquals('PUT F', $file_to_update['title']);
         $this->assertEquals('', $file_to_update['description']);
-        $this->assertEquals(110, $file_to_update['owner']['id']);
+        $this->assertEquals($this->docman_user_id, $file_to_update['owner']['id']);
 
         $date_before_update           = \DateTimeImmutable::createFromFormat(
             \DateTime::ATOM,
@@ -929,7 +929,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             'id'                => $file_to_update_id,
             'title'             => 'PUT F New Title',
             'description'       => '',
-            'owner_id'          => 101,
+            'owner_id'          => $this->test_user_1_id,
             'status'            => 'none'
         ];
 
@@ -958,7 +958,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $this->assertEquals('PUT F New Title', $new_version['title']);
         $this->assertEquals('', $new_version['description']);
-        $this->assertEquals(101, $new_version['owner']['id']);
+        $this->assertEquals($this->test_user_1_id, $new_version['owner']['id']);
     }
 
     /**
@@ -971,7 +971,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $this->assertEquals('PUT F Status', $file_to_update['title']);
         $this->assertEquals('', $file_to_update['description']);
-        $this->assertEquals(110, $file_to_update['owner']['id']);
+        $this->assertEquals($this->docman_user_id, $file_to_update['owner']['id']);
 
         $put_resource = [
             'id'                => $file_to_update_id,
@@ -1004,7 +1004,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $this->assertEquals('PUT F OD', $file_to_update['title']);
         $this->assertEquals('', $file_to_update['description']);
-        $this->assertEquals(110, $file_to_update['owner']['id']);
+        $this->assertEquals($this->docman_user_id, $file_to_update['owner']['id']);
 
         $put_resource = [
             'id'                => $file_to_update_id,
