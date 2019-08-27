@@ -23,7 +23,7 @@
   -->
 
 <project
-    unix-name="linked-artifacts" full-name="linked-artifacts" description="linked-artifacts" access="public">
+    unix-name="linked-artifacts" full-name="linked-artifacts" description="linked-artifacts" access="private">
     <long-description>Project for tracker fields actions</long-description>
     <services>
         <service shortname="plugin_tracker" enabled="true" />

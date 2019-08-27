@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2013 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Guzzle\Http\Message\Response;
 
 /**
  * @group ArtifactsChangesets
  */
-class ArtifactsChangesetsTest extends RestBase {
+class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+{
 
     private $artifact_resource;
 
@@ -47,18 +49,57 @@ class ArtifactsChangesetsTest extends RestBase {
     /**
      * @see https://tuleap.net/plugins/tracker/?aid=6371
      */
+    public function testOptionsArtifactIdWithUserRESTReadOnlyAdmin()
+    {
+        $response = $this->getResponse(
+            $this->client->options($this->artifact_resource['uri'].'/changesets'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(
+            ['OPTIONS', 'GET'],
+            $response->getHeader('Allow')->normalize()->toArray()
+        );
+    }
+
+    /**
+     * @see https://tuleap.net/plugins/tracker/?aid=6371
+     */
     public function testGetChangesetsHasPagination()
     {
         $response = $this->getResponse($this->client->get($this->artifact_resource['uri'].'/changesets?offset=2&limit=10'));
-        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertChangeset($response);
+    }
+
+    /**
+     * @see https://tuleap.net/plugins/tracker/?aid=6371
+     */
+    public function testGetChangesetsHasPaginationWithUserRESTReadOnlyAdmin()
+    {
+        $response = $this->getResponse(
+            $this->client->get($this->artifact_resource['uri'].'/changesets?offset=2&limit=10'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertChangeset($response);
+    }
+
+    /**
+     * @param $response
+     * @throws Exception
+     */
+    private function assertChangeset(Response $response): void
+    {
+        $this->assertEquals(200, $response->getStatusCode());
 
         $changesets = $response->json();
         $this->assertCount(1, $changesets);
         $this->assertEquals("Awesome changes", $changesets[0]['last_comment']['body']);
 
         $fields = $changesets[0]['values'];
-        foreach($fields as $field) {
-            switch($field['type']) {
+        foreach ($fields as $field) {
+            switch ($field['type']) {
                 case 'string':
                     $this->assertTrue(is_string($field['label']));
                     $this->assertTrue(is_string($field['value']));
@@ -71,7 +112,7 @@ class ArtifactsChangesetsTest extends RestBase {
                     $this->assertTrue(is_string($field['label']));
                     $this->assertTrue(is_string($field['value']));
                     $this->assertTrue(is_string($field['format']));
-                    $this->assertTrue($field['format'] == 'text'|| $field['format'] == 'html' );
+                    $this->assertTrue($field['format'] == 'text' || $field['format'] == 'html');
                     break;
                 case 'msb':
                 case 'sb':
@@ -96,14 +137,14 @@ class ArtifactsChangesetsTest extends RestBase {
                     break;
                 case 'lud':
                     $this->assertTrue(is_string($field['label']));
-                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT' , $field['value']) !== false);
+                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT', $field['value']) !== false);
                     break;
                 case 'subon':
                     $this->assertTrue(is_string($field['label']));
-                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT' , $field['value']) !== false);
+                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT', $field['value']) !== false);
                     break;
                 default:
-                    throw new Exception('You need to update this test for the field: '.print_r($field, true));
+                    throw new Exception('You need to update this test for the field: ' . print_r($field, true));
             }
         }
 
