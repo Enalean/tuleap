@@ -25,7 +25,7 @@ use EventManager;
 use PFUser;
 use Tracker_FormElementFactory;
 use TrackerFactory;
-use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 class IndexController extends TestManagementController
 {
