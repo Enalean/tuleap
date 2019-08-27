@@ -91,26 +91,33 @@ $tlp-tabs-transition: 75ms ease-out;
 .tlp-tab {
     display: flex;
     position: relative;
+    flex: 0 0 auto;
+    align-items: center;
     padding: 16px 30px 14px;
+    transition: color $tlp-tabs-transition, border-bottom-color $tlp-tabs-transition;
     border-bottom: 2px solid transparent;
-    color: $tlp-theme-color;
+    color: $tlp-ui-dimmed;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 1px;
     text-decoration: none;
     text-transform: uppercase;
-    flex: 0 0 auto;
-    align-items: center;
 
     &.tlp-tab-active,
     &:hover {
         border-bottom-color: $tlp-theme-color;
+        color: $tlp-theme-color;
         text-decoration: none;
+
+        > .tlp-tab-badge-append {
+            opacity: 1;
+        }
     }
 
     &.tlp-tab-disabled,
     &.tlp-tab-disabled:hover {
         border-bottom-color: transparent;
+        opacity: .5;
         color: $tlp-ui-dimmed;
         cursor: not-allowed;
     }
@@ -140,6 +147,8 @@ $tlp-tabs-transition: 75ms ease-out;
 
 .tlp-tab-badge-append {
     margin: -10px 0 -9px 10px;
+    transition: opacity $tlp-tabs-transition;
+    opacity: .5;
     letter-spacing: normal;
     line-height: unset;
     text-transform: none;
