@@ -19,8 +19,14 @@
 
 <template>
     <error-modal v-on:error-modal-hidden="bubbleErrorModalHidden">
-        <p v-translate>
-            {{ filename }} has been locked for edition by <a v-bind:href="lock_owner.user_url">{{ lock_owner.display_name }}</a>. You can't upload a new version of this file until the lock is released.
+        <p
+            v-translate="{
+                filename,
+                lock_owner_url: lock_owner.user_url,
+                lock_owner_name: lock_owner.display_name
+            }"
+        >
+            %{ filename } has been locked for edition by <a href="%{ lock_owner_url }">%{ lock_owner_name }</a>. You can't upload a new version of this file until the lock is released.
         </p>
     </error-modal>
 </template>

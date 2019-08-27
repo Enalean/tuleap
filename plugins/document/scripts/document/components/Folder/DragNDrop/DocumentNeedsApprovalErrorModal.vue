@@ -19,14 +19,21 @@
 
 <template>
     <error-modal v-on:error-modal-hidden="bubbleErrorModalHidden">
-        <p v-translate>
-            <a v-bind:href="table_owner.user_url">{{ table_owner.display_name }}</a> has created an <a v-bind:href="approval_table_url">approval table</a>  for the last version of {{ filename }}.
+        <p
+            v-translate="{
+                table_owner_url: table_owner.user_url,
+                table_owner_name: table_owner.display_name,
+                approval_table_url,
+                filename
+            }"
+        >
+            <a href="%{ table_owner_url }">%{ table_owner_name }</a> has created an <a href="%{ approval_table_url }">approval table</a> for the last version of %{ filename }.
         </p>
         <p v-translate>
             You can't upload a new version of this file until the approval table is closed.
         </p>
-        <p v-translate>
-            Current approval table state: {{ table_state }}.
+        <p v-translate="{ table_state }">
+            Current approval table state: %{ table_state }.
         </p>
     </error-modal>
 </template>
