@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchError } from "tlp-mocks";
+import { mockFetchSuccess, mockFetchError } from "tlp-fetch-mocks-helper-jest";
 import {
     PROJECT_KEY,
     ERROR_TYPE_NO_GIT,
@@ -25,35 +25,11 @@ import {
     REPOSITORIES_SORTED_BY_LAST_UPDATE,
     REPOSITORIES_SORTED_BY_PATH
 } from "../constants.js";
-import {
-    setDisplayMode,
-    getAsyncRepositoryList,
-    changeRepositories,
-    rewire$getAsyncRepositoryList,
-    restore as restoreActions
-} from "./actions.js";
-
-import {
-    rewire$setRepositoriesSortedByPathUserPreference,
-    rewire$deleteRepositoriesSortedByPathUserPreference,
-    rewire$getRepositoryList,
-    rewire$getForkedRepositoryList,
-    restore as restoreRestQuerier
-} from "../api/rest-querier.js";
-
-import {
-    rewire$getUserId,
-    rewire$getProjectId,
-    restore as restoreRepositoryPresenter
-} from "../repository-list-presenter.js";
+import { setDisplayMode, getAsyncRepositoryList, changeRepositories } from "./actions.js";
+import * as repository_list_presenter from "../repository-list-presenter.js";
+import * as rest_querier from "../api/rest-querier.js";
 
 describe("Store actions", () => {
-    afterEach(() => {
-        restoreRestQuerier();
-        restoreActions();
-        restoreRepositoryPresenter();
-    });
-
     describe("setDisplayMode", () => {
         let context,
             setRepositoriesSortedByPathUserPreference,
@@ -61,27 +37,22 @@ describe("Store actions", () => {
 
         beforeEach(() => {
             context = {
-                commit: jasmine.createSpy("commit")
+                commit: jest.fn()
             };
 
-            setRepositoriesSortedByPathUserPreference = jasmine.createSpy(
+            setRepositoriesSortedByPathUserPreference = jest.spyOn(
+                rest_querier,
                 "setRepositoriesSortedByPathUserPreference"
             );
-            rewire$setRepositoriesSortedByPathUserPreference(
-                setRepositoriesSortedByPathUserPreference
-            );
-
-            deleteRepositoriesSortedByPathUserPreference = jasmine.createSpy(
+            deleteRepositoriesSortedByPathUserPreference = jest.spyOn(
+                rest_querier,
                 "deleteRepositoriesSortedByPathUserPreference"
-            );
-            rewire$deleteRepositoriesSortedByPathUserPreference(
-                deleteRepositoriesSortedByPathUserPreference
             );
         });
 
         it("commits the new mode", async () => {
-            const getUserId = () => 0;
-            rewire$getUserId(getUserId);
+            const getUserId = jest.spyOn(repository_list_presenter, "getUserId");
+            getUserId.mockReturnValue(0);
 
             const new_mode = REPOSITORIES_SORTED_BY_PATH;
 
@@ -91,8 +62,8 @@ describe("Store actions", () => {
         });
 
         it("does not save user preference if user is anonymous", async () => {
-            const getUserId = () => 0;
-            rewire$getUserId(getUserId);
+            const getUserId = jest.spyOn(repository_list_presenter, "getUserId");
+            getUserId.mockReturnValue(0);
 
             const new_mode = REPOSITORIES_SORTED_BY_PATH;
 
@@ -103,8 +74,10 @@ describe("Store actions", () => {
         });
 
         it("saves user preferences if by path", async () => {
-            const getUserId = () => 101;
-            rewire$getUserId(getUserId);
+            const getUserId = jest.spyOn(repository_list_presenter, "getUserId");
+            getUserId.mockReturnValue(101);
+
+            mockFetchSuccess(setRepositoriesSortedByPathUserPreference);
 
             const new_mode = REPOSITORIES_SORTED_BY_PATH;
 
@@ -115,8 +88,10 @@ describe("Store actions", () => {
         });
 
         it("deletes user preferences if not by path", async () => {
-            const getUserId = () => 101;
-            rewire$getUserId(getUserId);
+            const getUserId = jest.spyOn(repository_list_presenter, "getUserId");
+            getUserId.mockReturnValue(101);
+
+            mockFetchSuccess(deleteRepositoriesSortedByPathUserPreference);
 
             const new_mode = REPOSITORIES_SORTED_BY_LAST_UPDATE;
 
@@ -130,25 +105,20 @@ describe("Store actions", () => {
     describe("changeRepositories", () => {
         const current_project_id = 100;
 
-        let getAsyncRepositoryList, getRepositoryList, getForkedRepositoryList, getProjectId;
+        let getRepositoryList, getForkedRepositoryList, getProjectId;
 
         beforeEach(() => {
-            getRepositoryList = jasmine.createSpy("getRepositoryList");
-            rewire$getRepositoryList(getRepositoryList);
+            getRepositoryList = jest.spyOn(rest_querier, "getRepositoryList");
 
-            getForkedRepositoryList = jasmine.createSpy("getForkedRepositoryList");
-            rewire$getForkedRepositoryList(getForkedRepositoryList);
+            getForkedRepositoryList = jest.spyOn(rest_querier, "getForkedRepositoryList");
 
-            getProjectId = () => current_project_id;
-            rewire$getProjectId(getProjectId);
+            getProjectId = jest.spyOn(repository_list_presenter, "getProjectId");
+            getProjectId.mockImplementation(() => current_project_id);
         });
 
         it("Given that my repositories have already been loaded, then it should not try to fetch the list of repositories.", () => {
-            getAsyncRepositoryList = jasmine.createSpy("getAsyncRepositoryList");
-            rewire$getAsyncRepositoryList(getAsyncRepositoryList);
-
             const context = {
-                commit: jasmine.createSpy("commit"),
+                commit: jest.fn(),
                 getters: {
                     areRepositoriesAlreadyLoadedForCurrentOwner: true
                 }
@@ -167,12 +137,14 @@ describe("Store actions", () => {
 
         it("Given that my repositories have not already been loaded, When I pass the PROJECT_KEY in parameters, then it should fetch the list of repositories of the project.", () => {
             const context = {
-                commit: jasmine.createSpy("commit"),
+                commit: jest.fn(),
                 getters: {
                     areRepositoriesAlreadyLoadedForCurrentOwner: false,
                     isFolderDisplayMode: false
                 }
             };
+
+            mockFetchSuccess(getRepositoryList);
 
             changeRepositories(context, PROJECT_KEY);
 
@@ -182,7 +154,7 @@ describe("Store actions", () => {
             expect(getRepositoryList).toHaveBeenCalledWith(
                 current_project_id,
                 "push_date",
-                jasmine.any(Function)
+                expect.any(Function)
             );
             expect(getForkedRepositoryList).not.toHaveBeenCalled();
         });
@@ -190,7 +162,7 @@ describe("Store actions", () => {
         it("Given that my repositories have not already been loaded, When I pass an user id in parameters, then it should fetch the list of forked repositories of the project.", () => {
             const selected_owner_id = 120;
             const context = {
-                commit: jasmine.createSpy("commit"),
+                commit: jest.fn(),
                 getters: {
                     areRepositoriesAlreadyLoadedForCurrentOwner: false,
                     isFolderDisplayMode: false
@@ -199,6 +171,8 @@ describe("Store actions", () => {
                     selected_owner_id
                 }
             };
+
+            mockFetchSuccess(getForkedRepositoryList);
 
             const owner_id = 101;
 
@@ -212,7 +186,7 @@ describe("Store actions", () => {
                 current_project_id,
                 selected_owner_id,
                 "push_date",
-                jasmine.any(Function)
+                expect.any(Function)
             );
         });
     });
@@ -220,13 +194,13 @@ describe("Store actions", () => {
     describe("getAsyncRepositoryList", () => {
         let commit, getRepositories;
         beforeEach(() => {
-            commit = jasmine.createSpy("commit");
-            getRepositories = jasmine.createSpy("getRepositories");
+            commit = jest.fn();
+            getRepositories = jest.fn();
         });
 
         it("When I want to load the project repositories, Then it should fetch them asynchronously and put them in the store.", async () => {
             const repositories = [{ name: "VueX" }];
-            getRepositories.and.callFake(callback => callback(repositories));
+            getRepositories.mockImplementation(callback => callback(repositories));
 
             await getAsyncRepositoryList(commit, getRepositories);
 

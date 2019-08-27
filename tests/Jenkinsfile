@@ -88,9 +88,6 @@ pipeline {
                         stage('Karma TimeTracking plugin') {
                             steps { script { actions.runKarmaTests('timetracking', 'plugins/timetracking/www/scripts') } }
                         }
-                        stage('Karma Git plugin') {
-                            steps { script { actions.runKarmaTests('git', 'plugins/git/www/scripts') } }
-                        }
                         stage('Karma Document plugin') {
                             steps { script { actions.runKarmaTests('document', 'plugins/document/scripts') } }
                         }
