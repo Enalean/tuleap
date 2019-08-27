@@ -1,7 +1,7 @@
 /*
  * Copyright Enalean (c) 2018 - present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -78,7 +78,7 @@ describe("Store mutations", () => {
                 expect(state.rest_feedback.type).toEqual("");
             });
 
-            it("When states updated with error message, Then we call setAddMode, states must change", () => {
+            it("When states updated with error message, Then we call setAddMode without being in add mode, states must change", () => {
                 state.is_add_mode = true;
                 state.rest_feedback.message = ERROR_OCCURRED;
                 state.rest_feedback.type = "danger";

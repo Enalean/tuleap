@@ -1,7 +1,7 @@
 /*
  * Copyright Enalean (c) 2018 - present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -33,7 +33,7 @@ describe("Widget", () => {
 
     describe("Call sums", () => {
         describe("Given a widget with state initialisation", () => {
-            it("Then we add times, times must change too", () => {
+            it("Then we add times, total sum must change too", () => {
                 let times = [
                     [
                         {
@@ -53,7 +53,7 @@ describe("Widget", () => {
                 expect(getters.get_formatted_total_sum(state)).toBe("00:40");
             });
 
-            it("Then we add times, times must change too", () => {
+            it("Then we add times, aggregated time must change too", () => {
                 let times = [
                     {
                         artifact: {},

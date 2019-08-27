@@ -1,7 +1,7 @@
 /**
  * Copyright Enalean (c) 2018. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -22,9 +22,13 @@
  */
 
 import { Settings } from "luxon";
-import { tlp, mockFetchSuccess } from "tlp-mocks";
+import { mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
 
 import { getTrackedTimes, addTime, deleteTime } from "./rest-querier.js";
+
+import * as tlp from "tlp";
+
+jest.mock("tlp");
 
 describe("getTrackedTimes() -", () => {
     it("the REST API will be queried with ISO-8601 dates and the times returned", async () => {
@@ -43,7 +47,8 @@ describe("getTrackedTimes() -", () => {
             ]
         ];
 
-        mockFetchSuccess(tlp.get, {
+        const tlpGet = jest.spyOn(tlp, "get");
+        mockFetchSuccess(tlpGet, {
             headers: {
                 get: header_name => {
                     const headers = {
@@ -57,7 +62,7 @@ describe("getTrackedTimes() -", () => {
         });
 
         const result = await getTrackedTimes(user_id, "2018-03-08", "2018-03-15", limit, offset);
-        expect(tlp.get).toHaveBeenCalledWith("/api/v1/users/" + user_id + "/timetracking", {
+        expect(tlpGet).toHaveBeenCalledWith("/api/v1/users/" + user_id + "/timetracking", {
             params: {
                 limit,
                 offset,
@@ -80,7 +85,8 @@ describe("getTrackedTimes() -", () => {
             minutes: 20
         };
 
-        mockFetchSuccess(tlp.post, {
+        const tlpPost = jest.spyOn(tlp, "post");
+        mockFetchSuccess(tlpPost, {
             return_json: time
         });
         const result = await addTime("2018-03-08", 2, "11:11", "oui");
@@ -93,7 +99,7 @@ describe("getTrackedTimes() -", () => {
             time_value: "11:11",
             step: "oui"
         });
-        expect(tlp.post).toHaveBeenCalledWith("/api/v1/timetracking", {
+        expect(tlpPost).toHaveBeenCalledWith("/api/v1/timetracking", {
             headers,
             body
         });
@@ -103,7 +109,8 @@ describe("getTrackedTimes() -", () => {
     it("the REST API should delete the given time", async () => {
         Settings.defaultZoneName = "Europe/Paris";
 
-        mockFetchSuccess(tlp.del, {
+        const tlpDel = jest.spyOn(tlp, "del");
+        mockFetchSuccess(tlpDel, {
             return_json: []
         });
         const time_id = 2;
@@ -111,7 +118,7 @@ describe("getTrackedTimes() -", () => {
         const headers = {
             "content-type": "application/json"
         };
-        expect(tlp.del).toHaveBeenCalledWith("/api/v1/timetracking/" + time_id, {
+        expect(tlpDel).toHaveBeenCalledWith("/api/v1/timetracking/" + time_id, {
             headers
         });
     });
