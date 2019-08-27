@@ -31,6 +31,7 @@ use Planning_MilestoneController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
+use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
@@ -96,6 +97,10 @@ class MilestoneControllerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|VisitRecorder
      */
     private $visit_recorder;
+    /**
+     * @var AllBreadCrumbsForMilestoneBuilder
+     */
+    private $crumb_builder;
 
     public function setUp() : void
     {
@@ -132,6 +137,12 @@ class MilestoneControllerTest extends TestCase
         $this->top_milestone_crumb_builder   = Mockery::mock(VirtualTopMilestoneCrumbBuilder::class);
         $this->milestone_crumb_builder       = Mockery::mock(MilestoneCrumbBuilder::class);
 
+        $this->crumb_builder = new AllBreadCrumbsForMilestoneBuilder(
+            $this->agile_dashboard_crumb_builder,
+            $this->top_milestone_crumb_builder,
+            $this->milestone_crumb_builder
+        );
+
         $this->service_breadcrumb     = new BreadCrumb(
             new BreadCrumbLink('Agile Dashboard', '/fake_url')
         );
@@ -146,11 +157,8 @@ class MilestoneControllerTest extends TestCase
             $this->milestone_factory,
             $this->project_manager,
             $this->pane_factory,
-            $this->pane_presenter_builder_factory,
-            $this->agile_dashboard_crumb_builder,
-            $this->top_milestone_crumb_builder,
-            $this->milestone_crumb_builder,
-            $this->visit_recorder
+            $this->visit_recorder,
+            $this->crumb_builder
         );
     }
 

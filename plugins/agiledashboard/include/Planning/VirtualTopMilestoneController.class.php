@@ -124,17 +124,9 @@ class Planning_VirtualTopMilestoneController extends BaseController
 
     private function getTopMilestonePresenter()
     {
-        $redirect_parameter = new Planning_MilestoneRedirectParameter();
-
         return new AgileDashboard_MilestonePresenter(
             $this->milestone,
-            $this->getCurrentUser(),
-            $this->request,
-            $this->top_milestone_pane_factory->getPanePresenterData($this->milestone),
-            $redirect_parameter->getPlanningRedirectToNew(
-                $this->milestone,
-                $this->top_milestone_pane_factory->getDefaultPaneIdentifier()
-            )
+            $this->top_milestone_pane_factory->getPanePresenterData($this->milestone)
         );
     }
 

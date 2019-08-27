@@ -41,7 +41,7 @@ abstract class PaneInfo
     /**
      * @var Planning_Milestone
      */
-    private $milestone;
+    protected $milestone;
 
     protected $action = self::ACTION;
 
