@@ -531,7 +531,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
 
         $this->assertEquals('PUT L', $item_to_update['title']);
         $this->assertEquals('', $item_to_update['description']);
-        $this->assertEquals(110, $item_to_update['owner']['id']);
+        $this->assertEquals($this->docman_user_id, $item_to_update['owner']['id']);
 
         $date_before_update           = \DateTimeImmutable::createFromFormat(
             \DateTime::ATOM,
@@ -543,7 +543,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
             'id'                => $item_to_update_id,
             'title'             => 'PUT L New Title',
             'description'       => 'Danger ! Danger !',
-            'owner_id'          => 101,
+            'owner_id'          => $this->test_user_1_id,
             'status'            => 'none'
         ];
 
@@ -572,7 +572,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
 
         $this->assertEquals('PUT L New Title', $new_version['title']);
         $this->assertEquals('Danger ! Danger !', $new_version['description']);
-        $this->assertEquals(101, $new_version['owner']['id']);
+        $this->assertEquals($this->test_user_1_id, $new_version['owner']['id']);
     }
 
     /**
