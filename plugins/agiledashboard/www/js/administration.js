@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'scrum/overview';
-@import 'scrum/planning';
-@import 'header';
+import { createPopover } from "tlp";
 
-.agiledashboard-milestone-details-items-list-badge {
-    margin: 0 5px 0 0;
-}
+document.addEventListener("DOMContentLoaded", () => {
+    const trigger = document.getElementById(
+        "agiledashboard-administration-cannot-create-planning-popover-trigger"
+    );
+
+    if (trigger) {
+        createPopover(
+            trigger,
+            document.getElementById("agiledashboard-administration-cannot-create-planning-popover")
+        );
+    }
+});

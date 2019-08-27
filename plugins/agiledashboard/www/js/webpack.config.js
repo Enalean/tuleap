@@ -44,6 +44,7 @@ const webpack_config_for_overview_and_vue = {
     entry: {
         "scrum-header": "./scrum-header.js",
         "permission-per-group": "./permissions-per-group/src/index.js",
+        administration: "./administration.js",
         "planning-admin": "./planning-admin.js"
     },
     context: path.resolve(__dirname),

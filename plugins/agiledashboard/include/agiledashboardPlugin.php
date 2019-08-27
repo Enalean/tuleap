@@ -696,6 +696,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $variant = $params['variant'];
         if ($this->isInOverviewTab() || $this->isPlanningV2URL()) {
             $params['stylesheets'][] = $theme_include_assets->getFileURL('scrum-' . $variant->getName() . '.css');
+        } elseif ($this->isScrumAdminURL()) {
+            $params['stylesheets'][] = $theme_include_assets->getFileURL('administration-' . $variant->getName() . '.css');
         }
     }
 
@@ -748,6 +750,13 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     private function isAnAgiledashboardRequest()
     {
         return $this->currentRequestIsForPlugin();
+    }
+
+    private function isScrumAdminURL()
+    {
+        $request = HTTPRequest::instance();
+
+        return $request->get('action') === 'admin' && $request->get('pane') !== 'kanban' && $request->get('pane') !== 'charts';
     }
 
     private function isPlanningV2URL()
@@ -1277,7 +1286,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     {
         if (KanbanURL::isKanbanURL(HTTPRequest::instance()) ||
             $this->isInOverviewTab() ||
-            $this->isPlanningV2URL()
+            $this->isPlanningV2URL() ||
+            $this->isScrumAdminURL()
         ) {
             $event->setIsInBurningParrotCompatiblePage();
         }

@@ -103,4 +103,8 @@
     &:not(.tlp-pane-section) {
         margin: $tlp-double-spacing 0 0;
     }
+
+    > [class*='tlp-button'] {
+        margin: 0 $tlp-half-spacing / 2;
+    }
 }

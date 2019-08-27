@@ -46,7 +46,19 @@
                 "www/themes/BurningParrot/css/scrum-purple.scss",
                 "www/themes/BurningParrot/css/scrum-purple-condensed.scss",
                 "www/themes/BurningParrot/css/scrum-red.scss",
-                "www/themes/BurningParrot/css/scrum-red-condensed.scss"
+                "www/themes/BurningParrot/css/scrum-red-condensed.scss",
+                "www/themes/BurningParrot/css/administration-blue.scss",
+                "www/themes/BurningParrot/css/administration-blue-condensed.scss",
+                "www/themes/BurningParrot/css/administration-green.scss",
+                "www/themes/BurningParrot/css/administration-green-condensed.scss",
+                "www/themes/BurningParrot/css/administration-grey.scss",
+                "www/themes/BurningParrot/css/administration-grey-condensed.scss",
+                "www/themes/BurningParrot/css/administration-orange.scss",
+                "www/themes/BurningParrot/css/administration-orange-condensed.scss",
+                "www/themes/BurningParrot/css/administration-purple.scss",
+                "www/themes/BurningParrot/css/administration-purple-condensed.scss",
+                "www/themes/BurningParrot/css/administration-red.scss",
+                "www/themes/BurningParrot/css/administration-red-condensed.scss"
             ],
             "includes": [
                 "../../src/www/themes/common/tlp/src/scss",

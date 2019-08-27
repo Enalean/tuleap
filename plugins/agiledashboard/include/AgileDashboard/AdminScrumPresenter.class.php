@@ -164,9 +164,13 @@ class AdminScrumPresenter
     public function cannot_create_planning_config()
     {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'cannot_create_planning_config', array(
-            $this->root_planning_name,
-            $this->root_planning_tracker_url.'&func=admin-hierarchy',
+            $this->root_planning_name
         ));
+    }
+
+    public function cannot_create_planning_popover_title()
+    {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'cannot_create_planning_popover_title');
     }
 
     public function edit_action_label()
@@ -197,16 +201,6 @@ class AdminScrumPresenter
     public function title_label_help()
     {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'title_scrum_help');
-    }
-
-    public function scrum_activated_label()
-    {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_activated_label');
-    }
-
-    public function scrum_not_activated_label()
-    {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_not_activated_label');
     }
 
     public function first_scrum_will_be_created()

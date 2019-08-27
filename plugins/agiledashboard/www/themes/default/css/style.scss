@@ -394,7 +394,7 @@ body.agiledashboard_homepage .main .content {
         }
     }
 
-    .active-scrum, .active-kanban {
+    .active-kanban {
         margin: 0 0 20px;
     }
 
@@ -488,8 +488,7 @@ body.agiledashboard_kanban {
     }
 }
 
-.admin-kanban-not-activated,
-.admin-scrum-not-activated {
+.admin-kanban-not-activated {
     > p {
         margin-top: 10px;
     }
