@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
+use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 use Tuleap\Widget\WidgetFactory;
 
 require_once __DIR__.'/../../lib/TestDataBuilder.php';
@@ -31,6 +32,11 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
     public const TEST_USER_4_NAME        = 'rest_api_tester_4';
     public const TEST_USER_4_PASS        = 'welcome0';
     public const TEST_USER_4_STATUS      = 'A';
+
+    public const TEST_BOT_USER_NAME   = 'rest_bot_read_only_admin';
+    public const TEST_BOT_USER_PASS   = 'welcome0';
+    public const TEST_BOT_USER_STATUS = 'A';
+    public const TEST_BOT_USER_MAIL   = 'test_bot_user@example.com';
 
     public const EPICS_TRACKER_SHORTNAME        = 'epic';
     public const RELEASES_TRACKER_SHORTNAME     = 'rel';
@@ -142,6 +148,14 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
         $delegated_rest_project_manager->setPassword(self::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_PASS);
         $this->user_manager->updateDb($delegated_rest_project_manager);
 
+        $bot_rest_read_only_admin = new PFUser();
+        $bot_rest_read_only_admin->setUserName(self::TEST_BOT_USER_NAME);
+        $bot_rest_read_only_admin->setPassword(self::TEST_BOT_USER_PASS);
+        $bot_rest_read_only_admin->setStatus(self::TEST_BOT_USER_STATUS);
+        $bot_rest_read_only_admin->setEmail(self::TEST_BOT_USER_MAIL);
+        $bot_rest_read_only_admin->setLanguage($GLOBALS['Language']);
+        $this->user_manager->createAccount($bot_rest_read_only_admin);
+
         return $this;
     }
 
@@ -172,6 +186,14 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
             $rest_project_management_delegate,
             $manage_project_through_rest_permission,
             'REST projects managers'
+        );
+
+        $rest_read_only_bot_user         = $this->user_manager->getUserByUserName(self::TEST_BOT_USER_NAME);
+        $rest_read_only_admin_permission = new RestReadOnlyAdminPermission();
+        $this->delegatePermissionToUser(
+            $rest_read_only_bot_user,
+            $rest_read_only_admin_permission,
+            'REST read only administrators'
         );
 
         return $this;
