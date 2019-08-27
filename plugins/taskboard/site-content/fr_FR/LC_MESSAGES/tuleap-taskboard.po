@@ -11,8 +11,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.0.6\n"
 
+msgid "Milestone not found."
+msgstr "Le jalon n'a pas été trouvé."
+
 msgid "Taskboard"
-msgstr "Taskboard"
+msgstr "Tableau des tâches"
+
+#, php-format
+msgid "Taskboard is not activated in project %s."
+msgstr "Le tableau des tâches n'est pas activé pour le projet %s."
+
+msgid "Taskboard not found."
+msgstr "Le tableau des tâches n'a pas été trouvé. "
 
 msgid ""
 "Visually keep track of things that need to get done in a task board, used in "

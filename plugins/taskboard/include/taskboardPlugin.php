@@ -20,11 +20,16 @@
 
 declare(strict_types=1);
 
+use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Taskboard\Routing\MilestoneExtractor;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class taskboardPlugin extends Plugin
 {
+    public const NAME = 'taskboard';
+
     public function __construct($id)
     {
         parent::__construct($id);
@@ -44,5 +49,37 @@ class taskboardPlugin extends Plugin
         }
 
         return $this->pluginInfo;
+    }
+
+    public function getHooksAndCallbacks(): Collection
+    {
+        $this->addHook(CollectRoutesEvent::NAME);
+
+        return parent::getHooksAndCallbacks();
+    }
+
+    public function routeGet(): \Tuleap\Taskboard\Routing\TaskboardController
+    {
+        $agiledashboard_plugin = PluginManager::instance()->getPluginByName('agiledashboard');
+        if (! $agiledashboard_plugin instanceof AgileDashboardPlugin) {
+            throw new RuntimeException('Cannot instantiate Agiledashboard plugin');
+        }
+
+        return new \Tuleap\Taskboard\Routing\TaskboardController(
+            new MilestoneExtractor(
+                $agiledashboard_plugin->getMilestoneFactory(),
+                new Cardwall_OnTop_Dao(),
+                PluginManager::instance(),
+                $this
+            ),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates')
+        );
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->addGroup('/taskboard', function (FastRoute\RouteCollector $r) {
+            $r->get('/{project_name:[A-z0-9-]+}/{id:\d+}', $this->getRouteHandler('routeGet'));
+        });
     }
 }

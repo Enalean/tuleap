@@ -786,7 +786,7 @@ class AgileDashboardPlugin extends Plugin
      * Builds a new Planning_MilestoneFactory instance.
      * @return Planning_MilestoneFactory
      */
-    protected function getMilestoneFactory()
+    public function getMilestoneFactory()
     {
         $form_element_factory = $this->getFormElementFactory();
 
