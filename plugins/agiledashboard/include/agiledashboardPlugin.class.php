@@ -33,6 +33,8 @@ use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\AgileDashboard\Kanban\KanbanXmlImporter;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSender;
+use Tuleap\AgileDashboard\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
+use Tuleap\AgileDashboard\Kanban\RecentlyVisited\VisitRetriever;
 use Tuleap\AgileDashboard\Kanban\TrackerCrumbBuilder;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
@@ -93,7 +95,9 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\TrackerCrumbInContext;
+use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryQuickLink;
+use Tuleap\User\History\HistoryRetriever;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
 require_once __DIR__ . '/../../cardwall/include/cardwallPlugin.class.php';
@@ -180,6 +184,8 @@ class AgileDashboardPlugin extends Plugin
             $this->addHook(SemanticStatusGetDisabledValues::NAME);
             $this->addHook(SemanticStatusCanBeDeleted::NAME);
             $this->addHook(SemanticStatusFieldCanBeUpdated::NAME);
+            $this->addHook(HistoryEntryCollection::NAME);
+            $this->addHook(Event::USER_HISTORY_CLEAR);
             $this->addHook(ArtifactCreated::NAME);
             $this->addHook(ArtifactsReordered::NAME);
             $this->addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
@@ -211,6 +217,28 @@ class AgileDashboardPlugin extends Plugin
         }
 
         return parent::getHooksAndCallbacks();
+    }
+
+    public function getHistoryEntryCollection(HistoryEntryCollection $collection): void
+    {
+        $visit_retriever = new VisitRetriever(
+            new RecentlyVisitedKanbanDao(),
+            $this->getKanbanFactory(),
+            TrackerFactory::instance()
+        );
+        $visit_retriever->getVisitHistory($collection, HistoryRetriever::MAX_LENGTH_HISTORY);
+    }
+
+    /**
+     * @see Event::USER_HISTORY_CLEAR
+     */
+    public function userHistoryClear(array $params): void
+    {
+        $user = $params['user'];
+        assert($user instanceof PFUser);
+
+        $visit_cleaner = new RecentlyVisitedKanbanDao();
+        $visit_cleaner->deleteVisitByUserId((int) $user->getId());
     }
 
     public function tracker_formelement_get_classnames($params)

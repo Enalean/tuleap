@@ -62,6 +62,10 @@ class UserHistoryEntryRepresentation
      * @var UserHistoryQuickLinkRepresentation[] Quick links to related information {@required true}
      */
     public $quick_links;
+    /**
+     * @var string The name of the icon {@required true}
+     */
+    public $icon_name;
 
     public function build(HistoryEntry $entry)
     {
@@ -70,8 +74,16 @@ class UserHistoryEntryRepresentation
         $this->html_url    = $entry->getLink();
         $this->title       = $entry->getTitle();
         $this->color_name  = $entry->getColor();
-        $this->small_icon  = $entry->getSmallIcon()->getInlineString();
-        $this->icon        = $entry->getNormalIcon()->getInlineString();
+        $this->icon_name   = $entry->getIconName();
+
+        $glyph_small_icon = $entry->getSmallIcon();
+        if ($glyph_small_icon !== null) {
+            $this->small_icon = $glyph_small_icon->getInlineString();
+        }
+        $glyph_normal_icon = $entry->getNormalIcon();
+        if ($glyph_normal_icon !== null) {
+            $this->icon = $glyph_normal_icon->getInlineString();
+        }
 
         $project_representation = new MinimalProjectRepresentation();
         $project_representation->buildMinimal($entry->getProject());

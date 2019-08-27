@@ -20,9 +20,14 @@
                 "
             >
                 <div class="history-item-description">
-                    <span class="history-item-description-badge badge tlp-badge-outline tlp-badge-{{ color_name }}">
-                        {{ xref }}
-                    </span>
+                    {{# xref }}
+                        <span class="history-item-description-badge badge tlp-badge-outline tlp-badge-{{ color_name }}">
+                            {{ xref }}
+                        </span>
+                    {{/ xref }}
+                    {{# icon_name }}
+                        <i class="fa fa-fw {{ icon_name }} history-item-description-icon"></i>
+                    {{/ icon_name }}
                     <span class="history-item-description-title">{{ title }}</span>
                 </div>
                 <span class="history-item-project">
