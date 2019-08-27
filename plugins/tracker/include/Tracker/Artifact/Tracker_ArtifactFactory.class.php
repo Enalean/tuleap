@@ -24,8 +24,8 @@
  */
 
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
-use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
-use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 class Tracker_ArtifactFactory {
 

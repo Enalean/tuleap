@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_ArtifactRenderer {
     /**

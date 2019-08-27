@@ -23,10 +23,9 @@
  */
 
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
-use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
-use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 /**
  * I build MilestoneController

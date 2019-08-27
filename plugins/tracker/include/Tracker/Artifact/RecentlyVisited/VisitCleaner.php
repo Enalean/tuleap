@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\RecentlyVisited;
+namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 class VisitCleaner
 {

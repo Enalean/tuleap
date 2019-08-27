@@ -19,7 +19,7 @@
  */
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\RecentlyVisited;
+namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 use Tracker_Artifact;
 use Tuleap\Event\Dispatchable;

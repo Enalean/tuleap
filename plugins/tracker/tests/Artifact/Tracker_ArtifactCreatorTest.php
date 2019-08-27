@@ -46,7 +46,7 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase //phpcs:ignoreFi
     /** @var Tracker_Artifact */
     private $bare_artifact;
     /**
-     * @var Tuleap\Tracker\RecentlyVisited\VisitRecorder
+     * @var Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder
      */
     private $visit_recorder;
 
@@ -62,7 +62,7 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase //phpcs:ignoreFi
         $this->changeset_creator = \Mockery::spy(\Tracker_Artifact_Changeset_InitialChangesetCreator::class);
         $this->fields_validator  = \Mockery::spy(\Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::class);
         $this->dao               = \Mockery::spy(\Tracker_ArtifactDao::class);
-        $this->visit_recorder    = \Mockery::spy(\Tuleap\Tracker\RecentlyVisited\VisitRecorder::class);
+        $this->visit_recorder    = \Mockery::spy(\Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder::class);
 
         $this->artifact_factory->setDao($this->dao);
 

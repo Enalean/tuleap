@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\RecentlyVisited;
+namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 require_once __DIR__.'/../../bootstrap.php';
 
@@ -30,7 +30,7 @@ class VisitCleanerTest extends \TuleapTestCase
         $user    = mock('PFUser');
         stub($user)->getId()->returns($user_id);
 
-        $recently_visited_dao = mock('Tuleap\\Tracker\\RecentlyVisited\\RecentlyVisitedDao');
+        $recently_visited_dao = mock('Tuleap\\Tracker\\Artifact\\RecentlyVisited\\RecentlyVisitedDao');
         $recently_visited_dao->expectOnce('deleteVisitByUserId', array($user_id));
 
         $visit_cleaner = new VisitCleaner($recently_visited_dao);

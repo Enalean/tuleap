@@ -110,7 +110,7 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase
 
         $this->event_manager             = \Mockery::spy(\EventManager::class);
         $this->artifact_retriever        = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever::class);
-        $visit_recorder                  = \Mockery::spy(\Tuleap\Tracker\RecentlyVisited\VisitRecorder::class);
+        $visit_recorder                  = \Mockery::spy(\Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder::class);
         $this->hidden_fieldsets_detector = \Mockery::spy(HiddenFieldsetsDetector::class);
 
         $this->action = new Tracker_Action_UpdateArtifact(
@@ -215,7 +215,7 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
     {
         $tracker        = aMockeryTracker()->withId($this->tracker_id)->build();
         $task           = aMockArtifact()->withId($this->artifact_id)->withTracker($tracker)->build();
-        $visit_recorder = \Mockery::spy(\Tuleap\Tracker\RecentlyVisited\VisitRecorder::class);
+        $visit_recorder = \Mockery::spy(\Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder::class);
 
         $action = new Tracker_Action_UpdateArtifact(
             $task,
@@ -382,7 +382,7 @@ class Tracker_Artifact_RedirectUrlTest extends Tracker_Artifact_Update_BaseTest 
     private function getRedirectUrlFor($request_data)
     {
         $request        = new Codendi_Request($request_data);
-        $visit_recorder = \Mockery::spy(\Tuleap\Tracker\RecentlyVisited\VisitRecorder::class);
+        $visit_recorder = \Mockery::spy(\Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder::class);
         $action         = new Tracker_Artifact_RedirectUrlTestVersion(
             $this->task,
             $this->formelement_factory,

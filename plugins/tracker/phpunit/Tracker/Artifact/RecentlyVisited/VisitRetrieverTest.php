@@ -19,7 +19,7 @@
  */
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\RecentlyVisited;
+namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -38,7 +38,7 @@ class VisitRetrieverTest extends TestCase
 
     public function testItRetrievesHistory()
     {
-        $recently_visited_dao = Mockery::mock(\Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao::class);
+        $recently_visited_dao = Mockery::mock(\Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao::class);
         $recently_visited_dao->shouldReceive('searchVisitByUserId')->andReturns(
             array(
                 array('artifact_id' => 1, 'created_on' => 1),
@@ -83,7 +83,7 @@ class VisitRetrieverTest extends TestCase
 
     public function testItExpectsBrokenHistory()
     {
-        $recently_visited_dao = Mockery::mock(\Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao::class);
+        $recently_visited_dao = Mockery::mock(\Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao::class);
         $recently_visited_dao->shouldReceive('searchVisitByUserId')->andReturns(
             array(
                 array('artifact_id' => 1, 'created_on' => 1),

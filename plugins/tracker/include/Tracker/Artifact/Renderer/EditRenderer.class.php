@@ -25,7 +25,7 @@
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ParentOfArtifactCollection;
 use Tuleap\Tracker\Artifact\View\Nature;
-use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRenderer

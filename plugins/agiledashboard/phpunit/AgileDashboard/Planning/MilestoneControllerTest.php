@@ -34,7 +34,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
-use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 class MilestoneControllerTest extends TestCase
 {
