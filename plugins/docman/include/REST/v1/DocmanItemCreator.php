@@ -256,7 +256,7 @@ class DocmanItemCreator
             );
 
             if ($metadata_to_create->isInheritedFromParent()) {
-                $this->metadata_value_dao->inheritMetadataFromParent((int)$parent_item->getId(), (int) $parent_item->getId());
+                $this->metadata_value_dao->inheritMetadataFromParent((int)$document_to_upload->getItemId(), (int) $parent_item->getId());
             }
 
             if ($file_properties->file_size === 0) {
