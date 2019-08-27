@@ -150,7 +150,8 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
                 new SemanticTimeframeBuilder(
                     new SemanticTimeframeDao(),
                     $tracker_form_element_factory
-                )
+                ),
+                new \BackendLogger()
             ),
             new MilestoneBurndownFieldChecker(
                 $tracker_form_element_factory
