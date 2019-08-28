@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,21 @@
  */
 
 import Vue from "vue";
-import { mockFetchError } from "tlp-mocks";
+import GetTextPlugin from "vue-gettext";
+import { mockFetchError } from "tlp-fetch-mocks-helper-jest";
 import { createStore } from "../store/index.js";
 import TrackerSelection from "./TrackerSelection.vue";
-import { rewire$getSortedProjectsIAmMemberOf, restore } from "./projects-cache.js";
-import { rewire$getTrackersOfProject, restore as restoreRest } from "../api/rest-querier.js";
+import * as project_cache from "./projects-cache.js";
+import * as rest_querier from "../api/rest-querier.js";
 
 describe("TrackerSelection", () => {
     let Selection, selectedTrackers;
 
     beforeEach(() => {
+        Vue.use(GetTextPlugin, {
+            translations: {},
+            silent: true
+        });
         Selection = Vue.extend(TrackerSelection);
         selectedTrackers = [];
     });
@@ -40,14 +45,14 @@ describe("TrackerSelection", () => {
             }
         });
         vm.$mount();
-        spyOn(vm.$store, "commit"); //eslint-disable-line jasmine/no-unsafe-spy
+        jest.spyOn(vm.$store, "commit").mockImplementation(() => {});
 
         return vm;
     }
 
     describe("mounted()", () => {
         it("on init, the projects will be loaded", () => {
-            spyOn(TrackerSelection.methods, "loadProjects");
+            jest.spyOn(TrackerSelection.methods, "loadProjects").mockImplementation(() => {});
 
             instantiateComponent();
 
@@ -59,19 +64,14 @@ describe("TrackerSelection", () => {
         let getProjects;
 
         beforeEach(() => {
-            getProjects = jasmine.createSpy("getSortedProjectsIAmMemberOf");
-            rewire$getSortedProjectsIAmMemberOf(getProjects);
-            spyOn(TrackerSelection.methods, "loadTrackers");
-        });
-
-        afterEach(() => {
-            restore();
+            getProjects = jest.spyOn(project_cache, "getSortedProjectsIAmMemberOf");
+            jest.spyOn(TrackerSelection.methods, "loadTrackers").mockImplementation(() => {});
         });
 
         it("when I load projects, the loader will be shown and the first project fetched will be set as selected", async () => {
             const first_project = { id: 543, label: "unheroically" };
             const second_project = { id: 554, label: "cycler" };
-            getProjects.and.returnValue(Promise.resolve([first_project, second_project]));
+            getProjects.mockImplementation(() => Promise.resolve([first_project, second_project]));
             const vm = instantiateComponent();
 
             const promise = vm.loadProjects();
@@ -91,7 +91,7 @@ describe("TrackerSelection", () => {
             return vm.loadProjects().then(() => {
                 expect(vm.$store.commit).toHaveBeenCalledWith(
                     "setErrorMessage",
-                    jasmine.any(String)
+                    expect.any(String)
                 );
                 expect(vm.is_loader_shown).toBe(false);
             });
@@ -99,23 +99,22 @@ describe("TrackerSelection", () => {
     });
 
     describe("loadTrackers()", () => {
-        let getTrackers;
+        let getTrackers, vm;
 
         beforeEach(() => {
-            getTrackers = jasmine.createSpy("getTrackersOfProject");
-            rewire$getTrackersOfProject(getTrackers);
-        });
-
-        afterEach(() => {
-            restoreRest();
+            getTrackers = jest.spyOn(rest_querier, "getTrackersOfProject");
+            vm = instantiateComponent();
         });
 
         it("when I load trackers, the loader will be shown and the trackers options will be disabled if already selected", async () => {
+            jest.spyOn(rest_querier, "getSortedProjectsIAmMemberOf").mockImplementation(() =>
+                Promise.resolve([{ id: 102 }])
+            );
             const first_tracker = { id: 8, label: "coquettish" };
             const second_tracker = { id: 26, label: "unfruitfully" };
             const trackers = [first_tracker, second_tracker];
             selectedTrackers = [{ tracker_id: 26 }];
-            getTrackers.and.returnValue(Promise.resolve(trackers));
+            getTrackers.mockImplementation(() => Promise.resolve(trackers));
             const project_id = 20;
             const vm = instantiateComponent();
 
@@ -133,14 +132,16 @@ describe("TrackerSelection", () => {
         });
 
         it("when there is a REST error, it will be displayed", () => {
-            mockFetchError(getTrackers, { status: 500 });
             const project_id = 34;
-            const vm = instantiateComponent();
+            jest.spyOn(rest_querier, "getSortedProjectsIAmMemberOf").mockImplementation(() =>
+                Promise.resolve([{ id: project_id }])
+            );
+            mockFetchError(getTrackers, { status: 500 });
 
             return vm.loadTrackers(project_id).then(() => {
                 expect(vm.$store.commit).toHaveBeenCalledWith(
                     "setErrorMessage",
-                    jasmine.any(String)
+                    expect.any(String)
                 );
                 expect(vm.is_loader_shown).toBe(false);
             });
@@ -149,13 +150,16 @@ describe("TrackerSelection", () => {
 
     describe("addTrackerToSelection()", () => {
         it("when I add a tracker, then an event will be emitted", () => {
-            spyOn(TrackerSelection.methods, "loadTrackers");
+            jest.spyOn(rest_querier, "getSortedProjectsIAmMemberOf").mockImplementation(() =>
+                Promise.resolve([{ id: 102 }])
+            );
+            jest.spyOn(TrackerSelection.methods, "loadTrackers").mockImplementation(() => {});
             const vm = instantiateComponent();
             const selected_project = { id: 972, label: "unmortised" };
             const selected_tracker = { id: 97, label: "acinus" };
             vm.selected_project = selected_project;
             vm.selected_tracker = selected_tracker;
-            spyOn(vm, "$emit");
+            jest.spyOn(vm, "$emit").mockImplementation(() => {});
 
             vm.addTrackerToSelection();
 

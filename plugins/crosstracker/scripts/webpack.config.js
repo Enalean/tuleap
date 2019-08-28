@@ -12,20 +12,9 @@ const webpack_config = {
     externals: {
         tlp: "tlp"
     },
-    resolve: {
-        alias: webpack_configurator.extendAliases(
-            {
-                "plugin-tracker-TQL": path.resolve(
-                    __dirname,
-                    "../../tracker/www/scripts/report/TQL-CodeMirror"
-                )
-            },
-            webpack_configurator.tlp_mocks_alias
-        )
-    },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader
         ]

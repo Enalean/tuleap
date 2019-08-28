@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +18,14 @@
  */
 
 import Vue from "vue";
-import { mockFetchError } from "tlp-mocks";
+import GetTextPlugin from "vue-gettext";
+import { mockFetchError } from "tlp-fetch-mocks-helper-jest";
 import { createStore } from "./store/index.js";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
 import BackendCrossTrackerReport from "./backend-cross-tracker-report.js";
 import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report.js";
 import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report.js";
-import {
-    rewire$getQueryResult,
-    rewire$getReport,
-    rewire$getReportContent,
-    restore as restoreRest
-} from "./api/rest-querier.js";
+import * as rest_querier from "./api/rest-querier.js";
 import initial_state from "./store/state.js";
 
 describe("CrossTrackerWidget", () => {
@@ -38,30 +34,22 @@ describe("CrossTrackerWidget", () => {
         backendCrossTrackerReport,
         readingCrossTrackerReport,
         writingCrossTrackerReport,
-        getReport,
-        getReportContent,
-        getQueryResult;
+        getReport;
 
     beforeEach(() => {
         state = { ...initial_state };
 
+        Vue.use(GetTextPlugin, {
+            translations: {},
+            silent: true
+        });
         Widget = Vue.extend(CrossTrackerWidget);
         backendCrossTrackerReport = new BackendCrossTrackerReport();
         readingCrossTrackerReport = new ReadingCrossTrackerReport();
         writingCrossTrackerReport = new WritingCrossTrackerReport();
 
-        spyOn(writingCrossTrackerReport, "duplicateFromReport");
-        spyOn(readingCrossTrackerReport, "duplicateFromReport");
-
-        getReportContent = jasmine.createSpy("getReportContent");
-        rewire$getReportContent(getReportContent);
-
-        getQueryResult = jasmine.createSpy("getQueryResult");
-        rewire$getQueryResult(getQueryResult);
-    });
-
-    afterEach(() => {
-        restoreRest();
+        jest.spyOn(writingCrossTrackerReport, "duplicateFromReport").mockImplementation(() => {});
+        jest.spyOn(readingCrossTrackerReport, "duplicateFromReport").mockImplementation(() => {});
     });
 
     function instantiateComponent() {
@@ -74,7 +62,7 @@ describe("CrossTrackerWidget", () => {
             }
         });
         vm.$mount();
-        spyOn(vm.$store, "commit"); //eslint-disable-line jasmine/no-unsafe-spy
+        jest.spyOn(vm.$store, "commit").mockImplementation(() => {});
 
         state.is_user_admin = false;
         state.invalid_trackers = [];
@@ -84,6 +72,9 @@ describe("CrossTrackerWidget", () => {
 
     describe("switchToWritingMode() -", () => {
         it("when I switch to the writing mode, then the  writing report will be updated and a mutation will be committed", () => {
+            jest.spyOn(rest_querier, "getSortedProjectsIAmMemberOf").mockImplementation(() =>
+                Promise.resolve([{ id: 102 }])
+            );
             const vm = instantiateComponent();
 
             vm.$store.replaceState({
@@ -100,6 +91,9 @@ describe("CrossTrackerWidget", () => {
         });
 
         it("Given I am not admin, when I try to switch to writing mode, then nothing will happen", () => {
+            jest.spyOn(rest_querier, "getSortedProjectsIAmMemberOf").mockImplementation(() =>
+                Promise.resolve([])
+            );
             const vm = instantiateComponent();
 
             vm.$store.replaceState({
@@ -142,18 +136,19 @@ describe("CrossTrackerWidget", () => {
 
     describe("loadBackendReport() -", () => {
         beforeEach(() => {
-            getReport = jasmine.createSpy("getReport");
-            rewire$getReport(getReport);
+            getReport = jest.spyOn(rest_querier, "getReport");
         });
 
         it("When I load the report, then the reports will be initialized", async () => {
             const trackers = [{ id: 25 }, { id: 30 }];
             const expert_query = '@title != ""';
-            getReport.and.returnValue({
-                trackers,
-                expert_query
-            });
-            spyOn(backendCrossTrackerReport, "init");
+            getReport.mockImplementation(() =>
+                Promise.resolve({
+                    trackers,
+                    expert_query
+                })
+            );
+            jest.spyOn(backendCrossTrackerReport, "init").mockImplementation(() => {});
             const vm = instantiateComponent();
 
             const promise = vm.loadBackendReport();
@@ -200,7 +195,7 @@ describe("CrossTrackerWidget", () => {
             );
             expect(vm.$store.commit).toHaveBeenCalledWith(
                 "switchReportToSaved",
-                jasmine.any(String)
+                expect.any(String)
             );
         });
     });

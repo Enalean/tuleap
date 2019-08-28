@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  */
 
 import Vue from "vue";
+import GetTextPlugin from "vue-gettext";
 import QueryEditor from "./QueryEditor.vue";
 import WritingCrossTrackerReport from "./writing-cross-tracker-report.js";
 
@@ -25,6 +26,10 @@ describe("QueryEditor", () => {
     let QueryEditorElement, writingCrossTrackerReport;
 
     beforeEach(() => {
+        Vue.use(GetTextPlugin, {
+            translations: {},
+            silent: true
+        });
         QueryEditorElement = Vue.extend(QueryEditor);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
     });
@@ -42,6 +47,16 @@ describe("QueryEditor", () => {
 
     describe("mounted()", () => {
         it("When the code mirror instance's value changes, then the writing report is updated", () => {
+            // eslint-disable-next-line no-undef
+            global.document.body.createTextRange = () => {
+                return {
+                    getBoundingClientRect: () => {},
+                    getClientRects() {
+                        return { length: 0 };
+                    }
+                };
+            };
+
             const vm = instantiateComponent();
             const expert_query = "@title = 'foo'";
 
@@ -54,7 +69,7 @@ describe("QueryEditor", () => {
     describe("search()", () => {
         it("When I search, then an event will be emitted", () => {
             const vm = instantiateComponent();
-            spyOn(vm, "$emit");
+            jest.spyOn(vm, "$emit").mockImplementation(() => {});
 
             vm.search();
 

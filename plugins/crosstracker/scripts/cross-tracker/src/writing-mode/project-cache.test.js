@@ -19,27 +19,23 @@
  */
 
 import { getSortedProjectsIAmMemberOf as getProjects } from "./projects-cache.js";
-import { rewire$getSortedProjectsIAmMemberOf, restore } from "../api/rest-querier.js";
+import * as rest_querier from "../api/rest-querier.js";
 
 describe("getSortedProjectsIAmMemberOf", () => {
-    let getSortedProjectsIAmMemberOf;
-
-    beforeEach(() => {
-        getSortedProjectsIAmMemberOf = jasmine.createSpy("getSortedProjectsIAmMemberOf");
-        rewire$getSortedProjectsIAmMemberOf(getSortedProjectsIAmMemberOf);
-    });
-
-    afterEach(() => {
-        restore();
-    });
-
     it("Returns the projects I'm member of", async () => {
+        const spyRESTgetSortedProjectsIAmMemberOf = jest.spyOn(
+            rest_querier,
+            "getSortedProjectsIAmMemberOf"
+        );
+
         const expected_project_list = [
             { id: 101, label: "project A" },
             { id: 102, label: "project B" }
         ];
 
-        getSortedProjectsIAmMemberOf.and.returnValue(expected_project_list);
+        spyRESTgetSortedProjectsIAmMemberOf.mockImplementation(() =>
+            Promise.resolve(expected_project_list)
+        );
 
         const project_list = await getProjects();
         expect(expected_project_list).toEqual(project_list);

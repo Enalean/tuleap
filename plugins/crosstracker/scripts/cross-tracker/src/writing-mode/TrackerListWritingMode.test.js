@@ -37,7 +37,7 @@ describe("TrackerListWritingMode", () => {
     describe("removeTracker()", () => {
         it("when I remove a tracker, then an event will be emitted", () => {
             const vm = instantiateComponent();
-            spyOn(vm, "$emit");
+            jest.spyOn(vm, "$emit").mockImplementation(() => {});
             const tracker = { tracker_label: "fake_tracker" };
 
             vm.removeTracker(tracker);

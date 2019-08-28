@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,33 +18,28 @@
  */
 
 import Vue from "vue";
-import { mockFetchError, mockFetchSuccess } from "tlp-mocks";
+import { mockFetchError, mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
 import { createStore } from "../store/index.js";
 import WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report.js";
 import ArtifactTable from "./ArtifactTable.vue";
-import {
-    rewire$getReportContent,
-    rewire$getQueryResult,
-    restore as restoreRest
-} from "../api/rest-querier.js";
+import GetTextPlugin from "vue-gettext";
+import * as rest_querier from "../api/rest-querier.js";
 
 describe("ArtifactTable", () => {
     let Widget, writingCrossTrackerReport, getReportContent, getQueryResult;
 
     beforeEach(() => {
+        Vue.use(GetTextPlugin, {
+            translations: {},
+            silent: true
+        });
         Widget = Vue.extend(ArtifactTable);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
 
-        getReportContent = jasmine.createSpy("getReportContent");
+        getReportContent = jest.spyOn(rest_querier, "getReportContent");
         mockFetchSuccess(getReportContent);
-        rewire$getReportContent(getReportContent);
 
-        getQueryResult = jasmine.createSpy("getQueryResult");
-        rewire$getQueryResult(getQueryResult);
-    });
-
-    afterEach(() => {
-        restoreRest();
+        getQueryResult = jest.spyOn(rest_querier, "getQueryResult");
     });
 
     function instantiateComponent() {
@@ -85,7 +80,7 @@ describe("ArtifactTable", () => {
         it("when there is a REST error, it will be displayed", () => {
             mockFetchError(getReportContent, { status: 500 });
             const vm = instantiateComponent();
-            spyOn(vm.$store, "commit");
+            jest.spyOn(vm.$store, "commit").mockImplementation(() => {});
 
             return vm.loadArtifacts().then(() => {
                 expect(vm.$store.commit).toHaveBeenCalledWith(
@@ -103,7 +98,7 @@ describe("ArtifactTable", () => {
                 }
             };
             mockFetchError(getReportContent, { status: 400, error_json });
-            spyOn(vm.$store, "commit");
+            jest.spyOn(vm.$store, "commit").mockImplementation(() => {});
 
             return vm.loadArtifacts().then(() => {
                 expect(vm.$store.commit).toHaveBeenCalledWith(

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,22 @@
  */
 
 import Vue from "vue";
-import { mockFetchError } from "tlp-mocks";
+import GetTextPlugin from "vue-gettext";
+import { mockFetchError } from "tlp-fetch-mocks-helper-jest";
 import { createStore } from "../store/index.js";
 import ReadingMode from "./ReadingMode.vue";
 import BackendCrossTrackerReport from "../backend-cross-tracker-report.js";
 import ReadingCrossTrackerReport from "./reading-cross-tracker-report.js";
-import { rewire$updateReport, restore as restoreRest } from "../api/rest-querier.js";
+import * as rest_querier from "../api/rest-querier.js";
 
 describe("ReadingMode", () => {
     let ReadingModeElement, backendCrossTrackerReport, readingCrossTrackerReport, updateReport;
 
     beforeEach(() => {
+        Vue.use(GetTextPlugin, {
+            translations: {},
+            silent: true
+        });
         ReadingModeElement = Vue.extend(ReadingMode);
         backendCrossTrackerReport = new BackendCrossTrackerReport();
         readingCrossTrackerReport = new ReadingCrossTrackerReport();
@@ -50,7 +55,7 @@ describe("ReadingMode", () => {
     describe("switchToWritingMode() -", () => {
         it("When I switch to the writing mode, then an event will be emitted", () => {
             const vm = instantiateComponent();
-            spyOn(vm, "$emit");
+            jest.spyOn(vm, "$emit").mockImplementation(() => {});
             vm.$store.replaceState({
                 is_user_admin: true
             });
@@ -65,7 +70,7 @@ describe("ReadingMode", () => {
             vm.$store.replaceState({
                 is_user_admin: false
             });
-            spyOn(vm, "$emit");
+            jest.spyOn(vm, "$emit").mockImplementation(() => {});
 
             vm.switchToWritingMode();
 
@@ -75,25 +80,24 @@ describe("ReadingMode", () => {
 
     describe("saveReport() -", () => {
         beforeEach(() => {
-            updateReport = jasmine.createSpy("updateReport");
-            rewire$updateReport(updateReport);
-        });
-
-        afterEach(() => {
-            restoreRest();
+            updateReport = jest.spyOn(rest_querier, "updateReport");
         });
 
         it("When I save the report, the backend report will be updated and an event will be emitted", async () => {
-            spyOn(backendCrossTrackerReport, "init");
-            spyOn(backendCrossTrackerReport, "duplicateFromReport");
+            jest.spyOn(backendCrossTrackerReport, "init").mockImplementation(() => {});
+            jest.spyOn(backendCrossTrackerReport, "duplicateFromReport").mockImplementation(
+                () => {}
+            );
             const trackers = [{ id: 36 }, { id: 17 }];
             const expert_query = '@description != ""';
-            updateReport.and.returnValue({
-                trackers,
-                expert_query
-            });
+            updateReport.mockImplementation(() =>
+                Promise.resolve({
+                    trackers,
+                    expert_query
+                })
+            );
             const vm = instantiateComponent();
-            spyOn(vm, "$emit");
+            jest.spyOn(vm, "$emit").mockImplementation(() => {});
 
             const promise = vm.saveReport();
             expect(vm.is_loading).toBe(true);
@@ -126,7 +130,7 @@ describe("ReadingMode", () => {
             };
             mockFetchError(updateReport, { error_json });
             const vm = instantiateComponent();
-            spyOn(vm.$store, "commit");
+            jest.spyOn(vm.$store, "commit").mockImplementation(() => {});
 
             return vm.saveReport().then(() => {
                 expect(vm.$store.commit).toHaveBeenCalledWith(
@@ -139,9 +143,11 @@ describe("ReadingMode", () => {
 
     describe("cancelReport() -", () => {
         it("when I click on 'Cancel', then the reading report will be reset", () => {
-            spyOn(readingCrossTrackerReport, "duplicateFromReport");
+            jest.spyOn(readingCrossTrackerReport, "duplicateFromReport").mockImplementation(
+                () => {}
+            );
             const vm = instantiateComponent();
-            spyOn(vm.$store, "commit");
+            jest.spyOn(vm.$store, "commit").mockImplementation(() => {});
 
             vm.cancelReport();
 
