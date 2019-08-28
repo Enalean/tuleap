@@ -34,7 +34,8 @@ async function getSortedProjectsIAmMemberOf() {
 }
 
 async function fetchProjects() {
-    cached_projects = await getProjects().map(({ id, label }) => {
+    const projects = await getProjects();
+    cached_projects = projects.map(({ id, label }) => {
         return { id, label };
     });
 }
