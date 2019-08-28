@@ -20,7 +20,10 @@
 import { rewire$post, restore as restoreTLP } from "tlp-fetch";
 import * as TUS from "tus-js-client";
 import { mockFetchSuccess, mockFetchError } from "tlp-mocks";
-import { rewire$getGettextProvider, restore as restoreGettext } from "./gettext-factory.js";
+import {
+    rewire$getGettextProvider,
+    restore as restoreGettext
+} from "../gettext/gettext-factory.js";
 import {
     buildFileUploadHandler,
     MaxSizeUploadExceededError,
