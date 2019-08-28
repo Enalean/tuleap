@@ -32,6 +32,7 @@ $(RPM_TMP)/SPECS/$(PKG_NAME).spec: $(BASE_DIR)/$(PKG_NAME).spec
 $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz: $(RPM_TMP)
 	[ -h $(RPM_TMP)/SOURCES/$(NAME_VERSION) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(NAME_VERSION)
 	[ ! -d $(RPM_TMP)/SOURCES/$(NAME_VERSION)/assets ] || rm -rf $(RPM_TMP)/SOURCES/$(NAME_VERSION)/assets
+	cp -ar $(BASE_DIR)/../../src/www/assets/taskboard $(RPM_TMP)/SOURCES/$(NAME_VERSION)/assets
 	cd $(RPM_TMP)/SOURCES && \
 		find $(NAME_VERSION)/ \(\
 		-path $(NAME_VERSION)/tests -o\
@@ -59,7 +60,9 @@ docker-run:
 	@[ -n "$(GID)" -a -n "$(UID)" ] || (echo "*** ERROR: UID or GID are missing" && false)
 	useradd -d /build -m build
 	mkdir -p /build/src/plugins/
+	mkdir -p /build/src/src/www/assets/
 	cp -Rf /tuleap/plugins/taskboard /build/src/plugins/
+	cp -Rf /tuleap/src/www/assets/taskboard /build/src/src/www/assets/
 	chown -R build /build/src
 	su --login --command "make -C /build/src/plugins/taskboard all TULEAP_VERSION=$(shell LANG=C cat /tuleap/VERSION) RELEASE=$(RELEASE)" build
 	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output
