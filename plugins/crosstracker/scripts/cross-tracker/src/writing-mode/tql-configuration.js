@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 - 2018, Enalean. All rights reserved
+ * Copyright (c) 2017 - Present, Enalean. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import { buildModeDefinition } from "plugin-tracker-TQL/configuration.js";
+import { buildModeDefinition } from "../../../../../tracker/www/scripts/report/TQL-CodeMirror/configuration.js";
 
 const TQL_cross_tracker_autocomplete_keywords = [
     "AND",

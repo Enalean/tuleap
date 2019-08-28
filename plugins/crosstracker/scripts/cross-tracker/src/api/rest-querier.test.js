@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,41 +26,40 @@ import {
     getTrackersOfProject,
     getCSVReport
 } from "./rest-querier.js";
-import { tlp, mockFetchSuccess } from "tlp-mocks";
+import { mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
+import * as tlp from "tlp";
+
+jest.mock("tlp");
 
 describe("rest-querier", () => {
-    afterEach(() => {
-        tlp.get.and.stub();
-        tlp.put.and.stub();
-        tlp.recursiveGet.and.stub();
-    });
-
     describe("getReport() -", () => {
         it("the REST API will be queried and the report returned", async () => {
+            const tlpGet = jest.spyOn(tlp, "get");
             const report = {
                 trackers: [{ id: 63 }, { id: 100 }],
                 expert_query: '@title = "bla"'
             };
-            mockFetchSuccess(tlp.get, {
+            mockFetchSuccess(tlpGet, {
                 return_json: report
             });
 
             const result = await getReport(16);
 
-            expect(tlp.get).toHaveBeenCalledWith("/api/v1/cross_tracker_reports/16");
+            expect(tlpGet).toHaveBeenCalledWith("/api/v1/cross_tracker_reports/16");
             expect(result).toEqual(report);
         });
     });
 
     describe("getReportContent() -", () => {
         it("the artifacts and the total number of artifacts will be returned", async () => {
+            const tlpGet = jest.spyOn(tlp, "get");
             const artifacts = [{ id: 100 }, { id: 33 }];
             const total = 91;
             const headers = {
                 /** 'X-PAGINATION-SIZE' */
                 get: () => total
             };
-            mockFetchSuccess(tlp.get, {
+            mockFetchSuccess(tlpGet, {
                 headers,
                 return_json: { artifacts }
             });
@@ -69,7 +68,7 @@ describe("rest-querier", () => {
 
             const result = await getReportContent(57, limit, offset);
 
-            expect(tlp.get).toHaveBeenCalledWith("/api/v1/cross_tracker_reports/57/content", {
+            expect(tlpGet).toHaveBeenCalledWith("/api/v1/cross_tracker_reports/57/content", {
                 params: { limit, offset }
             });
             expect(result).toEqual({ artifacts, total });
@@ -78,13 +77,14 @@ describe("rest-querier", () => {
 
     describe("getQueryResult() -", () => {
         it("the tracker ids and the expert query will be submitted to the REST API, and the artifacts and the total number of artifacts will be returned", async () => {
+            const tlpGet = jest.spyOn(tlp, "get");
             const artifacts = [{ id: 26 }, { id: 89 }];
             const total = 69;
             const headers = {
                 /** 'X-PAGINATION-SIZE' */
                 get: () => total
             };
-            mockFetchSuccess(tlp.get, {
+            mockFetchSuccess(tlpGet, {
                 headers,
                 return_json: { artifacts }
             });
@@ -95,7 +95,7 @@ describe("rest-querier", () => {
             const expert_query = '@title = "stalky"';
             const result = await getQueryResult(72, trackers_id, expert_query, limit, offset);
 
-            expect(tlp.get).toHaveBeenCalledWith("/api/v1/cross_tracker_reports/72/content", {
+            expect(tlpGet).toHaveBeenCalledWith("/api/v1/cross_tracker_reports/72/content", {
                 params: {
                     limit,
                     offset,
@@ -107,9 +107,10 @@ describe("rest-querier", () => {
 
         describe("updateReport() -", () => {
             it("the REST API will be queried and the report returned", async () => {
+                const tlpPut = jest.spyOn(tlp, "put");
                 const expert_query = '@title = "dolous"';
                 const trackers_id = [8, 3, 67];
-                mockFetchSuccess(tlp.put, {
+                mockFetchSuccess(tlpPut, {
                     return_json: {
                         trackers_id,
                         expert_query
@@ -118,9 +119,9 @@ describe("rest-querier", () => {
 
                 const result = await updateReport(59, trackers_id, expert_query);
 
-                expect(tlp.put).toHaveBeenCalledWith(
+                expect(tlpPut).toHaveBeenCalledWith(
                     "/api/v1/cross_tracker_reports/59",
-                    jasmine.any(Object)
+                    expect.any(Object)
                 );
                 expect(result).toEqual({ trackers_id, expert_query });
             });
@@ -128,16 +129,17 @@ describe("rest-querier", () => {
 
         describe("getSortedProjectsIAmMemberOf() -", () => {
             it("the REST API will be queried and the list of projects will be sorted and returned", async () => {
+                const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
                 const projects = [
                     { id: 765, label: "physicianless" },
                     { id: 239, label: "spur" },
                     { id: 487, label: "castellano" }
                 ];
-                tlp.recursiveGet.and.returnValue(projects);
+                tlpRecursiveGet.mockReturnValue(projects);
 
                 const result = await getSortedProjectsIAmMemberOf();
 
-                expect(tlp.recursiveGet).toHaveBeenCalledWith("/api/v1/projects", {
+                expect(tlpRecursiveGet).toHaveBeenCalledWith("/api/v1/projects", {
                     params: {
                         limit: 50,
                         query: JSON.stringify({ is_member_of: true })
@@ -152,13 +154,18 @@ describe("rest-querier", () => {
         });
 
         describe("getTrackersOfProject() -", () => {
+            beforeEach(() => {
+                jest.clearAllMocks();
+            });
+
             it("the REST API will be queried and the list of trackers returned", async () => {
+                const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
                 const trackers = [{ id: 28 }, { id: 50 }];
-                tlp.recursiveGet.and.returnValue(trackers);
+                tlp.recursiveGet.mockReturnValue(trackers);
 
                 const result = await getTrackersOfProject(444);
 
-                expect(tlp.recursiveGet).toHaveBeenCalledWith("/api/v1/projects/444/trackers", {
+                expect(tlpRecursiveGet).toHaveBeenCalledWith("/api/v1/projects/444/trackers", {
                     params: {
                         limit: 50,
                         representation: "minimal"
@@ -169,13 +176,15 @@ describe("rest-querier", () => {
         });
 
         describe("getCSVReport() -", () => {
-            beforeEach(() => {
-                tlp.get.calls.reset();
+            afterEach(() => {
+                jest.clearAllMocks();
             });
 
             it("When there is only one page then it will return the first request", async () => {
+                const tlpGet = jest.spyOn(tlp, "get");
                 const csv = `"id"\r\n65\r\n88\r\n`;
-                tlp.get.and.returnValue(
+
+                tlpGet.mockReturnValue(
                     Promise.resolve({
                         headers: {
                             /** 'X-PAGINATION-SIZE' */
@@ -186,20 +195,21 @@ describe("rest-querier", () => {
                 );
 
                 const results = await getCSVReport(72);
-                expect(tlp.get).toHaveBeenCalledWith("/plugins/crosstracker/csv_export/72", {
+                expect(tlpGet).toHaveBeenCalledWith("/plugins/crosstracker/csv_export/72", {
                     params: {
                         limit: 50,
                         offset: 0
                     }
                 });
-                expect(tlp.get.calls.count()).toEqual(1);
+                expect(tlpGet).toHaveBeenCalledTimes(1);
 
                 expect(results).toEqual(csv);
             });
 
             it("When there are two pages, then it will drop the header line of the second request, concat the two requests and return them", async () => {
+                const tlpGet = jest.spyOn(tlp, "get");
                 const csv = `"id"\r\n61\r\n26\r\n`;
-                tlp.get.and.returnValue(
+                tlpGet.mockReturnValue(
                     Promise.resolve({
                         headers: {
                             /** 'X-PAGINATION-SIZE' */
@@ -210,19 +220,19 @@ describe("rest-querier", () => {
                 );
 
                 const results = await getCSVReport(81);
-                expect(tlp.get).toHaveBeenCalledWith("/plugins/crosstracker/csv_export/81", {
+                expect(tlpGet).toHaveBeenCalledWith("/plugins/crosstracker/csv_export/81", {
                     params: {
                         limit: 50,
                         offset: 0
                     }
                 });
-                expect(tlp.get).toHaveBeenCalledWith("/plugins/crosstracker/csv_export/81", {
+                expect(tlpGet).toHaveBeenCalledWith("/plugins/crosstracker/csv_export/81", {
                     params: {
                         limit: 50,
                         offset: 50
                     }
                 });
-                expect(tlp.get.calls.count()).toEqual(2);
+                expect(tlpGet).toHaveBeenCalledTimes(2);
 
                 expect(results).toEqual(`"id"\r\n61\r\n26\r\n61\r\n26\r\n`);
             });

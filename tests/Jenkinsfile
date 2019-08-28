@@ -82,9 +82,6 @@ pipeline {
                         stage('Karma PullRequest plugin') {
                             steps { script { actions.runKarmaTests('pullrequest', 'plugins/pullrequest/www/scripts') } }
                         }
-                        stage('Karma CrossTracker plugin') {
-                            steps { script { actions.runKarmaTests('crosstracker', 'plugins/crosstracker/scripts') } }
-                        }
                         stage('Karma Document plugin') {
                             steps { script { actions.runKarmaTests('document', 'plugins/document/scripts') } }
                         }

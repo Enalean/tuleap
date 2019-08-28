@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,27 @@
  */
 
 import Vue from "vue";
+import GetTextPlugin from "vue-gettext";
 import { createStore } from "../store/index.js";
 import WritingMode from "./WritingMode.vue";
 import {
     default as WritingCrossTrackerReport,
     TooManyTrackersSelectedError
 } from "./writing-cross-tracker-report.js";
+import * as rest_querier from "../api/rest-querier.js";
 
 describe("WritingMode", () => {
     let Writing, writingCrossTrackerReport;
 
     beforeEach(() => {
+        jest.spyOn(rest_querier, "getSortedProjectsIAmMemberOf").mockImplementation(() =>
+            Promise.resolve([{ id: 102 }])
+        );
+
+        Vue.use(GetTextPlugin, {
+            translations: {},
+            silent: true
+        });
         Writing = Vue.extend(WritingMode);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
     });
@@ -76,7 +86,7 @@ describe("WritingMode", () => {
     describe("cancel()", () => {
         it("when I hit cancel, then an event will be emitted to switch the widget to reading mode in saved state", () => {
             const vm = instantiateComponent();
-            spyOn(vm, "$emit");
+            jest.spyOn(vm, "$emit").mockImplementation(() => {});
 
             vm.cancel();
 
@@ -87,7 +97,7 @@ describe("WritingMode", () => {
     describe("search()", () => {
         it("when I hit search, then an event will be emitted to switch the widget to reading mode in unsaved state", () => {
             const vm = instantiateComponent();
-            spyOn(vm, "$emit");
+            jest.spyOn(vm, "$emit").mockImplementation(() => {});
 
             vm.search();
 
@@ -105,10 +115,10 @@ describe("WritingMode", () => {
                 { id: 288, label: "defectless" },
                 { id: 46, label: "knothorn" }
             );
-            spyOn(writingCrossTrackerReport, "removeTracker").and.callThrough();
+            jest.spyOn(writingCrossTrackerReport, "removeTracker");
             const tracker = { tracker_id: 46 };
             const vm = instantiateComponent();
-            spyOn(vm.$store, "commit");
+            jest.spyOn(vm.$store, "commit").mockImplementation(() => {});
 
             vm.removeTrackerFromSelection(tracker);
 
@@ -126,7 +136,7 @@ describe("WritingMode", () => {
 
     describe("addTrackerToSelection()", () => {
         it("when I add a tracker, then the writing report will be updated", () => {
-            spyOn(writingCrossTrackerReport, "addTracker").and.callThrough();
+            jest.spyOn(writingCrossTrackerReport, "addTracker");
             const vm = instantiateComponent();
             const selected_project = { id: 656, label: "ergatogyne" };
             const selected_tracker = { id: 53, label: "observingly" };
@@ -150,20 +160,20 @@ describe("WritingMode", () => {
         });
 
         it("Given I had already added 10 trackers, when I try to add another, then an error will be shown", () => {
-            spyOn(writingCrossTrackerReport, "addTracker").and.throwError(
-                new TooManyTrackersSelectedError()
-            );
+            jest.spyOn(writingCrossTrackerReport, "addTracker").mockImplementation(() => {
+                throw new TooManyTrackersSelectedError();
+            });
             const vm = instantiateComponent();
             const selected_project = { id: 656, label: "ergatogyne" };
             const selected_tracker = { id: 53, label: "observingly" };
-            spyOn(vm.$store, "commit");
+            const storeCommitSpy = jest.spyOn(vm.$store, "commit");
 
             vm.addTrackerToSelection({
                 selected_project,
                 selected_tracker
             });
 
-            expect(vm.$store.commit).toHaveBeenCalledWith("setErrorMessage", jasmine.any(String));
+            expect(storeCommitSpy).toHaveBeenCalledWith("setErrorMessage", expect.any(String));
         });
     });
 });

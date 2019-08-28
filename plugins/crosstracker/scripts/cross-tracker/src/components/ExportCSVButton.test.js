@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,35 +18,31 @@
  */
 
 import Vue from "vue";
+import GetTextPlugin from "vue-gettext";
 import { createStore } from "../store/index.js";
 import ExportCSVButton from "./ExportCSVButton.vue";
-import { rewire$getCSVReport, restore as restoreRest } from "../api/rest-querier.js";
-import { rewire$download, restore as restoreDownload } from "../helpers/download-helper.js";
-import { rewire$addBOM, restore as restoreBOM } from "../helpers/bom-helper.js";
+import * as rest_querier from "../api/rest-querier.js";
+import * as download_helper from "../helpers/download-helper.js";
+import * as bom_helper from "../helpers/bom-helper.js";
 
 describe("ExportCSVButton", () => {
     let download, getCSVReport, addBOM;
     beforeEach(() => {
-        download = jasmine.createSpy("download");
-        rewire$download(download);
-        getCSVReport = jasmine.createSpy("getCSVReport");
-        rewire$getCSVReport(getCSVReport);
-        addBOM = jasmine.createSpy("addBOM");
-        rewire$addBOM(addBOM);
-    });
-
-    afterEach(() => {
-        restoreRest();
-        restoreDownload();
-        restoreBOM();
+        download = jest.spyOn(download_helper, "download").mockImplementation(() => {});
+        getCSVReport = jest.spyOn(rest_querier, "getCSVReport");
+        addBOM = jest.spyOn(bom_helper, "addBOM");
     });
 
     function instantiateComponent() {
+        Vue.use(GetTextPlugin, {
+            translations: {},
+            silent: true
+        });
         const Component = Vue.extend(ExportCSVButton);
         const vm = new Component({
             store: createStore()
         });
-        spyOn(vm.$store, "commit"); //eslint-disable-line jasmine/no-unsafe-spy
+        jest.spyOn(vm.$store, "commit").mockImplementation(() => {});
         return vm;
     }
 
@@ -57,8 +53,8 @@ describe("ExportCSVButton", () => {
                 report_id: 36
             });
             const csv = `"id"\r\n72\r\n17\r\n`;
-            getCSVReport.and.returnValue(Promise.resolve(csv));
-            addBOM.and.callFake(csv => csv);
+            getCSVReport.mockImplementation(() => Promise.resolve(csv));
+            addBOM.mockImplementation(csv => csv);
 
             const promise = vm.exportCSV();
 
@@ -73,7 +69,7 @@ describe("ExportCSVButton", () => {
 
         it("When there is a REST error, then it will be shown", async () => {
             const vm = instantiateComponent();
-            getCSVReport.and.returnValue(
+            getCSVReport.mockImplementation(() =>
                 Promise.reject({
                     response: {
                         status: 404,
@@ -93,7 +89,7 @@ describe("ExportCSVButton", () => {
 
         it("When there is a 50x REST error, then a generic error message will be shown", async () => {
             const vm = instantiateComponent();
-            getCSVReport.and.returnValue(
+            getCSVReport.mockImplementation(() =>
                 Promise.reject({
                     response: {
                         status: 503
@@ -104,7 +100,7 @@ describe("ExportCSVButton", () => {
             await vm.exportCSV();
 
             expect(vm.is_loading).toBe(false);
-            expect(vm.$store.commit).toHaveBeenCalledWith("setErrorMessage", jasmine.any(String));
+            expect(vm.$store.commit).toHaveBeenCalledWith("setErrorMessage", expect.any(String));
         });
     });
 });
