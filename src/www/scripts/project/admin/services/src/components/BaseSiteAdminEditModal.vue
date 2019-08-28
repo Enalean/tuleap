@@ -33,7 +33,7 @@
                 v-bind:allowed_icons="allowed_icons"
             >
                 <template slot="is_active">
-                    <service-is-active id="project-service-add-modal-active" v-bind:value="service.is_active"/>
+                    <service-is-active id="project-service-edit-modal-active" v-bind:value="service.is_active"/>
                 </template>
             </in-edition-custom-service>
             <editable-system-service
