@@ -31,6 +31,7 @@ use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Factory;
 use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Validator;
 use Tuleap\BotMattermostAgileDashboard\Exception\CannotDeleteBotNotificationException;
 use Tuleap\BotMattermostAgileDashboard\Presenter\AdminNotificationPresenter;
+use Tuleap\Layout\IncludeAssets;
 
 class Controller
 {
@@ -91,6 +92,13 @@ class Controller
             $bot_assigned = $bot_assigned->toArray($project_id);
         }
 
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../../src/www/assets/botmattermost_agiledashboard/',
+            '/assets/botmattermost_agiledashboard'
+        );
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('autocompleter.js'));
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('modal.js'));
+
         return $renderer->renderToString(
             'adminConfiguration',
             new AdminNotificationPresenter($this->csrf, $bots, $project_id, $bot_assigned)
@@ -112,7 +120,7 @@ class Controller
         if ($this->validator->isValid($this->csrf, $this->request, 'add')) {
             $project_id = $this->request->getProject()->getID();
             $bot_id     = $this->request->get('bot_id');
-            $channels   = explode(',', $this->request->get('channels'));
+            $channels   = $this->request->get('channels');
             $send_time  = $this->request->get('send_time');
 
             $this->bot_agiledashboard_factory->addBotNotification($channels, $bot_id, $project_id, $send_time);
@@ -123,7 +131,7 @@ class Controller
     {
         if ($this->validator->isValid($this->csrf, $this->request, 'edit')) {
             $project_id = $this->request->getProject()->getID();
-            $channels   = explode(',', $this->request->get('channels'));
+            $channels   = $this->request->get('channels');
             $send_time  = $this->request->get('send_time');
 
             $this->bot_agiledashboard_factory->saveBotNotification($channels, $project_id, $send_time);

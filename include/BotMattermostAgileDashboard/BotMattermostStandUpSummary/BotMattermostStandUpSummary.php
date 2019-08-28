@@ -58,7 +58,8 @@ class BotMattermostStandUpSummary
             'name'           => $this->bot->getName(),
             'webhook_url'    => $this->bot->getWebhookUrl(),
             'avatar'         => $this->bot->getAvatarUrl(),
-            'channels'       => implode(', ', $this->channels),
+            'has_channels'   => count($this->channels) > 0,
+            'channels'       => $this->channels,
             'project_id'     => $this->project_id,
             'send_time'      => date("H:i", strtotime($this->send_time)),
             'is_assigned'    => $this->isAssigned()

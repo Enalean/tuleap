@@ -57,6 +57,15 @@ class AdminNotificationPresenter
     public $any_configured_notification_tips;
     public $empty_bot_list;
     public $empty_channel_list;
+    /**
+     * @var string
+     */
+    public $time_format_regexp;
+
+    /**
+     * @var string
+     */
+    public $time_input_title;
 
     public function __construct(
         CSRFSynchronizerToken $csrf_token,
@@ -69,7 +78,6 @@ class AdminNotificationPresenter
         $this->project_id   = $project_id;
         $this->bot_assigned = $bot_assigned;
         $this->has_bots     = !empty($bots);
-
         $this->title                  = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_title');
         $this->description            = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_description');
         $this->description_create_bot = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_description_create_bot');
@@ -82,12 +90,14 @@ class AdminNotificationPresenter
         $this->button_delete  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_delete');
         $this->button_edit    = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_edit');
         $this->button_confirm = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'button_confirm');
+        $this->button_save = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'button_save');
 
         $this->modal_add_title      = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'modal_header_configure_notification');
         $this->modal_edit_title     = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'modal_header_edit_configure_notification');
         $this->modal_delete_title   = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'modal_header_delete_configure_notification');
         $this->modal_delete_content = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'modal_delete_content');
 
+        $this->label_bot_name         = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_name');
         $this->label_bot_list         = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_list');
         $this->label_send_time        = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_label_send_time');
         $this->label_channels_handles = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_label_channels_handles');
@@ -110,5 +120,8 @@ class AdminNotificationPresenter
         $this->any_configured_notification_tips = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'any_configured_notification_tips');
         $this->empty_bot_list                   = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_empty_bot_list');
         $this->empty_channel_list               = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'empty_channel_list');
+
+        $this->time_format_regexp = "^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$";
+        $this->time_input_title   = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'time_input_title');
     }
 }

@@ -38,7 +38,6 @@ use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationSender;
 use Tuleap\BotMattermost\SenderServices\EncoderMessage;
 use Tuleap\BotMattermost\SenderServices\Sender;
 use Tuleap\Cron\EventCronJobEveryMinute;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -63,8 +62,6 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
             require_once PLUGIN_BOT_MATTERMOST_BASE_DIR.'/include/autoload.php';
         }
         if (defined('AGILEDASHBOARD_BASE_URL')) {
-            $this->addHook('cssfile');
-            $this->addHook('javascript_file');
             $this->addHook(GetAdditionalScrumAdminPaneContent::NAME);
         }
         $this->addHook(EventCronJobEveryMinute::NAME);
@@ -89,32 +86,6 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
             $this->pluginInfo = new PluginInfo($this);
         }
         return $this->pluginInfo;
-    }
-
-    public function cssfile()
-    {
-        $agiledashboard_plugin = PluginManager::instance()->getPluginByName('agiledashboard');
-        if (strpos($_SERVER['REQUEST_URI'], $agiledashboard_plugin->getPluginPath()) === 0) {
-            $asset = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/botmattermost_agiledashboard/',
-                '/assets/botmattermost_agiledashboard'
-            );
-            echo '<link rel="stylesheet" type="text/css" href="'.$asset->getFileURL('style.css').'" />';
-        }
-    }
-
-    public function javascript_file()
-    {
-        $agiledashboard_plugin = PluginManager::instance()->getPluginByName('agiledashboard');
-        if (strpos($_SERVER['REQUEST_URI'], $agiledashboard_plugin->getPluginPath()) === 0) {
-            $asset = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/botmattermost_agiledashboard/',
-                '/assets/botmattermost_agiledashboard'
-            );
-
-            echo $asset->getHTMLSnippet('timepicker.js');
-            echo $asset->getHTMLSnippet('autocompleter.js');
-        }
     }
 
     public function additional_scrum_admin_pane_content(GetAdditionalScrumAdminPaneContent $event)

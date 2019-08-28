@@ -3,7 +3,9 @@
   "name": "botmattermost_agiledashboard",
   "homepage": "https://www.enalean.com",
   "license": "GNU General Public License v2",
-  "dependencies": {},
+  "dependencies": {
+    "mustache": "^2.3.0"
+  },
   "devDependencies": {},
   "config": {
     "bin": "../../node_modules/.bin"

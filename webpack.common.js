@@ -24,21 +24,21 @@ module.exports = [
     {
         entry: {
             "autocompleter": "./scripts/autocompleter.js",
-            "timepicker": "./scripts/timepicker.js",
-            "style": "./themes/FlamingParrot/css/style.scss",
+            "modal": "./scripts/modal.js"
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(path.resolve(__dirname, "../../src/www/assets/botmattermost_agiledashboard/")),
         module: {
             rules: [
                 webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
-                webpack_configurator.rule_scss_loader
             ]
+        },
+        externals: {
+            tlp: "tlp"
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
-            webpack_configurator.getManifestPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
+            webpack_configurator.getManifestPlugin()
         ]
     }
 ];

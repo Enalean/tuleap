@@ -6,7 +6,7 @@ plugin_botmattermost_agiledashboard	alert_error_create_bot_notification	L'ajout 
 plugin_botmattermost_agiledashboard	alert_error_delete_bot_notification	La suppression du robot de notification pour le résumé des stand-up a échoué
 plugin_botmattermost_agiledashboard	alert_error_update_bot_notification	La mise à jour du robot de notification pour le résumé des stand-up a échoué
 
-plugin_botmattermost_agiledashboard	admin_notification_title	Notifications dans Mattermost
+plugin_botmattermost_agiledashboard	admin_notification_title	Notifications Mattermost
 plugin_botmattermost_agiledashboard	admin_notification_description	Choisissez un robot afin d'envoyer le résumé du stand-up dans Mattermost.
 plugin_botmattermost_agiledashboard	admin_notification_description_create_bot	Si vous ne voyez pas de robot lié à votre projet/équipe Mattermost, veuillez contacter un administrateur.
 plugin_botmattermost_agiledashboard	admin_notification_label_send_time	Heure d'envoi du rapport
@@ -33,6 +33,7 @@ plugin_botmattermost_agiledashboard	any_configured_notification_tips	Pour commen
 
 plugin_botmattermost_agiledashboard	button_configure_notification	Ajouter une notification
 plugin_botmattermost_agiledashboard	button_confirm	Ajouter
+plugin_botmattermost_agiledashboard	button_save	Mettre à jour
 
 plugin_botmattermost_agiledashboard	modal_header_configure_notification	Ajout d'une notification
 plugin_botmattermost_agiledashboard	modal_header_edit_configure_notification	Edition de la notification
@@ -44,3 +45,4 @@ plugin_botmattermost_agiledashboard	configuration_label_channels_handles	Liste d
 plugin_botmattermost_agiledashboard	configuration_input_channels_handles	canal1, canal2, canal3
 plugin_botmattermost_agiledashboard	empty_channel_list	Aucun canal n'a été renseigné, celui défini lors de la création du webhook sera utilisé par défaut
 plugin_botmattermost_agiledashboard	configuration_empty_bot_list	Aucun robot n'a été défini par l'administrateur du système. La configuration des notifications n'est donc pas disponible.
+plugin_botmattermost_agiledashboard	time_input_title	Temps au format : "hh:mm"

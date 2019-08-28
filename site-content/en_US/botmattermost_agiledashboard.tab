@@ -6,9 +6,10 @@ plugin_botmattermost_agiledashboard	alert_error_create_bot_notification	Failed t
 plugin_botmattermost_agiledashboard	alert_error_delete_bot_notification	Failed to delete the bot notification for stand-up summary
 plugin_botmattermost_agiledashboard	alert_error_update_bot_notification	Failed to update the bot notification for stand-up summary
 
-plugin_botmattermost_agiledashboard	admin_notification_title	Notifications in Mattermost
+plugin_botmattermost_agiledashboard	admin_notification_title	Mattermost notifications
 plugin_botmattermost_agiledashboard	admin_notification_description	Choose a bot to send a summary of the stand-up in Mattermost.
 plugin_botmattermost_agiledashboard	admin_notification_description_create_bot	If you don't see a Bot linked to your Mattermost project/team, please contact your administrator.
+plugin_botmattermost_agiledashboard	configuration_label_bot	Stand-up summary report time
 plugin_botmattermost_agiledashboard	admin_notification_label_send_time	Stand-up summary report time
 plugin_botmattermost_agiledashboard	admin_notification_time_warning	The specified time must be adapted according to the server's time zone $1
 
@@ -33,6 +34,7 @@ plugin_botmattermost_agiledashboard	any_configured_notification_tips	To begin, c
 
 plugin_botmattermost_agiledashboard	button_configure_notification	Add notification
 plugin_botmattermost_agiledashboard	button_confirm	Add
+plugin_botmattermost_agiledashboard	button_save	Update
 
 plugin_botmattermost_agiledashboard	modal_header_configure_notification	Add notification
 plugin_botmattermost_agiledashboard	modal_header_edit_configure_notification	Edit notification
@@ -44,3 +46,4 @@ plugin_botmattermost_agiledashboard	configuration_label_channels_handles	Channel
 plugin_botmattermost_agiledashboard	configuration_input_channels_handles	channel1, channel2, channel3
 plugin_botmattermost_agiledashboard	empty_channel_list	No channel selected, the channel defined at the webhook creation will be used as default
 plugin_botmattermost_agiledashboard	configuration_empty_bot_list	No bots are defined by the system administrator. The notification configuration is not available.
+plugin_botmattermost_agiledashboard	time_input_title	Time format: "hh:mm"
