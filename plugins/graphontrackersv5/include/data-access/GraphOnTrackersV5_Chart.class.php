@@ -71,7 +71,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         $this->description       = $description;
         $this->width             = $width;
         $this->height            = $height;
-        $this->mustache_renderer = TemplateRendererFactory::build()->getRenderer(GRAPH_ON_TRACKER_V5_TEMPLATE_DIR);
+        $this->mustache_renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates');
     }
 
     public function registerInSession()
@@ -511,14 +511,6 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         }
 
         return $this->updateSpecificProperties($row);
-    }
-
-    /**
-     * @return string The inline help of the chart
-     */
-    public function getHelp()
-    {
-        return '';
     }
 
     public function exportToXml(SimpleXMLElement $root, $formsMapping)

@@ -1,6 +1,5 @@
-<?php
-/**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,5 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-define('GRAPH_ON_TRACKERS_V5_URL', '/plugins/graphontrackersv5');
-define('GRAPH_ON_TRACKER_V5_TEMPLATE_DIR', realpath(dirname(__FILE__).'/../templates'));
+
+const common = require("./webpack.common.js");
+const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+
+module.exports = webpack_configurator.extendProdConfiguration(common);

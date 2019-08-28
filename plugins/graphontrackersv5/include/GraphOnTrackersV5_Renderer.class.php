@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -113,9 +113,6 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
             $html .= $this->chart_to_edit->getContent();
             //}}}
             $html .= '</tr>';
-            if ($help = $this->chart_to_edit->getHelp()) {
-                $html .= '<tr><td colspan="2" class="inline_help">'. $help .'</td></tr>';
-            }
             $html .= '</tbody></table>';
             $html .= '</form>';
         } else {
@@ -419,8 +416,8 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
     public function getStylesheetDependencies()
     {
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../www/themes/default/assets',
-            GRAPH_ON_TRACKERS_V5_URL . '/themes/default/assets'
+            __DIR__ . '/../../../src/www/assets/graphontrackersv5/themes',
+            '/assets/graphontrackersv5/themes'
         );
         return new \Tuleap\Layout\CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($include_assets, 'style')]);
     }
