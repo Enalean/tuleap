@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,7 @@ use Tuleap\REST\ArtifactFileBase;
 /**
  * @group ArtifactFilesTest
  */
-class ArtifactFilesTest extends ArtifactFileBase
+class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private static $DEFAULT_QUOTA = 67108864;
 
@@ -143,7 +143,7 @@ class ArtifactFilesTest extends ArtifactFileBase
     /**
      * @depends testPostArtifactFile
      */
-    public function testPutArtifactId_isForbiddenForADifferentUser($file_id)
+    public function testPutArtifactIdIsForbiddenForADifferentUser($file_id)
     {
         $second_chunk = 'with more data';
 
@@ -161,7 +161,7 @@ class ArtifactFilesTest extends ArtifactFileBase
     /**
      * @depends testPostArtifactFile
      */
-    public function testPutArtifactId_throwsErrorForAWrongOffset($file_id)
+    public function testPutArtifactIdThrowsErrorForAWrongOffset($file_id)
     {
         $second_chunk = 'with more data';
 
@@ -177,7 +177,7 @@ class ArtifactFilesTest extends ArtifactFileBase
         $this->assertArrayHasKey('X-DISK-USAGE', $response->getHeaders());
     }
 
-    public function testPutArtifactId_throwsErrorForInvalidFile()
+    public function testPutArtifactIdThrowsErrorForInvalidFile()
     {
         $file_id = 1453655565245655;
         $chunk   = 'with more data';
@@ -227,11 +227,21 @@ class ArtifactFilesTest extends ArtifactFileBase
     /**
      * @depends testPostArtifactFile
      */
-    public function testOptionsArtifactId_isAllowedForADifferentUser($file_id)
+    public function testOptionsArtifactIdIsAllowedForADifferentUser($file_id)
     {
         $request = $this->client->options('artifact_temporary_files/'.$file_id);
         $response = $this->getResponseForDifferentUser($request);
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    /**
+     * @depends testPostArtifactFile
+     */
+    public function testOptionsArtifactIdWithUserRESTReadOnlyAdmin($file_id)
+    {
+        $request  = $this->client->options('artifact_temporary_files/'.$file_id);
+        $response = $this->getResponse($request, REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testAttachFileToPostArtifact()
@@ -279,7 +289,7 @@ class ArtifactFilesTest extends ArtifactFileBase
             ),
         ));
 
-        $response = $this->getResponse($this->client->post('artifacts' , null, $params));
+        $response = $this->getResponse($this->client->post('artifacts', null, $params));
         $this->assertEquals($response->getStatusCode(), 201);
         $posted_artifact = $response->json();
 
@@ -289,7 +299,7 @@ class ArtifactFilesTest extends ArtifactFileBase
         $this->assertCount(10, $posted_artifact['values']);
 
         $file_exists =false;
-        foreach($posted_artifact['values'] as $field) {
+        foreach ($posted_artifact['values'] as $field) {
             if ($field['type'] == 'file') {
                 $this->assertCount(1, $field['file_descriptions']);
                 $this->assertEquals($field['file_descriptions'][0]['description'], $this->third_file['description']);
@@ -385,7 +395,7 @@ class ArtifactFilesTest extends ArtifactFileBase
         $this->assertCount(9, $posted_artifact['values']);
 
         $file_exists =false;
-        foreach($posted_artifact['values'] as $field) {
+        foreach ($posted_artifact['values'] as $field) {
             if ($field['type'] == 'file') {
                 $this->assertCount(1, $field['file_descriptions']);
                 $this->assertEquals($field['file_descriptions'][0]['description'], $this->first_file['description']);
@@ -421,9 +431,41 @@ class ArtifactFilesTest extends ArtifactFileBase
     /**
      * @depends testAttachFileToPutArtifact
      */
+    public function testArtifactAttachedFilesGetIdWithUserRESTReadOnlyAdmin($file_id)
+    {
+        $request  = $this->client->get('artifact_files/' . $file_id);
+        $response = $this->getResponse($request, REST_TestDataBuilder::TEST_BOT_USER_NAME);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $json = $response->json();
+        $data = $json['data'];
+
+        $expected = base64_encode(base64_decode($this->first_file['content']).$this->second_chunk);
+
+        $this->assertEquals($expected, $data);
+    }
+
+    /**
+     * @depends testAttachFileToPutArtifact
+     */
     public function testOptionsArtifactAttachedFilesId($file_id)
     {
         $response = $this->getResponse($this->client->options('artifact_files/'.$file_id));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    /**
+     * @depends testAttachFileToPutArtifact
+     */
+    public function testOptionsArtifactAttachedFilesIdUserRESTReadOnlyAdmin($file_id)
+    {
+        $response = $this->getResponse(
+            $this->client->options('artifact_files/'.$file_id),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
 
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
