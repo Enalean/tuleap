@@ -224,7 +224,7 @@ legend {
         border-bottom: 2px solid transparent;
         border-left: 0;
         background-color: transparent;
-        color: $navbar-color;
+        color: #747474;
     }
 
     & > li > a:hover, a:focus {
@@ -239,6 +239,7 @@ legend {
     li.active {
         > a {
             border-bottom: 2px solid $navbar-color;
+            color: $navbar-color;
         }
     }
 
