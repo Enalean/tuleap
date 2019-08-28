@@ -237,11 +237,11 @@ class BurnupDataBuilderTest extends TestCase
             ->andReturnFalse();
 
         $this->burnup_cache_dao->shouldReceive('searchCachedDaysValuesByArtifactId')
-            ->with(101)
+            ->with(101, Mockery::any())
             ->andReturn([]);
 
         $this->count_cache_dao->shouldReceive('searchCachedDaysValuesByArtifactId')
-            ->with(101)
+            ->with(101, Mockery::any())
             ->andReturn([]);
 
         $this->burnup_calculator->shouldReceive('getValue')
@@ -274,7 +274,7 @@ class BurnupDataBuilderTest extends TestCase
     private function mockBurnupCacheDao(): void
     {
         $this->burnup_cache_dao->shouldReceive('searchCachedDaysValuesByArtifactId')
-            ->with(101)
+            ->with(101, Mockery::any())
             ->andReturn([
                 [
                     'team_effort' => 0,
@@ -302,7 +302,7 @@ class BurnupDataBuilderTest extends TestCase
     private function mockCountElementsCacheDao(): void
     {
         $this->count_cache_dao->shouldReceive('searchCachedDaysValuesByArtifactId')
-            ->with(101)
+            ->with(101, Mockery::any())
             ->andReturn([
                 [
                     'closed_subelements' => 0,
