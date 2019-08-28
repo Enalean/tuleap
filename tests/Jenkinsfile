@@ -100,7 +100,12 @@ pipeline {
                         }
                     }
                     steps { script { actions.runJestTests('Tuleap', '.') } }
-                    post { always { junit 'results/jest/test-*-results.xml' } }
+                    post {
+                        always {
+                            junit 'results/jest/test-*-results.xml'
+                            step([$class: 'CloverPublisher', cloverReportDir: 'results/jest/coverage/', cloverReportFileName: 'clover.xml'])
+                        }
+                    }
                 }
                 stage('REST') {
                     stages {
