@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 @import '../../../../../src/www/themes/common/css/utils/colors';
-@import '../../../../../src/www/themes/FlamingParrot/css/utils/badge-colors';
 
 @mixin message-colors($color) {
     border: 1px solid $color;

@@ -60,8 +60,8 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
     background: $tlp-theme-color;
 
     &.tlp-badge-outline {
-        border: 1px solid $tlp-theme-color;
-        background: transparent;
+        border: 1px solid transparentize($tlp-theme-color, .4);
+        background: transparentize($tlp-theme-color, .9);
         color: $tlp-theme-color;
     }
 }
@@ -74,8 +74,8 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
     color: $tlp-badge-secondary-color;
 
     &.tlp-badge-outline {
-        border: 1px solid $tlp-badge-secondary-outline-border;
-        background: transparent;
+        border: 1px solid transparentize($tlp-badge-secondary-outline-border, .4);
+        background: transparentize($tlp-badge-secondary-outline-border, .9);
         color: $tlp-badge-secondary-outline-color;
     }
 }
@@ -87,8 +87,8 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
     background: $tlp-ui-info;
 
     &.tlp-badge-outline {
-        border: 1px solid $tlp-ui-info;
-        background: transparent;
+        border: 1px solid transparentize($tlp-ui-info, .4);
+        background: transparentize($tlp-ui-info, .9);
         color: $tlp-ui-info;
     }
 }
@@ -100,8 +100,8 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
     background: $tlp-ui-success;
 
     &.tlp-badge-outline {
-        border: 1px solid $tlp-ui-success;
-        background: transparent;
+        border: 1px solid transparentize($tlp-ui-success, .4);
+        background: transparentize($tlp-ui-success, .9);
         color: $tlp-ui-success;
     }
 }
@@ -113,8 +113,8 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
     background: $tlp-ui-warning;
 
     &.tlp-badge-outline {
-        border: 1px solid $tlp-ui-warning;
-        background: transparent;
+        border: 1px solid transparentize($tlp-ui-warning, .4);
+        background: transparentize($tlp-ui-warning, .9);
         color: $tlp-ui-warning;
     }
 }
@@ -126,8 +126,8 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
     background: $tlp-ui-danger;
 
     &.tlp-badge-outline {
-        border: 1px solid $tlp-ui-danger;
-        background: transparent;
+        border: 1px solid transparentize($tlp-ui-danger, .4);
+        background: transparentize($tlp-ui-danger, .9);
         color: $tlp-ui-danger;
     }
 }
@@ -140,9 +140,9 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
         background: map-get($colors, 'primary');
 
         &.tlp-badge-outline {
-            border: 1px solid map-get($colors, 'primary');
-            background: transparent;
-            color: map-get($colors, 'primary');
+            border: 1px solid transparentize(map-get($colors, 'primary'), .4);
+            background: transparentize(map-get($colors, 'primary'), .9);
+            color: map-get($colors, 'text');
         }
     }
 }
