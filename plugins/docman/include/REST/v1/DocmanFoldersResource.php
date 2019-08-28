@@ -53,8 +53,8 @@ use Tuleap\Docman\REST\v1\CopyItem\BeforeCopyVisitor;
 use Tuleap\Docman\REST\v1\CopyItem\DocmanItemCopier;
 use Tuleap\Docman\REST\v1\CopyItem\DocmanValidateRepresentationForCopy;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Empties\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanPOSTFilesRepresentation;
-use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
@@ -303,7 +303,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      * The format of the obsolescence date is : "YYYY-MM-DD"
      *
      * @param int                                 $id   Id of the parent folder
-     * @param DocmanEmptyPOSTRepresentation $empty_representation {@from body} {@type \Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation}
+     * @param DocmanEmptyPOSTRepresentation $empty_representation {@from body} {@type \Tuleap\Docman\REST\v1\Empties\DocmanEmptyPOSTRepresentation}
      *
      * @url    POST {id}/empties
      * @access hybrid
