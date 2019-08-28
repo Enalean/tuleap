@@ -22,9 +22,10 @@ use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
-use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
-use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
+use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 
@@ -43,68 +44,34 @@ class Planning_MilestoneController extends BaseController
      */
     private $milestone;
 
-
     /** @var Planning_MilestonePaneFactory */
     private $pane_factory;
 
-    /** @var AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory */
-    private $pane_presenter_builder_factory;
-
     /** @var Project */
     private $project;
-
-    /**
-     * @var AgileDashboardCrumbBuilder
-     */
-    private $agile_dashboard_crumb_builder;
-    /**
-     * @var VirtualTopMilestoneCrumbBuilder
-     */
-    private $top_milestone_crumb_builder;
-    /**
-     * @var MilestoneCrumbBuilder
-     */
-    private $milestone_crumb_builder;
     /**
      * @var VisitRecorder
      */
     private $visit_recorder;
-
     /**
-     * Instanciates a new controller.
-     *
-     * TODO:
-     *   - pass $request to actions (e.g. show).
-     *
-     * @param Codendi_Request $request
-     * @param Planning_MilestoneFactory $milestone_factory
-     * @param ProjectManager $project_manager
-     * @param Planning_MilestonePaneFactory $pane_factory
-     * @param AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory
-     * @param AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder
-     * @param VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder
-     * @param MilestoneCrumbBuilder $milestone_crumb_builder
+     * @var AllBreadCrumbsForMilestoneBuilder
      */
+    private $bread_crumbs_for_milestone_builder;
+
     public function __construct(
         Codendi_Request $request,
         Planning_MilestoneFactory $milestone_factory,
         ProjectManager $project_manager,
         Planning_MilestonePaneFactory $pane_factory,
-        AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
-        AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
-        VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
-        MilestoneCrumbBuilder $milestone_crumb_builder,
-        VisitRecorder $visit_recorder
+        VisitRecorder $visit_recorder,
+        AllBreadCrumbsForMilestoneBuilder $bread_crumbs_for_milestone_builder
     ) {
         parent::__construct('agiledashboard', $request);
-        $this->milestone_factory              = $milestone_factory;
-        $this->pane_factory                   = $pane_factory;
-        $this->pane_presenter_builder_factory = $pane_presenter_builder_factory;
-        $this->project                        = $project_manager->getProject($request->get('group_id'));
-        $this->agile_dashboard_crumb_builder  = $agile_dashboard_crumb_builder;
-        $this->top_milestone_crumb_builder    = $top_milestone_crumb_builder;
-        $this->milestone_crumb_builder        = $milestone_crumb_builder;
-        $this->visit_recorder                 = $visit_recorder;
+        $this->milestone_factory                  = $milestone_factory;
+        $this->pane_factory                       = $pane_factory;
+        $this->project                            = $project_manager->getProject($request->get('group_id'));
+        $this->visit_recorder                     = $visit_recorder;
+        $this->bread_crumbs_for_milestone_builder = $bread_crumbs_for_milestone_builder;
     }
 
     public function show()
@@ -150,15 +117,7 @@ class Planning_MilestoneController extends BaseController
 
     private function getMilestonePresenter(PanePresenterData $presenter_data)
     {
-        $redirect_parameter = new Planning_MilestoneRedirectParameter();
-
-        return new AgileDashboard_MilestonePresenter(
-            $this->milestone,
-            $this->getCurrentUser(),
-            $this->request,
-            $presenter_data,
-            $redirect_parameter->getPlanningRedirectToNew($this->milestone, $this->pane_factory->getDefaultPaneIdentifier())
-        );
+        return new AgileDashboard_MilestonePresenter($this->milestone, $presenter_data);
     }
 
     /**
@@ -168,22 +127,11 @@ class Planning_MilestoneController extends BaseController
     {
         $this->generateBareMilestone();
 
-        $breadcrumbs            = new BreadCrumbCollection();
-        $breadcrumbs->addBreadCrumb(
-            $this->agile_dashboard_crumb_builder->build($this->getCurrentUser(), $this->project)
+        return $this->bread_crumbs_for_milestone_builder->getBreadcrumbs(
+            $this->getCurrentUser(),
+            $this->project,
+            $this->milestone
         );
-        $breadcrumbs->addBreadCrumb(
-            $this->top_milestone_crumb_builder->build($this->project)
-        );
-
-        if ($this->milestone->getArtifact()) {
-            foreach (array_reverse($this->milestone->getAncestors()) as $milestone) {
-                $breadcrumbs->addBreadCrumb($this->milestone_crumb_builder->build($this->getCurrentUser(), $milestone));
-            }
-            $breadcrumbs->addBreadCrumb($this->milestone_crumb_builder->build($this->getCurrentUser(), $this->milestone));
-        }
-
-        return $breadcrumbs;
     }
 
     public function solveInconsistencies()

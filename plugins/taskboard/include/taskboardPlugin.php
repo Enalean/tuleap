@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Taskboard\Routing\MilestoneExtractor;
 
@@ -55,6 +56,10 @@ class taskboardPlugin extends Plugin
     {
         $this->addHook(CollectRoutesEvent::NAME);
 
+        if (defined('AGILEDASHBOARD_BASE_URL')) {
+            $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
+        }
+
         return parent::getHooksAndCallbacks();
     }
 
@@ -68,18 +73,41 @@ class taskboardPlugin extends Plugin
         return new \Tuleap\Taskboard\Routing\TaskboardController(
             new MilestoneExtractor(
                 $agiledashboard_plugin->getMilestoneFactory(),
-                new Cardwall_OnTop_Dao(),
+                $this->getCardwallOnTopDao(),
                 PluginManager::instance(),
                 $this
             ),
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates')
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
+            $agiledashboard_plugin->getAllBreadCrumbsForMilestoneBuilder(),
+            $agiledashboard_plugin->getMilestonePaneFactory(),
+            $agiledashboard_plugin->getIncludeAssets(),
+            $agiledashboard_plugin->getThemeIncludeAssets()
         );
     }
 
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
-        $event->getRouteCollector()->addGroup('/taskboard', function (FastRoute\RouteCollector $r) {
-            $r->get('/{project_name:[A-z0-9-]+}/{id:\d+}', $this->getRouteHandler('routeGet'));
-        });
+        $event->getRouteCollector()->addGroup(
+            '/taskboard',
+            function (FastRoute\RouteCollector $r) {
+                $r->get('/{project_name:[A-z0-9-]+}/{id:\d+}', $this->getRouteHandler('routeGet'));
+            }
+        );
+    }
+
+    /** @see AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE */
+    public function agiledashboardEventAdditionalPanesOnMilestone(array $params): void
+    {
+        $milestone = $params['milestone'];
+        assert($milestone instanceof Planning_Milestone);
+
+        if ($this->getCardwallOnTopDao()->isEnabled($milestone->getTrackerId())) {
+            $params['panes'][] = new Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo($milestone);
+        }
+    }
+
+    private function getCardwallOnTopDao(): Cardwall_OnTop_Dao
+    {
+        return new Cardwall_OnTop_Dao();
     }
 }

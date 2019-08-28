@@ -33,37 +33,16 @@ class AgileDashboard_MilestonePresenter
     private $milestone;
 
     /**
-     * @var PFUser
-     */
-    private $current_user;
-
-    /**
-     * @var Codendi_Request
-     */
-    private $request;
-
-    /**
-     * @var string
-     */
-    private $planning_redirect_to_new;
-
-    /**
      * @var PanePresenterData
      */
     private $presenter_data;
 
     public function __construct(
         Planning_Milestone $milestone,
-        PFUser $current_user,
-        Codendi_Request $request,
-        PanePresenterData $presenter_data,
-        $planning_redirect_to_new
+        PanePresenterData $presenter_data
     ) {
-        $this->milestone                = $milestone;
-        $this->current_user             = $current_user;
-        $this->request                  = $request;
-        $this->presenter_data           = $presenter_data;
-        $this->planning_redirect_to_new = $planning_redirect_to_new;
+        $this->milestone      = $milestone;
+        $this->presenter_data = $presenter_data;
     }
 
     public function milestoneTitle()

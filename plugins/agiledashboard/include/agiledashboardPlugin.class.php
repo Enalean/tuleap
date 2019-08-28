@@ -19,6 +19,9 @@
  */
 
 use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
+use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
@@ -39,6 +42,7 @@ use Tuleap\AgileDashboard\Kanban\TrackerCrumbBuilder;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
+use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
@@ -683,10 +687,7 @@ class AgileDashboardPlugin extends Plugin
     /** @see Event::BURNING_PARROT_GET_STYLESHEETS */
     public function burning_parrot_get_stylesheets(array $params)
     {
-        $theme_include_assets = new IncludeAssets(
-            AGILEDASHBOARD_BASE_DIR . '/../www/themes/BurningParrot/assets',
-            $this->getThemePath() . '/assets'
-        );
+        $theme_include_assets = $this->getThemeIncludeAssets();
 
         $variant = $params['variant'];
         if ($this->isKanbanURL()) {
@@ -699,10 +700,7 @@ class AgileDashboardPlugin extends Plugin
     public function burning_parrot_get_javascript_files(array $params)
     {
         if ($this->isInOverviewTab()) {
-            $assets = new IncludeAssets(
-                AGILEDASHBOARD_BASE_DIR . '/../www/assets',
-                $this->getPluginPath() . '/assets'
-            );
+            $assets = $this->getIncludeAssets();
             $params['javascript_files'][] = $assets->getFileURL('overview.js');
             return;
         }
@@ -1858,7 +1856,21 @@ class AgileDashboardPlugin extends Plugin
             new AgileDashboardRouterBuilder(
                 PluginFactory::instance(),
                 $this->getMilestonePaneFactory(),
-                new VisitRecorder(new RecentlyVisitedDao())
+                new VisitRecorder(new RecentlyVisitedDao()),
+                $this->getAllBreadCrumbsForMilestoneBuilder()
+            )
+        );
+    }
+
+    public function getAllBreadCrumbsForMilestoneBuilder(): AllBreadCrumbsForMilestoneBuilder
+    {
+        return new AllBreadCrumbsForMilestoneBuilder(
+            new AgileDashboardCrumbBuilder($this->getPluginPath()),
+            new VirtualTopMilestoneCrumbBuilder($this->getPluginPath()),
+            new MilestoneCrumbBuilder(
+                $this->getPluginPath(),
+                $this->getMilestonePaneFactory(),
+                $this->getMilestoneFactory()
             )
         );
     }
@@ -1930,7 +1942,7 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    private function getMilestonePaneFactory(): Planning_MilestonePaneFactory
+    public function getMilestonePaneFactory(): Planning_MilestonePaneFactory
     {
         $request = HTTPRequest::instance();
 
@@ -1970,5 +1982,21 @@ class AgileDashboardPlugin extends Plugin
         );
 
         return $pane_factory;
+    }
+
+    public function getIncludeAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            AGILEDASHBOARD_BASE_DIR . '/../www/assets',
+            $this->getPluginPath() . '/assets'
+        );
+    }
+
+    public function getThemeIncludeAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            AGILEDASHBOARD_BASE_DIR . '/../www/themes/BurningParrot/assets',
+            AGILEDASHBOARD_BASE_URL . '/themes/BurningParrot/assets'
+        );
     }
 }
