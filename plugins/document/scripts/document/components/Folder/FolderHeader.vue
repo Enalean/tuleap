@@ -22,7 +22,7 @@
 <template>
     <div class="document-header">
         <h1 class="document-header-title">
-            <span v-bind:class="title_class">
+            <span v-bind:class="title_class" data-test="document-folder-header-title">
                 {{ folder_title }}
             </span>
         </h1>
@@ -31,25 +31,33 @@
                 <folder-header-action v-bind:item="current_folder"/>
                 <new-item-modal/>
                 <new-folder-modal/>
-                <create-new-item-version-modal v-bind:is="shown_new_version_modal" v-bind:item="updated_item"/>
-                <update-metadata-modal v-bind:is="shown_update_metadata_modal" v-bind:item="updated_metadata"/>
+                <create-new-item-version-modal v-bind:is="shown_new_version_modal" v-bind:item="updated_item" data-test="document-new-version-modal"/>
+                <update-metadata-modal v-bind:is="shown_update_metadata_modal" v-bind:item="updated_metadata" data-test="document-update-metadata-modal"/>
             </div>
             <div class="document-header-spacer"></div>
             <file-upload-manager/>
-            <search-box v-if="can_display_search_box"/>
+            <search-box v-if="can_display_search_box" data-test="document-folder-harder-search-box"/>
         </div>
         <confirm-deletion-modal
             v-if="item_to_delete"
             v-bind:item="item_to_delete"
             v-on:delete-modal-closed="hideDeleteItemModal"
+            data-test="document-delete-item-modal"
         />
-        <permissions-update-modal v-bind:item="item_to_update_permissions"/>
+        <permissions-update-modal v-bind:item="item_to_update_permissions" data-test="document-permissions-item-modal" v-if="Object.keys(item_to_update_permissions).length > 0"/>
     </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { TYPE_EMBEDDED, TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI } from "../../constants.js";
+import {
+    TYPE_EMBEDDED,
+    TYPE_EMPTY,
+    TYPE_FILE,
+    TYPE_FOLDER,
+    TYPE_LINK,
+    TYPE_WIKI
+} from "../../constants.js";
 import SearchBox from "./SearchBox.vue";
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
 import NewItemModal from "./ModalNewItem/NewItemModal.vue";
@@ -130,7 +138,11 @@ export default {
                     break;
                 case TYPE_LINK:
                     this.shown_new_version_modal = () =>
-                        import(/* webpackChunkName: "document-new-wiki-version-modal" */ "./ModalCreateNewItemVersion/CreateNewVersionLinkModal.vue");
+                        import(/* webpackChunkName: "document-new-link-version-modal" */ "./ModalCreateNewItemVersion/CreateNewVersionLinkModal.vue");
+                    break;
+                case TYPE_EMPTY:
+                    this.shown_new_version_modal = () =>
+                        import(/* webpackChunkName: "document-new-empty-version-modal" */ "./ModalCreateNewItemVersion/CreateNewVersionEmptyModal.vue");
                     break;
                 default: //nothing
             }

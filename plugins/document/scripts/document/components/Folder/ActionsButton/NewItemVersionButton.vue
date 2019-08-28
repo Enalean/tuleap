@@ -21,7 +21,7 @@
     <a
         v-if="item.user_can_write"
         v-bind:class="button_classes"
-        v-bind:data-tlp-tooltip="cannot_create_new_wiki_version_beacause_approval_table"
+        v-bind:data-tlp-tooltip="cannot_create_new_wiki_version_because_approval_table"
         v-on:click="goToUpdate"
         data-test="document-new-item-version-button"
     >
@@ -30,9 +30,7 @@
     </a>
 </template>
 <script>
-import { mapState } from "vuex";
-import { TYPE_EMPTY, TYPE_WIKI } from "../../../constants.js";
-import { redirectToUrl } from "../../../helpers/location-helper.js";
+import { TYPE_WIKI } from "../../../constants.js";
 import EventBus from "../../../helpers/event-bus.js";
 
 export default {
@@ -43,11 +41,10 @@ export default {
         iconClasses: String
     },
     computed: {
-        ...mapState(["project_id"]),
         is_item_a_wiki_with_approval_table() {
             return this.item.type === TYPE_WIKI && this.item.approval_table !== null;
         },
-        cannot_create_new_wiki_version_beacause_approval_table() {
+        cannot_create_new_wiki_version_because_approval_table() {
             return this.$gettext("This wiki has a approval table, you can't update it.");
         },
         button_classes() {
@@ -67,17 +64,6 @@ export default {
                 return;
             }
 
-            if (this.item.type === TYPE_EMPTY) {
-                return redirectToUrl(
-                    `/plugins/docman/index.php?group_id=${this.project_id}&id=${
-                        this.item.id
-                    }&action=action_update`
-                );
-            }
-
-            this.showUpdateFileModal();
-        },
-        showUpdateFileModal() {
             EventBus.$emit("show-create-new-item-version-modal", {
                 detail: { current_item: this.item }
             });
