@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\FRS\Tests\REST;
 
 use Guzzle\Http\Client;
+use REST_TestDataBuilder;
 use RestBase;
 
 class FileTest extends RestBase
@@ -46,10 +47,38 @@ class FileTest extends RestBase
         );
     }
 
+    public function testOPTIONSFileWithUserRESTReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('frs_files/1'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(
+            ['OPTIONS', 'GET', 'POST', 'DELETE'],
+            $response->getHeader('Allow')->normalize()->toArray()
+        );
+    }
+
     public function testGETFile(): void
     {
         $file = $this->getResponse($this->client->get('frs_files/1'))->json();
 
+        $this->assertGETFile($file);
+    }
+
+    public function testGETFileWithUserRESTReadOnlyAdmin(): void
+    {
+        $file = $this->getResponse(
+            $this->client->get('frs_files/1'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        )->json();
+
+        $this->assertGETFile($file);
+    }
+
+    private function assertGETFile(array $file): void
+    {
         $this->assertEquals(1, $file['id']);
         $this->assertEquals('BooksAuthors.txt', $file['name']);
         $this->assertEquals('x86_64', $file['arch']);
@@ -64,8 +93,18 @@ class FileTest extends RestBase
         $this->assertEquals(200, $file_data_response->getStatusCode());
         $this->assertStringEqualsFile(
             __DIR__ . '/../_fixtures/frs/data/authors.txt',
-            (string) $file_data_response->getBody()
+            (string)$file_data_response->getBody()
         );
+    }
+
+    public function testDELETEFileWithUserRESTReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->delete('frs_files/2'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testDELETEFile(): void
@@ -74,6 +113,24 @@ class FileTest extends RestBase
         $this->assertEquals(202, $response->getStatusCode());
         $response = $this->getResponse($this->client->get('frs_files/2'));
         $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    public function testPOSTFileWithUserRESTReadOnlyAdminNotProjectMember(): void
+    {
+        $file_size = 123;
+
+        $query = [
+            'release_id' => 1,
+            'name'       => 'file_creation_' . bin2hex(random_bytes(8)),
+            'file_size'  => $file_size
+        ];
+
+        $response = $this->getResponse(
+            $this->client->post('frs_files', null, json_encode($query)),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testPOSTFile(): void
