@@ -142,7 +142,11 @@ class BurnupDataBuilder
 
     private function addEfforts(Tracker_Artifact $artifact, BurnupData $burnup_data)
     {
-        $cached_days_result = $this->burnup_cache_dao->searchCachedDaysValuesByArtifactId($artifact->getId());
+        $cached_days_result = $this->burnup_cache_dao->searchCachedDaysValuesByArtifactId(
+            $artifact->getId(),
+            $burnup_data->getTimePeriod()->getStartDate()
+        );
+
         foreach ($cached_days_result as $cached_day) {
             $effort = new BurnupEffort($cached_day['team_effort'], $cached_day['total_effort']);
             $burnup_data->addEffort($effort, $cached_day['timestamp']);
@@ -158,7 +162,8 @@ class BurnupDataBuilder
     private function addCountElements(Tracker_Artifact $artifact, BurnupData $burnup_data): void
     {
         $cached_days_result = $this->count_elements_cache_dao->searchCachedDaysValuesByArtifactId(
-            (int) $artifact->getId()
+            (int) $artifact->getId(),
+            (int) $burnup_data->getTimePeriod()->getStartDate()
         );
 
         if (is_array($cached_days_result)) {
