@@ -60,7 +60,7 @@
                     v-bind:disabled="is_add_button_disabled"
                     v-on:click="addTrackerToSelection"
                 >
-                    <i v-if="is_loader_shown" class="tlp-button-icon fa fa-spinner fa-spin"></i>
+                    <i v-if="is_loader_shown" class="tlp-button-icon fa fa-circle-o-notch fa-spin"></i>
                     <i v-else class="tlp-button-icon fa fa-plus"></i> <translate>Add</translate>
                 </button>
             </div>

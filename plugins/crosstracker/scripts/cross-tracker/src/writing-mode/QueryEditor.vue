@@ -30,7 +30,7 @@
                 v-bind:placeholder="placeholder"
                 v-model="writingCrossTrackerReport.expert_query"
             ></textarea>
-            <p class="tlp-text-muted">
+            <p class="tlp-text-info">
                 <i class="fa fa-info-circle"></i>
                 <translate>You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + Space.</translate>
             </p>

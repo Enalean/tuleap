@@ -73,7 +73,8 @@
 .reading-mode-actions {
     display: flex;
     justify-content: center;
-    margin: $tlp-half-spacing $tlp-spacing $tlp-spacing;
+    padding: $tlp-half-spacing $tlp-spacing $tlp-spacing;
+    border-bottom: 1px solid $tlp-ui-border-light;
 }
 
 .reading-mode-actions-cancel {
