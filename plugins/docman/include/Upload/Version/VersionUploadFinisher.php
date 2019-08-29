@@ -230,7 +230,8 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                         'title'             => $upload_row['title'],
                         'description'       => $upload_row['description'],
                         'obsolescence_date' => $upload_row['obsolescence_date'],
-                        'status'            => $upload_row['status']
+                        'status'            => $upload_row['status'],
+                        'item_type'         => PLUGIN_DOCMAN_ITEM_TYPE_FILE
                     ]
                 );
                 if (! $last_update_date_change) {

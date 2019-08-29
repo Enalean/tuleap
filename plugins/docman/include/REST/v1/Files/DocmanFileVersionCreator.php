@@ -36,10 +36,15 @@ class DocmanFileVersionCreator
      * @var VersionToUploadCreator
      */
     private $creator;
+    /**
+     * @var \Docman_LockFactory
+     */
+    private $lock_factory;
 
-    public function __construct(VersionToUploadCreator $creator)
+    public function __construct(VersionToUploadCreator $creator, \Docman_LockFactory $lock_factory)
     {
-        $this->creator = $creator;
+        $this->creator      = $creator;
+        $this->lock_factory = $lock_factory;
     }
 
     /**
@@ -80,6 +85,47 @@ class DocmanFileVersionCreator
         $file_properties_representation = new CreatedItemFilePropertiesRepresentation();
         $file_properties_representation->build($document_to_upload->getUploadHref());
 
+        return $file_properties_representation;
+    }
+
+    /**
+     * @throws RestException
+     */
+    public function createVersionFromEmpty(
+        \Docman_Empty $item,
+        \PFUser $user,
+        FilePropertiesPOSTPATCHRepresentation $representation,
+        \DateTimeImmutable $current_time,
+        int $status,
+        int $obsolesence_date
+    ): CreatedItemFilePropertiesRepresentation {
+
+        $is_item_locked = $this->lock_factory->itemIsLocked($item);
+        try {
+            $document_to_upload = $this->creator->create(
+                $item,
+                $user,
+                $current_time,
+                '',
+                'Initial version',
+                $representation->file_name,
+                $representation->file_size,
+                $is_item_locked,
+                $status,
+                $obsolesence_date,
+                $item->getTitle(),
+                $item->getDescription(),
+                null
+            );
+        } catch (UploadCreationConflictException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (UploadCreationFileMismatchException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (UploadMaxSizeExceededException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+        $file_properties_representation = new CreatedItemFilePropertiesRepresentation();
+        $file_properties_representation->build($document_to_upload->getUploadHref());
         return $file_properties_representation;
     }
 }
