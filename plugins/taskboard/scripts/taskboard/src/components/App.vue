@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="tlp-framed-horizontally">Under construction</div>
+    <div class="tlp-framed-horizontally taskboard-under-construction">Under construction</div>
 </template>
 
 <script lang="ts">
