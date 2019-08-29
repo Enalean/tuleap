@@ -33,7 +33,6 @@ use Docman_Link;
 use Docman_LinkVersionFactory;
 use Docman_MetadataFactory;
 use Docman_MetadataListOfValuesElementDao;
-use Docman_MetadataValueDao;
 use Docman_PermissionsManager;
 use Docman_Wiki;
 use DocmanPlugin;
@@ -67,7 +66,6 @@ use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
 use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
 use Tuleap\Docman\REST\v1\Permissions\DocmanFolderPermissionsForGroupsPUTRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
-use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
@@ -76,16 +74,15 @@ use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
-use Tuleap\REST\UserManager as RestUserManager;
 use UGroupManager;
 use UserManager;
 
 class DocmanFoldersResource extends AuthenticatedResource
 {
     /**
-     * @var RestUserManager
+     * @var UserManager
      */
-    private $rest_user_manager;
+    private $user_manager;
     /**
      * @var DocmanItemsRequestBuilder
      */
@@ -98,9 +95,9 @@ class DocmanFoldersResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->rest_user_manager = RestUserManager::build();
-        $this->request_builder   = new DocmanItemsRequestBuilder($this->rest_user_manager, ProjectManager::instance());
-        $this->event_manager     = EventManager::instance();
+        $this->user_manager    = UserManager::instance();
+        $this->request_builder = new DocmanItemsRequestBuilder($this->user_manager, ProjectManager::instance());
+        $this->event_manager   = EventManager::instance();
     }
 
     /**
@@ -155,7 +152,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->checkAccess();
         $this->setCreationHeaders();
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
 
         $item_request = $this->request_builder->buildFromItemId($id);
         $parent       = $item_request->getItem();
@@ -247,7 +244,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->checkAccess();
         $this->setCreationHeaders();
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
 
         $item_request = $this->request_builder->buildFromItemId($id);
         $parent       = $item_request->getItem();
@@ -321,7 +318,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->checkAccess();
         $this->setCreationHeaders();
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
 
         $item_request = $this->request_builder->buildFromItemId($id);
         $parent       = $item_request->getItem();
@@ -397,7 +394,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->checkAccess();
         $this->setCreationHeaders();
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
 
         $item_request = $this->request_builder->buildFromItemId($id);
         $parent       = $item_request->getItem();
@@ -471,7 +468,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->checkAccess();
         $this->setCreationHeaders();
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
 
         $item_request = $this->request_builder->buildFromItemId($id);
         $parent       = $item_request->getItem();
@@ -557,7 +554,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->checkAccess();
         $this->setCreationHeaders();
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
 
         $item_request = $this->request_builder->buildFromItemId($id);
         $parent       = $item_request->getItem();
@@ -674,7 +671,7 @@ class DocmanFoldersResource extends AuthenticatedResource
 
         $item_request        = $this->request_builder->buildFromItemId($id);
         $item_to_delete      = $item_request->getItem();
-        $current_user        = $this->rest_user_manager->getCurrentUser();
+        $current_user        = $this->user_manager->getCurrentUser();
         $project             = $item_request->getProject();
         $validator_visitor   =$this->getValidator($project, $current_user, $item_to_delete);
 
@@ -755,7 +752,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $item_request = $this->request_builder->buildFromItemId($id);
         $item         = $item_request->getItem();
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
 
         $project = $item_request->getProject();
 
