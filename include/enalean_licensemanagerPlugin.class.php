@@ -30,7 +30,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Instrument\Prometheus\CollectTuleapComputedMetrics;
 use Tuleap\Webhook\Emitter;
 
-require_once 'autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
 class enalean_licensemanagerPlugin extends Plugin
