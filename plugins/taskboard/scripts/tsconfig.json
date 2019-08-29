@@ -1,7 +1,7 @@
 {
     "extends": "../../../tsconfig.json",
     "compilerOptions": {
-        "module": "es2015" //redefine otherwise vue-jest crashes: https://github.com/vuejs/vue-jest/issues/144
+        "module": "esnext"
     },
     "include": [
         "taskboard/**/*"

@@ -1,5 +1,11 @@
 {
     "name": "taskboard",
+    "gettext-vue": {
+        "taskboard": {
+            "src": "scripts/taskboard",
+            "po": "scripts/taskboard/po"
+        }
+    },
     "components": [
         "themes/",
         "scripts/"
