@@ -17,31 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Gettext from "node-gettext";
+import { initGettext as init } from "./gettext-init.js";
 
 let gettext_provider;
 
-export async function initGettext(options) {
-    if (typeof gettext_provider !== "undefined") {
-        return gettext_provider;
+export async function initGettext(language, domain, load_translations_callback) {
+    if (typeof gettext_provider === "undefined") {
+        // eslint-disable-next-line require-atomic-updates
+        gettext_provider = await init(language, domain, load_translations_callback);
     }
-
-    gettext_provider = new Gettext();
-    if (options.language === "fr_FR") {
-        try {
-            const french_translations = await import(/* webpackChunkName: "rich-text-editor-fr" */ "./po/fr.po");
-            gettext_provider.addTranslations(
-                options.language,
-                "rich-text-editor",
-                french_translations
-            );
-        } catch (exception) {
-            // will be en_US if translations cannot be loaded
-        }
-    }
-
-    gettext_provider.setLocale(options.language);
-    gettext_provider.setTextDomain("rich-text-editor");
 
     return gettext_provider;
 }
@@ -50,5 +34,6 @@ export function getGettextProvider() {
     if (typeof gettext_provider === "undefined") {
         throw new Error(`You need to initialize the provider first ! Call "initGettext"`);
     }
+
     return gettext_provider;
 }

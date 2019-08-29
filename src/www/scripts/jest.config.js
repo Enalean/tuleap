@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,24 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getGettextProvider } from "../gettext/gettext-factory.js";
+const config = require("../../../tests/jest/jest.config.js");
 
-export function isUploadEnabled(element) {
-    return document.body.querySelector("[data-upload-is-enabled]") && element.dataset.uploadUrl;
-}
+config.testMatch = ["**/tuleap/gettext/*.test.js"];
+config.collectCoverageFrom = ["**/tuleap/gettext/*.js"];
 
-export function informUsersThatTheyCanPasteImagesInEditor(element) {
-    if (typeof element.dataset.helpId === "undefined") {
-        return;
-    }
-    const help_block = document.getElementById(element.dataset.helpId);
-    if (!help_block) {
-        return;
-    }
-
-    const p = document.createElement("p");
-    p.innerText = getGettextProvider().gettext(
-        "You can drag 'n drop or paste image directly in the editor."
-    );
-    help_block.appendChild(p);
-}
+module.exports = config;

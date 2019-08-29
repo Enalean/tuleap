@@ -21,7 +21,7 @@ import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 import { isUploadEnabled, informUsersThatTheyCanPasteImagesInEditor } from "./element-adapter.js";
 import { addInstance } from "./consistent-uploaded-files-before-submit-checker.js";
-import { initGettext } from "./gettext-factory.js";
+import { initGettext } from "../gettext/gettext-factory.js";
 import { disableFormSubmit, enableFormSubmit } from "./form-adapter.js";
 import {
     buildFileUploadHandler,
@@ -31,7 +31,9 @@ import {
 import { isThereAnImageWithDataURI } from "./image-urls-finder.js";
 
 export async function initiateUploadImage(ckeditor_instance, options, element) {
-    const gettext_provider = await initGettext(options);
+    const gettext_provider = await initGettext(options.language, "rich-text-editor", locale =>
+        import(/* webpackChunkName: "rich-text-editor-po-" */ `./po/${locale}.po`)
+    );
     if (!isUploadEnabled(element)) {
         disablePasteOfImages(ckeditor_instance, gettext_provider);
         return;

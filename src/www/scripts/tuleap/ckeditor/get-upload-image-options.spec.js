@@ -22,7 +22,7 @@ import {
     rewire$informUsersThatTheyCanPasteImagesInEditor,
     restore as restoreDocument
 } from "./element-adapter.js";
-import { rewire$initGettext, restore as restoreGettext } from "./gettext-factory.js";
+import { rewire$initGettext, restore as restoreGettext } from "../gettext/gettext-factory.js";
 import {
     rewire$buildFileUploadHandler,
     restore as restoreHandlerFactory,

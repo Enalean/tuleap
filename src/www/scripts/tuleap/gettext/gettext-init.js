@@ -17,24 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getGettextProvider } from "../gettext/gettext-factory.js";
+import Gettext from "node-gettext";
 
-export function isUploadEnabled(element) {
-    return document.body.querySelector("[data-upload-is-enabled]") && element.dataset.uploadUrl;
-}
-
-export function informUsersThatTheyCanPasteImagesInEditor(element) {
-    if (typeof element.dataset.helpId === "undefined") {
-        return;
+export async function initGettext(locale, domain, load_translations_callback) {
+    const gettext_provider = new Gettext();
+    if (locale !== "en_US") {
+        try {
+            gettext_provider.addTranslations(
+                locale,
+                domain,
+                await load_translations_callback(locale)
+            );
+        } catch (exception) {
+            // will be en_US if translations cannot be loaded
+        }
     }
-    const help_block = document.getElementById(element.dataset.helpId);
-    if (!help_block) {
-        return;
-    }
 
-    const p = document.createElement("p");
-    p.innerText = getGettextProvider().gettext(
-        "You can drag 'n drop or paste image directly in the editor."
-    );
-    help_block.appendChild(p);
+    gettext_provider.setLocale(locale);
+    gettext_provider.setTextDomain(domain);
+
+    return gettext_provider;
 }
