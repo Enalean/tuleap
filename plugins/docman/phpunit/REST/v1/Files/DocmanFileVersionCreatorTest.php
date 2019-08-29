@@ -27,7 +27,6 @@ use Docman_Item;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
 use Tuleap\Docman\Upload\Version\VersionToUpload;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
 
@@ -45,19 +44,19 @@ class DocmanFileVersionCreatorTest extends TestCase
      */
     private $version_creator;
     /**
-     * @var \Docman_PermissionsManager|Mockery\MockInterface
+     * @var \Docman_LockFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
-    private $permissions_manager;
+    private $lock_factory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->creator             = Mockery::mock(VersionToUploadCreator::class);
-        $this->permissions_manager = Mockery::mock(\Docman_PermissionsManager::class);
-        $this->version_creator     = new DocmanFileVersionCreator(
+        $this->creator         = Mockery::mock(VersionToUploadCreator::class);
+        $this->lock_factory    = Mockery::mock(\Docman_LockFactory::class);
+        $this->version_creator = new DocmanFileVersionCreator(
             $this->creator,
-            $this->permissions_manager
+            $this->lock_factory
         );
     }
 
@@ -72,8 +71,6 @@ class DocmanFileVersionCreatorTest extends TestCase
 
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturn(101);
-
-        $this->permissions_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
 
         $date = new \DateTimeImmutable();
 
@@ -90,6 +87,8 @@ class DocmanFileVersionCreatorTest extends TestCase
         $version_to_upload = new VersionToUpload($version_id);
         $this->creator->shouldReceive('create')->once()->andReturn($version_to_upload);
 
+        $this->lock_factory->shouldReceive('itemIsLocked')->never();
+
         $created_version_representation = $this->version_creator->createFileVersion(
             $item,
             $user,
@@ -99,6 +98,41 @@ class DocmanFileVersionCreatorTest extends TestCase
             (int)$item->getObsolescenceDate(),
             $item->getTitle(),
             $item->getDescription()
+        );
+
+        $this->assertEquals("/uploads/docman/version/1", $created_version_representation->upload_href);
+    }
+
+    public function testItShouldStoreANewFileVersionWhenAnEmptyItemBecomesAFile(): void
+    {
+        $item = Mockery::mock(\Docman_Empty::class);
+        $item->shouldReceive('getId')->andReturn(4);
+        $item->shouldReceive('getStatus')->andReturn(100);
+        $item->shouldReceive('getObsolescenceDate')->andReturn(0);
+        $item->shouldReceive('getTitle')->andReturn('file');
+        $item->shouldReceive('getDescription')->andReturn('');
+
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturn(101);
+
+        $representation            = new FilePropertiesPOSTPATCHRepresentation();
+        $representation->file_name = "Coco";
+        $representation->file_size = 5;
+        $date                      = new \DateTimeImmutable();
+
+        $this->lock_factory->shouldReceive('itemIsLocked')->once()->with($item)->andReturn(true);
+
+        $version_id        = 1;
+        $version_to_upload = new VersionToUpload($version_id);
+        $this->creator->shouldReceive('create')->once()->andReturn($version_to_upload);
+
+        $created_version_representation = $this->version_creator->createVersionFromEmpty(
+            $item,
+            $user,
+            $representation,
+            $date,
+            (int)$item->getStatus(),
+            (int)$item->getObsolescenceDate()
         );
 
         $this->assertEquals("/uploads/docman/version/1", $created_version_representation->upload_href);

@@ -25,7 +25,9 @@ namespace Tuleap\Docman\REST\v1;
 use DateTimeImmutable;
 use Docman_Empty;
 use Docman_FileStorage;
+use Docman_Item;
 use Docman_ItemFactory;
+use Docman_LockDao;
 use Docman_LockFactory;
 use Docman_Log;
 use Docman_PermissionsManager;
@@ -42,6 +44,9 @@ use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreator;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentation;
+use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
+use Tuleap\Docman\REST\v1\Files\DocmanFileVersionCreator;
+use Tuleap\Docman\REST\v1\Files\FilePropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
@@ -52,6 +57,9 @@ use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresent
 use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
+use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
+use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
+use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -319,7 +327,6 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
      * @throws RestException 403
      * @trows  I18NRestException 404
      */
-
     public function postEmbeddedFileVersion(
         int $id,
         EmbeddedPropertiesPOSTPATCHRepresentation $representation
@@ -337,12 +344,7 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
-        $validator = new DocumentBeforeModificationValidatorVisitor(
-            $this->getPermissionManager($project),
-            $current_user,
-            $item,
-            new DoesItemHasExpectedTypeVisitor(Docman_Empty::class)
-        );
+        $validator = $this->getDocumentBeforeModificationValidatorVisitor($project, $current_user, $item);
         $item->accept($validator);
 
         $docman_item_version_creator = $this->getEmbeddedFileVersionCreator();
@@ -353,6 +355,68 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
             new DateTimeImmutable()
         );
     }
+
+    /**
+     * @url OPTIONS {id}/file
+     */
+    public function optionsFileVersion(int $id): void
+    {
+        $this->setVersionHeaders();
+    }
+
+    /**
+     * Create a file document
+     *
+     * @url    POST {id}/file
+     * @access hybrid
+     *
+     * @param int                                   $id             Id of the file
+     * @param FilePropertiesPOSTPATCHRepresentation $representation {@from body}
+     *
+     * @return CreatedItemFilePropertiesRepresentation
+     *
+     * @status 201
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 409
+     */
+    public function postFileVersion(
+        int $id,
+        FilePropertiesPOSTPATCHRepresentation $representation
+    ): CreatedItemFilePropertiesRepresentation {
+        $this->checkAccess();
+        $this->setVersionHeaders();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $project      = $item_request->getProject();
+        /** @var Docman_Empty $item */
+        $item         = $item_request->getItem();
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $this->addAllEvent($project);
+
+        $validator = $this->getDocumentBeforeModificationValidatorVisitor($project, $current_user, $item);
+        $item->accept($validator);
+
+        try {
+            $docman_item_version_creator = $this->getFileVersionCreator();
+            return $docman_item_version_creator->createVersionFromEmpty(
+                $item,
+                $current_user,
+                $representation,
+                new \DateTimeImmutable(),
+                (int)$item->getStatus(),
+                (int)$item->getObsolescenceDate()
+            );
+        } catch (UploadMaxSizeExceededException $exception) {
+            throw new RestException(
+                400,
+                $exception->getMessage()
+            );
+        }
+    }
+
+
     /**
      * @url OPTIONS {id}/metadata
      */
@@ -479,6 +543,30 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
                 new DocmanItemsEventAdder($this->event_manager),
                 $this->event_manager
             )
+        );
+    }
+
+    private function getFileVersionCreator(): DocmanFileVersionCreator
+    {
+        return new DocmanFileVersionCreator(
+            new VersionToUploadCreator(
+                new DocumentOnGoingVersionToUploadDAO(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            ),
+            new Docman_LockFactory(new Docman_LockDao(), new Docman_Log())
+        );
+    }
+
+    private function getDocumentBeforeModificationValidatorVisitor(
+        Project $project,
+        \PFUser $current_user,
+        Docman_Item $item
+    ): DocumentBeforeModificationValidatorVisitor {
+        return new DocumentBeforeModificationValidatorVisitor(
+            $this->getPermissionManager($project),
+            $current_user,
+            $item,
+            new DoesItemHasExpectedTypeVisitor(Docman_Empty::class)
         );
     }
 }

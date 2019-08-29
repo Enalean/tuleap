@@ -25,6 +25,7 @@ namespace Tuleap\Docman\REST\v1;
 use DateTimeImmutable;
 use Docman_File;
 use Docman_ItemFactory;
+use Docman_LockDao;
 use Docman_LockFactory;
 use Docman_Log;
 use Docman_PermissionsManager;
@@ -439,7 +440,8 @@ class DocmanFilesResource extends AuthenticatedResource
             new VersionToUploadCreator(
                 new DocumentOnGoingVersionToUploadDAO(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-            )
+            ),
+            new Docman_LockFactory(new Docman_LockDao(), new Docman_Log())
         );
     }
 

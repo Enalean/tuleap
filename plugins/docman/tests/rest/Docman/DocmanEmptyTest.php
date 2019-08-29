@@ -24,6 +24,7 @@ namespace Tuleap\Docman\Test\rest\Docman;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
+use Guzzle\Http\Client;
 use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
@@ -428,6 +429,103 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponse(
             $this->client->options('docman_empty_documents/' . $id . '/embedded_file'),
+            REST_TestDataBuilder::ADMIN_USER_NAME
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostVersionEmptyToFile(int $root_id): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+
+        $query = json_encode(
+            [
+                'title'       => 'Empty',
+                'description' => 'Nothing',
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . '/empties', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $empty_to_update_id = $response->json()['id'];
+
+        $file_size = 10;
+        $file_properties = json_encode(
+            [
+                'file_name' => 'Blanka',
+                'file_size' => $file_size
+            ]
+        );
+
+        $version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_empty_documents/' . urlencode((string)$empty_to_update_id) . "/file", null, $file_properties)
+        );
+
+        $this->assertEquals(201, $version_response->getStatusCode());
+        $this->assertNotNull($version_response->json()['upload_href']);
+
+        $general_use_http_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $general_use_http_client->setSslVerification(false, false, false);
+        $file_content        = str_repeat('A', $file_size);
+
+        $tus_response_upload = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $general_use_http_client->patch(
+                $version_response->json()['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                $file_content
+            )
+        );
+
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+
+        $updated_item_response = $this->getResponse(
+            $this->client->get('docman_items/' . urlencode((string)$empty_to_update_id)),
+            DocmanDataBuilder::ADMIN_USER_NAME
+        );
+
+        $this->assertEquals(200, $updated_item_response->getStatusCode());
+
+        $updated_item = $updated_item_response->json();
+        $this->assertEquals('file', $updated_item['type']);
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_files/' . $updated_item['id'])
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->checkItemHasBeenDeleted($updated_item['id']);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testOptionsFileVersion(int $id): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('docman_empty_documents/' . $id . '/file'),
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
