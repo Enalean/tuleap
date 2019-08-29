@@ -390,7 +390,7 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
         $project      = $item_request->getProject();
         /** @var Docman_Empty $item */
         $item         = $item_request->getItem();
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
 
         $this->addAllEvent($project);
 
