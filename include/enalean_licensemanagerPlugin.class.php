@@ -21,6 +21,9 @@
 use Tuleap\Admin\Homepage\StatisticsBadgePresenter;
 use Tuleap\Admin\Homepage\StatisticsPresenter;
 use Tuleap\Admin\Homepage\UserCounterDao;
+use Tuleap\CLI\CLICommandsCollector;
+use Tuleap\Enalean\LicenseManager\CountDueLicenses\DueLicencesDao;
+use Tuleap\Enalean\LicenseManager\CountDueLicenses\LicenseManagerCountDueLicensesCommand;
 use Tuleap\Enalean\LicenseManager\LicenseManagerComputedMetricsCollector;
 use Tuleap\Enalean\LicenseManager\StatusActivityEmitter;
 use Tuleap\Enalean\LicenseManager\Webhook\StatusLogger;
@@ -53,6 +56,7 @@ class enalean_licensemanagerPlugin extends Plugin
         $this->addHook('project_admin_suspend_user',  'userStatusActivity', true);
 
         $this->addHook(CollectTuleapComputedMetrics::NAME);
+        $this->addHook(CLICommandsCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -288,5 +292,20 @@ class enalean_licensemanagerPlugin extends Plugin
     private function isQuotaExceeded($nb_used_users, $nb_max_users)
     {
         return $nb_used_users > $nb_max_users;
+    }
+
+    public function collectCLICommands(CLICommandsCollector $commands_collector) : void
+    {
+        $commands_collector->addCommand(
+            LicenseManagerCountDueLicensesCommand::NAME,
+            function () : LicenseManagerCountDueLicensesCommand {
+                return new LicenseManagerCountDueLicensesCommand(
+                    new \UserDao(),
+                    new DueLicencesDao(),
+                    \UserManager::instance(),
+                    $this->getPluginEtcRoot()
+                );
+            }
+        );
     }
 }
