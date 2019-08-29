@@ -1,6 +1,7 @@
 {
     "name": "taskboard",
     "components": [
+        "themes/",
         "scripts/"
     ]
 }

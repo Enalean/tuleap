@@ -61,7 +61,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
     /**
      * @var IncludeAssets
      */
-    private $agiledashboard_theme_assets;
+    private $taskboard_theme_assets;
     /**
      * @var IncludeAssets
      */
@@ -73,16 +73,16 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
         AllBreadCrumbsForMilestoneBuilder $bread_crumbs_builder,
         Planning_MilestonePaneFactory $pane_factory,
         IncludeAssets $agiledashboard_assets,
-        IncludeAssets $agiledashboard_theme_assets,
+        IncludeAssets $taskboard_theme_assets,
         IncludeAssets $taskboard_js_assets
     ) {
-        $this->milestone_extractor         = $milestone_extractor;
-        $this->renderer                    = $renderer;
-        $this->bread_crumbs_builder        = $bread_crumbs_builder;
-        $this->pane_factory                = $pane_factory;
-        $this->agiledashboard_assets       = $agiledashboard_assets;
-        $this->agiledashboard_theme_assets = $agiledashboard_theme_assets;
-        $this->taskboard_js_assets         = $taskboard_js_assets;
+        $this->milestone_extractor    = $milestone_extractor;
+        $this->renderer               = $renderer;
+        $this->bread_crumbs_builder   = $bread_crumbs_builder;
+        $this->pane_factory           = $pane_factory;
+        $this->agiledashboard_assets  = $agiledashboard_assets;
+        $this->taskboard_theme_assets = $taskboard_theme_assets;
+        $this->taskboard_js_assets    = $taskboard_js_assets;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -105,7 +105,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
 
         $layout->includeFooterJavascriptFile($this->agiledashboard_assets->getFileURL('overview.js'));
         $layout->includeFooterJavascriptFile($this->taskboard_js_assets->getFileURL('taskboard.js'));
-        $layout->addCssAsset(new CssAsset($this->agiledashboard_theme_assets, 'scrum'));
+        $layout->addCssAsset(new CssAsset($this->taskboard_theme_assets, 'taskboard'));
 
         $service->displayHeader(
             $milestone->getArtifactTitle() . ' - ' . dgettext('tuleap-taskboard', "Taskboard"),

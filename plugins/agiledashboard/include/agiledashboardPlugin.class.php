@@ -687,7 +687,10 @@ class AgileDashboardPlugin extends Plugin
     /** @see Event::BURNING_PARROT_GET_STYLESHEETS */
     public function burning_parrot_get_stylesheets(array $params)
     {
-        $theme_include_assets = $this->getThemeIncludeAssets();
+        $theme_include_assets = new IncludeAssets(
+            AGILEDASHBOARD_BASE_DIR . '/../www/themes/BurningParrot/assets',
+            AGILEDASHBOARD_BASE_URL . '/themes/BurningParrot/assets'
+        );
 
         $variant = $params['variant'];
         if ($this->isKanbanURL()) {
@@ -1989,14 +1992,6 @@ class AgileDashboardPlugin extends Plugin
         return new IncludeAssets(
             AGILEDASHBOARD_BASE_DIR . '/../www/assets',
             $this->getPluginPath() . '/assets'
-        );
-    }
-
-    public function getThemeIncludeAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            AGILEDASHBOARD_BASE_DIR . '/../www/themes/BurningParrot/assets',
-            AGILEDASHBOARD_BASE_URL . '/themes/BurningParrot/assets'
         );
     }
 }
