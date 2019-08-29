@@ -43,9 +43,9 @@ use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
-use Tuleap\REST\UserManager as RestUserManager;
 use UGroupManager;
 use UserHelper;
+use UserManager;
 
 class DocmanItemsResource extends AuthenticatedResource
 {
@@ -56,9 +56,9 @@ class DocmanItemsResource extends AuthenticatedResource
      */
     private $item_dao;
     /**
-     * @var RestUserManager
+     * @var UserManager
      */
-    private $rest_user_manager;
+    private $user_manager;
     /**
      * @var DocmanItemsRequestBuilder
      */
@@ -71,10 +71,10 @@ class DocmanItemsResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->rest_user_manager = RestUserManager::build();
-        $this->item_dao          = new Docman_ItemDao();
-        $this->request_builder   = new DocmanItemsRequestBuilder($this->rest_user_manager, ProjectManager::instance());
-        $this->event_manager     = EventManager::instance();
+        $this->user_manager    = UserManager::instance();
+        $this->item_dao        = new Docman_ItemDao();
+        $this->request_builder = new DocmanItemsRequestBuilder($this->user_manager, ProjectManager::instance());
+        $this->event_manager   = EventManager::instance();
     }
 
     /**

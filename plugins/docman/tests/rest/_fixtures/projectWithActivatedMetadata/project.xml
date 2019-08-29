@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project unix-name="DocmanProjectMetadata" full-name="DocmanProjectMetadata" description="Docman project with activated metadata" access="public">
+<project unix-name="DocmanProjectMetadata" full-name="DocmanProjectMetadata" description="Docman project with activated metadata" access="private">
     <long-description></long-description>
     <services>
         <service shortname="summary" enabled="1"/>

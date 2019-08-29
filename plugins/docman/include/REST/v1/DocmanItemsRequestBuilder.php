@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -34,8 +34,8 @@ use ProjectManager;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\REST\UserManager;
 use URLVerification;
+use UserManager;
 
 class DocmanItemsRequestBuilder
 {
@@ -43,6 +43,7 @@ class DocmanItemsRequestBuilder
      * @var UserManager
      */
     private $user_manager;
+
     /**
      * @var ProjectManager
      */

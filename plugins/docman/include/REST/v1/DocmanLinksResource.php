@@ -56,7 +56,6 @@ use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
-use Tuleap\REST\UserManager as RestUserManager;
 use UGroupManager;
 use UserManager;
 
@@ -67,9 +66,9 @@ class DocmanLinksResource extends AuthenticatedResource
      */
     private $event_manager;
     /**
-     * @var RestUserManager
+     * @var UserManager
      */
-    private $rest_user_manager;
+    private $user_manager;
     /**
      * @var DocmanItemsRequestBuilder
      */
@@ -77,9 +76,9 @@ class DocmanLinksResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->rest_user_manager = RestUserManager::build();
-        $this->request_builder   = new DocmanItemsRequestBuilder($this->rest_user_manager, ProjectManager::instance());
-        $this->event_manager     = \EventManager::instance();
+        $this->user_manager    = UserManager::instance();
+        $this->request_builder = new DocmanItemsRequestBuilder($this->user_manager, ProjectManager::instance());
+        $this->event_manager   = \EventManager::instance();
     }
 
     /**
@@ -154,7 +153,7 @@ class DocmanLinksResource extends AuthenticatedResource
 
         $item_request   = $this->request_builder->buildFromItemId($id);
         $item_to_delete = $item_request->getItem();
-        $current_user   = $this->rest_user_manager->getCurrentUser();
+        $current_user   = $this->user_manager->getCurrentUser();
         $project        = $item_request->getProject();
         $validator      = $this->getValidator($project, $current_user, $item_to_delete);
         $item_to_delete->accept($validator);
@@ -199,7 +198,7 @@ class DocmanLinksResource extends AuthenticatedResource
         $this->checkAccess();
         $this->setHeadersForLock();
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
 
         $item_request = $this->request_builder->buildFromItemId($id);
         $item         = $item_request->getItem();
@@ -231,7 +230,7 @@ class DocmanLinksResource extends AuthenticatedResource
         $this->checkAccess();
         $this->setHeadersForLock();
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
 
         $item_request = $this->request_builder->buildFromItemId($id);
         $item         = $item_request->getItem();
@@ -318,7 +317,7 @@ class DocmanLinksResource extends AuthenticatedResource
         $item_request = $this->request_builder->buildFromItemId($id);
         $item         = $item_request->getItem();
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
 
         $project = $item_request->getProject();
 
@@ -489,7 +488,7 @@ class DocmanLinksResource extends AuthenticatedResource
     ) {
         $project      = $item_request->getProject();
         $item         = $item_request->getItem();
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
         try {
             $validator = DocumentBeforeVersionCreationValidatorVisitorBuilder::build($project);
             $item->accept(
