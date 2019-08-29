@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,8 +31,6 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\Upload\EmptyFileToUploadFinisher;
 use Tuleap\FRS\Upload\FileOngoingUploadDao;
@@ -43,8 +41,7 @@ use Tuleap\FRS\Upload\UploadPathAllocator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
-use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\REST\UserManager as RestUserManager;
+use UserManager;
 
 class FileResource extends AuthenticatedResource
 {
@@ -56,15 +53,16 @@ class FileResource extends AuthenticatedResource
      * @var FRSFileFactory
      */
     private $file_factory;
+
     /**
-     * @var RestUserManager
+     * @var UserManager
      */
     private $user_manager;
 
     public function __construct()
     {
         $this->release_factory = FRSReleaseFactory::instance();
-        $this->user_manager    = RestUserManager::build();
+        $this->user_manager    = UserManager::instance();
         $this->file_factory    = new FRSFileFactory();
     }
 

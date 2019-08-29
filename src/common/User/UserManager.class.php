@@ -399,8 +399,12 @@ class UserManager
         }
     }
 
-    public function setCurrentUser(PFUser $user) {
+    public function setCurrentUser(PFUser $user)
+    {
         $this->_currentuser = $user;
+        $this->_users[$user->getId()] = $user;
+        $this->_userid_bynames[$user->getUserName()] = $user->getId();
+
         return $user;
     }
 
