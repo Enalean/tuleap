@@ -20,10 +20,11 @@
 
 namespace Tuleap\FRS\Tests\REST;
 
+use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use RestBase;
 
-class ReleaseTest extends RestBase
+final class ReleaseTest extends RestBase
 {
     public const PROJECT_NAME = 'frs-test';
 
@@ -35,10 +36,42 @@ class ReleaseTest extends RestBase
         $this->project_id = $this->getProjectId(self::PROJECT_NAME);
     }
 
+    public function testReleaseIsInPackagesResourcesWithUserRESTReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get("frs_packages/1"),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertReleaseIsInPackage($response);
+    }
+
+    private function assertReleaseIsInPackage(Response $response): void
+    {
+        $package = $response->json();
+
+        $this->assertEquals(
+            [
+                'uri' => 'frs_packages/1/frs_release',
+            ],
+            $package['resources']['releases']
+        );
+    }
+
     public function testOPTIONS()
     {
         $response = $this->getResponse($this->client->options('frs_release'));
         $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testOPTIONSWithUserRESTReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('frs_release'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSRelease()
@@ -47,9 +80,34 @@ class ReleaseTest extends RestBase
         $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGETRelease()
+    public function testOPTIONSReleaseWithUserRESTReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('frs_release/1'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETRelease(): void
     {
         $response = $this->getResponse($this->client->get('frs_release/1'));
+
+        $this->assertGETRelease($response);
+    }
+
+    public function testGETReleaseWithUserRESTReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('frs_release/1'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertGETRelease($response);
+    }
+
+    private function assertGETRelease(Response $response): void
+    {
         $release  = $response->json();
 
         $this->assertEquals($release['id'], 1);
@@ -72,15 +130,7 @@ class ReleaseTest extends RestBase
 
     public function testPOSTRelease()
     {
-        $post_resource = json_encode(array(
-            'package_id'   => 1,
-            'name'         => 'Paleo Pumpkin Bread',
-            'release_note' => 'Philophobia',
-            'changelog'    => 'Food & Dining',
-            'status'       => 'hidden'
-        ));
-
-        $response = $this->getResponse($this->client->post('frs_release', null, $post_resource));
+        $response = $this->getResponse($this->client->post('frs_release', null, $this->getPostResource()));
         $release  = $response->json();
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -91,20 +141,55 @@ class ReleaseTest extends RestBase
         $this->assertEquals('hidden', $release['status']);
     }
 
-    public function testPATCHRelease()
+    public function testPOSTReleaseWithReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->post('frs_release', null, $this->getPostResource()),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    private function getPostResource(): string
+    {
+        return json_encode(array(
+            'package_id'   => 1,
+            'name'         => 'Paleo Pumpkin Bread',
+            'release_note' => 'Philophobia',
+            'changelog'    => 'Food & Dining',
+            'status'       => 'hidden'
+        ));
+    }
+
+    public function testPATCHRelease(): void
     {
         $resource_uri = 'frs_release/1';
 
         $release = $this->getResponse($this->client->get($resource_uri))->json();
         $this->assertEquals($release['name'], 'release1');
 
-        $patch_resource = json_encode(array(
-            'name' => 'Release 1.1',
-        ));
-        $response = $this->getResponse($this->client->patch($resource_uri, null, $patch_resource));
+        $response = $this->getResponse($this->client->patch($resource_uri, null, $this->getPatchResource()));
         $this->assertEquals(200, $response->getStatusCode());
 
         $release = $this->getResponse($this->client->get($resource_uri))->json();
         $this->assertEquals($release['name'], 'Release 1.1');
+    }
+
+    public function testPATCHReleaseWithReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->patch('frs_release/1', null, $this->getPatchResource()),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    private function getPatchResource(): string
+    {
+        return json_encode(array(
+            'name' => 'Release 1.1',
+        ));
     }
 }
