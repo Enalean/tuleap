@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Tests\REST\Artifacts;
 
+use Guzzle\Http\Message\Response;
+use REST_TestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__.'/../bootstrap.php';
@@ -45,16 +47,13 @@ final class LinkedArtifactsTest extends TrackerBase
         $response = $this->getResponse(
             $this->client->get('artifacts/' . urlencode((string) $artifact_id_3) . '/linked_artifacts?direction=forward')
         );
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArtifactLinks($response, $artifact_id_1, $artifact_id_2);
 
-        $linked_artifacts_collection = $response->json();
-
-        $linked_artifacts_id = [];
-        foreach ($linked_artifacts_collection['collection'] as $linked_artifact) {
-            $linked_artifacts_id[] = $linked_artifact['id'];
-        }
-
-        $this->assertEqualsCanonicalizing([$artifact_id_1, $artifact_id_2], $linked_artifacts_id);
+        $response_with_read_only_user = $this->getResponse(
+            $this->client->get('artifacts/' . urlencode((string) $artifact_id_3) . '/linked_artifacts?direction=forward'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertArtifactLinks($response_with_read_only_user, $artifact_id_1, $artifact_id_2);
     }
 
     private function createArtifact(int $tracker_id, int $art_link_field_id, int ...$linked_artifacts) : int
@@ -77,6 +76,13 @@ final class LinkedArtifactsTest extends TrackerBase
             ]
         ];
 
+        $response_with_read_only_user = $this->getResponse(
+            $this->client->post('artifacts', null, json_encode($payload)),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response_with_read_only_user->getStatusCode());
+
         $response = $this->getResponse(
             $this->client->post('artifacts', null, json_encode($payload))
         );
@@ -86,5 +92,19 @@ final class LinkedArtifactsTest extends TrackerBase
         $json = $response->json();
 
         return $json['id'];
+    }
+
+    private function assertArtifactLinks(Response $response, int $artifact_id_1, int $artifact_id_2): void
+    {
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $linked_artifacts_collection = $response->json();
+
+        $linked_artifacts_id = [];
+        foreach ($linked_artifacts_collection['collection'] as $linked_artifact) {
+            $linked_artifacts_id[] = $linked_artifact['id'];
+        }
+
+        $this->assertEqualsCanonicalizing([$artifact_id_1, $artifact_id_2], $linked_artifacts_id);
     }
 }

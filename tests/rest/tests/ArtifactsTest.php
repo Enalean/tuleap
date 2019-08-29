@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All rights reserved
+ * Copyright (c) Enalean, 2013-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Guzzle\Http\Exception\BadResponseException;
+use Guzzle\Http\Message\Response;
 use Tuleap\REST\ArtifactBase;
 
 /**
@@ -29,31 +29,73 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     public function testOptionsArtifactId()
     {
         $response = $this->getResponse($this->client->options('artifacts/9'));
-        $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'DELETE', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+
+        $this->assertOptionsId($response);
     }
 
     public function testOptionsArtifacts()
     {
         $response = $this->getResponse($this->client->options('artifacts'));
-        $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+
+        $this->assertoptions($response);
+    }
+
+    public function testOptionsArtifactsWithUserRESTReadOnlyAdmin()
+    {
+        $response = $this->getResponse(
+            $this->client->options('artifacts'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertoptions($response);
+
+        $response = $this->getResponse(
+            $this->client->options('artifacts/9'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertOptionsId($response);
+    }
+
+    private function assertOptionsId(Response $response)
+    {
+        $this->assertEquals(
+            ['OPTIONS', 'GET', 'PUT', 'DELETE', 'PATCH'],
+            $response->getHeader('Allow')->normalize()->toArray()
+        );
+    }
+
+    private function assertoptions(Response $response)
+    {
+        $this->assertEquals(
+            ['OPTIONS', 'GET', 'POST'],
+            $response->getHeader('Allow')->normalize()->toArray()
+        );
+    }
+
+    public function testPostArtifactWithUserRESTReadOnlyAdminNonMember()
+    {
+        $summary_field_label = 'Summary';
+        $summary_field_value = "This is a new epic";
+
+        $post_body = $this->buildPOSTBodyContent($summary_field_label, $summary_field_value);
+
+        $response = $this->getResponse(
+            $this->client->post('artifacts', null, $post_body),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testPostArtifact()
     {
         $summary_field_label = 'Summary';
         $summary_field_value = "This is a new epic";
-        $post_resource = json_encode(array(
-            'tracker' => array(
-                'id'  => $this->epic_tracker_id,
-                'uri' => 'whatever'
-            ),
-            'values' => array(
-               $this->getSubmitTextValue($this->epic_tracker_id, $summary_field_label, $summary_field_value),
-               $this->getSubmitListValue($this->epic_tracker_id, 'Status', 103)
-            ),
-        ));
 
-        $response = $this->getResponse($this->client->post('artifacts', null, $post_resource));
+        $post_body = $this->buildPOSTBodyContent($summary_field_label, $summary_field_value);
+
+        $response = $this->getResponse($this->client->post('artifacts', null, $post_body));
         $this->assertEquals(201, $response->getStatusCode());
         $this->assertRegExp('/.+ GMT$/', $response->getHeader('Last-Modified')->normalize()->__toString(), 'Last-Modified must be RFC1123 complient');
         $this->assertNotNull($response->getHeader('Etag'));
@@ -64,7 +106,22 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
 
         $fetched_value = $this->getFieldValueForFieldLabel($artifact_reference['id'], $summary_field_label);
         $this->assertEquals($summary_field_value, $fetched_value);
+
         return $artifact_reference['id'];
+    }
+
+    private function buildPOSTBodyContent($summary_field_label, $summary_field_value)
+    {
+        return json_encode(array(
+            'tracker' => array(
+                'id'  => $this->epic_tracker_id,
+                'uri' => 'whatever'
+            ),
+            'values' => array(
+                $this->getSubmitTextValue($this->epic_tracker_id, $summary_field_label, $summary_field_value),
+                $this->getSubmitListValue($this->epic_tracker_id, 'Status', 103)
+            ),
+        ));
     }
 
     public function testComputedFieldsCalculation()
@@ -148,9 +205,9 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
                 $value = null;
                 if (isset($field['manual_value'])) {
                     $value = $field['manual_value'];
-                } else if (isset($field[$field['type'].'_value'])) {
+                } elseif (isset($field[$field['type'].'_value'])) {
                     $value = $field[$field['type'].'_value'];
-                } else if (isset($field['value'])) {
+                } elseif (isset($field['value'])) {
                     $value = $field['value'];
                 }
 
@@ -324,90 +381,24 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     /**
      * @depends testPostArtifact
      */
-    public function testGetArtifact()
+    public function testGetArtifact($artifact_id)
     {
-        $test_put_return = func_get_args();
-        $artifact_id = $test_put_return[0];
+        $response = $this->getResponse($this->client->get("artifacts/$artifact_id"));
 
-        $response   = $this->getResponse($this->client->get("artifacts/$artifact_id"));
-        $artifact = $response->json();
+        $this->assertArtifact($response);
+    }
 
-        $this->assertNotNull($response->getHeader('Last-Modified'));
-        $this->assertNotNull($response->getHeader('Etag'));
-        $this->assertNull($response->getHeader('Location'), "There is no redirect with a simple GET");
+    /**
+     * @depends testPostArtifact
+     */
+    public function testGetArtifactWithUserRESTReadOnlyAdmin($artifact_id)
+    {
+        $response = $this->getResponse(
+            $this->client->get("artifacts/$artifact_id"),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
 
-        $fields = $artifact['values'];
-
-        $this->assertTrue(is_int($artifact['id']));
-        $this->assertTrue(is_int($artifact['submitted_by']));
-
-        $this->assertTrue(is_string($artifact['uri']));
-        $this->assertTrue(is_string($artifact['xref']));
-        $this->assertTrue(is_string($artifact['submitted_on']));
-        $this->assertTrue(is_string($artifact['html_url']));
-        $this->assertTrue(is_string($artifact['changesets_uri']));
-        $this->assertTrue(is_string($artifact['last_modified_date']));
-        $this->assertTrue(is_string($artifact['status']));
-        $this->assertTrue(is_string($artifact['title']));
-
-        $this->assertTrue(is_array($artifact['assignees']));
-
-        $this->assertTrue(is_array($artifact['tracker']));
-        $this->assertTrue(is_array($artifact['project']));
-        $this->assertTrue(is_array($artifact['submitted_by_user']));
-
-        foreach ($fields as $field) {
-            switch ($field['type']) {
-                case 'string':
-                    $this->assertTrue(is_string($field['label']));
-                    $this->assertTrue(is_string($field['value']));
-                    break;
-                case 'cross':
-                    $this->assertTrue(is_string($field['label']));
-                    $this->assertTrue(is_array($field['value']));
-                    break;
-                case 'art_link':
-                    $this->assertTrue(is_array($field['links']));
-                    $this->assertTrue(is_array($field['reverse_links']));
-                    break;
-                case 'text':
-                    $this->assertTrue(is_string($field['label']));
-                    $this->assertTrue(is_string($field['value']));
-                    $this->assertTrue(is_string($field['format']));
-                    $this->assertTrue($field['format'] == 'text'|| $field['format'] == 'html');
-                    break;
-                case 'sb':
-                    $this->assertTrue(is_string($field['label']));
-                    $this->assertTrue(is_array($field['values']));
-                    $this->assertTrue(is_array($field['bind_value_ids']));
-                    break;
-                case 'computed':
-                    $this->assertTrue(is_string($field['label']));
-                    $this->assertTrue(is_int($field['value']) || is_null($field['value']));
-                    break;
-                case 'aid':
-                    $this->assertTrue(is_string($field['label']));
-                    $this->assertTrue(is_int($field['value']));
-                    break;
-                case 'luby':
-                case 'subby':
-                    $this->assertTrue(is_string($field['label']));
-                    $this->assertTrue(is_array($field['value']));
-                    $this->assertTrue(array_key_exists('display_name', $field['value']));
-                    $this->assertTrue(array_key_exists('avatar_url', $field['value']));
-                    break;
-                case 'lud':
-                    $this->assertTrue(is_string($field['label']));
-                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT', $field['value']) !== false);
-                    break;
-                case 'subon':
-                    $this->assertTrue(is_string($field['label']));
-                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT', $field['value']) !== false);
-                    break;
-                default:
-                    throw new Exception('You need to update this test for the field: '.print_r($field, true));
-            }
-        }
+        $this->assertArtifact($response);
     }
 
     /**
@@ -420,9 +411,18 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         $wanted_artifacts_ids     = $existing_artifact_ids;
         $wanted_artifacts_ids[]   = $do_not_exist_artifact_id;
 
-        $query     = json_encode(array('id' => $wanted_artifacts_ids));
+        $query = json_encode(array('id' => $wanted_artifacts_ids));
+
         $response  = $this->getResponse($this->client->get('artifacts?query=' . urlencode($query)));
         $artifacts = $response->json();
+
+        $this->assertCount(count($existing_artifact_ids), $artifacts['collection']);
+
+        $response_with_read_only_user  = $this->getResponse(
+            $this->client->get('artifacts?query=' . urlencode($query)),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $artifacts = $response_with_read_only_user->json();
 
         $this->assertCount(count($existing_artifact_ids), $artifacts['collection']);
     }
@@ -436,27 +436,32 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         $this->assertEquals(403, $response->getStatusCode());
     }
 
+    /**
+     * @depends testPostArtifact
+     */
+    public function testPutArtifactIdWithUserRESTReadOnlyAdminNonMember($artifact_id)
+    {
+        $field_label =  'Summary';
+        $put_body    = $this->buildPUTBodyContent($artifact_id, $field_label);
+
+        $response = $this->getResponse(
+            $this->client->put('artifacts/'.$artifact_id, null, $put_body),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
 
     /**
      * @depends testPostArtifact
      */
-    public function testPutArtifactId()
+    public function testPutArtifactId($artifact_id)
     {
-        $test_post_return = func_get_args();
-        $artifact_id = $test_post_return[0];
         $field_label =  'Summary';
-        $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
-        $put_resource = json_encode(array(
-            'values' => array(
-                array(
-                    'field_id' => $field_id,
-                    'value'    => "wunderbar",
-                ),
-            ),
-        ));
+        $put_body    = $this->buildPUTBodyContent($artifact_id, $field_label);
+        $response    = $this->getResponse($this->client->put('artifacts/'.$artifact_id, null, $put_body));
 
-        $response    = $this->getResponse($this->client->put('artifacts/'.$artifact_id, null, $put_resource));
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
         $this->assertNotNull($response->getHeader('Last-Modified'));
         $this->assertNotNull($response->getHeader('Etag'));
 
@@ -464,14 +469,25 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         return $artifact_id;
     }
 
+    private function buildPUTBodyContent($artifact_id, $field_label)
+    {
+        $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
+
+        return json_encode(array(
+            'values' => array(
+                array(
+                    'field_id' => $field_id,
+                    'value'    => "wunderbar",
+                ),
+            ),
+        ));
+    }
+
     /**
      * @depends testPutArtifactId
      */
-    public function testPutIsIdempotent()
+    public function testPutIsIdempotent($artifact_id)
     {
-        $test_post_return = func_get_args();
-        $artifact_id = $test_post_return[0];
-
         $artifact      = $this->getResponse($this->client->get('artifacts/'.$artifact_id));
         $last_modified = $artifact->getHeader('Last-Modified')->normalize()->__toString();
         $etag          = $artifact->getHeader('Etag')->normalize()->__toString();
@@ -501,11 +517,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     /**
      * @depends testPutIsIdempotent
      */
-    public function testPutArtifactIdWithValidIfUnmodifiedSinceHeader()
+    public function testPutArtifactIdWithValidIfUnmodifiedSinceHeader($artifact_id)
     {
-        $test_post_return = func_get_args();
-        $artifact_id = $test_post_return[0];
-
         $field_label =  'Summary';
         $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
         $put_resource = json_encode(array(
@@ -535,11 +548,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     /**
      * @depends testPutArtifactIdWithValidIfUnmodifiedSinceHeader
      */
-    public function testPutArtifactIdWithValidIfMatchHeader()
+    public function testPutArtifactIdWithValidIfMatchHeader($artifact_id)
     {
-        $test_post_return = func_get_args();
-        $artifact_id = $test_post_return[0];
-
         $field_label =  'Summary';
         $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
         $put_resource = json_encode(array(
@@ -569,11 +579,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     /**
      * @depends testPutArtifactIdWithValidIfMatchHeader
      */
-    public function testPutArtifactIdWithInvalidIfUnmodifiedSinceHeader()
+    public function testPutArtifactIdWithInvalidIfUnmodifiedSinceHeader($artifact_id)
     {
-        $test_post_return = func_get_args();
-        $artifact_id = $test_post_return[0];
-
         $field_label =  'Summary';
         $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
         $put_resource = json_encode(array(
@@ -599,11 +606,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     /**
      * @depends testPutArtifactIdWithValidIfMatchHeader
      */
-    public function testPutArtifactIdWithInvalidIfMatchHeader()
+    public function testPutArtifactIdWithInvalidIfMatchHeader($artifact_id)
     {
-        $test_post_return = func_get_args();
-        $artifact_id = $test_post_return[0];
-
         $field_label =  'Summary';
         $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
         $put_resource = json_encode(array(
@@ -629,11 +633,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     /**
      * @depends testPutArtifactId
      */
-    public function testPutArtifactComment()
+    public function testPutArtifactComment($artifact_id)
     {
-        $test_post_return = func_get_args();
-        $artifact_id = $test_post_return[0];
-
         $put_resource = json_encode(array(
             'values' => array(),
             'comment' => array(
@@ -682,7 +683,20 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         $this->assertNotNull($response->getHeader('Etag'));
 
         $response = $this->getResponse($this->client->get("artifacts/$artifact_id/links"));
-        $links    = $response->json();
+        $this->assertLinks($response, $nature_is_child, $artifact_id, $nature_empty);
+
+        $response_with_read_only_user = $this->getResponse(
+            $this->client->get("artifacts/$artifact_id/links"),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertLinks($response_with_read_only_user, $nature_is_child, $artifact_id, $nature_empty);
+
+        return $artifact_id;
+    }
+
+    private function assertLinks(Response $response, $nature_is_child, $artifact_id, $nature_empty)
+    {
+        $links = $response->json();
 
         $expected_link = array(
             "natures" => array(
@@ -702,8 +716,6 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         );
 
         $this->assertEquals($expected_link, $links);
-
-        return $artifact_id;
     }
 
     public function testAnonymousGETArtifact()
@@ -720,6 +732,16 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testGetSuspendedProjectArtifactForUserRESTReadOnlyAdmin()
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            $this->client->get('artifacts/' . $this->suspended_tracker_artifacts_ids[1])
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testGetSuspendedProjectArtifactForRegularUser()
@@ -856,5 +878,91 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     {
         $response = $this->getResponse($this->client->get('trackers/'.$tracker_id));
         return $response->json();
+    }
+
+    /**
+     * @param $response
+     * @throws Exception
+     */
+    private function assertArtifact(Response $response): void
+    {
+        $artifact = $response->json();
+
+        $this->assertNotNull($response->getHeader('Last-Modified'));
+        $this->assertNotNull($response->getHeader('Etag'));
+        $this->assertNull($response->getHeader('Location'), "There is no redirect with a simple GET");
+
+        $fields = $artifact['values'];
+
+        $this->assertTrue(is_int($artifact['id']));
+        $this->assertTrue(is_int($artifact['submitted_by']));
+
+        $this->assertTrue(is_string($artifact['uri']));
+        $this->assertTrue(is_string($artifact['xref']));
+        $this->assertTrue(is_string($artifact['submitted_on']));
+        $this->assertTrue(is_string($artifact['html_url']));
+        $this->assertTrue(is_string($artifact['changesets_uri']));
+        $this->assertTrue(is_string($artifact['last_modified_date']));
+        $this->assertTrue(is_string($artifact['status']));
+        $this->assertTrue(is_string($artifact['title']));
+
+        $this->assertTrue(is_array($artifact['assignees']));
+
+        $this->assertTrue(is_array($artifact['tracker']));
+        $this->assertTrue(is_array($artifact['project']));
+        $this->assertTrue(is_array($artifact['submitted_by_user']));
+
+        foreach ($fields as $field) {
+            switch ($field['type']) {
+                case 'string':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_string($field['value']));
+                    break;
+                case 'cross':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_array($field['value']));
+                    break;
+                case 'art_link':
+                    $this->assertTrue(is_array($field['links']));
+                    $this->assertTrue(is_array($field['reverse_links']));
+                    break;
+                case 'text':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_string($field['value']));
+                    $this->assertTrue(is_string($field['format']));
+                    $this->assertTrue($field['format'] == 'text' || $field['format'] == 'html');
+                    break;
+                case 'sb':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_array($field['values']));
+                    $this->assertTrue(is_array($field['bind_value_ids']));
+                    break;
+                case 'computed':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_int($field['value']) || is_null($field['value']));
+                    break;
+                case 'aid':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_int($field['value']));
+                    break;
+                case 'luby':
+                case 'subby':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_array($field['value']));
+                    $this->assertTrue(array_key_exists('display_name', $field['value']));
+                    $this->assertTrue(array_key_exists('avatar_url', $field['value']));
+                    break;
+                case 'lud':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT', $field['value']) !== false);
+                    break;
+                case 'subon':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT', $field['value']) !== false);
+                    break;
+                default:
+                    throw new Exception('You need to update this test for the field: ' . print_r($field, true));
+            }
+        }
     }
 }

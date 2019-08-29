@@ -24,6 +24,7 @@
 
 namespace Tuleap\Tracker\Tests\REST\ArtifactsActions;
 
+use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
@@ -47,16 +48,41 @@ class ArtifactsActionsTest extends TrackerBase
             $this->client->patch("artifacts/$artifact_id", null, $body)
         );
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertMoveDryRun($response);
+    }
+
+    public function testMoveArtifactDryRunWithUserRESTReadOnlyAdminNotInProject()
+    {
+        $artifact_id = end($this->base_artifact_ids);
+        $body        = json_encode(
+            [
+                "move" => [
+                    "tracker_id" => $this->move_tracker_id,
+                    "dry_run"    => true,
+                ]
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->client->patch("artifacts/$artifact_id", null, $body),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    private function assertMoveDryRun(Response $response)
+    {
+        $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertEquals(
-            $response->getHeader('x-ratelimit-limit')->toArray()[0],
-            "2"
+            "2",
+            $response->getHeader('x-ratelimit-limit')->toArray()[0]
         );
 
         $this->assertEquals(
-            $response->getHeader('x-ratelimit-remaining')->toArray()[0],
-            "2"
+            "2",
+            $response->getHeader('x-ratelimit-remaining')->toArray()[0]
         );
 
         $json = $response->json();
@@ -99,6 +125,28 @@ class ArtifactsActionsTest extends TrackerBase
     /**
      * @depends testMoveArtifactDryRun
      */
+    public function testMoveArtifactWithUserRESTReadOnlyAdminNotInProject()
+    {
+        $artifact_id = end($this->base_artifact_ids);
+        $body        = json_encode(
+            [
+                "move" => [
+                    "tracker_id" => $this->move_tracker_id,
+                ]
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->client->patch("artifacts/$artifact_id", null, $body),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testMoveArtifactDryRun
+     */
     public function testMoveArtifact()
     {
         $artifact_id = end($this->base_artifact_ids);
@@ -114,16 +162,27 @@ class ArtifactsActionsTest extends TrackerBase
             $this->client->patch("artifacts/$artifact_id", null, $body)
         );
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertMoveArtifact($response, $artifact_id);
+
+        $changeset_response = $this->getResponse(
+            $this->client->get("artifacts/$artifact_id/changesets?fields=comments&limit=10")
+        );
+
+        $this->assertMoveChangeset($changeset_response);
+    }
+
+    private function assertMoveArtifact(Response $response, $artifact_id)
+    {
+        $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertEquals(
-            $response->getHeader('x-ratelimit-limit')->toArray()[0],
-            "2"
+            "2",
+            $response->getHeader('x-ratelimit-limit')->toArray()[0]
         );
 
         $this->assertEquals(
-            $response->getHeader('x-ratelimit-remaining')->toArray()[0],
-            "1"
+            "1",
+            $response->getHeader('x-ratelimit-remaining')->toArray()[0]
         );
 
         $artifact_response = $this->getResponse(
@@ -133,28 +192,40 @@ class ArtifactsActionsTest extends TrackerBase
         $this->assertEquals($artifact_response->getStatusCode(), 200);
         $artifact_json = $artifact_response->json();
 
-        $this->assertEquals($artifact_json['submitted_by_user']['username'], REST_TestDataBuilder::TEST_USER_2_NAME);
+        $this->assertEquals(REST_TestDataBuilder::TEST_USER_2_NAME, $artifact_json['submitted_by_user']['username']);
         $this->assertEquals($artifact_json['tracker']['id'], $this->move_tracker_id);
         $this->assertEquals($artifact_json['values_by_field']['title']['value'], "To be moved v2");
         $this->assertEquals($artifact_json['values_by_field']['desc']['value'], "Artifact that will be moved in another tracker");
         $this->assertEquals($artifact_json['values_by_field']['initialv2']['manual_value'], 25);
         $this->assertEquals($artifact_json['status'], 'On going');
         $this->assertEquals(count($artifact_json['assignees']), 1);
-        $this->assertEquals((int) $artifact_json['assignees'][0]["id"], $this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME]);
+        $this->assertEquals($this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME], (int) $artifact_json['assignees'][0]["id"]);
+    }
 
-        $changeset_response = $this->getResponse(
-            $this->client->get("artifacts/$artifact_id/changesets?fields=comments&limit=10")
-        );
-
-        $this->assertEquals($changeset_response->getStatusCode(), 200);
+    private function assertMoveChangeset(Response $changeset_response)
+    {
+        $this->assertEquals(200, $changeset_response->getStatusCode());
         $changeset_json = $changeset_response->json();
 
-        $this->assertEquals(count($changeset_json), 5);
+        $this->assertCount(5, $changeset_json);
         $this->assertEquals($changeset_json[0]['last_comment']['body'], "API 1 comment");
         $this->assertEquals($changeset_json[1]['last_comment']['body'], "API 2 comment");
         $this->assertEquals($changeset_json[2]['last_comment']['body'], "API 1 comment");
         $this->assertEquals($changeset_json[3]['last_comment']['body'], "API 2 comment");
         $this->assertEquals($changeset_json[4]['last_comment']['body'], "Artifact was moved from 'Base' tracker in 'Move artifact' project.");
+    }
+
+    /**
+     * @depends testMoveArtifact
+     */
+    public function testDeleteArtifactsWithUserRESTReadOnlyAdminNotInProject()
+    {
+        $response = $this->performArtifactDeletion(
+            $this->delete_artifact_ids[1],
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
@@ -188,12 +259,13 @@ class ArtifactsActionsTest extends TrackerBase
         $this->performArtifactDeletion($this->delete_artifact_ids[2]);
     }
 
-    private function performArtifactDeletion($artifact_id)
+    private function performArtifactDeletion($artifact_id, $user_name = REST_TestDataBuilder::TEST_USER_1_NAME)
     {
         $url = "artifacts/$artifact_id";
 
         return $this->getResponse(
-            $this->client->delete($url)
+            $this->client->delete($url),
+            $user_name
         );
     }
 }
