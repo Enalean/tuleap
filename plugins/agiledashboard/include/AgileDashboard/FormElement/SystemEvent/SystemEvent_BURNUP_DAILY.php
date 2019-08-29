@@ -21,6 +21,7 @@
 namespace Tuleap\AgileDashboard\FormElement\SystemEvent;
 
 use BackendLogger;
+use DateTimeImmutable;
 use SystemEvent;
 use TimePeriodWithoutWeekEnd;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
@@ -117,6 +118,17 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
                     $burnup['start_date'],
                     $burnup['duration']
                 );
+            }
+
+            $burnup_timeperiod_start_day_timestamp = $burnup_period->getStartDate();
+            if ($burnup_timeperiod_start_day_timestamp !== null &&
+                $yesterday < $burnup_timeperiod_start_day_timestamp
+            ) {
+                $this->logger->debug(
+                    "Today is not in time period for artifact #" . $burnup['id'] . ', skipping.'
+                );
+
+                continue;
             }
 
             if ($burnup_period->getEndDate() >= $yesterday) {
