@@ -103,6 +103,9 @@ import "./components/Folder/LockInfo/DocumentTitleLockInfo.spec.js";
 import "./components/Folder/ModalDeleteItem/ModalConfirmDeletion.spec.js";
 import "./components/Folder/ModalDeleteItem/AdditionalCheckboxes/DeleteAssociatedWikiPageCheckbox.spec.js";
 
+import "./components/Folder/ModalCreateNewItemVersion/CreateNewVersionEmptyModal.spec.js";
+import "./components/Folder/ModalCreateNewItemVersion/TypeSelectorForEmptyModal.spec.js";
+
 import "./components/Folder/QuickLook/QuickLookDocumentPreview.spec.js";
 import "./components/Folder/QuickLook/QuickLookDocumentAdditionalMetadataList.spec.js";
 import "./components/Folder/QuickLook/QuickLookDocumentMetadata.spec.js";
@@ -161,3 +164,5 @@ import "./helpers/metadata-helpers/hardcoded-metadata-mapping-helper.spec.js";
 import "./helpers/metadata-helpers/obsolescence-date-value.spec.js";
 import "./helpers/permissions/ugroups.spec.js";
 import "./helpers/metadata-helpers/custom-metadata-helper.spec.js";
+
+import "./components/Folder/FolderHeader.spec.js";

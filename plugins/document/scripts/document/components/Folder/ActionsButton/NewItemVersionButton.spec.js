@@ -22,7 +22,6 @@ import CreateNewItemVersionButton from "./NewItemVersionButton.vue";
 
 import localVue from "../../../helpers/local-vue.js";
 import { rewire$redirectToUrl, restore } from "../../../helpers/location-helper.js";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import {
     rewire as rewireEventBus,
     restore as restoreEventBus
@@ -31,21 +30,10 @@ import {
 describe("CreateNewItemVersionButton", () => {
     let create_new_item_version_button_factory, event_bus;
     beforeEach(() => {
-        const state = {
-            project_id: 101
-        };
-
-        const store_options = {
-            state
-        };
-
-        const store = createStoreMock(store_options);
-
         create_new_item_version_button_factory = (props = {}) => {
             return shallowMount(CreateNewItemVersionButton, {
                 localVue,
-                propsData: { ...props },
-                mocks: { $store: store }
+                propsData: { ...props }
             });
         };
 
@@ -141,7 +129,7 @@ describe("CreateNewItemVersionButton", () => {
 
     it(`Given item is an empty document
         When we click on [create new version]
-        Then user should be redirected on legacy UI`, () => {
+        Then create-new-item-version event should be dispatched`, () => {
         const redirect_to_url = jasmine.createSpy("redirectToUrl");
         rewire$redirectToUrl(redirect_to_url);
 
@@ -156,8 +144,9 @@ describe("CreateNewItemVersionButton", () => {
 
         wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
 
-        expect(redirect_to_url).toHaveBeenCalledWith(
-            "/plugins/docman/index.php?group_id=101&id=1&action=action_update"
+        expect(event_bus.$emit).toHaveBeenCalledWith(
+            "show-create-new-item-version-modal",
+            jasmine.any(Object)
         );
     });
 

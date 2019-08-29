@@ -146,6 +146,9 @@ msgstr "Corrompu"
 msgid "Create a new empty approval table."
 msgstr "Créer une nouvelle table d'approbation vide."
 
+msgid "Create a new version from legacy page."
+msgstr "Créer une nouvelle version depuis l'ancienne interface"
+
 msgid "Create document"
 msgstr "Créer le document"
 
