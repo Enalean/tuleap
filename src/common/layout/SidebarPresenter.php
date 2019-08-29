@@ -26,15 +26,21 @@ class SidebarPresenter
 {
     public $classname;
     public $content;
-    public $powered_by;
+    public $version;
     public $copyright;
+    public $has_copyright;
 
     public function __construct($classname, $content)
     {
-        $this->classname  = $classname;
-        $this->content    = $content;
-        $this->powered_by = $GLOBALS['Language']->getText('global', 'powered_by') . ' ' . $this->getForgeVersion();
-        $this->copyright  = $GLOBALS['Language']->getText('global', 'copyright');
+        $this->classname     = $classname;
+        $this->content       = $content;
+        $this->version       = $this->getForgeVersion();
+        $this->has_copyright = $GLOBALS['Language']->hasText('global', 'copyright');
+        $this->copyright     = '';
+
+        if ($this->has_copyright) {
+            $this->copyright = $GLOBALS['Language']->getOverridableText('global', 'copyright');
+        }
     }
 
     private function getForgeVersion()

@@ -33,7 +33,7 @@ function getSidebarUserPreference() {
 }
 
 function setSidebarUserPreference(new_width) {
-    var state = new_width == width_expanded ? "sidebar-expanded" : "sidebar-collapsed";
+    var state = new_width === width_expanded ? "sidebar-expanded" : "sidebar-collapsed";
 
     $.ajax({
         type: "POST",
@@ -81,7 +81,7 @@ function updateSidebarWidth(new_width, duration) {
 function updateNavbarLogo(new_width) {
     var logo = document.querySelector("#navbar-logo > .logo");
 
-    if (new_width == width_expanded) {
+    if (new_width === width_expanded) {
         logo.classList.remove("logo-collapsed");
     } else {
         logo.classList.add("logo-collapsed");
@@ -106,15 +106,13 @@ function updateSidebarTitle(show_only_icon) {
     }
 }
 
-function updateSidebarServices(show_only_icon, duration) {
+function updateSidebarServices(show_only_icon) {
     if (show_only_icon) {
-        $(".sidebar-about").hide();
         $(".sidebar-nav li a > span").hide();
         $(".sidebar-nav li a").tooltip("enable");
     } else {
         $(".sidebar-nav li a > span").show();
         $(".sidebar-nav li a").tooltip("disable");
-        $(".sidebar-about").show(duration);
     }
 }
 
@@ -124,7 +122,7 @@ function sidebarCollapseEvent(duration) {
     var show_only_icon = false;
     var new_size;
 
-    if (current_size == width_expanded) {
+    if (current_size === width_expanded) {
         new_size = width_collapsed;
         new_direction = "right";
         show_only_icon = true;
@@ -177,7 +175,7 @@ $(window).load(function() {
             container: "body"
         });
 
-        if (current_size == null || current_size == width_expanded) {
+        if (current_size === null || current_size === width_expanded) {
             updateSidebarIcon("left");
             updateSidebarServices(false, 100);
         } else {

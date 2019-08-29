@@ -114,5 +114,3 @@ global	null	NULL
 global	error_synchronizertoken	Votre requête ne semble pas être valide. Merci de recommencer.
 global	settings	Propriétés
 global	usage	Utilisation
-global	powered_by	<a href="https://tuleap.org/?utm_source=forge&utm_medium=forge&utm_campaign=forge" target="_blank" rel="noreferrer">Tuleap&trade;</a>
-global	copyright	Copyright &copy; 2011-2019 <a href="https://www.enalean.com/?utm_source=forge&utm_medium=forge&utm_campaign=forge" target="_blank" rel="noreferrer">Enalean</a>

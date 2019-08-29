@@ -33,40 +33,63 @@
     content: '\f053'; // fa-chevron-left
 }
 
+.sidebar-spacer {
+    flex: 1 1 auto;
+}
+
 .sidebar-about {
     display: flex;
-    flex: 1 0 auto;
+    flex: 0 0 auto;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
-    margin: 0 0 $tlp-spacing;
-    color: lighten($tlp-theme-sidebar-background-color, 15%);
-    cursor: default;
+    margin: $tlp-spacing 0 $tlp-half-spacing;
+    cursor: pointer;
 
-    p {
-        margin: 0 0 5px;
-        font-size: 12px;
-        line-height: normal;
-    }
-
-    a {
-        color: lighten($tlp-theme-sidebar-background-color, 15%);
+    &:hover {
         text-decoration: none;
 
-        &:hover {
-            color: $tlp-theme-color;
+        > .sidebar-about-logo > path {
+            fill: lighten($tlp-theme-color, 5%);
+        }
+
+        > .sidebar-about-version {
+            color: lighten($tlp-theme-color, 5%);
+            text-decoration: none;
         }
     }
 
-    > .sidebar-about-tuleap {
-        margin: 0 0 10px;
+    &:last-child {
+        margin: $tlp-spacing 0;
+    }
+
+    > .sidebar-about-logo > path {
         transition: fill 100ms;
-        fill: lighten($tlp-theme-sidebar-background-color, 15%);
-
-        &:hover {
-            fill: $tlp-theme-color;
-        }
+        fill: $tlp-theme-color;
     }
+
+    > .sidebar-about-version {
+        margin: 10px 0 0;
+    }
+}
+
+.sidebar-copyright {
+    align-self: center;
+    margin: 0 0 10px;
+}
+
+.sidebar-about > .sidebar-about-version,
+.sidebar-copyright,
+.sidebar-copyright a {
+    transition: color 100ms;
+    color: transparentize($tlp-ui-border-dark, .4);
+    font-size: 13px;
+    line-height: normal;
+}
+
+.sidebar-about:hover > .sidebar-about-version,
+.sidebar-copyright a:hover {
+    color: lighten($tlp-theme-color, 5%);
+    text-decoration: none;
 }
 
 @import 'includes/sidebar-project';

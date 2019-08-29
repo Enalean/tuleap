@@ -156,36 +156,65 @@
     }
 }
 
+.sidebar-spacer {
+    flex: 1 1 auto;
+}
+
 .sidebar-about {
     display: flex;
-    flex: 1 0 auto;
+    flex: 0 0 auto;
     flex-direction: column;
     align-items: center;
+    margin-top: auto;
     justify-content: flex-end;
-    width: $sidebar-width;
-    height: 75px;
-    padding: 33px 0 20px;
-    color: lighten($sidebar-background, 15%);
-    text-align: center;
+    width: 100%;
+    padding: 20px 0 10px;
+    cursor: pointer;
 
-    > .admin-sidebar-tuleap {
-        margin: 0 0 8px;
-        fill: lighten($sidebar-background, 15%);
-    }
+    &:hover {
+        text-decoration: none;
 
-    p {
-        margin: 0;
-        font-size: 12px;
-
-        a {
-            color: lighten($sidebar-background, 15%);
-            text-decoration: none;
-
-            &:hover {
-                color: $main;
-            }
+        > .sidebar-about-logo > path {
+            fill: lighten($main, 5%);
         }
     }
+
+    &:last-child {
+        padding: 20px 0;
+    }
+
+    > .sidebar-about-logo > path {
+        transition: fill 100ms;
+        fill: $main;
+    }
+
+    > .sidebar-about-version {
+        margin: 10px 0 5px;
+
+        &:last-child {
+            margin: 10px 0 0;
+        }
+    }
+}
+
+.sidebar-copyright {
+    align-self: center;
+    margin: 0 0 10px;
+}
+
+.sidebar-about > .sidebar-about-version,
+.sidebar-copyright,
+.sidebar-copyright a {
+    transition: color 100ms;
+    color: transparentize($grey, .2);
+    font-size: 13px;
+    line-height: normal;
+}
+
+.sidebar-about:hover > .sidebar-about-version,
+.sidebar-copyright a:hover {
+    color: lighten($main, 5%);
+    text-decoration: none;
 }
 
 .project-sidebar-nav-item-icon {
