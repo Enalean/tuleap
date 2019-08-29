@@ -1,0 +1,6 @@
+{
+    "name": "taskboard",
+    "components": [
+        "scripts/"
+    ]
+}

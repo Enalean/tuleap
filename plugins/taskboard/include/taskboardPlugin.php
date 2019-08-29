@@ -81,7 +81,11 @@ class taskboardPlugin extends Plugin
             $agiledashboard_plugin->getAllBreadCrumbsForMilestoneBuilder(),
             $agiledashboard_plugin->getMilestonePaneFactory(),
             $agiledashboard_plugin->getIncludeAssets(),
-            $agiledashboard_plugin->getThemeIncludeAssets()
+            $agiledashboard_plugin->getThemeIncludeAssets(),
+            new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/taskboard/scripts',
+                '/assets/taskboard/scripts'
+            )
         );
     }
 

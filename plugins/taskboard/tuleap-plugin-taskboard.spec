@@ -24,8 +24,10 @@ Keep track of things that need to get done in a task board.
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/taskboard
 %{__cp} -ar include site-content vendor Readme.mkd VERSION $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/taskboard
+%{__cp} -ar assets $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets/taskboard
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -33,3 +35,4 @@ Keep track of things that need to get done in a task board.
 %files
 %defattr(-,root,root,-)
 %{_datadir}/tuleap/plugins/taskboard
+%{_datadir}/tuleap/src/www/assets/taskboard

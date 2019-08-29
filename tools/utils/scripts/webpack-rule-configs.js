@@ -56,6 +56,11 @@ const babel_options_ie11 = {
     plugins: [BabelPluginSyntaxDynamicImport]
 };
 
+const babel_options_chrome_firefox = {
+    presets: [babel_preset_env_chrome_config(false)],
+    plugins: [BabelPluginSyntaxDynamicImport]
+};
+
 const babel_options_karma = {
     env: {
         watch: babel_options_ie11,
@@ -229,6 +234,7 @@ module.exports = {
     configureBabelRule,
     configureTypescriptRules,
     babel_options_ie11,
+    babel_options_chrome_firefox,
     babel_options_karma,
     babel_options_jest,
     rule_po_files,
