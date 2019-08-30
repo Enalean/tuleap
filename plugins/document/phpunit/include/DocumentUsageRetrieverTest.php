@@ -44,7 +44,7 @@ class DocumentUsageRetrieverTest extends TestCase
         parent::setUp();
 
         $this->metadata_factory = \Mockery::mock(\Docman_MetadataFactory::class);
-        $this->retriever        = new DocumentUsageRetriever($this->metadata_factory);
+        $this->retriever        = new DocumentUsageRetriever();
 
         ForgeConfig::store();
     }
@@ -75,8 +75,6 @@ class DocumentUsageRetrieverTest extends TestCase
 
         ForgeConfig::set('disable_new_document_ui_by_default', true);
 
-        $this->metadata_factory->shouldReceive('getRealMetadataList')->never();
-
         $this->assertTrue($this->retriever->shouldUseDocument($user, $project));
     }
 
@@ -85,8 +83,6 @@ class DocumentUsageRetrieverTest extends TestCase
         $user    = null;
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(102);
-
-        $this->metadata_factory->shouldReceive('getRealMetadataList')->never();
 
         $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
     }
@@ -101,23 +97,6 @@ class DocumentUsageRetrieverTest extends TestCase
 
         ForgeConfig::set('disable_new_document_ui_by_default', true);
 
-        $this->metadata_factory->shouldReceive('getRealMetadataList')->never();
-
-        $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
-    }
-
-
-    public function testItShouldUseOldUIWhenUserDoesNotHavePreferencesAndWhenProjectUsesRequiredMetadata(): void
-    {
-        $user    = \Mockery::mock(\PFUser::class);
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->andReturn(102);
-        $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
-
-        $metadata = \Mockery::mock(\Docman_Metadata::class);
-        $metadata->shouldReceive('isEmptyAllowed')->andReturn(false);
-
-        $this->metadata_factory->shouldReceive('getRealMetadataList')->andReturn([$metadata]);
         $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
     }
 
@@ -128,12 +107,8 @@ class DocumentUsageRetrieverTest extends TestCase
         $project->shouldReceive('getId')->andReturn(102);
         $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
 
-        $metadata = \Mockery::mock(\Docman_Metadata::class);
-        $metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
-
         ForgeConfig::set('sys_project_blacklist_which_uses_legacy_ui_by_default', '100,102');
 
-        $this->metadata_factory->shouldReceive('getRealMetadataList')->andReturn([$metadata]);
         $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
     }
 
@@ -144,12 +119,8 @@ class DocumentUsageRetrieverTest extends TestCase
         $project->shouldReceive('getId')->andReturn(102);
         $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
 
-        $metadata = \Mockery::mock(\Docman_Metadata::class);
-        $metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
-
         ForgeConfig::set('sys_project_blacklist_which_uses_legacy_ui_by_default', ' 100 , 102 ');
 
-        $this->metadata_factory->shouldReceive('getRealMetadataList')->andReturn([$metadata]);
         $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
     }
 
@@ -160,26 +131,18 @@ class DocumentUsageRetrieverTest extends TestCase
         $project->shouldReceive('getId')->andReturn(102);
         $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
 
-        $metadata = \Mockery::mock(\Docman_Metadata::class);
-        $metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
-
         ForgeConfig::set('sys_project_blacklist_which_uses_legacy_ui_by_default', '102');
 
-        $this->metadata_factory->shouldReceive('getRealMetadataList')->andReturn([$metadata]);
         $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
     }
 
-    public function testItShouldUseNewUIWhenUserDoesNotHavePreferencesAndWhenProjectHasNoRequiredMetadata(): void
+    public function testItShouldUseNewUIWhenUserDoesNotHavePreferences(): void
     {
         $user    = \Mockery::mock(\PFUser::class);
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(102);
         $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
 
-        $metadata = \Mockery::mock(\Docman_Metadata::class);
-        $metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
-
-        $this->metadata_factory->shouldReceive('getRealMetadataList')->andReturn([$metadata]);
         $this->assertTrue($this->retriever->shouldUseDocument($user, $project));
     }
 }
