@@ -59,23 +59,74 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
     }
 
     /**
+     * @depends testGetRootIdWithUserRESTReadOnlyAdmin
+     */
+    public function testGetDocumentItemsWithUserRESTReadOnlyAdmin(int $root_id): array
+    {
+        $root_folder = $this->loadRootFolderContent(
+            $root_id,
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $items_file    = $this->loadFolderContent($root_id, 'File', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $folder_files  = $this->findItemByTitle($root_folder, 'File');
+        $items_file_id = $folder_files['id'];
+        $deleted_files = $this->loadFolderContent($items_file_id, 'DELETE File', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $lock_files    = $this->loadFolderContent($items_file_id, 'LOCK File', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $post_files    = $this->loadFolderContent($items_file_id, 'POST File Version', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $put_files     = $this->loadFolderContent($items_file_id, 'PUT HM File', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+
+        return array_merge(
+            $root_folder,
+            $folder_files,
+            $items_file,
+            $deleted_files,
+            $lock_files,
+            $post_files,
+            $put_files
+        );
+    }
+
+    /**
      * @depends testGetRootId
      */
     public function testMoveFileDocument(int $root_id): void
     {
+        $file_creation_body_content = json_encode([
+            'title' => 'File document to cut',
+            'file_properties' => ['file_name' => 'file0', 'file_size' => 0]
+        ]);
+
+        $response_file_creation_with_rest_read_only_user = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/files',
+                null,
+                $file_creation_body_content
+            )
+        );
+        $this->assertEquals(403, $response_file_creation_with_rest_read_only_user->getStatusCode());
+
         $response_file_creation = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->post(
                 'docman_folders/' . urlencode((string) $root_id) . '/files',
                 null,
-                json_encode([
-                    'title' => 'File document to cut',
-                    'file_properties' => ['file_name' => 'file0', 'file_size' => 0]
-                ])
+                $file_creation_body_content
             )
         );
         $this->assertEquals(201, $response_file_creation->getStatusCode());
         $file_doc_id = $response_file_creation->json()['id'];
+
+        $response_folder_creation_with_rest_read_only_user = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/folders',
+                null,
+                json_encode(['title' => 'File cut folder'])
+            )
+        );
+        $this->assertEquals(403, $response_folder_creation_with_rest_read_only_user->getStatusCode());
 
         $response_folder_creation = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
@@ -87,6 +138,16 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         );
         $this->assertEquals(201, $response_folder_creation->getStatusCode());
         $folder_id = $response_folder_creation->json()['id'];
+
+        $move_response_with_rest_read_only_user = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            $this->client->patch(
+                'docman_files/' . urlencode((string) $file_doc_id),
+                null,
+                json_encode(['move' => ['destination_folder_id' => $folder_id]])
+            )
+        );
+        $this->assertEquals(403, $move_response_with_rest_read_only_user->getStatusCode());
 
         $move_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
@@ -103,6 +164,18 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
         $this->assertEquals($folder_id, $moved_item_response->json()['parent_id']);
+
+        $moved_item_response_with_rest_read_only_user = $this->getResponse(
+            $this->client->get('docman_items/' . urlencode((string) $file_doc_id)),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals($folder_id, $moved_item_response_with_rest_read_only_user->json()['parent_id']);
+
+        $delete_response_with_rest_read_only_user = $this->getResponse(
+            $this->client->delete('docman_folders/' . urlencode((string) $folder_id)),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(403, $delete_response_with_rest_read_only_user->getStatusCode());
 
         $this->getResponse(
             $this->client->delete('docman_folders/' . urlencode((string) $folder_id)),
@@ -121,12 +194,26 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         );
 
         $project_members_identifier = $this->project_id . '_3';
+        $put_body = json_encode(
+            ['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]]
+        );
+
+        $permission_update_response_with_rest_read_only_user = $this->getResponse(
+            $this->client->put(
+                'docman_files/' . urlencode((string) $file_doc_id) . '/permissions',
+                null,
+                $put_body
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(403, $permission_update_response_with_rest_read_only_user->getStatusCode());
+
         $permission_update_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
             $this->client->put(
                 'docman_files/' . urlencode((string) $file_doc_id) . '/permissions',
                 null,
-                json_encode(['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]])
+                $put_body
             )
         );
         $this->assertEquals(200, $permission_update_response->getStatusCode());
@@ -141,6 +228,12 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertEmpty($permissions_for_groups_representation['can_write']);
         $this->assertCount(1, $permissions_for_groups_representation['can_manage']);
         $this->assertEquals($project_members_identifier, $permissions_for_groups_representation['can_manage'][0]['id']);
+
+        $delete_response_with_rest_read_only_user = $this->getResponse(
+            $this->client->delete('docman_files/' . urlencode((string) $file_doc_id)),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(403, $delete_response_with_rest_read_only_user->getStatusCode());
 
         $this->getResponse(
             $this->client->delete('docman_files/' . urlencode((string) $file_doc_id)),
@@ -208,6 +301,24 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetDocumentItemsForAdminUser
      */
+    public function testItDoesNotDeletesAFileWithRESTReadOnlyUserNotInvolvedInProject(array $items): void
+    {
+        $file_to_delete    = $this->findItemByTitle($items, 'DELETE F');
+        $file_to_delete_id = $file_to_delete['id'];
+
+        $response = $this->getResponse(
+            $this->client->delete('docman_files/' . $file_to_delete_id),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+
+        $this->checkItemHasNotBeenDeleted($file_to_delete_id);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
     public function testItDeletesAFile(array $items): void
     {
         $file_to_delete    = $this->findItemByTitle($items, 'DELETE F');
@@ -246,6 +357,12 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
     {
         $file_to_lock    = $this->findItemByTitle($items, 'LOCK F');
         $file_to_lock_id = $file_to_lock['id'];
+
+        $post_response_with_rest_read_only_user = $this->getResponse(
+            $this->client->post('docman_files/' . $file_to_lock_id . "/lock"),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(403, $post_response_with_rest_read_only_user->getStatusCode());
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
@@ -299,6 +416,22 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetDocumentItemsForAdminUser
      */
+    public function testRESTReadOnyAdminShouldNotBeAbleToUnLockAFileIfNotInvolvedInProject(array $items): void
+    {
+        $locked_document   = $this->findItemByTitle($items, 'LOCK F AL');
+        $file_to_delete_id = $locked_document['id'];
+
+        $response = $this->getResponse(
+            $this->client->delete('docman_files/' . $file_to_delete_id . '/lock'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
     public function testItThrowsExceptionForDeleteLockWhenUserCanNotReadTheFile(array $items): void
     {
         $locked_document   = $this->findItemByTitle($items, 'LOCK F RO');
@@ -310,6 +443,42 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         );
 
         $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostVersionWithRESTReadOnlyUserDoesNotCreateAFile(array $items): void
+    {
+        $file_to_update    = $this->findItemByTitle($items, 'POST F V');
+        $file_to_update_id = $file_to_update['id'];
+
+        $current_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+
+        $this->assertEquals($current_version_response->getStatusCode(), 200);
+
+        $file_size            = 15;
+        $new_version_resource = json_encode(
+            [
+                'version_title'   => 'My new versionnn',
+                'description'     => 'whatever',
+                "file_properties" => [
+                    "file_name" => "string",
+                    "file_size" => $file_size
+                ],
+                "should_lock_file"      => false
+            ]
+        );
+
+        $new_version_response_with_rest_read_only_user = $this->getResponse(
+            $this->client->post('docman_files/' . $file_to_update_id . "/version", null, $new_version_resource),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $new_version_response_with_rest_read_only_user->getStatusCode());
     }
 
     /**
@@ -933,6 +1102,12 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             'status'            => 'none'
         ];
 
+        $updated_metadata_file_response_with_rest_read_only_user = $this->getResponse(
+            $this->client->put('docman_files/' . $file_to_update_id . '/metadata', null, $put_resource),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(403, $updated_metadata_file_response_with_rest_read_only_user->getStatusCode());
+
         $updated_metadata_file_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
             $this->client->put('docman_files/' . $file_to_update_id . '/metadata', null, $put_resource)
@@ -1030,6 +1205,20 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
+    public function testOptionsId($id): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('docman_files/' . $id),
+            REST_TestDataBuilder::ADMIN_USER_NAME
+        );
+
+        $this->assertEquals(array('OPTIONS', 'PATCH', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
     public function testOptionsLock($id): void
     {
         $response = $this->getResponse($this->client->options('docman_files/' . $id . '/lock'), REST_TestDataBuilder::ADMIN_USER_NAME);
@@ -1064,6 +1253,46 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $this->assertEquals(array('OPTIONS', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+
+
+    /**
+     * @depends testGetRootIdWithUserRESTReadOnlyAdmin
+     */
+    public function testAllAvailableOptionsWithRESTReadOnlyUser(int $id): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('docman_files/' . $id),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->options('docman_files/' . $id . '/metadata'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'PUT'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->options('docman_files/' . $id . '/lock'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->options('docman_files/' . $id . '/version'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     private function createANewFileAndGetItsId(int $parent_folder_id, string $title): int

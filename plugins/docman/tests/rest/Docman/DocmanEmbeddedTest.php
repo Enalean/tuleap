@@ -785,7 +785,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootIdWithUserRESTReadOnlyAdmin
      */
-    public function testOptionsWithRESTReadOnlyUser(int $id): void
+    public function testAllAvailableOptionsWithRESTReadOnlyUser(int $id): void
     {
         $response = $this->getResponse(
             $this->client->options('docman_embedded_files/' . $id),
