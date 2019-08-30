@@ -20,6 +20,7 @@
 
 namespace Git;
 
+use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use Tuleap\Git\REST\TestBase;
 
@@ -38,16 +39,41 @@ class GerritTest extends TestBase {
         );
     }
 
-    public function testOPTIONS()
+    public function testOPTIONS(): void
     {
         $response = $this->getResponse($this->client->options('gerrit'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGetServers()
+    public function testOPTIONSWithReadOnlySiteAdmin(): void
     {
-        $response  = $this->getResponse($this->client->get('gerrit'));
+        $response = $this->getResponse(
+            $this->client->options('gerrit'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
 
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETServers(): void
+    {
+        $response = $this->getResponse($this->client->get('gerrit'));
+
+        $this->assertGETServers($response);
+    }
+
+    public function testGETServersWithReadOnlySiteAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('gerrit'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertGETServers($response);
+    }
+
+    private function assertGETServers(Response $response): void
+    {
         $response_servers = $response->json();
         $this->assertArrayHasKey('servers', $response_servers);
 
@@ -59,11 +85,34 @@ class GerritTest extends TestBase {
         $this->assertEquals($servers[1]['html_url'], 'http://otherhost:8080');
     }
 
-    public function testGetServersForProject()
+    public function testGETServersForProject(): void
     {
         $url = 'gerrit?for_project=' . $this->git_project_id;
         $response  = $this->getResponse($this->client->get($url));
 
+        $this->assertGETServersForProject($response);
+    }
+
+    public function testGETServersForProjectWithReadOnlyAdmin(): void
+    {
+        $url = 'gerrit?for_project=' . $this->git_project_id;
+        $response  = $this->getResponse(
+            $this->client->get($url),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertGETServersForProject($response);
+    }
+
+    public function testGetGitRepositoryThrows403IfUserCantSeeRepository(): void
+    {
+        $response  = $this->getResponseForNonMember($this->client->get('gerrit'));
+
+        $this->assertEquals($response->getStatusCode(), 403);
+    }
+
+    private function assertGETServersForProject(Response $response): void
+    {
         $response_servers = $response->json();
         $this->assertArrayHasKey('servers', $response_servers);
 
@@ -75,12 +124,5 @@ class GerritTest extends TestBase {
         $this->assertEquals($servers[1]['html_url'], 'http://otherhost:8080');
         $this->assertEquals($servers[2]['id'], 3);
         $this->assertEquals($servers[2]['html_url'], 'http://restricted:8080');
-    }
-
-    public function testGetGitRepositoryThrows403IfUserCantSeeRepository()
-    {
-        $response  = $this->getResponseForNonMember($this->client->get('gerrit'));
-
-        $this->assertEquals($response->getStatusCode(), 403);
     }
 }
