@@ -69,6 +69,7 @@ $tlp_blue_css   = $include_asset_framework->getFileURL('tlp-blue.css');
 
 $include_asset_doc   = new IncludeAssets(__DIR__ . '/dist', 'dist');
 $main_doc_stylesheet = $include_asset_doc->getFileURL('style.css');
+$main_doc_script     = $include_asset_doc->getFileURL('script.js');
 
 ?><!DOCTYPE html>
 <html lang="en">
@@ -263,8 +264,6 @@ $main_doc_stylesheet = $include_asset_doc->getFileURL('style.css');
         echo (string) file_get_contents(__DIR__ . '/../dist/manifest.json');
     ?>
 </script>
-<script type="text/javascript" src="js/polyfills.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
 <script src="codemirror/5.12.2/codemirror-compressed.js"></script>
-<script type="text/javascript" src="js/editors.js"></script>
+<script type="text/javascript" src="<?php echo $main_doc_script; ?>"></script>
 </body>

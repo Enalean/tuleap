@@ -62,12 +62,19 @@ const tlp_framework_config = {
 
 const tlp_doc_config = {
     entry: {
-        style: "./doc/css/main.scss"
+        style: "./doc/css/main.scss",
+        script: "./doc/js/index.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(path.resolve(__dirname, "doc/dist/")),
+    externals: {
+        tlp: "tlp"
+    },
     module: {
-        rules: [webpack_configurator.rule_scss_loader]
+        rules: [
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.rule_scss_loader
+        ]
     },
     plugins: [
         webpack_configurator.getCleanWebpackPlugin(),

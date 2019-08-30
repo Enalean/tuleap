@@ -167,6 +167,35 @@ $nav-margin: 30px;
             }
         }
     }
+
+    .doc-colors-illustration-helper-modal-body {
+        display: flex;
+        padding: 0;
+    }
+
+    .doc-colors-illustration-helper-modal-target,
+    .doc-colors-illustration-helper-modal-source {
+        margin: 0;
+        padding: 20px;
+        width: 50%;
+    }
+    .doc-colors-illustration-helper-modal-source {
+        border-right: 1px solid $tlp-ui-border-normal;
+    }
+    .doc-colors-illustration-helper-modal-preview {
+        border-top: 1px solid $tlp-ui-border-normal;
+    }
+    #doc-colors-illustration-helper-modal-preview-block {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        border-radius: 3px;
+        background: $tlp-theme-background-color;
+    }
+    #illustration-helper-target {
+        background: $tlp-theme-background-color;
+    }
 }
 
 body {
