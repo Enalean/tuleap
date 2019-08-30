@@ -27,6 +27,8 @@ use Docman_VersionFactory;
 use EventManager;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
+use Tuleap\Docman\REST\v1\PostUpdateEventAdder;
+use Tuleap\Docman\Version\LinkVersionDataUpdator;
 
 class DocmanLinkVersionCreator
 {
@@ -54,6 +56,14 @@ class DocmanLinkVersionCreator
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
+    /**
+     * @var PostUpdateEventAdder
+     */
+    private $post_update_event_adder;
+    /**
+     * @var LinkVersionDataUpdator
+     */
+    private $link_version_data_updator;
 
     public function __construct(
         Docman_VersionFactory $version_factory,
@@ -61,7 +71,9 @@ class DocmanLinkVersionCreator
         Docman_ItemFactory $item_factory,
         EventManager $event_manager,
         \Docman_LinkVersionFactory $docman_link_version_factory,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
+        PostUpdateEventAdder $post_update_event_adder,
+        LinkVersionDataUpdator $link_version_data_updator
     ) {
         $this->version_factory             = $version_factory;
         $this->updator                     = $updator;
@@ -69,6 +81,8 @@ class DocmanLinkVersionCreator
         $this->event_manager               = $event_manager;
         $this->docman_link_version_factory = $docman_link_version_factory;
         $this->transaction_executor        = $transaction_executor;
+        $this->post_update_event_adder     = $post_update_event_adder;
+        $this->link_version_data_updator   = $link_version_data_updator;
     }
 
     public function createLinkVersion(
@@ -120,5 +134,33 @@ class DocmanLinkVersionCreator
             'version' => $last_version,
         ];
         $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_LINKVERSION, $event_data);
+    }
+
+    public function createLinkVersionFromEmpty(
+        \Docman_Empty $item,
+        \PFUser $current_user,
+        LinkPropertiesPOSTPATCHRepresentation $representation,
+        \DateTimeImmutable $current_time
+    ): void {
+        $this->transaction_executor->execute(
+            function () use ($item, $current_user, $representation, $current_time) {
+                $next_version_id = 1;
+
+                $new_link_version_row = [
+                    'item_id'   => $item->getId(),
+                    'number'    => $next_version_id,
+                    'label'     => '',
+                    'changelog' => 'Initial version',
+                    'date'      => $current_time->getTimestamp(),
+                    'link_url'  => $representation->link_url
+                ];
+
+                $new_link_item = $this->link_version_data_updator->updateLinkFromEmptyVersionData($item, $new_link_version_row);
+
+                $version = $this->docman_link_version_factory->getLatestVersion($new_link_item);
+
+                $this->post_update_event_adder->triggerPostUpdateEvents($item, $current_user, $version);
+            }
+        );
     }
 }

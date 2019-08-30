@@ -52,6 +52,7 @@ use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresent
 use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
+use Tuleap\Docman\Version\LinkVersionDataUpdator;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -466,15 +467,21 @@ class DocmanLinksResource extends AuthenticatedResource
 
     private function getLinkVersionCreator(): DocmanLinkVersionCreator
     {
-        $updator = (new DocmanItemUpdatorBuilder())->build($this->event_manager);
-
+        $updator      = (new DocmanItemUpdatorBuilder())->build($this->event_manager);
+        $item_factory = new \Docman_ItemFactory();
         return new DocmanLinkVersionCreator(
             new \Docman_VersionFactory(),
             $updator,
             new \Docman_ItemFactory(),
-            \EventManager::instance(),
+            $this->event_manager,
             new Docman_LinkVersionFactory(),
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            new PostUpdateEventAdder(
+                \ProjectManager::instance(),
+                new DocmanItemsEventAdder($this->event_manager),
+                $this->event_manager
+            ),
+            new LinkVersionDataUpdator($item_factory)
         );
     }
 
