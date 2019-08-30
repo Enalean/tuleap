@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -122,18 +122,32 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
         $msg = '';
         switch ($message_type) {
             case self::MESSAGE_REMOVED:
-                $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed_mail_body', array($params['path']->get($params['item']),
-                                                              $user->getRealName(),
-                                                              $this->_url));
+                $msg = sprintf(
+                        dgettext('plugin-docman', "%s has been removed by %s."),
+                        $params['path']->get($params['item']),
+                        $user->getRealName()
+                    ) . "\n";
+
+                $msg .= dgettext(
+                        'plugin-docman',
+                        "You are receiving this message because you are monitoring this item."
+                    );
+                $msg .=  "\n" . $this->_url;
                 break;
             case self::MESSAGE_REMOVED_FROM:
                 $monitoredItem = $this->_getMonitoredItemForUser($user, $params['parent']);
-                $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed_from_mail_body', array($params['path']->get($params['parent']),
-                                                              $user->getRealName(),
-                                                              $this->_url,
-                                                              $params['parent']->getId(),
-                                                              $params['item']->getTitle(),
-                                                              $monitoredItem->getId()));
+                $msg           = sprintf(
+                    dgettext('plugin-docman', "%s has been modified by %s."),
+                    $params['path']->get($params['parent']),
+                    $user->getRealName()
+                );
+
+                $msg .= "\n" . $this->getMessageLink($message_type, $params) . "\n\n";
+                $msg .= dgettext('plugin-docman', "Removed:");
+                $msg .= "\n";
+                $msg .= $params['item']->getTitle();
+
+                $msg .= $this->getMonitoringInformation($monitoredItem);
                 break;
             default:
                 $msg .= parent::_getMessageForUser($user, $message_type, $params);

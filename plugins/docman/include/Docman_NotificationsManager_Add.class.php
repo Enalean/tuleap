@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -56,12 +56,18 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
         switch($message_type) {
             case self::MESSAGE_ADDED:
                 $monitoredItem = $this->_getMonitoredItemForUser($user, $params['parent']);
-                $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_added_mail_body', array($params['path']->get($params['parent']),
-                                                              $user->getRealName(),
-                                                              $this->_url,
-                                                              $params['parent']->getId(),
-                                                              $params['item']->getTitle(),
-                                                              $monitoredItem->getId()));
+
+                $msg = sprintf(
+                    dgettext('plugin-docman', "%s has been modified by %s."),
+                    $params['path']->get($params['parent']),
+                    $user->getRealName()
+                ) ."\n";
+
+                $msg .=$this->getMessageLink($message_type, $params) . "\n\n";
+                $msg .= dgettext('plugin-docman', "Added:");
+                $msg .= "\n" . $params['item']->getTitle();
+
+                $msg           .= $this->getMonitoringInformation($monitoredItem);
                 break;
             default:
                 $msg .= parent::_getMessageForUser($user, $message_type, $params);
@@ -83,4 +89,3 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
         return $link;
     }
 }
-?>

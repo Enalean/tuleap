@@ -19,12 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
-use Tuleap\Docman\Notifications\UgroupsUpdater;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
-use Tuleap\Docman\Notifications\UsersUpdater;
+use Tuleap\Docman\Notifications\UgroupsUpdater;
 use Tuleap\Docman\Notifications\UsersRetriever;
+use Tuleap\Docman\Notifications\UsersToNotifyDao;
+use Tuleap\Docman\Notifications\UsersUpdater;
 
 class Docman_NotificationsManager
 {
@@ -307,11 +307,8 @@ class Docman_NotificationsManager
                 $msg .= dgettext('plugin-docman', 'Something happen!');
                 break;
         }
-        $msg .= "\n\n--------------------------------------------------------------------\n";
-        $msg .= dgettext('plugin-docman', 'You are receiving this message because you are monitoring this item.')."\n";
-        $msg .= dgettext('plugin-docman', 'To stop monitoring, please visit:')."\n";
         $monitoredItem = $this->_getMonitoredItemForUser($user, $params['item']);
-        $msg .= $this->_url .'&action=details&section=notifications&id='. $monitoredItem->getId();
+        $msg .= $this->getMonitoringInformation($monitoredItem);
 
         return $msg;
     }
@@ -398,5 +395,23 @@ class Docman_NotificationsManager
     private function doesNotificationConcernAUGroup($user_id, $item_id, $type)
     {
         return $this->ugroups_retriever->doesNotificationExistByUGroupAndItemId($user_id, $item_id, $type);
+    }
+
+    protected function getMonitoringInformation(Docman_Item $monitored_item): string
+    {
+        $message = "\n\n--------------------------------------------------------------------\n";
+        $message .= dgettext(
+            'plugin-docman',
+            "You are receiving this message because you are monitoring this item."
+        );
+        $message .= "\n";
+        $message .= dgettext(
+            'plugin-docman',
+            "To stop monitoring, please visit:"
+        );
+        $message .= "\n";
+        $message .= $this->_url . "&action=details&section=notifications&id=" . $monitored_item->getId();
+
+        return $message;
     }
 }
