@@ -59,11 +59,24 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
         return $json_docman_service['root_item']['id'];
     }
 
+    public function testGetRootIdWithUserRESTReadOnlyAdmin(): int
+    {
+        $project_response = $this->getResponse(
+            $this->client->get('projects/' . urlencode((string) $this->project_id) . '/docman_service'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
 
-    public function loadRootFolderContent(int $root_id): array
+        $this->assertSame(200, $project_response->getStatusCode());
+
+        $json_docman_service = $project_response->json();
+        return $json_docman_service['root_item']['id'];
+    }
+
+
+    public function loadRootFolderContent(int $root_id, string $user_name = REST_TestDataBuilder::ADMIN_USER_NAME): array
     {
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $user_name,
             $this->client->get('docman_items/' . $root_id . '/docman_items')
         );
         $folder   = $response->json();
@@ -72,10 +85,13 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
         return $folder;
     }
 
-    public function loadFolderContent(int $folder_id, string $folder_name): array
-    {
+    public function loadFolderContent(
+        int $folder_id,
+        string $folder_name,
+        string $user_name = REST_TestDataBuilder::ADMIN_USER_NAME
+    ): array {
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $user_name,
             $this->client->get('docman_items/' . $folder_id . '/docman_items')
         );
         $folder   = $response->json();
@@ -83,7 +99,7 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
         $folder_content = $this->findItemByTitle($folder, $folder_name);
         $new_folder_id  = $folder_content['id'];
         $response       = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $user_name,
             $this->client->get('docman_items/' . $new_folder_id . '/docman_items')
         );
         $item_folder    = $response->json();
