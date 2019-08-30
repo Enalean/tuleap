@@ -579,11 +579,8 @@ plugin_docman	md_html_validity_today	Obsolete today
 plugin_docman	md_love_status_none_name	None
 plugin_docman	md_love_status_none_desc	Status of item is not managed.
 plugin_docman	md_love_status_draft_name	Draft
-plugin_docman	md_love_status_draft_desc	
 plugin_docman	md_love_status_approved_name	Approved
-plugin_docman	md_love_status_approved_desc	
 plugin_docman	md_love_status_rejected_name	Rejected
-plugin_docman	md_love_status_rejected_desc	
 plugin_docman	md_odate_name	Obsolescence Date
 plugin_docman	md_odate_desc	Define a period of validity for your document. It will automatically be archived at the end of the period.
 plugin_docman	md_owner_name	Owner

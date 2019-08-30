@@ -579,11 +579,8 @@ plugin_docman	md_html_validity_today	Aujourd'hui obsolète
 plugin_docman	md_love_status_none_name	Aucun
 plugin_docman	md_love_status_none_desc	Le statut de l'élément n'est pas géré.
 plugin_docman	md_love_status_draft_name	Brouillon
-plugin_docman	md_love_status_draft_desc	
 plugin_docman	md_love_status_approved_name	Approuvé
-plugin_docman	md_love_status_approved_desc	
 plugin_docman	md_love_status_rejected_name	Rejeté
-plugin_docman	md_love_status_rejected_desc	
 plugin_docman	md_odate_name	Date d'obsolescence
 plugin_docman	md_odate_desc	Définit une période de validité pour votre document. Il sera automatiquement archivé à la fin de la période.
 plugin_docman	md_owner_name	Propriétaire
