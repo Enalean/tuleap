@@ -134,7 +134,7 @@ module.exports = {
             }
         },
         {
-            files: ["*.test.js", "*.test.ts"],
+            files: ["*.test.js", "*.test.ts", "tests/jest/fail-console-error-warning.js"],
             extends: ["plugin:jest/recommended"],
             rules: {
                 "jest/no-expect-resolves": "error",
