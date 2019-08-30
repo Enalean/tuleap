@@ -19,20 +19,27 @@
  */
 
 import Vue from "vue";
-import App from "./src/components/App.vue";
-import { initVueGettext } from "./src/helpers/vue-gettext-init";
+import GetTextPlugin from "vue-gettext";
 
-document.addEventListener("DOMContentLoaded", async () => {
-    const vue_mount_point = document.getElementById("taskboard");
-    if (!vue_mount_point) {
-        return;
+interface GettextTranslationsMap {
+    [key: string]: any;
+}
+
+export async function initVueGettext(load_translations_callback: Function) {
+    const translations: GettextTranslationsMap = {};
+    const locale = document.body.dataset.userLocale;
+    if (locale) {
+        try {
+            translations[locale] = (await load_translations_callback(locale))["messages"];
+        } catch (exception) {
+            // default to en_US
+        }
     }
-
-    await initVueGettext((locale: string) =>
-        import(/* webpackChunkName: "taskboard-po-" */ `./po/${locale}.po`)
-    );
-
-    const AppComponent = Vue.extend(App);
-
-    new AppComponent({}).$mount(vue_mount_point);
-});
+    Vue.use(GetTextPlugin, {
+        translations: translations,
+        silent: true
+    });
+    if (locale) {
+        Vue.config.language = locale;
+    }
+}
