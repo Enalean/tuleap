@@ -28,11 +28,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
+    const user_is_admin = Boolean(vue_mount_point.dataset.userIsAdmin);
+    const admin_url = vue_mount_point.dataset.adminUrl;
+
     await initVueGettext((locale: string) =>
         import(/* webpackChunkName: "taskboard-po-" */ `./po/${locale}.po`)
     );
 
     const AppComponent = Vue.extend(App);
 
-    new AppComponent({}).$mount(vue_mount_point);
+    new AppComponent({
+        propsData: { user_is_admin, admin_url }
+    }).$mount(vue_mount_point);
 });

@@ -17,37 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
-import App from "./App.vue";
+import { createLocalVue, shallowMount } from "@vue/test-utils";
+import GetTextPlugin from "vue-gettext";
+import BoardWithoutAnyColumnsError from "./BoardWithoutAnyColumnsError.vue";
+import { Vue } from "vue/types/vue";
 
-describe("App", () => {
+describe("BoardWithoutAnyColumnsError", () => {
+    let local_vue: typeof Vue;
+    beforeEach(() => {
+        local_vue = createLocalVue();
+        local_vue.use(GetTextPlugin, {
+            translations: {},
+            silent: true
+        });
+    });
     it("is displays misconfiguration error for regular user", () => {
-        const wrapper = shallowMount(App, {
+        const wrapper = shallowMount(BoardWithoutAnyColumnsError, {
+            localVue: local_vue,
             propsData: { user_is_admin: false, admin_url: "/path/to/admin" }
         });
-        expect(wrapper.element).toMatchInlineSnapshot(`
-            <div
-              class="tlp-framed-horizontally"
-            >
-              <board-without-any-columns-error-stub
-                admin_url="/path/to/admin"
-              />
-            </div>
-        `);
+        expect(wrapper.element).toMatchSnapshot();
     });
     it("is displays misconfiguration error for admin user", () => {
-        const wrapper = shallowMount(App, {
+        const wrapper = shallowMount(BoardWithoutAnyColumnsError, {
+            localVue: local_vue,
             propsData: { user_is_admin: true, admin_url: "/path/to/admin" }
         });
-        expect(wrapper.element).toMatchInlineSnapshot(`
-            <div
-              class="tlp-framed-horizontally"
-            >
-              <board-without-any-columns-error-stub
-                admin_url="/path/to/admin"
-                user_is_admin="true"
-              />
-            </div>
-        `);
+        expect(wrapper.element).toMatchSnapshot();
     });
 });
