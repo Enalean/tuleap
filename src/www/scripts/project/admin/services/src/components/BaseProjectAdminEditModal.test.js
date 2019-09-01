@@ -18,13 +18,13 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import BaseSiteAdminEditModal from "./BaseSiteAdminEditModal.vue";
+import BaseProjectAdminEditModal from "./BaseProjectAdminEditModal.vue";
 import InEditionCustomService from "./Service/InEditionCustomService.vue";
-import EditableSystemService from "./Service/EditableSystemService.vue";
+import ReadOnlySystemService from "./Service/ReadOnlySystemService.vue";
 import localVue from "../support/local-vue.js";
 
 function createWrapper(props, stubs) {
-    return shallowMount(BaseSiteAdminEditModal, {
+    return shallowMount(BaseProjectAdminEditModal, {
         stubs,
         localVue,
         propsData: props
@@ -39,13 +39,13 @@ function createFakeButton(service) {
     };
 }
 
-describe(`BaseSiteAdminEditModal`, () => {
+describe(`BaseProjectAdminEdit`, () => {
     let wrapper, modal;
     beforeEach(() => {
         modal = {
             template: `<div><slot name="content"/></div>`,
             methods: {
-                show: jasmine.createSpy("modal.show")
+                show: jest.fn()
             }
         };
 
@@ -65,7 +65,7 @@ describe(`BaseSiteAdminEditModal`, () => {
 
     it(`When the modal is not shown, it does not instanciate service components`, () => {
         const project_service = wrapper.find(InEditionCustomService);
-        const system_service = wrapper.find(EditableSystemService);
+        const system_service = wrapper.find(ReadOnlySystemService);
         expect(project_service.exists()).toBe(false);
         expect(system_service.exists()).toBe(false);
     });
@@ -79,11 +79,11 @@ describe(`BaseSiteAdminEditModal`, () => {
             expect(project_service.exists()).toBe(true);
         });
 
-        it(`and it's a system service, it will instanciate the editable system service component`, () => {
+        it(`and it's a system service, it will instanciate the read-only system service component`, () => {
             const fake_button = createFakeButton({ is_project_scope: false });
             wrapper.vm.show(fake_button);
 
-            const system_service = wrapper.find(EditableSystemService);
+            const system_service = wrapper.find(ReadOnlySystemService);
             expect(system_service.exists()).toBe(true);
         });
     });

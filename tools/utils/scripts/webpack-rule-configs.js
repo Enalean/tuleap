@@ -37,19 +37,17 @@ const babel_preset_env_ie_config = [
     }
 ];
 
-const babel_preset_env_chrome_config = modules => {
-    return [
-        BabelPresetEnv,
-        {
-            targets: {
-                browsers: ["last 2 Chrome versions"]
-            },
-            modules: modules,
-            useBuiltIns: "usage",
-            corejs: "3"
-        }
-    ];
-};
+const babel_preset_env_chrome_config = [
+    BabelPresetEnv,
+    {
+        targets: {
+            browsers: ["last 2 Chrome versions"]
+        },
+        modules: false,
+        useBuiltIns: "usage",
+        corejs: "3"
+    }
+];
 
 const babel_options_ie11 = {
     presets: [babel_preset_env_ie_config],
@@ -57,7 +55,7 @@ const babel_options_ie11 = {
 };
 
 const babel_options_chrome_firefox = {
-    presets: [babel_preset_env_chrome_config(false)],
+    presets: [babel_preset_env_chrome_config],
     plugins: [BabelPluginSyntaxDynamicImport]
 };
 
@@ -66,11 +64,11 @@ const babel_options_karma = {
         watch: babel_options_ie11,
         production: babel_options_ie11,
         test: {
-            presets: [babel_preset_env_chrome_config(false)],
+            presets: [babel_preset_env_chrome_config],
             plugins: [BabelPluginSyntaxDynamicImport, BabelPluginRewireExports]
         },
         coverage: {
-            presets: [babel_preset_env_chrome_config(false)],
+            presets: [babel_preset_env_chrome_config],
             plugins: [
                 BabelPluginSyntaxDynamicImport,
                 BabelPluginRewireExports,
@@ -86,7 +84,18 @@ const babel_options_karma = {
 };
 
 const babel_options_jest = {
-    presets: [babel_preset_env_chrome_config("auto")],
+    presets: [
+        [
+            BabelPresetEnv,
+            {
+                targets: {
+                    node: "8"
+                },
+                corejs: "3",
+                useBuiltIns: "usage"
+            }
+        ]
+    ],
     plugins: [BabelPluginSyntaxDynamicImport, BabelPluginDynamicImportNode]
 };
 

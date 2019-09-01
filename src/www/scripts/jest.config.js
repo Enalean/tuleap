@@ -17,9 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const config = require("../../../tests/jest/jest.config.js");
-
-config.testMatch = ["**/tuleap/gettext/*.test.js"];
-config.collectCoverageFrom = ["**/tuleap/gettext/*.js"];
-
-module.exports = config;
+module.exports = require("../../../tests/jest/jest.config.js");
