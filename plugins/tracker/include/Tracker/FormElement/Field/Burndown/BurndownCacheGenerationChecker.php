@@ -137,7 +137,7 @@ class BurndownCacheGenerationChecker
                 $this->field_retriever->getBurndownRemainingEffortField($artifact, $user)->getId()
             );
 
-            return $this->cached_days_comparator->isNumberOfCachedDaysExpected($time_period, $cached_days['cached_days']);
+            return $this->cached_days_comparator->isNumberOfCachedDaysExpected($time_period, $cached_days['cached_days'] ?? 0);
         }
 
         return true;
