@@ -17,23 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import Vue from "vue";
-import { rewire$getLabeledItems, restore } from "./rest-querier.js";
+import * as rest_querier from "./rest-querier.js";
 import LabeledItemsList from "./LabeledItemsList.vue";
-import { mockFetchError } from "tlp-mocks";
+import { mockFetchError } from "tlp-fetch-mocks-helper-jest";
+import GetTextPlugin from "vue-gettext";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 
 describe("LabeledItemsList", () => {
     let getLabeledItems;
     let LabeledItemsListVueElement;
 
     beforeEach(() => {
-        getLabeledItems = jasmine.createSpy("getLabeledItems");
-        rewire$getLabeledItems(getLabeledItems);
+        getLabeledItems = jest.spyOn(rest_querier, "getLabeledItems");
 
+        Vue.use(GetTextPlugin, {
+            translations: {},
+            silent: true
+        });
+        Vue.use(VueDOMPurifyHTML);
         LabeledItemsListVueElement = Vue.extend(LabeledItemsList);
-    });
-
-    afterEach(() => {
-        restore();
     });
 
     it("Should display an error when no labels id are provided", () => {
@@ -73,7 +75,7 @@ describe("LabeledItemsList", () => {
     });
 
     it("Should display an empty state when no items are found", async () => {
-        getLabeledItems.and.returnValue(Promise.resolve({ labeled_items: [] }));
+        getLabeledItems.mockReturnValue(Promise.resolve({ labeled_items: [] }));
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
@@ -89,7 +91,7 @@ describe("LabeledItemsList", () => {
     });
 
     it("Should display a list of items.", async () => {
-        getLabeledItems.and.returnValue(
+        getLabeledItems.mockReturnValue(
             Promise.resolve({
                 labeled_items: [
                     {
@@ -116,7 +118,7 @@ describe("LabeledItemsList", () => {
     });
 
     it("Displays a [load more] button, if there is more items to display", async () => {
-        getLabeledItems.and.returnValue(
+        getLabeledItems.mockReturnValue(
             Promise.resolve({
                 labeled_items: [{ title: "test 1" }],
                 has_more: true
@@ -137,7 +139,7 @@ describe("LabeledItemsList", () => {
     });
 
     it("Does not display a [load more] button, if there is not more items to display", async () => {
-        getLabeledItems.and.returnValue(
+        getLabeledItems.mockReturnValue(
             Promise.resolve({
                 labeled_items: [{ title: "test 1" }],
                 has_more: false
@@ -158,18 +160,21 @@ describe("LabeledItemsList", () => {
     });
 
     it("Loads the next page of items", async () => {
-        getLabeledItems.and.returnValues(
-            Promise.resolve({
-                labeled_items: [{ title: "test 1" }],
-                offset: 0,
-                has_more: true
-            }),
-            Promise.resolve({
-                labeled_items: [{ title: "test 2" }],
-                offset: 50,
-                has_more: false
-            })
-        );
+        getLabeledItems
+            .mockReturnValueOnce(
+                Promise.resolve({
+                    labeled_items: [{ title: "test 1" }],
+                    offset: 0,
+                    has_more: true
+                })
+            )
+            .mockReturnValueOnce(
+                Promise.resolve({
+                    labeled_items: [{ title: "test 2" }],
+                    offset: 50,
+                    has_more: false
+                })
+            );
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
@@ -181,11 +186,11 @@ describe("LabeledItemsList", () => {
         vm.$mount();
 
         await Vue.nextTick();
-        expect(getLabeledItems.calls.count()).toEqual(1);
-        expect(getLabeledItems.calls.argsFor(0)).toEqual(["101", [3, 4], 0, 50]);
+        expect(getLabeledItems.mock.calls.length).toEqual(1);
+        expect(getLabeledItems.mock.calls[0]).toEqual(["101", [3, 4], 0, 50]);
 
         vm.loadMore();
-        expect(getLabeledItems.calls.count()).toEqual(2);
-        expect(getLabeledItems.calls.argsFor(1)).toEqual(["101", [3, 4], 50, 50]);
+        expect(getLabeledItems.mock.calls.length).toEqual(2);
+        expect(getLabeledItems.mock.calls[1]).toEqual(["101", [3, 4], 50, 50]);
     });
 });
