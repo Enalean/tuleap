@@ -1,4 +1,5 @@
 <div class="tlp-framed-vertically">
+    {{# milestone_presenter }}
     <h1 class="tlp-framed-horizontally">
         <div class="tlp-dropdown">
             <div id="agiledashboard-scrum-milestone-menu">
@@ -36,6 +37,7 @@
         <i class="fa fa-external-link tlp-tab-icon"></i>
         </a>
     </nav>
+    {{/ milestone_presenter }}
 
-    <div id="taskboard"></div>
+    <div id="taskboard" data-user-is-admin="{{ user_is_admin }}" data-admin-url="{{ admin_url }}">
 </div>

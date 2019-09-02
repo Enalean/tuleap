@@ -24,6 +24,7 @@ namespace Tuleap\Taskboard\Routing;
 
 use AgileDashboard_MilestonePresenter;
 use HTTPRequest;
+use PFUser;
 use Planning_MilestonePaneFactory;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
@@ -89,7 +90,8 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
     {
         \Tuleap\Project\ServiceInstrumentation::increment(\taskboardPlugin::NAME);
 
-        $milestone = $this->milestone_extractor->getMilestone($request->getCurrentUser(), $variables);
+        $user      = $request->getCurrentUser();
+        $milestone = $this->milestone_extractor->getMilestone($user, $variables);
 
         $project = $milestone->getProject();
         $service = $project->getService('plugin_agiledashboard');
@@ -109,20 +111,24 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
 
         $service->displayHeader(
             $milestone->getArtifactTitle() . ' - ' . dgettext('tuleap-taskboard', "Taskboard"),
-            $this->bread_crumbs_builder->getBreadcrumbs($request->getCurrentUser(), $project, $milestone),
+            $this->bread_crumbs_builder->getBreadcrumbs($user, $project, $milestone),
             [],
             []
         );
-        $this->renderer->renderToPage('taskboard', $this->getPresenter($milestone));
+        $this->renderer->renderToPage('taskboard', $this->getPresenter($milestone, $user));
         $service->displayFooter();
     }
 
-    private function getPresenter(\Planning_Milestone $milestone): AgileDashboard_MilestonePresenter
+    private function getPresenter(\Planning_Milestone $milestone, PFuser $user): TaskboardPresenter
     {
         $presenter_data = $this->pane_factory->getPanePresenterData($milestone);
         $this->forceTaskboardPaneToBeTheActiveOne($presenter_data);
 
-        return new AgileDashboard_MilestonePresenter($milestone, $presenter_data);
+        return new TaskboardPresenter(
+            new AgileDashboard_MilestonePresenter($milestone, $presenter_data),
+            $user,
+            $milestone
+        );
     }
 
     private function forceTaskboardPaneToBeTheActiveOne(PanePresenterData $presenter_data): void
