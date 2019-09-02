@@ -47,6 +47,9 @@ use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentatio
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFileVersionCreator;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesPOSTPATCHRepresentation;
+use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
+use Tuleap\Docman\REST\v1\Links\DocmanLinkVersionCreator;
+use Tuleap\Docman\REST\v1\Links\LinkPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
@@ -60,6 +63,7 @@ use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
+use Tuleap\Docman\Version\LinkVersionDataUpdator;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -356,6 +360,59 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
     }
 
     /**
+     * @url OPTIONS {id}/link
+     */
+    public function optionsLinkVersion(int $id): void
+    {
+        $this->setVersionHeaders();
+    }
+
+    /**
+     * Create a link document
+     *
+     * @url    POST {id}/link
+     * @access hybrid
+     *
+     * @param int                                   $id             Id of the file
+     * @param LinkPropertiesPOSTPATCHRepresentation $representation {@from body}
+     *
+     * @status 201
+     *
+     * @throws RestException 400
+     * @throws RestException 403
+     * @trows  I18NRestException 404
+     */
+    public function postLinkVersion(
+        int $id,
+        LinkPropertiesPOSTPATCHRepresentation $representation
+    ): void {
+        $this->checkAccess();
+        $this->setVersionHeaders();
+
+        (new DocmanLinksValidityChecker())->checkLinkValidity($representation->link_url);
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $this->addAllEvent($item_request->getProject());
+
+        $project      = $item_request->getProject();
+        $item         = $item_request->getItem();
+
+        $current_user = $this->user_manager->getCurrentUser();
+
+        $validator = $this->getDocumentBeforeModificationValidatorVisitor($project, $current_user, $item);
+        $item->accept($validator);
+        /** @var Docman_Empty $item */
+
+        $docman_item_version_creator = $this->getLinkVersionCreator();
+        $docman_item_version_creator->createLinkVersionFromEmpty(
+            $item,
+            $current_user,
+            $representation,
+            new DateTimeImmutable()
+        );
+    }
+
+    /**
      * @url OPTIONS {id}/file
      */
     public function optionsFileVersion(int $id): void
@@ -542,6 +599,27 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
                 new DocmanItemsEventAdder($this->event_manager),
                 $this->event_manager
             )
+        );
+    }
+
+    private function getLinkVersionCreator(): DocmanLinkVersionCreator
+    {
+        $item_updator_builder = new DocmanItemUpdatorBuilder();
+        $item_factory         = new Docman_ItemFactory();
+
+        return new DocmanLinkVersionCreator(
+            new Docman_VersionFactory(),
+            $item_updator_builder->build($this->event_manager),
+            $item_factory,
+            $this->event_manager,
+            new \Docman_LinkVersionFactory(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            new PostUpdateEventAdder(
+                \ProjectManager::instance(),
+                new DocmanItemsEventAdder($this->event_manager),
+                $this->event_manager
+            ),
+            new LinkVersionDataUpdator($item_factory)
         );
     }
 

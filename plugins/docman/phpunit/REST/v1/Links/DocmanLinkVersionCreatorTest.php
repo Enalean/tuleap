@@ -35,9 +35,12 @@ use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkVersionCreator;
+use Tuleap\Docman\REST\v1\Links\LinkPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\PostUpdateEventAdder;
+use Tuleap\Docman\Version\LinkVersionDataUpdator;
 
 class DocmanLinkVersionCreatorTest extends TestCase
 {
@@ -88,6 +91,14 @@ class DocmanLinkVersionCreatorTest extends TestCase
      * @var DocmanLinkVersionCreator
      */
     private $version_creator;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostUpdateEventAdder
+     */
+    private $post_update_event_adder;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LinkVersionDataUpdator
+     */
+    private $link_data_updator;
 
     protected function setUp(): void
     {
@@ -99,6 +110,8 @@ class DocmanLinkVersionCreatorTest extends TestCase
         $this->event_manager               = Mockery::mock(EventManager::class);
         $this->docman_link_version_factory = Mockery::mock(\Docman_LinkVersionFactory::class);
         $this->transaction_executor        = Mockery::mock(DBTransactionExecutor::class);
+        $this->post_update_event_adder     = Mockery::mock(PostUpdateEventAdder::class);
+        $this->link_data_updator           = Mockery::mock(LinkVersionDataUpdator::class);
 
         $this->version_creator = new DocmanLinkVersionCreator(
             $this->version_factory,
@@ -106,7 +119,9 @@ class DocmanLinkVersionCreatorTest extends TestCase
             $this->item_factory,
             $this->event_manager,
             $this->docman_link_version_factory,
-            $this->transaction_executor
+            $this->transaction_executor,
+            $this->post_update_event_adder,
+            $this->link_data_updator
         );
     }
 
@@ -150,5 +165,20 @@ class DocmanLinkVersionCreatorTest extends TestCase
             "title",
             "description"
         );
+    }
+
+    public function testItShouldStoreANewLinkVersionDocumentFromAnEmptyDocument(): void
+    {
+        $item = Mockery::mock(\Docman_Empty::class);
+        $item->shouldReceive('getId')->andReturn(1);
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturn(101);
+
+        $representation           = new LinkPropertiesPOSTPATCHRepresentation();
+        $representation->link_url = "https://example.test";
+
+        $this->transaction_executor->shouldReceive('execute')->once();
+
+        $this->version_creator->createLinkVersionFromEmpty($item, $user, $representation, new \DateTimeImmutable());
     }
 }

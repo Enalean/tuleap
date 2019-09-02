@@ -1590,7 +1590,7 @@ class Docman_ItemFactory
         return false;
     }
 
-    private function createNewLinkVersion(Docman_Link $link, array $version_data): bool
+    public function createNewLinkVersion(Docman_Link $link, array $version_data)
     {
         $link_version_factory = new Docman_LinkVersionFactory();
 

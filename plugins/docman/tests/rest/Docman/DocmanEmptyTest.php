@@ -532,4 +532,76 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
     }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostVersionEmptyToLink(int $root_id): void
+    {
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $query = json_encode(
+            [
+                'title'       => 'Empty to link',
+                'description' => 'A description',
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . '/empties', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $empty_to_update_id = $response->json()['id'];
+
+        $new_link_url = json_encode(
+            [
+                'link_url' => 'https://example.test'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_empty_documents/' . $empty_to_update_id . "/link", null, $new_link_url)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $updated_item_response = $this->getResponse(
+            $this->client->get('docman_items/' . urlencode((string)$empty_to_update_id)),
+            DocmanDataBuilder::ADMIN_USER_NAME
+        );
+
+        $this->assertEquals(200, $updated_item_response->getStatusCode());
+
+        $updated_item = $updated_item_response->json();
+        $this->assertEquals('link', $updated_item['type']);
+        $this->assertEquals('https://example.test', $updated_item['link_properties']['link_url']);
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_links/' . urlencode((string)$updated_item['id']))
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->checkItemHasBeenDeleted($updated_item['id']);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testOptionsLinkVersion(int $id): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('docman_empty_documents/' . urlencode((string)$id) . '/link'),
+            REST_TestDataBuilder::ADMIN_USER_NAME
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+    }
 }
