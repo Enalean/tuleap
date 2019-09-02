@@ -11,9 +11,7 @@ Source0:	%{name}-%{version}.tar.gz
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 Requires:	tuleap = @@TULEAP_VERSION@@-@@RELEASE@@%{?dist}
-%if ! 0%{?el6}
 Requires: tuleap-plugin-agiledashboard
-%endif
 
 %description
 Keep track of things that need to get done in a task board.
@@ -26,7 +24,7 @@ Keep track of things that need to get done in a task board.
 
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/taskboard
-%{__cp} -ar include site-content vendor Readme.mkd VERSION $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/taskboard
+%{__cp} -ar include templates site-content vendor Readme.mkd VERSION $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/taskboard
 %{__cp} -ar assets $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets/taskboard
 
 %clean
