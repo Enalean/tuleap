@@ -7,7 +7,7 @@ exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for admi
   <div
     class="empty-page-illustration"
   >
-    <board-without-any-columns-svg-stub />
+    <board-without-any-columns-for-admin-svg-stub />
   </div>
    
   <div
@@ -44,31 +44,5 @@ exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for admi
       Define columns
     </translate-stub>
   </a>
-</div>
-`;
-
-exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for regular user 1`] = `
-<div
-  class="empty-page"
->
-  <div
-    class="empty-page-illustration"
-  >
-    <board-without-any-columns-svg-stub />
-  </div>
-   
-  <div
-    class="empty-page-text-with-small-text"
-  >
-    <translate-stub
-      tag="span"
-    >
-      This taskboard is not properly configured
-    </translate-stub>
-     
-    <!---->
-  </div>
-   
-  <!---->
 </div>
 `;
