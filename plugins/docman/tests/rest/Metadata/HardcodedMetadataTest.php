@@ -26,6 +26,7 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use DateTimeZone;
 use Guzzle\Http\Client;
+use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanHardcodedMetadataExecutionHelper;
 
@@ -40,6 +41,21 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $root_folder = $this->loadRootFolderContent($root_id);
 
         $items = $this->loadFolderContent($root_id, 'Folder HM');
+
+        return array_merge(
+            $root_folder,
+            $items
+        );
+    }
+
+    /**
+     * @depends testGetRootIdWithUserRESTReadOnlyAdmin
+     */
+    public function testGetDocumentItemsForUserRESTReadOnlyAdmin(int $root_id): array
+    {
+        $root_folder = $this->loadRootFolderContent($root_id, REST_TestDataBuilder::TEST_BOT_USER_NAME);
+
+        $items = $this->loadFolderContent($root_id, 'Folder HM', REST_TestDataBuilder::TEST_BOT_USER_NAME);
 
         return array_merge(
             $root_folder,
@@ -77,6 +93,31 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
     /**
      * @depends testGetDocumentItemsForAdmin
      */
+    public function testPostFolderStatusDeniedForUserRESTReadOnlyAdmin(array $items): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+        $query = json_encode(
+            [
+                'title'       => 'Faboulous Folder With Status',
+                'description' => 'A description',
+                'status'      => 'approved'
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->client->post('docman_folders/' . $folder_HM['id'] . "/folders", $headers, $query),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
     public function testPostEmptyWithStatusAndObsolescenceDate(array $items): int
     {
         $headers = ['Content-Type' => 'application/json'];
@@ -99,6 +140,31 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals(201, $response->getStatusCode());
 
         return $response->json()['id'];
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPostEmptyWithStatusAndObsolescenceDateDeniedForUserRESTReadOnlyAdmin(array $items): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+        $query = json_encode(
+            [
+                'title'             => 'Faboulous Empty With Status',
+                'status'            => 'rejected',
+                'obsolescence_date' => '3000-08-20'
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->client->post('docman_folders/' . $folder_HM['id'] . "/empties", $headers, $query),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
@@ -132,6 +198,34 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
     }
 
     /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPostEmbeddedFileWithStatusAndObsolescenceDateDeniedForUserRESTReadOnlyAdmin(array $items): void
+    {
+
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+        $headers             = ['Content-Type' => 'application/json'];
+        $embedded_properties = ['content' => 'step4 : Play with metadata'];
+        $query               = json_encode(
+            [
+                'title'               => 'How to become a Tuleap 4 (embedded version)',
+                'description'         => 'A description',
+                'embedded_properties' => $embedded_properties,
+                'status'              => 'approved',
+                'obsolescence_date'   => '3000-08-25'
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->client->post('docman_folders/' . $folder_HM['id'] . "/embedded_files", $headers, $query),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
      * @depends testGetRootId
      */
     public function testPostLinkWithStatusAndObsolescenceDate(int $root_id): int
@@ -161,6 +255,31 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
     /**
      * @depends testGetRootId
      */
+    public function testPostLinkWithStatusAndObsolescenceDateDeniedForUserRESTReadOnlyAdmin(int $root_id): void
+    {
+        $headers         = ['Content-Type' => 'application/json'];
+        $link_properties = ['link_url' => 'https://turfu.example.test'];
+        $query           = json_encode(
+            [
+                'title'             => 'To the future 2',
+                'description'       => 'A description',
+                'link_properties'   => $link_properties,
+                'status'            => 'approved',
+                'obsolescence_date' => '3000-08-25'
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->client->post('docman_folders/' . $root_id . "/links", $headers, $query),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
     public function testPostWikiWithStatusAndObsolescenceDate(int $root_id): int
     {
         $headers         = ['Content-Type' => 'application/json'];
@@ -183,6 +302,31 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals(201, $response->getStatusCode());
 
         return $response->json()['id'];
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostWikiWithStatusAndObsolescenceDateDeniedForUserRESTReadOnlyAdmin(int $root_id): void
+    {
+        $headers         = ['Content-Type' => 'application/json'];
+        $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
+        $query           = json_encode(
+            [
+                'title'             => 'How to become a Tuleap wiki version 2',
+                'description'       => 'A description',
+                'wiki_properties'   => $wiki_properties,
+                'status'            => 'approved',
+                'obsolescence_date' => '3000-08-08'
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->client->post('docman_folders/' . $root_id . "/wikis", $headers, $query),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
@@ -288,6 +432,30 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
     }
 
     /**
+     * @depends testGetRootId
+     */
+    public function testPostFileWithStatusDeniedForUserRESTReadOnlyAdmin(int $root_id): void
+    {
+        $file_size = 123;
+        $headers   = ['Content-Type' => 'application/json'];
+        $query     = json_encode(
+            [
+                'title'             => 'My File2352',
+                'file_properties'   => ['file_name' => 'file1', 'file_size' => $file_size],
+                'status'            => 'approved',
+                'obsolescence_date' => '3019-05-20'
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->client->post('docman_folders/' . $root_id . "/files", $headers, $query),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
      * @depends testGetDocumentItemsForAdmin
      */
     public function testPutFileHardcodedMetadataWithAllHardcodedMetadata(array $items): void
@@ -379,6 +547,41 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
             'format is incorrect',
             $updated_metadata_file_response->json()['error']['i18n_error_message']
         );
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPutFileHardcodedMetadataWithAllHardcodedMetadataDeniedForUserRESTReadOnlyAdmin(array $items): void
+    {
+        $file_to_update    = $this->findItemByTitle($items, 'PUT F');
+        $file_to_update_id = $file_to_update['id'];
+
+        $this->assertEquals('PUT F', $file_to_update['title']);
+        $this->assertEquals('', $file_to_update['description']);
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $date           = new \DateTimeImmutable();
+        $date           = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date           = $date->setTime(0, 0, 0);
+        $formatted_date = $date->modify('+1 day')->format('Y-m-d');
+
+        $put_resource = [
+            'id'                => $file_to_update_id,
+            'title'             => 'PUT File with new title',
+            'description'       => 'Whoo ! Whoo !',
+            'owner_id'          => 101,
+            'status'            => 'approved',
+            'obsolescence_date' => $formatted_date
+        ];
+
+        $updated_metadata_file_response = $this->getResponse(
+            $this->client->put('docman_files/' . $file_to_update_id . '/metadata', $headers, $put_resource),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $updated_metadata_file_response->getStatusCode());
     }
 
     /**
