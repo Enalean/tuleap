@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for regular user 1`] = `
+<div
+  class="empty-page"
+>
+  <div
+    class="empty-page-illustration"
+  >
+    <board-without-any-columns-for-users-svg-stub />
+  </div>
+   
+  <div
+    class="empty-page-text-with-small-text"
+  >
+    <translate-stub
+      tag="span"
+    >
+      This taskboard is not ready to be used
+    </translate-stub>
+     
+    <div
+      class="empty-page-small-text"
+    >
+      <translate-stub
+        tag="span"
+      >
+        Your project administrator needs to finish the planning configuration
+      </translate-stub>
+    </div>
+  </div>
+</div>
+`;

@@ -18,22 +18,31 @@
   -
   -->
 <template>
-    <board-without-any-columns-error-for-admin v-if="user_is_admin" v-bind:admin_url="admin_url"/>
-    <board-without-any-columns-error-for-users v-else/>
+    <div class="empty-page">
+        <div class="empty-page-illustration">
+            <board-without-any-columns-for-admin-svg/>
+        </div>
+        <div class="empty-page-text-with-small-text">
+            <translate>This taskboard is not properly configured</translate>
+            <div class="empty-page-small-text">
+                <translate>You have to configure the columns mapping</translate>
+            </div>
+        </div>
+        <a class="tlp-button-primary tlp-button-large" v-bind:href="admin_url">
+            <i class="fa fa-long-arrow-right tlp-button-icon"></i>
+            <translate>Define columns</translate>
+        </a>
+    </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import BoardWithoutAnyColumnsErrorForAdmin from "./BoardWithoutAnyColumnsErrorForAdmin.vue";
-import BoardWithoutAnyColumnsErrorForUsers from "./BoardWithoutAnyColumnsErrorForUsers.vue";
+import BoardWithoutAnyColumnsForAdminSvg from "./BoardWithoutAnyColumnsForAdminSvg.vue";
 
 @Component({
-    components: { BoardWithoutAnyColumnsErrorForUsers, BoardWithoutAnyColumnsErrorForAdmin }
+    components: { BoardWithoutAnyColumnsForAdminSvg }
 })
-export default class BoardWithoutAnyColumnsError extends Vue {
-    @Prop()
-    readonly user_is_admin!: boolean;
-
+export default class BoardWithoutAnyColumnsErrorForAdmin extends Vue {
     @Prop()
     readonly admin_url!: string;
 }

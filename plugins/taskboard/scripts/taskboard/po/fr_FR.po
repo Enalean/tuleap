@@ -18,5 +18,11 @@ msgstr "Définir les colonnes"
 msgid "This taskboard is not properly configured"
 msgstr "Ce tableau des tâches n'est pas correctement configuré"
 
+msgid "This taskboard is not ready to be used"
+msgstr "Ce tableau des tâches n'est pas prêt à être utilisé"
+
 msgid "You have to configure the columns mapping"
 msgstr "Vous devez configurer les colonnes"
+
+msgid "Your project administrator needs to finish the planning configuration"
+msgstr "Votre administrateur de projet doit finir la configuration du planning"

@@ -18,23 +18,25 @@
   -
   -->
 <template>
-    <board-without-any-columns-error-for-admin v-if="user_is_admin" v-bind:admin_url="admin_url"/>
-    <board-without-any-columns-error-for-users v-else/>
+    <div class="empty-page">
+        <div class="empty-page-illustration">
+            <board-without-any-columns-for-users-svg/>
+        </div>
+        <div class="empty-page-text-with-small-text">
+            <translate>This taskboard is not ready to be used</translate>
+            <div class="empty-page-small-text">
+                <translate>Your project administrator needs to finish the planning configuration</translate>
+            </div>
+        </div>
+    </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import BoardWithoutAnyColumnsErrorForAdmin from "./BoardWithoutAnyColumnsErrorForAdmin.vue";
-import BoardWithoutAnyColumnsErrorForUsers from "./BoardWithoutAnyColumnsErrorForUsers.vue";
+import { Component } from "vue-property-decorator";
+import BoardWithoutAnyColumnsForUsersSvg from "./BoardWithoutAnyColumnsForUsersSvg.vue";
 
 @Component({
-    components: { BoardWithoutAnyColumnsErrorForUsers, BoardWithoutAnyColumnsErrorForAdmin }
+    components: { BoardWithoutAnyColumnsForUsersSvg }
 })
-export default class BoardWithoutAnyColumnsError extends Vue {
-    @Prop()
-    readonly user_is_admin!: boolean;
-
-    @Prop()
-    readonly admin_url!: string;
-}
+export default class BoardWithoutAnyColumnsErrorForUsers extends Vue {}
 </script>
