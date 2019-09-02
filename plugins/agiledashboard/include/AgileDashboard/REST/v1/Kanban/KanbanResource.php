@@ -609,8 +609,10 @@ class KanbanResource extends AuthenticatedResource
         try {
             $current_user = UserManager::instance()->getCurrentUser();
             $kanban       = $this->kanban_factory->getKanban($current_user, $id);
-        } catch (AgileDashboard_KanbanCannotAccessException|AgileDashboard_KanbanNotFoundException $exception) {
+        } catch (AgileDashboard_KanbanNotFoundException $exception) {
             throw new RestException(404);
+        } catch (AgileDashboard_KanbanCannotAccessException $exception) {
+            throw new RestException(403);
         }
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
@@ -856,8 +858,10 @@ class KanbanResource extends AuthenticatedResource
         try {
             $current_user = UserManager::instance()->getCurrentUser();
             $kanban       = $this->kanban_factory->getKanban($current_user, $id);
-        } catch (AgileDashboard_KanbanCannotAccessException|AgileDashboard_KanbanNotFoundException $exception) {
+        } catch (AgileDashboard_KanbanNotFoundException $exception) {
             throw new RestException(404);
+        } catch (AgileDashboard_KanbanCannotAccessException $exception) {
+            throw new RestException(403);
         }
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
@@ -1049,8 +1053,10 @@ class KanbanResource extends AuthenticatedResource
         try {
             $current_user = UserManager::instance()->getCurrentUser();
             $kanban       = $this->kanban_factory->getKanban($current_user, $id);
-        } catch (AgileDashboard_KanbanCannotAccessException|AgileDashboard_KanbanNotFoundException $exception) {
+        } catch (AgileDashboard_KanbanNotFoundException $exception) {
             throw new RestException(404);
+        } catch (AgileDashboard_KanbanCannotAccessException $exception) {
+            throw new RestException(403);
         }
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
