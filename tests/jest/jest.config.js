@@ -36,6 +36,7 @@ module.exports = {
             "../../src/www/scripts/vue-components/$1"
         )
     },
+    setupFilesAfterEnv: [path.resolve(__dirname, "./fail-console-error-warning.js")],
     globals: {
         "vue-jest": {
             babelConfig: path.resolve(__dirname, "./babel.config.js")
