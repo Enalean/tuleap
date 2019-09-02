@@ -27,7 +27,8 @@ module.exports = [
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../../src/www/assets/taskboard/scripts")
+            path.resolve(__dirname, "../../../src/www/assets/taskboard/scripts"),
+            "/assets/taskboard/scripts/"
         ),
         resolve: {
             extensions: [".js", ".ts", ".vue"],
