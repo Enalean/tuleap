@@ -20,6 +20,7 @@
 
 <template>
     <div class="tlp-framed-horizontally">
+        <under-construction-modal/>
         <board-without-any-columns-error v-bind:user_is_admin="user_is_admin" v-bind:admin_url="admin_url"/>
     </div>
 </template>
@@ -28,9 +29,10 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import BoardWithoutAnyColumnsError from "./GlobalError/BoardWithoutAnyColumnsError.vue";
+import UnderConstructionModal from "./UnderConstruction/UnderConstructionModal.vue";
 
 @Component({
-    components: { BoardWithoutAnyColumnsError }
+    components: { BoardWithoutAnyColumnsError, UnderConstructionModal }
 })
 export default class App extends Vue {
     @Prop()

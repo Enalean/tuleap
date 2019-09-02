@@ -20,19 +20,18 @@
 import { Vue } from "vue/types/vue";
 import { shallowMount } from "@vue/test-utils";
 import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
-import BoardWithoutAnyColumnsErrorForAdmin from "./BoardWithoutAnyColumnsErrorForAdmin.vue";
+import UnderConstructionModal from "./UnderConstructionModal.vue";
 
-describe("BoardWithoutAnyColumnsError", () => {
+describe("UnderConstructionModal", () => {
     let local_vue: typeof Vue;
 
     beforeEach(() => {
         local_vue = createTaskboardLocalVue();
     });
 
-    it("is displays misconfiguration error for admin user", () => {
-        const wrapper = shallowMount(BoardWithoutAnyColumnsErrorForAdmin, {
-            localVue: local_vue,
-            propsData: { admin_url: "/path/to/admin" }
+    it("open the modal as soon as the component is mounted", () => {
+        const wrapper = shallowMount(UnderConstructionModal, {
+            localVue: local_vue
         });
         expect(wrapper.element).toMatchSnapshot();
     });

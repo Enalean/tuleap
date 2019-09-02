@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App is displays misconfiguration error for admin user 1`] = `
+<div
+  class="tlp-framed-horizontally"
+>
+  <under-construction-modal-stub />
+   
+  <board-without-any-columns-error-stub
+    admin_url="/path/to/admin"
+    user_is_admin="true"
+  />
+</div>
+`;
+
+exports[`App is displays misconfiguration error for regular user 1`] = `
+<div
+  class="tlp-framed-horizontally"
+>
+  <under-construction-modal-stub />
+   
+  <board-without-any-columns-error-stub
+    admin_url="/path/to/admin"
+  />
+</div>
+`;

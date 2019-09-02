@@ -31,7 +31,7 @@ const ID_TLP_MODAL_BACKDROP = "tlp-modal-backdrop";
 
 export default (element, options) => new Modal(element, options);
 
-class Modal {
+export class Modal {
     constructor(element, options = { keyboard: true }) {
         const { keyboard = true, destroy_on_hide = false } = options;
         this.body_element = document.body;

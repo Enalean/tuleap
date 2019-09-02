@@ -15,25 +15,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 import { Vue } from "vue/types/vue";
-import { shallowMount } from "@vue/test-utils";
-import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
-import BoardWithoutAnyColumnsErrorForAdmin from "./BoardWithoutAnyColumnsErrorForAdmin.vue";
+import VueDOMPurifyHTML from "vue-dompurify-html";
+import GetTextPlugin from "vue-gettext";
+import { createLocalVue } from "@vue/test-utils";
 
-describe("BoardWithoutAnyColumnsError", () => {
-    let local_vue: typeof Vue;
-
-    beforeEach(() => {
-        local_vue = createTaskboardLocalVue();
+export function createTaskboardLocalVue(): typeof Vue {
+    const local_vue = createLocalVue();
+    local_vue.use(GetTextPlugin, {
+        translations: {},
+        silent: true
     });
+    local_vue.use(VueDOMPurifyHTML);
 
-    it("is displays misconfiguration error for admin user", () => {
-        const wrapper = shallowMount(BoardWithoutAnyColumnsErrorForAdmin, {
-            localVue: local_vue,
-            propsData: { admin_url: "/path/to/admin" }
-        });
-        expect(wrapper.element).toMatchSnapshot();
-    });
-});
+    return local_vue;
+}

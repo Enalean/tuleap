@@ -25,29 +25,12 @@ describe("App", () => {
         const wrapper = shallowMount(App, {
             propsData: { user_is_admin: false, admin_url: "/path/to/admin" }
         });
-        expect(wrapper.element).toMatchInlineSnapshot(`
-            <div
-              class="tlp-framed-horizontally"
-            >
-              <board-without-any-columns-error-stub
-                admin_url="/path/to/admin"
-              />
-            </div>
-        `);
+        expect(wrapper.element).toMatchSnapshot();
     });
     it("is displays misconfiguration error for admin user", () => {
         const wrapper = shallowMount(App, {
             propsData: { user_is_admin: true, admin_url: "/path/to/admin" }
         });
-        expect(wrapper.element).toMatchInlineSnapshot(`
-            <div
-              class="tlp-framed-horizontally"
-            >
-              <board-without-any-columns-error-stub
-                admin_url="/path/to/admin"
-                user_is_admin="true"
-              />
-            </div>
-        `);
+        expect(wrapper.element).toMatchSnapshot();
     });
 });
