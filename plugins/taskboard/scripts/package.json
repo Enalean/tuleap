@@ -17,8 +17,8 @@
     "bin": "../../../node_modules/.bin/"
   },
   "scripts": {
-    "build": "rm -rf ../../../src/www/assets/taskboard/scripts && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
-    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' 'CI=true npm test -- --watch'",
+    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
+    "watch": "$npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --config webpack.dev.js --watch' 'CI=true npm test -- --watch'",
     "test": "$npm_package_config_bin/jest"
   }
 }
