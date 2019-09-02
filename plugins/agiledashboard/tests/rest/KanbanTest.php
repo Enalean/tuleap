@@ -31,7 +31,7 @@ class KanbanTest extends TestBase {
     public function testOPTIONSKanban()
     {
         $response = $this->getResponse($this->client->options('kanban'));
-        $this->assertEquals(array('OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETKanban()

@@ -298,7 +298,7 @@ class KanbanResource extends AuthenticatedResource
      */
     public function options()
     {
-        Header::allowOptions();
+        Header::allowOptionsGetPatchDelete();
     }
 
     /**
