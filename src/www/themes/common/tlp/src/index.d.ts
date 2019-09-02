@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Modal } from "./js/modal.js";
+
 export function get(url: string, init: object): Promise<any>;
 export function recursiveGet(url: string, init: object): Promise<any>;
+export function modal(element: object, options?: object): Modal;
 
 export as namespace tlp;

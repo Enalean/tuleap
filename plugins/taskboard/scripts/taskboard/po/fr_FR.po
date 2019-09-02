@@ -12,8 +12,42 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Close"
+msgstr "Fermer"
+
 msgid "Define columns"
 msgstr "Définir les colonnes"
+
+msgid "Hello,"
+msgstr "Bonjour,"
+
+msgid "I understand this is under construction"
+msgstr "Je comprends que c'est en cours de construction"
+
+msgid ""
+"If you have any questions or if you want to leave feedback, drop an email to "
+"<a href=\"mailto:feedback-taskboard@enalean.com\">feedback-taskboard@enalean."
+"com</a> or join us on <a href=\"https://chat.tuleap.org\">chat.tuleap.org</"
+"a>."
+msgstr ""
+"Si vous avez des questions ou si vous souhaitez faire un retour "
+"d'information, envoyez un courriel à <a href=\"mailto:feedback-"
+"taskboard@enalean.com\">feedback-taskboard@enalean.com</a> ou joignez-nous "
+"sur <a href=\"https://chat.tuleap.org\">chat.tuleap.org</a>."
+
+msgid ""
+"Thanks for your interest in Tuleap next features. You're about to test a new "
+"feature that is under construction. All the buttons, links, menus, … might "
+"not work. Things may also be broken on old browsers like IE11."
+msgstr ""
+"Merci pour votre intérêt pour les nouvelles fonctionnalités de Tuleap. Vous "
+"êtes sur le point de tester une fonctionnalité actuellement en cours de "
+"construction. Les boutons, liens, menus, … peuvent ne pas marcher. Il se "
+"peut également que l'interface soit cassée sur certains vieux navigateurs "
+"comme IE11."
+
+msgid "This feature is under construction"
+msgstr "Cette fonctionnalité est en cours de construction"
 
 msgid "This taskboard is not properly configured"
 msgstr "Ce tableau des tâches n'est pas correctement configuré"

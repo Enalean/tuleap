@@ -19,6 +19,7 @@
  */
 
 import Vue from "vue";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import App from "./src/components/App.vue";
 import { initVueGettext } from "./src/helpers/vue-gettext-init";
 
@@ -34,6 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await initVueGettext((locale: string) =>
         import(/* webpackChunkName: "taskboard-po-" */ `./po/${locale}.po`)
     );
+    Vue.use(VueDOMPurifyHTML);
 
     const AppComponent = Vue.extend(App);
 
