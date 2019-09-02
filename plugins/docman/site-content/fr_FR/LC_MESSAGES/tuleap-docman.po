@@ -34,12 +34,19 @@ msgstr ""
 msgid "%s has been modified by %s."
 msgstr "%s a été modifié par %s."
 
+#, php-format
+msgid "%s has been removed by %s."
+msgstr "%s a été supprimé par %s."
+
 msgid ""
 "A document with the same title is already being uploaded, you cannot copy "
 "your document here for now"
 msgstr ""
 "Un document avec le même titre est déjà en cours de téléversement, vous ne "
 "pouvez pas copier votre document ici pour le moment"
+
+msgid "Added:"
+msgstr "Ajouté :"
 
 msgid "An error occurred during the update of the max file size"
 msgstr ""
@@ -131,6 +138,9 @@ msgstr "Taille maximum des fichiers  (en Octets)"
 msgid "Maximum number of files"
 msgstr "Nombre maximum de fichiers"
 
+msgid "Moved"
+msgstr "Déplacé"
+
 msgid ""
 "New user interface is under construction and all feature are not available "
 "yet."
@@ -153,6 +163,9 @@ msgstr "Permission"
 
 msgid "Rejected"
 msgstr "Rejecté"
+
+msgid "Removed:"
+msgstr "Supprimé :"
 
 msgid "Save settings"
 msgstr "Enregistrer"
@@ -298,8 +311,20 @@ msgstr "Vous n'avez pas les droits suffisants pour supprimer %s."
 msgid "You should be site administrator to access this page"
 msgstr "Vous devez être administrateur site pour accéder à cette page"
 
+#, php-format
+msgid ""
+"from:\n"
+" %s"
+msgstr "depuis :\n%s"
+
 msgid "null is not a valid status."
 msgstr "null n'est pas un statut valide."
+
+#, php-format
+msgid ""
+"to:\n"
+" %s"
+msgstr "vers :\n%s"
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }} n'a pas de permissions globales"
