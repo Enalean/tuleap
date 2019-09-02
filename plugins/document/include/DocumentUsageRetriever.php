@@ -22,23 +22,12 @@ declare(strict_types = 1);
 
 namespace Tuleap\Document;
 
-use Docman_MetadataFactory;
 use ForgeConfig;
 use PFUser;
 use Project;
 
 class DocumentUsageRetriever
 {
-    /**
-     * @var Docman_MetadataFactory
-     */
-    private $metadata_factory;
-
-    public function __construct(Docman_MetadataFactory $metadata_factory)
-    {
-        $this->metadata_factory = $metadata_factory;
-    }
-
     public function shouldUseDocument(?PFUser $user, Project $project): bool
     {
         if (! $user) {
@@ -62,15 +51,6 @@ class DocumentUsageRetriever
         if ($blacklist_projects_string) {
             $blacklist_projects = array_map('trim', explode(',', $blacklist_projects_string));
             if ($blacklist_projects && in_array($project->getID(), $blacklist_projects)) {
-                return false;
-            }
-        }
-
-        $metadata_list = $this->metadata_factory->getRealMetadataList();
-
-        /** @var \Docman_Metadata $metadata */
-        foreach ($metadata_list as $metadata) {
-            if (! (bool)$metadata->isEmptyAllowed()) {
                 return false;
             }
         }
