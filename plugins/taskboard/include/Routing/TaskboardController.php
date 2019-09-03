@@ -36,6 +36,8 @@ use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo;
+use Tuleap\Taskboard\Board\BoardPresenter;
+use Tuleap\Taskboard\Board\BoardPresenterBuilder;
 
 class TaskboardController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
 {
@@ -67,12 +69,16 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
      * @var IncludeAssets
      */
     private $taskboard_js_assets;
+    /**
+     * @var BoardPresenterBuilder
+     */
+    private $presenter_builder;
 
     public function __construct(
         MilestoneExtractor $milestone_extractor,
         TemplateRenderer $renderer,
         AllBreadCrumbsForMilestoneBuilder $bread_crumbs_builder,
-        Planning_MilestonePaneFactory $pane_factory,
+        BoardPresenterBuilder $presenter_builder,
         IncludeAssets $agiledashboard_assets,
         IncludeAssets $taskboard_theme_assets,
         IncludeAssets $taskboard_js_assets
@@ -80,7 +86,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
         $this->milestone_extractor    = $milestone_extractor;
         $this->renderer               = $renderer;
         $this->bread_crumbs_builder   = $bread_crumbs_builder;
-        $this->pane_factory           = $pane_factory;
+        $this->presenter_builder      = $presenter_builder;
         $this->agiledashboard_assets  = $agiledashboard_assets;
         $this->taskboard_theme_assets = $taskboard_theme_assets;
         $this->taskboard_js_assets    = $taskboard_js_assets;
@@ -115,29 +121,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
             [],
             []
         );
-        $this->renderer->renderToPage('taskboard', $this->getPresenter($milestone, $user));
+        $this->renderer->renderToPage('taskboard', $this->presenter_builder->getPresenter($milestone, $user));
         $service->displayFooter();
-    }
-
-    private function getPresenter(\Planning_Milestone $milestone, PFuser $user): TaskboardPresenter
-    {
-        $presenter_data = $this->pane_factory->getPanePresenterData($milestone);
-        $this->forceTaskboardPaneToBeTheActiveOne($presenter_data);
-
-        return new TaskboardPresenter(
-            new AgileDashboard_MilestonePresenter($milestone, $presenter_data),
-            $user,
-            $milestone
-        );
-    }
-
-    private function forceTaskboardPaneToBeTheActiveOne(PanePresenterData $presenter_data): void
-    {
-        foreach ($presenter_data->getListOfPaneInfo() as $pane_info) {
-            if ($pane_info->getIdentifier() === TaskboardPaneInfo::NAME) {
-                $pane_info->setActive(true);
-                break;
-            }
-        }
     }
 }
