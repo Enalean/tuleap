@@ -31,36 +31,41 @@
         </label>
         <div class="tlp-form-element tlp-form-element-prepend">
             <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
-            <input
-                type="text"
-                v-bind:id="`document-${currentlyUpdatedItemMetadata.short_name}`"
-                class="tlp-input tlp-input-date"
-                size="12"
-                ref="document_date_input"
-                data-test="document-date-input"
+            <date-flat-picker
+                v-bind:id="`${currentlyUpdatedItemMetadata.short_name}`"
                 v-bind:required="currentlyUpdatedItemMetadata.is_required"
-                v-on:click="currentlyUpdatedItemMetadata.value = $event.target.value"
-            >
+                v-model="custom_metadata_date"
+            />
         </div>
     </div>
 </template>
 
 <script>
-import { datePicker } from "tlp";
+import DateFlatPicker from "../DateFlatPicker.vue";
 
 export default {
     name: "CustomMetadataDate",
+    components: { DateFlatPicker },
     props: {
-        currentlyUpdatedItemMetadata: Object
+        currentlyUpdatedItemMetadata: {
+            type: Object,
+            required: true,
+            readonly: true
+        },
+        value: {
+            type: String,
+            required: true,
+            readonly: true
+        }
     },
-    mounted() {
-        datePicker(this.$refs.document_date_input);
-
-        if (
-            this.currentlyUpdatedItemMetadata.value &&
-            this.currentlyUpdatedItemMetadata.type === "date"
-        ) {
-            this.$refs.document_date_input.value = this.currentlyUpdatedItemMetadata.value;
+    computed: {
+        custom_metadata_date: {
+            get() {
+                return this.value;
+            },
+            set(value) {
+                this.$emit("input", value);
+            }
         }
     }
 };

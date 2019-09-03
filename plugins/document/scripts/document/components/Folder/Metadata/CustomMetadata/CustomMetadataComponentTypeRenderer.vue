@@ -43,6 +43,7 @@
         v-else-if="itemMetadata.type === 'date'"
         v-bind:currently-updated-item-metadata="itemMetadata"
         data-test="document-custom-metadata-date"
+        v-model="itemMetadata.value"
     />
 </template>
 <script>
