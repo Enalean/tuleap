@@ -23,7 +23,7 @@ Requires:	tuleap >= 9.8
 %{__rm} -rf $RPM_BUILD_ROOT
 
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/enalean_licensemanager
-%{__cp} -ar include site-content etc README.mkd VERSION $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/enalean_licensemanager
+%{__cp} -ar include vendor site-content etc README.mkd VERSION $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/enalean_licensemanager
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT

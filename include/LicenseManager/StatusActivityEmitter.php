@@ -21,6 +21,7 @@
 namespace Tuleap\Enalean\LicenseManager;
 
 use Tuleap\Enalean\LicenseManager\Webhook\UserCounterPayload;
+use Tuleap\Enalean\LicenseManager\Webhook\UserCounterWebhook;
 use Tuleap\Webhook\Emitter;
 
 class StatusActivityEmitter
