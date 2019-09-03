@@ -19,65 +19,66 @@
 
 import Vue from "vue";
 import {
-    addNewEmpty,
-    addNewWiki,
-    addNewFile,
     addNewEmbedded,
+    addNewEmpty,
+    addNewFile,
     addNewLink,
+    addNewWiki,
+    addUserLegacyUIPreferency,
     cancelUpload,
     createNewVersion,
+    deleteEmbeddedFile,
+    deleteEmptyDocument,
+    deleteFile,
+    deleteFolder,
+    deleteLink,
+    deleteLockEmbedded,
+    deleteLockEmpty,
+    deleteLockFile,
+    deleteLockLink,
+    deleteLockWiki,
     deleteUserPreferenciesForFolderInProject,
-    addUserLegacyUIPreferency,
     deleteUserPreferenciesForUnderConstructionModal,
+    deleteWiki,
+    getDocumentManagerServiceInformation,
     getFolderContent,
     getItem,
-    getDocumentManagerServiceInformation,
-    patchUserPreferenciesForFolderInProject,
-    postEmbeddedFile,
-    postWiki,
-    postLinkVersion,
-    deleteFile,
-    deleteLink,
-    deleteEmbeddedFile,
-    deleteWiki,
-    deleteEmptyDocument,
-    deleteFolder,
     getItemsReferencingSameWikiPage,
     getParents,
-    postLockFile,
-    deleteLockFile,
-    postLockEmbedded,
-    deleteLockEmbedded,
-    postLockWiki,
-    deleteLockWiki,
-    postLockLink,
-    deleteLockLink,
-    postLockEmpty,
-    deleteLockEmpty,
-    setNarrowModeForEmbeddedDisplay,
-    removeUserPreferenceForEmbeddedDisplay,
     getPreferenceForEmbeddedDisplay,
-    putFileMetadata,
+    patchUserPreferenciesForFolderInProject,
+    postEmbeddedFile,
+    postLinkVersion,
+    postLockEmbedded,
+    postLockEmpty,
+    postLockFile,
+    postLockLink,
+    postLockWiki,
+    postNewLinkVersionFromEmpty,
+    postWiki,
     putEmbeddedFileMetadata,
-    putLinkMetadata,
-    putWikiMetadata,
-    putEmptyDocumentMetadata,
-    putFolderDocumentMetadata,
     putEmbeddedFilePermissions,
-    putFilePermissions,
-    putLinkPermissions,
-    putWikiPermissions,
+    putEmptyDocumentMetadata,
     putEmptyDocumentPermissions,
-    putFolderPermissions
+    putFileMetadata,
+    putFilePermissions,
+    putFolderDocumentMetadata,
+    putFolderPermissions,
+    putLinkMetadata,
+    putLinkPermissions,
+    putWikiMetadata,
+    putWikiPermissions,
+    removeUserPreferenceForEmbeddedDisplay,
+    setNarrowModeForEmbeddedDisplay
 } from "../api/rest-querier.js";
 
 import {
     getErrorMessage,
     handleErrors,
-    handleErrorsForModal,
     handleErrorsForDeletionModal,
     handleErrorsForDocument,
-    handleErrorsForLock
+    handleErrorsForLock,
+    handleErrorsForModal
 } from "./actions-helpers/handle-errors.js";
 import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
@@ -90,8 +91,8 @@ import {
     TYPE_EMPTY,
     TYPE_FILE,
     TYPE_FOLDER,
-    TYPE_WIKI,
     TYPE_LINK,
+    TYPE_WIKI,
     USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE
 } from "../constants.js";
 import { addNewFolder } from "../api/rest-querier";
@@ -884,4 +885,23 @@ export const toggleQuickLook = async (context, item_id) => {
 export const removeQuickLook = context => {
     context.commit("updateCurrentlyPreviewedItem", null);
     context.commit("toggleQuickLook", false);
+};
+
+export const createNewVersionFromEmpty = async (context, [selected_type, item, item_to_update]) => {
+    try {
+        switch (selected_type) {
+            case TYPE_LINK:
+                await postNewLinkVersionFromEmpty(item.id, item_to_update.link_properties.link_url);
+                break;
+            default:
+                break;
+        }
+        const updated_item = await getItem(item.id);
+        Vue.set(updated_item, "updated", true);
+        context.commit("removeItemFromFolderContent", updated_item);
+        context.commit("addJustCreatedItemToFolderContent", updated_item);
+        context.commit("updateCurrentItemForQuickLokDisplay", updated_item);
+    } catch (exception) {
+        await handleErrorsForModal(context, exception);
+    }
 };

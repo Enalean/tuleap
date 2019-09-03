@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { del, get, patch, post, recursiveGet, put } from "tlp";
+import { del, get, patch, post, put, recursiveGet } from "tlp";
 import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants.js";
 
 export {
@@ -85,7 +85,8 @@ export {
     putEmptyDocumentPermissions,
     putFolderPermissions,
     getProjectUserGroups,
-    getProjectMetadata
+    getProjectMetadata,
+    postNewLinkVersionFromEmpty
 };
 
 async function getDocumentManagerServiceInformation(project_id) {
@@ -767,5 +768,17 @@ function getProjectMetadata(project_id) {
             limit: 50,
             offset: 0
         }
+    });
+}
+
+function postNewLinkVersionFromEmpty(item_id, link_url) {
+    const escaped_item_id = encodeURIComponent(item_id);
+    return post(`/api/docman_empty_documents/${escaped_item_id}/link`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            link_url
+        })
     });
 }
