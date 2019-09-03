@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Taskboard\Board\BoardPresenterBuilder;
+use Tuleap\Taskboard\Column\ColumnPresenterCollectionRetriever;
 use Tuleap\Taskboard\Routing\MilestoneExtractor;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -79,7 +81,10 @@ class taskboardPlugin extends Plugin
             ),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
             $agiledashboard_plugin->getAllBreadCrumbsForMilestoneBuilder(),
-            $agiledashboard_plugin->getMilestonePaneFactory(),
+            new BoardPresenterBuilder(
+                $agiledashboard_plugin->getMilestonePaneFactory(),
+                new ColumnPresenterCollectionRetriever(new Cardwall_OnTop_ColumnDao())
+            ),
             $agiledashboard_plugin->getIncludeAssets(),
             new IncludeAssets(
                 __DIR__ . '/../../../src/www/assets/taskboard/themes',

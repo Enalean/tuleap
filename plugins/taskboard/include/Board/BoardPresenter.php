@@ -20,13 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Taskboard\Routing;
+namespace Tuleap\Taskboard\Board;
 
 use AgileDashboard_MilestonePresenter;
 use PFUser;
 use Planning_Milestone;
+use Tuleap\Taskboard\Column\ColumnPresenter;
 
-class TaskboardPresenter
+class BoardPresenter
 {
     /**
      * @var AgileDashboard_MilestonePresenter
@@ -40,11 +41,22 @@ class TaskboardPresenter
      * @var string
      */
     public $admin_url;
+    /**
+     * @var ColumnPresenter[]
+     */
+    public $columns;
 
+    /**
+     * @param AgileDashboard_MilestonePresenter $milestone_presenter
+     * @param PFUser                            $user
+     * @param Planning_Milestone                $milestone
+     * @param ColumnPresenter[]                 $columns
+     */
     public function __construct(
         AgileDashboard_MilestonePresenter $milestone_presenter,
         PFUser $user,
-        Planning_Milestone $milestone
+        Planning_Milestone $milestone,
+        array $columns
     ) {
         $project = $milestone->getProject();
 
@@ -58,5 +70,7 @@ class TaskboardPresenter
                     'action'      => 'edit'
                 ]
             );
+
+        $this->columns = $columns;
     }
 }
