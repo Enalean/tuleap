@@ -32,6 +32,7 @@ use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
 use Tuleap\DB\DBConnection;
 use Tuleap\User\AccessKey\AccessKeyRevoker;
 use UserManager;
+use Tuleap\Mail\AutomaticMailsSender;
 
 class DailyJobCommand extends Command
 {
@@ -59,12 +60,18 @@ class DailyJobCommand extends Command
      */
     private $access_key_revoker;
 
+    /**
+     * @var AutomaticMailsSender
+     */
+    private $auto_mails_sender;
+
     public function __construct(
         EventManager $event_manager,
         UserManager $user_manager,
         AccessKeyRevoker $access_key_revoker,
         DBConnection $db_connection,
-        ExecutionDelayedLauncher $execution_delayed_launcher
+        ExecutionDelayedLauncher $execution_delayed_launcher,
+        AutomaticMailsSender $auto_mails_sender
     ) {
         parent::__construct(self::NAME);
         $this->event_manager              = $event_manager;
@@ -72,6 +79,7 @@ class DailyJobCommand extends Command
         $this->db_connection              = $db_connection;
         $this->execution_delayed_launcher = $execution_delayed_launcher;
         $this->access_key_revoker         = $access_key_revoker;
+        $this->auto_mails_sender = $auto_mails_sender;
     }
 
     protected function configure() : void
@@ -85,11 +93,11 @@ class DailyJobCommand extends Command
             $this->db_connection->reconnectAfterALongRunningProcess();
             $this->event_manager->processEvent('codendi_daily_start');
             $this->user_manager->checkUserAccountValidity();
+            $this->auto_mails_sender->sendNotificationMailToIdleAccounts();
 
             $now = (new \DateTime())->getTimestamp();
             $this->access_key_revoker->revokeExpiredUserAccessKeys($now);
         });
-
         return 0;
     }
 }

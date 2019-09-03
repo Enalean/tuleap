@@ -27,7 +27,7 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\layout\HomePage\NewsCollectionBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
-use Tuleap\System\ServiceControl;
+use Tuleap\Mail\AutomaticMailsSender;
 
 class GetWhitelistedKeys implements Dispatchable
 {
@@ -48,7 +48,7 @@ class GetWhitelistedKeys implements Dispatchable
         NewsCollectionBuilder::CONFIG_DISPLAY_NEWS => true,
         StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS => true,
         DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME => true,
-        ServiceControl::FORGECONFIG_INIT_MODE => true,
+        AutomaticMailsSender::CONFIG_NOTIFICATION_DELAY => true,
     ];
 
     public function addPluginsKeys($key_name)
