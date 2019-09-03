@@ -21,10 +21,12 @@
 require_once __DIR__  . '/../vendor/autoload.php';
 require_once 'constants.php';
 
+use FastRoute\RouteCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\MyTuleapContactSupport\Plugin\Info;
-use Tuleap\MyTuleapContactSupport\Router;
-use Tuleap\MyTuleapContactSupport\ContactSupportController;
+use Tuleap\MyTuleapContactSupport\ContactSupportFormController;
+use Tuleap\MyTuleapContactSupport\SendMailSupportController;
+use Tuleap\Request\CollectRoutesEvent;
 
 class mytuleap_contact_supportPlugin extends Plugin
 {
@@ -43,6 +45,7 @@ class mytuleap_contact_supportPlugin extends Plugin
         $this->addHook('site_help');
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(CollectRoutesEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -56,20 +59,19 @@ class mytuleap_contact_supportPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    private function getRouter()
+    private function getContactSupportFormController()
     {
-        return new Router(
-            $this->getContactSupportController()
-        );
-    }
-
-    private function getContactSupportController()
-    {
-        return new ContactSupportController(
+        return new ContactSupportFormController(
             $this->getRenderer()
         );
     }
 
+    private function getSendMailSupportController()
+    {
+        return new SendMailSupportController(
+            $this->getRenderer()
+        );
+    }
     private function getRenderer()
     {
         $template_path = MYTULEAP_CONTACT_SUPPORT_BASE_DIR . '/templates/';
@@ -77,9 +79,25 @@ class mytuleap_contact_supportPlugin extends Plugin
         return TemplateRendererFactory::build()->getRenderer($template_path);
     }
 
-    public function process(HTTPRequest $request)
+    public function collectRoutesEvent(collectRoutesEvent $event) : void
     {
-        $this->getRouter()->route($request);
+        $event->getRouteCollector()->addGroup('/plugins/mytuleap_contact_support', function (RouteCollector $r) {
+                $r->post('/send-message',
+                    $this->getRouteHandler('routePost')
+                );
+                $r->get('/get-modal-content',
+                    $this->getRouteHandler('routeGet'));
+        });
+    }
+
+    public function routePost() : SendMailSupportController
+    {
+        return $this->getSendMailSupportController();
+    }
+
+    public function routeGet() : ContactSupportFormController
+    {
+        return $this->getContactSupportFormController();
     }
 
     public function cssfile()
@@ -94,9 +112,9 @@ class mytuleap_contact_supportPlugin extends Plugin
         echo $asset->getHTMLSnippet('modal-flaming-parrot.js');
     }
 
-    public function site_help($params)
+    public function site_help($params) : void
     {
-        $params['extra_content'] = $this->getContactSupportController()->getFormContent();
+        $params['extra_content'] = $this->getContactSupportFormController()->getFormContent();
     }
 
     public function burning_parrot_get_javascript_files(array $params)

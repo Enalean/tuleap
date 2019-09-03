@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import tlp from "tlp";
+import { modal as createModal } from "tlp";
 import jQuery from "jquery";
 import { contactSupportModalShown } from "./modal.js";
 
@@ -32,13 +32,12 @@ import { contactSupportModalShown } from "./modal.js";
 
         if (!contact_support_modal) {
             $.get(
-                "/plugins/mytuleap_contact_support/index.php?action=get-modal-content&is-burning-parrot-compatible=1"
+                "/plugins/mytuleap_contact_support/get-modal-content?is-burning-parrot-compatible=1"
             ).then(function(data) {
                 var modal_container = document.createElement("div");
                 modal_container.innerHTML = data;
                 document.body.appendChild(modal_container.querySelector(".tlp-modal"));
-
-                contact_support_modal = tlp.modal(
+                contact_support_modal = createModal(
                     document.body.querySelector(".contact-support-modal")
                 );
                 contact_support_modal.addEventListener(
