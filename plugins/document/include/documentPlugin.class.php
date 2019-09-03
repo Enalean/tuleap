@@ -157,7 +157,7 @@ class documentPlugin extends Plugin // phpcs:ignore
 
     private function shouldUseDocumentUrl(Project $project): bool
     {
-        $retriever = new DocumentUsageRetriever(new Docman_MetadataFactory($project->getID()));
+        $retriever = new DocumentUsageRetriever();
         $user      = $this->getCurrentUser();
         return $retriever->shouldUseDocument($user, $project);
     }
