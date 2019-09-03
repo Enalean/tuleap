@@ -20,6 +20,7 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use AgileDashboard_MilestonesCardwallRepresentation;
+use EventManager;
 use Planning_Milestone;
 use PlanningFactory;
 use TrackerFactory;
@@ -140,6 +141,11 @@ class MilestoneRepresentation extends MilestoneRepresentationBase {
         $this->resources['siblings'] = [
             'uri' => $this->uri . '/siblings'
         ];
+
+        $event = new AdditionalPanesForMilestoneEvent($milestone);
+        EventManager::instance()->processEvent($event);
+
+        $this->resources['additional_panes'] = $event->getPaneInfoRepresentations();
     }
 
     private function getContentTrackersRepresentation(Planning_Milestone $milestone)

@@ -167,11 +167,12 @@ class MilestoneRepresentationBase {
      * @var array
      */
     public $resources = array(
-        'milestones' => null,
-        'backlog'    => null,
-        'content'    => null,
-        'cardwall'   => null,
-        'burndown'   => null,
-        'siblings'   => null,
+        'milestones'       => null,
+        'backlog'          => null,
+        'content'          => null,
+        'cardwall'         => null,
+        'burndown'         => null,
+        'siblings'         => null,
+        'additional_panes' => [],
     );
 }

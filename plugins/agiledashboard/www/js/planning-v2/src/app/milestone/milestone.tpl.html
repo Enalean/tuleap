@@ -95,10 +95,16 @@
         ><i class="fa fa-sign-in"></i><span translate>Planning</span></a>
 
         <a href="{{ planning.generateMilestoneLinkUrl(milestoneController.milestone, 'cardwall') }}"
-            ng-if="milestoneController.milestone.resources.cardwall"
-            title="{{::'Cardwall' | translate }}"
-            class="milestone-info-link"
+           ng-if="milestoneController.milestone.resources.cardwall"
+           title="{{::'Cardwall' | translate }}"
+           class="milestone-info-link"
         ><i class="fa fa-table"></i><span translate>Cardwall</span></a>
+
+        <a ng-repeat="pane in milestoneController.milestone.resources.additional_panes"
+           href="{{ pane.uri }}"
+           title="{{ pane.title }}"
+           class="milestone-info-link"
+        ><i class="fa {{ pane.icon_name }}"></i><span>{{ pane.title }}</span></a>
     </div>
 
     <section class="tlp-pane-section milestone-content"
