@@ -22,6 +22,7 @@ import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import App from "./src/components/App.vue";
 import { initVueGettext } from "./src/helpers/vue-gettext-init";
+import { ColumnDefinition } from "./src/type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("taskboard");
@@ -31,6 +32,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const user_is_admin = Boolean(vue_mount_point.dataset.userIsAdmin);
     const admin_url = vue_mount_point.dataset.adminUrl;
+    const columns: Array<ColumnDefinition> =
+        typeof vue_mount_point.dataset.columns !== "undefined"
+            ? JSON.parse(vue_mount_point.dataset.columns)
+            : [];
 
     await initVueGettext((locale: string) =>
         import(/* webpackChunkName: "taskboard-po-" */ `./po/${locale}.po`)
@@ -40,6 +45,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const AppComponent = Vue.extend(App);
 
     new AppComponent({
-        propsData: { user_is_admin, admin_url }
+        propsData: { user_is_admin, admin_url, columns }
     }).$mount(vue_mount_point);
 });

@@ -19,39 +19,22 @@
   -->
 
 <template>
-    <div>
-        <under-construction-modal/>
-        <task-board v-bind:columns="columns" v-if="has_at_least_one_column"/>
-        <board-without-any-columns-error
-            v-bind:user_is_admin="user_is_admin"
-            v-bind:admin_url="admin_url"
-            v-else/>
-    </div>
+    <tbody>
+        <tr class="taskboard-swimlane">
+            <td class="taskboard-cell"></td>
+            <td class="taskboard-cell" v-for="col of columns" v-bind:key="col.id"></td>
+        </tr>
+    </tbody>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import BoardWithoutAnyColumnsError from "./GlobalError/BoardWithoutAnyColumnsError.vue";
-import UnderConstructionModal from "./UnderConstruction/UnderConstructionModal.vue";
-import { ColumnDefinition } from "../type";
-import TaskBoard from "./TaskBoard/TaskBoard.vue";
+import { ColumnDefinition } from "../../type";
 
-@Component({
-    components: { TaskBoard, BoardWithoutAnyColumnsError, UnderConstructionModal }
-})
-export default class App extends Vue {
-    @Prop()
-    readonly user_is_admin!: boolean;
-
-    @Prop()
-    readonly admin_url!: string;
-
+@Component
+export default class TaskBoardBody extends Vue {
     @Prop()
     readonly columns!: Array<ColumnDefinition>;
-
-    get has_at_least_one_column() {
-        return this.columns.length > 0;
-    }
 }
 </script>

@@ -17,16 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../agiledashboard/www/themes/BurningParrot/css/header';
-@import 'includes/header';
-@import 'includes/body';
-
-.taskboard-under-construction {
-    color: $tlp-ui-dimmed;
-}
-
-.taskboard {
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
+.taskboard-header {
+    position: sticky;
+    z-index: 10;
+    top: 45px;
+    min-width: 200px;
+    height: 50px;
+    padding: $tlp-half-spacing;
+    border: 0;
+    background: $tlp-ui-white;
+    box-shadow: inset 0 2px 0 0 $tlp-ui-border-normal, inset 0 -1px 0 $tlp-ui-border-normal;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+    vertical-align: middle;
 }

@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TaskBoardHeader displays a header with many columns 1`] = `
+<thead>
+  <tr>
+    <th
+      class="taskboard-header"
+    />
+     
+    <th
+      class="taskboard-header"
+    >
+      To do
+    </th>
+    <th
+      class="taskboard-header"
+    >
+      Done
+    </th>
+  </tr>
+</thead>
+`;

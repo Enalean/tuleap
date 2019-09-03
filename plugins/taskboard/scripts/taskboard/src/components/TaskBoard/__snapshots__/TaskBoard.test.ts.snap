@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TaskBoard displays a table with header and body 1`] = `
+<table
+  class="taskboard"
+>
+  <task-board-header-stub
+    columns="[object Object],[object Object]"
+  />
+   
+  <task-board-body-stub
+    columns="[object Object],[object Object]"
+  />
+</table>
+`;

@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TaskBoardBody displays a header with many columns 1`] = `
+<tbody>
+  <tr
+    class="taskboard-swimlane"
+  >
+    <td
+      class="taskboard-cell"
+    />
+     
+    <td
+      class="taskboard-cell"
+    />
+    <td
+      class="taskboard-cell"
+    />
+  </tr>
+</tbody>
+`;

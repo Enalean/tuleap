@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,18 +15,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-@import '../../agiledashboard/www/themes/BurningParrot/css/header';
-@import 'includes/header';
-@import 'includes/body';
-
-.taskboard-under-construction {
-    color: $tlp-ui-dimmed;
-}
-
-.taskboard {
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
+export interface ColumnDefinition {
+    id: number;
+    label: string;
 }
