@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Guzzle\Http\Message\Response;
 use Tuleap\AgileDashboard\REST\DataBuilder;
 use Tuleap\AgileDashboard\REST\TestBase;
-use Guzzle\Http\Message\Response;
 
 require_once dirname(__FILE__).'/bootstrap.php';
 
@@ -41,7 +41,10 @@ final class KanbanTest extends TestBase {
             $this->client->options('kanban'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-        $this->assertEquals(array('OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(
+            ['OPTIONS', 'GET', 'PATCH', 'DELETE'],
+            $response->getHeader('Allow')->normalize()->toArray()
+        );
     }
 
     public function testGETKanban(): void
