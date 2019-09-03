@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "tlp-mocks";
-import Vue from "vue";
-import VueDOMPurifyHTML from "vue-dompurify-html";
-import GetTextPlugin from "vue-gettext";
-
-Vue.use(VueDOMPurifyHTML);
-Vue.use(GetTextPlugin, {
-    translations: {},
-    silent: true
-});
-
-import "./LabeledItemsList.spec.js";
-import "./rest-querier.spec.js";
+module.exports = require("../../../../tests/jest/jest.config.js");

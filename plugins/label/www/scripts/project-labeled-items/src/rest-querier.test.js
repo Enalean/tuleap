@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { tlp, mockFetchSuccess } from "tlp-mocks";
+import { mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
 import { getLabeledItems } from "./rest-querier.js";
+
+import * as tlp from "tlp";
+
+jest.mock("tlp");
 
 describe("getLabeledItems", () => {
     const project_id = 101;
     const labels_id = [3, 4];
 
-    beforeEach(() => {
-        tlp.get.calls.reset();
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     it("Returns the items", async () => {
@@ -37,7 +41,7 @@ describe("getLabeledItems", () => {
             labeled_items: [{ title: "Le title" }],
             are_there_items_user_cannot_see: false
         };
-        mockFetchSuccess(tlp.get, { headers, return_json });
+        mockFetchSuccess(jest.spyOn(tlp, "get"), { headers, return_json });
 
         const { labeled_items } = await getLabeledItems(project_id, labels_id, 0, 1);
 
@@ -53,7 +57,7 @@ describe("getLabeledItems", () => {
             labeled_items: [{ title: "Le title" }],
             are_there_items_user_cannot_see: false
         };
-        mockFetchSuccess(tlp.get, { headers, return_json });
+        mockFetchSuccess(jest.spyOn(tlp, "get"), { headers, return_json });
 
         const { are_there_items_user_cannot_see } = await getLabeledItems(
             project_id,
@@ -74,7 +78,7 @@ describe("getLabeledItems", () => {
             labeled_items: [{ title: "Le title" }],
             are_there_items_user_cannot_see: false
         };
-        mockFetchSuccess(tlp.get, { headers, return_json });
+        mockFetchSuccess(jest.spyOn(tlp, "get"), { headers, return_json });
 
         const { has_more } = await getLabeledItems(project_id, labels_id, 0, 1);
 
@@ -90,7 +94,7 @@ describe("getLabeledItems", () => {
             labeled_items: [{ title: "Le title" }],
             are_there_items_user_cannot_see: false
         };
-        mockFetchSuccess(tlp.get, { headers, return_json });
+        mockFetchSuccess(jest.spyOn(tlp, "get"), { headers, return_json });
 
         const { has_more } = await getLabeledItems(project_id, labels_id, 9, 1);
 
@@ -106,7 +110,7 @@ describe("getLabeledItems", () => {
             labeled_items: [{ title: "Le title" }],
             are_there_items_user_cannot_see: false
         };
-        mockFetchSuccess(tlp.get, { headers, return_json });
+        mockFetchSuccess(jest.spyOn(tlp, "get"), { headers, return_json });
 
         const { offset } = await getLabeledItems(project_id, labels_id, 9, 1);
 
@@ -114,46 +118,52 @@ describe("getLabeledItems", () => {
     });
 
     it("Fetches items recursively until it finds at least one readable", async () => {
-        tlp.get.and.returnValues(
-            Promise.resolve({
-                headers: {
-                    /** 'X-PAGINATION-SIZE' */
-                    get: () => 10
-                },
-                json: () =>
-                    Promise.resolve({
-                        labeled_items: [],
-                        are_there_items_user_cannot_see: true
-                    })
-            }),
-            Promise.resolve({
-                headers: {
-                    /** 'X-PAGINATION-SIZE' */
-                    get: () => 10
-                },
-                json: () =>
-                    Promise.resolve({
-                        labeled_items: [],
-                        are_there_items_user_cannot_see: true
-                    })
-            }),
-            Promise.resolve({
-                headers: {
-                    /** 'X-PAGINATION-SIZE' */
-                    get: () => 10
-                },
-                json: () =>
-                    Promise.resolve({
-                        labeled_items: [{ title: "Le title" }],
-                        are_there_items_user_cannot_see: false
-                    })
-            })
-        );
+        const tlpGet = jest.spyOn(tlp, "get");
+        tlpGet
+            .mockReturnValueOnce(
+                Promise.resolve({
+                    headers: {
+                        /** 'X-PAGINATION-SIZE' */
+                        get: () => 10
+                    },
+                    json: () =>
+                        Promise.resolve({
+                            labeled_items: [],
+                            are_there_items_user_cannot_see: true
+                        })
+                })
+            )
+            .mockReturnValueOnce(
+                Promise.resolve({
+                    headers: {
+                        /** 'X-PAGINATION-SIZE' */
+                        get: () => 10
+                    },
+                    json: () =>
+                        Promise.resolve({
+                            labeled_items: [],
+                            are_there_items_user_cannot_see: true
+                        })
+                })
+            )
+            .mockReturnValueOnce(
+                Promise.resolve({
+                    headers: {
+                        /** 'X-PAGINATION-SIZE' */
+                        get: () => 10
+                    },
+                    json: () =>
+                        Promise.resolve({
+                            labeled_items: [{ title: "Le title" }],
+                            are_there_items_user_cannot_see: false
+                        })
+                })
+            );
 
         const { offset, labeled_items } = await getLabeledItems(project_id, labels_id, 0, 1);
 
-        expect(tlp.get.calls.count()).toEqual(3);
-        expect(tlp.get.calls.argsFor(0)).toEqual([
+        expect(tlpGet.mock.calls.length).toEqual(3);
+        expect(tlpGet.mock.calls[0]).toEqual([
             "/api/projects/" + project_id + "/labeled_items",
             {
                 params: {
@@ -163,7 +173,7 @@ describe("getLabeledItems", () => {
                 }
             }
         ]);
-        expect(tlp.get.calls.argsFor(1)).toEqual([
+        expect(tlpGet.mock.calls[1]).toEqual([
             "/api/projects/" + project_id + "/labeled_items",
             {
                 params: {
@@ -173,7 +183,7 @@ describe("getLabeledItems", () => {
                 }
             }
         ]);
-        expect(tlp.get.calls.argsFor(2)).toEqual([
+        expect(tlpGet.mock.calls[2]).toEqual([
             "/api/projects/" + project_id + "/labeled_items",
             {
                 params: {

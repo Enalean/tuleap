@@ -76,9 +76,6 @@ pipeline {
                         stage('Karma FRS plugin') {
                             steps { script { actions.runKarmaTests('frs', 'plugins/frs/www/js/angular') } }
                         }
-                        stage('Karma Label plugin') {
-                            steps { script { actions.runKarmaTests('label', 'plugins/label/www/scripts') } }
-                        }
                         stage('Karma PullRequest plugin') {
                             steps { script { actions.runKarmaTests('pullrequest', 'plugins/pullrequest/www/scripts') } }
                         }
