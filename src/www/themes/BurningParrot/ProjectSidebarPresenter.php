@@ -34,8 +34,12 @@ class ProjectSidebarPresenter
     public $project_privacy;
     public $is_sidebar_collapsable;
     public $project_id;
-    public $powered_by;
+    public $version;
     public $copyright;
+    /**
+     * @var bool
+     */
+    public $has_copyright;
     /**
      * @var bool
      */
@@ -65,8 +69,13 @@ class ProjectSidebarPresenter
         $this->project_name           = $project->getUnconvertedPublicName();
         $this->project_id             = $project->getID();
 
-        $this->powered_by = $GLOBALS['Language']->getText('global', 'powered_by') . ' ' . $this->getVersion();
-        $this->copyright  = $GLOBALS['Language']->getText('global', 'copyright');
+        $this->version       = $this->getVersion();
+        $this->has_copyright = $GLOBALS['Language']->hasText('global', 'copyright');
+        $this->copyright     = '';
+
+        if ($this->has_copyright) {
+            $this->copyright = $GLOBALS['Language']->getOverridableText('global', 'copyright');
+        }
 
         $this->are_restricted_users_allowed = ForgeConfig::areRestrictedUsersAllowed();
         if ($this->are_restricted_users_allowed) {

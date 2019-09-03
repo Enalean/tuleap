@@ -20,9 +20,13 @@
 ?>
 <h3 class="footer-section-title">Tuleap</h3>
 <p class="footer-paragraph">
-    Tuleap, outil de développement logiciel agile 100% open source. <a href="https://www.tuleap.org" target="_blank" rel="noreferrer">www.tuleap.org</a>.
+    Tuleap, outil de développement logiciel agile 100% open source. <a href="https://www.tuleap.org/https://www.tuleap.org?utm_source=forge&utm_medium=forge&utm_campaign=forge">www.tuleap.org</a>.
 </p>
 <p class="footer-paragraph">
-    <?php echo $GLOBALS['Language']->getText('global', 'powered_by'); ?> version <?php echo $version ?>
-    <br><?php echo $GLOBALS['Language']->getText('global', 'copyright'); ?>.
+    <a href="https://www.tuleap.org/resources/release-notes?utm_source=forge&utm_medium=forge&utm_campaign=forge">
+        Tuleap <?php echo $version ?>
+    </a>
+    <?php if ($GLOBALS['Language']->hasText('global', 'copyright')) { ?>
+        <br><?php echo $GLOBALS['Language']->getOverridableText('global', 'copyright'); ?>.
+    <?php } ?>
 </p>

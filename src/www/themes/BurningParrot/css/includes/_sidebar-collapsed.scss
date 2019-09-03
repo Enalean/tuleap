@@ -41,6 +41,11 @@
         right: 0;
         left: auto;
     }
+
+    .sidebar-about-version,
+    .sidebar-about-copyright {
+        display: none;
+    }
 }
 
 .sidebar-fully-collapsed {
@@ -59,6 +64,11 @@
     .sidebar-collapser-bar {
         cursor: e-resize;
     }
+
+    .sidebar-about,
+    .sidebar-copyright {
+        display: none;
+    }
 }
 
 .sidebar-collapsed,
@@ -69,7 +79,8 @@
     }
 
     .project-sidebar-title,
-    .sidebar-about {
+    .sidebar-about-version,
+    .sidebar-copyright {
         display: none;
     }
 

@@ -28,4 +28,4 @@ fi
 mkdir -p "$WORKSPACE/results/build-and-run-$OS"
 docker cp "$UNIQUE_NAME-rpm-installer":/output/index.html "$WORKSPACE/results/build-and-run-$OS"
 
-grep "version $(cat "$WORKSPACE"/sources/VERSION)" "$WORKSPACE/results/build-and-run-$OS/index.html"
+grep "Tuleap $(cat "$WORKSPACE"/sources/VERSION)" "$WORKSPACE/results/build-and-run-$OS/index.html"

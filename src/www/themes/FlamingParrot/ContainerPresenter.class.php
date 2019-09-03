@@ -47,7 +47,7 @@ class FlamingParrot_ContainerPresenter
     /** @var string */
     private $feedback_content;
 
-    private $forge_version;
+    public $version;
 
     /** @var bool */
     private $sidebar_collapsable;
@@ -77,7 +77,7 @@ class FlamingParrot_ContainerPresenter
         $project_tabs,
         $feedback,
         $feedback_content,
-        $forge_version,
+        $version,
         $sidebar_collapsable,
         ?Project $project = null
     ) {
@@ -90,7 +90,7 @@ class FlamingParrot_ContainerPresenter
         $this->project_tabs        = $project_tabs;
         $this->feedback            = $feedback;
         $this->feedback_content    = $feedback_content;
-        $this->forge_version       = $forge_version;
+        $this->version             = $version;
         $this->sidebar_collapsable = $sidebar_collapsable;
 
         $this->are_restricted_users_allowed = ForgeConfig::areRestrictedUsersAllowed();
@@ -137,14 +137,14 @@ class FlamingParrot_ContainerPresenter
         return $this->project_tabs;
     }
 
-    public function powered_by()
+    public function has_copyright()
     {
-        return $GLOBALS['Language']->getText('global','powered_by').' '.$this->forge_version;
+        return $GLOBALS['Language']->hasText('global','copyright');
     }
 
     public function copyright()
     {
-        return $GLOBALS['Language']->getText('global','copyright');
+        return $GLOBALS['Language']->getOverridableText('global','copyright');
     }
 
     public function projectName()
