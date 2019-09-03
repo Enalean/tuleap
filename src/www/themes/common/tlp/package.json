@@ -1,5 +1,5 @@
 {
-  "name": "TLP",
+  "name": "tlp",
   "version": "0.0.1",
   "description": "Tuleap CSS framework",
   "author": "Enalean",
@@ -13,10 +13,13 @@
     "jquery": "2.1.0",
     "popper.js": "^1.14.7",
     "regenerator-runtime": "^0.13.3",
-    "select2": "4.0.3",
+    "select2": "^4.0.10",
     "whatwg-fetch": "^3.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/select2": "^4.0.48"
+  },
+  "types": "./src/index.d.ts",
   "config": {
     "bin": "../../../../../node_modules/.bin"
   },
