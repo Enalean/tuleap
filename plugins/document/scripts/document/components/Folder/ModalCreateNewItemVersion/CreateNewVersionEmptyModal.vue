@@ -49,7 +49,7 @@
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
 import { sprintf } from "sprintf-js";
-import { TYPE_FILE, TYPE_LINK } from "../../../constants.js";
+import { TYPE_FILE } from "../../../constants.js";
 import { redirectToUrl } from "../../../helpers/location-helper.js";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
@@ -100,7 +100,7 @@ export default {
             return sprintf(this.$gettext('New version for "%s"'), this.item.title);
         },
         is_loading_if_not_link_selected() {
-            return this.new_item_version.type !== TYPE_LINK;
+            return this.new_item_version.type === TYPE_FILE;
         }
     },
     mounted() {

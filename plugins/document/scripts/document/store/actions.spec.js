@@ -51,6 +51,7 @@ import {
     rewire$postLockEmbedded,
     rewire$postLockFile,
     rewire$postNewLinkVersionFromEmpty,
+    rewire$postNewEmbeddedFileVersionFromEmpty,
     rewire$postWiki,
     rewire$putEmbeddedFileMetadata,
     rewire$putEmbeddedFilePermissions,
@@ -2501,7 +2502,11 @@ describe("Store actions", () => {
         });
     });
     describe("createNewVersionFromEmpty - ", () => {
-        let postNewLinkVersionFromEmpty, getItem, context, handleErrorsForModal;
+        let postNewLinkVersionFromEmpty,
+            postNewEmbeddedFileVersionFromEmpty,
+            getItem,
+            context,
+            handleErrorsForModal;
         beforeEach(() => {
             handleErrorsForModal = jasmine.createSpy("handleErrorsForModal");
             rewire$handleErrorsForModal(handleErrorsForModal);
@@ -2509,14 +2514,16 @@ describe("Store actions", () => {
             postNewLinkVersionFromEmpty = jasmine.createSpy("postNewLinkVersionFromEmpty");
             rewire$postNewLinkVersionFromEmpty(postNewLinkVersionFromEmpty);
 
+            postNewEmbeddedFileVersionFromEmpty = jasmine.createSpy(
+                "postNewEmbeddedFileVersionFromEmpty"
+            );
+            rewire$postNewEmbeddedFileVersionFromEmpty(postNewEmbeddedFileVersionFromEmpty);
+
             getItem = jasmine.createSpy("getItem");
             rewire$getItem(getItem);
 
             context = {
-                commit: jasmine.createSpy("commit"),
-                state: {
-                    current_folder: { id: 999, type: TYPE_FOLDER }
-                }
+                commit: jasmine.createSpy("commit")
             };
         });
 
@@ -2544,6 +2551,46 @@ describe("Store actions", () => {
             await createNewVersionFromEmpty(context, [TYPE_LINK, item, item_to_update]);
 
             expect(postNewLinkVersionFromEmpty).toHaveBeenCalled();
+            expect(postNewEmbeddedFileVersionFromEmpty).not.toHaveBeenCalled();
+            expect(handleErrorsForModal).not.toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                updated_item
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                updated_item
+            );
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                updated_item
+            );
+        });
+
+        it("should update the empty document to embedded_file document", async () => {
+            const item_to_update = {
+                type: TYPE_EMPTY,
+                embedded_properties: {
+                    content: "content"
+                }
+            };
+            const item = {
+                id: 123,
+                type: TYPE_EMPTY
+            };
+
+            const updated_item = {
+                id: 123,
+                type: TYPE_EMBEDDED
+            };
+
+            getItem.and.returnValue(Promise.resolve(updated_item));
+
+            await createNewVersionFromEmpty(context, [TYPE_EMBEDDED, item, item_to_update]);
+
+            expect(postNewLinkVersionFromEmpty).not.toHaveBeenCalled();
+            expect(postNewEmbeddedFileVersionFromEmpty).toHaveBeenCalled();
             expect(handleErrorsForModal).not.toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",

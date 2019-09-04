@@ -86,7 +86,8 @@ export {
     putFolderPermissions,
     getProjectUserGroups,
     getProjectMetadata,
-    postNewLinkVersionFromEmpty
+    postNewLinkVersionFromEmpty,
+    postNewEmbeddedFileVersionFromEmpty
 };
 
 async function getDocumentManagerServiceInformation(project_id) {
@@ -779,6 +780,18 @@ function postNewLinkVersionFromEmpty(item_id, link_url) {
         },
         body: JSON.stringify({
             link_url
+        })
+    });
+}
+
+function postNewEmbeddedFileVersionFromEmpty(item_id, content) {
+    const escaped_item_id = encodeURIComponent(item_id);
+    return post(`/api/docman_empty_documents/${escaped_item_id}/embedded_file`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            content
         })
     });
 }
