@@ -21,17 +21,22 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import CreateNewVersionEmptyModal from "./CreateNewVersionEmptyModal.vue";
-import { TYPE_EMPTY, TYPE_FILE } from "../../../constants.js";
+import { TYPE_EMPTY, TYPE_FILE, TYPE_LINK } from "../../../constants.js";
 import { tlp } from "tlp-mocks";
+import { restore as restoreAction } from "../../../store/actions.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 describe("CreateNewVersionEmptyModal", () => {
-    let factory;
+    let factory, store;
 
     beforeEach(() => {
+        store = createStoreMock({}, { project_ugroups: null, error: {} });
+
         factory = props => {
             return shallowMount(CreateNewVersionEmptyModal, {
                 localVue,
-                propsData: { ...props }
+                propsData: { ...props },
+                mocks: { $store: store }
             });
         };
 
@@ -42,13 +47,33 @@ describe("CreateNewVersionEmptyModal", () => {
         });
     });
 
-    afterEach(() => {});
+    afterEach(() => {
+        restoreAction();
+    });
 
-    it("Default type for creation of new version of an empty document is file", () => {
+    it("Default type for creation of new link version of an empty document is file", () => {
         const wrapper = factory({
             item: { id: 10, type: TYPE_EMPTY }
         });
 
         expect(wrapper.vm.new_item_version.type).toBe(TYPE_FILE);
+    });
+    it("It should create a new link version from an empty document", () => {
+        const wrapper = factory({
+            item: { id: 10, type: TYPE_EMPTY }
+        });
+        wrapper.setData({
+            new_item_version: {
+                type: TYPE_LINK
+            }
+        });
+        store.dispatch.and.callFake(actionMethodName => {
+            if (actionMethodName === "createNewVersionFromEmpty") {
+                expect(wrapper.vm.is_loading).toBe(true);
+                expect(wrapper.vm.new_item_version.type).toBe(TYPE_LINK);
+                store.state.error.has_modal_error = false;
+            }
+        });
+        wrapper.find("form").trigger("submit.prevent");
     });
 });

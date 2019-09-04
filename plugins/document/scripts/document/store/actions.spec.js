@@ -50,6 +50,7 @@ import {
     rewire$postLinkVersion,
     rewire$postLockEmbedded,
     rewire$postLockFile,
+    rewire$postNewLinkVersionFromEmpty,
     rewire$postWiki,
     rewire$putEmbeddedFileMetadata,
     rewire$putEmbeddedFilePermissions,
@@ -100,6 +101,7 @@ import {
     createNewFileVersionFromModal,
     createNewItem,
     createNewLinkVersionFromModal,
+    createNewVersionFromEmpty,
     createNewWikiVersionFromModal,
     deleteItem,
     displayEmbeddedInLargeMode,
@@ -107,12 +109,12 @@ import {
     getWikisReferencingSameWikiPage,
     loadDocumentWithAscendentHierarchy,
     loadFolder,
-    toggleQuickLook,
     loadProjectUserGroupsIfNeeded,
     loadRootFolder,
     lockDocument,
     setUserPreferenciesForFolder,
     setUserPreferenciesForUI,
+    toggleQuickLook,
     unlockDocument,
     unsetUnderConstructionUserPreference,
     updateFolderMetadata,
@@ -2496,6 +2498,105 @@ describe("Store actions", () => {
 
             expect(context.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", item);
             expect(context.commit).toHaveBeenCalledWith("toggleQuickLook", true);
+        });
+    });
+    describe("createNewVersionFromEmpty - ", () => {
+        let postNewLinkVersionFromEmpty, getItem, context, handleErrorsForModal;
+        beforeEach(() => {
+            handleErrorsForModal = jasmine.createSpy("handleErrorsForModal");
+            rewire$handleErrorsForModal(handleErrorsForModal);
+
+            postNewLinkVersionFromEmpty = jasmine.createSpy("postNewLinkVersionFromEmpty");
+            rewire$postNewLinkVersionFromEmpty(postNewLinkVersionFromEmpty);
+
+            getItem = jasmine.createSpy("getItem");
+            rewire$getItem(getItem);
+
+            context = {
+                commit: jasmine.createSpy("commit"),
+                state: {
+                    current_folder: { id: 999, type: TYPE_FOLDER }
+                }
+            };
+        });
+
+        afterEach(() => {
+            restoreRestQuerier();
+        });
+        it("should update the empty document to link document", async () => {
+            const item_to_update = {
+                type: TYPE_EMPTY,
+                link_properties: {
+                    link_url: "https://example.test"
+                }
+            };
+            const item = {
+                id: 123,
+                type: TYPE_EMPTY
+            };
+
+            const updated_item = {
+                id: 123,
+                type: TYPE_LINK
+            };
+            getItem.and.returnValue(Promise.resolve(updated_item));
+
+            await createNewVersionFromEmpty(context, [TYPE_LINK, item, item_to_update]);
+
+            expect(postNewLinkVersionFromEmpty).toHaveBeenCalled();
+            expect(handleErrorsForModal).not.toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                updated_item
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                updated_item
+            );
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                updated_item
+            );
+        });
+
+        it("should failed the update", async () => {
+            const item_to_update = {
+                type: TYPE_EMPTY,
+                link_properties: {
+                    link_url: "https://example.test"
+                }
+            };
+            const item = {
+                id: 123,
+                type: TYPE_EMPTY
+            };
+
+            const updated_item = {
+                id: 123,
+                type: TYPE_LINK
+            };
+
+            postNewLinkVersionFromEmpty.and.throwError("Failed to update");
+
+            await createNewVersionFromEmpty(context, [TYPE_LINK, item, item_to_update]);
+
+            expect(postNewLinkVersionFromEmpty).toHaveBeenCalled();
+            expect(handleErrorsForModal).toHaveBeenCalled();
+            expect(getItem).not.toHaveBeenCalled();
+            expect(context.commit).not.toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                updated_item
+            );
+            expect(context.commit).not.toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                updated_item
+            );
+
+            expect(context.commit).not.toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                updated_item
+            );
         });
     });
 });

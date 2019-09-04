@@ -19,7 +19,9 @@
   -->
 
 <template>
-    <form class="tlp-modal" role="dialog" v-bind:aria-labelled-by="`document-new-empty-version-modal`">
+    <form class="tlp-modal" role="dialog" v-bind:aria-labelled-by="`document-new-empty-version-modal`"
+          v-on:submit="createNewVersion"
+    >
         <modal-header v-bind:modal-title="modal_title"
                       v-bind:aria-labelled-by="`document-new-empty-version-modal`"
                       v-bind:icon-header-class="'fa-plus'"
@@ -35,7 +37,7 @@
             <embedded-properties v-model="new_item_version.embedded_properties" v-bind:item="new_item_version"/>
             <file-properties v-model="new_item_version.file_properties" v-bind:item="new_item_version"/>
         </div>
-        <modal-footer v-bind:is-loading="true"
+        <modal-footer v-bind:is-loading="is_loading_if_not_link_selected"
                       v-bind:submit-button-label="submit_button_label"
                       v-bind:aria-labelled-by="`document-new-empty-version-modal`"
                       v-bind:icon-submit-button-class="'fa-plus'"
@@ -47,7 +49,7 @@
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
 import { sprintf } from "sprintf-js";
-import { TYPE_FILE } from "../../../constants.js";
+import { TYPE_FILE, TYPE_LINK } from "../../../constants.js";
 import { redirectToUrl } from "../../../helpers/location-helper.js";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
@@ -73,6 +75,7 @@ export default {
     },
     data() {
         return {
+            is_loading: false,
             new_item_version: {
                 type: TYPE_FILE,
                 link_properties: {
@@ -95,6 +98,9 @@ export default {
         },
         modal_title() {
             return sprintf(this.$gettext('New version for "%s"'), this.item.title);
+        },
+        is_loading_if_not_link_selected() {
+            return this.new_item_version.type !== TYPE_LINK;
         }
     },
     mounted() {
@@ -117,6 +123,22 @@ export default {
                     this.item.id
                 }&action=action_update`
             );
+        },
+        async createNewVersion(event) {
+            event.preventDefault();
+            this.is_loading = true;
+            this.$store.commit("error/resetModalError");
+
+            await this.$store.dispatch("createNewVersionFromEmpty", [
+                this.new_item_version.type,
+                this.item,
+                this.new_item_version
+            ]);
+
+            this.is_loading = false;
+            if (this.has_modal_error === false) {
+                this.modal.hide();
+            }
         }
     }
 };
