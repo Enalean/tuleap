@@ -17,10 +17,80 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Modal } from "./js/modal.js";
+interface FetchWrapperParameter {
+    [key: string]: string | number;
+}
+export function get(
+    url: string,
+    init?: RequestInit & { method?: "GET"; params?: FetchWrapperParameter }
+): Promise<Response>;
+interface RecursiveGetLimitParameters {
+    limit?: number;
+    offset?: number;
+}
+interface RecursiveGetInit {
+    params?: FetchWrapperParameter & RecursiveGetLimitParameters;
+    getCollectionCallback?: (json: Array<any>) => Array<any>;
+}
+export function recursiveGet(url: string, init?: RecursiveGetInit): Promise<Array<any>>;
+export function put(url: string, init?: RequestInit & { method?: "PUT" }): Promise<Response>;
+export function patch(url: string, init?: RequestInit & { method?: "PATCH" }): Promise<Response>;
+export function post(url: string, init?: RequestInit & { method?: "POST" }): Promise<Response>;
+export function del(url: string, init?: RequestInit & { method?: "DELETE" }): Promise<Response>;
+export function options(
+    url: string,
+    init?: RequestInit & { method?: "OPTIONS" }
+): Promise<Response>;
 
-export function get(url: string, init: object): Promise<any>;
-export function recursiveGet(url: string, init: object): Promise<any>;
-export function modal(element: object, options?: object): Modal;
+interface ModalOptions {
+    keyboard?: boolean;
+    destroy_on_hide?: boolean;
+}
+declare class Modal {
+    constructor(element: Element, options?: ModalOptions);
+
+    toggle(): void;
+    show(): void;
+    hide(): void;
+    destroy(): void;
+    addEventListener(type: string, listener: (evt: Event) => void): void;
+    removeEventListener(type: string, listener: (evt: Event) => void): void;
+}
+export function modal(element: Element, options?: ModalOptions): Modal;
+
+interface DropdownOptions {
+    keyboard?: boolean;
+    dropdown_menu?: () => Element;
+}
+declare class Dropdown {
+    constructor(trigger: Element, options?: DropdownOptions);
+
+    toggle(): void;
+    show(): void;
+    hide(): void;
+    addEventListener(type: string, eventHandler: (evt: Event) => void): void;
+    removeEventListener(type: string, eventHandler: (evt: Event) => void): void;
+}
+export function dropdown(trigger: Element, options?: DropdownOptions): Dropdown;
+
+import { PopperOptions } from "popper.js";
+interface Popover {
+    destroy(): void;
+}
+export function createPopover(
+    popover_trigger: Element,
+    popover_content: Element,
+    options?: PopperOptions & { anchor?: Element }
+): Popover;
+
+interface FilterTable {
+    filterTable(): void;
+}
+export function filterInlineTable(filter: Element): FilterTable;
+
+import { OptionData, Select2Plugin } from "select2";
+export function select2(element: Element, options?: OptionData): Select2Plugin;
+
+export function datePicker(element: Element, options?: object): object;
 
 export as namespace tlp;
