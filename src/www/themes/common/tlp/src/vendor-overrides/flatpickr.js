@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,9 +19,9 @@
 
 import flatpickr from "flatpickr";
 
-flatpickr.init.prototype.defaultConfig.prevArrow = "<i class='fa fa-angle-left'></i>";
-flatpickr.init.prototype.defaultConfig.nextArrow = "<i class='fa fa-angle-right'></i>";
-flatpickr.init.prototype.l10n.firstDayOfWeek = 1;
+flatpickr.defaultConfig.prevArrow = "<i class='fa fa-angle-left'></i>";
+flatpickr.defaultConfig.nextArrow = "<i class='fa fa-angle-right'></i>";
+flatpickr.l10ns.default.firstDayOfWeek = 1;
 
 export default datePicker;
 
@@ -32,11 +32,14 @@ function datePicker(element, options) {
     options = options || {};
 
     options.weekNumbers = true;
-    options.timeFormat = "H:i";
+    options.dateFormat = "Y-m-d";
     options.time_24hr = true;
+    options.monthSelectorType = "static";
 
-    var placeholder = "yyyy-mm-dd";
+    let placeholder = "yyyy-mm-dd";
     if (element.hasAttribute("data-enabletime")) {
+        options.enableTime = true;
+        options.dateFormat = "Y-m-d H:i";
         placeholder += " HH:mm";
     }
     element.setAttribute("placeholder", placeholder);
