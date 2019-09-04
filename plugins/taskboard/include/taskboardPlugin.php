@@ -20,8 +20,12 @@
 
 declare(strict_types=1);
 
+use Tuleap\AgileDashboard\REST\v1\AdditionalPanesForMilestoneEvent;
+use Tuleap\AgileDashboard\REST\v1\PaneInfoRepresentation;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo;
+use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfoBuilder;
 use Tuleap\Taskboard\Board\BoardPresenterBuilder;
 use Tuleap\Taskboard\Column\ColumnPresenterCollectionRetriever;
 use Tuleap\Taskboard\Routing\MilestoneExtractor;
@@ -60,6 +64,7 @@ class taskboardPlugin extends Plugin
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
+            $this->addHook(AdditionalPanesForMilestoneEvent::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -113,13 +118,34 @@ class taskboardPlugin extends Plugin
         $milestone = $params['milestone'];
         assert($milestone instanceof Planning_Milestone);
 
-        if ($this->getCardwallOnTopDao()->isEnabled($milestone->getTrackerId())) {
-            $params['panes'][] = new Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo($milestone);
+        $pane = $this->getPaneForMilestone($milestone);
+        if ($pane !== null) {
+            $params['panes'][] = $pane;
         }
     }
 
     private function getCardwallOnTopDao(): Cardwall_OnTop_Dao
     {
         return new Cardwall_OnTop_Dao();
+    }
+
+    public function additionalPanesForMilestoneEvent(AdditionalPanesForMilestoneEvent $event): void
+    {
+        $milestone = $event->getMilestone();
+
+        $pane = $this->getPaneForMilestone($milestone);
+        if ($pane !== null) {
+            $representation = new PaneInfoRepresentation();
+            $representation->build($pane);
+
+            $event->add($representation);
+        }
+    }
+
+    public function getPaneForMilestone(Planning_Milestone $milestone): ?TaskboardPaneInfo
+    {
+        $pane_builder = new TaskboardPaneInfoBuilder(PluginManager::instance(), $this, $this->getCardwallOnTopDao());
+
+        return $pane_builder->getPaneForMilestone($milestone);
     }
 }
