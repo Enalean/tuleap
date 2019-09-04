@@ -102,6 +102,46 @@ export function uploadVersion(context, dropped_file, updated_file, new_version) 
             updated_file.upload_error = originalRequest.statusText;
         }
     });
+    uploader.start();
+    return uploader;
+}
+export function uploadVersionFromEmpty(context, dropped_file, updated_empty, new_version) {
+    let parent_folder = context.state.folder_content.find(
+        item => item.id === updated_empty.parent_id
+    );
+    if (!parent_folder) {
+        parent_folder = context.state.current_folder;
+    }
+    const uploader = new Upload(dropped_file, {
+        uploadUrl: new_version.upload_href,
+        retryDelays: RETRY_DELAYS,
+        metadata: {
+            filename: dropped_file.name,
+            filetype: dropped_file.type
+        },
+        onProgress: (bytes_uploaded, bytes_total) => {
+            updateParentProgress(
+                bytes_total,
+                updated_empty,
+                bytes_uploaded,
+                context,
+                parent_folder
+            );
+        },
+        onSuccess: async () => {
+            updated_empty.progress = null;
+            updated_empty.is_uploading_new_version = false;
+            updated_empty.last_update_date = Date.now();
+            context.commit("removeFileFromUploadsList", updated_empty);
+            const new_item_version = await getItem(updated_empty.id);
+            context.commit("removeItemFromFolderContent", new_item_version);
+            context.commit("addJustCreatedItemToFolderContent", new_item_version);
+            context.commit("updateCurrentItemForQuickLokDisplay", new_item_version);
+        },
+        onError: ({ originalRequest }) => {
+            updated_empty.upload_error = originalRequest.statusText;
+        }
+    });
 
     uploader.start();
 
