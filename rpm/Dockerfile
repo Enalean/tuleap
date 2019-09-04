@@ -1,6 +1,8 @@
 FROM centos:7
 
-RUN yum install -y make rpm-build tar git fontconfig epel-release && \
+COPY --from=composer:1.9 /usr/bin/composer /usr/bin/composer
+
+RUN yum install -y make rpm-build tar git fontconfig epel-release php && \
     yum install -y nodejs npm && \
     mkdir npm_install && pushd npm_install && \
     npm install npm@6.9.0 && \

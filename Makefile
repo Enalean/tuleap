@@ -44,7 +44,8 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 .PHONY: build
 build:
 	cd /build/src && npm install && \
-	cd /build/src/plugins/mytuleap_contact_support && npm install && npm run build
+	cd /build/src/plugins/mytuleap_contact_support && npm install && npm run build && \
+	cd /build/src/plugins/mytuleap_contact_support && composer install --classmap-authoritative --no-dev --no-interaction --no-scripts
 
 $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz: build $(RPM_TMP)
 	[ -h $(RPM_TMP)/SOURCES/$(NAME_VERSION) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(NAME_VERSION)
