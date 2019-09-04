@@ -124,12 +124,6 @@ export default {
                 !this.wiki_page_referencers_loading &&
                 this.wiki_page_referencers !== null
             );
-        },
-        should_redirect_to_parent_folder() {
-            return (
-                (this.is_item_a_folder(this.item) && this.item.id === this.current_folder.id) ||
-                this.shouldRedirectToParentAfterDeletion
-            );
         }
     },
     mounted() {
@@ -150,12 +144,11 @@ export default {
             await this.$store.dispatch("deleteItem", [this.item, this.additional_options]);
 
             if (!this.has_modal_error) {
-                if (this.should_redirect_to_parent_folder) {
-                    this.$router.replace(
-                        { name: "folder", params: { item_id: deleted_item.parent_id } },
-                        this.$store.commit("showPostDeletionNotification")
-                    );
-                }
+                this.$router.replace({
+                    name: "folder",
+                    params: { item_id: deleted_item.parent_id }
+                });
+                this.$store.commit("showPostDeletionNotification");
 
                 this.modal.hide();
             }
