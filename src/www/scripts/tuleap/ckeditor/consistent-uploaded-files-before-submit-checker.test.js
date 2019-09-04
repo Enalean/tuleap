@@ -18,26 +18,10 @@
  */
 
 import { addInstance } from "./consistent-uploaded-files-before-submit-checker.js";
-import { rewire$findAllHiddenInputByNames, restore as restoreForm } from "./form-adapter.js";
-import { rewire$findImageUrls, restore as restoreFinder } from "./image-urls-finder.js";
+import * as form_adapter from "./form-adapter.js";
+import * as image_urls_finder from "./image-urls-finder.js";
 
 describe(`consistent-uploaded-files-before-submit-checker`, () => {
-    let findAllHiddenInputByNames, findImageUrls;
-
-    beforeEach(() => {
-        findAllHiddenInputByNames = jasmine
-            .createSpy("findAllHiddenInputByNames")
-            .and.returnValue([]);
-        rewire$findAllHiddenInputByNames(findAllHiddenInputByNames);
-        findImageUrls = jasmine.createSpy("findImageUrls").and.returnValue([]);
-        rewire$findImageUrls(findImageUrls);
-    });
-
-    afterEach(() => {
-        restoreForm();
-        restoreFinder();
-    });
-
     describe(`addInstance()`, () => {
         let form, triggerFormSubmit;
         const ckeditor_instance = {
@@ -47,11 +31,10 @@ describe(`consistent-uploaded-files-before-submit-checker`, () => {
 
         beforeEach(() => {
             form = {
-                addEventListener: jasmine
-                    .createSpy("addEventListener")
-                    .and.callFake((event_name, handler) => {
-                        triggerFormSubmit = handler.bind(form);
-                    })
+                addEventListener: jest.fn((event_name, handler) => {
+                    triggerFormSubmit = handler.bind(form);
+                }),
+                querySelectorAll: jest.fn(() => [])
             };
         });
 
@@ -60,17 +43,22 @@ describe(`consistent-uploaded-files-before-submit-checker`, () => {
             const file_input = {
                 dataset: { url: "https://example.com/advertently.jpg" },
                 parentNode: {
-                    removeChild: jasmine.createSpy("parentNode.removeChild")
+                    removeChild: jest.fn()
                 }
             };
             const unused_file_input = {
                 dataset: { url: "http://example.com/hypersystole.png" },
                 parentNode: {
-                    removeChild: jasmine.createSpy("parentNode.removeChild")
+                    removeChild: jest.fn()
                 }
             };
-            findAllHiddenInputByNames.and.returnValue([file_input, unused_file_input]);
-            findImageUrls.and.returnValue(["https://example.com/advertently.jpg"]);
+            jest.spyOn(form_adapter, "findAllHiddenInputByNames").mockReturnValue([
+                file_input,
+                unused_file_input
+            ]);
+            jest.spyOn(image_urls_finder, "findImageUrls").mockReturnValue([
+                "https://example.com/advertently.jpg"
+            ]);
 
             addInstance(form, ckeditor_instance, field_name);
             triggerFormSubmit();
@@ -80,13 +68,13 @@ describe(`consistent-uploaded-files-before-submit-checker`, () => {
         });
 
         it(`takes into account hidden inputs from multiple forms`, () => {
+            const findAllHiddenInputByNames = jest.spyOn(form_adapter, "findAllHiddenInputByNames");
             let triggerSecondFormSubmit;
             const other_form = {
-                addEventListener: jasmine
-                    .createSpy("addEventListener")
-                    .and.callFake((event_name, handler) => {
-                        triggerSecondFormSubmit = handler.bind(other_form);
-                    })
+                addEventListener: jest.fn((event_name, handler) => {
+                    triggerSecondFormSubmit = handler.bind(other_form);
+                }),
+                querySelectorAll: jest.fn(() => [])
             };
 
             addInstance(form, ckeditor_instance, field_name);
@@ -97,10 +85,11 @@ describe(`consistent-uploaded-files-before-submit-checker`, () => {
             expect(form.addEventListener).toHaveBeenCalled();
             expect(other_form.addEventListener).toHaveBeenCalled();
 
-            expect(findAllHiddenInputByNames.calls.count()).toBe(2);
+            expect(findAllHiddenInputByNames.mock.calls.length).toBe(2);
         });
 
         it(`takes into account images from multiple CKEditor instances`, () => {
+            const findImageUrls = jest.spyOn(image_urls_finder, "findImageUrls");
             const other_ckeditor_instance = {
                 getData: () => ""
             };
@@ -110,7 +99,7 @@ describe(`consistent-uploaded-files-before-submit-checker`, () => {
             addInstance(form, other_ckeditor_instance, other_field_name);
             triggerFormSubmit();
 
-            expect(findImageUrls.calls.count()).toBe(2);
+            expect(findImageUrls.mock.calls.length).toBe(2);
         });
     });
 });

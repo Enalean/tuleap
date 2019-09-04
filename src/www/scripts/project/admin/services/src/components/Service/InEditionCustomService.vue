@@ -167,7 +167,12 @@ export default {
         },
         async scrollWarningsIntoView() {
             await this.$nextTick();
-            this.$refs.warnings.scrollIntoView(false);
+            if (
+                typeof this.$refs.warnings !== "undefined" &&
+                typeof this.$refs.warnings.scrollIntoView !== "undefined"
+            ) {
+                this.$refs.warnings.scrollIntoView(false);
+            }
         }
     }
 };

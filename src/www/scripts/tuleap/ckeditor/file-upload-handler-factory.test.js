@@ -17,68 +17,64 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { rewire$post, restore as restoreTLP } from "tlp-fetch";
 import * as TUS from "tus-js-client";
-import { mockFetchSuccess, mockFetchError } from "tlp-mocks";
-import {
-    rewire$getGettextProvider,
-    restore as restoreGettext
-} from "../gettext/gettext-factory.js";
+import { mockFetchSuccess, mockFetchError } from "tlp-fetch-mocks-helper-jest";
+import * as gettext_factory from "../gettext/gettext-factory.js";
 import {
     buildFileUploadHandler,
     MaxSizeUploadExceededError,
     UploadError
 } from "./file-upload-handler-factory.js";
+import * as tlp from "tlp";
+
+jest.mock("tlp");
+jest.mock("tus-js-client");
 
 describe(`file-upload-handler-factory`, () => {
     let file_upload_event,
         loader,
-        options = {},
-        getGettextProvider,
-        post;
+        options = {};
     beforeEach(() => {
-        getGettextProvider = jasmine
-            .createSpy("getGettextProvider")
-            .and.returnValue({ gettext: () => "" });
-        rewire$getGettextProvider(getGettextProvider);
+        jest.spyOn(gettext_factory, "getGettextProvider").mockImplementation(() => ({
+            gettext: () => ""
+        }));
 
-        post = jasmine.createSpy("tlp.post");
-        rewire$post(post);
-
-        // TUS exports as CommonJS, so rewire does not seem to work
-        spyOn(TUS, "Upload");
-
-        options.ckeditor_instance = jasmine.createSpyObj("ckeditor_instance", ["fire"]);
-        loader = jasmine.createSpyObj("fileLoader", ["changeStatus"]);
-        loader.file = {
-            name: "pentacyanic.jpg",
-            type: "image/jpg"
+        options = {
+            ckeditor_instance: {
+                fire: jest.fn()
+            },
+            onStartCallback: jest.fn(),
+            onErrorCallback: jest.fn(),
+            onSuccessCallback: jest.fn(),
+            max_size_upload: 100
+        };
+        loader = {
+            changeStatus: jest.fn(),
+            update: jest.fn(),
+            file: {
+                name: "pentacyanic.jpg",
+                type: "image/jpg"
+            },
+            lang: {
+                filetools: []
+            }
         };
         file_upload_event = {
             data: {
                 fileLoader: loader
             },
-            stop: jasmine.createSpy("event.stop")
+            stop: jest.fn()
         };
-        options.onStartCallback = jasmine.createSpy("onStartCallback");
-        options.onErrorCallback = jasmine.createSpy("onErrorCallback");
-        options.onSuccessCallback = jasmine.createSpy("onSuccessCallback");
-        options.max_size_upload = 100;
     });
 
     function handlerFactory() {
         return buildFileUploadHandler(options);
     }
 
-    afterEach(() => {
-        restoreGettext();
-        restoreTLP();
-    });
-
     describe(`buildFileUploadHandler() - when a fileUploadRequest event is dispatched`, () => {
-        describe(``, () => {
+        describe(`component is initialized`, () => {
             beforeEach(async () => {
-                mockFetchSuccess(post, {
+                mockFetchSuccess(jest.spyOn(tlp, "post"), {
                     return_json: {
                         id: 71,
                         download_href: "https://example.com/extenuator"
@@ -105,7 +101,7 @@ describe(`file-upload-handler-factory`, () => {
 
             it(`will call the Error callback with a MaxSizeUploadExceededError`, () => {
                 expect(options.onErrorCallback).toHaveBeenCalled();
-                const [error] = options.onErrorCallback.calls.first().args;
+                const [error] = options.onErrorCallback.mock.calls[0];
 
                 expect(error instanceof MaxSizeUploadExceededError).toBe(
                     true,
@@ -134,7 +130,8 @@ describe(`file-upload-handler-factory`, () => {
                 loader.fileName = "pulpitism.png";
                 loader.uploadUrl = "https://example.com/upload_url";
                 loader.file.type = "image/png";
-                mockFetchSuccess(post, {
+                const tlpPost = jest.spyOn(tlp, "post");
+                mockFetchSuccess(tlpPost, {
                     return_json: {
                         id: 25,
                         download_url: "https://example.com/download_url"
@@ -144,7 +141,7 @@ describe(`file-upload-handler-factory`, () => {
                 const handler = handlerFactory();
                 await handler(file_upload_event);
 
-                expect(post).toHaveBeenCalledWith("https://example.com/upload_url", {
+                expect(tlpPost).toHaveBeenCalledWith("https://example.com/upload_url", {
                     headers: { "content-type": "application/json" },
                     body: JSON.stringify({
                         name: "pulpitism.png",
@@ -156,15 +153,14 @@ describe(`file-upload-handler-factory`, () => {
 
             describe(`when the POST endpoint returns an error`, () => {
                 it(`will call the Error callback with an UploadError`, async () => {
-                    post.and.returnValue(Promise.reject({}));
+                    jest.spyOn(tlp, "post").mockReturnValue(Promise.reject({}));
 
                     const handler = handlerFactory();
                     try {
                         await handler(file_upload_event);
-                        fail("Promise should be rejected on error");
                     } catch (exception) {
                         expect(options.onErrorCallback).toHaveBeenCalled();
-                        const [error] = options.onErrorCallback.calls.first().args;
+                        const [error] = options.onErrorCallback.mock.calls[0];
 
                         expect(error instanceof UploadError).toBe(
                             true,
@@ -179,7 +175,7 @@ describe(`file-upload-handler-factory`, () => {
                 });
 
                 it(`when the error is translated, then it will show the translated error`, async () => {
-                    mockFetchError(post, {
+                    mockFetchError(jest.spyOn(tlp, "post"), {
                         error_json: {
                             error: {
                                 i18n_error_message: "Problème durant le téléversement"
@@ -190,7 +186,6 @@ describe(`file-upload-handler-factory`, () => {
                     const handler = handlerFactory();
                     try {
                         await handler(file_upload_event);
-                        fail("Promise should be rejected on error");
                     } catch (exception) {
                         expect(loader.message).toEqual("Problème durant le téléversement");
                         expect(loader.changeStatus).toHaveBeenCalledWith("error");
@@ -198,7 +193,7 @@ describe(`file-upload-handler-factory`, () => {
                 });
 
                 it(`when the error is not translated, then it will show its message`, async () => {
-                    mockFetchError(post, {
+                    mockFetchError(jest.spyOn(tlp, "post"), {
                         error_json: {
                             error: {
                                 message: "Untranslated error message"
@@ -209,7 +204,6 @@ describe(`file-upload-handler-factory`, () => {
                     const handler = handlerFactory();
                     try {
                         await handler(file_upload_event);
-                        fail("Promise should be rejected on error");
                     } catch (exception) {
                         expect(loader.message).toEqual("Untranslated error message");
                         expect(loader.changeStatus).toHaveBeenCalledWith("error");
@@ -219,7 +213,7 @@ describe(`file-upload-handler-factory`, () => {
 
             describe(`when the POST endpoint does not return an upload_href`, () => {
                 beforeEach(() => {
-                    mockFetchSuccess(post, {
+                    mockFetchSuccess(jest.spyOn(tlp, "post"), {
                         return_json: {
                             id: 71,
                             download_href: "https://example.com/download_url"
@@ -262,7 +256,7 @@ describe(`file-upload-handler-factory`, () => {
 
             describe(`when the POST endpoint returns an upload_href`, () => {
                 beforeEach(() => {
-                    mockFetchSuccess(post, {
+                    mockFetchSuccess(jest.spyOn(tlp, "post"), {
                         return_json: {
                             id: 23,
                             download_href: "https://example.com/download_url",
@@ -272,7 +266,7 @@ describe(`file-upload-handler-factory`, () => {
                 });
 
                 it(`will call the Start callback`, async () => {
-                    TUS.Upload.and.callFake((file, config) => ({
+                    TUS.Upload.mockImplementation((file, config) => ({
                         start: () => config.onSuccess()
                     }));
 
@@ -285,8 +279,7 @@ describe(`file-upload-handler-factory`, () => {
                 describe(`will create and start the TUS uploader`, () => {
                     it(`and when the uploader receives the onProgress event,
                             it will update the loader with the bytes send and total`, async () => {
-                        loader.update = jasmine.createSpy("loader.update");
-                        TUS.Upload.and.callFake((file, config) => ({
+                        TUS.Upload.mockImplementation((file, config) => ({
                             start: () => {
                                 config.onProgress(256, 1024);
                                 expect(loader.uploadTotal).toEqual(1024);
@@ -302,7 +295,7 @@ describe(`file-upload-handler-factory`, () => {
 
                     describe(`and when the uploader receives the onSuccess event`, () => {
                         beforeEach(() => {
-                            TUS.Upload.and.callFake((file, config) => ({
+                            TUS.Upload.mockImplementation((file, config) => ({
                                 start: () => config.onSuccess()
                             }));
                         });
@@ -350,7 +343,7 @@ describe(`file-upload-handler-factory`, () => {
                     describe(`and when the uploader receives the onError event`, () => {
                         let error;
                         beforeEach(() => {
-                            TUS.Upload.and.callFake((file, config) => ({
+                            TUS.Upload.mockImplementation((file, config) => ({
                                 start: () => config.onError(error)
                             }));
                         });
@@ -367,7 +360,6 @@ describe(`file-upload-handler-factory`, () => {
                             const handler = handlerFactory();
                             try {
                                 await handler(file_upload_event);
-                                fail("Promise should be rejected on error");
                             } catch (exception) {
                                 expect(loader.message).toEqual("Translated error message");
                                 expect(options.onErrorCallback).toHaveBeenCalledWith(
@@ -388,7 +380,6 @@ describe(`file-upload-handler-factory`, () => {
                             const handler = handlerFactory();
                             try {
                                 await handler(file_upload_event);
-                                fail("Promise should be rejected on error");
                             } catch (exception) {
                                 expect(loader.message).toEqual("Error 500");
                                 expect(options.onErrorCallback).toHaveBeenCalledWith(
@@ -406,7 +397,6 @@ describe(`file-upload-handler-factory`, () => {
                             const handler = handlerFactory();
                             try {
                                 await handler(file_upload_event);
-                                fail("Promise should be rejected on error");
                             } catch (exception) {
                                 expect(loader.changeStatus).toHaveBeenCalledWith("error");
                                 expect(options.onErrorCallback).toHaveBeenCalledWith(

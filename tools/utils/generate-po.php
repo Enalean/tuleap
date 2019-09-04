@@ -251,6 +251,7 @@ function gettextJS($translated_plugin, $path, $manifest_json)
         executeCommandAndExitIfStderrNotEmpty("find $src \
                             -name '*.js' \
                             -not -name '*.spec.js' \
+                            -not -name '*.test.js' \
                             -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) \
                         | xargs xgettext \
                             --language=JavaScript \
