@@ -17,27 +17,23 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -
   -->
-
 <template>
-    <thead>
-        <tr>
-            <th class="taskboard-header"></th>
-            <task-board-header-cell v-for="col of columns" v-bind:key="col.id" v-bind:column="col"/>
-        </tr>
-    </thead>
+    <th class="taskboard-header" v-bind:class="classes">
+        {{ column.label }}
+    </th>
 </template>
-
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { ColumnDefinition } from "../../type";
-import TaskBoardHeaderCell from "./TaskBoardHeaderCell.vue";
 
-@Component({
-    components: { TaskBoardHeaderCell }
-})
-export default class TaskBoardHeader extends Vue {
+@Component
+export default class TaskBoardHeaderCell extends Vue {
     @Prop()
-    readonly columns!: Array<ColumnDefinition>;
+    readonly column!: ColumnDefinition;
+
+    get classes() {
+        return this.column.color ? "taskboard-header-" + this.column.color : "";
+    }
 }
 </script>

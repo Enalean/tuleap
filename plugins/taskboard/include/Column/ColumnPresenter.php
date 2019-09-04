@@ -34,9 +34,15 @@ class ColumnPresenter
      */
     public $label;
 
-    public function __construct(int $id, string $label)
+    /**
+     * @var string
+     */
+    public $color;
+
+    public function __construct(int $id, string $label, string $color)
     {
         $this->id    = $id;
         $this->label = $label;
+        $this->color = $color;
     }
 }

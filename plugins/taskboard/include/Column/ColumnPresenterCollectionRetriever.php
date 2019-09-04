@@ -46,10 +46,20 @@ class ColumnPresenterCollectionRetriever
         foreach ($this->dao->searchColumnsByTrackerId($tracker->getId()) as $row) {
             $collection[] = new ColumnPresenter(
                 (int) $row['id'],
-                $row['label']
+                $row['label'],
+                $this->getColor($row)
             );
         }
 
         return $collection;
+    }
+
+    private function getColor(array $row): string
+    {
+        if ($row['tlp_color_name']) {
+            return $row['tlp_color_name'];
+        }
+
+        return '';
     }
 }

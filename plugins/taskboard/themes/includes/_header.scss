@@ -27,8 +27,16 @@
     border: 0;
     background: $tlp-ui-white;
     box-shadow: inset 0 2px 0 0 $tlp-ui-border-normal, inset 0 -1px 0 $tlp-ui-border-normal;
+    color: $tlp-ui-dimmed;
     font-weight: 600;
     text-align: center;
     text-transform: uppercase;
     vertical-align: middle;
+
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.taskboard-header-#{$color-name} {
+            box-shadow: inset 0 2px 0 0 map-get($colors, 'primary'), inset 0 -1px 0 $tlp-ui-border-normal;
+            color: map-get($colors, 'text');
+        }
+    }
 }
