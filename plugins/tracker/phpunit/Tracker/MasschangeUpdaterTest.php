@@ -214,7 +214,7 @@ final class MasschangeUpdaterTest extends TestCase
         $last_changeset->shouldReceive('getValue')->with($target_field_rule2)->andReturn($target_value_rule2);
 
         $artifact->shouldReceive('createNewChangeset')->with(
-            [1 => 'Value01', 3201 => 321, 3202 => 100, 3203 => [333,334]],
+            [1 => 'Value01', 3202 => 100],
             Mockery::any(),
             Mockery::any(),
             Mockery::any(),

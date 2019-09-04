@@ -213,16 +213,13 @@ class Tracker_MasschangeUpdater
             $changeset_value = $changeset->getValue($list_field);
             if ($changeset_value !== null) {
                 $value = $changeset_value->getValue();
-                if ($list_field->isNone($value)) {
+                if ($list_field->isNone($value) && !(isset($fields_data[$list_field->getId()]))) {
                     $field_value = [Tracker_FormElement_Field_List::NONE_VALUE];
-                } else {
-                    $field_value = $value;
-                }
-
-                if (count($field_value) === 1) {
-                    $fields_data[$list_field->getId()] = current($field_value);
-                } else {
-                    $fields_data[$list_field->getId()] = $field_value;
+                    if (count($field_value) === 1) {
+                        $fields_data[$list_field->getId()] = current($field_value);
+                    } else {
+                        $fields_data[$list_field->getId()] = $field_value;
+                    }
                 }
             }
         }
