@@ -673,11 +673,6 @@ plugin_docman	notifications_add_user_title	Add users to the monitoring list :
 plugin_docman	notifications_add_user_cascade	Enable monitoring for the whole sub-hierarchy
 plugin_docman	notifications_permission_denied	You don't have enough permissions to perform this action
 plugin_docman	notifications_cascade_on	You're monitoring '$1' and its sub-hierarchy.
-plugin_docman	notifications_added_to_monitoring_list_subject	You were added to '$1' monitoring list
-plugin_docman	notifications_added_to_monitoring_list	You are receiving this message because you were added to the monitoring list of this item:
-plugin_docman	notifications_removed_from_monitoring_list_subject	You were removed from '$1' monitoring list
-plugin_docman	notifications_removed_from_monitoring_list	You are receiving this message because you were removed from the monitoring list of this item:
-plugin_docman	notif_something_happen	Something happen !
 plugin_docman	notif_footer_message_restore_link	To restore monitoring, please visit:
 
 plugin_docman	obso_warn_email_subject	[$1] Document '$2' will be obsolete in one month
