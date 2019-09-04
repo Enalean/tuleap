@@ -24,20 +24,31 @@ import { USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE } from "../../../constan
 import ConfirmationModal from "./ModalConfirmDeletion.vue";
 import { tlp } from "tlp-mocks";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+import VueRouter from "vue-router";
 
 describe("ModalConfirmDeletion", () => {
-    let state, store_options, store;
+    let router, state, store_options, store;
 
-    function getDeletionModal(item = {}) {
+    function getDeletionModal(props = {}) {
+        router = new VueRouter({
+            routes: [
+                {
+                    path: "folder/42",
+                    name: "folder"
+                }
+            ]
+        });
+
         return shallowMount(ConfirmationModal, {
             localVue,
             mocks: { $store: store },
             propsData: {
-                item: { ...item }
+                ...props
             },
             stubs: {
                 "delete-associated-wiki-page-checkbox": `<div data-test="checkbox"></div>`
-            }
+            },
+            router
         });
     }
 
@@ -54,7 +65,8 @@ describe("ModalConfirmDeletion", () => {
 
         tlp.modal.and.returnValue({
             addEventListener: () => {},
-            show: jasmine.createSpy("show")
+            show: () => {},
+            hide: () => {}
         });
 
         store.getters.is_item_a_wiki = () => false;
@@ -91,7 +103,7 @@ describe("ModalConfirmDeletion", () => {
                 }
             ]);
 
-            const deletion_modal = await getDeletionModal(item);
+            const deletion_modal = await getDeletionModal({ item });
 
             expect(store.dispatch).toHaveBeenCalledWith("getWikisReferencingSameWikiPage", item);
             expect(deletion_modal.contains("[data-test=checkbox]")).toBeTruthy();
@@ -102,7 +114,7 @@ describe("ModalConfirmDeletion", () => {
                 .withArgs("getWikisReferencingSameWikiPage", item)
                 .and.returnValue(USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE);
 
-            const deletion_modal = await getDeletionModal(item);
+            const deletion_modal = await getDeletionModal({ item });
 
             expect(store.dispatch).toHaveBeenCalledWith("getWikisReferencingSameWikiPage", item);
             expect(deletion_modal.contains("[data-test=checkbox]")).toBeFalsy();
@@ -111,7 +123,7 @@ describe("ModalConfirmDeletion", () => {
         it(`when it does not reference an existing wiki page, then it should not add a checkbox`, () => {
             item.wiki_properties.page_id = null;
 
-            const deletion_modal = getDeletionModal(item);
+            const deletion_modal = getDeletionModal({ item });
 
             expect(store.dispatch).not.toHaveBeenCalled();
             expect(deletion_modal.contains("[data-test=checkbox]")).toBeFalsy();
@@ -127,10 +139,30 @@ describe("ModalConfirmDeletion", () => {
 
         store.getters.is_item_a_folder = () => true;
 
-        const deletion_modal = getDeletionModal(item);
+        const deletion_modal = getDeletionModal({ item });
 
         expect(store.dispatch).not.toHaveBeenCalled();
         expect(deletion_modal.contains("[data-test=delete-folder-warning]")).toBeTruthy();
         expect(deletion_modal.contains("[data-test=checkbox]")).toBeFalsy();
+    });
+
+    it("Delete the item, and update the url link", async () => {
+        const item = {
+            id: 42,
+            title: "my folder",
+            type: "folder"
+        };
+
+        const additional_options = {};
+
+        store.getters.is_item_a_folder = () => true;
+
+        const deletion_modal = getDeletionModal({ item, additional_options });
+        deletion_modal.find("[data-test=confirm-deletion-button]").trigger("click");
+
+        await deletion_modal.vm.$nextTick().then(() => {});
+        expect(store.dispatch).toHaveBeenCalledWith("deleteItem", [item, additional_options]);
+        expect(store.commit).toHaveBeenCalledWith("showPostDeletionNotification");
+        expect(deletion_modal.vm.$route.path).toBe("folder/42");
     });
 });
