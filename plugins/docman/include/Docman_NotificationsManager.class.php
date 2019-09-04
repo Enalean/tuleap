@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
 use Tuleap\Docman\Notifications\UgroupsUpdater;
@@ -37,7 +38,6 @@ class Docman_NotificationsManager
     var $_item_factory;
     /** @var array */
     private $notifications;
-    var $_url;
 
     /**
      * @var Project
@@ -78,10 +78,14 @@ class Docman_NotificationsManager
      * @var UgroupsUpdater
      */
     private $ugroups_updater;
+    /**
+     * @var ILinkUrlProvider
+     */
+    protected $url_provider;
 
     public function __construct(
         Project $project,
-        string $url,
+        ILinkUrlProvider $url_provider,
         $feedback,
         MailBuilder $mail_builder,
         UsersToNotifyDao $users_to_notify_dao,
@@ -92,7 +96,6 @@ class Docman_NotificationsManager
         UgroupsUpdater $ugroups_updater
     ) {
         $this->project       = $project;
-        $this->_url          = $url;
         $this->_listeners    = array();
         $this->_feedback     = $feedback;
         $this->_item_factory = $this->_getItemFactory();
@@ -107,6 +110,7 @@ class Docman_NotificationsManager
         $this->notified_people_retriever = $notified_people_retriever;
         $this->users_updater             = $users_updater;
         $this->ugroups_updater           = $ugroups_updater;
+        $this->url_provider              = $url_provider;
     }
 
     function _getItemFactory()
@@ -243,19 +247,19 @@ class Docman_NotificationsManager
     protected function getMessageLink($type, $params)
     {
         if($this->project->getTruncatedEmailsUsage()) {
-            return $this->_url.'&action=details&id='. $params['item']->getId().'&section=history';
+            return  $this->url_provider->getHistoryUrl($params['item']);
         }
 
         switch($type) {
             case self::MESSAGE_MODIFIED:
             case self::MESSAGE_NEWVERSION:
-                $link = $this->_url .'&action=details&id='. $params['item']->getId();
+                $link = $this->url_provider->getDetailsLinkUrl($params['item']);
                 break;
             case self::MESSAGE_WIKI_NEWVERSION:
                 $link = $params['url'];
                 break;
             default:
-                $link = $this->_url;
+                $link = $this->url_provider->getPluginLinkUrl();
                 break;
         }
         return $link;
@@ -410,8 +414,17 @@ class Docman_NotificationsManager
             "To stop monitoring, please visit:"
         );
         $message .= "\n";
-        $message .= $this->_url . "&action=details&section=notifications&id=" . $monitored_item->getId();
+        $message .= $this->getUrlProvider()->getNotificationLinkUrl($monitored_item);
 
         return $message;
+    }
+
+    /**
+     * protected for testing purpose
+     * @return ILinkUrlProvider
+     */
+    protected function getUrlProvider()
+    {
+        return $this->url_provider;
     }
 }

@@ -21,6 +21,7 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
 use Tuleap\Docman\Notifications\UgroupsUpdater;
@@ -32,6 +33,10 @@ use Tuleap\Docman\Notifications\UsersUpdater;
 class Docman_NotificationsManagerTest extends \PHPUnit\Framework\TestCase
 {
     use MockeryPHPUnitIntegration;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ILinkUrlProvider
+     */
+    private $link_url_provider;
     /**
      * @var Tuleap\Mail\MailFilter
      */
@@ -67,9 +72,10 @@ class Docman_NotificationsManagerTest extends \PHPUnit\Framework\TestCase
         $project->shouldReceive('isError')->andReturn(false);
         $project->shouldReceive('getPublicName')->andReturn("My project");
         $project->shouldReceive('getTruncatedEmailsUsage')->andReturn(false);
+        $this->link_url_provider    = Mockery::mock(ILinkUrlProvider::class);
         $this->notification_manager = new Docman_NotificationsManager(
             $project,
-            "http://www.example.com/plugins/docman/",
+            $this->link_url_provider,
             Mockery::mock(Feedback::class),
             Mockery::mock(MailBuilder::class),
             Mockery::mock(UsersToNotifyDao::class),
@@ -114,10 +120,19 @@ class Docman_NotificationsManagerTest extends \PHPUnit\Framework\TestCase
         $params['wiki_page'] = 'wiki';
         $params['url']       = 'http://www.example.com/plugins/docman/';
 
-        $message1 = "Folder1/Folder2/File has been modified by John Doe.\nhttp://www.example.com/plugins/docman/&action=details&id=1\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
-        $message2 = "Folder1/Folder2/File has been modified by John Doe.\nhttp://www.example.com/plugins/docman/&action=details&id=1\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
-        $message3 = "New version of wiki wiki page was created by John Doe.\nhttp://www.example.com/plugins/docman/\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
-        $message4 = "Something happen!\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $details_link_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $this->link_url_provider->shouldReceive('getDetailsLinkUrl')->andReturn($details_link_url);
+
+        $notifications_link_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $this->link_url_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_link_url);
+
+        $plugin_link_url = "http://www.example.com/plugins/docman/";
+        $this->link_url_provider->shouldReceive('getPluginLinkUrl')->andReturn($plugin_link_url);
+
+        $message1 = "Folder1/Folder2/File has been modified by John Doe.\n$details_link_url\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
+        $message2 = "Folder1/Folder2/File has been modified by John Doe.\n$details_link_url\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
+        $message3 = "New version of wiki wiki page was created by John Doe.\n$plugin_link_url\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
+        $message4 = "Something happen!\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
 
         $this->assertEquals($message1, $this->notification_manager->_getMessageForUser($user, 'modified', $params));
         $this->assertEquals($message2, $this->notification_manager->_getMessageForUser($user, 'new_version', $params));
@@ -146,10 +161,16 @@ class Docman_NotificationsManagerTest extends \PHPUnit\Framework\TestCase
         $params['wiki_page'] = 'wiki';
         $params['url']       = 'http://www.example.com/plugins/docman/';
 
-        $message1 = "Folder1/Folder2/File has been modified by John Doe.\nhttp://www.example.com/plugins/docman/&action=details&id=10\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
-        $message2 = "Folder1/Folder2/File has been modified by John Doe.\nhttp://www.example.com/plugins/docman/&action=details&id=10\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
-        $message3 = "New version of wiki wiki page was created by John Doe.\nhttp://www.example.com/plugins/docman/\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
-        $message4 = "Something happen!\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $details_link_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $this->link_url_provider->shouldReceive('getDetailsLinkUrl')->andReturn($details_link_url);
+
+        $notifications_link_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $this->link_url_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_link_url);
+
+        $message1 = "Folder1/Folder2/File has been modified by John Doe.\n$details_link_url\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
+        $message2 = "Folder1/Folder2/File has been modified by John Doe.\n$details_link_url\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
+        $message3 = "New version of wiki wiki page was created by John Doe.\nhttp://www.example.com/plugins/docman/\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
+        $message4 = "Something happen!\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
 
         $this->assertEquals($message1, $this->notification_manager->_getMessageForUser($user, 'modified', $params));
         $this->assertEquals($message2, $this->notification_manager->_getMessageForUser($user, 'new_version', $params));

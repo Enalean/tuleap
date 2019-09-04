@@ -91,7 +91,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
                     $user->getRealName()
                 );
 
-                $msg .= "\n" . $this->_url . "&action=show&id=" . $params['parent']->getId() . "\n\n";
+                $msg .= "\n" . $this->getUrlProvider()->getShowLinkUrl($params['parent']) . "\n\n";
                 $msg .= dgettext('plugin-docman', "Moved");
 
                 $msg .= " ";
@@ -107,7 +107,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
                     $user->getRealName()
                 );
 
-                $msg .= "\n" . $this->_url. "&action=show&id=" . $params['parent']->getId()  . "\n\n";
+                $msg .= "\n" . $this->getUrlProvider()->getShowLinkUrl($params['parent']) . "\n\n";
                 $msg .= dgettext('plugin-docman', "Moved");
 
                 $msg .= " ";
@@ -122,7 +122,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
                     $params['path']->get($params['parent']),
                     $user->getRealName()
                 );
-                $msg .= "\n" . $this->_url. "&action=show&id=" . $params['parent']->getId()  . "\n\n";
+                $msg .= "\n" . $this->getUrlProvider()->getShowLinkUrl($params['parent']) . "\n\n";
                 $msg .= dgettext('plugin-docman', "Moved");
 
                 $msg           .= " ";
@@ -143,10 +143,10 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
             case self::MESSAGE_MOVED:
             case self::MESSAGE_MOVED_TO:
             case self::MESSAGE_MOVED_FROM:
-                $link = $this->_url . '&action=show&id=' . $params['parent']->getId();
+                $link = $this->getUrlProvider()->getShowLinkUrl($params['parent']);
                 break;
             default:
-                $link = $this->_url;
+                $link = $this->getUrlProvider()->getPluginLinkUrl();
                 break;
         }
         return $link;

@@ -43,6 +43,11 @@ class DocumentUsageRetriever
             return false;
         }
 
+        return $this->canProjectUseNewUI($project);
+    }
+
+    public function canProjectUseNewUI(Project $project): bool
+    {
         if (ForgeConfig::get('disable_new_document_ui_by_default')) {
             return false;
         }

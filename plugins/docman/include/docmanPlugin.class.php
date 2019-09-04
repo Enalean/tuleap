@@ -41,7 +41,10 @@ use Tuleap\Docman\Download\DocmanFileDownloadController;
 use Tuleap\Docman\Download\DocmanFileDownloadCORS;
 use Tuleap\Docman\Download\DocmanFileDownloadResponseGenerator;
 use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
+use Tuleap\Docman\ExternalLinks\DocmanLinkProvider;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
+use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
+use Tuleap\Docman\ExternalLinks\LegacyLinkProvider;
 use Tuleap\Docman\LegacyRestoreDocumentsController;
 use Tuleap\Docman\LegacySendMessageController;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
@@ -1172,7 +1175,7 @@ class DocmanPlugin extends Plugin
             $this->getItemFactory($project->getID()),
             new Docman_NotificationsManager(
                 $project,
-                $this->getPluginPath() . '/?group_id=' . urlencode((string) $project->getID()),
+                $this->getProvider($project),
                 null,
                 $this->getMailBuilder(),
                 $this->getUsersToNotifyDao(),
@@ -1535,5 +1538,16 @@ class DocmanPlugin extends Plugin
     private function getDocmanLockFactory(): Docman_LockFactory
     {
         return new \Docman_LockFactory(new \Docman_LockDao(), new Docman_Log());
+    }
+
+    private function getProvider(Project $project): ILinkUrlProvider
+    {
+        $provider = new LegacyLinkProvider(
+            HTTPRequest::instance()->getServerUrl(). '/?group_id=' . urlencode((string) $project->getID())
+        );
+        $link_provider = new DocmanLinkProvider($project, $provider);
+        EventManager::instance()->processEvent($link_provider);
+
+        return $link_provider->getProvider();
     }
 }

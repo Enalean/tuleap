@@ -23,11 +23,16 @@ declare(strict_types = 1);
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_NotificationsManager_MoveTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ILinkUrlProvider
+     */
+    private $link_provider;
     /**
      * @var Docman_Path|\Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
@@ -68,22 +73,23 @@ class Docman_NotificationsManager_MoveTest extends TestCase
         $this->notification_manager->_url = "http://www.example.com/plugins/docman/";
 
         $this->folder = Mockery::mock(Docman_Folder::class);
-        $this->folder->shouldReceive('getId')->once()->andReturn(1);
-        $this->folder->shouldReceive('getTitle')->andReturn("My title");
 
         $this->old_parent = Mockery::mock(Docman_Folder::class);
 
         $this->parent_folder = Mockery::mock(Docman_Folder::class);
-        $this->parent_folder->shouldReceive('getId')->andReturn(10);
+        $this->parent_folder->shouldReceive('getId')->once()->andReturn(10);
 
         $this->permission_manager = Mockery::mock(Docman_PermissionsManager::class);
 
         $this->user = Mockery::mock(PFUser::class);
-        $this->user->shouldReceive('getRealName')->andReturn('UserRealName');
+        $this->user->shouldReceive('getRealName')->once()->andReturn('UserRealName');
 
         $this->path = Mockery::mock(Docman_Path::class);
         $this->path->shouldReceive('get')->withArgs([$this->old_parent])->andReturn("/my/old/path");
         $this->path->shouldReceive('get')->withArgs([$this->parent_folder])->andReturn("/my/new/path");
+
+        $this->link_provider = Mockery::mock(ILinkUrlProvider::class);
+        $this->notification_manager->shouldReceive('getUrlProvider')->andReturn($this->link_provider);
     }
 
     public function testItBuildMovedMessageForUser(): void
@@ -93,11 +99,18 @@ class Docman_NotificationsManager_MoveTest extends TestCase
         $params['user_monitor'] = $this->user;
         $params['old_parent']   = $this->old_parent;
         $params['path']         = $this->path;
-        $this->old_parent->shouldReceive('getId')->once()->andReturn(100);
+        $this->old_parent->shouldReceive('getId')->andReturn(100);
 
         $this->notification_manager->shouldReceive('_getMonitoredItemForUser')->andReturn($this->folder);
         $this->notification_manager->shouldReceive('_getPermissionsManager')->andReturn($this->permission_manager);
         $this->permission_manager->shouldReceive('userCanAccess')->andReturn(true);
+
+        $details_url = "http://www.example.com/plugins/docman/project_name/preview/100/";
+        $this->link_provider->shouldReceive('getShowLinkUrl')->andReturn($details_url);
+        $notifications_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
+
+        $this->folder->shouldReceive('getTitle')->once()->andReturn("My title");
 
         $message = $this->notification_manager->_getMessageForUser(
             $this->user,
@@ -106,12 +119,12 @@ class Docman_NotificationsManager_MoveTest extends TestCase
         );
 
         $expected_message = "My title has been modified by UserRealName.\n";
-        $expected_message .= "http://www.example.com/plugins/docman/&action=show&id=10\n\n";
+        $expected_message .= $details_url . "\n\n";
         $expected_message .= "Moved from:\n /my/old/path\n        to:\n /my/new/path\n\n";
         $expected_message .= "--------------------------------------------------------------------\n";
         $expected_message .= "You are receiving this message because you are monitoring this item.\n";
         $expected_message .= "To stop monitoring, please visit:\n";
-        $expected_message .= "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $expected_message .= $notifications_url;
 
         $this->assertEquals($expected_message, $message);
     }
@@ -123,11 +136,16 @@ class Docman_NotificationsManager_MoveTest extends TestCase
         $params['user_monitor'] = $this->user;
         $params['path']         = $this->path;
         $params['old_parent']   = $this->old_parent;
-        $this->old_parent->shouldReceive('getId')->once()->andReturn(100);
+        $this->old_parent->shouldReceive('getId')->andReturn(100);
 
         $this->notification_manager->shouldReceive('_getMonitoredItemForUser')->andReturn($this->folder);
         $this->notification_manager->shouldReceive('_getPermissionsManager')->andReturn($this->permission_manager);
         $this->permission_manager->shouldReceive('userCanAccess')->andReturn(true);
+
+        $details_url = "http://www.example.com/plugins/docman/project_name/preview/100/";
+        $this->link_provider->shouldReceive('getShowLinkUrl')->andReturn($details_url);
+        $notifications_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
 
         $message = $this->notification_manager->_getMessageForUser(
             $this->user,
@@ -136,12 +154,12 @@ class Docman_NotificationsManager_MoveTest extends TestCase
         );
 
         $expected_message = "/my/new/path has been modified by UserRealName.\n";
-        $expected_message .= "http://www.example.com/plugins/docman/&action=show&id=10\n\n";
+        $expected_message .= $details_url. "\n\n";
         $expected_message .= "Moved from:\n /my/old/path to:\n /my/new/path\n\n";
         $expected_message .= "--------------------------------------------------------------------\n";
         $expected_message .= "You are receiving this message because you are monitoring this item.\n";
         $expected_message .= "To stop monitoring, please visit:\n";
-        $expected_message .= "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $expected_message .= $notifications_url;
 
         $this->assertEquals($expected_message, $message);
     }
@@ -153,11 +171,16 @@ class Docman_NotificationsManager_MoveTest extends TestCase
         $params['user_monitor'] = $this->user;
         $params['path']         = $this->path;
         $params['old_parent']   = $this->old_parent;
-        $this->old_parent->shouldReceive('getId')->once()->andReturn(100);
+        $this->old_parent->shouldReceive('getId')->andReturn(100);
 
         $this->notification_manager->shouldReceive('_getMonitoredItemForUser')->andReturn($this->folder);
         $this->notification_manager->shouldReceive('_getPermissionsManager')->andReturn($this->permission_manager);
         $this->permission_manager->shouldReceive('userCanAccess')->andReturn(true);
+
+        $details_url = "http://www.example.com/plugins/docman/project_name/preview/100/";
+        $this->link_provider->shouldReceive('getShowLinkUrl')->andReturn($details_url);
+        $notifications_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
 
         $message = $this->notification_manager->_getMessageForUser(
             $this->user,
@@ -166,12 +189,12 @@ class Docman_NotificationsManager_MoveTest extends TestCase
         );
 
         $expected_message = "/my/old/path has been modified by UserRealName.\n";
-        $expected_message .= "http://www.example.com/plugins/docman/&action=show&id=10\n\n";
+        $expected_message .= $details_url . "\n\n";
         $expected_message .= "Moved from:\n /my/old/path to:\n /my/new/path\n\n";
         $expected_message .= "--------------------------------------------------------------------\n";
         $expected_message .= "You are receiving this message because you are monitoring this item.\n";
         $expected_message .= "To stop monitoring, please visit:\n";
-        $expected_message .= "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $expected_message .= $notifications_url;
 
         $this->assertEquals($expected_message, $message);
     }
@@ -183,11 +206,18 @@ class Docman_NotificationsManager_MoveTest extends TestCase
         $params['user_monitor'] = $this->user;
         $params['old_parent']   = $this->old_parent;
         $params['path']         = $this->path;
-        $this->old_parent->shouldReceive('getId')->once()->andReturn(100);
+        $this->old_parent->shouldReceive('getId')->andReturn(100);
 
         $this->notification_manager->shouldReceive('_getMonitoredItemForUser')->andReturn($this->folder);
         $this->notification_manager->shouldReceive('_getPermissionsManager')->andReturn($this->permission_manager);
         $this->permission_manager->shouldReceive('userCanAccess')->andReturn(false);
+
+        $details_url = "http://www.example.com/plugins/docman/project_name/preview/100/";
+        $this->link_provider->shouldReceive('getShowLinkUrl')->andReturn($details_url);
+        $notifications_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
+
+        $this->folder->shouldReceive('getTitle')->once()->andReturn("My title");
 
         $message = $this->notification_manager->_getMessageForUser(
             $this->user,
@@ -196,12 +226,12 @@ class Docman_NotificationsManager_MoveTest extends TestCase
         );
 
         $expected_message = "My title has been modified by UserRealName.\n";
-        $expected_message .= "http://www.example.com/plugins/docman/&action=show&id=10\n\n";
+        $expected_message .= $details_url . "\n\n";
         $expected_message .= "Moved \n\n";
         $expected_message .= "--------------------------------------------------------------------\n";
         $expected_message .= "You are receiving this message because you are monitoring this item.\n";
         $expected_message .= "To stop monitoring, please visit:\n";
-        $expected_message .= "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $expected_message .= $notifications_url;
 
         $this->assertEquals($expected_message, $message);
     }
