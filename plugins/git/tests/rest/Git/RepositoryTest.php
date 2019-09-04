@@ -21,6 +21,7 @@
 namespace Git;
 
 use GitDataBuilder;
+use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use Tuleap\Git\REST\TestBase;
 
@@ -36,12 +37,29 @@ class RepositoryTest extends TestBase {
         return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
     }
 
-    public function testGetGitRepository()
+    public function testGetGitRepository(): void
     {
-        $response  = $this->getResponse($this->client->get(
-            'git/'.GitDataBuilder::REPOSITORY_GIT_ID
+        $response = $this->getResponse($this->client->get(
+            'git/' . GitDataBuilder::REPOSITORY_GIT_ID
         ));
 
+        $this->assertGETGitRepository($response);
+    }
+
+    public function testGetGitRepositoryWithReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get(
+            'git/' . GitDataBuilder::REPOSITORY_GIT_ID
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertGETGitRepository($response);
+    }
+
+    private function assertGETGitRepository(Response $response): void
+    {
         $repository = $response->json();
 
         $this->assertArrayHasKey('id', $repository);
@@ -50,13 +68,22 @@ class RepositoryTest extends TestBase {
         $this->assertArrayHasKey('server', $repository);
     }
 
-    public function testOPTIONS()
+    public function testOPTIONS(): void
     {
         $response = $this->getResponse($this->client->options('git/'.GitDataBuilder::REPOSITORY_GIT_ID));
         $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGetGitRepositoryThrows403IfUserCantSeeRepository()
+    public function testOPTIONSWithReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('git/'.GitDataBuilder::REPOSITORY_GIT_ID),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGetGitRepositoryThrows403IfUserCantSeeRepository(): void
     {
         $response = $this->getResponseForNonMember($this->client->get(
             'git/'.GitDataBuilder::REPOSITORY_GIT_ID
@@ -65,7 +92,32 @@ class RepositoryTest extends TestBase {
         $this->assertEquals($response->getStatusCode(), 403);
     }
 
-    public function testOPTIONSFiles()
+    public function testPATCHGitRepositoryWithReadOnlySiteAdmin(): void
+    {
+        $patch_payload = json_encode(
+            array(
+                "migrate_to_gerrit" => array(
+                    "server" => 1,
+                    "permissions" => "default"
+                )
+            )
+        );
+
+        $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID;
+
+        $response = $this->getResponse(
+            $this->client->patch(
+                $url,
+                null,
+                $patch_payload
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals($response->getStatusCode(), 403);
+    }
+
+    public function testOPTIONSFiles(): void
     {
         $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
             'path_to_file' => 'file01',
@@ -76,14 +128,50 @@ class RepositoryTest extends TestBase {
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGETFiles()
+    public function testOPTIONSFilesWithReadOnlyAdmin(): void
     {
         $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
-            'path_to_file' => 'file01',
-            'ref'          => 'master'
-        ]);
+                'path_to_file' => 'file01',
+                'ref'          => 'master'
+            ]);
+
+        $response = $this->getResponse(
+            $this->client->options($url),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETFiles(): void
+    {
+        $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
+                'path_to_file' => 'file01',
+                'ref' => 'master'
+            ]);
 
         $response = $this->getResponse($this->client->get($url));
+
+        $this->assertGETFiles($response);
+    }
+
+    public function testGETFilesWithReadOnlyAdmin(): void
+    {
+        $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
+                'path_to_file' => 'file01',
+                'ref' => 'master'
+            ]);
+
+        $response = $this->getResponse(
+            $this->client->get($url),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertGETFiles($response);
+    }
+
+    private function assertGetFiles(Response $response): void
+    {
         $content  = $response->json();
 
         $this->assertEquals($content['name'], 'file01');
@@ -91,7 +179,7 @@ class RepositoryTest extends TestBase {
         $this->assertNotEmpty($content['content']);
     }
 
-    public function testGETFilesOnOtherBranchThanMaster()
+    public function testGETFilesOnOtherBranchThanMaster(): void
     {
         $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
             'path_to_file' => 'file02',
@@ -106,7 +194,7 @@ class RepositoryTest extends TestBase {
         $this->assertNotEmpty($content['content']);
     }
 
-    public function testGETFilesOnNonExistingFile()
+    public function testGETFilesOnNonExistingFile(): void
     {
         $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
             'path_to_file' => 'NotAFile',
@@ -118,7 +206,7 @@ class RepositoryTest extends TestBase {
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
-    public function testGETFilesOnNonExistingBranch()
+    public function testGETFilesOnNonExistingBranch(): void
     {
         $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
             'path_to_file' => 'file01',
@@ -130,18 +218,43 @@ class RepositoryTest extends TestBase {
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
-    public function testOPTIONSBranches()
+    public function testOPTIONSBranches(): void
     {
         $response = $this->getResponse($this->client->options('git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/branches'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGETBranches()
+    public function testOPTIONSBranchesWithReadOnlyAdmin(): void
     {
-        $response  = $this->getResponse($this->client->get(
-            'git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/branches'
+        $response = $this->getResponse(
+            $this->client->options('git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/branches'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETBranches(): void
+    {
+        $response = $this->getResponse($this->client->get(
+            'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/branches'
         ));
 
+        $this->assertGETBranches($response);
+    }
+
+    public function testGETBranchesWithReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/branches'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertGETBranches($response);
+    }
+
+    private function assertGETBranches(Response $response): void
+    {
         $branches = $response->json();
 
         $this->assertCount(2, $branches);
@@ -206,18 +319,77 @@ class RepositoryTest extends TestBase {
         );
     }
 
-    public function testOPTIONSTags()
+    public function testOPTIONSTags(): void
     {
         $response = $this->getResponse($this->client->options('git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/tags'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGETTags()
+    public function testOPTIONSTagsWithReadOnlyAdmin(): void
     {
-        $response  = $this->getResponse($this->client->get(
-            'git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/tags'
+        $response = $this->getResponse(
+            $this->client->options('git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/tags'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETTags(): void
+    {
+        $response = $this->getResponse($this->client->get(
+            'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tags'
         ));
 
+        $this->assertGETTags($response);
+    }
+
+    public function testGETTagsWithReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tags'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertGETTags($response);
+    }
+
+    public function testPOSTGitWithReadOnlyAdmin(): void
+    {
+        $project_id   = $this->getProjectId(GitDataBuilder::PROJECT_TEST_GIT_SHORTNAME);
+        $post_payload = json_encode(
+            array(
+                'project_id' => $project_id,
+                'name' => 'newTestGitRepository'
+            )
+        );
+        $response = $this->getResponse(
+            $this->client->post('git/', null, $post_payload),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    public function testPOSTStatusWithReadOnlyAdmin(): void
+    {
+        $post_payload = json_encode(
+            array(
+                "state" => "success",
+                "token" => "someToken"
+            )
+        );
+
+        $response = $this->getResponse(
+            $this->client->post('git/'.GitDataBuilder::REPOSITORY_GIT_ID.'/statuses/5d408503daf6f1348e264122cfa8fc89a30f7f12', null, $post_payload),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    private function assertGETTags(Response $response): void
+    {
         $tags = $response->json();
         $this->assertCount(1, $tags);
         $this->assertEqualsCanonicalizing(
@@ -252,5 +424,37 @@ class RepositoryTest extends TestBase {
                 ]
             ]
         );
+    }
+
+    public function testGETPullRequestsWithReadOnlyAdmin(): void
+    {
+        $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID.'/pull_requests';
+
+        $response = $this->getResponse(
+            $this->client->get($url),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertGETPullRequests($response);
+    }
+
+    public function testGETPullRequests(): void
+    {
+        $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID.'/pull_requests';
+
+        $response = $this->getResponse($this->client->get($url));
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertGETPullRequests($response);
+
+    }
+
+    private function assertGETPullRequests(Response $response): void
+    {
+        $content = $response->json();
+
+        $this->assertEquals(2, count($content['collection']));
+        $this->assertEquals(2, $content['total_size']);
     }
 }
