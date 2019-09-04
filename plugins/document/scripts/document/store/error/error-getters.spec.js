@@ -32,6 +32,7 @@ describe("error_getters", () => {
             state.has_folder_loading_error = false;
             state.has_document_lock_error = false;
             state.has_document_permission_error = false;
+            state.has_document_loading_error = false;
 
             const result = getters.does_folder_have_any_error(state);
 
@@ -43,6 +44,7 @@ describe("error_getters", () => {
             state.has_folder_loading_error = true;
             state.has_document_lock_error = false;
             state.has_document_permission_error = false;
+            state.has_document_loading_error = false;
 
             const result = getters.does_folder_have_any_error(state);
 
@@ -54,6 +56,7 @@ describe("error_getters", () => {
             state.has_folder_loading_error = false;
             state.has_document_lock_error = true;
             state.has_document_permission_error = false;
+            state.has_document_loading_error = false;
 
             const result = getters.does_folder_have_any_error(state);
 
@@ -63,8 +66,21 @@ describe("error_getters", () => {
         it("folder has an error if document preview fail", () => {
             state.has_folder_permission_error = false;
             state.has_folder_loading_error = false;
-            state.has_document_lock_error = true;
+            state.has_document_lock_error = false;
             state.has_document_permission_error = true;
+            state.has_document_loading_error = false;
+
+            const result = getters.does_folder_have_any_error(state);
+
+            expect(result).toEqual(true);
+        });
+
+        it("folder has an error if document load fail", () => {
+            state.has_folder_permission_error = false;
+            state.has_folder_loading_error = false;
+            state.has_document_lock_error = false;
+            state.has_document_permission_error = false;
+            state.has_document_loading_error = true;
 
             const result = getters.does_folder_have_any_error(state);
 
@@ -76,6 +92,7 @@ describe("error_getters", () => {
             state.has_folder_loading_error = false;
             state.has_document_lock_error = false;
             state.has_document_permission_error = false;
+            state.has_document_loading_error = false;
 
             const result = getters.does_folder_have_any_error(state);
 
