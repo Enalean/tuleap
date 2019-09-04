@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`App is displays misconfiguration error for admin user 1`] = `
-<div
-  class="tlp-framed-horizontally"
->
+exports[`App displays misconfiguration error for admin user 1`] = `
+<div>
   <under-construction-modal-stub />
    
   <board-without-any-columns-error-stub
@@ -13,14 +11,22 @@ exports[`App is displays misconfiguration error for admin user 1`] = `
 </div>
 `;
 
-exports[`App is displays misconfiguration error for regular user 1`] = `
-<div
-  class="tlp-framed-horizontally"
->
+exports[`App displays misconfiguration error for regular user 1`] = `
+<div>
   <under-construction-modal-stub />
    
   <board-without-any-columns-error-stub
     admin_url="/path/to/admin"
+  />
+</div>
+`;
+
+exports[`App displays the board when there are columns 1`] = `
+<div>
+  <under-construction-modal-stub />
+   
+  <task-board-stub
+    columns="[object Object],[object Object]"
   />
 </div>
 `;

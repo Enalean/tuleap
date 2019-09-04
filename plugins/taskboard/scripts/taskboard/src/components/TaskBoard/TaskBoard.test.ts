@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../agiledashboard/www/themes/BurningParrot/css/header';
-@import 'includes/header';
-@import 'includes/body';
+import { shallowMount } from "@vue/test-utils";
+import TaskBoard from "./TaskBoard.vue";
 
-.taskboard-under-construction {
-    color: $tlp-ui-dimmed;
-}
-
-.taskboard {
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
-}
+describe("TaskBoard", () => {
+    it("displays a table with header and body", () => {
+        const wrapper = shallowMount(TaskBoard, {
+            propsData: { columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] }
+        });
+        expect(wrapper.element).toMatchSnapshot();
+    });
+});

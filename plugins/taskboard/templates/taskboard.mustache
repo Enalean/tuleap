@@ -39,8 +39,6 @@
     </nav>
     {{/ milestone_presenter }}
 
-    {{# columns }}{{ id }}: {{ label }}. {{/columns}}
-
-    <div id="taskboard" data-user-is-admin="{{ user_is_admin }}" data-admin-url="{{ admin_url }}"></div>
+    <div id="taskboard" data-user-is-admin="{{ user_is_admin }}" data-admin-url="{{ admin_url }}" data-columns="{{ json_encoded_columns }}"></div>
 
 </div>

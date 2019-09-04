@@ -42,9 +42,9 @@ class BoardPresenter
      */
     public $admin_url;
     /**
-     * @var ColumnPresenter[]
+     * @var string
      */
-    public $columns;
+    public $json_encoded_columns;
 
     /**
      * @param AgileDashboard_MilestonePresenter $milestone_presenter
@@ -71,6 +71,6 @@ class BoardPresenter
                 ]
             );
 
-        $this->columns = $columns;
+        $this->json_encoded_columns = (string) json_encode($columns, JSON_THROW_ON_ERROR);
     }
 }

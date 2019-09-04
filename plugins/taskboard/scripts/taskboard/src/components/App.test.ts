@@ -21,15 +21,25 @@ import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 
 describe("App", () => {
-    it("is displays misconfiguration error for regular user", () => {
+    it("displays misconfiguration error for regular user", () => {
         const wrapper = shallowMount(App, {
-            propsData: { user_is_admin: false, admin_url: "/path/to/admin" }
+            propsData: { user_is_admin: false, admin_url: "/path/to/admin", columns: [] }
         });
         expect(wrapper.element).toMatchSnapshot();
     });
-    it("is displays misconfiguration error for admin user", () => {
+    it("displays misconfiguration error for admin user", () => {
         const wrapper = shallowMount(App, {
-            propsData: { user_is_admin: true, admin_url: "/path/to/admin" }
+            propsData: { user_is_admin: true, admin_url: "/path/to/admin", columns: [] }
+        });
+        expect(wrapper.element).toMatchSnapshot();
+    });
+    it("displays the board when there are columns", () => {
+        const wrapper = shallowMount(App, {
+            propsData: {
+                user_is_admin: true,
+                admin_url: "/path/to/admin",
+                columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }]
+            }
         });
         expect(wrapper.element).toMatchSnapshot();
     });
