@@ -55,6 +55,7 @@ import {
     postLockLink,
     postLockWiki,
     postNewLinkVersionFromEmpty,
+    postNewEmbeddedFileVersionFromEmpty,
     postWiki,
     putEmbeddedFileMetadata,
     putEmbeddedFilePermissions,
@@ -892,6 +893,12 @@ export const createNewVersionFromEmpty = async (context, [selected_type, item, i
         switch (selected_type) {
             case TYPE_LINK:
                 await postNewLinkVersionFromEmpty(item.id, item_to_update.link_properties.link_url);
+                break;
+            case TYPE_EMBEDDED:
+                await postNewEmbeddedFileVersionFromEmpty(
+                    item.id,
+                    item_to_update.embedded_properties.content
+                );
                 break;
             default:
                 break;
