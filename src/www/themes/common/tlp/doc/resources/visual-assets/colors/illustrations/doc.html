@@ -1,5 +1,5 @@
 <p>SVG illustrations that are used for error states should use css class to adapt colors to current theme.</p>
-<p>3 helpers are available: </p>
+<p>The following classes are available:</p>
 <ul>
     <li>
         <code class="code-inline">tlp-illustration-primary-box</code> used to both stroke and fill a shape.
@@ -32,3 +32,54 @@
         <code class="code-inline">tlp-illustration-tertiary-stroke</code> used to stroke with a light color (mainly used for background elements).
     </li>
 </ul>
+
+<p>It may be difficult to parse a given SVG illustration to decide which class should be used, where, and when.<br>
+    The following tool help you do the conversion, just paste the original illustration and the relevant classes will be injected for you: </p>
+    <button type="button" id="doc-colors-illustration-helper-button" class="tlp-button tlp-button-primary">
+        <i class="fa fa-bolt tlp-button-icon"></i>
+        Inject TLP classes into an illustration
+    </button>
+</p>
+<div id="doc-colors-illustration-helper-modal"
+     class="tlp-modal tlp-modal-medium-sized"
+     role="dialog"
+     aria-labelledby="doc-colors-illustration-helper-modal-label"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="doc-colors-illustration-helper-modal-label">
+            <i class="fa fa-bolt tlp-modal-title-icon"></i>
+            Inject TLP classes into an illustration
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            ×
+        </div>
+    </div>
+    <div class="tlp-modal-body doc-colors-illustration-helper-modal-body">
+        <div class="tlp-form-element doc-colors-illustration-helper-modal-source">
+            <label class="tlp-label" for="illustration-helper-source">Source SVG</label>
+            <textarea type="text" rows="20" class="tlp-textarea" id="illustration-helper-source" placeholder="<svg …>" autocomplete="off">&lt;svg xmlns="http://www.w3.org/2000/svg" width="56" height="56">
+    &lt;rect
+          fill="#e0f6ff" stroke="#92CEE5"
+          stroke-width="3"
+          x="3" y="3"
+          rx="0.6" ry="0.6"
+          width="50" height="50"/>
+&lt;/svg></textarea>
+        </div>
+        <div class="tlp-form-element doc-colors-illustration-helper-modal-target">
+            <label class="tlp-label" for="illustration-helper-target">Transformed SVG</label>
+            <textarea type="text" rows="20" class="tlp-textarea" id="illustration-helper-target" placeholder="<svg …>"></textarea>
+        </div>
+    </div>
+    <div class="tlp-modal-body doc-colors-illustration-helper-modal-preview">
+        <div class="tlp-property">
+            <label class="tlp-label">Preview</label>
+            <div id="doc-colors-illustration-helper-modal-preview-block">
+                <em class="tlp-text-muted">Preview</em>
+            </div>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">Close</button>
+    </div>
+</div>

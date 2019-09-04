@@ -19,6 +19,8 @@
 
 /* global CodeMirror:readonly tlp:readonly */
 
+import { sanitize } from "dompurify";
+
 (function loadCodeMirrorEditors() {
     var demo_panels = document.querySelectorAll(".demo");
 
@@ -44,7 +46,7 @@
         });
 
         function updatePreview() {
-            example.innerHTML = editor.getValue();
+            example.innerHTML = sanitize(editor.getValue());
             var datepickers = example.querySelectorAll(".tlp-input-date");
             [].forEach.call(datepickers, function(datepicker) {
                 tlp.datePicker(datepicker);
