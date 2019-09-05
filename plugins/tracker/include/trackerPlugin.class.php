@@ -121,7 +121,7 @@ use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupController;
 use Tuleap\Tracker\Permission\Fields\PermissionsOnFieldsUpdateController;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\Tracker\ProjectDeletionEvent;
-use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Reference\ReferenceCreator;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigController;
@@ -1539,7 +1539,7 @@ class trackerPlugin extends Plugin {
 
     public function getHistoryEntryCollection(HistoryEntryCollection $collection)
     {
-        $visit_retriever = new \Tuleap\Tracker\RecentlyVisited\VisitRetriever(
+        $visit_retriever = new \Tuleap\Tracker\Artifact\RecentlyVisited\VisitRetriever(
             new RecentlyVisitedDao(),
             $this->getArtifactFactory(),
             new \Tuleap\Glyph\GlyphFinder(EventManager::instance())
@@ -1555,7 +1555,7 @@ class trackerPlugin extends Plugin {
         /** @var PFUser $user */
         $user = $params['user'];
 
-        $visit_cleaner = new \Tuleap\Tracker\RecentlyVisited\VisitCleaner(
+        $visit_cleaner = new \Tuleap\Tracker\Artifact\RecentlyVisited\VisitCleaner(
             new RecentlyVisitedDao()
         );
         $visit_cleaner->clearVisitedArtifacts($user);

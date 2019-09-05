@@ -26,7 +26,7 @@ use Tracker_Artifact;
 use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactDao;
 use Tracker_FormElement_Field_ComputedDaoCache;
-use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 
 class ArtifactDependenciesDeletor
 {
