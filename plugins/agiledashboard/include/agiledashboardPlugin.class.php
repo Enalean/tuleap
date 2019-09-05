@@ -704,7 +704,7 @@ class AgileDashboardPlugin extends Plugin
     {
         if ($this->isInOverviewTab()) {
             $assets = $this->getIncludeAssets();
-            $params['javascript_files'][] = $assets->getFileURL('overview.js');
+            $params['javascript_files'][] = $assets->getFileURL('scrum-header.js');
             return;
         }
 
