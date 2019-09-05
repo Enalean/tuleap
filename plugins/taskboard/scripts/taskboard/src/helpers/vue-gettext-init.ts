@@ -21,22 +21,32 @@
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 
-interface GettextTranslationsMap {
-    [key: string]: any;
+interface TranslatedStrings {
+    readonly [key: string]: string;
 }
 
-export async function initVueGettext(load_translations_callback: Function) {
+interface GettextTranslationsMap {
+    [locale: string]: TranslatedStrings;
+}
+
+interface POFile {
+    readonly messages: TranslatedStrings;
+}
+
+export async function initVueGettext(
+    load_translations_callback: (locale: string) => Promise<POFile>
+) {
     const translations: GettextTranslationsMap = {};
     const locale = document.body.dataset.userLocale;
     if (locale) {
         try {
-            translations[locale] = (await load_translations_callback(locale))["messages"];
+            translations[locale] = (await load_translations_callback(locale)).messages;
         } catch (exception) {
             // default to en_US
         }
     }
     Vue.use(GetTextPlugin, {
-        translations: translations,
+        translations,
         silent: true
     });
     if (locale) {
