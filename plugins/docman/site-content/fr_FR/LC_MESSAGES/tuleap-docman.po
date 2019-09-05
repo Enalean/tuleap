@@ -301,6 +301,16 @@ msgstr "Vous n'êtes pas autorisé à modifier cet élément."
 msgid "You are receiving this message because you are monitoring this item."
 msgstr "Vous recevez cette notification car vous monitorez cet item."
 
+msgid ""
+"You are receiving this message because you were added to the monitoring list "
+"of this item:"
+msgstr "Vous recevez cette notification car vous avez été rajouté à la liste des utilisateurs qui monitorent cet item:"
+
+msgid ""
+"You are receiving this message because you were removed from the monitoring "
+"list of this item:"
+msgstr "Vous recevez cette notification car vous avez été enlevé de la liste des utilisateurs qui monitorent cet item:"
+
 msgid "You cannot delete the root folder."
 msgstr "Vous ne pouvez pas supprimer le dossier racine."
 
@@ -312,10 +322,20 @@ msgid "You should be site administrator to access this page"
 msgstr "Vous devez être administrateur site pour accéder à cette page"
 
 #, php-format
+msgid "You were added to '%s' monitoring list"
+msgstr "Vous avez été ajouté de la liste de monitoring du document '%s'"
+
+#, php-format
+msgid "You were removed from '%s' monitoring list"
+msgstr "Vous avez été enlevé de la liste de monitoring du document '%s'"
+
+#, php-format
 msgid ""
 "from:\n"
 " %s"
-msgstr "depuis :\n%s"
+msgstr ""
+"depuis :\n"
+"%s"
 
 msgid "null is not a valid status."
 msgstr "null n'est pas un statut valide."
@@ -324,7 +344,9 @@ msgstr "null n'est pas un statut valide."
 msgid ""
 "to:\n"
 " %s"
-msgstr "vers :\n%s"
+msgstr ""
+"vers :\n"
+"%s"
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }} n'a pas de permissions globales"
