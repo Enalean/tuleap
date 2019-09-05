@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NoContentEmptyState displays a cell that span on the whole table 1`] = `
+<tr
+  class="taskboard-swimlane"
+>
+  <td
+    class="taskboard-cell"
+    colspan="3"
+  >
+    <div
+      class="empty-page"
+    >
+      <div
+        class="empty-page-illustration"
+      >
+        <no-content-svg-stub />
+      </div>
+       
+      <translate-stub
+        class="empty-page-text"
+        tag="p"
+      >
+        
+                This taskboard is empty
+            
+      </translate-stub>
+    </div>
+  </td>
+</tr>
+`;

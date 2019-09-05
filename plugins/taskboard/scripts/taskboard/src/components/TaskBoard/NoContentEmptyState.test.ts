@@ -17,20 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Vue } from "vue/types/vue";
 import { shallowMount } from "@vue/test-utils";
-import TaskBoardBody from "./TaskBoardBody.vue";
+import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
+import NoContentEmptyState from "./NoContentEmptyState.vue";
 
-describe("TaskBoardBody", () => {
-    it("displays an empty state", () => {
-        const wrapper = shallowMount(TaskBoardBody, {
+describe("NoContentEmptyState", () => {
+    let local_vue: typeof Vue;
+
+    beforeEach(() => {
+        local_vue = createTaskboardLocalVue();
+    });
+
+    it("displays a cell that span on the whole table", () => {
+        const wrapper = shallowMount(NoContentEmptyState, {
+            localVue: local_vue,
             propsData: { columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] }
         });
-        expect(wrapper.element).toMatchInlineSnapshot(`
-            <tbody>
-              <no-content-empty-state-stub
-                columns="[object Object],[object Object]"
-              />
-            </tbody>
-        `);
+        expect(wrapper.element).toMatchSnapshot();
     });
 });

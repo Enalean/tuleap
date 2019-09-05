@@ -19,22 +19,35 @@
   -->
 
 <template>
-    <tbody>
-        <no-content-empty-state v-bind:columns="columns"/>
-    </tbody>
+    <tr class="taskboard-swimlane">
+        <td class="taskboard-cell" v-bind:colspan="colspan">
+            <div class="empty-page">
+                <div class="empty-page-illustration">
+                    <no-content-svg/>
+                </div>
+                <translate tag="p" class="empty-page-text">
+                    This taskboard is empty
+                </translate>
+            </div>
+        </td>
+    </tr>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { ColumnDefinition } from "../../type";
 import NoContentSvg from "./NoContentSvg.vue";
-import NoContentEmptyState from "./NoContentEmptyState.vue";
+import { ColumnDefinition } from "../../type";
+
 @Component({
-    components: { NoContentEmptyState, NoContentSvg }
+    components: { NoContentSvg }
 })
-export default class TaskBoardBody extends Vue {
+export default class NoContentEmptyState extends Vue {
     @Prop()
     readonly columns!: Array<ColumnDefinition>;
+
+    get colspan(): number {
+        return this.columns.length + 1;
+    }
 }
 </script>

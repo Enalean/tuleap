@@ -49,6 +49,9 @@ msgstr ""
 msgid "This feature is under construction"
 msgstr "Cette fonctionnalité est en cours de construction"
 
+msgid "This taskboard is empty"
+msgstr "Ce tableau des tâches est vide"
+
 msgid "This taskboard is not properly configured"
 msgstr "Ce tableau des tâches n'est pas correctement configuré"
 
