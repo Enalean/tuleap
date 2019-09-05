@@ -67,6 +67,199 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
 
         $items = array_merge($items_folder_1, $items_folder_2);
 
+        $this->assertGetDocumentItems($items, $folder, $empty, $file, $link, $embedded, $wiki);
+
+        return $items;
+    }
+
+    /**
+     * @depends testGetRootIdWithUserRESTReadOnlyAdmin
+     */
+    public function testGetDocumentItemsWithUserRESTReadOnlyAdmin(int $root_id): array
+    {
+        $root_folder = $this->loadRootFolderContent($root_id, REST_TestDataBuilder::TEST_BOT_USER_NAME);
+
+        $items_file    = $this->loadFolderContent($root_id, 'Folder', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $folder_files  = $this->findItemByTitle($root_folder, 'Folder');
+        $items_file_id = $folder_files['id'];
+        $get           = $this->loadFolderContent($items_file_id, 'GET FO', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+
+        $items_folder_1 = array_merge(
+            $root_folder,
+            $folder_files,
+            $items_file,
+            $get
+        );
+
+        $folder   = $this->findItemByTitle($items_folder_1, 'GET FO');
+        $empty    = $this->findItemByTitle($items_folder_1, 'GET EM');
+        $file     = $this->findItemByTitle($items_folder_1, 'GET F');
+        $embedded = $this->findItemByTitle($items_folder_1, 'GET E');
+        $link     = $this->findItemByTitle($items_folder_1, 'GET L');
+        $wiki     = $this->findItemByTitle($items_folder_1, 'GET W');
+
+        $response       = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            $this->client->get('docman_items/' . $folder['id'] . '/docman_items')
+        );
+        $items_folder_2     = $response->json();
+
+        $items = array_merge($items_folder_1, $items_folder_2);
+
+        $this->assertGetDocumentItems($items, $folder, $empty, $file, $link, $embedded, $wiki);
+
+        return $items;
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testRegularUserCantSeeFolderHeCantRead(int $root_id): void
+    {
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        );
+        $folder   = $response->json();
+
+        $allowed_folder = $this->findItemByTitle($folder, 'Folder');
+        $this->assertNotNull($allowed_folder);
+        $denied_folder = $this->findItemByTitle($folder, 'Folder RO');
+        $this->assertNull($denied_folder);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testOPTIONSDocmanItemsId($root_id): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('docman_items/' . $root_id . '/docman_items'),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testOPTIONSId($root_id): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('docman_items/' . $root_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testAllOPTIONSDocmanItemsWithUserRESTReadOnlyAdmin($root_id): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('docman_items/' . $root_id),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+
+        $response = $this->getResponse(
+            $this->client->options('docman_items/' . $root_id . '/docman_items'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testGetId($root_id) : void
+    {
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $root_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        $item     = $response->json();
+
+        $this->assertEquals('Project Documentation', $item['title']);
+        $this->assertEquals($root_id, $item['id']);
+        $this->assertEquals('folder', $item['type']);
+        $this->assertNull($item['permissions_for_groups']);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testGetIdWithUserRESTReadOnlyAdmin($root_id) : void
+    {
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $root_id),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $item     = $response->json();
+
+        $this->assertEquals('Project Documentation', $item['title']);
+        $this->assertEquals($root_id, $item['id']);
+        $this->assertEquals('folder', $item['type']);
+        $this->assertIsArray($item['permissions_for_groups']);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testGetAllItemParents(array $items): void
+    {
+        $embedded_2 = $this->findItemByTitle($items, 'GET EM');
+
+        $project_response = $this->getResponse($this->client->get('docman_items/' . $embedded_2['id'] . '/parents'));
+        $json_parents     = $project_response->json();
+        $this->assertEquals(count($json_parents), 3);
+        $this->assertEquals($json_parents[0]['title'], 'Project Documentation');
+        $this->assertEquals($json_parents[1]['title'], 'Folder');
+        $this->assertEquals($json_parents[2]['title'], 'GET FO');
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testGetAllItemParentsWithUserRESTReadOnlyAdmin(array $items): void
+    {
+        $embedded_2 = $this->findItemByTitle($items, 'GET EM');
+
+        $project_response = $this->getResponse(
+            $this->client->get('docman_items/' . $embedded_2['id'] . '/parents'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $json_parents = $project_response->json();
+        $this->assertEquals(count($json_parents), 3);
+        $this->assertEquals($json_parents[0]['title'], 'Project Documentation');
+        $this->assertEquals($json_parents[1]['title'], 'Folder');
+        $this->assertEquals($json_parents[2]['title'], 'GET FO');
+    }
+
+    /**
+     * @param array $items
+     * @param array|null $folder
+     * @param array|null $empty
+     * @param array|null $file
+     * @param array|null $link
+     * @param array|null $embedded
+     * @param array|null $wiki
+     */
+    private function assertGetDocumentItems(
+        array $items,
+        ?array $folder,
+        ?array $empty,
+        ?array $file,
+        ?array $link,
+        ?array $embedded,
+        ?array $wiki
+    ): void {
         $this->assertGreaterThan(0, count($items));
 
         $this->assertEquals(' (docman_regular_user)', $items[0]['owner']['display_name']);
@@ -136,82 +329,5 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertNotNull($link['permissions_for_groups']);
         $this->assertNotNull($embedded['permissions_for_groups']);
         $this->assertNotNull($wiki['permissions_for_groups']);
-
-        return $items;
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testRegularUserCantSeeFolderHeCantRead(int $root_id): void
-    {
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->get('docman_items/' . $root_id . '/docman_items')
-        );
-        $folder   = $response->json();
-
-        $allowed_folder = $this->findItemByTitle($folder, 'Folder');
-        $this->assertNotNull($allowed_folder);
-        $denied_folder = $this->findItemByTitle($folder, 'Folder RO');
-        $this->assertNull($denied_folder);
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testOPTIONSDocmanItemsId($root_id)
-    {
-        $response = $this->getResponse(
-            $this->client->options('docman_items/' . $root_id . '/docman_items'),
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
-        );
-
-        $this->assertEquals(['OPTIONS', 'GET', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testOPTIONSId($root_id)
-    {
-        $response = $this->getResponse(
-            $this->client->options('docman_items/' . $root_id),
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
-        );
-
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testGetId($root_id) : void
-    {
-        $response = $this->getResponse(
-            $this->client->get('docman_items/' . $root_id),
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
-        );
-        $item     = $response->json();
-
-        $this->assertEquals('Project Documentation', $item['title']);
-        $this->assertEquals($root_id, $item['id']);
-        $this->assertEquals('folder', $item['type']);
-        $this->assertNull($item['permissions_for_groups']);
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testGetAllItemParents(array $items)
-    {
-        $embedded_2 = $this->findItemByTitle($items, 'GET EM');
-
-        $project_response = $this->getResponse($this->client->get('docman_items/' . $embedded_2['id'] . '/parents'));
-        $json_parents     = $project_response->json();
-        $this->assertEquals(count($json_parents), 3);
-        $this->assertEquals($json_parents[0]['title'], 'Project Documentation');
-        $this->assertEquals($json_parents[1]['title'], 'Folder');
-        $this->assertEquals($json_parents[2]['title'], 'GET FO');
     }
 }
