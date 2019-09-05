@@ -38,7 +38,6 @@ import {
     deleteLockLink,
     deleteLockWiki,
     deleteUserPreferenciesForFolderInProject,
-    deleteUserPreferenciesForUnderConstructionModal,
     deleteWiki,
     getDocumentManagerServiceInformation,
     getFolderContent,
@@ -581,19 +580,6 @@ export const setUserPreferenciesForUI = async context => {
         return await addUserLegacyUIPreferency(context.state.user_id, context.state.project_id);
     } catch (exception) {
         return handleErrors(context, exception);
-    }
-};
-
-export const unsetUnderConstructionUserPreference = async context => {
-    try {
-        return await deleteUserPreferenciesForUnderConstructionModal(
-            context.state.user_id,
-            context.state.project_id
-        );
-    } catch (exception) {
-        return handleErrors(context, exception);
-    } finally {
-        context.commit("removeIsUnderConstruction");
     }
 };
 

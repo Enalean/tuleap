@@ -27,7 +27,6 @@ export {
     stopLoadingAscendantHierarchy,
     appendFolderToAscendantHierarchy,
     setCurrentFolder,
-    removeIsUnderConstruction,
     updateCurrentlyPreviewedItem,
     showPostDeletionNotification,
     hidePostDeletionNotification,
@@ -48,7 +47,6 @@ function initApp(
         user_can_create_wiki,
         max_files_dragndrop,
         max_size_upload,
-        is_under_construction,
         embedded_are_allowed,
         is_deletion_allowed,
         is_item_status_metadata_used,
@@ -63,7 +61,6 @@ function initApp(
     state.user_can_create_wiki = user_can_create_wiki;
     state.max_files_dragndrop = max_files_dragndrop;
     state.max_size_upload = max_size_upload;
-    state.is_under_construction = is_under_construction;
     state.embedded_are_allowed = embedded_are_allowed;
     state.is_deletion_allowed = is_deletion_allowed;
     state.is_item_status_metadata_used = is_item_status_metadata_used;
@@ -133,10 +130,6 @@ function replaceCurrentFolder(state, folder) {
     if (folder_in_hierarchy_index >= 0) {
         state.current_folder_ascendant_hierarchy[folder_in_hierarchy_index] = folder;
     }
-}
-
-function removeIsUnderConstruction(state) {
-    state.is_under_construction = false;
 }
 
 function updateCurrentlyPreviewedItem(state, item) {

@@ -56,7 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const user_id = Number.parseInt(document.body.dataset.userId, 10);
     const max_files_dragndrop = Number.parseInt(vue_mount_point.dataset.maxFilesDragndrop, 10);
     const max_size_upload = Number.parseInt(vue_mount_point.dataset.maxSizeUpload, 10);
-    const is_under_construction = Boolean(vue_mount_point.dataset.isUnderConstruction);
     const embedded_are_allowed = Boolean(vue_mount_point.dataset.embeddedAreAllowed);
     const is_deletion_allowed = Boolean(vue_mount_point.dataset.userCanDeleteItem);
     const is_item_status_metadata_used = Boolean(vue_mount_point.dataset.isItemStatusMetadataUsed);
@@ -82,7 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
             date_time_format,
             max_files_dragndrop,
             max_size_upload,
-            is_under_construction,
             embedded_are_allowed,
             is_deletion_allowed,
             is_item_status_metadata_used,

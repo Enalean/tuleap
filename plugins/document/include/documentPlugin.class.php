@@ -26,7 +26,6 @@ use Tuleap\Document\DocumentUsageRetriever;
 use Tuleap\Document\LinkProvider\DocumentLinkProvider;
 use Tuleap\Document\Tree\DocumentTreeController;
 use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
-use Tuleap\Document\Tree\DocumentTreeUnderConstructionController;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Request\CollectRoutesEvent;
 
@@ -84,10 +83,6 @@ class documentPlugin extends Plugin // phpcs:ignore
         return ['docman'];
     }
 
-    public function routeGetUnderConstruction(): DocumentTreeUnderConstructionController
-    {
-        return new DocumentTreeUnderConstructionController($this->getProjectExtractor());
-    }
 
     public function routeGet(): DocumentTreeController
     {
@@ -97,7 +92,6 @@ class documentPlugin extends Plugin // phpcs:ignore
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup('/plugins/document', function (FastRoute\RouteCollector $r) {
-            $r->get('/{project_name:[A-z0-9-]+}/under_construction/[{vue-routing:.*}]', $this->getRouteHandler('routeGetUnderConstruction'));
             $r->get('/{project_name:[A-z0-9-]+}/[{vue-routing:.*}]', $this->getRouteHandler('routeGet'));
         });
     }

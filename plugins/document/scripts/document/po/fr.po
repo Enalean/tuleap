@@ -45,14 +45,6 @@ msgstr ""
 "href=\"%{ approval_table_url }\">table d'approbation</a> pour la dernière "
 "version de %{ filename }."
 
-msgid ""
-"<b>The new interface is under construction</b>, all features are not "
-"available for now. Here's the list of what is yet to be implemented:"
-msgstr ""
-"<b>La nouvelle interface est en cours de construction</b>, toutes les "
-"fonctionnalités ne sont pas disponibles pour le moment. Voici ce qu'il reste "
-"à implémenter:"
-
 msgid "A document already exists with the same title."
 msgstr "Un document existe déjà avec le même titre."
 
@@ -294,10 +286,6 @@ msgstr "Verrouiller la nouvelle version"
 msgid "Manager"
 msgstr "Gestionnaire"
 
-msgid "Modal \"create a new version\" for documents of type \"empty\""
-msgstr ""
-"Modale \"créer une nouvelle version\" pour les documents de type \"vide\""
-
 msgid "My content..."
 msgstr "Mon contenu..."
 
@@ -339,9 +327,6 @@ msgstr "Pas encore"
 
 msgid "Notifications"
 msgstr "Notifications"
-
-msgid "OK, got it"
-msgstr "OK, compris"
 
 msgid "Obsolescence date"
 msgstr "Date d'obsolescence"
@@ -515,9 +500,6 @@ msgstr "Validité"
 msgid "Version name"
 msgstr "Nom de version"
 
-msgid "Welcome to the new documents manager"
-msgstr "Bienvenue dans le nouveau gestionnaire de documents"
-
 msgid ""
 "When you delete a folder, all its content is also deleted. Please think "
 "wisely!"
@@ -575,13 +557,6 @@ msgstr ""
 
 msgid "You are not allowed to write in this folder"
 msgstr "Vous n'êtes pas autorisé à écrire dans ce dossier"
-
-msgid ""
-"You can switch to the old Document Manager UI whenever you want. (The switch "
-"is at the bottom of the page)"
-msgstr ""
-"Vous pouvez revenir à l'ancienne interface du gestionnaire de documents à "
-"tout moment. (Le bouton se trouve en bas de la page)"
 
 msgid ""
 "You can't upload a new version of this file until the approval table is "
