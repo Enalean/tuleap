@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "83fb6f7ebb9d784bebe03575aeb8f2b6",
+    "content-hash": "b40a0073b196083f4df50e76dfcac583",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -743,24 +743,23 @@
         },
         {
             "name": "mustache/mustache",
-            "version": "dev-feature/strict-variables",
+            "version": "dev-master-tuleap",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Enalean/mustache.php.git",
-                "reference": "8d966dcf10b25c76eb4e80a7c69bb4e3d7c44041"
+                "reference": "fd1914163a899d598eb933a60afe3ba972fde70f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Enalean/mustache.php/zipball/8d966dcf10b25c76eb4e80a7c69bb4e3d7c44041",
-                "reference": "8d966dcf10b25c76eb4e80a7c69bb4e3d7c44041",
+                "url": "https://api.github.com/repos/Enalean/mustache.php/zipball/fd1914163a899d598eb933a60afe3ba972fde70f",
+                "reference": "fd1914163a899d598eb933a60afe3ba972fde70f",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2.4"
+                "php": ">=7.2"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "~1.11",
-                "phpunit/phpunit": "~3.7|~4.0|~5.0"
+                "phpunit/phpunit": "^8.3"
             },
             "type": "library",
             "autoload": {
@@ -785,9 +784,9 @@
                 "templating"
             ],
             "support": {
-                "source": "https://github.com/Enalean/mustache.php/tree/feature/strict-variables"
+                "source": "https://github.com/Enalean/mustache.php/tree/v2.9.0-20190905"
             },
-            "time": "2017-12-08T15:59:09+00:00"
+            "time": "2019-09-05T14:05:04+00:00"
         },
         {
             "name": "nikic/fast-route",
