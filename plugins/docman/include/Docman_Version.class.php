@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\Version\Version;
 
 /**
@@ -218,8 +219,11 @@ class Docman_Version implements Version {
      */
     function preDownload($item, $user)
     {
-        $em = EventManager::instance();
-        $em->processEvent('plugin_docman_event_access', array(
+        $event_manager = EventManager::instance();
+        $event_adder   = new DocmanItemsEventAdder($event_manager);
+        $event_adder->addLogEvents();
+
+        $event_manager->processEvent('plugin_docman_event_access', array(
                     'group_id' => $item->getGroupId(),
                     'item'     => $item,
                     'version'  => $this->getNumber(),
