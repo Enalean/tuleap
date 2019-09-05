@@ -21,6 +21,7 @@ import { Vue } from "vue/types/vue";
 import { shallowMount } from "@vue/test-utils";
 import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
 import BoardWithoutAnyColumnsErrorForAdmin from "./BoardWithoutAnyColumnsErrorForAdmin.vue";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 
 describe("BoardWithoutAnyColumnsError", () => {
     let local_vue: typeof Vue;
@@ -32,7 +33,7 @@ describe("BoardWithoutAnyColumnsError", () => {
     it("is displays misconfiguration error for admin user", () => {
         const wrapper = shallowMount(BoardWithoutAnyColumnsErrorForAdmin, {
             localVue: local_vue,
-            propsData: { admin_url: "/path/to/admin" }
+            mocks: { $store: createStoreMock({ state: { admin_url: "/path/to/admin" } }) }
         });
         expect(wrapper.element).toMatchSnapshot();
     });

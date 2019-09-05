@@ -18,23 +18,21 @@
   -
   -->
 <template>
-    <board-without-any-columns-error-for-admin v-if="user_is_admin" v-bind:admin_url="admin_url"/>
+    <board-without-any-columns-error-for-admin v-if="user_is_admin"/>
     <board-without-any-columns-error-for-users v-else/>
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import BoardWithoutAnyColumnsErrorForAdmin from "./BoardWithoutAnyColumnsErrorForAdmin.vue";
 import BoardWithoutAnyColumnsErrorForUsers from "./BoardWithoutAnyColumnsErrorForUsers.vue";
+import { State } from "vuex-class";
 
 @Component({
     components: { BoardWithoutAnyColumnsErrorForUsers, BoardWithoutAnyColumnsErrorForAdmin }
 })
 export default class BoardWithoutAnyColumnsError extends Vue {
-    @Prop()
+    @State
     readonly user_is_admin!: boolean;
-
-    @Prop()
-    readonly admin_url!: string;
 }
 </script>

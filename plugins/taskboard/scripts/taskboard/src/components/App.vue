@@ -22,10 +22,7 @@
     <div>
         <under-construction-modal/>
         <task-board v-bind:columns="columns" v-if="has_at_least_one_column"/>
-        <board-without-any-columns-error
-            v-bind:user_is_admin="user_is_admin"
-            v-bind:admin_url="admin_url"
-            v-else/>
+        <board-without-any-columns-error v-else/>
     </div>
 </template>
 
@@ -41,12 +38,6 @@ import TaskBoard from "./TaskBoard/TaskBoard.vue";
     components: { TaskBoard, BoardWithoutAnyColumnsError, UnderConstructionModal }
 })
 export default class App extends Vue {
-    @Prop()
-    readonly user_is_admin!: boolean;
-
-    @Prop()
-    readonly admin_url!: string;
-
     @Prop()
     readonly columns!: Array<ColumnDefinition>;
 

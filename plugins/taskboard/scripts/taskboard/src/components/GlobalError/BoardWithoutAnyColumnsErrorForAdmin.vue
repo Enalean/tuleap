@@ -36,14 +36,15 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import BoardWithoutAnyColumnsForAdminSvg from "./BoardWithoutAnyColumnsForAdminSvg.vue";
+import { State } from "vuex-class";
 
 @Component({
     components: { BoardWithoutAnyColumnsForAdminSvg }
 })
 export default class BoardWithoutAnyColumnsErrorForAdmin extends Vue {
-    @Prop()
+    @State
     readonly admin_url!: string;
 }
 </script>
