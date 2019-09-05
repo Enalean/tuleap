@@ -24,6 +24,7 @@ use Tuleap\AgileDashboard\REST\v1\AdditionalPanesForMilestoneEvent;
 use Tuleap\AgileDashboard\REST\v1\PaneInfoRepresentation;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Taskboard\AgileDashboard\TaskboardPane;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfoBuilder;
 use Tuleap\Taskboard\Board\BoardPresenterBuilder;
@@ -118,10 +119,17 @@ class taskboardPlugin extends Plugin
         $milestone = $params['milestone'];
         assert($milestone instanceof Planning_Milestone);
 
-        $pane = $this->getPaneForMilestone($milestone);
-        if ($pane !== null) {
-            $params['panes'][] = $pane;
+        $pane_info = $this->getPaneInfoForMilestone($milestone);
+        if ($pane_info === null) {
+            return;
         }
+
+        if (strpos($_SERVER['REQUEST_URI'], '/taskboard/') === 0) {
+            $pane_info->setActive(true);
+            $params['active_pane'] = new TaskboardPane($pane_info);
+        }
+
+        $params['panes'][] = $pane_info;
     }
 
     private function getCardwallOnTopDao(): Cardwall_OnTop_Dao
@@ -133,7 +141,7 @@ class taskboardPlugin extends Plugin
     {
         $milestone = $event->getMilestone();
 
-        $pane = $this->getPaneForMilestone($milestone);
+        $pane = $this->getPaneInfoForMilestone($milestone);
         if ($pane !== null) {
             $representation = new PaneInfoRepresentation();
             $representation->build($pane);
@@ -142,7 +150,7 @@ class taskboardPlugin extends Plugin
         }
     }
 
-    public function getPaneForMilestone(Planning_Milestone $milestone): ?TaskboardPaneInfo
+    public function getPaneInfoForMilestone(Planning_Milestone $milestone): ?TaskboardPaneInfo
     {
         $pane_builder = new TaskboardPaneInfoBuilder(PluginManager::instance(), $this, $this->getCardwallOnTopDao());
 
