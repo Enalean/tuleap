@@ -21,8 +21,10 @@ import { mockFetchError } from "tlp-mocks";
 import {
     restore as restoreUploadFile,
     restore as restoreUploadVersion,
+    restore as restoreUploadVersionFromEmpty,
     rewire$uploadFile,
-    rewire$uploadVersion
+    rewire$uploadVersion,
+    rewire$uploadVersionFromEmpty
 } from "./actions-helpers/upload-file.js";
 import {
     restore as restoreRestQuerier,
@@ -50,8 +52,9 @@ import {
     rewire$postLinkVersion,
     rewire$postLockEmbedded,
     rewire$postLockFile,
-    rewire$postNewLinkVersionFromEmpty,
     rewire$postNewEmbeddedFileVersionFromEmpty,
+    rewire$postNewFileVersionFromEmpty,
+    rewire$postNewLinkVersionFromEmpty,
     rewire$postWiki,
     rewire$putEmbeddedFileMetadata,
     rewire$putEmbeddedFilePermissions,
@@ -2504,6 +2507,7 @@ describe("Store actions", () => {
     describe("createNewVersionFromEmpty - ", () => {
         let postNewLinkVersionFromEmpty,
             postNewEmbeddedFileVersionFromEmpty,
+            postNewFileVersionFromEmpty,
             getItem,
             context,
             handleErrorsForModal;
@@ -2514,6 +2518,9 @@ describe("Store actions", () => {
             postNewLinkVersionFromEmpty = jasmine.createSpy("postNewLinkVersionFromEmpty");
             rewire$postNewLinkVersionFromEmpty(postNewLinkVersionFromEmpty);
 
+            postNewFileVersionFromEmpty = jasmine.createSpy("postNewFileVersionFromEmpty");
+            rewire$postNewFileVersionFromEmpty(postNewFileVersionFromEmpty);
+
             postNewEmbeddedFileVersionFromEmpty = jasmine.createSpy(
                 "postNewEmbeddedFileVersionFromEmpty"
             );
@@ -2523,12 +2530,16 @@ describe("Store actions", () => {
             rewire$getItem(getItem);
 
             context = {
-                commit: jasmine.createSpy("commit")
+                commit: jasmine.createSpy("commit"),
+                state: {
+                    folder_content: [{ id: 123, type: TYPE_EMPTY }]
+                }
             };
         });
 
         afterEach(() => {
             restoreRestQuerier();
+            restoreUploadVersionFromEmpty();
         });
         it("should update the empty document to link document", async () => {
             const item_to_update = {
@@ -2552,7 +2563,9 @@ describe("Store actions", () => {
 
             expect(postNewLinkVersionFromEmpty).toHaveBeenCalled();
             expect(postNewEmbeddedFileVersionFromEmpty).not.toHaveBeenCalled();
+            expect(postNewFileVersionFromEmpty).not.toHaveBeenCalled();
             expect(handleErrorsForModal).not.toHaveBeenCalled();
+
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
                 updated_item
@@ -2591,6 +2604,50 @@ describe("Store actions", () => {
 
             expect(postNewLinkVersionFromEmpty).not.toHaveBeenCalled();
             expect(postNewEmbeddedFileVersionFromEmpty).toHaveBeenCalled();
+            expect(postNewFileVersionFromEmpty).not.toHaveBeenCalled();
+            expect(handleErrorsForModal).not.toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                updated_item
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                updated_item
+            );
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                updated_item
+            );
+        });
+
+        it("should update the empty document to file document", async () => {
+            const item_to_update = {
+                type: TYPE_EMPTY,
+                file_properties: {
+                    file: ""
+                }
+            };
+            const item = {
+                id: 123,
+                type: TYPE_EMPTY
+            };
+
+            const updated_item = {
+                id: 123,
+                type: TYPE_FILE
+            };
+            const uploadVersionFromEmpty = jasmine.createSpy("uploadVersionFromEmpty");
+            rewire$uploadVersionFromEmpty(uploadVersionFromEmpty);
+
+            getItem.and.returnValue(Promise.resolve(updated_item));
+
+            await createNewVersionFromEmpty(context, [TYPE_FILE, item, item_to_update]);
+
+            expect(postNewLinkVersionFromEmpty).not.toHaveBeenCalled();
+            expect(postNewEmbeddedFileVersionFromEmpty).not.toHaveBeenCalled();
+            expect(postNewFileVersionFromEmpty).toHaveBeenCalled();
+            expect(uploadVersionFromEmpty).toHaveBeenCalled();
             expect(handleErrorsForModal).not.toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",

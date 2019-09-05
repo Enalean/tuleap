@@ -30,14 +30,11 @@
 
         <type-selector-for-empty-modal v-model="new_item_version.type"/>
         <div class="tlp-modal-body">
-            <p class="tlp-alert-info">
-                <a v-on:click="redirectToLegacyUrl()" href="#" v-translate>Create a new version from legacy page.</a>
-            </p>
             <link-properties v-model="new_item_version.link_properties" v-bind:item="new_item_version"/>
             <embedded-properties v-model="new_item_version.embedded_properties" v-bind:item="new_item_version"/>
             <file-properties v-model="new_item_version.file_properties" v-bind:item="new_item_version"/>
         </div>
-        <modal-footer v-bind:is-loading="is_loading_if_not_link_selected"
+        <modal-footer v-bind:is-loading="is_loading"
                       v-bind:submit-button-label="submit_button_label"
                       v-bind:aria-labelled-by="`document-new-empty-version-modal`"
                       v-bind:icon-submit-button-class="'fa-plus'"
@@ -98,9 +95,6 @@ export default {
         },
         modal_title() {
             return sprintf(this.$gettext('New version for "%s"'), this.item.title);
-        },
-        is_loading_if_not_link_selected() {
-            return this.new_item_version.type === TYPE_FILE;
         }
     },
     mounted() {

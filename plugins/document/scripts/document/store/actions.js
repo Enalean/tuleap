@@ -54,8 +54,9 @@ import {
     postLockFile,
     postLockLink,
     postLockWiki,
-    postNewLinkVersionFromEmpty,
     postNewEmbeddedFileVersionFromEmpty,
+    postNewFileVersionFromEmpty,
+    postNewLinkVersionFromEmpty,
     postWiki,
     putEmbeddedFileMetadata,
     putEmbeddedFilePermissions,
@@ -83,7 +84,11 @@ import {
 } from "./actions-helpers/handle-errors.js";
 import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
-import { uploadFile, uploadVersion } from "./actions-helpers/upload-file.js";
+import {
+    uploadFile,
+    uploadVersion,
+    uploadVersionFromEmpty
+} from "./actions-helpers/upload-file.js";
 import { flagItemAsCreated } from "./actions-helpers/flag-item-as-created.js";
 import { adjustItemToContentAfterItemCreationInAFolder } from "./actions-helpers/adjust-item-to-content-after-item-creation-in-folder.js";
 import { buildItemPath } from "./actions-helpers/build-parent-paths.js";
@@ -398,6 +403,26 @@ async function uploadNewVersion(
     Vue.set(updated_item, "is_uploading_new_version", true);
 
     uploadVersionAndAssignUploader(item, context, uploaded_file, new_version);
+}
+
+async function uploadNewFileVersionFromEmptyDocument(context, [item, uploaded_file]) {
+    const new_version = await postNewFileVersionFromEmpty(item.id, uploaded_file);
+    if (uploaded_file.size === 0) {
+        return;
+    }
+
+    const updated_item = context.state.folder_content.find(({ id }) => id === item.id);
+
+    context.commit("addFileInUploadsList", updated_item);
+    Vue.set(updated_item, "progress", null);
+    Vue.set(updated_item, "upload_error", null);
+    Vue.set(updated_item, "is_uploading_new_version", true);
+
+    uploadVersionAndAssignUploaderFroEmpty(item, context, uploaded_file, new_version);
+}
+
+function uploadVersionAndAssignUploaderFroEmpty(item, context, uploaded_file, new_version) {
+    item.uploader = uploadVersionFromEmpty(context, uploaded_file, item, new_version);
 }
 
 function uploadVersionAndAssignUploader(item, context, uploaded_file, new_version) {
@@ -900,7 +925,14 @@ export const createNewVersionFromEmpty = async (context, [selected_type, item, i
                     item_to_update.embedded_properties.content
                 );
                 break;
+            case TYPE_FILE:
+                await uploadNewFileVersionFromEmptyDocument(context, [
+                    item,
+                    item_to_update.file_properties.file
+                ]);
+                break;
             default:
+                await handleErrorsForModal(context, "The wanted type is not supported");
                 break;
         }
         const updated_item = await getItem(item.id);

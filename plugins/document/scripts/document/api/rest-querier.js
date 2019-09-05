@@ -87,7 +87,8 @@ export {
     getProjectUserGroups,
     getProjectMetadata,
     postNewLinkVersionFromEmpty,
-    postNewEmbeddedFileVersionFromEmpty
+    postNewEmbeddedFileVersionFromEmpty,
+    postNewFileVersionFromEmpty
 };
 
 async function getDocumentManagerServiceInformation(project_id) {
@@ -794,4 +795,18 @@ function postNewEmbeddedFileVersionFromEmpty(item_id, content) {
             content
         })
     });
+}
+
+async function postNewFileVersionFromEmpty(item_id, dropped_file) {
+    const response = await post(`/api/docman_empty_documents/${encodeURIComponent(item_id)}/file`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            file_name: dropped_file.name,
+            file_size: dropped_file.size
+        })
+    });
+
+    return response.json();
 }
