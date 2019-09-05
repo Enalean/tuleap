@@ -22,7 +22,7 @@
         <release-description-badges-tracker v-bind:release-data="releaseData"/>
         <div class="release-description-row">
             <div class="release-description" v-dompurify-html="releaseData.description"></div>
-            <a v-bind:href="get_overview_link" data-test="overview-link">
+            <a v-if="get_overview_link !== null" v-bind:href="get_overview_link" data-test="overview-link">
                 <i class="release-description-link-icon fa fa-long-arrow-right"></i>
                 <translate> Go to release overview </translate>
             </a>
@@ -46,12 +46,15 @@ export default class ReleaseDescription extends Vue {
     @State
     readonly project_id!: number;
 
-    get get_overview_link(): string {
+    get get_overview_link(): string | null {
+        if (!this.releaseData.planning) {
+            return null;
+        }
         return (
             "/plugins/agiledashboard/?group_id=" +
             encodeURIComponent(this.project_id) +
             "&planning_id=" +
-            encodeURIComponent(this.releaseData.planning!.id) +
+            encodeURIComponent(this.releaseData.planning.id) +
             "&action=show&aid=" +
             encodeURIComponent(this.releaseData.id) +
             "&pane=details"

@@ -50,16 +50,16 @@ import { Component } from "vue-property-decorator";
 
 @Component
 export default class UnderConstructionModal extends Vue {
-    mounted() {
+    mounted(): void {
         const modal = createModal(this.$el);
         modal.show();
     }
 
-    get close() {
+    get close(): string {
         return this.$gettext("Close");
     }
 
-    get leave_feedback() {
+    get leave_feedback(): string {
         return this.$gettext(
             'If you have any questions or if you want to leave feedback, drop an email to <a href="mailto:feedback-taskboard@enalean.com">feedback-taskboard@enalean.com</a> or join us on <a href="https://chat.tuleap.org">chat.tuleap.org</a>.'
         );

@@ -19,7 +19,7 @@
 
 import Vue from "vue";
 import GettextPlugin from "vue-gettext";
-import { initVueGettext } from "./vue-gettext-init";
+import { initVueGettext, POFile } from "./vue-gettext-init";
 
 jest.mock("vue", () => {
     return {
@@ -40,7 +40,7 @@ describe(`vue-gettext-init`, () => {
     });
 
     describe(`when a locale is defined on the document's body`, () => {
-        const callback = () =>
+        const callback = (): Promise<POFile> =>
             Promise.resolve({
                 messages: {
                     "Hello world": "Bonjour monde"

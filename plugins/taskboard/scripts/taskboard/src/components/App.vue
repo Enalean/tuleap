@@ -41,7 +41,7 @@ export default class App extends Vue {
     @Prop()
     readonly columns!: Array<ColumnDefinition>;
 
-    get has_at_least_one_column() {
+    get has_at_least_one_column(): boolean {
         return this.columns.length > 0;
     }
 }

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, Wrapper } from "@vue/test-utils";
 import RoadmapSection from "./RoadmapSection.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import Vue from "vue";
@@ -25,7 +25,7 @@ import GetTextPlugin from "vue-gettext";
 import { StoreOptions } from "../../type";
 
 const project_id = 102;
-function getPersonalWidgetInstance(store_options: StoreOptions) {
+function getPersonalWidgetInstance(store_options: StoreOptions): Wrapper<RoadmapSection> {
     const store = createStoreMock(store_options);
     const component_options = {
         mocks: { $store: store }

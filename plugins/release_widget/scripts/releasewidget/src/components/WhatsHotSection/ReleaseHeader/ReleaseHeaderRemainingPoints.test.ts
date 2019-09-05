@@ -19,19 +19,21 @@
 
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseHeaderRemainingPoints from "./ReleaseHeaderRemainingPoints.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
-import { ComponentOption, MilestoneData, StoreOptions } from "../../../type";
+import { MilestoneData, StoreOptions } from "../../../type";
 
 let releaseData: MilestoneData;
-const component_options: ComponentOption = {};
+const component_options: ShallowMountOptions<ReleaseHeaderRemainingPoints> = {};
 
 describe("ReleaseHeaderRemainingEffort", () => {
     let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(store_options: StoreOptions) {
+    function getPersonalWidgetInstance(
+        store_options: StoreOptions
+    ): Wrapper<ReleaseHeaderRemainingPoints> {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };

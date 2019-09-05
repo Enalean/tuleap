@@ -168,8 +168,15 @@ describe("Store actions", () => {
 
     describe("handleErrorMessage - error", () => {
         it("Given an error, When it can't parse the error, Then the error message is empty.", async () => {
-            const error_json = "[a,b, c, d, e, f,]";
-            await actions.handleErrorMessage(context, error_json);
+            await actions.handleErrorMessage(context, {
+                name: "error",
+                message: "Something went wrong",
+                response: {
+                    json(): Promise<void> {
+                        throw new Error();
+                    }
+                } as Response
+            });
 
             expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "");
         });
