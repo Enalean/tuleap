@@ -36,12 +36,34 @@
     margin: $tlp-spacing $tlp-spacing 0;
 }
 
-.cross-tracker-list-bind-user:not(:last-child)::after {
-    content: ', ';
+.cross-tracker-last-update-date,
+.cross-tracker-list-bind-user {
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
 }
+
+.cross-tracker-list-bind-user {
+    &:hover {
+        color: $tlp-theme-color;
+    }
+
+    &:not(:last-child)::after {
+        content: ', ';
+    }
+}
+
 
 .link-to-tracker-badge {
     margin: 0 5px 0 0;
+}
+
+.cross-tracker-project,
+.direct-link-to-artifact {
+    color: inherit;
+
+    &:hover {
+        color: $tlp-theme-color;
+    }
 }
 
 .cross-tracker-report-error,
@@ -49,7 +71,7 @@
     margin: $tlp-spacing;
 }
 
-.cross-tracker-report-archive-icone {
+.cross-tracker-report-archive-icon {
     margin: 0 3px 0 0;
-    font-size: 12px;
+    font-size: 10px;
 }

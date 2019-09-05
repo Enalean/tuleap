@@ -30,7 +30,7 @@
                 ></i> {{ tracker.tracker_label }}
             </span>
             <span>
-                <i class="fa fa-archive cross-tracker-report-archive-icone"></i>{{ tracker.project_label }}
+                <i class="fa fa-archive cross-tracker-report-archive-icon"></i>{{ tracker.project_label }}
             </span>
         </span>
     </div>

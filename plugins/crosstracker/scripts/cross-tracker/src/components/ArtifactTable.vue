@@ -60,7 +60,7 @@
                     v-on:click="loadMoreArtifacts()"
                     v-bind:disabled="is_loading_more"
             >
-                <i v-if="is_loading_more" class="tlp-button-icon fa fa-spinner fa-spin"></i>
+                <i v-if="is_loading_more" class="tlp-button-icon fa fa-circle-o-notch fa-spin"></i>
                 <translate>Load more</translate>
             </button>
         </div>

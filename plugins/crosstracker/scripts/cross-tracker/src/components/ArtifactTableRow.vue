@@ -26,9 +26,13 @@
                 </span>{{ artifact.title }}
             </a>
         </td>
-        <td>{{ artifact.project.label }}</td>
+        <td>
+            <a v-bind:href="'/' + artifact.project.uri" class="cross-tracker-project">
+                {{ artifact.project.label }}
+            </a>
+        </td>
         <td>{{ artifact.status }}</td>
-        <td>{{ artifact.formatted_last_update_date }}</td>
+        <td class="cross-tracker-last-update-date">{{ artifact.formatted_last_update_date }}</td>
         <td><list-bind-user v-bind:user="artifact.submitted_by"/></td>
         <td><list-bind-user v-for="user in artifact.assigned_to"
                             v-bind:user="user"

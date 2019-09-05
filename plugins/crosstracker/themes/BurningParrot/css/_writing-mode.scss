@@ -19,7 +19,8 @@
 @import 'query-edition';
 
 .cross-tracker-writing-mode {
-    margin: $tlp-spacing;
+    padding: $tlp-spacing;
+    border-bottom: 1px solid $tlp-ui-border-light;
 }
 
 .cross-tracker-selector {
@@ -45,11 +46,10 @@
     &:last-child {
         margin: 0 0 10px;
     }
-}
 
-.cross-tracker-project-icon {
-    margin: 0 3px 0 8px;
-    fill: $tlp-theme-color;
+    .cross-tracker-report-archive-icon {
+        margin: 0 3px 0 5px;
+    }
 }
 
 .cross-tracker-remove-tracker {

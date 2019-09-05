@@ -40,8 +40,10 @@
             <button
                 class="tlp-button-primary writing-mode-actions-search"
                 v-on:click="search"
-                v-translate
-            >Search</button>
+            >
+                <i class="fa fa-search tlp-button-icon"></i>
+                <translate>Search</translate>
+            </button>
         </div>
     </div>
 </template>
