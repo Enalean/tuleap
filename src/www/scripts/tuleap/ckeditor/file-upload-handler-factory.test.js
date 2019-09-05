@@ -155,6 +155,7 @@ describe(`file-upload-handler-factory`, () => {
                 it(`will call the Error callback with an UploadError`, async () => {
                     jest.spyOn(tlp, "post").mockReturnValue(Promise.reject({}));
 
+                    expect.assertions(4);
                     const handler = handlerFactory();
                     try {
                         await handler(file_upload_event);
@@ -183,6 +184,7 @@ describe(`file-upload-handler-factory`, () => {
                         }
                     });
 
+                    expect.assertions(2);
                     const handler = handlerFactory();
                     try {
                         await handler(file_upload_event);
@@ -201,6 +203,7 @@ describe(`file-upload-handler-factory`, () => {
                         }
                     });
 
+                    expect.assertions(2);
                     const handler = handlerFactory();
                     try {
                         await handler(file_upload_event);
@@ -357,6 +360,7 @@ describe(`file-upload-handler-factory`, () => {
                                 }
                             };
 
+                            expect.assertions(2);
                             const handler = handlerFactory();
                             try {
                                 await handler(file_upload_event);
@@ -377,6 +381,7 @@ describe(`file-upload-handler-factory`, () => {
                                 }
                             };
 
+                            expect.assertions(2);
                             const handler = handlerFactory();
                             try {
                                 await handler(file_upload_event);
@@ -394,6 +399,7 @@ describe(`file-upload-handler-factory`, () => {
                                     httpError: ""
                                 }
                             };
+                            expect.assertions(2);
                             const handler = handlerFactory();
                             try {
                                 await handler(file_upload_event);
