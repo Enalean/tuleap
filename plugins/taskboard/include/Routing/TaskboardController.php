@@ -111,7 +111,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
             );
         }
 
-        $layout->includeFooterJavascriptFile($this->agiledashboard_assets->getFileURL('overview.js'));
+        $layout->includeFooterJavascriptFile($this->agiledashboard_assets->getFileURL('scrum-header.js'));
         $layout->includeFooterJavascriptFile($this->taskboard_js_assets->getFileURL('taskboard.js'));
         $layout->addCssAsset(new CssAsset($this->taskboard_theme_assets, 'taskboard'));
 
