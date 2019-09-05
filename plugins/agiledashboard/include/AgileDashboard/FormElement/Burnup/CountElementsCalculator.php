@@ -29,7 +29,6 @@ use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\FormElement\BurnupDao;
-use Tuleap\AgileDashboard\FormElement\BurnupEffort;
 
 class CountElementsCalculator
 {
@@ -68,105 +67,89 @@ class CountElementsCalculator
 
     public function getValue(int $artifact_id, int $timestamp): CountElementsInfo
     {
-        $backlog_items = $this->burnup_dao->searchLinkedArtifactsAtGivenTimestamp($artifact_id, $timestamp);
-
-        $already_seen_artifacts = [];
-
-        $total_subelements  = 0;
-        $closed_subelements = 0;
-        foreach ($backlog_items as $item) {
-            $artifact = $this->artifact_factory->getArtifactById($item['id']);
-            if ($artifact === null) {
-                continue;
-            }
-
-            if ($this->isArtifactAlreadyParsed($artifact, $already_seen_artifacts)) {
-                continue;
-            }
-
-            $already_seen_artifacts[] = (int) $artifact->getId();
-
-            $total_subelements += 1;
-
-            $changeset = $this->changeset_factory->getChangesetAtTimestamp($artifact, $timestamp);
-            if ($changeset === null) {
-                continue;
-            }
-
-            if (! $artifact->isOpenAtGivenChangeset($changeset)) {
-                $closed_subelements += 1;
-            }
-
-            $this->countChildren(
-                $artifact,
-                $changeset,
-                $timestamp,
-                $total_subelements,
-                $closed_subelements,
-                $already_seen_artifacts
-            );
-        }
-
-        return new CountElementsInfo($closed_subelements, $total_subelements);
+        $items_dar      = $this->burnup_dao->searchLinkedArtifactsAtGivenTimestamp($artifact_id, $timestamp);
+        $backlog_items = [];
+        array_push($backlog_items, ...$items_dar);
+        $elements_count = array_reduce(
+            $backlog_items,
+            function (ElementsCount $accumulator, array $item) use ($timestamp): ElementsCount {
+                $artifact = $this->artifact_factory->getArtifactById($item['id']);
+                if ($artifact === null) {
+                    return $accumulator;
+                }
+                return $this->countElements($accumulator, $artifact, $timestamp);
+            },
+            new ElementsCount(0, 0, [])
+        );
+        return CountElementsInfo::buildFromElementsCount($elements_count);
     }
 
     private function countChildren(
         Tracker_Artifact $artifact,
         Tracker_Artifact_Changeset $changeset,
         int $timestamp,
-        int &$total_subelements,
-        int &$closed_subelements,
-        array &$already_seen_artifacts
-    ) {
+        ElementsCount $initial_accumulator
+    ): ElementsCount {
         $used_artifact_link_fields = $this->form_element_factory->getUsedArtifactLinkFields($artifact->getTracker());
         if (count($used_artifact_link_fields) === 0) {
-            return;
+            return $initial_accumulator;
         }
 
         $artifact_link_field = $used_artifact_link_fields[0];
         $artifact_link_value = $changeset->getValue($artifact_link_field);
 
         if ($artifact_link_value === null) {
-            return;
+            return $initial_accumulator;
         }
 
         assert($artifact_link_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
 
-        foreach ($artifact_link_value->getArtifactIds() as $artifact_link_id) {
-            $linked_artifact = $this->artifact_factory->getArtifactById($artifact_link_id);
-            if ($linked_artifact === null) {
-                continue;
-            }
+        return array_reduce(
+            $artifact_link_value->getArtifactIds(),
+            function (ElementsCount $accumulator, int $artifact_link_id) use ($artifact, $timestamp): ElementsCount {
+                $linked_artifact = $this->artifact_factory->getArtifactById($artifact_link_id);
+                if ($linked_artifact === null) {
+                    return $accumulator;
+                }
 
-            if (! $this->isLinkedArtifactChildOfGivenArtifact($linked_artifact, $artifact)) {
-                continue;
-            }
+                if (! $this->isLinkedArtifactChildOfGivenArtifact($linked_artifact, $artifact)) {
+                    return $accumulator;
+                }
 
-            if ($this->isArtifactAlreadyParsed($linked_artifact, $already_seen_artifacts)) {
-                continue;
-            }
-            $already_seen_artifacts[] = (int) $linked_artifact->getId();
+                return $this->countElements($accumulator, $linked_artifact, $timestamp);
+            },
+            $initial_accumulator
+        );
+    }
 
-            $total_subelements += 1;
-
-            $child_changeset = $this->changeset_factory->getChangesetAtTimestamp($linked_artifact, $timestamp);
-            if ($child_changeset === null) {
-                continue;
-            }
-
-            if (! $linked_artifact->isOpenAtGivenChangeset($child_changeset)) {
-                $closed_subelements += 1;
-            }
-
-            $this->countChildren(
-                $linked_artifact,
-                $child_changeset,
-                $timestamp,
-                $total_subelements,
-                $closed_subelements,
-                $already_seen_artifacts
-            );
+    private function countElements(
+        ElementsCount $accumulator,
+        Tracker_Artifact $artifact,
+        int $timestamp
+    ): ElementsCount {
+        if ($accumulator->isArtifactAlreadyParsed($artifact)) {
+            return $accumulator;
         }
+
+        $already_seen_artifacts = array_merge($accumulator->getAlreadySeenArtifacts(), [(int) $artifact->getId()]);
+        $total_subelements      = $accumulator->getTotalElements() + 1;
+        $closed_subelements     = $accumulator->getClosedElements();
+
+        $changeset = $this->changeset_factory->getChangesetAtTimestamp($artifact, $timestamp);
+        if ($changeset === null) {
+            return new ElementsCount($total_subelements, $closed_subelements, $already_seen_artifacts);
+        }
+
+        if (! $artifact->isOpenAtGivenChangeset($changeset)) {
+            $closed_subelements += 1;
+        }
+
+        return $this->countChildren(
+            $artifact,
+            $changeset,
+            $timestamp,
+            new ElementsCount($total_subelements, $closed_subelements, $already_seen_artifacts)
+        );
     }
 
     private function isLinkedArtifactChildOfGivenArtifact(Tracker_Artifact $linked_artifact, Tracker_Artifact $artifact): bool
@@ -175,10 +158,5 @@ class CountElementsCalculator
 
         return $parent_linked_artifact !== null &&
             (int) $parent_linked_artifact->getId() === (int) $artifact->getId();
-    }
-
-    private function isArtifactAlreadyParsed(Tracker_Artifact $artifact, array $already_seen_artifacts): bool
-    {
-        return in_array((int) $artifact->getId(), $already_seen_artifacts, true);
     }
 }
