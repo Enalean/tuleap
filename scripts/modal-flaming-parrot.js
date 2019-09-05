@@ -32,7 +32,7 @@ import { contactSupportModalShown } from "./modal.js";
 
             if (!contact_support_modal) {
                 $.get(
-                    "/plugins/mytuleap_contact_support/index.php?action=get-modal-conten&is-burning-parrot-compatible=0"
+                    "/plugins/mytuleap_contact_support/get-modal-content?is-burning-parrot-compatible=0"
                 ).then(function(data) {
                     var modal_container = document.createElement("div");
                     modal_container.innerHTML = data;

@@ -5,7 +5,7 @@
                 <i class="fa fa-envelope-o tlp-pane-title-icon"></i> {{# gettext }}Send a message to the myTuleap team{{/ gettext }}
             </h1>
         </div>
-        <form class="tlp-pane-section contact-support-modal-form" action="/plugins/mytuleap_contact_support/index.php?action=send-message">
+        <form class="tlp-pane-section contact-support-modal-form" action="/plugins/mytuleap_contact_support/send-message" method="POST">
             <p class="tlp-alert-success contact-support-modal-success-message">
                 {{# gettext }}Your message has been sent to the myTuleap team. You will receive an answer as soon as possible.{{/ gettext }}
             </p>
