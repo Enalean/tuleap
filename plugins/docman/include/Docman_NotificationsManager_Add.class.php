@@ -80,10 +80,10 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
     {
         switch($type) {
             case self::MESSAGE_ADDED:
-                $link = $this->_url . '&action=show&id=' . $params['parent']->getId();
+                $link = $this->getUrlProvider()->getShowLinkUrl($params['parent']);
                 break;
             default:
-                $link = $this->_url;
+                $link =  $this->getUrlProvider()->getPluginLinkUrl();
                 break;
         }
         return $link;

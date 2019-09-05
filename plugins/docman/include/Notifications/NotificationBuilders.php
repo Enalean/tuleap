@@ -32,6 +32,9 @@ use MailBuilder;
 use PermissionsOverrider_PermissionsOverriderManager;
 use Project;
 use TemplateRendererFactory;
+use Tuleap\Docman\ExternalLinks\DocmanLinkProvider;
+use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
+use Tuleap\Docman\ExternalLinks\LegacyLinkProvider;
 use Tuleap\Docman\ResponseFeedbackWrapper;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -65,7 +68,7 @@ class NotificationBuilders
     {
         return new Docman_NotificationsManager(
             $this->project,
-            HTTPRequest::instance()->getServerUrl() . $this->base_url,
+            $this->getProvider($this->project),
             $this->feedback,
             $this->getMailBuilder(),
             $this->getUsersToNotifyDao(),
@@ -81,7 +84,7 @@ class NotificationBuilders
     {
         return new Docman_NotificationsManager_Add(
             $this->project,
-            HTTPRequest::instance()->getServerUrl() . $this->base_url,
+            $this->getProvider($this->project),
             $this->feedback,
             $this->getMailBuilder(),
             $this->getUsersToNotifyDao(),
@@ -97,7 +100,7 @@ class NotificationBuilders
     {
         return new Docman_NotificationsManager_Delete(
             $this->project,
-            HTTPRequest::instance()->getServerUrl() . $this->base_url,
+            $this->getProvider($this->project),
             $this->feedback,
             $this->getMailBuilder(),
             $this->getUsersToNotifyDao(),
@@ -113,7 +116,7 @@ class NotificationBuilders
     {
         return new Docman_NotificationsManager_Move(
             $this->project,
-            HTTPRequest::instance()->getServerUrl() . $this->base_url,
+            $this->getProvider($this->project),
             $this->feedback,
             $this->getMailBuilder(),
             $this->getUsersToNotifyDao(),
@@ -129,7 +132,7 @@ class NotificationBuilders
     {
         return new Docman_NotificationsManager_Subscribers(
             $this->project,
-            HTTPRequest::instance()->getServerUrl() . $this->base_url,
+            $this->getProvider($this->project),
             $this->feedback,
             $this->getMailBuilder(),
             $this->getUsersToNotifyDao(),
@@ -227,5 +230,16 @@ class NotificationBuilders
     public function getItemFactory()
     {
         return new Docman_ItemFactory();
+    }
+
+    private function getProvider(Project $project): ILinkUrlProvider
+    {
+        $provider = new LegacyLinkProvider(
+            HTTPRequest::instance()->getServerUrl(). '/plugins/docman/?group_id=' . urlencode((string) $project->getID())
+        );
+        $link_provider = new DocmanLinkProvider($project, $provider);
+        EventManager::instance()->processEvent($link_provider);
+
+        return $link_provider->getProvider();
     }
 }

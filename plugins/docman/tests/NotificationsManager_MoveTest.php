@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox, 2006. All Rights Reserved.
- * Copyright Enalean, 2017. All Rights Reserved.
+ * Copyright Enalean, 2017 - present. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2006.
  *
@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UgroupsUpdater;
 use Tuleap\Docman\Notifications\UsersUpdater;
@@ -37,6 +38,7 @@ Mock::generatePartial('Docman_NotificationsManager_Move', 'Docman_NotificationsM
         '_getPermissionsManager',
         '_getDocmanPath',
         '_buildMessage',
+        'getUrlProvider'
     )
 );
 
@@ -316,7 +318,7 @@ class NotificationsManager_MoveTest extends TuleapTestCase
         //C'est parti
         $dnmm->__construct(
             $project,
-            'my_url',
+            Mockery::mock(ILinkUrlProvider::class),
             $feedback,
             $mail_builder,
             $dao,

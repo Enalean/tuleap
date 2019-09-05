@@ -1,9 +1,9 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  * Copyright (c) STMicroelectronics 2011. All rights reserved
- * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 require_once 'bootstrap.php';
+
+use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
 
 Mock::generatePartial(
     'Docman_NotificationsManager_Delete',
     'Docman_NotificationsManager_DeleteTestVersion',
     array(
         '_getPermissionsManager',
-        '_getUserManager'
+        '_getUserManager',
+        'getUrlProvider'
     )
 );
 
@@ -38,6 +42,7 @@ Mock::generate('PFUser');
 
 Mock::generate('Docman_PermissionsManager');
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class NotificationsManager_DeleteTest extends TuleapTestCase
 {
 
@@ -83,9 +88,10 @@ class NotificationsManager_DeleteTest extends TuleapTestCase
         $ugroups_remover = mock('Tuleap\Docman\Notifications\UgroupsUpdater');
 
         $notifications_manager = new Docman_NotificationsManager_DeleteTestVersion();
+        $link_url_provider                  = Mockery::mock(ILinkUrlProvider::class);
         $notifications_manager->__construct(
             $project,
-            '/toto',
+            $link_url_provider,
             $feedback,
             $mail_builder,
             $notifications_dao,
@@ -97,6 +103,7 @@ class NotificationsManager_DeleteTest extends TuleapTestCase
         );
         $notifications_manager->setReturnValue('_getUserManager', $um);
         $notifications_manager->setReturnValue('_getPermissionsManager', $dpm);
+        $notifications_manager->setReturnValue('getUrlProvider', $link_url_provider);
         $notifications_manager->_listeners = array();
 
         $notifications_manager->_storeEvents(1, 'removed', $params);

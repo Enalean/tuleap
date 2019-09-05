@@ -116,7 +116,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
                 $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notif_something_happen')."\n";
             break;
         }
-        $msg .= $this->_url .'&action=details&section=notifications&id='. $params['item']->getId();
+        $msg .= $this->getUrlProvider()->getNotificationLinkUrl($params['item']);
         return $msg;
     }
 
@@ -125,14 +125,12 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
         switch ($type) {
             case self::MESSAGE_ADDED:
             case self::MESSAGE_REMOVED:
-                $link = $this->_url .'&action=show&id='. $params['item']->getId();
+                $link = $this->getUrlProvider()->getShowLinkUrl($params['item']);
                 break;
             default:
-                $link = $this->_url;
+                $link = $this->getUrlProvider()->getPluginLinkUrl();
                 break;
         }
         return $link;
     }
 }
-
-?>

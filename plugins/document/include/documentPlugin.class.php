@@ -18,10 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\ExternalLinks\DocmanLinkProvider;
 use Tuleap\Docman\ExternalLinks\ExternalLinkRedirector;
 use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
 use Tuleap\Docman\ExternalLinks\Link;
 use Tuleap\Document\DocumentUsageRetriever;
+use Tuleap\Document\LinkProvider\DocumentLinkProvider;
 use Tuleap\Document\Tree\DocumentTreeController;
 use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
 use Tuleap\Document\Tree\DocumentTreeUnderConstructionController;
@@ -52,6 +54,7 @@ class documentPlugin extends Plugin // phpcs:ignore
         $this->addHook(ExternalLinksManager::NAME);
         $this->addHook(ExternalLinkRedirector::NAME);
         $this->addHook(ServiceUrlCollector::NAME);
+        $this->addHook(DocmanLinkProvider::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -160,5 +163,14 @@ class documentPlugin extends Plugin // phpcs:ignore
         $retriever = new DocumentUsageRetriever();
         $user      = $this->getCurrentUser();
         return $retriever->shouldUseDocument($user, $project);
+    }
+
+    public function docmanLinkProvider(DocmanLinkProvider $link_provider)
+    {
+        $project = $link_provider->getProject();
+        $retriever = new DocumentUsageRetriever();
+        if ($retriever->canProjectUseNewUI($project)) {
+            $link_provider->replaceProvider(new DocumentLinkProvider(HTTPRequest::instance()->getServerUrl(), $project));
+        }
     }
 }

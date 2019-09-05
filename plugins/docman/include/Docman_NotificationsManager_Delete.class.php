@@ -132,7 +132,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
                         'plugin-docman',
                         "You are receiving this message because you are monitoring this item."
                     );
-                $msg .=  "\n" . $this->_url;
+                $msg .=  "\n" . $this->getUrlProvider()->getPluginLinkUrl();
                 break;
             case self::MESSAGE_REMOVED_FROM:
                 $monitoredItem = $this->_getMonitoredItemForUser($user, $params['parent']);
@@ -160,10 +160,10 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
     {
         switch ($type) {
             case self::MESSAGE_REMOVED_FROM:
-                $link = $this->_url . '&action=show&id=' . $params['parent']->getId();
+                $link = $this->getUrlProvider()->getShowLinkUrl($params['parent']);
                 break;
             default:
-                $link = $this->_url;
+                $link = $this->getUrlProvider()->getPluginLinkUrl();
         }
         return $link;
     }

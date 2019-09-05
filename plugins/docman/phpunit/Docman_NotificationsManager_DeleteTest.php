@@ -23,11 +23,16 @@ declare(strict_types = 1);
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_NotificationsManager_DeleteTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ILinkUrlProvider
+     */
+    private $link_provider;
     /**
      * @var Docman_NotificationsManager_Delete
      */
@@ -40,6 +45,9 @@ class Docman_NotificationsManager_DeleteTest extends TestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
         $this->notification_manager->_url = "http://www.example.com/plugins/docman/";
+
+        $this->link_provider = Mockery::mock(ILinkUrlProvider::class);
+        $this->notification_manager->shouldReceive('getUrlProvider')->andReturn($this->link_provider);
     }
 
     public function testItBuildMessageRemovedForUser(): void
@@ -57,6 +65,10 @@ class Docman_NotificationsManager_DeleteTest extends TestCase
 
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getRealName')->andReturn("UserName");
+
+        $plugin_url = "http://www.example.com/plugins/docman/";
+        $this->link_provider->shouldReceive('getPluginLinkUrl')->andReturn($plugin_url);
+
         $message          = $this->notification_manager->_getMessageForUser(
             $user,
             $this->notification_manager::MESSAGE_REMOVED,
@@ -64,7 +76,7 @@ class Docman_NotificationsManager_DeleteTest extends TestCase
         );
         $expected_message = "/my/folder/parent has been removed by UserName.\n";
         $expected_message .= "You are receiving this message because you are monitoring this item.\n";
-        $expected_message .= "http://www.example.com/plugins/docman/";
+        $expected_message .= $plugin_url;
         $this->assertEquals($expected_message, $message);
     }
 
@@ -83,18 +95,24 @@ class Docman_NotificationsManager_DeleteTest extends TestCase
 
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getRealName')->andReturn("UserName");
+
+        $details_url = "http://www.example.com/plugins/docman/project_name/preview/100/";
+        $this->link_provider->shouldReceive('getShowLinkUrl')->andReturn($details_url);
+        $notifications_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
+
         $message          = $this->notification_manager->_getMessageForUser(
             $user,
             $this->notification_manager::MESSAGE_REMOVED_FROM,
             $params
         );
         $expected_message = "/my/folder/parent has been modified by UserName.\n";
-        $expected_message .= "http://www.example.com/plugins/docman/&action=show&id=1\n\n";
+        $expected_message .= $details_url . "\n\n";
         $expected_message .= "Removed:\nmy file name\n\n";
         $expected_message .= "--------------------------------------------------------------------\n";
         $expected_message .= "You are receiving this message because you are monitoring this item.\n";
         $expected_message .= "To stop monitoring, please visit:\n";
-        $expected_message .= "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $expected_message .= $notifications_url;
         $this->assertEquals($expected_message, $message);
     }
 }
