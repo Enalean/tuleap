@@ -69,7 +69,7 @@ class DocumentMetadataCreatorTest extends TestCase
 
         $this->expectException(LogicException::class);
 
-        $this->creator->storeItemCustomMetadata(1, ['id' => 5, 'value' => "abcde"]);
+        $this->creator->storeItemCustomMetadata(1, [['id' => 5, 'value' => "abcde"]]);
     }
 
     public function testItDoesNotStoreWhenMetadataIsAnEmptyArray(): void
@@ -83,7 +83,7 @@ class DocumentMetadataCreatorTest extends TestCase
 
     public function testItStoreMetadata(): void
     {
-        $metadata_list = ['metadata_id' => 10];
+        $metadata_list = [['id' => 10, 'value' => 'Text']];
         $this->metadata_dao->shouldReceive('searchById')
                            ->andReturn(
                                TestHelper::arrayToDar(

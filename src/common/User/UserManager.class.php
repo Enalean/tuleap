@@ -430,7 +430,7 @@ class UserManager
                 } else {
                     $accessInfo = $this->getUserAccessInfo($this->_currentuser);
                     $now = $_SERVER['REQUEST_TIME'];
-                    $break_time = $now - $accessInfo['last_access_date'];
+                    $break_time = $now - ($accessInfo['last_access_date'] ?? 0);
                     //if the access is not later than 6 hours, it is not necessary to log it
                     if ($break_time > ForgeConfig::get('last_access_resolution')) {
                         $this->_getEventManager()->processEvent(new UserConnectionUpdateEvent($this->_currentuser));

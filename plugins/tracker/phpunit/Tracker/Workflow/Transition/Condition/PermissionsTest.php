@@ -57,7 +57,7 @@ class PermissionsTest extends TestCase
                 303,
                 Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION
             )
-            ->andReturn(array(404));
+            ->andReturn([['ugroup_id' => 404]]);
 
         PermissionsManager::setInstance($this->permission_manager);
 
