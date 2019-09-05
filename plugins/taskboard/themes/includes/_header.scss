@@ -40,3 +40,37 @@
         }
     }
 }
+
+.taskboard-header-content {
+    display: flex;
+}
+
+.taskboard-header-label {
+    flex: 1 0 auto;
+}
+
+.taskboard-header-wrong-color {
+    color: $tlp-ui-warning;
+    cursor: pointer;
+}
+
+.taskboard-header-wrong-color-preview {
+    white-space: nowrap;
+}
+
+.taskboard-header-wrong-color-preview-color {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border: 1px solid $tlp-ui-border-light;
+    vertical-align: middle;
+}
+
+.taskboard-header-wrong-color-popover {
+    z-index: 1001;
+}
+
+.taskboard-header-wrong-color-body {
+    color: $tlp-typo-default-text-color;
+    text-transform: none;
+}

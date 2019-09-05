@@ -19,21 +19,49 @@
   -->
 <template>
     <th class="taskboard-header" v-bind:class="classes">
-        {{ column.label }}
+        <div class="taskboard-header-content">
+            <span class="taskboard-header-label">{{ column.label }}</span>
+            <wrong-color-popover v-if="should_popover_be_displayed" v-bind:color="this.column.color"/>
+        </div>
     </th>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { ColumnDefinition } from "../../type";
+import WrongColorPopover from "./WrongColorPopover.vue";
+import { State } from "vuex-class";
 
-@Component
+const DEFAULT_COLOR = "#F8F8F8";
+
+@Component({
+    components: { WrongColorPopover }
+})
 export default class TaskBoardHeaderCell extends Vue {
-    @Prop()
+    @Prop({ required: true })
     readonly column!: ColumnDefinition;
 
+    @State
+    readonly user_is_admin!: boolean;
+
     get classes() {
+        if (this.is_rgb_color) {
+            return "";
+        }
+
         return this.column.color ? "taskboard-header-" + this.column.color : "";
+    }
+
+    get is_rgb_color() {
+        return this.column.color.charAt(0) === "#";
+    }
+
+    get is_default_color() {
+        return this.column.color === DEFAULT_COLOR;
+    }
+
+    get should_popover_be_displayed() {
+        return this.user_is_admin && this.is_rgb_color && !this.is_default_color;
     }
 }
 </script>

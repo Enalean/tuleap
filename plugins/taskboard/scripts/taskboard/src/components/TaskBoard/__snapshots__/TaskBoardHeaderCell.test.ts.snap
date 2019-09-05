@@ -4,9 +4,73 @@ exports[`TaskBoardHeaderCell displays a cell with color 1`] = `
 <th
   class="taskboard-header taskboard-header-fiesta-red"
 >
-  
-    To do
+  <div
+    class="taskboard-header-content"
+  >
+    <span
+      class="taskboard-header-label"
+    >
+      To do
+    </span>
+     
+    <!---->
+  </div>
+</th>
+`;
 
+exports[`TaskBoardHeaderCell displays a cell with default color 1`] = `
+<th
+  class="taskboard-header"
+>
+  <div
+    class="taskboard-header-content"
+  >
+    <span
+      class="taskboard-header-label"
+    >
+      To do
+    </span>
+     
+    <!---->
+  </div>
+</th>
+`;
+
+exports[`TaskBoardHeaderCell displays a cell with legacy color to admin users 1`] = `
+<th
+  class="taskboard-header"
+>
+  <div
+    class="taskboard-header-content"
+  >
+    <span
+      class="taskboard-header-label"
+    >
+      To do
+    </span>
+     
+    <wrong-color-popover-stub
+      color="#87DBEF"
+    />
+  </div>
+</th>
+`;
+
+exports[`TaskBoardHeaderCell displays a cell with legacy color to regular users 1`] = `
+<th
+  class="taskboard-header"
+>
+  <div
+    class="taskboard-header-content"
+  >
+    <span
+      class="taskboard-header-label"
+    >
+      To do
+    </span>
+     
+    <!---->
+  </div>
 </th>
 `;
 
@@ -14,8 +78,16 @@ exports[`TaskBoardHeaderCell displays a cell without color 1`] = `
 <th
   class="taskboard-header"
 >
-  
-    To do
-
+  <div
+    class="taskboard-header-content"
+  >
+    <span
+      class="taskboard-header-label"
+    >
+      To do
+    </span>
+     
+    <!---->
+  </div>
 </th>
 `;

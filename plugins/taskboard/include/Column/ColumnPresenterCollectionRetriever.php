@@ -60,6 +60,13 @@ class ColumnPresenterCollectionRetriever
             return $row['tlp_color_name'];
         }
 
+        $r = $row['bg_red'];
+        $g = $row['bg_green'];
+        $b = $row['bg_blue'];
+        if ($r !== null && $g !== null && $b !== null) {
+            return \ColorHelper::RGBToHexa($r, $g, $b);
+        }
+
         return '';
     }
 }
