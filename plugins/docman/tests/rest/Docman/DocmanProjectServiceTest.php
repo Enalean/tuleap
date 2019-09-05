@@ -53,4 +53,17 @@ final class DocmanProjectServiceTest extends DocmanTestExecutionHelper
         $this->assertNotNull($result['root_item']);
         $this->assertNull($result['permissions_for_groups']);
     }
+
+    public function testGetServiceRepresentationAsRESTReadOnlyUser() : void
+    {
+        $response = $this->getResponse(
+            $this->client->get('projects/' . urlencode((string) $this->project_id) . '/docman_service'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertSame(200, $response->getStatusCode());
+        $result = $response->json();
+        $this->assertNotNull($result['root_item']);
+        $this->assertNotNull($result['permissions_for_groups']);
+    }
 }
