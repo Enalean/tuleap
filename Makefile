@@ -268,8 +268,6 @@ dev-setup: .env deploy-githooks ## Setup environment for Docker Compose (should 
 	@echo "MYSQL_ROOT_PASSWORD=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" > .env
 	@echo "LDAP_ROOT_PASSWORD=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" >> .env
 	@echo "LDAP_MANAGER_PASSWORD=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" >> .env
-	@echo "RABBITMQ_DEFAULT_PASS=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" >> .env
-	@echo RABBITMQ_DEFAULT_USER=tuleap >> .env
 	@echo VIRTUAL_HOST=tuleap-web.tuleap-aio-dev.docker >> .env
 	@echo "REALTIME_KEY=$(head -c 64 /dev/urandom | base64 --wrap=88)" >> .env
 
@@ -349,6 +347,9 @@ start-jenkins:
 	else \
 		echo "Admin credentials will be prompted by jenkins during start-up"; \
 	fi
+
+start-redis:
+	@$(DOCKER_COMPOSE) up -d redis
 
 start-all:
 	echo "Start all containers (Web, LDAP, DB, Elasticsearch)"

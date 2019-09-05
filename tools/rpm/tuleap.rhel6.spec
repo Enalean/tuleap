@@ -77,7 +77,7 @@ Requires(post): policycoreutils-python
 # Bind utils
 Requires: bind-utils
 
-Obsoletes: php-restler, php-amqplib-amqplib, php-markdown
+Obsoletes: php-restler, php-markdown
 Obsoletes: %{name}-plugin-im
 Obsoletes: %{name}-plugin-fulltextsearch
 

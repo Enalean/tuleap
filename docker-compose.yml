@@ -70,13 +70,6 @@ services:
     volumes:
       - db-data:/var/lib/mysql
 
-  rabbitmq:
-    image: rabbitmq:3.6
-    env_file:
-      - .env
-    volumes:
-      - rabbitmq-data:/var/lib/rabbitmq
-
   redis:
     image: redis:3.2
     volumes:
@@ -104,7 +97,6 @@ volumes:
   ldap-data:
   gerrit-data:
   db-data:
-  rabbitmq-data:
   redis-data:
   realtime-conf:
   realtime-cert:

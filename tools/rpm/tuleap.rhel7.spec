@@ -43,9 +43,6 @@ Requires: highlight, forgeupgrade >= 1.6, nginx, logrotate
 # Unit file
 Requires: systemd
 
-# It's embedded in Tuleap thanks to composer.
-Obsoletes: php-amqplib-amqplib
-
 # It's embedded in Tuleap thanks to npm.
 Obsoletes: ckeditor
 

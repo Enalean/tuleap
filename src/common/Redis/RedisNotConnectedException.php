@@ -1,7 +1,6 @@
-#!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,23 +19,11 @@
  *
  */
 
-require_once __DIR__ . '/../../www/include/pre.php';
+declare(strict_types=1);
 
-$locker = new Tuleap\System\DaemonLocker('/var/run/svnroot_updater.pid');
+namespace Tuleap\Redis;
 
-$logger = new TruncateLevelLogger(
-    new BackendLogger('/var/log/tuleap/svnroot_updater.log'),
-    ForgeConfig::get('sys_logger_level')
-);
+class RedisNotConnectedException extends RedisConnectionException
+{
 
-try {
-    $locker->isRunning();
-
-    $logger->info("Start service");
-
-    $updater = new  Tuleap\Svn\SvnrootUpdater($logger);
-    $updater->listen('backend-svn-1');
-} catch (Exception $exception) {
-    fwrite(STDERR, '*** ERROR: '.$exception->getMessage()."\n");
-    exit(1);
 }
