@@ -7,16 +7,12 @@ exports[`TaskBoardHeader displays a header with many columns 1`] = `
       class="taskboard-header"
     />
      
-    <th
-      class="taskboard-header"
-    >
-      To do
-    </th>
-    <th
-      class="taskboard-header"
-    >
-      Done
-    </th>
+    <task-board-header-cell-stub
+      column="[object Object]"
+    />
+    <task-board-header-cell-stub
+      column="[object Object]"
+    />
   </tr>
 </thead>
 `;

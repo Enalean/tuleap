@@ -15,11 +15,22 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-export interface ColumnDefinition {
-    id: number;
-    label: string;
-    color: string;
-}
+import { shallowMount } from "@vue/test-utils";
+import TaskBoardHeaderCell from "./TaskBoardHeaderCell.vue";
+
+describe("TaskBoardHeaderCell", () => {
+    it("displays a cell without color", () => {
+        const wrapper = shallowMount(TaskBoardHeaderCell, {
+            propsData: { column: { id: 2, label: "To do", color: "" } }
+        });
+        expect(wrapper.element).toMatchSnapshot();
+    });
+    it("displays a cell with color", () => {
+        const wrapper = shallowMount(TaskBoardHeaderCell, {
+            propsData: { column: { id: 2, label: "To do", color: "fiesta-red" } }
+        });
+        expect(wrapper.element).toMatchSnapshot();
+    });
+});

@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TaskBoardHeaderCell displays a cell with color 1`] = `
+<th
+  class="taskboard-header taskboard-header-fiesta-red"
+>
+  
+    To do
+
+</th>
+`;
+
+exports[`TaskBoardHeaderCell displays a cell without color 1`] = `
+<th
+  class="taskboard-header"
+>
+  
+    To do
+
+</th>
+`;

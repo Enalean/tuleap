@@ -56,8 +56,8 @@ class ColumnPresenterCollectionRetrieverTest extends TestCase
             ->with(101)
             ->once()
             ->andReturn([
-                ['id' => 2, 'label' => 'To do'],
-                ['id' => 4, 'label' => 'Done']
+                ['id' => 2, 'label' => 'To do', 'tlp_color_name' => 'fiesta_red'],
+                ['id' => 4, 'label' => 'Done', 'tlp_color_name' => '']
             ]);
 
         $tracker = Mockery::mock(Tracker::class);
@@ -68,6 +68,8 @@ class ColumnPresenterCollectionRetrieverTest extends TestCase
 
         $this->assertCount(2, $collection);
         $this->assertEquals('To do', $collection[0]->label);
+        $this->assertEquals('fiesta_red', $collection[0]->color);
         $this->assertEquals('Done', $collection[1]->label);
+        $this->assertEquals('', $collection[1]->color);
     }
 }
