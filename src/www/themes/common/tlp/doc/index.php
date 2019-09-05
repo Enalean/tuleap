@@ -80,9 +80,6 @@ $main_doc_script     = $include_asset_doc->getFileURL('script.js');
     <link rel="stylesheet" id="tlp-stylesheet" href="<?php echo $tlp_blue_css ?>">
 
     <link rel="stylesheet" href="<?php echo $main_doc_stylesheet ?>">
-    <link rel="stylesheet" href="codemirror/5.12.2/codemirror.css">
-    <link rel="stylesheet" href="codemirror/5.12.2/addon/scroll/simplescrollbars.css">
-    <link rel="stylesheet" href="codemirror/5.12.2/theme/mdn-like.css">
 
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 </head>
@@ -264,6 +261,5 @@ $main_doc_script     = $include_asset_doc->getFileURL('script.js');
         echo (string) file_get_contents(__DIR__ . '/../dist/manifest.json');
     ?>
 </script>
-<script src="codemirror/5.12.2/codemirror-compressed.js"></script>
 <script type="text/javascript" src="<?php echo $main_doc_script; ?>"></script>
 </body>

@@ -317,3 +317,6 @@ body {
 @import 'nav';
 @import 'sections';
 @import 'javascript-sections';
+@import '../../node_modules/codemirror/lib/codemirror';
+@import '../../node_modules/codemirror/theme/mdn-like';
+@import '../../node_modules/codemirror/addon/scroll/simplescrollbars';

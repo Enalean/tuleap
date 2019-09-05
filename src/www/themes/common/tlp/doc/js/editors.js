@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global CodeMirror:readonly tlp:readonly */
-
+import tlp from "tlp";
+import CodeMirror from "codemirror";
+import "codemirror/mode/htmlmixed/htmlmixed";
+import "codemirror/addon/scroll/simplescrollbars";
 import { sanitize } from "dompurify";
 
 (function loadCodeMirrorEditors() {
