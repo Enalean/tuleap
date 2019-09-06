@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All rights reserved
+ * Copyright (c) Enalean, 2014-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,15 +20,20 @@
 
 namespace Tuleap\TestManagement;
 
+use REST_TestDataBuilder;
+use TestManagementDataBuilder;
+
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 /**
  * @group TestManagementTest
  */
-class DefinitionsTest extends BaseTest {
+final class DefinitionsTest extends BaseTest
+{
 
-    public function testGetDefinition() {
-        $first_definition = $this->getFirstDefinition();
+    public function testGetDefinition(): void
+    {
+        $first_definition = $this->getFirstDefinition(TestManagementDataBuilder::USER_TESTER_NAME);
 
         $definition_request = $this->client->get('testmanagement_definitions/' . $first_definition['id']);
         $definition         = $this->getResponse($definition_request)->json();
@@ -36,23 +41,45 @@ class DefinitionsTest extends BaseTest {
         $this->assertEquals($definition, $first_definition);
     }
 
-    private function getFirstDefinition() {
-        $campaign  = $this->getFirstCampaign();
-        $execution = $this->getFirstExecution($campaign['id']);
+    public function testGetDefinitionWithRESTReadOnlyUser(): void
+    {
+        $first_definition = $this->getFirstDefinition(REST_TestDataBuilder::TEST_BOT_USER_NAME);
+
+        $definition_request = $this->client->get('testmanagement_definitions/' . $first_definition['id']);
+        $definition         = $this->getResponse(
+            $definition_request,
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        )->json();
+
+        $this->assertEquals($definition, $first_definition);
+    }
+
+    private function getFirstDefinition(string $user_name)
+    {
+        $campaign  = $this->getFirstCampaign($user_name);
+        $execution = $this->getFirstExecution($campaign['id'], $user_name);
 
         return $execution['definition'];
     }
 
-    private function getFirstCampaign() {
+    private function getFirstCampaign(string $user_name)
+    {
         $campaigns_request  = $this->client->get("projects/$this->project_id/testmanagement_campaigns");
-        $campaigns          = $this->getResponse($campaigns_request)->json();
+        $campaigns          = $this->getResponse(
+            $campaigns_request,
+            $user_name
+        )->json();
 
         return $campaigns[0];
     }
 
-    private function getFirstExecution($campaign_id) {
+    private function getFirstExecution($campaign_id, string $user_name)
+    {
         $executions_request = $this->client->get('testmanagement_campaigns/'.$campaign_id.'/testmanagement_executions');
-        $executions         = $this->getResponse($executions_request)->json();
+        $executions         = $this->getResponse(
+            $executions_request,
+            $user_name
+        )->json();
 
         return $executions[0];
     }
