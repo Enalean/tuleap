@@ -20,21 +20,17 @@
 
 <template>
     <tbody>
-        <no-content-empty-state v-bind:columns="columns"/>
+        <no-content-empty-state/>
     </tbody>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { ColumnDefinition } from "../../type";
+import { Component } from "vue-property-decorator";
 import NoContentSvg from "./NoContentSvg.vue";
 import NoContentEmptyState from "./NoContentEmptyState.vue";
 @Component({
     components: { NoContentEmptyState, NoContentSvg }
 })
-export default class TaskBoardBody extends Vue {
-    @Prop()
-    readonly columns!: Array<ColumnDefinition>;
-}
+export default class TaskBoardBody extends Vue {}
 </script>

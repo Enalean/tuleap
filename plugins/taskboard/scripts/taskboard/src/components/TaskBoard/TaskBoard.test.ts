@@ -19,11 +19,16 @@
 
 import { shallowMount } from "@vue/test-utils";
 import TaskBoard from "./TaskBoard.vue";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 
 describe("TaskBoard", () => {
     it("displays a table with header and body", () => {
         const wrapper = shallowMount(TaskBoard, {
-            propsData: { columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] }
+            mocks: {
+                $store: createStoreMock({
+                    state: { columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] }
+                })
+            }
         });
         expect(wrapper.element).toMatchSnapshot();
     });

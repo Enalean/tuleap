@@ -19,23 +19,28 @@
 
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 
 describe("App", () => {
     it("displays misconfiguration error for regular user", () => {
         const wrapper = shallowMount(App, {
-            propsData: { columns: [] }
+            mocks: { $store: createStoreMock({ state: { columns: [] } }) }
         });
         expect(wrapper.element).toMatchSnapshot();
     });
     it("displays misconfiguration error for admin user", () => {
         const wrapper = shallowMount(App, {
-            propsData: { columns: [] }
+            mocks: { $store: createStoreMock({ state: { columns: [] } }) }
         });
         expect(wrapper.element).toMatchSnapshot();
     });
     it("displays the board when there are columns", () => {
         const wrapper = shallowMount(App, {
-            propsData: { columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] }
+            mocks: {
+                $store: createStoreMock({
+                    state: { columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] }
+                })
+            }
         });
         expect(wrapper.element).toMatchSnapshot();
     });

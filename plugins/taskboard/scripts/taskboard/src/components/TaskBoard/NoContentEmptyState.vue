@@ -35,15 +35,16 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import NoContentSvg from "./NoContentSvg.vue";
 import { ColumnDefinition } from "../../type";
+import { State } from "vuex-class";
 
 @Component({
     components: { NoContentSvg }
 })
 export default class NoContentEmptyState extends Vue {
-    @Prop()
+    @State
     readonly columns!: Array<ColumnDefinition>;
 
     get colspan(): number {

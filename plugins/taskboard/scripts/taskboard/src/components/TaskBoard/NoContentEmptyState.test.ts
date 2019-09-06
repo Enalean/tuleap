@@ -21,6 +21,7 @@ import { Vue } from "vue/types/vue";
 import { shallowMount } from "@vue/test-utils";
 import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
 import NoContentEmptyState from "./NoContentEmptyState.vue";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 
 describe("NoContentEmptyState", () => {
     let local_vue: typeof Vue;
@@ -32,7 +33,11 @@ describe("NoContentEmptyState", () => {
     it("displays a cell that span on the whole table", () => {
         const wrapper = shallowMount(NoContentEmptyState, {
             localVue: local_vue,
-            propsData: { columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] }
+            mocks: {
+                $store: createStoreMock({
+                    state: { columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] }
+                })
+            }
         });
         expect(wrapper.element).toMatchSnapshot();
     });

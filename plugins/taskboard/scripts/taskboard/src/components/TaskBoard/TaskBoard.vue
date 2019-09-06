@@ -20,23 +20,19 @@
 
 <template>
     <table class="taskboard">
-        <task-board-header v-bind:columns="columns"/>
-        <task-board-body v-bind:columns="columns"/>
+        <task-board-header/>
+        <task-board-body/>
     </table>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { ColumnDefinition } from "../../type";
+import { Component } from "vue-property-decorator";
 import TaskBoardHeader from "./TaskBoardHeader.vue";
 import TaskBoardBody from "./TaskBoardBody.vue";
 
 @Component({
     components: { TaskBoardBody, TaskBoardHeader }
 })
-export default class TaskBoard extends Vue {
-    @Prop()
-    readonly columns!: Array<ColumnDefinition>;
-}
+export default class TaskBoard extends Vue {}
 </script>
