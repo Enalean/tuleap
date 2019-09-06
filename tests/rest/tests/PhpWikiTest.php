@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,10 +19,13 @@
  *
  */
 
+use Guzzle\Http\Message\Response;
+
 /**
  * @group PhpWikiTests
  */
-class PhpWikiTest extends RestBase {
+class PhpWikiTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+{
 
     public function testOPTIONSId()
     {
@@ -31,13 +34,42 @@ class PhpWikiTest extends RestBase {
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
+    public function testOPTIONSIdWithRESTReadOnlyUser()
+    {
+        $response = $this->getResponse(
+            $this->client->options('phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
     public function testGETId()
     {
         $response = $this->getResponse($this->client->get('phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID));
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
 
+        $this->assertPageID($response);
+    }
+
+    public function testGETIdWithRESTReadOnlyUser()
+    {
+        $response = $this->getResponse(
+            $this->client->get('phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertPageID($response);
+    }
+
+    private function assertPageID(Response $response)
+    {
         $content = $response->json();
+
         $this->assertArrayHasKey('versions', $content);
         $this->assertCount(4, $content['versions']);
         $this->assertEquals(4, $content['last_version']);
@@ -52,10 +84,31 @@ class PhpWikiTest extends RestBase {
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
+    public function testOPTIONSVersionsWithRESTReadOnlyUser()
+    {
+        $response = $this->getResponse(
+            $this->client->options('phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID .'/versions'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
     public function testGETVersionsReturns400IfNoVersionGiven()
     {
         $response = $this->getResponse($this->client->get('phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions'));
         $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testGETVersionWithRESTReadOnlyUser()
+    {
+        $response = $this->getResponse(
+            $this->client->get('phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=0'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertResponseBodyIsVersion4($response);
     }
 
     public function testGETLastVersion()
