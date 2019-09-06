@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All rights reserved
+ * Copyright (c) Enalean, 2017-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\REST;
 
+use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
@@ -38,6 +39,21 @@ class RepositoryTest extends TestBase
     {
         $response = $this->getResponse($this->client->get('svn/1'));
 
+        $this->assertRepositoryForAdmin($response);
+    }
+
+    public function testGETRepositoryForRESTReadOnlyUser()
+    {
+        $response = $this->getResponse(
+            $this->client->get('svn/1'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertRepositoryForAdmin($response);
+    }
+
+    private function assertRepositoryForAdmin(Response $response)
+    {
         $repository = $response->json();
 
         $this->assertArrayHasKey('id', $repository);
@@ -122,6 +138,37 @@ class RepositoryTest extends TestBase
                 'svn/1'
             )
         );
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGETRepositoryForProjectAdmin
+     * @depends testGETRepositoryForProjectMember
+     */
+    public function testDELETERepositoryForRESTReadOnlyUserNotInvolvedInProject()
+    {
+        $response = $this->getResponse(
+            $this->client->delete('svn/1'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    public function testPOSTRepositoryForRESTReadOnlyUserNotInvolvedInProject()
+    {
+        $params = json_encode(
+            array(
+                "project_id" => $this->svn_project_id,
+                "name"       => "my_repository",
+            )
+        );
+
+        $response = $this->getResponse(
+            $this->client->post('svn', null, $params),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
         $this->assertEquals(403, $response->getStatusCode());
     }
 
@@ -277,6 +324,46 @@ class RepositoryTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 201);
     }
 
+    public function testPUTRepositoryRESTReadOnlyUserNotInvolvedInProject()
+    {
+        $data = json_encode(
+            array(
+                'settings' => array(
+                    'commit_rules'        => array(
+                        'is_reference_mandatory'           => true,
+                        'is_commit_message_change_allowed' => false
+                    ),
+                    "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
+                    "immutable_tags"      => array(
+                        "paths"     => array(),
+                        "whitelist" => array()
+                    ),
+                    "email_notifications" => array(
+                        array(
+                            'path'        => "/tags",
+                            'emails'      => array(
+                                "project-announce@list.example.com",
+                                "project-devel@lists.example.com"
+                            ),
+                            "users"       => array(102),
+                            "user_groups" => array(
+                                $this->user_group_1_id,
+                                $this->user_group_2_id
+                            )
+                        )
+                    )
+                )
+            )
+        );
+
+        $response = $this->getResponse(
+            $this->client->put('svn/1', null, $data),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
     public function testPUTRepository()
     {
         $data = json_encode(
@@ -350,9 +437,9 @@ class RepositoryTest extends TestBase
         );
     }
 
-    public function testOPTIONS()
+    public function testOPTIONSId()
     {
-        $response = $this->getResponse($this->client->get('svn/1'));
+        $response = $this->getResponse($this->client->options('svn/1'));
 
         $this->assertEquals(
             array('OPTIONS', 'GET', 'PUT', 'DELETE'),
@@ -360,7 +447,7 @@ class RepositoryTest extends TestBase
         );
     }
 
-    public function testOPTIONSId()
+    public function testOPTIONS()
     {
         $response = $this->getResponse(
             $this->client->options('svn'),
@@ -368,5 +455,25 @@ class RepositoryTest extends TestBase
         );
 
         $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testAllOptionsWithRESTReadOnlyUserNotInvolvedInProject()
+    {
+        $response = $this->getResponse(
+            $this->client->options('svn/1'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(
+            ['OPTIONS', 'GET', 'PUT', 'DELETE'],
+            $response->getHeader('Allow')->normalize()->toArray()
+        );
+
+        $response = $this->getResponse(
+            $this->client->options('svn'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
     }
 }
