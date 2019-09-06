@@ -19,10 +19,7 @@
 
 <template>
     <section class="tlp-pane-section">
-        <p class="tlp-alert-warning" v-translate="{ url: edit_fields_url }">
-            There is no selectbox bound to static values in your tracker! Please
-            <a href="%{ url }">add one</a> before configuring the workflow.
-        </p>
+        <p class="tlp-alert-warning" v-dompurify-html="message"></p>
     </section>
 </template>
 
@@ -37,6 +34,12 @@ export default {
             return encodeURI(
                 `/plugins/tracker/?tracker=${this.current_tracker_id}&func=admin-formElements`
             );
+        },
+        message() {
+            let translated = this
+                .$gettext(`There is no selectbox bound to static values in your tracker! Please
+            <a href="%{ url }">add one</a> before configuring the workflow.`);
+            return this.$gettextInterpolate(translated, { url: this.edit_fields_url });
         }
     }
 };

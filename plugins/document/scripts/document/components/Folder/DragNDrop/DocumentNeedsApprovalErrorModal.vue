@@ -19,16 +19,7 @@
 
 <template>
     <error-modal v-on:error-modal-hidden="bubbleErrorModalHidden">
-        <p
-            v-translate="{
-                table_owner_url: table_owner.user_url,
-                table_owner_name: table_owner.display_name,
-                approval_table_url,
-                filename
-            }"
-        >
-            <a href="%{ table_owner_url }">%{ table_owner_name }</a> has created an <a href="%{ approval_table_url }">approval table</a> for the last version of %{ filename }.
-        </p>
+        <p v-dompurify-html="approval_table_message"></p>
         <p v-translate>
             You can't upload a new version of this file until the approval table is closed.
         </p>
@@ -48,9 +39,6 @@ export default {
     },
     computed: {
         ...mapState(["project_id"]),
-        filename() {
-            return this.reasons[0].filename;
-        },
         table_owner() {
             return this.reasons[0].approval_table_owner;
         },
@@ -65,6 +53,17 @@ export default {
                 this.reasons[0].item_id +
                 "&action=details&section=approval"
             );
+        },
+        approval_table_message() {
+            let translated = this.$gettext(
+                `<a href="%{ table_owner_url }">%{ table_owner_name }</a> has created an <a href="%{ approval_table_url }">approval table</a> for the last version of %{ filename }.`
+            );
+            return this.$gettextInterpolate(translated, {
+                table_owner_url: this.table_owner.user_url,
+                table_owner_name: this.table_owner.display_name,
+                approval_table_url: this.approval_table_url,
+                filename: this.reasons[0].filename
+            });
         }
     },
     methods: {

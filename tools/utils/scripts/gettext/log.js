@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-module.exports.ALLOWED_EXTENSIONS = ["js", "ts", "vue"];
-module.exports.PROGRAM_NAME = "gettext-extractor";
-module.exports.DIRECTIVE_NAME = "v-translate";
-module.exports.COMPONENT_NAME = "translate";
-module.exports.PLURAL_STRING_DIRECTIVE_NAME = "translate-plural";
+const { PROGRAM_NAME } = module.require("./constants.js");
+
+module.exports.log = message => console.log("[" + PROGRAM_NAME + "] " + message);

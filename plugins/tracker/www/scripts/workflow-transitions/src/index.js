@@ -26,6 +26,7 @@ import Vuex from "vuex";
 import store_options from "./store";
 import GettextPlugin from "vue-gettext";
 import french_translations from "../po/fr.po";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import BaseTrackerWorkflowTransitions from "./components/BaseTrackerWorkflowTransitions.vue";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -42,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         silent: true
     });
+    Vue.use(VueDOMPurifyHTML);
 
     const locale = document.body.dataset.userLocale;
     Vue.config.language = locale;
