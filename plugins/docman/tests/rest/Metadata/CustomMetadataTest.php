@@ -39,6 +39,29 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $json_result = $response->json();
 
+        $this->assertMetadataForProject($json_result);
+
+        return $json_result;
+    }
+
+    public function testGetMetadataForProjectWithRESTReadOnlyUser(): array
+    {
+        $response = $this->getResponse(
+            $this->client->get('projects/' . $this->project_id . '/docman_metadata'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $json_result = $response->json();
+
+        $this->assertMetadataForProject($json_result);
+
+        return $json_result;
+    }
+
+    private function assertMetadataForProject(array $json_result): void
+    {
         $text_metadata = $this->findMetadataByName($json_result, "text metadata");
         $list_metadata = $this->findMetadataByName($json_result, "list metadata");
 
@@ -55,8 +78,6 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $this->assertEquals("value 1", $value["value"]);
         $this->assertEquals("value 2", $value_two["value"]);
-
-        return $json_result;
     }
 
     /**
@@ -93,6 +114,13 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
             ]
         );
 
+        $response1_with_rest_read_only_user = $this->getResponse(
+            $this->client->post('docman_folders/' . $root_id . '/empties', null, $query),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response1_with_rest_read_only_user->getStatusCode());
+
         $response1 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->post('docman_folders/' . $root_id . '/empties', null, $query)
@@ -121,6 +149,14 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
 
         $created_document_id = $response1->json()['id'];
+
+        $response2_with_rest_read_only_user = $this->getResponse(
+            $this->client->put('docman_empty_documents/' . $created_document_id . '/metadata', null, $updated_query),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response2_with_rest_read_only_user->getStatusCode());
+
         $response2 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->put('docman_empty_documents/' . $created_document_id . '/metadata', null, $updated_query)
@@ -142,6 +178,13 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals('updated value', $updated_text_metadata['value']);
         $this->assertEquals($updated_value['id'], $updated_list_metadata['list_value'][0]['id']);
         $this->assertEquals([], $updated_other_list_metadata['list_value']);
+
+        $response_with_rest_read_only_user = $this->getResponse(
+            $this->client->delete('docman_empty_documents/' . $created_document_id),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response_with_rest_read_only_user->getStatusCode());
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
@@ -187,6 +230,13 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                 ]
             ]
         );
+
+        $response1_with_rest_read_only_user = $this->getResponse(
+            $this->client->post('docman_folders/' . $root_id . '/files', null, $query),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response1_with_rest_read_only_user->getStatusCode());
 
         $response1 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
@@ -282,6 +332,14 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
 
         $created_document_id = $response1->json()['id'];
+
+        $response2_with_rest_read_only_user = $this->getResponse(
+            $this->client->put('docman_files/' . $created_document_id . '/metadata', null, $updated_query),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response2_with_rest_read_only_user->getStatusCode());
+
         $response2 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->put('docman_files/' . $created_document_id . '/metadata', null, $updated_query)
@@ -303,6 +361,13 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals('updated value', $updated_text_metadata['value']);
         $this->assertEquals([], $updated_list_metadata['list_value']);
         $this->assertEquals($other_updated_value['id'], $updated_other_list_metadata['list_value'][0]['id']);
+
+        $response_delete_with_rest_read_only_user = $this->getResponse(
+            $this->client->delete('docman_files/' . $created_document_id),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response_delete_with_rest_read_only_user->getStatusCode());
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
@@ -328,6 +393,13 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
             ]
         );
 
+        $folder_response_with_rest_read_only_user = $this->getResponse(
+            $this->client->post('docman_folders/' . $root_id . '/folders', null, $query),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $folder_response_with_rest_read_only_user->getStatusCode());
+
         $folder_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->post('docman_folders/' . $root_id . '/folders', null, $query)
@@ -340,6 +412,13 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                 'title'    => 'an empty document'
             ]
         );
+
+        $empty_response_with_rest_read_only_user = $this->getResponse(
+            $this->client->post('docman_folders/' . $created_document_id . '/empties', null, $query),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $empty_response_with_rest_read_only_user->getStatusCode());
 
         $empty_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
@@ -376,6 +455,13 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
             ]
         );
 
+        $response2_with_rest_read_only_user = $this->getResponse(
+            $this->client->put('docman_folders/' . $created_document_id . '/metadata', null, $updated_query),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response2_with_rest_read_only_user->getStatusCode());
+
         $response2 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->put('docman_folders/' . $created_document_id . '/metadata', null, $updated_query)
@@ -404,6 +490,13 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $empty_text_metadata       = $this->findMetadataByName($empty_content, "text metadata");
         $this->assertEquals('updated value', $empty_text_metadata['value']);
 
+        $response_delete_with_rest_read_only_user = $this->getResponse(
+            $this->client->delete('docman_folders/' . $created_document_id),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response_delete_with_rest_read_only_user->getStatusCode());
+
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
             $this->client->delete('docman_folders/' . $created_document_id)
@@ -421,6 +514,17 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testOptionsProjectMetadataWithRESTReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('projects/' . $this->project_id . '/docman_metadata'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     /**
