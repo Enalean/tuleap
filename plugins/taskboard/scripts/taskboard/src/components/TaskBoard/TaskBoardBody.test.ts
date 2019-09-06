@@ -22,14 +22,10 @@ import TaskBoardBody from "./TaskBoardBody.vue";
 
 describe("TaskBoardBody", () => {
     it("displays an empty state", () => {
-        const wrapper = shallowMount(TaskBoardBody, {
-            propsData: { columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] }
-        });
+        const wrapper = shallowMount(TaskBoardBody);
         expect(wrapper.element).toMatchInlineSnapshot(`
             <tbody>
-              <no-content-empty-state-stub
-                columns="[object Object],[object Object]"
-              />
+              <no-content-empty-state-stub />
             </tbody>
         `);
     });

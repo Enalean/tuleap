@@ -21,14 +21,15 @@
 <template>
     <div>
         <under-construction-modal/>
-        <task-board v-bind:columns="columns" v-if="has_at_least_one_column"/>
+        <task-board v-if="has_at_least_one_column"/>
         <board-without-any-columns-error v-else/>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { State } from "vuex-class";
+import { Component } from "vue-property-decorator";
 import BoardWithoutAnyColumnsError from "./GlobalError/BoardWithoutAnyColumnsError.vue";
 import UnderConstructionModal from "./UnderConstruction/UnderConstructionModal.vue";
 import { ColumnDefinition } from "../type";
@@ -38,10 +39,10 @@ import TaskBoard from "./TaskBoard/TaskBoard.vue";
     components: { TaskBoard, BoardWithoutAnyColumnsError, UnderConstructionModal }
 })
 export default class App extends Vue {
-    @Prop()
+    @State
     readonly columns!: Array<ColumnDefinition>;
 
-    get has_at_least_one_column() {
+    get has_at_least_one_column(): boolean {
         return this.columns.length > 0;
     }
 }

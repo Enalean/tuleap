@@ -20,7 +20,7 @@
 
 import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import { createStore } from "./src/store/index";
+import { createStore } from "./src/store";
 import App from "./src/components/App.vue";
 import { initVueGettext } from "./src/helpers/vue-gettext-init";
 import { ColumnDefinition } from "./src/type";
@@ -46,7 +46,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const AppComponent = Vue.extend(App);
 
     new AppComponent({
-        store: createStore({ user_is_admin, admin_url }),
-        propsData: { columns }
+        store: createStore({ user_is_admin, admin_url, columns })
     }).$mount(vue_mount_point);
 });

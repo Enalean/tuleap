@@ -29,7 +29,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { State } from "vuex-class";
+import { Component } from "vue-property-decorator";
 import { ColumnDefinition } from "../../type";
 import TaskBoardHeaderCell from "./TaskBoardHeaderCell.vue";
 
@@ -37,7 +38,7 @@ import TaskBoardHeaderCell from "./TaskBoardHeaderCell.vue";
     components: { TaskBoardHeaderCell }
 })
 export default class TaskBoardHeader extends Vue {
-    @Prop()
+    @State
     readonly columns!: Array<ColumnDefinition>;
 }
 </script>

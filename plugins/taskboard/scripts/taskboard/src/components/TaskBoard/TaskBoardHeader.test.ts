@@ -19,11 +19,16 @@
 
 import { shallowMount } from "@vue/test-utils";
 import TaskBoardHeader from "./TaskBoardHeader.vue";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 
 describe("TaskBoardHeader", () => {
     it("displays a header with many columns", () => {
         const wrapper = shallowMount(TaskBoardHeader, {
-            propsData: { columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] }
+            mocks: {
+                $store: createStoreMock({
+                    state: { columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] }
+                })
+            }
         });
         expect(wrapper.element).toMatchSnapshot();
     });

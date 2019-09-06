@@ -20,8 +20,6 @@ exports[`App displays the board when there are columns 1`] = `
 <div>
   <under-construction-modal-stub />
    
-  <task-board-stub
-    columns="[object Object],[object Object]"
-  />
+  <task-board-stub />
 </div>
 `;
