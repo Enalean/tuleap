@@ -40,70 +40,6 @@ describe("OtherInformationMetadataForUpdate", () => {
             });
         };
     });
-
-    describe("Obsolescence date", () => {
-        describe("Given obsolescence date value is updated", () => {
-            it(`Then the props used for document creation is updated`, () => {
-                const wrapper = other_metadata({
-                    currentlyUpdatedItem: {
-                        metadata: [
-                            {
-                                short_name: "obsolescence_date",
-                                value: null
-                            }
-                        ],
-                        status: 100,
-                        type: TYPE_FILE,
-                        title: "title",
-                        value: ""
-                    },
-                    metadataToUpdate: []
-                });
-
-                store.state = {
-                    is_obsolescence_date_metadata_used: true,
-                    metadata: {
-                        has_loaded_metadata: true
-                    }
-                };
-
-                const date = "2019-07-10";
-                wrapper.vm.date_value = date;
-
-                expect(wrapper.vm.currentlyUpdatedItem.metadata[0].value).toEqual(date);
-            });
-
-            it(`Then the props used for document update is updated`, () => {
-                const wrapper = other_metadata({
-                    currentlyUpdatedItem: {
-                        metadata: [
-                            {
-                                short_name: "obsolescence_date",
-                                value: null
-                            }
-                        ],
-                        status: 100,
-                        type: TYPE_FILE,
-                        title: "title",
-                        value: ""
-                    },
-                    metadataToUpdate: []
-                });
-
-                store.state = {
-                    is_obsolescence_date_metadata_used: true,
-                    metadata: {
-                        has_loaded_metadata: true
-                    }
-                };
-
-                const date = "2019-07-10";
-                wrapper.vm.date_value = date;
-                expect(wrapper.vm.currentlyUpdatedItem.obsolescence_date).toEqual(date);
-            });
-        });
-    });
-
     describe("Custom metadata", () => {
         it(`Given custom component are loading
         Then it displays spinner`, () => {
@@ -114,7 +50,8 @@ describe("OtherInformationMetadataForUpdate", () => {
                     type: TYPE_FILE,
                     title: "title"
                 },
-                metadataToUpdate: []
+                metadataToUpdate: [],
+                value: ""
             });
 
             store.state = {
@@ -142,7 +79,8 @@ describe("OtherInformationMetadataForUpdate", () => {
                     type: TYPE_FILE,
                     title: "title"
                 },
-                metadataToUpdate: []
+                metadataToUpdate: [],
+                value: ""
             });
 
             EventBus.$emit("show-new-document-modal", {
@@ -169,7 +107,8 @@ describe("OtherInformationMetadataForUpdate", () => {
                     type: TYPE_FILE,
                     title: "title"
                 },
-                metadataToUpdate: []
+                metadataToUpdate: [],
+                value: ""
             });
 
             store.state = {
@@ -202,7 +141,8 @@ describe("OtherInformationMetadataForUpdate", () => {
                     type: TYPE_FILE,
                     title: "title"
                 },
-                metadataToUpdate: [{ id: 1 }]
+                metadataToUpdate: [{ id: 1 }],
+                value: ""
             });
 
             store.state = {
@@ -224,7 +164,8 @@ describe("OtherInformationMetadataForUpdate", () => {
                     type: TYPE_FILE,
                     title: "title"
                 },
-                metadataToUpdate: []
+                metadataToUpdate: [],
+                value: ""
             });
 
             store.state = {
