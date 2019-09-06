@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2013 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,21 +18,46 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Guzzle\Http\Message\Response;
+
 /**
  * @group PlanningTests
  */
-class PlanningTest extends RestBase {
+class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+{
 
-    public function testOptionsPlannings()
+    public function testOptionsPlannings(): void
     {
         $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/plannings'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGetPlanningsContainsAReleasePlanning()
+    public function testOptionsPlanningsWithRESTReadOnlyUser(): void
+    {
+        $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/plannings'));
+
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGetPlanningsContainsAReleasePlanning(): void
     {
         $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/plannings'));
 
+        $this->assertPlannigAndReleasePlanning($response);
+    }
+
+    public function testGetPlanningsContainsAReleasePlanningWithRESTReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('projects/'.$this->project_private_member_id.'/plannings'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertPlannigAndReleasePlanning($response);
+    }
+
+    private function assertPlannigAndReleasePlanning(Response $response): void
+    {
         $plannings = $response->json();
 
         $this->assertCount(2, $plannings);
@@ -54,9 +79,21 @@ class PlanningTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testReleasePlanningHasNoMilestone()
+    public function testReleasePlanningHasNoMilestone(): void
     {
         $response = $this->getResponse($this->client->get($this->getMilestonesUri()));
+
+        $this->assertCount(1, $response->json());
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testReleasePlanningHasNoMilestoneWithRESTReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get($this->getMilestonesUri()),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
 
         $this->assertCount(1, $response->json());
 
@@ -66,7 +103,7 @@ class PlanningTest extends RestBase {
     /**
      * @depends testReleasePlanningHasNoMilestone
      */
-    public function testPlanningMilestonesArePaginatedCorrectly()
+    public function testPlanningMilestonesArePaginatedCorrectly(): void
     {
         $response = $this->getResponse($this->client->get($this->getMilestonesUri() . '?limit=0'));
 
@@ -77,9 +114,12 @@ class PlanningTest extends RestBase {
         $this->assertGreaterThanOrEqual(1, $pagination_size);
     }
 
-    private function getMilestonesUri()
+    private function getMilestonesUri(): string
     {
-        $response_plannings = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/plannings'))->json();
+        $response_plannings = $this->getResponse(
+            $this->client->get('projects/'.$this->project_private_member_id.'/plannings')
+        )->json();
+
         return $response_plannings[0]['milestones_uri'];
     }
 }
