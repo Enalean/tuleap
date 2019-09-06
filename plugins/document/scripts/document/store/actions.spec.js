@@ -41,7 +41,6 @@ import {
     rewire$deleteLockEmbedded,
     rewire$deleteLockFile,
     rewire$deleteUserPreferenciesForFolderInProject,
-    rewire$deleteUserPreferenciesForUnderConstructionModal,
     rewire$deleteWiki,
     rewire$getDocumentManagerServiceInformation,
     rewire$getItem,
@@ -120,7 +119,6 @@ import {
     setUserPreferenciesForUI,
     toggleQuickLook,
     unlockDocument,
-    unsetUnderConstructionUserPreference,
     updateFolderMetadata,
     updateMetadata,
     updatePermissions
@@ -141,7 +139,6 @@ describe("Store actions", () => {
         loadFolderContent,
         loadAscendantHierarchy,
         deleteUserPreferenciesForFolderInProject,
-        deleteUserPreferenciesForUnderConstructionModal,
         patchUserPreferenciesForFolderInProject,
         addUserLegacyUIPreferency,
         addNewEmpty,
@@ -200,13 +197,6 @@ describe("Store actions", () => {
             "deleteUserPreferenciesForFolderInProject"
         );
         rewire$deleteUserPreferenciesForFolderInProject(deleteUserPreferenciesForFolderInProject);
-
-        deleteUserPreferenciesForUnderConstructionModal = jasmine.createSpy(
-            "deleteUserPreferenciesForUnderConstructionModal"
-        );
-        rewire$deleteUserPreferenciesForUnderConstructionModal(
-            deleteUserPreferenciesForUnderConstructionModal
-        );
 
         patchUserPreferenciesForFolderInProject = jasmine.createSpy(
             "patchUserPreferenciesForFolderInProject"
@@ -538,23 +528,6 @@ describe("Store actions", () => {
             await setUserPreferenciesForUI(context);
 
             expect(addUserLegacyUIPreferency).toHaveBeenCalled();
-        });
-    });
-
-    describe("unsetUnderConstructionUserPreference", () => {
-        it("unset the under construction preference", async () => {
-            const context = {
-                commit: jasmine.createSpy("commit"),
-                state: {
-                    user_id: 102,
-                    project_id: 110
-                }
-            };
-
-            await unsetUnderConstructionUserPreference(context);
-
-            expect(deleteUserPreferenciesForUnderConstructionModal).toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("removeIsUnderConstruction");
         });
     });
 

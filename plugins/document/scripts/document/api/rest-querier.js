@@ -30,7 +30,6 @@ export {
     postWiki,
     postLinkVersion,
     deleteUserPreferenciesForFolderInProject,
-    deleteUserPreferenciesForUnderConstructionModal,
     addUserLegacyUIPreferency,
     cancelUpload,
     createNewVersion,
@@ -393,12 +392,6 @@ async function deleteUserPreference(user_id, key) {
 
 async function deleteUserPreferenciesForFolderInProject(user_id, project_id, folder_id) {
     const key = `plugin_docman_hide_${project_id}_${folder_id}`;
-
-    await deleteUserPreference(user_id, key);
-}
-
-async function deleteUserPreferenciesForUnderConstructionModal(user_id, project_id) {
-    const key = `plugin_document_set_display_under_construction_modal_${project_id}`;
 
     await deleteUserPreference(user_id, key);
 }
