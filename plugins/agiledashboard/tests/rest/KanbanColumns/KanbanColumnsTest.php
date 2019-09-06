@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2015 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -25,12 +25,23 @@ use Tuleap\AgileDashboard\REST\TestBase;
 /**
  * @group KanbanTests
  */
-class KanbanColumnsTest extends TestBase {
+class KanbanColumnsTest extends TestBase
+{
 
     public function testOPTIONSKanbanColumns()
     {
         $response = $this->getResponse($this->client->options('kanban_columns'));
         $this->assertEquals(array('OPTIONS', 'PATCH', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testOPTIONSKanbanColumnsWithRESTReadOnlyUser()
+    {
+        $response = $this->getResponse(
+            $this->client->options('kanban_columns'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testPATCHKanbanColumns()
@@ -53,5 +64,24 @@ class KanbanColumnsTest extends TestBase {
 
         $this->assertEquals($kanban['columns'][1]['limit'], 200);
         $this->assertEquals($kanban['columns'][1]['label'], "yummy");
+    }
+
+    public function testPATCHKanbanColumnsDeniedForRESTReadOnlyUserNotInvolvedInProject()
+    {
+        $url = 'kanban_columns/'. REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID.'?kanban_id='. REST_TestDataBuilder::KANBAN_ID;
+
+        $response = $this->getResponse(
+            $this->client->patch(
+                $url,
+                null,
+                json_encode(array(
+                    "wip_limit" => 200,
+                    "label"     => "yummy"
+                ))
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 }
