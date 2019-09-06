@@ -53,7 +53,6 @@
     "mustache/mustache": "dev-master-tuleap#v2.9.0-20190905",
     "nikic/fast-route": "^1.2",
     "paragonie/easydb": "^2",
-    "php-amqplib/php-amqplib": "^2.7",
     "php-http/client-common": "^2.0",
     "php-http/guzzle6-adapter": "^2.0",
     "php-http/message": "^1.7",
