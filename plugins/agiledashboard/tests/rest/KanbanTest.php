@@ -699,7 +699,7 @@ final class KanbanTest extends TestBase {
     /**
      * @depends testPATCHArchiveWithAddAndOrder
      */
-    public function testPOSTKanbanItemsInBacklog()
+    public function testPOSTKanbanItemsInBacklog(): void
     {
         $url = 'kanban_items/';
 
@@ -722,6 +722,30 @@ final class KanbanTest extends TestBase {
     }
 
     /**
+     * @depends testPATCHArchiveWithAddAndOrder
+     */
+    public function testPOSTKanbanItemsWithReadOnlyAdmin(): void
+    {
+        $url = 'kanban_items/';
+
+        $response = $this->getResponse(
+            $this->client->post(
+                $url,
+                null,
+                json_encode(array(
+                    "item" => array(
+                        "label" => "New item in backlog",
+                        "kanban_id" => REST_TestDataBuilder::KANBAN_ID
+                    )
+                ))
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals($response->getStatusCode(), 403);
+    }
+
+        /**
      * @depends testPOSTKanbanItemsInBacklog
      */
     public function testPOSTKanbanItemsInColmun()
@@ -747,12 +771,28 @@ final class KanbanTest extends TestBase {
         $this->assertEquals($item['in_column'], REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID);
     }
 
-    public function testGETKanbanItem()
+    public function testGETKanbanItem(): void
     {
         $response = $this->getResponse($this->client->get('kanban_items/' . $this->kanban_artifact_ids[1]));
-        $item = $response->json();
 
+        $this->assertGETKanbanItems($response);
+    }
+
+    public function testGETKanbanItemWithReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('kanban_items/' . $this->kanban_artifact_ids[1]),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertGETKanbanItems($response);
+    }
+
+    private function assertGETKanbanItems(Response $response): void
+    {
         $this->assertEquals($response->getStatusCode(), 200);
+
+        $item = $response->json();
         $this->assertEquals($item['label'], 'Do something');
         $this->assertEquals($item['in_column'], 'backlog');
     }
