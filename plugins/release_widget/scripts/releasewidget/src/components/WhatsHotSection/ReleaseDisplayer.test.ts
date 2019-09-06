@@ -19,20 +19,21 @@
 
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseDisplayer from "./ReleaseDisplayer.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
-import { ComponentOption, MilestoneData, StoreOptions } from "../../type";
+import { MilestoneData, StoreOptions } from "../../type";
+import { DefaultData } from "vue/types/options";
 
 let releaseData: MilestoneData;
-let component_options: ComponentOption;
+let component_options: ShallowMountOptions<ReleaseDisplayer>;
 
 describe("ReleaseDisplayer", () => {
     let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(store_options: StoreOptions) {
+    function getPersonalWidgetInstance(store_options: StoreOptions): Wrapper<ReleaseDisplayer> {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
@@ -64,7 +65,7 @@ describe("ReleaseDisplayer", () => {
             propsData: {
                 releaseData
             },
-            data() {
+            data(): DefaultData<ReleaseDisplayer> {
                 return {
                     is_open: false
                 };

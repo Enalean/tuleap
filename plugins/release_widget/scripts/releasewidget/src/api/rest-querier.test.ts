@@ -43,7 +43,7 @@ describe("getProject() -", () => {
         mockFetchSuccess(tlpGetMock, {
             headers: {
                 // X-PAGINATION-SIZE
-                get: () => 2
+                get: (): number => 2
             }
         });
 
@@ -145,7 +145,7 @@ describe("getProject() -", () => {
         mockFetchSuccess(tlpGetMock, {
             headers: {
                 // X-PAGINATION-SIZE
-                get: () => 2
+                get: (): number => 2
             }
         });
 

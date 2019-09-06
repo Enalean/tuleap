@@ -44,7 +44,7 @@ export default class TaskBoardHeaderCell extends Vue {
     @State
     readonly user_is_admin!: boolean;
 
-    get classes() {
+    get classes(): string {
         if (this.is_rgb_color) {
             return "";
         }
@@ -52,15 +52,15 @@ export default class TaskBoardHeaderCell extends Vue {
         return this.column.color ? "taskboard-header-" + this.column.color : "";
     }
 
-    get is_rgb_color() {
+    get is_rgb_color(): boolean {
         return this.column.color.charAt(0) === "#";
     }
 
-    get is_default_color() {
+    get is_default_color(): boolean {
         return this.column.color === DEFAULT_COLOR;
     }
 
-    get should_popover_be_displayed() {
+    get should_popover_be_displayed(): boolean {
         return this.user_is_admin && this.is_rgb_color && !this.is_default_color;
     }
 }

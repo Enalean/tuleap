@@ -21,6 +21,7 @@
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import french_translations from "./po/fr.po";
 import App from "./src/components/App.vue";

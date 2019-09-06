@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function mockFetchSuccess(
-    mocked_function: jest.SpyInstance<Promise<any>>,
+export function mockFetchSuccess<T>(
+    mocked_function: jest.SpyInstance<Promise<Response | Array<T>>>,
     options: object
 ): void;
-export function mockFetchError(
-    mocked_function: jest.SpyInstance<Promise<any>>,
+export function mockFetchError<T>(
+    mocked_function: jest.SpyInstance<Promise<Response | Array<T>>>,
     options: object
 ): void;

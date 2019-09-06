@@ -17,6 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+interface FetchWrapperError extends Error {
+    response: Response;
+}
 interface FetchWrapperParameter {
     [key: string]: string | number;
 }
@@ -28,11 +31,11 @@ interface RecursiveGetLimitParameters {
     limit?: number;
     offset?: number;
 }
-interface RecursiveGetInit {
+interface RecursiveGetInit<Y, T> {
     params?: FetchWrapperParameter & RecursiveGetLimitParameters;
-    getCollectionCallback?: (json: Array<any>) => Array<any>;
+    getCollectionCallback?: (json: Y) => Array<T>;
 }
-export function recursiveGet(url: string, init?: RecursiveGetInit): Promise<Array<any>>;
+export function recursiveGet<Y, T>(url: string, init?: RecursiveGetInit<Y, T>): Promise<Array<T>>;
 export function put(url: string, init?: RequestInit & { method?: "PUT" }): Promise<Response>;
 export function patch(url: string, init?: RequestInit & { method?: "PATCH" }): Promise<Response>;
 export function post(url: string, init?: RequestInit & { method?: "POST" }): Promise<Response>;

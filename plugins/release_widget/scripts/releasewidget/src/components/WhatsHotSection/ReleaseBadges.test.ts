@@ -17,17 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseBadges from "./ReleaseBadges.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
-import { ComponentOption, MilestoneData, StoreOptions } from "../../type";
+import { MilestoneData, StoreOptions } from "../../type";
 
-let releaseData: MilestoneData;
-const total_sprint: number = 10;
-const initial_effort: number = 10;
-const component_options: ComponentOption = {};
+let releaseData: MilestoneData & Required<Pick<MilestoneData, "planning">>;
+const total_sprint = 10;
+const initial_effort = 10;
+const component_options: ShallowMountOptions<ReleaseBadges> = {};
 
 const project_id = 102;
 
@@ -35,7 +35,7 @@ describe("ReleaseBadges", () => {
     let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(store_options: StoreOptions) {
+    function getPersonalWidgetInstance(store_options: StoreOptions): Wrapper<ReleaseBadges> {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
@@ -79,7 +79,7 @@ describe("ReleaseBadges", () => {
             "/plugins/agiledashboard/?group_id=" +
                 encodeURIComponent(project_id) +
                 "&planning_id=" +
-                encodeURIComponent(releaseData.planning!.id) +
+                encodeURIComponent(releaseData.planning.id) +
                 "&action=show&aid=" +
                 encodeURIComponent(releaseData.id) +
                 "&pane=planning-v2"

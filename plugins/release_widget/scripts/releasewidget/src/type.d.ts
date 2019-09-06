@@ -63,14 +63,6 @@ export interface MilestoneContent {
     };
 }
 
-export interface ComponentOption {
-    mocks?: Object;
-    propsData?: {
-        releaseData: MilestoneData;
-    };
-    data?(): Object;
-}
-
 export interface StoreOptions {
     state: {
         project_id?: number;
@@ -101,7 +93,7 @@ export interface Context {
 }
 
 interface ParametersRequestWithId {
-    project_id: number | null;
+    project_id: number;
     limit: number;
     offset: number;
 }

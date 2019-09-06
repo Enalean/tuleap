@@ -26,23 +26,54 @@ import {
     getTrackersProject as getTrackers
 } from "../api/rest-querier";
 
-import { Context, MilestoneContent, MilestoneData, TrackerNumberArtifacts } from "../type";
+import {
+    Context,
+    MilestoneContent,
+    MilestoneData,
+    TrackerNumberArtifacts,
+    TrackerProject
+} from "../type";
+import { FetchWrapperError } from "tlp";
 
 async function getNumberOfBacklogItems(context: Context): Promise<void> {
     context.commit("resetErrorMessage");
-    const total = await getBacklogs(context.state);
+    let total = 0;
+    const project_id = context.state.project_id;
+    if (project_id !== null) {
+        total = await getBacklogs({
+            project_id,
+            limit: context.state.limit,
+            offset: context.state.offset
+        });
+    }
     return context.commit("setNbBacklogItem", total);
 }
 
 async function getNumberOfUpcomingReleases(context: Context): Promise<void> {
     context.commit("resetErrorMessage");
-    const total = await getReleases(context.state);
+    let total = 0;
+    const project_id = context.state.project_id;
+    if (project_id !== null) {
+        total = await getReleases({
+            project_id,
+            limit: context.state.limit,
+            offset: context.state.offset
+        });
+    }
     return context.commit("setNbUpcomingReleases", total);
 }
 
 async function getCurrentMilestones(context: Context): Promise<void> {
     context.commit("resetErrorMessage");
-    const milestones = await getAllCurrentMilestones(context.state);
+    let milestones: MilestoneData[] = [];
+    const project_id = context.state.project_id;
+    if (project_id !== null) {
+        milestones = await getAllCurrentMilestones({
+            project_id,
+            limit: context.state.limit,
+            offset: context.state.offset
+        });
+    }
 
     const promises = milestones.map(
         async (milestone: MilestoneData): Promise<MilestoneData> => {
@@ -76,7 +107,15 @@ export async function getMilestones(context: Context): Promise<void> {
 
 async function getTrackersProject(context: Context): Promise<void> {
     context.commit("resetErrorMessage");
-    const trackers = await getTrackers(context.state);
+    let trackers: TrackerProject[] = [];
+    const project_id = context.state.project_id;
+    if (project_id !== null) {
+        trackers = await getTrackers({
+            project_id,
+            limit: context.state.limit,
+            offset: context.state.offset
+        });
+    }
     return context.commit("setTrackers", trackers);
 }
 
@@ -117,9 +156,13 @@ function getNumberArtifactsInTrackerOfAgileDashboard(
     milestone: MilestoneData,
     milestone_contents: MilestoneContent[]
 ): void {
+    if (!milestone.resources) {
+        return;
+    }
+
     const trackers_with_number_artifacts: TrackerNumberArtifacts[] = [];
 
-    milestone.resources!.content.accept.trackers.forEach(agiledashboard_tracker => {
+    milestone.resources.content.accept.trackers.forEach(agiledashboard_tracker => {
         const tracker_with_color = context.state.trackers.find(
             tracker => tracker.id === agiledashboard_tracker.id
         );
@@ -148,7 +191,10 @@ function getNumberArtifactsInTrackerOfAgileDashboard(
     milestone.number_of_artifact_by_trackers = [...trackers_with_number_artifacts];
 }
 
-export async function handleErrorMessage(context: Context, rest_error: any): Promise<void> {
+export async function handleErrorMessage(
+    context: Context,
+    rest_error: FetchWrapperError
+): Promise<void> {
     try {
         const { error } = await rest_error.response.json();
         context.commit("setErrorMessage", error.code + " " + error.message);

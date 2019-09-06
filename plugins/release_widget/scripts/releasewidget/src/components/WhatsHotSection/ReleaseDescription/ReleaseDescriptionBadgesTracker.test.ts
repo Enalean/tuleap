@@ -17,23 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import { ComponentOption, MilestoneData, StoreOptions } from "../../../type";
+import { MilestoneData, StoreOptions } from "../../../type";
 
 let releaseData: MilestoneData;
-const component_options: ComponentOption = {};
+const component_options: ShallowMountOptions<ReleaseDescriptionBadgesTracker> = {};
 const project_id = 102;
 
 describe("ReleaseDescriptionBadgesTracker", () => {
     let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(store_options: StoreOptions) {
+    function getPersonalWidgetInstance(
+        store_options: StoreOptions
+    ): Wrapper<ReleaseDescriptionBadgesTracker> {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };

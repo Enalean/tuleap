@@ -29,13 +29,13 @@ interface GettextTranslationsMap {
     [locale: string]: TranslatedStrings;
 }
 
-interface POFile {
+export interface POFile {
     readonly messages: TranslatedStrings;
 }
 
 export async function initVueGettext(
     load_translations_callback: (locale: string) => Promise<POFile>
-) {
+): Promise<void> {
     const translations: GettextTranslationsMap = {};
     const locale = document.body.dataset.userLocale;
     if (locale) {

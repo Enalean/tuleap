@@ -13,7 +13,8 @@ module.exports = {
         "plugin:you-dont-need-lodash-underscore/all",
         "plugin:vue/recommended",
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:import/typescript"
+        "plugin:import/typescript",
+        "plugin:@typescript-eslint/recommended"
     ],
     parser: "vue-eslint-parser",
     parserOptions: {
@@ -28,7 +29,6 @@ module.exports = {
         // Possible Errors
         "no-template-curly-in-string": "error",
         // Best Practices
-        "@typescript-eslint/no-unused-vars": "error",
         "no-unused-vars": "off",
         "array-callback-return": "warn",
         "consistent-return": "warn",
@@ -100,12 +100,61 @@ module.exports = {
         "vue/require-default-prop": "off",
         "vue/require-direct-export": "off",
         "vue/singleline-html-element-content-newline": "off", // Just annoying and would be better adressed with prettier
+        "vue/html-closing-bracket-newline": "off",
         "vue/v-bind-style": ["error", "longform"],
         "vue/v-on-style": ["error", "longform"],
+        // Typescript
+        "@typescript-eslint/camelcase": "off",
+        "@typescript-eslint/explicit-function-return-type": "error",
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/no-non-null-assertion": "error",
+        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/no-use-before-define": ["error", { functions: false, typedefs: false }],
         // import
         "import/no-extraneous-dependencies": "error"
     },
     overrides: [
+        {
+            // Disable some rules enabled by @typescript-eslint/recommended for existing JS files
+            files: ["*.js"],
+            rules: {
+                "@typescript-eslint/no-var-requires": "off",
+                "@typescript-eslint/explicit-function-return-type": "off",
+                "prefer-const": "off",
+                "no-var": "off",
+                "prefer-rest-params": "off",
+                "prefer-spread": "off",
+                "@typescript-eslint/no-array-constructor": "off",
+                "@typescript-eslint/no-use-before-define": "off",
+                "@typescript-eslint/no-this-alias": "off",
+                "@typescript-eslint/no-empty-function": "off"
+            }
+        },
+        {
+            // Disable some rules enabled by @typescript-eslint/recommended for existing Vue files
+            files: [
+                "plugins/document/**/*.vue",
+                "plugins/tracker/**/*.vue",
+                "plugins/timetracking/**/*.vue",
+                "plugins/svn/**/*.vue",
+                "plugins/pullrequest/**/*.vue",
+                "plugins/label/**/*.vue",
+                "plugins/git/**/*.vue",
+                "plugins/testmanagement/**/*.vue",
+                "plugins/baseline/**/*.vue",
+                "plugins/create_test_env/**/*.vue",
+                "plugins/crosstracker/**/*.vue",
+                "plugins/agiledashboard/www/js/permissions-per-group/**/*.vue",
+                "src/www/scripts/project/admin/services/**/*.vue",
+                "src/www/scripts/*/permissions-per-group/**/*.vue",
+                "src/www/scripts/vue-components/skeletons/SkeletonTable.vue"
+            ],
+            rules: {
+                "@typescript-eslint/explicit-function-return-type": "off",
+                "prefer-const": "off",
+                "no-var": "off"
+            }
+        },
         {
             files: ["*.spec.js"],
             env: {

@@ -68,9 +68,16 @@ export default class ReleaseHeaderRemainingDays extends Vue {
     formatDate = (date: number): number => (date && date > 0 ? date : 0);
 
     get are_dates_correctly_set(): boolean {
+        if (
+            this.releaseData.number_days_since_start === null ||
+            typeof this.releaseData.number_days_since_start === "undefined" ||
+            !this.releaseData.number_days_until_end
+        ) {
+            return false;
+        }
         return (
-            this.releaseData.number_days_since_start! >= 0 &&
-            this.releaseData.number_days_until_end! > 0
+            this.releaseData.number_days_since_start >= 0 &&
+            this.releaseData.number_days_until_end > 0
         );
     }
 
@@ -95,14 +102,8 @@ export default class ReleaseHeaderRemainingDays extends Vue {
         }
 
         return (
-            (
-                (this.releaseData.number_days_since_start! /
-                    (this.releaseData.number_days_since_start! +
-                        this.releaseData.number_days_until_end!)) *
-                100
-            )
-                .toFixed(2)
-                .toString() + "%"
+            ((days_since_start / (days_since_start + days_until_end)) * 100).toFixed(2).toString() +
+            "%"
         );
     }
 }

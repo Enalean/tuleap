@@ -17,23 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseDescription from "./ReleaseDescription.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import { ComponentOption, MilestoneData, StoreOptions } from "../../../type";
+import { MilestoneData, StoreOptions } from "../../../type";
 
-let releaseData: MilestoneData;
-const component_options: ComponentOption = {};
+let releaseData: MilestoneData & Required<Pick<MilestoneData, "planning">>;
+const component_options: ShallowMountOptions<ReleaseDescription> = {};
 const project_id = 102;
 
 describe("ReleaseDescription", () => {
     let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(store_options: StoreOptions) {
+    function getPersonalWidgetInstance(store_options: StoreOptions): Wrapper<ReleaseDescription> {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
@@ -77,7 +77,7 @@ describe("ReleaseDescription", () => {
             "/plugins/agiledashboard/?group_id=" +
                 encodeURIComponent(project_id) +
                 "&planning_id=" +
-                encodeURIComponent(releaseData.planning!.id) +
+                encodeURIComponent(releaseData.planning.id) +
                 "&action=show&aid=" +
                 encodeURIComponent(releaseData.id) +
                 "&pane=details"

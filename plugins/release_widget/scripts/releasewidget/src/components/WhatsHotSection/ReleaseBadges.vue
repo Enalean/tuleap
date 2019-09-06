@@ -19,7 +19,7 @@
 
 <template>
     <div class="project-release-infos-badges">
-        <a class="project-release-info-badge tlp-badge-primary toggle-sprints" v-bind:href="get_top_planning_link" data-test="planning-link">
+        <a class="project-release-info-badge tlp-badge-primary toggle-sprints" v-if="get_top_planning_link !== null" v-bind:href="get_top_planning_link" data-test="planning-link">
             <i class="fa fa-map-signs tlp-badge-icon"></i>
             <translate v-bind:translate-n="releaseData.total_sprint" translate-plural="%{ releaseData.total_sprint } sprints">
                 %{ releaseData.total_sprint } sprint
@@ -57,12 +57,15 @@ export default class ReleaseBadges extends Vue {
     @State
     readonly project_id!: number;
 
-    get get_top_planning_link(): string {
+    get get_top_planning_link(): string | null {
+        if (!this.releaseData.planning) {
+            return null;
+        }
         return (
             "/plugins/agiledashboard/?group_id=" +
             encodeURIComponent(this.project_id) +
             "&planning_id=" +
-            encodeURIComponent(this.releaseData.planning!.id) +
+            encodeURIComponent(this.releaseData.planning.id) +
             "&action=show&aid=" +
             encodeURIComponent(this.releaseData.id) +
             "&pane=planning-v2"
@@ -70,11 +73,17 @@ export default class ReleaseBadges extends Vue {
     }
 
     get capacity_exists(): boolean {
-        return this.releaseData.capacity! > 0;
+        if (!this.releaseData.capacity) {
+            return false;
+        }
+        return this.releaseData.capacity > 0;
     }
 
     get initial_effort_exist(): boolean {
-        return this.releaseData.initial_effort! > 0;
+        if (!this.releaseData.initial_effort) {
+            return false;
+        }
+        return this.releaseData.initial_effort > 0;
     }
 }
 </script>

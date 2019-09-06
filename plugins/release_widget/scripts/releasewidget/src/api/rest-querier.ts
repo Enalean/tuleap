@@ -59,12 +59,7 @@ async function getNbOfUpcomingReleases({
         period: "future"
     });
 
-    const response = await recursiveGetProjectMilestonesWithQuery(
-        project_id!,
-        query,
-        limit,
-        offset
-    );
+    const response = await recursiveGetProjectMilestonesWithQuery(project_id, query, limit, offset);
 
     return response.length;
 }
@@ -78,7 +73,7 @@ function getCurrentMilestones({
         period: "current"
     });
 
-    return recursiveGetProjectMilestonesWithQuery(project_id!, query, limit, offset);
+    return recursiveGetProjectMilestonesWithQuery(project_id, query, limit, offset);
 }
 
 async function getNbOfBacklogItems({
@@ -86,7 +81,7 @@ async function getNbOfBacklogItems({
     limit,
     offset
 }: ParametersRequestWithId): Promise<number> {
-    const response = await get(`/api/v1/projects/${encodeURIComponent(project_id!)}/backlog`, {
+    const response = await get(`/api/v1/projects/${encodeURIComponent(project_id)}/backlog`, {
         params: {
             limit,
             offset
@@ -130,7 +125,7 @@ function getTrackersProject({
     limit,
     offset
 }: ParametersRequestWithId): Promise<TrackerProject[]> {
-    return recursiveGet(`/api/v1/projects/${encodeURIComponent(project_id!)}/trackers`, {
+    return recursiveGet(`/api/v1/projects/${encodeURIComponent(project_id)}/trackers`, {
         params: {
             limit,
             offset
@@ -138,6 +133,10 @@ function getTrackersProject({
     });
 }
 
-function getPaginationSizeFromHeader(header: any): number {
-    return Number.parseInt(header.get("X-PAGINATION-SIZE"), 10);
+function getPaginationSizeFromHeader(header: Headers): number {
+    const pagination_size_header = header.get("X-PAGINATION-SIZE");
+    if (pagination_size_header === null) {
+        return 0;
+    }
+    return Number.parseInt(pagination_size_header, 10);
 }

@@ -51,7 +51,7 @@ export default class TaskBoardHeaderCell extends Vue {
     @State
     readonly admin_url!: string;
 
-    mounted() {
+    mounted(): void {
         const trigger = this.$refs.trigger;
         const container = this.$refs.container;
         if (trigger instanceof Element && container instanceof Element) {

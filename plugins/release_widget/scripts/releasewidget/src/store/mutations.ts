@@ -48,7 +48,7 @@ export default {
         state.current_milestones = milestones;
     },
 
-    setTrackers(state: State, trackers: TrackerProject[]) {
+    setTrackers(state: State, trackers: TrackerProject[]): void {
         state.trackers = trackers;
     }
 };

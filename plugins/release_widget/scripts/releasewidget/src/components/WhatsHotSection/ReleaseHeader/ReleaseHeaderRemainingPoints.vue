@@ -66,10 +66,13 @@ export default class ReleaseHeaderRemainingPoints extends Vue {
     formatPoints = (pts: number): number => (pts ? pts : 0);
 
     get are_all_effort_defined(): boolean {
+        if (!this.releaseData.remaining_effort || !this.releaseData.initial_effort) {
+            return false;
+        }
         return (
-            this.releaseData.remaining_effort! > 0 &&
-            this.releaseData.initial_effort! > 0 &&
-            this.releaseData.initial_effort! > this.releaseData.remaining_effort!
+            this.releaseData.remaining_effort > 0 &&
+            this.releaseData.initial_effort > 0 &&
+            this.releaseData.initial_effort > this.releaseData.remaining_effort
         );
     }
 
@@ -100,13 +103,8 @@ export default class ReleaseHeaderRemainingPoints extends Vue {
         }
 
         return (
-            (
-                ((this.releaseData.initial_effort! - this.releaseData.remaining_effort!) /
-                    this.releaseData.initial_effort!) *
-                100
-            )
-                .toFixed(2)
-                .toString() + "%"
+            (((initial_effort - remaining_effort) / initial_effort) * 100).toFixed(2).toString() +
+            "%"
         );
     }
 }
