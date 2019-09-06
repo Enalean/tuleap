@@ -329,7 +329,7 @@ class ExecutionsResource
      */
     public function patchId($id, PATCHExecutionRepresentation $body)
     {
-        $user               = UserManager::instance()->getCurrentUser();
+        $user               = $this->user_manager->getCurrentUser();
         $execution_artifact = $this->getArtifactById($user, $id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
@@ -380,7 +380,7 @@ class ExecutionsResource
      */
     protected function putId($id, $status, $time = 0, $results = '')
     {
-        $user     = UserManager::instance()->getCurrentUser();
+        $user     = $this->user_manager->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(

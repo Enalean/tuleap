@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All rights reserved
+ * Copyright (c) Enalean, 2014-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\TestManagement;
 
+use REST_TestDataBuilder;
 use TestManagementDataBuilder;
 
 require_once dirname(__FILE__).'/../bootstrap.php';
@@ -27,13 +28,46 @@ require_once dirname(__FILE__).'/../bootstrap.php';
 /**
  * @group TestManagementTest
  */
-class ExecutionsTest extends BaseTest {
-
-    public function testPutExecutions() {
+final class ExecutionsTest extends BaseTest
+{
+    public function testPutExecutionsWithRESTReadOnlyUser(): void
+    {
         $initial_value = 'failed';
         $new_value     = 'blocked';
 
-        $execution = $this->getLastExecutionForValid73Campaign();
+        $execution = $this->getLastExecutionForValid73Campaign(REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $this->assertEquals($initial_value, $execution['status']);
+
+        $response = $this->getResponse(
+            $this->client->put('testmanagement_executions/'. $execution['id'], null, json_encode(array(
+                'status' => $new_value,
+                'time'   => 0
+            ))),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(404, $response->getStatusCode());
+
+        $updated_execution = $this->getLastExecutionForValid73Campaign(REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $this->assertEquals($initial_value, $updated_execution['status']);
+
+        $response2 = $this->getResponse(
+            $this->client->put('testmanagement_executions/'. $execution['id'], null, json_encode(array(
+                'status' => $initial_value,
+                'time'   => 0
+            ))),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(404, $response2->getStatusCode());
+    }
+
+    public function testPutExecutions(): void
+    {
+        $initial_value = 'failed';
+        $new_value     = 'blocked';
+
+        $execution = $this->getLastExecutionForValid73Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
         $this->assertEquals($initial_value, $execution['status']);
 
         $response = $this->getResponse($this->client->put('testmanagement_executions/'. $execution['id'], null, json_encode(array(
@@ -43,7 +77,7 @@ class ExecutionsTest extends BaseTest {
 
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $updated_execution = $this->getLastExecutionForValid73Campaign();
+        $updated_execution = $this->getLastExecutionForValid73Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
         $this->assertEquals($new_value, $updated_execution['status']);
 
         $this->getResponse($this->client->put('testmanagement_executions/'. $execution['id'], null, json_encode(array(
@@ -52,14 +86,40 @@ class ExecutionsTest extends BaseTest {
         ))));
     }
 
-    public function testPatchIssueLinkExecutions()
+    public function testPatchIssueLinkExecutionsWithRESTReadOnlyUser()
     {
         $issue_tracker_id = $this->tracker_ids[$this->project_id][TestManagementDataBuilder::ISSUE_TRACKER_SHORTNAME];
 
         $issue    = $this->getLastArtifactFromTracker($issue_tracker_id);
         $issue_id = $issue['id'];
 
-        $execution = $this->getLastExecutionForValid73Campaign();
+        $execution = $this->getLastExecutionForValid73Campaign(REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $response  = $this->getResponse(
+            $this->client->patch(
+                'testmanagement_executions/'. $execution['id'] . '/issues',
+                null,
+                json_encode(array(
+                    'issue_id' => $issue_id,
+                    'comment'  => array(
+                        'body'     => 'test result',
+                        'format'   => 'html'
+                    )
+                ))
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    public function testPatchIssueLinkExecutions(): void
+    {
+        $issue_tracker_id = $this->tracker_ids[$this->project_id][TestManagementDataBuilder::ISSUE_TRACKER_SHORTNAME];
+
+        $issue    = $this->getLastArtifactFromTracker($issue_tracker_id);
+        $issue_id = $issue['id'];
+
+        $execution = $this->getLastExecutionForValid73Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
         $response  = $this->getResponse($this->client->patch(
             'testmanagement_executions/'. $execution['id'] . '/issues',
             null,
@@ -83,12 +143,12 @@ class ExecutionsTest extends BaseTest {
         $this->assertEquals('test result', $comments[0]['last_comment']['body']);
     }
 
-    private function getLastExecutionForValid73Campaign()
+    private function getLastExecutionForValid73Campaign(string $user_name)
     {
         $campaign = $this->getValid73Campaign();
 
         $all_executions_request  = $this->client->get('testmanagement_campaigns/'. $campaign['id'] . '/testmanagement_executions');
-        $all_executions_response = $this->getResponse($all_executions_request);
+        $all_executions_response = $this->getResponse($all_executions_request, $user_name);
 
         $executions     = $all_executions_response->json();
         $last_execution = end($executions);
