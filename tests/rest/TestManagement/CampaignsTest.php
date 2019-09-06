@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2014 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,18 @@
 
 namespace Tuleap\TestManagement;
 
+use REST_TestDataBuilder;
+
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 /**
  * @group TestManagementTest
  */
-class CampaignsTest extends BaseTest {
+final class CampaignsTest extends BaseTest
+{
 
-    public function testGetCampaign() {
+    public function testGetCampaign(): void
+    {
         $expected_campaign = $this->getValid73Campaign();
 
         $response  = $this->getResponse($this->client->get('testmanagement_campaigns/'. $expected_campaign['id']));
@@ -36,11 +40,44 @@ class CampaignsTest extends BaseTest {
         $this->assertEquals($expected_campaign, $campaign);
     }
 
-    public function testGetExecutions() {
+    public function testGetCampaignWithRESTReadOnlyUser(): void
+    {
+        $expected_campaign = $this->getValid73Campaign();
+
+        $response  = $this->getResponse(
+            $this->client->get('testmanagement_campaigns/'. $expected_campaign['id']),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $campaign = $response->json();
+
+        $this->assertEquals($expected_campaign, $campaign);
+    }
+
+    public function testGetExecutions(): void
+    {
         $campaign = $this->getValid73Campaign();
 
         $all_executions_request  = $this->client->get('testmanagement_campaigns/'. $campaign['id'] .'/testmanagement_executions');
         $all_executions_response = $this->getResponse($all_executions_request);
+
+        $executions = $all_executions_response->json();
+        $this->assertCount(3, $executions);
+        $this->assertExecutionsContains($executions, 'Import default template');
+        $this->assertExecutionsContains($executions, 'Create a repository');
+        $this->assertExecutionsContains($executions, 'Delete a repository');
+    }
+
+    public function testGetExecutionsWithRESTReadOnlyUser(): void
+    {
+        $campaign = $this->getValid73Campaign();
+
+        $all_executions_request  = $this->client->get('testmanagement_campaigns/'. $campaign['id'] .'/testmanagement_executions');
+
+        $all_executions_response = $this->getResponse(
+            $all_executions_request,
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
 
         $executions = $all_executions_response->json();
         $this->assertCount(3, $executions);
@@ -57,6 +94,26 @@ class CampaignsTest extends BaseTest {
             }
         }
         $this->fail();
+    }
+
+    public function testPatchCampaignWithRESTReadOnlyUser(): void
+    {
+        $campaign = $this->getValid73Campaign();
+
+        $response = $this->getResponse(
+            $this->client->patch(
+                'testmanagement_campaigns/' . $campaign['id'],
+                null,
+                json_encode(
+                    [
+                        'label' => 'Tuleap 9.18'
+                    ]
+                )
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testPatchCampaignLabel()

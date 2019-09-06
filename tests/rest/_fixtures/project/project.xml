@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project
-    unix-name="test-mgmt" full-name="TestManagement" description="For test" access="public">
+    unix-name="test-mgmt" full-name="TestManagement" description="For test" access="private">
     <long-description>A test project</long-description>
     <services>
         <service shortname="plugin_tracker" enabled="true" />
