@@ -27,6 +27,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use TuleapCfg\Command\Configure\ConfigureApache;
 
 class ConfigureCommand extends Command
 {
@@ -54,14 +55,12 @@ class ConfigureCommand extends Command
     {
         if (! file_exists($this->base_directory.'/etc/httpd/conf/httpd.conf') && ! file_exists($this->base_directory . '/etc/httpd/conf.d/ssl.conf')) {
             $output->writeln('Nothing to do for Apache');
-            return;
+            return 0;
         }
 
         try {
-            $configured = $this->configureHTTPDConf($this->base_directory.'/etc/httpd/conf/httpd.conf');
-            $configured |= $this->configureSSLConf($this->base_directory . '/etc/httpd/conf.d/ssl.conf');
-
-            if ($configured) {
+            $configure_apache = new ConfigureApache($this->base_directory);
+            if ($configure_apache->configure()) {
                 $output->writeln('Apache has been configured');
             } else {
                 $output->writeln('Apache is already configured');
@@ -72,63 +71,5 @@ class ConfigureCommand extends Command
             $error_output->writeln($exception->getMessage());
             return 1;
         }
-    }
-
-    private function configureHTTPDConf(string $file_path) : bool
-    {
-        if (! file_exists($file_path)) {
-            return false;
-        }
-        if (! is_writable($file_path)) {
-            throw new PermissionsDeniedException($file_path.' is not writable by current user (uid '.posix_getuid().')');
-        }
-
-        $content = file_get_contents($file_path);
-        $new_content = preg_replace(
-            [
-                '/^User.*$/m',
-                '/^Group.*$/m',
-                '/^Listen 80$/m',
-            ],
-            [
-                'User codendiadm',
-                'Group codendiadm',
-                'Listen 127.0.0.1:8080',
-            ],
-            $content
-        );
-        if ($content !== $new_content) {
-            file_put_contents($file_path, $new_content);
-            return true;
-        }
-        return false;
-    }
-
-    private function configureSSLConf(string $file_path) : bool
-    {
-        if (! file_exists($file_path)) {
-            return false;
-        }
-        if (! is_writable($file_path)) {
-            throw new PermissionsDeniedException($file_path.' is not writable by current user (uid '.posix_getuid().')');
-        }
-
-        $content = file_get_contents($file_path);
-        $new_content = preg_replace(
-            [
-                '/^Listen (.*)$/m',
-                '/^SSLEngine .*/m',
-            ],
-            [
-                '#Listen $1',
-                'SSLEngine off',
-            ],
-            $content
-        );
-        if ($content !== $new_content) {
-            file_put_contents($file_path, $new_content);
-            return true;
-        }
-        return false;
     }
 }

@@ -25,12 +25,31 @@ namespace TuleapCfg\Command;
 
 use SplFileInfo;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
+use TuleapCfg\Command\Configure\ConfigureApache;
 
 class DockerAioRunCommand extends Command
 {
+    private const PERSISTENT_DATA = [
+        '/etc/pki/tls/private/localhost.key.pem',
+        '/etc/pki/tls/certs/localhost.cert.pem',
+        '/etc/tuleap',
+        '/etc/ssh/ssh_host_ecdsa_key',
+        '/etc/ssh/ssh_host_ed25519_key',
+        '/etc/ssh/ssh_host_ecdsa_key.pub',
+        '/etc/ssh/ssh_host_ed25519_key.pub',
+        '/etc/ssh/ssh_host_rsa_key',
+        '/etc/ssh/ssh_host_rsa_key.pub',
+        '/root/.tuleap_passwd',
+        '/var/lib/gitolite',
+        '/var/lib/tuleap',
+        '/var/opt/rh/rh-mysql57/lib/mysql',
+    ];
+
     /**
      * @var ProcessFactory
      */
@@ -52,12 +71,34 @@ class DockerAioRunCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->generateSSHServerKeys();
-        $this->installTuleap($output);
-        $this->setupRsyslog($output);
-        $this->setupSupervisord($output);
-        $this->setupPostfix($output);
-        $this->runTuleap($output);
+        try {
+            $this->generateSSHServerKeys();
+            if (! is_dir('/data/var/lib/tuleap')) {
+                $this->installTuleap($output);
+                $this->movePersistentData($output);
+                $this->restorePersistentData($output);
+            } else {
+                $this->restorePersistentData($output);
+                $this->deployMysqldConfig();
+                $this->deployCrondConfig();
+                $this->regenerateConfigurations($output);
+                $mysql_daemon = $this->startMysqlDaemon();
+                $this->runForgeUpgrade($output);
+                $this->queueSystemCheck($output);
+                $this->shutdownMysql($output, $mysql_daemon);
+            }
+            $this->setupRsyslog($output);
+            $this->setupSupervisord($output);
+            $this->setupPostfix($output);
+            $this->runTuleap($output);
+        } catch (\Exception $exception) {
+            $output->writeln(sprintf('<error>%s</error>', OutputFormatter::escape($exception->getMessage())));
+            $output->writeln("Something went wrong, here is a shell to debug: ");
+            $return = pcntl_exec('/bin/bash');
+            if ($return !== null) {
+                throw new \RuntimeException('Exec of /usr/bin/supervisord failed');
+            }
+        }
     }
 
     private function generateSSHServerKeys()
@@ -80,18 +121,31 @@ class DockerAioRunCommand extends Command
     private function initializeMysqlDataStore(OutputInterface $output): Process
     {
         $output->writeln("Initialize Mysql data store");
-        unlink('/etc/opt/rh/rh-mysql57/my.cnf.d/rh-mysql57-mysql-server.cnf');
-        copy(__DIR__.'/../../../tools/docker/tuleap-aio-c7/rh-mysql57-mysql-server.cnf', '/etc/opt/rh/rh-mysql57/my.cnf.d/rh-mysql57-mysql-server.cnf');
+        $this->deployMysqldConfig();
         $this->process_factory->getProcess(['sudo', '-u', 'mysql', '/usr/bin/scl', 'enable', 'rh-mysql57', '--', '/opt/rh/rh-mysql57/root/usr/libexec/mysql-check-socket'])->mustRun();
         $this->process_factory->getProcess(['sudo', '-u', 'mysql', '/usr/bin/scl', 'enable', 'rh-mysql57', '--', '/opt/rh/rh-mysql57/root/usr/libexec/mysqld', '--initialize-insecure', '--datadir=/var/opt/rh/rh-mysql57/lib/mysql', '--user=mysql'])->mustRun();
         file_put_contents('/var/opt/rh/rh-mysql57/lib/mysql/mysql_upgrade_info', '5.7.24');
         chown('/var/opt/rh/rh-mysql57/lib/mysql/mysql_upgrade_info', 'mysql');
         chgrp('/var/opt/rh/rh-mysql57/lib/mysql/mysql_upgrade_info', 'mysql');
+
+        $mysqld = $this->startMysqlDaemon();
+
+        $this->process_factory->getProcess(['scl', 'enable', 'rh-mysql57', '--', 'mysqladmin', '-uroot', 'password', getenv('MYSQL_ROOT_PASSWORD')])->mustRun();
+        return $mysqld;
+    }
+
+    private function startMysqlDaemon(): Process
+    {
         $mysqld = $this->process_factory->getProcess(['sudo', '-u', 'mysql', '/opt/rh/rh-mysql57/root/usr/libexec/mysqld-scl-helper', 'enable', 'rh-mysql57', '--', '/opt/rh/rh-mysql57/root/usr/libexec/mysqld', '--basedir=/opt/rh/rh-mysql57/root/usr', '--pid-file=/var/run/rh-mysql57-mysqld/mysqld.pid']);
         $mysqld->start();
         sleep(1);
-        $this->process_factory->getProcess(['scl', 'enable', 'rh-mysql57', '--', 'mysqladmin', '-uroot', 'password', getenv('MYSQL_ROOT_PASSWORD')])->mustRun();
         return $mysqld;
+    }
+
+    private function deployMysqldConfig()
+    {
+        unlink('/etc/opt/rh/rh-mysql57/my.cnf.d/rh-mysql57-mysql-server.cnf');
+        copy(__DIR__.'/../../../tools/docker/tuleap-aio-c7/rh-mysql57-mysql-server.cnf', '/etc/opt/rh/rh-mysql57/my.cnf.d/rh-mysql57-mysql-server.cnf');
     }
 
     private function startSSHDaemon(OutputInterface $output): Process
@@ -105,7 +159,7 @@ class DockerAioRunCommand extends Command
     private function setupTuleap(OutputInterface $output)
     {
         $output->writeln("Install Tuleap");
-        $this->process_factory->getProcess(['/usr/share/tuleap/tools/setup.el7.sh', '--assumeyes', '--configure', '--server-name=tuleap.local', '--mysql-server=localhost', '--mysql-password='.getenv('MYSQL_ROOT_PASSWORD')])->mustRun();
+        $this->process_factory->getProcess(['/bin/bash', '+x', '/usr/share/tuleap/tools/setup.el7.sh', '--assumeyes', '--configure', '--server-name=tuleap.local', '--mysql-server=localhost', '--mysql-password='.getenv('MYSQL_ROOT_PASSWORD')])->mustRun();
     }
 
     private function shutdownMysql(OutputInterface $output, Process $mysql_daemon): void
@@ -163,5 +217,69 @@ class DockerAioRunCommand extends Command
         $content = file_get_contents($file_path);
         $new_content = preg_replace('/^inet_interfaces = localhost$/m', 'inet_interfaces = all', $content);
         file_put_contents($file_path, $new_content);
+    }
+
+    private function movePersistentData(OutputInterface $output): void
+    {
+        if (! is_dir('/data') && ! mkdir('/data', 0755) && ! is_dir('/data')) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', '/data'));
+        }
+        foreach (self::PERSISTENT_DATA as $path) {
+            $output->writeln("Move $path to persistent storage");
+            $this->createBaseDir($path);
+            $this->process_factory->getProcess(['/bin/mv', $path, '/data'.$path])->mustRun();
+        }
+    }
+
+    private function createBaseDir(string $path): void
+    {
+        $dirname = '/data'.dirname($path);
+        if (! is_dir($dirname) && ! mkdir($dirname, 0755, true) && ! is_dir($dirname)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $dirname));
+        }
+    }
+
+    private function restorePersistentData(OutputInterface $output)
+    {
+        foreach (self::PERSISTENT_DATA as $path) {
+            if (is_link($path)) {
+                continue;
+            }
+            if (is_dir($path)) {
+                $this->process_factory->getProcess(['/bin/rm', '-rf', $path])->mustRun();
+            }
+            if (is_file($path)) {
+                unlink($path);
+            }
+            $output->writeln("Create link to persistent storage for $path");
+            symlink('/data'.$path, $path);
+        }
+    }
+
+    private function regenerateConfigurations(OutputInterface $output)
+    {
+        $output->writeln("Regenerate configurations for nginx, fpm");
+        $this->process_factory->getProcess([__DIR__.'/../../../tools/utils/php73/run.php', '--module=nginx,fpm'])->mustRun();
+
+        $output->writeln("Regenerate configuration for apache");
+        $configure_apache = new ConfigureApache('/');
+        $configure_apache->configure();
+    }
+
+    private function deployCrondConfig()
+    {
+        copy(__DIR__.'/../../utils/cron.d/codendi', '/etc/cron.d/tuleap');
+    }
+
+    private function runForgeUpgrade(OutputInterface $output)
+    {
+        $output->writeln('<info>Run forgeupgrade</info>');
+        $this->process_factory->getProcess(['/usr/lib/forgeupgrade/bin/forgeupgrade', '--config=/etc/tuleap/forgeupgrade/config.ini', 'update'])->setTimeout(0)->mustRun();
+    }
+
+    private function queueSystemCheck(OutputInterface $output)
+    {
+        $output->writeln('<info>Queue a system check</info>');
+        $this->process_factory->getProcess(['/usr/bin/tuleap', 'queue-system-check'])->mustRun();
     }
 }
