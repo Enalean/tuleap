@@ -114,26 +114,26 @@ class DocmanLinkVersionCreator
                 ];
 
                 $this->item_factory->updateLinkWithMetadata($item, $new_link_version_row);
+
+                $version = $this->docman_link_version_factory->getLatestVersion($item);
+
+                $this->updator->updateCommonData(
+                    $item,
+                    $representation->should_lock_file,
+                    $current_user,
+                    $representation->approval_table_action,
+                    $version
+                );
+
+                $last_version = $this->version_factory->getCurrentVersionForItem($item);
+
+                $event_data = [
+                    'item'    => $item,
+                    'version' => $last_version,
+                ];
+                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_LINKVERSION, $event_data);
             }
         );
-
-        $version = $this->docman_link_version_factory->getLatestVersion($item);
-
-        $this->updator->updateCommonData(
-            $item,
-            $representation->should_lock_file,
-            $current_user,
-            $representation->approval_table_action,
-            $version
-        );
-
-        $last_version = $this->version_factory->getCurrentVersionForItem($item);
-
-        $event_data = [
-            'item'    => $item,
-            'version' => $last_version,
-        ];
-        $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_LINKVERSION, $event_data);
     }
 
     public function createLinkVersionFromEmpty(

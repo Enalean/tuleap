@@ -138,10 +138,6 @@ class DocmanLinkVersionCreatorTest extends TestCase
         $obsolescence_date           = $date->modify('+1 day');
         $obsolescence_date_formatted = $obsolescence_date->format('Y-m-d');
 
-        $this->docman_link_version_factory->shouldReceive('getLatestVersion')->once();
-        $this->version_factory->shouldReceive('getCurrentVersionForItem')->once();
-        $this->event_manager->shouldReceive('processEvent')->once();
-
         $representation                            = new DocmanLinkPATCHRepresentation();
         $representation->change_log                = 'changelog';
         $representation->version_title             = 'version title';
@@ -152,7 +148,6 @@ class DocmanLinkVersionCreatorTest extends TestCase
         $representation->status                    = 'rejected';
         $representation->obsolescence_date         = $obsolescence_date_formatted;
 
-        $this->updator->shouldReceive('updateCommonData')->once();
         $this->transaction_executor->shouldReceive('execute')->once();
 
         $this->version_creator->createLinkVersion(
