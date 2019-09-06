@@ -19,7 +19,7 @@
 
 <template>
     <div class="document-switch-to-docman">
-        <a v-bind:href="redirect_url" v-on:click.prevent="redirectUser()" class="document-switch-to-docman-link">
+        <a v-bind:href="redirect_url" v-on:click.prevent="redirectUser()" class="document-switch-to-docman-link" data-test="document-switch-to-old-ui">
             <i class="fa fa-random document-switch-to-docman-icon"></i><!--
             --><translate>Switch to old user interface</translate>
         </a>
@@ -28,28 +28,36 @@
 
 <script>
 import { mapState } from "vuex";
+import { redirectToUrl } from "../../helpers/location-helper.js";
 
 export default {
     name: "SwitchToOldUI",
     computed: {
         ...mapState(["project_id", "current_folder"]),
         redirect_url() {
-            if (this.$route.params.item_id) {
+            const encoded_project_id = encodeURIComponent(this.project_id);
+            if (this.$route.name === "folder") {
                 return (
                     "/plugins/docman/?group_id=" +
-                    this.project_id +
+                    encoded_project_id +
                     "&action=show&id=" +
-                    parseInt(this.$route.params.item_id, 10)
+                    encodeURIComponent(parseInt(this.$route.params.item_id, 10))
+                );
+            } else if (this.$route.name === "preview" && this.current_folder) {
+                return (
+                    "/plugins/docman/?group_id=" +
+                    encoded_project_id +
+                    "&action=show&id=" +
+                    encodeURIComponent(parseInt(this.current_folder.id, 10))
                 );
             }
-
-            return "/plugins/docman/?group_id=" + this.project_id;
+            return "/plugins/docman/?group_id=" + encoded_project_id;
         }
     },
     methods: {
         async redirectUser() {
             await this.$store.dispatch("setUserPreferenciesForUI");
-            window.location = this.redirect_url;
+            redirectToUrl(this.redirect_url);
         }
     }
 };
