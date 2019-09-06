@@ -24,7 +24,7 @@ import ng_sanitize from "angular-sanitize";
 import "angular-gettext";
 import "angular-filter";
 import "ng-showdown";
-import "angular-ui-bootstrap-templates";
+import "../../vendor/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js";
 import translations from "../../po/fr.po";
 
 import AppController from "./app-controller.js";

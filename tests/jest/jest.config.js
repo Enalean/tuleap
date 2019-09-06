@@ -26,6 +26,8 @@ module.exports = {
         "^.+\\.js$": path.resolve(__dirname, "./babel-jest-process.js")
     },
     moduleNameMapper: {
+        "^.+\\.po$": "identity-obj-proxy",
+        "^.+\\.tpl\\.html$": "identity-obj-proxy",
         "tlp-fetch-mocks-helper-jest": path.resolve(
             __dirname,
             "../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js"

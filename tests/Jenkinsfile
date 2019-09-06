@@ -70,9 +70,6 @@ pipeline {
                         stage('Karma Tracker') {
                             steps { script { actions.runKarmaTests('tracker', 'plugins/tracker/www/scripts') } }
                         }
-                        stage('Karma FRS plugin') {
-                            steps { script { actions.runKarmaTests('frs', 'plugins/frs/www/js/angular') } }
-                        }
                         stage('Karma PullRequest plugin') {
                             steps { script { actions.runKarmaTests('pullrequest', 'plugins/pullrequest/www/scripts') } }
                         }
