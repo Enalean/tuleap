@@ -59,6 +59,7 @@ import "./components/Folder/FolderHeaderAction.spec.js";
 import "./components/Folder/FolderContent.spec.js";
 import "./components/Folder/ChildFolder.spec.js";
 import "./components/Folder/RootFolder.spec.js";
+import "./components/Folder/SwitchToOldUI.spec.js";
 
 import "./components/Folder/DragNDrop/CurrentFolderDropZone.spec.js";
 import "./components/Folder/DragNDrop/DragNDropHandler.spec.js";
