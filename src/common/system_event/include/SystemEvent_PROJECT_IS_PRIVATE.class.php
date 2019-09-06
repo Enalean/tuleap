@@ -169,7 +169,7 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setTo($user->getEmail());
         $mail->setSubject($purifier->purify($title, CODENDI_PURIFIER_STRIP_HTML));
-        $mail->setBodyHtml($body_text);
+        $mail->setBodyHtml($body);
         $mail->setBodyText($body_text);
 
         $mail->send();
