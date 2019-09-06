@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,16 +15,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-export interface ColumnDefinition {
-    id: number;
-    label: string;
-    color: string;
-}
+import Vue from "vue";
+import Vuex, { Store } from "vuex";
+import { State } from "../type";
 
-export interface State {
-    user_is_admin: boolean;
-    admin_url: string;
+Vue.use(Vuex);
+
+export function createStore(initial_state: State): Store<State> {
+    return new Vuex.Store({
+        state: initial_state
+    });
 }

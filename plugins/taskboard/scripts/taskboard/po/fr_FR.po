@@ -35,6 +35,17 @@ msgstr ""
 "taskboard@enalean.com\">feedback-taskboard@enalean.com</a> ou joignez-nous "
 "sur <a href=\"https://chat.tuleap.org\">chat.tuleap.org</a>."
 
+msgid "Incompatible usage of color"
+msgstr "Incompatibilité dans le choix de la couleur"
+
+msgid "Only colors from the new palette can be used."
+msgstr "Seules les couleurs de la nouvelle palette peuvent être utilisées."
+
+msgid "Please <a href=\"%s\">adjust configuration</a> to use a suitable color."
+msgstr ""
+"Merci <a href=\"%s\">d'ajuster la configuration</a> afin d'utiliser une "
+"bonne couleur."
+
 msgid ""
 "Thanks for your interest in Tuleap next features. You're about to test a new "
 "feature that is under construction. All the buttons, links, menus, … might "
@@ -45,6 +56,11 @@ msgstr ""
 "construction. Les boutons, liens, menus, … peuvent ne pas marcher. Il se "
 "peut également que l'interface soit cassée sur certains vieux navigateurs "
 "comme IE11."
+
+msgid "The column is configured to use a color (%s) from the legacy palette."
+msgstr ""
+"La colonne est configurée pour utiliser une couleur (%s) qui fait partie de "
+"l'ancienne palette."
 
 msgid "This feature is under construction"
 msgstr "Cette fonctionnalité est en cours de construction"

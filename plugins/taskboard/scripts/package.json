@@ -6,13 +6,17 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "sprintf-js": "^1.1.2",
     "vue": "^2.6.10",
     "vue-dompurify-html": "^2.0.0",
-    "vue-gettext": "^2.1.5"
+    "vue-gettext": "^2.1.5",
+    "vuex": "^3.1.1"
   },
   "devDependencies": {
+    "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.0.0-beta.27",
-    "vue-property-decorator": "^8.2.1"
+    "vue-property-decorator": "^8.2.1",
+    "vuex-class": "^0.3.2"
   },
   "config": {
     "bin": "../../../node_modules/.bin/"

@@ -56,8 +56,9 @@ class ColumnPresenterCollectionRetrieverTest extends TestCase
             ->with(101)
             ->once()
             ->andReturn([
-                ['id' => 2, 'label' => 'To do', 'tlp_color_name' => 'fiesta_red'],
-                ['id' => 4, 'label' => 'Done', 'tlp_color_name' => '']
+                ['id' => 2, 'label' => 'To do', 'bg_red' => null, 'bg_green' => null, 'bg_blue' => null, 'tlp_color_name' => 'fiesta_red'],
+                ['id' => 4, 'label' => 'On going', 'bg_red' => null, 'bg_green' => null, 'bg_blue' => null, 'tlp_color_name' => ''],
+                ['id' => 6, 'label' => 'Done', 'bg_red' => 135, 'bg_green' => 219, 'bg_blue' => 239, 'tlp_color_name' => '']
             ]);
 
         $tracker = Mockery::mock(Tracker::class);
@@ -66,10 +67,12 @@ class ColumnPresenterCollectionRetrieverTest extends TestCase
         $retriever = new ColumnPresenterCollectionRetriever($dao);
         $collection = $retriever->getColumns($tracker);
 
-        $this->assertCount(2, $collection);
+        $this->assertCount(3, $collection);
         $this->assertEquals('To do', $collection[0]->label);
         $this->assertEquals('fiesta_red', $collection[0]->color);
-        $this->assertEquals('Done', $collection[1]->label);
+        $this->assertEquals('On going', $collection[1]->label);
         $this->assertEquals('', $collection[1]->color);
+        $this->assertEquals('Done', $collection[2]->label);
+        $this->assertEquals('#87DBEF', $collection[2]->color);
     }
 }

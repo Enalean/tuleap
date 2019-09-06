@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WrongColorPopover initiates a popover to inform user that the chosen color is wrong 1`] = `
+<div>
+  <span
+    class="taskboard-header-wrong-color"
+    data-placement="bottom"
+    data-trigger="click"
+  >
+    <i
+      class="fa fa-warning"
+    />
+  </span>
+   
+  <section
+    class="tlp-popover tlp-popover-warning taskboard-header-wrong-color-popover"
+  >
+    <div
+      class="tlp-popover-arrow"
+    />
+     
+    <div
+      class="tlp-popover-header"
+    >
+      <translate-stub
+        class="tlp-popover-title"
+        tag="h1"
+      >
+        Incompatible usage of color
+      </translate-stub>
+    </div>
+     
+    <div
+      class="tlp-popover-body taskboard-header-wrong-color-body"
+    >
+      <p>
+        The column is configured to use a color (
+        <span
+          class="taskboard-header-wrong-color-preview"
+        >
+          <span
+            class="taskboard-header-wrong-color-preview-color"
+            style="background: #87DBEF;"
+          />
+          
+                
+          <code>
+            #87DBEF
+          </code>
+        </span>
+        ) from the legacy palette.
+      </p>
+       
+      <p
+        data-current-language="en_US"
+        data-msgid="Only colors from the new palette can be used."
+      >
+        Only colors from the new palette can be used.
+      </p>
+       
+      <p>
+        Please 
+        <a
+          href="/path/to/admin"
+        >
+          adjust configuration
+        </a>
+         to use a suitable color.
+      </p>
+    </div>
+  </section>
+</div>
+`;
