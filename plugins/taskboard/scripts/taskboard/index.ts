@@ -47,6 +47,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     new AppComponent({
         store: createStore({ user_is_admin, admin_url }),
-        propsData: { user_is_admin, admin_url, columns }
+        propsData: { columns }
     }).$mount(vue_mount_point);
 });

@@ -19,11 +19,12 @@
 
 import { shallowMount } from "@vue/test-utils";
 import BoardWithoutAnyColumnsError from "./BoardWithoutAnyColumnsError.vue";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 
 describe("BoardWithoutAnyColumnsError", () => {
     it("is displays misconfiguration error for regular user", () => {
         const wrapper = shallowMount(BoardWithoutAnyColumnsError, {
-            propsData: { user_is_admin: false, admin_url: "/path/to/admin" }
+            mocks: { $store: createStoreMock({ state: { user_is_admin: false } }) }
         });
         expect(wrapper.element).toMatchInlineSnapshot(
             `<board-without-any-columns-error-for-users-stub />`
@@ -31,12 +32,10 @@ describe("BoardWithoutAnyColumnsError", () => {
     });
     it("is displays misconfiguration error for admin user", () => {
         const wrapper = shallowMount(BoardWithoutAnyColumnsError, {
-            propsData: { user_is_admin: true, admin_url: "/path/to/admin" }
+            mocks: { $store: createStoreMock({ state: { user_is_admin: true } }) }
         });
-        expect(wrapper.element).toMatchInlineSnapshot(`
-            <board-without-any-columns-error-for-admin-stub
-              admin_url="/path/to/admin"
-            />
-        `);
+        expect(wrapper.element).toMatchInlineSnapshot(
+            `<board-without-any-columns-error-for-admin-stub />`
+        );
     });
 });

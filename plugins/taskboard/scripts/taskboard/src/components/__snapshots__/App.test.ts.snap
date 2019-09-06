@@ -4,10 +4,7 @@ exports[`App displays misconfiguration error for admin user 1`] = `
 <div>
   <under-construction-modal-stub />
    
-  <board-without-any-columns-error-stub
-    admin_url="/path/to/admin"
-    user_is_admin="true"
-  />
+  <board-without-any-columns-error-stub />
 </div>
 `;
 
@@ -15,9 +12,7 @@ exports[`App displays misconfiguration error for regular user 1`] = `
 <div>
   <under-construction-modal-stub />
    
-  <board-without-any-columns-error-stub
-    admin_url="/path/to/admin"
-  />
+  <board-without-any-columns-error-stub />
 </div>
 `;
 
