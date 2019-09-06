@@ -59,6 +59,32 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
     }
 
     /**
+     * @depends testGetRootIdWithUserRESTReadOnlyAdmin
+     */
+    public function testGetDocumentItemsForUserRESTReadOnlyAdmin(int $root_id): array
+    {
+        $root_folder = $this->loadRootFolderContent($root_id, REST_TestDataBuilder::TEST_BOT_USER_NAME);
+
+        $items         = $this->loadFolderContent($root_id, 'Wiki', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $folder        = $this->findItemByTitle($root_folder, 'Wiki');
+        $items_id      = $folder['id'];
+        $deleted_items = $this->loadFolderContent($items_id, 'DELETE Wiki', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $lock_items    = $this->loadFolderContent($items_id, 'LOCK Wiki', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $post_items    = $this->loadFolderContent($items_id, 'POST Wiki', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $put_items     = $this->loadFolderContent($items_id, 'PUT HM Wiki', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+
+        return array_merge(
+            $root_folder,
+            $folder,
+            $items,
+            $deleted_items,
+            $lock_items,
+            $post_items,
+            $put_items
+        );
+    }
+
+    /**
      * @depends testGetRootId
      */
     public function testMoveWikiDocument(int $root_id): void
@@ -87,6 +113,16 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         );
         $this->assertEquals(201, $response_folder_creation->getStatusCode());
         $folder_id = $response_folder_creation->json()['id'];
+
+        $move_response_with_rest_read_only_user = $this->getResponse(
+            $this->client->patch(
+                'docman_wikis/' . urlencode((string) $wiki_doc_id),
+                null,
+                json_encode(['move' => ['destination_folder_id' => $folder_id]])
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(403, $move_response_with_rest_read_only_user->getStatusCode());
 
         $move_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
@@ -170,6 +206,24 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetDocumentItemsForAdminUser
      */
+    public function testDeletionOfAWikiForbiddenForRESTReadOnlyUserNotInvolvedInProject(array $items): void
+    {
+        $item_to_delete    = $this->findItemByTitle($items, 'DELETE W');
+        $item_to_delete_id = $item_to_delete['id'];
+
+        $response = $this->getResponse(
+            $this->client->delete('docman_wikis/' . $item_to_delete_id),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+
+        $this->checkItemHasNotBeenDeleted($item_to_delete_id);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
     public function testItDeletesAWiki(array $items): void
     {
         $item_to_delete    = $this->findItemByTitle($items, 'DELETE W');
@@ -192,6 +246,13 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
     {
         $locked_document    = $this->findItemByTitle($items, 'LOCK W');
         $locked_document_id = $locked_document['id'];
+
+        $response_with_rest_read_only_user = $this->getResponse(
+            $this->client->post('docman_wikis/' . $locked_document_id . "/lock"),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response_with_rest_read_only_user->getStatusCode());
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
@@ -216,6 +277,13 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
     {
         $locked_document    = $this->findItemByTitle($items, 'LOCK W');
         $locked_document_id = $locked_document['id'];
+
+        $response_with_rest_read_only_user = $this->getResponse(
+            $this->client->delete('docman_wikis/' . $locked_document_id . "/lock"),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response_with_rest_read_only_user->getStatusCode());
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
@@ -273,6 +341,13 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
             ]
         );
 
+        $response1_with_rest_read_only_user = $this->getResponse(
+            $this->client->post('docman_folders/' . $root_id . '/wikis', null, $query),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response1_with_rest_read_only_user->getStatusCode());
+
         $response1 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->post('docman_folders/' . $root_id . '/wikis', null, $query)
@@ -297,6 +372,13 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
                 'wiki_properties'  => ['page_name' => 'my updated page name']
             ]
         );
+
+        $response_with_rest_read_only_user = $this->getResponse(
+            $this->client->post('docman_wikis/' . $wiki_id.'/version', null, $put_resource),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response_with_rest_read_only_user->getStatusCode());
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
@@ -340,6 +422,13 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
             'owner_id'          => $this->test_user_1_id,
             'status'            => 'none'
         ];
+
+        $updated_metadata_file_response_with_reast_read_only_user = $this->getResponse(
+            $this->client->put('docman_wikis/' . $item_to_update_id . '/metadata', null, $put_resource),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $updated_metadata_file_response_with_reast_read_only_user->getStatusCode());
 
         $updated_metadata_file_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
@@ -409,6 +498,36 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
+    public function testAllOptionsForRESTReadOnlyUser(int $id): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('docman_wikis/' . $id . '/metadata'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'PUT'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->options('docman_wikis/' . $id),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->options('docman_wikis/' . $id . '/lock'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
     public function testUpdatePermissionsWikiDocument(int $root_id) : void
     {
         $wiki_doc_id = $this->createWikiAndReturnItsId(
@@ -417,6 +536,18 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         );
 
         $project_members_identifier = $this->project_id . '_3';
+
+        $response_with_rest_read_only_user = $this->getResponse(
+            $this->client->put(
+                'docman_wikis/' . urlencode((string) $wiki_doc_id) . '/permissions',
+                null,
+                json_encode(['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]])
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response_with_rest_read_only_user->getStatusCode());
+
         $permission_update_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
             $this->client->put(
@@ -452,6 +583,13 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
      */
     private function createWikiAndReturnItsId(int $root_id, string $query)
     {
+        $response_with_rest_read_only_user = $this->getResponse(
+            $this->client->post('docman_folders/' . $root_id . '/wikis', null, $query),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response_with_rest_read_only_user->getStatusCode());
+
         $response1 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->post('docman_folders/' . $root_id . '/wikis', null, $query)
