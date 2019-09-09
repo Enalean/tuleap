@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\AccessControl;
 
+use SVN_AccessFile_Writer;
 use Tuleap\SVN\ServiceSvn;
 use HTTPRequest;
 use Tuleap\SVN\Repository\Repository;
@@ -123,7 +124,12 @@ class AccessControlController
             if ($request->exist('submit_other_version')) {
                 $this->access_file_creator->useAVersionWithHistory($repository, $request->get('version_selected'));
             } else {
-                $this->access_file_creator->create($repository, $request->get('form_accessfile'), $_SERVER['REQUEST_TIME']);
+                $this->access_file_creator->create(
+                    $repository,
+                    $request->get('form_accessfile'),
+                    $_SERVER['REQUEST_TIME'],
+                    new SVN_AccessFile_Writer($repository->getSystemPath())
+                );
             }
             $GLOBALS['Response']->redirect($this->getUrl($repository));
         } catch (CannotCreateAccessFileHistoryException $exception) {

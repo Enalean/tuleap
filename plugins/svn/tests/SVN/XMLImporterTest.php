@@ -83,6 +83,7 @@ class TestBackendSVN extends BackendSVN
     }
 }
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MultipleClasses
 class XMLImporterTest extends TuleapTestCase
 {
     /**
@@ -242,7 +243,8 @@ class XMLImporterTest extends TuleapTestCase
             $this->accessfiledao,
             $this->accessfilefac,
             $project_history_dao,
-            \Mockery::spy(\Tuleap\SVN\Repository\ProjectHistoryFormatter::class)
+            \Mockery::spy(\Tuleap\SVN\Repository\ProjectHistoryFormatter::class),
+            Mockery::mock(BackendSVN::class)
         );
 
         $users_to_notify_dao      = safe_mock('Tuleap\SVN\Notifications\UsersToNotifyDao');

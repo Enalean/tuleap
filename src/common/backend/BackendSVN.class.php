@@ -452,6 +452,12 @@ class BackendSVN extends Backend
         return "# END CODENDI DEFAULT SETTINGS\n";
     }
 
+    private function getDefaultBlockStart(): string
+    {
+        // if you change these block markers also change them in src/www/svn/svn_utils.php
+        return "# BEGIN CODENDI DEFAULT SETTINGS - DO NOT REMOVE\n";
+    }
+
     private function getCustomPermission($system_path, SVNAccessFile $svn_access_file, Project $project)
     {
         $contents = '';
@@ -512,15 +518,13 @@ class BackendSVN extends Backend
         $svnaccess_file     = $this->getSvnAccessFile($system_path);
         $svnaccess_file_old = $this->getSvnAccessFile($system_path).".old";
         $svnaccess_file_new = $this->getSvnAccessFile($system_path).".new";
-        // if you change these block markers also change them in
-        // src/www/svn/svn_utils.php
-        $default_block_start="# BEGIN CODENDI DEFAULT SETTINGS - DO NOT REMOVE\n";
+
 
         // Retrieve custom permissions, if any
         $fp = fopen($svnaccess_file_new, 'w');
 
         // Codendi specifc
-        fwrite($fp, "$default_block_start");
+        fwrite($fp, $this->getDefaultBlockStart());
         fwrite($fp, $this->getDefaultBlock($project));
         fwrite($fp, $this->getDefaultBlocEnd());
 
@@ -987,5 +991,10 @@ class BackendSVN extends Backend
     {
         $parameter_manager = new ParameterRetriever(new ParameterDao());
         return $parameter_manager->getParameters();
+    }
+
+    public function exportSVNAccessFileDefaultBloc(Project $project): string
+    {
+        return $this->getDefaultBlockStart() . $this->getDefaultBlock($project) . $this->getDefaultBlocEnd();
     }
 }

@@ -246,7 +246,8 @@ class XMLRepositoryImporter
         $access_file = $accessfile_history_creator->create(
             $repo,
             $this->access_file_contents,
-            time()
+            time(),
+            new SVN_AccessFile_Writer($repo->getSystemPath())
         );
 
         // Write .SVNAccessFile
