@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project unix-name="pbi-6348" full-name="PBI" description="For test" access="public">
+<project unix-name="pbi-6348" full-name="PBI" description="For test" access="private">
   <long-description></long-description>
   <services>
     <service shortname="summary" enabled="1"/>

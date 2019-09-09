@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\REST;
 
+use REST_TestDataBuilder;
+
 /**
  * @group ProjectTests
  */
@@ -52,6 +54,22 @@ class ProjectMilestonesPeriodTest extends ProjectBase
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
+
+        $milestones = $response->json();
+        $this->assertCount(4, $milestones);
+    }
+
+    public function testGETmilestonesWithPeriodCurrentQueryWithRESTReadOnlyUser(): void
+    {
+        $query    = urlencode(json_encode(["period" => "current"]));
+        $response = $this->getResponse(
+            $this->client->get(
+                'projects/' . $this->project_future_releases_id . '/milestones?query=' . $query
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
 
         $milestones = $response->json();
         $this->assertCount(4, $milestones);

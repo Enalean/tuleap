@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace Tuleap\REST;
 
 use Guzzle\Http\Exception\BadResponseException;
+use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 
 /**
@@ -29,19 +30,38 @@ use REST_TestDataBuilder;
  */
 class ProjectServicesTest extends ProjectBase
 {
-    public function testGETProjectServices()
+    public function testGETProjectServices(): void
     {
         $url = 'projects/' . $this->getProjectId(REST_TestDataBuilder::PROJECT_SERVICES) . '/project_services';
 
         $response = $this->getResponse($this->client->get($url));
         $this->assertEquals(200, $response->getStatusCode());
 
+        $this->assertGETProjectServices($response);
+    }
+
+    public function testGETProjectServicesWithRESTReadOnlyUser(): void
+    {
+        $url = 'projects/' . $this->getProjectId(REST_TestDataBuilder::PROJECT_SERVICES) . '/project_services';
+
+        $response = $this->getResponse(
+            $this->client->get($url),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertGETProjectServices($response);
+    }
+
+    private function assertGETProjectServices(Response $response): void
+    {
         $services = $response->json();
 
         $expected = [
-            'summary'        => ['is_enabled' => true],
+            'summary' => ['is_enabled' => true],
             'plugin_tracker' => ['is_enabled' => true],
-            'file'           => ['is_enabled' => false],
+            'file' => ['is_enabled' => false],
         ];
         foreach ($services as $key => $service) {
             if (isset($expected[$service['name']])) {
@@ -61,7 +81,26 @@ class ProjectServicesTest extends ProjectBase
         );
     }
 
-    public function testPUTProjectServices()
+    public function testPUTProjectServicesWithRESTReadOnlyUser(): void
+    {
+        $service = $this->getService('file');
+
+        $is_enabled_value     = $service['is_enabled'];
+        $new_is_enabled_value = ! $is_enabled_value;
+        $body                 = json_encode(['is_enabled' => $new_is_enabled_value]);
+
+        $response = $this->getResponse(
+            $this->client->put($service['uri'], null, $body),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+
+        $updated_service = $this->getService('file');
+        $this->assertEquals($is_enabled_value, $updated_service['is_enabled']);
+    }
+
+    public function testPUTProjectServices(): void
     {
         $service = $this->getService('file');
 
@@ -75,7 +114,7 @@ class ProjectServicesTest extends ProjectBase
         $this->assertEquals($new_is_enabled_value, $updated_service['is_enabled']);
     }
 
-    public function testAdminServiceCannotBeDisabled()
+    public function testAdminServiceCannotBeDisabled(): void
     {
         $service = $this->getService('admin');
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2014 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,8 @@
 
 namespace Tuleap\REST;
 
+use Guzzle\Http\Message\Response;
+use REST_TestDataBuilder;
 use RestBase;
 
 /**
@@ -37,26 +39,51 @@ class ProjectBacklogV2Test extends RestBase
         }
     }
 
-    public function testOPTIONSBacklog()
+    public function testOPTIONSBacklog(): void
     {
         $response = $this->getResponse($this->client->options("projects/$this->project_pbi_id/backlog"));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGETProjectTopBacklogNoItems()
+    public function testOPTIONSBacklogWithRESTReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->options("projects/$this->project_pbi_id/backlog"),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETProjectTopBacklogNoItems(): void
     {
         $response = $this->getResponse($this->client->get("projects/$this->project_pbi_id/backlog?limit=0&offset=0"));
 
+        $this->assertGETProjectBacklog($response);
+    }
+
+    public function testGETProjectTopBacklogNoItemsWithRESTReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get("projects/$this->project_pbi_id/backlog?limit=0&offset=0"),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertGETProjectBacklog($response);
+    }
+
+    private function assertGETProjectBacklog(Response $response): void
+    {
         $backlog = $response->json();
+
+        $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertCount(0, $backlog['content']);
         $this->assertCount(1, $backlog['accept']['trackers']);
         $this->assertCount(0, $backlog['accept']['parent_trackers']);
-
-        $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testGETProjectTopBacklogNoPlannings()
+    public function testGETProjectTopBacklogNoPlannings(): void
     {
         $response = $this->getResponse($this->client->get("projects/$this->project_public_id/backlog"));
 
