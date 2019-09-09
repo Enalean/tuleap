@@ -604,4 +604,233 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
     }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testAllOptionsRouteForUserRESTReadOnlyAdmin(int $id): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('docman_empty_documents/' . urlencode((string)$id)),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+
+        $response = $this->getResponse(
+            $this->client->options('docman_empty_documents/' . urlencode((string)$id) . '/lock'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+
+        $response = $this->getResponse(
+            $this->client->options('docman_empty_documents/' . urlencode((string)$id) . '/embedded_file'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+
+        $response = $this->getResponse(
+            $this->client->options('docman_empty_documents/' . urlencode((string)$id) . '/link'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+
+        $response = $this->getResponse(
+            $this->client->options('docman_empty_documents/' . urlencode((string)$id) . '/file'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+
+        $response = $this->getResponse(
+            $this->client->options('docman_empty_documents/' . urlencode((string)$id) . '/metadata'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(['OPTIONS', 'PUT'], $response->getHeader('Allow')->normalize()->toArray());
+
+        $response = $this->getResponse(
+            $this->client->options('docman_empty_documents/' . urlencode((string)$id) . '/permissions'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function patchMoveAnEmptyDocumentDeniedForUserRestReadOnlyAdmin(int $root_id): void
+    {
+        $response = $this->getResponse(
+            $this->client->post(
+                'docman_empty_documents/' . $root_id,
+                null,
+                ['move' => ['destination_folder_id' => $root_id]]
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function deleteAnEmptyDocumentDeniedForUserRestReadOnlyAdmin(int $root_id): void
+    {
+        $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
+        $response           = $this->getResponse(
+            $this->client->delete(
+                'docman_empty_documents/' . $empty_to_update_id
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(403, $response->getStatusCode());
+        $this->deleteCreatedEmptyDocument($empty_to_update_id);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function postLockToAnEmptyDocumentDeniedForUserRestReadOnlyAdmin(int $root_id): void
+    {
+        $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
+        $response           = $this->getResponse(
+            $this->client->post(
+                'docman_empty_documents/' . $empty_to_update_id . '/lock'
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(403, $response->getStatusCode());
+        $this->deleteCreatedEmptyDocument($empty_to_update_id);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function deleteLockToAnEmptyDocumentDeniedForUserRestReadOnlyAdmin(int $root_id): void
+    {
+        $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
+        $response           = $this->getResponse(
+            $this->client->delete(
+                'docman_empty_documents/' . $empty_to_update_id . '/lock'
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(403, $response->getStatusCode());
+        $this->deleteCreatedEmptyDocument($empty_to_update_id);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function putMetadataToAnEmptyDocumentDeniedForUserRestReadOnlyAdmin(int $root_id): void
+    {
+        $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
+
+        $metadata = ['status' => 'none'];
+        $response           = $this->getResponse(
+            $this->client->put(
+                'docman_empty_documents/' . $empty_to_update_id . '/metadata',
+                null,
+                $metadata
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(403, $response->getStatusCode());
+        $this->deleteCreatedEmptyDocument($empty_to_update_id);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function putPermissionsToAnEmptyDocumentDeniedForUserRestReadOnlyAdmin(int $root_id): void
+    {
+        $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
+
+        $project_members_identifier = $this->project_id . '_3';
+        $response           = $this->getResponse(
+            $this->client->put(
+                'docman_empty_documents/' . $empty_to_update_id . '/permissions',
+                null,
+                json_encode(['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]])
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(403, $response->getStatusCode());
+        $this->deleteCreatedEmptyDocument($empty_to_update_id);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function postVersionDeniedForUserRESTReadOnlyAdmin(int $root_id): void
+    {
+        $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
+
+        $content  = json_encode(
+            [
+                'content' => 'You just get jealous about my fame'
+            ]
+        );
+        $response = $this->getResponse(
+            $this->client->post('docman_empty_documents/' . $empty_to_update_id . '/embedded_file', null, $content),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(403, $response->getStatusCode());
+
+        $file_properties = json_encode(
+            [
+                'file_name' => 'Spongebob.jpeg',
+                'file_size' => 10
+            ]
+        );
+        $response        = $this->getResponse(
+            $this->client->post('docman_empty_documents/' . $empty_to_update_id . '/file', null, $file_properties),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(403, $response->getStatusCode());
+
+        $link_url = json_encode(
+            [
+                'link_url' => 'https://example.test'
+            ]
+        );
+        $response = $this->getResponse(
+            $this->client->post('docman_empty_documents/' . $empty_to_update_id . '/link', null, $link_url),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    private function createEmptyDocumentAndReturnId(int $root_id): int
+    {
+        $headers = ['Content-Type' => 'application/json'];
+
+        $query = json_encode(
+            [
+                'title'       => 'Empty to nothing',
+                'description' => 'A description',
+            ]
+        );
+
+        $response = $this->getResponse(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . '/empties', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $empty_to_update_id = $response->json()['id'];
+
+        return $empty_to_update_id;
+    }
+
+    private function deleteCreatedEmptyDocument(int $empty_document_to_delete): void
+    {
+        $response = $this->getResponse(
+            $this->client->delete(
+                'docman_empty_documents/' . $empty_document_to_delete
+            ),
+            REST_TestDataBuilder::ADMIN_USER_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 }
