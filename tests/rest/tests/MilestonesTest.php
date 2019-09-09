@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2013 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,31 +18,73 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-// @codingStandardsIgnoreFile
-
 use Tuleap\REST\MilestoneBase;
 
 /**
  * @group MilestonesTest
  */
-class MilestonesTest extends MilestoneBase
+class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public function testOPTIONS() {
+    public function testOPTIONS(): void
+    {
         $response = $this->getResponse($this->client->options('milestones'));
         $this->assertEquals(array('OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testOPTIONSMilestonesId() {
+    public function testOPTIONSMilestonesId(): void
+    {
         $response = $this->getResponse($this->client->options('milestones/'.$this->release_artifact_ids[1]));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGETResourcesMilestones() {
+    public function testOPTIONSWithRESTReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('milestones'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(['OPTIONS'], $response->getHeader('Allow')->normalize()->toArray());
+
+        $response = $this->getResponse(
+            $this->client->options('milestones/'.$this->release_artifact_ids[1]),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETResourcesMilestones(): void
+    {
         $response = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1]));
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $milestone = $response->json();
+
+        $this->assertGETResourcesMilestones($milestone);
+        $this->assertGETResourcesBacklog($milestone);
+        $this->assertGETResourcesContent($milestone);
+        $this->assertGETResourcesBurndownCardwallEmpty($milestone);
+    }
+
+    public function testGETResourcesMilestonesWithRESTReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('milestones/'.$this->release_artifact_ids[1]),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $milestone = $response->json();
+
+        $this->assertGETResourcesMilestones($milestone);
+        $this->assertGETResourcesBacklog($milestone);
+        $this->assertGETResourcesContent($milestone);
+        $this->assertGETResourcesBurndownCardwallEmpty($milestone);
+    }
+
+    private function assertGETResourcesMilestones(array $milestone): void
+    {
         $this->assertEquals(
             array(
                 'uri'    => 'milestones/'.$this->release_artifact_ids[1].'/milestones',
@@ -67,12 +109,8 @@ class MilestonesTest extends MilestoneBase
         $this->arrayHasKey($milestone['sub_milestone_type']);
     }
 
-    public function testGETResourcesBacklog() {
-        $response = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1]));
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $milestone = $response->json();
+    private function assertGETResourcesBacklog(array $milestone): void
+    {
         $this->assertEquals(
             array(
                 'uri'    => 'milestones/'.$this->release_artifact_ids[1].'/backlog',
@@ -107,11 +145,8 @@ class MilestonesTest extends MilestoneBase
         );
     }
 
-    public function testGETResourcesContent() {
-        $response = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1]));
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $milestone = $response->json();
+    private function assertGETResourcesContent(array $milestone): void
+    {
         $this->assertEquals(
             array(
                 'uri'    => 'milestones/'.$this->release_artifact_ids[1].'/content',
@@ -134,11 +169,8 @@ class MilestonesTest extends MilestoneBase
         );
     }
 
-    public function testGETResourcesBurndownCardwallEmpty() {
-        $response = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1]));
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $milestone = $response->json();
+    private function assertGETResourcesBurndownCardwallEmpty(array $milestone): void
+    {
         $this->assertNull(
             $milestone['resources']['cardwall']
         );
@@ -147,20 +179,22 @@ class MilestonesTest extends MilestoneBase
         );
     }
 
-    public function testGETResourcesBurndown() {
+    public function testGETResourcesBurndown(): void
+    {
         $response = $this->getResponse($this->client->get('milestones/'.$this->sprint_artifact_ids[1]));
         $this->assertEquals(200, $response->getStatusCode());
 
         $milestone = $response->json();
         $this->assertEquals(
             array(
-                'uri'    => 'milestones/'.$this->sprint_artifact_ids[1].'/burndown',
+                'uri' => 'milestones/'.$this->sprint_artifact_ids[1].'/burndown',
             ),
             $milestone['resources']['burndown']
         );
     }
 
-    public function testGETResourcesCardwall() {
+    public function testGETResourcesCardwall(): void
+    {
         $response = $this->getResponse($this->client->get('milestones/'.$this->sprint_artifact_ids[1]));
         $this->assertEquals(200, $response->getStatusCode());
 
