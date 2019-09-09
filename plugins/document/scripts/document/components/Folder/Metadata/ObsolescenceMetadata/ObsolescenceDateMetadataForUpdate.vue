@@ -30,61 +30,26 @@
             <select
                 class="tlp-select document-obsolescence-date-metadata-select"
                 id="document-obsolescence-date-select-update"
-                name="obsolescence-date-select"
-                v-on:input="obsolescenceDateValue"
+                v-model="selected_date_value"
+                v-on:change="updateDatePickerValue"
                 ref="selectDateValue"
                 data-test="document-obsolescence-date-select-update"
             >
-                <option name="permanent"
-                        value="permanent"
-                        v-translate
-                >
-                    Permanent
-                </option>
-                <option name="3months"
-                        value="3"
-                        v-translate
-                >
-                    3 months
-                </option>
-                <option name="6months"
-                        value="6"
-                        v-translate
-                >
-                    6 months
-                </option>
-                <option name="12months"
-                        value="12"
-                        v-translate
-                >
-                    12 months
-                </option>
-                <option name="fixedDate"
-                        value="fixed"
-                        v-translate
-                >
-                    Fixed date
-                </option>
-                <option name="today"
-                        value="today"
-                        v-translate
-                >
-                    Obsolete today
-                </option>
+                <option name="permanent" value="permanent" v-translate>Permanent</option>
+                <option name="3months" value="3" v-translate>3 months</option>
+                <option name="6months" value="6" v-translate>6 months</option>
+                <option name="12months" value="12" v-translate>12 months</option>
+                <option name="fixedDate" value="fixed" v-translate>Fixed date</option>
+                <option name="today" value="today" v-translate>Obsolete today</option>
             </select>
             <div class="tlp-form-element-prepend">
                 <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
-                <input
-                    type="text"
-                    id="document-obsolescence-date-update"
-                    class="tlp-input tlp-input-date"
-                    size="12"
-                    v-on:click.prevent="inputDate"
-                    name="input"
-                    data-test="document-obsolescence-date-input-update"
-                    v-bind:value="value"
+                <date-flat-picker
+                    v-bind:id="'document-obsolescence-date-update'"
+                    v-bind:required="true"
+                    v-model="obsolescence_date"
                     ref="input"
-                >
+                />
             </div>
         </div>
         <p class="tlp-text-danger" v-if="error_message.length > 0" data-test="obsolescence-date-error-message">
@@ -94,55 +59,64 @@
 </template>
 
 <script>
-import { datePicker } from "tlp";
 import { mapState } from "vuex";
-import { isDateValid } from "../../../../helpers/date-formatter.js";
 import { getObsolescenceDateValueInput } from "../../../../helpers/metadata-helpers/obsolescence-date-value.js";
+import DateFlatPicker from "../DateFlatPicker.vue";
 
 export default {
     name: "ObsolescenceDateMetadataForUpdate",
+    components: { DateFlatPicker },
     props: {
         value: String
     },
     data() {
         return {
-            select_date_value: "permanent",
-            error_message: ""
+            date_value: this.value,
+            selected_value: "",
+            error_message: "",
+            uses_helper_validity: false
         };
     },
     computed: {
-        ...mapState(["is_obsolescence_date_metadata_used"])
+        ...mapState(["is_obsolescence_date_metadata_used"]),
+        obsolescence_date: {
+            get() {
+                return this.date_value;
+            },
+            set(value) {
+                if (!this.uses_helper_validity) {
+                    this.selected_value = "fixed";
+                }
+                this.date_value = value;
+                this.$emit("input", value);
+
+                this.uses_helper_validity = false;
+            }
+        },
+        selected_date_value: {
+            get() {
+                return this.selected_value;
+            },
+            set(value) {
+                this.selected_value = value;
+            }
+        }
     },
     mounted() {
-        datePicker(this.$refs.input);
-        if (this.value) {
-            this.setSelectDate("fixed");
+        if (this.value !== "") {
+            this.selected_value = "fixed";
+        } else {
+            this.selected_value = "permanent";
         }
     },
     methods: {
-        obsolescenceDateValue(event) {
-            this.select_date_value = event.target.value;
-            const date = getObsolescenceDateValueInput(this.select_date_value);
-            this.$emit("input", date);
-        },
-        inputDate(event) {
-            const input_date_value = event.target.value;
-            if (input_date_value && this.value !== input_date_value) {
-                this.setSelectDate("fixed");
+        updateDatePickerValue(event) {
+            const input_date_value = getObsolescenceDateValueInput(event.target.value);
 
-                let error = "";
-                if (!isDateValid(input_date_value)) {
-                    error = this.$gettext("Bad date format");
-                }
-                this.$refs.input.setCustomValidity(error);
-                this.error_message = error;
+            this.uses_helper_validity = true;
 
-                this.$emit("input", input_date_value);
-            }
-        },
-        setSelectDate(value) {
-            this.select_date_value = value;
-            this.$refs.selectDateValue.value = value;
+            this.selected_value = event.target.value;
+            this.obsolescence_date = input_date_value;
         }
     }
 };

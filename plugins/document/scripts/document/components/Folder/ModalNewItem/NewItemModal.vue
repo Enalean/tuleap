@@ -39,7 +39,10 @@
                 <embedded-properties v-model="item.embedded_properties" v-bind:item="item" name="properties"/>
                 <file-properties v-model="item.file_properties" v-bind:item="item" name="properties"/>
             </document-global-metadata-for-create>
-            <other-information-metadata-for-create v-bind:currently-updated-item="item"/>
+            <other-information-metadata-for-create
+                v-bind:currently-updated-item="item"
+                v-model="item.obsolescence_date"
+            />
             <creation-modal-permissions-section
                 v-if="item.permissions_for_groups"
                 v-model="item.permissions_for_groups"
@@ -148,7 +151,7 @@ export default {
                 embedded_properties: {
                     content: ""
                 },
-                obsolescence_date: null,
+                obsolescence_date: "",
                 metadata: null,
                 permissions_for_groups: {
                     can_read: [],
@@ -164,6 +167,11 @@ export default {
             this.item.permissions_for_groups = JSON.parse(
                 JSON.stringify(this.parent.permissions_for_groups)
             );
+
+            if (this.parent.obsolescence_date) {
+                this.item.obsolescence_date = this.parent.obsolescence_date;
+            }
+
             this.is_displayed = true;
             this.modal.show();
             try {

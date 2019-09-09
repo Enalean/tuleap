@@ -106,9 +106,6 @@ msgstr "Tables d'approbation"
 msgid "Approved"
 msgstr "Approuvé"
 
-msgid "Bad date format"
-msgstr "Format de la date incorrecte"
-
 msgid "Cancel"
 msgstr "Annuler"
 

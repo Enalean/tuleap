@@ -54,7 +54,8 @@ describe("OtherInformationMetadataForCreate", () => {
                     obsolescence_date: null,
                     type: TYPE_FILE,
                     title: "title"
-                }
+                },
+                value: ""
             },
             { parent: 102 }
         );
@@ -74,17 +75,15 @@ describe("OtherInformationMetadataForCreate", () => {
 
     it(`Given obsolescence date is disabled for project
         Then obsolescence date component is not rendered`, () => {
-        const wrapper = factory(
-            {
-                currentlyUpdatedItem: {
-                    metadata: null,
-                    status: 100,
-                    type: TYPE_FILE,
-                    title: "title"
-                }
+        const wrapper = factory({
+            currentlyUpdatedItem: {
+                metadata: null,
+                status: 100,
+                type: TYPE_FILE,
+                title: "title"
             },
-            { parent: 102 }
-        );
+            value: ""
+        });
 
         store.state = {
             is_obsolescence_date_metadata_used: false,
@@ -99,17 +98,15 @@ describe("OtherInformationMetadataForCreate", () => {
 
     it(`Given custom component are loading
         Then it displays spinner`, () => {
-        const wrapper = factory(
-            {
-                currentlyUpdatedItem: {
-                    metadata: [],
-                    status: 100,
-                    type: TYPE_FILE,
-                    title: "title"
-                }
+        const wrapper = factory({
+            currentlyUpdatedItem: {
+                metadata: [],
+                status: 100,
+                type: TYPE_FILE,
+                title: "title"
             },
-            { parent: 102 }
-        );
+            value: ""
+        });
 
         store.state = {
             is_obsolescence_date_metadata_used: true,
@@ -129,17 +126,15 @@ describe("OtherInformationMetadataForCreate", () => {
             has_loaded_metadata: false
         };
 
-        const wrapper = factory(
-            {
-                currentlyUpdatedItem: {
-                    metadata: [],
-                    status: 100,
-                    type: TYPE_FILE,
-                    title: "title"
-                }
+        const wrapper = factory({
+            currentlyUpdatedItem: {
+                metadata: [],
+                status: 100,
+                type: TYPE_FILE,
+                title: "title"
             },
-            { parent: 102 }
-        );
+            value: ""
+        });
 
         EventBus.$emit("show-new-document-modal", {
             detail: { parent: store.state.current_folder }

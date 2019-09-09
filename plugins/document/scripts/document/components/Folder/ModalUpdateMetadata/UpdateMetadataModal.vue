@@ -33,6 +33,7 @@
             <other-information-metadata-for-update
                 v-bind:currently-updated-item="item_to_update"
                 v-bind:metadata-to-update="formatted_item_metadata"
+                v-model="obsolescence_date_value"
             />
         </div>
         <modal-footer v-bind:is-loading="is_loading"
@@ -88,6 +89,29 @@ export default {
         },
         aria_labelled_by() {
             return "document-update-file-metadata-modal";
+        },
+        obsolescence_date_value: {
+            get() {
+                if (!this.item.metadata) {
+                    return "";
+                }
+
+                const obsolescence_date = this.item.metadata.find(
+                    metadata => metadata.short_name === "obsolescence_date"
+                );
+
+                if (!obsolescence_date) {
+                    return "";
+                }
+
+                if (!obsolescence_date.value) {
+                    return "";
+                }
+                return obsolescence_date.value;
+            },
+            set(value) {
+                this.item_to_update.obsolescence_date = value;
+            }
         }
     },
     created() {

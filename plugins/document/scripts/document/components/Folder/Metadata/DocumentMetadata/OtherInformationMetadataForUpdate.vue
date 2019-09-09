@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "vuex";
 import ObsolescenceDateMetadataForUpdate from "../ObsolescenceMetadata/ObsolescenceDateMetadataForUpdate.vue";
 import CustomMetadata from "../CustomMetadata/CustomMetadata.vue";
 
@@ -50,38 +50,24 @@ export default {
     },
     props: {
         currentlyUpdatedItem: Object,
-        metadataToUpdate: Array
+        metadataToUpdate: Array,
+        value: {
+            type: String,
+            required: true
+        }
     },
     computed: {
         ...mapState(["is_obsolescence_date_metadata_used"]),
         ...mapState("metadata", ["has_loaded_metadata"]),
-        ...mapGetters(["obsolescence_date_metadata"]),
         should_display_other_information() {
             return this.is_obsolescence_date_metadata_used || this.metadataToUpdate.length > 0;
         },
         date_value: {
             get() {
-                if (!this.is_obsolescence_date_metadata_used) {
-                    return "";
-                }
-                const metadata = this.currentlyUpdatedItem.metadata.find(
-                    metadata => metadata.short_name === "obsolescence_date"
-                );
-
-                if (!metadata) {
-                    return;
-                }
-                return metadata.value;
+                return this.value;
             },
             set(value) {
-                if (!this.is_obsolescence_date_metadata_used) {
-                    return;
-                }
-                const metadata = this.currentlyUpdatedItem.metadata.find(
-                    metadata => metadata.short_name === "obsolescence_date"
-                );
-                metadata.value = value;
-                this.currentlyUpdatedItem.obsolescence_date = value;
+                this.$emit("input", value);
             }
         }
     },
