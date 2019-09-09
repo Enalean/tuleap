@@ -133,8 +133,9 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         }
     }
 
-    private function runCommand(Process $process, Logger $logger, array &$warnings)
+    private function runCommand(Process $process, Logger $logger, array &$warnings) : void
     {
+        $process->setTimeout(null);
         $process->run();
         if (! $process->isSuccessful()) {
             $warnings[] = $process->getCommandLine().' ran with errors, check '.ForgeConfig::get('codendi_log');
