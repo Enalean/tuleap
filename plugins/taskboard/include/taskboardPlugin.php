@@ -97,7 +97,8 @@ class taskboardPlugin extends Plugin
             $agiledashboard_plugin->getAllBreadCrumbsForMilestoneBuilder(),
             new BoardPresenterBuilder(
                 $agiledashboard_plugin->getMilestonePaneFactory(),
-                new ColumnPresenterCollectionRetriever(new Cardwall_OnTop_ColumnDao())
+                new ColumnPresenterCollectionRetriever(new Cardwall_OnTop_ColumnDao()),
+                new AgileDashboard_BacklogItemDao()
             ),
             $agiledashboard_plugin->getIncludeAssets(),
             new IncludeAssets(

@@ -19,36 +19,23 @@
   -->
 
 <template>
-    <tbody>
-        <tr class="taskboard-swimlane" v-for="swimlane of swimlanes" v-bind:key="swimlane.card.id">
-            <td class="taskboard-cell"><parent-card v-bind:card="swimlane.card"/></td>
-            <td class="taskboard-cell" v-for="col of columns" v-bind:key="col.id"></td>
-        </tr>
-    </tbody>
+    <div class="empty-page">
+        <div class="empty-page-illustration">
+            <no-content-svg/>
+        </div>
+        <translate tag="p" class="empty-page-text">
+            This taskboard is empty
+        </translate>
+    </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { Action, State } from "vuex-class";
-import { ColumnDefinition, Swimlane } from "../../type";
-import ParentCard from "./Card/ParentCard.vue";
+import NoContentSvg from "./NoContentSvg.vue";
 
 @Component({
-    components: { ParentCard }
+    components: { NoContentSvg }
 })
-export default class TaskBoardBody extends Vue {
-    @State
-    readonly swimlanes!: Array<Swimlane>;
-
-    @State
-    readonly columns!: Array<ColumnDefinition>;
-
-    @Action
-    loadSwimlanes!: () => void;
-
-    created(): void {
-        this.loadSwimlanes();
-    }
-}
+export default class NoContentEmptyState extends Vue {}
 </script>

@@ -19,36 +19,40 @@
   -->
 
 <template>
-    <tr class="taskboard-swimlane">
-        <td class="taskboard-cell" v-bind:colspan="colspan">
-            <div class="empty-page">
-                <div class="empty-page-illustration">
-                    <no-content-svg/>
-                </div>
-                <translate tag="p" class="empty-page-text">
-                    This taskboard is empty
-                </translate>
+    <div class="taskboard-card taskboard-card-parent" v-bind:class="additional_classnames">
+        <div class="taskboard-card-content">
+            <div class="taskboard-card-xref-label">
+                <span class="taskboard-card-xref">{{ card.xref }}</span>
+                <span class="taskboard-card-label">{{ card.label }}</span>
             </div>
-        </td>
-    </tr>
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import NoContentSvg from "./NoContentSvg.vue";
-import { ColumnDefinition } from "../../type";
-import { State } from "vuex-class";
+import { Component, Prop } from "vue-property-decorator";
+import { Card } from "../../../type";
 
-@Component({
-    components: { NoContentSvg }
-})
-export default class NoContentEmptyState extends Vue {
-    @State
-    readonly columns!: Array<ColumnDefinition>;
+@Component
+export default class ParentCard extends Vue {
+    @Prop({ required: true })
+    readonly card!: Card;
 
-    get colspan(): number {
-        return this.columns.length + 1;
+    add_show_class = true;
+
+    mounted(): void {
+        setTimeout(() => {
+            this.add_show_class = false;
+        }, 500);
+    }
+
+    get additional_classnames(): string {
+        if (this.add_show_class) {
+            return "taskboard-card-show";
+        }
+
+        return "";
     }
 }
 </script>

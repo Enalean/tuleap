@@ -23,7 +23,8 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createStore } from "./src/store";
 import App from "./src/components/App.vue";
 import { initVueGettext } from "./src/helpers/vue-gettext-init";
-import { ColumnDefinition } from "./src/type";
+import { ColumnDefinition, State, Swimlane } from "./src/type";
+import Vuex from "vuex";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("taskboard");
@@ -39,15 +40,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         typeof vue_mount_point.dataset.columns !== "undefined"
             ? JSON.parse(vue_mount_point.dataset.columns)
             : [];
+    const has_content = Boolean(vue_mount_point.dataset.hasContent);
+    const swimlanes: Array<Swimlane> = [];
+    const milestone_id = Number.parseInt(vue_mount_point.dataset.milestoneId || "0", 10);
 
     await initVueGettext((locale: string) =>
         import(/* webpackChunkName: "taskboard-po-" */ `./po/${locale}.po`)
     );
+    Vue.use(Vuex);
     Vue.use(VueDOMPurifyHTML);
 
     const AppComponent = Vue.extend(App);
 
+    const initial_state: State = {
+        user_is_admin,
+        admin_url,
+        user_id,
+        columns,
+        swimlanes,
+        has_content,
+        milestone_id
+    };
     new AppComponent({
-        store: createStore({ user_is_admin, admin_url, user_id, columns })
+        store: createStore(initial_state)
     }).$mount(vue_mount_point);
 });
