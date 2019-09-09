@@ -20,30 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Taskboard\AgileDashboard;
+namespace Tuleap\Taskboard\REST;
 
-use Planning_Milestone;
+use Luracast\Restler\Restler;
 
-class TaskboardPaneInfoBuilder
+class ResourcesInjector
 {
-    /**
-     * @var MilestoneIsAllowedChecker
-     */
-    private $checker;
-
-    public function __construct(MilestoneIsAllowedChecker $checker)
+    public function populate(Restler $restler): void
     {
-        $this->checker = $checker;
-    }
-
-    public function getPaneForMilestone(Planning_Milestone $milestone): ?TaskboardPaneInfo
-    {
-        try {
-            $this->checker->checkMilestoneIsAllowed($milestone);
-
-            return new TaskboardPaneInfo($milestone);
-        } catch (MilestoneIsNotAllowedException $exception) {
-            return null;
-        }
+        $restler->addAPIClass(v1\TaskboardResource::class, 'taskboard');
     }
 }

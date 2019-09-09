@@ -73,9 +73,13 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
     protected $cache;
 
-    public function __construct()
+    private $initialized = false;
+    protected function initialize(): void
     {
-        parent::__construct();
+        if ($this->initialized) {
+            return;
+        }
+
         if (isset($_ENV['TULEAP_HOST'])) {
             $this->base_url  = $_ENV['TULEAP_HOST'] . '/api/v1';
             $this->setup_url = $_ENV['TULEAP_HOST'] . '/api/v1';
@@ -102,11 +106,14 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $this->setup_client->setDefaultOption('headers/Content-Type', 'application/json');
 
         $this->rest_request = new RequestWrapper($this->client, $this->cache);
+
+        $this->initialized = true;
     }
 
     public function setUp() : void
     {
         parent::setUp();
+        $this->initialize();
 
         $this->project_ids = $this->cache->getProjectIds();
         if (!$this->project_ids) {

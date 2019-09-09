@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -40,6 +40,27 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
                     INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = child_art.id)
                 WHERE parent_art.id = $milestone_artifact_id
                 ORDER BY tracker_artifact_priority_rank.rank ASC";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getBacklogArtifactsWithLimitAndOffset($milestone_artifact_id, $limit, $offset)
+    {
+        $milestone_artifact_id = $this->da->escapeInt($milestone_artifact_id);
+        $limit                 = $this->da->escapeInt($limit);
+        $offset                = $this->da->escapeInt($offset);
+        $sql = "SELECT child_art.*, tracker_artifact_priority_rank.rank as rank
+                FROM tracker_artifact parent_art
+                    INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                    INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                    INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
+                    INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
+                    INNER JOIN plugin_agiledashboard_planning       planning   ON (planning.planning_tracker_id = parent_art.tracker_id)
+                    INNER JOIN plugin_agiledashboard_planning_backlog_tracker backlog ON (backlog.planning_id = planning.id AND child_art.tracker_id = backlog.tracker_id)
+                    INNER JOIN tracker_artifact_priority_rank                       ON (tracker_artifact_priority_rank.artifact_id = child_art.id)
+                WHERE parent_art.id = $milestone_artifact_id
+                ORDER BY tracker_artifact_priority_rank.rank ASC
+                LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
     }

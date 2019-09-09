@@ -36,18 +36,6 @@ class TaskboardPaneInfoBuilderTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PluginManager
-     */
-    private $plugin_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|taskboardPlugin
-     */
-    private $plugin;
-    /**
-     * @var Cardwall_OnTop_Dao|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $dao;
-    /**
      * @var TaskboardPaneInfoBuilder
      */
     private $builder;
@@ -55,64 +43,37 @@ class TaskboardPaneInfoBuilderTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_Milestone
      */
     private $milestone;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MilestoneIsAllowedChecker
+     */
+    private $checker;
 
     protected function setUp(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn(102);
-
         $this->milestone = Mockery::mock(Planning_Milestone::class);
-        $this->milestone->shouldReceive('getProject')->andReturn($project);
-        $this->milestone->shouldReceive('getTrackerId')->andReturn(42);
 
-        $this->plugin_manager = Mockery::mock(PluginManager::class);
-        $this->plugin         = Mockery::mock(taskboardPlugin::class);
-        $this->dao            = Mockery::mock(Cardwall_OnTop_Dao::class);
+        $this->checker = Mockery::mock(MilestoneIsAllowedChecker::class);
 
-        $this->builder = new TaskboardPaneInfoBuilder($this->plugin_manager, $this->plugin, $this->dao);
+        $this->builder = new TaskboardPaneInfoBuilder($this->checker);
     }
 
-    public function testItReturnsNullIfPluginIsNotAllowedToUseThePlugin(): void
+    public function testItReturnsNullIfMilestoneIsNotAllowed(): void
     {
-        $this->plugin_manager
-            ->shouldReceive('isPluginAllowedForProject')
-            ->with($this->plugin, 102)
+        $this->checker
+            ->shouldReceive('checkMilestoneIsAllowed')
+            ->with($this->milestone)
             ->once()
-            ->andReturnFalse();
-
-        $this->assertNull($this->builder->getPaneForMilestone($this->milestone));
-    }
-
-    public function testItReturnsNullIfCardwallOnTopIsNotEnabled(): void
-    {
-        $this->plugin_manager
-            ->shouldReceive('isPluginAllowedForProject')
-            ->with($this->plugin, 102)
-            ->once()
-            ->andReturnTrue();
-
-        $this->dao
-            ->shouldReceive('isEnabled')
-            ->with(42)
-            ->once()
-            ->andReturnFalse();
+            ->andThrow(MilestoneIsNotAllowedException::class);
 
         $this->assertNull($this->builder->getPaneForMilestone($this->milestone));
     }
 
     public function testItReturnsPaneInfo(): void
     {
-        $this->plugin_manager
-            ->shouldReceive('isPluginAllowedForProject')
-            ->with($this->plugin, 102)
-            ->once()
-            ->andReturnTrue();
-
-        $this->dao
-            ->shouldReceive('isEnabled')
-            ->with(42)
-            ->once()
-            ->andReturnTrue();
+        $this->checker
+            ->shouldReceive('checkMilestoneIsAllowed')
+            ->with($this->milestone)
+            ->once();
 
         $this->assertInstanceOf(TaskboardPaneInfo::class, $this->builder->getPaneForMilestone($this->milestone));
     }
