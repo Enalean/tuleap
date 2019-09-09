@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2013 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 namespace Tuleap\REST;
+
+use Guzzle\Http\Message\Response;
 
 /**
  * @group TrackersTests
@@ -48,6 +50,17 @@ class TrackersTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
+    public function testOptionsTrackersIdReportsForReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->options($this->getReleaseTrackerReportsUri()),
+            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
     public function testOptionsReportsId()
     {
         $response = $this->getResponse($this->client->options($this->report_uri));
@@ -56,12 +69,34 @@ class TrackersTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
+    public function testOptionsReportsIdForReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->options($this->report_uri),
+            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
     public function testOptionsReportsArtifactsId()
     {
         $response = $this->getResponse($this->client->options($this->getReportsArtifactsUri()));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testOptionsReportsArtifactsIdForReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->options($this->getReportsArtifactsUri()),
+            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOptionsGetParentArtifacts()
@@ -201,11 +236,22 @@ class TrackersTest extends TrackerBase
         return [];
     }
 
-    public function testGetTrackersIdReports()
+    public function testGetTrackersIdReports(): void
     {
         $report_uri = $this->getReleaseTrackerReportsUri();
         $response   = $this->getResponse($this->client->get($report_uri));
+        $this->assertGETTrackersIdReports($response);
+    }
 
+    public function testGetTrackersIdReportsForReadOnlyUser(): void
+    {
+        $report_uri = $this->getReleaseTrackerReportsUri();
+        $response   = $this->getResponse($this->client->get($report_uri), \REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $this->assertGETTrackersIdReports($response);
+    }
+
+    private function assertGETTrackersIdReports(Response $response): void
+    {
         $reports        = $response->json();
         $default_report = $reports[0];
 
@@ -216,10 +262,25 @@ class TrackersTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testGetReportsId()
+    public function testGetReportsId(): void
     {
         $response = $this->getResponse($this->client->get($this->report_uri));
 
+        $this->assertGETReportsId($response);
+    }
+
+    public function testGetReportsIdFoReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get($this->report_uri),
+            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertGETReportsId($response);
+    }
+
+    private function assertGETReportsId(Response $response): void
+    {
         $report = $response->json();
 
         $this->assertEquals($this->report_id, $report['id']);
@@ -231,7 +292,21 @@ class TrackersTest extends TrackerBase
 
     public function testGetReportsArtifactsId()
     {
-        $response  = $this->getResponse($this->client->get($this->getReportsArtifactsUri()));
+        $response = $this->getResponse($this->client->get($this->getReportsArtifactsUri()));
+        $this->assertGETReportsByArtifactsId($response);
+    }
+
+    public function testGetReportsByArtifactsIdForReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get($this->getReportsArtifactsUri()),
+            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertGETReportsByArtifactsId($response);
+    }
+
+    private function assertGETReportsByArtifactsId(Response $response): void
+    {
         $artifacts = $response->json();
 
         $first_artifact_info = $artifacts[0];
