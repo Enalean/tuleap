@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -53,6 +53,16 @@ class PullRequestsTest extends RestBase
     public function testOPTIONS()
     {
         $response = $this->getResponse($this->client->options('pull_requests/'));
+
+        $this->assertEquals(array('OPTIONS', 'GET', 'POST', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testOPTIONSWithReadOnlyAdmin()
+    {
+        $response = $this->getResponse(
+            $this->client->options('pull_requests/'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
 
         $this->assertEquals(array('OPTIONS', 'GET', 'POST', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
