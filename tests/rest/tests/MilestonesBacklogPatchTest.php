@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All rights reserved
+ * Copyright (c) Enalean, 2014-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,7 @@ use Tuleap\REST\MilestoneBase;
 /**
  * @group MilestonesTest
  */
-class MilestonesBacklogPatchTest extends MilestoneBase
+class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /** @var Test\Rest\Tracker\Tracker */
     private $release;
@@ -67,6 +67,16 @@ class MilestonesBacklogPatchTest extends MilestoneBase
         $this->sprints = $this->getArtifactIdsIndexedByTitle('dragndrop', 'sprint');
 
         $this->uri     = 'milestones/'.$this->release['id'].'/backlog';
+    }
+
+    public function testPatchBacklogForbiddenForRESTReadOnlyUserNotInvolvedInProject(): void
+    {
+        $response = $this->getResponse(
+            $this->client->patch($this->uri, null, null),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testPatchBacklogAfter()
@@ -331,7 +341,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase
     {
         $response = $this->getResponse($this->client->get($uri));
         $actual_order = array();
-        foreach($response->json() as $backlog_element) {
+        foreach ($response->json() as $backlog_element) {
             $actual_order[] = $backlog_element['id'];
         }
         return $actual_order;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2013 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,49 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Guzzle\Http\Message\Response;
 use Tuleap\REST\MilestoneBase;
 
 /**
  * @group MilestonesTest
  */
-class MilestonesCardwallTest extends MilestoneBase
+class MilestonesCardwallTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public function testOPTIONSCardwallOnSprintGivesOPTIONSandGET()
+    public function testOPTIONSCardwallOnSprintGivesOPTIONSandGET(): void
     {
         $response = $this->getResponse($this->client->options('milestones/'.$this->sprint_artifact_ids[1].'/cardwall'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGETCardwall()
+    public function testOPTIONSCardwallWithRESTReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('milestones/'.$this->sprint_artifact_ids[1].'/cardwall'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETCardwall(): void
     {
         $response = $this->getResponse($this->client->get('milestones/'.$this->sprint_artifact_ids[1].'/cardwall'));
 
+        $this->assertCardwall($response);
+    }
+
+    public function testGETCardwallWithRESTReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('milestones/'.$this->sprint_artifact_ids[1].'/cardwall'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertCardwall($response);
+    }
+
+    private function assertCardwall(Response $response): void
+    {
         $cardwall = $response->json();
 
         $this->assertArrayHasKey('columns', $cardwall);
@@ -58,14 +84,14 @@ class MilestonesCardwallTest extends MilestoneBase
         $first_swimlane = $swimlanes[0];
 
         $first_swimlane_card = $first_swimlane['cards'][0];
-        $this->assertEquals(REST_TestDataBuilder::PLANNING_ID.'_'.$this->story_artifact_ids[1], $first_swimlane_card['id']);
+        $this->assertEquals(REST_TestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1], $first_swimlane_card['id']);
         $this->assertEquals("Believe", $first_swimlane_card['label']);
-        $this->assertEquals("cards/".REST_TestDataBuilder::PLANNING_ID."_".$this->story_artifact_ids[1], $first_swimlane_card['uri']);
+        $this->assertEquals("cards/" . REST_TestDataBuilder::PLANNING_ID . "_" . $this->story_artifact_ids[1], $first_swimlane_card['uri']);
         $this->assertEquals(REST_TestDataBuilder::PLANNING_ID, $first_swimlane_card['planning_id']);
         $this->assertEquals("Open", $first_swimlane_card['status']);
         $this->assertEquals(null, $first_swimlane_card['accent_color']);
         $this->assertEquals("2", $first_swimlane_card['column_id']);
-        $this->assertEquals(array(1,2,4), $first_swimlane_card['allowed_column_ids']);
+        $this->assertEquals(array(1, 2, 4), $first_swimlane_card['allowed_column_ids']);
         $this->assertEquals(array(), $first_swimlane_card['values']);
 
         $first_swimlane_card_project_reference = $first_swimlane_card['project'];
@@ -74,10 +100,10 @@ class MilestonesCardwallTest extends MilestoneBase
 
         $first_swimlane_card_artifact_reference = $first_swimlane_card['artifact'];
         $this->assertEquals($this->story_artifact_ids[1], $first_swimlane_card_artifact_reference['id']);
-        $this->assertEquals("artifacts/".$this->story_artifact_ids[1], $first_swimlane_card_artifact_reference['uri']);
+        $this->assertEquals("artifacts/" . $this->story_artifact_ids[1], $first_swimlane_card_artifact_reference['uri']);
 
         $first_swimlane_card_artifact_tracker_reference = $first_swimlane_card_artifact_reference['tracker'];
         $this->assertEquals($this->user_stories_tracker_id, $first_swimlane_card_artifact_tracker_reference['id']);
-        $this->assertEquals('trackers/'.$this->user_stories_tracker_id, $first_swimlane_card_artifact_tracker_reference['uri']);
+        $this->assertEquals('trackers/' . $this->user_stories_tracker_id, $first_swimlane_card_artifact_tracker_reference['uri']);
     }
 }

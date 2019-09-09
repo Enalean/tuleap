@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2013 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,49 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Guzzle\Http\Message\Response;
 use Tuleap\REST\MilestoneBase;
 
 /**
  * @group MilestonesTest
  */
-class MilestonesContentTest extends MilestoneBase
+class MilestonesContentTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public function testOPTIONSContent()
+    public function testOPTIONSContent(): void
     {
         $response = $this->getResponse($this->client->options('milestones/'.$this->release_artifact_ids[1].'/content'));
         $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGETContent()
+    public function testOPTIONSContentWithRESTReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('milestones/'.$this->release_artifact_ids[1].'/content'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'GET', 'PUT', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETContent(): void
     {
         $response = $this->getResponse($this->client->get('milestones/' . $this->release_artifact_ids[1] . '/content'));
 
+        $this->assertGETContent($response);
+    }
+
+    public function testGETContentWithRESTReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('milestones/' . $this->release_artifact_ids[1] . '/content'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertGETContent($response);
+    }
+
+    private function assertGETContent(Response $response): void
+    {
         $content_items = $response->json();
 
         $this->assertCount(4, $content_items);
@@ -74,11 +100,12 @@ class MilestonesContentTest extends MilestoneBase
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testPUTContent()
+    public function testPUTContent(): void
     {
         $response_put = $this->getResponse(
             $this->client->put(
-                'milestones/' . $this->release_artifact_ids[1] . '/content', null,
+                'milestones/' . $this->release_artifact_ids[1] . '/content',
+                null,
                 '[' . $this->epic_artifact_ids[1] . ',' . $this->epic_artifact_ids[4] . ']'
             )
         );
@@ -112,7 +139,7 @@ class MilestonesContentTest extends MilestoneBase
     /**
      * @depends testPUTContent
      */
-    public function testPUTContentWithSameValueAsPreviouslyReturns200()
+    public function testPUTContentWithSameValueAsPreviouslyReturns200(): void
     {
         $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/content', null, '['.$this->epic_artifact_ids[1].','.$this->epic_artifact_ids[4].']'));
 
@@ -120,7 +147,7 @@ class MilestonesContentTest extends MilestoneBase
         $this->assertEquals($response_put->getBody(true), '');
     }
 
-    public function testPUTContentWithoutPermission()
+    public function testPUTContentWithoutPermission(): void
     {
         $response_put = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->put('milestones/'.$this->release_artifact_ids[1].'/content', null, '['.$this->epic_artifact_ids[4].','.$this->epic_artifact_ids[1].']'));
 
@@ -128,11 +155,27 @@ class MilestonesContentTest extends MilestoneBase
         $this->assertArrayHasKey('error', $response_put->json());
     }
 
-    public function testPUTContentOnlyOneElement()
+    public function testPUTContentWithRESTReadOnlyUserNotInvolvedInProject(): void
     {
         $response_put = $this->getResponse(
             $this->client->put(
-                'milestones/' . $this->release_artifact_ids[1] . '/content', null,
+                'milestones/'.$this->release_artifact_ids[1].'/content',
+                null,
+                '['.$this->epic_artifact_ids[4].','.$this->epic_artifact_ids[1].']'
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response_put->getStatusCode());
+        $this->assertArrayHasKey('error', $response_put->json());
+    }
+
+    public function testPUTContentOnlyOneElement(): void
+    {
+        $response_put = $this->getResponse(
+            $this->client->put(
+                'milestones/' . $this->release_artifact_ids[1] . '/content',
+                null,
                 '[' . $this->epic_artifact_ids[4] . ']'
             )
         );
@@ -156,7 +199,8 @@ class MilestonesContentTest extends MilestoneBase
 
         $this->getResponse(
             $this->client->put(
-                'milestones/' . $this->release_artifact_ids[1] . '/content', null,
+                'milestones/' . $this->release_artifact_ids[1] . '/content',
+                null,
                 '[' . $this->epic_artifact_ids[1] . ',' . $this->epic_artifact_ids[4] . ']'
             )
         );

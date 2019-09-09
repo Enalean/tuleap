@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2013 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -23,9 +23,9 @@ use Tuleap\REST\MilestoneBase;
 /**
  * @group MilestonesTest
  */
-class MilestonesMilestonesTest extends MilestoneBase
+class MilestonesMilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public function testPUTRemoveSubMilestones()
+    public function testPUTRemoveSubMilestones(): void
     {
         $this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.$this->sprint_artifact_ids[1].']');
         $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '[]'));
@@ -36,10 +36,25 @@ class MilestonesMilestonesTest extends MilestoneBase
         $this->assertCount(0, $submilestones);
     }
 
-    public function testPUTOnlyOneSubMilestone()
+    public function testPUTSubMilestoneDeniedForRESTReadOnlyUserNotInvolvedInProject(): void
+    {
+        $response_put = $this->getResponse(
+            $this->client->put(
+                'milestones/'.$this->release_artifact_ids[1].'/milestones',
+                null,
+                '['.$this->sprint_artifact_ids[1].']'
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response_put->getStatusCode());
+    }
+
+    public function testPUTOnlyOneSubMilestone(): void
     {
         $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.$this->sprint_artifact_ids[1].']'));
-        $this->assertEquals($response_put->getStatusCode(), 200);
+        $this->assertEquals(200, $response_put->getStatusCode());
+
         $response_get = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1].'/milestones', null));
         $submilestones = $response_get->json();
 
@@ -47,23 +62,32 @@ class MilestonesMilestonesTest extends MilestoneBase
         $this->assertEquals($this->sprint_artifact_ids[1], $submilestones[0]['id']);
     }
 
-    public function testPUTOnlyOneSubMilestoneAlreadyAdded()
+    /**
+     * @depends testPUTOnlyOneSubMilestone
+     */
+    public function testPUTOnlyOneSubMilestoneAlreadyAdded(): void
     {
-        $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.$this->sprint_artifact_ids[1].']'));
-        $this->assertEquals($response_put->getStatusCode(), 200);
-        $this->assertEquals($response_put->json(), array());
+        $response_put = $this->getResponse(
+            $this->client->put(
+                'milestones/'.$this->release_artifact_ids[1].'/milestones',
+                null,
+                '['.$this->sprint_artifact_ids[1].']'
+            )
+        );
+
+        $this->assertEquals(200, $response_put->getStatusCode());
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
-    public function testPUTOnlyOneSubMilestoneTwice()
+    public function testPUTOnlyOneSubMilestoneTwice(): void
     {
-        $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.$this->sprint_artifact_ids[1].','.$this->sprint_artifact_ids[1].']'));
-        $this->assertEquals($response_put->getStatusCode(), 400);
-        $response_get = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1].'/milestones', null));
-        $submilestones = $response_get->json();
+        $response_put = $this->getResponse(
+            $this->client->put(
+                'milestones/'.$this->release_artifact_ids[1].'/milestones',
+                null,
+                '['.$this->sprint_artifact_ids[1].','.$this->sprint_artifact_ids[1].']'
+            )
+        );
 
-        $this->assertCount(0, $submilestones);
+        $this->assertEquals(400, $response_put->getStatusCode());
     }
 }
