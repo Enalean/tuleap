@@ -1,5 +1,24 @@
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import angular from "angular";
-import tuleap_frs_module from "tuleap-frs-module";
+import tuleap_frs_module from "../app.js";
 import file_download_controller from "./file-download-controller.js";
 
 import "angular-mocks";
@@ -44,10 +63,10 @@ describe("FileDownloadController -", function() {
 
     describe("downloadFile() -", function() {
         beforeEach(function() {
-            spyOn($modal, "open").and.returnValue({
+            jest.spyOn($modal, "open").mockReturnValue({
                 result: $q.when()
             });
-            spyOn($window, "open");
+            jest.spyOn($window, "open").mockImplementation(() => {});
 
             FileDownloadController = $controller(file_download_controller, {
                 $modal: $modal,

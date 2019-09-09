@@ -41,6 +41,7 @@
     "gulp-rev": "^7.1.2",
     "gulp-sass": "^4.0.2",
     "http-server": "^0.11.1",
+    "identity-obj-proxy": "^3.0.0",
     "jasmine-core": "^3.4.0",
     "jasmine-fixture": "^2.0.0",
     "jasmine-promise-matchers": "^2.6.0",

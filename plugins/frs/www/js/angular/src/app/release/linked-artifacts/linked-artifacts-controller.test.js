@@ -1,5 +1,24 @@
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import angular from "angular";
-import tuleap_frs_module from "tuleap-frs-module";
+import tuleap_frs_module from "../../app.js";
 import linked_artifacts_controller from "./linked-artifacts-controller.js";
 
 import "angular-mocks";
@@ -29,9 +48,9 @@ describe("LinkedArtifactsController -", function() {
             SharedPropertiesService = _SharedPropertiesService_;
         });
 
-        spyOn(SharedPropertiesService, "getRelease");
-        spyOn(ReleaseRestService, "getReleaseLinkNatures");
-        spyOn(ReleaseRestService, "getAllLinkedArtifacts");
+        jest.spyOn(SharedPropertiesService, "getRelease").mockImplementation(() => {});
+        jest.spyOn(ReleaseRestService, "getReleaseLinkNatures").mockImplementation(() => {});
+        jest.spyOn(ReleaseRestService, "getAllLinkedArtifacts").mockImplementation(() => {});
     });
 
     describe("init() -", function() {
@@ -42,7 +61,7 @@ describe("LinkedArtifactsController -", function() {
                     id: 117
                 }
             };
-            SharedPropertiesService.getRelease.and.returnValue(release);
+            SharedPropertiesService.getRelease.mockReturnValue(release);
 
             var nature_is_child = {
                 shortname: "_is_child",
@@ -56,7 +75,7 @@ describe("LinkedArtifactsController -", function() {
                 label: "Fixed In",
                 uri: "/scaphocephalus/grieved?a=junketing&b=drowner"
             };
-            ReleaseRestService.getReleaseLinkNatures.and.returnValue(
+            ReleaseRestService.getReleaseLinkNatures.mockReturnValue(
                 $q.when([nature_is_child, nature_fixed_in])
             );
 
@@ -76,7 +95,7 @@ describe("LinkedArtifactsController -", function() {
                     id: 292
                 }
             ];
-            ReleaseRestService.getAllLinkedArtifacts.and.callFake(function(uri, callback) {
+            ReleaseRestService.getAllLinkedArtifacts.mockImplementation(function(uri, callback) {
                 if (uri === nature_is_child.uri) {
                     callback(is_child_artifacts);
                     return $q.when(is_child_artifacts);
@@ -95,21 +114,21 @@ describe("LinkedArtifactsController -", function() {
             );
             expect(ReleaseRestService.getAllLinkedArtifacts).toHaveBeenCalledWith(
                 nature_is_child.uri,
-                jasmine.any(Function)
+                expect.any(Function)
             );
             expect(ReleaseRestService.getAllLinkedArtifacts).toHaveBeenCalledWith(
                 nature_fixed_in.uri,
-                jasmine.any(Function)
+                expect.any(Function)
             );
-            expect(ReleaseRestService.getAllLinkedArtifacts.calls.count()).toBe(2);
+            expect(ReleaseRestService.getAllLinkedArtifacts.mock.calls.length).toBe(2);
             expect(LinkedArtifactsController.natures[0]).toEqual(
-                jasmine.objectContaining(nature_is_child)
+                expect.objectContaining(nature_is_child)
             );
             expect(LinkedArtifactsController.natures[0].linked_artifacts).toEqual(
                 is_child_artifacts
             );
             expect(LinkedArtifactsController.natures[1]).toEqual(
-                jasmine.objectContaining(nature_fixed_in)
+                expect.objectContaining(nature_fixed_in)
             );
             expect(LinkedArtifactsController.natures[1].linked_artifacts).toEqual(
                 fixed_in_artifacts
@@ -124,7 +143,7 @@ describe("LinkedArtifactsController -", function() {
                     id: 375
                 }
             };
-            SharedPropertiesService.getRelease.and.returnValue(release);
+            SharedPropertiesService.getRelease.mockReturnValue(release);
 
             var no_nature_forward = {
                 shortname: "",
@@ -139,10 +158,10 @@ describe("LinkedArtifactsController -", function() {
                 label: "",
                 uri: "/odinitic/prophase?a=nunlet&b=sabino"
             };
-            ReleaseRestService.getReleaseLinkNatures.and.returnValue(
+            ReleaseRestService.getReleaseLinkNatures.mockReturnValue(
                 $q.when([no_nature_forward, no_nature_reverse])
             );
-            ReleaseRestService.getAllLinkedArtifacts.and.returnValue($q.when());
+            ReleaseRestService.getAllLinkedArtifacts.mockReturnValue($q.when());
 
             LinkedArtifactsController = $controller(linked_artifacts_controller);
             $rootScope.$apply();

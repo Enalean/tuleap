@@ -28,19 +28,9 @@ const webpack_config = {
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
-    resolve: {
-        alias: {
-            "angular-ui-bootstrap-templates": path.resolve(
-                __dirname,
-                "vendor/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"
-            ),
-            // Shorthand for testing purpose
-            "tuleap-frs-module": path.resolve(__dirname, "./src/app/app.js")
-        }
-    },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_ng_cache_loader,
             webpack_configurator.rule_angular_gettext_loader
         ]
