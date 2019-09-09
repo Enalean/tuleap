@@ -1,6 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`UnderConstructionModal open the modal as soon as the component is mounted 1`] = `
+exports[`UnderConstructionModal When the modal has not been opened before,
+        it will open the modal as soon as the component is mounted 1`] = `
 <div
   aria-labelledby="taskboard-under-construction-modal-title"
   class="tlp-modal tlp-modal-warning tlp-modal-display tlp-modal-shown"

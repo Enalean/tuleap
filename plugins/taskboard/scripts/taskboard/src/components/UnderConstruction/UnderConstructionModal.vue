@@ -25,7 +25,7 @@
                 <i class="fa fa-warning tlp-modal-title-icon"></i>
                 <translate>This feature is under construction</translate>
             </h1>
-            <div class="tlp-modal-close" data-dismiss="modal" v-bind:title="close" role="button">
+            <div class="tlp-modal-close" data-dismiss="modal" v-bind:title="$gettext('Close')" role="button">
                 ×
             </div>
         </div>
@@ -47,16 +47,42 @@
 import { modal as createModal } from "tlp";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+import { State } from "vuex-class";
+
+const storage_key_root = "tuleap-taskboard-under-construction-modal-hidden-";
 
 @Component
 export default class UnderConstructionModal extends Vue {
+    @State
+    readonly user_id!: number;
+
     mounted(): void {
-        const modal = createModal(this.$el);
+        if (!this.shouldShowModal()) {
+            return;
+        }
+        const modal = createModal(this.$el, {
+            destroy_on_hide: true
+        });
+
+        modal.addEventListener("tlp-modal-hidden", () => {
+            sessionStorage.setItem(this.storage_key, new Date().toUTCString());
+        });
         modal.show();
     }
 
-    get close(): string {
-        return this.$gettext("Close");
+    shouldShowModal(): boolean {
+        const last_time_modal_was_shown = sessionStorage.getItem(this.storage_key);
+        if (last_time_modal_was_shown === null) {
+            return true;
+        }
+        const next_time_modal_should_show_up = new Date(last_time_modal_was_shown);
+        next_time_modal_should_show_up.setDate(next_time_modal_should_show_up.getDate() + 1);
+        const today = new Date();
+        return today > next_time_modal_should_show_up;
+    }
+
+    get storage_key(): string {
+        return storage_key_root + this.user_id;
     }
 
     get leave_feedback(): string {
