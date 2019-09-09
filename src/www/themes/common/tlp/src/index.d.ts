@@ -94,6 +94,15 @@ export function filterInlineTable(filter: Element): FilterTable;
 import { OptionData, Select2Plugin } from "select2";
 export function select2(element: Element, options?: OptionData): Select2Plugin;
 
-export function datePicker(element: Element, options?: object): object;
+import flatpickr from "flatpickr";
+import { Options } from "flatpickr/dist/types/options";
+export function datePicker(
+    element: Element,
+    options?: Omit<Options, "enableTime" | "dateFormat"> & {
+        weekNumbers?: true;
+        time_24hr?: true;
+        monthSelectorType?: "static";
+    }
+): flatpickr.Instance;
 
 export as namespace tlp;
