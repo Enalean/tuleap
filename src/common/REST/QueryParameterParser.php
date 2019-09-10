@@ -119,6 +119,26 @@ class QueryParameterParser
      * @param string $query
      * @param string $parameter_name
      *
+     * @return bool
+     * @throws Exceptions\InvalidJsonException
+     * @throws InvalidParameterTypeException
+     * @throws MissingMandatoryParameterException
+     */
+    public function getBoolean(string $query, string $parameter_name): bool
+    {
+        $parameter_content = $this->getParameterContent($query, $parameter_name);
+
+        if (! is_bool($parameter_content)) {
+            throw new InvalidParameterTypeException("$parameter_name must be a boolean");
+        }
+
+        return $parameter_content;
+    }
+
+    /**
+     * @param string $query
+     * @param string $parameter_name
+     *
      * @return array
      * @throws Exceptions\InvalidJsonException
      * @throws InvalidParameterTypeException

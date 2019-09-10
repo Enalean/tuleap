@@ -51,7 +51,7 @@ class MinimalTrackerRepresentation implements TrackerRepresentation
      */
     public $project;
 
-    public function build(Tracker $tracker)
+    public function build(Tracker $tracker): self
     {
         $this->id         = JsonCast::toInt($tracker->getId());
         $this->uri        = CompleteTrackerRepresentation::ROUTE . '/' . $this->id;
@@ -61,5 +61,7 @@ class MinimalTrackerRepresentation implements TrackerRepresentation
         $project       = $tracker->getProject();
         $this->project = new ProjectReference();
         $this->project->build($project);
+
+        return $this;
     }
 }

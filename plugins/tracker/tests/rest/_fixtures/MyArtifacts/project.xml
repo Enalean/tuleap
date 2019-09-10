@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+  ~
+  ~ This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<project
+    unix-name="test-my-artifacts" full-name="Tests for MyArtifacts" description="For test" access="public">
+    <long-description>delete artifacts</long-description>
+    <services>
+    </services>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">rest_my_artifacts</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">rest_my_artifacts</member>
+            </members>
+        </ugroup>
+    </ugroups>
+    <trackers>
+        <tracker id="T104" parent_id="0" instantiate_for_new_projects="1">
+            <name>
+                <![CDATA[ Bugs ]]>
+            </name>
+            <item_name>bug</item_name>
+            <description>
+                <![CDATA[ Some bug tracker ]]>
+            </description>
+            <color>inca_silver</color>
+            <cannedResponses/>
+            <formElements>
+                <formElement type="string" ID="F8" rank="0" required="1">
+                    <name>summary</name>
+                    <label>Summary</label>
+                    <properties size="50"/>
+                </formElement>
+                <formElement type="sb" ID="F26" rank="371">
+                    <name>assigned_to</name>
+                    <label>Assigned to</label>
+                    <description>Who is in charge of solving the artifact</description>
+                    <bind type="users">
+                        <items>
+                            <item label="group_members"/>
+                        </items>
+                    </bind>
+                </formElement>
+            </formElements>
+            <semantics>
+                <semantic type="title">
+                    <shortname>title</shortname>
+                    <label>Title</label>
+                    <description>Define the title of an artifact</description>
+                    <field REF="F8"/>
+                </semantic>
+                <semantic type="contributor">
+                    <shortname>contributor</shortname>
+                    <label>Contributor/assignee</label>
+                    <description>Define the contributor/assignee of an artifact</description>
+                    <field REF="F26"/>
+                </semantic>
+            </semantics>
+            <rules/>
+            <reports/>
+            <workflow/>
+            <permissions>
+                <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                <permission scope="field" REF="F8" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F8" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F8" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+            </permissions>
+            <artifacts>
+                <artifact id="3">
+                    <changeset>
+                        <submitted_by format="username">rest_my_artifacts</submitted_by>
+                        <submitted_on format="ISO8601">2018-03-01T12:00:00+01:00</submitted_on>
+                        <comments/>
+                        <field_change field_name="summary" type="string">
+                            <value><![CDATA[I submitted this one]]></value>
+                        </field_change>
+                    </changeset>
+                </artifact>
+                <artifact id="4">
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2018-03-01T12:00:00+01:00</submitted_on>
+                        <comments/>
+                        <field_change field_name="summary" type="string">
+                            <value><![CDATA[I am assigned to this one]]></value>
+                        </field_change>
+                        <field_change field_name="assigned_to" type="list" bind="users">
+                            <value format="username">rest_my_artifacts</value>
+                        </field_change>
+                    </changeset>
+                </artifact>
+                <artifact id="5">
+                    <changeset>
+                        <submitted_by format="username">rest_my_artifacts</submitted_by>
+                        <submitted_on format="ISO8601">2018-03-01T12:00:00+01:00</submitted_on>
+                        <comments/>
+                        <field_change field_name="summary" type="string">
+                            <value><![CDATA[I submitted and I am assigned to this one]]></value>
+                        </field_change>
+                        <field_change field_name="assigned_to" type="list" bind="users">
+                            <value format="username">rest_my_artifacts</value>
+                        </field_change>
+                    </changeset>
+                </artifact>
+            </artifacts>
+        </tracker>
+    </trackers>
+</project>
