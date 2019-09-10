@@ -880,6 +880,18 @@ class ProjectTest extends ProjectBase
                 'compared_to' => $first_item['id']
             )
         ));
+
+        $response_patch_with_rest_read_only = $this->getResponse(
+            $this->client->patch(
+                'projects/'.$this->project_private_member_id.'/backlog',
+                null,
+                $request_body
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response_patch_with_rest_read_only->getStatusCode());
+
         $response_patch = $this->getResponse($this->client->patch(
             'projects/'.$this->project_private_member_id.'/backlog',
             null,
