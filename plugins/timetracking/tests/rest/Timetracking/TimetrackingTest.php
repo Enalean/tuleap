@@ -28,7 +28,7 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
 
 class TimetrackingTest extends TimetrackingBase
 {
-    public function testGetTimesForUserWithDates()
+    public function testGetTimesForUserWithDates(): void
     {
         $query = urlencode(
             json_encode([
@@ -50,6 +50,22 @@ class TimetrackingTest extends TimetrackingBase
         $this->assertEquals($times[0]['id'], 1);
         $this->assertEquals($times[0]['minutes'], 600);
         $this->assertEquals($times[0]['date'], '2018-04-01');
+    }
+
+    public function testGetTimesForUserWithDatesWithReadOnlySiteAdmin(): void
+    {
+        $query = urlencode(
+            json_encode([
+                "start_date" => "2018-04-01T00:00:00+01",
+                "end_date"   => "2018-04-10T00:00:00+01"
+            ])
+        );
+        $response = $this->getResponse(
+            $this->client->get("users/" . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query"),
+            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testGetTimesForUserForOneDay()
