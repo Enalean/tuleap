@@ -116,7 +116,7 @@ class DeleteControllerTest extends TestCase
     public function testItDeletesOneService(): void
     {
         $this->service_manager->shouldReceive('getService')->with($this->service_id)->andReturn(
-            new Service($this->project, ['service_id' => $this->service_id])
+            new Service($this->project, ['service_id' => $this->service_id, 'scope' => Service::SCOPE_PROJECT])
         );
 
         $this->service_dao->shouldReceive('delete')->with($this->project_id, $this->service_id)->andReturnTrue();
@@ -130,7 +130,7 @@ class DeleteControllerTest extends TestCase
     public function testItDeletesAllServicesWhenItsInDefaultTemplate(): void
     {
         $this->service_manager->shouldReceive('getService')->with($this->service_id)->andReturn(
-            new Service($this->default_template_project, ['service_id' => $this->service_id, 'short_name' => 'homepage'])
+            new Service($this->default_template_project, ['service_id' => $this->service_id, 'short_name' => 'homepage', 'scope' => Service::SCOPE_PROJECT])
         );
 
         $this->service_dao->shouldReceive('delete')->with((string) Project::ADMIN_PROJECT_ID, $this->service_id)->andReturnTrue();
@@ -153,6 +153,20 @@ class DeleteControllerTest extends TestCase
         $this->service_dao->shouldNotReceive('deleteFromAllProjects');
 
         $this->expectException(ForbiddenException::class);
+
+        $this->controller->process($this->request, $this->layout, ['id' => '120']);
+    }
+
+    public function testItDoesNotAllowToDeleteSystemServices() : void
+    {
+        $this->service_manager->shouldReceive('getService')->with($this->service_id)->andReturn(
+            new Service($this->project, ['service_id' => $this->service_id, 'scope' => Service::SCOPE_SYSTEM ])
+        );
+
+        $this->service_dao->shouldReceive('delete')->never();
+
+        $this->layout->shouldReceive('addFeedback')->with(Feedback::ERROR, M::any())->once();
+        $this->layout->shouldReceive('redirect')->once();
 
         $this->controller->process($this->request, $this->layout, ['id' => '120']);
     }

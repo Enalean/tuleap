@@ -92,6 +92,10 @@ class DeleteController implements DispatchableWithRequest, DispatchableWithProje
 
             $service = $this->service_manager->getService($service_id);
 
+            if ($service->getScope() === Service::SCOPE_SYSTEM) {
+                throw new RuntimeException(_('This service is a system service, it cannot be deleted.'));
+            }
+
             if (! $this->dao->delete($project->getID(), $service->getId())) {
                 throw new RuntimeException($GLOBALS['Language']->getText('project_admin_editgroupinfo', 'upd_fail'));
             }
