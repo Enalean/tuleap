@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,8 +20,7 @@
 
 namespace Tuleap\Tracker\Tests\REST\Workflows;
 
-use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\Exception\ClientErrorResponseException;
+use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
@@ -82,6 +81,32 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         };
 
         return $all_transitions;
+    }
+
+    /**
+     * @depends testGetAllTransitionCombinations
+     */
+    public function testPOSTTrackerWorkflowTransitionDeniedForReadOnlyUser(array $transition_combinations): void
+    {
+        $available_transition = $transition_combinations["missing_transitions"][0];
+
+        $params = json_encode(
+            array(
+                "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
+                "from_id"    => $available_transition['from_id'] ?: 0,
+                "to_id"      => $available_transition['to_id']
+            )
+        );
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            $this->client->post(
+                'tracker_workflow_transitions',
+                null,
+                $params
+            )
+        );
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
@@ -257,6 +282,24 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
     /**
      * @depends testGetAllTransitionCombinations
      */
+    public function testDELETETrackerWorkflowTransitionsDeniedForReadOnlyUser(array $transition_combinations): void
+    {
+        $used_transition = $transition_combinations["transitions"][1];
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            $this->client->delete(
+                'tracker_workflow_transitions/' . $used_transition['id'],
+                null
+            )
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetAllTransitionCombinations
+     */
     public function testDELETETrackerWorkflowTransitions($transition_combinations)
     {
         $used_transition = $transition_combinations["transitions"][1];
@@ -344,6 +387,33 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
     /**
      * @depends testGetResolvedToClosedTransition
      */
+    public function testPATCHTrackerWorkflowTransitionsDeniedForReadOnlyUser(int $transition_id): void
+    {
+        $tracker_workflows_project_id = $this->getProjectId(self::TRACKER_WORKFLOWS_PROJECT_NAME);
+        $a_user_group_id              = $this->user_groups_ids[$tracker_workflows_project_id]['project_members'];
+
+        $params = json_encode(
+            [
+                "authorized_user_group_ids" => [$a_user_group_id],
+                "not_empty_field_ids"       => [],
+                "is_comment_required"       => true
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            $this->client->patch(
+                "tracker_workflow_transitions/$transition_id",
+                null,
+                $params
+            )
+        );
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetResolvedToClosedTransition
+     */
     public function testPATCHTrackerWorkflowTransitionsThenGETReturnsUpdatedTransition(int $transition_id)
     {
         $tracker_workflows_project_id = $this->getProjectId(self::TRACKER_WORKFLOWS_PROJECT_NAME);
@@ -369,6 +439,31 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
             REST_TestDataBuilder::TEST_USER_1_NAME,
             $this->client->get("tracker_workflow_transitions/$transition_id")
         );
+
+        $this->assertGETTransitions($response);
+    }
+
+    /**
+     * @depends testGetResolvedToClosedTransition
+     */
+    public function testGETTransitionForReadOnlyUser(int $transition_id): void
+    {
+        $tracker_workflows_project_id = $this->getProjectId(self::TRACKER_WORKFLOWS_PROJECT_NAME);
+        $a_user_group_id              = $this->user_groups_ids[$tracker_workflows_project_id]['project_members'];
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            $this->client->get("tracker_workflow_transitions/$transition_id")
+        );
+
+        $this->assertGETTransitions($response);
+    }
+
+    private function assertGETTransitions(Response $response): void
+    {
+        $tracker_workflows_project_id = $this->getProjectId(self::TRACKER_WORKFLOWS_PROJECT_NAME);
+        $a_user_group_id              = $this->user_groups_ids[$tracker_workflows_project_id]['project_members'];
+
         $this->assertEquals($response->getStatusCode(), 200);
 
         $response_content = $response->json();
@@ -380,13 +475,33 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
     /**
      * @depends testGetResolvedToClosedTransition
      */
-    public function testGETTrackerWorkflowTransitionActions(int $transition_id)
+    public function testGETTrackerWorkflowTransitionActions(int $transition_id): int
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
             $this->client->get("tracker_workflow_transitions/$transition_id/actions")
         );
 
+        $this->assertGETTrackerWorkflowTransitionActions($response);
+
+        return $transition_id;
+    }
+
+    /**
+     * @depends testGetResolvedToClosedTransition
+     */
+    public function testGETTrackerWorkflowTransitionActionsForReadOnlyUser(int $transition_id): void
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            $this->client->get("tracker_workflow_transitions/$transition_id/actions")
+        );
+
+        $this->assertGETTrackerWorkflowTransitionActions($response);
+    }
+
+    private function assertGETTrackerWorkflowTransitionActions(Response $response): void
+    {
         $this->assertEquals($response->getStatusCode(), 200);
 
         $post_actions = $response->json();
@@ -407,8 +522,35 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
 
         $forth_post_action = $post_actions[3];
         $this->assertSame("run_job", $forth_post_action["type"]);
+    }
 
-        return $transition_id;
+    /**
+     * @depends testGetResolvedToClosedTransition
+     */
+    public function testPUTTrackerWorkflowTransitionActionsDeniedForReadOnlyUser(int $transition_id): void
+    {
+        $body = json_encode(
+            [
+                "post_actions" => [
+                    [
+                        "id"      => null,
+                        "type"    => "run_job",
+                        "job_url" => "http://example.test"
+                    ]
+                ]
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            $this->client->put(
+                "tracker_workflow_transitions/$transition_id/actions",
+                null,
+                $body
+            )
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
