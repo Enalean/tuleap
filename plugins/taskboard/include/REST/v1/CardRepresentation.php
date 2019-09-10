@@ -20,30 +20,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Taskboard\AgileDashboard;
+namespace Tuleap\Taskboard\REST\v1;
 
-use Planning_Milestone;
+use Tracker_Artifact;
+use Tuleap\REST\JsonCast;
 
-class TaskboardPaneInfoBuilder
+class CardRepresentation
 {
     /**
-     * @var MilestoneIsAllowedChecker
+     * @var int
      */
-    private $checker;
+    public $id;
+    /**
+     * @var string
+     */
+    public $label;
+    /**
+     * @var string
+     */
+    public $xref;
+    /**
+     * @var int
+     */
+    public $rank;
 
-    public function __construct(MilestoneIsAllowedChecker $checker)
+    public function build(Tracker_Artifact $artifact, int $rank): void
     {
-        $this->checker = $checker;
-    }
-
-    public function getPaneForMilestone(Planning_Milestone $milestone): ?TaskboardPaneInfo
-    {
-        try {
-            $this->checker->checkMilestoneIsAllowed($milestone);
-
-            return new TaskboardPaneInfo($milestone);
-        } catch (MilestoneIsNotAllowedException $exception) {
-            return null;
-        }
+        $this->id    = JsonCast::toInt($artifact->getId());
+        $this->label = $artifact->getTitle();
+        $this->xref  = $artifact->getXRef();
+        $this->rank  = $rank;
     }
 }

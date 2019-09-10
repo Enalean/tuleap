@@ -33,6 +33,8 @@ use PluginManager;
 use Project;
 use taskboardPlugin;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
+use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;
 
 class MilestoneExtractorTest extends TestCase
 {
@@ -51,28 +53,18 @@ class MilestoneExtractorTest extends TestCase
      */
     private $user;
     /**
-     * @var Cardwall_OnTop_Dao|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MilestoneIsAllowedChecker
      */
-    private $dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PluginManager
-     */
-    private $plugin_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|taskboardPlugin
-     */
-    private $plugin;
+    private $checker;
 
     protected function setUp(): void
     {
         $this->user = Mockery::mock(PFUser::class);
 
         $this->factory        = Mockery::mock(Planning_MilestoneFactory::class);
-        $this->dao            = Mockery::mock(Cardwall_OnTop_Dao::class);
-        $this->plugin_manager = Mockery::mock(PluginManager::class);
-        $this->plugin         = Mockery::mock(taskboardPlugin::class);
+        $this->checker = Mockery::mock(MilestoneIsAllowedChecker::class);
 
-        $this->extractor = new MilestoneExtractor($this->factory, $this->dao, $this->plugin_manager, $this->plugin);
+        $this->extractor = new MilestoneExtractor($this->factory, $this->checker);
     }
 
     public function testNotFoundExceptionWhenMilestoneDoesNotExist(): void
@@ -108,7 +100,7 @@ class MilestoneExtractorTest extends TestCase
         $this->extractor->getMilestone($this->user, ['id' => 1, 'project_name' => 'my-project']);
     }
 
-    public function testNotFoundExceptionWhenProjectIsNotAllowedForPlugin(): void
+    public function testNotFoundExceptionWhenMilestoneIsNotAllowed(): void
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturn('my-project');
@@ -125,44 +117,11 @@ class MilestoneExtractorTest extends TestCase
             ->once()
             ->andReturn($milestone);
 
-        $this->plugin_manager
-            ->shouldReceive('isPluginAllowedForProject')
-            ->with($this->plugin, 42)
+        $this->checker
+            ->shouldReceive('checkMilestoneIsAllowed')
+            ->with($milestone)
             ->once()
-            ->andReturnFalse();
-
-        $this->expectException(NotFoundException::class);
-
-        $this->extractor->getMilestone($this->user, ['id' => 1, 'project_name' => 'my-project']);
-    }
-
-    public function testNotFoundExceptionWhenNoCardwallOnMilestone(): void
-    {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getUnixNameMixedCase')->andReturn('my-project');
-        $project->shouldReceive('getID')->andReturn(42);
-
-        $milestone = Mockery::mock(Planning_Milestone::class);
-        $milestone->shouldReceive('getTrackerId')->andReturn(101);
-        $milestone->shouldReceive('getProject')->andReturn($project);
-
-        $this->factory
-            ->shouldReceive('getBareMilestoneByArtifactId')
-            ->with($this->user, 1)
-            ->once()
-            ->andReturn($milestone);
-
-        $this->plugin_manager
-            ->shouldReceive('isPluginAllowedForProject')
-            ->with($this->plugin, 42)
-            ->once()
-            ->andReturnTrue();
-
-        $this->dao
-            ->shouldReceive('isEnabled')
-            ->with(101)
-            ->once()
-            ->andReturnFalse();
+            ->andThrow(MilestoneIsNotAllowedException::class);
 
         $this->expectException(NotFoundException::class);
 
@@ -185,17 +144,10 @@ class MilestoneExtractorTest extends TestCase
             ->once()
             ->andReturn($milestone);
 
-        $this->plugin_manager
-            ->shouldReceive('isPluginAllowedForProject')
-            ->with($this->plugin, 42)
-            ->once()
-            ->andReturnTrue();
-
-        $this->dao
-            ->shouldReceive('isEnabled')
-            ->with(101)
-            ->once()
-            ->andReturnTrue();
+        $this->checker
+            ->shouldReceive('checkMilestoneIsAllowed')
+            ->with($milestone)
+            ->once();
 
         $this->assertEquals(
             $milestone,

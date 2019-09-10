@@ -22,43 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Routing;
 
-use Cardwall_OnTop_Dao;
 use PFUser;
 use Planning_MilestoneFactory;
-use PluginManager;
-use taskboardPlugin;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
+use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;
 
 class MilestoneExtractor
 {
-
     /**
      * @var Planning_MilestoneFactory
      */
     private $milestone_factory;
     /**
-     * @var Cardwall_OnTop_Dao
+     * @var MilestoneIsAllowedChecker
      */
-    private $cardwall_on_top_dao;
-    /**
-     * @var PluginManager
-     */
-    private $plugin_manager;
-    /**
-     * @var taskboardPlugin
-     */
-    private $taskboard_plugin;
+    private $checker;
 
-    public function __construct(
-        Planning_MilestoneFactory $milestone_factory,
-        Cardwall_OnTop_Dao $cardwall_on_top_dao,
-        PluginManager $plugin_manager,
-        taskboardPlugin $taskboard_plugin
-    ) {
+    public function __construct(Planning_MilestoneFactory $milestone_factory, MilestoneIsAllowedChecker $checker)
+    {
         $this->milestone_factory = $milestone_factory;
-        $this->cardwall_on_top_dao = $cardwall_on_top_dao;
-        $this->plugin_manager = $plugin_manager;
-        $this->taskboard_plugin = $taskboard_plugin;
+        $this->checker           = $checker;
     }
 
     /**
@@ -75,22 +59,12 @@ class MilestoneExtractor
             throw new NotFoundException(dgettext('tuleap-taskboard', "Milestone not found."));
         }
 
-        if (! $this->plugin_manager->isPluginAllowedForProject(
-            $this->taskboard_plugin,
-            $milestone->getProject()->getID()
-        )) {
-            throw new NotFoundException(
-                sprintf(
-                    dgettext('tuleap-taskboard', "Taskboard is not activated in project %s."),
-                    $milestone->getProject()->getUnconvertedPublicName()
-                )
-            );
-        }
+        try {
+            $this->checker->checkMilestoneIsAllowed($milestone);
 
-        if (! $this->cardwall_on_top_dao->isEnabled($milestone->getTrackerId())) {
-            throw new NotFoundException(dgettext('tuleap-taskboard', "Taskboard not found."));
+            return $milestone;
+        } catch (MilestoneIsNotAllowedException $exception) {
+            throw new NotFoundException($exception->getMessage());
         }
-
-        return $milestone;
     }
 }

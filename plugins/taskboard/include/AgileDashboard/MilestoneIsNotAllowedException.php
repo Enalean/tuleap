@@ -22,28 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\AgileDashboard;
 
-use Planning_Milestone;
-
-class TaskboardPaneInfoBuilder
+class MilestoneIsNotAllowedException extends \Exception
 {
-    /**
-     * @var MilestoneIsAllowedChecker
-     */
-    private $checker;
-
-    public function __construct(MilestoneIsAllowedChecker $checker)
-    {
-        $this->checker = $checker;
-    }
-
-    public function getPaneForMilestone(Planning_Milestone $milestone): ?TaskboardPaneInfo
-    {
-        try {
-            $this->checker->checkMilestoneIsAllowed($milestone);
-
-            return new TaskboardPaneInfo($milestone);
-        } catch (MilestoneIsNotAllowedException $exception) {
-            return null;
-        }
-    }
 }

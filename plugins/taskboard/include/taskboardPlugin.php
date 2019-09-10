@@ -24,11 +24,13 @@ use Tuleap\AgileDashboard\REST\v1\AdditionalPanesForMilestoneEvent;
 use Tuleap\AgileDashboard\REST\v1\PaneInfoRepresentation;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPane;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfoBuilder;
 use Tuleap\Taskboard\Board\BoardPresenterBuilder;
 use Tuleap\Taskboard\Column\ColumnPresenterCollectionRetriever;
+use Tuleap\Taskboard\REST\ResourcesInjector;
 use Tuleap\Taskboard\Routing\MilestoneExtractor;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -61,6 +63,7 @@ class taskboardPlugin extends Plugin
 
     public function getHooksAndCallbacks(): Collection
     {
+        $this->addHook(Event::REST_RESOURCES);
         $this->addHook(CollectRoutesEvent::NAME);
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
@@ -69,6 +72,13 @@ class taskboardPlugin extends Plugin
         }
 
         return parent::getHooksAndCallbacks();
+    }
+
+    /** @see Event::REST_RESOURCES */
+    public function restResources(array $params): void
+    {
+        $injector = new ResourcesInjector();
+        $injector->populate($params['restler']);
     }
 
     public function routeGet(): \Tuleap\Taskboard\Routing\TaskboardController
@@ -81,9 +91,7 @@ class taskboardPlugin extends Plugin
         return new \Tuleap\Taskboard\Routing\TaskboardController(
             new MilestoneExtractor(
                 $agiledashboard_plugin->getMilestoneFactory(),
-                $this->getCardwallOnTopDao(),
-                PluginManager::instance(),
-                $this
+                $this->getMilestoneIsAllowedChecker()
             ),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
             $agiledashboard_plugin->getAllBreadCrumbsForMilestoneBuilder(),
@@ -152,8 +160,17 @@ class taskboardPlugin extends Plugin
 
     public function getPaneInfoForMilestone(Planning_Milestone $milestone): ?TaskboardPaneInfo
     {
-        $pane_builder = new TaskboardPaneInfoBuilder(PluginManager::instance(), $this, $this->getCardwallOnTopDao());
+        $pane_builder = new TaskboardPaneInfoBuilder($this->getMilestoneIsAllowedChecker());
 
         return $pane_builder->getPaneForMilestone($milestone);
+    }
+
+    public function getMilestoneIsAllowedChecker(): MilestoneIsAllowedChecker
+    {
+        return new MilestoneIsAllowedChecker(
+            $this->getCardwallOnTopDao(),
+            PluginManager::instance(),
+            $this
+        );
     }
 }
