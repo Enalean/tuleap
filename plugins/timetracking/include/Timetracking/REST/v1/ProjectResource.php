@@ -30,7 +30,6 @@ use Tracker_FormElementFactory;
 use Tracker_REST_TrackerRestBuilder;
 use TrackerFactory;
 use TransitionFactory;
-use Tuleap\REST\UserManager as RestUserManager;
 use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
@@ -54,14 +53,15 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use UserManager;
 use Workflow_Transition_ConditionFactory;
 
 class ProjectResource
 {
     public const TIMETRACKING_CRITERION = 'with_time_tracking';
 
-    /** @var \Tuleap\REST\UserManager */
-    private $rest_user_manager;
+    /** @var UserManager */
+    private $user_manager;
 
     /**
      * @var TimeRetriever
@@ -75,13 +75,13 @@ class ProjectResource
 
     public function __construct()
     {
-        $this->rest_user_manager             = RestUserManager::build();
-        $this->permissions_retriever         = new PermissionsRetriever(
+        $this->user_manager          = UserManager::instance();
+        $this->permissions_retriever = new PermissionsRetriever(
             new TimetrackingUgroupRetriever(
                 new TimetrackingUgroupDao()
             )
         );
-        $this->time_retriever                = new TimeRetriever(
+        $this->time_retriever        = new TimeRetriever(
             new TimeDao(),
             $this->permissions_retriever,
             new AdminDao(),
@@ -157,7 +157,7 @@ class ProjectResource
     public function getProjects($limit, $offset, array $query)
     {
         $this->checkQuery($query);
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
 
         return $this->time_retriever->getProjectsWithTimetracking($current_user, $limit, $offset);
     }
@@ -180,7 +180,7 @@ class ProjectResource
     public function getTrackers($query, $representation, Project $project, $limit, $offset)
     {
         $this->checkQuery($query);
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
         if ($representation === "minimal") {
             return $this->timetracking_overview_builder->getTrackersMinimalRepresentationsWithTimetracking(
                 $current_user,

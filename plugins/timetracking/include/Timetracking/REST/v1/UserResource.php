@@ -32,25 +32,25 @@ use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
-use Tuleap\REST\UserManager as RestUserManager;
 use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimeRetriever;
+use UserManager;
 
 class UserResource extends AuthenticatedResource
 {
     public const MAX_TIMES_BATCH = 100;
 
-    /** @var \Tuleap\REST\UserManager */
-    private $rest_user_manager;
+    /** @var UserManager */
+    private $user_manager;
 
 
     public function __construct()
     {
-        $this->rest_user_manager  = RestUserManager::build();
+        $this->user_manager = UserManager::instance();
     }
 
     /**
@@ -82,11 +82,11 @@ class UserResource extends AuthenticatedResource
         $representation_builder = new TimetrackingRepresentationBuilder();
         $query_checker->checkTimePeriodIsValid($start_date, $end_date);
 
-        if ($id != $this->rest_user_manager->getCurrentUser()->getId()) {
+        if ($id != $this->user_manager->getCurrentUser()->getId()) {
             throw new RestException(403, 'You can only access to your own preferences');
         }
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
 
         $time_retriever = new TimeRetriever(
             new TimeDao(),
