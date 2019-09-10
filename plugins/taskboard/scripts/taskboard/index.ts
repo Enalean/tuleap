@@ -32,6 +32,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const user_is_admin = Boolean(vue_mount_point.dataset.userIsAdmin);
+    const user_id_string = document.body.dataset.userId || "0";
+    const user_id = Number.parseInt(user_id_string, 10);
     const admin_url = vue_mount_point.dataset.adminUrl || "";
     const columns: Array<ColumnDefinition> =
         typeof vue_mount_point.dataset.columns !== "undefined"
@@ -46,6 +48,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const AppComponent = Vue.extend(App);
 
     new AppComponent({
-        store: createStore({ user_is_admin, admin_url, columns })
+        store: createStore({ user_is_admin, admin_url, user_id, columns })
     }).$mount(vue_mount_point);
 });

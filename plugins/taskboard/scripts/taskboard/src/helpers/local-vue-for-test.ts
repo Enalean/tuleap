@@ -19,6 +19,7 @@
  */
 
 import { Vue } from "vue/types/vue";
+import Vuex from "vuex";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import { createLocalVue } from "@vue/test-utils";
@@ -29,6 +30,7 @@ export function createTaskboardLocalVue(): typeof Vue {
         translations: {},
         silent: true
     });
+    local_vue.use(Vuex);
     local_vue.use(VueDOMPurifyHTML);
 
     return local_vue;

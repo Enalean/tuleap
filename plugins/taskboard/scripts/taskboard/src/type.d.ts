@@ -26,6 +26,7 @@ export interface ColumnDefinition {
 
 export interface State {
     user_is_admin: boolean;
+    user_id: number;
     admin_url: string;
     columns: Array<ColumnDefinition>;
 }
