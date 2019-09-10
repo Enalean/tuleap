@@ -73,7 +73,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         foreach ($values as $value) {
             try {
                 $attributes = $value->attributes();
-                $file_id    = (string) $attributes['ref'];
+                $file_id    = (string) ($attributes['ref'] ?? '');
                 $file       = $this->files_importer->getFileXML($file_id);
 
                 if (! $this->files_importer->fileIsAlreadyImported($file_id)) {

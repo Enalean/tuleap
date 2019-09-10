@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,13 +26,9 @@ class MassmailSender {
      *
      * Send mails to a group of people and check the max number of emailed people limit.
      *
-     * @param Project $project Project of the receivers
-     * @param PFO_User $user Sender
-     * @param string $subject
-     * @param string $html_body
      * @param PFUser[] $receivers
      */
-    public function sendMassmail(Project $project, PFUser $user, $subject, $html_body, array $receivers)
+    public function sendMassmail(Project $project, PFUser $user, string $subject, string $html_body, array $receivers)
     {
         $hp             = Codendi_HTMLPurifier::instance();
         $project_name   = $project->getUnconvertedPublicName();

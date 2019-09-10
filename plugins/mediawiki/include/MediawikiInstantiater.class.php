@@ -37,7 +37,7 @@ class MediaWikiInstantiater {
     /** @var string */
     private $project_name_dir;
 
-    /** @var project */
+    /** @var Project */
     private $project;
 
     /** @var MediawikiDao */
@@ -57,9 +57,13 @@ class MediaWikiInstantiater {
 
     /** @var Backend */
     private $backend;
+    /**
+     * @var MediawikiMLEBExtensionManager
+     */
+    private $mleb_manager;
 
     /**
-     * @param Project|string $project
+     * @param Project $project
      * @param MediawikiManager $mediawiki_manager
      * @param MediawikiLanguageManager $language_manager
      * @param MediawikiVersionManager $version_manager

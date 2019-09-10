@@ -36,7 +36,7 @@ class Chart_GanttMileStone {
     * Constructor
     *
     * @param int    $aVPos    Vertical position (row)
-    * @param string $aLabel   Text label
+    * @param string|string[] $aLabel   Text label
     * @param int    $aDate    Date of the milestone
     * @param string $aCaption Caption string for bar. Default is ""
     *

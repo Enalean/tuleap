@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -67,7 +67,7 @@ class Cardwall_OnTop_Config_ValueMapping {
     /**
      * Return true is the given status label match the current value
      *
-     * @param String $artifact_status_label
+     * @param string|null $artifact_status_label
      *
      * @return bool
      */

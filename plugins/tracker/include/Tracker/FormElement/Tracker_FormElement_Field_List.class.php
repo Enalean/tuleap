@@ -1052,9 +1052,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        $html = '';
-        if ($value) {
-            $html .= $this->fetchChangesetValue($artifact->id, $artifact->getLastChangeset()->id, $value);
+        $html           = '';
+        $last_changeset = $artifact->getLastChangeset();
+        if ($value && $last_changeset !== null) {
+            $html .= $this->fetchChangesetValue($artifact->id, $last_changeset->getId(), $value);
         }
         return $html;
     }

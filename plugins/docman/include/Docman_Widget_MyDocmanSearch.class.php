@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2004-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -120,8 +120,10 @@ class Docman_Widget_MyDocmanSearch extends Widget
 
         if ($res_group && db_numrows($res_group)== 1){
             $row = db_fetch_array($res_group);
-            $res['group_id'] = (int) $row['group_id'];
-            $res['title'] = $row['title'];
+            $res = [
+                'group_id' => (int) $row['group_id'],
+                'title'    => (string) $row['title']
+            ];
 
             $project = ProjectManager::instance()->getProject($res['group_id']);
             if ($project->isPublic()){

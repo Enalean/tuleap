@@ -96,7 +96,7 @@ class GitViews_GitPhpViewer
 
             ProjectList::Instantiate($this->repository);
 
-            $controller = Controller::GetController((isset($_GET['a']) ? $_GET['a'] : null));
+            $controller = Controller::GetController($_GET['a'] ?? '');
             if ($controller) {
                 $controller->RenderHeaders();
                 $controller->Render();

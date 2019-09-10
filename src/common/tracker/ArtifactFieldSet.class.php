@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -111,7 +111,7 @@ class ArtifactFieldSet {
     /**
      *  Set the fields of this field set
      *
-     * @param array{ArtifactFiel} $fields the array of fields contained in this Field set
+     * @param ArtifactField[] $fields the array of fields contained in this Field set
      */
     function setArtifactFields($fields)
     {
@@ -120,7 +120,7 @@ class ArtifactFieldSet {
     /**
      * getArtifactFields - get the ArtifactField objects contained in this ArtifactFieldSet
      *
-     * @return array{ArtifactFields} The ArtifactType object.
+     * @return ArtifactField[] The ArtifactType object.
      */
     function getArtifactFields()
     {

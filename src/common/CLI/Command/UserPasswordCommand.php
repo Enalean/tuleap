@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -77,6 +77,8 @@ class UserPasswordCommand extends Command
             $password = $helper->ask($input, $output, $question);
         }
 
+        assert(is_string($password));
+
         if (! $this->password_sanity_checker->check($password)) {
             throw new InvalidArgumentException("The provided password does not match the expected password policy.");
         }
@@ -84,6 +86,8 @@ class UserPasswordCommand extends Command
         $user->setPassword($password);
         if (! $this->user_manager->updateDb($user)) {
             return 1;
-        };
+        }
+
+        return 0;
     }
 }

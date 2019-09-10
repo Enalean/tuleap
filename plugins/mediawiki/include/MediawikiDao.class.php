@@ -561,7 +561,7 @@ class MediawikiDao extends DataAccessObject {
     /**
      *
      * @param int $project_id
-     * @param bool $enable_compatibility_view
+     * @param 0|1 $enable_compatibility_view
      * @return bool true if success
      */
     public function updateCompatibilityViewOption($project_id, $enable_compatibility_view)

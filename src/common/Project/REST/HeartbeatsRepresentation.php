@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,9 +35,6 @@ class HeartbeatsRepresentation
      */
     public $are_there_activities_user_cannot_see;
 
-    /**
-     * @param HeartbeatsEntry[] $heartbeats
-     */
     public function build(HeartbeatsEntryCollection $heartbeats)
     {
         $this->entries = array();

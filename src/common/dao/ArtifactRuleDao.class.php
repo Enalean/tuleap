@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -18,8 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('include/DataAccessObject.class.php');
 
 /**
  *  Data Access Object for ArtifactRule
@@ -267,6 +265,9 @@ class ArtifactRuleDao extends DataAccessObject {
         $inserted = $this->update($sql);
         if ($inserted) {
             $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
+            if ($dar === false) {
+                return false;
+            }
             if ($row = $dar->getRow()) {
                 $inserted = $row['id'];
             } else {
@@ -276,6 +277,3 @@ class ArtifactRuleDao extends DataAccessObject {
         return $inserted;
     }
 }
-
-
-?>
