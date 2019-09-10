@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\PullRequest;
 
+use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use RestBase;
 
@@ -28,39 +29,95 @@ require_once dirname(__FILE__).'/../bootstrap.php';
 /**
  * @group PullRequest
  */
-class PullRequestsLabelsTest extends RestBase
+final class PullRequestsLabelsTest extends RestBase
 {
-    public function testOPTIONS()
+    public function testOPTIONS(): void
     {
         $response = $this->getResponse($this->client->options('pull_requests/1/labels'));
 
         $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGETLabel()
+    public function testOPTIONSWithReadOnlyAdmin(): void
     {
-        $response = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
+        $response = $this->getResponse(
+            $this->client->options('pull_requests/1/labels'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
 
-        $this->assertEquals(array(), $response['labels']);
+        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETLabel(): void
+    {
+        $response = $this->getResponse($this->client->get('pull_requests/1/labels'));
+
+        $this->assertGETLabel($response);
+    }
+
+    public function testGETLabelWithReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('pull_requests/1/labels'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertGETLabel($response);
+    }
+
+    private function assertGETLabel(Response $response): void
+    {
+        $content = $response->json();
+
+        $this->assertEquals(array(), $content['labels']);
     }
 
     /**
      * @depends testGETLabel
      */
-    public function testPATCHAddUnknownLabel()
+    public function testPATCHAddUnknownLabel(): void
     {
-        $response = $this->getResponse($this->client->patch('pull_requests/1/labels',null, json_encode(
-            array(
-                'add' => array(
-                    array('label' => 'Emergency Fix')
+        $response = $this->getResponse(
+            $this->client->patch(
+                'pull_requests/1/labels',
+                null,
+                json_encode(
+                    array(
+                        'add' => array(
+                            array('label' => 'Emergency Fix')
+                        )
+                    )
                 )
             )
-        )));
+        );
         $this->assertEquals($response->getStatusCode(), 200);
 
         $response = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
         $this->assertCount(1, $response['labels']);
         $this->assertEquals('Emergency Fix', $response['labels'][0]['label']);
+    }
+
+    /**
+     * @depends testGETLabel
+     */
+    public function testPATCHWithReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->patch(
+                'pull_requests/1/labels',
+                null,
+                json_encode(
+                    array(
+                        'add' => array(
+                            array('label' => 'Emergency Fix')
+                        )
+                    )
+                )
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
@@ -82,7 +139,8 @@ class PullRequestsLabelsTest extends RestBase
         $response = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
         $label_ids = array_map(
             function ($label) {
-                return array('id' => $label['id']); },
+                return array('id' => $label['id']);
+            },
             $response['labels']
         );
 

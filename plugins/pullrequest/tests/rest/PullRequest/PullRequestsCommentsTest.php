@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\PullRequest;
 
+use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 use RestBase;
 
@@ -28,24 +29,50 @@ require_once dirname(__FILE__).'/../bootstrap.php';
 /**
  * @group PullRequest
  */
-class PullRequestsCommentsTest extends RestBase {
+final class PullRequestsCommentsTest extends RestBase
+{
 
     protected function getResponseForNonMember($request)
     {
         return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
     }
 
-    public function testOptions()
+    public function testOptions(): void
     {
         $response = $this->getResponse($this->client->options('pull_requests/1/comments'));
 
         $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGetPullRequestComments()
+    public function testOptionsWithReadOnlyAdmin(): void
     {
-        $response  = $this->getResponse($this->client->get('pull_requests/1/comments'));
+        $response = $this->getResponse(
+            $this->client->options('pull_requests/1/comments'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
 
+        $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGetPullRequestComments(): void
+    {
+        $response = $this->getResponse($this->client->get('pull_requests/1/comments'));
+
+        $this->assertGETPullRequestsComments($response);
+    }
+
+    public function testGetPullRequestCommentsWithReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('pull_requests/1/comments'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertGETPullRequestsComments($response);
+    }
+
+    private function assertGETPullRequestsComments(Response $response): void
+    {
         $pull_request_comments = $response->json();
 
         $this->assertEquals(3, count($pull_request_comments));
@@ -57,14 +84,14 @@ class PullRequestsCommentsTest extends RestBase {
         $this->assertEquals('I am never at home on Sundays.', $pull_request_comments[2]['content']);
     }
 
-    public function testGetPullRequestCommentsThrows403IfUserCantSeeGitRepository()
+    public function testGetPullRequestCommentsThrows403IfUserCantSeeGitRepository(): void
     {
         $response = $this->getResponseForNonMember($this->client->get('pull_requests/1/comments'));
 
         $this->assertEquals($response->getStatusCode(), 403);
     }
 
-    public function testPostPullRequestComment()
+    public function testPostPullRequestComment(): void
     {
         $response  = $this->getResponse($this->client->post('pull_requests/1/comments', null, json_encode(
             array(
@@ -76,5 +103,23 @@ class PullRequestsCommentsTest extends RestBase {
 
         $pull_request_comment = $response->json();
         $this->assertEquals('Shot down in flames', $pull_request_comment['content']);
+    }
+
+    public function testPostPullRequestCommentWithReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->post(
+                'pull_requests/1/comments',
+                null,
+                json_encode(
+                    array(
+                        'content' => 'Shot down in flames'
+                    )
+                )
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 }
