@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -48,7 +48,7 @@ use Tuleap\Baseline\Domain\CurrentUserProvider;
 use Tuleap\Baseline\Domain\ProjectRepository;
 use Tuleap\Baseline\Domain\RoleAssignmentRepository;
 use Tuleap\DB\DBFactory;
-use Tuleap\REST\UserManager;
+use UserManager;
 use function DI\autowire;
 use function DI\factory;
 
@@ -64,7 +64,7 @@ class ContainerBuilderFactory
             [
                 Authorizations::class       => autowire(AuthorizationsImpl::class),
                 Clock::class                => autowire(ClockAdapter::class),
-                UserManager::class          => factory([UserManager::class, 'build']),
+                UserManager::class          => factory([UserManager::class, 'instance']),
                 CurrentUserProvider::class  => autowire(CurrentUserProviderAdapter::class),
                 BaselineRepository::class   => autowire(BaselineRepositoryAdapter::class),
                 ComparisonRepository::class => autowire(ComparisonRepositoryAdapter::class),

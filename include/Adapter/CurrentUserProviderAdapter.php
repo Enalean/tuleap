@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,7 @@ namespace Tuleap\Baseline\Adapter;
 
 use PFUser;
 use Tuleap\Baseline\Domain\CurrentUserProvider;
-use Tuleap\REST\UserManager;
+use UserManager;
 
 class CurrentUserProviderAdapter implements CurrentUserProvider
 {
