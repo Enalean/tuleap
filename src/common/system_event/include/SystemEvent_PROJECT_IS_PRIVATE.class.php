@@ -150,10 +150,10 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
         }
     }
 
-    private function notifyUser(Project $project, PFUser $user)
+    private function notifyUser(Project $project, PFUser $user) : void
     {
         $user_language = $user->getLanguage();
-        $purifier = Codendi_HTMLPurifier::instance();
+        $purifier      = Codendi_HTMLPurifier::instance();
 
         $title = $user_language->getText(
             'project_privacy',
@@ -163,14 +163,12 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
 
         $body = $this->getBody($project, $user_language);
 
-        $body_text = $purifier->purify($body, CODENDI_PURIFIER_STRIP_HTML);
-
         $mail = new Codendi_Mail();
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setTo($user->getEmail());
-        $mail->setSubject($purifier->purify($title, CODENDI_PURIFIER_STRIP_HTML));
-        $mail->setBodyHtml($body);
-        $mail->setBodyText($body_text);
+        $mail->setSubject($title);
+        $mail->setBodyHtml($purifier->purify($body));
+        $mail->setBodyText($body);
 
         $mail->send();
     }
