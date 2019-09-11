@@ -19,7 +19,7 @@
 
 <template>
     <div class="document-switch-to-docman">
-        <a v-bind:href="redirect_url" v-on:click.prevent="redirectUser()" class="document-switch-to-docman-link" data-test="document-switch-to-old-ui">
+        <a v-bind:href="redirect_url" v-on:click.prevent="redirectUser()" class="document-switch-to-docman-link">
             <i class="fa fa-random document-switch-to-docman-icon"></i><!--
             --><translate>Switch to old user interface</translate>
         </a>
