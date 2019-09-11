@@ -126,7 +126,8 @@ class User_ForgeUserGroupPermissionsFactory // @codingStandardsIgnoreLine
             User_ForgeUserGroupPermission_UserManagement::ID                    => new User_ForgeUserGroupPermission_UserManagement(),
             RetrieveSystemEventsInformationApi::ID                              => new RetrieveSystemEventsInformationApi(),
             SiteAdministratorPermission::ID                                     => new SiteAdministratorPermission(),
-            RestProjectManagementPermission::ID                                 => new RestProjectManagementPermission()
+            RestProjectManagementPermission::ID                                 => new RestProjectManagementPermission(),
+            RestReadOnlyAdminPermission::ID                                     => new RestReadOnlyAdminPermission()
         ];
 
         return $all_permissions;
@@ -147,10 +148,6 @@ class User_ForgeUserGroupPermissionsFactory // @codingStandardsIgnoreLine
         }
 
         foreach ($rows as $row) {
-            //Skip this permission so that user are not yet able to select it in the siteadmin UI.
-            if ($row['permission_id'] == RestReadOnlyAdminPermission::ID) {
-                continue;
-            }
             $permissions[$row['permission_id']] = $this->instantiateFromRow($row);
         }
 
