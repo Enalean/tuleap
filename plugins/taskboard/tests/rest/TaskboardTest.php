@@ -71,6 +71,7 @@ class TaskboardTest extends RestBase
             $this->assertEquals($label, $cards[$key]['label']);
             $this->assertStringMatchesFormat('story #%i', $cards[$key]['xref']);
             $this->assertNotEmpty($cards[$key]['rank']);
+            $this->assertEquals('lake-placid-blue', $cards[$key]['color']);
         }
     }
 

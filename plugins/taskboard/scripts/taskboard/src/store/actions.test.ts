@@ -57,41 +57,14 @@ describe("loadSwimlanes", () => {
                 }
 
                 return Promise.resolve(
-                    init.getCollectionCallback([
-                        {
-                            id: 43,
-                            label: "Story 2",
-                            xref: "story #43",
-                            rank: 11
-                        },
-                        {
-                            id: 44,
-                            label: "Story 3",
-                            xref: "story #44",
-                            rank: 12
-                        }
-                    ])
+                    init.getCollectionCallback([{ id: 43 } as Card, { id: 44 } as Card])
                 );
             }
         );
         actions.loadSwimlanes(context);
         expect(context.commit).toHaveBeenCalledWith("addSwimlanes", [
-            {
-                card: {
-                    id: 43,
-                    label: "Story 2",
-                    xref: "story #43",
-                    rank: 11
-                }
-            },
-            {
-                card: {
-                    id: 44,
-                    label: "Story 3",
-                    xref: "story #44",
-                    rank: 12
-                }
-            }
+            { card: { id: 43 } },
+            { card: { id: 44 } }
         ]);
     });
 });

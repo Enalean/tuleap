@@ -17,66 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { State } from "../type";
+import { Card, State } from "../type";
 import * as mutations from "./mutations";
 
 describe("addSwimlanes", () => {
     it("add swimlanes to existing ones", () => {
         const state: State = {
-            swimlanes: [
-                {
-                    card: {
-                        id: 42,
-                        label: "Story 1",
-                        xref: "story #42",
-                        rank: 10
-                    }
-                }
-            ]
+            swimlanes: [{ card: { id: 42 } }]
         } as State;
-        mutations.addSwimlanes(state, [
-            {
-                card: {
-                    id: 43,
-                    label: "Story 2",
-                    xref: "story #43",
-                    rank: 11
-                }
-            },
-            {
-                card: {
-                    id: 44,
-                    label: "Story 3",
-                    xref: "story #44",
-                    rank: 12
-                }
-            }
-        ]);
+        mutations.addSwimlanes(state, [{ card: { id: 43 } as Card }, { card: { id: 44 } as Card }]);
         expect(state.swimlanes).toStrictEqual([
-            {
-                card: {
-                    id: 42,
-                    label: "Story 1",
-                    xref: "story #42",
-                    rank: 10
-                }
-            },
-            {
-                card: {
-                    id: 43,
-                    label: "Story 2",
-                    xref: "story #43",
-                    rank: 11
-                }
-            },
-            {
-                card: {
-                    id: 44,
-                    label: "Story 3",
-                    xref: "story #44",
-                    rank: 12
-                }
-            }
+            { card: { id: 42 } },
+            { card: { id: 43 } },
+            { card: { id: 44 } }
         ]);
     });
 });

@@ -43,6 +43,10 @@ class CardRepresentation
      * @var int
      */
     public $rank;
+    /**
+     * @var string
+     */
+    public $color;
 
     public function build(Tracker_Artifact $artifact, int $rank): void
     {
@@ -50,5 +54,6 @@ class CardRepresentation
         $this->label = $artifact->getTitle();
         $this->xref  = $artifact->getXRef();
         $this->rank  = $rank;
+        $this->color = $artifact->getTracker()->getColor()->getName();
     }
 }

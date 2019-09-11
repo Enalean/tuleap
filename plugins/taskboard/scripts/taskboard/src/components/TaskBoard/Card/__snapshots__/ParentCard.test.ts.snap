@@ -2,7 +2,7 @@
 
 exports[`ParentCard displays a parent card 1`] = `
 <div
-  class="taskboard-card taskboard-card-parent taskboard-card-show"
+  class="taskboard-card taskboard-card-parent taskboard-card-lake-placid-blue taskboard-card-show"
 >
   <div
     class="taskboard-card-content"
