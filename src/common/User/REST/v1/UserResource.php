@@ -20,8 +20,12 @@
 namespace Tuleap\User\REST\v1;
 
 use EventManager;
+use Luracast\Restler\RestException;
+use PaginatedUserCollection;
 use PFUser;
-use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\REST\AuthenticatedResource;
+use Tuleap\REST\Header;
+use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\v1\TimetrackingRepresentationBase;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
@@ -29,34 +33,26 @@ use Tuleap\User\AccessKey\REST\UserAccessKeyRepresentation;
 use Tuleap\User\History\HistoryCleaner;
 use Tuleap\User\History\HistoryEntry;
 use Tuleap\User\History\HistoryRetriever;
-use Tuleap\Widget\Event\UserTimeRetriever;
-use UserManager;
-use UGroupLiteralizer;
-use PaginatedUserCollection;
-use Tuleap\User\REST\UserRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
-use Tuleap\REST\Header;
-use Tuleap\REST\JsonDecoder;
-use Tuleap\REST\UserManager as RestUserManager;
-use Luracast\Restler\RestException;
+use Tuleap\User\REST\UserRepresentation;
+use Tuleap\Widget\Event\UserTimeRetriever;
+use UGroupLiteralizer;
 use User_ForgeUserGroupPermission_RetrieveUserMembershipInformation;
 use User_ForgeUserGroupPermission_UserManagement;
-use User_ForgeUserGroupPermissionsManager;
 use User_ForgeUserGroupPermissionsDao;
-use Tuleap\REST\AuthenticatedResource;
+use User_ForgeUserGroupPermissionsManager;
+use UserManager;
 
 /**
  * Wrapper for users related REST methods
  */
-class UserResource extends AuthenticatedResource {
+class UserResource extends AuthenticatedResource
+{
 
     public const MAX_LIMIT       = 50;
     public const DEFAULT_LIMIT   = 10;
     public const DEFAULT_OFFSET  = 0;
     public const MAX_TIMES_BATCH = 100;
-
-    /** @var UserManager */
-    private $user_manager;
 
     /** @var JsonDecoder */
     private $json_decoder;
@@ -64,8 +60,8 @@ class UserResource extends AuthenticatedResource {
     /** @var UGroupLiteralizer */
     private $ugroup_literalizer;
 
-    /** @var \Tuleap\REST\UserManager */
-    private $rest_user_manager;
+    /** @var UserManager */
+    private $user_manager;
 
     /**
      * @var HistoryRetriever
@@ -83,9 +79,8 @@ class UserResource extends AuthenticatedResource {
         $this->user_manager       = UserManager::instance();
         $this->json_decoder       = new JsonDecoder();
         $this->ugroup_literalizer = new UGroupLiteralizer();
-        $this->rest_user_manager  = RestUserManager::build();
         $this->history_retriever  = new HistoryRetriever(\EventManager::instance());
-        $this->event_manager     = EventManager::instance();
+        $this->event_manager      = EventManager::instance();
 
         $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
@@ -260,7 +255,7 @@ class UserResource extends AuthenticatedResource {
         $this->checkAccess();
 
         $watchee = $this->getUserById($id);
-        $watcher = $this->rest_user_manager->getCurrentUser();
+        $watcher = $this->user_manager->getCurrentUser();
         if ($this->checkUserCanSeeOtherUser($watcher, $watchee)) {
             return $this->ugroup_literalizer->getUserGroupsForUser($watchee);
         }
@@ -300,7 +295,7 @@ class UserResource extends AuthenticatedResource {
         $this->checkAccess();
         $this->optionPreferences($id);
 
-        if ($id != $this->rest_user_manager->getCurrentUser()->getId()) {
+        if ($id != $this->user_manager->getCurrentUser()->getId()) {
             throw new RestException(403, 'You can only access to your own preferences');
         }
 
@@ -382,7 +377,7 @@ class UserResource extends AuthenticatedResource {
         $this->checkAccess();
         $this->optionPreferences($id);
 
-        if ($id != $this->rest_user_manager->getCurrentUser()->getId()) {
+        if ($id != $this->user_manager->getCurrentUser()->getId()) {
             throw new RestException(403, 'You can only set your own preferences');
         }
 
@@ -411,7 +406,7 @@ class UserResource extends AuthenticatedResource {
         $this->checkAccess();
         $this->optionPreferences($id);
 
-        if ($id != $this->rest_user_manager->getCurrentUser()->getId()) {
+        if ($id != $this->user_manager->getCurrentUser()->getId()) {
             throw new RestException(403, 'You can only set your own preferences');
         }
 
@@ -444,11 +439,16 @@ class UserResource extends AuthenticatedResource {
             return true;
         }
 
-        return ($this->forge_ugroup_permissions_manager->doesUserHavePermission(
-            $watcher, new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation()
-        ) || $this->forge_ugroup_permissions_manager->doesUserHavePermission(
-            $watcher, new User_ForgeUserGroupPermission_UserManagement()
-        ));
+        return (
+            $this->forge_ugroup_permissions_manager->doesUserHavePermission(
+                $watcher,
+                new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation()
+            )
+            || $this->forge_ugroup_permissions_manager->doesUserHavePermission(
+                $watcher,
+                new User_ForgeUserGroupPermission_UserManagement()
+            )
+        );
     }
 
 
@@ -479,26 +479,22 @@ class UserResource extends AuthenticatedResource {
     protected function patchUserDetails($id, array $values)
     {
         $watchee = $this->getUserById($id);
-        $watcher = $this->rest_user_manager->getCurrentUser();
+        $watcher = $this->user_manager->getCurrentUser();
         if ($this->checkUserCanUpdateOtherUser($watcher, $watchee)) {
-            foreach ($values as $key => $value){
+            foreach ($values as $key => $value) {
                 switch ($key) {
                     case "status":
                         $watchee->setStatus($value);
-                    break;
-
+                        break;
                     case "email":
                         $watchee->setEmail($value);
-                    break;
-
+                        break;
                     case "real_name":
                         $watchee->setRealName($value);
-                    break;
-
+                        break;
                     case "username":
                         $watchee->setUserName($value);
-                    break;
-
+                        break;
                     default:
                         break;
                 }
@@ -523,7 +519,8 @@ class UserResource extends AuthenticatedResource {
         }
 
         return $this->forge_ugroup_permissions_manager->doesUserHavePermission(
-           $watcher, new User_ForgeUserGroupPermission_UserManagement()
+            $watcher,
+            new User_ForgeUserGroupPermission_UserManagement()
         );
     }
 
@@ -579,7 +576,7 @@ class UserResource extends AuthenticatedResource {
 
         $this->checkAccess();
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
         $this->checkUserCanAccessToTheHistory($current_user, $id);
 
         $history_representation = new UserHistoryRepresentation();
@@ -617,7 +614,7 @@ class UserResource extends AuthenticatedResource {
 
         $this->checkAccess();
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
         $this->checkUserCanAccessToTheHistory($current_user, $id);
 
         if (! empty($history_entries)) {
@@ -668,7 +665,7 @@ class UserResource extends AuthenticatedResource {
         $this->optionAccessKey($id);
         $this->checkAccess();
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
 
         if ($id != $current_user->getId()) {
             throw new RestException(403, 'You can only access to your own access keys');
