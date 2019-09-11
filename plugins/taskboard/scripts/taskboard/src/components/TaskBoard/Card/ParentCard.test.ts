@@ -30,7 +30,7 @@ describe("ParentCard", () => {
                     id: 43,
                     label: "Story 2",
                     xref: "story #43",
-                    rank: 11
+                    color: "lake-placid-blue"
                 }
             }
         });
@@ -44,7 +44,7 @@ describe("ParentCard", () => {
                     id: 43,
                     label: "Story 2",
                     xref: "story #43",
-                    rank: 11
+                    color: "lake-placid-blue"
                 }
             }
         });

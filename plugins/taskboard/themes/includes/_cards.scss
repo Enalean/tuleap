@@ -31,6 +31,31 @@
     &.taskboard-card-show {
         animation: showCard 400ms ease-in-out forwards;
     }
+
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: -1px;
+        width: 4px;
+        height: 100%;
+        border-radius: 2px 0 0 2px;
+        box-shadow: 1px 0 0 0 transparentize($tlp-ui-white, .5);
+    }
+
+
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.taskboard-card-#{$color-name} {
+            &::before {
+                background: map-get($colors, 'primary');
+            }
+
+            > .taskboard-card-content > .taskboard-card-xref-label > .taskboard-card-xref {
+                color: map-get($colors, 'text');
+            }
+        }
+    }
 }
 
 .taskboard-cell:first-child > .taskboard-card {
@@ -47,7 +72,6 @@
     margin: 0 5px 0 0;
     color: $tlp-ui-dimmed;
     font-size: 12px;
-    cursor: pointer;
 }
 
 .taskboard-card-label {

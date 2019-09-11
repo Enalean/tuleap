@@ -48,11 +48,13 @@ export default class ParentCard extends Vue {
     }
 
     get additional_classnames(): string {
+        const classnames = [`taskboard-card-${this.card.color}`];
+
         if (this.add_show_class) {
-            return "taskboard-card-show";
+            classnames.push("taskboard-card-show");
         }
 
-        return "";
+        return classnames.join(" ");
     }
 }
 </script>

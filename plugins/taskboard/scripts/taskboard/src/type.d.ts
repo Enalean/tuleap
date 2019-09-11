@@ -33,6 +33,7 @@ export interface Card {
     label: string;
     xref: string;
     rank: number;
+    color: string;
 }
 
 interface State {
