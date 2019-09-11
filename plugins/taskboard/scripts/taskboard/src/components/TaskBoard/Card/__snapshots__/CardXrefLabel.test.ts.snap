@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CardXrefLabel displays a parent card 1`] = `
+<div
+  class="taskboard-card-xref-label"
+>
+  <a
+    class="taskboard-card-xref taskboard-card-xref-lake-placid-blue"
+    href="/path/to/43"
+  >
+    story #43
+  </a>
+   
+  <span
+    class="taskboard-card-label"
+  >
+    Story 2
+  </span>
+</div>
+`;

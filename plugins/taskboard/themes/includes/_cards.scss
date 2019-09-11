@@ -46,14 +46,8 @@
 
 
     @each $color-name, $colors in $tlp-swatch-color-map {
-        &.taskboard-card-#{$color-name} {
-            &::before {
-                background: map-get($colors, 'primary');
-            }
-
-            > .taskboard-card-content > .taskboard-card-xref-label > .taskboard-card-xref {
-                color: map-get($colors, 'text');
-            }
+        &.taskboard-card-#{$color-name}::before {
+            background: map-get($colors, 'primary');
         }
     }
 }
@@ -68,10 +62,21 @@
     justify-content: space-between;
 }
 
-.taskboard-card-xref {
+/* stylelint-disable-next-line selector-no-qualifying-type */
+a.taskboard-card-xref {
     margin: 0 5px 0 0;
     color: $tlp-ui-dimmed;
     font-size: 12px;
+
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.taskboard-card-xref-#{$color-name} {
+            color: map-get($colors, 'text');
+        }
+    }
+
+    &:hover {
+        text-decoration: none;
+    }
 }
 
 .taskboard-card-label {

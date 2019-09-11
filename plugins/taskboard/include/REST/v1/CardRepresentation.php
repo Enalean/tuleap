@@ -47,13 +47,18 @@ class CardRepresentation
      * @var string
      */
     public $color;
+    /**
+     * @var string
+     */
+    public $artifact_html_uri;
 
     public function build(Tracker_Artifact $artifact, int $rank): void
     {
-        $this->id    = JsonCast::toInt($artifact->getId());
-        $this->label = $artifact->getTitle();
-        $this->xref  = $artifact->getXRef();
-        $this->rank  = $rank;
-        $this->color = $artifact->getTracker()->getColor()->getName();
+        $this->id                = JsonCast::toInt($artifact->getId());
+        $this->label             = $artifact->getTitle();
+        $this->xref              = $artifact->getXRef();
+        $this->rank              = $rank;
+        $this->color             = $artifact->getTracker()->getColor()->getName();
+        $this->artifact_html_uri = $artifact->getUri();
     }
 }
