@@ -25,7 +25,6 @@ namespace Tuleap\Taskboard\Board;
 use AgileDashboard_MilestonePresenter;
 use PFUser;
 use Planning_Milestone;
-use Tuleap\Taskboard\Column\ColumnPresenter;
 
 class BoardPresenter
 {
@@ -49,19 +48,18 @@ class BoardPresenter
      * @var bool
      */
     public $has_content;
-
     /**
-     * @param AgileDashboard_MilestonePresenter $milestone_presenter
-     * @param PFUser                            $user
-     * @param Planning_Milestone                $milestone
-     * @param ColumnPresenter[]                 $columns
+     * @var bool
      */
+    public $is_ie_11;
+
     public function __construct(
         AgileDashboard_MilestonePresenter $milestone_presenter,
         PFUser $user,
         Planning_Milestone $milestone,
         array $columns,
-        bool $has_content
+        bool $has_content,
+        bool $is_ie_11
     ) {
         $project = $milestone->getProject();
 
@@ -78,5 +76,6 @@ class BoardPresenter
 
         $this->json_encoded_columns = (string) json_encode($columns, JSON_THROW_ON_ERROR);
         $this->has_content          = $has_content;
+        $this->is_ie_11             = $is_ie_11;
     }
 }

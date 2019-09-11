@@ -22,21 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Routing;
 
-use AgileDashboard_MilestonePresenter;
 use HTTPRequest;
-use PFUser;
 use Planning_MilestonePaneFactory;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
-use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo;
-use Tuleap\Taskboard\Board\BoardPresenter;
 use Tuleap\Taskboard\Board\BoardPresenterBuilder;
 
 class TaskboardController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
@@ -112,7 +107,10 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
         }
 
         $layout->includeFooterJavascriptFile($this->agiledashboard_assets->getFileURL('scrum-header.js'));
-        $layout->includeFooterJavascriptFile($this->taskboard_js_assets->getFileURL('taskboard.js'));
+        $is_ie_11 = $this->isIE11();
+        if (! $is_ie_11) {
+            $layout->includeFooterJavascriptFile($this->taskboard_js_assets->getFileURL('taskboard.js'));
+        }
         $layout->addCssAsset(new CssAsset($this->taskboard_theme_assets, 'taskboard'));
 
         $service->displayHeader(
@@ -121,7 +119,14 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
             [],
             []
         );
-        $this->renderer->renderToPage('taskboard', $this->presenter_builder->getPresenter($milestone, $user));
+        $this->renderer->renderToPage('taskboard', $this->presenter_builder->getPresenter($milestone, $user, $is_ie_11));
         $service->displayFooter();
+    }
+
+    private function isIE11(): bool
+    {
+        return preg_match('~MSIE|Internet Explorer~i', $_SERVER['HTTP_USER_AGENT'])
+            || (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0;') !== false
+                && strpos($_SERVER['HTTP_USER_AGENT'], 'rv:11.0') !== false);
     }
 }

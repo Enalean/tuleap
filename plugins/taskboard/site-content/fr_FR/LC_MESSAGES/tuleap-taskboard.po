@@ -30,3 +30,8 @@ msgid ""
 msgstr ""
 "Gardez une trace visuelle des tâches à effectuer dans un tableau, utilisé "
 "dans Agile Dashboard."
+
+msgid "Your browser is not compatible with Taskboard application"
+msgstr ""
+"Votre navigateur n'est pas compatible avec l'application de tableau des "
+"tâches"
