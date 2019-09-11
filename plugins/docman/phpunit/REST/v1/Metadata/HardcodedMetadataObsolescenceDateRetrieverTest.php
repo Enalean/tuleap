@@ -142,4 +142,16 @@ class HardcodedMetadataObsolescenceDateRetrieverTest extends TestCase
 
         $this->assertEquals(0, $time_stamp);
     }
+
+    public function testGetTimeStampOfDateWithoutPeriodValidityReturn0IfObsolescenceDateIsNotUsed(): void
+    {
+        $retriever = new HardcodedMetadataObsolescenceDateRetriever($this->metadata_obsolescence_date_checker);
+
+        $this->metadata_obsolescence_date_checker->shouldReceive('isObsolescenceMetadataUsed')->andReturn(false);
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->never();
+
+        $time_stamp = $retriever->getTimeStampOfDateWithoutPeriodValidity('2020-09-20', new \DateTimeImmutable());
+
+        $this->assertEquals(0, $time_stamp);
+    }
 }
