@@ -400,6 +400,10 @@ span.flatpickr-weekday {
         &:hover {
             border-color: transparent;
             background: transparentize($tlp-theme-color, .2);
+
+            &.today {
+                color: $tlp-ui-white;
+            }
         }
     }
 }
