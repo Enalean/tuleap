@@ -1,6 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`App displays misconfiguration error for admin user 1`] = `
+exports[`App displays empty state when there is no content 1`] = `
+<div>
+  <under-construction-modal-stub />
+   
+  <no-content-empty-state-stub />
+</div>
+`;
+
+exports[`App displays misconfiguration error even if there are no content 1`] = `
 <div>
   <under-construction-modal-stub />
    
@@ -8,7 +16,7 @@ exports[`App displays misconfiguration error for admin user 1`] = `
 </div>
 `;
 
-exports[`App displays misconfiguration error for regular user 1`] = `
+exports[`App displays misconfiguration error when there are no column 1`] = `
 <div>
   <under-construction-modal-stub />
    

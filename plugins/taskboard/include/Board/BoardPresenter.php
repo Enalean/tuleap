@@ -45,6 +45,10 @@ class BoardPresenter
      * @var string
      */
     public $json_encoded_columns;
+    /**
+     * @var bool
+     */
+    public $has_content;
 
     /**
      * @param AgileDashboard_MilestonePresenter $milestone_presenter
@@ -56,7 +60,8 @@ class BoardPresenter
         AgileDashboard_MilestonePresenter $milestone_presenter,
         PFUser $user,
         Planning_Milestone $milestone,
-        array $columns
+        array $columns,
+        bool $has_content
     ) {
         $project = $milestone->getProject();
 
@@ -72,5 +77,6 @@ class BoardPresenter
             );
 
         $this->json_encoded_columns = (string) json_encode($columns, JSON_THROW_ON_ERROR);
+        $this->has_content          = $has_content;
     }
 }

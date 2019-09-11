@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,37 +15,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-export interface ColumnDefinition {
-    id: number;
-    label: string;
-    color: string;
-}
+import { Card, Context, Swimlane } from "../type";
+import { recursiveGet } from "tlp";
 
-export interface Swimlane {
-    card: Card;
-}
+export function loadSwimlanes(context: Context): Promise<Swimlane[]> {
+    return recursiveGet(`/api/v1/taskboard/${context.state.milestone_id}/cards`, {
+        params: {
+            limit: 100,
+            offset: 0
+        },
+        getCollectionCallback: (collection: Card[]): Swimlane[] => {
+            const swimlanes = collection.map(card => {
+                return { card };
+            });
+            context.commit("addSwimlanes", swimlanes);
 
-export interface Card {
-    id: number;
-    label: string;
-    xref: string;
-    rank: number;
-}
-
-interface State {
-    user_is_admin: boolean;
-    user_id: number;
-    admin_url: string;
-    has_content: boolean;
-    columns: Array<ColumnDefinition>;
-    milestone_id: number;
-    swimlanes: Array<Swimlane>;
-}
-
-interface Context {
-    state: State;
-    commit: Function;
+            return swimlanes;
+        }
+    });
 }

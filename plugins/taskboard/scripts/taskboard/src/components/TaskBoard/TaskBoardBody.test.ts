@@ -19,14 +19,43 @@
 
 import { shallowMount } from "@vue/test-utils";
 import TaskBoardBody from "./TaskBoardBody.vue";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 
 describe("TaskBoardBody", () => {
-    it("displays an empty state", () => {
-        const wrapper = shallowMount(TaskBoardBody);
-        expect(wrapper.element).toMatchInlineSnapshot(`
-            <tbody>
-              <no-content-empty-state-stub />
-            </tbody>
-        `);
+    it("displays swimlanes with empty columns", () => {
+        const wrapper = shallowMount(TaskBoardBody, {
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }],
+                        swimlanes: [
+                            {
+                                card: {
+                                    id: 43,
+                                    label: "Story 2",
+                                    xref: "story #43",
+                                    rank: 11
+                                }
+                            },
+                            {
+                                card: {
+                                    id: 44,
+                                    label: "Story 3",
+                                    xref: "story #44",
+                                    rank: 12
+                                }
+                            }
+                        ]
+                    }
+                })
+            }
+        });
+        expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("loads all swimlanes as soon as the component is created", () => {
+        const $store = createStoreMock({});
+        shallowMount(TaskBoardBody, { mocks: { $store } });
+        expect($store.dispatch).toHaveBeenCalledWith("loadSwimlanes");
     });
 });

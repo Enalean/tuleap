@@ -49,7 +49,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
         $milestone_artifact_id = $this->da->escapeInt($milestone_artifact_id);
         $limit                 = $this->da->escapeInt($limit);
         $offset                = $this->da->escapeInt($offset);
-        $sql = "SELECT child_art.*, tracker_artifact_priority_rank.rank as rank
+        $sql = "SELECT SQL_CALC_FOUND_ROWS child_art.*, tracker_artifact_priority_rank.rank as rank
                 FROM tracker_artifact parent_art
                     INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)

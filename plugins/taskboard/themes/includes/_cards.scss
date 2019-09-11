@@ -1,0 +1,73 @@
+/**
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.taskboard-card {
+    position: relative;
+    margin: 0 0 $tlp-half-spacing;
+    padding: $tlp-half-spacing $tlp-half-spacing $tlp-half-spacing ($tlp-half-spacing + 2);
+    border-radius: 2px;
+    background: $tlp-ui-white;
+
+    &.taskboard-card-parent {
+        margin: 0;
+    }
+
+    &.taskboard-card-show {
+        animation: showCard 400ms ease-in-out forwards;
+    }
+}
+
+.taskboard-cell:first-child > .taskboard-card {
+    border: 1px solid $tlp-ui-border-normal;
+    background: $tlp-theme-background-color;
+}
+
+.taskboard-card-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.taskboard-card-xref {
+    margin: 0 5px 0 0;
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.taskboard-card-label {
+    font-size: 14px;
+    line-height: 18px;
+    word-break: break-word;
+}
+
+@keyframes showCard {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    70% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

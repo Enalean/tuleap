@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Board;
 
+use AgileDashboard_BacklogItemDao;
 use AgileDashboard_MilestonePresenter;
 use PFUser;
 use Planning_MilestonePaneFactory;
@@ -37,24 +38,34 @@ class BoardPresenterBuilder
      * @var ColumnPresenterCollectionRetriever
      */
     private $columns_retriever;
+    /**
+     * @var AgileDashboard_BacklogItemDao
+     */
+    private $backlog_item_dao;
 
     public function __construct(
         Planning_MilestonePaneFactory $pane_factory,
-        ColumnPresenterCollectionRetriever $columns_retriever
+        ColumnPresenterCollectionRetriever $columns_retriever,
+        AgileDashboard_BacklogItemDao $backlog_item_dao
     ) {
         $this->pane_factory      = $pane_factory;
         $this->columns_retriever = $columns_retriever;
+        $this->backlog_item_dao  = $backlog_item_dao;
     }
 
     public function getPresenter(\Planning_Milestone $milestone, PFuser $user): BoardPresenter
     {
         $presenter_data = $this->pane_factory->getPanePresenterData($milestone);
 
+        $this->backlog_item_dao->getBacklogArtifactsWithLimitAndOffset($milestone->getArtifactId(), 0, 0);
+        $has_content = $this->backlog_item_dao->foundRows() > 0;
+
         return new BoardPresenter(
             new AgileDashboard_MilestonePresenter($milestone, $presenter_data),
             $user,
             $milestone,
-            $this->columns_retriever->getColumns($milestone->getPlanning()->getPlanningTracker())
+            $this->columns_retriever->getColumns($milestone->getPlanning()->getPlanningTracker()),
+            $has_content
         );
     }
 }

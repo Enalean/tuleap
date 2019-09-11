@@ -22,15 +22,15 @@ import App from "./App.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 
 describe("App", () => {
-    it("displays misconfiguration error for regular user", () => {
+    it("displays misconfiguration error when there are no column", () => {
         const wrapper = shallowMount(App, {
-            mocks: { $store: createStoreMock({ state: { columns: [] } }) }
+            mocks: { $store: createStoreMock({ state: { columns: [], has_content: true } }) }
         });
         expect(wrapper.element).toMatchSnapshot();
     });
-    it("displays misconfiguration error for admin user", () => {
+    it("displays misconfiguration error even if there are no content", () => {
         const wrapper = shallowMount(App, {
-            mocks: { $store: createStoreMock({ state: { columns: [] } }) }
+            mocks: { $store: createStoreMock({ state: { columns: [], has_content: false } }) }
         });
         expect(wrapper.element).toMatchSnapshot();
     });
@@ -38,7 +38,23 @@ describe("App", () => {
         const wrapper = shallowMount(App, {
             mocks: {
                 $store: createStoreMock({
-                    state: { columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] }
+                    state: {
+                        columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }],
+                        has_content: true
+                    }
+                })
+            }
+        });
+        expect(wrapper.element).toMatchSnapshot();
+    });
+    it("displays empty state when there is no content", () => {
+        const wrapper = shallowMount(App, {
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }],
+                        has_content: false
+                    }
                 })
             }
         });
