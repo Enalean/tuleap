@@ -7,7 +7,17 @@ exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for admi
   <div
     class="empty-page-illustration"
   >
-    <board-without-any-columns-for-admin-svg-stub />
+    <svg
+      fill="none"
+      height="150"
+      width="364"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <use
+        class="tlp-illustration"
+        href="../../images/illustrations.svg#board-without-any-columns-for-admin"
+      />
+    </svg>
   </div>
    
   <div

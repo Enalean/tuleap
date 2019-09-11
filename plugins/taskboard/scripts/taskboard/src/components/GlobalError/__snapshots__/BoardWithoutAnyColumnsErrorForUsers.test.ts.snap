@@ -7,26 +7,32 @@ exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for regu
   <div
     class="empty-page-illustration"
   >
-    <board-without-any-columns-for-users-svg-stub />
+    <svg
+      fill="none"
+      height="189"
+      width="364"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <use
+        class="tlp-illustration"
+        href="../../images/illustrations.svg#board-without-any-columns-for-user"
+      />
+    </svg>
   </div>
    
   <div
     class="empty-page-text-with-small-text"
   >
-    <translate-stub
-      tag="span"
-    >
+    <span>
       This taskboard is not ready to be used
-    </translate-stub>
+    </span>
      
     <div
       class="empty-page-small-text"
     >
-      <translate-stub
-        tag="span"
-      >
+      <span>
         Your project administrator needs to finish the planning configuration
-      </translate-stub>
+      </span>
     </div>
   </div>
 </div>

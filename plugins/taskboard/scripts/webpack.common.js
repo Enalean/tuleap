@@ -43,7 +43,8 @@ module.exports = [
                     webpack_configurator.babel_options_chrome_firefox
                 ),
                 webpack_configurator.rule_easygettext_loader,
-                webpack_configurator.rule_vue_loader
+                webpack_configurator.rule_vue_loader,
+                webpack_configurator.rule_file_loader_images
             ]
         },
         plugins: [

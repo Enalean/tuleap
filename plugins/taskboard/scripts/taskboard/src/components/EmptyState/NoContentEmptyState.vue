@@ -18,10 +18,12 @@
   -
   -->
 
-<template>
+<template functional>
     <div class="empty-page">
         <div class="empty-page-illustration">
-            <no-content-svg/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="534" height="170" fill="none">
+                <use href="../../images/illustrations.svg#no-content-empty-state" class="tlp-illustration"/>
+            </svg>
         </div>
         <translate tag="p" class="empty-page-text">
             This taskboard is empty
@@ -32,10 +34,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import NoContentSvg from "./NoContentSvg.vue";
 
-@Component({
-    components: { NoContentSvg }
-})
+@Component
 export default class NoContentEmptyState extends Vue {}
 </script>
