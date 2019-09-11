@@ -19,7 +19,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import VueRouter from 'vue-router';
+import VueRouter from "vue-router";
 import localVue from "../support/local-vue.js";
 import IndexPage from "./IndexPage.vue";
 import { createStoreMock } from "../support/store-wrapper.spec-helper";

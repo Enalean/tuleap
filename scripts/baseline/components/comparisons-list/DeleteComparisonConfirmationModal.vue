@@ -22,9 +22,7 @@
         v-bind:default_failed_message="default_failed_message"
         v-bind:on_submit="confirm"
     >
-        <span v-translate>
-            You are about to delete the comparison between the baselines <strong>%{ base_baseline.name }</strong> and <strong>%{ compared_to_baseline.name }</strong>.
-        </span>
+        <span v-dompurify-html="message"></span>
     </delete-confirmation-modal>
 </template>
 
@@ -46,6 +44,15 @@ export default {
         },
         default_failed_message() {
             return this.$gettext("Cannot delete comparison");
+        },
+        message() {
+            const translated = this
+                .$gettext(`You are about to delete the comparison between the baselines <strong>%{ base_baseline_name }</strong>
+                and <strong>%{ compared_to_baseline_name }</strong>.`);
+            return this.$gettextInterpolate(translated, {
+                base_baseline_name: this.base_baseline.name,
+                compared_to_baseline_name: this.compared_to_baseline.name
+            });
         }
     },
     methods: {

@@ -23,9 +23,7 @@
         v-bind:default_failed_message="default_failed_message"
         v-bind:on_submit="confirm"
     >
-        <span v-translate>
-            You are about to delete the baseline <strong>%{ baseline.name }</strong>.
-        </span>
+        <span v-dompurify-html="message"></span>
     </delete-confirmation-modal>
 </template>
 
@@ -45,6 +43,14 @@ export default {
         },
         default_failed_message() {
             return this.$gettext("Cannot delete baseline");
+        },
+        message() {
+            const translated = this.$gettext(
+                "You are about to delete the baseline <strong>%{ baseline_name }</strong>."
+            );
+            return this.$gettextInterpolate(translated, {
+                baseline_name: this.baseline.name
+            });
         }
     },
     methods: {

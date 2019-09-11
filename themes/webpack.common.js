@@ -32,11 +32,11 @@ module.exports = [
     {
         entry: entry_points,
         context: path.resolve(__dirname, "./BurningParrot"),
-        output: webpack_configurator.configureOutput(path.resolve(__dirname, "../../../src/www/assets/baseline/BurningParrot/")),
+        output: webpack_configurator.configureOutput(
+            path.resolve(__dirname, "../../../src/www/assets/baseline/BurningParrot/")
+        ),
         module: {
-            rules: [
-                webpack_configurator.rule_scss_loader
-            ]
+            rules: [webpack_configurator.rule_scss_loader]
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
