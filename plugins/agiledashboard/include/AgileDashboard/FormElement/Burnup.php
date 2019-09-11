@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -106,7 +106,8 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return new ChartMessageFetcher(
             Tracker_HierarchyFactory::instance(),
             $this->getConfigurationFieldRetriever(),
-            EventManager::instance()
+            EventManager::instance(),
+            UserManager::instance()
         );
     }
 

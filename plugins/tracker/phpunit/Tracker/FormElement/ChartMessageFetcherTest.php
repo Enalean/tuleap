@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,12 @@
 
 namespace Tuleap\Tracker\FormElement;
 
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
+use UserManager;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
@@ -51,16 +54,20 @@ class ChartMessageFetcherTest extends TestCase
 
         $this->hierarchy_factory             = \Mockery::mock(\Tracker_HierarchyFactory::class);
         $this->configuration_field_retriever = \Mockery::mock(ChartConfigurationFieldRetriever::class);
+        $user_manager                        = Mockery::mock(UserManager::class);
         $this->message_fetcher               = new ChartMessageFetcher(
             $this->hierarchy_factory,
             $this->configuration_field_retriever,
-            \Mockery::spy(\EventManager::class)
+            \Mockery::spy(\EventManager::class),
+            $user_manager
         );
 
         $this->tracker = \Mockery::mock(\Tracker::class);
         $this->field   = \Mockery::mock(\Tracker_FormElement_Field::class);
 
         $this->field->shouldReceive('getTracker')->andReturn($this->tracker);
+
+        $user_manager->shouldReceive('getCurrentUser')->andReturn(Mockery::mock(PFUser::class));
     }
 
     public function testItDisplaysWarningsWhenFieldsAreMissingInChartConfiguration()
