@@ -36,7 +36,6 @@ use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\RESTLogger;
-use Tuleap\REST\UserManager;
 use Tuleap\Tracker\REST\v1\TrackerPermissionsChecker;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\PostActionNonEligibleForTrackerException;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\PostActionsRepresentationBuilder;
@@ -85,6 +84,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicatorBuilder;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
+use UserManager;
 use WorkflowFactory;
 
 class TransitionsResource extends AuthenticatedResource
@@ -94,7 +94,7 @@ class TransitionsResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->user_manager = UserManager::build();
+        $this->user_manager = UserManager::instance();
     }
 
     /**

@@ -28,7 +28,6 @@ use PHPUnit\Framework\TestCase;
 use TrackerFactory;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\REST\UserManager;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
@@ -36,6 +35,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionCreator;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
+use UserManager;
 
 class TransitionPOSTHandlerTest extends TestCase
 {
@@ -43,7 +43,7 @@ class TransitionPOSTHandlerTest extends TestCase
 
     /** @var TransitionPOSTHandler */
     private $handler;
-    /** @var Mockery\MockInterface */
+    /** @var Mockery\MockInterface | UserManager */
     private $user_manager;
     /** @var Mockery\MockInterface */
     private $tracker_factory;

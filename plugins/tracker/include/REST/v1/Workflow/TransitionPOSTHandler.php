@@ -26,7 +26,6 @@ use Luracast\Restler\RestException;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\REST\UserManager;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionCreator;
@@ -35,6 +34,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
+use UserManager;
 use Workflow;
 use WorkflowFactory;
 
