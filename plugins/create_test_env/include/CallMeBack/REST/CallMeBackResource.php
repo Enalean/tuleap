@@ -22,19 +22,19 @@
 namespace Tuleap\CallMeBack\REST;
 
 use Tuleap\REST\Header;
-use Tuleap\REST\UserManager;
 use Tuleap\REST\AuthenticatedResource;
 use Luracast\Restler\RestException;
 use Tuleap\CallMeBack\CallMeBackEmailNotifier;
 use Tuleap\CallMeBack\CallMeBackEmailDao;
 use Tuleap\CallMeBack\Exception\NotifyException;
+use UserManager;
 
 class CallMeBackResource extends AuthenticatedResource
 {
     /**
      * @var UserManager
      */
-    private $rest_user_manager;
+    private $user_manager;
 
     /**
      * @var CallMeBackEmailNotifier
@@ -43,8 +43,8 @@ class CallMeBackResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->rest_user_manager = UserManager::build();
-        $this->notifier          = new CallMeBackEmailNotifier(
+        $this->user_manager = UserManager::instance();
+        $this->notifier     = new CallMeBackEmailNotifier(
             new CallMeBackEmailDao()
         );
     }
@@ -76,7 +76,7 @@ class CallMeBackResource extends AuthenticatedResource
         try {
             $this->checkAccess();
 
-            $current_user = $this->rest_user_manager->getCurrentUser();
+            $current_user = $this->user_manager->getCurrentUser();
 
             $this->notifier->notify($current_user, $phone, $date);
 
