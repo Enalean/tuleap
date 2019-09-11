@@ -259,51 +259,20 @@ class Tracker_ArtifactFactory {
      *  - searchOpenAssignedToUserId,
      *  - searchOpenSubmittedByUserId
      *  - searchOpenSubmittedByOrAssignedToUserId)
-     *
-     * in an array of the form:
-     * array(
-     *    $tracker_id => array(
-     *                      'tracker'   => $tracker (Tracker),
-     *                      'artifacts' => array(
-     *                                          'artifact' => $artifact (Tracker_Artifact),
-     *                                          'title'    => $title (string)
-     *                                     )
-     *                   )
-     * )
-     *
-     * @param int    $user_id  the id of the user
-     * @param string $callback the callback method
-     *
-     * @return MyArtifactsCollection
      */
-    protected function getUserOpenArtifacts($user_id, $callback)
+    protected function getUserOpenArtifacts(PFUser $user, string $callback, ?int $offset, ?int $limit): MyArtifactsCollection
     {
-        $tf = TrackerFactory::instance();
-        $my_artifacts = new MyArtifactsCollection();
-        foreach ($this->getDao()->$callback($user_id) as $row) {
+        $my_artifacts = new MyArtifactsCollection(TrackerFactory::instance());
+        $dar = $this->getDao()->$callback($user, $offset, $limit);
+        $my_artifacts->setTotalNumberOfArtifacts($this->getDao()->foundRows());
+        foreach ($dar as $row) {
             $tracker_id  = (int) $row['tracker_id'];
             $artifact_id = (int) $row['id'];
-            if (! $my_artifacts->hasTracker($row['tracker_id'])) {
-                $tracker = $tf->getTrackerById($tracker_id);
 
-                $with_title = false;
-                if ($title_field = Tracker_Semantic_Title::load($tracker)->getField()) {
-                    if ($title_field->userCanRead()) {
-                        $with_title = true;
-                    }
-                }
-
-                $my_artifacts->addTracker($tracker_id, $tracker, $with_title);
-            }
-            if (! $my_artifacts->trackerHasArtifact($tracker_id, $artifact_id)) {
-                $artifact = $this->getInstanceFromRow($row);
-                if ($artifact->userCanView()) {
-                    $artifact->setTitle('');
-                    if ($my_artifacts->trackerHasTitle($tracker_id)) {
-                        $artifact->setTitle($this->getTitleFromRowAsText($row));
-                    }
-                    $my_artifacts->addArtifactForTracker($tracker_id, $artifact_id, $artifact);
-                }
+            $tracker = $my_artifacts->setTracker($tracker_id, $user);
+            if (! $my_artifacts->trackerHasArtifactId($tracker, $artifact_id)) {
+                $artifact = $this->getInstanceFromRow($my_artifacts->getRowAccordingToTrackerPermissions($tracker, $row));
+                $my_artifacts->addArtifactForTracker($tracker, $artifact);
             }
         }
         return $my_artifacts;
@@ -311,44 +280,26 @@ class Tracker_ArtifactFactory {
 
     /**
      * Returns the "open" artifacts assigned to user $user_id
-     * in an array of the form:
-     * @see getUserOpenArtifacts
-     *
-     * @param int $user_id the id of the user
-     *
-     * @return MyArtifactsCollection
      */
-    public function getUserOpenArtifactsAssignedTo($user_id)
+    public function getUserOpenArtifactsAssignedTo(PFUser $user, ?int $offset = null, ?int $limit = null): MyArtifactsCollection
     {
-        return $this->getUserOpenArtifacts($user_id, 'searchOpenAssignedToUserId');
+        return $this->getUserOpenArtifacts($user, 'searchOpenAssignedToUserId', $offset, $limit);
     }
 
     /**
      * Returns the "open" artifacts submitted by user $user_id
-     * in an array of the form:
-     * @see getUserOpenArtifacts
-     *
-     * @param int $user_id the id of the user
-     *
-     * @return MyArtifactsCollection
      */
-    public function getUserOpenArtifactsSubmittedBy($user_id)
+    public function getUserOpenArtifactsSubmittedBy(PFUser $user, ?int $offset = null, ?int $limit = null): MyArtifactsCollection
     {
-        return $this->getUserOpenArtifacts($user_id, 'searchOpenSubmittedByUserId');
+        return $this->getUserOpenArtifacts($user, 'searchOpenSubmittedByUserId', $offset, $limit);
     }
 
     /**
      * Returns the "open" artifacts assigned to or submitted by user $user_id
-     * in an array of the form:
-     * @see getUserOpenArtifacts
-     *
-     * @param int $user_id the id of the user
-     *
-     * @return MyArtifactsCollection
      */
-    public function getUserOpenArtifactsSubmittedByOrAssignedTo($user_id)
+    public function getUserOpenArtifactsSubmittedByOrAssignedTo(PFUser $user, ?int $offset = null, ?int $limit = null): MyArtifactsCollection
     {
-        return $this->getUserOpenArtifacts($user_id, 'searchOpenSubmittedByOrAssignedToUserId');
+        return $this->getUserOpenArtifacts($user, 'searchOpenSubmittedByOrAssignedToUserId', $offset, $limit);
     }
 
     /**

@@ -184,14 +184,13 @@ class Tracker_ArtifactDao extends DataAccessObject {
      * Search open artifact (see tracker semantic for a definition of open)
      * submitted by user $user_id in all projects and trackers.
      *
-     * @param int $user_id the ID of the user
-     *
-     * @return DataAccessResult The result of the query
+     * @return DataAccessResult|false The result of the query
      */
-    public function searchOpenSubmittedByUserId($user_id)
+    public function searchOpenSubmittedByUserId(PFUser $user, ?int $offset = null, ?int $limit = null)
     {
-        $user_id = $this->da->escapeInt($user_id);
-        $sql = "SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, C.id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on
+        $user_id = $this->da->escapeInt($user->getId());
+        $order_and_paginate_stmt = $this->getMyArtifactOrderAndPaginateStatement($offset, $limit);
+        $sql = "SELECT SQL_CALC_FOUND_ROWS A.id AS id, A.tracker_id, A.use_artifact_permissions, C.id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id)
                     INNER JOIN groups AS G ON (G.group_id = T.group_id)
@@ -214,7 +213,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                      )
                   AND G.status = 'A'
                   AND T.deletion_date IS NULL
-               ORDER BY G.group_name ASC, T.id ASC, A.id DESC";
+               $order_and_paginate_stmt";
         return $this->retrieve($sql);
     }
 
@@ -222,15 +221,14 @@ class Tracker_ArtifactDao extends DataAccessObject {
      * Search open artifact (see tracker semantic for a definition of open)
      * assigned to user $user_id in all projects and trackers (see tracker semantic for a definition of assigned to).
      *
-     * @param int $user_id the ID of the user
-     *
-     * @return DataAccessResult The result of the query
+     * @return DataAccessResult|false The result of the query
      */
-    public function searchOpenAssignedToUserId($user_id)
+    public function searchOpenAssignedToUserId(PFUser $user, ?int $offset = null, ?int $limit = null)
     {
-        $user_id = $this->da->escapeInt($user_id);
+        $user_id = $this->da->escapeInt($user->getId());
+        $order_and_paginate_stmt = $this->getMyArtifactOrderAndPaginateStatement($offset, $limit);
         // The [SC|SS|ST.tracker_id = A.tracker_id is not mandatory but it gives a small perf boost
-        $sql = "SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, A.last_changeset_id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on
+        $sql = "SELECT SQL_CALC_FOUND_ROWS A.id AS id, A.tracker_id, A.use_artifact_permissions, A.last_changeset_id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id)
                     INNER JOIN groups AS G ON (G.group_id = T.group_id)
@@ -257,7 +255,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                      )
                   AND G.status = 'A'
                   AND T.deletion_date IS NULL
-               ORDER BY G.group_name ASC, T.id ASC, A.id DESC";
+               $order_and_paginate_stmt";
         return $this->retrieve($sql);
     }
 
@@ -265,15 +263,14 @@ class Tracker_ArtifactDao extends DataAccessObject {
      * Search open artifact (see tracker semantic for a definition of open)
      * submitted by or assigned to user $user_id in all projects and trackers (see tracker semantic for a definition of assigned to).
      *
-     * @param int $user_id the ID of the user
-     *
-     * @return DataAccessResult The result of the query
+     * @return DataAccessResult|false The result of the query
      */
-    public function searchOpenSubmittedByOrAssignedToUserId($user_id)
+    public function searchOpenSubmittedByOrAssignedToUserId(PFUser $user, ?int $offset = null, ?int $limit = null)
     {
-        $user_id = $this->da->escapeInt($user_id);
+        $user_id = $this->da->escapeInt($user->getId());
+        $order_and_paginate_stmt = $this->getMyArtifactOrderAndPaginateStatement($offset, $limit);
         // The [SC|SS|ST.tracker_id = A.tracker_id is not mandatory but it gives a small perf boost
-        $sql = "SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, A.last_changeset_id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on, G.group_name
+        $sql = "SELECT SQL_CALC_FOUND_ROWS A.id AS id, A.tracker_id, A.use_artifact_permissions, A.last_changeset_id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on, G.group_name
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id)
                     INNER JOIN groups AS G ON (G.group_id = T.group_id)
@@ -323,8 +320,16 @@ class Tracker_ArtifactDao extends DataAccessObject {
                      )
                   AND G.status = 'A'
                   AND T.deletion_date IS NULL
-               ORDER BY group_name ASC, tracker_id ASC, id DESC";
+               $order_and_paginate_stmt";
         return $this->retrieve($sql);
+    }
+
+    private function getMyArtifactOrderAndPaginateStatement(?int $offset = null, ?int $limit = null)
+    {
+        if ($offset !== null && $limit !== null) {
+            return sprintf(' ORDER BY id ASC LIMIT %d OFFSET %d', $limit, $offset);
+        }
+        return ' ORDER BY group_name ASC, tracker_id ASC, id DESC';
     }
 
     public function searchStatsForTracker($tracker_id)

@@ -87,6 +87,22 @@ final class UsersArtifactsTest extends TrackerBase
         );
     }
 
+    public function testItFetchesPaginated(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get(sprintf('users/self/artifacts?query=%s&offset=1&limit=1', urlencode(json_encode(['assigned_to' => true, 'submitted_by' => true])))),
+            DataBuilder::MY_ARTIFACTS_USER_NAME
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $json = \json_decode($response->getBody(true), true);
+        $this->assertCount(1, $json);
+
+        $this->assertEqualsCanonicalizing(
+            ['I am assigned to this one'],
+            $this->getTitles($json)
+        );
+    }
+
     private function getTitles(array $json): array
     {
         $titles = [];

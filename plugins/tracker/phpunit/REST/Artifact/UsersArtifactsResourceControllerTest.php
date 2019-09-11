@@ -28,6 +28,7 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_ArtifactFactory;
+use Tracker_Semantic_Title;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 use Tuleap\Tracker\TrackerColor;
@@ -99,48 +100,55 @@ class UsersArtifactsResourceControllerTest extends TestCase
 
     public function testFetchArtifactsSubmittedByUserWithoutData(): void
     {
-        $this->artifact_factory->shouldReceive('getUserOpenArtifactsSubmittedBy')->with($this->current_user_id)->once()->andReturn(new MyArtifactsCollection());
+        $this->artifact_factory->shouldReceive('getUserOpenArtifactsSubmittedBy')->with($this->current_user, 0, 250)->once()->andReturn(new MyArtifactsCollection(M::mock(\TrackerFactory::class)));
 
-        $this->assertEmpty($this->controller->getArtifacts('self', '{"submitted_by": true}', 0, 250));
+        [$total, $artifacts] = $this->controller->getArtifacts('self', '{"submitted_by": true}', 0, 250);
+        $this->assertEquals(0, $total);
+        $this->assertEmpty($artifacts);
     }
 
     public function testFetchArtifactsAssignedToUserWithoutData(): void
     {
-        $this->artifact_factory->shouldReceive('getUserOpenArtifactsAssignedTo')->with($this->current_user_id)->once()->andReturn(new MyArtifactsCollection());
+        $this->artifact_factory->shouldReceive('getUserOpenArtifactsAssignedTo')->with($this->current_user, 0, 250)->once()->andReturn(new MyArtifactsCollection(M::mock(\TrackerFactory::class)));
 
-        $this->assertEmpty($this->controller->getArtifacts('self', '{"assigned_to": true}', 0, 250));
+        [$total, $artifacts] = $this->controller->getArtifacts('self', '{"assigned_to": true}', 0, 250);
+        $this->assertEquals(0, $total);
+        $this->assertEmpty($artifacts);
     }
 
     public function testFetchArtifactsAssignedToOrSubmittedByUserWithoutData(): void
     {
-        $this->artifact_factory->shouldReceive('getUserOpenArtifactsSubmittedByOrAssignedTo')->with($this->current_user_id)->once()->andReturn(new MyArtifactsCollection());
+        $this->artifact_factory->shouldReceive('getUserOpenArtifactsSubmittedByOrAssignedTo')->with($this->current_user, 0, 250)->once()->andReturn(new MyArtifactsCollection(M::mock(\TrackerFactory::class)));
 
-        $this->assertEmpty($this->controller->getArtifacts('self', '{"assigned_to": true, "submitted_by": true}', 0, 250));
+        [$total, $artifacts] = $this->controller->getArtifacts('self', '{"assigned_to": true, "submitted_by": true}', 0, 250);
+        $this->assertEquals(0, $total);
+        $this->assertEmpty($artifacts);
     }
 
     public function testFetchArtifactsSubmittedByUserWithData(): void
     {
+        $tracker_id = 122;
         $project = new \Project(['group_id' => 333, 'group_name' => '']);
-        $tracker = new \Tracker(122, -1, '', '', '', false, '', '', '', '', '', '', '', TrackerColor::default(), '');
+        $tracker = new \Tracker($tracker_id, -1, '', '', '', false, '', '', '', '', '', '', '', TrackerColor::default(), '');
         $tracker->setProject($project);
+        $tracker_factory = M::mock(\TrackerFactory::class);
+        $tracker_factory->shouldReceive('getTrackerById')->once()->andReturn($tracker);
+        Tracker_Semantic_Title::setInstance(M::mock(Tracker_Semantic_Title::class, ['getField' => M::mock(\Tracker_FormElement_Field_String::class, ['userCanRead' => true])]), $tracker);
 
-        $artifact1 = new \Tracker_Artifact(455, 122, -1, -1, false);
-        $artifact1->setTracker($tracker);
-        $artifact1->setTitle('');
-        $artifact2 = new \Tracker_Artifact(456, 122, -1, -1, false);
-        $artifact2->setTracker($tracker);
-        $artifact2->setTitle('bar');
+        $artifact1 = M::mock(\Tracker_Artifact::class, [ 'getId' => 455, 'getTitle' => '', 'getUri' => '', 'getXRef'=> '', 'getTracker' => $tracker, 'userCanView' => true ]);
+        $artifact2 = M::mock(\Tracker_Artifact::class, [ 'getId' => 456, 'getTitle' => 'bar', 'getUri' => '', 'getXRef'=> '', 'getTracker' => $tracker, 'userCanView' => true ]);
 
-        $my_artifacts_collection = new MyArtifactsCollection();
-        $my_artifacts_collection->addTracker($tracker->getId(), $tracker, true);
-        $my_artifacts_collection->addArtifactForTracker($tracker->getId(), $artifact1->getId(), $artifact1);
-        $my_artifacts_collection->addArtifactForTracker($tracker->getId(), $artifact2->getId(), $artifact2);
+        $my_artifacts_collection = new MyArtifactsCollection($tracker_factory);
+        $my_artifacts_collection->setTotalNumberOfArtifacts(2);
+        $my_artifacts_collection->setTracker($tracker_id, $this->current_user);
+        $my_artifacts_collection->addArtifactForTracker($tracker, $artifact1);
+        $my_artifacts_collection->addArtifactForTracker($tracker, $artifact2);
 
-        $this->artifact_factory->shouldReceive('getUserOpenArtifactsSubmittedBy')->with($this->current_user_id)->once()->andReturn($my_artifacts_collection);
+        $this->artifact_factory->shouldReceive('getUserOpenArtifactsSubmittedBy')->with($this->current_user, 0, 250)->once()->andReturn($my_artifacts_collection);
 
-        $my_artifacts_rest_collection = $this->controller->getArtifacts('self', '{"submitted_by": true}', 0, 250);
-        $this->assertCount(2, $my_artifacts_rest_collection);
-        $this->assertEmpty('', $my_artifacts_rest_collection[0]->title);
-        $this->assertEquals('bar', $my_artifacts_rest_collection[1]->title);
+        [$total, $artifacts] = $this->controller->getArtifacts('self', '{"submitted_by": true}', 0, 250);
+        $this->assertEquals(2, $total);
+        $this->assertEquals('', $artifacts[0]->title);
+        $this->assertEquals('bar', $artifacts[1]->title);
     }
 }

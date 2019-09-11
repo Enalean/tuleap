@@ -22,6 +22,8 @@ else
 COMPOSER_INSTALL=composer install
 endif
 
+PHP=php
+
 AUTOLOAD_EXCLUDES=^tests|^template
 
 .DEFAULT_GOAL := help
@@ -152,7 +154,7 @@ ifneq ($(origin SEED),undefined)
     RANDOM_ORDER_SEED_ARGUMENT=--random-order-seed=$(SEED)
 endif
 phpunit:
-	src/vendor/bin/phpunit -c tests/phpunit/phpunit.xml --do-not-cache-result --random-order $(RANDOM_ORDER_SEED_ARGUMENT) $(FILES)
+	$(PHP) src/vendor/bin/phpunit -c tests/phpunit/phpunit.xml --do-not-cache-result --random-order $(RANDOM_ORDER_SEED_ARGUMENT) $(FILES)
 
 simpletest-73-ci:
 	@mkdir -p $(WORKSPACE)/results/ut-simpletest/php-73
@@ -189,11 +191,11 @@ simpletest-74-file: ## Run SimpleTest with PHP 7.4 on a given file or directory 
 
 psalm: ## Run Psalm (PHP static analysis tool). Use FILES variables to execute on a given set of files or directories.
 	$(eval THREADS ?= 2)
-	tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --show-info=false --threads=$(THREADS) -c={config_path} $(FILES)
+	$(PHP) tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --show-info=false --threads=$(THREADS) -c={config_path} $(FILES)
 
 psalm-with-info: ## Run Psalm (PHP static analysis tool) with INFO findings. Use FILES variables to execute on a given set of files or directories.
 	$(eval THREADS ?= 2)
-	tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --show-info=true -c={config_path} $(FILES)
+	$(PHP) tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --show-info=true -c={config_path} $(FILES)
 
 psalm-baseline-update: ## Update the baseline used by Psalm (PHP static analysis tool).
 	$(eval TMPPSALM := $(shell mktemp -d))
