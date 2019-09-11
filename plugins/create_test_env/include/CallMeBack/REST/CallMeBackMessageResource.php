@@ -22,17 +22,17 @@
 namespace Tuleap\CallMeBack\REST;
 
 use Tuleap\REST\Header;
-use Tuleap\REST\UserManager;
 use Tuleap\REST\AuthenticatedResource;
 use Luracast\Restler\RestException;
 use Tuleap\CallMeBack\CallMeBackMessageDao;
+use UserManager;
 
 class CallMeBackMessageResource extends AuthenticatedResource
 {
     /**
      * @var UserManager
      */
-    private $rest_user_manager;
+    private $user_manager;
     /**
      * @var CallMeBackMessageDao
      */
@@ -40,8 +40,8 @@ class CallMeBackMessageResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->rest_user_manager = UserManager::build();
-        $this->message_dao       = new CallMeBackMessageDao();
+        $this->user_manager = UserManager::instance();
+        $this->message_dao  = new CallMeBackMessageDao();
     }
     /**
      * @url OPTIONS
@@ -67,7 +67,7 @@ class CallMeBackMessageResource extends AuthenticatedResource
         $this->checkAccess();
         $this->sendAllowHeaders();
 
-        $current_user           = $this->rest_user_manager->getCurrentUser();
+        $current_user           = $this->user_manager->getCurrentUser();
         $current_user_locale    = $current_user->getLocale();
         $message_representation = new MessageRepresentation();
         $message_content        = $this->message_dao->get($current_user_locale) ?: null;
