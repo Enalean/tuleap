@@ -49,12 +49,22 @@
         &.taskboard-card-#{$color-name}::before {
             background: map-get($colors, 'primary');
         }
+
+        &.taskboard-card-background-#{$color-name} {
+            background: map-get($colors, 'secondary');
+        }
     }
 }
 
 .taskboard-cell:first-child > .taskboard-card {
     border: 1px solid $tlp-ui-border-normal;
     background: $tlp-theme-background-color;
+
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.taskboard-card-background-#{$color-name} {
+            background: mix(map-get($colors, 'secondary'), $tlp-theme-background-color);
+        }
+    }
 }
 
 .taskboard-card-content {

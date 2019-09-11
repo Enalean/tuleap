@@ -34,6 +34,7 @@ export interface Card {
     xref: string;
     rank: number;
     color: string;
+    background_color: string;
     artifact_html_uri: string;
 }
 
