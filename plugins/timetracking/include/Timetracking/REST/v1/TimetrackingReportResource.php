@@ -32,7 +32,6 @@ use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
-use Tuleap\REST\UserManager;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Exceptions\TimetrackingReportNotFoundException;
@@ -44,6 +43,7 @@ use Tuleap\Timetracking\Time\TimetrackingReportFactory;
 use Tuleap\Tracker\Report\TrackerDuplicateException;
 use Tuleap\Tracker\Report\TrackerNotFoundException;
 use Tuleap\Tracker\Report\TrackerReportExtractor;
+use UserManager;
 
 class TimetrackingReportResource extends AuthenticatedResource
 {
@@ -53,7 +53,7 @@ class TimetrackingReportResource extends AuthenticatedResource
     /**
      * @var UserManager
      */
-    private $rest_user_manager;
+    private $user_manager;
 
     /**
      * @var TimetrackingReportDao
@@ -87,15 +87,15 @@ class TimetrackingReportResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->rest_user_manager              = UserManager::build();
-        $this->report_dao                     = new TimetrackingReportDao();
-        $this->report_factory                 = new TimetrackingReportFactory(
+        $this->user_manager      = UserManager::instance();
+        $this->report_dao        = new TimetrackingReportDao();
+        $this->report_factory    = new TimetrackingReportFactory(
             $this->report_dao,
             \TrackerFactory::instance()
         );
-        $this->tracker_extractor              = new TrackerReportExtractor(\TrackerFactory::instance());
-        $this->json_decoder                   = new JsonDecoder();
-        $this->date_extractor                 = new TimetrackingDatesExtractor($this->json_decoder);
+        $this->tracker_extractor = new TrackerReportExtractor(\TrackerFactory::instance());
+        $this->json_decoder      = new JsonDecoder();
+        $this->date_extractor    = new TimetrackingDatesExtractor($this->json_decoder);
         $this->tracker_representation_factory = new TrackerRepresentationFactory(
             new TimeDao(),
             new PermissionsRetriever(new TimetrackingUgroupRetriever(new TimetrackingUgroupDao())),
@@ -193,7 +193,7 @@ class TimetrackingReportResource extends AuthenticatedResource
         $this->checkAccess();
         $this->sendAllowHeaders();
         try {
-            $current_user = $this->rest_user_manager->getCurrentUser();
+            $current_user = $this->user_manager->getCurrentUser();
             $report       = $this->getReport($id);
             $trackers     = [];
 
@@ -264,7 +264,7 @@ class TimetrackingReportResource extends AuthenticatedResource
     private function getReport(int $id)
     {
         $report       = $this->report_factory->getReportById($id);
-        $current_user = $this->rest_user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
 
         $this->checkUserIsAllowedToSeeReport($current_user, $report);
 
