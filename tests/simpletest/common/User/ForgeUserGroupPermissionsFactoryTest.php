@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2014 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\User;
 
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
+use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 use Tuleap\User\ForgeUserGroupPermission\RetrieveSystemEventsInformationApi;
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermission;
 use Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter;
@@ -88,6 +89,7 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Tul
         $expected_id6 = RetrieveSystemEventsInformationApi::ID;
         $expected_id7 = SiteAdministratorPermission::ID;
         $expected_id8 = RestProjectManagementPermission::ID;
+        $expected_id9 = RestReadOnlyAdminPermission::ID;
 
         $permission_ids = [
             ['permission_id' => $expected_id1],
@@ -95,7 +97,8 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Tul
             ['permission_id' => $expected_id5],
             ['permission_id' => $expected_id6],
             ['permission_id' => $expected_id7],
-            ['permission_id' => $expected_id8]
+            ['permission_id' => $expected_id8],
+            ['permission_id' => $expected_id9]
         ];
 
         stub($this->dao)->getPermissionsForForgeUGroup(101)->returns($permission_ids);
