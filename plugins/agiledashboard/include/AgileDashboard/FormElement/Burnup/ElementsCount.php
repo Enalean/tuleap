@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,36 +22,47 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\FormElement\Burnup;
 
-final class CountElementsInfo
+use Tracker_Artifact;
+
+class ElementsCount
 {
     /**
-     * @var int|null
+     * @var int
      */
     private $closed_elements;
-
     /**
-     * @var int|null
+     * @var int
      */
     private $total_elements;
+    /**
+     * @var int[]
+     */
+    private $already_seen_artifacts;
 
-    public function __construct(?int $closed_elements, ?int $total_elements)
+    public function __construct(int $total_elements, int $closed_elements, array $already_seen_artifacts)
     {
-        $this->closed_elements = $closed_elements;
-        $this->total_elements  = $total_elements;
+        $this->total_elements         = $total_elements;
+        $this->closed_elements        = $closed_elements;
+        $this->already_seen_artifacts = $already_seen_artifacts;
     }
 
-    public static function buildFromElementsCount(ElementsCount $elements_count): self
+    public function getTotalElements(): int
     {
-        return new self($elements_count->getClosedElements(), $elements_count->getTotalElements());
+        return $this->total_elements;
     }
 
-    public function getClosedElements(): ?int
+    public function getClosedElements(): int
     {
         return $this->closed_elements;
     }
 
-    public function getTotalElements(): ?int
+    public function getAlreadySeenArtifacts(): array
     {
-        return $this->total_elements;
+        return $this->already_seen_artifacts;
+    }
+
+    public function isArtifactAlreadyParsed(Tracker_Artifact $artifact): bool
+    {
+        return in_array((int) $artifact->getId(), $this->already_seen_artifacts, true);
     }
 }
