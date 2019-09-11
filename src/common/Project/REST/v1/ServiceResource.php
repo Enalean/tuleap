@@ -36,9 +36,9 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectAuthorization;
-use Tuleap\REST\UserManager;
 use URLVerification;
 use User_LoginException;
+use UserManager;
 
 /**
  * Wrapper for project related REST methods
@@ -147,7 +147,7 @@ class ServiceResource extends AuthenticatedResource
     private function getUser(): PFUser
     {
         try {
-            return UserManager::build()->getCurrentUser();
+            return UserManager::instance()->getCurrentUser();
         } catch (\Rest_Exception_InvalidTokenException | User_LoginException $exception) {
             throw new I18NRestException(401, $exception->getMessage());
         }

@@ -32,7 +32,7 @@ class ProjectServicesTest extends ProjectBase
 {
     public function testGETProjectServices(): void
     {
-        $url = 'projects/' . $this->getProjectId(REST_TestDataBuilder::PROJECT_SERVICES) . '/project_services';
+        $url = "projects/$this->project_services_id/project_services";
 
         $response = $this->getResponse($this->client->get($url));
         $this->assertEquals(200, $response->getStatusCode());
@@ -42,7 +42,7 @@ class ProjectServicesTest extends ProjectBase
 
     public function testGETProjectServicesWithRESTReadOnlyUser(): void
     {
-        $url = 'projects/' . $this->getProjectId(REST_TestDataBuilder::PROJECT_SERVICES) . '/project_services';
+        $url = "projects/$this->project_services_id/project_services";
 
         $response = $this->getResponse(
             $this->client->get($url),
@@ -129,7 +129,7 @@ class ProjectServicesTest extends ProjectBase
      */
     private function getService(string $name): array
     {
-        $url      = 'projects/' . $this->getProjectId(REST_TestDataBuilder::PROJECT_SERVICES) . '/project_services';
+        $url      = "projects/$this->project_services_id/project_services";
         $response = $this->getResponse($this->client->get($url));
         $this->assertEquals(200, $response->getStatusCode());
 
