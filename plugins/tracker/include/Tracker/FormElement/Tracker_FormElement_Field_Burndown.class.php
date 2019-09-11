@@ -712,7 +712,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return new ChartMessageFetcher(
             $this->getHierarchyFactory(),
             $this->getBurdownConfigurationFieldRetriever(),
-            EventManager::instance()
+            EventManager::instance(),
+            UserManager::instance()
         );
     }
 

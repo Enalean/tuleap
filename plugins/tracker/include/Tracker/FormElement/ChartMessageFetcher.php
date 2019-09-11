@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,8 +26,8 @@ use Tracker;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field;
 use Tracker_HierarchyFactory;
-use Tuleap\REST\UserManager;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
+use UserManager;
 
 class ChartMessageFetcher
 {
@@ -45,14 +45,21 @@ class ChartMessageFetcher
      */
     private $event_manager;
 
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+
     public function __construct(
         Tracker_HierarchyFactory $hierarchy_factory,
         ChartConfigurationFieldRetriever $configuration_field_retriever,
-        EventManager $event_manager
+        EventManager $event_manager,
+        UserManager $user_manager
     ) {
         $this->hierarchy_factory             = $hierarchy_factory;
         $this->configuration_field_retriever = $configuration_field_retriever;
         $this->event_manager                 = $event_manager;
+        $this->user_manager                  = $user_manager;
     }
 
     /**
@@ -64,7 +71,7 @@ class ChartMessageFetcher
     {
         $tracker = $field->getTracker();
         assert($tracker instanceof Tracker);
-        $user    = UserManager::build()->getCurrentUser();
+        $user    = $this->user_manager->getCurrentUser();
 
         $warnings = array();
         if ($usage->getUseStartDate()) {
