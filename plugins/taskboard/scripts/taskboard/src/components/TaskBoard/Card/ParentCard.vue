@@ -23,6 +23,7 @@
         <div class="taskboard-card-content">
             <card-xref-label v-bind:card="card"/>
         </div>
+        <div class="taskboard-card-accessibility" v-if="user_has_accessibility_mode"></div>
     </div>
 </template>
 
@@ -31,10 +32,15 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Card } from "../../../type";
 import CardXrefLabel from "./CardXrefLabel.vue";
+import { State } from "vuex-class";
+
 @Component({
     components: { CardXrefLabel }
 })
 export default class ParentCard extends Vue {
+    @State
+    readonly user_has_accessibility_mode!: boolean;
+
     @Prop({ required: true })
     readonly card!: Card;
 

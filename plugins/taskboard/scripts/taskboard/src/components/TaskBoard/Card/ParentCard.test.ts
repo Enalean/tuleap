@@ -19,12 +19,14 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ParentCard from "./ParentCard.vue";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 
 jest.useFakeTimers();
 
 describe("ParentCard", () => {
     it("displays a parent card", () => {
         const wrapper = shallowMount(ParentCard, {
+            mocks: { $store: createStoreMock({ state: { user_has_accessibility_mode: false } }) },
             propsData: {
                 card: {
                     id: 43,
@@ -36,8 +38,9 @@ describe("ParentCard", () => {
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("doesn't add a background class if the card has no background color", () => {
+    it("doesn't add a dummy taskboard-card-background- class if the card has no background color", () => {
         const wrapper = shallowMount(ParentCard, {
+            mocks: { $store: createStoreMock({ state: { user_has_accessibility_mode: false } }) },
             propsData: {
                 card: {
                     id: 43,
@@ -46,11 +49,26 @@ describe("ParentCard", () => {
                 }
             }
         });
-        expect(wrapper.classes().join(" ")).not.toContain("taskboard-card-background");
+        expect(wrapper.classes()).not.toContain("taskboard-card-background-");
+    });
+
+    it("adds accessibility class if user needs it", () => {
+        const wrapper = shallowMount(ParentCard, {
+            mocks: { $store: createStoreMock({ state: { user_has_accessibility_mode: true } }) },
+            propsData: {
+                card: {
+                    id: 43,
+                    color: "lake-placid-blue",
+                    background_color: ""
+                }
+            }
+        });
+        expect(wrapper.contains(".taskboard-card-accessibility")).toBe(true);
     });
 
     it("removes the show classes after 500ms", () => {
         const wrapper = shallowMount(ParentCard, {
+            mocks: { $store: createStoreMock({ state: { user_has_accessibility_mode: false } }) },
             propsData: {
                 card: {
                     id: 43,
