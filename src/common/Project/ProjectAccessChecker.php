@@ -71,6 +71,10 @@ class ProjectAccessChecker
             throw new Project_AccessProjectNotFoundException();
         }
 
+        if ($user->isAnonymous() && ! ForgeConfig::areAnonymousAllowed()) {
+            throw new Project_AccessProjectNotFoundException(_('Project does not exist'));
+        }
+
         if ($user->isSuperUser()) {
             return;
         }
