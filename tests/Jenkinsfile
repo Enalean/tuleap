@@ -73,9 +73,6 @@ pipeline {
                         stage('Karma PullRequest plugin') {
                             steps { script { actions.runKarmaTests('pullrequest', 'plugins/pullrequest/www/scripts') } }
                         }
-                        stage('Karma Document plugin') {
-                            steps { script { actions.runKarmaTests('document', 'plugins/document/scripts') } }
-                        }
                     }
                     post { always { junit 'results/karma/test-*-results.xml' } }
                 }
