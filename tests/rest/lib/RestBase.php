@@ -67,11 +67,16 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     protected $user_groups_ids = array();
     protected $user_ids = [];
 
+    protected $tracker_representations = [];
+
     protected $release_artifact_ids = array();
     protected $epic_artifact_ids = array();
     protected $story_artifact_ids = array();
     protected $sprint_artifact_ids = array();
 
+    /**
+     * @var Cache
+     */
     protected $cache;
 
     private $initialized = false;
@@ -125,6 +130,8 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         if (!$this->tracker_ids) {
             $this->initTrackerIds();
         }
+
+        $this->tracker_representations = $this->cache->getTrackerRepresentations();
 
         $this->user_ids = $this->cache->getUserIds();
         if (!$this->user_ids) {
@@ -233,7 +240,8 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             array('limit' => $limit, 'offset' => $offset)
         );
 
-        $tracker_ids = array();
+        $tracker_ids            = array();
+        $tracker_representation = [];
 
         do {
             $response = $this->getResponseByName(
@@ -245,9 +253,12 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             $number_of_tracker = (int)(string)$response->getHeader('X-Pagination-Size');
 
             $this->addTrackerIdFromRequestData($trackers, $tracker_ids);
+            $this->addTrackerRepresentationFromRequestData($trackers, $tracker_representation);
 
             $offset += $limit;
         } while ($offset < $number_of_tracker);
+
+        $this->cache->addTrackerRepresentations($tracker_representation);
 
         $this->tracker_ids[$project_id] = $tracker_ids;
         $this->cache->setTrackerIds($this->tracker_ids);
@@ -260,6 +271,15 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             $tracker_shortname = $tracker['item_name'];
 
             $tracker_ids[$tracker_shortname] = $tracker_id;
+        }
+    }
+
+    private function addTrackerRepresentationFromRequestData(array $trackers, array &$tracker_representation)
+    {
+        foreach ($trackers as $tracker) {
+            $tracker_id = $tracker['id'];
+
+            $tracker_representation[$tracker_id] = $tracker;
         }
     }
 

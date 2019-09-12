@@ -251,8 +251,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $response = $this->getResponse($request);
         $file_representation = $response->json();
 
-        $request = $this->client->get('trackers/'. $this->user_stories_tracker_id);
-        $structure = json_decode($this->getResponse($request)->getBody(true), true);
+        $structure = $this->tracker_representations[$this->user_stories_tracker_id];
         foreach ($structure['fields'] as $field) {
             if ($field['type'] == 'file') {
                 $field_id_file = $field['field_id'];
@@ -368,8 +367,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
     {
         $artifact_id = $this->story_artifact_ids[1];
 
-        $request = $this->client->get('trackers/'. $this->user_stories_tracker_id);
-        $structure = json_decode($this->getResponse($request)->getBody(true), true);
+        $structure = $this->tracker_representations[$this->user_stories_tracker_id];
         foreach ($structure['fields'] as $field) {
             if ($field['type'] == 'file') {
                 $field_id = $field['field_id'];

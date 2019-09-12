@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,15 +28,9 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class SimpleModeTest extends TrackerBase
 {
-    public function testGatherWorkflowInformation(): array
+    private function gatherWorkflowInformation(): array
     {
-        $response = $this->getResponseByName(
-            \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->setup_client->get("trackers/$this->simple_mode_workflow_tracker_id")
-        );
-
-        $this->assertEquals($response->getStatusCode(), 200);
-        $tracker = $response->json();
+        $tracker = $this->tracker_representations[$this->simple_mode_workflow_tracker_id];
 
         $done_id       = 0;
         $closed_id     = 0;
@@ -83,11 +77,10 @@ class SimpleModeTest extends TrackerBase
         ];
     }
 
-    /**
-     * @depends testGatherWorkflowInformation
-     */
-    public function testPOSTTrackerWorkflowTransitions(array $infos): int
+    public function testPOSTTrackerWorkflowTransitions(): int
     {
+        $infos = $this->gatherWorkflowInformation();
+
         $body     = json_encode(
             [
                 'tracker_id' => $this->simple_mode_workflow_tracker_id,
@@ -106,11 +99,11 @@ class SimpleModeTest extends TrackerBase
     }
 
     /**
-     * @depends testGatherWorkflowInformation
      * @depends testPOSTTrackerWorkflowTransitions
      */
-    public function testCreatedPostActionDuplicatesPreConditions(array $infos, int $transition_id)
+    public function testCreatedPostActionDuplicatesPreConditions(int $transition_id): void
     {
+        $infos = $this->gatherWorkflowInformation();
         $date_field_id = $infos['date_field_id'];
         $response      = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -141,12 +134,11 @@ class SimpleModeTest extends TrackerBase
         $this->assertSame('https://example.com/2', $post_actions[0]['job_url']);
     }
 
-    /**
-     * @depends testGatherWorkflowInformation
-     */
-    public function testPATCHTrackerWorkflowTransitionsDuplicatesPreConditionsOnAllSiblingTransitions(array $infos)
+    public function testPATCHTrackerWorkflowTransitionsDuplicatesPreConditionsOnAllSiblingTransitions(): void
     {
-        $transition            = $this->getSpecificTransition(
+        $infos = $this->gatherWorkflowInformation();
+
+        $transition = $this->getSpecificTransition(
             $this->simple_mode_workflow_tracker_id,
             'status',
             'Open',
@@ -188,11 +180,10 @@ class SimpleModeTest extends TrackerBase
         $this->assertSame([$date_field_id], $sibling_pre_conditions['not_empty_field_ids']);
     }
 
-    /**
-     * @depends testGatherWorkflowInformation
-     */
-    public function testPUTTrackerWorkflowTransitionsActions(array $infos)
+    public function testPUTTrackerWorkflowTransitionsActions(): int
     {
+        $infos = $this->gatherWorkflowInformation();
+
         $date_field_id = $infos['date_field_id'];
         $int_field_id  = $infos['int_field_id'];
         $transition    = $this->getSpecificTransition(
@@ -292,7 +283,7 @@ class SimpleModeTest extends TrackerBase
     /**
      * @depends testPUTTrackerWorkflowTransitionFrozenFieldsActions
      */
-    public function testGETTrackerWorkflowTransitionReturnsTheFrozenFieldPostAction(int $transition_id)
+    public function testGETTrackerWorkflowTransitionReturnsTheFrozenFieldPostAction(int $transition_id): int
     {
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -430,13 +421,7 @@ class SimpleModeTest extends TrackerBase
 
     public function testGETWorkflowImportedFromXML()
     {
-        $response = $this->getResponseByName(
-            \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->setup_client->get("trackers/$this->simple_mode_from_xml_tracker_id")
-        );
-
-        $this->assertEquals($response->getStatusCode(), 200);
-        $tracker = $response->json();
+        $tracker = $this->tracker_representations[$this->simple_mode_from_xml_tracker_id];
 
         $this->assertEquals($tracker['workflow']['is_advanced'], false);
         $this->assertEquals($tracker['workflow']['is_used'], "1");

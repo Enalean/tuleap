@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,6 +31,7 @@ class Cache
     private $user_ids        = array();
     private $tokens          = array();
 
+    private $trackers  = [];
     private $artifacts = array();
 
     public static function instance()
@@ -71,6 +72,16 @@ class Cache
     public function setTrackerIds($tracker_ids)
     {
         $this->tracker_ids = $tracker_ids;
+    }
+
+    public function addTrackerRepresentations(array $tracker_representations)
+    {
+        $this->trackers = $this->trackers + $tracker_representations;
+    }
+
+    public function getTrackerRepresentations(): array
+    {
+        return $this->trackers;
     }
 
     public function getTrackerIds()

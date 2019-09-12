@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2015 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -23,13 +23,15 @@ namespace Tracker;
 use SimpleXMLElement;
 use RestBase;
 use Guzzle\Http\Client;
+use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ .'/../bootstrap.php';
 
 /**
  * @group TrackerTests
  */
-class ArtifactTest extends RestBase {
+class ArtifactTest extends TrackerBase
+{
 
     protected $project_id;
     protected $tracker_id;
@@ -50,7 +52,7 @@ class ArtifactTest extends RestBase {
     {
         parent::__construct();
 
-        $this->xml_client   = new Client($this->base_url);
+        $this->xml_client = new Client($this->base_url);
         $this->xml_client->setSslVerification(false, false, false);
 
         $this->xml_client->setDefaultOption('headers/Accept', 'application/xml');
@@ -63,7 +65,6 @@ class ArtifactTest extends RestBase {
 
         $this->getReleaseArtifactIds();
 
-        $this->project_id = $this->getProjectId('rest-xml-api');
         $tracker          = $this->getTracker();
         $this->tracker_id = $tracker['id'];
 
@@ -90,7 +91,7 @@ class ArtifactTest extends RestBase {
             return;
         }
 
-        $release_tracker = $this->getResponse($this->client->get("trackers/$this->releases_tracker_id"))->json();
+        $release_tracker = $this->tracker_representations[$this->releases_tracker_id];
         foreach ($release_tracker['fields'] as $field) {
             if ($field['name'] === 'name') {
                 $this->release_name_field_id = $field['field_id'];
@@ -107,8 +108,7 @@ class ArtifactTest extends RestBase {
 
     private function getTracker()
     {
-        $response = $this->getResponse($this->client->get('projects/'. $this->project_id . '/trackers'))->json();
-        return $response[0];
+        return $this->tracker_representations[$this->rest_xml_api_tracker_id];
     }
 
     public function testGetArtifact()
@@ -183,7 +183,7 @@ class ArtifactTest extends RestBase {
         $artifact_xml = $response->xml();
 
         $this->assertEquals((int) $artifact_xml->id, $artifact_id);
-        $this->assertEquals((int) $artifact_xml->project->id, $this->project_id);
+        $this->assertEquals((int) $artifact_xml->project->id, $this->rest_xml_api_project_id);
 
         $this->assertGreaterThan(0, count($artifact_xml->values->children()));
         $this->assertCount(0, $artifact_xml->values_by_field->children());
@@ -202,7 +202,7 @@ class ArtifactTest extends RestBase {
         $artifact_xml = $response->xml();
 
         $this->assertEquals((int) $artifact_xml->id, $artifact_id);
-        $this->assertEquals((int) $artifact_xml->project->id, $this->project_id);
+        $this->assertEquals((int) $artifact_xml->project->id, $this->rest_xml_api_project_id);
 
         $this->assertEquals(0, count($artifact_xml->values->children()));
         $this->assertGreaterThan(0, count($artifact_xml->values_by_field->children()));
@@ -221,7 +221,7 @@ class ArtifactTest extends RestBase {
         $artifact_xml = $response->xml();
 
         $this->assertEquals((int) $artifact_xml->id, $artifact_id);
-        $this->assertEquals((int) $artifact_xml->project->id, $this->project_id);
+        $this->assertEquals((int) $artifact_xml->project->id, $this->rest_xml_api_project_id);
 
         $this->assertGreaterThan(0, count($artifact_xml->values->children()));
         $this->assertGreaterThan(0, count($artifact_xml->values_by_field->children()));
@@ -283,12 +283,12 @@ class ArtifactTest extends RestBase {
     public function testGetArtifactCreatedWithValueByFieldInXMLTracker($artifact_id)
     {
         $response = $this->getResponse($this->xml_client->get('artifacts/'.$artifact_id.'?values_format=by_field'));
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
 
         $artifact_xml = $response->xml();
 
         $this->assertEquals((int) $artifact_xml->id, $artifact_id);
-        $this->assertEquals((int) $artifact_xml->project->id, $this->project_id);
+        $this->assertEquals((int) $artifact_xml->project->id, $this->rest_xml_api_project_id);
 
         $this->assertEquals(0, count($artifact_xml->values->children()));
         $this->assertGreaterThan(0, count($artifact_xml->values_by_field->children()));
