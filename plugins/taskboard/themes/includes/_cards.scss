@@ -76,6 +76,15 @@
     }
 }
 
+.taskboard-card-skeleton {
+    min-height: 38px;
+    border-left-width: 3px;
+
+    &.taskboard-card-parent {
+        min-height: 96px;
+    }
+}
+
 .taskboard-card-content {
     display: flex;
     justify-content: space-between;

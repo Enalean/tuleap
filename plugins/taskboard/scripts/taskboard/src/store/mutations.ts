@@ -22,3 +22,7 @@ import { Swimlane, State } from "../type";
 export function addSwimlanes(state: State, swimlanes: Array<Swimlane>): void {
     state.swimlanes = [...state.swimlanes, ...swimlanes];
 }
+
+export function setIsLoadingSwimlanes(state: State, is_loading_swimlanes: boolean): void {
+    state.is_loading_swimlanes = is_loading_swimlanes;
+}

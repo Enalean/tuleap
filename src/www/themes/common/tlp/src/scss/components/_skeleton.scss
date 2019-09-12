@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-skeleton-color: transparentize($tlp-theme-color, .85);
-$tlp-skeleton-highlight-color: transparentize($tlp-theme-color, .97);
+$tlp-skeleton-color: transparentize($tlp-ui-dimmed, .85);
+$tlp-skeleton-highlight-color: transparentize($tlp-ui-dimmed, .97);
 
 @keyframes skeletonBlink {
     0% {
@@ -105,6 +105,14 @@ p > .tlp-skeleton-text {
 }
 
 .tlp-skeleton-field {
+    animation: skeletonBlink 750ms linear infinite alternate;
+    border: 1px solid $tlp-skeleton-color;
+    background: transparent;
+    box-shadow: inset 0 0 0 1px $tlp-skeleton-color;
+}
+
+.tlp-skeleton-card {
+    min-height: 58px;
     animation: skeletonBlink 750ms linear infinite alternate;
     border: 1px solid $tlp-skeleton-color;
     background: transparent;

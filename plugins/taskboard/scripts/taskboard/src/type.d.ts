@@ -47,6 +47,7 @@ interface State {
     milestone_id: number;
     swimlanes: Array<Swimlane>;
     user_has_accessibility_mode: boolean;
+    is_loading_swimlanes: boolean;
 }
 
 interface Context {
