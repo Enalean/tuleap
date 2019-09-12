@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All rights reserved
+ * Copyright (c) Enalean, 2018 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -258,32 +258,28 @@ class TrackerFieldsTest extends TrackerBase
 
     private function getStaticMultiSelectboxFieldId()
     {
-        $response     = $this->getResponse($this->client->get('trackers/' . $this->tracker_fields_tracker_id));
-        $tracker_json = $response->json();
+        $tracker_json = $this->tracker_representations[$this->tracker_fields_tracker_id];
 
         return $this->getFieldId($tracker_json["fields"], self::FIELD_STATIC_MULTI_SELECTBOX_SHOTNAME);
     }
 
     private function getStaticSelectboxFieldId()
     {
-        $response     = $this->getResponse($this->client->get('trackers/' . $this->tracker_fields_tracker_id));
-        $tracker_json = $response->json();
+        $tracker_json = $this->tracker_representations[$this->tracker_fields_tracker_id];
 
         return $this->getFieldId($tracker_json["fields"], self::FIELD_STATIC_SELECTBOX_SHOTNAME);
     }
 
     private function getUserSelectboxFieldId()
     {
-        $response     = $this->getResponse($this->client->get('trackers/' . $this->tracker_fields_tracker_id));
-        $tracker_json = $response->json();
+        $tracker_json = $this->tracker_representations[$this->tracker_fields_tracker_id];
 
         return $this->getFieldId($tracker_json["fields"], self::FIELD_USER_SELECTBOX_SHOTNAME);
     }
 
     private function getStaticRadiobuttonFieldId()
     {
-        $response     = $this->getResponse($this->client->get('trackers/' . $this->tracker_fields_tracker_id));
-        $tracker_json = $response->json();
+        $tracker_json = $this->tracker_representations[$this->tracker_fields_tracker_id];
 
         return $this->getFieldId($tracker_json["fields"], self::FIELD_STATIC_RADIOBUTTON_SHOTNAME);
     }

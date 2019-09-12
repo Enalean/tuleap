@@ -876,8 +876,7 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
 
     private function getTracker($tracker_id)
     {
-        $response = $this->getResponse($this->client->get('trackers/'.$tracker_id));
-        return $response->json();
+        return $this->tracker_representations[$tracker_id];
     }
 
     /**

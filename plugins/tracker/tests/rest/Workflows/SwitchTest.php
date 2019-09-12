@@ -28,16 +28,9 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class SwitchTest extends TrackerBase
 {
-    public function testPATCHTrackerToSwitchWorkflowInAdvancedMode() : void
+    public function testPATCHTrackerToSwitchWorkflowInAdvancedMode() : array
     {
-        $response_get = $this->getResponseByName(
-            \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->setup_client->get("trackers/$this->simple_mode_workflow_to_switch_tracker_id")
-        );
-
-        $this->assertSame(200, $response_get->getStatusCode());
-
-        $tracker  = $response_get->json();
+        $tracker = $this->tracker_representations[$this->simple_mode_workflow_to_switch_tracker_id];
         $workflow = $tracker['workflow'];
 
         $this->assertFalse($workflow['is_advanced']);
@@ -54,21 +47,15 @@ class SwitchTest extends TrackerBase
         $workflow_after_patch = $tracker_after_patch['workflow'];
 
         $this->assertTrue($workflow_after_patch['is_advanced']);
+
+        return $tracker_after_patch;
     }
 
     /**
      * @depends testPATCHTrackerToSwitchWorkflowInAdvancedMode
      */
-    public function testPATCHTrackerToSwitchWorkflowInSimpleMode() : void
+    public function testPATCHTrackerToSwitchWorkflowInSimpleMode(array $tracker) : void
     {
-        $response_get = $this->getResponseByName(
-            \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->setup_client->get("trackers/$this->simple_mode_workflow_to_switch_tracker_id")
-        );
-
-        $this->assertSame(200, $response_get->getStatusCode());
-
-        $tracker  = $response_get->json();
         $workflow = $tracker['workflow'];
 
         $this->assertTrue($workflow['is_advanced']);
