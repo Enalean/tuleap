@@ -64,8 +64,6 @@ const webpack_config = {
                 "tuleap-pullrequest-module": path.resolve(__dirname, "./src/app/app.js"),
                 angular$: path.resolve(__dirname, "node_modules/angular")
             },
-            webpack_configurator.tlp_mocks_alias,
-            webpack_configurator.tuleap_core_alias,
             webpack_configurator.angular_tlp_alias
         )
     },

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -74,6 +74,9 @@ function isFirstLineOfGroup(line) {
 }
 
 function hasNextLine(line) {
+    if (typeof diff_lines === "undefined") {
+        return null;
+    }
     return line.unidiff_offset < diff_lines.length;
 }
 
@@ -90,6 +93,9 @@ function getLeftLine(line_number) {
 }
 
 function getLineOfHandle(handle) {
+    if (typeof line_to_line_handles_map === "undefined") {
+        return null;
+    }
     for (const [key, value] of line_to_line_handles_map) {
         const line_group = getGroupOfLine(key);
         if (value.left_handle === handle && line_group.type === DELETED_GROUP) {

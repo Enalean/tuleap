@@ -27,12 +27,16 @@ module.exports = {
     },
     moduleNameMapper: {
         "^.+\\.po$": "identity-obj-proxy",
-        "^.+\\.tpl\\.html$": "identity-obj-proxy",
+        "^.+\\.html$": "identity-obj-proxy",
         "tlp-fetch-mocks-helper-jest": path.resolve(
             __dirname,
             "../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js"
         ),
         tlp: path.resolve(__dirname, "../../src/www/themes/common/tlp/src/js/index.js"),
+        "angular-tlp": path.resolve(
+            __dirname,
+            "../../src/www/themes/common/tlp/angular-tlp/index.js"
+        ),
         "@tuleap-vue-components/(.*)$": path.resolve(
             __dirname,
             "../../src/www/scripts/vue-components/$1"

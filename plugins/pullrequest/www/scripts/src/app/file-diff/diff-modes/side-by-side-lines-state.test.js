@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,36 +23,32 @@ import {
     getGroupLines,
     getLineOfHandle
 } from "./side-by-side-lines-state.js";
-import { rewire$buildLineGroups, restore as restoreGrouper } from "./side-by-side-line-grouper.js";
-import {
-    rewire$buildLineToLineHandlesMap,
-    restore as restoreMapper
-} from "./side-by-side-line-mapper.js";
+import * as side_by_side_line_grouper from "./side-by-side-line-grouper.js";
+import * as side_by_side_line_mapper from "./side-by-side-line-mapper.js";
 import { ADDED_GROUP, DELETED_GROUP, UNMOVED_GROUP } from "./side-by-side-line-grouper";
 
 describe("side-by-side lines state", () => {
     let buildLineGroups, buildLineToLineHandlesMap, left_code_mirror, right_code_mirror;
 
     beforeEach(() => {
-        buildLineGroups = jasmine.createSpy("buildLineGroups").and.returnValue({
-            first_line_to_group_map: new Map(),
-            line_to_group_map: new Map()
-        });
-        rewire$buildLineGroups(buildLineGroups);
-        buildLineToLineHandlesMap = jasmine.createSpy("buildLineToLineHandlesMap");
-        rewire$buildLineToLineHandlesMap(buildLineToLineHandlesMap);
+        buildLineGroups = jest
+            .spyOn(side_by_side_line_grouper, "buildLineGroups")
+            .mockImplementation(() => ({
+                first_line_to_group_map: new Map(),
+                line_to_group_map: new Map()
+            }));
+        buildLineToLineHandlesMap = jest.spyOn(
+            side_by_side_line_mapper,
+            "buildLineToLineHandlesMap"
+        );
 
         left_code_mirror = buildCodeMirrorSpy();
         right_code_mirror = buildCodeMirrorSpy();
     });
 
-    afterEach(() => {
-        restoreGrouper();
-        restoreMapper();
-    });
-
     describe("initDataAndCodeMirrors()", () => {
         it("Given diff lines, the left and right code mirrors, then it will store the lines, set the left and right code mirror content and build line maps", () => {
+            buildLineToLineHandlesMap.mockImplementation(() => {});
             const lines = [
                 { old_offset: 1, new_offset: 1 },
                 { old_offset: 2, new_offset: null },
@@ -105,10 +101,10 @@ describe("side-by-side lines state", () => {
             const left_handle = {};
             const right_handle = {};
             const unmoved_group = { type: UNMOVED_GROUP };
-            buildLineGroups.and.returnValue({
+            buildLineGroups.mockReturnValue({
                 line_to_group_map: new Map([[line.unidiff_offset, unmoved_group]])
             });
-            buildLineToLineHandlesMap.and.returnValue(
+            buildLineToLineHandlesMap.mockReturnValue(
                 new Map([
                     [
                         line,
@@ -133,13 +129,13 @@ describe("side-by-side lines state", () => {
             const opposite_right_handle = {};
             const added_group = { type: ADDED_GROUP };
             const unmoved_group = { type: UNMOVED_GROUP };
-            buildLineGroups.and.returnValue({
+            buildLineGroups.mockReturnValue({
                 line_to_group_map: new Map([
                     [added_line.unidiff_offset, added_group],
                     [opposite_line.unidiff_offset, unmoved_group]
                 ])
             });
-            buildLineToLineHandlesMap.and.returnValue(
+            buildLineToLineHandlesMap.mockReturnValue(
                 new Map([
                     [
                         added_line,
@@ -175,13 +171,13 @@ describe("side-by-side lines state", () => {
             const deleted_handle = { a: "a" };
             const added_group = { type: ADDED_GROUP };
             const deleted_group = { type: DELETED_GROUP };
-            buildLineGroups.and.returnValue({
+            buildLineGroups.mockReturnValue({
                 line_to_group_map: new Map([
                     [opposite_line.unidiff_offset, added_group],
                     [deleted_line.unidiff_offset, deleted_group]
                 ])
             });
-            buildLineToLineHandlesMap.and.returnValue(
+            buildLineToLineHandlesMap.mockReturnValue(
                 new Map([
                     [
                         opposite_line,
@@ -212,6 +208,8 @@ describe("side-by-side lines state", () => {
 });
 
 function buildCodeMirrorSpy() {
-    //eslint-disable-next-line jasmine/no-unsafe-spy
-    return jasmine.createSpyObj("code_mirror", ["setValue"]);
+    return {
+        getLineHandle: jest.fn(),
+        setValue: jest.fn()
+    };
 }

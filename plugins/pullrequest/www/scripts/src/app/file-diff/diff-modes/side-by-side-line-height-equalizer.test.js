@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
 
 import { equalizeSides } from "./side-by-side-line-height-equalizer.js";
 
-import { rewire$getCommentPlaceholderWidget, restore } from "./side-by-side-widget-finder.js";
+import * as side_by_side_widget_finder from "./side-by-side-widget-finder.js";
 
 describe("line-height-equalizer", () => {
     let getCommentPlaceholderWidget;
@@ -28,12 +28,10 @@ describe("line-height-equalizer", () => {
     const right_codemirror = "right-codemirror";
 
     beforeEach(() => {
-        getCommentPlaceholderWidget = jasmine.createSpy("getCommentPlaceholderWidget");
-        rewire$getCommentPlaceholderWidget(getCommentPlaceholderWidget);
-    });
-
-    afterEach(() => {
-        restore();
+        getCommentPlaceholderWidget = jest.spyOn(
+            side_by_side_widget_finder,
+            "getCommentPlaceholderWidget"
+        );
     });
 
     describe("equalizeSides", () => {
@@ -41,7 +39,13 @@ describe("line-height-equalizer", () => {
             const handles = {
                 left_handle: {
                     widgets: [
-                        { height: 20, node: { localName: "new-inline-comment", className: "" } }
+                        {
+                            height: 20,
+                            node: {
+                                localName: "new-inline-comment",
+                                classList: { contains: () => false }
+                            }
+                        }
                     ]
                 },
                 right_handle: {}
@@ -59,7 +63,7 @@ describe("line-height-equalizer", () => {
         });
 
         it("Given a line with 1 comment, 1 new comment, when the opposite has a placeholder, then it should adjust the opposite placeholder height.", () => {
-            const changed = jasmine.createSpy("changed");
+            const changed = jest.fn();
 
             const placeholder = {
                 height: 20,
@@ -83,7 +87,7 @@ describe("line-height-equalizer", () => {
                 }
             };
 
-            getCommentPlaceholderWidget.and.returnValues(null, placeholder);
+            getCommentPlaceholderWidget.mockReturnValueOnce(null).mockReturnValueOnce(placeholder);
 
             const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 
@@ -122,7 +126,9 @@ describe("line-height-equalizer", () => {
             const opposite_placeholder = null;
             const current_placeholder = placeholder;
 
-            getCommentPlaceholderWidget.and.returnValues(current_placeholder, opposite_placeholder);
+            getCommentPlaceholderWidget
+                .mockReturnValueOnce(current_placeholder)
+                .mockReturnValueOnce(opposite_placeholder);
 
             const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 
@@ -155,12 +161,11 @@ describe("line-height-equalizer", () => {
             const opposite_placeholder = null;
             const current_placeholder = placeholder;
 
-            getCommentPlaceholderWidget.and.returnValues(
-                current_placeholder,
-                opposite_placeholder,
-                current_placeholder,
-                opposite_placeholder
-            );
+            getCommentPlaceholderWidget
+                .mockReturnValueOnce(current_placeholder)
+                .mockReturnValueOnce(opposite_placeholder)
+                .mockReturnValueOnce(current_placeholder)
+                .mockReturnValueOnce(opposite_placeholder);
 
             const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 
@@ -170,7 +175,7 @@ describe("line-height-equalizer", () => {
     });
 
     it("Given a line with a code placeholder (added/deleted line), when a new inline comment is added, a comment placeholder will be added and the code placeholder will remain untouched.", () => {
-        const changed = jasmine.createSpy("changed");
+        const changed = jest.fn();
 
         const code_placeholder = {
             height: 20,
@@ -194,7 +199,9 @@ describe("line-height-equalizer", () => {
         const opposite_placeholder = null;
         const current_placeholder = null;
 
-        getCommentPlaceholderWidget.and.returnValues(current_placeholder, opposite_placeholder);
+        getCommentPlaceholderWidget
+            .mockReturnValueOnce(current_placeholder)
+            .mockReturnValueOnce(opposite_placeholder);
 
         const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 

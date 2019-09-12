@@ -1,4 +1,4 @@
-import { loadTooltips } from "tuleap-core/codendi/Tooltip.js";
+import { loadTooltips } from "../../../../../../src/www/scripts/codendi/Tooltip.js";
 
 export default TooltipService;
 

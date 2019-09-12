@@ -30,8 +30,8 @@ describe("widget finder", () => {
         });
 
         it("Given a handle with no comment placeholder, then it will return null", () => {
-            const contains = jasmine.createSpy("contains");
-            contains.and.returnValue(false);
+            const contains = jest.fn();
+            contains.mockReturnValue(false);
 
             const comment_placeholder = { node: { classList: { contains } } };
             const handle = {
@@ -44,8 +44,8 @@ describe("widget finder", () => {
         });
 
         it("Given a handle with a comment placeholder, then it will return the comment placeholder widget", () => {
-            const contains = jasmine.createSpy("contains");
-            contains.and.returnValue(true);
+            const contains = jest.fn();
+            contains.mockReturnValue(true);
 
             const comment_placeholder = { node: { classList: { contains } } };
             const handle = {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,13 +21,7 @@ import { ADDED_GROUP, DELETED_GROUP, UNMOVED_GROUP } from "./side-by-side-line-g
 import { NAME as INLINE_COMMENT_NAME } from "../inline-comment-component.js";
 import { buildCommentsPlaceholderWidget } from "./side-by-side-comment-placeholder-builder.js";
 
-import {
-    rewire$getGroupLines,
-    rewire$getLineHandles,
-    rewire$getGroupOfLine,
-    rewire$getLineOfHandle,
-    restore as restoreLinesState
-} from "./side-by-side-lines-state.js";
+import * as side_by_side_lines_state from "./side-by-side-lines-state.js";
 
 describe("side-by-side widget builder", () => {
     const left_code_mirror = {};
@@ -35,18 +29,10 @@ describe("side-by-side widget builder", () => {
     let getGroupLines, getLineHandles, getGroupOfLine, getLineOfHandle;
 
     beforeEach(() => {
-        getGroupLines = jasmine.createSpy("getGroupLines");
-        rewire$getGroupLines(getGroupLines);
-        getLineHandles = jasmine.createSpy("getLineHandles");
-        rewire$getLineHandles(getLineHandles);
-        getGroupOfLine = jasmine.createSpy("getGroupOfLine");
-        rewire$getGroupOfLine(getGroupOfLine);
-        getLineOfHandle = jasmine.createSpy("getLineOfHandle");
-        rewire$getLineOfHandle(getLineOfHandle);
-    });
-
-    afterEach(() => {
-        restoreLinesState();
+        getGroupLines = jest.spyOn(side_by_side_lines_state, "getGroupLines");
+        getLineHandles = jest.spyOn(side_by_side_lines_state, "getLineHandles");
+        getGroupOfLine = jest.spyOn(side_by_side_lines_state, "getGroupOfLine");
+        getLineOfHandle = jest.spyOn(side_by_side_lines_state, "getLineOfHandle");
     });
 
     describe("buildCommentsPlaceholderWidget()", () => {
@@ -60,9 +46,12 @@ describe("side-by-side widget builder", () => {
                 const left_handle = {};
                 const right_handle = { widgets: [fake_widget] };
                 beforeEach(() => {
-                    getLineHandles
-                        .withArgs(unmoved_line)
-                        .and.returnValue({ left_handle, right_handle });
+                    getLineHandles.mockImplementation(value => {
+                        if (value === unmoved_line) {
+                            return { left_handle, right_handle };
+                        }
+                        throw new Error(value);
+                    });
                 });
 
                 it("then it will return the left code mirror and left handle (where the placeholder will go)", () => {
@@ -104,11 +93,23 @@ describe("side-by-side widget builder", () => {
                 const left_handle = { widgets: [fake_widget] };
 
                 beforeEach(() => {
-                    getLineHandles
-                        .withArgs(unmoved_line)
-                        .and.returnValue({ left_handle, right_handle });
-                    getLineOfHandle.withArgs(left_handle).and.returnValue(unmoved_line);
-                    getGroupOfLine.withArgs(unmoved_line).and.returnValue({ type: UNMOVED_GROUP });
+                    getLineHandles.mockImplementation(value => {
+                        if (value === unmoved_line) {
+                            return { left_handle, right_handle };
+                        }
+                        throw new Error(value);
+                    });
+                    getLineOfHandle.mockImplementation(value => {
+                        if (value === left_handle) {
+                            return unmoved_line;
+                        }
+                        throw new Error(value);
+                    });
+                    getLineOfHandle.mockImplementation(value => {
+                        if (value === unmoved_line) {
+                            return { type: UNMOVED_GROUP };
+                        }
+                    });
                 });
 
                 it("then it will return the right code mirror and the right handle (where the placeholder will go)", () => {
@@ -147,9 +148,11 @@ describe("side-by-side widget builder", () => {
             it("When it has no comment, then widget parameters will be null", () => {
                 const left_handle = {};
                 const right_handle = {};
-                getLineHandles
-                    .withArgs(unmoved_line)
-                    .and.returnValue({ left_handle, right_handle });
+                getLineHandles.mockImplementation(value => {
+                    if (value === unmoved_line) {
+                        return { left_handle, right_handle };
+                    }
+                });
 
                 const widget_params = buildCommentsPlaceholderWidget(
                     unmoved_line,
@@ -181,19 +184,36 @@ describe("side-by-side widget builder", () => {
             };
 
             beforeEach(() => {
-                getLineOfHandle.withArgs(left_handle).and.returnValue(null);
-                getLineOfHandle.withArgs(first_right_handle).and.returnValue(first_added_line);
-                getLineHandles
-                    .withArgs(first_added_line)
-                    .and.returnValue({ left_handle, right_handle: first_right_handle });
-                getLineHandles
-                    .withArgs(second_added_line)
-                    .and.returnValue({ left_handle, right_handle: second_right_handle });
-
-                getGroupOfLine.withArgs(first_added_line).and.returnValue(group);
-                getGroupLines
-                    .withArgs(group)
-                    .and.returnValue([first_added_line, second_added_line]);
+                getLineOfHandle.mockImplementation(value => {
+                    if (value === left_handle) {
+                        return null;
+                    }
+                    if (value === first_right_handle) {
+                        return first_added_line;
+                    }
+                    throw new Error(value);
+                });
+                getLineHandles.mockImplementation(value => {
+                    if (value === first_added_line) {
+                        return { left_handle, right_handle: first_right_handle };
+                    }
+                    if (value === second_added_line) {
+                        return { left_handle, right_handle: second_right_handle };
+                    }
+                    throw new Error(value);
+                });
+                getGroupOfLine.mockImplementation(value => {
+                    if (value === first_added_line) {
+                        return group;
+                    }
+                    throw new Error(value);
+                });
+                getGroupLines.mockImplementation(value => {
+                    if (group === value) {
+                        return [first_added_line, second_added_line];
+                    }
+                    throw new Error(value);
+                });
             });
 
             it("then it will return the left code mirror and the left handle (where the placeholder will go)", () => {
@@ -249,18 +269,35 @@ describe("side-by-side widget builder", () => {
             };
 
             beforeEach(() => {
-                getLineHandles
-                    .withArgs(first_deleted_line)
-                    .and.returnValue({ left_handle: first_left_handle, right_handle });
-                getLineHandles
-                    .withArgs(second_deleted_line)
-                    .and.returnValue({ left_handle: second_left_handle, right_handle });
-                getLineOfHandle.withArgs(first_left_handle).and.returnValue(first_deleted_line);
-                getLineOfHandle.withArgs(right_handle).and.returnValue(null);
-                getGroupOfLine.withArgs(first_deleted_line).and.returnValue(group);
-                getGroupLines
-                    .withArgs(group)
-                    .and.returnValue([first_deleted_line, second_deleted_line]);
+                getLineHandles.mockImplementation(value => {
+                    if (value === first_deleted_line) {
+                        return { left_handle: first_left_handle, right_handle };
+                    }
+                    if (value === second_deleted_line) {
+                        return { left_handle: second_left_handle, right_handle };
+                    }
+                    throw new Error(value);
+                });
+                getLineOfHandle.mockImplementation(value => {
+                    if (value === first_left_handle) {
+                        return first_deleted_line;
+                    }
+                    if (value === right_handle) {
+                        return null;
+                    }
+                    throw new Error(value);
+                });
+                getGroupOfLine.mockImplementation(value => {
+                    if (value === first_deleted_line) {
+                        return group;
+                    }
+                });
+                getGroupLines.mockImplementation(value => {
+                    if (value === group) {
+                        return [first_deleted_line, second_deleted_line];
+                    }
+                    throw new Error(value);
+                });
             });
 
             it("then it will return the right code mirror and the right handle (where the placeholder will go)", () => {
@@ -318,20 +355,39 @@ describe("side-by-side widget builder", () => {
                 added_group = {
                     type: ADDED_GROUP
                 };
-                getLineHandles.and.returnValue({ left_handle: {}, right_handle: {} });
-                getLineHandles
-                    .withArgs(first_deleted_line)
-                    .and.returnValue({ left_handle, right_handle });
-                getLineOfHandle.withArgs(left_handle).and.returnValue(first_deleted_line);
-                getLineOfHandle.withArgs(right_handle).and.returnValue(third_added_line);
-                getGroupOfLine.withArgs(first_deleted_line).and.returnValue(deleted_group);
-                getGroupOfLine.withArgs(third_added_line).and.returnValue(added_group);
-                getGroupLines
-                    .withArgs(deleted_group)
-                    .and.returnValue([first_deleted_line, second_deleted_line]);
-                getGroupLines
-                    .withArgs(added_group)
-                    .and.returnValue([third_added_line, fourth_added_line]);
+                getLineHandles.mockImplementation(value => {
+                    if (value === first_deleted_line) {
+                        return { left_handle, right_handle };
+                    }
+                    return { left_handle: {}, right_handle: {} };
+                });
+                getLineOfHandle.mockImplementation(value => {
+                    if (value === left_handle) {
+                        return first_deleted_line;
+                    }
+                    if (value === right_handle) {
+                        return third_added_line;
+                    }
+                    throw new Error(value);
+                });
+                getGroupOfLine.mockImplementation(value => {
+                    if (value === first_deleted_line) {
+                        return deleted_group;
+                    }
+                    if (value === third_added_line) {
+                        return added_group;
+                    }
+                    throw new Error(value);
+                });
+                getGroupLines.mockImplementation(value => {
+                    if (value === deleted_group) {
+                        return [first_deleted_line, second_deleted_line];
+                    }
+                    if (value === added_group) {
+                        return [third_added_line, fourth_added_line];
+                    }
+                    throw new Error(value);
+                });
             });
 
             it("then it will return the right code mirror and the right handle", () => {
@@ -393,13 +449,30 @@ describe("side-by-side widget builder", () => {
             };
 
             beforeEach(() => {
-                getLineHandles
-                    .withArgs(second_added_line)
-                    .and.returnValue({ left_handle, right_handle });
-                getLineOfHandle.withArgs(left_handle).and.returnValue(first_deleted_line);
-                getLineOfHandle.withArgs(right_handle).and.returnValue(second_added_line);
-                getGroupOfLine.withArgs(first_deleted_line).and.returnValue(deleted_group);
-                getGroupOfLine.withArgs(second_added_line).and.returnValue(added_group);
+                getLineHandles.mockImplementation(value => {
+                    if (value === second_added_line) {
+                        return { left_handle, right_handle };
+                    }
+                    throw new Error(value);
+                });
+                getLineOfHandle.mockImplementation(value => {
+                    if (value === left_handle) {
+                        return first_deleted_line;
+                    }
+                    if (value === right_handle) {
+                        return second_added_line;
+                    }
+                    throw new Error(value);
+                });
+                getGroupOfLine.mockImplementation(value => {
+                    if (value === first_deleted_line) {
+                        return deleted_group;
+                    }
+                    if (value === second_added_line) {
+                        return added_group;
+                    }
+                    throw new Error(value);
+                });
             });
 
             it("then the group will be skipped and it will return null", () => {

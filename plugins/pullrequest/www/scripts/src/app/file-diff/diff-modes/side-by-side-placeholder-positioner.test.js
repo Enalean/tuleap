@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,26 +18,15 @@
  */
 
 import { getDisplayAboveLineForWidget } from "./side-by-side-placeholder-positioner.js";
-import {
-    rewire$getGroupOfLine,
-    rewire$getLineOfHandle,
-    restore
-} from "./side-by-side-lines-state.js";
+import * as side_by_side_lines_state from "./side-by-side-lines-state.js";
 import { DELETED_GROUP } from "./side-by-side-line-grouper.js";
 
 describe("placeholder positioner", () => {
     let getGroupOfLine, getLineOfHandle;
 
     beforeEach(() => {
-        getGroupOfLine = jasmine.createSpy("getGroupOfLine");
-        rewire$getGroupOfLine(getGroupOfLine);
-
-        getLineOfHandle = jasmine.createSpy("getLineOfHandle");
-        rewire$getLineOfHandle(getLineOfHandle);
-    });
-
-    afterEach(() => {
-        restore();
+        getGroupOfLine = jest.spyOn(side_by_side_lines_state, "getGroupOfLine");
+        getLineOfHandle = jest.spyOn(side_by_side_lines_state, "getLineOfHandle");
     });
 
     describe("getDisplayAboveLineForWidget()", () => {
@@ -45,8 +34,13 @@ describe("placeholder positioner", () => {
             const handle = {};
             const line = { unidiff_offset: 666 };
 
-            getLineOfHandle.and.returnValue(line);
-            getGroupOfLine.withArgs(line).and.returnValue({ type: DELETED_GROUP });
+            getLineOfHandle.mockReturnValue(line);
+            getGroupOfLine.mockImplementation(l => {
+                if (line === l) {
+                    return { type: DELETED_GROUP };
+                }
+                throw new Error(l);
+            });
 
             const should_display_above = getDisplayAboveLineForWidget(handle);
 
@@ -56,7 +50,7 @@ describe("placeholder positioner", () => {
         it("Given a handle without line, then it should return false", () => {
             const handle = {};
 
-            getLineOfHandle.and.returnValue(null);
+            getLineOfHandle.mockReturnValue(null);
 
             const should_display_above = getDisplayAboveLineForWidget(handle);
 

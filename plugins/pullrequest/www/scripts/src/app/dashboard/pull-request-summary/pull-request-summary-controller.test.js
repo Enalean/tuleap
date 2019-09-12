@@ -1,5 +1,5 @@
 import angular from "angular";
-import tuleap_pullrequest_module from "tuleap-pullrequest-module";
+import tuleap_pullrequest_module from "../../app.js";
 import pullrequest_summary_controller from "./pull-request-summary-controller.js";
 
 import "angular-mocks";
@@ -26,8 +26,10 @@ describe("PullRequestSummaryController -", () => {
             PullRequestService = _PullRequestService_;
         });
 
-        $state = jasmine.createSpyObj("$state", ["go"]);
-        spyOn(UserRestService, "getUser").and.returnValue($q.when());
+        $state = {
+            go: () => {}
+        };
+        jest.spyOn(UserRestService, "getUser").mockReturnValue($q.when());
 
         PullRequestSummaryController = $controller(
             pullrequest_summary_controller,
@@ -51,7 +53,7 @@ describe("PullRequestSummaryController -", () => {
                 display_name: "Oliver Haglund"
             };
 
-            UserRestService.getUser.and.returnValue($q.when(user));
+            UserRestService.getUser.mockReturnValue($q.when(user));
             PullRequestSummaryController.pull_request = {
                 user_id: user_id
             };

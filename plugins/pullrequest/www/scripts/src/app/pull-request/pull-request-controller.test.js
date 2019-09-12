@@ -1,5 +1,5 @@
 import angular from "angular";
-import tuleap_pullrequest_module from "tuleap-pullrequest-module";
+import tuleap_pullrequest_module from "../app.js";
 import pullrequest_controller from "./pull-request-controller.js";
 
 import "angular-mocks";
@@ -31,23 +31,23 @@ describe("PullRequestController -", () => {
             SharedPropertiesService = _SharedPropertiesService_;
         });
 
-        $state = jasmine.createSpyObj("$state", ["go"]);
-        $state.params = {};
+        $state = {
+            go: () => {},
+            params: {}
+        };
 
         PullRequestController = $controller(pullrequest_controller, {
             $state,
             PullRequestRestService,
             SharedPropertiesService
         });
-
-        installPromiseMatchers();
     });
 
     describe("init()", () => {
         beforeEach(() => {
-            spyOn(SharedPropertiesService, "setPullRequest");
-            spyOn(SharedPropertiesService, "setReadyPromise");
-            spyOn(PullRequestRestService, "getPullRequest").and.returnValue($q.when());
+            jest.spyOn(SharedPropertiesService, "setPullRequest").mockImplementation(() => {});
+            jest.spyOn(SharedPropertiesService, "setReadyPromise").mockImplementation(() => {});
+            jest.spyOn(PullRequestRestService, "getPullRequest").mockReturnValue($q.when());
         });
 
         it("Given I have a pull request id in $state.params.id and the pull requests had not been initially loaded, then the pull_request will be loaded using the REST service and set in SharedPropertiesService", () => {
@@ -58,7 +58,7 @@ describe("PullRequestController -", () => {
             };
 
             const promise = $q.when(pull_request);
-            PullRequestRestService.getPullRequest.and.returnValue(promise);
+            PullRequestRestService.getPullRequest.mockReturnValue(promise);
 
             PullRequestController.$onInit();
             $rootScope.$apply();
