@@ -7,21 +7,9 @@ exports[`ParentCard displays a parent card 1`] = `
   <div
     class="taskboard-card-content"
   >
-    <div
-      class="taskboard-card-xref-label"
-    >
-      <span
-        class="taskboard-card-xref"
-      >
-        story #43
-      </span>
-       
-      <span
-        class="taskboard-card-label"
-      >
-        Story 2
-      </span>
-    </div>
+    <card-xref-label-stub
+      card="[object Object]"
+    />
   </div>
 </div>
 `;

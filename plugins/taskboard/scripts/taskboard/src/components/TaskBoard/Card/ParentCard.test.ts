@@ -28,8 +28,6 @@ describe("ParentCard", () => {
             propsData: {
                 card: {
                     id: 43,
-                    label: "Story 2",
-                    xref: "story #43",
                     color: "lake-placid-blue"
                 }
             }
@@ -42,8 +40,6 @@ describe("ParentCard", () => {
             propsData: {
                 card: {
                     id: 43,
-                    label: "Story 2",
-                    xref: "story #43",
                     color: "lake-placid-blue"
                 }
             }

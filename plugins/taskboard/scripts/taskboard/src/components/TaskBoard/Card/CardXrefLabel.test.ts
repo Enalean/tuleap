@@ -15,39 +15,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-export interface ColumnDefinition {
-    id: number;
-    label: string;
-    color: string;
-}
+import { shallowMount } from "@vue/test-utils";
+import CardXrefLabel from "./CardXrefLabel.vue";
 
-export interface Swimlane {
-    card: Card;
-}
-
-export interface Card {
-    id: number;
-    label: string;
-    xref: string;
-    rank: number;
-    color: string;
-    artifact_html_uri: string;
-}
-
-interface State {
-    user_is_admin: boolean;
-    user_id: number;
-    admin_url: string;
-    has_content: boolean;
-    columns: Array<ColumnDefinition>;
-    milestone_id: number;
-    swimlanes: Array<Swimlane>;
-}
-
-interface Context {
-    state: State;
-    commit: Function;
-}
+describe("CardXrefLabel", () => {
+    it("displays a parent card", () => {
+        const wrapper = shallowMount(CardXrefLabel, {
+            propsData: {
+                card: {
+                    id: 43,
+                    label: "Story 2",
+                    xref: "story #43",
+                    color: "lake-placid-blue",
+                    artifact_html_uri: "/path/to/43"
+                }
+            }
+        });
+        expect(wrapper.element).toMatchSnapshot();
+    });
+});

@@ -19,10 +19,12 @@
   -->
 
 <template>
-    <div class="taskboard-card taskboard-card-parent" v-bind:class="additional_classnames">
-        <div class="taskboard-card-content">
-            <card-xref-label v-bind:card="card"/>
-        </div>
+    <div class="taskboard-card-xref-label">
+        <a class="taskboard-card-xref"
+           v-bind:href="card.artifact_html_uri"
+           v-bind:class="additional_classnames"
+        >{{ card.xref }}</a>
+        <span class="taskboard-card-label">{{ card.label }}</span>
     </div>
 </template>
 
@@ -30,30 +32,14 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Card } from "../../../type";
-import CardXrefLabel from "./CardXrefLabel.vue";
-@Component({
-    components: { CardXrefLabel }
-})
-export default class ParentCard extends Vue {
+
+@Component
+export default class CardXrefLabel extends Vue {
     @Prop({ required: true })
     readonly card!: Card;
 
-    add_show_class = true;
-
-    mounted(): void {
-        setTimeout(() => {
-            this.add_show_class = false;
-        }, 500);
-    }
-
     get additional_classnames(): string {
-        const classnames = [`taskboard-card-${this.card.color}`];
-
-        if (this.add_show_class) {
-            classnames.push("taskboard-card-show");
-        }
-
-        return classnames.join(" ");
+        return `taskboard-card-xref-${this.card.color}`;
     }
 }
 </script>
