@@ -53,7 +53,7 @@ class BoardPresenterBuilder
         $this->backlog_item_dao  = $backlog_item_dao;
     }
 
-    public function getPresenter(\Planning_Milestone $milestone, PFuser $user): BoardPresenter
+    public function getPresenter(\Planning_Milestone $milestone, PFuser $user, bool $is_ie_11): BoardPresenter
     {
         $presenter_data = $this->pane_factory->getPanePresenterData($milestone);
 
@@ -65,7 +65,8 @@ class BoardPresenterBuilder
             $user,
             $milestone,
             $this->columns_retriever->getColumns($milestone->getPlanning()->getPlanningTracker()),
-            $has_content
+            $has_content,
+            $is_ie_11
         );
     }
 }

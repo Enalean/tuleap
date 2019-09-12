@@ -39,6 +39,14 @@
     </nav>
     {{/ milestone_presenter }}
 
+    {{# is_ie_11 }}
+    <div class="empty-page">
+        <p class="empty-page-text">
+            {{# dgettext }}tuleap-taskboard | Your browser is not compatible with Taskboard application{{/ dgettext }}
+        </p>
+    </div>
+    {{/ is_ie_11 }}
+    {{^ is_ie_11 }}
     <div id="taskboard"
          data-user-is-admin="{{ user_is_admin }}"
          data-admin-url="{{ admin_url }}"
@@ -46,5 +54,6 @@
          data-has-content="{{ has_content }}"
          data-milestone-id="{{# milestone_presenter }}{{ milestoneId }}{{/milestone_presenter}}"
     ></div>
+    {{/ is_ie_11 }}
 
 </div>
