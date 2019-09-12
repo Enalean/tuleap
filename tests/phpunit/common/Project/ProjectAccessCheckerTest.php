@@ -77,7 +77,8 @@ class ProjectAccessCheckerTest extends TestCase
             [
                 'isSuperUser'  => false,
                 'isMember'     => false,
-                'isRestricted' => true
+                'isRestricted' => true,
+                'isAnonymous'  => false,
             ]
         );
 
@@ -105,7 +106,8 @@ class ProjectAccessCheckerTest extends TestCase
             [
                 'isSuperUser'  => false,
                 'isMember'     => false,
-                'isRestricted' => true
+                'isRestricted' => true,
+                'isAnonymous'  => false,
             ]
         );
 
@@ -132,7 +134,8 @@ class ProjectAccessCheckerTest extends TestCase
             [
                 'isSuperUser'  => false,
                 'isMember'     => false,
-                'isRestricted' => true
+                'isRestricted' => true,
+                'isAnonymous'  => false,
             ]
         );
 
@@ -173,7 +176,8 @@ class ProjectAccessCheckerTest extends TestCase
             [
                 'isSuperUser'  => false,
                 'isMember'     => true,
-                'isRestricted' => true
+                'isRestricted' => true,
+                'isAnonymous'  => false,
             ]
         );
 
@@ -201,7 +205,8 @@ class ProjectAccessCheckerTest extends TestCase
             [
                 'isSuperUser'  => false,
                 'isMember'     => true,
-                'isRestricted' => true
+                'isRestricted' => true,
+                'isAnonymous'  => false,
             ]
         );
 
@@ -224,7 +229,8 @@ class ProjectAccessCheckerTest extends TestCase
         $user->shouldReceive(
             [
                 'isMember'    => true,
-                'isSuperUser' => false
+                'isSuperUser' => false,
+                'isAnonymous'  => false,
             ]
         );
 
@@ -238,7 +244,8 @@ class ProjectAccessCheckerTest extends TestCase
             [
                 'isMember'     => false,
                 'isSuperUser'  => false,
-                'isRestricted' => false
+                'isRestricted' => false,
+                'isAnonymous'  => false,
             ]
         );
 
@@ -264,7 +271,8 @@ class ProjectAccessCheckerTest extends TestCase
             [
                 'isMember'     => false,
                 'isRestricted' => true,
-                'isSuperUser'  => false
+                'isSuperUser'  => false,
+                'isAnonymous'  => false,
             ]
         );
 
@@ -292,7 +300,8 @@ class ProjectAccessCheckerTest extends TestCase
             [
                 'isMember'     => true,
                 'isRestricted' => true,
-                'isSuperUser'  => false
+                'isSuperUser'  => false,
+                'isAnonymous'  => false,
             ]
         );
 
@@ -316,7 +325,8 @@ class ProjectAccessCheckerTest extends TestCase
             [
                 'isRestricted' => false,
                 'isSuperUser'  => false,
-                'isMember'     => false
+                'isMember'     => false,
+                'isAnonymous'  => false,
             ]
         );
 
@@ -345,7 +355,8 @@ class ProjectAccessCheckerTest extends TestCase
             [
                 'isMember'     => false,
                 'isRestricted' => true,
-                'isSuperUser'  => false
+                'isSuperUser'  => false,
+                'isAnonymous'  => false,
             ]
         );
 
@@ -374,7 +385,8 @@ class ProjectAccessCheckerTest extends TestCase
             [
                 'isMember'     => false,
                 'isRestricted' => true,
-                'isSuperUser'  => false
+                'isSuperUser'  => false,
+                'isAnonymous'  => false,
             ]
         );
 
@@ -400,7 +412,8 @@ class ProjectAccessCheckerTest extends TestCase
         $user->shouldReceive(
             [
                 'isMember'    => true,
-                'isSuperUser' => false
+                'isSuperUser' => false,
+                'isAnonymous'  => false,
             ]
         );
 
@@ -426,7 +439,8 @@ class ProjectAccessCheckerTest extends TestCase
         $user->shouldReceive(
             [
                 'isMember'    => true,
-                'isSuperUser' => false
+                'isSuperUser' => false,
+                'isAnonymous'  => false,
             ]
         );
 
@@ -470,7 +484,8 @@ class ProjectAccessCheckerTest extends TestCase
         $user->shouldReceive(
             [
                 'isSuperUser' => true,
-                'isMember'    => false
+                'isMember'    => false,
+                'isAnonymous' => false,
             ]
         );
 
@@ -494,7 +509,8 @@ class ProjectAccessCheckerTest extends TestCase
             [
                 'isRestricted' => false,
                 'isSuperUser'  => false,
-                'isMember'     => false
+                'isMember'     => false,
+                'isAnonymous'  => false,
             ]
         );
 
@@ -515,6 +531,48 @@ class ProjectAccessCheckerTest extends TestCase
                 return true;
             }
         );
+
+        $this->checker->checkUserCanAccessProject($user, $project);
+    }
+
+    public function testItForbidsAccessToAnonymousUsersWhenTheInstanceDoesNotAllowAnonymousUsers() : void
+    {
+        $user = Mockery::mock(PFUser::class);
+        $user->shouldReceive('isAnonymous')->andReturn(true);
+
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
+
+        $project = Mockery::mock(Project::class);
+        $project->shouldReceive('isError')->andReturn(false);
+
+        $this->expectException(Project_AccessProjectNotFoundException::class);
+        $this->checker->checkUserCanAccessProject($user, $project);
+    }
+
+    public function testItForbidsAccessForAnonymousUsersInAPublicProjectWhenTheInstanceAllowsAnonymousUsers() : void
+    {
+        $user = Mockery::mock(PFUser::class);
+        $user->shouldReceive(
+            [
+                'isRestricted' => false,
+                'isSuperUser'  => false,
+                'isMember'     => false,
+                'isAnonymous'  => true,
+            ]
+        );
+
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+
+        $project = Mockery::mock(Project::class);
+        $project->shouldReceive(
+            [
+                'getID'     => 110,
+                'isPublic'  => true,
+                'isActive'  => true,
+                'isError'   => false,
+            ]
+        );
+        $this->overrider->shouldReceive('doesOverriderAllowUserToAccessProject')->andReturn(false);
 
         $this->checker->checkUserCanAccessProject($user, $project);
     }
