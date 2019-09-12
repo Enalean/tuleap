@@ -22,6 +22,7 @@
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 
 /**
  * Widget_MyArtifacts
@@ -171,16 +172,15 @@ class Tracker_Widget_MyArtifacts extends Widget {
         return $html_my_artifacts;
     }
 
-    function _display_artifacts($artifacts)
+    function _display_artifacts(MyArtifactsCollection $my_artifacts)
     {
         $hp = Codendi_HTMLPurifier::instance();
 
         $html_my_artifacts = '';
 
-        foreach ($artifacts as $tracker_id => $tracker_and_its_artifacts) {
-            if (count($tracker_and_its_artifacts['artifacts'])) {
-                $tracker = $tracker_and_its_artifacts['tracker'];
-
+        foreach ($my_artifacts->getTrackers() as $tracker) {
+            $artifacts_in_tracker_count = $my_artifacts->getArtifactsInTrackerCount($tracker);
+            if ($artifacts_in_tracker_count > 0) {
                 $div_id              = 'plugin_tracker_my_artifacts_tracker_' . $tracker->getId();
                 $classname           = Toggler::getClassname($div_id);
                 $group_id            = $tracker->getGroupId();
@@ -192,12 +192,12 @@ class Tracker_Widget_MyArtifacts extends Widget {
                 $html_my_artifacts .= '<a href="/plugins/tracker/?tracker=' . $tracker->getId() . '" class="tracker-widget-artifacts">';
                 $html_my_artifacts .= '<strong>' . $hp->purify($project_and_tracker, CODENDI_PURIFIER_CONVERT_HTML) . '</strong>';
                 $html_my_artifacts .= '</a>';
-                $html_my_artifacts .= ' [' . count($tracker_and_its_artifacts['artifacts']) . ']';
+                $html_my_artifacts .= ' [' . $artifacts_in_tracker_count . ']';
                 $html_my_artifacts .= ' </div>';
                 $html_my_artifacts .= '<ul class="plugin_tracker_my_artifacts_list tracker-widget-artifacts-list">';
-                foreach ($tracker_and_its_artifacts['artifacts'] as $artifact_and_its_title) {
+                foreach ($my_artifacts->getArtifactsInTracker($tracker) as $artifact) {
                     $html_my_artifacts .=  '<li>';
-                    $html_my_artifacts .=  $artifact_and_its_title['artifact']->fetchWidget($tracker->getItemName(), $artifact_and_its_title['title']);
+                    $html_my_artifacts .=  $artifact->fetchWidget($tracker->getItemName());
                     $html_my_artifacts .=  '</li>';
                 }
                 $html_my_artifacts .= '</ul>';

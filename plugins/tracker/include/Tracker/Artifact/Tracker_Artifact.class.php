@@ -373,17 +373,17 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * Fetch the artifact for the MyArtifact widget
      *
      * @param string $item_name The short name of the tracker this artifact belongs to
-     * @param string $title     The title of this artifact
      *
      * @return string html
      */
-    public function fetchWidget($item_name, $title) {
+    public function fetchWidget($item_name) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= ' <a class="direct-link-to-artifact tracker-widget-artifacts" href="'.TRACKER_BASE_URL.'/?aid='. $this->id .'">';
         $html .= $hp->purify($item_name, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= ' #';
         $html .= $this->id;
+        $title = $this->getTitle();
         if ($title) {
             $html .= ' - ';
             $html .= $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML);

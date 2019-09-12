@@ -24,6 +24,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
@@ -273,15 +274,17 @@ class Tracker_ArtifactFactory {
      * @param int    $user_id  the id of the user
      * @param string $callback the callback method
      *
-     * @return array Complex array of artifacts group by trackers (see above)
+     * @return MyArtifactsCollection
      */
     protected function getUserOpenArtifacts($user_id, $callback)
     {
         $tf = TrackerFactory::instance();
-        $artifacts = array();
+        $my_artifacts = new MyArtifactsCollection();
         foreach ($this->getDao()->$callback($user_id) as $row) {
-            if (!isset($artifacts[$row['tracker_id']])) {
-                $tracker = $tf->getTrackerById($row['tracker_id']);
+            $tracker_id  = (int) $row['tracker_id'];
+            $artifact_id = (int) $row['id'];
+            if (! $my_artifacts->hasTracker($row['tracker_id'])) {
+                $tracker = $tf->getTrackerById($tracker_id);
 
                 $with_title = false;
                 if ($title_field = Tracker_Semantic_Title::load($tracker)->getField()) {
@@ -290,23 +293,20 @@ class Tracker_ArtifactFactory {
                     }
                 }
 
-                $artifacts[$row['tracker_id']] = array(
-                    'tracker'    => $tracker,
-                    'with_title' => $with_title,
-                    'artifacts'  => array(),
-                );
+                $my_artifacts->addTracker($tracker_id, $tracker, $with_title);
             }
-            if (!isset($artifacts[$row['tracker_id']]['artifacts'][$row['id']])) {
+            if (! $my_artifacts->trackerHasArtifact($tracker_id, $artifact_id)) {
                 $artifact = $this->getInstanceFromRow($row);
                 if ($artifact->userCanView()) {
-                    $artifacts[$row['tracker_id']]['artifacts'][$row['id']] = array(
-                        'artifact' => $artifact,
-                        'title'    => $artifacts[$row['tracker_id']]['with_title'] ? $this->getTitleFromRowAsText($row) : '',
-                    );
+                    $artifact->setTitle('');
+                    if ($my_artifacts->trackerHasTitle($tracker_id)) {
+                        $artifact->setTitle($this->getTitleFromRowAsText($row));
+                    }
+                    $my_artifacts->addArtifactForTracker($tracker_id, $artifact_id, $artifact);
                 }
             }
         }
-        return $artifacts;
+        return $my_artifacts;
     }
 
     /**
@@ -316,7 +316,7 @@ class Tracker_ArtifactFactory {
      *
      * @param int $user_id the id of the user
      *
-     * @return array Complex array of artifacts group by trackers (see above)
+     * @return MyArtifactsCollection
      */
     public function getUserOpenArtifactsAssignedTo($user_id)
     {
@@ -330,7 +330,7 @@ class Tracker_ArtifactFactory {
      *
      * @param int $user_id the id of the user
      *
-     * @return array Complex array of artifacts group by trackers (see above)
+     * @return MyArtifactsCollection
      */
     public function getUserOpenArtifactsSubmittedBy($user_id)
     {
@@ -344,7 +344,7 @@ class Tracker_ArtifactFactory {
      *
      * @param int $user_id the id of the user
      *
-     * @return array Complex array of artifacts group by trackers (see above)
+     * @return MyArtifactsCollection
      */
     public function getUserOpenArtifactsSubmittedByOrAssignedTo($user_id)
     {
