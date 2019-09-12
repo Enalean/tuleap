@@ -32,6 +32,8 @@ use Tuleap\Taskboard\Board\BoardPresenterBuilder;
 use Tuleap\Taskboard\Column\ColumnPresenterCollectionRetriever;
 use Tuleap\Taskboard\REST\ResourcesInjector;
 use Tuleap\Taskboard\Routing\MilestoneExtractor;
+use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -108,7 +110,8 @@ class taskboardPlugin extends Plugin
             new IncludeAssets(
                 __DIR__ . '/../../../src/www/assets/taskboard/scripts',
                 '/assets/taskboard/scripts'
-            )
+            ),
+            new VisitRecorder(new RecentlyVisitedDao())
         );
     }
 
