@@ -20,7 +20,9 @@
 <template>
     <div class="empty-page">
         <div class="empty-page-illustration">
-            <board-without-any-columns-for-admin-svg/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="364" height="150" fill="none">
+                <use href="../../images/illustrations.svg#board-without-any-columns-for-admin" class="tlp-illustration"/>
+            </svg>
         </div>
         <div class="empty-page-text-with-small-text">
             <translate>This taskboard is not properly configured</translate>
@@ -37,12 +39,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import BoardWithoutAnyColumnsForAdminSvg from "./BoardWithoutAnyColumnsForAdminSvg.vue";
 import { State } from "vuex-class";
 
-@Component({
-    components: { BoardWithoutAnyColumnsForAdminSvg }
-})
+@Component
 export default class BoardWithoutAnyColumnsErrorForAdmin extends Vue {
     @State
     readonly admin_url!: string;

@@ -7,16 +7,25 @@ exports[`NoContentEmptyState displays a cell that span on the whole table 1`] = 
   <div
     class="empty-page-illustration"
   >
-    <no-content-svg-stub />
+    <svg
+      fill="none"
+      height="170"
+      width="534"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <use
+        class="tlp-illustration"
+        href="../../images/illustrations.svg#no-content-empty-state"
+      />
+    </svg>
   </div>
    
-  <translate-stub
+  <p
     class="empty-page-text"
-    tag="p"
   >
     
         This taskboard is empty
     
-  </translate-stub>
+  </p>
 </div>
 `;
