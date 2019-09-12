@@ -1,0 +1,21 @@
+#
+# These groups are read by MySQL server.
+# Use it for options that only the server (but not clients) should see
+#
+# See the examples of server my.cnf files in /usr/share/mysql/
+#
+
+# this is read by the standalone daemon and embedded servers
+[server]
+
+# this is only for the mysqld standalone daemon
+# Settings user and group are ignored when systemd is used.
+# If you need to run mysqld under a different user or group,
+# customize your systemd unit file for mysqld/mariadb according to the
+# instructions in http://fedoraproject.org/wiki/Systemd
+[mysqld]
+datadir=/var/opt/rh/rh-mysql57/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+log-error=/var/opt/rh/rh-mysql57/log/mysql/mysqld.log
+pid-file=/var/run/rh-mysql57-mysqld/mysqld.pid
+sql-mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
