@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -64,9 +64,6 @@ class Cardwall_OnTop_Config_TrackerMappingFactory {
 
     /**
      * Get all mappings defined for the cardwall on top of a tracker
-     *
-     * @param Tracker $tracker The tracker
-     * @param array   $columns array of Cardwall_Column
      *
      * @return Cardwall_OnTop_Config_TrackerMapping[]
      */

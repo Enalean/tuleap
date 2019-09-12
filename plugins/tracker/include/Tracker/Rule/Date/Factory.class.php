@@ -32,11 +32,6 @@ class Tracker_Rule_Date_Factory {
     /** @var Tracker_FormElementFactory */
     private $element_factory;
 
-    /**
-     *
-     * @param DataAccessObject $dao
-     * @param Tracker_FormElementFactory $element_factory
-     */
     public function __construct(Tracker_Rule_Date_Dao $dao, Tracker_FormElementFactory $element_factory)
     {
         $this->dao = $dao;

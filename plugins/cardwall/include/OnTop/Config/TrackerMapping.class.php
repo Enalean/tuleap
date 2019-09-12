@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -54,7 +54,7 @@ abstract class Cardwall_OnTop_Config_TrackerMapping {
      * Return true of the given status label belongs to the given column
      *
      * @param Cardwall_Column $column
-     * @param String          $artifact_status
+     * @param string|null $artifact_status
      *
      * @return bool
      */

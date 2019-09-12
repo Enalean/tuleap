@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -127,10 +127,6 @@ interface Git_Driver_Gerrit {
      * Add a user to a user group on a given gerrit server
      *
      * Can throw Git_Driver_Gerrit_RemoteSSHCommandFailure exception
-     *
-     * @param Git_RemoteServer_GerritServer $server
-     * @param PFUser $user
-     * @param String $group_name
      */
     public function addUserToGroup(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $group_name);
 
@@ -138,10 +134,6 @@ interface Git_Driver_Gerrit {
      * Remove a user from a user group on a given gerrit server
      *
      * Can throw Git_Driver_Gerrit_RemoteSSHCommandFailure exception
-     *
-     * @param Git_RemoteServer_GerritServer $server
-     * @param PFUser $user
-     * @param String $group_name
      */
     public function removeUserFromGroup(
         Git_RemoteServer_GerritServer $server,

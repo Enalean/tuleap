@@ -375,6 +375,9 @@ class Tracker_Artifact_XMLImport {
     ) {
         $changesets      = array_values($this->getSortedBySubmittedOn($xml_artifact->changeset));
         $first_changeset = count($changesets) ? $changesets[0] : null;
+        if ($first_changeset === null) {
+            return null;
+        }
         $artifact = $this->artifact_creator->createBare(
             $tracker,
             $this->getSubmittedBy($first_changeset),
@@ -673,6 +676,9 @@ class Tracker_Artifact_XMLImport {
         if (count($xml_artifact->changeset) > 0) {
             $changesets      = array_values($this->getSortedBySubmittedOn($xml_artifact->changeset));
             $first_changeset = count($changesets) ? $changesets[0] : null;
+            if ($first_changeset === null) {
+                return null;
+            }
             $artifact = $this->artifact_creator->createBareWithAllData(
                 $tracker,
                 (int) $xml_artifact['id'],

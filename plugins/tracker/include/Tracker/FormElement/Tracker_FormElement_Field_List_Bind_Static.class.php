@@ -136,6 +136,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             }
         }
         if ($value) {
+            assert($value instanceof Tracker_FormElement_Field_List_Value);
             return $this->formatChangesetValueObject($value);
         }
     }

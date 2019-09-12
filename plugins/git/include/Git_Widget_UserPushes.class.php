@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -164,8 +164,6 @@ class Git_Widget_UserPushes extends Widget {
 
     /**
      * Update preferences
-     *
-     * @param Array $request HTTP request
      *
      * @return bool
      */

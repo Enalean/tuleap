@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -639,6 +639,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         $gerrit_key_id
     ) {
         try {
+            /** @psalm-suppress UndefinedDocblockClass Guzzle client class is not autoloaded by Composer */
             $this->sendRequest(
                 $server,
                 $this->guzzle_client->delete(
@@ -733,6 +734,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         PFUser $user
     ) {
         try {
+            /** @psalm-suppress UndefinedDocblockClass Guzzle client class is not autoloaded by Composer */
             $this->sendRequest(
                 $server,
                 $this->guzzle_client->delete(

@@ -942,7 +942,7 @@ class Artifact {
 
                 $old_value = $result[$field_name];
                 if  ($is_text) {
-                    $differ = ($old_value != htmlspecialchars($value));
+                    $differ = ($old_value != htmlspecialchars((string) $value));
                     //Log for Cross references
                     $text_value_list[]=$value;
 

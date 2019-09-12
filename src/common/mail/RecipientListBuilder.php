@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -61,7 +61,7 @@ class Mail_RecipientListBuilder {
     }
 
     /**
-     * @param string $addresses array('jdoe@example.com', …)
+     * @param string[] $addresses array('jdoe@example.com', …)
      *
      * @return array of array('email' => 'jdoe@example.com', 'real_name' => 'John Doe')
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -1206,12 +1206,12 @@ class ArtifactImport {
                     return false;
                 }
             }
-            if($notify && (count($changes)>0 || $add_cc || $comments_ok)) {
+            if($notify && (($changes !== null && count($changes)>0) || $add_cc || $comments_ok)) {
                 $agnf = new ArtifactGlobalNotificationFactory();
                 $ah->mailFollowupWithPermissions($agnf->getAllAddresses($this->ath->getID(), $update = true), $changes);
             }
 
-            if(count($changes)>0 || $add_cc || $comments_ok) {
+            if(($changes !== null  && count($changes)>0) || $add_cc || $comments_ok) {
                 // Update the 'last_update_date' artifact field
                 $res_last_up = $ah->update_last_update_date();
             }

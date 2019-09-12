@@ -1618,7 +1618,7 @@ if (defined('NUSOAP')) {
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to retrieve the array of artifacts
  * @param int $group_artifact_id the ID of the tracker we want to retrieve the array of artifacts
- * @param array{SOAPCriteria} $criteria the criteria that the set of artifact must match
+ * @param array $criteria the criteria that the set of artifact must match
  * @param int $offset number of artifact skipped. Used in association with $max_rows to limit the number of returned artifact.
  * @param int $max_rows the maximum number of artifacts returned
  * @return the SOAPArtifactQueryResult that match the criteria $criteria and belong to the project $group_id and the tracker $group_artifact_id,
@@ -1676,10 +1676,10 @@ if (defined('NUSOAP')) {
  * @param int $group_id the ID of the group we want to retrieve the array of artifacts
  * @param int $group_artifact_id the ID of the tracker we want to retrieve the array of artifacts
  * @param int $report_id the ID of the report that will be use to build the result
- * @param array{SOAPCriteria} $criteria the criteria that the set of artifact must match
+ * @param array $criteria the criteria that the set of artifact must match
  * @param int $offset number of artifact skipped. Used in association with $max_rows to limit the number of returned artifact.
  * @param int $max_rows the maximum number of artifacts returned
- * @param array{SOAPSortCriteria} $sort_criteria the sort criteria to sort the result
+ * @param array $sort_criteria the sort criteria to sort the result
  * @return the SOAPArtifactFromReportResult that match the criteria $criteria and belong to the project $group_id and the tracker $group_artifact_id,
  *          or a soap fault if group_id does not match with a valid project, or if group_artifact_id does not match with a valid tracker.
  */
@@ -2005,7 +2005,7 @@ if (defined('NUSOAP')) {
  * @param string $summary the summary of the artifact
  * @param string $details the details (original submission) of the artifact
  * @param int $severity the severity of the artifact
- * @param array{SOAPArtifactFieldValue} $extra_fields the extra_fields of the artifact (non standard fields)
+ * @param array $extra_fields the extra_fields of the artifact (non standard fields)
  * @return int the ID of the new created artifact,
  *              or a soap fault if :
  *              - group_id does not match with a valid project,
@@ -2164,7 +2164,7 @@ if (defined('NUSOAP')) {
  * @param string $summary the summary of the artifact
  * @param string $details the details (original submission) of the artifact
  * @param int $severity the severity of the artifact
- * @param array{SOAPArtifactFieldNameValue} $extra_fields the extra_fields of the artifact (non standard fields)
+ * @param array $extra_fields the extra_fields of the artifact (non standard fields)
  * @return int the ID of the new created artifact,
  *              or a soap fault if :
  *              - group_id does not match with a valid project,
@@ -2236,7 +2236,7 @@ if (defined('NUSOAP')) {
  * @param string $summary the summary of the artifact
  * @param string $details the details (original submission) of the artifact
  * @param int $severity the severity of the artifact
- * @param array{SOAPArtifactFieldValue} $extra_fields the extra_fields of the artifact (non standard fields)
+ * @param array $extra_fields the extra_fields of the artifact (non standard fields)
  * @return int the ID of the artifact,
  *              or a soap fault if :
  *              - group_id does not match with a valid project,
@@ -2326,7 +2326,7 @@ if (defined('NUSOAP')) {
  * @param string $summary the summary of the artifact
  * @param string $details the details (original submission) of the artifact
  * @param int $severity the severity of the artifact
- * @param array{SOAPArtifactFieldNameValue} $extra_fields the extra_fields of the artifact (non standard fields)
+ * @param array $extra_fields the extra_fields of the artifact (non standard fields)
  * @return int the ID of the artifact,
  *              or a soap fault if :
  *              - group_id does not match with a valid project,
@@ -2393,7 +2393,7 @@ if (defined('NUSOAP')) {
  * @param int $group_id the ID of the group we want to retrieve the artifact follow-ups
  * @param int $group_artifact_id the ID of the tracker we want to retrieve the artifact follow-ups
  * @param int $artifact_id the ID of the artifact we want to retrieve the follow-ups
- * @return array{SOAPArtifactFollowup} the array of the follow-ups for this artifact,
+ * @return array the array of the follow-ups for this artifact,
  *              or a soap fault if :
  *              - group_id does not match with a valid project,
  *              - group_artifact_id does not match with a valid tracker,
@@ -2468,7 +2468,7 @@ if (defined('NUSOAP')) {
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to retrieve the artifact follow-ups
  * @param int $group_artifact_id the ID of the tracker we want to retrieve the artifact follow-ups
- * @return array{SOAPArtifactCannedResponses} the array of the canned responses for this tracker,
+ * @return array the array of the canned responses for this tracker,
  *              or a soap fault if :
  *              - group_id does not match with a valid project,
  *              - group_artifact_id does not match with a valid tracker
@@ -2516,7 +2516,7 @@ if (defined('NUSOAP')) {
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to retrieve the reports
  * @param int $group_artifact_id the ID of the tracker we want to retrieve the reports
- * @return array{SOAPArtifactReport} the array of the reports of the current user for this tracker,
+ * @return array the array of the reports of the current user for this tracker,
  *              or a soap fault if :
  *              - group_id does not match with a valid project,
  *              - group_artifact_id does not match with a valid tracker
@@ -2600,7 +2600,7 @@ if (defined('NUSOAP')) {
  * @param int $group_id the ID of the group we want to retrieve the attached files
  * @param int $group_artifact_id the ID of the tracker we want to retrieve the attached files
  * @param int $artifact_id the ID of the artifact we want to retrieve the attached files
- * @return array{SOAPArtifactFile} the array of the attached file of the artifact,
+ * @return array the array of the attached file of the artifact,
  *              or a soap fault if :
  *              - group_id does not match with a valid project,
  *              - group_artifact_id does not match with a valid tracker
@@ -2765,7 +2765,7 @@ if (defined('NUSOAP')) {
  * @param int $group_id the ID of the group we want to retrieve the dependencies
  * @param int $group_artifact_id the ID of the tracker we want to retrieve the dependencies
  * @param int $artifact_id the ID of the artifact we want to retrieve the dependencies
- * @return array{SOAPArtifactDependency} the array of the dependencies of the artifact,
+ * @return array the array of the dependencies of the artifact,
  *              or a soap fault if :
  *              - group_id does not match with a valid project,
  *              - group_artifact_id does not match with a valid tracker
@@ -2843,7 +2843,7 @@ if (defined('NUSOAP')) {
  * @param int $group_id the ID of the group we want to retrieve the inverse dependencies
  * @param int $group_artifact_id the ID of the tracker we want to retrieve the inverse dependencies
  * @param int $artifact_id the ID of the artifact we want to retrieve the inverse dependencies
- * @return array{SOAPArtifactDependency} the array of the inverse dependencies of the artifact,
+ * @return array the array of the inverse dependencies of the artifact,
  *              or a soap fault if :
  *              - group_id does not match with a valid project,
  *              - group_artifact_id does not match with a valid tracker
@@ -3427,7 +3427,7 @@ if (defined('NUSOAP')) {
  * @param int $group_id the ID of the group we want to retrieve the CC list
  * @param int $group_artifact_id the ID of the tracker we want to retrieve the CC list
  * @param int $artifact_id the ID of the artifact we want to retrieve the CC list
- * @return array{SOAPArtifactCC} the array of the CC list of the artifact,
+ * @return array the array of the CC list of the artifact,
  *              or a soap fault if :
  *              - group_id does not match with a valid project,
  *              - group_artifact_id does not match with a valid tracker
@@ -3603,7 +3603,7 @@ if (defined('NUSOAP')) {
  * @param int $group_id the ID of the group we want to retrieve the history
  * @param int $group_artifact_id the ID of the tracker we want to retrieve the history
  * @param int $artifact_id the ID of the artifact we want to retrieve the history
- * @return array{SOAPArtifactHistory} the array of the history of the artifact,
+ * @return array the array of the history of the artifact,
  *              or a soap fault if :
  *              - group_id does not match with a valid project,
  *              - group_artifact_id does not match with a valid tracker

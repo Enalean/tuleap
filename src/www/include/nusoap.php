@@ -872,7 +872,7 @@ function iso8601_to_timestamp($datestr)
                 $regs[5] = $regs[5] - $m;
             }
         }
-        return gmmktime($regs[4], $regs[5], $regs[6], $regs[2], $regs[3], $regs[1]);
+        return gmmktime((int) $regs[4], (int) $regs[5], (int) $regs[6], (int) $regs[2], (int) $regs[3], (int) $regs[1]);
     } else {
         return false;
     }
@@ -5110,7 +5110,7 @@ class wsdl extends nusoap_base {
      * @param string $type XML schema type of value (type or element)
      * @param mixed $value a native PHP value (parameter value)
      * @param string $use use for part (encoded|literal)
-     * @param string $encodingStyle SOAP encoding style for the value (if different than the enclosing style)
+     * @param string|false $encodingStyle SOAP encoding style for the value (if different than the enclosing style)
      * @param bool $unqualified a kludge for what should be XML namespace form handling
      * @return string value serialized as an XML string
      * @access private
@@ -5471,7 +5471,7 @@ class wsdl extends nusoap_base {
      * @param string $ns the namespace of the type
      * @param string $uqType the local part of the type
      * @param string $use use for part (encoded|literal)
-     * @param string $encodingStyle SOAP encoding style for the value (if different than the enclosing style)
+     * @param string|false $encodingStyle SOAP encoding style for the value (if different than the enclosing style)
      * @return string value serialized as an XML string
      * @access private
      */
