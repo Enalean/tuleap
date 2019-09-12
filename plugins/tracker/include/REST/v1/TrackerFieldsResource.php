@@ -33,12 +33,12 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\REST\UserManager;
 use Tuleap\REST\v1\TrackerFieldRepresentations\TrackerFieldPatchRepresentation;
 use Tuleap\Tracker\FormElement\Field\File\Upload\EmptyFileToUploadFinisher;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileToUploadCreator;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
+use UserManager;
 
 class TrackerFieldsResource extends AuthenticatedResource
 {
@@ -96,8 +96,8 @@ class TrackerFieldsResource extends AuthenticatedResource
         $this->checkAccess();
         $this->optionsId($id);
 
-        $rest_user_manager = UserManager::build();
-        $user              = $rest_user_manager->getCurrentUser();
+        $user_manager = UserManager::instance();
+        $user         = $user_manager->getCurrentUser();
 
         $field = $this->getField($id, $user);
 
@@ -165,9 +165,10 @@ class TrackerFieldsResource extends AuthenticatedResource
         $this->checkAccess();
         $this->optionsFiles($id);
 
-        $rest_user_manager = UserManager::build();
-        $user              = $rest_user_manager->getCurrentUser();
-        $field             = $this->getFileFieldUserCanUpdate($id, $user);
+        $user_manager = UserManager::instance();
+        $user         = $user_manager->getCurrentUser();
+
+        $field = $this->getFileFieldUserCanUpdate($id, $user);
 
         $file_ongoing_upload_dao = new FileOngoingUploadDao();
 
