@@ -145,7 +145,7 @@ final class ExecutionsTest extends BaseTest
 
     private function getLastExecutionForValid73Campaign(string $user_name)
     {
-        $campaign = $this->getValid73Campaign();
+        $campaign = $this->valid_73_campaign;
 
         $all_executions_request  = $this->client->get('testmanagement_campaigns/'. $campaign['id'] . '/testmanagement_executions');
         $all_executions_response = $this->getResponse($all_executions_request, $user_name);

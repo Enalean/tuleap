@@ -56,7 +56,7 @@ final class DefinitionsTest extends BaseTest
 
     private function getFirstDefinition(string $user_name)
     {
-        $campaign  = $this->getFirstCampaign($user_name);
+        $campaign  = $this->valid_73_campaign;
         $execution = $this->getFirstExecution($campaign['id'], $user_name);
 
         return $execution['definition'];

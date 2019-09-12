@@ -32,7 +32,7 @@ final class CampaignsTest extends BaseTest
 
     public function testGetCampaign(): void
     {
-        $expected_campaign = $this->getValid73Campaign();
+        $expected_campaign = $this->valid_73_campaign;
 
         $response  = $this->getResponse($this->client->get('testmanagement_campaigns/'. $expected_campaign['id']));
         $campaign = $response->json();
@@ -42,7 +42,7 @@ final class CampaignsTest extends BaseTest
 
     public function testGetCampaignWithRESTReadOnlyUser(): void
     {
-        $expected_campaign = $this->getValid73Campaign();
+        $expected_campaign = $this->valid_73_campaign;
 
         $response  = $this->getResponse(
             $this->client->get('testmanagement_campaigns/'. $expected_campaign['id']),
@@ -56,7 +56,7 @@ final class CampaignsTest extends BaseTest
 
     public function testGetExecutions(): void
     {
-        $campaign = $this->getValid73Campaign();
+        $campaign = $this->valid_73_campaign;
 
         $all_executions_request  = $this->client->get('testmanagement_campaigns/'. $campaign['id'] .'/testmanagement_executions');
         $all_executions_response = $this->getResponse($all_executions_request);
@@ -70,7 +70,7 @@ final class CampaignsTest extends BaseTest
 
     public function testGetExecutionsWithRESTReadOnlyUser(): void
     {
-        $campaign = $this->getValid73Campaign();
+        $campaign = $this->valid_73_campaign;
 
         $all_executions_request  = $this->client->get('testmanagement_campaigns/'. $campaign['id'] .'/testmanagement_executions');
 
@@ -98,7 +98,7 @@ final class CampaignsTest extends BaseTest
 
     public function testPatchCampaignWithRESTReadOnlyUser(): void
     {
-        $campaign = $this->getValid73Campaign();
+        $campaign = $this->valid_73_campaign;
 
         $response = $this->getResponse(
             $this->client->patch(
@@ -118,7 +118,7 @@ final class CampaignsTest extends BaseTest
 
     public function testPatchCampaignLabel()
     {
-        $campaign = $this->getValid73Campaign();
+        $campaign = $this->valid_73_campaign;
 
         $response = $this->getResponse(
             $this->client->patch(
@@ -143,7 +143,7 @@ final class CampaignsTest extends BaseTest
 
     public function testPatchCampaignJobUrlToken()
     {
-        $campaign = $this->getValid73Campaign();
+        $campaign = $this->valid_73_campaign;
 
         $response = $this->getResponse(
             $this->client->patch(
@@ -170,7 +170,7 @@ final class CampaignsTest extends BaseTest
 
     public function testPatchCampaignThrow400IfJobUrlIsInvalid()
     {
-        $campaign = $this->getValid73Campaign();
+        $campaign = $this->valid_73_campaign;
 
         $response = $this->getResponse(
             $this->client->patch(
