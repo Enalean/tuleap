@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright 1999-2000 (c) VA Linux Systems
  * http://sourceforge.net
@@ -32,6 +32,7 @@ use Tuleap\User\Admin\UserDetailsFormatter;
 use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\User\Admin\UserStatusBuilder;
 use Tuleap\User\Admin\UserStatusChecker;
+use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 use Tuleap\User\Password\Change\PasswordChanger;
 use Tuleap\User\Password\PasswordValidatorPresenter;
 use Tuleap\User\SessionManager;
@@ -311,6 +312,15 @@ foreach ($password_strategy->validators as $key => $v) {
 
 $restricted_projects_user_counter = new RestrictedProjectsUserCounter(new UserGroupDao());
 
+$forge_user_group_permission_manager = new User_ForgeUserGroupPermissionsManager(
+    new User_ForgeUserGroupPermissionsDao()
+);
+
+$user_has_rest_read_only_administration_delegation = $forge_user_group_permission_manager->doesUserHavePermission(
+    $user,
+    new RestReadOnlyAdminPermission()
+);
+
 $siteadmin->renderAPresenter(
     $Language->getText('admin_usergroup', 'title'),
     ForgeConfig::get('codendi_dir') . '/src/templates/admin/users/',
@@ -331,6 +341,7 @@ $siteadmin->renderAPresenter(
         $details_formatter->getShells($user),
         $details_formatter->getStatus($user),
         $restricted_projects_user_counter->getNumberOfProjectsNotAllowingRestrictedTheUserIsMemberOf($user),
-        $details_formatter->getUnixStatus($user)
+        $details_formatter->getUnixStatus($user),
+        $user_has_rest_read_only_administration_delegation
     )
 );
