@@ -11,5 +11,7 @@ exports[`ParentCard displays a parent card 1`] = `
       card="[object Object]"
     />
   </div>
+   
+  <!---->
 </div>
 `;

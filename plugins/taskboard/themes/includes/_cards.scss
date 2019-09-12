@@ -52,6 +52,15 @@
 
         &.taskboard-card-background-#{$color-name} {
             background: map-get($colors, 'secondary');
+
+            > .taskboard-card-accessibility {
+                opacity: .5;
+                background-color: map-get($colors, 'text');
+                /* stylelint-disable-next-line property-no-vendor-prefix, function-url-quotes */
+                -webkit-mask-image: url(map-get($colors, 'pattern'));
+                /* stylelint-disable-next-line function-url-quotes */
+                mask-image: url(map-get($colors, 'pattern'));
+            }
         }
     }
 }
@@ -93,6 +102,15 @@ a.taskboard-card-xref {
     font-size: 14px;
     line-height: 18px;
     word-break: break-word;
+}
+
+
+.taskboard-card-accessibility {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: $tlp-spacing;
+    height: 100%;
 }
 
 @keyframes showCard {

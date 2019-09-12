@@ -98,6 +98,10 @@ class HeaderPresenter
      * @var OpenGraphPresenter
      */
     public $open_graph;
+    /**
+     * @var bool
+     */
+    public $user_has_accessibility_mode;
 
     public function __construct(
         PFUser $user,
@@ -135,6 +139,7 @@ class HeaderPresenter
         $this->has_motd                              = ! empty($motd);
         $this->breadcrumbs                           = $breadcrumbs;
         $this->open_graph                            = $open_graph;
+        $this->user_has_accessibility_mode           = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
 
         $this->buildFeedbacks($feedback_logs);
 

@@ -46,6 +46,7 @@ interface State {
     columns: Array<ColumnDefinition>;
     milestone_id: number;
     swimlanes: Array<Swimlane>;
+    user_has_accessibility_mode: boolean;
 }
 
 interface Context {

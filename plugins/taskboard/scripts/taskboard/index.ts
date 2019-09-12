@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const has_content = Boolean(vue_mount_point.dataset.hasContent);
     const swimlanes: Array<Swimlane> = [];
     const milestone_id = Number.parseInt(vue_mount_point.dataset.milestoneId || "0", 10);
+    const user_has_accessibility_mode = Boolean(document.body.dataset.userHasAccessibilityMode);
 
     await initVueGettext((locale: string) =>
         import(/* webpackChunkName: "taskboard-po-" */ `./po/${locale}.po`)
@@ -59,7 +60,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         columns,
         swimlanes,
         has_content,
-        milestone_id
+        milestone_id,
+        user_has_accessibility_mode
     };
     new AppComponent({
         store: createStore(initial_state)
