@@ -49,6 +49,10 @@ export default class ParentCard extends Vue {
     get additional_classnames(): string {
         const classnames = [`taskboard-card-${this.card.color}`];
 
+        if (this.card.background_color) {
+            classnames.push(`taskboard-card-background-${this.card.background_color}`);
+        }
+
         if (this.add_show_class) {
             classnames.push("taskboard-card-show");
         }

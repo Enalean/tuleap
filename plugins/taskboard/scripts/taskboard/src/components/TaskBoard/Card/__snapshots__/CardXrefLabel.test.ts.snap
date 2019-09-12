@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CardXrefLabel displays a parent card 1`] = `
+exports[`CardXrefLabel displays the xref and the label of a card 1`] = `
 <div
   class="taskboard-card-xref-label"
 >

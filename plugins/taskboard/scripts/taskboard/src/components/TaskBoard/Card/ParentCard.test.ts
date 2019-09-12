@@ -28,11 +28,25 @@ describe("ParentCard", () => {
             propsData: {
                 card: {
                     id: 43,
-                    color: "lake-placid-blue"
+                    color: "lake-placid-blue",
+                    background_color: "fiesta-red"
                 }
             }
         });
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("doesn't add a background class if the card has no background color", () => {
+        const wrapper = shallowMount(ParentCard, {
+            propsData: {
+                card: {
+                    id: 43,
+                    color: "lake-placid-blue",
+                    background_color: ""
+                }
+            }
+        });
+        expect(wrapper.classes().join(" ")).not.toContain("taskboard-card-background");
     });
 
     it("removes the show classes after 500ms", () => {
@@ -40,7 +54,8 @@ describe("ParentCard", () => {
             propsData: {
                 card: {
                     id: 43,
-                    color: "lake-placid-blue"
+                    color: "lake-placid-blue",
+                    background_color: "fiesta-red"
                 }
             }
         });

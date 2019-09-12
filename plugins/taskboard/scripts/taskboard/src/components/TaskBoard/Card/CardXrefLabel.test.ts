@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import CardXrefLabel from "./CardXrefLabel.vue";
 
 describe("CardXrefLabel", () => {
-    it("displays a parent card", () => {
+    it("displays the xref and the label of a card", () => {
         const wrapper = shallowMount(CardXrefLabel, {
             propsData: {
                 card: {
