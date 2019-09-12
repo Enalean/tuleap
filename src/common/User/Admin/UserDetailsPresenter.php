@@ -68,6 +68,11 @@ class UserDetailsPresenter
     public $current_status_id;
     public $current_status_label;
 
+    /**
+     * @var bool
+     */
+    public $user_has_rest_read_only_administration_delegation;
+
     public function __construct(
         PFUser $user,
         array $projects,
@@ -79,7 +84,8 @@ class UserDetailsPresenter
         array $shells,
         array $status,
         int $nb_project_user_is_member_of_that_dont_accept_restricted,
-        array $unix_status
+        array $unix_status,
+        bool $user_has_rest_read_only_administration_delegation
     ) {
         $this->id     = $user->getId();
         $this->name   = $user->getRealName();
@@ -135,6 +141,8 @@ class UserDetailsPresenter
         );
         $this->current_status_id    = $user->getStatus();
         $this->current_status_label = $this->getCurrentStatusLabel($this->current_status_id);
+
+        $this->user_has_rest_read_only_administration_delegation = $user_has_rest_read_only_administration_delegation;
     }
 
     private function getCurrentStatusLabel($current_status_id)

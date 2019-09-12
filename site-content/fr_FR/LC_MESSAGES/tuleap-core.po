@@ -1545,6 +1545,13 @@ msgid "This service is a system service, it cannot be deleted."
 msgstr "Ce service est un service système, il ne peut pas être supprimé."
 
 msgid ""
+"This user has the global REST read only administration permission and should "
+"not browse the application."
+msgstr ""
+"Cet utilisateur a la permission globale d'administrateur lecture seule via "
+"REST et ne devrait pas naviguer dans l'application."
+
+msgid ""
 "This users group is bound to a group you are not allowed to administrate."
 msgstr "Ce groupe est lié à un groupe que vous ne pouvez pas administrer."
 

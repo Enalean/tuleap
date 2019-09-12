@@ -11,6 +11,12 @@
 
 {{> user-change-password }}
 
+{{# user_has_rest_read_only_administration_delegation }}
+    <div class="tlp-alert-warning">
+        {{# gettext }} This user has the global REST read only administration permission and should not browse the application. {{/ gettext }}
+    </div>
+{{/ user_has_rest_read_only_administration_delegation }}
+
 <div id="siteadmin-user">
     <div id="siteadmin-user-details">
         <form action="" method="POST" class="tlp-pane" id="siteadmin-user-details-form">
