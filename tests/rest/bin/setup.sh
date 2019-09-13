@@ -45,6 +45,8 @@ setup_tuleap() {
 
 	install -m 00755 -o codendiadm -g codendiadm /usr/share/tuleap/src/utils/tuleap /usr/bin/tuleap
 	ln -s /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php /usr/bin/tuleap-cfg
+
+	install -m 00755 -o codendiadm -g codendiadm -d /var/lib/tuleap/tracker
 }
 
 setup_database() {

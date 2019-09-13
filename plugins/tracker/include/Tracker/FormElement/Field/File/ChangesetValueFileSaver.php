@@ -113,17 +113,18 @@ class ChangesetValueFileSaver
     protected function initFolder(Tracker_FormElement_Field_File $field): void
     {
         $backend                  = Backend::instance();
-        $path                     = $field->getRootPath() . '/thumbnails';
+        $thumbnail_path           = $field->getRootPath() . '/thumbnails';
         $no_filter_file_extension = [];
 
-        if (! is_dir($path)) {
-            mkdir($path, 0777, true);
-            $backend->recurseChownChgrp(
-                $field->getGlobalTrackerRootPath(),
-                ForgeConfig::get('sys_http_user'),
-                ForgeConfig::get('sys_http_user'),
-                $no_filter_file_extension
-            );
+        if (! is_dir($thumbnail_path) && ! mkdir($thumbnail_path, 0750, true) && ! is_dir($thumbnail_path)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $thumbnail_path));
         }
+
+        $backend->recurseChownChgrp(
+            $field->getRootPath(),
+            ForgeConfig::get('sys_http_user'),
+            ForgeConfig::get('sys_http_user'),
+            $no_filter_file_extension
+        );
     }
 }
