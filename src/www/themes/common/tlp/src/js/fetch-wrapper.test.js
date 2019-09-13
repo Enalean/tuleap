@@ -243,7 +243,7 @@ describe(`fetch-wrapper`, () => {
                                 if (name !== "X-PAGINATION-SIZE") {
                                     return null;
                                 }
-                                return "4";
+                                return "6";
                             }
                         },
                         ok: true,
@@ -252,40 +252,51 @@ describe(`fetch-wrapper`, () => {
                 });
             }
 
-            it(`will continue querying the route with GET
-            and will concatenate all entries into an array`, async () => {
-                const first_batch = [{ id: 11 }, { id: 25 }];
-                const second_batch = [{ id: 26 }, { id: 27 }];
-                mockSuccessiveCalls(first_batch);
-                mockSuccessiveCalls(second_batch);
+            it(`will query all the remaining batches in parallel
+                and will concatenate all entries into an array
+                in the right order`, async () => {
+                const batch_A = [{ id: 11 }, { id: 12 }];
+                const batch_B = [{ id: 26 }, { id: 27 }];
+                const batch_C = [{ id: 28 }, { id: 40 }];
+                mockSuccessiveCalls(batch_A);
+                mockSuccessiveCalls(batch_B);
+                mockSuccessiveCalls(batch_C);
 
                 const results = await wrapper.recursiveGet(url, { params: { limit: 2 } });
 
-                expect(window.fetch.mock.calls.length).toBe(2);
-                const second_call = window.fetch.mock.calls[1];
-                expect(second_call[1]).toEqual(
-                    expect.objectContaining({
-                        params: {
-                            limit: 2,
-                            offset: 2
-                        }
-                    })
-                );
-                expect(results).toEqual(first_batch.concat(second_batch));
+                const expected_results_in_order = batch_A.concat(batch_B).concat(batch_C);
+                expect(results).toEqual(expected_results_in_order);
+
+                expect(window.fetch.mock.calls.length).toBe(3);
+                const [, ...later_calls] = window.fetch.mock.calls;
+                later_calls.forEach(call => {
+                    const [, second_parameter] = call;
+                    expect(second_parameter.params.limit).toEqual(2);
+                    expect([2, 4]).toContain(second_parameter.params.offset);
+                });
             });
 
             it(`will call getCollectionCallback for each batch`, async () => {
                 const first_batch = { collection: [{ id: 11 }, { id: 25 }] };
                 const second_batch = { collection: [{ id: 26 }, { id: 27 }] };
+                const third_batch = { collection: [{ id: 28 }, { id: 40 }] };
                 mockSuccessiveCalls(first_batch);
                 mockSuccessiveCalls(second_batch);
+                mockSuccessiveCalls(third_batch);
 
                 const results = await wrapper.recursiveGet(url, {
                     params: { limit: 2 },
                     getCollectionCallback: ({ collection }) => collection
                 });
 
-                expect(results).toEqual([{ id: 11 }, { id: 25 }, { id: 26 }, { id: 27 }]);
+                expect(results).toEqual([
+                    { id: 11 },
+                    { id: 25 },
+                    { id: 26 },
+                    { id: 27 },
+                    { id: 28 },
+                    { id: 40 }
+                ]);
             });
         });
     });
