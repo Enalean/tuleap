@@ -28,9 +28,9 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
 {
     private static $DEFAULT_QUOTA = 67108864;
 
-    private $first_file;
+    protected $first_file;
     private $second_file;
-    private $second_chunk = 'with more data';
+    protected $second_chunk = 'with more data';
     private $third_file;
 
     protected function getResponseForDifferentUser($request)

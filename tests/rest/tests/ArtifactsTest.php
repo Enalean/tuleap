@@ -19,73 +19,31 @@
  */
 
 use Guzzle\Http\Message\Response;
-use Tuleap\REST\ArtifactBase;
+use Test\Rest\Tracker\ArtifactsTestExecutionHelper;
 
 /**
  * @group ArtifactsTest
  */
-class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
+class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgnoreLine
 {
     public function testOptionsArtifactId()
     {
         $response = $this->getResponse($this->client->options('artifacts/9'));
 
-        $this->assertOptionsId($response);
-    }
-
-    public function testOptionsArtifacts()
-    {
-        $response = $this->getResponse($this->client->options('artifacts'));
-
-        $this->assertoptions($response);
-    }
-
-    public function testOptionsArtifactsWithUserRESTReadOnlyAdmin()
-    {
-        $response = $this->getResponse(
-            $this->client->options('artifacts'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
-        );
-
-        $this->assertoptions($response);
-
-        $response = $this->getResponse(
-            $this->client->options('artifacts/9'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
-        );
-
-        $this->assertOptionsId($response);
-    }
-
-    private function assertOptionsId(Response $response)
-    {
         $this->assertEquals(
             ['OPTIONS', 'GET', 'PUT', 'DELETE', 'PATCH'],
             $response->getHeader('Allow')->normalize()->toArray()
         );
     }
 
-    private function assertoptions(Response $response)
+    public function testOptionsArtifacts()
     {
+        $response = $this->getResponse($this->client->options('artifacts'));
+
         $this->assertEquals(
             ['OPTIONS', 'GET', 'POST'],
             $response->getHeader('Allow')->normalize()->toArray()
         );
-    }
-
-    public function testPostArtifactWithUserRESTReadOnlyAdminNonMember()
-    {
-        $summary_field_label = 'Summary';
-        $summary_field_value = "This is a new epic";
-
-        $post_body = $this->buildPOSTBodyContent($summary_field_label, $summary_field_value);
-
-        $response = $this->getResponse(
-            $this->client->post('artifacts', null, $post_body),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
-        );
-
-        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testPostArtifact()
@@ -110,19 +68,6 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         return $artifact_reference['id'];
     }
 
-    private function buildPOSTBodyContent($summary_field_label, $summary_field_value)
-    {
-        return json_encode(array(
-            'tracker' => array(
-                'id'  => $this->epic_tracker_id,
-                'uri' => 'whatever'
-            ),
-            'values' => array(
-                $this->getSubmitTextValue($this->epic_tracker_id, $summary_field_label, $summary_field_value),
-                $this->getSubmitListValue($this->epic_tracker_id, 'Status', 103)
-            ),
-        ));
-    }
 
     public function testComputedFieldsCalculation()
     {
@@ -391,19 +336,6 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     /**
      * @depends testPostArtifact
      */
-    public function testGetArtifactWithUserRESTReadOnlyAdmin($artifact_id)
-    {
-        $response = $this->getResponse(
-            $this->client->get("artifacts/$artifact_id"),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
-        );
-
-        $this->assertArtifact($response);
-    }
-
-    /**
-     * @depends testPostArtifact
-     */
     public function testGetArtifacts()
     {
         $do_not_exist_artifact_id = 999999999999999999;
@@ -444,9 +376,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         $field_label =  'Summary';
         $put_body    = $this->buildPUTBodyContent($artifact_id, $field_label);
 
-        $response = $this->getResponse(
-            $this->client->put('artifacts/'.$artifact_id, null, $put_body),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        $response = $this->getResponseForReadOnlyUserAdmin(
+            $this->client->put('artifacts/' . $artifact_id, null, $put_body)
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -685,37 +616,7 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         $response = $this->getResponse($this->client->get("artifacts/$artifact_id/links"));
         $this->assertLinks($response, $nature_is_child, $artifact_id, $nature_empty);
 
-        $response_with_read_only_user = $this->getResponse(
-            $this->client->get("artifacts/$artifact_id/links"),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
-        );
-        $this->assertLinks($response_with_read_only_user, $nature_is_child, $artifact_id, $nature_empty);
-
         return $artifact_id;
-    }
-
-    private function assertLinks(Response $response, $nature_is_child, $artifact_id, $nature_empty)
-    {
-        $links = $response->json();
-
-        $expected_link = array(
-            "natures" => array(
-                array(
-                    "shortname" => $nature_is_child,
-                    "direction" => 'forward',
-                    "label"     => "Child",
-                    "uri"       => "artifacts/$artifact_id/linked_artifacts?nature=$nature_is_child&direction=forward"
-                ),
-                array(
-                    "shortname" => $nature_empty,
-                    "direction" => 'forward',
-                    "label"     => '',
-                    "uri"       => "artifacts/$artifact_id/linked_artifacts?nature=$nature_empty&direction=forward"
-                )
-            )
-        );
-
-        $this->assertEquals($expected_link, $links);
     }
 
     public function testAnonymousGETArtifact()
@@ -732,16 +633,6 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
-    }
-
-    public function testGetSuspendedProjectArtifactForUserRESTReadOnlyAdmin()
-    {
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_BOT_USER_NAME,
-            $this->client->get('artifacts/' . $this->suspended_tracker_artifacts_ids[1])
-        );
-
-        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testGetSuspendedProjectArtifactForRegularUser()
@@ -809,76 +700,10 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         );
         $this->assertEquals(400, $response->getStatusCode());
     }
-
-    private function getFieldIdForFieldLabel($artifact_id, $field_label)
-    {
-        $value = $this->getFieldByFieldLabel($artifact_id, $field_label);
-        return $value['field_id'];
-    }
-
-    private function getFieldValueForFieldLabel($artifact_id, $field_label)
-    {
-        $value = $this->getFieldByFieldLabel($artifact_id, $field_label);
-        return $value['value'];
-    }
-
-    private function getFieldByFieldLabel($artifact_id, $field_label)
-    {
-        $artifact = $this->getArtifact($artifact_id);
-        foreach ($artifact['values'] as $value) {
-            if ($value['label'] == $field_label) {
-                return $value;
-            }
-        }
-    }
-
-    private function getArtifact($artifact_id)
-    {
-        $response = $this->getResponse($this->client->get('artifacts/'.$artifact_id));
-        if ($response->getStatusCode() !== 200) {
-            throw new Exception($response->getBody(), $response->getStatusCode());
-        }
-        $this->assertNotNull($response->getHeader('Last-Modified'));
-        $this->assertNotNull($response->getHeader('Etag'));
-
-        return $response->json();
-    }
-
-    private function getSubmitTextValue($tracker_id, $field_label, $field_value)
-    {
-        $field_def = $this->getFieldDefByFieldLabel($tracker_id, $field_label);
-        return array(
-            'field_id' => $field_def['field_id'],
-            'value'    => $field_value,
-        );
-    }
-
-    private function getSubmitListValue($tracker_id, $field_label, $field_value)
-    {
-        $field_def = $this->getFieldDefByFieldLabel($tracker_id, $field_label);
-        return array(
-            'field_id'       => $field_def['field_id'],
-            'bind_value_ids' => array(
-                $field_value
-            ),
-        );
-    }
-
-    private function getFieldDefByFieldLabel($tracker_id, $field_label)
-    {
-        $tracker = $this->getTracker($tracker_id);
-        foreach ($tracker['fields'] as $field) {
-            if ($field['label'] == $field_label) {
-                return $field;
-            }
-        }
-    }
-
     private function getTracker($tracker_id)
     {
         return $this->tracker_representations[$tracker_id];
     }
-
     /**
      * @param $response
      * @throws Exception
