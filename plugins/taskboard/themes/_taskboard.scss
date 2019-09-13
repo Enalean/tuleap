@@ -26,6 +26,10 @@
     color: $tlp-ui-dimmed;
 }
 
+.taskboard-root {
+    padding: $tlp-spacing 0 0;
+}
+
 .taskboard {
     width: 100%;
     table-layout: fixed;
