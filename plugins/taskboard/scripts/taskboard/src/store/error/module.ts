@@ -15,46 +15,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-export interface ColumnDefinition {
-    id: number;
-    label: string;
-    color: string;
-}
+import * as mutations from "./error-mutations";
+import * as getters from "./error-getters";
 
-export interface Swimlane {
-    card: Card;
-}
-
-export interface Card {
-    id: number;
-    label: string;
-    xref: string;
-    rank: number;
-    color: string;
-    background_color: string;
-    artifact_html_uri: string;
-}
-
-interface State {
-    user_is_admin: boolean;
-    user_id: number;
-    admin_url: string;
-    has_content: boolean;
-    columns: Array<ColumnDefinition>;
-    milestone_id: number;
-    swimlanes: Array<Swimlane>;
-    user_has_accessibility_mode: boolean;
-    is_loading_swimlanes: boolean;
-}
-
-interface ErrorState {
-    global_error_message: string;
-}
-
-interface Context {
-    state: State;
-    commit: Function;
-}
+export default {
+    namespaced: true,
+    state: {
+        global_error_message: ""
+    },
+    mutations,
+    getters
+};

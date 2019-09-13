@@ -8,6 +8,14 @@ exports[`App displays empty state when there is no content 1`] = `
 </div>
 `;
 
+exports[`App displays global error state when there is an error 1`] = `
+<div>
+  <under-construction-modal-stub />
+   
+  <global-app-error-stub />
+</div>
+`;
+
 exports[`App displays misconfiguration error even if there are no content 1`] = `
 <div>
   <under-construction-modal-stub />

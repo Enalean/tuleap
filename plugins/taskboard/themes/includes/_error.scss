@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,19 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { State } from "../type";
-import * as mutations from "./mutations";
-import * as actions from "./actions";
-import { Store } from "vuex";
-import error from "./error/module";
+.taskboard-error {
+    margin: 100px $tlp-spacing $tlp-spacing;
+}
 
-export function createStore(initial_state: State): Store<State> {
-    return new Store({
-        state: initial_state,
-        mutations,
-        actions,
-        modules: {
-            error
-        }
-    });
+.taskboard-error-link {
+    margin: $tlp-spacing 0 0;
+    font-size: 18px;
+    line-height: 20px;
+
+    > a {
+        cursor: pointer;
+    }
+}
+
+.taskboard-error-details {
+    text-align: left;
 }
