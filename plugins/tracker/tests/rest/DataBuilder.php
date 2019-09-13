@@ -28,8 +28,8 @@ require_once __DIR__ . '/TrackerBase.php';
 
 class DataBuilder extends REST_TestDataBuilder
 {
-    public const USER_TESTER_NAME   = 'rest_api_tracker_admin_1';
-    public const USER_TESTER_PASS   = 'welcome0';
+    public const USER_TESTER_NAME       = 'rest_api_tracker_admin_1';
+    public const MY_ARTIFACTS_USER_NAME = 'rest_my_artifacts';
 
     /**
      * @var ArtifactsDeletionConfigDAO
@@ -60,9 +60,8 @@ class DataBuilder extends REST_TestDataBuilder
 
     private function createUser()
     {
-        $user = $this->user_manager->getUserByUserName(self::USER_TESTER_NAME);
-        $user->setPassword(self::USER_TESTER_PASS);
-        $this->user_manager->updateDb($user);
+        $this->initPassword(self::USER_TESTER_NAME, self::STANDARD_PASSWORD);
+        $this->initPassword(self::MY_ARTIFACTS_USER_NAME, self::STANDARD_PASSWORD);
     }
 
     private function setUpWorkflowsInSimpleMode()

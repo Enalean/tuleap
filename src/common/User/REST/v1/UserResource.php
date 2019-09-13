@@ -49,6 +49,7 @@ use UserManager;
 class UserResource extends AuthenticatedResource
 {
 
+    public const SELF_ID         = 'self';
     public const MAX_LIMIT       = 50;
     public const DEFAULT_LIMIT   = 10;
     public const DEFAULT_OFFSET  = 0;

@@ -21,6 +21,7 @@
 use Tuleap\Project\REST\ProjectResourceReference;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\ReportRepresentation;
+use Tuleap\Tracker\REST\Artifact\UsersArtifactsResource;
 use Tuleap\Tracker\REST\v1\ArtifactFilesResource;
 use Tuleap\Tracker\REST\v1\ArtifactsResource;
 use Tuleap\Tracker\REST\v1\ArtifactTemporaryFilesResource;
@@ -28,6 +29,7 @@ use Tuleap\Tracker\REST\v1\ReportsResource;
 use Tuleap\Tracker\REST\v1\TrackerFieldsResource;
 use Tuleap\Tracker\REST\v1\TrackersResource;
 use Tuleap\Tracker\REST\v1\Workflow\TransitionsResource;
+use Tuleap\User\REST\UserRepresentation;
 
 /**
  * Inject resource into restler
@@ -43,6 +45,7 @@ class Tracker_REST_ResourcesInjector
         $restler->addAPIClass(ReportsResource::class, ReportRepresentation::ROUTE);
         $restler->addAPIClass(TrackerFieldsResource::class, TrackerFieldsResource::ROUTE);
         $restler->addAPIClass(TransitionsResource::class, 'tracker_workflow_transitions');
+        $restler->addAPIClass(UsersArtifactsResource::class, UserRepresentation::ROUTE);
     }
 
     public function declareProjectPlanningResource(array &$resources, Project $project)

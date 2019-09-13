@@ -25,6 +25,9 @@ namespace Tuleap\Tracker\Artifact;
 
 class MyArtifactsCollection implements \Countable
 {
+    /**
+     * @var array<int, \Tracker>
+     */
     private $trackers = [];
     private $trackers_has_title = [];
     private $artifacts = [];
@@ -80,5 +83,19 @@ class MyArtifactsCollection implements \Countable
     public function getArtifactsInTracker(\Tracker $tracker): array
     {
         return $this->artifacts[(int) $tracker->getId()];
+    }
+
+    public function getArtifacts(): \Generator
+    {
+        foreach ($this->artifacts as $artifacts) {
+            foreach ($artifacts as $artifact) {
+                yield $artifact;
+            }
+        }
+    }
+
+    public function getArtifactTracker(\Tracker_Artifact $artifact): \Tracker
+    {
+        return $this->trackers[(int) $artifact->getTrackerId()];
     }
 }

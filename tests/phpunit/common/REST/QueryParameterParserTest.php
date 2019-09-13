@@ -120,6 +120,12 @@ class QueryParameterParserTest extends TestCase
         $this->assertEquals('test', $result);
     }
 
+    public function testGetBoolean()
+    {
+        $result = $this->query_parser->getBoolean('{"identifier": true}', 'identifier');
+        $this->assertTrue($result);
+    }
+
     public function testGetObjectWithAnEmptyString()
     {
         $this->expectException(MissingMandatoryParameterException::class);
