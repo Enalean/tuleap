@@ -165,6 +165,14 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         );
     }
 
+    protected function getResponseForReadOnlyUserAdmin($request)
+    {
+        return $this->getResponseByName(
+            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            $request
+        );
+    }
+
     protected function getResponseWithoutAuth($request)
     {
         return $this->rest_request->getResponseWithoutAuth($request);
