@@ -38,5 +38,7 @@ exports[`TaskBoardBody displays swimlanes with empty columns 1`] = `
       class="taskboard-cell"
     />
   </tr>
+   
+  <!---->
 </tbody>
 `;

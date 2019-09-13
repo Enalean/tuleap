@@ -23,6 +23,7 @@
     padding: $tlp-half-spacing;
     border: 1px solid $tlp-ui-border-normal;
     border-bottom-width: 3px;
+    vertical-align: top;
 
     &:first-child {
         background: transparentize($tlp-ui-white, .6);

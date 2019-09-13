@@ -19,41 +19,31 @@
   -->
 
 <template>
-    <tbody>
-        <tr class="taskboard-swimlane" v-for="swimlane of swimlanes" v-bind:key="swimlane.card.id">
-            <td class="taskboard-cell"><parent-card v-bind:card="swimlane.card"/></td>
-            <td class="taskboard-cell" v-for="col of columns" v-bind:key="col.id"></td>
-        </tr>
-        <swimlane-skeleton v-if="is_loading_swimlanes"/>
-    </tbody>
+    <tr class="taskboard-swimlane">
+        <td class="taskboard-cell">
+            <div class="tlp-card tlp-skeleton-card taskboard-card-parent taskboard-card-skeleton"></div>
+        </td>
+        <td class="taskboard-cell" v-for="(col, index) of columns" v-bind:key="col.id">
+            <div class="tlp-card tlp-skeleton-card taskboard-card-skeleton" v-for="i in nb_skeletons(index)" v-bind:key="i"></div>
+        </td>
+    </tr>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { Action, State } from "vuex-class";
-import { ColumnDefinition, Swimlane } from "../../type";
-import ParentCard from "./Card/ParentCard.vue";
-import SwimlaneSkeleton from "./SwimlaneSkeleton.vue";
+import { ColumnDefinition } from "../../type";
+import { State } from "vuex-class";
 
-@Component({
-    components: { SwimlaneSkeleton, ParentCard }
-})
-export default class TaskBoardBody extends Vue {
-    @State
-    readonly swimlanes!: Array<Swimlane>;
+const nb_skeletons_per_column = [4, 1, 2, 3, 1];
 
+@Component
+export default class SwimlaneSkeleton extends Vue {
     @State
     readonly columns!: Array<ColumnDefinition>;
 
-    @State
-    readonly is_loading_swimlanes!: boolean;
-
-    @Action
-    loadSwimlanes!: () => void;
-
-    created(): void {
-        this.loadSwimlanes();
+    nb_skeletons(index: number): number {
+        return nb_skeletons_per_column[index % nb_skeletons_per_column.length];
     }
 }
 </script>

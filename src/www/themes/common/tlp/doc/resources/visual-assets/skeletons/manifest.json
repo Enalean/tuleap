@@ -3,6 +3,7 @@
   "children": [
     "typo",
     "fields",
+    "cards",
     "tables"
   ]
 }

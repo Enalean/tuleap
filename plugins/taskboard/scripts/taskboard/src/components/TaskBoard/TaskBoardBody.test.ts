@@ -20,6 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import TaskBoardBody from "./TaskBoardBody.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import SwimlaneSkeleton from "./SwimlaneSkeleton.vue";
 
 describe("TaskBoardBody", () => {
     it("displays swimlanes with empty columns", () => {
@@ -57,5 +58,11 @@ describe("TaskBoardBody", () => {
         const $store = createStoreMock({});
         shallowMount(TaskBoardBody, { mocks: { $store } });
         expect($store.dispatch).toHaveBeenCalledWith("loadSwimlanes");
+    });
+
+    it("displays skeletons when swimlanes are being loaded", () => {
+        const $store = createStoreMock({ state: { is_loading_swimlanes: true } });
+        const wrapper = shallowMount(TaskBoardBody, { mocks: { $store } });
+        expect(wrapper.contains(SwimlaneSkeleton)).toBe(true);
     });
 });

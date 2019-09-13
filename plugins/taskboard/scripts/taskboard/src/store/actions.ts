@@ -20,8 +20,9 @@
 import { Card, Context, Swimlane } from "../type";
 import { recursiveGet } from "tlp";
 
-export function loadSwimlanes(context: Context): Promise<Swimlane[]> {
-    return recursiveGet(`/api/v1/taskboard/${context.state.milestone_id}/cards`, {
+export async function loadSwimlanes(context: Context): Promise<void> {
+    context.commit("setIsLoadingSwimlanes", true);
+    await recursiveGet(`/api/v1/taskboard/${context.state.milestone_id}/cards`, {
         params: {
             limit: 100,
             offset: 0
@@ -35,4 +36,5 @@ export function loadSwimlanes(context: Context): Promise<Swimlane[]> {
             return swimlanes;
         }
     });
+    context.commit("setIsLoadingSwimlanes", false);
 }
