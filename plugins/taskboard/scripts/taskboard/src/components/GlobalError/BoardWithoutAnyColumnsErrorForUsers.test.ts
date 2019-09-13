@@ -25,8 +25,8 @@ import BoardWithoutAnyColumnsErrorForUsers from "./BoardWithoutAnyColumnsErrorFo
 describe("BoardWithoutAnyColumnsError", () => {
     let local_vue: typeof Vue;
 
-    beforeEach(() => {
-        local_vue = createTaskboardLocalVue();
+    beforeEach(async () => {
+        local_vue = await createTaskboardLocalVue();
     });
 
     it("is displays misconfiguration error for regular user", () => {

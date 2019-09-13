@@ -27,7 +27,7 @@
     "sprintf-js": "^1.1.1",
     "tus-js-client": "^1.8.0-1",
     "vue": "^2.6.10",
-    "vue-gettext": "^2.1.0",
+    "vue-gettext": "^2.1.5",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {

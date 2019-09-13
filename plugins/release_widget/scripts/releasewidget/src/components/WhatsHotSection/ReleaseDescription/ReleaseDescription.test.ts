@@ -21,9 +21,9 @@ import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseDescription from "./ReleaseDescription.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import Vue from "vue";
-import GetTextPlugin from "vue-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { MilestoneData, StoreOptions } from "../../../type";
+import { initVueGettext } from "../../../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 
 let releaseData: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const component_options: ShallowMountOptions<ReleaseDescription> = {};
@@ -33,16 +33,16 @@ describe("ReleaseDescription", () => {
     let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(store_options: StoreOptions): Wrapper<ReleaseDescription> {
+    async function getPersonalWidgetInstance(
+        store_options: StoreOptions
+    ): Promise<Wrapper<ReleaseDescription>> {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
 
-        Vue.use(GetTextPlugin, {
-            translations: {},
-            silent: true
+        await initVueGettext(Vue, () => {
+            throw new Error("Fallback to default");
         });
-
         Vue.use(VueDOMPurifyHTML);
 
         return shallowMount(ReleaseDescription, component_options);
@@ -64,14 +64,12 @@ describe("ReleaseDescription", () => {
         component_options.propsData = {
             releaseData
         };
-
-        getPersonalWidgetInstance(store_options);
     });
 
-    it("Given user display widget, Then a good link to top planning of the release is rendered", () => {
+    it("Given user display widget, Then a good link to top planning of the release is rendered", async () => {
         store_options.state.project_id = project_id;
 
-        const wrapper = getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance(store_options);
 
         expect(wrapper.find("[data-test=overview-link]").attributes("href")).toEqual(
             "/plugins/agiledashboard/?group_id=" +

@@ -22,7 +22,7 @@ import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createStore } from "./src/store";
 import App from "./src/components/App.vue";
-import { initVueGettext } from "./src/helpers/vue-gettext-init";
+import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 import { ColumnDefinition, State, Swimlane } from "./src/type";
 import Vuex from "vuex";
 
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const swimlanes: Array<Swimlane> = [];
     const milestone_id = Number.parseInt(vue_mount_point.dataset.milestoneId || "0", 10);
 
-    await initVueGettext((locale: string) =>
+    await initVueGettext(Vue, (locale: string) =>
         import(/* webpackChunkName: "taskboard-po-" */ `./po/${locale}.po`)
     );
     Vue.use(Vuex);

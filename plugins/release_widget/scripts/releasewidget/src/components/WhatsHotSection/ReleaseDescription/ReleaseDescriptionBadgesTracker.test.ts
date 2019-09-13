@@ -21,9 +21,9 @@ import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import Vue from "vue";
-import GetTextPlugin from "vue-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { MilestoneData, StoreOptions } from "../../../type";
+import { initVueGettext } from "../../../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 
 let releaseData: MilestoneData;
 const component_options: ShallowMountOptions<ReleaseDescriptionBadgesTracker> = {};
@@ -33,18 +33,16 @@ describe("ReleaseDescriptionBadgesTracker", () => {
     let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(
+    async function getPersonalWidgetInstance(
         store_options: StoreOptions
-    ): Wrapper<ReleaseDescriptionBadgesTracker> {
+    ): Promise<Wrapper<ReleaseDescriptionBadgesTracker>> {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
 
-        Vue.use(GetTextPlugin, {
-            translations: {},
-            silent: true
+        await initVueGettext(Vue, () => {
+            throw new Error("Fallback to default");
         });
-
         Vue.use(VueDOMPurifyHTML);
 
         return shallowMount(ReleaseDescriptionBadgesTracker, component_options);
@@ -73,14 +71,12 @@ describe("ReleaseDescriptionBadgesTracker", () => {
         component_options.propsData = {
             releaseData
         };
-
-        getPersonalWidgetInstance(store_options);
     });
 
-    it("Given user display widget, Then the good number of artifacts and good color of the tracker is rendered", () => {
+    it("Given user display widget, Then the good number of artifacts and good color of the tracker is rendered", async () => {
         store_options.state.project_id = project_id;
 
-        const wrapper = getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance(store_options);
 
         expect(wrapper.find("[data-test=color-name-tracker").classes()).toEqual([
             "release-number-artifacts-tracker",

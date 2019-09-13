@@ -125,7 +125,8 @@ function configureTypescriptRules(babel_options) {
                 {
                     loader: "ts-loader",
                     options: {
-                        appendTsSuffixTo: ["\\.vue$"]
+                        appendTsSuffixTo: ["\\.vue$"],
+                        transpileOnly: true
                     }
                 }
             ]

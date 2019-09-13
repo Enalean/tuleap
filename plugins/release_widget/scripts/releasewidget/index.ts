@@ -19,23 +19,13 @@
  */
 
 import Vue from "vue";
-import GetTextPlugin from "vue-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-import french_translations from "./po/fr.po";
 import App from "./src/components/App.vue";
-import { createStore } from "./src/store/index";
+import { createStore } from "./src/store";
 import { setUserLocale } from "./src/helpers/user-locale-helper";
+import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 
-document.addEventListener("DOMContentLoaded", () => {
-    Vue.use(GetTextPlugin, {
-        translations: {
-            fr: french_translations.messages
-        },
-        silent: true
-    });
-
+document.addEventListener("DOMContentLoaded", async () => {
     Vue.use(VueDOMPurifyHTML);
 
     const locale = document.body.dataset.userLocale;
@@ -43,6 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
         Vue.config.language = locale;
         setUserLocale(locale.replace("_", "-"));
     }
+    await initVueGettext(Vue, (locale: string) =>
+        import(/* webpackChunkName: "releasewidget-po-" */ `./po/${locale}.po`)
+    );
 
     const vue_mount_point = document.getElementById("release-widget");
 

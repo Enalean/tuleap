@@ -18,11 +18,11 @@
  */
 
 import Vue from "vue";
-import GetTextPlugin from "vue-gettext";
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseHeader from "./ReleaseHeader.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import { MilestoneData, StoreOptions } from "../../../type";
+import { initVueGettext } from "../../../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 
 let releaseData: MilestoneData;
 let component_options: ShallowMountOptions<ReleaseHeader>;
@@ -31,14 +31,15 @@ describe("ReleaseHeader", () => {
     let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(store_options: StoreOptions): Wrapper<ReleaseHeader> {
+    async function getPersonalWidgetInstance(
+        store_options: StoreOptions
+    ): Promise<Wrapper<ReleaseHeader>> {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
 
-        Vue.use(GetTextPlugin, {
-            translations: {},
-            silent: true
+        await initVueGettext(Vue, () => {
+            throw new Error("Fallback to default");
         });
 
         return shallowMount(ReleaseHeader, component_options);
@@ -62,18 +63,16 @@ describe("ReleaseHeader", () => {
                 releaseData
             }
         };
-
-        getPersonalWidgetInstance(store_options);
     });
 
     describe("Display arrow between dates", () => {
-        it("When there is a start date of a release, Then an arrow is displayed", () => {
-            const wrapper = getPersonalWidgetInstance(store_options);
+        it("When there is a start date of a release, Then an arrow is displayed", async () => {
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=display-arrow]")).toBeTruthy();
         });
 
-        it("When there isn't a start date of a release, Then there isn't an arrow", () => {
+        it("When there isn't a start date of a release, Then there isn't an arrow", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -85,13 +84,13 @@ describe("ReleaseHeader", () => {
                 releaseData
             };
 
-            const wrapper = getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=display-arrow]")).toBeFalsy();
         });
     });
 
-    it("When the widget is rendered, Then the component ReleaseHeaderRemainingEffort is displayed", () => {
+    it("When the widget is rendered, Then the component ReleaseHeaderRemainingEffort is displayed", async () => {
         releaseData = {
             label: "mile",
             id: 2,
@@ -102,7 +101,7 @@ describe("ReleaseHeader", () => {
             releaseData
         };
 
-        const wrapper = getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance(store_options);
 
         expect(wrapper.contains("[data-test=display-remaining-days]")).toBeTruthy();
         expect(wrapper.contains("[data-test=display-remaining-points]")).toBeTruthy();

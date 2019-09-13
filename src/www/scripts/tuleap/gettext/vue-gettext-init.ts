@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,11 +15,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import Vue from "vue";
-import GetTextPlugin from "vue-gettext";
+import { VueConstructor } from "vue/types/vue";
+import VueGettext from "vue-gettext";
 
 interface TranslatedStrings {
     readonly [key: string]: string;
@@ -34,6 +33,7 @@ export interface POFile {
 }
 
 export async function initVueGettext(
+    vue_instance: VueConstructor,
     load_translations_callback: (locale: string) => Promise<POFile>
 ): Promise<void> {
     const translations: GettextTranslationsMap = {};
@@ -45,11 +45,11 @@ export async function initVueGettext(
             // default to en_US
         }
     }
-    Vue.use(GetTextPlugin, {
+    vue_instance.use(VueGettext, {
         translations,
         silent: true
     });
     if (locale) {
-        Vue.config.language = locale;
+        vue_instance.config.language = locale;
     }
 }

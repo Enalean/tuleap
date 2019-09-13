@@ -50,7 +50,8 @@ module.exports = [
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            webpack_configurator.getVueLoaderPlugin()
+            webpack_configurator.getVueLoaderPlugin(),
+            webpack_configurator.getTypescriptCheckerPlugin(true)
         ],
         resolveLoader: {
             alias: webpack_configurator.easygettext_loader_alias
