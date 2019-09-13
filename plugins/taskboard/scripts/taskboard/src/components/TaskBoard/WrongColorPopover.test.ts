@@ -26,11 +26,11 @@ import * as tlp from "tlp";
 jest.mock("tlp");
 
 describe("WrongColorPopover", () => {
-    it("initiates a popover to inform user that the chosen color is wrong", () => {
+    it("initiates a popover to inform user that the chosen color is wrong", async () => {
         const tlpCreatePopover = jest.spyOn(tlp, "createPopover").mockImplementation();
 
         const wrapper = shallowMount(WrongColorPopover, {
-            localVue: createTaskboardLocalVue(),
+            localVue: await createTaskboardLocalVue(),
             mocks: { $store: createStoreMock({ state: { admin_url: "/path/to/admin" } }) },
             propsData: { color: "#87DBEF" }
         });

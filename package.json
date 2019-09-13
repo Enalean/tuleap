@@ -35,6 +35,7 @@
     "eslint-plugin-vue": "^5.2.3",
     "eslint-plugin-you-dont-need-lodash-underscore": "^6.6.0",
     "file-loader": "^4.2.0",
+    "fork-ts-checker-webpack-plugin": "^1.5.0",
     "gettext-extractor": "^3.5.1",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",

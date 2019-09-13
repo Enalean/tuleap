@@ -18,13 +18,13 @@
  */
 
 import Vue from "vue";
-import GetTextPlugin from "vue-gettext";
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseDisplayer from "./ReleaseDisplayer.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
 import { MilestoneData, StoreOptions } from "../../type";
 import { DefaultData } from "vue/types/options";
+import { initVueGettext } from "../../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 
 let releaseData: MilestoneData;
 let component_options: ShallowMountOptions<ReleaseDisplayer>;
@@ -33,16 +33,16 @@ describe("ReleaseDisplayer", () => {
     let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(store_options: StoreOptions): Wrapper<ReleaseDisplayer> {
+    async function getPersonalWidgetInstance(
+        store_options: StoreOptions
+    ): Promise<Wrapper<ReleaseDisplayer>> {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
 
-        Vue.use(GetTextPlugin, {
-            translations: {},
-            silent: true
+        await initVueGettext(Vue, () => {
+            throw new Error("Fallback to default");
         });
-
         return shallowMount(ReleaseDisplayer, component_options);
     }
 
@@ -71,12 +71,10 @@ describe("ReleaseDisplayer", () => {
                 };
             }
         };
-
-        getPersonalWidgetInstance(store_options);
     });
 
-    it("When the user toggle twice a release, the content widget is displayed first and hidden after", () => {
-        const wrapper = getPersonalWidgetInstance(store_options);
+    it("When the user toggle twice a release, the content widget is displayed first and hidden after", async () => {
+        const wrapper = await getPersonalWidgetInstance(store_options);
 
         wrapper.find(ReleaseHeader).vm.$emit("toggleReleaseDetails");
         expect(wrapper.contains("[data-test=toggle_open]")).toBeTruthy();

@@ -21,8 +21,8 @@ import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseBadges from "./ReleaseBadges.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import Vue from "vue";
-import GetTextPlugin from "vue-gettext";
 import { MilestoneData, StoreOptions } from "../../type";
+import { initVueGettext } from "../../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 
 let releaseData: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const total_sprint = 10;
@@ -35,14 +35,15 @@ describe("ReleaseBadges", () => {
     let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(store_options: StoreOptions): Wrapper<ReleaseBadges> {
+    async function getPersonalWidgetInstance(
+        store_options: StoreOptions
+    ): Promise<Wrapper<ReleaseBadges>> {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
 
-        Vue.use(GetTextPlugin, {
-            translations: {},
-            silent: true
+        await initVueGettext(Vue, () => {
+            throw new Error("Fallback to default");
         });
 
         return shallowMount(ReleaseBadges, component_options);
@@ -68,12 +69,10 @@ describe("ReleaseBadges", () => {
         };
 
         component_options.propsData = { releaseData };
-
-        getPersonalWidgetInstance(store_options);
     });
 
-    it("When the component is displayed, Then a good link to top planning of the release is rendered", () => {
-        const wrapper = getPersonalWidgetInstance(store_options);
+    it("When the component is displayed, Then a good link to top planning of the release is rendered", async () => {
+        const wrapper = await getPersonalWidgetInstance(store_options);
 
         expect(wrapper.find("[data-test=planning-link]").attributes("href")).toEqual(
             "/plugins/agiledashboard/?group_id=" +
@@ -87,14 +86,14 @@ describe("ReleaseBadges", () => {
     });
 
     describe("Display points of initial effort", () => {
-        it("When there is an initial effort, Then the points of initial effort are displayed", () => {
-            const wrapper = getPersonalWidgetInstance(store_options);
+        it("When there is an initial effort, Then the points of initial effort are displayed", async () => {
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBeTruthy();
             expect(wrapper.contains("[data-test=initial-effort-empty]")).toBeFalsy();
         });
 
-        it("When there is initial effort but null, Then the points of initial effort are 'N/A'", () => {
+        it("When there is initial effort but null, Then the points of initial effort are 'N/A'", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -108,13 +107,13 @@ describe("ReleaseBadges", () => {
             };
 
             component_options.propsData = { releaseData };
-            const wrapper = getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBeFalsy();
             expect(wrapper.contains("[data-test=initial-effort-empty]")).toBeTruthy();
         });
 
-        it("When there isn't initial effort, Then the points of initial effort are 'N/A'", () => {
+        it("When there isn't initial effort, Then the points of initial effort are 'N/A'", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -129,7 +128,7 @@ describe("ReleaseBadges", () => {
             component_options.propsData = {
                 releaseData
             };
-            const wrapper = getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBeFalsy();
             expect(wrapper.contains("[data-test=initial-effort-empty]")).toBeTruthy();
@@ -137,14 +136,14 @@ describe("ReleaseBadges", () => {
     });
 
     describe("Display points of capacity", () => {
-        it("When there are points of capacity, Then the points of capacity are displayed", () => {
-            const wrapper = getPersonalWidgetInstance(store_options);
+        it("When there are points of capacity, Then the points of capacity are displayed", async () => {
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=capacity-not-empty]")).toBeTruthy();
             expect(wrapper.contains("[data-test=capacity-empty]")).toBeFalsy();
         });
 
-        it("When there are points of capacity but null, Then the points of capacity are 'N/A'", () => {
+        it("When there are points of capacity but null, Then the points of capacity are 'N/A'", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -161,13 +160,13 @@ describe("ReleaseBadges", () => {
                 releaseData
             };
 
-            const wrapper = getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=capacity-not-empty]")).toBeFalsy();
             expect(wrapper.contains("[data-test=capacity-empty]")).toBeTruthy();
         });
 
-        it("When there aren't points of capacity, Then the points of capacity are 'N/A'", () => {
+        it("When there aren't points of capacity, Then the points of capacity are 'N/A'", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -183,7 +182,7 @@ describe("ReleaseBadges", () => {
                 releaseData
             };
 
-            const wrapper = getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=capacity-not-empty]")).toBeFalsy();
             expect(wrapper.contains("[data-test=capacity-empty]")).toBeTruthy();

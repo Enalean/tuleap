@@ -48,7 +48,11 @@ const webpack_config = {
             webpack_configurator.rule_vue_loader
         ]
     },
-    plugins: [webpack_configurator.getManifestPlugin(), webpack_configurator.getVueLoaderPlugin()],
+    plugins: [
+        webpack_configurator.getManifestPlugin(),
+        webpack_configurator.getVueLoaderPlugin(),
+        webpack_configurator.getTypescriptCheckerPlugin(true)
+    ],
     resolveLoader: {
         alias: webpack_configurator.easygettext_loader_alias
     }

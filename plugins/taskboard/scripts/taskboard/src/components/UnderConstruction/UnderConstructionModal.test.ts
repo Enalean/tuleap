@@ -30,9 +30,11 @@ jest.mock("tlp", () => {
     };
 });
 
-function createWrapper<G, Spy>(store: Store<TestState, G, Spy>): Wrapper<UnderConstructionModal> {
+async function createWrapper<G, Spy>(
+    store: Store<TestState, G, Spy>
+): Promise<Wrapper<UnderConstructionModal>> {
     return shallowMount(UnderConstructionModal, {
-        localVue: createTaskboardLocalVue(),
+        localVue: await createTaskboardLocalVue(),
         mocks: {
             $store: store
         }
@@ -66,17 +68,17 @@ describe("UnderConstructionModal", () => {
     });
 
     it(`When the modal has not been opened before,
-        it will open the modal as soon as the component is mounted`, () => {
+        it will open the modal as soon as the component is mounted`, async () => {
         const actual_tlp = jest.requireActual("tlp");
         jest.spyOn(tlp, "modal").mockImplementation(actual_tlp.modal);
 
-        const wrapper = createWrapper(store);
+        const wrapper = await createWrapper(store);
 
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it(`When the modal is closed, it will save the current date/time`, () => {
-        createWrapper(store);
+    it(`When the modal is closed, it will save the current date/time`, async () => {
+        await createWrapper(store);
         hide_listener();
 
         const saved_date = sessionStorage.getItem(storage_key);
@@ -84,32 +86,32 @@ describe("UnderConstructionModal", () => {
     });
 
     it(`When the modal has been opened in the last 24 hours,
-        it won't open the modal`, () => {
+        it won't open the modal`, async () => {
         const six_hours_ago = new Date();
         six_hours_ago.setHours(six_hours_ago.getHours() - 6);
         sessionStorage.setItem(storage_key, six_hours_ago.toUTCString());
 
-        createWrapper(store);
+        await createWrapper(store);
 
         expect(tlp_modal).not.toHaveBeenCalled();
     });
 
     it(`When the modal has been opened before the last 24 hours,
-        it will open the modal again`, () => {
+        it will open the modal again`, async () => {
         const thirty_six_hours_ago = new Date();
         thirty_six_hours_ago.setDate(thirty_six_hours_ago.getDate() - 1);
         thirty_six_hours_ago.setHours(thirty_six_hours_ago.getHours() - 12);
         sessionStorage.setItem(storage_key, thirty_six_hours_ago.toUTCString());
 
-        createWrapper(store);
+        await createWrapper(store);
 
         expect(tlp_modal).toHaveBeenCalled();
     });
 
     it(`When I'm browsing as anonymous user,
-        the session storage key will be suffixed by "0"`, () => {
+        the session storage key will be suffixed by "0"`, async () => {
         store.state.user_id = 0;
-        createWrapper(store);
+        await createWrapper(store);
         hide_listener();
 
         const saved_date = sessionStorage.getItem(

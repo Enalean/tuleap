@@ -21,18 +21,19 @@ import { shallowMount, Wrapper } from "@vue/test-utils";
 import RoadmapSection from "./RoadmapSection.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import Vue from "vue";
-import GetTextPlugin from "vue-gettext";
 import { StoreOptions } from "../../type";
+import { initVueGettext } from "../../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 
 const project_id = 102;
-function getPersonalWidgetInstance(store_options: StoreOptions): Wrapper<RoadmapSection> {
+async function getPersonalWidgetInstance(
+    store_options: StoreOptions
+): Promise<Wrapper<RoadmapSection>> {
     const store = createStoreMock(store_options);
     const component_options = {
         mocks: { $store: store }
     };
-    Vue.use(GetTextPlugin, {
-        translations: {},
-        silent: true
+    await initVueGettext(Vue, () => {
+        throw new Error("Fallback to default");
     });
 
     return shallowMount(RoadmapSection, component_options);
@@ -51,12 +52,10 @@ describe("RoadmapSection", () => {
                 has_rest_error: false
             }
         };
-
-        getPersonalWidgetInstance(store_options);
     });
 
-    it("Given user display widget, Then a good link to top planning of the project is rendered", () => {
-        const wrapper = getPersonalWidgetInstance(store_options);
+    it("Given user display widget, Then a good link to top planning of the project is rendered", async () => {
+        const wrapper = await getPersonalWidgetInstance(store_options);
 
         expect(wrapper.element).toMatchSnapshot();
     });

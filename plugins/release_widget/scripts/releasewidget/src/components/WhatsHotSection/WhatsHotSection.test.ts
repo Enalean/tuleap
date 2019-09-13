@@ -21,12 +21,14 @@ import { shallowMount, Wrapper } from "@vue/test-utils";
 import WhatsHotSection from "./WhatsHotSection.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import Vue from "vue";
-import GetTextPlugin from "vue-gettext";
 import { MilestoneData, StoreOptions } from "../../type";
+import { initVueGettext } from "../../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 
 const project_id = 102;
 
-function getPersonalWidgetInstance(store_options: StoreOptions): Wrapper<WhatsHotSection> {
+async function getPersonalWidgetInstance(
+    store_options: StoreOptions
+): Promise<Wrapper<WhatsHotSection>> {
     const store = createStoreMock(store_options);
     const component_options = {
         propsData: {
@@ -34,9 +36,8 @@ function getPersonalWidgetInstance(store_options: StoreOptions): Wrapper<WhatsHo
         },
         mocks: { $store: store }
     };
-    Vue.use(GetTextPlugin, {
-        translations: {},
-        silent: true
+    await initVueGettext(Vue, () => {
+        throw new Error("Fallback to default");
     });
 
     return shallowMount(WhatsHotSection, component_options);
@@ -58,17 +59,15 @@ describe("What'sHotSection", () => {
                 has_rest_error: false
             }
         };
-
-        getPersonalWidgetInstance(store_options);
     });
 
-    it("When there are no current milestones, then ReleaseDisplayer Component is not allowed", () => {
-        const wrapper = getPersonalWidgetInstance(store_options);
+    it("When there are no current milestones, then ReleaseDisplayer Component is not allowed", async () => {
+        const wrapper = await getPersonalWidgetInstance(store_options);
 
         expect(wrapper.contains("[data-test=current-milestones-test]")).toBeFalsy();
     });
 
-    it("When there are some current_milestones, then ReleaseDisplayer Component is displayed", () => {
+    it("When there are some current_milestones, then ReleaseDisplayer Component is displayed", async () => {
         const release1: MilestoneData = {
             label: "release_1",
             id: 1,
@@ -82,7 +81,7 @@ describe("What'sHotSection", () => {
         };
 
         store_options.state.current_milestones = [release1, release2];
-        const wrapper = getPersonalWidgetInstance(store_options);
+        const wrapper = await getPersonalWidgetInstance(store_options);
 
         expect(
             wrapper.contains("[data-test=current-milestones-test-" + release1.label + "]")

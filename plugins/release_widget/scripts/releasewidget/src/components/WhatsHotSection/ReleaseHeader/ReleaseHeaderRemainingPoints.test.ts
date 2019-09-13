@@ -18,11 +18,11 @@
  */
 
 import Vue from "vue";
-import GetTextPlugin from "vue-gettext";
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseHeaderRemainingPoints from "./ReleaseHeaderRemainingPoints.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import { MilestoneData, StoreOptions } from "../../../type";
+import { initVueGettext } from "../../../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 
 let releaseData: MilestoneData;
 const component_options: ShallowMountOptions<ReleaseHeaderRemainingPoints> = {};
@@ -31,16 +31,15 @@ describe("ReleaseHeaderRemainingEffort", () => {
     let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(
+    async function getPersonalWidgetInstance(
         store_options: StoreOptions
-    ): Wrapper<ReleaseHeaderRemainingPoints> {
+    ): Promise<Wrapper<ReleaseHeaderRemainingPoints>> {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
 
-        Vue.use(GetTextPlugin, {
-            translations: {},
-            silent: true
+        await initVueGettext(Vue, () => {
+            throw new Error("Fallback to default");
         });
 
         return shallowMount(ReleaseHeaderRemainingPoints, component_options);
@@ -62,12 +61,10 @@ describe("ReleaseHeaderRemainingEffort", () => {
         component_options.propsData = {
             releaseData
         };
-
-        getPersonalWidgetInstance(store_options);
     });
 
     describe("Display remaining points", () => {
-        it("When there is negative remaining points, Then it displays and percent in tooltip", () => {
+        it("When there is negative remaining points, Then it displays and percent in tooltip", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -84,7 +81,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 releaseData
             };
 
-            const wrapper = getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
             const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
@@ -104,7 +101,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toEqual("-1");
         });
 
-        it("When there isn't remaining effort points, Then 0 is displayed and message in tooltip", () => {
+        it("When there isn't remaining effort points, Then 0 is displayed and message in tooltip", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -120,7 +117,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 releaseData
             };
 
-            const wrapper = getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
             const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
@@ -136,7 +133,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toEqual("0");
         });
 
-        it("When there is remaining effort point and is null, Then 0 is displayed and message in tooltip", () => {
+        it("When there is remaining effort point and is null, Then 0 is displayed and message in tooltip", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -153,7 +150,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 releaseData
             };
 
-            const wrapper = getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
             const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
@@ -169,7 +166,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toEqual("0");
         });
 
-        it("When there is remaining effort point, not null and greater than 0, Then it's displayed and percent in tooltip", () => {
+        it("When there is remaining effort point, not null and greater than 0, Then it's displayed and percent in tooltip", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -186,7 +183,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 releaseData
             };
 
-            const wrapper = getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
             const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
@@ -202,7 +199,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toEqual("5");
         });
 
-        it("When there is remaining effort point, equal at 0, Then it's displayed and percent in tooltip", () => {
+        it("When there is remaining effort point, equal at 0, Then it's displayed and percent in tooltip", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -219,7 +216,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 releaseData
             };
 
-            const wrapper = getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
             const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
@@ -238,7 +235,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toEqual("0");
         });
 
-        it("When there isn't initial effort point, Then 0 is displayed and message in tooltip", () => {
+        it("When there isn't initial effort point, Then 0 is displayed and message in tooltip", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -254,7 +251,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 releaseData
             };
 
-            const wrapper = getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
             const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
@@ -270,7 +267,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toEqual("5");
         });
 
-        it("When there is initial effort point but null, Then 0 is displayed and message in tooltip", () => {
+        it("When there is initial effort point but null, Then 0 is displayed and message in tooltip", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -287,7 +284,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 releaseData
             };
 
-            const wrapper = getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
             const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
@@ -303,7 +300,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toEqual("5");
         });
 
-        it("When there is initial effort point but equal at 0, Then 0 is displayed and message in tooltip", () => {
+        it("When there is initial effort point but equal at 0, Then 0 is displayed and message in tooltip", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -320,7 +317,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 releaseData
             };
 
-            const wrapper = getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
             const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
@@ -336,7 +333,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             expect(remaining_point_text.text()).toEqual("5");
         });
 
-        it("When remaining effort > initial effort, Then remaining effort is displayed and message in tooltip", () => {
+        it("When remaining effort > initial effort, Then remaining effort is displayed and message in tooltip", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -353,7 +350,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 releaseData
             };
 
-            const wrapper = getPersonalWidgetInstance(store_options);
+            const wrapper = await getPersonalWidgetInstance(store_options);
 
             const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
             const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");

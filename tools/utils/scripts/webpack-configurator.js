@@ -26,6 +26,7 @@ const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 const rule_configurations = require("./webpack-rule-configs.js");
 const aliases = require("./webpack-aliases.js");
@@ -64,6 +65,13 @@ function getCleanWebpackPlugin() {
 
 function getVueLoaderPlugin() {
     return new VueLoaderPlugin();
+}
+
+function getTypescriptCheckerPlugin(use_vue) {
+    return new ForkTsCheckerWebpackPlugin({
+        vue: use_vue,
+        reportFiles: ["**", "!**/*.test.ts"]
+    });
 }
 
 function getCopyPlugin(patterns = [], options = {}) {
@@ -130,6 +138,7 @@ const configurator = {
     getManifestPlugin,
     getMomentLocalePlugin,
     getVueLoaderPlugin,
+    getTypescriptCheckerPlugin,
     getCleanWebpackPlugin,
     getCSSExtractionPlugins,
     extendDevConfiguration,

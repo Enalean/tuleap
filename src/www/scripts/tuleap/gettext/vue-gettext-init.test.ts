@@ -48,7 +48,7 @@ describe(`vue-gettext-init`, () => {
             });
         beforeEach(async () => {
             document.body.dataset.userLocale = "fr_FR";
-            await initVueGettext(callback);
+            await initVueGettext(Vue, callback);
         });
 
         it(`loads the translations and gives them to vue-gettext`, () =>
@@ -70,7 +70,7 @@ describe(`vue-gettext-init`, () => {
     describe(`when a locale is NOT defined on the document's body`, () => {
         const callback = jest.fn().mockImplementation(() => Promise.resolve({ messages: {} }));
         beforeEach(async () => {
-            await initVueGettext(callback);
+            await initVueGettext(Vue, callback);
         });
         it(`does not call the callback`, () => expect(callback).not.toHaveBeenCalled());
         it(`does not set vue-gettext's language config`, () =>
