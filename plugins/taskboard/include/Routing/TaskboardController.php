@@ -33,6 +33,7 @@ use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Taskboard\Board\BoardPresenterBuilder;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 class TaskboardController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
 {
@@ -68,6 +69,10 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
      * @var BoardPresenterBuilder
      */
     private $presenter_builder;
+    /**
+     * @var VisitRecorder
+     */
+    private $visit_recorder;
 
     public function __construct(
         MilestoneExtractor $milestone_extractor,
@@ -76,7 +81,8 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
         BoardPresenterBuilder $presenter_builder,
         IncludeAssets $agiledashboard_assets,
         IncludeAssets $taskboard_theme_assets,
-        IncludeAssets $taskboard_js_assets
+        IncludeAssets $taskboard_js_assets,
+        VisitRecorder $visit_recorder
     ) {
         $this->milestone_extractor    = $milestone_extractor;
         $this->renderer               = $renderer;
@@ -85,6 +91,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
         $this->agiledashboard_assets  = $agiledashboard_assets;
         $this->taskboard_theme_assets = $taskboard_theme_assets;
         $this->taskboard_js_assets    = $taskboard_js_assets;
+        $this->visit_recorder         = $visit_recorder;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -105,6 +112,8 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
                 )
             );
         }
+
+        $this->visit_recorder->record($user, $milestone->getArtifact());
 
         $layout->includeFooterJavascriptFile($this->agiledashboard_assets->getFileURL('scrum-header.js'));
         $is_ie_11 = $this->isIE11();
