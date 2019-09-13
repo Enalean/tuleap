@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -193,7 +193,7 @@ class XMLMediaWikiExporterTest extends TuleapTestCase
         );
 
         $readers = $this->xml_tree->mediawiki->{'read-access'}->ugroup;
-        $this->assertEqual((string) $readers[0], null);
+        $this->assertFalse(isset($readers[0]));
 
         $writers = $this->xml_tree->mediawiki->{'write-access'}->ugroup;
         $this->assertEqual((string) $writers[0], 'custom');
@@ -224,6 +224,6 @@ class XMLMediaWikiExporterTest extends TuleapTestCase
         $this->assertEqual((string) $readers[1], 'custom');
 
         $writers = $this->xml_tree->mediawiki->{'write-access'}->ugroup;
-        $this->assertEqual((string) $writers[0], null);
+        $this->assertFalse(isset($writers[0]));
     }
 }

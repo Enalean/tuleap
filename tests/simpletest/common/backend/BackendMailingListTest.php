@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -51,8 +52,8 @@ class BackendMailingListTest extends TuleapTestCase {
         $dao = new MockMailingListDao();
         $dar = new MockDataAccessResult();
         $dar->setReturnValue('isError', false);
-        $dar->setReturnValueAt(0, 'getRow', true);
-        $dar->setReturnValueAt(1, 'getRow', true);
+        $dar->setReturnValueAt(0, 'getRow', ['group_list_id' => 10]);
+        $dar->setReturnValueAt(1, 'getRow', ['group_list_id' => 12]);
         $dar->setReturnValueAt(2, 'getRow', false);
         $dao->setReturnValue('searchByProject', $dar);
         $dao->setReturnValue('deleteList', false);
@@ -69,8 +70,8 @@ class BackendMailingListTest extends TuleapTestCase {
         $dao = new MockMailingListDao();
         $dar = new MockDataAccessResult();
         $dar->setReturnValue('isError', false);
-        $dar->setReturnValueAt(0, 'getRow', true);
-        $dar->setReturnValueAt(1, 'getRow', true);
+        $dar->setReturnValueAt(0, 'getRow', ['group_list_id' => 10]);
+        $dar->setReturnValueAt(1, 'getRow', ['group_list_id' => 12]);
         $dar->setReturnValueAt(2, 'getRow', false);
         $dao->setReturnValue('searchByProject', $dar);
         $dao->setReturnValue('deleteList', true);

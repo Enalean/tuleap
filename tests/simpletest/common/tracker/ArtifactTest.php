@@ -37,6 +37,7 @@ class ArtifactTest extends TuleapTestCase {
     public function testAddDependenciesSimple()
     {
         $a = new ArtifactTestVersion($this);
+        $a->data_array = ['artifact_id' => 147];
         $a->setReturnValue('insertDependency', true);
         $a->setReturnValue('validArtifact', true);
         $a->setReturnValue('existDependency', false);
@@ -47,6 +48,7 @@ class ArtifactTest extends TuleapTestCase {
     public function testAddWrongDependency()
     {
         $a = new ArtifactTestVersion($this);
+        $a->data_array = ['artifact_id' => 147];
         $a->setReturnValue('insertDependency', true);
         $a->setReturnValue('validArtifact', false);
         //$a->setReturnValue('existDependency', false);
@@ -59,6 +61,7 @@ class ArtifactTest extends TuleapTestCase {
     public function testAddDependenciesDouble()
     {
         $a = new ArtifactTestVersion($this);
+        $a->data_array = ['artifact_id' => 147];
         $a->setReturnValue('insertDependency', true);
         $a->setReturnValue('validArtifact', true);
         $a->setReturnValue('existDependency', false);

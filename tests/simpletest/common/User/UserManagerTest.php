@@ -148,8 +148,7 @@ class UserManagerTest extends TuleapTestCase
     function testGoodLogin() {
         $cm               = Mockery::mock(\Tuleap\CookieManager::class);
         $session_manager  = mock('Tuleap\User\SessionManager');
-        $dao              = new MockUserDao($this);
-        $dar              = new MockDataAccessResult($this);
+        $dao              = Mockery::mock(UserDao::class);
         $user123          = mock('PFUser');
         $user_manager     = new UserManagerTestVersion($this);
         $password_handler = PasswordHandlerFactory::getPasswordHandler();
@@ -175,11 +174,14 @@ class UserManagerTest extends TuleapTestCase
         stub($user_manager)->getSessionManager()->returns($session_manager);
         stub($user_manager)->getTokenManager()->returns($token_manager);
 
-        $dao->setReturnReference('searchByUserName', $dar, array('user_123'));
-        $dar->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
+        $dao->shouldReceive('searchByUserName')
+            ->with('user_123')
+            ->andReturn(TestHelper::arrayToDar(['user_name' => 'user_123', 'user_id' => 123]));
+        $dao->shouldReceive('getUserAccessInfo')->andReturn(['nb_auth_failure' => 0, 'last_auth_success' => 0]);
         $user_manager->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
 
-        $dao->expectNever('storeLoginFailure');
+        $dao->shouldNotReceive('storeLoginFailure');
+        $dao->shouldReceive('storeLoginSuccess');
 
         $user_manager->setReturnReference('getDao', $dao);
         $this->assertEqual($user123, $user_manager->login('user_123', self::PASSWORD, 0));
