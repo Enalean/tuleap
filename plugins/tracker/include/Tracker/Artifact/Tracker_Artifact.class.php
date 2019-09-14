@@ -232,7 +232,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return PermissionsCache::userCanView($this, $user, $permission_checker);
     }
 
-    public function userCanUpdate(PFUser $user) {
+    public function userCanUpdate(PFUser $user): bool
+    {
         if ($user->isAnonymous() || !$this->userCanView($user)) {
             return false;
         }
@@ -1434,7 +1435,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return Tracker_Artifact_ChangesetValue | null
      */
-    function getValue(Tracker_FormElement_Field $field, Tracker_Artifact_Changeset $changeset = null) {
+    function getValue(Tracker_FormElement_Field $field, Tracker_Artifact_Changeset $changeset = null) : ?Tracker_Artifact_ChangesetValue
+    {
         if (!$changeset) {
             $changeset = $this->getLastChangeset();
         }
@@ -1760,10 +1762,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * Get parent artifact regartheless if user can access it
      *
      * Note: even if there are several parents, only the first one is returned
-     *
-     * @return Tracker_Artifact|null
      */
-    public function getParentWithoutPermissionChecking() {
+    public function getParentWithoutPermissionChecking(): ?self
+    {
         if ($this->parent_without_permission_checking !== self::NO_PARENT && ! isset($this->parent_without_permission_checking)) {
             $dar = $this->getDao()->getParents(array($this->getId()));
             if ($dar && count($dar) == 1) {

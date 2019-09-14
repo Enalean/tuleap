@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c5643f158f48686cb61ce873daf09d4a",
+    "content-hash": "df6611ba53eb597e103e7a1dd3e8942f",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -5333,16 +5333,16 @@
         },
         {
             "name": "simpletest/simpletest",
-            "version": "dev-nullable-types",
+            "version": "dev-master-tuleap",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Enalean/simpletest.git",
-                "reference": "cb841c0de8edf09ad1e0d3e3c738e5265897b26f"
+                "reference": "5507b185c9041d046356ff7fad92d100b604c409"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Enalean/simpletest/zipball/cb841c0de8edf09ad1e0d3e3c738e5265897b26f",
-                "reference": "cb841c0de8edf09ad1e0d3e3c738e5265897b26f",
+                "url": "https://api.github.com/repos/Enalean/simpletest/zipball/5507b185c9041d046356ff7fad92d100b604c409",
+                "reference": "5507b185c9041d046356ff7fad92d100b604c409",
                 "shasum": ""
             },
             "require": {
@@ -5403,9 +5403,9 @@
             ],
             "support": {
                 "issues": "https://github.com/simpletest/simpletest/issues",
-                "source": "https://github.com/Enalean/simpletest/tree/nullable-types"
+                "source": "https://github.com/Enalean/simpletest/tree/20190916"
             },
-            "time": "2019-06-04T06:50:40+00:00"
+            "time": "2019-09-14T14:51:34+00:00"
         },
         {
             "name": "slevomat/coding-standard",
