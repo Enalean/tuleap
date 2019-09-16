@@ -24,6 +24,7 @@
 use Tuleap\CookieManager;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 use Tuleap\User\InvalidSessionException;
 use Tuleap\User\SessionManager;
 use Tuleap\User\SessionNotCreatedException;
@@ -535,6 +536,7 @@ class UserManager
             $password_expiration_checker->checkPasswordLifetime($user);
             $password_expiration_checker->warnUserAboutPasswordExpiration($user);
             $this->warnUserAboutAuthenticationAttempts($user);
+            $this->warnUserAboutAdminReadOnlyPermission($user);
 
             $this->getDao()->storeLoginSuccess($user->getId(), $_SERVER['REQUEST_TIME']);
 
@@ -630,6 +632,21 @@ class UserManager
         // Display nothing if no previous record.
         if ($access_info['last_auth_success'] > 0) {
             $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_prev_success') . ' ' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $access_info['last_auth_success']));
+        }
+    }
+
+    private function warnUserAboutAdminReadOnlyPermission(PFUser $user): void
+    {
+        $permission = new RestReadOnlyAdminPermission();
+
+        if ($this->getForgeUserGroupPermissionsManager()->doesUserHavePermission($user, new RestReadOnlyAdminPermission())) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                sprintf(
+                    _('You should not browse the platform with this user, you may experience inconsistent behaviour (%s)'),
+                    $permission->getName()
+                )
+            );
         }
     }
 
@@ -946,7 +963,7 @@ class UserManager
     {
         $factory = new WidgetFactory(
             $this,
-            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+            $this->getForgeUserGroupPermissionsManager(),
             EventManager::instance()
         );
 
@@ -956,6 +973,17 @@ class UserManager
             ),
             $factory,
             EventManager::instance()
+        );
+    }
+
+    /**
+     * protected for testing purpose
+     * @return User_ForgeUserGroupPermissionsManager
+     */
+    protected function getForgeUserGroupPermissionsManager()
+    {
+        return new User_ForgeUserGroupPermissionsManager(
+            new User_ForgeUserGroupPermissionsDao()
         );
     }
 
