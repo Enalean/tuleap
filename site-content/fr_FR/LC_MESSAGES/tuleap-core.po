@@ -1978,6 +1978,14 @@ msgstr ""
 "Vous devez fournir un fichier simple, contenant pour chaque ligne l'adresse "
 "email ou le nom de l'utilisateur à importer."
 
+#, php-format
+msgid ""
+"You should not browse the platform with this user, you may experience "
+"inconsistent behaviour (%s)"
+msgstr ""
+"Il est fortement déconseillé de naviguer la plateforme avec cet utilisateur, "
+"vous pourriez rencontrer des comportements incohérents (%s)"
+
 msgid "You should provide a file in entry."
 msgstr "Vous devez fournir un fichier en entrée."
 

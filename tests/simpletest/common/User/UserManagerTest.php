@@ -38,6 +38,7 @@ Mock::generatePartial('UserManager',
                             '_getEventManager',
                             'getDao',
                             'destroySession',
+                            'getForgeUserGroupPermissionsManager'
                       )
 );
 // Special mock for getUserByIdentifier test
@@ -146,12 +147,13 @@ class UserManagerTest extends TuleapTestCase
     }
 
     function testGoodLogin() {
-        $cm               = Mockery::mock(\Tuleap\CookieManager::class);
-        $session_manager  = mock('Tuleap\User\SessionManager');
-        $dao              = Mockery::mock(UserDao::class);
-        $user123          = mock('PFUser');
-        $user_manager     = new UserManagerTestVersion($this);
-        $password_handler = PasswordHandlerFactory::getPasswordHandler();
+        $cm                  = Mockery::mock(\Tuleap\CookieManager::class);
+        $session_manager     = mock('Tuleap\User\SessionManager');
+        $dao                 = Mockery::mock(UserDao::class);
+        $user123             = mock('PFUser');
+        $user_manager        = new UserManagerTestVersion($this);
+        $password_handler    = PasswordHandlerFactory::getPasswordHandler();
+        $permissions_manager = mock(User_ForgeUserGroupPermissionsManager::class);
 
         $user_manager->setReturnValue('_getEventManager', \Mockery::spy(EventManager::class));
         $hash = 'valid_hash';
@@ -169,10 +171,12 @@ class UserManagerTest extends TuleapTestCase
         $cm->shouldReceive('setCookie')->with('session_hash', $hash, 0)->once();
 
         stub($session_manager)->createSession()->returns($hash);
+        stub($permissions_manager)->doesUserHavePermission()->returns(false);
 
         $user_manager->setReturnReference('getCookieManager', $cm);
         stub($user_manager)->getSessionManager()->returns($session_manager);
         stub($user_manager)->getTokenManager()->returns($token_manager);
+        stub($user_manager)->getForgeUserGroupPermissionsManager()->returns($permissions_manager);
 
         $dao->shouldReceive('searchByUserName')
             ->with('user_123')
