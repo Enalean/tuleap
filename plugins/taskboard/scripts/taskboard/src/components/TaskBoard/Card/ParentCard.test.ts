@@ -64,6 +64,7 @@ describe("ParentCard", () => {
             }
         });
         expect(wrapper.contains(".taskboard-card-accessibility")).toBe(true);
+        expect(wrapper.classes()).toContain("taskboard-card-with-accessibility");
     });
 
     it("removes the show classes after 500ms", () => {
