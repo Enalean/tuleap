@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -119,7 +119,9 @@ class ShowKanbanController extends BaseController
 
         try {
             $kanban = $this->kanban_factory->getKanban($user, $kanban_id);
-            $this->recently_visited_dao->save((int) $user->getId(), (int) $kanban_id, (int) $_SERVER['REQUEST_TIME']);
+            if (! $user->isAnonymous()) {
+                $this->recently_visited_dao->save((int) $user->getId(), (int) $kanban_id, (int) $_SERVER['REQUEST_TIME']);
+            }
 
             $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
 

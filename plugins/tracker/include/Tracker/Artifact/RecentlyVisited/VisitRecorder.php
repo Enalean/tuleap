@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,8 +35,11 @@ class VisitRecorder
     /**
      * @throws \DataAccessException
      */
-    public function record(\PFUser $user, \Tracker_Artifact $artifact)
+    public function record(\PFUser $user, \Tracker_Artifact $artifact) : void
     {
+        if ($user->isAnonymous()) {
+            return;
+        }
         $this->dao->save($user->getId(), $artifact->getId(), $_SERVER['REQUEST_TIME']);
     }
 }
