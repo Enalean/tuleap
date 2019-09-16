@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -83,6 +83,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
     public function itExecutesTheCreateCommandOnTheRemoteServer()
     {
         $cmd = '-p 29418 -i /path/to/codendiadm/.ssh/id_rsa gerrit@gerrit.example.com a_remote_command';
+        stub($this->ssh)->sshExec()->returns(['exit_code' => 0, 'std_out' =>'']);
         expect($this->ssh)->sshExec($cmd)->once();
         $this->ssh->execute($this->config, 'a_remote_command');
     }

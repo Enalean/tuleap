@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All rights reserved
+ * Copyright (c) Enalean, 2016-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -145,6 +145,7 @@ class Gitolite3LogParser
                 $last_read_char = $this->file_logs_dao->getLastReadLine($log);
                 if (! $last_read_char) {
                     $this->logger->info('Start import of new file: '.$log);
+                    $last_read_char = ['end_line' => 0];
                 } else {
                     $this->logger->info('Import file: '.$log . ' from last position');
                 }

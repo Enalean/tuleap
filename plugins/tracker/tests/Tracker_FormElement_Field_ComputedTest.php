@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -499,10 +499,11 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         );
 
         $artifact  = stub('Tracker_Artifact')->getId()->returns(233);
-        $changeset = stub($artifact)->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
-        $changeset = stub($changeset)->getId()->returns(101);
+        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive('getId')->andReturn(101);
+        stub($artifact)->getLastChangeset()->returns($changeset);
 
-        stub($this->manual_dao)->getManuallySetValueForChangeset($changeset, 233)->returns(array('value' => null));
+        stub($this->manual_dao)->getManuallySetValueForChangeset(101, 23)->returns(array('value' => null));
         expect($this->field)->getStandardCalculationMode()->once();
         $this->field->getComputedValueWithNoStopOnManualValue($artifact);
     }
@@ -515,10 +516,11 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         );
 
         $artifact  = stub('Tracker_Artifact')->getId()->returns(233);
-        $changeset = stub($artifact)->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
-        $changeset = stub($changeset)->getId()->returns(101);
+        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive('getId')->andReturn(101);
+        stub($artifact)->getLastChangeset()->returns($changeset);
 
-        stub($this->manual_dao)->getManuallySetValueForChangeset($changeset, 233)->returns(array('value' => null));
+        stub($this->manual_dao)->getManuallySetValueForChangeset(101, 23)->returns(array('value' => null));
         expect($this->field)->getStandardCalculationMode()->once();
         $this->field->getComputedValueWithNoStopOnManualValue($artifact);
     }

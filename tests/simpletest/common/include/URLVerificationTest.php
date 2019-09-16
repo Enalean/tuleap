@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -165,7 +165,7 @@ class URLVerificationTest extends URLVerificationBaseTest {
         $urlVerification = new URLVerification();
         $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
-        $this->assertEqual($chunks['protocol'], null);
+        $this->assertFalse(isset($chunks['protocol']));
     }
 
     public function testVerifyProtocolHTTPAndHTTPSIsNotAvailable()
@@ -173,7 +173,7 @@ class URLVerificationTest extends URLVerificationBaseTest {
         $urlVerification = new URLVerification();
         $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
-        $this->assertEqual($chunks['protocol'], null);
+        $this->assertFalse(isset($chunks['protocol']));
     }
 
     public function testVerifyHostHTTPSAndHTTPSIsAvailable()
@@ -183,7 +183,7 @@ class URLVerificationTest extends URLVerificationBaseTest {
         $urlVerification = new URLVerification();
         $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
-        $this->assertEqual($chunks['host'], null);
+        $this->assertFalse(isset($chunks['host']));
     }
 
     public function testVerifyHostHTTPAndHTTPSIsAvailable()
@@ -208,7 +208,7 @@ class URLVerificationTest extends URLVerificationBaseTest {
         $urlVerification = new URLVerification();
         $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
-        $this->assertEqual($chunks['host'], null);
+        $this->assertFalse(isset($chunks['host']));
     }
 }
 
@@ -244,7 +244,7 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
 
-        $this->assertEqual($chunks['script'], null);
+        $this->assertFalse(isset($chunks['script']));
     }
 
     function testVerifyRequestAnonymousWhenAllowed()
@@ -256,7 +256,7 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
 
-        $this->assertEqual($chunks['script'], null);
+        $this->assertFalse(isset($chunks['script']));
     }
 
     function testVerifyRequestAuthenticatedWhenAnonymousAllowed()
@@ -268,7 +268,7 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
 
-        $this->assertEqual($chunks['script'], null);
+        $this->assertFalse(isset($chunks['script']));
     }
 
     function testVerifyRequestAnonymousWhenNotAllowedAtRoot()
@@ -332,7 +332,7 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
 
-        $this->assertEqual($chunks['script'], null);
+        $this->assertFalse(isset($chunks['script']));
     }
 }
 
@@ -611,7 +611,7 @@ class URLVerification_PermissionsOverriderTest extends URLVerificationBaseTest {
     {
         $this->urlVerification->verifyRequest($this->server);
         $chunks = $this->urlVerification->getUrlChunks();
-        return $chunks['script'];
+        return $chunks['script'] ?? null;
     }
 }
 
