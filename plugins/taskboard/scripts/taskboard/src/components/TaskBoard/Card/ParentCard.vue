@@ -59,6 +59,10 @@ export default class ParentCard extends Vue {
             classnames.push(`taskboard-card-background-${this.card.background_color}`);
         }
 
+        if (this.user_has_accessibility_mode) {
+            classnames.push("taskboard-card-with-accessibility");
+        }
+
         if (this.add_show_class) {
             classnames.push("taskboard-card-show");
         }
