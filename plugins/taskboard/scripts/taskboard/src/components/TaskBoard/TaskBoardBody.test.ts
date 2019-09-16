@@ -29,24 +29,26 @@ describe("TaskBoardBody", () => {
                 $store: createStoreMock({
                     state: {
                         columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }],
-                        swimlanes: [
-                            {
-                                card: {
-                                    id: 43,
-                                    label: "Story 2",
-                                    xref: "story #43",
-                                    rank: 11
+                        swimlane: {
+                            swimlanes: [
+                                {
+                                    card: {
+                                        id: 43,
+                                        label: "Story 2",
+                                        xref: "story #43",
+                                        rank: 11
+                                    }
+                                },
+                                {
+                                    card: {
+                                        id: 44,
+                                        label: "Story 3",
+                                        xref: "story #44",
+                                        rank: 12
+                                    }
                                 }
-                            },
-                            {
-                                card: {
-                                    id: 44,
-                                    label: "Story 3",
-                                    xref: "story #44",
-                                    rank: 12
-                                }
-                            }
-                        ]
+                            ]
+                        }
                     }
                 })
             }
@@ -55,13 +57,13 @@ describe("TaskBoardBody", () => {
     });
 
     it("loads all swimlanes as soon as the component is created", () => {
-        const $store = createStoreMock({});
+        const $store = createStoreMock({ state: { swimlane: {} } });
         shallowMount(TaskBoardBody, { mocks: { $store } });
-        expect($store.dispatch).toHaveBeenCalledWith("loadSwimlanes");
+        expect($store.dispatch).toHaveBeenCalledWith("swimlane/loadSwimlanes");
     });
 
     it("displays skeletons when swimlanes are being loaded", () => {
-        const $store = createStoreMock({ state: { is_loading_swimlanes: true } });
+        const $store = createStoreMock({ state: { swimlane: { is_loading_swimlanes: true } } });
         const wrapper = shallowMount(TaskBoardBody, { mocks: { $store } });
         expect(wrapper.contains(SwimlaneSkeleton)).toBe(true);
     });

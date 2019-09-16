@@ -31,25 +31,27 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { Action, State } from "vuex-class";
+import { namespace, State } from "vuex-class";
 import { ColumnDefinition, Swimlane } from "../../type";
 import ParentCard from "./Card/ParentCard.vue";
 import SwimlaneSkeleton from "./SwimlaneSkeleton.vue";
+
+const swimlane = namespace("swimlane");
 
 @Component({
     components: { SwimlaneSkeleton, ParentCard }
 })
 export default class TaskBoardBody extends Vue {
-    @State
+    @swimlane.State
     readonly swimlanes!: Array<Swimlane>;
 
     @State
     readonly columns!: Array<ColumnDefinition>;
 
-    @State
+    @swimlane.State
     readonly is_loading_swimlanes!: boolean;
 
-    @Action
+    @swimlane.Action
     loadSwimlanes!: () => void;
 
     created(): void {

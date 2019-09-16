@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as actions from "./error-actions";
 import * as mutations from "./error-mutations";
 import * as getters from "./error-getters";
 
@@ -25,6 +26,7 @@ export default {
     state: {
         global_error_message: ""
     },
+    actions,
     mutations,
     getters
 };

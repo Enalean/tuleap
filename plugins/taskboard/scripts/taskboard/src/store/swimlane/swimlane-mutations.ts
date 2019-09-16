@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Swimlane, State } from "../type";
+import { Swimlane } from "../../type";
+import { SwimlaneState } from "./swimlane-state";
 
-export function addSwimlanes(state: State, swimlanes: Array<Swimlane>): void {
+export function addSwimlanes(state: SwimlaneState, swimlanes: Array<Swimlane>): void {
     state.swimlanes = [...state.swimlanes, ...swimlanes];
 }
 
-export function setIsLoadingSwimlanes(state: State, is_loading_swimlanes: boolean): void {
+export function setIsLoadingSwimlanes(state: SwimlaneState, is_loading_swimlanes: boolean): void {
     state.is_loading_swimlanes = is_loading_swimlanes;
 }

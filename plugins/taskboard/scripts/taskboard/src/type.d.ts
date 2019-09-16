@@ -45,16 +45,9 @@ interface State {
     has_content: boolean;
     columns: Array<ColumnDefinition>;
     milestone_id: number;
-    swimlanes: Array<Swimlane>;
     user_has_accessibility_mode: boolean;
-    is_loading_swimlanes: boolean;
 }
 
 interface ErrorState {
     global_error_message: string;
-}
-
-interface Context {
-    state: State;
-    commit: Function;
 }
