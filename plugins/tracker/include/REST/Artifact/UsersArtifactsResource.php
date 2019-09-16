@@ -29,6 +29,8 @@ use Tuleap\REST\Header;
 
 class UsersArtifactsResource extends AuthenticatedResource
 {
+    private const MAX_LIMIT = 250;
+
     /**
      * Get user's artifacts
      *
@@ -41,21 +43,31 @@ class UsersArtifactsResource extends AuthenticatedResource
      *
      * @param string $id Id of the desired user, as of today only `self` is allowed to get current user's artifacts
      * @param string $query What artifacts to retrieve {@required}
-     * @param int $offset Offset in the collection
-     * @param int $limit Limit of the collection being returned
+     * @param int $offset Offset in the collection {@min 0}
+     * @param int $limit Limit of the collection being returned {@min 0}{@max 250}
      *
      * @throws RestException 401
      * @throws RestException 400
      * @throws RestException 403
      *
-     * @return array {@type MyArtifactsRepresentation}
+     * @return MyArtifactsRepresentation[]
      */
-    protected function getArtifacts(string $id, string $query, int $offset = 0, int $limit = 250): array
+    protected function getArtifacts(string $id, string $query, int $offset = 0, int $limit = self::MAX_LIMIT): array
     {
         $this->checkAccess();
 
         $controller = new UsersArtifactsResourceController(\UserManager::instance(), \Tracker_ArtifactFactory::instance());
-        return $controller->getArtifacts($id, $query, $offset, $limit);
+        [$total, $artifacts] = $controller->getArtifacts($id, $query, $offset, $limit);
+
+        $this->sendGetArtifactsAllowHeaders();
+        Header::sendPaginationHeaders(
+            $limit,
+            $offset,
+            $total,
+            self::MAX_LIMIT
+        );
+
+        return $artifacts;
     }
 
     /**
@@ -66,6 +78,11 @@ class UsersArtifactsResource extends AuthenticatedResource
      * @access public
      */
     public function options(string $id)
+    {
+        $this->sendGetArtifactsAllowHeaders();
+    }
+
+    private function sendGetArtifactsAllowHeaders()
     {
         Header::allowOptionsGet();
     }

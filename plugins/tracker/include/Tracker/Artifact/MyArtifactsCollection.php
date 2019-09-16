@@ -23,6 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact;
 
+use PFUser;
+use Tracker;
+use Tracker_Artifact;
+use Tracker_Semantic_Title;
+use TrackerFactory;
+
 class MyArtifactsCollection implements \Countable
 {
     /**
@@ -31,31 +37,30 @@ class MyArtifactsCollection implements \Countable
     private $trackers = [];
     private $trackers_has_title = [];
     private $artifacts = [];
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+    /**
+     * @var int
+     */
+    private $nb_max_artifacts = 0;
 
-    public function hasTracker(int $tracker_id): bool
+    public function __construct(TrackerFactory $tracker_factory)
     {
-        return isset($this->trackers[$tracker_id]);
+        $this->tracker_factory = $tracker_factory;
     }
 
-    public function addTracker(int $tracker_id, \Tracker $tracker, bool $with_title): void
+    public function trackerHasArtifactId(Tracker $tracker, int $artifact_id): bool
     {
-        $this->trackers[$tracker_id] = $tracker;
-        $this->trackers_has_title[$tracker_id] = $with_title;
+        return isset($this->artifacts[(int) $tracker->getId()][$artifact_id]);
     }
 
-    public function trackerHasArtifact(int $tracker_id, int $artifact_id): bool
+    public function addArtifactForTracker(Tracker $tracker, Tracker_Artifact $artifact): void
     {
-        return isset($this->artifacts[$tracker_id][$artifact_id]);
-    }
-
-    public function trackerHasTitle(int $tracker_id): bool
-    {
-        return isset($this->trackers_has_title[$tracker_id]);
-    }
-
-    public function addArtifactForTracker(int $tracker_id, int $artifact_id, \Tracker_Artifact $artifact): void
-    {
-        $this->artifacts[$tracker_id][$artifact_id] = $artifact;
+        if ($artifact->userCanView()) {
+            $this->artifacts[(int) $tracker->getId()][(int) $artifact->getId()] = $artifact;
+        }
     }
 
     public function count(): int
@@ -64,23 +69,22 @@ class MyArtifactsCollection implements \Countable
     }
 
     /**
-     * @return \Tracker[]
+     * @return Tracker[]
      */
     public function getTrackers(): array
     {
         return $this->trackers;
     }
 
-    public function getArtifactsInTrackerCount(\Tracker $tracker): int
+    public function getArtifactsInTrackerCount(Tracker $tracker): int
     {
         return count($this->artifacts[(int) $tracker->getId()]);
     }
 
     /**
-     * @param \Tracker $tracker
-     * @return \Tracker_Artifact[]
+     * @return Tracker_Artifact[]
      */
-    public function getArtifactsInTracker(\Tracker $tracker): array
+    public function getArtifactsInTracker(Tracker $tracker): array
     {
         return $this->artifacts[(int) $tracker->getId()];
     }
@@ -94,8 +98,49 @@ class MyArtifactsCollection implements \Countable
         }
     }
 
-    public function getArtifactTracker(\Tracker_Artifact $artifact): \Tracker
+    public function getTrackerById(int $tracker_id): Tracker
     {
-        return $this->trackers[(int) $artifact->getTrackerId()];
+        return $this->trackers[$tracker_id];
+    }
+
+    public function setTracker(int $tracker_id, PFUser $user): Tracker
+    {
+        if (! isset($this->trackers[$tracker_id])) {
+            $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+
+            $with_title = false;
+            if (($title_field = Tracker_Semantic_Title::load($tracker)->getField()) && $title_field->userCanRead($user)) {
+                $with_title = true;
+            }
+
+            $this->trackers[(int) $tracker->getId()] = $tracker;
+            $this->trackers_has_title[(int) $tracker->getId()] = $with_title;
+
+            return $tracker;
+        }
+        return $this->trackers[$tracker_id];
+    }
+
+    public function getRowAccordingToTrackerPermissions(Tracker $tracker, array $row): array
+    {
+        if (! $this->trackerHasTitle($tracker)) {
+            $row['title'] = '';
+        }
+        return $row;
+    }
+
+    private function trackerHasTitle(Tracker $tracker): bool
+    {
+        return isset($this->trackers_has_title[(int) $tracker->getId()]);
+    }
+
+    public function setTotalNumberOfArtifacts(int $nb_max_artifacts): void
+    {
+        $this->nb_max_artifacts = $nb_max_artifacts;
+    }
+
+    public function getTotalNumberOfArtifacts(): int
+    {
+        return $this->nb_max_artifacts;
     }
 }

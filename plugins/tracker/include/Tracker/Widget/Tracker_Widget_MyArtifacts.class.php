@@ -121,16 +121,16 @@ class Tracker_Widget_MyArtifacts extends Widget {
 
         $taf = Tracker_ArtifactFactory::instance();
         $um = UserManager::instance();
-        $user_id = $um->getCurrentUser()->getId();
+        $user = $um->getCurrentUser();
         switch ($this->artifact_show) {
             case 'A':
-                $my_artifacts = $taf->getUserOpenArtifactsAssignedTo($user_id);
+                $my_artifacts = $taf->getUserOpenArtifactsAssignedTo($user);
             break;
             case 'S':
-                $my_artifacts = $taf->getUserOpenArtifactsSubmittedBy($user_id);
+                $my_artifacts = $taf->getUserOpenArtifactsSubmittedBy($user);
             break;
             default:
-                $my_artifacts = $taf->getUserOpenArtifactsSubmittedByOrAssignedTo($user_id);
+                $my_artifacts = $taf->getUserOpenArtifactsSubmittedByOrAssignedTo($user);
             break;
         }
 

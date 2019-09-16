@@ -78,24 +78,24 @@ class UsersArtifactsResourceController
 
         $user = $this->user_manager->getCurrentUser();
         if ($submitted_by && $assigned_to) {
-            $users_artifacts = $this->artifact_factory->getUserOpenArtifactsSubmittedByOrAssignedTo($user->getId());
+            $users_artifacts = $this->artifact_factory->getUserOpenArtifactsSubmittedByOrAssignedTo($user, $offset, $limit);
         } elseif ($submitted_by) {
-            $users_artifacts = $this->artifact_factory->getUserOpenArtifactsSubmittedBy($user->getId());
+            $users_artifacts = $this->artifact_factory->getUserOpenArtifactsSubmittedBy($user, $offset, $limit);
         } elseif ($assigned_to) {
-            $users_artifacts = $this->artifact_factory->getUserOpenArtifactsAssignedTo($user->getId());
+            $users_artifacts = $this->artifact_factory->getUserOpenArtifactsAssignedTo($user, $offset, $limit);
         } else {
             throw new RestException(400, 'You must specify either `assigned_to: true` or `submitted_by: true`');
         }
 
-        $representations = [];
+        $artifacts = [];
         foreach ($users_artifacts->getArtifacts() as $artifact) {
             assert($artifact instanceof \Tracker_Artifact);
-            $representations[] = (new MyArtifactsRepresentation())->build(
+            $artifacts[] = (new MyArtifactsRepresentation())->build(
                 $artifact,
-                (new MinimalTrackerRepresentation())->build($users_artifacts->getArtifactTracker($artifact))
+                (new MinimalTrackerRepresentation())->build($artifact->getTracker())
             );
         }
 
-        return $representations;
+        return [$users_artifacts->getTotalNumberOfArtifacts(), $artifacts];
     }
 }
