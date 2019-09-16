@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div>
+    <div class="taskboard-app">
         <under-construction-modal/>
         <global-app-error v-if="has_global_error"/>
         <board-without-any-columns-error v-else-if="! has_at_least_one_column"/>
