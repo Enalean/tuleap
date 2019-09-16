@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@import '../../../src/www/themes/BurningParrot/css/includes/global-variables';
 @import '../../agiledashboard/www/themes/BurningParrot/css/header';
 @import 'includes/header';
 @import 'includes/body';
@@ -27,11 +28,19 @@
 }
 
 .taskboard-root {
-    padding: $tlp-spacing 0 0;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height});
+    margin: $tlp-spacing 0 0;
+}
+
+.taskboard-app {
+    flex-grow: 1;
 }
 
 .taskboard {
     width: 100%;
+    height: 100%;
     table-layout: fixed;
     border-collapse: collapse;
 }

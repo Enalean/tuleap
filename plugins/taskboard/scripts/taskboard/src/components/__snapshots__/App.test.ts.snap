@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`App displays empty state when there is no content 1`] = `
-<div>
+<div
+  class="taskboard-app"
+>
   <under-construction-modal-stub />
    
   <no-content-empty-state-stub />
@@ -9,7 +11,9 @@ exports[`App displays empty state when there is no content 1`] = `
 `;
 
 exports[`App displays misconfiguration error even if there are no content 1`] = `
-<div>
+<div
+  class="taskboard-app"
+>
   <under-construction-modal-stub />
    
   <board-without-any-columns-error-stub />
@@ -17,7 +21,9 @@ exports[`App displays misconfiguration error even if there are no content 1`] = 
 `;
 
 exports[`App displays misconfiguration error when there are no column 1`] = `
-<div>
+<div
+  class="taskboard-app"
+>
   <under-construction-modal-stub />
    
   <board-without-any-columns-error-stub />
@@ -25,7 +31,9 @@ exports[`App displays misconfiguration error when there are no column 1`] = `
 `;
 
 exports[`App displays the board when there are columns 1`] = `
-<div>
+<div
+  class="taskboard-app"
+>
   <under-construction-modal-stub />
    
   <task-board-stub />

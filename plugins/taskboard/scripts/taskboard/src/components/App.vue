@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div>
+    <div class="taskboard-app">
         <under-construction-modal/>
         <board-without-any-columns-error v-if="! has_at_least_one_column"/>
         <task-board v-else-if="has_content"/>
