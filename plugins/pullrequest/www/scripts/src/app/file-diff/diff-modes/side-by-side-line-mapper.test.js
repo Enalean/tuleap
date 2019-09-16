@@ -27,8 +27,8 @@ describe("side-by-side line mapper", () => {
             left_code_mirror = buildCodeMirrorSpy();
             right_code_mirror = buildCodeMirrorSpy();
 
-            left_code_mirror.getLineHandle.and.returnValue("handle");
-            right_code_mirror.getLineHandle.and.returnValue("handle");
+            left_code_mirror.getLineHandle.mockReturnValue("handle");
+            right_code_mirror.getLineHandle.mockReturnValue("handle");
         });
 
         describe("Unmoved lines -", () => {
@@ -41,14 +41,24 @@ describe("side-by-side line mapper", () => {
                 const first_line_right_handle = {};
                 const second_line_left_handle = {};
                 const second_line_right_handle = {};
-                left_code_mirror.getLineHandle.withArgs(0).and.returnValue(first_line_left_handle);
-                left_code_mirror.getLineHandle.withArgs(1).and.returnValue(second_line_left_handle);
-                right_code_mirror.getLineHandle
-                    .withArgs(0)
-                    .and.returnValue(first_line_right_handle);
-                right_code_mirror.getLineHandle
-                    .withArgs(1)
-                    .and.returnValue(second_line_right_handle);
+                left_code_mirror.getLineHandle.mockImplementation(value => {
+                    if (value === 0) {
+                        return first_line_left_handle;
+                    }
+                    if (value === 1) {
+                        return second_line_left_handle;
+                    }
+                    throw new Error(value);
+                });
+                right_code_mirror.getLineHandle.mockImplementation(value => {
+                    if (value === 0) {
+                        return first_line_right_handle;
+                    }
+                    if (value === 1) {
+                        return second_line_right_handle;
+                    }
+                    throw new Error(value);
+                });
 
                 const map = buildLineToLineHandlesMap(
                     lines,
@@ -82,15 +92,24 @@ describe("side-by-side line mapper", () => {
                 const first_line_before_group_left_handle = {};
                 const first_added_line_right_handle = {};
                 const second_added_line_right_handle = {};
-                left_code_mirror.getLineHandle
-                    .withArgs(0)
-                    .and.returnValue(first_line_before_group_left_handle);
-                right_code_mirror.getLineHandle
-                    .withArgs(1)
-                    .and.returnValue(first_added_line_right_handle);
-                right_code_mirror.getLineHandle
-                    .withArgs(2)
-                    .and.returnValue(second_added_line_right_handle);
+                left_code_mirror.getLineHandle.mockImplementation(value => {
+                    if (value === 0) {
+                        return first_line_before_group_left_handle;
+                    }
+                    throw new Error(value);
+                });
+                right_code_mirror.getLineHandle.mockImplementation(value => {
+                    if (value === 0) {
+                        return {};
+                    }
+                    if (value === 1) {
+                        return first_added_line_right_handle;
+                    }
+                    if (value === 2) {
+                        return second_added_line_right_handle;
+                    }
+                    throw new Error(value);
+                });
 
                 const added_group = {
                     unidiff_offsets: [2, 3],
@@ -123,13 +142,21 @@ describe("side-by-side line mapper", () => {
                 const first_line_left_handle = {};
                 const first_line_right_handle = {};
                 const second_line_right_handle = {};
-                left_code_mirror.getLineHandle.withArgs(0).and.returnValue(first_line_left_handle);
-                right_code_mirror.getLineHandle
-                    .withArgs(0)
-                    .and.returnValue(first_line_right_handle);
-                right_code_mirror.getLineHandle
-                    .withArgs(1)
-                    .and.returnValue(second_line_right_handle);
+                left_code_mirror.getLineHandle.mockImplementation(value => {
+                    if (value === 0) {
+                        return first_line_left_handle;
+                    }
+                    throw new Error(value);
+                });
+                right_code_mirror.getLineHandle.mockImplementation(value => {
+                    if (value === 0) {
+                        return first_line_right_handle;
+                    }
+                    if (value === 1) {
+                        return second_line_right_handle;
+                    }
+                    throw new Error(value);
+                });
 
                 const added_group = {
                     unidiff_offsets: [1, 2],
@@ -171,15 +198,27 @@ describe("side-by-side line mapper", () => {
                 const third_deleted_line_left_handle = {};
                 const first_line_after_group_right_handle = {};
 
-                left_code_mirror.getLineHandle
-                    .withArgs(1)
-                    .and.returnValue(second_deleted_line_left_handle);
-                left_code_mirror.getLineHandle
-                    .withArgs(2)
-                    .and.returnValue(third_deleted_line_left_handle);
-                right_code_mirror.getLineHandle
-                    .withArgs(1)
-                    .and.returnValue(first_line_after_group_right_handle);
+                left_code_mirror.getLineHandle.mockImplementation(value => {
+                    if (value === 0 || value === 3) {
+                        return {};
+                    }
+                    if (value === 1) {
+                        return second_deleted_line_left_handle;
+                    }
+                    if (value === 2) {
+                        return third_deleted_line_left_handle;
+                    }
+                    throw new Error(value);
+                });
+                right_code_mirror.getLineHandle.mockImplementation(value => {
+                    if (value === 0) {
+                        return {};
+                    }
+                    if (value === 1) {
+                        return first_line_after_group_right_handle;
+                    }
+                    throw new Error(value);
+                });
 
                 const deleted_group = {
                     unidiff_offsets: [2, 3],
@@ -213,11 +252,24 @@ describe("side-by-side line mapper", () => {
                 const first_line_left_handle = {};
                 const second_line_left_handle = {};
                 const third_line_right_handle = {};
-                right_code_mirror.getLineHandle
-                    .withArgs(0)
-                    .and.returnValue(third_line_right_handle);
-                left_code_mirror.getLineHandle.withArgs(0).and.returnValue(first_line_left_handle);
-                left_code_mirror.getLineHandle.withArgs(1).and.returnValue(second_line_left_handle);
+                left_code_mirror.getLineHandle.mockImplementation(value => {
+                    if (value === 0) {
+                        return first_line_left_handle;
+                    }
+                    if (value === 1) {
+                        return second_line_left_handle;
+                    }
+                    if (value === 2) {
+                        return {};
+                    }
+                    throw new Error(value);
+                });
+                right_code_mirror.getLineHandle.mockImplementation(value => {
+                    if (value === 0) {
+                        return third_line_right_handle;
+                    }
+                    throw new Error(value);
+                });
 
                 const deleted_group = {
                     unidiff_offsets: [1, 2],
@@ -250,11 +302,21 @@ describe("side-by-side line mapper", () => {
                 const first_line_left_handle = {};
                 const first_line_right_handle = {};
                 const second_line_left_handle = {};
-                left_code_mirror.getLineHandle.withArgs(0).and.returnValue(first_line_left_handle);
-                left_code_mirror.getLineHandle.withArgs(1).and.returnValue(second_line_left_handle);
-                right_code_mirror.getLineHandle
-                    .withArgs(0)
-                    .and.returnValue(first_line_right_handle);
+                left_code_mirror.getLineHandle.mockImplementation(value => {
+                    if (value === 0) {
+                        return first_line_left_handle;
+                    }
+                    if (value === 1) {
+                        return second_line_left_handle;
+                    }
+                    throw new Error(value);
+                });
+                right_code_mirror.getLineHandle.mockImplementation(value => {
+                    if (value === 0) {
+                        return first_line_right_handle;
+                    }
+                    throw new Error(value);
+                });
 
                 const deleted_group = {
                     unidiff_offsets: [1, 2],
@@ -283,6 +345,7 @@ describe("side-by-side line mapper", () => {
 });
 
 function buildCodeMirrorSpy() {
-    //eslint-disable-next-line jasmine/no-unsafe-spy
-    return jasmine.createSpyObj("code_mirror", ["getLineHandle"]);
+    return {
+        getLineHandle: jest.fn()
+    };
 }

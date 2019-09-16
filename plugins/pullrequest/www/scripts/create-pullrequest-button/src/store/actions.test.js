@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,41 +18,23 @@
  */
 
 import * as actions from "./actions.js";
-
-import {
-    restore as restoreRestQuerier,
-    rewire$getBranches,
-    rewire$createPullrequest
-} from "../api/rest-querier.js";
-import { restore as restoreWindow, rewire$redirectTo } from "../helpers/window-helper.js";
+import * as rest_querier from "../api/rest-querier.js";
+import * as window_helper from "../helpers/window-helper.js";
 
 describe("Store actions", () => {
-    let getBranches, createPullrequest, redirectTo, context;
+    let context;
 
     beforeEach(() => {
         context = {
-            commit: jasmine.createSpy("commit")
+            commit: jest.fn()
         };
-
-        getBranches = jasmine.createSpy("getBranches");
-        rewire$getBranches(getBranches);
-
-        createPullrequest = jasmine.createSpy("createPullrequest");
-        rewire$createPullrequest(createPullrequest);
-
-        redirectTo = jasmine.createSpy("redirectTo");
-        rewire$redirectTo(redirectTo);
-    });
-
-    afterEach(() => {
-        restoreRestQuerier();
-        restoreWindow();
     });
 
     describe("init", () => {
         it("loads branches of current repository and store them as source branches", async () => {
             const branches = [{ name: "master" }, { name: "feature/branch" }];
-            getBranches.withArgs(42).and.returnValue(Promise.resolve(branches));
+            const getBranches = jest.spyOn(rest_querier, "getBranches");
+            getBranches.mockReturnValue(Promise.resolve(branches));
 
             await actions.init(context, { repository_id: 42, project_id: 101 });
 
@@ -70,7 +52,8 @@ describe("Store actions", () => {
 
         it("loads branches of current repository and store them as destination branches if there is no parent repository", async () => {
             const branches = [{ name: "master" }, { name: "feature/branch" }];
-            getBranches.withArgs(42).and.returnValue(Promise.resolve(branches));
+            const getBranches = jest.spyOn(rest_querier, "getBranches");
+            getBranches.mockReturnValue(Promise.resolve(branches));
 
             await actions.init(context, { repository_id: 42, project_id: 101 });
 
@@ -88,8 +71,15 @@ describe("Store actions", () => {
         it("loads branches of parent repository and add them as destination branches", async () => {
             const branches = [{ name: "master" }, { name: "feature/branch" }];
             const parent_branches = [{ name: "master" }, { name: "dev" }];
-            getBranches.withArgs(42).and.returnValue(Promise.resolve(branches));
-            getBranches.withArgs(66).and.returnValue(Promise.resolve(parent_branches));
+            jest.spyOn(rest_querier, "getBranches").mockImplementation(id => {
+                if (id === 42) {
+                    return Promise.resolve(branches);
+                }
+                if (id === 66) {
+                    return Promise.resolve(parent_branches);
+                }
+                throw new Error("Unexpected ID: " + id);
+            });
 
             await actions.init(context, {
                 repository_id: 42,
@@ -118,7 +108,7 @@ describe("Store actions", () => {
         });
 
         it("switch the error flag if REST API returns an error", async () => {
-            getBranches.and.returnValue(Promise.reject(500));
+            jest.spyOn(rest_querier, "getBranches").mockReturnValue(Promise.reject(500));
 
             await actions.init(context, {
                 repository_id: 42,
@@ -146,7 +136,10 @@ describe("Store actions", () => {
 
         it("calls the rest api to create the pull request", async () => {
             const created_pullrequest = { id: 1 };
-            createPullrequest.and.returnValue(Promise.resolve(created_pullrequest));
+            const createPullrequest = jest.spyOn(rest_querier, "createPullrequest");
+            createPullrequest.mockReturnValue(Promise.resolve(created_pullrequest));
+
+            jest.spyOn(window_helper, "redirectTo").mockImplementation(() => {});
 
             await actions.create(context, { source_branch, destination_branch });
 
@@ -155,7 +148,10 @@ describe("Store actions", () => {
 
         it("it does a full page reload to redirect to the created pull request", async () => {
             const created_pullrequest = { id: 1 };
-            createPullrequest.and.returnValue(Promise.resolve(created_pullrequest));
+            const createPullrequest = jest.spyOn(rest_querier, "createPullrequest");
+            createPullrequest.mockReturnValue(Promise.resolve(created_pullrequest));
+
+            const redirectTo = jest.spyOn(window_helper, "redirectTo").mockImplementation(() => {});
 
             await actions.create(context, { source_branch, destination_branch });
 
@@ -165,7 +161,8 @@ describe("Store actions", () => {
         });
 
         it("Logs an error if the creation failed", async () => {
-            createPullrequest.and.returnValue(
+            const createPullrequest = jest.spyOn(rest_querier, "createPullrequest");
+            createPullrequest.mockReturnValue(
                 Promise.reject({
                     response: {
                         json() {

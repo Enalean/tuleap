@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,14 +19,7 @@
 
 import { buildCodePlaceholderWidget } from "./side-by-side-code-placeholder-builder.js";
 import { ADDED_GROUP, DELETED_GROUP } from "./side-by-side-line-grouper.js";
-import {
-    rewire$getLineHandles,
-    rewire$getGroupOfLine,
-    rewire$getGroupLines,
-    rewire$hasNextLine,
-    rewire$getNextLine,
-    restore as restoreState
-} from "./side-by-side-lines-state.js";
+import * as side_by_side_lines_state from "./side-by-side-lines-state.js";
 
 describe("side-by-side code placeholder builder", () => {
     const left_code_mirror = {};
@@ -34,20 +27,11 @@ describe("side-by-side code placeholder builder", () => {
     let getLineHandles, getGroupOfLine, getGroupLines, hasNextLine, getNextLine;
 
     beforeEach(() => {
-        getLineHandles = jasmine.createSpy("getLineHandles");
-        rewire$getLineHandles(getLineHandles);
-        getGroupOfLine = jasmine.createSpy("getGroupOfLine");
-        rewire$getGroupOfLine(getGroupOfLine);
-        getGroupLines = jasmine.createSpy("getGroupLines");
-        rewire$getGroupLines(getGroupLines);
-        hasNextLine = jasmine.createSpy("hasNextLine");
-        rewire$hasNextLine(hasNextLine);
-        getNextLine = jasmine.createSpy("getNextLine");
-        rewire$getNextLine(getNextLine);
-    });
-
-    afterEach(() => {
-        restoreState();
+        getLineHandles = jest.spyOn(side_by_side_lines_state, "getLineHandles");
+        getGroupOfLine = jest.spyOn(side_by_side_lines_state, "getGroupOfLine");
+        getGroupLines = jest.spyOn(side_by_side_lines_state, "getGroupLines");
+        hasNextLine = jest.spyOn(side_by_side_lines_state, "hasNextLine");
+        getNextLine = jest.spyOn(side_by_side_lines_state, "getNextLine");
     });
 
     describe("buildCodePlaceholderWidget()", () => {
@@ -58,21 +42,34 @@ describe("side-by-side code placeholder builder", () => {
                 const first_right_handle = {};
                 const first_left_handle = { height: 40 };
                 const second_left_handle = { height: 20 };
-                getLineHandles.withArgs(first_deleted_line).and.returnValue({
-                    left_handle: first_left_handle,
-                    right_handle: first_right_handle
+                getLineHandles.mockImplementation(value => {
+                    if (value === first_deleted_line) {
+                        return {
+                            left_handle: first_left_handle,
+                            right_handle: first_right_handle
+                        };
+                    }
+                    if (value === second_deleted_line) {
+                        return { left_handle: second_left_handle };
+                    }
+                    throw new Error(value);
                 });
-                getLineHandles
-                    .withArgs(second_deleted_line)
-                    .and.returnValue({ left_handle: second_left_handle });
                 const group = {
                     unidiff_offsets: [2, 3],
                     type: DELETED_GROUP
                 };
-                getGroupOfLine.withArgs(first_deleted_line).and.returnValue(group);
-                getGroupLines
-                    .withArgs(group)
-                    .and.returnValue([first_deleted_line, second_deleted_line]);
+                getGroupOfLine.mockImplementation(value => {
+                    if (value === first_deleted_line) {
+                        return group;
+                    }
+                    throw new Error(value);
+                });
+                getGroupLines.mockImplementation(value => {
+                    if (value === group) {
+                        return [first_deleted_line, second_deleted_line];
+                    }
+                    throw new Error(value);
+                });
 
                 const widget_params = buildCodePlaceholderWidget(
                     first_deleted_line,
@@ -96,21 +93,29 @@ describe("side-by-side code placeholder builder", () => {
                 const first_right_handle = { height: 20 };
                 const first_left_handle = { height: 20 };
                 const second_left_handle = { height: 57 };
-                getLineHandles.withArgs(first_deleted_line).and.returnValue({
-                    left_handle: first_left_handle,
-                    right_handle: first_right_handle
+                getLineHandles.mockImplementation(value => {
+                    if (value === first_deleted_line) {
+                        return {
+                            left_handle: first_left_handle,
+                            right_handle: first_right_handle
+                        };
+                    }
+                    if (value === second_deleted_line) {
+                        return { left_handle: second_left_handle };
+                    }
+                    throw new Error(value);
                 });
-                getLineHandles
-                    .withArgs(second_deleted_line)
-                    .and.returnValue({ left_handle: second_left_handle });
                 const group = {
                     unidiff_offsets: [1, 2],
                     type: DELETED_GROUP
                 };
-                getGroupOfLine.and.returnValue(group);
-                getGroupLines
-                    .withArgs(group)
-                    .and.returnValue([first_deleted_line, second_deleted_line]);
+                getGroupOfLine.mockReturnValue(group);
+                getGroupLines.mockImplementation(value => {
+                    if (value === group) {
+                        return [first_deleted_line, second_deleted_line];
+                    }
+                    throw new Error(value);
+                });
 
                 const widget_params = buildCodePlaceholderWidget(
                     first_deleted_line,
@@ -135,21 +140,34 @@ describe("side-by-side code placeholder builder", () => {
                 const first_left_handle = {};
                 const first_right_handle = { height: 20 };
                 const second_right_handle = { height: 40 };
-                getLineHandles.withArgs(first_added_line).and.returnValue({
-                    left_handle: first_left_handle,
-                    right_handle: first_right_handle
+                getLineHandles.mockImplementation(value => {
+                    if (value === first_added_line) {
+                        return {
+                            left_handle: first_left_handle,
+                            right_handle: first_right_handle
+                        };
+                    }
+                    if (value === second_added_line) {
+                        return { right_handle: second_right_handle };
+                    }
+                    throw new Error(value);
                 });
-                getLineHandles
-                    .withArgs(second_added_line)
-                    .and.returnValue({ right_handle: second_right_handle });
                 const group = {
                     unidiff_offsets: [2, 3],
                     type: ADDED_GROUP
                 };
-                getGroupOfLine.withArgs(first_added_line).and.returnValue(group);
-                getGroupLines
-                    .withArgs(group)
-                    .and.returnValue([first_added_line, second_added_line]);
+                getGroupOfLine.mockImplementation(value => {
+                    if (value === first_added_line) {
+                        return group;
+                    }
+                    throw new Error(value);
+                });
+                getGroupLines.mockImplementation(value => {
+                    if (value === group) {
+                        return [first_added_line, second_added_line];
+                    }
+                    throw new Error(value);
+                });
 
                 const widget_params = buildCodePlaceholderWidget(
                     first_added_line,
@@ -172,21 +190,29 @@ describe("side-by-side code placeholder builder", () => {
                 const first_left_handle = { height: 20 };
                 const first_right_handle = { height: 57 };
                 const second_right_handle = { height: 20 };
-                getLineHandles.withArgs(first_added_line).and.returnValue({
-                    left_handle: first_left_handle,
-                    right_handle: first_right_handle
+                getLineHandles.mockImplementation(value => {
+                    if (value === first_added_line) {
+                        return {
+                            left_handle: first_left_handle,
+                            right_handle: first_right_handle
+                        };
+                    }
+                    if (value === second_added_line) {
+                        return { right_handle: second_right_handle };
+                    }
+                    throw new Error(value);
                 });
-                getLineHandles
-                    .withArgs(second_added_line)
-                    .and.returnValue({ right_handle: second_right_handle });
                 const group = {
                     unidiff_offsets: [2, 3],
                     type: ADDED_GROUP
                 };
-                getGroupOfLine.and.returnValue(group);
-                getGroupLines
-                    .withArgs(group)
-                    .and.returnValue([first_added_line, second_added_line]);
+                getGroupOfLine.mockReturnValue(group);
+                getGroupLines.mockImplementation(value => {
+                    if (value === group) {
+                        return [first_added_line, second_added_line];
+                    }
+                    throw new Error(value);
+                });
 
                 const widget_params = buildCodePlaceholderWidget(
                     first_added_line,
@@ -208,17 +234,28 @@ describe("side-by-side code placeholder builder", () => {
             it("Given the first line is modified (it will appear as deleted and then added), then the height of the first line will not be subtracted from the height of the widget", () => {
                 const first_deleted_line = { unidiff_offset: 1, old_offset: 1, new_offset: null };
                 const second_added_line = { unidiff_offset: 2, old_offset: null, new_offset: 1 };
-                hasNextLine.withArgs(first_deleted_line).and.returnValue(true);
-                getNextLine.withArgs(first_deleted_line).and.returnValue(second_added_line);
+                hasNextLine.mockImplementation(value => {
+                    if (value === first_deleted_line) {
+                        return true;
+                    }
+                    throw new Error(value);
+                });
+                getNextLine.mockImplementation(value => {
+                    if (value === first_deleted_line) {
+                        return second_added_line;
+                    }
+                    throw new Error(value);
+                });
                 const left_handle = { height: 40 };
                 const right_handle = { height: 40 };
-                getLineHandles.withArgs(first_deleted_line).and.returnValue({
-                    left_handle,
-                    right_handle
-                });
-                getLineHandles.withArgs(second_added_line).and.returnValue({
-                    left_handle,
-                    right_handle
+                getLineHandles.mockImplementation(value => {
+                    if (value === first_deleted_line || value === second_added_line) {
+                        return {
+                            left_handle,
+                            right_handle
+                        };
+                    }
+                    throw new Error(value);
                 });
                 const deleted_group = {
                     unidiff_offsets: [1],
@@ -228,10 +265,24 @@ describe("side-by-side code placeholder builder", () => {
                     unidiff_offsets: [2],
                     type: ADDED_GROUP
                 };
-                getGroupOfLine.withArgs(first_deleted_line).and.returnValue(deleted_group);
-                getGroupOfLine.withArgs(second_added_line).and.returnValue(added_group);
-                getGroupLines.withArgs(deleted_group).and.returnValue([first_deleted_line]);
-                getGroupLines.withArgs(added_group).and.returnValue([second_added_line]);
+                getGroupOfLine.mockImplementation(value => {
+                    if (value === first_deleted_line) {
+                        return deleted_group;
+                    }
+                    if (value === second_added_line) {
+                        return added_group;
+                    }
+                    throw new Error(value);
+                });
+                getGroupLines.mockImplementation(value => {
+                    if (value === deleted_group) {
+                        return [first_deleted_line];
+                    }
+                    if (value === added_group) {
+                        return [second_added_line];
+                    }
+                    throw new Error(value);
+                });
 
                 const widget_params = buildCodePlaceholderWidget(
                     first_deleted_line,

@@ -18,7 +18,7 @@
  */
 
 import angular from "angular";
-import tuleap_pullrequest_module from "tuleap-pullrequest-module";
+import tuleap_pullrequest_module from "../../app/app.js";
 import pullrequest_refs_controller from "./pull-request-refs-controller.js";
 
 import "angular-mocks";
@@ -40,12 +40,12 @@ describe("PullRequestRefsController -", function() {
             SharedPropertiesService: SharedPropertiesService
         });
 
-        spyOn(SharedPropertiesService, "getRepositoryId");
+        jest.spyOn(SharedPropertiesService, "getRepositoryId").mockImplementation(() => {});
     });
 
     describe("isCurrentRepository()", function() {
         it("Given the current repository id in SharedPropertiesService and given a repository object with the same id, when I check if it is the current repository, then it will return true", function() {
-            SharedPropertiesService.getRepositoryId.and.returnValue(14);
+            SharedPropertiesService.getRepositoryId.mockReturnValue(14);
 
             const repository = {
                 id: 14
@@ -57,7 +57,7 @@ describe("PullRequestRefsController -", function() {
         });
 
         it("Given no repository, when I check if it is the current repository, then it will return false", function() {
-            SharedPropertiesService.getRepositoryId.and.returnValue(14);
+            SharedPropertiesService.getRepositoryId.mockReturnValue(14);
 
             const result = PullRequestRefsController.isCurrentRepository();
 

@@ -18,29 +18,33 @@
  */
 
 import angular from "angular";
-import tuleap_pullrequest_module from "tuleap-pullrequest-module";
+import tuleap_pullrequest_module from "../app.js";
 
 import "angular-mocks";
+import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
 describe("PullRequestRestService -", function() {
-    var $httpBackend, PullRequestRestService, ErrorModalService;
+    var $httpBackend, PullRequestRestService, ErrorModalService, wrapPromise;
 
     beforeEach(function() {
+        let $rootScope;
         angular.mock.module(tuleap_pullrequest_module);
 
         angular.mock.inject(function(
+            _$rootScope_,
             _$httpBackend_,
             _ErrorModalService_,
             _PullRequestRestService_
         ) {
+            $rootScope = _$rootScope_;
             $httpBackend = _$httpBackend_;
             ErrorModalService = _ErrorModalService_;
             PullRequestRestService = _PullRequestRestService_;
         });
 
-        spyOn(ErrorModalService, "showError");
+        jest.spyOn(ErrorModalService, "showError").mockImplementation(() => {});
 
-        installPromiseMatchers();
+        wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
     afterEach(function() {
@@ -49,7 +53,7 @@ describe("PullRequestRestService -", function() {
     });
 
     describe("getPullRequest()", function() {
-        it("Given a pull_request id, when I get it, then a GET request will be sent to Tuleap and a promise will be resolved with a pull_request object", function() {
+        it("Given a pull_request id, when I get it, then a GET request will be sent to Tuleap and a promise will be resolved with a pull_request object", async function() {
             var pull_request_id = 83;
 
             var pull_request = {
@@ -72,24 +76,30 @@ describe("PullRequestRestService -", function() {
                 .expectGET("/api/v1/pull_requests/" + pull_request_id)
                 .respond(angular.toJson(pull_request));
 
-            var promise = PullRequestRestService.getPullRequest(pull_request_id);
+            var promise = wrapPromise(PullRequestRestService.getPullRequest(pull_request_id));
             $httpBackend.flush();
 
-            expect(promise).toBeResolvedWith(pull_request);
+            expect(await promise).toEqual(pull_request);
         });
 
-        it("when the server responds with an error, then the error modal will be shown", function() {
+        it("when the server responds with an error, then the error modal will be shown", async function() {
             var pull_request_id = 48;
 
             $httpBackend
                 .expectGET("/api/v1/pull_requests/" + pull_request_id)
                 .respond(403, "Forbidden");
 
-            var promise = PullRequestRestService.getPullRequest(pull_request_id);
+            var promise = wrapPromise(PullRequestRestService.getPullRequest(pull_request_id));
+            $httpBackend.flush();
 
-            expect(promise).toBeRejected();
+            expect.assertions(2);
+            try {
+                await promise;
+            } catch (e) {
+                expect(e.status).toEqual(403);
+            }
             expect(ErrorModalService.showError).toHaveBeenCalledWith(
-                jasmine.objectContaining({
+                expect.objectContaining({
                     status: 403,
                     statusText: ""
                 })
