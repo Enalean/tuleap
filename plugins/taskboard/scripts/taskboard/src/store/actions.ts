@@ -18,23 +18,40 @@
  */
 
 import { Card, Context, Swimlane } from "../type";
-import { recursiveGet } from "tlp";
+import { FetchWrapperError, recursiveGet } from "tlp";
 
 export async function loadSwimlanes(context: Context): Promise<void> {
     context.commit("setIsLoadingSwimlanes", true);
-    await recursiveGet(`/api/v1/taskboard/${context.state.milestone_id}/cards`, {
-        params: {
-            limit: 100,
-            offset: 0
-        },
-        getCollectionCallback: (collection: Card[]): Swimlane[] => {
-            const swimlanes = collection.map(card => {
-                return { card };
-            });
-            context.commit("addSwimlanes", swimlanes);
+    try {
+        await recursiveGet(`/api/v1/taskboard/${context.state.milestone_id}/cards`, {
+            params: {
+                limit: 100,
+                offset: 0
+            },
+            getCollectionCallback: (collection: Card[]): Swimlane[] => {
+                const swimlanes = collection.map(card => {
+                    return { card };
+                });
+                context.commit("addSwimlanes", swimlanes);
 
-            return swimlanes;
-        }
-    });
-    context.commit("setIsLoadingSwimlanes", false);
+                return swimlanes;
+            }
+        });
+    } catch (error) {
+        await handleErrorMessage(context, error);
+    } finally {
+        context.commit("setIsLoadingSwimlanes", false);
+    }
+}
+
+export async function handleErrorMessage(
+    context: Context,
+    rest_error: FetchWrapperError
+): Promise<void> {
+    try {
+        const { error } = await rest_error.response.json();
+        context.commit("error/setGlobalErrorMessage", error.code + " " + error.message);
+    } catch (error) {
+        context.commit("error/setGlobalErrorMessage", "");
+    }
 }

@@ -15,46 +15,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-export interface ColumnDefinition {
-    id: number;
-    label: string;
-    color: string;
-}
+import { has_global_error } from "./error-getters";
+import { ErrorState } from "../../type";
 
-export interface Swimlane {
-    card: Card;
-}
-
-export interface Card {
-    id: number;
-    label: string;
-    xref: string;
-    rank: number;
-    color: string;
-    background_color: string;
-    artifact_html_uri: string;
-}
-
-interface State {
-    user_is_admin: boolean;
-    user_id: number;
-    admin_url: string;
-    has_content: boolean;
-    columns: Array<ColumnDefinition>;
-    milestone_id: number;
-    swimlanes: Array<Swimlane>;
-    user_has_accessibility_mode: boolean;
-    is_loading_swimlanes: boolean;
-}
-
-interface ErrorState {
-    global_error_message: string;
-}
-
-interface Context {
-    state: State;
-    commit: Function;
-}
+describe("has_global_error", () => {
+    it("returns true if there is an error", () => {
+        expect(
+            has_global_error({ global_error_message: "500 Internal Server Error" } as ErrorState)
+        ).toBe(true);
+    });
+    it("returns false if there is no error", () => {
+        expect(has_global_error({ global_error_message: "" } as ErrorState)).toBe(false);
+    });
+});

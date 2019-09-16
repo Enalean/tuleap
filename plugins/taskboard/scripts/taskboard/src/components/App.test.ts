@@ -20,29 +20,48 @@
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import { ColumnDefinition } from "../type";
 
 describe("App", () => {
+    function getStore(
+        has_content: boolean,
+        columns: Array<ColumnDefinition>,
+        has_global_error: boolean
+    ): unknown {
+        return createStoreMock({
+            state: {
+                columns: columns,
+                has_content: has_content,
+                error: {}
+            },
+            getters: {
+                "error/has_global_error": has_global_error
+            }
+        });
+    }
+
     it("displays misconfiguration error when there are no column", () => {
         const wrapper = shallowMount(App, {
-            mocks: { $store: createStoreMock({ state: { columns: [], has_content: true } }) }
+            mocks: { $store: getStore(true, [], false) }
         });
         expect(wrapper.element).toMatchSnapshot();
     });
     it("displays misconfiguration error even if there are no content", () => {
         const wrapper = shallowMount(App, {
-            mocks: { $store: createStoreMock({ state: { columns: [], has_content: false } }) }
+            mocks: { $store: getStore(false, [], false) }
         });
         expect(wrapper.element).toMatchSnapshot();
     });
     it("displays the board when there are columns", () => {
         const wrapper = shallowMount(App, {
             mocks: {
-                $store: createStoreMock({
-                    state: {
-                        columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }],
-                        has_content: true
-                    }
-                })
+                $store: getStore(
+                    true,
+                    [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] as Array<
+                        ColumnDefinition
+                    >,
+                    false
+                )
             }
         });
         expect(wrapper.element).toMatchSnapshot();
@@ -50,12 +69,22 @@ describe("App", () => {
     it("displays empty state when there is no content", () => {
         const wrapper = shallowMount(App, {
             mocks: {
-                $store: createStoreMock({
-                    state: {
-                        columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }],
-                        has_content: false
-                    }
-                })
+                $store: getStore(
+                    false,
+                    [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] as Array<
+                        ColumnDefinition
+                    >,
+                    false
+                )
+            }
+        });
+        expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("displays global error state when there is an error", () => {
+        const wrapper = shallowMount(App, {
+            mocks: {
+                $store: getStore(true, [], true)
             }
         });
         expect(wrapper.element).toMatchSnapshot();

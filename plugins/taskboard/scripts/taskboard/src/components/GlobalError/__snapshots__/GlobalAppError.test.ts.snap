@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GlobalAppError it warns user that something is wrong without too much details 1`] = `
+<div
+  class="empty-page taskboard-error"
+>
+  <div
+    class="empty-page-illustration"
+  >
+    <svg
+      fill="none"
+      height="150"
+      width="360"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <use
+        class="tlp-illustration"
+        href="../../images/illustrations.svg#global-error-state"
+      />
+    </svg>
+  </div>
+   
+  <div
+    class="empty-page-text-with-small-text"
+  >
+    <translate-stub
+      tag="span"
+    >
+      Oops, there's an issue
+    </translate-stub>
+     
+    <div
+      class="empty-page-small-text"
+      data-current-language="en_US"
+      data-msgid="It seems action you try to perform can't be done"
+    >
+      It seems action you try to perform can't be done
+    </div>
+     
+    <div
+      class="taskboard-error-link"
+    >
+      <a
+        data-current-language="en_US"
+        data-msgid="Show error details"
+      >
+        Show error details
+      </a>
+    </div>
+     
+    <!---->
+  </div>
+   
+  <button
+    class="tlp-button-primary tlp-button-large"
+    type="button"
+  >
+    <i
+      class="fa fa-refresh tlp-button-icon"
+    />
+    
+        Reload the page
+    
+  </button>
+</div>
+`;

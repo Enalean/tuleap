@@ -20,7 +20,7 @@
 import * as actions from "./actions";
 import { Card, Context, State } from "../type";
 import * as tlp from "tlp";
-import { RecursiveGetInit } from "tlp";
+import { FetchWrapperError, RecursiveGetInit } from "tlp";
 
 jest.mock("tlp");
 
@@ -66,5 +66,25 @@ describe("loadSwimlanes", () => {
             { card: { id: 43 } },
             { card: { id: 44 } }
         ]);
+    });
+
+    it("Given a rest error, the error message is stored", async () => {
+        tlpRecursiveGetMock.mockImplementation(() => {
+            const error = new Error() as FetchWrapperError;
+            error.response = {
+                json: () =>
+                    Promise.resolve({
+                        error: { code: 500, message: "Internal Server Error" }
+                    })
+            } as Response;
+            throw error;
+        });
+        await actions.loadSwimlanes(context);
+        expect(context.commit).toHaveBeenCalledTimes(3);
+        expect(context.commit).toHaveBeenNthCalledWith(
+            2,
+            "error/setGlobalErrorMessage",
+            "500 Internal Server Error"
+        );
     });
 });
