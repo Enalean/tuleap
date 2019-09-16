@@ -113,6 +113,31 @@ final class PackagesTest extends RestBase
         $this->assertEquals('project_members', $package['permissions_for_groups']['can_read'][0]['short_name']);
     }
 
+    public function testGETReleasePackage(): void
+    {
+        $response = $this->getResponse($this->client->get('frs_packages/1/frs_release'));
+
+        $this->assertGETReleasePackage($response);
+    }
+
+    public function testGETReleasePackageWithUserRESTReadOnlyAdmin(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('frs_packages/1/frs_release'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertGETReleasePackage($response);
+    }
+
+    private function assertGETReleasePackage(Response $response): void
+    {
+        $package = $response->json();
+
+        $this->assertEquals(1, $package["collection"][0]['id']);
+        $this->assertEquals('release1', $package["collection"][0]['name']);
+    }
+
     public function testGETPackageWithoutFRSAdminPermissions(): void
     {
         $response = $this->getResponse($this->client->get('frs_packages/1'), REST_TestDataBuilder::TEST_USER_5_NAME);
