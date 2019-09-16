@@ -62,6 +62,13 @@ class AgileDashboard_KanbanColumnManager {
         return $semantic->getField()->getBind()->getValueDao()->reorder($column_ids);
     }
 
+    /**
+     * @throws AgileDashboard_KanbanColumnNotRemovableException
+     * @throws Kanban_SemanticStatusBasedOnASharedFieldException
+     * @throws Kanban_SemanticStatusNotBoundToStaticValuesException
+     * @throws Kanban_SemanticStatusNotDefinedException
+     * @throws Kanban_TrackerNotDefinedException
+     */
     public function deleteColumn(PFUser $user, AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumn $column)
     {
         $this->kanban_actions_checker->checkUserCanDeleteColumn($user, $kanban, $column);

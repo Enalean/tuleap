@@ -61,6 +61,7 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
     public const KANBAN_TO_BE_DONE_COLUMN_ID = 230;
     public const KANBAN_ONGOING_COLUMN_ID    = 231;
     public const KANBAN_REVIEW_COLUMN_ID     = 232;
+    public const KANBAN_OTHER_VALUE_COLUMN_ID = 233;
 
     public const PLANNING_ID = 2;
 

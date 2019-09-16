@@ -2361,6 +2361,7 @@
                                             <item ID="V900" label="To be done" is_hidden="0"/>
                                             <item ID="V901" label="On going" is_hidden="0"/>
                                             <item ID="V902" label="Review" is_hidden="0"/>
+                                            <item ID="V905" label="Other open value" is_hidden="0"/>
                                             <item ID="V903" label="Done" is_hidden="0"/>
                                             <item ID="V904" label="Canceled" is_hidden="0"/>
                                         </items>
@@ -2550,6 +2551,7 @@
                         <open_value REF="V900"/>
                         <open_value REF="V901"/>
                         <open_value REF="V902"/>
+                        <open_value REF="V905"/>
                     </open_values>
                 </semantic>
                 <semantic type="contributor">

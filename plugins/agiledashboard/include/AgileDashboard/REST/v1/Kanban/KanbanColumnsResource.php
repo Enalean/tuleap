@@ -19,6 +19,7 @@
 
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
+use AgileDashboard_SemanticStatusNotFoundException;
 use BackendLogger;
 use Luracast\Restler\RestException;
 use Tuleap\Http\HttpClientFactory;
@@ -219,20 +220,28 @@ class KanbanColumnsResource {
             $this->getKanbanProject($kanban)
         );
 
-        $column = $this->kanban_column_factory->getColumnForAKanban($kanban, $id, $current_user);
+        try {
+            $column = $this->kanban_column_factory->getColumnForAKanban($kanban, $id, $current_user);
+        } catch (AgileDashboard_KanbanColumnNotFoundException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        } catch (AgileDashboard_SemanticStatusNotFoundException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        }
 
         try {
             if (! $this->kanban_column_manager->deleteColumn($current_user, $kanban, $column)) {
                 throw new RestException(500);
             }
-        } catch (AgileDashboard_KanbanColumnNotFoundException $exception) {
-            throw new RestException(404, $exception->getMessage());
-        } catch (AgileDashboard_UserNotAdminException $exception) {
-            throw new RestException(401, $exception->getMessage());
-        } catch (AgileDashboard_SemanticStatusNotFoundException $exception) {
-            throw new RestException(404, $exception->getMessage());
         } catch (AgileDashboard_KanbanColumnNotRemovableException $exception) {
             throw new RestException(409, $exception->getMessage());
+        } catch (\Kanban_SemanticStatusBasedOnASharedFieldException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (\Kanban_SemanticStatusNotBoundToStaticValuesException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (\Kanban_SemanticStatusNotDefinedException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (\Kanban_TrackerNotDefinedException $exception) {
+            throw new RestException(400, $exception->getMessage());
         }
 
         if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
