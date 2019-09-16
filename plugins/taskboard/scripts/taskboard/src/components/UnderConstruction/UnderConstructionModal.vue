@@ -31,7 +31,7 @@
         </div>
         <div class="tlp-modal-body">
             <translate tag="p">Hello,</translate>
-            <translate tag="p">Thanks for your interest in Tuleap next features. You're about to test a new feature that is under construction. All the buttons, links, menus, … might not work. Things may also be broken on old browsers like IE11.</translate>
+            <p v-dompurify-html="new_feature"></p>
             <p v-dompurify-html="leave_feedback"></p>
         </div>
         <div class="tlp-modal-footer">
@@ -88,6 +88,12 @@ export default class UnderConstructionModal extends Vue {
     get leave_feedback(): string {
         return this.$gettext(
             'If you have any questions or if you want to leave feedback, drop an email to <a href="mailto:feedback-taskboard@enalean.com">feedback-taskboard@enalean.com</a> or join us on <a href="https://chat.tuleap.org">chat.tuleap.org</a>.'
+        );
+    }
+
+    get new_feature(): string {
+        return this.$gettext(
+            "Thanks for your interest in Tuleap next features. You're about to test a new feature that is under construction. All the buttons, links, menus, … might not work. This application <strong>will not work on IE11</strong>."
         );
     }
 }

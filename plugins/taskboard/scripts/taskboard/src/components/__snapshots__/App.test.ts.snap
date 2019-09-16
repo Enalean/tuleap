@@ -11,7 +11,9 @@ exports[`App displays empty state when there is no content 1`] = `
 `;
 
 exports[`App displays global error state when there is an error 1`] = `
-<div>
+<div
+  class="taskboard-app"
+>
   <under-construction-modal-stub />
    
   <global-app-error-stub />
