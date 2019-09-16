@@ -957,30 +957,6 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testPostFileWithObsolescenceDateWhenObsolescenceDateIsNotAllowedForProject(int $root_id): void
-    {
-        $file_size = 123;
-        $headers   = ['Content-Type' => 'application/json'];
-        $query     = json_encode(
-            [
-                'title'             => 'My File',
-                'file_properties'   => ['file_name' => 'file1', 'file_size' => $file_size],
-                'obsolescence_date' => '3019-05-20'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/files", $headers, $query)
-        );
-
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("obsolescence date", $response->json()["error"]['i18n_error_message']);
-    }
-
-    /**
-     * @depends testGetRootId
-     */
     public function testUpdatePermissionsFolder(int $root_id) : void
     {
         $response_folder_updater_permissions = $this->getResponseByName(
