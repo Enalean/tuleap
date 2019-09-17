@@ -21,10 +21,6 @@
 class TestDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const ADMIN_USER_NAME      = 'admin';
-    public const ADMIN_REAL_NAME      = 'Site Administrator';
-    public const ADMIN_DISPLAY_NAME   = 'Site Administrator (admin)';
-    public const ADMIN_EMAIL          = 'codendi-admin@_DOMAIN_NAME_';
-    public const ADMIN_STATUS         = 'A';
     public const ADMIN_PASSWORD       = 'welcome0';
 
     public const TEST_USER_1_NAME        = 'rest_api_tester_1';
@@ -33,43 +29,31 @@ class TestDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public const TEST_USER_1_PASS        = 'welcome0';
     public const TEST_USER_1_EMAIL       = 'test_user_1@example.com';
     public const TEST_USER_1_LDAPID      = 'tester1';
-    public const TEST_USER_1_STATUS      = 'A';
 
     public const TEST_USER_2_NAME        = 'rest_api_tester_2';
     public const TEST_USER_2_DISPLAYNAME = ' (rest_api_tester_2)';
     public const TEST_USER_2_PASS        = 'welcome0';
-    public const TEST_USER_2_STATUS      = 'A';
     public const TEST_USER_2_EMAIL       = 'test_user_2@example.com';
 
     public const TEST_USER_3_NAME        = 'rest_api_tester_3';
     public const TEST_USER_3_DISPLAYNAME = ' (rest_api_tester_3)';
-    public const TEST_USER_3_PASS        = 'welcome0';
-    public const TEST_USER_3_STATUS      = 'A';
     public const TEST_USER_3_EMAIL       = 'test_user_3@example.com';
 
     public const TEST_USER_5_NAME        = 'rest_api_tester_5';
     public const TEST_USER_5_DISPLAYNAME = ' (rest_api_tester_5)';
     public const TEST_USER_5_PASS        = 'welcome0';
-    public const TEST_USER_5_STATUS      = 'A';
     public const TEST_USER_5_EMAIL       = 'test_user_5@example.com';
 
     public const TEST_USER_RESTRICTED_1_NAME        = 'rest_api_restricted_1';
     public const TEST_USER_RESTRICTED_1_DISPLAYNAME = ' (rest_api_restricted_1)';
-    public const TEST_USER_RESTRICTED_1_PASS        = 'welcome0';
-    public const TEST_USER_RESTRICTED_1_STATUS      = 'R';
     public const TEST_USER_RESTRICTED_1_EMAIL       = 'rest_api_restricted_1@example.com';
 
     public const TEST_USER_RESTRICTED_2_NAME        = 'rest_api_restricted_2';
     public const TEST_USER_RESTRICTED_2_DISPLAYNAME = ' (rest_api_restricted_2)';
-    public const TEST_USER_RESTRICTED_2_PASS        = 'welcome0';
-    public const TEST_USER_RESTRICTED_2_STATUS      = 'R';
     public const TEST_USER_RESTRICTED_2_EMAIL       = 'rest_api_restricted_2@example.com';
 
     public const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME        = "rest_api_delegated_rest_project_manager";
-    public const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_DISPLAYNAME = ' (rest_api_delegated_rest_project_manager)';
     public const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_PASS        = 'welcome0';
-    public const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_STATUS      = 'A';
-    public const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_EMAIL       = 'rest_api_delegated_rest_project_manager@example.com';
 
     public const ADMIN_PROJECT_ID = 100;
 
@@ -79,7 +63,6 @@ class TestDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public const PROJECT_PUBLIC_SHORTNAME                 = 'public';
     public const PROJECT_PUBLIC_MEMBER_SHORTNAME          = 'public-member';
     public const PROJECT_PBI_SHORTNAME                    = 'pbi-6348';
-    public const PROJECT_BACKLOG_DND                      = 'dragndrop';
     public const PROJECT_COMPUTED_FIELDS                  = 'computedfields';
     public const PROJECT_BURNDOWN                         = 'burndown-generation';
     public const PROJECT_DELETED_SHORTNAME                = 'deleted-project';
@@ -107,8 +90,6 @@ class TestDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public const DYNAMIC_UGROUP_PROJECT_MEMBERS_KEY       = 'ugroup_project_members_name_key';
     public const DYNAMIC_UGROUP_PROJECT_ADMINS_ID         = 4;
     public const DYNAMIC_UGROUP_PROJECT_ADMINS_LABEL      = 'project_admins';
-    public const DYNAMIC_UGROUP_AUTHENTICATED_USERS_ID    = 5;
-    public const DYNAMIC_UGROUP_AUTHENTICATED_USERS_LABEL = 'authenticated_users';
     public const DYNAMIC_UGROUP_FILE_MANAGER_ID           = 11;
     public const DYNAMIC_UGROUP_FILE_MANAGER_LABEL        = 'file_manager_admins';
     public const DYNAMIC_UGROUP_WIKI_ADMIN_ID             = 14;
