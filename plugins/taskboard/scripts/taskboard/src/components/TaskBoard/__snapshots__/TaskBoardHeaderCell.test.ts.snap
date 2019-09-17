@@ -1,93 +1,73 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TaskBoardHeaderCell displays a cell with color 1`] = `
-<th
+<div
   class="taskboard-header taskboard-header-fiesta-red"
 >
-  <div
-    class="taskboard-header-content"
+  <span
+    class="taskboard-header-label"
   >
-    <span
-      class="taskboard-header-label"
-    >
-      To do
-    </span>
-     
-    <!---->
-  </div>
-</th>
+    To do
+  </span>
+   
+  <!---->
+</div>
 `;
 
 exports[`TaskBoardHeaderCell displays a cell with default color 1`] = `
-<th
+<div
   class="taskboard-header"
 >
-  <div
-    class="taskboard-header-content"
+  <span
+    class="taskboard-header-label"
   >
-    <span
-      class="taskboard-header-label"
-    >
-      To do
-    </span>
-     
-    <!---->
-  </div>
-</th>
+    To do
+  </span>
+   
+  <!---->
+</div>
 `;
 
 exports[`TaskBoardHeaderCell displays a cell with legacy color to admin users 1`] = `
-<th
+<div
   class="taskboard-header"
 >
-  <div
-    class="taskboard-header-content"
+  <span
+    class="taskboard-header-label"
   >
-    <span
-      class="taskboard-header-label"
-    >
-      To do
-    </span>
-     
-    <wrong-color-popover-stub
-      color="#87DBEF"
-    />
-  </div>
-</th>
+    To do
+  </span>
+   
+  <wrong-color-popover-stub
+    color="#87DBEF"
+  />
+</div>
 `;
 
 exports[`TaskBoardHeaderCell displays a cell with legacy color to regular users 1`] = `
-<th
+<div
   class="taskboard-header"
 >
-  <div
-    class="taskboard-header-content"
+  <span
+    class="taskboard-header-label"
   >
-    <span
-      class="taskboard-header-label"
-    >
-      To do
-    </span>
-     
-    <!---->
-  </div>
-</th>
+    To do
+  </span>
+   
+  <!---->
+</div>
 `;
 
 exports[`TaskBoardHeaderCell displays a cell without color 1`] = `
-<th
+<div
   class="taskboard-header"
 >
-  <div
-    class="taskboard-header-content"
+  <span
+    class="taskboard-header-label"
   >
-    <span
-      class="taskboard-header-label"
-    >
-      To do
-    </span>
-     
-    <!---->
-  </div>
-</th>
+    To do
+  </span>
+   
+  <!---->
+</div>
 `;

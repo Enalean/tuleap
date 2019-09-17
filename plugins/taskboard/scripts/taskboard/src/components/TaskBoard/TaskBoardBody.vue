@@ -19,13 +19,13 @@
   -->
 
 <template>
-    <tbody>
-        <tr class="taskboard-swimlane" v-for="swimlane of swimlanes" v-bind:key="swimlane.card.id">
-            <td class="taskboard-cell"><parent-card v-bind:card="swimlane.card"/></td>
-            <td class="taskboard-cell" v-for="col of columns" v-bind:key="col.id"></td>
-        </tr>
+    <div class="taskboard-body">
+        <div class="taskboard-swimlane" v-for="swimlane of swimlanes" v-bind:key="swimlane.card.id">
+            <div class="taskboard-cell"><parent-card v-bind:card="swimlane.card"/></div>
+            <div class="taskboard-cell" v-for="col of columns" v-bind:key="col.id"></div>
+        </div>
         <swimlane-skeleton v-if="is_loading_swimlanes"/>
-    </tbody>
+    </div>
 </template>
 
 <script lang="ts">

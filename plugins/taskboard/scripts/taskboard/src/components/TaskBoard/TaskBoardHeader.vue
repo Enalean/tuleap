@@ -19,12 +19,10 @@
   -->
 
 <template>
-    <thead>
-        <tr>
-            <th class="taskboard-header"></th>
-            <task-board-header-cell v-for="col of columns" v-bind:key="col.id" v-bind:column="col"/>
-        </tr>
-    </thead>
+    <div class="taskboard-head">
+        <div class="taskboard-header"></div>
+        <task-board-header-cell v-for="col of columns" v-bind:key="col.id" v-bind:column="col"/>
+    </div>
 </template>
 
 <script lang="ts">

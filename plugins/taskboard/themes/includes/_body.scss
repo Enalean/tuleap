@@ -17,8 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.taskboard-body {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+}
+
+
+.taskboard-swimlane {
+    display: flex;
+    justify-self: first baseline;
+    flex: 1;
+
+    &:first-child > .taskboard-cell {
+        border-top: 0;
+    }
+
+    &:only-child > .taskboard-cell,
+    &:last-child > .taskboard-cell {
+        border-bottom: 0;
+    }
+}
+
 .taskboard-cell {
     position: relative;
+    flex: 1;
     min-width: 200px;
     padding: $tlp-half-spacing;
     border: 1px solid $tlp-ui-border-normal;
@@ -28,8 +51,8 @@
     &:first-child {
         background: transparentize($tlp-ui-white, .6);
     }
-}
 
-.taskboard-swimlane:first-child > .taskboard-cell {
-    border-top: 0;
+    &:last-child {
+        border-right: 0;
+    }
 }

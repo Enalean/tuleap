@@ -1,11 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TaskBoard displays a table with header and body 1`] = `
-<table
+<div
   class="taskboard"
 >
   <task-board-header-stub />
    
   <task-board-body-stub />
-</table>
+</div>
 `;

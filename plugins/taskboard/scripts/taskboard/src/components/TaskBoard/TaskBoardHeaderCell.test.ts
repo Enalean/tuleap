@@ -20,39 +20,50 @@
 import { shallowMount } from "@vue/test-utils";
 import TaskBoardHeaderCell from "./TaskBoardHeaderCell.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import { UserState } from "../../store/user/type";
 
 describe("TaskBoardHeaderCell", () => {
     it("displays a cell without color", () => {
         const wrapper = shallowMount(TaskBoardHeaderCell, {
-            mocks: { $store: createStoreMock({ state: { user_is_admin: false } }) },
+            mocks: {
+                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } })
+            },
             propsData: { column: { id: 2, label: "To do", color: "" } }
         });
         expect(wrapper.element).toMatchSnapshot();
     });
     it("displays a cell with color", () => {
         const wrapper = shallowMount(TaskBoardHeaderCell, {
-            mocks: { $store: createStoreMock({ state: { user_is_admin: false } }) },
+            mocks: {
+                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } })
+            },
             propsData: { column: { id: 2, label: "To do", color: "fiesta-red" } }
         });
         expect(wrapper.element).toMatchSnapshot();
     });
     it("displays a cell with default color", () => {
         const wrapper = shallowMount(TaskBoardHeaderCell, {
-            mocks: { $store: createStoreMock({ state: { user_is_admin: false } }) },
+            mocks: {
+                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } })
+            },
             propsData: { column: { id: 2, label: "To do", color: "#F8F8F8" } }
         });
         expect(wrapper.element).toMatchSnapshot();
     });
     it("displays a cell with legacy color to regular users", () => {
         const wrapper = shallowMount(TaskBoardHeaderCell, {
-            mocks: { $store: createStoreMock({ state: { user_is_admin: false } }) },
+            mocks: {
+                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } })
+            },
             propsData: { column: { id: 2, label: "To do", color: "#87DBEF" } }
         });
         expect(wrapper.element).toMatchSnapshot();
     });
     it("displays a cell with legacy color to admin users", () => {
         const wrapper = shallowMount(TaskBoardHeaderCell, {
-            mocks: { $store: createStoreMock({ state: { user_is_admin: true } }) },
+            mocks: {
+                $store: createStoreMock({ state: { user: { user_is_admin: true } as UserState } })
+            },
             propsData: { column: { id: 2, label: "To do", color: "#87DBEF" } }
         });
         expect(wrapper.element).toMatchSnapshot();

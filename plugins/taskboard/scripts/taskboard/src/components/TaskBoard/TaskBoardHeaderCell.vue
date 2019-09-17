@@ -18,19 +18,19 @@
   -
   -->
 <template>
-    <th class="taskboard-header" v-bind:class="classes">
-        <div class="taskboard-header-content">
-            <span class="taskboard-header-label">{{ column.label }}</span>
-            <wrong-color-popover v-if="should_popover_be_displayed" v-bind:color="this.column.color"/>
-        </div>
-    </th>
+    <div class="taskboard-header" v-bind:class="classes">
+        <span class="taskboard-header-label">{{ column.label }}</span>
+        <wrong-color-popover v-if="should_popover_be_displayed" v-bind:color="this.column.color"/>
+    </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { ColumnDefinition } from "../../type";
 import WrongColorPopover from "./WrongColorPopover.vue";
-import { State } from "vuex-class";
+import { namespace } from "vuex-class";
+
+const user = namespace("user");
 
 const DEFAULT_COLOR = "#F8F8F8";
 
@@ -41,7 +41,7 @@ export default class TaskBoardHeaderCell extends Vue {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
 
-    @State
+    @user.State
     readonly user_is_admin!: boolean;
 
     get classes(): string {

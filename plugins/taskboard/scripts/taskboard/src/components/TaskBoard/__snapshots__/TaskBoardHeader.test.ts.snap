@@ -1,18 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TaskBoardHeader displays a header with many columns 1`] = `
-<thead>
-  <tr>
-    <th
-      class="taskboard-header"
-    />
-     
-    <task-board-header-cell-stub
-      column="[object Object]"
-    />
-    <task-board-header-cell-stub
-      column="[object Object]"
-    />
-  </tr>
-</thead>
+<div
+  class="taskboard-head"
+>
+  <div
+    class="taskboard-header"
+  />
+   
+  <task-board-header-cell-stub
+    column="[object Object]"
+  />
+  <task-board-header-cell-stub
+    column="[object Object]"
+  />
+</div>
 `;
