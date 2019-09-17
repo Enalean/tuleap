@@ -28,6 +28,7 @@ namespace Tuleap\Timetracking\REST\v1;
 
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\Time\TimeDao;
+use UserHelper;
 
 class TrackerRepresentationFactory
 {
@@ -51,19 +52,26 @@ class TrackerRepresentationFactory
      */
     private $artifact_factory;
 
+    /**
+     * @var UserHelper
+     */
+    private $user_helper;
+
     public function __construct(
         TimeDao $time_dao,
         PermissionsRetriever $permissions_retriever,
         \TrackerFactory $tracker_factory,
-        \Tracker_ArtifactFactory $artifact_factory
+        \Tracker_ArtifactFactory $artifact_factory,
+        UserHelper $user_helper
     ) {
         $this->time_dao              = $time_dao;
         $this->permissions_retriever = $permissions_retriever;
         $this->tracker_factory       = $tracker_factory;
         $this->artifact_factory      = $artifact_factory;
+        $this->user_helper           = $user_helper;
     }
 
-    public function getTrackersRepresentationWithTimes(array $trackers, DateTrackingTimesPeriod $dates, \PFUser $user, int $limit, int $offset) : array
+    public function getTrackersRepresentationWithTimes(array $trackers, DateTrackingTimesPeriod $dates, \PFUser $user, int $limit, int $offset): array
     {
         $authorized_trackers_ids = [];
         foreach ($trackers as $tracker) {
@@ -81,30 +89,34 @@ class TrackerRepresentationFactory
             $authorized_trackers_ids,
             $dates->getStartDate(),
             $dates->getEndDate(),
+            $this->user_helper->getDisplayNameSQLQuery(),
             $limit,
             $offset
         );
 
         foreach ($authorized_trackers_ids as $tracker_id) {
             $tracker_representation = new TimetrackingTrackerReportRepresentation();
-            $tracker_representation->build($trackers[$tracker_id], $this->getMinutesFromRows($trackers_rows, $tracker_id));
+            $tracker_representation->build($trackers[$tracker_id], $this->getTrackersRow($tracker_id, $trackers_rows));
             $tracker_representations[] = $tracker_representation;
         }
 
         return $tracker_representations;
     }
 
-    private function getMinutesFromRows(array $trackers_rows, int $tracker_id) : int
+    private function getTrackersRow(int $tracker_id, array $trackers_rows): array
     {
-        $minutes = 0;
-        foreach ($trackers_rows as $key => $tracker_row) {
-            if ($tracker_row["tracker_id"] === $tracker_id) {
-                $minutes = (int)($tracker_row[ "minutes" ]);
-                unset($trackers_rows[$key]);
-                break;
+        $selected_rows = [];
+        foreach ($trackers_rows as $tracker_row) {
+            if ($tracker_id === (int)$tracker_row['tracker_id']) {
+                $tracker_user_representation = TimetrackingTrackerUserRepresentation::build(
+                    $tracker_row['full_name'],
+                    (int)$tracker_row['user_id'],
+                    (int)$tracker_row['minutes']
+                );
+                $selected_rows[] = $tracker_user_representation;
             }
         }
 
-        return $minutes;
+        return $selected_rows;
     }
 }

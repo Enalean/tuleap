@@ -29,6 +29,7 @@
                 <i v-bind:class="[are_void_trackers_hidden ? 'fa fa-eye' : 'fa fa-eye-slash']"></i>
                 {{ display_button_text }}
             </button>
+            <time-tracking-overview-user-list v-if="has_users" data-test="user-list-component"/>
         </div>
         <div v-if="is_loading" class="timetracking-loader" data-test="timetracking-loader"></div>
         <table v-if="can_results_be_displayed" class="tlp-table" data-test="overview-table">
@@ -78,11 +79,12 @@
 </template>
 <script>
 import TimeTrackingOverviewTableRow from "./TimeTrackingOverviewTableRow.vue";
+import TimeTrackingOverviewUserList from "./TimeTrackingOverviewUserList.vue";
 import { mapGetters, mapState } from "vuex";
 
 export default {
     name: "TimeTrackingOverviewTable",
-    components: { TimeTrackingOverviewTableRow },
+    components: { TimeTrackingOverviewTableRow, TimeTrackingOverviewUserList },
     computed: {
         ...mapGetters([
             "get_formatted_total_sum",
@@ -90,7 +92,13 @@ export default {
             "can_results_be_displayed",
             "is_sum_of_times_equals_zero"
         ]),
-        ...mapState(["trackers_times", "error_message", "is_loading", "are_void_trackers_hidden"]),
+        ...mapState([
+            "trackers_times",
+            "error_message",
+            "is_loading",
+            "are_void_trackers_hidden",
+            "users"
+        ]),
         time_format_tooltip() {
             return this.$gettext("The time is displayed in hours:minutes");
         },
@@ -99,6 +107,9 @@ export default {
                 this.has_trackers_times &&
                 !(this.are_void_trackers_hidden && this.is_sum_of_times_equals_zero)
             );
+        },
+        has_users() {
+            return this.users.length > 0;
         },
         has_trackers_times() {
             return this.trackers_times.length > 0;

@@ -15,6 +15,9 @@ msgstr ""
 msgid "Add"
 msgstr "Ajouter"
 
+msgid "All users"
+msgstr "Tout les utilisateurs"
+
 msgid "An error occurred"
 msgstr "Une erreur est survenue"
 

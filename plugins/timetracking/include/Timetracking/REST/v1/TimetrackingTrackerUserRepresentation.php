@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2019. All rights reserved.
+ * Copyright Enalean (c) 2019 - present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,51 +22,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\Timetracking\REST\v1;
 
-use Tracker;
-use Tuleap\Project\REST\MinimalProjectRepresentation;
-use Tuleap\REST\JsonCast;
-
-class TimetrackingTrackerReportRepresentation
+class TimetrackingTrackerUserRepresentation
 {
+    /**
+     * @var string
+     */
+    public $user_name;
+
     /**
      * @var int
      */
-    public $id;
+    public $user_id;
 
     /**
-     * @var string
+     * @var int
      */
-    public $uri;
+    public $minutes;
 
-    /**
-     * @var string
-     */
-    public $label;
-
-    /**
-     * @var MinimalProjectRepresentation
-     */
-    public $project;
-
-    /**
-     * @var TimetrackingTrackerUserRepresentation[]
-     */
-    public $time_per_user;
-
-    public function build(Tracker $tracker, array $time_per_user) : void
+    private function __construct(string $user_name, int $user_id, int $minutes)
     {
-        $this->id    = JsonCast::toInt($tracker->getId());
-        $this->uri   = $tracker->getUri();
-        $this->label = $tracker->getName();
+        $this->user_name = $user_name;
+        $this->user_id   = $user_id;
+        $this->minutes   = $minutes;
+    }
 
-        $project_reference = new MinimalProjectRepresentation();
-        $project_reference->buildMinimal($tracker->getProject());
-        $this->project = $project_reference;
-
-        $this->time_per_user = $time_per_user;
+    public static function build(string $user_name, int $user_id, int $minutes) : TimetrackingTrackerUserRepresentation
+    {
+        return new self($user_name, $user_id, $minutes);
     }
 }

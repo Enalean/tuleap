@@ -37,7 +37,9 @@ const state = {
     trackers: [],
     trackers_ids: [],
     projects: [],
-    is_added_tracker: true
+    users: [],
+    is_added_tracker: true,
+    selected_user: null
 };
 
 export default state;

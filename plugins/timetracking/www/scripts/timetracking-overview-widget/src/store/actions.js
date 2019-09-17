@@ -99,7 +99,6 @@ export async function loadTimes(context) {
     context.commit("setIsLoading", true);
 
     const times = await getTimesWithoutNewParameters(context);
-
     context.commit("setTrackersTimes", times);
     context.commit("setIsLoading", false);
 }
