@@ -25,7 +25,13 @@
     background: $tlp-ui-white;
 
     &.taskboard-card-with-accessibility {
-        padding: $tlp-half-spacing $tlp-spacing $tlp-half-spacing ($tlp-half-spacing + 2);
+        &[class*='taskboard-card-background-'] {
+            padding: $tlp-half-spacing $tlp-spacing $tlp-half-spacing ($tlp-half-spacing + 2);
+        }
+
+        &:not([class*='taskboard-card-background-']) > .taskboard-card-accessibility {
+            display: none;
+        }
     }
 
     &.taskboard-card-parent {
