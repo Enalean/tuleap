@@ -23,6 +23,7 @@ services:
     depends_on:
     - ldap
     - db
+    - db57
     - realtime
 
   realtime:
@@ -70,6 +71,14 @@ services:
     volumes:
       - db-data:/var/lib/mysql
 
+  db57:
+    image: mysql:5.7
+    env_file:
+      - .env
+    volumes:
+      - ./src/etc/tuleap-mysql57-dev.cnf:/etc/mysql/mysql.conf.d/tuleap.cnf:ro,cached
+      - db57-data:/var/lib/mysql
+
   redis:
     image: redis:3.2
     volumes:
@@ -97,6 +106,7 @@ volumes:
   ldap-data:
   gerrit-data:
   db-data:
+  db57-data:
   redis-data:
   realtime-conf:
   realtime-cert:
