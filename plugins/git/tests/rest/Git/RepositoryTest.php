@@ -371,6 +371,22 @@ class RepositoryTest extends TestBase {
         $this->assertEquals(403, $response->getStatusCode());
     }
 
+    public function testPOSTGit(): void
+    {
+        $project_id   = $this->getProjectId(GitDataBuilder::PROJECT_TEST_GIT_SHORTNAME);
+        $post_payload = json_encode(
+            array(
+                'project_id' => $project_id,
+                'name' => 'newTestGitRepository'
+            )
+        );
+        $response = $this->getResponse(
+            $this->client->post('git/', null, $post_payload)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+    }
+
     public function testPOSTStatusWithReadOnlyAdmin(): void
     {
         $post_payload = json_encode(
