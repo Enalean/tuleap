@@ -23,7 +23,7 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createStore } from "./src/store";
 import App from "./src/components/App.vue";
 import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
-import { ColumnDefinition, State, Swimlane } from "./src/type";
+import { ColumnDefinition, State } from "./src/type";
 import Vuex from "vuex";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -41,8 +41,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             ? JSON.parse(vue_mount_point.dataset.columns)
             : [];
     const has_content = Boolean(vue_mount_point.dataset.hasContent);
-    const swimlanes: Array<Swimlane> = [];
-    const is_loading_swimlanes = false;
     const milestone_id = Number.parseInt(vue_mount_point.dataset.milestoneId || "0", 10);
     const user_has_accessibility_mode = Boolean(document.body.dataset.userHasAccessibilityMode);
 
@@ -59,8 +57,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         admin_url,
         user_id,
         columns,
-        swimlanes,
-        is_loading_swimlanes,
         has_content,
         milestone_id,
         user_has_accessibility_mode

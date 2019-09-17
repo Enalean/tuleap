@@ -17,19 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, State } from "../type";
-import * as mutations from "./mutations";
+import { ErrorState, State } from "../../type";
+import { FetchWrapperError } from "tlp";
+import { ActionContext } from "vuex";
 
-describe("addSwimlanes", () => {
-    it("add swimlanes to existing ones", () => {
-        const state: State = {
-            swimlanes: [{ card: { id: 42 } }]
-        } as State;
-        mutations.addSwimlanes(state, [{ card: { id: 43 } as Card }, { card: { id: 44 } as Card }]);
-        expect(state.swimlanes).toStrictEqual([
-            { card: { id: 42 } },
-            { card: { id: 43 } },
-            { card: { id: 44 } }
-        ]);
-    });
-});
+export async function handleErrorMessage(
+    context: ActionContext<ErrorState, State>,
+    rest_error: FetchWrapperError
+): Promise<void> {
+    try {
+        const { error } = await rest_error.response.json();
+        context.commit("setGlobalErrorMessage", error.code + " " + error.message);
+    } catch (error) {
+        context.commit("setGlobalErrorMessage", "");
+    }
+}

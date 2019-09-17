@@ -17,13 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, Context, Swimlane } from "../type";
-import { FetchWrapperError, recursiveGet } from "tlp";
+import { Card, State, Swimlane } from "../../type";
+import { recursiveGet } from "tlp";
+import { ActionContext } from "vuex";
+import { SwimlaneState } from "./swimlane-state";
 
-export async function loadSwimlanes(context: Context): Promise<void> {
+export async function loadSwimlanes(context: ActionContext<SwimlaneState, State>): Promise<void> {
     context.commit("setIsLoadingSwimlanes", true);
     try {
-        await recursiveGet(`/api/v1/taskboard/${context.state.milestone_id}/cards`, {
+        await recursiveGet(`/api/v1/taskboard/${context.rootState.milestone_id}/cards`, {
             params: {
                 limit: 100,
                 offset: 0
@@ -38,20 +40,8 @@ export async function loadSwimlanes(context: Context): Promise<void> {
             }
         });
     } catch (error) {
-        await handleErrorMessage(context, error);
+        await context.dispatch("error/handleErrorMessage", error, { root: true });
     } finally {
         context.commit("setIsLoadingSwimlanes", false);
-    }
-}
-
-export async function handleErrorMessage(
-    context: Context,
-    rest_error: FetchWrapperError
-): Promise<void> {
-    try {
-        const { error } = await rest_error.response.json();
-        context.commit("error/setGlobalErrorMessage", error.code + " " + error.message);
-    } catch (error) {
-        context.commit("error/setGlobalErrorMessage", "");
     }
 }

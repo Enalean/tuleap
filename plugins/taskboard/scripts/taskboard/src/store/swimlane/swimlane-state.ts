@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { State } from "../type";
-import { Store } from "vuex";
-import error from "./error/module";
-import swimlane_initial_state from "./swimlane/swimlane-state";
+import * as actions from "./swimlane-actions";
+import * as mutations from "./swimlane-mutations";
+import { Swimlane } from "../../type";
 
-export function createStore(initial_global_state: State): Store<State> {
-    return new Store({
-        state: initial_global_state,
-        modules: {
-            error,
-            swimlane: swimlane_initial_state
-        }
-    });
+export interface SwimlaneState {
+    swimlanes: Array<Swimlane>;
+    is_loading_swimlanes: boolean;
 }
+
+export default {
+    namespaced: true,
+    actions,
+    mutations,
+    state: {
+        swimlanes: [],
+        is_loading_swimlanes: false
+    } as SwimlaneState
+};
