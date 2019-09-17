@@ -32,30 +32,45 @@ class CrossTrackerTest extends RestBase
         $this->getEpicArtifactIds();
     }
 
-    public function testGetId()
+    public function testGetId(): void
     {
         $response = $this->getResponse($this->client->get('cross_tracker_reports/1'));
 
         $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertGetIdReport($response);
+    }
 
-        $expected_cross_tracker = array(
-            "id"           => 1,
-            "uri"          => "cross_tracker_reports/1",
-            "expert_query" => "",
-            "trackers"     => array(
-                array(
+    public function testGetIdForReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('cross_tracker_reports/1'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertGetIdReport($response);
+    }
+
+    private function assertGetIdReport(\Guzzle\Http\Message\Response $response): void
+    {
+        $expected_cross_tracker = [
+            "id"               => 1,
+            "uri"              => "cross_tracker_reports/1",
+            "expert_query"     => "",
+            "trackers"         => [
+                [
                     "id"      => $this->kanban_tracker_id,
                     "uri"     => "trackers/" . $this->kanban_tracker_id,
                     "label"   => REST_TestDataBuilder::KANBAN_TRACKER_LABEL,
-                    "project" => array(
+                    "project" => [
                         "id"    => $this->project_private_member_id,
                         'uri'   => 'projects/' . $this->project_private_member_id,
                         'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
-                    )
-                )
-            ),
+                    ]
+                ]
+            ],
             "invalid_trackers" => []
-        );
+        ];
 
         $this->assertEquals(
             $response->json(),
@@ -98,26 +113,42 @@ class CrossTrackerTest extends RestBase
         );
     }
 
-    public function testGetContentId()
+    public function testPutForReadOnlyUser(): void
+    {
+        $params   = array(
+            "trackers_id"  => array($this->epic_tracker_id),
+            "expert_query" => ""
+        );
+        $response = $this->getResponse(
+            $this->client->put('cross_tracker_reports/1', null, $params),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    public function testGetContentId(): void
     {
         $response = $this->getResponse($this->client->get('cross_tracker_reports/1/content?limit=50&offset=0'));
 
         $this->assertEquals($response->getStatusCode(), 200);
         $cross_tracker_artifacts = $response->json();
-
-        $this->assertEquals(
-            count($cross_tracker_artifacts['artifacts']),
-            5
-        );
-
-        $this->assertEquals($cross_tracker_artifacts['artifacts'][0]['id'], $this->epic_artifact_ids[7]);
-        $this->assertEquals($cross_tracker_artifacts['artifacts'][1]['id'], $this->epic_artifact_ids[6]);
-        $this->assertEquals($cross_tracker_artifacts['artifacts'][2]['id'], $this->epic_artifact_ids[5]);
-        $this->assertEquals($cross_tracker_artifacts['artifacts'][3]['id'], $this->epic_artifact_ids[4]);
-        $this->assertEquals($cross_tracker_artifacts['artifacts'][4]['id'], $this->epic_artifact_ids[1]);
+        $this->assertGetReport($cross_tracker_artifacts);
     }
 
-    public function testGetContentIdWithQuery()
+    public function testGetContentIdForReadOnlyUser(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('cross_tracker_reports/1/content?limit=50&offset=0'),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $cross_tracker_artifacts = $response->json();
+        $this->assertGetReport($cross_tracker_artifacts);
+    }
+
+    public function testGetContentIdWithQuery(): void
     {
         $query    = json_encode(
             array(
@@ -131,17 +162,7 @@ class CrossTrackerTest extends RestBase
 
         $this->assertEquals($response->getStatusCode(), 200);
         $cross_tracker_artifacts = $response->json();
-
-        $this->assertEquals(
-            count($cross_tracker_artifacts['artifacts']),
-            5
-        );
-
-        $this->assertEquals($cross_tracker_artifacts['artifacts'][0]['id'], $this->epic_artifact_ids[7]);
-        $this->assertEquals($cross_tracker_artifacts['artifacts'][1]['id'], $this->epic_artifact_ids[6]);
-        $this->assertEquals($cross_tracker_artifacts['artifacts'][2]['id'], $this->epic_artifact_ids[5]);
-        $this->assertEquals($cross_tracker_artifacts['artifacts'][3]['id'], $this->epic_artifact_ids[4]);
-        $this->assertEquals($cross_tracker_artifacts['artifacts'][4]['id'], $this->epic_artifact_ids[1]);
+        $this->assertGetReport($cross_tracker_artifacts);
     }
 
 
@@ -156,5 +177,19 @@ class CrossTrackerTest extends RestBase
             $cross_tracker_artifacts['artifacts'],
             array()
         );
+    }
+
+    private function assertGetReport(array $cross_tracker_artifacts): void
+    {
+        $this->assertEquals(
+            count($cross_tracker_artifacts['artifacts']),
+            5
+        );
+
+        $this->assertEquals($cross_tracker_artifacts['artifacts'][0]['id'], $this->epic_artifact_ids[7]);
+        $this->assertEquals($cross_tracker_artifacts['artifacts'][1]['id'], $this->epic_artifact_ids[6]);
+        $this->assertEquals($cross_tracker_artifacts['artifacts'][2]['id'], $this->epic_artifact_ids[5]);
+        $this->assertEquals($cross_tracker_artifacts['artifacts'][3]['id'], $this->epic_artifact_ids[4]);
+        $this->assertEquals($cross_tracker_artifacts['artifacts'][4]['id'], $this->epic_artifact_ids[1]);
     }
 }
