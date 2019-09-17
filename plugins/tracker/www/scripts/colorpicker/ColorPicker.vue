@@ -63,7 +63,7 @@
                v-bind:id="inputId"
                v-bind:name="inputName"
                v-bind:value="color"
-               type="text"
+               type="hidden"
                size="6"
                autocomplete="off"
         >

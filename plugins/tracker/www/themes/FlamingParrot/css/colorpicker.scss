@@ -123,6 +123,15 @@
     top: 1px;
 }
 
+.color-picker-preview {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    border: 1px solid #e3e5ed;
+    vertical-align: middle;
+}
+
 @each $color-name, $colors in $tlp-swatch-color-map {
     .colorpicker-circular-color-#{$color-name} {
         border: 3px solid map-get($colors, 'primary');
@@ -130,13 +139,9 @@
         color: map-get($colors, 'primary');
     }
 
-    &.color-picker-preview-#{$color-name} {
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        margin: 0;
+    .color-picker-preview-#{$color-name} {
+        border: 0;
         background-color: map-get($colors, 'primary');
-        vertical-align: middle;
     }
 }
 
