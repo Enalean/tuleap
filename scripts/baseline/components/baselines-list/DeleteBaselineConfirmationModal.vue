@@ -55,7 +55,13 @@ export default {
     },
     methods: {
         async confirm() {
-            await deleteBaseline(this.baseline.id);
+            try {
+                await deleteBaseline(this.baseline.id);
+            } catch (e) {
+                // Error management is missing
+                return;
+            }
+
             this.$store.commit("baselines/delete", this.baseline);
             this.$store.commit("dialog_interface/notify", {
                 text: this.$gettext("The baseline was deleted"),

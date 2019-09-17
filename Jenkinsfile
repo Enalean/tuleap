@@ -71,9 +71,21 @@ pipeline {
                     }
                     post { always { junit "results/api-soap/*/soap_tests.xml" } }
                 }
-                stage ('Karma') {
-                    steps { script { actions.runKarmaTests('baseline', 'plugins/baseline/scripts/') } }
-                    post { always { junit 'results/karma/test-*-results.xml' } }
+                stage ('Jest') {
+                    agent {
+                        docker {
+                            image 'node:12.6-alpine'
+                            reuseNode true
+                            args '--network none'
+                        }
+                    }
+                    steps { script { actions.runJestTests('Baseline', 'plugins/baseline/scripts/') } }
+                    post {
+                        always {
+                            junit 'results/jest/test-*-results.xml'
+                            step([$class: 'CloverPublisher', cloverReportDir: 'results/jest/coverage/', cloverReportFileName: 'clover.xml'])
+                        }
+                    }
                 }
                 stage('Check translation files') {
                     steps { script {
