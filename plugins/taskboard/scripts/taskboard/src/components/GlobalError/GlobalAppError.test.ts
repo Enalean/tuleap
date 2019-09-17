@@ -30,9 +30,14 @@ describe("GlobalAppError", () => {
         local_vue = await createTaskboardLocalVue();
     });
 
-    it("it warns user that something is wrong without too much details", () => {
+    it("it warns user that something is wrong with a button to show details", () => {
         const wrapper = shallowMount(GlobalAppError, {
-            localVue: local_vue
+            localVue: local_vue,
+            mocks: {
+                $store: createStoreMock({
+                    state: { error: { global_error_message: "Full error message with details" } }
+                })
+            }
         });
         expect(wrapper.element).toMatchSnapshot();
     });
@@ -51,5 +56,18 @@ describe("GlobalAppError", () => {
         wrapper.find(".taskboard-error-link > a").element.click();
 
         expect(wrapper.text()).toMatch(error_message);
+    });
+
+    it("it warns user that something is wrong without any details", () => {
+        const wrapper = shallowMount(GlobalAppError, {
+            localVue: local_vue,
+            mocks: {
+                $store: createStoreMock({
+                    state: { error: { global_error_message: "" } }
+                })
+            }
+        });
+        expect(wrapper.find(".taskboard-error-link").exists()).toBe(false);
+        expect(wrapper.find(".taskboard-error-details").exists()).toBe(false);
     });
 });

@@ -18,12 +18,19 @@
  */
 
 import { setGlobalErrorMessage } from "./error-mutations";
-import { ErrorState } from "../../type";
+import { ErrorState } from "./module";
 
 describe("setGlobalErrorMessage", () => {
     it("stores the error message", () => {
-        const state = { global_error_message: "" } as ErrorState;
+        const state = { global_error_message: "", has_global_error: false } as ErrorState;
         setGlobalErrorMessage(state, "500 Internal Server Error");
         expect(state.global_error_message).toBe("500 Internal Server Error");
+        expect(state.has_global_error).toBe(true);
+    });
+    it("activates error state even if error message is empty", () => {
+        const state = { global_error_message: "", has_global_error: false } as ErrorState;
+        setGlobalErrorMessage(state, "");
+        expect(state.global_error_message).toBe("");
+        expect(state.has_global_error).toBe(true);
     });
 });

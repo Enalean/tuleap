@@ -32,10 +32,9 @@ describe("App", () => {
             state: {
                 columns: columns,
                 has_content: has_content,
-                error: {}
-            },
-            getters: {
-                "error/has_global_error": has_global_error
+                error: {
+                    has_global_error
+                }
             }
         });
     }

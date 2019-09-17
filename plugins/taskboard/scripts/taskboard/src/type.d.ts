@@ -47,7 +47,3 @@ interface State {
     milestone_id: number;
     user_has_accessibility_mode: boolean;
 }
-
-interface ErrorState {
-    global_error_message: string;
-}
