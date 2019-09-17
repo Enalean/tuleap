@@ -29,7 +29,6 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
     public const STANDARD_PASSWORD       = 'welcome0';
 
     public const TEST_USER_4_NAME        = 'rest_api_tester_4';
-    public const TEST_USER_4_STATUS      = 'A';
 
     public const TEST_BOT_USER_NAME   = 'rest_bot_read_only_admin';
     public const TEST_BOT_USER_PASS   = 'welcome0';
@@ -62,7 +61,6 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
     public const KANBAN_TO_BE_DONE_COLUMN_ID = 230;
     public const KANBAN_ONGOING_COLUMN_ID    = 231;
     public const KANBAN_REVIEW_COLUMN_ID     = 232;
-    public const KANBAN_DONE_VALUE_ID        = 233;
 
     public const PLANNING_ID = 2;
 
