@@ -64,26 +64,14 @@
       <description>How quickly the artifact must be completed</description>
       <bind type="static" is_rank_alpha="0">
         <items>
-          <item ID="F12-V0" label="1 - Lowest"/>
-          <item ID="F12-V1" label="2"/>
-          <item ID="F12-V2" label="3"/>
-          <item ID="F12-V3" label="4"/>
-          <item ID="F12-V4" label="5 - Medium"/>
-          <item ID="F12-V5" label="6"/>
-          <item ID="F12-V6" label="7"/>
-          <item ID="F12-V7" label="8"/>
-          <item ID="F12-V8" label="9 - Highest"/>
+          <item ID="F12-V0" label="Low"/>
+          <item ID="F12-V1" label="Medium"/>
+          <item ID="F12-V2" label="High"/>
         </items>
         <decorators>
-          <decorator REF="F12-V0" r="255" g="255" b="204"/>
-          <decorator REF="F12-V1" r="255" g="255" b="102"/>
-          <decorator REF="F12-V2" r="255" g="204" b="0"/>
-          <decorator REF="F12-V3" r="255" g="153" b="0"/>
-          <decorator REF="F12-V4" r="255" g="102" b="0"/>
-          <decorator REF="F12-V5" r="255" g="51" b="0"/>
-          <decorator REF="F12-V6" r="204" g="51" b="0"/>
-          <decorator REF="F12-V7" r="153" g="0" b="0"/>
-          <decorator REF="F12-V8" r="51" g="0" b="0"/>
+          <decorator REF="F12-V0" tlp_color_name="graffiti-yellow"/>
+          <decorator REF="F12-V1" tlp_color_name="clockwork-orange"/>
+          <decorator REF="F12-V2" tlp_color_name="fiesta-red"/>
         </decorators>
       </bind>
     </formElement>

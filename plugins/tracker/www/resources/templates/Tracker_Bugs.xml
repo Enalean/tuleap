@@ -61,29 +61,19 @@
             <formElement type="sb" ID="F11" rank="0">
               <name>severity</name>
               <label>Severity</label>
-              <description>Impact of the artifact on the system (Critical, Major,...)</description>
+              <description>Impact of the artifact on the system (Critical, Marginal,...)</description>
               <bind type="static" is_rank_alpha="0">
                 <items>
-                  <item ID="F11-V0" label="1 - Ordinary"/>
-                  <item ID="F11-V1" label="2"/>
-                  <item ID="F11-V2" label="3"/>
-                  <item ID="F11-V3" label="4"/>
-                  <item ID="F11-V4" label="5 - Major"/>
-                  <item ID="F11-V5" label="6"/>
-                  <item ID="F11-V6" label="7"/>
-                  <item ID="F11-V7" label="8"/>
-                  <item ID="F11-V8" label="9 - Critical"/>
+                  <item ID="F17-V0" label="Negligible"/>
+                  <item ID="F17-V1" label="Marginal"/>
+                  <item ID="F17-V2" label="Critical"/>
+                  <item ID="F17-V3" label="Catastrophic"/>
                 </items>
                 <decorators>
-                  <decorator REF="F11-V0" r="255" g="255" b="102"/>
-                  <decorator REF="F11-V1" r="255" g="204" b="51"/>
-                  <decorator REF="F11-V2" r="255" g="153" b="0"/>
-                  <decorator REF="F11-V3" r="255" g="102" b="0"/>
-                  <decorator REF="F11-V4" r="255" g="51" b="0"/>
-                  <decorator REF="F11-V5" r="204" g="0" b="0"/>
-                  <decorator REF="F11-V6" r="153" g="0" b="0"/>
-                  <decorator REF="F11-V7" r="102" g="0" b="0"/>
-                  <decorator REF="F11-V8" r="51" g="0" b="0"/>
+                  <decorator REF="F17-V0" tlp_color_name="graffiti-yellow"/>
+                  <decorator REF="F17-V1" tlp_color_name="clockwork-orange"/>
+                  <decorator REF="F17-V2" tlp_color_name="fiesta-red"/>
+                  <decorator REF="F17-V3" tlp_color_name="red-wine"/>
                 </decorators>
               </bind>
             </formElement>
@@ -371,7 +361,7 @@
                     <title>Status</title>
                     <description>Number of Artifacts by Status</description>
                 </chart>
-                <chart type="bar" width="600" height="400" rank="1" base="F11"> 
+                <chart type="bar" width="600" height="400" rank="1" base="F11">
                     <title>Severity</title>
                     <description>Number of Artifacts by severity level</description>
                 </chart>
@@ -419,60 +409,60 @@
   </reports>
   <workflow>
     <field_id REF="F19"/>
-    <is_used>1</is_used>  
-    <transitions>  
+    <is_used>1</is_used>
+    <transitions>
         <transition>
             <from_id REF="null"/>
             <to_id REF="F19-V0"/>
-        </transition>        
+        </transition>
         <transition>
             <from_id REF="F19-V0"/>
             <to_id REF="F19-V1"/>
-        </transition>        
+        </transition>
         <transition>
             <from_id REF="F19-V0"/>
             <to_id REF="F19-V2"/>
-        </transition>        
+        </transition>
         <transition>
             <from_id REF="F19-V0"/>
             <to_id REF="F19-V4"/>
-        </transition>        
+        </transition>
         <transition>
             <from_id REF="F19-V1"/>
             <to_id REF="F19-V2"/>
-        </transition>        
+        </transition>
         <transition>
             <from_id REF="F19-V1"/>
             <to_id REF="F19-V4"/>
-        </transition>        
+        </transition>
         <transition>
             <from_id REF="F19-V3"/>
             <to_id REF="F19-V4"/>
-        </transition>        
+        </transition>
         <transition>
             <from_id REF="F19-V4"/>
             <to_id REF="F19-V5"/>
-        </transition>        
+        </transition>
         <transition>
             <from_id REF="F19-V5"/>
             <to_id REF="F19-V3"/>
-        </transition>        
+        </transition>
         <transition>
             <from_id REF="F19-V5"/>
             <to_id REF="F19-V4"/>
-        </transition>        
+        </transition>
         <transition>
             <from_id REF="F19-V0"/>
             <to_id REF="F19-V3"/>
-        </transition>        
+        </transition>
         <transition>
             <from_id REF="F19-V1"/>
             <to_id REF="F19-V3"/>
-        </transition>        
+        </transition>
         <transition>
             <from_id REF="F19-V2"/>
             <to_id REF="F19-V3"/>
-        </transition>        
+        </transition>
         <transition>
             <from_id REF="F19-V2"/>
             <to_id REF="F19-V4"/>
@@ -531,7 +521,7 @@
     <permission scope="field" REF="F33" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F34" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F34" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F34" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>    
+    <permission scope="field" REF="F34" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <!--TODO TRACKER_ADMIN <permission scope="field" REF="F31" ugroup="UGROUP_PLUGIN_TRACKER_ADMIN" type="PLUGIN_TRACKER_FIELD_UPDATE"/> -->
   </permissions>
 </tracker>
