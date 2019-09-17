@@ -23,7 +23,7 @@ use Tuleap\REST\CardsBase;
 /**
  * @group CardsTests
  */
-class CardsTest extends CardsBase
+class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function testOPTIONSCards()
     {
@@ -68,6 +68,25 @@ class CardsTest extends CardsBase
                 "values": []
             }
         '));
+    }
+
+    public function testPUTCardsForReadOnlyUser(): void
+    {
+        $card_id        = REST_TestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1];
+        $response_put   = $this->getResponse(
+            $this->client->put(
+                "cards/$card_id",
+                null,
+                '
+                {
+                    "label": "Ieatlaughingcow",
+                    "column_id": 2,
+                    "values": []
+                } '
+            ),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+        $this->assertEquals(403, $response_put->getStatusCode());
     }
 
     private function findCardInCardwall($cardwall, $id)

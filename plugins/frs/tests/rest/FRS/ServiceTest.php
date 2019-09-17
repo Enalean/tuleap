@@ -52,11 +52,7 @@ final class ServiceTest extends RestBase
         $response = $this->getResponse($this->client->get(sprintf('projects/%d/frs_service', $this->project_id)));
         $service  = $response->json();
 
-        $this->assertCount(1, $service['permissions_for_groups']['can_read']);
-        $this->assertEquals('project_members', $service['permissions_for_groups']['can_read'][0]['short_name']);
-
-        $this->assertCount(1, $service['permissions_for_groups']['can_admin']);
-        $this->assertEquals('FRS_Admin', $service['permissions_for_groups']['can_admin'][0]['short_name']);
+        $this->assertFrsService($service);
     }
 
     public function testServiceAsRandomUser(): void
@@ -65,6 +61,14 @@ final class ServiceTest extends RestBase
         $service  = $response->json();
 
         $this->assertNull($service['permissions_for_groups']);
+    }
+
+    public function testServiceAsReadOnlyUser(): void
+    {
+        $response = $this->getResponse($this->client->get(sprintf('projects/%d/frs_service', $this->project_id)), REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $service  = $response->json();
+
+        $this->assertFrsService($service);
     }
 
     public function testServiceIsInProjectResources(): void
@@ -79,5 +83,14 @@ final class ServiceTest extends RestBase
             ],
             $project['resources']
         );
+    }
+
+    private function assertFrsService(array $service): void
+    {
+        $this->assertCount(1, $service['permissions_for_groups']['can_read']);
+        $this->assertEquals('project_members', $service['permissions_for_groups']['can_read'][0]['short_name']);
+
+        $this->assertCount(1, $service['permissions_for_groups']['can_admin']);
+        $this->assertEquals('FRS_Admin', $service['permissions_for_groups']['can_admin'][0]['short_name']);
     }
 }
