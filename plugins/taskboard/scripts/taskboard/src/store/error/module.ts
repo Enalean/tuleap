@@ -19,14 +19,18 @@
 
 import * as actions from "./error-actions";
 import * as mutations from "./error-mutations";
-import * as getters from "./error-getters";
+
+export interface ErrorState {
+    global_error_message: string;
+    has_global_error: boolean;
+}
 
 export default {
     namespaced: true,
     state: {
-        global_error_message: ""
-    },
+        global_error_message: "",
+        has_global_error: false
+    } as ErrorState,
     actions,
-    mutations,
-    getters
+    mutations
 };

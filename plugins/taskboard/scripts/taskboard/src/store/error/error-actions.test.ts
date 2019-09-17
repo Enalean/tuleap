@@ -18,9 +18,10 @@
  */
 
 import { ActionContext } from "vuex";
-import { ErrorState, State } from "../../type";
+import { State } from "../../type";
 import { FetchWrapperError } from "tlp";
 import { handleErrorMessage } from "./error-actions";
+import { ErrorState } from "./module";
 
 describe("Error modules actions", () => {
     let context: ActionContext<ErrorState, State>;

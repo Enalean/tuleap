@@ -29,15 +29,17 @@
         <div class="empty-page-text-with-small-text">
             <translate>Oops, there's an issue</translate>
             <div class="empty-page-small-text" v-translate>It seems action you try to perform can't be done</div>
-            <div class="taskboard-error-link">
-                <a v-if="! is_more_shown"
-                   v-on:click="is_more_shown = true"
-                   v-translate
-                >Show error details</a>
-            </div>
-            <pre v-if="is_more_shown"
-                 class="taskboard-error-details"
-            >{{ global_error_message }}</pre>
+            <template v-if="has_more_details">
+                <div class="taskboard-error-link">
+                    <a v-if="! is_more_shown"
+                       v-on:click="is_more_shown = true"
+                       v-translate
+                    >Show error details</a>
+                </div>
+                <pre v-if="is_more_shown"
+                     class="taskboard-error-details"
+                >{{ global_error_message }}</pre>
+            </template>
         </div>
 
         <button type="button" class="tlp-button-primary tlp-button-large" v-on:click="reloadPage">
@@ -63,6 +65,10 @@ export default class GlobalAppError extends Vue {
 
     reloadPage(): void {
         window.location.reload();
+    }
+
+    get has_more_details(): boolean {
+        return this.global_error_message.length > 0;
     }
 }
 </script>

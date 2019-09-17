@@ -57,7 +57,7 @@ export default class App extends Vue {
     @State
     readonly has_content!: boolean;
 
-    @error.Getter
+    @error.State
     readonly has_global_error!: boolean;
 
     get has_at_least_one_column(): boolean {
