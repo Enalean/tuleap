@@ -17,17 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, State } from "../../type";
+import { Card, RootState } from "../../type";
 import * as tlp from "tlp";
 import * as actions from "./swimlane-actions";
 import { RecursiveGetInit } from "tlp";
 import { ActionContext } from "vuex";
-import { SwimlaneState } from "./swimlane-state";
+import { SwimlaneState } from "./type";
 
 jest.mock("tlp");
 
 describe("Swimlane state actions", () => {
-    let context: ActionContext<SwimlaneState, State>;
+    let context: ActionContext<SwimlaneState, RootState>;
     let tlpRecursiveGetMock: jest.SpyInstance;
 
     beforeEach(() => {
@@ -36,8 +36,8 @@ describe("Swimlane state actions", () => {
             dispatch: jest.fn(),
             rootState: {
                 milestone_id: 42
-            } as State
-        } as unknown) as ActionContext<SwimlaneState, State>;
+            } as RootState
+        } as unknown) as ActionContext<SwimlaneState, RootState>;
         tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
     });
 

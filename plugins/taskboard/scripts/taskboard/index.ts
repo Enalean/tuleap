@@ -23,7 +23,7 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createStore } from "./src/store";
 import App from "./src/components/App.vue";
 import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
-import { ColumnDefinition, State } from "./src/type";
+import { ColumnDefinition, RootState } from "./src/type";
 import Vuex from "vuex";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const AppComponent = Vue.extend(App);
 
-    const initial_state: State = {
+    const initial_state: RootState = {
         user_is_admin,
         admin_url,
         user_id,

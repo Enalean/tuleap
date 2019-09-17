@@ -18,7 +18,7 @@
  */
 
 import { setGlobalErrorMessage } from "./error-mutations";
-import { ErrorState } from "./module";
+import { ErrorState } from "./type";
 
 describe("setGlobalErrorMessage", () => {
     it("stores the error message", () => {

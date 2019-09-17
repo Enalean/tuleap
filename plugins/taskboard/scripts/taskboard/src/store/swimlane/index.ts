@@ -17,20 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as actions from "./error-actions";
-import * as mutations from "./error-mutations";
-
-export interface ErrorState {
-    global_error_message: string;
-    has_global_error: boolean;
-}
+import * as actions from "./swimlane-actions";
+import * as mutations from "./swimlane-mutations";
+import { SwimlaneState } from "./type";
+import { Module } from "vuex";
+import { RootState } from "../../type";
 
 export default {
     namespaced: true,
-    state: {
-        global_error_message: "",
-        has_global_error: false
-    } as ErrorState,
     actions,
-    mutations
-};
+    mutations,
+    state: {
+        swimlanes: [],
+        is_loading_swimlanes: false
+    }
+} as Module<SwimlaneState, RootState>;

@@ -17,17 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { State } from "../type";
-import { Store } from "vuex";
-import error from "./error/module";
-import swimlane_initial_state from "./swimlane/swimlane-state";
+import { RootState } from "../type";
+import { Store, StoreOptions } from "vuex";
+import error from "./error";
+import swimlane from "./swimlane";
 
-export function createStore(initial_global_state: State): Store<State> {
+export function createStore(initial_global_state: RootState): Store<RootState> {
     return new Store({
         state: initial_global_state,
         modules: {
             error,
-            swimlane: swimlane_initial_state
+            swimlane
         }
-    });
+    } as StoreOptions<RootState>);
 }

@@ -15,35 +15,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-export interface ColumnDefinition {
-    id: number;
-    label: string;
-    color: string;
-}
-
-export interface Swimlane {
-    card: Card;
-}
-
-export interface Card {
-    id: number;
-    label: string;
-    xref: string;
-    rank: number;
-    color: string;
-    background_color: string;
-    artifact_html_uri: string;
-}
-
-interface RootState {
-    user_is_admin: boolean;
-    user_id: number;
-    admin_url: string;
-    has_content: boolean;
-    columns: Array<ColumnDefinition>;
-    milestone_id: number;
-    user_has_accessibility_mode: boolean;
+export interface ErrorState {
+    global_error_message: string;
+    has_global_error: boolean;
 }
