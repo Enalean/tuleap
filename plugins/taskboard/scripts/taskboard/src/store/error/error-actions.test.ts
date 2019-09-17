@@ -18,18 +18,18 @@
  */
 
 import { ActionContext } from "vuex";
-import { State } from "../../type";
+import { RootState } from "../../type";
 import { FetchWrapperError } from "tlp";
 import { handleErrorMessage } from "./error-actions";
-import { ErrorState } from "./module";
+import { ErrorState } from "./type";
 
 describe("Error modules actions", () => {
-    let context: ActionContext<ErrorState, State>;
+    let context: ActionContext<ErrorState, RootState>;
 
     beforeEach(() => {
         context = ({
             commit: jest.fn()
-        } as unknown) as ActionContext<ErrorState, State>;
+        } as unknown) as ActionContext<ErrorState, RootState>;
     });
 
     it("sets a global error message when a message can be extracted from the FetchWrapperError instance", async () => {

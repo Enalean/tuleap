@@ -19,7 +19,7 @@
 
 import { Card } from "../../type";
 import * as mutations from "./swimlane-mutations";
-import { SwimlaneState } from "./swimlane-state";
+import { SwimlaneState } from "./type";
 
 describe("addSwimlanes", () => {
     it("add swimlanes to existing ones", () => {

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ErrorState } from "./module";
+import { ErrorState } from "./type";
 
 export function setGlobalErrorMessage(state: ErrorState, message: string): void {
     state.global_error_message = message;

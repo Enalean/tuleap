@@ -18,7 +18,7 @@
  */
 
 import { Swimlane } from "../../type";
-import { SwimlaneState } from "./swimlane-state";
+import { SwimlaneState } from "./type";
 
 export function addSwimlanes(state: SwimlaneState, swimlanes: Array<Swimlane>): void {
     state.swimlanes = [...state.swimlanes, ...swimlanes];

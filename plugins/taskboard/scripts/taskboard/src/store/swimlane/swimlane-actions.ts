@@ -17,12 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, State, Swimlane } from "../../type";
+import { Card, RootState, Swimlane } from "../../type";
 import { recursiveGet } from "tlp";
 import { ActionContext } from "vuex";
-import { SwimlaneState } from "./swimlane-state";
+import { SwimlaneState } from "./type";
 
-export async function loadSwimlanes(context: ActionContext<SwimlaneState, State>): Promise<void> {
+export async function loadSwimlanes(
+    context: ActionContext<SwimlaneState, RootState>
+): Promise<void> {
     context.commit("setIsLoadingSwimlanes", true);
     try {
         await recursiveGet(`/api/v1/taskboard/${context.rootState.milestone_id}/cards`, {
