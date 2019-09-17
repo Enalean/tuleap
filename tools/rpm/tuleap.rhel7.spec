@@ -666,6 +666,9 @@ done
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
 %{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
 
+# Symlink for compatibility with older version
+%{__ln_s} %{APP_DIR} $RPM_BUILD_ROOT/%{_datadir}/codendi
+
 #
 ##
 ## On package install
@@ -934,6 +937,9 @@ fi
 %attr(00644,root,root) %{_unitdir}/tuleap-launch-daily-event.service
 %attr(00644,root,root) %{_unitdir}/tuleap-launch-plugin-job.timer
 %attr(00644,root,root) %{_unitdir}/tuleap-launch-plugin-job.service
+
+# Compatibility with older version
+%attr(-,root,root) %{_datadir}/codendi
 
 #
 # Core
