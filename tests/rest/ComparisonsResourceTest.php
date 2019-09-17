@@ -25,6 +25,7 @@ namespace Tuleap\Baseline\Tests\REST;
 
 require_once __DIR__ . '/BaselineFixtureData.php';
 
+use Guzzle\Http\Message\Response;
 use RestBase;
 
 class ComparisonsResourceTest extends RestBase
@@ -43,7 +44,7 @@ class ComparisonsResourceTest extends RestBase
         $this->an_artifact_id  = $artifact_ids_by_title[BaselineFixtureData::ARTIFACT_TITLE];
     }
 
-    public function testPostBaselineComparison()
+    public function testPostBaselineComparison(): void
     {
         $base_baseline        = $this->createABaseline($this->an_artifact_id);
         $compared_to_baseline = $this->createABaseline($this->an_artifact_id);
@@ -75,7 +76,29 @@ class ComparisonsResourceTest extends RestBase
         $this->assertNotNull($json_response['creation_date']);
     }
 
-    public function testGetBaselineComparison()
+    public function testPOSTBaselineComparisonWithReadOnlyAdministrator(): void
+    {
+        $base_baseline        = $this->createABaseline($this->an_artifact_id);
+        $compared_to_baseline = $this->createABaseline($this->an_artifact_id);
+
+        $response = $this->getResponseForReadOnlyUserAdmin(
+            $this->client->post(
+                'baselines_comparisons',
+                null,
+                json_encode(
+                    [
+                        'name'                    => 'new comparison',
+                        'comment'                 => 'used fo tests',
+                        'base_baseline_id'        => $base_baseline['id'],
+                        'compared_to_baseline_id' => $compared_to_baseline['id']
+                    ]
+                )
+            )
+        );
+        $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    public function testGetBaselineComparison(): void
     {
         $comparison = $this->createAComparison($this->an_artifact_id);
 
@@ -84,6 +107,22 @@ class ComparisonsResourceTest extends RestBase
             $this->client->get('baselines_comparisons/' . $comparison['id'])
         );
 
+        $this->assertGETBaselineComparison($comparison, $response);
+    }
+
+    public function testGETBaselineComparisonWithReadOnlyAdministrator(): void
+    {
+        $comparison = $this->createAComparison($this->an_artifact_id);
+
+        $response = $this->getResponseForReadOnlyUserAdmin(
+            $this->client->get('baselines_comparisons/' . $comparison['id'])
+        );
+
+        $this->assertGETBaselineComparison($comparison, $response);
+    }
+
+    private function assertGETBaselineComparison(array $comparison, Response $response): void
+    {
         $this->assertEquals(200, $response->getStatusCode());
 
         $json_response = $response->json();
@@ -97,7 +136,7 @@ class ComparisonsResourceTest extends RestBase
         $this->assertNotNull($json_response['creation_date']);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $comparison = $this->createAComparison($this->an_artifact_id);
 
@@ -115,18 +154,48 @@ class ComparisonsResourceTest extends RestBase
         $this->assertEquals(404, $get_response->getStatusCode());
     }
 
+    public function testDeleteWithReadOnlyAdministrator(): void
+    {
+        $comparison = $this->createAComparison($this->an_artifact_id);
+
+        $delete_response = $this->getResponseForReadOnlyUserAdmin(
+            $this->client->delete('baselines_comparisons/' . $comparison['id'])
+        );
+
+        $this->assertEquals(404, $delete_response->getStatusCode());
+    }
+
     /**
      * @depends testPostBaselineComparison
      */
     public function testGetByProject(): void
     {
         $project_id = $this->project_ids[BaselineFixtureData::PROJECT_NAME];
-        $url        = 'projects/' . $project_id . '/baselines_comparisons?limit=2';
-        $response   = $this->getResponseByName(
+        $url = 'projects/' . $project_id . '/baselines_comparisons?limit=2';
+        $response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
             $this->client->get($url)
         );
 
+        $this->assertGETByProject($response);
+    }
+
+    /**
+     * @depends testPostBaselineComparison
+     */
+    public function testGETByProjectWithReadOnlyAdministrator(): void
+    {
+        $project_id = $this->project_ids[BaselineFixtureData::PROJECT_NAME];
+        $url = 'projects/' . $project_id . '/baselines_comparisons?limit=2';
+        $response = $this->getResponseForReadOnlyUserAdmin(
+            $this->client->get($url)
+        );
+
+        $this->assertGETByProject($response);
+    }
+
+    private function assertGETByProject(Response $response): void
+    {
         $this->assertEquals(200, $response->getStatusCode());
 
         $json_response = $response->json();
