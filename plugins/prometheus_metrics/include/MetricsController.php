@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,69 +16,97 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace Tuleap\PrometheusMetrics;
 
+use EventManager;
 use ForgeConfig;
-use HTTPRequest;
 use Prometheus\RenderTextFormat;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
-use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
-use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\NotFoundException;
+use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
 
-class MetricsController implements DispatchableWithRequestNoAuthz
+final class MetricsController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
-
-    private $config_dir_root;
-
-    public function __construct($config_dir_root)
-    {
-        $this->config_dir_root = $config_dir_root;
-    }
-
     /**
-     * Is able to process a request routed by FrontRouter
-     *
-     * @param HTTPRequest $request
-     * @param BaseLayout $layout
-     * @param array $variables
-     * @throws NotFoundException
-     * @throws ForbiddenException
-     * @return void
+     * @var ResponseFactoryInterface
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
-    {
-        $this->checkUserCanAccess();
+    private $response_factory;
+    /**
+     * @var StreamFactoryInterface
+     */
+    private $stream_factory;
+    /**
+     * @var MetricsCollectorDao
+     */
+    private $dao;
+    /**
+     * @var NbUsersByStatusBuilder
+     */
+    private $nb_user_builder;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
-        header('Content-type: ' . RenderTextFormat::MIME_TYPE);
-
-        echo $this->getTuleapMetrics();
-        echo $this->getTuleapComputedMetrics();
-        echo $this->getNodeExporterMetrics();
+    public function __construct(
+        ResponseFactoryInterface $response_factory,
+        StreamFactoryInterface $stream_factory,
+        EmitterInterface $emitter,
+        MetricsCollectorDao $dao,
+        NbUsersByStatusBuilder $nb_user_builder,
+        EventManager $event_manager,
+        MiddlewareInterface ...$middleware_stack
+    ) {
+        parent::__construct($emitter, ...$middleware_stack);
+        $this->response_factory = $response_factory;
+        $this->stream_factory   = $stream_factory;
+        $this->dao              = $dao;
+        $this->nb_user_builder  = $nb_user_builder;
+        $this->event_manager    = $event_manager;
     }
 
-    private function getTuleapMetrics()
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        echo Prometheus::instance()->renderText();
+        return $this->response_factory->createResponse()
+            ->withHeader('Content-Type', RenderTextFormat::MIME_TYPE)
+            ->withBody(
+                $this->stream_factory->createStream(
+                    $this->getTuleapMetrics() .
+                    $this->getTuleapComputedMetrics() .
+                    $this->getNodeExporterMetrics()
+                )
+            );
     }
 
-    private function getTuleapComputedMetrics()
+    private function getTuleapMetrics() : string
+    {
+        return Prometheus::instance()->renderText();
+    }
+
+    private function getTuleapComputedMetrics() : string
     {
         $prometheus = Prometheus::getInMemory();
-        $collector  = MetricsCollector::build($prometheus);
+        $collector  = new MetricsCollector($prometheus, $this->dao, $this->nb_user_builder, $this->event_manager);
 
         $collector->collect();
 
         return $prometheus->renderText();
     }
 
-    private function getNodeExporterMetrics()
+    private function getNodeExporterMetrics() : string
     {
         try {
             $node_exporter_url = ForgeConfig::get(Prometheus::CONFIG_PROMETHEUS_NODE_EXPORTER, '');
@@ -96,41 +124,5 @@ class MetricsController implements DispatchableWithRequestNoAuthz
         } catch (\Exception $exception) {
             return '';
         }
-    }
-
-    private function checkUserCanAccess()
-    {
-        if (! isset($_SERVER['PHP_AUTH_USER']) ||
-            $_SERVER['PHP_AUTH_USER'] == '' ||
-            ! isset($_SERVER['PHP_AUTH_PW']) ||
-            $_SERVER['PHP_AUTH_PW'] == ''
-        ) {
-            $this->basicAuthenticationChallenge();
-        }
-
-        if ($_SERVER['PHP_AUTH_USER'] === 'metrics' && hash_equals($_SERVER['PHP_AUTH_PW'], $this->getSecret())) {
-            return;
-        }
-        $this->basicAuthenticationChallenge();
-    }
-
-    private function basicAuthenticationChallenge()
-    {
-        header('WWW-Authenticate: Basic realm="'. ForgeConfig::get('sys_name').' /metrics authentication"');
-        header('HTTP/1.0 401 Unauthorized');
-        exit;
-    }
-
-    private function getSecret()
-    {
-        $path = $this->config_dir_root.'/metrics_secret.key';
-        if (! file_exists($path)) {
-            throw new \RuntimeException('Configuration not complete. Admin should define a metrics_secret.key');
-        }
-        $secret = trim(file_get_contents($path));
-        if (strlen($secret) < 16) {
-            throw new \RuntimeException('Configuration not complete. Secret not strong enough (min len 16)');
-        }
-        return $secret;
     }
 }
