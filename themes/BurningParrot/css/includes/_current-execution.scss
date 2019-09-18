@@ -64,6 +64,10 @@
         > .current-test-header-who {
             color: transparentize($tlp-ui-white, .3);
         }
+
+        > .current-test-header-title-container > .current-test-header-title {
+            color: #444444;
+        }
     }
 }
 
@@ -97,6 +101,7 @@
 
 .current-test-header-title {
     margin: 0 0 $tlp-spacing / 2;
+    color: $tlp-ui-white;
     font-size: 24px;
 }
 
