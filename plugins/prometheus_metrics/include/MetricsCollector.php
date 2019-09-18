@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,12 +19,14 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\PrometheusMetrics;
 
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
-use Tuleap\Admin\Homepage\UserCounterDao;
 use Tuleap\Instrument\Prometheus\CollectTuleapComputedMetrics;
 use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\Queue\Worker;
 
 class MetricsCollector
 {
@@ -50,37 +52,34 @@ class MetricsCollector
      * @var \EventManager
      */
     private $event_manager;
+    /**
+     * @var \Redis|null
+     */
+    private $redis;
 
     public function __construct(
         Prometheus $prometheus,
         MetricsCollectorDao $dao,
         NbUsersByStatusBuilder $nb_user_builder,
-        \EventManager $event_manager
+        \EventManager $event_manager,
+        ?\Redis $redis
     ) {
         $this->prometheus      = $prometheus;
         $this->dao             = $dao;
         $this->nb_user_builder = $nb_user_builder;
         $this->event_manager   = $event_manager;
+        $this->redis           = $redis;
     }
 
-    public static function build(Prometheus $prometheus)
-    {
-        return new self(
-            $prometheus,
-            new MetricsCollectorDao(),
-            new NbUsersByStatusBuilder(new UserCounterDao()),
-            \EventManager::instance()
-        );
-    }
-
-    public function collect()
+    public function collect(): void
     {
         $this->setUsersByStatus();
         $this->setProjectsByStatus();
+        $this->setWorkerStatus();
         $this->event_manager->processEvent(new CollectTuleapComputedMetrics($this->prometheus));
     }
 
-    private function setUsersByStatus()
+    private function setUsersByStatus(): void
     {
         $nb_users_by_status = $this->nb_user_builder->getNbUsersByStatusBuilder();
 
@@ -92,20 +91,28 @@ class MetricsCollector
         $this->setUsersTotal('deleted', $nb_users_by_status->getNbDeleted());
     }
 
-    private function setUsersTotal($type, $value)
+    private function setUsersTotal($type, $value): void
     {
         $this->prometheus->gaugeSet('users_total', 'Total number of users by type', $value, ['type' => $type]);
     }
 
-    private function setProjectsByStatus()
+    private function setProjectsByStatus(): void
     {
         foreach ($this->dao->getProjectsByStatus() as $row) {
             $this->setProjectsTotal($this->project_status[$row['status']], $row['nb']);
         }
     }
 
-    private function setProjectsTotal($type, $value)
+    private function setProjectsTotal($type, $value): void
     {
         $this->prometheus->gaugeSet('projects_total', 'Total number of projects by type', $value, ['type' => $type]);
+    }
+
+    private function setWorkerStatus(): void
+    {
+        if ($this->redis !== null) {
+            $nb_events = $this->redis->lLen(Worker::EVENT_QUEUE_NAME);
+            $this->prometheus->gaugeSet('worker_events', 'Total number of worker events', $nb_events, ['queue' => Worker::EVENT_QUEUE_NAME]);
+        }
     }
 }

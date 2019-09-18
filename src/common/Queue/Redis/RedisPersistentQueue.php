@@ -21,6 +21,7 @@
 
 namespace Tuleap\Queue\Redis;
 
+use Tuleap\Queue\QueueInstrumentation;
 use Tuleap\Redis;
 use RedisException;
 use Logger;
@@ -34,7 +35,9 @@ use Tuleap\Queue\QueueServerConnectionException;
  */
 class RedisPersistentQueue implements PersistentQueue
 {
-    private const MAX_MESSAGES = 1000;
+    private const MAX_MESSAGES             = 1000;
+    private const MESSAGE_FIELD_EVENT_NAME = 'event_name';
+    private const MESSAGE_FIELD_PAYLOAD    = 'payload';
 
     /**
      * @var Logger
@@ -97,6 +100,10 @@ class RedisPersistentQueue implements PersistentQueue
         $this->logger->debug('queuePastEvents');
         do {
             $value = $redis->rpoplpush($processing_queue, $this->event_queue_name);
+            if ($value !== false) {
+                $topic = $this->getTopic($value);
+                QueueInstrumentation::increment($this->event_queue_name, $topic, QueueInstrumentation::STATUS_REQUEUED);
+            }
         } while ($value !== false);
     }
 
@@ -106,8 +113,11 @@ class RedisPersistentQueue implements PersistentQueue
         $message_counter = 0;
         while ($message_counter < self::MAX_MESSAGES) {
             $value = $redis->brpoplpush($this->event_queue_name, $processing_queue, 0);
+            $topic = $this->getTopic($value);
+            QueueInstrumentation::increment($this->event_queue_name, $topic, QueueInstrumentation::STATUS_DEQUEUED);
             $callback($value);
             $redis->lRem($processing_queue, $value, 1);
+            QueueInstrumentation::increment($this->event_queue_name, $topic, QueueInstrumentation::STATUS_DONE);
             $message_counter++;
             $this->logger->info("Message processed [{$message_counter}/".self::MAX_MESSAGES."]");
         }
@@ -137,14 +147,27 @@ class RedisPersistentQueue implements PersistentQueue
     public function pushSinglePersistentMessage($topic, $content)
     {
         $this->connect();
+        QueueInstrumentation::increment($this->event_queue_name, $topic, QueueInstrumentation::STATUS_ENQUEUED);
         $this->redis->lPush(
             $this->event_queue_name,
             json_encode(
                 [
-                    'event_name' => $topic,
-                    'payload'    => $content,
+                    self::MESSAGE_FIELD_EVENT_NAME => $topic,
+                    self::MESSAGE_FIELD_PAYLOAD    => $content,
                 ]
             )
         );
+    }
+
+    private function getTopic(string $value): string
+    {
+        try {
+            $value_json = json_decode($value, true, JSON_THROW_ON_ERROR);
+            if (isset($value_json[self::MESSAGE_FIELD_EVENT_NAME])) {
+                return $value_json[self::MESSAGE_FIELD_EVENT_NAME];
+            }
+        } catch (\Exception $exception) {
+        }
+        return 'notopic';
     }
 }

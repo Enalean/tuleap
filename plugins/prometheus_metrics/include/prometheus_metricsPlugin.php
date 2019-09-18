@@ -25,6 +25,8 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\PrometheusMetrics\MetricsAuthentication;
 use Tuleap\PrometheusMetrics\MetricsCollectorDao;
 use Tuleap\PrometheusMetrics\MetricsController;
+use Tuleap\Redis\ClientFactory;
+use Tuleap\Redis\RedisConnectionException;
 use Tuleap\Request\CollectRoutesEvent;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
@@ -61,6 +63,12 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
     public function routeGetMetrics(): MetricsController
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
+        $redis_client     = null;
+        try {
+            $redis_client = ClientFactory::fromForgeConfig();
+        } catch (\RedisException | RedisConnectionException $exception) {
+            // If no redis, client can be null
+        }
         return new MetricsController(
             $response_factory,
             HTTPFactoryBuilder::streamFactory(),
@@ -68,6 +76,7 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
             new MetricsCollectorDao(),
             new NbUsersByStatusBuilder(new UserCounterDao()),
             EventManager::instance(),
+            $redis_client,
             new MetricsAuthentication(
                 $response_factory,
                 $this->getPluginEtcRoot()

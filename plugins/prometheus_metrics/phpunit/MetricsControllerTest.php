@@ -27,9 +27,11 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Redis;
 use Tuleap\Admin\Homepage\NbUsersByStatus;
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Queue\Worker;
 use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
 
 final class MetricsControllerTest extends TestCase
@@ -41,13 +43,15 @@ final class MetricsControllerTest extends TestCase
         $dao             = Mockery::mock(MetricsCollectorDao::class);
         $nb_user_builder = Mockery::mock(NbUsersByStatusBuilder::class);
         $event_manager   = Mockery::mock(EventManager::class);
+        $redis_client    = Mockery::mock(Redis::class);
         $controller      = new MetricsController(
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
             Mockery::mock(EmitterInterface::class),
             $dao,
             $nb_user_builder,
-            $event_manager
+            $event_manager,
+            $redis_client,
         );
 
         $dao->shouldReceive('getProjectsByStatus')->andReturn([]);
@@ -55,6 +59,8 @@ final class MetricsControllerTest extends TestCase
             new NbUsersByStatus(0, 0, 0, 0, 0, 0, 0)
         );
         $event_manager->shouldReceive('processEvent');
+
+        $redis_client->shouldReceive('lLen')->with(Worker::EVENT_QUEUE_NAME)->andReturn(0);
 
         $response = $controller->handle(Mockery::mock(ServerRequestInterface::class));
 

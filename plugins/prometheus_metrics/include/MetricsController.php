@@ -30,6 +30,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Redis;
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -60,6 +61,10 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
      * @var EventManager
      */
     private $event_manager;
+    /**
+     * @var Redis|null
+     */
+    private $redis;
 
     public function __construct(
         ResponseFactoryInterface $response_factory,
@@ -68,6 +73,7 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
         MetricsCollectorDao $dao,
         NbUsersByStatusBuilder $nb_user_builder,
         EventManager $event_manager,
+        ?Redis $redis,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
@@ -76,6 +82,7 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
         $this->dao              = $dao;
         $this->nb_user_builder  = $nb_user_builder;
         $this->event_manager    = $event_manager;
+        $this->redis            = $redis;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -99,7 +106,7 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
     private function getTuleapComputedMetrics() : string
     {
         $prometheus = Prometheus::getInMemory();
-        $collector  = new MetricsCollector($prometheus, $this->dao, $this->nb_user_builder, $this->event_manager);
+        $collector  = new MetricsCollector($prometheus, $this->dao, $this->nb_user_builder, $this->event_manager, $this->redis);
 
         $collector->collect();
 
