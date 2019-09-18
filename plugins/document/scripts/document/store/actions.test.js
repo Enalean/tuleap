@@ -427,6 +427,28 @@ describe("Store actions", () => {
             getItem = jest.spyOn(rest_querier, "getItem");
         });
 
+        it("Replace the obsolescence date with null when date is permantent", async () => {
+            const created_item_reference = { id: 66 };
+            addNewEmpty.mockReturnValue(Promise.resolve(created_item_reference));
+
+            const item = { id: 66, title: "whatever", type: "empty", obsolescence_date: "" };
+            const correct_item = {
+                created: true,
+                id: 66,
+                title: "whatever",
+                type: "empty",
+                obsolescence_date: null
+            };
+            const parent = { id: 2, title: "my folder", type: "folder", is_expanded: true };
+            const current_folder = parent;
+
+            getItem.mockReturnValue(Promise.resolve(item));
+
+            await createNewItem(context, [item, parent, current_folder]);
+
+            expect(addNewEmpty).toHaveBeenCalledWith(correct_item, parent.id);
+        });
+
         it("Creates new document and reload folder content", async () => {
             const created_item_reference = { id: 66 };
             addNewEmpty.mockReturnValue(Promise.resolve(created_item_reference));
@@ -1816,6 +1838,54 @@ describe("Store actions", () => {
         });
 
         describe("Given item is not the current folder - ", () => {
+            it("it should send null when obsolesence date is permanent", async () => {
+                jest.spyOn(rest_querier, "putFileMetadata").mockReturnValue(Promise.resolve());
+
+                const item = {
+                    id: 123,
+                    title: "My file",
+                    type: TYPE_FILE,
+                    description: "n",
+                    owner: {
+                        id: 102
+                    },
+                    status: "none",
+                    obsolescence_date: ""
+                };
+
+                const item_to_update = {
+                    id: 123,
+                    title: "My new title",
+                    description: "My description",
+                    owner: {
+                        id: 102
+                    },
+                    status: "draft",
+                    obsolescence_date: null,
+                    metadata: []
+                };
+
+                const current_folder = {
+                    id: 456
+                };
+
+                getItem.mockReturnValue(Promise.resolve(item_to_update));
+
+                await updateMetadata(context, [item, item_to_update, current_folder]);
+
+                expect(context.commit).toHaveBeenCalledWith(
+                    "removeItemFromFolderContent",
+                    item_to_update
+                );
+                expect(context.commit).toHaveBeenCalledWith(
+                    "addJustCreatedItemToFolderContent",
+                    item_to_update
+                );
+                expect(context.commit).toHaveBeenCalledWith(
+                    "updateCurrentItemForQuickLokDisplay",
+                    item_to_update
+                );
+            });
             it("it should update file metadata", async () => {
                 jest.spyOn(rest_querier, "putFileMetadata").mockReturnValue(Promise.resolve());
 
