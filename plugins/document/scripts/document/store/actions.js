@@ -135,6 +135,9 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
     try {
         let should_display_item = true;
         let item_reference;
+        if (item.obsolescence_date === "") {
+            item.obsolescence_date = null;
+        }
         switch (item.type) {
             case TYPE_FILE:
                 if (!parent.is_expanded && parent.id !== current_folder.id) {
@@ -734,6 +737,10 @@ export const getEmbeddedFileDisplayPreference = async (context, item) => {
 
 export const updateMetadata = async (context, [item, item_to_update, current_folder]) => {
     const custom_metadata = getCustomMetadata(item_to_update.metadata);
+    let obsolescence_date = item_to_update.obsolescence_date;
+    if (obsolescence_date === "") {
+        obsolescence_date = null;
+    }
     try {
         switch (item_to_update.type) {
             case TYPE_FILE:
@@ -743,7 +750,7 @@ export const updateMetadata = async (context, [item, item_to_update, current_fol
                     item_to_update.description,
                     item_to_update.owner.id,
                     item_to_update.status,
-                    item_to_update.obsolescence_date,
+                    obsolescence_date,
                     custom_metadata
                 );
                 break;
@@ -754,7 +761,7 @@ export const updateMetadata = async (context, [item, item_to_update, current_fol
                     item_to_update.description,
                     item_to_update.owner.id,
                     item_to_update.status,
-                    item_to_update.obsolescence_date,
+                    obsolescence_date,
                     custom_metadata
                 );
                 break;
@@ -765,7 +772,7 @@ export const updateMetadata = async (context, [item, item_to_update, current_fol
                     item_to_update.description,
                     item_to_update.owner.id,
                     item_to_update.status,
-                    item_to_update.obsolescence_date,
+                    obsolescence_date,
                     custom_metadata
                 );
                 break;
@@ -776,7 +783,7 @@ export const updateMetadata = async (context, [item, item_to_update, current_fol
                     item_to_update.description,
                     item_to_update.owner.id,
                     item_to_update.status,
-                    item_to_update.obsolescence_date,
+                    obsolescence_date,
                     custom_metadata
                 );
                 break;
@@ -787,7 +794,7 @@ export const updateMetadata = async (context, [item, item_to_update, current_fol
                     item_to_update.description,
                     item_to_update.owner.id,
                     item_to_update.status,
-                    item_to_update.obsolescence_date,
+                    obsolescence_date,
                     custom_metadata
                 );
                 break;
@@ -801,7 +808,7 @@ export const updateMetadata = async (context, [item, item_to_update, current_fol
                         value: item_to_update.status.value,
                         recursion: item_to_update.status.recursion
                     },
-                    item_to_update.obsolescence_date,
+                    obsolescence_date,
                     custom_metadata
                 );
                 break;
