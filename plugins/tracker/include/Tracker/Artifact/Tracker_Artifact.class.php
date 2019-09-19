@@ -36,6 +36,7 @@ use Tuleap\Tracker\Artifact\ActionButtons\ArtifactCopyButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactIncomingEmailButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactMoveButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactNotificationActionButtonPresenterBuilder;
+use Tuleap\Tracker\Artifact\ArtifactDescriptionProvider;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
@@ -522,30 +523,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
-     * @return string the description of the artifact, or null if no description defined in semantics
+     * @return string|null the description of the artifact, or null if no description defined in semantics
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
-        $description_field = Tracker_Semantic_Description::load($this->getTracker())->getField();
-        if (! $description_field) {
-            return null;
-        }
-
-        if (! $description_field->userCanRead()) {
-            return null;
-        }
-
-        $last_changeset = $this->getLastChangeset();
-        if (! $last_changeset) {
-            return null;
-        }
-
-        $description_field_value = $last_changeset->getValue($description_field);
-        if (! $description_field_value) {
-            return null;
-        }
-
-        return $description_field_value->getValue();
+        $provider = new ArtifactDescriptionProvider(Tracker_Semantic_Description::load($this->getTracker()));
+        return $provider->getDescription($this);
     }
 
     public function getCachedTitle() {
