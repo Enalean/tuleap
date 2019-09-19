@@ -24,6 +24,8 @@ namespace Tuleap\CLI\DelayExecution;
 
 final class ConditionalTuleapCronEnvExecutionDelayer implements ExecutionDelayer
 {
+    public const DELAY_ENV_VAR_NAME = 'TLP_DELAY_CRON_CMD';
+
     /**
      * @var ExecutionDelayer
      */
@@ -36,7 +38,7 @@ final class ConditionalTuleapCronEnvExecutionDelayer implements ExecutionDelayer
 
     public function delay() : void
     {
-        if (getenv('TLP_DELAY_CRON_CMD') === '1') {
+        if (getenv(self::DELAY_ENV_VAR_NAME) === '1') {
             $this->execution_delayer->delay();
         }
     }
