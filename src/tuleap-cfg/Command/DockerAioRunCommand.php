@@ -26,7 +26,6 @@ namespace TuleapCfg\Command;
 use SplFileInfo;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatter;
-use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
@@ -199,7 +198,7 @@ class DockerAioRunCommand extends Command
         copy(__DIR__.'/../../../tools/docker/tuleap-aio-c7/rsyslog.conf', '/etc/rsyslog.conf');
     }
 
-    private function setupSupervisord(OutputInterface $output)
+    private function setupSupervisord(OutputInterface $output) : void
     {
         $output->writeln("Setup Supervisord");
         foreach (new \DirectoryIterator(__DIR__.'/../../../tools/docker/tuleap-aio-c7/supervisor.d') as $file) {
@@ -208,6 +207,20 @@ class DockerAioRunCommand extends Command
                 copy($file->getPathname(), '/etc/supervisord.d/'.$file->getFilename());
             }
         }
+        file_put_contents(
+            '/etc/supervisord.d/supervisord-server-credentials.ini',
+            $this->generateCredentialsConfigurationForSupervisordSocket()
+        );
+    }
+
+    private function generateCredentialsConfigurationForSupervisordSocket() : string
+    {
+        $password = sodium_bin2hex(random_bytes(32));
+        return <<<EOT
+                [unix_http_server]
+                username = tuleap
+                password = $password
+                EOT;
     }
 
     private function setupPostfix(OutputInterface $output)
