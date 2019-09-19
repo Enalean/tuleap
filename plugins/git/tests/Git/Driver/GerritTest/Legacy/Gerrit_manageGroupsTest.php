@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/GerritTestBase.php';
 
-class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_baseTest implements Git_Driver_Gerrit_manageGroupsTest {
+class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_baseTest implements Git_Driver_Gerrit_manageGroupsTest
+{
     private $groupname = 'project/repo-contributors';
     private $expected_query = 'gerrit gsql --format json -c "SELECT\ *\ FROM\ account_groups\ WHERE\ name=\\\'project/repo-contributors\\\'"';
     /** @var Git_Driver_GerritLegacy */
@@ -59,7 +60,7 @@ class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_b
         stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
         expect($this->logger)->info("Gerrit: Group firefox/project_members successfully created")->once();
-        $this->gerrit_driver->createGroup($this->gerrit_server,  'firefox/project_members', 'firefox/project_admins');
+        $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', 'firefox/project_admins');
     }
 
     public function itRaisesAGerritDriverExceptionOnGroupsCreation()
@@ -72,7 +73,7 @@ class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_b
         stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_GerritLegacy::EXIT_CODE, '', $std_err));
 
         try {
-            $this->gerrit_driver->createGroup($this->gerrit_server,  'firefox/project_members', 'firefox/project_admins');
+            $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', 'firefox/project_admins');
             $this->fail('An exception was expected');
         } catch (Git_Driver_Gerrit_Exception $e) {
             $this->assertEqual($e->getMessage(), "Command: $command" . PHP_EOL . "Error: $std_err");

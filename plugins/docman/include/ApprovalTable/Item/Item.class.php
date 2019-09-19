@@ -20,13 +20,16 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableItem extends Docman_ApprovalTable {
+class Docman_ApprovalTableItem extends Docman_ApprovalTable
+{
     var $itemId = null;
 
     function initFromRow($row)
     {
         parent::initFromRow($row);
-        if(isset($row['item_id'])) $this->itemId = $row['item_id'];
+        if (isset($row['item_id'])) {
+            $this->itemId = $row['item_id'];
+        }
     }
 
     function setItemId($v)

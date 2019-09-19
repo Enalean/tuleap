@@ -17,18 +17,18 @@ function mail_header($params)
     $project=$pm->getProject($group_id);
 
     if (!$project->usesMail()) {
-        exit_error($Language->getText('global','error'),$Language->getText('mail_utils','mail_turned_off'));
+        exit_error($Language->getText('global', 'error'), $Language->getText('mail_utils', 'mail_turned_off'));
     }
 
     site_project_header($params);
     echo '<P><B>';
     // admin link is only displayed if the user is a project administrator
     if (user_ismember($group_id, 'A')) {
-        echo '<A HREF="/mail/admin/?group_id='.$group_id.'">'.$Language->getText('mail_utils','admin').'</A>';
+        echo '<A HREF="/mail/admin/?group_id='.$group_id.'">'.$Language->getText('mail_utils', 'admin').'</A>';
         echo ' | ';
     }
     if ($params['help']) {
-        echo help_button($params['help'],false,$Language->getText('global','help'));
+        echo help_button($params['help'], false, $Language->getText('global', 'help'));
     }
     echo '</B><P>';
 }
@@ -44,19 +44,18 @@ function mail_header_admin($params)
     $project=$pm->getProject($group_id);
 
     if (!$project->usesMail()) {
-        exit_error($Language->getText('global','error'),$Language->getText('mail_utils','mail_turned_off'));
+        exit_error($Language->getText('global', 'error'), $Language->getText('mail_utils', 'mail_turned_off'));
     }
 
     site_project_header($params);
     echo '
-		<P><B><A HREF="/mail/admin/?group_id='.$group_id.'">'.$Language->getText('mail_utils','admin').'</A></B>
- | <B><A HREF="/mail/admin/?group_id='.$group_id.'&add_list=1">'.$Language->getText('mail_utils','add_list').'</A></B>
- | <B><A HREF="/mail/admin/?group_id='.$group_id.'&change_status=1">'.$Language->getText('mail_utils','update_list').'</A></B>
+		<P><B><A HREF="/mail/admin/?group_id='.$group_id.'">'.$Language->getText('mail_utils', 'admin').'</A></B>
+ | <B><A HREF="/mail/admin/?group_id='.$group_id.'&add_list=1">'.$Language->getText('mail_utils', 'add_list').'</A></B>
+ | <B><A HREF="/mail/admin/?group_id='.$group_id.'&change_status=1">'.$Language->getText('mail_utils', 'update_list').'</A></B>
 ';
     if ($params['help']) {
-        echo ' | <B>'.help_button($params['help'],false,$Language->getText('global','help')).'</B>';
+        echo ' | <B>'.help_button($params['help'], false, $Language->getText('global', 'help')).'</B>';
     }
-
 }
 
 function mail_footer($params)
@@ -68,46 +67,49 @@ function mail_footer($params)
 function mail_is_list_public($list)
 {
 
-    $sql = sprintf('SELECT is_public FROM mail_group_list'.
+    $sql = sprintf(
+        'SELECT is_public FROM mail_group_list'.
                       ' WHERE group_list_id = "%d"',
-                      $list);
+        $list
+    );
     $res = db_query($sql);
 
-    return db_result($res,0,'is_public');
+    return db_result($res, 0, 'is_public');
 }
 
 //Checks if a mailing-list (list_id) exist and is active
 function mail_is_list_active($list)
 {
 
-    $sql = sprintf('SELECT status'.
+    $sql = sprintf(
+        'SELECT status'.
                     ' FROM mail_group_list'.
                     ' WHERE group_list_id = "%d"',
-                    $list);
+        $list
+    );
     $res = db_query($sql);
     if (db_numrows($res) < 1) {
         return false;
     } else {
-        $status = db_result($res,0,'status');
+        $status = db_result($res, 0, 'status');
         if ($status <> 1) {
             return false;
         } else {
             return true;
         }
     }
-
 }
 
 // Gets mailing-list name from list id
 function mail_get_listname_from_list_id($list_id)
 {
 
-    $sql = sprintf('SELECT list_name'.
+    $sql = sprintf(
+        'SELECT list_name'.
                     ' FROM mail_group_list'.
                     ' WHERE group_list_id = %d',
-                    $list_id);
+        $list_id
+    );
     $res = db_query($sql);
-    return db_result($res,0,'list_name');
+    return db_result($res, 0, 'list_name');
 }
-
-?>

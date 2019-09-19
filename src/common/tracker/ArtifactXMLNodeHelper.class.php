@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactXMLNodeHelper {
+class ArtifactXMLNodeHelper
+{
     /** @var DOMDocument */
     private $document;
 

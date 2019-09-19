@@ -20,7 +20,8 @@
  */
 
 
-class FRSRelease {
+class FRSRelease
+{
     public const PERM_READ        = 'RELEASE_READ';
 
     public const STATUS_ACTIVE  = 1;
@@ -274,15 +275,33 @@ class FRSRelease {
 
     function initFromArray($array)
     {
-        if (isset($array['release_id']))      $this->setReleaseID($array['release_id']);
-        if (isset($array['package_id']))      $this->setPackageID($array['package_id']);
-        if (isset($array['name']))            $this->setName($array['name']);
-        if (isset($array['notes']))           $this->setNotes($array['notes']);
-        if (isset($array['changes']))         $this->setChanges($array['changes']);
-        if (isset($array['status_id']))       $this->setStatusID($array['status_id']);
-        if (isset($array['preformatted']))    $this->setPreformatted($array['preformatted']);
-        if (isset($array['release_date']))    $this->setReleaseDate($array['release_date']);
-        if (isset($array['released_by']))     $this->setReleasedBy($array['released_by']);
+        if (isset($array['release_id'])) {
+            $this->setReleaseID($array['release_id']);
+        }
+        if (isset($array['package_id'])) {
+            $this->setPackageID($array['package_id']);
+        }
+        if (isset($array['name'])) {
+            $this->setName($array['name']);
+        }
+        if (isset($array['notes'])) {
+            $this->setNotes($array['notes']);
+        }
+        if (isset($array['changes'])) {
+            $this->setChanges($array['changes']);
+        }
+        if (isset($array['status_id'])) {
+            $this->setStatusID($array['status_id']);
+        }
+        if (isset($array['preformatted'])) {
+            $this->setPreformatted($array['preformatted']);
+        }
+        if (isset($array['release_date'])) {
+            $this->setReleaseDate($array['release_date']);
+        }
+        if (isset($array['released_by'])) {
+            $this->setReleasedBy($array['released_by']);
+        }
     }
 
     function toArray()
@@ -378,4 +397,3 @@ class FRSRelease {
         return ProjectManager::instance();
     }
 }
-

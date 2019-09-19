@@ -21,7 +21,8 @@
 
 require_once('bootstrap.php');
 
-class Tracker_FileInfo_CommonTest extends TuleapTestCase {
+class Tracker_FileInfo_CommonTest extends TuleapTestCase
+{
     protected $fixture_data_dir;
     protected $working_directory;
     /** @var Tracker_FormElement_Field_File */
@@ -61,10 +62,10 @@ class Tracker_FileInfo_CommonTest extends TuleapTestCase {
         $this->recurseDeleteInDir($this->working_directory);
         rmdir($this->working_directory);
     }
-
 }
 
-class Tracker_FileInfoTest extends Tracker_FileInfo_CommonTest {
+class Tracker_FileInfoTest extends Tracker_FileInfo_CommonTest
+{
 
     function testProperties()
     {
@@ -150,7 +151,7 @@ class Tracker_FileInfoTest extends Tracker_FileInfo_CommonTest {
                 'human'    => '977 MB',
             ),
         );
-        foreach($sizes as $s) {
+        foreach ($sizes as $s) {
             $id = $field = $submitted_by = $description = $filename = $filetype = '';
             $f = new Tracker_FileInfo($id, $field, $submitted_by, $description, $filename, $s['filesize'], $filetype);
             $this->assertEqual($f->getHumanReadableFilesize(), $s['human']);
@@ -158,7 +159,8 @@ class Tracker_FileInfoTest extends Tracker_FileInfo_CommonTest {
     }
 }
 
-class Tracker_FileInfo_PostUploadActionsTest extends Tracker_FileInfo_CommonTest {
+class Tracker_FileInfo_PostUploadActionsTest extends Tracker_FileInfo_CommonTest
+{
 
     private $thumbnails_dir;
 
@@ -240,7 +242,6 @@ class Tracker_FileInfo_PostUploadActionsTest extends Tracker_FileInfo_CommonTest
            'channels' => 3,
            'mime' => 'image/jpeg'
         ));
-
     }
 
     public function itEnsuresFilesIsOwnedByHttpUser()

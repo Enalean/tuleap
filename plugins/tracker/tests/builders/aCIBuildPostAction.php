@@ -25,7 +25,8 @@ function aCIBuildPostAction()
     return new Test_Transition_PostAction_CIBuild_Builder();
 }
 
-class Test_Transition_PostAction_CIBuild_Builder {
+class Test_Transition_PostAction_CIBuild_Builder
+{
 
     private $id;
 
@@ -74,5 +75,3 @@ class Test_Transition_PostAction_CIBuild_Builder {
         );
     }
 }
-
-?>

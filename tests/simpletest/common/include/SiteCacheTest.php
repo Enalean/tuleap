@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SiteCacheTest extends TuleapTestCase {
+class SiteCacheTest extends TuleapTestCase
+{
 
     private $global_language;
     private $global_html;

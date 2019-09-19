@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEventQueueStatistics extends SystemEventQueue {
+class SystemEventQueueStatistics extends SystemEventQueue
+{
 
     public const NAME = 'statistics';
 

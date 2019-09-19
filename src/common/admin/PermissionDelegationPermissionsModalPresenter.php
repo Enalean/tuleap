@@ -18,7 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class Admin_PermissionDelegationPermissionsModalPresenter {
+class Admin_PermissionDelegationPermissionsModalPresenter
+{
 
     /**
      * @var int

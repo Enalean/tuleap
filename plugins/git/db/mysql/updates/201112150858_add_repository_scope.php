@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201112150858_add_repository_scope extends ForgeUpgrade_Bucket {
+class b201112150858_add_repository_scope extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -62,7 +63,6 @@ EOT;
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column repository_scope to the table plugin_git');
         }
-
     }
 
     /**
@@ -76,7 +76,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column repository_scope in table plugin_git is missing');
         }
     }
-
 }
-
-?>

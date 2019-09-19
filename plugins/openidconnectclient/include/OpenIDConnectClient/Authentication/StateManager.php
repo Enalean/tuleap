@@ -54,15 +54,15 @@ class StateManager
     {
         $stored_state = $this->state_storage->loadState();
 
-        if($stored_state === null && $signed_state !== null) {
+        if ($stored_state === null && $signed_state !== null) {
             throw new InvalidLocalStateException('Invalid stored state hash - empty string');
         }
 
-        if($stored_state !== null && $signed_state === null) {
+        if ($stored_state !== null && $signed_state === null) {
             throw new InvalidRemoteStateException('The server did not return a state hash');
         }
 
-        if($stored_state !== null && $signed_state !== null) {
+        if ($stored_state !== null && $signed_state !== null) {
             try {
                 return State::createFromSignature(
                     $signed_state,

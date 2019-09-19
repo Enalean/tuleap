@@ -28,7 +28,8 @@ use Tuleap\PluginsAdministration\AvailablePluginsPresenter;
 use Tuleap\PluginsAdministration\PluginDisablerVerifier;
 use Tuleap\PluginsAdministration\PluginPropertiesPresenter;
 
-class PluginsAdministrationViews extends Views {
+class PluginsAdministrationViews extends Views
+{
 
     /** @var PluginManager */
     private $plugin_manager;
@@ -44,7 +45,7 @@ class PluginsAdministrationViews extends Views {
      */
     private $plugin_disabler_verifier;
 
-    function __construct(&$controler, $view=null)
+    function __construct(&$controler, $view = null)
     {
         $this->View($controler, $view);
         $this->plugin_manager           = PluginManager::instance();
@@ -70,7 +71,7 @@ class PluginsAdministrationViews extends Views {
         $GLOBALS['HTML']->footer(array());
     }
 
-    public function display($view='')
+    public function display($view = '')
     {
         $renderer       = new AdminPageRenderer();
         $request        = HTTPRequest::instance();
@@ -101,10 +102,9 @@ class PluginsAdministrationViews extends Views {
                 if ($request->exist('plugin_id')) {
                     $plugin = $plugin_factory->getPluginById($request->get('plugin_id'));
 
-                    if(! $plugin) {
+                    if (! $plugin) {
                         $GLOBALS['HTML']->redirect('/plugins/pluginsadministration/');
                         return;
-
                     } else {
                         $presenter = $this->getPluginPropertiesPresenter(
                             $plugin
@@ -274,7 +274,7 @@ class PluginsAdministrationViews extends Views {
             }
 
             $plugins = $plugin_manager->getAllPlugins();
-            foreach($plugins as $plugin) {
+            foreach ($plugins as $plugin) {
                 $plug_info  = $plugin->getPluginInfo();
                 $descriptor = $plug_info->getPluginDescriptor();
                 $available = $plugin_manager->isPluginAvailable($plugin);
@@ -316,7 +316,7 @@ class PluginsAdministrationViews extends Views {
         usort(
             $this->_plugins,
             function ($a, $b) {
-                return strcasecmp($a['name'] , $b['name']);
+                return strcasecmp($a['name'], $b['name']);
             }
         );
 

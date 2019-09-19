@@ -18,13 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FRSProcessorDao extends DataAccessObject {
+class FRSProcessorDao extends DataAccessObject
+{
 
     public function listProcessors($group_id)
     {
         $sql = sprintf(
-              "SELECT * FROM frs_processor WHERE group_id=100 OR group_id=%s ORDER BY rank",
-              $this->da->quoteSmart((int) $group_id));
+            "SELECT * FROM frs_processor WHERE group_id=100 OR group_id=%s ORDER BY rank",
+            $this->da->quoteSmart((int) $group_id)
+        );
         return $this->retrieve($sql);
     }
 
@@ -34,11 +36,12 @@ class FRSProcessorDao extends DataAccessObject {
     public function searchProcessorId($group_id, $name)
     {
         $sql = sprintf(
-              "SELECT * FROM frs_processor WHERE (group_id=100 OR group_id=%s) AND name=%s ORDER BY rank",
-              $this->da->escapeInt($group_id),
-            $this->da->quoteSmart((string) $name));
+            "SELECT * FROM frs_processor WHERE (group_id=100 OR group_id=%s) AND name=%s ORDER BY rank",
+            $this->da->escapeInt($group_id),
+            $this->da->quoteSmart((string) $name)
+        );
         $proc = $this->retrieve($sql);
-        if(!$proc->valid()) {
+        if (!$proc->valid()) {
                    return null;
         }
         $current = $proc->current();

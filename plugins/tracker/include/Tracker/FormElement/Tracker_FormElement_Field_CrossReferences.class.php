@@ -21,7 +21,8 @@
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
+class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
+{
 
     public const REST_REF_INDEX          = 'ref';
     public const REST_REF_URL            = 'url';
@@ -35,7 +36,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     public function getCriteriaFrom($criteria)
     {
         //Only filter query if field is used
-        if($this->isUsed()) {
+        if ($this->isUsed()) {
             //Only filter query if criteria is valuated
             if ($criteria_value = $this->getCriteriaValue($criteria)) {
                 $criteria_value = CodendiDataAccess::instance()->quoteSmart($criteria_value);
@@ -71,14 +72,15 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     private function getCrossReferenceListForREST(Tracker_Artifact_Changeset $changeset)
     {
         $crf  = new CrossReferenceFactory(
-            $changeset->getArtifact()->getId(), Tracker_Artifact::REFERENCE_NATURE,
+            $changeset->getArtifact()->getId(),
+            Tracker_Artifact::REFERENCE_NATURE,
             $this->getTracker()->getGroupId()
         );
         $crf->fetchDatas();
 
         $list = array();
         $refs = $crf->getFormattedCrossReferences();
-        if (! empty($refs['target']) ) {
+        if (! empty($refs['target'])) {
             foreach ($refs['target'] as $refTgt) {
                 $list[] = array(
                     self::REST_REF_INDEX     => $refTgt['ref'],
@@ -87,7 +89,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                 );
             }
         }
-        if (! empty($refs['source']) ) {
+        if (! empty($refs['source'])) {
             foreach ($refs['source'] as $refSrc) {
                 $list[] = array(
                     self::REST_REF_INDEX     => $refSrc['ref'],
@@ -96,7 +98,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                 );
             }
         }
-        if (! empty($refs['both']) ) {
+        if (! empty($refs['both'])) {
             foreach ($refs['both'] as $refBoth) {
                 $list[] = array(
                     self::REST_REF_INDEX     => $refBoth['ref'],
@@ -124,7 +126,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return '';
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
     {
         $crossref_fact = $this->getCrossReferencesFactory($artifact_id);
 
@@ -230,7 +232,6 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
 
     public function afterCreate(array $form_element_data, $tracker_is_empty)
     {
-
     }
 
     /**
@@ -392,8 +393,8 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                 $tgt  = '';
                 $both = '';
                 $output = PHP_EOL;
-                if ( !empty($refs['target']) ) {
-                    foreach ( $refs['target'] as $refTgt ) {
+                if (!empty($refs['target'])) {
+                    foreach ($refs['target'] as $refTgt) {
                         $tgt .= $refTgt['ref'];
                         $tgt .= PHP_EOL;
                         $tgt .= $refTgt['url'];
@@ -402,8 +403,8 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                     $output .= ' -> Target : '.PHP_EOL.$tgt;
                     $output .= PHP_EOL;
                 }
-                if ( !empty($refs['source']) ) {
-                    foreach ( $refs['source'] as $refSrc ) {
+                if (!empty($refs['source'])) {
+                    foreach ($refs['source'] as $refSrc) {
                         $src .= $refSrc['ref'];
                         $src .= PHP_EOL;
                         $src .= $refSrc['url'];
@@ -412,8 +413,8 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                     $output .= ' -> Source : '.PHP_EOL.$src;
                     $output .= PHP_EOL;
                 }
-                if ( !empty($refs['both']) ) {
-                    foreach ( $refs['both'] as $refBoth ) {
+                if (!empty($refs['both'])) {
+                    foreach ($refs['both'] as $refBoth) {
                         $both .= $refBoth['ref'];
                         $both .= PHP_EOL;
                         $both .= $refBoth['url'];
@@ -434,7 +435,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     protected function fetchAdminFormElement()
     {
         $html = '';
-        $html .= '<div>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','display_references') .'</div>';
+        $html .= '<div>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'display_references') .'</div>';
         return $html;
     }
 

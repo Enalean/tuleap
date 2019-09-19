@@ -37,7 +37,8 @@ use Tuleap\Git\PathJoinUtil;
  * And if you don't push, you will stay in Gitolite admin directory!
  *
  */
-class Git_GitoliteDriver {
+class Git_GitoliteDriver
+{
 
     /**
      * @var Logger
@@ -90,9 +91,9 @@ class Git_GitoliteDriver {
         Git::PERM_WPLUS => ' RW+'
     );
 
-    public CONST OLD_AUTHORIZED_KEYS_PATH = "/usr/com/gitolite/.ssh/authorized_keys";
-    public CONST NEW_AUTHORIZED_KEYS_PATH = "/var/lib/gitolite/.ssh/authorized_keys";
-    public CONST EXTRA_REPO_RESTORE_DEPTH = 2;
+    public const OLD_AUTHORIZED_KEYS_PATH = "/usr/com/gitolite/.ssh/authorized_keys";
+    public const NEW_AUTHORIZED_KEYS_PATH = "/var/lib/gitolite/.ssh/authorized_keys";
+    public const EXTRA_REPO_RESTORE_DEPTH = 2;
 
     /**
      * Constructor
@@ -107,7 +108,7 @@ class Git_GitoliteDriver {
         GitDao $git_dao,
         Git_Mirror_MirrorDao $git_mirror_dao,
         GitPlugin $git_plugin,
-        ?Git_Exec $gitExec                        = null,
+        ?Git_Exec $gitExec = null,
         ?GitRepositoryFactory $repository_factory = null,
         ?Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer = null,
         ?Git_Gitolite_GitoliteConfWriter $gitolite_conf_writer = null,
@@ -130,7 +131,7 @@ class Git_GitoliteDriver {
         $this->project_manager        = $project_manager ? $project_manager : ProjectManager::instance();
         $this->url_manager            = $url_manager;
 
-        if(empty($mirror_data_mapper)) {
+        if (empty($mirror_data_mapper)) {
             $this->mirror_data_mapper = new Git_Mirror_MirrorDataMapper(
                 $git_mirror_dao,
                 UserManager::instance(),
@@ -147,7 +148,7 @@ class Git_GitoliteDriver {
             $this->mirror_data_mapper = $mirror_data_mapper;
         }
 
-        if(empty($permissions_serializer)) {
+        if (empty($permissions_serializer)) {
             $this->permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
                 $this->mirror_data_mapper,
                 new Git_Driver_Gerrit_ProjectCreatorStatus(
@@ -181,7 +182,6 @@ class Git_GitoliteDriver {
             $this->project_manager,
             $adminPath
         );
-
     }
 
     /**
@@ -231,7 +231,7 @@ class Git_GitoliteDriver {
                     }
                 }
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             // If directory doesn't even exists, return false
         }
         return false;
@@ -331,13 +331,11 @@ class Git_GitoliteDriver {
 
         $git_modifications = $this->gitolite_conf_writer->renameProject($oldName, $newName);
 
-        foreach ($git_modifications->toAdd() as $file)
-        {
+        foreach ($git_modifications->toAdd() as $file) {
             $ok = $ok && $this->gitExec->add($file);
         }
 
-        foreach ($git_modifications->toMove() as $old_file => $new_file)
-        {
+        foreach ($git_modifications->toMove() as $old_file => $new_file) {
             $ok = $ok && $this->gitExec->mv($old_file, $new_file);
         }
 
@@ -350,13 +348,13 @@ class Git_GitoliteDriver {
 
     public function delete($path)
     {
-        if ( empty($path) || !is_writable($path) ) {
+        if (empty($path) || !is_writable($path)) {
             throw new GitDriverErrorException('Empty path or permission denied '.$path);
         }
         $rcode = 0;
         $this->logger->debug('Removing physically the repository...');
         $output = system('rm -fr '.escapeshellarg($path), $rcode);
-        if ( $rcode != 0 ) {
+        if ($rcode != 0) {
             throw new GitDriverErrorException('Unable to delete path '.$path);
         }
         $this->logger->debug('Removing physically the repository: done');
@@ -466,23 +464,23 @@ class Git_GitoliteDriver {
     {
         $repository_path = $git_root_path.$repository->getPath();
         $backup_path     = $this->getBackupPath($repository, $backup_directory);
-        if(! file_exists($backup_path)) {
+        if (! file_exists($backup_path)) {
             $this->logger->error('[Gitolite][Restore] Unable to find repository archive: '.$backup_path);
             return false;
         }
 
         $backup_path = realpath($backup_path);
 
-        if(!$this->extractRepository($backup_path)) {
+        if (!$this->extractRepository($backup_path)) {
             $this->logger->error('[Gitolite][Restore] Unable to restore repository: '.$repository->getName());
             return false;
         }
         $this->deleteBackup($repository, $backup_directory);
 
-        if(!$this->getDao()->activate($repository->getId())) {
+        if (!$this->getDao()->activate($repository->getId())) {
             $this->logger->error('[Gitolite][Restore] Unable to activate repository after restore: '.$repository->getName());
         }
-        if(!$repository->getBackend()->updateRepoConf($repository)) {
+        if (!$repository->getBackend()->updateRepoConf($repository)) {
             $this->logger->warn('[Gitolite][Restore] Unable to update repository configuration after restore : '.$repository->getName());
         }
 

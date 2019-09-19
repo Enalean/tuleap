@@ -20,7 +20,8 @@
  */
 
 
-class Tracker_Semantic_TitleDao extends DataAccessObject {
+class Tracker_Semantic_TitleDao extends DataAccessObject
+{
 
     public function __construct()
     {

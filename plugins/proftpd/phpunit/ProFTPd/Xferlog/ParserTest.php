@@ -22,7 +22,8 @@ use Tuleap\ProFTPd\Xferlog\InvalidEntryException;
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class ParserTest extends \PHPUnit\Framework\TestCase {
+class ParserTest extends \PHPUnit\Framework\TestCase
+{
 
     public function testItExtractAnEntryFromALine()
     {

@@ -19,7 +19,8 @@
  */
 require_once __DIR__.'/../../../../bootstrap.php';
 
-class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdaterTest extends TuleapTestCase {
+class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdaterTest extends TuleapTestCase
+{
 
     /** @var Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater */
     private $updater;
@@ -35,8 +36,7 @@ class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdaterTest extends Tule
             . '<field_change field_name="status" type="list" bind="static">'
             . '  <value format="id">101</value>'
             . '  <value format="id">102</value>'
-            . '</field_change>'
-        );
+            . '</field_change>');
     }
 
     public function itUpdatesTheValueNodesValueWithTwoNewSubmittedValue()

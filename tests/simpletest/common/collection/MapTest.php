@@ -20,7 +20,8 @@
  */
 
 
-class MapTest extends TuleapTestCase {
+class MapTest extends TuleapTestCase
+{
 
     function testEmptyMap()
     {

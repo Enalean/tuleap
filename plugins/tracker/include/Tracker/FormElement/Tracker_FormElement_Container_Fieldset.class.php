@@ -194,7 +194,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         $html .= '</span>';
         $html .= '</legend>';
         $content = array();
-        foreach($this->getFormElements() as $formElement) {
+        foreach ($this->getFormElements() as $formElement) {
             $content[] = $formElement->fetchAdmin($tracker);
         }
         $html .= implode('', $content);
@@ -270,7 +270,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
      */
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','fieldset');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'fieldset');
     }
 
     /**
@@ -278,7 +278,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
      */
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','fieldset_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'fieldset_description');
     }
 
     /**

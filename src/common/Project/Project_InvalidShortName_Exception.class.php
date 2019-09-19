@@ -17,11 +17,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Project_InvalidShortName_Exception extends Exception {
+class Project_InvalidShortName_Exception extends Exception
+{
     function __construct($message)
     {
         parent::__construct($message, 3102);
     }
 }
-
-?>

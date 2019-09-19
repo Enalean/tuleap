@@ -141,7 +141,7 @@ class PluginsAdministrationActions extends Actions
     {
         $sPrjList = null;
         $usList = trim(rtrim($usList));
-        if($usList) {
+        if ($usList) {
             $usPrjList = explode(',', $usList);
             $sPrjList = array_map('intval', $usPrjList);
         }
@@ -164,19 +164,19 @@ class PluginsAdministrationActions extends Actions
 
     function _changePluginGenericProperties($properties)
     {
-        if(isset($properties['allowed_project'])) {
+        if (isset($properties['allowed_project'])) {
             $sPrjList = $this->_validateProjectList($properties['allowed_project']);
-            if($sPrjList !== null) {
+            if ($sPrjList !== null) {
                 $this->_addAllowedProjects($sPrjList);
             }
         }
-        if(isset($properties['disallowed_project'])) {
+        if (isset($properties['disallowed_project'])) {
             $sPrjList = $this->_validateProjectList($properties['disallowed_project']);
-            if($sPrjList !== null) {
+            if ($sPrjList !== null) {
                 $this->_delAllowedProjects($sPrjList);
             }
         }
-        if(isset($properties['prj_restricted'])) {
+        if (isset($properties['prj_restricted'])) {
             $plugin = $this->_getPluginFromRequest();
             $plugin_manager = $this->plugin_manager;
             $resricted = ($properties['prj_restricted'] == 1 ? true : false);
@@ -200,7 +200,7 @@ class PluginsAdministrationActions extends Actions
             $GLOBALS['Response']->redirect($plugin_properties_url);
         }
         $this->checkSynchronizerToken($plugin_properties_url);
-        if($request->exist('gen_prop')) {
+        if ($request->exist('gen_prop')) {
             $this->_changePluginGenericProperties($request->get('gen_prop'));
         }
         $user_properties = $request->get('properties');
@@ -210,7 +210,7 @@ class PluginsAdministrationActions extends Actions
             $descs = $plug_info->getPropertyDescriptors();
             $keys  = $descs->getKeys();
             $iter  = $keys->iterator();
-            while($iter->valid()) {
+            while ($iter->valid()) {
                 $key   = $iter->current();
                 $desc  = $descs->get($key);
                 $prop_name = $desc->getName();
@@ -269,7 +269,6 @@ class PluginsAdministrationActions extends Actions
 
             if ($all_allowed) {
                 $this->unsetPluginRestricted($plugin);
-
             } else {
                 $this->setPluginRestricted($plugin);
             }
@@ -325,7 +324,6 @@ class PluginsAdministrationActions extends Actions
 
             if ($request->get('allow-project') && ! empty($project_to_add)) {
                 $this->allowProjectOnPlugin($plugin, $project_to_add);
-
             } elseif ($request->get('revoke-project') && ! empty($project_ids_to_remove)) {
                 $this->revokeProjectsFromPlugin($plugin, $project_ids_to_remove);
             }
@@ -355,7 +353,6 @@ class PluginsAdministrationActions extends Actions
         } else {
             $this->sendUpdateProjectListError();
         }
-
     }
 
     private function revokeProjectsFromPlugin(Plugin $plugin, $project_ids)
@@ -370,7 +367,6 @@ class PluginsAdministrationActions extends Actions
         } else {
             $this->sendUpdateProjectListError();
         }
-
     }
 
     private function sendUpdateProjectListError()

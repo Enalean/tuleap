@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ForgeUpgradeConfigTest extends TuleapTestCase {
+class ForgeUpgradeConfigTest extends TuleapTestCase
+{
     private $fixtures;
     private $command;
 
@@ -93,7 +94,8 @@ class ForgeUpgradeConfigTest extends TuleapTestCase {
     }
 }
 
-class ForgeUpgradeConfig_InstallPluginTest extends TuleapTestCase {
+class ForgeUpgradeConfig_InstallPluginTest extends TuleapTestCase
+{
     private $command;
     private $forgeupgrade_config;
 
@@ -112,7 +114,8 @@ class ForgeUpgradeConfig_InstallPluginTest extends TuleapTestCase {
     }
 }
 
-class ForgeUpgradeConfig_IsSystemUpToDateTest extends TuleapTestCase {
+class ForgeUpgradeConfig_IsSystemUpToDateTest extends TuleapTestCase
+{
     private $command;
     private $forgeupgrade_config;
     private $config_file;

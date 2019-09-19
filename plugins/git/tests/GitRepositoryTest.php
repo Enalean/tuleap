@@ -22,7 +22,8 @@ require_once 'bootstrap.php';
 
 Mock::generatePartial('GitRepository', 'GitRepositorySecondTestVersion', array('_getProjectManager', 'getDao'));
 
-class GitRepositoryTest extends TuleapTestCase {
+class GitRepositoryTest extends TuleapTestCase
+{
 
     public function testDeletionPathShouldBeInProjectPath()
     {
@@ -216,7 +217,8 @@ class GitRepositoryTest extends TuleapTestCase {
     }
 }
 
-class GitRepository_CanDeletedTest extends TuleapTestCase {
+class GitRepository_CanDeletedTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -255,7 +257,8 @@ class GitRepository_CanDeletedTest extends TuleapTestCase {
     }
 }
 
-class GitRepository_GetAccessUrlTest extends TuleapTestCase {
+class GitRepository_GetAccessUrlTest extends TuleapTestCase
+{
     /**
      * @var Git_Backend_Interface
      */

@@ -18,6 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_Trigger_Exception_RuleException extends Tracker_Exception {}
-
-?>
+class Tracker_Workflow_Trigger_Exception_RuleException extends Tracker_Exception
+{
+}

@@ -27,7 +27,8 @@
  * The ldap object is initialized with global parameters (from local.inc):
  * servers, query templates, etc.
  */
-class LDAP {
+class LDAP
+{
     /**
      * This is equivalent to searching the entire directory.
      */
@@ -112,7 +113,7 @@ class LDAP {
         if (!$this->ds) {
             foreach (explode('[,;]', $this->ldapParams['server']) as $ldap_server) {
                 $this->ds = ldap_connect($ldap_server);
-                if($this->ds) {
+                if ($this->ds) {
                     // Force protocol to LDAPv3 (for AD & recent version of OpenLDAP)
                     ldap_set_option($this->ds, LDAP_OPT_PROTOCOL_VERSION, 3);
                     ldap_set_option($this->ds, LDAP_OPT_REFERRALS, 0);
@@ -121,26 +122,23 @@ class LDAP {
                     // OpenLdap 2.2.x, we have to check that this ressource is
                     // valid with a bind, If bind success: that's great, if
                     // not, this is a connexion failure.
-                    if($this->bind()) {
+                    if ($this->bind()) {
                         $this->logger->debug('Bound to LDAP server: '.$ldap_server);
                         return true;
                     } else {
                         $this->logger->warn('Cannot bind to LDAP server: '.$ldap_server.
                             ' ***ERROR MESSSAGE:'. ldap_error($this->ds).
-                            ' ***ERROR no:'. $this->getErrno()
-                        );
+                            ' ***ERROR no:'. $this->getErrno());
                     }
                 } else {
                     $this->logger->warn('Cannot connect to LDAP server: '.$ldap_server.
                         ' ***ERROR:'. ldap_error($this->ds) .
-                        ' ***ERROR no:'. $this->getErrno()
-                    );
+                        ' ***ERROR no:'. $this->getErrno());
                 }
             }
             $this->logger->warn('Cannot connect to any LDAP server: '.$this->ldapParams['server'].
                 ' ***ERROR:'. ldap_error($this->ds).
-                ' ***ERROR no:'. $this->getErrno()
-            );
+                ' ***ERROR no:'. $this->getErrno());
             return false;
         } else {
             return true;
@@ -183,9 +181,9 @@ class LDAP {
      *
      * @return bool true if bind was successful, false otherwise.
      */
-    function bind($binddn=null, $bindpw=null)
+    function bind($binddn = null, $bindpw = null)
     {
-        if(!$this->bound) {
+        if (!$this->bound) {
             if (!$binddn) {
                 $binddn=isset($this->ldapParams['bind_dn']) ? $this->ldapParams['bind_dn'] : null;
                 $bindpw=isset($this->ldapParams['bind_passwd']) ? $this->ldapParams['bind_passwd'] : null;
@@ -195,8 +193,7 @@ class LDAP {
                 // accepts anonymous connections
                 //$this->setError($Language->getText('ldap_class','err_bind_nopasswd',$binddn));
                 $this->logger->error('Cannot connect to LDAP server: '.$this->ldapParams['server'].
-                    ' ***ERROR: will not bind if a username is given and the server accepts anonymous connections'
-                );
+                    ' ***ERROR: will not bind if a username is given and the server accepts anonymous connections');
                 $this->bound = false;
             }
 
@@ -289,7 +286,7 @@ class LDAP {
         // authentication will always be successfull.
         $this->unbind();
         try {
-            return $this->bind($auth_dn,$passwd);
+            return $this->bind($auth_dn, $passwd);
         } finally {
             $this->unbind();
         }
@@ -311,7 +308,7 @@ class LDAP {
      *
      * @return LDAPResultIterator|false
      */
-    public function search($baseDn, $filter, $scope=self::SCOPE_SUBTREE, $attributes=array(), $attrsOnly=0, $sizeLimit=0, $timeLimit=0, $deref=LDAP_DEREF_NEVER)
+    public function search($baseDn, $filter, $scope = self::SCOPE_SUBTREE, $attributes = array(), $attrsOnly = 0, $sizeLimit = 0, $timeLimit = 0, $deref = LDAP_DEREF_NEVER)
     {
         $this->trapErrors();
 
@@ -320,11 +317,11 @@ class LDAP {
             switch ($scope) {
                 case self::SCOPE_BASE:
                     $sr = ldap_read($this->ds, $baseDn, $filter, $attributes, $attrsOnly, $sizeLimit, $timeLimit, $deref);
-                break;
+                    break;
 
                 case self::SCOPE_ONELEVEL:
                     $sr = ldap_list($this->ds, $baseDn, $filter, $attributes, $attrsOnly, $sizeLimit, $timeLimit, $deref);
-                break;
+                    break;
 
                 case self::SCOPE_SUBTREE:
                 default:
@@ -341,8 +338,7 @@ class LDAP {
             } else {
                 $this->logger->warn('LDAP search error: '.$baseDn.' '.$filter.' '.$this->ldapParams['server'].
                     ' ***ERROR:'. ldap_error($this->ds).
-                    ' ***ERROR no:'. $this->getErrno()
-                );
+                    ' ***ERROR no:'. $this->getErrno());
             }
         }
 
@@ -368,7 +364,7 @@ class LDAP {
      *
      * @return LDAPResultIterator|false
      */
-    function searchDn($dn, $attributes=array())
+    function searchDn($dn, $attributes = array())
     {
         $attributes = count($attributes) > 0 ? $attributes : $this->getDefaultAttributes();
         return $this->search($dn, 'objectClass=*', self::SCOPE_BASE, $attributes);
@@ -476,17 +472,17 @@ class LDAP {
      *
      * @return AppendIterator
      */
-    function searchUserAsYouType($name, $sizeLimit, $validEmail=false)
+    function searchUserAsYouType($name, $sizeLimit, $validEmail = false)
     {
         $apIt  = new AppendIterator();
-        if($name && $this->_connectAndBind()) {
+        if ($name && $this->_connectAndBind()) {
             $name = ldap_escape($name, '', LDAP_ESCAPE_FILTER);
             if (isset($this->ldapParams['tooltip_search_user'])) {
                 $filter = str_replace("%words%", $name, $this->ldapParams['tooltip_search_user']);
             } else {
                 $filter = '('.$this->ldapParams['cn'].'='.$name.'*)';
             }
-            if($validEmail) {
+            if ($validEmail) {
                 // Only search people with a non empty mail field
                 $mail = ldap_escape($this->ldapParams['mail'], '', LDAP_ESCAPE_FILTER);
                 $filter = '(&'.$filter.'('.$mail.'=*))';
@@ -551,7 +547,7 @@ class LDAP {
     function searchGroupAsYouType($name, $sizeLimit)
     {
         $lri = false;
-        if($this->_connectAndBind()) {
+        if ($this->_connectAndBind()) {
             $name = ldap_escape($name, '', LDAP_ESCAPE_FILTER);
             // Use display name if setting is found. Otherwise, fall back on old hard-coded filter.
             if (isset($this->ldapParams['tooltip_search_grp'])) {
@@ -676,7 +672,8 @@ class LDAP {
     private function _initErrorHandler()
     {
         if ($this->errorsTrapped) {
-            set_error_handler(function ($errno, $errstr) {});
+            set_error_handler(function ($errno, $errstr) {
+            });
         }
     }
 

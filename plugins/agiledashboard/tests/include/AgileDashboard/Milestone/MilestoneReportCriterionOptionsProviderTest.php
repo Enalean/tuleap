@@ -19,7 +19,8 @@
  */
 require_once __DIR__.'/../../../bootstrap.php';
 
-class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest extends TuleapTestCase {
+class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest extends TuleapTestCase
+{
 
     public function setUp()
     {

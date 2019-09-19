@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field_Selectbox {
+class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field_Selectbox
+{
 
     public $default_properties = array(
         'size' => array(
@@ -64,7 +65,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
      */
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','multiselectbox');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'multiselectbox');
     }
 
     /**
@@ -72,7 +73,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
      */
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','multiselectbox_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'multiselectbox_description');
     }
 
     /**
@@ -169,9 +170,10 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
     {
         if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
             return array_unique(
-               array_map(
-                   array($this->getBind(), 'getFieldDataFromRESTValue'), $value['bind_value_ids']
-               )
+                array_map(
+                    array($this->getBind(), 'getFieldDataFromRESTValue'),
+                    $value['bind_value_ids']
+                )
             );
         }
 

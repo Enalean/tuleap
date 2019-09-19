@@ -40,7 +40,8 @@ use PFUser;
 use Project;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 
-class MilestoneResourceValidator {
+class MilestoneResourceValidator
+{
 
     /** @var \Planning_MilestoneFactory */
     private $milestone_factory;
@@ -140,13 +141,13 @@ class MilestoneResourceValidator {
 
     public function validateSubmilestonesFromBodyContent(array $ids, Planning_Milestone $milestone, PFUser $user)
     {
-        if (! $milestone->getArtifact()->userCanUpdate($user)){
+        if (! $milestone->getArtifact()->userCanUpdate($user)) {
             throw new UserCannotUpdateMilestoneException($milestone->getArtifactId());
         }
 
         $this->validateIdsAreUnique($ids);
 
-        foreach($ids as $id) {
+        foreach ($ids as $id) {
             $this->checkSubMilestoneById($milestone, $user, $id);
         }
     }
@@ -166,7 +167,6 @@ class MilestoneResourceValidator {
         $artifacts = array();
 
         foreach ($ids as $potential_backlog_item_id) {
-
             $artifact = $this->tracker_artifact_factory->getArtifactById($potential_backlog_item_id);
             if (! $artifact) {
                 throw new ArtifactDoesNotExistException($potential_backlog_item_id);
@@ -219,7 +219,7 @@ class MilestoneResourceValidator {
 
         $unplanned = $this->backlog_item_collection_factory->getUnplannedCollection($user, $milestone, $this->backlog_factory->getBacklog($milestone), false);
 
-        foreach($ids as $id) {
+        foreach ($ids as $id) {
             if (! $unplanned->containsId($id)) {
                 throw new ArtifactIsNotInUnplannedBacklogItemsException($id);
             }
@@ -256,7 +256,7 @@ class MilestoneResourceValidator {
             $indexed_children_backlog_trackers = $this->getIndexedChildrenBacklogTrackers($milestone);
         }
 
-        foreach($ids_to_add as $id) {
+        foreach ($ids_to_add as $id) {
             $artifact = $this->tracker_artifact_factory->getArtifactById($id);
             if (! isset($indexed_children_backlog_trackers[$artifact->getTrackerId()])) {
                 throw new ArtifactCannotBeInBacklogOfException($milestone->getArtifactId(), $artifact->getId(), $artifact->getTracker()->getItemName(), array_keys($indexed_children_backlog_trackers));
@@ -327,7 +327,7 @@ class MilestoneResourceValidator {
         $backlog_unassigned = $this->backlog_factory->getSelfBacklog($top_milestone);
         $unassigned         = $this->backlog_item_collection_factory->getUnassignedCollection($user, $top_milestone, $backlog_unassigned, false);
 
-        foreach($ids as $id) {
+        foreach ($ids as $id) {
             if (! $unassigned->containsId($id)) {
                 throw new ArtifactIsNotInUnassignedTopBacklogItemsException($id);
             }
@@ -352,7 +352,7 @@ class MilestoneResourceValidator {
             throw new UserCannotReadSubMilestoneException($sub_milesone_id);
         }
 
-        if($sub_milestone->getParent() && $sub_milestone->getParent()->getArtifactId() != $milestone->getArtifactId()) {
+        if ($sub_milestone->getParent() && $sub_milestone->getParent()->getArtifactId() != $milestone->getArtifactId()) {
             throw new SubMilestoneAlreadyHasAParentException($sub_milesone_id);
         }
     }

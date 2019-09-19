@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_View_Hierarchy extends Tracker_Artifact_View_View {
+class Tracker_Artifact_View_Hierarchy extends Tracker_Artifact_View_View
+{
 
     /** @see Tracker_Artifact_View_View::getTitle() */
     public function getTitle()
@@ -38,4 +39,3 @@ class Tracker_Artifact_View_Hierarchy extends Tracker_Artifact_View_View {
         return '<div data-artifact-id="'. $this->artifact->getId() .'" class="artifact-hierarchy"></div>';
     }
 }
-?>

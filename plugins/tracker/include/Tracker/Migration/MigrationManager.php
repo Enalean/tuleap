@@ -33,7 +33,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
-class Tracker_Migration_MigrationManager {
+class Tracker_Migration_MigrationManager
+{
 
     public const INDENT_XSL_RESOURCE = '/xml/indent.xsl';
 

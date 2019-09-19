@@ -40,7 +40,8 @@ use Tuleap\Tracker\REST\Artifact\FileDataRepresentation;
 use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 use UserManager;
 
-class ArtifactTemporaryFilesResource {
+class ArtifactTemporaryFilesResource
+{
 
     public const PAGINATION_MAX_LIMIT      = 50;
     public const PAGINATION_DEFAULT_LIMIT  = 10;
@@ -79,7 +80,7 @@ class ArtifactTemporaryFilesResource {
      *
      * @throws RestException 400
      */
-    protected function get($limit  = self::PAGINATION_DEFAULT_LIMIT, $offset = self::PAGINATION_DEFAULT_OFFSET)
+    protected function get($limit = self::PAGINATION_DEFAULT_LIMIT, $offset = self::PAGINATION_DEFAULT_OFFSET)
     {
         if ($limit > self::PAGINATION_MAX_LIMIT) {
             throw new RestException(400);
@@ -138,7 +139,6 @@ class ArtifactTemporaryFilesResource {
 
         try {
             return $this->file_manager->getTemporaryFileChunk($file, $offset, $limit);
-
         } catch (FileNotFoundException $e) {
             throw new RestException(404);
         }
@@ -235,7 +235,6 @@ class ArtifactTemporaryFilesResource {
         try {
             $this->file_manager->validateChunkSize($this->user, $content);
             $this->file_manager->appendChunk($content, $file, $offset);
-
         } catch (ChunkTooBigException $e) {
             $this->raiseError(406, 'Uploaded content exceeds maximum size of ' . $this->file_manager->getMaximumChunkSize());
         } catch (InvalidOffsetException $e) {
@@ -297,7 +296,6 @@ class ArtifactTemporaryFilesResource {
     {
         try {
             $file = $this->file_manager->getFile($id);
-
         } catch (FileNotFoundException $e) {
             $this->raiseError(404);
         }
@@ -338,7 +336,6 @@ class ArtifactTemporaryFilesResource {
 
         try {
             $this->removeTemporaryFile($id);
-
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             $this->raiseError(400, $exception->getMessage());
         } catch (InvalidFileInfoException $exception) {

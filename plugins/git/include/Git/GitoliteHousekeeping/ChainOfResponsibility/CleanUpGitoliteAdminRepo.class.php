@@ -21,7 +21,8 @@
 /**
  * I do the real stuff: backuping admin repo and cloning a fresh one
  */
-class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo extends Git_GitoliteHousekeeping_ChainOfResponsibility_Command {
+class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo extends Git_GitoliteHousekeeping_ChainOfResponsibility_Command
+{
 
     /** @var Git_GitoliteHousekeeping_GitoliteHousekeepingResponse */
     private $response;

@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
+class Git_RemoteServer_GerritServerTest extends TuleapTestCase
+{
 
     public function itDoesNotNeedToCustomizeSSHConfigOfCodendiadmOrRoot()
     {
@@ -170,18 +171,18 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $replication_password = '';
 
         $server = new Git_RemoteServer_GerritServer(
-           $id,
-           $host,
-           $ssh_port,
-           $http_port,
-           $login,
-           $identity_file,
-           $replication_key,
-           $use_ssl,
-           $gerrit_version,
-           $http_password,
-           $replication_password,
-           $auth_type
+            $id,
+            $host,
+            $ssh_port,
+            $http_port,
+            $login,
+            $identity_file,
+            $replication_key,
+            $use_ssl,
+            $gerrit_version,
+            $http_password,
+            $replication_password,
+            $auth_type
         );
         $this->assertEqual($server->getProjectUrl('gerrit_project_name'), 'https://le_host:8080/#/q/project:gerrit_project_name,n,z');
     }
@@ -220,7 +221,8 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
     }
 }
 
-class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase {
+class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -253,7 +255,6 @@ class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase {
             $replication_password,
             $auth_type
         );
-
     }
 
     public function itGivesTheCloneUrlForTheEndUserWhoWantToCloneRepository()

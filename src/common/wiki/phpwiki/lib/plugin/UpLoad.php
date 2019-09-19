@@ -35,8 +35,7 @@ rcs_id('$Id: UpLoad.php,v 1.19 2005/04/11 19:40:15 rurban Exp $');
  * Note:    See also Jochen Kalmbach's plugin/UserFileManagement.php
  */
 
-class WikiPlugin_UpLoad
-extends WikiPlugin
+class WikiPlugin_UpLoad extends WikiPlugin
 {
     var $disallowed_extensions;
     // TODO: use PagePerms instead
@@ -64,8 +63,9 @@ extends WikiPlugin
 
     function run($dbi, $argstr, &$request, $basepage)
     {
-        $this->disallowed_extensions = explode("\n",
-        "ad[ep]
+        $this->disallowed_extensions = explode(
+            "\n",
+            "ad[ep]
 asd
 ba[st]
 chm
@@ -100,7 +100,8 @@ swf
 url
 vb[esx]?
 vxd
-ws[cfh]");
+ws[cfh]"
+        );
         //removed "\{[[:xdigit:]]{8}(?:-[[:xdigit:]]{4}){3}-[[:xdigit:]]{12}\}"
 
         $args = $this->getArgs($argstr, $request);
@@ -118,7 +119,7 @@ ws[cfh]");
                                                  'value' => MAX_UPLOAD_SIZE)));
         /// MV add pv
         /// @todo: have a generic method to transmit pv
-        if(!empty($_REQUEST['pv'])) {
+        if (!empty($_REQUEST['pv'])) {
             $contents->pushContent(HTML::input(array('type' => 'hidden',
                                                      'name' => 'pv',
                                                      'value' => $_REQUEST['pv'])));
@@ -136,8 +137,11 @@ ws[cfh]");
             // Make sure that the user is logged in.
             $user = $request->getUser();
             if (!$user->isAuthenticated()) {
-                $message->pushContent(HTML::h2(_("ACCESS DENIED: You must log in to upload files.")),
-                                          HTML::br(),HTML::br());
+                $message->pushContent(
+                    HTML::h2(_("ACCESS DENIED: You must log in to upload files.")),
+                    HTML::br(),
+                    HTML::br()
+                );
                 $result = HTML();
                 $result->pushContent($form);
                 $result->pushContent($message);
@@ -155,9 +159,13 @@ ws[cfh]");
             /// MV add
             /// Wiki attachments
             $wa  = new WikiAttachment(GROUP_ID);
-            $rev = $wa->createRevision($userfile_name, $userfile->getSize(),
-                                       $userfile->getType(), $userfile->getTmpName());
-            if($rev >= 0) {
+            $rev = $wa->createRevision(
+                $userfile_name,
+                $userfile->getSize(),
+                $userfile->getType(),
+                $userfile->getTmpName()
+            );
+            if ($rev >= 0) {
                 $prev = $rev+1;
                 $interwiki = new PageType_interwikimap();
                 $link = $interwiki->link("Upload:$prev/$userfile_name");
@@ -178,70 +186,82 @@ ws[cfh]");
                         $text = $current->getPackedContent();
                         $newtext = $text . "\n* [Upload:$userfile_name]";
                         $meta = $current->_data;
-                        $meta['summary'] = sprintf(_("uploaded %s"),$userfile_name);
+                        $meta['summary'] = sprintf(_("uploaded %s"), $userfile_name);
                         $pagehandle->save($newtext, $version + 1, $meta);
                     }
                 }
-            }
-            else {
+            } else {
                 $message->pushContent($err_header);
-                $message->pushContent(HTML::br(),_("Uploading failed."),HTML::br());
+                $message->pushContent(HTML::br(), _("Uploading failed."), HTML::br());
             }
-        }
-        else {
-            $message->pushContent(HTML::br(),HTML::br());
+        } else {
+            $message->pushContent(HTML::br(), HTML::br());
         }
 
         /// {{{ Codendi Specific
 
         // URL arguments
-        if(array_key_exists('offset', $_REQUEST))
+        if (array_key_exists('offset', $_REQUEST)) {
             $offset = $_REQUEST['offset'];
-        else
+        } else {
             $offset = 0;
+        }
 
-        if(array_key_exists('limit', $_REQUEST))
+        if (array_key_exists('limit', $_REQUEST)) {
             $limit = $_REQUEST['limit'];
-        else
+        } else {
             $limit = 10;
+        }
 
         $attchTab = HTML::table(array('border' => '1',
                                       'width'  => '100%'));
-        $attchTab->pushContent(HTML::tr(HTML::th(_("Attachment")),
-                                        HTML::th(_("Number of revision"))));
-        $wai = WikiAttachment::getListWithCounter(GROUP_ID,
-                                                   UserManager::instance()->getCurrentUser()->getId(),
-                                                   array('offset' => $offset,
-                                                         'nb'     => $limit));
+        $attchTab->pushContent(HTML::tr(
+            HTML::th(_("Attachment")),
+            HTML::th(_("Number of revision"))
+        ));
+        $wai = WikiAttachment::getListWithCounter(
+            GROUP_ID,
+            UserManager::instance()->getCurrentUser()->getId(),
+            array('offset' => $offset,
+            'nb'     => $limit)
+        );
         $wai->rewind();
-        while($wai->valid()) {
+        while ($wai->valid()) {
             $wa = $wai->current();
 
             $filename = basename($wa->getFilename());
             $url = getUploadDataPath().urlencode($filename);
 
             $line = HTML::tr();
-            $line->pushContent(HTML::td(HTML::a(array('href' => $url),
-                                                "Attach:".$filename)));
+            $line->pushContent(HTML::td(HTML::a(
+                array('href' => $url),
+                "Attach:".$filename
+            )));
             $line->pushContent(HTML::td($wa->count()));
             $attchTab->pushContent($line);
 
             $wai->next();
         }
         $attchList = HTML();
-        $attchList->pushContent(HTML::hr(),
-                                HTML::h2(_("Attached files")));
+        $attchList->pushContent(
+            HTML::hr(),
+            HTML::h2(_("Attached files"))
+        );
         $attchList->pushContent($attchTab);
 
         $url = WikiURL("UpLoad");
-        if(!empty($_REQUEST['pv'])) {
+        if (!empty($_REQUEST['pv'])) {
             $url .= '&pv='.$_REQUEST['pv'];
         }
-        $attchList->pushContent(HTML::a(array('href' => $url.'&offset='.($offset-$limit)),
-                                        "<- Previous"));
+        $attchList->pushContent(HTML::a(
+            array('href' => $url.'&offset='.($offset-$limit)),
+            "<- Previous"
+        ));
         $attchList->pushContent(" - ");
-        $attchList->pushContent(HTML::a(array('href' => $url.'&offset='.($offset+$limit)),
-                                        "Next ->"));
+        $attchList->pushContent(HTML::a(
+            array('href' => $url.'&offset='.($offset+$limit)),
+            "Next ->"
+        ));
         /// }}}
 
         //$result = HTML::div( array( 'class' => 'wikiaction' ) );
@@ -258,27 +278,26 @@ ws[cfh]");
         $user = $GLOBALS['request']->_user;
         if (!is_writable($upload_log)) {
             trigger_error(_("The upload logfile is not writable."), E_USER_WARNING);
-        }
-        elseif (!$log_handle = fopen ($upload_log, "a")) {
+        } elseif (!$log_handle = fopen($upload_log, "a")) {
             trigger_error(_("Can't open the upload logfile."), E_USER_WARNING);
-        }
-        else {        // file size in KB; precision of 0.1
+        } else {        // file size in KB; precision of 0.1
             $file_size = round(($userfile->getSize())/1024, 1);
             if ($file_size <= 0) {
                 $file_size = "&lt; 0.1";
             }
             $userfile_name = $userfile->getName();
-            fwrite($log_handle,
-                   "\n"
+            fwrite(
+                $log_handle,
+                "\n"
                    . "<tr><td><a href=\"$userfile_name\">$userfile_name</a></td>"
                    . "<td align=\"right\">$file_size kB</td>"
                    . "<td>&nbsp;&nbsp;" . $WikiTheme->formatDate(time()) . "</td>"
-                   . "<td>&nbsp;&nbsp;<em>" . $user->getId() . "</em></td></tr>");
+                . "<td>&nbsp;&nbsp;<em>" . $user->getId() . "</em></td></tr>"
+            );
             fclose($log_handle);
         }
         return;
     }
-
 }
 
 // $Log: UpLoad.php,v $
@@ -389,4 +408,3 @@ ws[cfh]");
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

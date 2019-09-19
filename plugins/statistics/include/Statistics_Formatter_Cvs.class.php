@@ -23,7 +23,8 @@ require_once 'Statistics_Formatter_Scm.class.php';
 /**
  * SCM statistics for CVS
  */
-class Statistics_Formatter_Cvs extends Statistics_Formatter_Scm {
+class Statistics_Formatter_Cvs extends Statistics_Formatter_Scm
+{
 
     /**
      * Constructor of the class
@@ -50,7 +51,4 @@ class Statistics_Formatter_Cvs extends Statistics_Formatter_Scm {
         $this->addHeader('CVS');
         return parent::getStats();
     }
-
 }
-
-?>

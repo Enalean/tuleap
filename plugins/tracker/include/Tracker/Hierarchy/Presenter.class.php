@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Hierarchy_Presenter {
+class Tracker_Hierarchy_Presenter
+{
 
     /**
      * @var Tracker_Hierarchy_HierarchicalTracker

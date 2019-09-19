@@ -24,7 +24,8 @@ use PFUser;
 use XML_Security;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 
-class MockArchive implements ArchiveInterface {
+class MockArchive implements ArchiveInterface
+{
 
     /** @var SimpleXMLElement */
     private $user_xml;
@@ -54,10 +55,10 @@ class MockArchive implements ArchiveInterface {
     {
         return $this->user_xml;
     }
-
 }
 
-class UsersToBeImportedCollectionBuilderTestBase  extends TuleapTestCase {
+class UsersToBeImportedCollectionBuilderTestBase extends TuleapTestCase
+{
     /** @var UsersToBeImportedCollectionBuilder */
     protected $builder;
     protected $user_manager;
@@ -85,10 +86,10 @@ class UsersToBeImportedCollectionBuilderTestBase  extends TuleapTestCase {
             ->withStatus($status)
             ->build();
     }
-
 }
 
-class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollectionBuilderTestBase {
+class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollectionBuilderTestBase
+{
 
     private $active_user_in_ldap;
     private $suspended_user_in_ldap;
@@ -144,7 +145,6 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
             $this->active_user_in_ldap,
             $this->suspended_user_in_ldap
         ));
-
     }
 
     public function itReturnsACollection()
@@ -397,7 +397,8 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
     }
 }
 
-class UsersToBeImportedCollectionBuilder_AutomapTest extends UsersToBeImportedCollectionBuilderTestBase {
+class UsersToBeImportedCollectionBuilder_AutomapTest extends UsersToBeImportedCollectionBuilderTestBase
+{
 
     private $john_doe;
     private $cat_steven;

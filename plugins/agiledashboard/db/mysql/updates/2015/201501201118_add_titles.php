@@ -22,7 +22,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201501201118_add_titles extends ForgeUpgrade_Bucket {
+class b201501201118_add_titles extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

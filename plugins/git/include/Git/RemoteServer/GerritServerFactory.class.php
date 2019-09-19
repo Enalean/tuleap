@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_RemoteServer_GerritServerFactory {
+class Git_RemoteServer_GerritServerFactory
+{
 
     /** @var Git_RemoteServer_Dao */
     private $dao;

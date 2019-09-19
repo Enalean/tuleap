@@ -23,7 +23,8 @@ require_once('include/DataAccessObject.class.php');
 /**
  *  Data Access Object for mailing lists
  */
-class MailingListDao extends DataAccessObject {
+class MailingListDao extends DataAccessObject
+{
 
     /**
     * Search active (=not deteted) mailing lists
@@ -94,6 +95,4 @@ class MailingListDao extends DataAccessObject {
              " WHERE group_list_id=".$listId;
         return $this->update($sql);
     }
-
 }
-?>

@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../bootstrap.php';
 
-class MockTrackerBuilder {
+class MockTrackerBuilder
+{
 
     private $id;
 

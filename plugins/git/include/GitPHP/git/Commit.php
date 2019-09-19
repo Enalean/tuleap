@@ -682,7 +682,7 @@ class Commit extends GitObject
                 $this->committer = $regs[1];
                 $this->committerEpoch = $regs[2];
                 $this->committerTimezone = $regs[3];
-            } else if ($header && strpos($line, self::HEADER_PGP . ' ') === 0) {
+            } elseif ($header && strpos($line, self::HEADER_PGP . ' ') === 0) {
                 $this->pgp_signature      = substr($line, strlen(self::HEADER_PGP . ' ')) . "\n";
                 $is_parsing_pgp_signature = true;
             } else {

@@ -21,7 +21,8 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-class NatureValidator {
+class NatureValidator
+{
 
     public const SHORTNAME_PATTERN = '[a-zA-Z][a-zA-Z_]*';
 

@@ -25,7 +25,8 @@ require_once('Docman_Document.class.php');
  * Wiki is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_Wiki extends Docman_Document {
+class Docman_Wiki extends Docman_Document
+{
 
     function __construct($data = null)
     {
@@ -65,5 +66,3 @@ class Docman_Wiki extends Docman_Document {
         return $visitor->visitWiki($this, $params);
     }
 }
-
-?>

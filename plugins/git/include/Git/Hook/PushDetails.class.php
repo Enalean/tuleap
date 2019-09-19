@@ -25,7 +25,8 @@
 /**
  * Store informations about a push
  */
-class Git_Hook_PushDetails {
+class Git_Hook_PushDetails
+{
     public const ACTION_ERROR  = 'error';
     public const ACTION_CREATE = 'create';
     public const ACTION_DELETE = 'delete';
@@ -143,5 +144,3 @@ class Git_Hook_PushDetails {
         return $this->revision_list;
     }
 }
-
-?>

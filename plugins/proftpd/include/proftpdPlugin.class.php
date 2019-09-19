@@ -29,7 +29,8 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 require_once 'constants.php';
 require_once __DIR__.'/../vendor/autoload.php';
 
-class proftpdPlugin extends Plugin {
+class proftpdPlugin extends Plugin
+{
     public const SERVICE_SHORTNAME = 'plugin_proftpd';
 
     public function __construct($id)
@@ -114,7 +115,6 @@ class proftpdPlugin extends Plugin {
             $project,
             $params['ugroupsMapping']
         );
-
     }
 
     public function service_classnames(array &$params)
@@ -295,7 +295,6 @@ class proftpdPlugin extends Plugin {
             $rank_in_project = $service->getRank();
             $event->addPane($admin_permission_pane, $rank_in_project);
         }
-
     }
 
     /**

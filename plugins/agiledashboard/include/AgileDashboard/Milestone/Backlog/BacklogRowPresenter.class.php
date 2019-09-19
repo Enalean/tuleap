@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface AgileDashboard_Milestone_Backlog_BacklogRowPresenter {
+interface AgileDashboard_Milestone_Backlog_BacklogRowPresenter
+{
 
     public function title();
 
@@ -34,5 +35,3 @@ interface AgileDashboard_Milestone_Backlog_BacklogRowPresenter {
 
     public function parent_url();
 }
-
-?>

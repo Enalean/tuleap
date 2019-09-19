@@ -18,7 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class Admin_Homepage_HeadlinePresenter {
+class Admin_Homepage_HeadlinePresenter
+{
 
     public $headline;
     public $language_id;

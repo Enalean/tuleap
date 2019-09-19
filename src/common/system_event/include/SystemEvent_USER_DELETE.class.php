@@ -26,7 +26,8 @@
 * System Event classes
 *
 */
-class SystemEvent_USER_DELETE extends SystemEvent {
+class SystemEvent_USER_DELETE extends SystemEvent
+{
 
     /**
      * Verbalize the parameters so they are readable and much user friendly in
@@ -65,7 +66,4 @@ class SystemEvent_USER_DELETE extends SystemEvent {
         $this->done();
         return true;
     }
-
 }
-
-?>

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FlamingParrot_NavBarItemPresentersCollection {
+class FlamingParrot_NavBarItemPresentersCollection
+{
 
     private $items = array();
 

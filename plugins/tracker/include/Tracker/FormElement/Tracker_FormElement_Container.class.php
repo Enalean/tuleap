@@ -51,7 +51,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
         return Tracker_FormElementFactory::instance()->getAllFormElementsByParentId($this->id);
     }
 
-    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false)
+    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
         return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
     }
@@ -74,7 +74,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
     public function prepareForDisplay()
     {
         $this->has_been_displayed = false;
-        foreach($this->getFormElements() as $field) {
+        foreach ($this->getFormElements() as $field) {
             $field->prepareForDisplay();
         }
     }
@@ -83,7 +83,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
     {
         $def = parent::getRankSelectboxDefinition();
         $def['subitems'] = array();
-        foreach($this->getFormElements() as $field) {
+        foreach ($this->getFormElements() as $field) {
             $def['subitems'][] = $field->getRankSelectboxDefinition();
         }
         return $def;
@@ -147,7 +147,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
         $prefix   .= $purifier->purify($this->getLabel());
         $html      = '<optgroup id="'. $id_prefix . $this->id .'" label="'. $prefix .'">';
         $optgroups = '';
-        foreach($this->getFormElements() as $formElement) {
+        foreach ($this->getFormElements() as $formElement) {
             if ($formElement->userCanRead()) {
                 $opt = $formElement->$method($used, $prefix . '::');
                 if (strpos($opt, '<optgroup') === 0) {
@@ -174,7 +174,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
         parent::exportToXML($root, $xmlMapping, $project_export_context, $user_xml_exporter);
         $subfields = $this->getAllFormElements();
         $child = $root->addChild('formElements');
-        foreach($subfields as $subfield) {
+        foreach ($subfields as $subfield) {
             $grandchild = $child->addChild('formElement');
             $subfield->exportToXML($grandchild, $xmlMapping, $project_export_context, $user_xml_exporter);
         }
@@ -184,7 +184,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
     {
         parent::exportPermissionsToXML($node_perms, $ugroups, $xmlMapping);
         $subfields = $this->getAllFormElements();
-        foreach($subfields as $subfield) {
+        foreach ($subfields as $subfield) {
             $subfield->exportPermissionsToXML($node_perms, $ugroups, $xmlMapping);
         }
     }
@@ -318,7 +318,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
     protected function getContainerContent($method, $params)
     {
         $content = array();
-        foreach($this->getFormElements() as $formElement) {
+        foreach ($this->getFormElements() as $formElement) {
             if ($c = call_user_func_array(array($formElement, $method), $params)) {
                 $content[] = $c;
             }
@@ -371,7 +371,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
     public function afterSaveObject(Tracker $tracker, $tracker_is_empty, $force_absolute_ranking)
     {
         //save sub elements
-        foreach ($this->getFormElements() as $elem){
+        foreach ($this->getFormElements() as $elem) {
             $this->getFormElementFactory()->saveObject($tracker, $elem, $this->getId(), $tracker_is_empty, $force_absolute_ranking);
         }
     }
@@ -449,10 +449,10 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
         return true;
     }
 
-    protected abstract function fetchArtifactPrefix();
-    protected abstract function fetchArtifactSuffix();
-    protected abstract function fetchMailArtifactPrefix($format);
-    protected abstract function fetchMailArtifactSuffix($format);
+    abstract protected function fetchArtifactPrefix();
+    abstract protected function fetchArtifactSuffix();
+    abstract protected function fetchMailArtifactPrefix($format);
+    abstract protected function fetchMailArtifactSuffix($format);
 
 
     protected function fetchMailArtifactContent($format, array $content)
@@ -504,7 +504,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
     {
         $content_structure = array();
 
-        foreach($this->getFormElements() as $field) {
+        foreach ($this->getFormElements() as $field) {
             $structure_element_representation = new Tuleap\Tracker\REST\StructureElementRepresentation();
             $structure_element_representation->build($field);
 

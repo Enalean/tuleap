@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactStaticListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
+class ArtifactStaticListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter
+{
     public const TV3_DISPLAY_TYPE = 'SB';
     public const TV3_DATA_TYPE    = '2';
     public const TV3_VALUE_INDEX  = 'valueInt';
@@ -85,5 +86,4 @@ class ArtifactStaticListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporte
     {
         return self::TV3_VALUE_INDEX;
     }
-
 }

@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class URLRedirect_MakeUrlTest extends TuleapTestCase {
+class URLRedirect_MakeUrlTest extends TuleapTestCase
+{
 
     private $url_redirect;
 
@@ -82,5 +83,4 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
             $this->url_redirect->makeReturnToUrl('/my/redirect.php', 'vbscript:msgbox(1)')
         );
     }
-
 }

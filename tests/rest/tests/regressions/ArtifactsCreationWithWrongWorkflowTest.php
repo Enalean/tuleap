@@ -21,7 +21,8 @@
 /**
  * @group Regressions
  */
-class ArtifactsCreationWithWrongWorkflowTest extends RestBase {
+class ArtifactsCreationWithWrongWorkflowTest extends RestBase
+{
 
     public function setUp() : void
     {

@@ -28,7 +28,8 @@ require_once(dirname(__FILE__).'/../include/ForumML_FileStorage.class.php');
 
 Mock::generatePartial('ForumML_FileStorage', 'ForumML_FileStorageTestVersion', array('fileExists'));
 
-class ForumML_FileStorageTest extends TuleapTestCase {
+class ForumML_FileStorageTest extends TuleapTestCase
+{
     private $_fixture;
     private $_namePattern;
 
@@ -52,7 +53,7 @@ class ForumML_FileStorageTest extends TuleapTestCase {
         $fstorage = $this->_getFileStorage($this->_fixture);
         $this->assertNotNull($fstorage->root);
         $this->assertIsA($fstorage->root, 'string');
-        $this->assertEqual($fstorage->root,$this->_fixture);
+        $this->assertEqual($fstorage->root, $this->_fixture);
     }
 
     // case 1: an attachment file whose name has more than 64 characters
@@ -65,22 +66,22 @@ class ForumML_FileStorageTest extends TuleapTestCase {
         $type1 = "store";
 
      // check returned path
-        $path1 = $fs1->_getPath($name1,$list1,$date1,$type1);
+        $path1 = $fs1->_getPath($name1, $list1, $date1, $type1);
         $this->assertNotNull($path1);
         $this->assertIsA($path1, 'string');
 
      // check filename length is restricted to 64 characters
-        $path_array1 = explode("/",$path1);
+        $path_array1 = explode("/", $path1);
         $fname1 = $path_array1[count($path_array1) - 1];
-        $this->assertNotEqual($name1,$fname1);
-        $this->assertEqual(strlen($fname1),63);
+        $this->assertNotEqual($name1, $fname1);
+        $this->assertEqual(strlen($fname1), 63);
      // check other path components
         $flist1 = $path_array1[count($path_array1) - 3];
-        $this->assertEqual($flist1,$list1);
+        $this->assertEqual($flist1, $list1);
         $fdate1 = $path_array1[count($path_array1) - 2];
-        $this->assertEqual($fdate1,$date1);
+        $this->assertEqual($fdate1, $date1);
      // check regexp
-        $this->assertPattern($this->_namePattern,$name1);
+        $this->assertPattern($this->_namePattern, $name1);
     }
 
     // case 2: an attachment file whose name has less than 64 characters
@@ -92,20 +93,20 @@ class ForumML_FileStorageTest extends TuleapTestCase {
         $date1 = "2007_10_24";
         $type1 = "store";
 
-        $path2 = $fs1->_getPath($name2,$list1,$date1,$type1);
+        $path2 = $fs1->_getPath($name2, $list1, $date1, $type1);
         $this->assertNotNull($path2);
         $this->assertIsA($path2, 'string');
-        $path_array2 = explode("/",$path2);
+        $path_array2 = explode("/", $path2);
         $fname2 = $path_array2[count($path_array2) - 1];
-        $this->assertEqual($fname2,"filename_less_than_64_chars");
-        $this->assertNotEqual(strlen($fname2),64);
+        $this->assertEqual($fname2, "filename_less_than_64_chars");
+        $this->assertNotEqual(strlen($fname2), 64);
         // check path components
         $flist2 = $path_array2[count($path_array2) - 3];
-        $this->assertEqual($flist2,$list1);
+        $this->assertEqual($flist2, $list1);
         $fdate2 = $path_array2[count($path_array2) - 2];
-        $this->assertEqual($fdate2,$date1);
+        $this->assertEqual($fdate2, $date1);
         // check regexp
-        $this->assertPattern($this->_namePattern,$name2);
+        $this->assertPattern($this->_namePattern, $name2);
     }
 
     // case 3: attachment filename with only alphanumeric characters
@@ -117,12 +118,12 @@ class ForumML_FileStorageTest extends TuleapTestCase {
         $date1 = "2007_10_24";
         $type1 = "store";
 
-        $path3 = $fs1->_getPath($name3,$list1,$date1,$type1);
+        $path3 = $fs1->_getPath($name3, $list1, $date1, $type1);
         $this->assertNotNull($path3);
         $this->assertIsA($path3, 'string');
-        $path_array3 = explode("/",$path3);
+        $path_array3 = explode("/", $path3);
         $fname3 = $path_array3[count($path_array3) - 1];
-        $this->assertNoPattern($this->_namePattern,$name3);
+        $this->assertNoPattern($this->_namePattern, $name3);
     }
 
     // case 4: attachment filename is an empty string
@@ -134,10 +135,10 @@ class ForumML_FileStorageTest extends TuleapTestCase {
         $date1 = "2007_10_24";
         $type1 = "store";
 
-        $path4 = $fs1->_getPath($name4,$list1,$date1,$type1);
+        $path4 = $fs1->_getPath($name4, $list1, $date1, $type1);
         $this->assertNotNull($path4);
         $this->assertIsA($path4, 'string');
-        $path_array4 = explode("/",$path4);
+        $path_array4 = explode("/", $path4);
         $fname4 = $path_array4[count($path_array4) - 1];
         $this->assertPattern('/^attachment.*/', $fname4);
     }
@@ -156,10 +157,10 @@ class ForumML_FileStorageTest extends TuleapTestCase {
         $name = 'Screenshot.jpg';
 
         // First file stored that day
-        $path1 = $fs->_getPath($name,$list,$date,$type);
+        $path1 = $fs->_getPath($name, $list, $date, $type);
 
         // Second file with same name
-        $path2 = $fs->_getPath($name,$list,$date,$type);
+        $path2 = $fs->_getPath($name, $list, $date, $type);
 
         $this->assertNotEqual($path1, $path2);
     }

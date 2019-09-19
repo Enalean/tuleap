@@ -202,7 +202,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         return $new_changeset;
     }
 
-    protected abstract function saveNewChangesetForField(
+    abstract protected function saveNewChangesetForField(
         Tracker_FormElement_Field $field,
         Tracker_Artifact $artifact,
         $previous_changeset,

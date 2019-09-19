@@ -25,7 +25,8 @@
 /**
  * I'm responsible of handling what happens in pre-commit subversion hook
  */
-class SVN_Hook_PreCommit_BaseTest extends TuleapTestCase {
+class SVN_Hook_PreCommit_BaseTest extends TuleapTestCase
+{
 
     /** @var SVN_Svnlook */
     protected $svn_look;
@@ -62,7 +63,8 @@ class SVN_Hook_PreCommit_BaseTest extends TuleapTestCase {
     }
 }
 
-class SVN_Hook_PreCommit_MessageTest extends SVN_Hook_PreCommit_BaseTest {
+class SVN_Hook_PreCommit_MessageTest extends SVN_Hook_PreCommit_BaseTest
+{
 
     public function itRejectsCommitIfCommitMessageIsEmptyAndForgeRequiresACommitMessage()
     {
@@ -84,7 +86,8 @@ class SVN_Hook_PreCommit_MessageTest extends SVN_Hook_PreCommit_BaseTest {
     }
 }
 
-class SVN_Hook_PreCommit_CommitToTagTest extends SVN_Hook_PreCommit_BaseTest {
+class SVN_Hook_PreCommit_CommitToTagTest extends SVN_Hook_PreCommit_BaseTest
+{
 
     public function testCommitToTagIsAllowed()
     {
@@ -300,8 +303,8 @@ EOS;
 
         try {
             $pre_commit->assertCommitToTagIsAllowed(
-               $this->repo,
-               $this->transaction
+                $this->repo,
+                $this->transaction
             );
 
             $this->pass();
@@ -317,8 +320,8 @@ EOS;
 
         try {
             $pre_commit->assertCommitToTagIsAllowed(
-               $this->repo,
-               $this->transaction
+                $this->repo,
+                $this->transaction
             );
 
             $this->fail('Commit of "'.implode(', ', $paths).'" should be denied');

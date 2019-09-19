@@ -28,7 +28,8 @@ use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
  * VersionFactory is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_VersionFactory {
+class Docman_VersionFactory
+{
 
     function __construct()
     {
@@ -244,8 +245,7 @@ class Docman_VersionFactory {
                           'group_id'   => $item->getGroupId(),
                           'item'       => $item,
                           'old_value'  => $value,
-                          'user'       => $user)
-                    );
+                          'user'       => $user));
                     return true;
                 }
             }
@@ -262,7 +262,7 @@ class Docman_VersionFactory {
     function renameProject($docman_path, $project, $new_name)
     {
         $updateSystem = rename($docman_path.$project->getUnixName(true), $docman_path.strtolower($new_name));
-        if ($updateSystem){
+        if ($updateSystem) {
             $dao = $this->_getVersionDao();
             return $dao->renameProject($docman_path, $project, $new_name);
         }

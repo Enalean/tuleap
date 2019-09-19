@@ -21,7 +21,8 @@
 /**
  * Build all the data needed to create Trigger rules in workflow administration
  */
-class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonFormatOfMyself {
+class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonFormatOfMyself
+{
     public const CONDITION_AT_LEAST_ONE = 'at_least_one';
     public const CONDITION_ALL_OFF      = 'all_of';
 
@@ -149,5 +150,3 @@ class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonF
         return $json;
     }
 }
-
-?>

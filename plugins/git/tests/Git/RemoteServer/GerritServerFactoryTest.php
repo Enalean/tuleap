@@ -20,7 +20,8 @@
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
+class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase
+{
 
     private $server_id          = 1;
     private $host               = 'g.tuleap.net';
@@ -124,7 +125,6 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         );
         stub($git_dao)->isRemoteServerUsed($this->server_id)->returns(true);
         stub($git_dao)->isRemoteServerUsed($this->alternate_server_id)->returns(false);
-
     }
 
     public function itThrowsAnExceptionIfThereIsNoSuchServer()
@@ -281,5 +281,4 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         expect($this->dao)->delete($this->server_id)->never();
         $this->factory->delete($this->main_gerrit_server);
     }
-
 }

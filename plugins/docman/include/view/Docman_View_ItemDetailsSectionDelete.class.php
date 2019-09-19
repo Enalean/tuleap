@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectionActions {
+class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectionActions
+{
 
     var $token;
     function __construct($item, $url, $controller, $token)
@@ -47,11 +48,11 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         $content .= '<form action="'. $this->url .'" method="POST">';
         $content .= '<div class="docman_confirm_delete">';
         if ($version !== false) {
-            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_version',  array($this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML), $version) );
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_version', array($this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML), $version));
         } else {
-            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_'.$folder_or_document,  $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) );
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_'.$folder_or_document, $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
         }
-        if($item_type == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
+        if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
             $content .= $this->getWikiDeleteInfo();
         }
         $content .= '<div class="docman_confirm_delete_buttons">';
@@ -84,11 +85,11 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         // List of other possible referencers.
         $pagename = $this->item->getPagename();
         $referencers = $this->_controller->getItemFactory()->getWikiPageReferencers($pagename, $this->item->getGroupId());
-        if(is_array($referencers) && count($referencers) > 1) {
+        if (is_array($referencers) && count($referencers) > 1) {
             $output .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_wiki_impact_on_documents');
             $output .= '<div id="other_referencers">';
-            foreach($referencers as $key => $doc) {
-                if($this->item->getId() != $doc->getId()) {
+            foreach ($referencers as $key => $doc) {
+                if ($this->item->getId() != $doc->getId()) {
                     $output .= $this->getWikiDocumentPath($doc);
                 }
             }
@@ -121,7 +122,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         }
         $parents = array_reverse($parents);
         $item_url = '/plugins/docman/?group_id=' . urlencode($item->getGroupId()) . '&sort_update_date=0&action=show&id=';
-        foreach($parents as $parent) {
+        foreach ($parents as $parent) {
             $html .= '<a href="'. $item_url. urlencode($parent['id']). '">'. $purifier->purify($parent['title']) . '</a>';
             $html .= ' / ';
         }

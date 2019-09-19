@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_PossibleParentsRetriever {
+class Tracker_Artifact_PossibleParentsRetriever
+{
 
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;

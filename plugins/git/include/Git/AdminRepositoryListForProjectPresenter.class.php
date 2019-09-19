@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_AdminRepositoryListForProjectPresenter {
+class Git_AdminRepositoryListForProjectPresenter
+{
 
     /** @var int */
     public $project_id;

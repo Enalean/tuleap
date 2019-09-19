@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TestPlanningCreationRequestBuilder {
+class TestPlanningCreationRequestBuilder
+{
     private $group_id;
     private $planning_id;
     private $planning;
@@ -76,5 +77,3 @@ function aPlanningCreationRequest()
 {
     return new TestPlanningCreationRequestBuilder();
 }
-
-?>

@@ -30,8 +30,8 @@ rcs_id('$Id: Diff.php,v 1.3 2005/09/30 18:53:10 uckelman Exp $');
 
 require_once('lib/difflib.php');
 
-class WikiPlugin_Diff
-extends WikiPlugin {
+class WikiPlugin_Diff extends WikiPlugin
+{
 
     function getName()
     {
@@ -45,8 +45,11 @@ extends WikiPlugin {
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.3 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.3 $"
+        );
     }
 
     // Establish default values for each of this plugin's arguments.
@@ -75,10 +78,14 @@ extends WikiPlugin {
             $authorlink = $iswikipage ? WikiLink($author) : $author;
 
             $linked_version = WikiLink($rev, 'existing', $rev->getVersion());
-            $row->pushContent(HTML::td(fmt("version %s", $linked_version)),
-                              HTML::td($WikiTheme->getLastModifiedMessage($rev,
-                                                                      false)),
-                              HTML::td(fmt("by %s", $authorlink)));
+            $row->pushContent(
+                HTML::td(fmt("version %s", $linked_version)),
+                HTML::td($WikiTheme->getLastModifiedMessage(
+                    $rev,
+                    false
+                )),
+                HTML::td(fmt("by %s", $authorlink))
+            );
         } else {
             $row->pushContent(HTML::td(array('colspan' => '3'), _("None")));
         }
@@ -98,54 +105,59 @@ extends WikiPlugin {
         $page = $request->getPage($pagename);
         $current = $page->getCurrentRevision();
         if ($current->getVersion() < 1) {
-            $html = HTML(HTML::p(fmt("I'm sorry, there is no such page as %s.",
-                                     WikiLink($pagename, 'unknown'))));
+            $html = HTML(HTML::p(fmt(
+                "I'm sorry, there is no such page as %s.",
+                WikiLink($pagename, 'unknown')
+            )));
             return $html; //early return
         }
 
         if ($version) {
-            if (!($new = $page->getRevision($version)))
+            if (!($new = $page->getRevision($version))) {
                 NoSuchRevision($request, $page, $version);
+            }
             $new_version = fmt("version %d", $version);
-        }
-        else {
+        } else {
             $new = $current;
             $new_version = _("current version");
         }
 
         if (preg_match('/^\d+$/', $previous)) {
-            if ( !($old = $page->getRevision($previous)) )
+            if (!($old = $page->getRevision($previous))) {
                 NoSuchRevision($request, $page, $previous);
+            }
             $old_version = fmt("version %d", $previous);
             $others = array('major', 'minor', 'author');
-        }
-        else {
+        } else {
             switch ($previous) {
                 case 'author':
                     $old = $new;
                     while ($old = $page->getRevisionBefore($old)) {
-                        if ($old->get('author') != $new->get('author'))
-                        break;
+                        if ($old->get('author') != $new->get('author')) {
+                            break;
+                        }
                     }
                     $old_version = _("revision by previous author");
                     $others = array('major', 'minor');
-                break;
+                    break;
                 case 'minor':
                     $previous='minor';
                     $old = $page->getRevisionBefore($new);
                     $old_version = _("previous revision");
                     $others = array('major', 'author');
-                break;
+                    break;
                 case 'major':
                 default:
                     $old = $new;
-                    while ($old && $old->get('is_minor_edit'))
-                    $old = $page->getRevisionBefore($old);
-                    if ($old)
-                    $old = $page->getRevisionBefore($old);
+                    while ($old && $old->get('is_minor_edit')) {
+                        $old = $page->getRevisionBefore($old);
+                    }
+                    if ($old) {
+                        $old = $page->getRevisionBefore($old);
+                    }
                     $old_version = _("predecessor to the previous major change");
                     $others = array('minor', 'author');
-                break;
+                    break;
             }
         }
 
@@ -153,8 +165,12 @@ extends WikiPlugin {
         $old_link = $old ? WikiLink($old, '', $old_version) : $old_version;
         $page_link = WikiLink($page);
 
-        $html = HTML(HTML::p(fmt("Differences between %s and %s of %s.",
-                                 $new_link, $old_link, $page_link)));
+        $html = HTML(HTML::p(fmt(
+            "Differences between %s and %s of %s.",
+            $new_link,
+            $old_link,
+            $page_link
+        )));
 
         $otherdiffs = HTML::p(_("Other diffs:"));
         $label = array('major' => _("Previous Major Revision"),
@@ -162,33 +178,48 @@ extends WikiPlugin {
                        'author'=> _("Previous Author"));
         foreach ($others as $other) {
             $args = array('pagename' => $pagename, 'previous' => $other);
-            if ($version)
+            if ($version) {
                 $args['version'] = $version;
-            if (count($otherdiffs->getContent()) > 1)
+            }
+            if (count($otherdiffs->getContent()) > 1) {
                 $otherdiffs->pushContent(", ");
-            else
+            } else {
                 $otherdiffs->pushContent(" ");
+            }
             $otherdiffs->pushContent(Button($args, $label[$other]));
         }
         $html->pushContent($otherdiffs);
 
-        if ($old and $old->getVersion() == 0)
+        if ($old and $old->getVersion() == 0) {
             $old = false;
+        }
 
-        $html->pushContent(HTML::Table($this->PageInfoRow(_("Newer page:"), $new,
-                                                          $request),
-                                       $this->PageInfoRow(_("Older page:"), $old,
-                                                          $request)));
+        $html->pushContent(HTML::Table(
+            $this->PageInfoRow(
+                _("Newer page:"),
+                $new,
+                $request
+            ),
+            $this->PageInfoRow(
+                _("Older page:"),
+                $old,
+                $request
+            )
+        ));
 
         if ($new && $old) {
             $diff = new Diff($old->getContent(), $new->getContent());
 
             if ($diff->isEmpty()) {
-                $html->pushContent(HTML::hr(),
-                                   HTML::p('[', _("Versions are identical"),
-                                           ']'));
-            }
-            else {
+                $html->pushContent(
+                    HTML::hr(),
+                    HTML::p(
+                        '[',
+                        _("Versions are identical"),
+                        ']'
+                    )
+                );
+            } else {
                 // New CSS formatted unified diffs (ugly in NS4).
                 $fmt = new HtmlUnifiedDiffFormatter;
 
@@ -205,7 +236,8 @@ extends WikiPlugin {
     }
 };
 
-class _HWLDF_WordAccumulator {
+class _HWLDF_WordAccumulator
+{
     function __construct()
     {
         $this->_lines = array();
@@ -217,11 +249,14 @@ class _HWLDF_WordAccumulator {
     function _flushGroup($new_tag)
     {
         if ($this->_group !== false) {
-            if (!$this->_line)
+            if (!$this->_line) {
                 $this->_line = HTML();
+            }
             $this->_line->pushContent($this->_tag
-                                      ? new HtmlElement($this->_tag,
-                                                        $this->_group)
+                                      ? new HtmlElement(
+                                          $this->_tag,
+                                          $this->_group
+                                      )
                                       : $this->_group);
         }
         $this->_group = '';
@@ -231,20 +266,23 @@ class _HWLDF_WordAccumulator {
     function _flushLine($new_tag)
     {
         $this->_flushGroup($new_tag);
-        if ($this->_line)
+        if ($this->_line) {
             $this->_lines[] = $this->_line;
+        }
         $this->_line = HTML();
     }
 
     function addWords($words, $tag = '')
     {
-        if ($tag != $this->_tag)
+        if ($tag != $this->_tag) {
             $this->_flushGroup($tag);
+        }
 
         foreach ($words as $word) {
             // new-line should only come as first char of word.
-            if (!$word)
+            if (!$word) {
                 continue;
+            }
             if ($word[0] == "\n") {
                 $this->_group .= PrintXML(HTML::raw('&nbsp;'));
                 $this->_flushLine($tag);
@@ -269,16 +307,22 @@ class WordLevelDiff extends MappedDiff
         list ($orig_words, $orig_stripped) = $this->_split($orig_lines);
         list ($final_words, $final_stripped) = $this->_split($final_lines);
 
-        parent::__construct($orig_words, $final_words,
-                          $orig_stripped, $final_stripped);
+        parent::__construct(
+            $orig_words,
+            $final_words,
+            $orig_stripped,
+            $final_stripped
+        );
     }
 
     function _split($lines)
     {
         // FIXME: fix POSIX char class.
-        if (!preg_match_all('/ ( [^\S\n]+ | [[:alnum:]]+ | . ) (?: (?!< \n) [^\S\n])? /xs',
-                            implode("\n", $lines),
-                            $m)) {
+        if (!preg_match_all(
+            '/ ( [^\S\n]+ | [[:alnum:]]+ | . ) (?: (?!< \n) [^\S\n])? /xs',
+            implode("\n", $lines),
+            $m
+        )) {
             return array(array(''), array(''));
         }
         return array($m[0], $m[1]);
@@ -289,10 +333,11 @@ class WordLevelDiff extends MappedDiff
         $orig = new _HWLDF_WordAccumulator;
 
         foreach ($this->edits as $edit) {
-            if ($edit->type == 'copy')
+            if ($edit->type == 'copy') {
                 $orig->addWords($edit->orig);
-            elseif ($edit->orig)
+            } elseif ($edit->orig) {
                 $orig->addWords($edit->orig, 'del');
+            }
         }
         return $orig->getLines();
     }
@@ -302,10 +347,11 @@ class WordLevelDiff extends MappedDiff
         $final = new _HWLDF_WordAccumulator;
 
         foreach ($this->edits as $edit) {
-            if ($edit->type == 'copy')
+            if ($edit->type == 'copy') {
                 $final->addWords($edit->final);
-            elseif ($edit->final)
+            } elseif ($edit->final) {
                 $final->addWords($edit->final, 'ins');
+            }
         }
         return $final->getLines();
     }
@@ -340,8 +386,10 @@ class HtmlUnifiedDiffFormatter extends UnifiedDiffFormatter
 
     function _start_block($header)
     {
-        $this->_block = HTML::div(array('class' => 'block'),
-                                  HTML::tt($header));
+        $this->_block = HTML::div(
+            array('class' => 'block'),
+            HTML::tt($header)
+        );
     }
 
     function _end_block()
@@ -352,16 +400,23 @@ class HtmlUnifiedDiffFormatter extends UnifiedDiffFormatter
 
     function _lines($lines, $class, $prefix = false, $elem = false)
     {
-        if (!$prefix)
+        if (!$prefix) {
             $prefix = HTML::raw('&nbsp;');
+        }
         $div = HTML::div(array('class' => 'difftext'));
         foreach ($lines as $line) {
-            if ($elem)
+            if ($elem) {
                 $line = new HtmlElement($elem, $line);
-            $div->pushContent(HTML::div(array('class' => $class),
-                                        HTML::tt(array('class' => 'prefix'),
-                                                 $prefix),
-                                        $line, HTML::raw('&nbsp;')));
+            }
+            $div->pushContent(HTML::div(
+                array('class' => $class),
+                HTML::tt(
+                    array('class' => 'prefix'),
+                    $prefix
+                ),
+                $line,
+                HTML::raw('&nbsp;')
+            ));
         }
         $this->_block->pushContent($div);
     }
@@ -416,13 +471,17 @@ class TableUnifiedDiffFormatter extends HtmlUnifiedDiffFormatter
 
     function _start_block($header)
     {
-        $this->_block = HTML::table(array('width' => '100%',
+        $this->_block = HTML::table(
+            array('width' => '100%',
                                           'class' => 'block',
                                           'cellspacing' => 0,
                                           'cellpadding' => 1,
                                           'border' => 0),
-                                    HTML::tr(HTML::td(array('colspan' => 2),
-                                                      HTML::tt($header))));
+            HTML::tr(HTML::td(
+                array('colspan' => 2),
+                HTML::tt($header)
+            ))
+        );
     }
 
     function _end_block()
@@ -433,19 +492,25 @@ class TableUnifiedDiffFormatter extends HtmlUnifiedDiffFormatter
 
     function _lines($lines, $class, $prefix = false, $elem = false)
     {
-        if (!$prefix)
+        if (!$prefix) {
             $prefix = HTML::raw('&nbsp;');
+        }
         $prefix = HTML::td(array('class' => 'prefix',
                                  'width' => "1%"), $prefix);
         foreach ($lines as $line) {
-            if (! trim($line))
+            if (! trim($line)) {
                 $line = HTML::raw('&nbsp;');
-            elseif ($elem)
+            } elseif ($elem) {
                 $line = new HtmlElement($elem, $line);
-            $this->_block->pushContent(HTML::tr(array('valign' => 'top'),
-                                                $prefix,
-                                                HTML::td(array('class' => $class),
-                                                         $line)));
+            }
+            $this->_block->pushContent(HTML::tr(
+                array('valign' => 'top'),
+                $prefix,
+                HTML::td(
+                    array('class' => $class),
+                    $line
+                )
+            ));
         }
     }
 }
@@ -477,4 +542,3 @@ class TableUnifiedDiffFormatter extends HtmlUnifiedDiffFormatter
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

@@ -24,7 +24,8 @@
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \PHPUnit\Framework\TestCase {
+class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \PHPUnit\Framework\TestCase
+{
     /** @var SystemEvent_PROFTPD_DIRECTORY_CREATE */
     private $event;
     /** @var String */

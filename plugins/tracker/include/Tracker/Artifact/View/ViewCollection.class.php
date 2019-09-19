@@ -21,7 +21,8 @@
 /**
  * First class collection of Tracker_Artifact_View_View
  */
-class Tracker_Artifact_View_ViewCollection {
+class Tracker_Artifact_View_ViewCollection
+{
 
     /** @var Tracker_Artifact_View_View[] */
     private $views = array();
@@ -74,4 +75,3 @@ class Tracker_Artifact_View_ViewCollection {
         return $html;
     }
 }
-?>

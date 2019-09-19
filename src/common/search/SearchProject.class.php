@@ -20,7 +20,8 @@
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
-class Search_SearchProject {
+class Search_SearchProject
+{
     public const NAME = 'soft';
 
     /**

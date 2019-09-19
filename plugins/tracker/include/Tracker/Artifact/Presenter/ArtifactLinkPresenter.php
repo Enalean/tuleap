@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-class Tracker_Artifact_Presenter_ArtifactLinkPresenter {
+class Tracker_Artifact_Presenter_ArtifactLinkPresenter
+{
 
     public $tracker_name;
 
@@ -39,4 +40,3 @@ class Tracker_Artifact_Presenter_ArtifactLinkPresenter {
         $this->title           = $title;
     }
 }
-?>

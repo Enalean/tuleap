@@ -23,7 +23,8 @@ use Tuleap\Event\Events\ArchiveDeletedItemEvent;
 use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 
-class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backend_Interface {
+class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backend_Interface
+{
 
     /**
      * @var Logger
@@ -460,8 +461,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
 
         if ($this->inSameProject($old, $new)) {
             $pm->duplicateWithStatic($old->getId(), $new->getId(), Git::allPermissionTypes());
-        }
-        else {
+        } else {
             $pm->duplicateWithoutStatic($old->getId(), $new->getId(), Git::allPermissionTypes());
         }
     }
@@ -563,7 +563,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         $project_repositories = array();
 
         $result = $this->getDao()->searchRepositoriesInSameProjectFromRepositoryList($repositor_ids, $repository->getProjectId());
-        if(! $result) {
+        if (! $result) {
             return $project_repositories;
         }
 
@@ -596,4 +596,3 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         );
     }
 }
-?>

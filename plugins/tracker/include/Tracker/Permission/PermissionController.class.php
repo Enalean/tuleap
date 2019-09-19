@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Permission_PermissionController implements Tracker_Dispatchable_Interface {
+class Tracker_Permission_PermissionController implements Tracker_Dispatchable_Interface
+{
     /** @var Tracker */
     private $tracker;
 

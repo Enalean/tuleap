@@ -21,7 +21,8 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-/* abstract */ class Docman_View_Browse extends Docman_View_Display {
+/* abstract */ class Docman_View_Browse extends Docman_View_Display
+{
 
     /**
      * @access: protected
@@ -51,11 +52,11 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
     private function getTitleWhenFilterIsSet(array $params)
     {
-        if(isset($params['filter']) || $params['filter'] === null) {
+        if (isset($params['filter']) || $params['filter'] === null) {
             return false;
         }
 
-        if($params['filter']->getTitle() === null && trim($params['filter']->getTitle()) === '') {
+        if ($params['filter']->getTitle() === null && trim($params['filter']->getTitle()) === '') {
             return false;
         }
 
@@ -66,7 +67,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
     {
         $html = '';
         // No mode selector in printer version
-        if(isset($params['pv']) && $params['pv'] > 0) {
+        if (isset($params['pv']) && $params['pv'] > 0) {
             // Close table opened in method 'breadCrumbs' in 'Display' class.
             $html .= '</tr>';
             $html .= '</table>';
@@ -80,7 +81,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         $html .= $GLOBALS['Language']->getText('plugin_docman', 'browse_viewas') .' ';
         $actual = Docman_View_Browse::getViewForCurrentUser($params['group_id']);
         $views  = Docman_View_Browse::getDefaultViews();
-        foreach($views as $val => $view) {
+        foreach ($views as $val => $view) {
             $html .= '<input type="image" 
             				 name="selected_view['. $val .']" 
             				 src="'. $this->_controller->plugin->getThemePath() .'/images/ic/view-'. $view .'.png" 
@@ -105,7 +106,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
     var $dfltParams = null;
     function _getDefaultUrlParams($params)
     {
-        if($this->dfltParams === null) {
+        if ($this->dfltParams === null) {
             $this->dfltParams = array('action' => 'search',
                                       'id'     => $params['item']->getId());
 
@@ -128,13 +129,13 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         $html = '';
 
         // No filter in printer version
-        if(isset($params['pv']) && $params['pv'] > 0) {
+        if (isset($params['pv']) && $params['pv'] > 0) {
             return;
         }
 
         $html .= "<!-- Filters -->\n";
         $html .= '<div class="docman_filters">';
-        if(isset($params['filter']) && $params['filter'] !== null) {
+        if (isset($params['filter']) && $params['filter'] !== null) {
             $htmlReport = new Docman_ReportHtml($params['filter'], $this, $params['default_url']);
             $html .= $htmlReport->toHtml($params);
         }
@@ -168,10 +169,9 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
     }
     /* static */ function getViewForCurrentUser($group_id, $report = '')
     {
-        if($report != '') {
+        if ($report != '') {
             $pref = $report;
-        }
-        else {
+        } else {
             $pref = user_get_preference(PLUGIN_DOCMAN_VIEW_PREF .'_'. $group_id);
             if (!$pref) {
                 $sBo = Docman_SettingsBo::instance($group_id);

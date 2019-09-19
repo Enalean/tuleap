@@ -123,7 +123,7 @@ class ProjectCreationData
      */
     public function getField($group_desc_id)
     {
-        if(!isset($this->data_fields['form_' . $group_desc_id])) {
+        if (!isset($this->data_fields['form_' . $group_desc_id])) {
             return null;
         }
         return $this->data_fields['form_' . $group_desc_id];
@@ -174,7 +174,6 @@ class ProjectCreationData
         $this->trove_data          = isset($project['trove'])                  ? $project['trove']                  : array();
         $this->data_services       = isset($project['services'])               ? $project['services']               : array();
         $this->data_fields         = $project;
-
     }
 
     private function getAccessFromProjectArrayData(array $project)
@@ -228,13 +227,13 @@ class ProjectCreationData
         ?ServiceManager $service_manager = null,
         ?ProjectManager $project_manager = null
     ) {
-        if(empty($xml_validator)) {
+        if (empty($xml_validator)) {
             $xml_validator = new XML_RNGValidator();
         }
-        if(empty($service_manager)){
+        if (empty($service_manager)) {
             $service_manager = ServiceManager::instance();
         }
-        if(empty($project_manager)){
+        if (empty($project_manager)) {
             $project_manager = ProjectManager::instance();
         }
 
@@ -299,17 +298,21 @@ class ProjectCreationData
     ) {
         $template = $project_manager->getProject($template_id);
         $services_by_name = array();
-        foreach($service_manager->getListOfAllowedServicesForProject($template) as $service) {
+        foreach ($service_manager->getListOfAllowedServicesForProject($template) as $service) {
             $services_by_name[$service->getShortName()] = $service;
         }
 
-        foreach($xml->services->children() as $service) {
-            if(!($service instanceof SimpleXMLElement)) continue;
-            if($service->getName() !== "service") continue;
+        foreach ($xml->services->children() as $service) {
+            if (!($service instanceof SimpleXMLElement)) {
+                continue;
+            }
+            if ($service->getName() !== "service") {
+                continue;
+            }
             $attrs   = $service->attributes();
             $name    = (string) $attrs['shortname'];
             $enabled = \Tuleap\XML\PHPCast::toBoolean($attrs['enabled']);
-            if(isset($services_by_name[$name])) {
+            if (isset($services_by_name[$name])) {
                 $service_id = $services_by_name[$name]->getId();
                 $this->data_services[$service_id] = array(
                     'is_used' => $enabled
@@ -332,4 +335,3 @@ class ProjectCreationData
         }
     }
 }
-

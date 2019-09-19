@@ -24,7 +24,8 @@ use UserManager;
 use Logger;
 use RandomNumberGenerator;
 
-class WillBeCreatedUser implements ReadyToBeImportedUser {
+class WillBeCreatedUser implements ReadyToBeImportedUser
+{
 
     public static $ALLOWED_STATUSES = array(
         PFUser::STATUS_ACTIVE,

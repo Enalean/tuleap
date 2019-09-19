@@ -22,7 +22,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 
 require_once 'bootstrap.php';
 
-class TrackerXmlExportTest extends TuleapTestCase {
+class TrackerXmlExportTest extends TuleapTestCase
+{
 
     private $tracker1;
     private $tracker2;

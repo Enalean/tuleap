@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class DateParser {
+class DateParser
+{
 
     /**
      * Parse an ISO8601 calendar date
@@ -50,15 +51,12 @@ class DateParser {
                         $offsetHour = -$offsetHour;
                         $offsetMinute = -$offsetMinute;
                     }
-                } else if ($rest != 'Z') {
+                } elseif ($rest != 'Z') {
                     $localOffset = 0;
                 }
-
             }
 
             return mktime($hour - $offsetHour, $minute - $offsetMinute, (int)$second, $month, $day, $year) + $localOffset;
         }
     }
 }
-
-?>

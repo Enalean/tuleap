@@ -68,7 +68,7 @@ class AdminRouter implements DispatchableWithRequest
 
     private function checkUserIsSiteAdmin(PFUser $user, BaseLayout $layout)
     {
-        if(! $user->isSuperUser()) {
+        if (! $user->isSuperUser()) {
             $layout->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('global', 'perm_denied')

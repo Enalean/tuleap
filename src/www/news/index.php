@@ -26,13 +26,13 @@ require_once __DIR__ . '/../forum/forum_utils.php';
 
 $request = HTTPRequest::instance();
 
-if($request->valid(new Valid_GroupId())) {
+if ($request->valid(new Valid_GroupId())) {
     $group_id = $request->get('group_id');
 } else {
     $group_id = null;
 }
 
-if($request->valid(new Valid_Pv())) {
+if ($request->valid(new Valid_Pv())) {
     $pv = $request->get('pv');
 } else {
     $pv = 0;
@@ -40,9 +40,9 @@ if($request->valid(new Valid_Pv())) {
 
 $pm = ProjectManager::instance();
 if ($group_id) {
-    $title = $Language->getText('news_index','news_for',$pm->getProject($group_id)->getPublicName());
+    $title = $Language->getText('news_index', 'news_for', $pm->getProject($group_id)->getPublicName());
 } else {
-    $title = $Language->getText('news_index','news');
+    $title = $Language->getText('news_index', 'news');
 }
 $params=array('title'=>$title,
               'help'=>'communication.html#news-service',
@@ -52,16 +52,16 @@ news_header($params);
 
 if ($pv != 2) {
     if ($pv == 1) {
-        echo '<H3>'.$Language->getText('news_index','news').'</H3>';
+        echo '<H3>'.$Language->getText('news_index', 'news').'</H3>';
     } else {
         echo "<TABLE width='100%'><TR><TD>";
-        echo '<H3>'.$Language->getText('news_index','news').'</H3>';
+        echo '<H3>'.$Language->getText('news_index', 'news').'</H3>';
         echo "</TD>";
-        echo "<TD align='left'> ( <A HREF='?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> ) </TD>";
+        echo "<TD align='left'> ( <A HREF='?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global', 'printer_version')."</A> ) </TD>";
         echo "</TR></TABLE>";
     }
 
-    echo '<P>'.$Language->getText('news_index','choose_news').'<P>';
+    echo '<P>'.$Language->getText('news_index', 'choose_news').'<P>';
 } else {
     echo '<P>';
 }
@@ -81,20 +81,20 @@ $rows=db_numrows($result);
 $purifier = Codendi_HTMLPurifier::instance();
 
 if ($rows < 1) {
-    echo '<H2>'.$Language->getText('news_index','no_news_found');
+    echo '<H2>'.$Language->getText('news_index', 'no_news_found');
     if ($group_id) {
-         echo $purifier->purify(' '.$Language->getText('news_index','for', $pm->getProject($group_id)->getUnconvertedPublicName()));
+         echo $purifier->purify(' '.$Language->getText('news_index', 'for', $pm->getProject($group_id)->getUnconvertedPublicName()));
     }
     echo '</H2>';
     echo '
-		<P>'.$Language->getText('news_index','no_items_found');
+		<P>'.$Language->getText('news_index', 'no_items_found');
 } else {
     echo '<table WIDTH="100%" border=0>
 		<TR><TD VALIGN="TOP">';
 
     for ($j = 0; $j < $rows; $j++) {
-        $forum_id=db_result($result,$j,'forum_id');
-        if (news_check_permission($forum_id,$group_id)) {
+        $forum_id=db_result($result, $j, 'forum_id');
+        if (news_check_permission($forum_id, $group_id)) {
             if ($group_id) {
                 echo '
 		<A HREF="/forum/forum.php?forum_id='.db_result($result, $j, 'forum_id').

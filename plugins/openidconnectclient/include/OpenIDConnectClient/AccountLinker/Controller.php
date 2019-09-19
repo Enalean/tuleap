@@ -30,7 +30,8 @@ use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
 use UserManager;
 
-class Controller {
+class Controller
+{
     /**
      * @var UserManager
      */
@@ -157,7 +158,6 @@ class Controller {
                 dgettext('tuleap-openidconnectclient', 'Request seems invalid, please retry')
             );
         }
-
     }
 
     private function linkAccount(PFUser $user, Provider $provider, UnlinkedAccount $unlinked_account, $request_time)

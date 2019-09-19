@@ -21,7 +21,8 @@
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Git\History\GitPhpAccessLogger;
 
-class GitViews_ShowRepo_Content {
+class GitViews_ShowRepo_Content
+{
 
     /**
      * @var HTTPRequest
@@ -96,5 +97,4 @@ class GitViews_ShowRepo_Content {
 
         return $purifier->purify($mirror->name);
     }
-
 }

@@ -22,7 +22,8 @@ namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
-class FlowResponse {
+class FlowResponse
+{
 
     /**
      * @var Provider

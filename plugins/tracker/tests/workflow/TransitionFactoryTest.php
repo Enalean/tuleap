@@ -21,7 +21,8 @@
 
 require_once __DIR__.'/../bootstrap.php';
 
-class TransitionFactory_BaseTest extends TuleapTestCase {
+class TransitionFactory_BaseTest extends TuleapTestCase
+{
 
     /** @var TransitionFactory */
     protected $factory;
@@ -45,7 +46,8 @@ class TransitionFactory_BaseTest extends TuleapTestCase {
     }
 }
 
-class TransitionFactory_isFieldUsedInTransitionsTest extends TransitionFactory_BaseTest {
+class TransitionFactory_isFieldUsedInTransitionsTest extends TransitionFactory_BaseTest
+{
 
     private $a_field_not_used_in_transitions;
     private $a_field_used_in_post_actions;
@@ -89,7 +91,8 @@ class TransitionFactory_isFieldUsedInTransitionsTest extends TransitionFactory_B
     }
 }
 
-class TransitionFactory_duplicateTest extends TransitionFactory_BaseTest {
+class TransitionFactory_duplicateTest extends TransitionFactory_BaseTest
+{
 
     public function testDuplicate()
     {

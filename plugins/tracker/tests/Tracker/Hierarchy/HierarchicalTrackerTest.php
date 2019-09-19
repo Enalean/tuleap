@@ -19,7 +19,8 @@
  */
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_Hierarchy_HierarchicalTrackerTest extends TuleapTestCase {
+class Tracker_Hierarchy_HierarchicalTrackerTest extends TuleapTestCase
+{
 
     public function setUp()
     {

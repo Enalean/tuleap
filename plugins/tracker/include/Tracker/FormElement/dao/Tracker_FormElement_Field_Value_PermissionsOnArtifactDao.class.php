@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_Field_Value_PermissionsOnArtifactDao extends Tracker_FormElement_Field_ValueDao {
+class Tracker_FormElement_Field_Value_PermissionsOnArtifactDao extends Tracker_FormElement_Field_ValueDao
+{
 
     public function __construct()
     {
@@ -34,7 +35,7 @@ class Tracker_FormElement_Field_Value_PermissionsOnArtifactDao extends Tracker_F
         if (!is_array($value_ids)) {
             $value_ids = array($value_ids);
         }
-        foreach($value_ids as $v) {
+        foreach ($value_ids as $v) {
             $values[] = "($changeset_value_id, $use_perm, $v)";
         }
         if ($values) {
@@ -49,7 +50,7 @@ class Tracker_FormElement_Field_Value_PermissionsOnArtifactDao extends Tracker_F
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $changeset_value_ids = $this->createNoneChangesetValue($tracker_id, $field_id);
-        if ( $changeset_value_ids === false ) {
+        if ($changeset_value_ids === false) {
             return false;
         }
         $sql = " INSERT INTO $this->table_name(changeset_value_id, use_perm, ugroup_id) VALUES (".implode(', 1, 1), ( ', $changeset_value_ids).", 1, 1) ";
@@ -76,4 +77,3 @@ class Tracker_FormElement_Field_Value_PermissionsOnArtifactDao extends Tracker_F
         return $this->retrieve($sql);
     }
 }
-?>

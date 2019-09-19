@@ -25,7 +25,8 @@ use Tuleap\Project\UserRemoverDao;
 /**
  * Wrapper for project related SOAP methods
  */
-class Project_SOAPServer {
+class Project_SOAPServer
+{
 
     /**
      * @var ProjectManager
@@ -161,7 +162,8 @@ class Project_SOAPServer {
     private function doesUserHavePermission(PFUser $user, User_ForgeUserGroupPermission $permission)
     {
         return $this->forge_ugroup_permissions_manager->doesUserHavePermission(
-            $user, $permission
+            $user,
+            $permission
         );
     }
 
@@ -315,7 +317,7 @@ class Project_SOAPServer {
             try {
                 $ugroup = new ProjectUGroup(array('ugroup_id' => $ugroupId, 'group_id' => $groupId));
                 $ugroup->addUser($user);
-            }  catch (Exception $e) {
+            } catch (Exception $e) {
                 throw new SoapFault((string) $e->getCode(), $e->getMessage());
             }
             $this->feedbackToSoapFault();
@@ -348,7 +350,7 @@ class Project_SOAPServer {
             try {
                 $ugroup = new ProjectUGroup(array('ugroup_id' => $ugroupId, 'group_id' => $groupId));
                 $ugroup->removeUser($user);
-            }  catch (Exception $e) {
+            } catch (Exception $e) {
                 throw new SoapFault((string) $e->getCode(), $e->getMessage());
             }
             $this->feedbackToSoapFault();
@@ -379,7 +381,6 @@ class Project_SOAPServer {
             if (! $user) {
                 throw new SoapFault('3105', "Generic User creation failure");
             }
-
         } else {
             $user->setPassword($password);
             $this->generic_user_factory->update($user);
@@ -491,7 +492,7 @@ class Project_SOAPServer {
             throw new SoapFault('3108', "The given project description field does not exist");
         }
 
-        $this->description_manager->setCustomDescription($project, $field_id_to_update,$field_value);
+        $this->description_manager->setCustomDescription($project, $field_id_to_update, $field_value);
     }
 
     private function descriptionFieldExists($field_id_to_update)
@@ -716,5 +717,4 @@ class Project_SOAPServer {
         }
         throw new SoapFault('3001', 'Invalid session');
     }
-
 }

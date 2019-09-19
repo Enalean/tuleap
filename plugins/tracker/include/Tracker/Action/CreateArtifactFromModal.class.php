@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Action_CreateArtifactFromModal {
+class Tracker_Action_CreateArtifactFromModal
+{
 
     /** @var Codendi_Request */
     private $request;
@@ -75,7 +76,7 @@ class Tracker_Action_CreateArtifactFromModal {
     private function sendJSONErrors()
     {
         $feedback            = array();
-        $feedback['message'] = $GLOBALS['Language']->getText('plugin_tracker_modal_artifact','submit_error');
+        $feedback['message'] = $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'submit_error');
 
         if ($GLOBALS['Response']->feedbackHasErrors()) {
             $feedback['errors'] = $GLOBALS['Response']->getFeedbackErrors();
@@ -83,5 +84,4 @@ class Tracker_Action_CreateArtifactFromModal {
 
         $GLOBALS['Response']->send400JSONErrors($feedback);
     }
-
 }

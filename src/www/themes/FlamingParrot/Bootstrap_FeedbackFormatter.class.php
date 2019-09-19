@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Bootstrap_FeedbackFormatter extends FeedbackFormatter {
+class Bootstrap_FeedbackFormatter extends FeedbackFormatter
+{
 
     /**
      * @return string html
@@ -30,7 +31,7 @@ class Bootstrap_FeedbackFormatter extends FeedbackFormatter {
         $old_level = null;
 
         $html .= '<div class="container-fluid">';
-        foreach($logs as $log) {
+        foreach ($logs as $log) {
             if (!is_null($old_level) && $old_level != $log['level']) {
                 $html .= '</div>';
             }
@@ -65,4 +66,3 @@ class Bootstrap_FeedbackFormatter extends FeedbackFormatter {
         return $html;
     }
 }
-?>

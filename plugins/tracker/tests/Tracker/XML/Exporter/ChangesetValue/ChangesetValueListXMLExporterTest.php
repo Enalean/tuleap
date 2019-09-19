@@ -19,7 +19,8 @@
  */
 require_once __DIR__.'/../../../../bootstrap.php';
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTest extends TuleapTestCase {
+class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTest extends TuleapTestCase
+{
 
     /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter */
     private $exporter;

@@ -20,13 +20,12 @@
 /**
  * trackerPluginInfo
  */
-class trackerPluginInfo extends PluginInfo {
+class trackerPluginInfo extends PluginInfo
+{
 
     function __construct($plugin)
     {
         parent::__construct($plugin);
         $this->setPluginDescriptor(new trackerPluginDescriptor());
     }
-
 }
-?>

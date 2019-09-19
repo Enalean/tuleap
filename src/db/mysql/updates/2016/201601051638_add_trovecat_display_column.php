@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201601051638_add_trovecat_display_column extends ForgeUpgrade_Bucket {
+class b201601051638_add_trovecat_display_column extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -57,5 +58,4 @@ class b201601051638_add_trovecat_display_column extends ForgeUpgrade_Bucket {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while updating the trove_cat table values.');
         }
     }
-
 }

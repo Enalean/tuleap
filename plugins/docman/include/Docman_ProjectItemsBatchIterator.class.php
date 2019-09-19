@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ProjectItemsBatchIterator {
+class Docman_ProjectItemsBatchIterator
+{
 
     public const ITEMS_PER_BATCH = 1000;
 
@@ -61,5 +62,3 @@ class Docman_ProjectItemsBatchIterator {
         $this->batches_processed = -1;
     }
 }
-
-?>

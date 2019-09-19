@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tuleap_TourUsage {
+class Tuleap_TourUsage
+{
 
     /**
      * @var Tuleap_TourUsageStatsDao

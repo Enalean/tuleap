@@ -8,7 +8,8 @@
 // Copyright (c) Asial Corporation. All rights reserved.
 //========================================================================
 
-class ImgData_PushPins extends ImgData {
+class ImgData_PushPins extends ImgData
+{
     protected $name = 'Push pins';
     protected $an = array(MARK_IMG_PUSHPIN => 'imgdata_small',
     MARK_IMG_SPUSHPIN => 'imgdata_small',
@@ -512,5 +513,3 @@ class ImgData_PushPins extends ImgData {
         'dL5b1/ji+/IX8EGWP4AwRii8PdFHTqAAAAAElFTkSuQmCC' ;
     }
 }
-
-?>

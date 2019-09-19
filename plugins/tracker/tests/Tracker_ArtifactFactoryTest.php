@@ -24,7 +24,8 @@
 
 require_once 'bootstrap.php';
 
-class Tracker_ArtifactFactoryTest extends TuleapTestCase {
+class Tracker_ArtifactFactoryTest extends TuleapTestCase
+{
     /** @var Tracker_ArtifactDao */
     private $dao;
 
@@ -90,7 +91,8 @@ class Tracker_ArtifactFactoryTest extends TuleapTestCase {
     }
 }
 
-class Tracker_ArtifactFactory_GetChildrenTest extends TuleapTestCase {
+class Tracker_ArtifactFactory_GetChildrenTest extends TuleapTestCase
+{
     /** @var Tracker_ArtifactDao */
     private $dao;
 

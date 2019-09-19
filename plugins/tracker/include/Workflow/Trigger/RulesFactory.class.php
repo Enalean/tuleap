@@ -21,7 +21,8 @@
 /**
  * Build a PHP representation of a Rule out of json
  */
-class Tracker_Workflow_Trigger_RulesFactory {
+class Tracker_Workflow_Trigger_RulesFactory
+{
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 
@@ -124,4 +125,3 @@ class Tracker_Workflow_Trigger_RulesFactory {
         throw new Tracker_FormElement_InvalidFieldValueException("Value doesn't belong to field");
     }
 }
-?>

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_RemoteServer_Dao extends \Tuleap\DB\DataAccessObject {
+class Git_RemoteServer_Dao extends \Tuleap\DB\DataAccessObject
+{
 
     /**
      * @var StandardPasswordHandler

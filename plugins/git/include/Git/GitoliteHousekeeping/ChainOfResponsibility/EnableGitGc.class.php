@@ -21,7 +21,8 @@
 /**
  * I enable git gc in next system events
  */
-class Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGc extends Git_GitoliteHousekeeping_ChainOfResponsibility_Command {
+class Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGc extends Git_GitoliteHousekeeping_ChainOfResponsibility_Command
+{
 
     /** @var Git_GitoliteHousekeeping_GitoliteHousekeepingResponse */
     private $response;

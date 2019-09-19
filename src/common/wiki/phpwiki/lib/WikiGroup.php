@@ -20,19 +20,20 @@
  */
 
 if (!defined('GROUP_METHOD') or
-    GROUP_METHOD !== 'NONE')
+    GROUP_METHOD !== 'NONE') {
     trigger_error(_("No or unsupported GROUP_METHOD defined"), E_USER_WARNING);
+}
 
 /* Special group names for ACL */
-define('GROUP_EVERY',        _("Every"));
-define('GROUP_ANONYMOUS',    _("Anonymous Users"));
-define('GROUP_BOGOUSER',    _("Bogo Users"));
-define('GROUP_HASHOMEPAGE',     _("HasHomePage"));
-define('GROUP_SIGNED',        _("Signed Users"));
-define('GROUP_AUTHENTICATED',    _("Authenticated Users"));
-define('GROUP_ADMIN',        _("Administrators"));
-define('GROUP_OWNER',        _("Owner"));
-define('GROUP_CREATOR',           _("Creator"));
+define('GROUP_EVERY', _("Every"));
+define('GROUP_ANONYMOUS', _("Anonymous Users"));
+define('GROUP_BOGOUSER', _("Bogo Users"));
+define('GROUP_HASHOMEPAGE', _("HasHomePage"));
+define('GROUP_SIGNED', _("Signed Users"));
+define('GROUP_AUTHENTICATED', _("Authenticated Users"));
+define('GROUP_ADMIN', _("Administrators"));
+define('GROUP_OWNER', _("Owner"));
+define('GROUP_CREATOR', _("Creator"));
 
 /**
  * WikiGroup is an abstract class to provide the base functions for determining
@@ -51,7 +52,8 @@ define('GROUP_CREATOR',           _("Creator"));
  * This will instantiate the proper subclass.
  *
  */
-class WikiGroup{
+class WikiGroup
+{
     /** User name */
     var $username = '';
     /** User object if different from current user */
@@ -88,8 +90,9 @@ class WikiGroup{
             $this->membership = array();
             $this->username = $username;
         }
-        if (!$this->not_current)
-           $this->user = $user;
+        if (!$this->not_current) {
+            $this->user = $user;
+        }
         return $username;
     }
 
@@ -109,12 +112,12 @@ class WikiGroup{
      */
     function specialGroup($group)
     {
-        return in_array($group,$this->specialGroups());
+        return in_array($group, $this->specialGroups());
     }
     /** untranslated */
     function _specialGroup($group)
     {
-        return in_array($group,$this->_specialGroups());
+        return in_array($group, $this->_specialGroups());
     }
     /** translated */
     function specialGroups()
@@ -153,14 +156,20 @@ class WikiGroup{
      */
     function isMember($group)
     {
-        if (isset($this->membership[$group]))
+        if (isset($this->membership[$group])) {
             return $this->membership[$group];
+        }
         if ($this->specialGroup($group)) {
             return $this->isSpecialMember($group);
         } else {
-            trigger_error(PHPWikiSprintf("Method '%s' not implemented in this GROUP_METHOD %s",
-                                    'isMember', GROUP_METHOD),
-                          E_USER_WARNING);
+            trigger_error(
+                PHPWikiSprintf(
+                    "Method '%s' not implemented in this GROUP_METHOD %s",
+                    'isMember',
+                    GROUP_METHOD
+                ),
+                E_USER_WARNING
+            );
         }
         return false;
     }
@@ -169,8 +178,9 @@ class WikiGroup{
     {
         global $request;
 
-        if (isset($this->membership[$group]))
+        if (isset($this->membership[$group])) {
             return $this->membership[$group];
+        }
         $user = (!empty($this->user)) ? $this->user : $request->getUser();
         switch ($group) {
             case GROUP_EVERY:
@@ -178,7 +188,7 @@ class WikiGroup{
             case GROUP_ANONYMOUS:
                 return $this->membership[$group] = ! $user->isSignedIn();
             case GROUP_BOGOUSER:
-                return $this->membership[$group] = (isa($user,'_BogoUser')
+                return $this->membership[$group] = (isa($user, '_BogoUser')
                                                     and $user->_level >= WIKIAUTH_BOGO);
             case GROUP_SIGNED:
                 return $this->membership[$group] = $user->isSignedIn();
@@ -191,9 +201,14 @@ class WikiGroup{
             case GROUP_CREATOR:
                 return false;
             default:
-                trigger_error(PHPWikiSprintf("Undefined method %s for special group %s",
-                                        'isMember',$group),
-                              E_USER_WARNING);
+                trigger_error(
+                    PHPWikiSprintf(
+                        "Undefined method %s for special group %s",
+                        'isMember',
+                        $group
+                    ),
+                    E_USER_WARNING
+                );
         }
         return false;
     }
@@ -207,17 +222,23 @@ class WikiGroup{
      */
     function getAllGroupsIn()
     {
-        trigger_error(PHPWikiSprintf("Method '%s' not implemented in this GROUP_METHOD %s",
-                                'getAllGroupsIn', GROUP_METHOD),
-                      E_USER_WARNING);
+        trigger_error(
+            PHPWikiSprintf(
+                "Method '%s' not implemented in this GROUP_METHOD %s",
+                'getAllGroupsIn',
+                GROUP_METHOD
+            ),
+            E_USER_WARNING
+        );
         return array();
     }
 
     function _allUsers()
     {
         static $result = array();
-        if (!empty($result))
-        return $result;
+        if (!empty($result)) {
+            return $result;
+        }
 
         global $request;
         /* WikiPage users: */
@@ -225,27 +246,32 @@ class WikiGroup{
         $page_iter = $dbh->getAllPages();
         $users = array();
         while ($page = $page_iter->next()) {
-            if ($page->isUserPage())
+            if ($page->isUserPage()) {
                 $users[] = $page->_pagename;
+            }
         }
 
         /* WikiDB users from prefs (not from users): */
-        if (ENABLE_USER_NEW)
+        if (ENABLE_USER_NEW) {
             $dbi = _PassUser::getAuthDbh();
-        else
+        } else {
             $dbi = false;
+        }
 
         if ($dbi and $dbh->getAuthParam('pref_select')) {
             //get prefs table
-            $sql = preg_replace('/SELECT .+ FROM/i','SELECT userid FROM',
-                                $dbh->getAuthParam('pref_select'));
+            $sql = preg_replace(
+                '/SELECT .+ FROM/i',
+                'SELECT userid FROM',
+                $dbh->getAuthParam('pref_select')
+            );
             //don't strip WHERE, only the userid stuff.
-            $sql = preg_replace('/(WHERE.*?)\s+\w+\s*=\s*["\']\$userid[\'"]/i','\\1 AND 1', $sql);
-            $sql = str_replace('WHERE AND 1','',$sql);
+            $sql = preg_replace('/(WHERE.*?)\s+\w+\s*=\s*["\']\$userid[\'"]/i', '\\1 AND 1', $sql);
+            $sql = str_replace('WHERE AND 1', '', $sql);
             if (isa($dbi, 'ADOConnection')) {
                 $db_result = $dbi->Execute($sql);
                 foreach ($db_result->GetArray() as $u) {
-                    $users = array_merge($users,array_values($u));
+                    $users = array_merge($users, array_values($u));
                 }
             } elseif (isa($dbi, 'DB_common')) { // PearDB
                 $users = array_merge($users, $dbi->getCol($sql));
@@ -256,9 +282,12 @@ class WikiGroup{
         // Fixme: don't strip WHERE, only the userid stuff.
         if ($dbi and $dbh->getAuthParam('auth_user_exists')) {
             //don't strip WHERE, only the userid stuff.
-            $sql = preg_replace('/(WHERE.*?)\s+\w+\s*=\s*["\']\$userid[\'"]/i','\\1 AND 1',
-                                $dbh->getAuthParam('auth_user_exists'));
-            $sql = str_replace('WHERE AND 1','', $sql);
+            $sql = preg_replace(
+                '/(WHERE.*?)\s+\w+\s*=\s*["\']\$userid[\'"]/i',
+                '\\1 AND 1',
+                $dbh->getAuthParam('auth_user_exists')
+            );
+            $sql = str_replace('WHERE AND 1', '', $sql);
             if (isa($dbi, 'ADOConnection')) {
                 $db_result = $dbi->Execute($sql);
                 foreach ($db_result->GetArray() as $u) {
@@ -272,7 +301,9 @@ class WikiGroup{
         // remove empty and duplicate users
         $result = array();
         foreach ($users as $u) {
-            if (empty($u) or in_array($u,$result)) continue;
+            if (empty($u) or in_array($u, $result)) {
+                continue;
+            }
             $result[] = $u;
         }
         return $result;
@@ -291,9 +322,14 @@ class WikiGroup{
         if ($this->specialGroup($group)) {
             return $this->getSpecialMembersOf($group);
         }
-        trigger_error(PHPWikiSprintf("Method '%s' not implemented in this GROUP_METHOD %s",
-                                'getMembersOf', GROUP_METHOD),
-                      E_USER_WARNING);
+        trigger_error(
+            PHPWikiSprintf(
+                "Method '%s' not implemented in this GROUP_METHOD %s",
+                'getMembersOf',
+                GROUP_METHOD
+            ),
+            E_USER_WARNING
+        );
         return array();
     }
 
@@ -304,40 +340,49 @@ class WikiGroup{
         $users = array();
         switch ($group) {
             case GROUP_EVERY:
-            return $all;
+                return $all;
             case GROUP_ANONYMOUS:
-            return $users;
+                return $users;
             case GROUP_BOGOUSER:
                 foreach ($all as $u) {
-                    if (isWikiWord($u)) $users[] = $u;
+                    if (isWikiWord($u)) {
+                        $users[] = $u;
+                    }
                 }
-            return $users;
+                return $users;
             case GROUP_SIGNED:
                 foreach ($all as $u) {
                     $user = WikiUser($u);
-                    if ($user->isSignedIn()) $users[] = $u;
+                    if ($user->isSignedIn()) {
+                        $users[] = $u;
+                    }
                 }
-            return $users;
+                return $users;
             case GROUP_AUTHENTICATED:
                 foreach ($all as $u) {
                     $user = WikiUser($u);
-                    if ($user->isAuthenticated()) $users[] = $u;
+                    if ($user->isAuthenticated()) {
+                        $users[] = $u;
+                    }
                 }
-            return $users;
+                return $users;
             case GROUP_ADMIN:
                 foreach ($all as $u) {
                     $user = WikiUser($u);
-                    if (isset($user->_level) and $user->_level == WIKIAUTH_ADMIN)
-                    $users[] = $u;
+                    if (isset($user->_level) and $user->_level == WIKIAUTH_ADMIN) {
+                        $users[] = $u;
+                    }
                 }
-            return $users;
+                return $users;
             case GROUP_OWNER:
             case GROUP_CREATOR:
                 // this could get complex so just return an empty array
-            return false;
+                return false;
             default:
-                trigger_error(PHPWikiSprintf("Unknown special group '%s'", $group),
-                          E_USER_WARNING);
+                trigger_error(
+                    PHPWikiSprintf("Unknown special group '%s'", $group),
+                    E_USER_WARNING
+                );
         }
     }
 
@@ -352,9 +397,14 @@ class WikiGroup{
      */
     function setMemberOf($group, $user = false)
     {
-        trigger_error(PHPWikiSprintf("Method '%s' not implemented in this GROUP_METHOD %s",
-                                'setMemberOf', GROUP_METHOD),
-                      E_USER_WARNING);
+        trigger_error(
+            PHPWikiSprintf(
+                "Method '%s' not implemented in this GROUP_METHOD %s",
+                'setMemberOf',
+                GROUP_METHOD
+            ),
+            E_USER_WARNING
+        );
         return false;
     }
 
@@ -369,9 +419,14 @@ class WikiGroup{
      */
     function removeMemberOf($group, $user = false)
     {
-        trigger_error(PHPWikiSprintf("Method '%s' not implemented in this GROUP_METHOD %s",
-                                'removeMemberOf', GROUP_METHOD),
-                      E_USER_WARNING);
+        trigger_error(
+            PHPWikiSprintf(
+                "Method '%s' not implemented in this GROUP_METHOD %s",
+                'removeMemberOf',
+                GROUP_METHOD
+            ),
+            E_USER_WARNING
+        );
         return false;
     }
 }
@@ -382,7 +437,8 @@ class WikiGroup{
  * All of the GroupNone functions return false or empty values to indicate failure or
  * no results.  Use GroupNone if group controls are not desired.
  */
-class GroupNone extends WikiGroup{
+class GroupNone extends WikiGroup
+{
 
     /**
      * Constructor
@@ -435,7 +491,6 @@ class GroupNone extends WikiGroup{
     {
         return array();
     }
-
 }
 
 // $Log: WikiGroup.php,v $
@@ -666,4 +721,3 @@ class GroupNone extends WikiGroup{
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

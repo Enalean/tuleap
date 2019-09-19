@@ -6,111 +6,48 @@
 >
     <description>Tuleap minimal coding standard.</description>
 
-    <config name="installed_paths" value="../../slevomat/coding-standard,../../phpcompatibility/php-compatibility"/>
+    <!-- Autofix fails on those files, ignore them for now -->
+    <exclude-pattern>src/common/wiki/phpwiki/lib/plugin/CalendarList.php</exclude-pattern>
+    <exclude-pattern>src/common/wiki/phpwiki/lib/plugin/Calendar.php</exclude-pattern>
+    <exclude-pattern>src/common/wiki/phpwiki/lib/BlockParser.php</exclude-pattern>
+    <exclude-pattern>src/common/wiki/phpwiki/lib/WikiDB.php</exclude-pattern>
+    <exclude-pattern>src/common/wiki/phpwiki/lib/XmlElement.php</exclude-pattern>
+    <exclude-pattern>src/common/wiki/phpwiki/lib/HtmlElement.php</exclude-pattern>
+    <exclude-pattern>plugins/mediawiki/fusionforge/FusionForge.php</exclude-pattern>
+    <exclude-pattern>plugins/projectlinks/include/projectlinksPlugin.class.php</exclude-pattern>
+    <exclude-pattern>plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php</exclude-pattern>
 
-    <exclude-pattern>*/vendor/*</exclude-pattern>
-    <exclude-pattern>*/node_modules/*</exclude-pattern>
-    <exclude-pattern>*/src/www/assets/*</exclude-pattern>
-    <exclude-pattern>*/tests/phpcs/tests/Sniffs/*/_fixtures/*</exclude-pattern>
-    <!-- Exclude generated files -->
-    <exclude-pattern>plugins/tracker/include/Tracker/Report/Query/Advanced/Grammar/Parser.php</exclude-pattern>
-
-    <!-- PHP code MUST use only UTF-8 without BOM. -->
-    <rule ref="Generic.Files.ByteOrderMark"/>
-
-    <!-- PSR-2 rules -->
-    <!-- All PHP files MUST use the Unix LF (linefeed) line ending. -->
-    <rule ref="Generic.Files.LineEndings">
-        <properties>
-            <property name="eolChar" value="\n"/>
-        </properties>
+    <rule ref="PSR2">
+        <exclude name="Generic.Files.LineLength.TooLong"/>
+        <exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>
+        <!-- checked by SlevomatCodingStandard.Namespaces.UseSpacing -->
+        <exclude name="PSR2.Namespaces.UseDeclaration.SpaceAfterLastUse"/>
+        <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace"/>
+        <exclude name="Squiz.Classes.ValidClassName.NotCamelCaps"/>
+        <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
+        <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps"/>
+        <exclude name="PSR2.ControlStructures.SwitchDeclaration.TerminatingComment"/>
+        <exclude name="Squiz.Scope.MethodScope.Missing"/>
+        <exclude name="PSR2.Classes.PropertyDeclaration.ScopeMissing"/>
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
+        <exclude name="PSR2.ControlStructures.SwitchDeclaration.WrongOpenercase"/>
+        <exclude name="PSR2.Classes.PropertyDeclaration.VarUsed"/>
+        <exclude name="PSR1.Classes.ClassDeclaration.MultipleClasses"/>
+        <exclude name="PSR2.ControlStructures.SwitchDeclaration.WrongOpenerdefault"/>
+        <exclude name="PSR2.Classes.ClassDeclaration.CloseBraceSameLine"/>
+        <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace"/>
+        <exclude name="PEAR.Functions.ValidDefaultValue.NotAtEnd"/>
+        <exclude name="PSR2.Classes.PropertyDeclaration.Multiple"/>
+        <exclude name="Generic.NamingConventions.UpperCaseConstantName.ConstantNotUpperCase"/>
+        <exclude name="PSR2.Classes.PropertyDeclaration.Multiple"/>
     </rule>
-    <!-- Indenting - 4 spaces - no tabs -->
-    <rule ref="Generic.WhiteSpace.ScopeIndent">
-        <properties>
-            <property name="ignoreIndentationTokens" type="array">
-                <element value="T_COMMENT"/>
-                <element value="T_DOC_COMMENT_OPEN_TAG"/>
-            </property>
-        </properties>
-    </rule>
-    <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
     <!-- Forbid superfluous whitespaces -->
-    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
-    <!-- Methods - May be split across lines, opening and closing brace positions, indents, spacing… -->
-    <rule ref="Squiz.Functions.MultiLineFunctionDeclaration"/>
-
-    <!-- Forbid use of short open tags <? -->
-    <rule ref="Generic.PHP.DisallowShortOpenTag" />
-
-    <!-- Comments -->
-    <!-- Forbid comments starting with # -->
-    <rule ref="PEAR.Commenting.InlineComment"/>
-    <!-- Forbid empty comments -->
-    <rule ref="SlevomatCodingStandard.Commenting.EmptyComment"/>
-    <!-- Forbid useless comments -->
-    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenComments">
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
         <properties>
-            <property name="forbiddenCommentPatterns" type="array">
-                <element value="~^(?:(?!private|protected|static)\S+ )?(?:con|de)structor\.\z~i"/>
-                <element value="~^Created by .+\.\z~i"/>
-                <element value="~^(User|Date|Time): \S+\z~i"/>
-                <element value="~^\S+ [gs]etter\.\z~i"/>
-                <element value="~^Class \S+\z~i"/>
-            </property>
-        </properties>
-    </rule>
-    <!-- report invalid format of inline phpDocs with @var -->
-    <rule ref="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration"/>
-    <!-- Forbid useless annotations -->
-    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenAnnotations">
-        <properties>
-            <property name="forbiddenAnnotations" type="array">
-                <element value="@api"/>
-                <element value="@author"/>
-                <element value="@category"/>
-                <element value="@copyright"/>
-                <element value="@created"/>
-                <element value="@license"/>
-                <element value="@package"/>
-                <element value="@since"/>
-                <element value="@subpackage"/>
-                <element value="@version"/>
-            </property>
+            <!-- turned on by PSR2 -> turning back off -->
+            <property name="ignoreBlankLines" value="false"/>
         </properties>
     </rule>
 
-    <!-- Require presence of class constant visibility -->
-    <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility"/>
-    <!-- Require ? when default value is null -->
-    <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue"/>
-    <!-- Require use of short versions of scalar types (i.e. int instead of integer) -->
-    <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
-    <!-- Require usage of ::class instead of __CLASS__, get_class(), get_class($this), get_called_class() and get_parent_class() -->
-    <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference"/>
-    <rule ref="SlevomatCodingStandard.Classes.DisallowLateStaticBindingForConstants"/>
-    <!-- Check the presence of a comment/copyright block at the very beginning of the file -->
-    <rule ref="./TuleapCodingStandard/Sniffs/Commenting/FileCopyrightSniff.php"/>
-    <!-- Forbid fancy group uses -->
-    <rule ref="SlevomatCodingStandard.Namespaces.DisallowGroupUse"/>
-    <!-- Forbid multiple use statements on same line -->
-    <rule ref="SlevomatCodingStandard.Namespaces.MultipleUsesPerLine"/>
-    <!-- Forbid useless uses of the same namespace -->
-    <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace"/>
-    <!-- Require empty newlines before and after uses -->
-    <rule ref="SlevomatCodingStandard.Namespaces.UseSpacing">
-        <properties>
-            <property name="linesCountAfterLastUse" value="1"/>
-            <property name="linesCountBeforeFirstUse" value="1"/>
-            <property name="linesCountBetweenUseTypes" value="0"/>
-        </properties>
-    </rule>
-    <!-- Forbid superfluous leading backslash in use statements -->
-    <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash"/>
-    <!-- Forbid useless alias for classes, constants and functions -->
-    <rule ref="SlevomatCodingStandard.Namespaces.UselessAlias"/>
-
-    <!-- Ensure code is compatible with the targeted version of PHP -->
-    <rule ref="PHPCompatibility"/>
-    <config name="testVersion" value="7.3-7.4"/>
+    <rule ref="./non-psr-rules.xml"/>
 </ruleset>

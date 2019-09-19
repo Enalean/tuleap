@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ServiceNotAllowedForProjectException extends Exception {
+class ServiceNotAllowedForProjectException extends Exception
+{
 }
-
-?>

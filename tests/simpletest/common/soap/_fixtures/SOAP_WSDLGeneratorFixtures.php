@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SOAP_WSDLGeneratorFixtures {
+class SOAP_WSDLGeneratorFixtures
+{
 
     /**
      * Create a new project
@@ -69,7 +70,6 @@ class SOAP_WSDLGeneratorFixtures {
      */
     public function returnUnknownType()
     {
-
     }
 
     /**
@@ -77,8 +77,5 @@ class SOAP_WSDLGeneratorFixtures {
      */
     public function returnArrayOfPluginTypes()
     {
-
     }
 }
-
-?>

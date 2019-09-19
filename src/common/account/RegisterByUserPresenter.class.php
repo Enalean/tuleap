@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Account_RegisterByUserPresenter extends Account_RegisterPresenter {
+class Account_RegisterByUserPresenter extends Account_RegisterPresenter
+{
 
     public $title;
     public $submit;

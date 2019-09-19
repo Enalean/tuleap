@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class WrapperLoggerTest extends TuleapTestCase {
+class WrapperLoggerTest extends TuleapTestCase
+{
 
     private $logger;
 

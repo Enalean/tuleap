@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class User_PasswordExpirationChecker {
+class User_PasswordExpirationChecker
+{
     public const DAYS_FOR_EXPIRATION_WARN = 10;
 
     /**

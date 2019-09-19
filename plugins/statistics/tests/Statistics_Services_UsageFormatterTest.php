@@ -21,7 +21,8 @@
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/../../../src/www/include/user.php';
 
-class Statistics_Services_UsageFormatterTest extends TuleapTestCase {
+class Statistics_Services_UsageFormatterTest extends TuleapTestCase
+{
 
     /** @var Statistics_Services_UsageFormatter */
     private $usage_formatter;
@@ -64,7 +65,6 @@ class Statistics_Services_UsageFormatterTest extends TuleapTestCase {
 
         $datas = $this->usage_formatter->buildDatas($this->first_input_datas, "title");
         $this->assertEqual($datas, $expected);
-
     }
 
     public function itOnlyAddTitlesWhithEmptyData()
@@ -96,6 +96,4 @@ class Statistics_Services_UsageFormatterTest extends TuleapTestCase {
 
         $this->assertEqual($datas, $expected);
     }
-
 }
-?>

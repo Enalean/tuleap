@@ -19,7 +19,8 @@
  */
 require_once __DIR__.'/../../../bootstrap.php';
 
-class AgileDashboard_Planning_NearestPlanningTrackerProviderTest extends TuleapTestCase {
+class AgileDashboard_Planning_NearestPlanningTrackerProviderTest extends TuleapTestCase
+{
 
 
     public function setUp()

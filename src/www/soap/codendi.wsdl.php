@@ -22,7 +22,7 @@ require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/nusoap.php';
 require_once __DIR__ . '/../include/utils_soap.php';
 
-define ('permission_denied_fault', '3016');
+define('permission_denied_fault', '3016');
 
 define('NUSOAP', 1);
 
@@ -41,7 +41,7 @@ $uri = $protocol.'://'.$default_domain;
 $server = new soap_server();
 
 //configureWSDL($serviceName,$namespace = false,$endpoint = false,$style='rpc', $transport = 'http://schemas.xmlsoap.org/soap/http');
-$server->configureWSDL('CodendiAPI',$uri,false,'rpc','http://schemas.xmlsoap.org/soap/http',$uri);
+$server->configureWSDL('CodendiAPI', $uri, false, 'rpc', 'http://schemas.xmlsoap.org/soap/http', $uri);
 
 //include the common TYPES API
 require_once('./common/types.php');
@@ -67,5 +67,3 @@ $em->processEvent('soap', array());
 
 // Call the service method to initiate the transaction and send the response
 $server->service(file_get_contents('php://input'));
-
-?>

@@ -20,7 +20,8 @@
  */
 
 
-class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox {
+class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox
+{
 
     protected function fetchFieldContainerStart($id, $name)
     {
@@ -79,7 +80,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
      */
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','checkbox_desc');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'checkbox_desc');
     }
 
     /**

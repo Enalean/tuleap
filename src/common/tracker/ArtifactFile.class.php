@@ -11,7 +11,8 @@
  */
 
 
-class ArtifactFile {
+class ArtifactFile
+{
 
     public const ROOT_DIRNAME = 'trackerv3';
 
@@ -44,13 +45,13 @@ class ArtifactFile {
      *  @param    array    (all fields from artifact_file_user_vw) OR id from database.
      *  @return bool success.
      */
-    function __construct(&$Artifact, $data=false)
+    function __construct(&$Artifact, $data = false)
     {
         global $Language;
 
      //was Artifact legit?
         if (!$Artifact || !is_object($Artifact)) {
-            $this->setError('ArtifactFile: '.$Language->getText('tracker_common_file','invalid'));
+            $this->setError('ArtifactFile: '.$Language->getText('tracker_common_file', 'invalid'));
             return false;
         }
      //did ArtifactType have an error?
@@ -83,11 +84,13 @@ class ArtifactFile {
      *    @param    string    Item description.
      *  @return id on success / false on failure.
      */
-    function create($filename, $filetype, $filesize, $bin_data, $description=false,&$changes)
+    function create($filename, $filetype, $filesize, $bin_data, $description = false, &$changes)
     {
         global $Language;
 
-        if (!$description) $description=$Language->getText('global','none');
+        if (!$description) {
+            $description=$Language->getText('global', 'none');
+        }
         $old_value = $this->Artifact->getAttachedFileNames();
 
      // Some browsers don't supply mime type if they don't know it
@@ -99,7 +102,7 @@ class ArtifactFile {
      //    data validation
         if (!$filename || !$filetype || !$filesize || !$bin_data) {
             $GLOBALS['Response']->addFeedback('error', '<P>|'.$filename.'|'.$filetype.'|'.$filesize.'|'.$bin_data.'|');
-            $this->setError('ArtifactFile: '.$Language->getText('tracker_common_file','name_requ'));
+            $this->setError('ArtifactFile: '.$Language->getText('tracker_common_file', 'name_requ'));
             return false;
         }
 
@@ -115,7 +118,7 @@ class ArtifactFile {
 			('". db_ei($this->Artifact->getID()) ."','". db_es($description) ."','','". db_es($filename) ."',
 			'".  db_ei($filesize)  ."','".  db_es($filetype)  ."','". time() ."','".  db_ei($userid)  ."')");
 
-        $id=db_insertid($res,'artifact_file','id');
+        $id=db_insertid($res, 'artifact_file', 'id');
 
         if (!$res || !$id) {
             $this->setError('ArtifactFile: '.db_error());
@@ -133,7 +136,7 @@ class ArtifactFile {
             } else {
                 $new_value = $old_value .",".$filename;
             }
-            $this->Artifact->addHistory('attachment',$old_value,$new_value);
+            $this->Artifact->addHistory('attachment', $old_value, $new_value);
 
             $changes['attach']['href'] = HTTPRequest::instance()->getServerUrl() .
              "/tracker/download.php?artifact_id=".$this->Artifact->getID()."&id=$id";
@@ -190,12 +193,12 @@ class ArtifactFile {
      //echo "sql=$sql<br>";
         $res=db_query($sql);
         if (!$res || db_affected_rows($res) < 1) {
-            $this->setError('ArtifactFile: '.$Language->getText('tracker_common_file','del_err'));
+            $this->setError('ArtifactFile: '.$Language->getText('tracker_common_file', 'del_err'));
             return false;
         } else {
                     $this->deleteOnFileSystem();
             $new_value = $this->Artifact->getAttachedFileNames();
-            $this->Artifact->addHistory('attachment',$old_value,$new_value);
+            $this->Artifact->addHistory('attachment', $old_value, $new_value);
             return true;
         }
     }
@@ -241,7 +244,7 @@ class ArtifactFile {
      //echo $sql;
         $res=db_query($sql);
         if (!$res || db_numrows($res) < 1) {
-            $this->setError('ArtifactFile: '.$Language->getText('tracker_common_file','invalid_id'));
+            $this->setError('ArtifactFile: '.$Language->getText('tracker_common_file', 'invalid_id'));
             return false;
         }
         $this->data_array = db_fetch_array($res);
@@ -393,7 +396,4 @@ class ArtifactFile {
     {
         return $this->error_state;
     }
-
 }
-
-?>

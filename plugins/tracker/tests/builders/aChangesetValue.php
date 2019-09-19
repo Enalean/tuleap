@@ -29,7 +29,8 @@ function aChangesetValueList()
     return new Test_Tracker_ChangesetValue_List_Builder();
 }
 
-class Test_Tracker_ChangesetValue_Builder {
+class Test_Tracker_ChangesetValue_Builder
+{
     protected $name;
     protected $id;
     protected $field;
@@ -62,7 +63,8 @@ class Test_Tracker_ChangesetValue_Builder {
     }
 }
 
-class Test_Tracker_ChangesetValue_ArtifactLink_Builder extends Test_Tracker_ChangesetValue_Builder {
+class Test_Tracker_ChangesetValue_ArtifactLink_Builder extends Test_Tracker_ChangesetValue_Builder
+{
     private $artifact_links;
     private $reverse_artifact_links;
 
@@ -88,7 +90,8 @@ class Test_Tracker_ChangesetValue_ArtifactLink_Builder extends Test_Tracker_Chan
     }
 }
 
-class Test_Tracker_ChangesetValue_List_Builder extends Test_Tracker_ChangesetValue_Builder {
+class Test_Tracker_ChangesetValue_List_Builder extends Test_Tracker_ChangesetValue_Builder
+{
     private $list_values = array();
 
     public function __construct()
@@ -110,5 +113,3 @@ class Test_Tracker_ChangesetValue_List_Builder extends Test_Tracker_ChangesetVal
         return new Tracker_Artifact_ChangesetValue_List($this->id, mock('Tracker_Artifact_Changeset'), $this->field, null, $this->list_values);
     }
 }
-
-?>

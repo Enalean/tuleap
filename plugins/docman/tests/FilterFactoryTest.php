@@ -63,5 +63,4 @@ class Docman_FilterFactoryTest extends TuleapTestCase
 
         $filterFactory->cloneFilter($srcFilter, $dstReport, $metadataMapping);
     }
-
 }

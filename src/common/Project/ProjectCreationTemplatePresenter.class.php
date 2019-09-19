@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class ProjectCreationTemplatePresenter {
+class ProjectCreationTemplatePresenter
+{
 
     /**
      * @var Project
@@ -116,9 +117,9 @@ class ProjectCreationTemplatePresenter {
     public function getPurifiedProjectName()
     {
         return $this->text_purifier->purify(
-                util_unconvert_htmlspecialchars($this->project->getPublicName()),
-                CODENDI_PURIFIER_CONVERT_HTML
-                );
+            util_unconvert_htmlspecialchars($this->project->getPublicName()),
+            CODENDI_PURIFIER_CONVERT_HTML
+        );
     }
 
     /**
@@ -128,10 +129,10 @@ class ProjectCreationTemplatePresenter {
     public function getPurifiedShortDescription()
     {
         return $this->text_purifier->purify(
-                util_unconvert_htmlspecialchars($this->project->getDescription()),
-                CODENDI_PURIFIER_LIGHT,
-                $this->project->getID()
-                );
+            util_unconvert_htmlspecialchars($this->project->getDescription()),
+            CODENDI_PURIFIER_LIGHT,
+            $this->project->getID()
+        );
     }
 
     /**
@@ -142,6 +143,3 @@ class ProjectCreationTemplatePresenter {
         return $this->selected_template_id == $this->project->getID();
     }
 }
-
-
-?>

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Tracker_Artifact_Attachment_TemporaryFile {
+class Tracker_Artifact_Attachment_TemporaryFile
+{
 
     private $id;
     private $name;
@@ -87,6 +88,4 @@ class Tracker_Artifact_Attachment_TemporaryFile {
     {
         return $this->description;
     }
-
 }
-?>

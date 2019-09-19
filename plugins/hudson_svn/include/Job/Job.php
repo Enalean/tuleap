@@ -20,7 +20,8 @@
 
 namespace Tuleap\HudsonSvn\Job;
 
-class Job {
+class Job
+{
 
     private $token;
     private $url;
@@ -61,5 +62,4 @@ class Job {
     {
         return $this->token;
     }
-
 }

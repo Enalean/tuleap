@@ -24,7 +24,8 @@
 require_once('Docman_View_ItemDetailsSectionProperties.class.php');
 require_once(dirname(__FILE__).'/../Docman_PermissionsManager.class.php');
 
-class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetailsSectionProperties {
+class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetailsSectionProperties
+{
     var $token;
     var $subItemsWritable;
     var $updateConfirmed;
@@ -58,10 +59,10 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         $html = '';
         $params = array('form_name' => $this->formName);
         $html  .= '<form name="'.$params['form_name'].'" action="'. $this->url .'" method="post" class="docman_form">';
-        if(!$this->updateConfirmed && $this->_subItemsAreWritable()) {
+        if (!$this->updateConfirmed && $this->_subItemsAreWritable()) {
             $html .= '<div class="docman_confirm_delete">';
             $nbDocs = 0;
-            if($this->recurseOnDocs) {
+            if ($this->recurseOnDocs) {
                 $nbDocs = $this->nbDocsImpacted;
             }
             $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_update_recursion_warning', array($nbDocs, $this->nbFoldersImpacted));
@@ -84,7 +85,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
 
     function _subItemsAreWritable()
     {
-        if($this->subItemsWritable === null) {
+        if ($this->subItemsWritable === null) {
             $dPm = Docman_PermissionsManager::instance($this->item->getGroupId());
             $this->subItemsWritable = $dPm->currentUserCanWriteSubItems($this->item->getId());
 
@@ -103,15 +104,15 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
 
         $html .= '<tr style="vertical-align:top;">';
         $checked = '';
-        if($this->_subItemsAreWritable()) {
-            if(in_array($field->md->getLabel(), $this->recurse)) {
+        if ($this->_subItemsAreWritable()) {
+            if (in_array($field->md->getLabel(), $this->recurse)) {
                 $checked = ' checked="checked"';
             }
             $html .= '<td style="text-align: center;"><input type="checkbox" name="recurse[]" value="'.$field->md->getLabel().'"'.$checked.' /></td>';
         }
         $html .= '<td class="label">';
         $fieldHtml = $this->_getFieldLabel($field);
-        if($checked != '') {
+        if ($checked != '') {
             $html .= '<strong>'.$fieldHtml.'</strong>';
         } else {
             $html .= $fieldHtml;
@@ -125,7 +126,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
     function _getDefaultValuesTableHeader()
     {
         $html = '';
-        if($this->_subItemsAreWritable()) {
+        if ($this->_subItemsAreWritable()) {
             $html .= '<tr>';
             $html .= '<th>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_rec').'</th>';
             $html .= '<th>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_md').'</td>';
@@ -138,8 +139,8 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
     function _getDefaultValues()
     {
         $html = '';
-        if($this->_subItemsAreWritable()) {
-            if(!$this->updateConfirmed) {
+        if ($this->_subItemsAreWritable()) {
+            if (!$this->updateConfirmed) {
                 $html .= '<input type="hidden" name="validate_recurse" value="true" />';
             }
         }
@@ -150,7 +151,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         // Apply on Folder/Doc selection
         $docChecked = '';
         $fldChecked = ' selected="selected"';
-        if($this->recurseOnDocs) {
+        if ($this->recurseOnDocs) {
             $docChecked = ' selected="selected"';
             $fldChecked = '';
         }
@@ -176,18 +177,15 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         $html .= '<input type="hidden" name="item[id]" value="'. $this->item->getId() .'" />';
         $html .= '<input type="hidden" name="action" value="update" />';
 
-        if($this->updateConfirmed){
-            $confirmStr = $GLOBALS['Language']->getText('global','btn_submit');
+        if ($this->updateConfirmed) {
+            $confirmStr = $GLOBALS['Language']->getText('global', 'btn_submit');
         } else {
-            $confirmStr = $GLOBALS['Language']->getText('global','btn_apply');
+            $confirmStr = $GLOBALS['Language']->getText('global', 'btn_apply');
         }
         $html .= '<input type="submit" name="confirm" value="'. $confirmStr .'" />';
         $html .= ' ';
-        $html .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global','btn_cancel') .'" />';
+        $html .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />';
         $html .= '</p>';
         return $html;
     }
-
-
 }
-?>

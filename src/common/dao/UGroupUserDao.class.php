@@ -28,7 +28,8 @@ require_once __DIR__. '/../../www/project/admin/ugroup_utils.php';
 /**
  *  Data Access Object for ProjectUGroup
  */
-class UGroupUserDao extends DataAccessObject {
+class UGroupUserDao extends DataAccessObject
+{
 
     /**
     * Searches ProjectUGroup members by UGroupId

@@ -29,7 +29,8 @@ require_once dirname(__FILE__).'/../bootstrap.php';
 /**
  * @group GitTests
  */
-class GerritTest extends TestBase {
+class GerritTest extends TestBase
+{
 
     protected function getResponseForNonMember($request)
     {

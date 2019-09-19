@@ -21,7 +21,8 @@
 
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Transition_PostAction_FieldFactory_BaseTest extends TuleapTestCase {
+class Transition_PostAction_FieldFactory_BaseTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -38,7 +39,8 @@ class Transition_PostAction_FieldFactory_BaseTest extends TuleapTestCase {
     }
 }
 
-class Transition_PostAction_FieldFactoryTest extends Transition_PostAction_FieldFactory_BaseTest {
+class Transition_PostAction_FieldFactoryTest extends Transition_PostAction_FieldFactory_BaseTest
+{
 
     public function setUp()
     {
@@ -124,7 +126,8 @@ class Transition_PostAction_FieldFactoryTest extends Transition_PostAction_Field
     }
 }
 
-class Transition_PostActionFieldFactory_AddPostActionTest extends Transition_PostAction_FieldFactory_BaseTest {
+class Transition_PostActionFieldFactory_AddPostActionTest extends Transition_PostAction_FieldFactory_BaseTest
+{
 
     public function itCanAddAPostActionToAnIntField()
     {
@@ -143,10 +146,10 @@ class Transition_PostActionFieldFactory_AddPostActionTest extends Transition_Pos
         $this->date_dao->expectOnce('create', array($this->transition_id));
         $this->factory->addPostAction($this->transition, 'field_date');
     }
-
 }
 
-class Transition_PostActionFieldFactory_DuplicateTest extends Transition_PostAction_FieldFactory_BaseTest {
+class Transition_PostActionFieldFactory_DuplicateTest extends Transition_PostAction_FieldFactory_BaseTest
+{
 
     public function setUp()
     {
@@ -190,7 +193,8 @@ class Transition_PostActionFieldFactory_DuplicateTest extends Transition_PostAct
     }
 }
 
-class Transition_PostActionFieldFactory_GetInstanceFromXmlTest extends Transition_PostAction_FieldFactory_BaseTest {
+class Transition_PostActionFieldFactory_GetInstanceFromXmlTest extends Transition_PostAction_FieldFactory_BaseTest
+{
 
     public function setUp()
     {
@@ -255,7 +259,8 @@ class Transition_PostActionFieldFactory_GetInstanceFromXmlTest extends Transitio
     }
 }
 
-class Transition_PostActionFieldFactory_SaveObjectTest extends Transition_PostAction_FieldFactory_BaseTest {
+class Transition_PostActionFieldFactory_SaveObjectTest extends Transition_PostAction_FieldFactory_BaseTest
+{
 
     public function itSavesDateFieldPostActions()
     {
@@ -288,7 +293,8 @@ class Transition_PostActionFieldFactory_SaveObjectTest extends Transition_PostAc
     }
 }
 
-class Transition_PostActionFieldFactory_DeleteWorkflowTest extends Transition_PostAction_FieldFactory_BaseTest {
+class Transition_PostActionFieldFactory_DeleteWorkflowTest extends Transition_PostAction_FieldFactory_BaseTest
+{
 
     private $workflow_id = 1;
 
@@ -320,7 +326,8 @@ class Transition_PostActionFieldFactory_DeleteWorkflowTest extends Transition_Po
     }
 }
 
-class Transition_PostActionFieldFactory_IsFieldUsedInPostActionsTest extends Transition_PostAction_FieldFactory_BaseTest {
+class Transition_PostActionFieldFactory_IsFieldUsedInPostActionsTest extends Transition_PostAction_FieldFactory_BaseTest
+{
 
     public function setUp()
     {
@@ -373,6 +380,4 @@ class Transition_PostActionFieldFactory_IsFieldUsedInPostActionsTest extends Tra
 
         $this->assertFalse($this->factory->isFieldUsedInPostActions($this->field));
     }
-
 }
-?>

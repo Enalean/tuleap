@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Migration_V3_CannedDao extends DataAccessObject {
+class Tracker_Migration_V3_CannedDao extends DataAccessObject
+{
 
     public function create($tv3_id, $tv5_id)
     {
@@ -33,4 +34,3 @@ class Tracker_Migration_V3_CannedDao extends DataAccessObject {
         $this->update($sql);
     }
 }
-?>

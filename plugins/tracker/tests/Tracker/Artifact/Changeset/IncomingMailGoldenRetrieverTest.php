@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends TuleapTestCase {
+class Tracker_Artifact_Changeset_IncomingMailGoldenRetrieverTest extends TuleapTestCase
+{
 
     /** @var Tracker_Artifact_Changeset_IncomingMailDao */
     private $dao;

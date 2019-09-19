@@ -123,8 +123,7 @@ class GreenTheme extends Theme
     function ApplyPlot($plot)
     {
 
-        switch (get_class($plot))
-        {
+        switch (get_class($plot)) {
             case 'GroupBarPlot':
             {
                 foreach ($plot->plots as $_plot) {
@@ -180,6 +179,3 @@ class GreenTheme extends Theme
         }
     }
 }
-
-
-?>

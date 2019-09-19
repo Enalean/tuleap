@@ -25,7 +25,8 @@ use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForT
 
 require_once TRACKER_BASE_DIR . '/tracker_permissions.php';
 
-class Tracker_FormElementFactory {
+class Tracker_FormElementFactory
+{
 
     /**
      * Cache formElements
@@ -417,8 +418,7 @@ class Tracker_FormElementFactory {
     public function getComputableFieldByNameForUser($tracker_id, $field_name, PFUser $user)
     {
         $field = $this->getUsedFieldByNameForUser($tracker_id, $field_name, $user);
-        if (
-            $field
+        if ($field
             && $field instanceof Tracker_FormElement_IComputeValues
         ) {
             return $field;
@@ -435,7 +435,7 @@ class Tracker_FormElementFactory {
     {
         if (!isset($this->formElements_by_parent[$parent_id])) {
             $this->formElements_by_parent[$parent_id] = array();
-            foreach($this->getDao()->searchUsedByParentId($parent_id) as $row) {
+            foreach ($this->getDao()->searchUsedByParentId($parent_id) as $row) {
                 $form_element = $this->getCachedInstanceFromRow($row);
                 if ($form_element) {
                     $this->formElements_by_parent[$parent_id][$form_element->getId()] = $form_element;
@@ -456,7 +456,7 @@ class Tracker_FormElementFactory {
     {
         $all        = array();
         $tracker_id = $tracker->getId();
-        foreach($this->getDao()->searchByTrackerId($tracker_id) as $row) {
+        foreach ($this->getDao()->searchByTrackerId($tracker_id) as $row) {
             $form_element_id       = $row['id'];
             $all[$form_element_id] = $this->getCachedInstanceFromRow($row);
         }
@@ -471,7 +471,7 @@ class Tracker_FormElementFactory {
     public function getAllFormElementsByParentId($parent_id)
     {
         $all = array();
-        foreach($this->getDao()->searchByParentId($parent_id) as $row) {
+        foreach ($this->getDao()->searchByParentId($parent_id) as $row) {
             $form_element_id = $row['id'];
             $all[$form_element_id] = $this->getCachedInstanceFromRow($row);
         }
@@ -738,7 +738,7 @@ class Tracker_FormElementFactory {
         }
 
         $binded_fields = (array) $this->getUsedFormElementsByType($tracker, array('tbl',  'sb', 'msb'));
-        foreach($binded_fields as $field) {
+        foreach ($binded_fields as $field) {
             if ($field->getBind()->getType() === Tracker_FormElement_Field_List_Bind_Ugroups::TYPE) {
                 $fields[] = $field;
             }
@@ -793,7 +793,7 @@ class Tracker_FormElementFactory {
     {
         $form_elements = array();
         $tracker_id    = $tracker->getId();
-        foreach($this->getDao()->searchUsedUserListFieldByTrackerId($tracker_id) as $row) {
+        foreach ($this->getDao()->searchUsedUserListFieldByTrackerId($tracker_id) as $row) {
             $form_elements[] = $this->getCachedInstanceFromRow($row);
         }
         return array_filter($form_elements);
@@ -818,7 +818,7 @@ class Tracker_FormElementFactory {
     public function getUsedUserSbFields($tracker)
     {
         $form_elements = array();
-        foreach($this->getDao()->searchUsedUserSbFieldByTrackerId($tracker->getId()) as $row) {
+        foreach ($this->getDao()->searchUsedUserSbFieldByTrackerId($tracker->getId()) as $row) {
             $form_elements[] = $this->getCachedInstanceFromRow($row);
         }
         return array_filter($form_elements);
@@ -929,9 +929,9 @@ class Tracker_FormElementFactory {
     {
         $mapping = array();
 
-        foreach($this->getDao()->searchByTrackerId($from_tracker_id) as $from_row) {
+        foreach ($this->getDao()->searchByTrackerId($from_tracker_id) as $from_row) {
             $has_workflow = false;
-            if(in_array($from_row['formElement_type'], array('sb', 'rb'))) {
+            if (in_array($from_row['formElement_type'], array('sb', 'rb'))) {
                 $field = $this->getFieldById($from_row['id']);
                 if ($field->fieldHasDefineWorkflow()) {
                     $has_workflow = true;
@@ -980,7 +980,7 @@ class Tracker_FormElementFactory {
     protected function getCachedInstancesFromDAR(LegacyDataAccessResultInterface $dar)
     {
         $form_elements = array();
-        foreach($dar as $row) {
+        foreach ($dar as $row) {
             $form_elements[] = $this->getCachedInstanceFromRow($row);
         }
         return array_filter($form_elements);
@@ -1016,7 +1016,7 @@ class Tracker_FormElementFactory {
     {
         $unused = array();
         $tracker_id = $tracker->getId();
-        foreach($this->getDao()->searchUnusedByTrackerId($tracker_id) as $row) {
+        foreach ($this->getDao()->searchUnusedByTrackerId($tracker_id) as $row) {
             $form_element_id = $row['id'];
             $unused[$form_element_id] = $this->getCachedInstanceFromRow($row);
         }
@@ -1031,7 +1031,7 @@ class Tracker_FormElementFactory {
         $tracker_id = $tracker->getId();
         if (!isset($this->used[$tracker_id])) {
             $this->used[$tracker_id] = array();
-            foreach($this->getDao()->searchUsedByTrackerId($tracker_id) as $row) {
+            foreach ($this->getDao()->searchUsedByTrackerId($tracker_id) as $row) {
                 $form_element = $this->getCachedInstanceFromRow($row);
                 if ($form_element) {
                     $form_element_id = $row['id'];
@@ -1087,18 +1087,18 @@ class Tracker_FormElementFactory {
             $original_field = $this->getFormElementById($row['original_field_id']);
         }
         $form_element = new $klass(
-                                $row['id'],
-                                $row['tracker_id'],
-                                $row['parent_id'],
-                                $row['name'],
-                                $row['label'],
-                                $row['description'],
-                                $row['use_it'],
-                                $row['scope'],
-                                $row['required'],
-                                $row['notifications'],
-                                $row['rank'],
-                                $original_field
+            $row['id'],
+            $row['tracker_id'],
+            $row['parent_id'],
+            $row['name'],
+            $row['label'],
+            $row['description'],
+            $row['use_it'],
+            $row['scope'],
+            $row['required'],
+            $row['notifications'],
+            $row['rank'],
+            $original_field
         );
 
         return $form_element;
@@ -1192,7 +1192,7 @@ class Tracker_FormElementFactory {
             'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o', 'ö'=>'o', 'ø'=>'o', 'ù'=>'u',
             'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y', 'ƒ'=>'f'
         );
-        $label = strtolower( trim($label) );
+        $label = strtolower(trim($label));
         $label = preg_replace('/[^\w\d_ -]/si', '', $label);
         //replace any space char with _
         $label = preg_replace('/\s+/', '_', $label);
@@ -1264,8 +1264,8 @@ class Tracker_FormElementFactory {
 
     private function getValueMappingFromFieldMapping($original_field_id, $field_mapping)
     {
-        foreach($field_mapping as $row) {
-            if($row['from'] == $original_field_id) {
+        foreach ($field_mapping as $row) {
+            if ($row['from'] == $original_field_id) {
                 return $row['values'];
             }
         }
@@ -1274,8 +1274,8 @@ class Tracker_FormElementFactory {
 
     private function getNewOriginalFieldIdFromMapping($old_field_id, array $field_mapping)
     {
-        foreach($field_mapping as $row) {
-            if($row['from'] == $old_field_id) {
+        foreach ($field_mapping as $row) {
+            if ($row['from'] == $old_field_id) {
                 return $row['to'];
             }
         }
@@ -1420,10 +1420,10 @@ class Tracker_FormElementFactory {
                     );
                     $tracker = $form_element->getTracker();
                     plugin_tracker_permission_process_update_fields_permissions(
-                            $tracker->getGroupID(),
-                            $tracker->getID(),
-                            $this->getUsedFields($tracker),
-                            $permissions
+                        $tracker->getGroupID(),
+                        $tracker->getID(),
+                        $this->getUsedFields($tracker),
+                        $permissions
                     );
                 }
             }
@@ -1457,15 +1457,15 @@ class Tracker_FormElementFactory {
     {
         $hp = Codendi_HTMLPurifier::instance();
 
-        $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin','fields'));
+        $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'fields'));
         $w->setContent($this->fetchFactoryButtons($this->classnames, $tracker));
         $w->display();
 
-        $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin','dynamic_fields'));
+        $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'dynamic_fields'));
         $w->setContent($this->fetchFactoryButtons($this->special_classnames, $tracker));
         $w->display();
 
-        $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin','structural_elements'));
+        $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'structural_elements'));
         $w->setContent($this->fetchFactoryButtons(array_merge($this->group_classnames, $this->staticfield_classnames), $tracker));
         $w->display();
     }
@@ -1477,7 +1477,7 @@ class Tracker_FormElementFactory {
 
         $html = '';
         $html .= '<div class="tracker-admin-palette-content">';
-        foreach($event->getKlasses() as $type => $klass) {
+        foreach ($event->getKlasses() as $type => $klass) {
             $html .= $this->getFactoryButton($klass, 'create-formElement['.  urlencode($type) .']', $tracker);
         }
         $html .= '</div>';
@@ -1614,12 +1614,11 @@ class Tracker_FormElementFactory {
                 }
 
                 //Check that parent_id is valid
-                if($parent_id == 0 || $this->getFormElementById($parent_id)) {
-
+                if ($parent_id == 0 || $this->getFormElementById($parent_id)) {
                     $name = null;
                     if (isset($form_element_data['name']) && trim($form_element_data['name'])) {
                         $name = $form_element_data['name'];
-                    } else if ($label) {
+                    } elseif ($label) {
                         $name = $this->deductNameFromLabel($label);
                     }
                     if ($name) {
@@ -1644,21 +1643,22 @@ class Tracker_FormElementFactory {
                     $original_field_id = isset($form_element_data['original_field_id']) ? $form_element_data['original_field_id'] : null;
 
                     //Create the element
-                    if($id = $this->getDao()->create($type,
-                                                     $tracker->id,
-                                                     $parent_id,
-                                                     $name,
-                                                     $prefix,
-                                                     $label,
-                                                     $description,
-                                                     $form_element_data['use_it'],
-                                                     'P',
-                                                     $is_required,
-                                                     $notify,
-                                                     $rank,
-                                                     $original_field_id,
-                                                     $force_absolute_ranking
-                        )) {
+                    if ($id = $this->getDao()->create(
+                        $type,
+                        $tracker->id,
+                        $parent_id,
+                        $name,
+                        $prefix,
+                        $label,
+                        $description,
+                        $form_element_data['use_it'],
+                        'P',
+                        $is_required,
+                        $notify,
+                        $rank,
+                        $original_field_id,
+                        $force_absolute_ranking
+                    )) {
                         //Set permissions
                         if (!array_key_exists($type, array_merge($this->group_classnames, $this->staticfield_classnames))) {
                             $ugroups_permissions = $this->getPermissionsFromFormElementData($id, $form_element_data);
@@ -1673,10 +1673,12 @@ class Tracker_FormElementFactory {
                         }
 
                         //Announce to the world that an element has been created
-                        EventManager::instance()->processEvent('tracker_formElement_justcreated',
-                                                               array('id' => $id,
+                        EventManager::instance()->processEvent(
+                            'tracker_formElement_justcreated',
+                            array('id' => $id,
                                                                      'row' => $form_element_data,
-                                                                     'type' => $type));
+                            'type' => $type)
+                        );
                         //Clear some internal cache
                         unset($this->formElements_by_parent[$parent_id]);
 
@@ -1758,7 +1760,7 @@ class Tracker_FormElementFactory {
     public function getGroupsByTrackerId($tracker_id)
     {
         $form_elements = array();
-        foreach($this->getDao()->searchByTrackerIdAndType($tracker_id, array_keys($this->group_classnames)) as $row) {
+        foreach ($this->getDao()->searchByTrackerIdAndType($tracker_id, array_keys($this->group_classnames)) as $row) {
             $form_elements[] = $this->getCachedInstanceFromRow($row);
         }
         return array_filter($form_elements);
@@ -1803,7 +1805,6 @@ class Tracker_FormElementFactory {
     {
         $dar = $this->getDao()->searchFieldFromTrackerIdAndSharedFieldId($tracker->getId(), $shared->getId());
         return $this->getInstanceFromDar($dar);
-
     }
 
     public function getInstanceFromDar($dar)

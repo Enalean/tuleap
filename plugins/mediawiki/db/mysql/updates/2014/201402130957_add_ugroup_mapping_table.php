@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201402130957_add_ugroup_mapping_table extends ForgeUpgrade_Bucket {
+class b201402130957_add_ugroup_mapping_table extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -62,7 +63,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message.implode(', ', $this->db->dbh->errorInfo()));
         }
     }
-
 }
-
-?>

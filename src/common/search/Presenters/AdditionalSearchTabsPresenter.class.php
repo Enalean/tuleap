@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_AdditionalSearchTabsPresenter {
+class Search_AdditionalSearchTabsPresenter
+{
 
     public $name;
 
@@ -32,5 +33,4 @@ class Search_AdditionalSearchTabsPresenter {
         $this->url            = $url;
         $this->type_of_search = $type_of_search;
     }
-
 }

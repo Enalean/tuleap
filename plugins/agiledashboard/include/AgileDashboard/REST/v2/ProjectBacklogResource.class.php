@@ -53,7 +53,8 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 /**
  * Wrapper for backlog related REST methods
  */
-class ProjectBacklogResource {
+class ProjectBacklogResource
+{
     public const MAX_LIMIT = 50;
 
     /** @var Planning_MilestoneFactory */
@@ -162,7 +163,7 @@ class ProjectBacklogResource {
         $backlog_item_representations        = array();
         $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
 
-        foreach($backlog_items as $backlog_item) {
+        foreach ($backlog_items as $backlog_item) {
             $backlog_item_representations[] = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
         }
 

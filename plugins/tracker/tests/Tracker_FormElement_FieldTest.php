@@ -107,7 +107,8 @@ Mock::generate('BaseLanguage');
 
 Mock::generate('Tracker_Artifact_ChangesetValue');
 
-class Tracker_FormElement_FieldTest extends TuleapTestCase {
+class Tracker_FormElement_FieldTest extends TuleapTestCase
+{
 
     private $response;
     private $language;
@@ -206,7 +207,7 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase {
                     $field->expectNever('isValid');
                     $field->expectNever('setHasErrors');
                     $is_valid = true;
-                break;
+                    break;
             // Error due to required
                 case 'R':
                     $field->expectNever('isValid');
@@ -214,7 +215,7 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase {
                     $GLOBALS['Language']->expectOnce('getText', array('plugin_tracker_common_artifact', 'err_required', $field->getLabel() .' ('. $field->getName() .')'));
                     $GLOBALS['Response']->expectOnce('addFeedback', array('error', '*'));
                     $is_valid = false;
-                break;
+                    break;
             // Error due to perms
                 case 'P':
                     $field->expectNever('isValid');
@@ -222,16 +223,16 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase {
                     $GLOBALS['Language']->expectOnce('getText', array('plugin_tracker_common_artifact', 'bad_field_permission_update', $field->getLabel()));
                     $GLOBALS['Response']->expectOnce('addFeedback', array('error', '*'));
                     $is_valid = false;
-                break;
+                    break;
             // Depends on field->isValid()
                 case 'V':
                     $field->expectOnce('isValid');
                     $field->expectNever('setHasErrors');
                     $field->setReturnValue('isValid', true);
                     $is_valid = true;
-                break;
+                    break;
                 default:
-                break;
+                    break;
             }
 
             $result = $field->validateFieldWithPermissionsAndRequiredStatus($artifact_update, $submitted_value, $last_changeset_value);
@@ -288,7 +289,8 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElement_Field_RESTValueTest extends TuleapTestCase {
+class Tracker_FormElement_Field_RESTValueTest extends TuleapTestCase
+{
 
     public function itReturnsTheValueIndexedByFieldName()
     {

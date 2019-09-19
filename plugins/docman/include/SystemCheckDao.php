@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_SystemCheckDao extends DataAccessObject {
+class Docman_SystemCheckDao extends DataAccessObject
+{
 
     public function getActiveProjectUnixNamesThatUseDocman()
     {
@@ -33,5 +34,4 @@ class Docman_SystemCheckDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
-
 }

@@ -426,7 +426,6 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
         $this->expectException('Tracker_Exception');
 
         $artifact->createNewChangeset($fields_data, $comment, $user);
-
     }
 
     public function itCheckThatGlobalRulesAreValid()
@@ -682,8 +681,10 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
         $c3 = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $c4 = \Mockery::spy(\Tracker_Artifact_Changeset::class);
 
-        $u1 = \Mockery::spy(\PFUser::class); $u1->shouldReceive('getUserName')->andReturns('sandrae');
-        $u2 = \Mockery::spy(\PFUser::class); $u2->shouldReceive('getUserName')->andReturns('marc');
+        $u1 = \Mockery::spy(\PFUser::class);
+        $u1->shouldReceive('getUserName')->andReturns('sandrae');
+        $u2 = \Mockery::spy(\PFUser::class);
+        $u2->shouldReceive('getUserName')->andReturns('marc');
 
         $um = \Mockery::spy(\UserManager::class);
         $um->shouldReceive('getUserById')->with(101)->andReturns($u1);
@@ -709,7 +710,8 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
     }
 }
 
-class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase {
+class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -741,7 +743,8 @@ class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Artifact_getWorkflowTest extends TuleapTestCase {
+class Tracker_Artifact_getWorkflowTest extends TuleapTestCase
+{
 
     private $workflow;
     private $artifact;
@@ -771,7 +774,8 @@ class Tracker_Artifact_getWorkflowTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
+class Tracker_Artifact_PostActionsTest extends TuleapTestCase
+{
     private $changeset_dao;
     /**
      * @var Tracker_Artifact_Changeset_NewChangesetCreator
@@ -873,7 +877,8 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
+class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase
+{
 
     private $user_manager;
 

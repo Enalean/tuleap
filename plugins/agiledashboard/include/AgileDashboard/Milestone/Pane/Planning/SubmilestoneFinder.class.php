@@ -81,7 +81,6 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
 
         $milestone_backlog_trackers = $milestone->getPlanning()->getBacklogTrackers();
         foreach ($milestone_backlog_trackers as $milestone_backlog_tracker) {
-
             foreach ($children as $tracker) {
                 $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
 

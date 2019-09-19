@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Migration_V3_AttachmentFieldDao extends DataAccessObject {
+class Tracker_Migration_V3_AttachmentFieldDao extends DataAccessObject
+{
 
     public function addAttachmentField($tv5_id)
     {
@@ -41,4 +42,3 @@ class Tracker_Migration_V3_AttachmentFieldDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-?>

@@ -28,7 +28,8 @@ use GitRepositoryPermissionsManager;
 use GitDao;
 use UGroupManager;
 
-class GitRepositoryPermissionRepresentation extends GitRepositoryPermissionRepresentationBase {
+class GitRepositoryPermissionRepresentation extends GitRepositoryPermissionRepresentationBase
+{
 
     /** @var GitRepositoryPermissionsManager */
     private $repository_permissions_manager;

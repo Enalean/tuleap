@@ -20,7 +20,8 @@
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class AgileDashboard_KanbanUserPreferencesTest extends TuleapTestCase {
+class AgileDashboard_KanbanUserPreferencesTest extends TuleapTestCase
+{
 
     /** @var PFUser */
     private $user;

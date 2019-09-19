@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_CardFieldPresenter {
+class Cardwall_CardFieldPresenter
+{
 
     /**
      * @var Tracker_FormElement_Field
@@ -47,5 +48,3 @@ class Cardwall_CardFieldPresenter {
         return $this->field;
     }
 }
-
-?>

@@ -23,7 +23,8 @@ use Tuleap\SOAP\SOAPRequestValidator;
 /**
  * Wrapper for statistics related SOAP methods
  */
-class Statistics_SOAPServer {
+class Statistics_SOAPServer
+{
 
     /**
      * @var SOAPRequestValidator
@@ -91,7 +92,6 @@ class Statistics_SOAPServer {
             $this->assertUserCanAccessProject($user, $group_id);
 
             return $this->getDiskStatsForUser($user, $group_id);
-
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }

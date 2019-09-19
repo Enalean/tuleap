@@ -24,7 +24,8 @@ Mock::generate('Tracker');
 
 Mock::generate('Tracker_FormElement_Field_List');
 
-class Tracker_Semantic_StatusFactoryTest extends TuleapTestCase {
+class Tracker_Semantic_StatusFactoryTest extends TuleapTestCase
+{
 
     private $xml_security;
 
@@ -80,7 +81,4 @@ class Tracker_Semantic_StatusFactoryTest extends TuleapTestCase {
         $this->assertTrue(in_array(807, $semantic_status->getOpenValues()));
         $this->assertTrue(in_array(808, $semantic_status->getOpenValues()));
     }
-
 }
-
-?>

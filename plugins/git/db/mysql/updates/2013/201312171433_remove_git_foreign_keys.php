@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201312171433_remove_git_foreign_keys extends ForgeUpgrade_Bucket {
+class b201312171433_remove_git_foreign_keys extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -64,4 +65,3 @@ EOT;
         }
     }
 }
-?>

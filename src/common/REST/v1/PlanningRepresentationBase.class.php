@@ -21,7 +21,8 @@ namespace Tuleap\REST\v1;
 /**
  * Basic representation of a planning
  */
-class PlanningRepresentationBase {
+class PlanningRepresentationBase
+{
 
     public const ROUTE = 'plannings';
 

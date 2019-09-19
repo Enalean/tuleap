@@ -35,7 +35,8 @@ use PasswordHandlerFactory;
 /**
  * Wrapper for token related REST methods
  */
-class TokenResource {
+class TokenResource
+{
 
     /** @var UserManager */
     private $user_manager;
@@ -84,13 +85,13 @@ class TokenResource {
                 $this->getTokenManager()->generateTokenForUser($user)
             );
             return $token;
-        } catch(User_LoginException $exception) {
+        } catch (User_LoginException $exception) {
             throw new RestException(401, $exception->getMessage());
-        } catch(User_InvalidPasswordWithUserException $exception) {
+        } catch (User_InvalidPasswordWithUserException $exception) {
             throw new RestException(401, $exception->getMessage());
-        } catch(User_InvalidPasswordException $exception) {
+        } catch (User_InvalidPasswordException $exception) {
             throw new RestException(401, $exception->getMessage());
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             throw new RestException(500, $exception->getMessage());
         }
     }
@@ -121,7 +122,7 @@ class TokenResource {
             );
         } catch (Rest_Exception_InvalidTokenException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             throw new RestException(500, $exception->getMessage());
         }
     }

@@ -22,7 +22,8 @@
 /**
  * This migrate trackers v3 into tracker v5
  */
-class Tracker_Migration_V3 {
+class Tracker_Migration_V3
+{
 
     /** @var TrackerFactory */
     private $tracker_factory;
@@ -121,4 +122,3 @@ class Tracker_Migration_V3 {
         }
     }
 }
-?>

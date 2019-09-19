@@ -22,7 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
+class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5
+{
     /**
      * build burndown chart properties
      *
@@ -76,6 +77,4 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
     {
         return in_array($type, array('int', 'float'));
     }
-
 }
-?>

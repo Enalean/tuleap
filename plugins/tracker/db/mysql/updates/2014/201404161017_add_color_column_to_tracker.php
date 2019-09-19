@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201404161017_add_color_column_to_tracker extends ForgeUpgrade_Bucket {
+class b201404161017_add_color_column_to_tracker extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class b201603031145_clean_ldap_ugroup_removed extends ForgeUpgrade_Bucket {
+class b201603031145_clean_ldap_ugroup_removed extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return 'Clean LDAP bindings to removed user groups';

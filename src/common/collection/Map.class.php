@@ -24,7 +24,8 @@ require_once('Collection.class.php');
  * An object that maps key to value.
  * A map cannot contain duplicate keys; each key can map to at most one value.
  */
-class Map {
+class Map
+{
 
     var $elements;
 
@@ -98,7 +99,7 @@ class Map {
      */
     function containsValue($value)
     {
-        return in_array($value,$this->elements);
+        return in_array($value, $this->elements);
     }
 
     /**

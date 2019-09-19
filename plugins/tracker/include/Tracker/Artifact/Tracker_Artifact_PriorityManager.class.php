@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_PriorityManager {
+class Tracker_Artifact_PriorityManager
+{
 
     /**
      * @var Tracker_Artifact_PriorityDao
@@ -171,7 +172,7 @@ class Tracker_Artifact_PriorityManager {
         $rows                     = $this->priority_history_dao->getArtifactPriorityHistory($artifact->getId());
         $priority_history_changes = array();
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $priority_history_changes[] = $this->getInstanceFromRow($row);
         }
 

@@ -23,7 +23,8 @@ require_once('HTML_Element.class.php');
 /**
  * Define a html select option
  */
-class HTML_Element_Option extends HTML_Element {
+class HTML_Element_Option extends HTML_Element
+{
     protected $selected;
     public function __construct($label, $value, $selected = false)
     {
@@ -47,5 +48,3 @@ class HTML_Element_Option extends HTML_Element {
         return $html;
     }
 }
-
-?>

@@ -30,7 +30,8 @@ use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
  * It's an implementation of the abstract class Sabre_DAV_File methods
  *
  */
-class WebDAVFRSFile extends Sabre_DAV_File {
+class WebDAVFRSFile extends Sabre_DAV_File
+{
 
     private $user;
     private $project;
@@ -57,7 +58,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
         $this->package = $package;
         $this->release = $release;
         $this->file = $file;
-
     }
 
     /**
@@ -110,7 +110,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
          */
         $basename = basename($this->getFile()->getFileName());
         return $basename;
-
     }
 
     /**
@@ -122,7 +121,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     {
 
         return $this->getFile()->getPostDate();
-
     }
 
     /**
@@ -134,7 +132,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     {
 
         return $this->getFile()->getFileSize();
-
     }
 
     /**
@@ -171,7 +168,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     {
 
         return $this->getFile()->getFileLocation();
-
     }
 
     /**
@@ -183,7 +179,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     {
 
         return $this->file;
-
     }
 
     /**
@@ -195,7 +190,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     {
 
         return $this->getFile()->getFileID();
-
     }
 
     /**
@@ -207,7 +201,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     {
 
         return $this->getFile()->getReleaseID();
-
     }
 
     /**
@@ -219,7 +212,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     {
 
         return $this->getFile()->getPackageID();
-
     }
 
     /**
@@ -231,7 +223,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     {
 
         return $this->project;
-
     }
 
     /**
@@ -243,7 +234,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     {
 
         return $this->user;
-
     }
 
     /**
@@ -255,7 +245,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     {
 
         return WebDAVUtils::getInstance();
-
     }
 
     /**
@@ -267,7 +256,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     {
 
         return $this->getFile()->isActive();
-
     }
 
     /**
@@ -281,7 +269,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     {
 
         return $this->getFile()->userCanDownload($user->getId());
-
     }
 
     /**
@@ -294,7 +281,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     {
 
         return $this->getFile()->fileExists();
-
     }
 
     /**
@@ -308,7 +294,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     {
 
         return $this->getFile()->LogDownload($user->getId());
-
     }
 
     /**
@@ -341,7 +326,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }
-
     }
 
     /**
@@ -356,9 +340,5 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     {
 
         return copy($source, $destination);
-
     }
-
 }
-
-?>

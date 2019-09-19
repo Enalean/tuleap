@@ -21,7 +21,8 @@
 /**
  * This class returns ugroup in a literalized form (eg: 'gpig_project_member')
  */
-class UGroupLiteralizer {
+class UGroupLiteralizer
+{
 
     private static $user_status = array(
         PFUser::STATUS_RESTRICTED => 'site_restricted',
@@ -94,7 +95,7 @@ class UGroupLiteralizer {
      *
      * @return array the new array of user's ugroup
      */
-    private function appendDynamicUGroups( PFUser $user, array $user_ugroups = array())
+    private function appendDynamicUGroups(PFUser $user, array $user_ugroups = array())
     {
         $user_projects = $user->getProjects(true);
         foreach ($user_projects as $user_project) {
@@ -116,7 +117,7 @@ class UGroupLiteralizer {
      *
      * @return array the new array of user's ugroup
      */
-    private function appendStaticUgroups( PFUser $user, array $user_ugroups = array())
+    private function appendStaticUgroups(PFUser $user, array $user_ugroups = array())
     {
         $ugroups = $user->getAllUgroups();
         foreach ($ugroups as $row) {
@@ -146,7 +147,7 @@ class UGroupLiteralizer {
         $ugroup = null;
         if ($ugroup_id > 100) {
             $ugroup = '@ug_'. $ugroup_id;
-        } else if (isset(self::$ugroups_templates[$ugroup_id])) {
+        } elseif (isset(self::$ugroups_templates[$ugroup_id])) {
             $ugroup = sprintf(self::$ugroups_templates[$ugroup_id], $project_name);
         }
         return $ugroup;
@@ -182,7 +183,6 @@ class UGroupLiteralizer {
     {
         $ugroup_ids = $this->getUgroupIds($project, $object_id, $permission_type);
         return $this->ugroupIdsToString($ugroup_ids, $project);
-
     }
 
     public function getUgroupIds(Project $project, $object_id, $permission_type)

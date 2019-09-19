@@ -20,7 +20,8 @@
  */
 
 
-class b201210291756_add_old_id_column_on_chart extends ForgeUpgrade_Bucket {
+class b201210291756_add_old_id_column_on_chart extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -53,4 +54,3 @@ EOT;
         }
     }
 }
-?>

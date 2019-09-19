@@ -22,7 +22,8 @@ namespace Tuleap\ProFTPd\Directory;
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class DirectoryParserTest extends \PHPUnit\Framework\TestCase {
+class DirectoryParserTest extends \PHPUnit\Framework\TestCase
+{
 
     public function setUp() : void
     {
@@ -145,9 +146,9 @@ class DirectoryParserTest extends \PHPUnit\Framework\TestCase {
         $folder2 = $folders[2];
         $folder3 = $folders[3];
 
-        $this->assertEquals('..'      , $folder0->getName());
+        $this->assertEquals('..', $folder0->getName());
         $this->assertEquals('folder01', $folder1->getName());
-        $this->assertEquals('folder9' ,  $folder2->getName());
+        $this->assertEquals('folder9', $folder2->getName());
         $this->assertEquals('folder10', $folder3->getName());
     }
 
@@ -164,6 +165,4 @@ class DirectoryParserTest extends \PHPUnit\Framework\TestCase {
 
         $this->assertInstanceOf('\Tuleap\ProFTPd\Directory\DirectoryItem', $files[0]);
     }
-
 }
-?>

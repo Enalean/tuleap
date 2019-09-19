@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SysteEvent_For_Testing_Purpose extends SystemEvent {
+class SysteEvent_For_Testing_Purpose extends SystemEvent
+{
     public function verbalizeParameters($with_link)
     {
         return $this->parameters;
@@ -30,7 +31,8 @@ function aSystemEvent($name = 'SysteEvent_For_Testing_Purpose')
     return new Test_SystemEvent_Builder($name);
 }
 
-class Test_SystemEvent_Builder {
+class Test_SystemEvent_Builder
+{
     private $name;
     private $parameters;
 

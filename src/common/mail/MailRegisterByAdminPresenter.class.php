@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MailRegisterByAdminPresenter extends MailRegisterPresenter {
+class MailRegisterByAdminPresenter extends MailRegisterPresenter
+{
 
     public $section_three;
     public $password;

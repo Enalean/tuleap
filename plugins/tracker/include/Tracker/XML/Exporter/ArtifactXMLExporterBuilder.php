@@ -20,7 +20,8 @@
 
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\ChangesetValueComputedXMLExporter;
 
-class Tracker_XML_Exporter_ArtifactXMLExporterBuilder {
+class Tracker_XML_Exporter_ArtifactXMLExporterBuilder
+{
 
     /** @var Tracker_XML_Exporter_ArtifactXMLExporter */
     public function build(

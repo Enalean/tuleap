@@ -26,7 +26,8 @@
 
 Mock::generatePartial('Rule_File', 'Rule_FileTestVersion', array('geti18nError'));
 
-class Rule_FileTest extends TuleapTestCase {
+class Rule_FileTest extends TuleapTestCase
+{
 
     function UnitTestCase($name = 'Rule_File test')
     {
@@ -70,7 +71,7 @@ class Rule_FileTest extends TuleapTestCase {
     {
         $r = new Rule_FileTestVersion($this);
         $r->setMaxSize('1000');
-        $r->setReturnValue('geti18nError',UPLOAD_ERR_FORM_SIZE );
+        $r->setReturnValue('geti18nError', UPLOAD_ERR_FORM_SIZE);
         $r->expectOnce('geti18nError', array('error_upload_size', UPLOAD_ERR_FORM_SIZE));
         $this->file['error'] = UPLOAD_ERR_FORM_SIZE;
         $this->assertFalse($r->isValid($this->file));

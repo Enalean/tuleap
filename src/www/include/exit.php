@@ -9,7 +9,7 @@ function exit_error($title, $text = '')
 
     // if the error comes from the SOAP API, we don't display the site_header and footer, but a soap fault (xml).
     if (substr($_SERVER['SCRIPT_NAME'], 1, 4) != "soap") {
-        site_header(array('title'=>$Language->getText('include_exit','exit_error')));
+        site_header(array('title'=>$Language->getText('include_exit', 'exit_error')));
         echo '<p data-test="feedback">',$text,'</p>';
         $HTML->footer(array('showfeedback' => false));
     } else {
@@ -22,14 +22,14 @@ function exit_permission_denied()
 {
     global $feedback,$Language;
     if (UserManager::instance()->getCurrentUser()->isAnonymous()) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('include_exit','perm_denied'));
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('include_exit','no_perm'));
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('include_exit', 'perm_denied'));
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('include_exit', 'no_perm'));
         if ($feedback) {
             $GLOBALS['Response']->addFeedback('error', $feedback);
         }
         exit_not_logged_in();
     } else {
-        exit_error($Language->getText('include_exit','perm_denied'),$Language->getText('include_exit','no_perm').'<p>'.$feedback);
+        exit_error($Language->getText('include_exit', 'perm_denied'), $Language->getText('include_exit', 'no_perm').'<p>'.$feedback);
     }
 }
 
@@ -58,7 +58,7 @@ function exit_not_logged_in()
 function exit_no_group()
 {
     global $feedback,$Language;
-    exit_error($Language->getText('include_exit','choose_proj_err'),$Language->getText('include_exit','no_gid_err').'<p>'.$feedback);
+    exit_error($Language->getText('include_exit', 'choose_proj_err'), $Language->getText('include_exit', 'no_gid_err').'<p>'.$feedback);
 }
 
 function exit_missing_param()
@@ -67,7 +67,7 @@ function exit_missing_param()
   // Display current $feedback normally, and replace feedback with error message
     $msg=$feedback;
     $feedback="";
-    exit_error($Language->getText('include_exit','missing_param_err'),'<p>'.$msg);
+    exit_error($Language->getText('include_exit', 'missing_param_err'), '<p>'.$msg);
 }
 
 function print_soap_fault($fault_code, $fault_factor, $fault_string, $fault_detail)
@@ -84,5 +84,3 @@ function print_soap_fault($fault_code, $fault_factor, $fault_string, $fault_deta
     echo '</SOAP-ENV:Body>';
     echo '</SOAP-ENV:Envelope>';
 }
-
-?>

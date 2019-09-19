@@ -43,5 +43,4 @@ class b201608091610_add_index_for_frs_permissions extends ForgeUpgrade_Bucket
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
         }
     }
-
 }

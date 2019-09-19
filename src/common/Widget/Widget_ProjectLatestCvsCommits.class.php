@@ -25,7 +25,8 @@ require_once __DIR__ . '/../../www/cvs/commit_utils.php';
 * Widget_ProjectLatestCvsCommits
 *
 */
-class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits {
+class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits
+{
 
     public function __construct()
     {
@@ -34,7 +35,7 @@ class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits {
 
     function getTitle()
     {
-        return $GLOBALS['Language']->getText('include_project_home','latest_cvs_commit');
+        return $GLOBALS['Language']->getText('include_project_home', 'latest_cvs_commit');
     }
     function _getLinkToCommit($data)
     {
@@ -52,6 +53,6 @@ class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits {
 
     function getDescription()
     {
-        return $GLOBALS['Language']->getText('widget_description_project_latest_cvs_commits','description');
+        return $GLOBALS['Language']->getText('widget_description_project_latest_cvs_commits', 'description');
     }
 }

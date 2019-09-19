@@ -19,7 +19,8 @@
  */
 
 
-class Tracker_Workflow_Action_Transitions_EditTransition extends Tracker_Workflow_Action_Transitions {
+class Tracker_Workflow_Action_Transitions_EditTransition extends Tracker_Workflow_Action_Transitions
+{
     /** @var TransitionFactory */
     private $transition_factory;
 
@@ -44,10 +45,10 @@ class Tracker_Workflow_Action_Transitions_EditTransition extends Tracker_Workflo
         $hp = Codendi_HTMLPurifier::instance();
         $this->displayHeader($engine);
 
-        if($transition->getFieldValueFrom()) {
+        if ($transition->getFieldValueFrom()) {
             $from_label = $transition->getFieldValueFrom()->getLabel();
         } else {
-            $from_label = $GLOBALS['Language']->getText('workflow_admin','new_artifact');
+            $from_label = $GLOBALS['Language']->getText('workflow_admin', 'new_artifact');
         }
         $to_label = $transition->getFieldValueTo()->getLabel();
 
@@ -72,14 +73,14 @@ class Tracker_Workflow_Action_Transitions_EditTransition extends Tracker_Workflo
         echo '<form action="'. $form_action .'" method="POST">';
         echo '<table><tr><td>';
 
-        $section_conditions = new Widget_Static($GLOBALS['Language']->getText('workflow_admin','under_the_following_condition'));
+        $section_conditions = new Widget_Static($GLOBALS['Language']->getText('workflow_admin', 'under_the_following_condition'));
         $section_conditions->setContent($transition->fetchConditions());
         $section_conditions->display();
 
         $actions = '';
         $actions .= $transition->fetchPostActions();
         $actions .= $this->post_action_factory->fetchPostActions();
-        $section_postactions = new Widget_Static($GLOBALS['Language']->getText('workflow_admin','following_action_performed'));
+        $section_postactions = new Widget_Static($GLOBALS['Language']->getText('workflow_admin', 'following_action_performed'));
         $section_postactions->setContent($actions);
         $section_postactions->display();
 
@@ -101,5 +102,3 @@ class Tracker_Workflow_Action_Transitions_EditTransition extends Tracker_Workflo
         $this->displayFooter($engine);
     }
 }
-
-?>

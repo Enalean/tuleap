@@ -27,7 +27,8 @@ use Tracker_Artifact_Changeset_Comment;
 use PFUser;
 use UserManager;
 
-class ChangesetRepresentation {
+class ChangesetRepresentation
+{
     public const ROUTE = 'changesets';
 
     /**

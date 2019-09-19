@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter {
+abstract class Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter
+{
 
     abstract protected function getFieldChangeType();
 
@@ -39,8 +40,8 @@ abstract class Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter {
         $field = $changeset_value->getField();
 
         $field_change = $changeset_xml->addChild('field_change');
-        $field_change->addAttribute('field_name' , $field->getName());
-        $field_change->addAttribute('type' , $this->getFieldChangeType());
+        $field_change->addAttribute('field_name', $field->getName());
+        $field_change->addAttribute('type', $this->getFieldChangeType());
 
         return $field_change;
     }

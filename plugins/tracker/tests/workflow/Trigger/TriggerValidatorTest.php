@@ -39,7 +39,6 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $this->validator = new Tracker_Workflow_Trigger_TriggerValidator($this->rules_manager);
         $this->json_input = json_decode(file_get_contents(dirname(__FILE__).'/_fixtures/add_rule.json'));
         $this->tracker = mock('Tracker');
-
     }
 
     public function itRaisesAnExceptionIfNoTarget()

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SvnPluginDescriptor extends PluginDescriptor {
+class SvnPluginDescriptor extends PluginDescriptor
+{
     public function __construct()
     {
         parent::__construct(

@@ -18,7 +18,8 @@
  */
 require_once __DIR__.'/../../bootstrap.php';
 
-class AdminVisitorTest extends TuleapTestCase {
+class AdminVisitorTest extends TuleapTestCase
+{
 
     public function testVisitAStringShouldFallbackOnField()
     {
@@ -132,5 +133,3 @@ class AdminVisitorTest extends TuleapTestCase {
         $this->assertIsA($visitor->getAdmin(), 'Tracker_FormElement_View_Admin_StaticField_Separator');
     }
 }
-
-?>

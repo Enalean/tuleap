@@ -44,8 +44,7 @@ class URLRedirect
         $returnTo = $server['REQUEST_URI'];
         if ($server['REQUEST_URI'] === '/' ||
             strpos($server['REQUEST_URI'], '/account/login.php') === 0 ||
-            strpos($server['REQUEST_URI'], '/account/register.php') === 0)
-        {
+            strpos($server['REQUEST_URI'], '/account/register.php') === 0) {
             $returnTo = '/my/';
         }
         $url        = parse_url($server['REQUEST_URI']);
@@ -76,20 +75,20 @@ class URLRedirect
         $urlToken = parse_url($url);
 
         $server_url = '';
-        if(array_key_exists('host', $urlToken) && $urlToken['host']) {
+        if (array_key_exists('host', $urlToken) && $urlToken['host']) {
             $server_url = $urlToken['scheme'].'://'.$urlToken['host'];
-            if(array_key_exists('port', $urlToken) && $urlToken['port']) {
+            if (array_key_exists('port', $urlToken) && $urlToken['port']) {
                 $server_url .= ':'.$urlToken['port'];
             }
         }
 
         $finaleUrl = $server_url;
 
-        if(array_key_exists('path', $urlToken) && $urlToken['path']) {
+        if (array_key_exists('path', $urlToken) && $urlToken['path']) {
             $finaleUrl .= $urlToken['path'];
         }
 
-        if($return_to) {
+        if ($return_to) {
             $return_to_parameter = 'return_to=';
             /*
              * We do not want redirect to an external website
@@ -102,23 +101,21 @@ class URLRedirect
                 $return_to_parameter .= '/';
             }
 
-            if(array_key_exists('query', $urlToken) && $urlToken['query']) {
+            if (array_key_exists('query', $urlToken) && $urlToken['query']) {
                 $finaleUrl .= '?'.$urlToken['query'].'&amp;'.$return_to_parameter;
-            }
-            else {
+            } else {
                 $finaleUrl .= '?'.$return_to_parameter;
             }
-            if (strstr($return_to,'pv=2')) {
+            if (strstr($return_to, 'pv=2')) {
                 $finaleUrl .= '&pv=2';
             }
-        }
-        else {
-            if(array_key_exists('query', $urlToken) && $urlToken['query']) {
+        } else {
+            if (array_key_exists('query', $urlToken) && $urlToken['query']) {
                 $finaleUrl .= '?'.$urlToken['query'];
             }
         }
 
-        if(array_key_exists('fragment', $urlToken) && $urlToken['fragment']) {
+        if (array_key_exists('fragment', $urlToken) && $urlToken['fragment']) {
             $finaleUrl .= '#'.$urlToken['fragment'];
         }
 

@@ -21,7 +21,8 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use Exception;
 
-class ArtifactCannotBeInBacklogOfException extends Exception {
+class ArtifactCannotBeInBacklogOfException extends Exception
+{
 
     public function __construct($milestone_id, $id, $type, $allowed)
     {

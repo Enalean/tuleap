@@ -24,7 +24,8 @@
  * It's an implementation of the abstract class Sabre_DAV_File methods
  *
  */
-class WebDAVDocmanDocument extends Sabre_DAV_File {
+class WebDAVDocmanDocument extends Sabre_DAV_File
+{
 
     protected $user;
     protected $project;
@@ -241,7 +242,4 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
             throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
         }
     }
-
 }
-
-?>

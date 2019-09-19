@@ -37,7 +37,8 @@ Mock::generate('Tracker');
 
 Mock::generate('TrackerFactory');
 
-class Tracker_CannedResponseFactoryTest extends TuleapTestCase {
+class Tracker_CannedResponseFactoryTest extends TuleapTestCase
+{
 
     /** @var XML_Security */
     protected $xml_security;
@@ -68,7 +69,6 @@ class Tracker_CannedResponseFactoryTest extends TuleapTestCase {
 
         $this->assertEqual($responses[0]->title, 'new response');
         $this->assertEqual($responses[0]->body, 'this is the message of the new canned response');
-
     }
 
     public function testDuplicateWithNoCannedResponses()
@@ -114,4 +114,3 @@ class Tracker_CannedResponseFactoryTest extends TuleapTestCase {
         $crf->duplicate(102, 502);
     }
 }
-?>

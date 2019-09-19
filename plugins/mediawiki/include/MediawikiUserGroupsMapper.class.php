@@ -24,7 +24,8 @@ use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 /**
  * This class do the mapping between Tuleap And Mediawiki groups
  */
-class MediawikiUserGroupsMapper {
+class MediawikiUserGroupsMapper
+{
 
     public const MEDIAWIKI_GROUPS_ANONYMOUS  = 'anonymous';
     public const MEDIAWIKI_GROUPS_USER       = 'user';
@@ -110,14 +111,14 @@ class MediawikiUserGroupsMapper {
 
     private function removeMediawikiUserGroupMapping(Project $project, array $mappings_to_remove, $mw_group_name)
     {
-        foreach($mappings_to_remove[$mw_group_name] as $ugroup_id) {
+        foreach ($mappings_to_remove[$mw_group_name] as $ugroup_id) {
             $this->dao->removeMediawikiUserGroupMapping($project, $mw_group_name, $ugroup_id);
         }
     }
 
     private function addMediawikiUserGroupMapping(Project $project, array $mappings_to_add, $mw_group_name)
     {
-        foreach($mappings_to_add[$mw_group_name] as $ugroup_id) {
+        foreach ($mappings_to_add[$mw_group_name] as $ugroup_id) {
             $this->dao->addMediawikiUserGroupMapping($project, $mw_group_name, $ugroup_id);
         }
     }

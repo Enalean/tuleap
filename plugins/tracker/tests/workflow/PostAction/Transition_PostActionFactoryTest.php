@@ -22,7 +22,8 @@ use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsFactory;
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Transition_PostActionFactory_BaseTest extends TuleapTestCase {
+class Transition_PostActionFactory_BaseTest extends TuleapTestCase
+{
 
     protected $factory;
     protected $field_factory;
@@ -49,7 +50,8 @@ class Transition_PostActionFactory_BaseTest extends TuleapTestCase {
     }
 }
 
-class Transition_PostActionFactory_AddPostActionTest extends Transition_PostActionFactory_BaseTest {
+class Transition_PostActionFactory_AddPostActionTest extends Transition_PostActionFactory_BaseTest
+{
 
     public function itCanAddAPostActionToAnIntField()
     {
@@ -66,10 +68,10 @@ class Transition_PostActionFactory_AddPostActionTest extends Transition_PostActi
 
         $this->factory->addPostAction($this->transition, Transition_PostAction_Field_Float::SHORT_NAME);
     }
-
 }
 
-class Transition_PostActionFactory_DuplicateTest extends Transition_PostActionFactory_BaseTest {
+class Transition_PostActionFactory_DuplicateTest extends Transition_PostActionFactory_BaseTest
+{
 
     public function itDelegatesDuplicationToTheOtherPostActionFactories()
     {
@@ -86,7 +88,8 @@ class Transition_PostActionFactory_DuplicateTest extends Transition_PostActionFa
     }
 }
 
-class Transition_PostActionFactory_GetInstanceFromXmlTest extends Transition_PostActionFactory_BaseTest {
+class Transition_PostActionFactory_GetInstanceFromXmlTest extends Transition_PostActionFactory_BaseTest
+{
 
     public function itreturnsAFieldDatePostActionIfXmlCorrespondsToADate()
     {
@@ -221,7 +224,8 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends Transition_Pos
         $this->assertIsA($post_actions[1], 'Transition_PostAction_CIBuild');
     }
 }
-class Transition_PostActionFactory_SaveObjectTest extends Transition_PostActionFactory_BaseTest {
+class Transition_PostActionFactory_SaveObjectTest extends Transition_PostActionFactory_BaseTest
+{
 
     public function itSavesDateFieldPostActions()
     {
@@ -258,10 +262,10 @@ class Transition_PostActionFactory_SaveObjectTest extends Transition_PostActionF
 
         $this->factory->saveObject($post_action);
     }
-
 }
 
-class Transition_PostActionFactory_DeleteWorkflowTest extends Transition_PostActionFactory_BaseTest {
+class Transition_PostActionFactory_DeleteWorkflowTest extends Transition_PostActionFactory_BaseTest
+{
 
     public function itDeletesAllPostActions()
     {
@@ -271,10 +275,10 @@ class Transition_PostActionFactory_DeleteWorkflowTest extends Transition_PostAct
 
         $this->factory->deleteWorkflow($workflow_id);
     }
-
 }
 
-class Transition_PostActionFactory_IsFieldUsedInPostActionsTest extends Transition_PostActionFactory_BaseTest {
+class Transition_PostActionFactory_IsFieldUsedInPostActionsTest extends Transition_PostActionFactory_BaseTest
+{
 
     public function itChecksFieldIsUsedInEachTypeOfPostAction()
     {
@@ -295,7 +299,8 @@ class Transition_PostActionFactory_IsFieldUsedInPostActionsTest extends Transiti
     }
 }
 
-class Transition_PostActionFactory_loadPostActionsTest extends Transition_PostActionFactory_BaseTest {
+class Transition_PostActionFactory_loadPostActionsTest extends Transition_PostActionFactory_BaseTest
+{
 
     public function setUp()
     {

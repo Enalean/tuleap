@@ -20,7 +20,8 @@
 
 require_once('bootstrap.php');
 
-class ArtifactNotificationSubscriberTest extends TuleapTestCase {
+class ArtifactNotificationSubscriberTest extends TuleapTestCase
+{
 
     /** @var Tracker_ArtifactNotificationSubscriber */
     private $artifact_subscriber;
@@ -70,5 +71,4 @@ class ArtifactNotificationSubscriberTest extends TuleapTestCase {
 
         $this->artifact_subscriber->unsubscribeUser($this->user, $this->request);
     }
-
 }

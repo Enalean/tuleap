@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboardKanbanConfigurationUpdater {
+class AgileDashboardKanbanConfigurationUpdater
+{
 
     /** @var int */
     private $project_id;

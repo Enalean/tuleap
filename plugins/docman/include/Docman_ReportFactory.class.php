@@ -27,7 +27,8 @@ require_once('Docman_SettingsBo.class.php');
 require_once('Docman_ReportDao.class.php');
 require_once('Docman_PermissionsManager.class.php');
 
-class Docman_ReportFactory {
+class Docman_ReportFactory
+{
     var $groupId;
 
     function __construct($groupId)
@@ -45,7 +46,7 @@ class Docman_ReportFactory {
         $report = new Docman_Report();
 
         // Drop all filters
-        if($request->exist('clear_filters')) {
+        if ($request->exist('clear_filters')) {
             $this->initReport($report, $request, $item);
             $this->initColumns($report, $request);
             return $report;
@@ -57,11 +58,11 @@ class Docman_ReportFactory {
         //    $reportId = (int) $request->get('report_id');
         // todo Verify validity of the info
         //}
-        if($reportId > 0) {
+        if ($reportId > 0) {
             // todo Verify validity of the info
             $dao = $this->getDao();
             $dar = $dao->searchById($reportId);
-            if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
                 $noDbReport = false;
                 $row = $dar->getRow();
                 $report = new Docman_Report();
@@ -74,7 +75,7 @@ class Docman_ReportFactory {
             }
         }
 
-        if($noDbReport) {
+        if ($noDbReport) {
             // Init from url
             $this->initReport($report, $request, $item);
             $this->initFilters($report, $request, $feedback);
@@ -82,7 +83,7 @@ class Docman_ReportFactory {
         }
 
         // Save current report
-        if($request->exist('save_report')) {
+        if ($request->exist('save_report')) {
             $um   = UserManager::instance();
             $user = $um->getCurrentUser();
             $dpm  = Docman_PermissionsManager::instance($this->groupId);
@@ -90,14 +91,14 @@ class Docman_ReportFactory {
             $report->setUserId($user->getId());
 
             // New report
-            if($request->get('save_report') == 'newp'
+            if ($request->get('save_report') == 'newp'
                || $request->get('save_report') == 'newi') {
-                if($request->exist('report_name')) {
+                if ($request->exist('report_name')) {
                     $reportName = $request->get('report_name');
                     // todo Validate report name
                     $report->setScope('I');
-                    if($dpm->userCanAdmin($user)) {
-                        if($request->get('save_report') == 'newp') {
+                    if ($dpm->userCanAdmin($user)) {
+                        if ($request->get('save_report') == 'newp') {
                             $report->setScope('P');
                         }
                     }
@@ -106,28 +107,27 @@ class Docman_ReportFactory {
                 }
             }
             // Override an existing one
-            if(is_numeric($request->get('save_report'))) {
+            if (is_numeric($request->get('save_report'))) {
                 $reportId = (int) $request->get('save_report');
 
                 // validate reportId
                 $updReportOk = false;
                 $refReport = $this->getReportById($reportId);
-                if($refReport !== null) {
-                    if($refReport->getGroupId() == $this->groupId) {
-                        if($dpm->userCanAdmin($user)){
+                if ($refReport !== null) {
+                    if ($refReport->getGroupId() == $this->groupId) {
+                        if ($dpm->userCanAdmin($user)) {
                             $updReportOk = true;
                         } else {
-                            if($refReport->getScope() == 'I'
+                            if ($refReport->getScope() == 'I'
                                && $refReport->getUserId() == $user->getId()) {
                                 $updReportOk = true;
                             }
                         }
                     }
-
                 }
 
-                if($updReportOk) {
-                    if($request->exist('report_name') && trim($request->get('report_name')) != '') {
+                if ($updReportOk) {
+                    if ($request->exist('report_name') && trim($request->get('report_name')) != '') {
                         $refReport->setName($request->get('report_name'));
                     }
                     $refReport->setItemId($item->getId());
@@ -137,14 +137,13 @@ class Docman_ReportFactory {
                     $this->saveReport($refReport);
                 }
             }
-
         }
         return $report;
     }
 
     function initReport(&$report, $request, $item)
     {
-        if($request->exist('advsearch')
+        if ($request->exist('advsearch')
            && $request->get('advsearch') == 1) {
             $report->setAdvancedSearch(true);
         }
@@ -159,7 +158,7 @@ class Docman_ReportFactory {
         $mdFactory = new Docman_MetadataFactory($this->groupId);
         $mdIter = $mdFactory->getMetadataForGroup(true);
         $mdIter->rewind();
-        while($mdIter->valid()) {
+        while ($mdIter->valid()) {
             $md = $mdIter->current();
             $filter = $filterFactory->createFilterOnMatch($md, $request, $report->getAdvancedSearch());
             $this->_validateFilterAndCreate($report, $filter, $feedback);
@@ -175,12 +174,12 @@ class Docman_ReportFactory {
 
     function _validateFilterAndCreate(&$report, $filter, &$feedback)
     {
-        if($filter !== null) {
+        if ($filter !== null) {
             // Validate submitted paramters
             $validateFilterFactory = new Docman_ValidateFilterFactory();
             $validateFilter = $validateFilterFactory->getFromFilter($filter);
-            if($validateFilter !== null) {
-                if(!$validateFilter->validate()) {
+            if ($validateFilter !== null) {
+                if (!$validateFilter->validate()) {
                     $feedback->log('error', $validateFilter->getMessage());
                 }
             }
@@ -208,28 +207,27 @@ class Docman_ReportFactory {
         $settingsBo =  Docman_SettingsBo::instance($this->groupId);
         $useStatus = $settingsBo->getMetadataUsage('status');
 
-        if($useStatus) {
+        if ($useStatus) {
             $columnsOnReport = array('status', 'title', 'description', 'location', 'owner', 'update_date');
             // report with a dynamic field:
             //$columnsOnReport = array('status', 'title', 'description', 'field_2', 'location', 'owner', 'update_date');
-        }
-        else {
+        } else {
             $columnsOnReport = array('title', 'description', 'location', 'owner', 'update_date');
         }
         $keepRefOnUpdateDate = null;
         $thereIsAsort = false;
 
         $colFactory = new Docman_ReportColumnFactory($this->groupId);
-        foreach($columnsOnReport as $colLabel) {
+        foreach ($columnsOnReport as $colLabel) {
             $column = $colFactory->getColumnFromLabel($colLabel);
-            if($column !== null) {
+            if ($column !== null) {
                 $column->initFromRequest($request);
 
                 // If no sort, sort on update_date in DESC by default
-                if($colLabel == 'update_date') {
+                if ($colLabel == 'update_date') {
                     $keepRefOnUpdateDate = $column;
                 }
-                if($column->getSort() !== null) {
+                if ($column->getSort() !== null) {
                     $thereIsAsort = true;
                 }
 
@@ -237,7 +235,7 @@ class Docman_ReportFactory {
             }
             unset($column);
         }
-        if(!$thereIsAsort && $keepRefOnUpdateDate !== null) {
+        if (!$thereIsAsort && $keepRefOnUpdateDate !== null) {
             $keepRefOnUpdateDate->setSort(PLUGIN_DOCMAN_SORT_DESC);
         }
     }
@@ -247,7 +245,7 @@ class Docman_ReportFactory {
         $report = null;
         $dao = $this->getDao();
         $dar = $dao->searchById($id);
-        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $report = new Docman_Report();
             $report->initFromRow($dar->current());
         }
@@ -260,7 +258,7 @@ class Docman_ReportFactory {
         $dao = $this->getDao();
         $dar = $dao->searchProjectReportByGroupId($this->groupId);
         $i = 0;
-        while($dar->valid()) {
+        while ($dar->valid()) {
             $ra[$i] = new Docman_Report();
             $ra[$i]->initFromRow($dar->current());
             $i++;
@@ -276,7 +274,7 @@ class Docman_ReportFactory {
         $dao = $this->getDao();
         $dar = $dao->searchPersonalReportByUserId($this->groupId, $user->getId());
         $i = 0;
-        while($dar->valid()) {
+        while ($dar->valid()) {
             $ra[$i] = new Docman_Report();
             $ra[$i]->initFromRow($dar->current());
             $i++;
@@ -292,13 +290,13 @@ class Docman_ReportFactory {
      * @param $reportId If null, consider all reports for the project.
      * @return Array of Docma_Item
      */
-    function getReportsItems($reportId=null)
+    function getReportsItems($reportId = null)
     {
         $itemArray = array();
         $itemFactory = new Docman_ItemFactory($this->groupId);
         $dao = $this->getDao();
         $dar = $dao->searchItemsInReports($this->groupId, $reportId);
-        while($dar->valid()) {
+        while ($dar->valid()) {
             $itemArray[] = $itemFactory->getItemFromRow($dar->current());
             $dar->next();
         }
@@ -307,7 +305,7 @@ class Docman_ReportFactory {
 
     function saveReport($report)
     {
-        if($report->getId() !== null) {
+        if ($report->getId() !== null) {
             $this->updateReport($report);
         } else {
             $this->createReport($report);
@@ -317,7 +315,7 @@ class Docman_ReportFactory {
     function updateReport($report)
     {
         $success = $this->updateReportSettings($report);
-        if($success) {
+        if ($success) {
             $filterFactory = new Docman_FilterFactory($this->groupId);
             $filterFactory->truncateFilters($report);
             $filterFactory->createFiltersFromReport($report);
@@ -334,11 +332,11 @@ class Docman_ReportFactory {
     {
         $dao = $this->getDao();
         $res= $dao->verifyQueryUnicity($report->getName(), $report->getGroupId(), $report->getUserId(), $report->getScope());
-        if ($res){
+        if ($res) {
             // report
             $id = $dao->create($report->getName(), $report->getTitle(), $report->getGroupId(), $report->getUserId(), $report->getItemId(), $report->getScope(), $report->getIsDefault(), $report->getAdvancedSearch(), $report->getDescription(), $report->getImage());
 
-            if($id) {
+            if ($id) {
                 $report->setId($id);
                 // filters
                 $filterFactory = new Docman_FilterFactory($this->groupId);
@@ -353,7 +351,7 @@ class Docman_ReportFactory {
     {
         $dao = $this->getDao();
         $filterFactory = new Docman_FilterFactory($this->groupId);
-        if($filterFactory->truncateFilters($report)) {
+        if ($filterFactory->truncateFilters($report)) {
             return $dao->deleteById($report->getId());
         } else {
             return false;
@@ -370,7 +368,7 @@ class Docman_ReportFactory {
      * @param $forceScopeToI   Force scope of the new reports to I (individual).
      * @param $itemMapping     Mapping between $srcReport project items and $dstGroupId items (for folders associated to report).
      */
-    function cloneReport($srcReport, $dstGroupId, $metadataMapping, $user, $forceScopeToI = false, $itemMapping=array())
+    function cloneReport($srcReport, $dstGroupId, $metadataMapping, $user, $forceScopeToI = false, $itemMapping = array())
     {
         $dstReportFactory = new Docman_ReportFactory($dstGroupId);
         $srcFilterFactory = new Docman_FilterFactory($this->groupId);
@@ -380,13 +378,13 @@ class Docman_ReportFactory {
         $dstReport = clone $srcReport;
         $dstReport->setGroupId($dstGroupId);
         $dstReport->setUserId($user->getId());
-        if($forceScopeToI) {
+        if ($forceScopeToI) {
             $dstReport->setScope('I');
         }
 
         // Be carful with reports associated to an item.
-        if($srcReport->getGroupId() != $dstGroupId) {
-            if($srcReport->getItemId() !== null
+        if ($srcReport->getGroupId() != $dstGroupId) {
+            if ($srcReport->getItemId() !== null
                && $srcReport->getItemId() != 0
                && isset($itemMapping[$srcReport->getItemId()])) {
                 $dstReport->setItemId($itemMapping[$srcReport->getItemId()]);
@@ -397,7 +395,7 @@ class Docman_ReportFactory {
 
         // Save report
         $rId = $dstReportFactory->createReport($dstReport);
-        if($rId !== false) {
+        if ($rId !== false) {
             $dstReport->setId($rId);
 
             // Copy filters
@@ -411,11 +409,11 @@ class Docman_ReportFactory {
     /**
      * Clone reports from a project to another one
      */
-    function copy($dstGroupId, $metadataMapping, $user, $forceScope = false, $itemMapping=array())
+    function copy($dstGroupId, $metadataMapping, $user, $forceScope = false, $itemMapping = array())
     {
         $ri = $this->getProjectReportsForGroup();
         $ri->rewind();
-        while($ri->valid()) {
+        while ($ri->valid()) {
             $srcReport = $ri->current();
             $this->cloneReport($srcReport, $dstGroupId, $metadataMapping, $user, $forceScope, $itemMapping);
             $ri->next();
@@ -428,7 +426,4 @@ class Docman_ReportFactory {
         $dao = new Docman_ReportDao(CodendiDataAccess::instance());
         return $dao;
     }
-
 }
-
-?>

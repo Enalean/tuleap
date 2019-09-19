@@ -29,7 +29,8 @@ use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 /**
  * GitForkPermissionsManager
  */
-class GitForkPermissionsManager {
+class GitForkPermissionsManager
+{
 
     /**
      * @var GitPermissionsManager

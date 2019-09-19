@@ -44,11 +44,11 @@ function getReferenceRow($ref, $row_num)
 function getReferencesTable($groupId)
 {
     $html = '';
-    $html .= '<h3>'.$GLOBALS['Language']->getText('project_showdetails','references').'</h3>';
+    $html .= '<h3>'.$GLOBALS['Language']->getText('project_showdetails', 'references').'</h3>';
 
-    $title_arr[]=$GLOBALS['Language']->getText('project_reference','r_keyword');
-    $title_arr[]=$GLOBALS['Language']->getText('project_reference','r_desc');
-    $title_arr[]=$GLOBALS['Language']->getText('project_reference','r_link');
+    $title_arr[]=$GLOBALS['Language']->getText('project_reference', 'r_keyword');
+    $title_arr[]=$GLOBALS['Language']->getText('project_reference', 'r_desc');
+    $title_arr[]=$GLOBALS['Language']->getText('project_reference', 'r_link');
     $html .= html_build_list_table_top($title_arr, false, false, true);
 
     $referenceManager = ReferenceManager::instance();
@@ -66,7 +66,7 @@ function getReferencesTable($groupId)
 // Check if group_id is valid
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
-if($request->valid($vGroupId)) {
+if ($request->valid($vGroupId)) {
     $group_id = $request->get('group_id');
 } else {
     exit_no_group();
@@ -74,9 +74,9 @@ if($request->valid($vGroupId)) {
 
 $currentproject= new Project($group_id);
 
-site_project_header(array('title'=>$Language->getText('project_showdetails','proj_details'),'group'=>$group_id,'toptab'=>'summary'));
+site_project_header(array('title'=>$Language->getText('project_showdetails', 'proj_details'),'group'=>$group_id,'toptab'=>'summary'));
 
-print '<P><h3>'.$Language->getText('project_showdetails','proj_details').'</h3>';
+print '<P><h3>'.$Language->getText('project_showdetails', 'proj_details').'</h3>';
 
 // Now fetch the project details
 
@@ -84,6 +84,6 @@ $currentproject->displayProjectsDescFieldsValue();
 
 echo getReferencesTable($group_id);
 
-print '<P><a href="/project/?group_id='.$group_id .'"> '.$Language->getText('project_showdetails','back_main').' </a>';
+print '<P><a href="/project/?group_id='.$group_id .'"> '.$Language->getText('project_showdetails', 'back_main').' </a>';
 
 site_project_footer(array());

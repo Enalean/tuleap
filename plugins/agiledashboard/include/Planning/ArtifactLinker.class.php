@@ -34,7 +34,8 @@
  * When I add a new Epic into "Release 1.0" backlog, it must be added into
  * "Product Toto" backlog as well
  */
-class Planning_ArtifactLinker {
+class Planning_ArtifactLinker
+{
     private $artifact_factory;
     private $planning_factory;
 
@@ -96,5 +97,3 @@ class Planning_ArtifactLinker {
         return $last_ancestor;
     }
 }
-
-?>

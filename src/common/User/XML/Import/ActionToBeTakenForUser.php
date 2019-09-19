@@ -19,7 +19,8 @@
  */
 namespace User\XML\Import;
 
-abstract class ActionToBeTakenForUser implements User {
+abstract class ActionToBeTakenForUser implements User
+{
 
     /** @var string */
     protected $username;
@@ -76,8 +77,8 @@ abstract class ActionToBeTakenForUser implements User {
     }
 
     /** @return array */
-    public abstract function getCSVData();
+    abstract public function getCSVData();
 
     /** @return bool */
-    public abstract function isActionAllowed($action);
+    abstract public function isActionAllowed($action);
 }

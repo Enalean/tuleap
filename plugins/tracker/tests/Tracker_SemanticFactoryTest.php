@@ -19,14 +19,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('bootstrap.php');
-Mock::generatePartial('Tracker_SemanticFactory',
-                      'Tracker_SemanticFactoryTestVersion',
-                      array(
+Mock::generatePartial(
+    'Tracker_SemanticFactory',
+    'Tracker_SemanticFactoryTestVersion',
+    array(
                           'getSemanticTitleFactory',
                           'getSemanticStatusFactory',
                           'getSemanticContributorFactory',
                           'getSemanticTooltipFactory',
-                          ));
+    )
+);
 
 Mock::generate('Tracker');
 

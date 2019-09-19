@@ -46,7 +46,8 @@ class NewsItemForWidgetDataMapper
             $items[] = new NewsItem($row);
         }
 
-        return $items;;
+        return $items;
+        ;
     }
 
     public function updatePromotedItems(Project $project, $promoted_ids)

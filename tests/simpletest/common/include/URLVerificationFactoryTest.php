@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Plugin_URLVerification extends URLVerification {}
+class Plugin_URLVerification extends URLVerification
+{
+}
 
 class URLVerificationFactoryTest extends TuleapTestCase
 {

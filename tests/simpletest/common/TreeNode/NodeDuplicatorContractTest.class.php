@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class NodeDuplicatorContractTest extends TuleapTestCase {
+abstract class NodeDuplicatorContractTest extends TuleapTestCase
+{
 
     public function itCopiesAllPropertiesOfTheGivenNode()
     {
@@ -35,9 +36,5 @@ abstract class NodeDuplicatorContractTest extends TuleapTestCase {
         $this->assertEqual($tree_node->getObject(), $presenter_node->getObject());
     }
 
-    protected abstract function newNode(TreeNode $tree_node);
-
+    abstract protected function newNode(TreeNode $tree_node);
 }
-
-
-?>

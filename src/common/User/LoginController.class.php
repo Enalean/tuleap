@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class User_LoginController extends MVC2_Controller {
+class User_LoginController extends MVC2_Controller
+{
 
     public function __construct(Codendi_Request $request)
     {
@@ -50,7 +51,6 @@ class User_LoginController extends MVC2_Controller {
                     // Set restricted shell for restricted users.
                     $user->setShell($GLOBALS['codendi_bin_prefix'] .'/cvssh-restricted');
                 }
-
             }
             $user->setUnixStatus(PFUser::STATUS_ACTIVE);
             $user_manager->updateDb($user);
@@ -63,5 +63,3 @@ class User_LoginController extends MVC2_Controller {
         }
     }
 }
-
-?>

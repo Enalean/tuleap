@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactAttachmentXMLLinker implements ArtifactAttachmentXMLExporter {
+class ArtifactAttachmentXMLLinker implements ArtifactAttachmentXMLExporter
+{
 
     /** @var ArtifactXMLNodeHelper */
     private $node_helper;
@@ -35,7 +36,7 @@ class ArtifactAttachmentXMLLinker implements ArtifactAttachmentXMLExporter {
     public function addFilesToArtifact(DOMElement $artifact_node, $artifact_type_id, $artifact_id)
     {
         $dar = $this->dao->searchFilesForArtifact($artifact_id);
-        foreach($dar as $row) {
+        foreach ($dar as $row) {
             $xml_file_id     = ArtifactAttachmentFieldXMLExporter::XML_FILE_PREFIX.$row['id'];
 
             $file = $this->node_helper->createElement('file');

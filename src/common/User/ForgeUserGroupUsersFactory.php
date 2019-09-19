@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUserGroupUsersFactory {
+class User_ForgeUserGroupUsersFactory
+{
 
     /** @var User_ForgeUserGroupUsersDao */
     private $users_dao;

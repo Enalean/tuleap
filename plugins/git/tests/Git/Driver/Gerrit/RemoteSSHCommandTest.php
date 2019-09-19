@@ -21,7 +21,8 @@
 
 require_once dirname(__FILE__).'/../../../bootstrap.php';
 
-class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
+class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase
+{
 
     protected $host = 'gerrit.example.com';
 
@@ -138,9 +139,10 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
     public function itRaisesAnErrorThatContainsTheStdErr()
     {
         stub($this->ssh)->sshExec()->returns(
-                  array('exit_code' => 1,
+            array('exit_code' => 1,
                         'std_out'   => '',
-                        'std_err'   => 'command someFailingCommand not found\nOn host '.$this->host));
+            'std_err'   => 'command someFailingCommand not found\nOn host '.$this->host)
+        );
         try {
             $this->ssh->execute($this->config, 'someFailingCommand');
             $this->fail('expected exception');
@@ -155,7 +157,6 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         try {
             $ssh_command->execute($this->config, 'someFailingCommand');
         } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
-
         }
 
         $this->assertFalse(file_exists($ssh_command->getStdErrFilePath()));
@@ -183,7 +184,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
     }
 }
 
-class RemoteSSHCommandFailureTest extends TuleapTestCase {
+class RemoteSSHCommandFailureTest extends TuleapTestCase
+{
 
     public function itConcatenatesEverythingInGetMessage()
     {

@@ -20,10 +20,10 @@
 
 namespace Tuleap\Project\XML;
 
-interface ArchiveInterface {
+interface ArchiveInterface
+{
 
     public const USER_FILE    = 'users.xml' ;
     public const PROJECT_FILE = 'project.xml';
     public const DATA_DIR     = 'data';
-
 }

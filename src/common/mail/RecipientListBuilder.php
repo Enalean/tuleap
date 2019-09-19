@@ -23,7 +23,8 @@
  *
  * A valid address is the address of an active/restricted/… user or an external address.
  */
-class Mail_RecipientListBuilder {
+class Mail_RecipientListBuilder
+{
 
     /**
      * @var UserManager

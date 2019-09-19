@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Kanban_TrackerNotDefinedException extends Exception {
+class Kanban_TrackerNotDefinedException extends Exception
+{
     public function __construct()
     {
         parent::__construct("Tracker not defined");

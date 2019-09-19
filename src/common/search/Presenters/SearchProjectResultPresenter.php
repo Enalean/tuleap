@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchProjectResultPresenter {
+class Search_SearchProjectResultPresenter
+{
 
     /** @var  string */
     private $project_name;
@@ -56,5 +57,4 @@ class Search_SearchProjectResultPresenter {
     {
         return $this->project_description;
     }
-
 }

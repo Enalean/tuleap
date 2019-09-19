@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_HomeNavPresenter {
+class Tracker_HomeNavPresenter
+{
 
     /**
      * @var Project
@@ -38,7 +39,7 @@ class Tracker_HomeNavPresenter {
         array('label_key' => 'search', 'func' => 'cross-search')
     );
 
-    public function __construct(Project $project, $func='')
+    public function __construct(Project $project, $func = '')
     {
         $this->project  = $project;
         $this->func     = $func;
@@ -74,4 +75,3 @@ class Tracker_HomeNavPresenter {
         return TRACKER_BASE_URL . '/?group_id=' . $this->project->getId() . '&func=' . $nav_item['func'];
     }
 }
-?>

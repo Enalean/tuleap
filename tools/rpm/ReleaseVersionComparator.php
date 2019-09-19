@@ -20,7 +20,8 @@
 
 require_once 'FakePluginDescriptor.php';
 
-class ReleaseVersionComparator {
+class ReleaseVersionComparator
+{
     public const COLOR_RED     = "\033[31m";
     public const COLOR_GREEN   = "\033[32m";
     public const COLOR_NOCOLOR = "\033[0m";
@@ -40,7 +41,7 @@ class ReleaseVersionComparator {
         }
     }
 
-    public function iterateOverPaths($paths, $rpms, $verbose=false)
+    public function iterateOverPaths($paths, $rpms, $verbose = false)
     {
         $iRpms = array_flip(array_map('strtolower', $rpms));
         foreach ($paths as $path) {
@@ -49,7 +50,7 @@ class ReleaseVersionComparator {
             try {
                 $prevVersion = $this->getPreviousVersion($versionPath);
                 $this->displayOneLine($path, $curVersion, $prevVersion, $iRpms, $verbose);
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 echo "Impossible to get previous $versionPath. It's normal if it's new in this release. Otherwise, please check\n";
             }
         }
@@ -110,10 +111,10 @@ class ReleaseVersionComparator {
     {
         return trim(file_get_contents($filePath));
     }
-
 }
 
-class PluginReleaseVersionComparator extends ReleaseVersionComparator {
+class PluginReleaseVersionComparator extends ReleaseVersionComparator
+{
 
     public function __construct($prevUri, $curUri, $fpd)
     {
@@ -138,7 +139,4 @@ class PluginReleaseVersionComparator extends ReleaseVersionComparator {
         }
         throw new Exception('No way to get the previous version number');
     }
-
 }
-
-?>

@@ -22,7 +22,8 @@ namespace Tuleap\OpenIDConnectClient\UserMapping;
 
 use DataAccessObject;
 
-class UserMappingDao extends DataAccessObject {
+class UserMappingDao extends DataAccessObject
+{
 
     public function save($user_id, $provider_id, $identifier, $last_used)
     {
@@ -96,5 +97,4 @@ class UserMappingDao extends DataAccessObject {
                 ORDER BY unique_authentication_endpoint DESC, name ASC";
         return $this->retrieve($sql);
     }
-
 }

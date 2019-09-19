@@ -25,7 +25,8 @@
 
 require_once 'bootstrap.php';
 
-class TokenTest extends TuleapTestCase {
+class TokenTest extends TuleapTestCase
+{
 
     function testGenerateRandomToken()
     {
@@ -122,7 +123,7 @@ class TokenTest extends TuleapTestCase {
         $dao  = \Mockery::spy(Docman_TokenDao::class);
         $http = \Mockery::spy(HTTPRequest::class);
         $http->allows()->get('bc')->andReturns(false);
-        foreach(array('aaaa', '?action=foo', '?action=details&section=notification') as $referer) {
+        foreach (array('aaaa', '?action=foo', '?action=details&section=notification') as $referer) {
             $t = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
             $t->allows(['_getDao' => $dao]);
             $t->allows(['_getReferer' => 'http://codendi.com/'. $referer]);
@@ -132,7 +133,7 @@ class TokenTest extends TuleapTestCase {
 
             $this->assertNull($t->getToken(), 'Without valid referer, we should have a null token');
         }
-        foreach(array('?action=show', '?id=1&action=show', '?action=details', '?action=details&section=history') as $referer) {
+        foreach (array('?action=show', '?id=1&action=show', '?action=details', '?action=details&section=history') as $referer) {
             $t = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
             $t->allows(['_getDao' => $dao]);
             $t->allows(['_getReferer' => 'http://codendi.com/'. $referer]);

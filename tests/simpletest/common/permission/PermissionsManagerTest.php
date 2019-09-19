@@ -21,7 +21,8 @@
 
 Mock::generate('PermissionsDao');
 
-class PermissionsManagerTest extends TuleapTestCase {
+class PermissionsManagerTest extends TuleapTestCase
+{
 
     function testDuplicatePermissionsPassParamters()
     {
@@ -85,7 +86,8 @@ class PermissionsManagerTest extends TuleapTestCase {
     }
 }
 
-class PermissionsManager_getAuthorizedUGroupIdsForProjectTest extends TuleapTestCase {
+class PermissionsManager_getAuthorizedUGroupIdsForProjectTest extends TuleapTestCase
+{
 
     private $permissions_manager;
     private $project;
@@ -260,7 +262,8 @@ class PermissionsManager_getAuthorizedUGroupIdsForProjectTest extends TuleapTest
     }
 }
 
-abstract class PermissionsManager_savePermissionsTest extends TuleapTestCase {
+abstract class PermissionsManager_savePermissionsTest extends TuleapTestCase
+{
     protected $permissions_manager;
     protected $project;
     protected $permission_type;
@@ -299,7 +302,8 @@ abstract class PermissionsManager_savePermissionsTest extends TuleapTestCase {
     }
 }
 
-class PermissionsManager_savePermissions_CommonTest extends PermissionsManager_savePermissionsTest {
+class PermissionsManager_savePermissions_CommonTest extends PermissionsManager_savePermissionsTest
+{
 
     public function setUp()
     {
@@ -338,7 +342,8 @@ class PermissionsManager_savePermissions_CommonTest extends PermissionsManager_s
     }
 }
 
-class PermissionsManager_savePermissions_PlatformForAnonymousProjectPrivateTest extends PermissionsManager_savePermissionsTest {
+class PermissionsManager_savePermissions_PlatformForAnonymousProjectPrivateTest extends PermissionsManager_savePermissionsTest
+{
 
     public function setUp()
     {
@@ -387,7 +392,8 @@ class PermissionsManager_savePermissions_PlatformForAnonymousProjectPrivateTest 
     }
 }
 
-class PermissionsManager_savePermissions_PlatformForAnonymousProjectPublicTest extends PermissionsManager_savePermissionsTest {
+class PermissionsManager_savePermissions_PlatformForAnonymousProjectPublicTest extends PermissionsManager_savePermissionsTest
+{
 
     public function setUp()
     {
@@ -483,7 +489,8 @@ class PermissionsManager_savePermissions_PlatformForAnonymousProjectPublicTest e
     }
 }
 
-class PermissionsManager_savePermissions_PlatformRegularProjectPrivateTest extends PermissionsManager_savePermissionsTest {
+class PermissionsManager_savePermissions_PlatformRegularProjectPrivateTest extends PermissionsManager_savePermissionsTest
+{
 
     public function setUp()
     {
@@ -532,7 +539,8 @@ class PermissionsManager_savePermissions_PlatformRegularProjectPrivateTest exten
     }
 }
 
-class PermissionsManager_savePermissions_PlatformForRegularProjectPublicTest extends PermissionsManager_savePermissionsTest {
+class PermissionsManager_savePermissions_PlatformForRegularProjectPublicTest extends PermissionsManager_savePermissionsTest
+{
 
     public function setUp()
     {
@@ -572,7 +580,8 @@ class PermissionsManager_savePermissions_PlatformForRegularProjectPublicTest ext
     }
 }
 
-class PermissionsManager_savePermissions_PlatformForRestrictedProjectUnrestrictedTest extends PermissionsManager_savePermissionsTest {
+class PermissionsManager_savePermissions_PlatformForRestrictedProjectUnrestrictedTest extends PermissionsManager_savePermissionsTest
+{
 
     public function setUp()
     {
@@ -676,7 +685,8 @@ class PermissionsManager_savePermissions_PlatformForRestrictedProjectUnrestricte
     }
 }
 
-class PermissionsManager_savePermissions_PlatformForRestrictedProjectPublicTest extends PermissionsManager_savePermissionsTest {
+class PermissionsManager_savePermissions_PlatformForRestrictedProjectPublicTest extends PermissionsManager_savePermissionsTest
+{
 
     public function setUp()
     {
@@ -766,7 +776,8 @@ class PermissionsManager_savePermissions_PlatformForRestrictedProjectPublicTest 
     }
 }
 
-class PermissionsManager_savePermissions_SaveDaoTest extends PermissionsManager_savePermissionsTest {
+class PermissionsManager_savePermissions_SaveDaoTest extends PermissionsManager_savePermissionsTest
+{
 
     public function setUp()
     {
@@ -794,7 +805,8 @@ class PermissionsManager_savePermissions_SaveDaoTest extends PermissionsManager_
     }
 }
 
-class PermissionsManager_savePermissions_FeebackOverlapingTest extends PermissionsManager_savePermissionsTest {
+class PermissionsManager_savePermissions_FeebackOverlapingTest extends PermissionsManager_savePermissionsTest
+{
 
     private $normalizer;
 

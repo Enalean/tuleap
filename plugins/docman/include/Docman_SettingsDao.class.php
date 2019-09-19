@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_SettingsDao extends DataAccessObject {
+class Docman_SettingsDao extends DataAccessObject
+{
 
     function searchByGroupId($group_id)
     {
@@ -32,17 +33,19 @@ class Docman_SettingsDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function create($group_id, $view, $use_obsolescence_date=0, $use_status=0)
+    function create($group_id, $view, $use_obsolescence_date = 0, $use_status = 0)
     {
-        $sql = sprintf('INSERT INTO plugin_docman_project_settings('.
+        $sql = sprintf(
+            'INSERT INTO plugin_docman_project_settings('.
                        'group_id, view, use_obsolescence_date, use_status'.
                        ') VALUES ('.
                        '%d, %s, %d, %d'.
                        ')',
-                       $group_id,
-                       $this->da->quoteSmart($view),
-                       $use_obsolescence_date,
-                       $use_status);
+            $group_id,
+            $this->da->quoteSmart($view),
+            $use_obsolescence_date,
+            $use_status
+        );
          return $this->update($sql);
     }
 
@@ -54,14 +57,14 @@ class Docman_SettingsDao extends DataAccessObject {
 
     function updateMetadataUsageForGroupId($group_id, $label, $useIt)
     {
-        $sql = sprintf('UPDATE plugin_docman_project_settings'.
+        $sql = sprintf(
+            'UPDATE plugin_docman_project_settings'.
                        ' SET use_%s = %d'.
                        ' WHERE group_id = %d',
-                       $label,
-                       $useIt,
-                       $group_id);
+            $label,
+            $useIt,
+            $group_id
+        );
         return $this->update($sql);
     }
 }
-
-?>

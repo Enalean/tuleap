@@ -29,7 +29,8 @@
  *
  * @see LDAPResult
  */
-class LDAPResultIterator implements SeekableIterator, Countable {
+class LDAPResultIterator implements SeekableIterator, Countable
+{
 
     var $list;
     var $key;
@@ -55,10 +56,9 @@ class LDAPResultIterator implements SeekableIterator, Countable {
      */
     function count()
     {
-        if($this->list && array_key_exists('count', $this->list)){
+        if ($this->list && array_key_exists('count', $this->list)) {
             return $this->list['count'];
-        }
-        else {
+        } else {
             return 0;
         }
     }
@@ -84,10 +84,10 @@ class LDAPResultIterator implements SeekableIterator, Countable {
     {
         $this->key = $pos;
         $this->valid = true;
-        if($this->key >= $this->count()) {
+        if ($this->key >= $this->count()) {
             $this->valid = false;
         }
-        if($this->key < 0) {
+        if ($this->key < 0) {
             $this->valid = false;
         }
     }
@@ -101,10 +101,9 @@ class LDAPResultIterator implements SeekableIterator, Countable {
     function get($pos)
     {
         $this->seek($pos);
-        if($this->valid) {
+        if ($this->valid) {
             return $this->current();
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -198,7 +197,8 @@ class LDAPResultIterator implements SeekableIterator, Countable {
  *
  * @see LDAPResultIterator
  */
-class LDAPResult implements Iterator, Countable {
+class LDAPResult implements Iterator, Countable
+{
     protected $ldapParams;
     protected $info;
     protected $index;
@@ -270,7 +270,7 @@ class LDAPResult implements Iterator, Countable {
     function getGroupMembers()
     {
         $memberAttr = strtolower($this->ldapParams['grp_member']);
-        if(isset($this->info[$memberAttr])) {
+        if (isset($this->info[$memberAttr])) {
             $members = $this->info[$memberAttr];
             // Remove count from the info to be able to iterate on result
             unset($members['count']);
@@ -310,7 +310,7 @@ class LDAPResult implements Iterator, Countable {
     function getAll($arg)
     {
         $arg = strtolower($arg);
-        if(isset($this->info[$arg])) {
+        if (isset($this->info[$arg])) {
             return $this->info[$arg];
         } else {
             return null;
@@ -357,5 +357,3 @@ class LDAPResult implements Iterator, Countable {
         return $this->index;
     }
 }
-
-?>

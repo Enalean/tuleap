@@ -20,7 +20,8 @@
 
 require_once 'ForumML_MessageDao.class.php';
 
-class ForumML_MessageManager {
+class ForumML_MessageManager
+{
     private $_dao;
 
     function getHeaderValue($messageId, $headerId)
@@ -40,7 +41,4 @@ class ForumML_MessageManager {
         }
         return $this->_dao;
     }
-
 }
-
-?>

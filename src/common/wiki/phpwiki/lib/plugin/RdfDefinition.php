@@ -36,8 +36,7 @@ rcs_id('$Id: RdfDefinition.php,v 1.6 2004/09/14 10:33:39 rurban Exp $');
  *
  * @author: Reini Urban
  */
-class WikiPlugin_RdfDefinition
-extends WikiPlugin
+class WikiPlugin_RdfDefinition extends WikiPlugin
 {
     function getName()
     {
@@ -49,8 +48,11 @@ extends WikiPlugin
     }
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.6 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.6 $"
+        );
     }
     function getDefaultArguments()
     {
@@ -69,7 +71,6 @@ extends WikiPlugin
         // comments?
         ;
     }
-
 };
 
 // $Log: RdfDefinition.php,v $
@@ -81,4 +82,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

@@ -39,8 +39,7 @@ rcs_id('$Id: EditMetaData.php,v 1.11 2004/06/01 16:48:11 rurban Exp $');
  *
  * Array support added by ReiniUrban.
  */
-class WikiPlugin_EditMetaData
-extends WikiPlugin
+class WikiPlugin_EditMetaData extends WikiPlugin
 {
     function getName()
     {
@@ -54,8 +53,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.11 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.11 $"
+        );
     }
 
     // Arguments:
@@ -74,8 +76,9 @@ extends WikiPlugin
     {
         $this->_args = $this->getArgs($argstr, $request);
         extract($this->_args);
-        if (!$page)
+        if (!$page) {
             return '';
+        }
 
         $hidden_pagemeta = array ('_cached_html');
         $readonly_pagemeta = array ('hits');
@@ -99,30 +102,34 @@ extends WikiPlugin
                 }
             }
             $dbi->touch();
-            $url = $request->getURLtoSelf(false,
-                                          array('metaedit','metafield','metavalue'));
+            $url = $request->getURLtoSelf(
+                false,
+                array('metaedit','metafield','metavalue')
+            );
             $request->redirect($url);
             // The rest of the output will not be seen due to the
             // redirect.
-
         }
 
         // Now we show the meta data and provide entry box for new data.
 
         $html = HTML();
 
-        $html->pushContent(fmt("Existing page-level metadata for %s:",
-                               $page));
+        $html->pushContent(fmt(
+            "Existing page-level metadata for %s:",
+            $page
+        ));
         $dl = HTML::dl();
         foreach ($pagemeta as $key => $val) {
-            if (is_string($val) and (substr($val,0,2) == 'a:')) {
-                $dl->pushContent(HTML::dt("\n$key => $val\n",
-                                          $dl1 = HTML::dl()));
+            if (is_string($val) and (substr($val, 0, 2) == 'a:')) {
+                $dl->pushContent(HTML::dt(
+                    "\n$key => $val\n",
+                    $dl1 = HTML::dl()
+                ));
                 foreach (unserialize($val) as $akey => $aval) {
                     $dl1->pushContent(HTML::dt(HTML::strong("$key" . '['
                                                             . $akey
-                                                            . "] => $aval\n"))
-                                      );
+                                                            . "] => $aval\n")));
                 }
                 $dl->pushContent($dl1);
             } elseif (is_array($val)) {
@@ -130,15 +137,16 @@ extends WikiPlugin
                 foreach ($val as $akey => $aval) {
                     $dl1->pushContent(HTML::dt(HTML::strong("$key" . '['
                                                             . $akey
-                                                            . "] => $aval\n"))
-                                      );
+                                                            . "] => $aval\n")));
                 }
                 $dl->pushContent($dl1);
-            } elseif (in_array($key,$hidden_pagemeta)) {
+            } elseif (in_array($key, $hidden_pagemeta)) {
                 ;
-            } elseif (in_array($key,$readonly_pagemeta)) {
-                $dl->pushContent(HTML::dt(array('style' => 'background: #dddddd'),
-                                          "$key => $val\n"));
+            } elseif (in_array($key, $readonly_pagemeta)) {
+                $dl->pushContent(HTML::dt(
+                    array('style' => 'background: #dddddd'),
+                    "$key => $val\n"
+                ));
             } else {
                 $dl->pushContent(HTML::dt(HTML::strong("$key => $val\n")));
             }
@@ -152,14 +160,19 @@ extends WikiPlugin
             $keyfield = HTML::input(array('name' => 'metafield'), '');
             $valfield = HTML::input(array('name' => 'metavalue'), '');
             $button = Button('submit:metaedit', _("Submit"), false);
-            $form = HTML::form(array('action' => $action,
+            $form = HTML::form(
+                array('action' => $action,
                                      'method' => 'post',
                                      'accept-charset' => $GLOBALS['charset']),
-                               $hiddenfield,
-                               $instructions, HTML::br(),
-                               $keyfield, ' => ', $valfield,
-                               HTML::raw('&nbsp;'), $button
-                               );
+                $hiddenfield,
+                $instructions,
+                HTML::br(),
+                $keyfield,
+                ' => ',
+                $valfield,
+                HTML::raw('&nbsp;'),
+                $button
+            );
 
             $html->pushContent(HTML::br(), $form);
         } else {
@@ -208,4 +221,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

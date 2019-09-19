@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201211211457_refactor_tracker_rule_tables extends ForgeUpgrade_Bucket {
+class b201211211457_refactor_tracker_rule_tables extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -85,4 +86,3 @@ class b201211211457_refactor_tracker_rule_tables extends ForgeUpgrade_Bucket {
         }
     }
 }
-?>

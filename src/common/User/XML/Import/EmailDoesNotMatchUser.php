@@ -21,7 +21,8 @@ namespace User\XML\Import;
 
 use PFUser;
 
-class EmailDoesNotMatchUser extends ActionToBeTakenForUser {
+class EmailDoesNotMatchUser extends ActionToBeTakenForUser
+{
 
     private static $ACTION = 'map';
 

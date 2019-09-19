@@ -21,7 +21,8 @@
 use Tuleap\Git\GerritServerResourceRestrictor;
 use Tuleap\Git\RestrictedGerritServerDao;
 
-class GitDataBuilder extends REST_TestDataBuilder {
+class GitDataBuilder extends REST_TestDataBuilder
+{
 
     public const PROJECT_TEST_GIT_SHORTNAME = 'test-git';
     public const REPOSITORY_GIT_ID          = 1;

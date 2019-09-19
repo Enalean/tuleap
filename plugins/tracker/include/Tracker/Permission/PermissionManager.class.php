@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Permission_PermissionManager {
+class Tracker_Permission_PermissionManager
+{
 
     public function save(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter)
     {
@@ -58,7 +59,7 @@ class Tracker_Permission_PermissionManager {
                     'no_assignee_semantic',
                     array(
                         TRACKER_BASE_URL . '/?'.  http_build_query(array('func' => 'admin-semantic', 'tracker' => $tracker->getId())),
-                        $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_label')
+                        $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'contributor_label')
                     )
                 ),
                 CODENDI_PURIFIER_DISABLED

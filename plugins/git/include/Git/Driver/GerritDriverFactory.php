@@ -22,7 +22,8 @@
 /**
  * I build Git_Driver_Gerrit objects
  */
-class Git_Driver_Gerrit_GerritDriverFactory {
+class Git_Driver_Gerrit_GerritDriverFactory
+{
 
     /** @var Logger */
     private $logger;

@@ -23,7 +23,8 @@ use PFUser;
 use Logger;
 use UserManager;
 
-class AlreadyExistingUser extends ActionToBeTakenForUser implements ReadyToBeImportedUser {
+class AlreadyExistingUser extends ActionToBeTakenForUser implements ReadyToBeImportedUser
+{
 
     private static $ALLOWED_ACTIONS = array(ToBeActivatedUser::ACTION, ToBeMappedUser::ACTION);
 

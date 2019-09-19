@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_OnTop_Config_ValueMapping {
+class Cardwall_OnTop_Config_ValueMapping
+{
 
     /**
      * @var Tracker_FormElement_Field_List_Value

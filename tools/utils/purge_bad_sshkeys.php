@@ -44,5 +44,3 @@ while ($row = db_fetch_array($res)) {
         db_query($sql);
     }
 }
-
-?>

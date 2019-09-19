@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Account_RegisterField {
+class Account_RegisterField
+{
 
     public $value;
     public $has_error;
@@ -29,5 +30,4 @@ class Account_RegisterField {
         $this->value      = $value;
         $this->error      = $error;
     }
-
 }

@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GroupFactory {
+class GroupFactory
+{
     /**
      * @var bool
      */
@@ -67,13 +68,14 @@ class GroupFactory {
 
      //echo $sql;
 
-        $result = db_query ($sql);
+        $result = db_query($sql);
 
         $rows = db_numrows($result);
 
         if (!$result || $rows < 1) {
-                    if (isset($GLOBALS['Language']))
-                        $this->setError();
+            if (isset($GLOBALS['Language'])) {
+                $this->setError();
+            }
                     return false;
         }
         return $result;
@@ -102,7 +104,7 @@ class GroupFactory {
 
      //echo $sql;
 
-        $result = db_query ($sql);
+        $result = db_query($sql);
 
         $rows = db_numrows($result);
 

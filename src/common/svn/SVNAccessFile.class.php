@@ -25,7 +25,8 @@ require_once __DIR__ . '/../../www/svn/svn_utils.php';
  * When updating .SVNAccessFile this class verifies ugroup permission lines.
  * It comments lines with invalid synatx, non existant or empty ugroups.
  */
-class SVNAccessFile {
+class SVNAccessFile
+{
 
     /**
      * Value in $groups when the group is (re)defined by user
@@ -205,11 +206,11 @@ class SVNAccessFile {
         foreach ($lines as $line) {
             $currentSection = $this->getCurrentSection($line, $currentSection);
             switch ($currentSection) {
-                case 'groups' :
+                case 'groups':
                     $groups = $this->accumulateDefinedGroups($groups, $line, false);
                     $validContents .= $line.PHP_EOL;
                     break;
-                default :
+                default:
                     $validContents .= $this->validateUGroupLine($groups, $line, $verbose).PHP_EOL;
                     break;
             }
@@ -236,7 +237,7 @@ class SVNAccessFile {
         if ($trimmedLine != '') {
             preg_match('/^'.self::GROUPNAME_PATTERN.'\s*=/', $trimmedLine, $matches);
             if (!empty($matches)) {
-                if (!$defaultSection){
+                if (!$defaultSection) {
                     $groups[$matches[1]] = self::UGROUP_REDEFINED;
                 } else {
                     $groups[$matches[1]] = self::UGROUP_DEFAULT;

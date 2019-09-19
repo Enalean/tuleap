@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_BatchIterator {
+class Tracker_Artifact_BatchIterator
+{
 
     public const ITEMS_PER_BATCH = 100;
 

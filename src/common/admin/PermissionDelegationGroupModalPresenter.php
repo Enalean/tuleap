@@ -108,5 +108,4 @@ class Admin_PermissionDelegationGroupModalPresenter
     {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_cancel');
     }
-
 }

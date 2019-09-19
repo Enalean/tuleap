@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
+class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject
+{
 
     public function create($tv3_id, $tv5_id)
     {
@@ -233,7 +234,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $res   = $this->retrieve($sql);
 
         if ($res) {
-            while($row = $res->getRow()) {
+            while ($row = $res->getRow()) {
                 $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
                              SELECT " . $row['id'] . ", new.id 
                              FROM tracker_field_list_bind_static_value AS new 
@@ -257,7 +258,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $res   = $this->retrieve($sql);
 
         if ($res) {
-            while($row = $res->getRow()) {
+            while ($row = $res->getRow()) {
                 $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
                      SELECT " . $row['id'] . ", user_id 
                      FROM user 
@@ -268,4 +269,3 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         }
     }
 }
-?>

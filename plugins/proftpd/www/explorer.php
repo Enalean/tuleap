@@ -21,7 +21,7 @@
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 // hack to make sure that pseudo-nice urls don't bypass the restricted user check
-if ( preg_match_all('/^\/plugins\/proftpd\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
+if (preg_match_all('/^\/plugins\/proftpd\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches)) {
     $_REQUEST['group_id'] = $_GET['group_id'] = $matches[1][0];
 }
 

@@ -46,8 +46,7 @@ rcs_id('$Id: FrameInclude.php,v 1.10 2004/06/14 11:31:39 rurban Exp $');
  *  named "top") For the Sidebar theme (or derived from it) we provide
  *  a left frame also, otherwise only top, content and bottom.
  */
-class WikiPlugin_FrameInclude
-extends WikiPlugin
+class WikiPlugin_FrameInclude extends WikiPlugin
 {
     function getName()
     {
@@ -61,8 +60,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.10 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.10 $"
+        );
     }
 
     function getDefaultArguments()
@@ -89,27 +91,36 @@ extends WikiPlugin
         $args = ($this->getArgs($argstr, $request));
         extract($args);
 
-        if ($request->getArg('action') != 'browse')
+        if ($request->getArg('action') != 'browse') {
             return $this->disabled("(action != 'browse')");
-        if (! $request->isGetOrHead())
+        }
+        if (! $request->isGetOrHead()) {
             return $this->disabled("(method != 'GET')");
+        }
 
         if (!$src and $page) {
             if ($page == $request->get('pagename')) {
-                return $this->error(sprintf(_("recursive inclusion of page %s"),
-                                            $page));
+                return $this->error(sprintf(
+                    _("recursive inclusion of page %s"),
+                    $page
+                ));
             }
             $src = WikiURL($page);
         }
         if (!$src) {
-            return $this->error(sprintf(_("%s or %s parameter missing"),
-                                        'src', 'page'));
+            return $this->error(sprintf(
+                _("%s or %s parameter missing"),
+                'src',
+                'page'
+            ));
         }
 
         // FIXME: How to normalize url's to compare against recursion?
-        if ($src == $request->getURLtoSelf() ) {
-            return $this->error(sprintf(_("recursive inclusion of url %s"),
-                                        $src));
+        if ($src == $request->getURLtoSelf()) {
+            return $this->error(sprintf(
+                _("recursive inclusion of url %s"),
+                $src
+            ));
         }
 
         if (($which = $request->getArg('frame'))) {
@@ -131,10 +142,12 @@ extends WikiPlugin
                                    'noresize' => (bool)$noresize,
                                    ));
 
-        if ($marginwidth)
+        if ($marginwidth) {
             $frame->setArg('marginwidth', $marginwidth);
-        if ($marginheight)
+        }
+        if ($marginheight) {
             $frame->setArg('marginheight', $marginheight);
+        }
 
         $tokens = array('CONTENT_FRAME' => $frame,
                         'ROWS' => $rows,
@@ -188,4 +201,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

@@ -42,7 +42,7 @@ class PluginFactory // phpcs:ignore
     /** @var array */
     private $plugin_class_path = array();
 
-    static private $instance;
+    private static $instance;
 
     public function __construct(
         PluginDao $plugin_dao,
@@ -224,7 +224,7 @@ class PluginFactory // phpcs:ignore
 
     private function tryPluginPaths(array $potential_paths, $file_name)
     {
-        foreach($potential_paths as $path) {
+        foreach ($potential_paths as $path) {
             $full_path = $path.'/'.$file_name;
             if ($this->loadClass($full_path)) {
                 return $full_path;
@@ -268,7 +268,7 @@ class PluginFactory // phpcs:ignore
     function _getAvailableOrUnavailablePlugins($map, $criteria)
     {
          $dar = $this->plugin_dao->searchByAvailable($criteria);
-        while($row = $dar->getRow()) {
+        while ($row = $dar->getRow()) {
             $p = $this->_getInstancePlugin($row['id'], $row);
         }
          return $this->retrieved_plugins[$map];
@@ -300,7 +300,7 @@ class PluginFactory // phpcs:ignore
     {
         $all_plugins = array();
         $dar = $this->plugin_dao->searchAll();
-        while($row = $dar->getRow()) {
+        while ($row = $dar->getRow()) {
             if ($p = $this->_getInstancePlugin($row['id'], $row)) {
                 $all_plugins[] = $p;
             }
@@ -343,7 +343,7 @@ class PluginFactory // phpcs:ignore
         $col     = array();
         $paths   = $this->getOfficialPluginPaths();
         $exclude = array('.', '..', 'CVS', '.svn');
-        foreach($paths as $path) {
+        foreach ($paths as $path) {
             $dir = openDir($path);
             while ($file = readDir($dir)) {
                 if (!in_array($file, $exclude) && is_dir($path.'/'.$file)) {
@@ -410,7 +410,7 @@ class PluginFactory // phpcs:ignore
         $dar         = $this->plugin_restrictor->searchAllowedProjectsOnPlugin($plugin);
 
         if ($dar && !$dar->isError()) {
-            while($row = $dar->getRow()) {
+            while ($row = $dar->getRow()) {
                 $project_ids[] = $row['project_id'];
             }
         }
@@ -448,7 +448,7 @@ class PluginFactory // phpcs:ignore
     {
         $restricted = false;
         $dar =$this->plugin_dao->searchProjectPluginRestrictionStatus($plugin->getId());
-        if($dar && !$dar->isError()) {
+        if ($dar && !$dar->isError()) {
             $row = $dar->getRow();
             $restricted = $row['prj_restricted'];
         }

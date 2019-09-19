@@ -25,7 +25,8 @@ Mock::generate('UserManager');
 Mock::generate('ProjectManager');
 Mock::generate('SystemEventManager');
 
-class Rule_ProjectNameIntegrationTest extends TuleapTestCase {
+class Rule_ProjectNameIntegrationTest extends TuleapTestCase
+{
 
     function testValidNamesAreValid()
     {
@@ -58,5 +59,3 @@ class Rule_ProjectNameIntegrationTest extends TuleapTestCase {
         $this->assertTrue($r->isValid("test1"));
     }
 }
-
-?>

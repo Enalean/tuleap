@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_FieldPriorityAugmenter {
+class AgileDashboard_FieldPriorityAugmenter
+{
 
     /** @var AgileDashboard_SequenceIdManager */
     private $sequence_id_manager;

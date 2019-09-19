@@ -21,7 +21,8 @@
 use Tuleap\Git\Gitolite\SSHKey\Dumper;
 use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
-class SystemEvent_GIT_USER_RENAME extends SystemEvent {
+class SystemEvent_GIT_USER_RENAME extends SystemEvent
+{
 
     public const NAME = "GIT_USER_RENAME";
 

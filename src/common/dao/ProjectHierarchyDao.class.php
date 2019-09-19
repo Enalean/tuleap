@@ -20,7 +20,8 @@
 
 require_once('include/DataAccessObject.class.php');
 
-class ProjectHierarchyDao extends DataAccessObject {
+class ProjectHierarchyDao extends DataAccessObject
+{
 
     /**
      * @param int $group_id
@@ -101,4 +102,3 @@ class ProjectHierarchyDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 }
-?>

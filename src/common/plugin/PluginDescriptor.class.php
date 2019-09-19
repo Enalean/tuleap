@@ -21,7 +21,8 @@
 /**
  * PluginDescriptor
  */
-class PluginDescriptor {
+class PluginDescriptor
+{
 
     var $name;
     var $version;
@@ -37,13 +38,16 @@ class PluginDescriptor {
 
     function getFullName()
     {
-        return $this->name; }
+        return $this->name;
+    }
     function getVersion()
     {
-        return $this->version; }
+        return $this->version;
+    }
     function getDescription()
     {
-        return $this->description; }
+        return $this->description;
+    }
 
     public function setVersionFromFile($path)
     {
@@ -52,4 +56,3 @@ class PluginDescriptor {
         }
     }
 }
-?>

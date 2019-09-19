@@ -19,7 +19,8 @@
  */
 
 
-class Tracker_FormElement_Shared implements Tracker_FormElement_IProvideFactoryButtonInformation {
+class Tracker_FormElement_Shared implements Tracker_FormElement_IProvideFactoryButtonInformation
+{
     /**
      * @var Tracker
      */
@@ -104,4 +105,3 @@ class Tracker_FormElement_Shared implements Tracker_FormElement_IProvideFactoryB
         $this->rank          = $rank;
     }
 }
-?>

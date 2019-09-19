@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class CardInCellPresenterFactoryTest extends TuleapTestCase {
+class CardInCellPresenterFactoryTest extends TuleapTestCase
+{
 
     public function setUp()
     {

@@ -34,7 +34,7 @@ if (user_isloggedin()) {
         $forum_id = $request->get('forum_id');
                 // Check permissions
         if (!forum_utils_access_allowed($forum_id)) {
-            exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));
+            exit_error($Language->getText('global', 'error'), $Language->getText('forum_forum', 'forum_restricted'));
         }
 
      //If the forum is associated to a private news, non-allowed users shouldn't be able to save their places in this forum
@@ -42,7 +42,7 @@ if (user_isloggedin()) {
         $res = db_query($qry);
         if (db_numrows($res) > 0) {
             if (!forum_utils_news_access($forum_id)) {
-                exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','permission_denied'));
+                exit_error($Language->getText('global', 'error'), $Language->getText('news_admin_index', 'permission_denied'));
             }
         }
 
@@ -58,14 +58,14 @@ if (user_isloggedin()) {
      */
         $result=db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=".db_ei($forum_id));
 
-        $group_id=db_result($result,0,'group_id');
-        $forum_name=db_result($result,0,'forum_name');
+        $group_id=db_result($result, 0, 'group_id');
+        $forum_name=db_result($result, 0, 'forum_name');
 
 
-        forum_header(array('title'=>$Language->getText('forum_save','save_place')));
+        forum_header(array('title'=>$Language->getText('forum_save', 'save_place')));
 
         echo '
-			<H2>'.$Language->getText('forum_save','save_your_place').'</H2>';
+			<H2>'.$Language->getText('forum_save', 'save_your_place').'</H2>';
 
         $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
 
@@ -83,34 +83,31 @@ if (user_isloggedin()) {
             $result = db_query($sql);
 
             if (!$result) {
-                echo "<span class=\"highlight\">".$Language->getText('forum_save','insert_err')."</span>";
+                echo "<span class=\"highlight\">".$Language->getText('forum_save', 'insert_err')."</span>";
                 echo db_error();
             } else {
-                echo "<span class=\"highlight\"><H3>".$Language->getText('forum_save','place_saved')."</H3></span>";
-                echo '<P>'.$Language->getText('forum_save','msg_highlighted');
+                echo "<span class=\"highlight\"><H3>".$Language->getText('forum_save', 'place_saved')."</H3></span>";
+                echo '<P>'.$Language->getText('forum_save', 'msg_highlighted');
             }
-
         } else {
             $sql="UPDATE forum_saved_place SET save_date='".time()."' WHERE user_id='".$db_escaped_user_id."' AND forum_id=".db_ei($forum_id);
             $result = db_query($sql);
 
             if (!$result) {
-                echo "<span class=\"highlight\">".$Language->getText('forum_save','update_err')."</span>";
+                echo "<span class=\"highlight\">".$Language->getText('forum_save', 'update_err')."</span>";
                 echo db_error();
             } else {
-                echo "<span class=\"highlight\"><H3>".$Language->getText('forum_save','place_saved')."</H3></span>";
-                echo "<P>".$Language->getText('forum_save','msg_highlighted');
+                echo "<span class=\"highlight\"><H3>".$Language->getText('forum_save', 'place_saved')."</H3></span>";
+                echo "<P>".$Language->getText('forum_save', 'msg_highlighted');
             }
         }
         forum_footer(array());
     } else {
-        forum_header(array('title'=>$Language->getText('forum_monitor','choose_forum_first')));
+        forum_header(array('title'=>$Language->getText('forum_monitor', 'choose_forum_first')));
         echo '
-			<H1>'.$Language->getText('forum_forum','choose_forum_first').'</H1>';
+			<H1>'.$Language->getText('forum_forum', 'choose_forum_first').'</H1>';
         forum_footer(array());
     }
-
 } else {
     exit_not_logged_in();
 }
-?>

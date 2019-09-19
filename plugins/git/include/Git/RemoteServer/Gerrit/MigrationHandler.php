@@ -38,7 +38,8 @@ use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedOnRestrictedGerritServerExce
 use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
 
-class MigrationHandler {
+class MigrationHandler
+{
 
     /**
      * @var Git_SystemEventManager
@@ -155,7 +156,7 @@ class MigrationHandler {
     ) {
         $this->disconnectFromGerrit($repository);
 
-        switch($disconnect_option) {
+        switch ($disconnect_option) {
             case Pane\Gerrit::OPTION_DELETE_GERRIT_PROJECT:
                 $this->git_system_event_manager->queueRemoteProjectDeletion($repository, $driver);
 
@@ -206,5 +207,4 @@ class MigrationHandler {
             throw new DeletePluginNotInstalledException();
         }
     }
-
 }

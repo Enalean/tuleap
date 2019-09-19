@@ -39,7 +39,8 @@
  *   v3 -'                          | v3 -'
  *   v4 -> approval v4 (copy of v2) | v4 -'
  */
-abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTableFactory {
+abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTableFactory
+{
 
     /**
      * Create $dstTable based on $srcTable.
@@ -51,17 +52,17 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
      */
     protected function importTable($srcTable, $dstTable, $type)
     {
-        if($srcTable->getStatus() == PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED) {
+        if ($srcTable->getStatus() == PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED) {
             $dstTable->setStatus(PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED);
         }
 
         $newTableId = $this->_createTable($dstTable);
-        if($newTableId) {
+        if ($newTableId) {
             // Copy reviewers
             $reviewerFactory = $this->_getReviewerFactory($dstTable, $this->item);
-            if($type == 'copy') {
+            if ($type == 'copy') {
                 $reviewerFactory->newTableCopy($newTableId);
-            } elseif($type == 'reset') {
+            } elseif ($type == 'reset') {
                 $reviewerFactory->newTableReset($newTableId);
             }
             return true;
@@ -81,7 +82,6 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
     {
         $dstTable->setOwner($userId);
         return $this->importTable($srcTable, $dstTable, 'copy');
-
     }
 
     /**
@@ -104,12 +104,12 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
     function createTable($userId, $import)
     {
         $tableCreated = false;
-        if($import == 'copy' || $import == 'reset' || $import == 'empty') {
+        if ($import == 'copy' || $import == 'reset' || $import == 'empty') {
             $srcTable = $this->getLastTableForItem();
-            if($import == 'copy' || $import == 'reset') {
+            if ($import == 'copy' || $import == 'reset') {
                 $dstTable = clone $srcTable;
                 $this->_updateTableWithLastId($dstTable);
-                if($import == 'copy') {
+                if ($import == 'copy') {
                     $tableCreated = $this->newTableCopy($srcTable, $dstTable, $userId);
                 } else {
                     $tableCreated = $this->newTableReset($srcTable, $dstTable, $userId);
@@ -118,7 +118,7 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
                 $tableCreated = $this->newTableEmpty($userId);
             }
             // Close source table
-            if(!$srcTable->isClosed()) {
+            if (!$srcTable->isClosed()) {
                 $srcTable->setStatus(PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED);
                 $this->_updateTable($srcTable);
             }
@@ -138,7 +138,7 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
         $table = null;
         $dao = $this->_getDao();
         $dar = $dao->getLatestTableByItemId($this->item->getId());
-        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
             $table = $this->createTableFromRow($row);
         }
@@ -153,8 +153,8 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
         $tableArray = array();
         $dao = $this->_getDao();
         $dar = $dao->getApprovalTableItemId($this->item->getId(), 'app.*', '', true);
-        if($dar && !$dar->isError()) {
-            while($row = $dar->getRow()) {
+        if ($dar && !$dar->isError()) {
+            while ($row = $dar->getRow()) {
                 $tableArray[] = $this->createTableFromRow($row);
             }
         }

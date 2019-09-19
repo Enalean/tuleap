@@ -21,7 +21,8 @@
 require_once 'SystemEventManager.class.php';
 require_once 'IRunInAMutex.php';
 
-abstract class SystemEventProcessor implements IRunInAMutex {
+abstract class SystemEventProcessor implements IRunInAMutex
+{
 
     /**
      * @var SystemEventProcess
@@ -65,7 +66,7 @@ abstract class SystemEventProcessor implements IRunInAMutex {
         $executed_events_ids = $this->loopOverEventsForOwner($this->getOwner(), $queue);
         try {
             $this->postEventsActions($executed_events_ids, $queue);
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             $this->logger->error("[SystemEventProcessor] An error happened during execution of post actions: ".$exception->getMessage());
         }
     }
@@ -114,5 +115,4 @@ abstract class SystemEventProcessor implements IRunInAMutex {
     abstract protected function getOwner();
 
     abstract protected function postEventsActions(array $executed_events_ids, $queue_name);
-
 }

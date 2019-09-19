@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../bootstrap.php';
 
-class Tracker_ReferenceManagerTest extends TuleapTestCase {
+class Tracker_ReferenceManagerTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -71,5 +72,4 @@ class Tracker_ReferenceManagerTest extends TuleapTestCase {
         $this->assertNotNull($reference);
         $this->assertIsA($reference, 'Tracker_Reference');
     }
-
 }

@@ -20,7 +20,8 @@
 /**
  * Render statistics in csv format
  */
-class Statistics_Formatter {
+class Statistics_Formatter
+{
 
     private $separator;
     public $startDate;

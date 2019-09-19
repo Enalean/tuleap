@@ -19,7 +19,8 @@
  */
 
 
-class Cardwall_OnTop_Config_TrackerMappingFactory {
+class Cardwall_OnTop_Config_TrackerMappingFactory
+{
 
     /**
      * @var TrackerFactory
@@ -138,4 +139,3 @@ class Cardwall_OnTop_Config_TrackerMappingFactory {
         );
     }
 }
-?>

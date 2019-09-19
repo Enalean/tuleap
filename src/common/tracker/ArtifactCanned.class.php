@@ -11,7 +11,8 @@
  */
 
 
-class ArtifactCanned {
+class ArtifactCanned
+{
 
     /**
      * The artifact type object.
@@ -43,7 +44,7 @@ class ArtifactCanned {
      *  @param    array    (all fields from artifact_file_user_vw) OR id from database.
      *  @return bool success.
      */
-    function __construct(&$ArtifactType, $data=false)
+    function __construct(&$ArtifactType, $data = false)
     {
         global $Language;
 
@@ -52,8 +53,8 @@ class ArtifactCanned {
             $this->setError('ArtifactCanned: No ArtifactType');
             return false;
         }
-        if ( !is_object($ArtifactType)) {
-            $this->setError('ArtifactCanned: '.$Language->getText('tracker_common_canned','not_valid'));
+        if (!is_object($ArtifactType)) {
+            $this->setError('ArtifactCanned: '.$Language->getText('tracker_common_canned', 'not_valid'));
             return false;
         }
      //did ArtifactType have an error?
@@ -91,11 +92,11 @@ class ArtifactCanned {
 
      //    data validation
         if (!$title || !$body) {
-            $this->setError('ArtifactCanned: '.$Language->getText('tracker_common_canned','name_requ'));
+            $this->setError('ArtifactCanned: '.$Language->getText('tracker_common_canned', 'name_requ'));
             return false;
         }
         if (!$this->ArtifactType->userIsAdmin()) {
-            $this->setError($Language->getText('tracker_common_canned','perm_denied'));
+            $this->setError($Language->getText('tracker_common_canned', 'perm_denied'));
             return false;
         }
 
@@ -135,7 +136,7 @@ class ArtifactCanned {
 
         $res=db_query("SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='". db_ei($id) ."' AND group_artifact_id='". db_ei($this->atid) ."'");
         if (!$res || db_numrows($res) < 1) {
-            $this->setError('ArtifactCanned: '.$Language->getText('tracker_common_canned','invalid_id'));
+            $this->setError('ArtifactCanned: '.$Language->getText('tracker_common_canned', 'invalid_id'));
             return false;
         }
         $this->data_array = db_fetch_array($res);
@@ -195,7 +196,7 @@ class ArtifactCanned {
         global $Language;
 
         if (!$this->ArtifactType->userIsAdmin()) {
-            $this->setError($Language->getText('tracker_common_canned','perm_denied'));
+            $this->setError($Language->getText('tracker_common_canned', 'perm_denied'));
             return false;
         }
 
@@ -211,7 +212,6 @@ class ArtifactCanned {
         } else {
              return true;
         }
-
     }
 
     /**
@@ -221,16 +221,16 @@ class ArtifactCanned {
      *  @param    string    Body of the message.
      *  @return bool success.
      */
-    function update($title,$body)
+    function update($title, $body)
     {
         global $Language;
 
         if (!$this->ArtifactType->userIsAdmin()) {
-            $this->setError($Language->getText('tracker_common_canned','perm_denied'));
+            $this->setError($Language->getText('tracker_common_canned', 'perm_denied'));
             return false;
         }
         if (!$title || !$body) {
-            $this->setError($Language->getText('tracker_common_canned','missing_param'));
+            $this->setError($Language->getText('tracker_common_canned', 'missing_param'));
             return false;
         }
 
@@ -283,5 +283,3 @@ class ArtifactCanned {
         return $this->error_state;
     }
 }
-
-?>

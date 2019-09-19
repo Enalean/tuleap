@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201211121137_add_transition_condition_field_notempty_table extends ForgeUpgrade_Bucket {
+class b201211121137_add_transition_condition_field_notempty_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -50,4 +51,3 @@ class b201211121137_add_transition_condition_field_notempty_table extends ForgeU
         }
     }
 }
-?>

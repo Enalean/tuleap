@@ -23,7 +23,8 @@
  */
 
 
-class Rule_DateTest extends TuleapTestCase {
+class Rule_DateTest extends TuleapTestCase
+{
 
     function UnitTestCase($name = 'Rule_Date test')
     {
@@ -62,6 +63,4 @@ class Rule_DateTest extends TuleapTestCase {
         $this->assertFalse($r->isValid('2001-2-29'));
         $this->assertTrue($r->isValid('2004-2-29'));
     }
-
 }
-?>

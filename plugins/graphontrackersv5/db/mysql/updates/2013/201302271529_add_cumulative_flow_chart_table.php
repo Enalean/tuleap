@@ -20,7 +20,8 @@
  */
 
 
-class b201302271529_add_cumulative_flow_chart_table extends ForgeUpgrade_Bucket {
+class b201302271529_add_cumulative_flow_chart_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -58,4 +59,3 @@ EOT;
         }
     }
 }
-?>

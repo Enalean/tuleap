@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface TrackerXmlFieldsMapping {
+interface TrackerXmlFieldsMapping
+{
 
     public function getNewValueId($old_value_id);
 

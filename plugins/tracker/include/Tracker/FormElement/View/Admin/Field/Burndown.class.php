@@ -18,7 +18,8 @@
  */
 
 
-class Tracker_FormElement_View_Admin_Field_Burndown extends Tracker_FormElement_View_Admin_Field {
+class Tracker_FormElement_View_Admin_Field_Burndown extends Tracker_FormElement_View_Admin_Field
+{
 
     protected function fetchRequired()
     {

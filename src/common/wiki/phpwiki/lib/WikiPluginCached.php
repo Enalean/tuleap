@@ -74,15 +74,15 @@ class WikiPluginCached extends WikiPlugin
         global $request;
         //$cacheparams = $GLOBALS['CacheParams'];
 
-        $plugincall = serialize( array(
+        $plugincall = serialize(array(
             'pluginname' => $this->getName(),
-            'arguments'  => $argarray ) );
-        $id = $cache->generateId( $plugincall );
+            'arguments'  => $argarray ));
+        $id = $cache->generateId($plugincall);
         $plugincall_arg = rawurlencode($plugincall);
         //$plugincall_arg = md5($plugincall); // will not work if plugin has to recreate content and cache is lost
 
         $url = DATA_PATH . '/getimg.php?';
-        if (($lastchar = substr($url,-1)) == '/') {
+        if (($lastchar = substr($url, -1)) == '/') {
             $url = substr($url, 0, -1);
         }
         if (strlen($plugincall_arg) > PLUGIN_CACHED_MAXARGLEN) {
@@ -106,8 +106,9 @@ class WikiPluginCached extends WikiPlugin
             $url .= '/' . PLUGIN_CACHED_FILENAME_PREFIX . $id . '.img'
                 . ($plugincall_arg ? '?args='.$plugincall_arg : '');
         }
-        if ($request->getArg("start_debug"))
+        if ($request->getArg("start_debug")) {
             $url .= "&start_debug=1";
+        }
         return array($id, $url);
     } // genUrl
 
@@ -154,7 +155,7 @@ class WikiPluginCached extends WikiPlugin
      * @return           imagehandle  image handle if successful
      *                                false if an error occured
      */
-    function getImage($dbi,$argarray,$request)
+    function getImage($dbi, $argarray, $request)
     {
         trigger_error('WikiPluginCached::getImage: pure virtual function in file '
                       . __FILE__ . ' line ' . __LINE__, E_USER_ERROR);
@@ -178,7 +179,7 @@ class WikiPluginCached extends WikiPlugin
      * @return           string       format: '+seconds'
      *                                '0' never expires
      */
-    function getExpire($dbi,$argarray,$request)
+    function getExpire($dbi, $argarray, $request)
     {
         return '0'; // persist forever
     }
@@ -197,10 +198,11 @@ class WikiPluginCached extends WikiPlugin
      */
     function getImageType(&$dbi, $argarray, &$request)
     {
-        if (in_array($argarray['imgtype'], preg_split('/\s*:\s*/', PLUGIN_CACHED_IMGTYPES)))
+        if (in_array($argarray['imgtype'], preg_split('/\s*:\s*/', PLUGIN_CACHED_IMGTYPES))) {
             return $argarray['imgtype'];
-        else
+        } else {
             return 'png';
+        }
     }
 
     /**
@@ -215,7 +217,7 @@ class WikiPluginCached extends WikiPlugin
      * @param  request   Request      ???
      * @return           string       "alt" description of the image
      */
-    function getAlt($dbi,$argarray,$request)
+    function getAlt($dbi, $argarray, $request)
     {
         return '<?plugin '.$this->getName().' '.$this->glueArgs($argarray).'?>';
     }
@@ -282,17 +284,18 @@ class WikiPluginCached extends WikiPlugin
      * @param  request  Request ???
      * @return          string  html output
      */
-    function embedMap($id,$url,$map,&$dbi,$argarray,&$request)
+    function embedMap($id, $url, $map, &$dbi, $argarray, &$request)
     {
         // id is not unique if the same map is produced twice
-        $key = substr($id,0,8).substr(microtime(),0,6);
-        return HTML(HTML::map(array( 'name' => $key ), $map ),
-                    HTML::img( array(
+        $key = substr($id, 0, 8).substr(microtime(), 0, 6);
+        return HTML(
+            HTML::map(array( 'name' => $key ), $map),
+            HTML::img(array(
                    'src'    => $url,
                    'border' => 0,
                    //  'alt'    => htmlspecialchars($this->getAlt($dbi,$argarray,$request))
                    'usemap' => '#'.$key ))
-               );
+        );
     }
 
     /**
@@ -313,10 +316,10 @@ class WikiPluginCached extends WikiPlugin
      */
     function embedImg($url, $dbi, $argarray, $request)
     {
-        return HTML::img( array(
+        return HTML::img(array(
             'src' => $url,
             'border' => 0,
-            'alt' => htmlspecialchars($this->getAlt($dbi, $argarray, $request)) ) );
+            'alt' => htmlspecialchars($this->getAlt($dbi, $argarray, $request)) ));
     }
 
     /**
@@ -338,10 +341,13 @@ class WikiPluginCached extends WikiPlugin
     // how to handle alternate images? always provide alternate static images?
     function embedObject($url, $type, $args = false, $params = false)
     {
-        if (!$args) $args = array();
+        if (!$args) {
+            $args = array();
+        }
         $object = HTML::object(array_merge($args, array('src' => $url, 'type' => $type)));
-        if ($params)
+        if ($params) {
             $object->pushContent($params);
+        }
         return $object;
     }
 
@@ -383,11 +389,14 @@ class WikiPluginCached extends WikiPlugin
 
     function tempnam($prefix = false)
     {
-        $temp = tempnam(isWindows() ? str_replace('/', "\\", PLUGIN_CACHED_CACHE_DIR)
+        $temp = tempnam(
+            isWindows() ? str_replace('/', "\\", PLUGIN_CACHED_CACHE_DIR)
                                     : PLUGIN_CACHED_CACHE_DIR,
-                       $prefix ? $prefix : PLUGIN_CACHED_FILENAME_PREFIX);
-        if (isWindows())
+            $prefix ? $prefix : PLUGIN_CACHED_FILENAME_PREFIX
+        );
+        if (isWindows()) {
             $temp = preg_replace("/\.tmp$/", "_tmp", $temp);
+        }
         return $temp;
     }
 
@@ -431,7 +440,6 @@ class WikiPluginCached extends WikiPlugin
     {
         $this->_errortext .= $addtext;
     }
-
 } // WikiPluginCached
 
 
@@ -480,4 +488,3 @@ class WikiPluginCached extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

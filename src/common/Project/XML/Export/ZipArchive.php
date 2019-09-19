@@ -22,7 +22,8 @@ namespace Tuleap\Project\XML\Export;
 
 use Tuleap\Project\XML\ArchiveException;
 
-class ZipArchive implements ArchiveInterface {
+class ZipArchive implements ArchiveInterface
+{
     /**
      * @var \ZipArchive
      */

@@ -24,7 +24,8 @@
  * Stores a reference as extracted from some user text.
  * Only valid Reference Instances are created (i.e., the corresponding "Reference" object must exist).
  */
-class ReferenceInstance {
+class ReferenceInstance
+{
 
     var $match;
     var $gotoLink;
@@ -35,7 +36,7 @@ class ReferenceInstance {
      * Constructor
      * Note that we need a valid reference parameter
      */
-    function __construct($match,$ref,$value)
+    function __construct($match, $ref, $value)
     {
         $this->reference = $ref;
         $this->match = $match;
@@ -45,20 +46,24 @@ class ReferenceInstance {
     /** Accessors */
     function getMatch()
     {
-        return $this->match;}
+        return $this->match;
+    }
 
     /**
      * @return Reference
      */
     function getReference()
     {
-        return $this->reference;}
+        return $this->reference;
+    }
     function getGotoLink()
     {
-        return $this->gotoLink;}
+        return $this->gotoLink;
+    }
     function getValue()
     {
-        return $this->value;}
+        return $this->value;
+    }
 
     /**
      @return string full link (with http://servername...) if needed.
@@ -71,16 +76,15 @@ class ReferenceInstance {
     /**
      * Compute GotoLink according to the extracted match.
      */
-    function computeGotoLink($keyword,$value,$group_id)
+    function computeGotoLink($keyword, $value, $group_id)
     {
         // If no group_id from context, the default is "100".
         // Don't use it in the link...
         $group_param = '';
-        if ($group_id!=100) { $group_param="&group_id=$group_id";}
+        if ($group_id!=100) {
+            $group_param="&group_id=$group_id";
+        }
 
         $this->gotoLink="/goto?key=".urlencode($keyword)."&val=".urlencode($value).$group_param;
     }
-
 }
-
-?>

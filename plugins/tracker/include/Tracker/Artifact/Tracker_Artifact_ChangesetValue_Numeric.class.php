@@ -22,7 +22,8 @@
 /**
  * Manage values in changeset for numeric fields
  */
-abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_ChangesetValue {
+abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_ChangesetValue
+{
 
     /**
      * @var mixed (int or float)
@@ -66,12 +67,12 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
         $next_numeric     = $this->getValue();
         if ($previous_numeric !== $next_numeric) {
             if ($previous_numeric === null) {
-                return $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to') . ' ' . $this->format($next_numeric, $format);
+                return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to') . ' ' . $this->format($next_numeric, $format);
             } elseif ($next_numeric === null) {
-                return $GLOBALS['Language']->getText('plugin_tracker_artifact','cleared');
+                return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'cleared');
             } else {
-                return $GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from'). ' ' .
-                    $this->format($previous_numeric, $format) . ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact','to') .
+                return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from'). ' ' .
+                    $this->format($previous_numeric, $format) . ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') .
                     ' ' . $this->format($next_numeric, $format);
             }
         }
@@ -86,7 +87,7 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
     public function nodiff($format = 'html')
     {
         if ($this->getNumeric() != 0) {
-            return $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '. $this->format($this->getValue(), $format);
+            return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to').' '. $this->format($this->getValue(), $format);
         }
         return '';
     }

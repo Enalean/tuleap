@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XML_Exporter_ChangesetValuesXMLExporter {
+class Tracker_XML_Exporter_ChangesetValuesXMLExporter
+{
 
     public const ARTIFACT_XML_KEY  = 'artifact_xml';
     public const CHANGESET_XML_KEY = 'changeset_xml';

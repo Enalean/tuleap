@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Cardwall_UserPreferences_UserPreferencesAutostack {
+abstract class Cardwall_UserPreferences_UserPreferencesAutostack
+{
     public const DONT_STACK = 'no_stack';
     public const STACK      = 'auto_stack';
 
@@ -67,5 +68,3 @@ abstract class Cardwall_UserPreferences_UserPreferencesAutostack {
         return $this->user->getPreference($this->getName($column));
     }
 }
-
-?>

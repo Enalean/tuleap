@@ -24,7 +24,8 @@ require_once 'ServiceUsageDao.class.php';
 /**
  * Manage Project_Service_ServiceUsage objects
  */
-class Project_Service_ServiceUsageManager {
+class Project_Service_ServiceUsageManager
+{
 
     /** @var Project_Service_ServiceUsageDao */
     private $dao;
@@ -56,4 +57,3 @@ class Project_Service_ServiceUsageManager {
         return $this->dao->deactivateService($project->getID(), $service->getId());
     }
 }
-?>

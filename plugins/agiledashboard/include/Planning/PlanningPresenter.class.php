@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class PlanningPresenter {
+class PlanningPresenter
+{
 
     /**
      * @var Planning
@@ -55,4 +56,3 @@ class PlanningPresenter {
         return $this->planning->getPlanTitle();
     }
 }
-?>

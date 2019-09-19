@@ -22,12 +22,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Exception_Migration_CreateArchiveException extends Exception {
+class Tracker_Exception_Migration_CreateArchiveException extends Exception
+{
 
     public function __construct($archive_path)
     {
         $message = 'Impossible to create archive '.$archive_path;
         parent::__construct($message);
     }
-
 }

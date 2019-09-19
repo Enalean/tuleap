@@ -26,7 +26,8 @@
 
 require_once 'bootstrap.php';
 
-class MetadataListOfValuesElementDaoTest extends TuleapTestCase {
+class MetadataListOfValuesElementDaoTest extends TuleapTestCase
+{
 
     function testUpdate()
     {
@@ -56,7 +57,6 @@ class MetadataListOfValuesElementDaoTest extends TuleapTestCase {
 
         $val = $dao->updateElement($metadataId, $valueId, $name, $description, $rank, $status);
         $this->assertTrue($val);
-
     }
 
     function testDeleteByMetadataId()
@@ -73,5 +73,4 @@ class MetadataListOfValuesElementDaoTest extends TuleapTestCase {
         $val = $dao->deleteByMetadataId($metadataId);
         $this->assertTrue($val);
     }
-
 }

@@ -24,7 +24,8 @@ require_once('Docman_Document.class.php');
  * URL is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_File extends Docman_Document {
+class Docman_File extends Docman_Document
+{
 
     function __construct($data = null)
     {
@@ -61,5 +62,3 @@ class Docman_File extends Docman_Document {
         return $visitor->visitFile($this, $params);
     }
 }
-
-?>

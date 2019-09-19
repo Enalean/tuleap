@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201403061609_add_gerrit_server_version_and_http_password extends ForgeUpgrade_Bucket {
+class b201403061609_add_gerrit_server_version_and_http_password extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket

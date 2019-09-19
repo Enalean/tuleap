@@ -21,7 +21,8 @@
 /**
  * I give a suitable file path for xml export
  */
-interface Tracker_XML_Exporter_FilePathXMLExporter {
+interface Tracker_XML_Exporter_FilePathXMLExporter
+{
 
     /**
      * @param Tracker_FileInfo $file_info

@@ -25,5 +25,3 @@
 foreach (glob(dirname(__FILE__).'/*.php') as $file) {
     require_once $file;
 }
-
-?>

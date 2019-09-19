@@ -21,7 +21,8 @@
 /**
  * PHP representation of a TriggerRule
  */
-class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormatOfMyself {
+class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormatOfMyself
+{
 
     /** @var int */
     private $id;
@@ -127,7 +128,6 @@ class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormat
         $trg = array();
         foreach ($this->getTriggers() as $trigger) {
             $trg[] = $trigger->getAsChangesetComment($this->getCondition());
-
         }
         return $GLOBALS['Language']->getText('workflow_trigger_rules_processor', 'rule_comment').
                '<ul><li>'.implode('</li><li>'.$this->getConditionOperatorLabel().' ', $trg).'</li></ul>';
@@ -138,5 +138,3 @@ class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormat
         return $GLOBALS['Language']->getText('workflow_trigger_rules_processor', 'condition_operator_'.$this->getCondition());
     }
 }
-
-?>

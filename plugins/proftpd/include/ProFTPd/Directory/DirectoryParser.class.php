@@ -24,7 +24,8 @@ namespace Tuleap\ProFTPd\Directory;
 use DirectoryIterator;
 use UnexpectedValueException;
 
-class DirectoryParser {
+class DirectoryParser
+{
 
     private $base_dir;
 
@@ -98,7 +99,7 @@ class DirectoryParser {
     private function createNaturalAlphabeticallyItemsCollection(array $items)
     {
         uksort($items['folders'], "strnatcmp");
-        uksort($items['files'],  "strnatcmp");
+        uksort($items['files'], "strnatcmp");
 
         $folders = array_values($items['folders']);
         $files   = array_values($items['files']);

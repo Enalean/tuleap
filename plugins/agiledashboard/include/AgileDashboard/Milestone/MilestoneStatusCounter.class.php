@@ -20,7 +20,8 @@
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
-class AgileDashboard_Milestone_MilestoneStatusCounter {
+class AgileDashboard_Milestone_MilestoneStatusCounter
+{
 
     private $backlog_item_dao;
     private $artifact_dao;

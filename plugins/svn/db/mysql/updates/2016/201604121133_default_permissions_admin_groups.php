@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201604121133_default_permissions_admin_groups extends ForgeUpgrade_Bucket {
+class b201604121133_default_permissions_admin_groups extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -37,6 +38,5 @@ class b201604121133_default_permissions_admin_groups extends ForgeUpgrade_Bucket
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while adding default permissions for admin groups in svn plugin.');
         }
-
     }
 }

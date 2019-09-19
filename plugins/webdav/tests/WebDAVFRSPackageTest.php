@@ -32,13 +32,14 @@ Mock::generate('WebDAVUtils');
 Mock::generatePartial(
     'WebDAVFRSPackage',
     'WebDAVFRSPackageTestVersion',
-array('getPackage', 'getPackageId', 'getProject', 'getUtils', 'getReleaseList', 'getFRSReleaseFromName', 'getWebDAVRelease', 'userIsAdmin', 'userCanWrite')
+    array('getPackage', 'getPackageId', 'getProject', 'getUtils', 'getReleaseList', 'getFRSReleaseFromName', 'getWebDAVRelease', 'userIsAdmin', 'userCanWrite')
 );
 
 /**
  * This is the unit test of WebDAVFRSPackage
  */
-class WebDAVFRSPackageTest extends TuleapTestCase {
+class WebDAVFRSPackageTest extends TuleapTestCase
+{
 
     /**
      * Testing when The package have no releases
@@ -50,7 +51,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $webDAVFRSPackage->setReturnValue('getReleaseList', array());
 
         $this->assertEqual($webDAVFRSPackage->getChildren(), array());
-
     }
 
     /**
@@ -69,7 +69,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $webDAVFRSPackage->setReturnValue('getReleaseList', array($FRSRelease));
 
         $this->assertEqual($webDAVFRSPackage->getChildren(), array());
-
     }
 
     /**
@@ -88,7 +87,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $webDAVFRSPackage->setReturnValue('getReleaseList', array($FRSRelease));
 
         $this->assertEqual($webDAVFRSPackage->getChildren(), array($release));
-
     }
 
     /**
@@ -110,7 +108,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
 
         $webDAVFRSPackage->getChild($WebDAVRelease->getReleaseId());
-
     }
 
     /**
@@ -133,7 +130,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSPackage->getChild($WebDAVRelease->getReleaseId());
-
     }
 
     /**
@@ -154,7 +150,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $webDAVFRSPackage->setReturnValue('getUtils', $utils);
 
         $this->assertEqual($webDAVFRSPackage->getChild($WebDAVRelease->getReleaseId()), $WebDAVRelease);
-
     }
 
     /**
@@ -174,7 +169,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), false);
-
     }
 
     /**
@@ -194,7 +188,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), false);
-
     }
 
     /**
@@ -214,7 +207,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), false);
-
     }
 
     /**
@@ -234,7 +226,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), true);
-
     }
 
     /**
@@ -254,7 +245,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), false);
-
     }
 
     /**
@@ -274,7 +264,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), false);
-
     }
 
     /**
@@ -294,7 +283,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), false);
-
     }
 
     /**
@@ -315,7 +303,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), false);
-
     }
 
     /**
@@ -335,7 +322,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), false);
-
     }
 
     /**
@@ -355,7 +341,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), true);
-
     }
 
     /**
@@ -375,7 +360,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), true);
-
     }
 
     /**
@@ -395,7 +379,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), true);
-
     }
 
     /**
@@ -409,7 +392,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSPackage->delete();
-
     }
 
     /**
@@ -425,7 +407,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSPackage->delete();
-
     }
 
     /**
@@ -448,7 +429,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSPackage->delete();
-
     }
 
     /**
@@ -469,7 +449,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $webDAVFRSPackage->setReturnValue('getProject', $project);
 
         $webDAVFRSPackage->delete();
-
     }
 
     /**
@@ -489,7 +468,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSPackage->setName('newName');
-
     }
 
     /**
@@ -510,7 +488,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
 
         $webDAVFRSPackage->setName('newName');
-
     }
 
     /**
@@ -532,7 +509,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
 
         $webDAVFRSPackage->setName('newName');
-
     }
 
     /**
@@ -547,7 +523,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSPackage->createDirectory('release');
-
     }
 
     /**
@@ -567,7 +542,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
 
         $webDAVFRSPackage->createDirectory('release');
-
     }
 
     /**

@@ -150,7 +150,6 @@ class FileImporter
     {
         if (strpos($entry->filename, $this->base_dir) === 0) {
             $entry->filename = substr($entry->filename, strlen($this->base_dir));
-
         }
         $matches = array();
         if (preg_match('%^/([^/]+)/.*%', $entry->filename, $matches)) {

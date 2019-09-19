@@ -31,8 +31,7 @@
 require_once('lib/PageList.php');
 require_once('lib/plugin/OrphanedPages.php');
 
-class WikiPlugin_DeadEndPages
-extends WikiPlugin_OrphanedPages
+class WikiPlugin_DeadEndPages extends WikiPlugin_OrphanedPages
 {
     function getName()
     {
@@ -50,4 +49,3 @@ extends WikiPlugin_OrphanedPages
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

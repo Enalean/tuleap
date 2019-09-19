@@ -21,4 +21,6 @@ namespace User\XML\Import;
 
 use Exception;
 
-class InvalidMappingFileException extends Exception {}
+class InvalidMappingFileException extends Exception
+{
+}

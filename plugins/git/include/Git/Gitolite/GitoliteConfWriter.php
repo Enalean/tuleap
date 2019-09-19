@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>
  */
 
-class Git_Gitolite_GitoliteConfWriter {
+class Git_Gitolite_GitoliteConfWriter
+{
 
     public const GITOLITE_CONF_FILE = "conf/gitolite.conf";
 
@@ -402,7 +403,6 @@ class Git_Gitolite_GitoliteConfWriter {
         foreach ($mirrors as $mirror) {
             $this->moveProjectFileForMirror($old_name, $new_name, $git_modifications, $mirror);
         }
-
     }
 
     private function proceedToFileMove($old_file, $new_file, Git_Gitolite_GitModifications $git_modifications)
@@ -428,7 +428,7 @@ class Git_Gitolite_GitoliteConfWriter {
     {
         $hostname_config_file = $this->getFullConfigFilePathFromHostname($hostname);
 
-        file_put_contents($hostname_config_file ,$this->permissions_serializer->getAllIncludes($project_list));
+        file_put_contents($hostname_config_file, $this->permissions_serializer->getAllIncludes($project_list));
         $git_modifications->add($this->getRelativeConfigFilePathFromHostname($hostname));
     }
 
@@ -436,7 +436,7 @@ class Git_Gitolite_GitoliteConfWriter {
     {
         $hostname_config_file = $this->getFullConfigFilePathFromHostname($hostname);
 
-        file_put_contents($hostname_config_file ,$this->permissions_serializer->getAllIncludesForHostname($hostname, $project_list));
+        file_put_contents($hostname_config_file, $this->permissions_serializer->getAllIncludesForHostname($hostname, $project_list));
         $git_modifications->add($this->getRelativeConfigFilePathFromHostname($hostname));
     }
 

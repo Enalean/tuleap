@@ -20,7 +20,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class DataBuilderV5 {
+class DataBuilderV5
+{
 
     var $field_X;
     var $field_Y;
@@ -39,7 +40,7 @@ class DataBuilderV5 {
     *  @return null
     */
 
-    function __construct($field_X,$field_Y,$atid,$artifacts)
+    function __construct($field_X, $field_Y, $atid, $artifacts)
     {
         $this->field_X = $field_X;
         $this->field_Y = $field_Y;
@@ -93,13 +94,13 @@ class DataBuilderV5 {
                 $select   .= "afvl.value AS field1 ";
                 $from     .= "INNER JOIN artifact_field_value_list afvl";
                 $from     .= " ON (afvl.group_artifact_id = a.group_artifact_id AND afvl.field_id=".db_ei($af_x->getId())." AND afvl.value_id = a.".db_es($this->field_X).") ";
-            } else if ($af_x->isStandardField() && ($af_x->isUsername())) {
+            } elseif ($af_x->isStandardField() && ($af_x->isUsername())) {
                 //echo "2";
                 $field     = "u.user_id";
                 $select   .= "u.realName AS field1, u.user_id AS id1 ";
                 $from     .= "INNER JOIN user u";
                 $from     .= " ON (u.user_id=a.".db_es($this->field_X).") ";
-            } else if (!$af_x->isStandardField() && (!$af_x->isUsername())) {
+            } elseif (!$af_x->isStandardField() && (!$af_x->isUsername())) {
                 //echo "3";
                 $field     = "afvl.value_id";
                 $select   .= "afvl.value AS field1 ";
@@ -122,20 +123,20 @@ class DataBuilderV5 {
             // now if the second field exist
             if (!is_null($this->field_Y)) {
                 $af_y = new Tracker_Field();
-                $af_y->fetchData($this->atid,$this->field_Y);
+                $af_y->fetchData($this->atid, $this->field_Y);
                 if ($af_y->isStandardField() && (!$af_y->isUsername())) {
                     //echo " : 1<br>";
                     $field     = "afvl1.value_id";
                     $select   .= ",afvl1.value AS field2 ";
                     $from     .= "INNER JOIN artifact_field_value_list afvl1";
                     $from     .= " ON (afvl1.group_artifact_id = a.group_artifact_id AND afvl1.field_id = ".db_ei($af_y->getId())." AND afvl1.value_id = a.".db_es($af_y->getName()).") ";
-                } else if ($af_y->isStandardField() && ($af_y->isUsername())) {
+                } elseif ($af_y->isStandardField() && ($af_y->isUsername())) {
                     //echo " : 2<br>";
                     $field     = "u1.user_id";
                     $select   .= ",u1.realName AS field2, u1.user_id AS id2 ";
                     $from     .= "INNER JOIN user u1";
                     $from     .= " ON (u1.user_id=a.".db_es($this->field_Y).") ";
-                } else if (!$af_y->isStandardField() && (!$af_y->isUsername())) {
+                } elseif (!$af_y->isStandardField() && (!$af_y->isUsername())) {
                     //echo " : 3<br>";
                     $field     = "afvl1.value_id";
                     $select   .= ",afvl1.value AS field2 ";
@@ -185,35 +186,33 @@ class DataBuilderV5 {
             //echo "$sql<br>\n";
             $res = db_query($sql);
             $r   = [];
-            for($i=0;$i<db_numrows($res);$i++) {
+            for ($i=0; $i<db_numrows($res); $i++) {
                 $r[$i] = db_fetch_array($res);
                 $result['field1'][$i] = $r[$i]['field1'];
 
-                if ($r[$i]['id1']==100){
-                    $result['field1'][$i]=$GLOBALS['Language']->getText('global','none');
-
+                if ($r[$i]['id1']==100) {
+                    $result['field1'][$i]=$GLOBALS['Language']->getText('global', 'none');
                 }
                 if (!is_null($this->field_Y)) {
                     $result['field2'][$i] = $r[$i]['field2'];
-                    if ($r[$i]['id2']==100){
-                        $result['field2'][$i]=$GLOBALS['Language']->getText('global','none');
-
+                    if ($r[$i]['id2']==100) {
+                        $result['field2'][$i]=$GLOBALS['Language']->getText('global', 'none');
                     }
                 }
                 $result['c'][$i] = $r[$i]['c'];
             }
         }
 
-        for ($i=0;$i<count($result['field1']);$i++) {
-            $x = array_search($result['field1'][$i],$this->x_values);
+        for ($i=0; $i<count($result['field1']); $i++) {
+            $x = array_search($result['field1'][$i], $this->x_values);
             if ($x === false) {
                 $this->x_values[count($this->x_values)] = $result['field1'][$i];
             }
         }
 
         if (!is_null($this->field_Y)) {
-            for ($i=0;$i<count($result['field2']);$i++) {
-                $y = array_search($result['field2'][$i],$this->y_values);
+            for ($i=0; $i<count($result['field2']); $i++) {
+                $y = array_search($result['field2'][$i], $this->y_values);
                 if ($y === false) {
                     $this->y_values[count($this->y_values)] = $result['field2'][$i];
                 }
@@ -221,9 +220,9 @@ class DataBuilderV5 {
         }
 
         // data initialisation
-        for ($i=0;$i<count($this->x_values);$i++) {
+        for ($i=0; $i<count($this->x_values); $i++) {
             if (!is_null($this->field_Y)) {
-                for ($j=0;$j<count($this->y_values);$j++) {
+                for ($j=0; $j<count($this->y_values); $j++) {
                     $this->data[$i][$j] = 0;
                 }
             } else {
@@ -231,10 +230,10 @@ class DataBuilderV5 {
             }
         }
 
-        for ($i=0;$i<count($result['c']);$i++) {
-            $x = array_search($result['field1'][$i],$this->x_values);
+        for ($i=0; $i<count($result['c']); $i++) {
+            $x = array_search($result['field1'][$i], $this->x_values);
             if (!is_null($this->field_Y)) {
-                $y = array_search($result['field2'][$i],$this->y_values);
+                $y = array_search($result['field2'][$i], $this->y_values);
                 if ($x !== false && $y !== false) {
                     $this->data[$x][$y] = $result['c'][$i];
                 }
@@ -245,6 +244,4 @@ class DataBuilderV5 {
             }
         }
     }
-
 }
-?>

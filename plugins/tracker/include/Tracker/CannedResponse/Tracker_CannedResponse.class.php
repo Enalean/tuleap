@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_CannedResponse {
+class Tracker_CannedResponse
+{
 
     public $id;
     public $tracker;
@@ -78,6 +79,4 @@ class Tracker_CannedResponse {
         $root->addChild('title', $this->title);
         $root->addChild('body', $this->body);
     }
-
 }
-?>

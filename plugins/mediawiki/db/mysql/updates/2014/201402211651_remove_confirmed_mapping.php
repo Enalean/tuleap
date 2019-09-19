@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201402211651_remove_confirmed_mapping extends ForgeUpgrade_Bucket {
+class b201402211651_remove_confirmed_mapping extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket

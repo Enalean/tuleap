@@ -69,7 +69,6 @@ class Tracker_MasschangeUpdater
     public function updateArtifacts(PFUser $user, Codendi_Request $request)
     {
         if ($this->tracker->userIsAdmin($user)) {
-
             $masschange_aids = $request->get('masschange_aids');
             if (empty($masschange_aids)) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
@@ -84,7 +83,7 @@ class Tracker_MasschangeUpdater
             $send_notifications = $this->getSendNotificationsFromRequest($request);
             $masschange_data    = $request->get('artifact');
 
-            if (! $unsubscribe && empty($masschange_data) ) {
+            if (! $unsubscribe && empty($masschange_data)) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId());
             }
@@ -106,7 +105,6 @@ class Tracker_MasschangeUpdater
             }
 
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId());
-
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->tracker_report->getId());
@@ -270,5 +268,4 @@ class Tracker_MasschangeUpdater
 
         return $send_notifications;
     }
-
 }

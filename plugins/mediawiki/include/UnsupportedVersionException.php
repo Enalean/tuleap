@@ -18,5 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Mediawiki_UnsupportedVersionException extends Exception {
+class Mediawiki_UnsupportedVersionException extends Exception
+{
 }

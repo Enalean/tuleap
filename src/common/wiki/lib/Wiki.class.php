@@ -33,7 +33,8 @@ require_once __DIR__ . '/WikiPage.class.php';
  * PhpWiki for Codendi) and Codendi application
  *
  */
-class Wiki {
+class Wiki
+{
   /* private int */ var $gid;
   /* private string */ var $language_id;
     /* private int */ var $exist;
@@ -86,10 +87,12 @@ class Wiki {
         global $feedback;
 
         /** @psalm-suppress DeprecatedFunction */
-        list ($ret, $feedback) = permission_process_selection_form($this->gid,
-                                   'WIKI_READ',
-                                   $this->gid,
-                                   $groups);
+        list ($ret, $feedback) = permission_process_selection_form(
+            $this->gid,
+            'WIKI_READ',
+            $this->gid,
+            $groups
+        );
         return $ret;
     }
 
@@ -101,9 +104,11 @@ class Wiki {
    */
     function resetPermissions()
     {
-        return permission_clear_all($this->gid,
-                                'WIKI_READ',
-                                $this->gid);
+        return permission_clear_all(
+            $this->gid,
+            'WIKI_READ',
+            $this->gid
+        );
     }
 
 
@@ -113,7 +118,7 @@ class Wiki {
    */
     function exist()
     {
-        if($this->exist === null) {
+        if ($this->exist === null) {
             $res = db_query('SELECT count(*) AS nb FROM wiki_page'
                           .' WHERE group_id='.db_ei($this->gid));
 
@@ -133,10 +138,11 @@ class Wiki {
         .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
         .' AND wiki_nonempty.id=wiki_page.id');
 
-        if(db_numrows($res) > 0)
-        return db_result($res,0,'count');
-        else
-        return 0;
+        if (db_numrows($res) > 0) {
+            return db_result($res, 0, 'count');
+        } else {
+            return 0;
+        }
     }
 
 
@@ -156,10 +162,11 @@ class Wiki {
         .' AND wiki_nonempty.id=wiki_page.id'
             .' AND wiki_page.pagename NOT IN ('.implode(',', $excluded_pages_db_escaped).')');
 
-        if(db_numrows($res) > 0)
-        return db_result($res,0,'count');
-        else
-        return 0;
+        if (db_numrows($res) > 0) {
+            return db_result($res, 0, 'count');
+        } else {
+            return 0;
+        }
     }
 
 
@@ -193,30 +200,27 @@ class Wiki {
         .' WHERE linkfrom='.db_ei($id)
         .' OR linkto='.db_ei($id));
 
-        if(db_affected_rows($res) === 1)
-        return true;
-
+        if (db_affected_rows($res) === 1) {
+            return true;
+        }
     }
 
     function dropNonEmpty($id)
     {
         $res = db_query('  DELETE FROM wiki_nonempty'
         .' WHERE id='.db_ei($id));
-
     }
 
     function dropRecent($id)
     {
         $res = db_query('  DELETE FROM wiki_recent'
         .' WHERE id='.db_ei($id));
-
     }
 
     function dropVersion($id)
     {
         $res = db_query('  DELETE FROM wiki_version'
         .' WHERE id='.db_ei($id));
-
     }
 
     function dropPage($id)
@@ -233,7 +237,7 @@ class Wiki {
         $res = db_query('  SELECT id FROM wiki_page'
         .' WHERE group_id='.db_ei($this->gid));
 
-        while($row = db_fetch_array($res)) {
+        while ($row = db_fetch_array($res)) {
             $pid = $row['id'];
 
             // Link

@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Report_Criteria_Date_ValueDao extends Tracker_Report_Criteria_ValueDao {
+class Tracker_Report_Criteria_Date_ValueDao extends Tracker_Report_Criteria_ValueDao
+{
     function __construct()
     {
         parent::__construct();
@@ -29,19 +30,19 @@ class Tracker_Report_Criteria_Date_ValueDao extends Tracker_Report_Criteria_Valu
     {
         $id        = $this->da->escapeInt($id);
 
-        if(isset($value['op'])) {
+        if (isset($value['op'])) {
             $op = $this->da->quoteSmart($value['op']);
         } else {
             $op ='';
         }
 
-        if(isset($value['from_date'])) {
+        if (isset($value['from_date'])) {
             $from_date = $this->da->escapeInt($value['from_date']);
         } else {
             $from_date ='';
         }
 
-        if(isset($value['to_date'])) {
+        if (isset($value['to_date'])) {
             $to_date = $this->da->escapeInt($value['to_date']);
         } else {
             $to_date ='';
@@ -55,4 +56,3 @@ class Tracker_Report_Criteria_Date_ValueDao extends Tracker_Report_Criteria_Valu
         return $this->update($sql);
     }
 }
-?>

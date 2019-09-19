@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SVN_IntroPresenter {
+class SVN_IntroPresenter
+{
 
     /**
      * @var bool
@@ -121,5 +122,4 @@ class SVN_IntroPresenter {
 
         return $password_content;
     }
-
 }

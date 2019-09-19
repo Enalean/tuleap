@@ -76,21 +76,19 @@ class Docman_Widget_MyDocmanSearch extends Widget
         $html .= '<input type="submit" class="tlp-button-primary" value="'.$GLOBALS['Language']->getText('plugin_docman', 'widget_my_docman_search_btn').'"/>';
         $html .= '</form>';
 
-        if (($func == 'show_docman') && $docman_id){
+        if (($func == 'show_docman') && $docman_id) {
             $res = $this->returnAllowedGroupId($docman_id, $user);
 
-            if ($res){
+            if ($res) {
                 $dPm = Docman_PermissionsManager::instance($res['group_id']);
                 $itemPerm = $dPm->userCanAccess($user, $docman_id);
 
-                if ($itemPerm){
+                if ($itemPerm) {
                     $html .= '<p><a href="/plugins/docman/?group_id='.$res['group_id'].'&action=details&id='.$docman_id.'&section=properties">Show &quot;'.$res['title'].'&quot; Properties</a></p>';
                     return $html;
                 }
-
             }
-            $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman','perm_denied').'</p>';
-
+            $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'perm_denied').'</p>';
         }
 
         return $html;
@@ -118,7 +116,7 @@ class Docman_Widget_MyDocmanSearch extends Widget
 
         $res_group = db_query($sql_group);
 
-        if ($res_group && db_numrows($res_group)== 1){
+        if ($res_group && db_numrows($res_group)== 1) {
             $row = db_fetch_array($res_group);
             $res = [
                 'group_id' => (int) $row['group_id'],
@@ -126,7 +124,7 @@ class Docman_Widget_MyDocmanSearch extends Widget
             ];
 
             $project = ProjectManager::instance()->getProject($res['group_id']);
-            if ($project->isPublic()){
+            if ($project->isPublic()) {
                 // Check restricted user
                 if (($user->isRestricted() && $user->isMember($res['group_id'])) || !$user->isRestricted()) {
                     return $res;
@@ -147,6 +145,6 @@ class Docman_Widget_MyDocmanSearch extends Widget
 
     function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_docman','widget_description_my_docman_search');
+        return $GLOBALS['Language']->getText('plugin_docman', 'widget_description_my_docman_search');
     }
 }

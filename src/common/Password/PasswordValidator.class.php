@@ -21,7 +21,8 @@
 /**
 * PasswordValidator
 */
-/* abstract */ class PasswordValidator {
+/* abstract */ class PasswordValidator
+{
     var $description;
     /**
     * PasswordValidator
@@ -54,6 +55,4 @@
     {
         return $this->description;
     }
-
 }
-?>

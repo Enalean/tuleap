@@ -29,7 +29,8 @@ Mock::generate('Project');
 Mock::generate('ProjectManager');
 Mock::generate('GitRepositoryFactory');
 
-class GitTest extends TuleapTestCase  {
+class GitTest extends TuleapTestCase
+{
 
     public function testTheDelRouteExecutesDeleteRepositoryWithTheIndexView()
     {
@@ -67,7 +68,6 @@ class GitTest extends TuleapTestCase  {
         $git->user = $user;
 
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null, null);
-
     }
 
     public function testDispatchToForkRepositoriesIfRequestsPersonalAndNonMember()
@@ -85,7 +85,6 @@ class GitTest extends TuleapTestCase  {
         $git->user = $user;
 
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null, null);
-
     }
 
     public function testDispatchToForkCrossProjectIfRequestsProject()
@@ -103,11 +102,11 @@ class GitTest extends TuleapTestCase  {
 
         $git->expectOnce('_doDispatchForkCrossProject');
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null, null);
-
     }
 }
 
-abstract class Git_RouteBaseTestCase extends TuleapTestCase {
+abstract class Git_RouteBaseTestCase extends TuleapTestCase
+{
 
     protected $repo_id           = 999;
     protected $group_id          = 101;
@@ -244,7 +243,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
     }
 }
 
-class Git_DisconnectFromGerritRouteTest extends Git_RouteBaseTestCase {
+class Git_DisconnectFromGerritRouteTest extends Git_RouteBaseTestCase
+{
 
     public function itDispatchTo_disconnectFromGerrit_withRepoManagementView()
     {

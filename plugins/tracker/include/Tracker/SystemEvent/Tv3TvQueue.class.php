@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_SystemEvent_Tv3Tv5Queue extends SystemEventQueue {
+class Tracker_SystemEvent_Tv3Tv5Queue extends SystemEventQueue
+{
 
     public const NAME = 'tv3_tv5_migration';
 

@@ -29,7 +29,8 @@ Mock::generate('BackendSVN');
 Mock::generate('BackendCVS');
 
 
-class Rule_ProjectNameTest extends TuleapTestCase {
+class Rule_ProjectNameTest extends TuleapTestCase
+{
 
     function testNoUnderscore()
     {
@@ -152,7 +153,6 @@ class Rule_ProjectNameTest extends TuleapTestCase {
         $r->setReturnValue('_getBackend', $backendSystem, array('System'));
 
         $this->assertTrue($r->isNameAvailable('foobar'));
-
     }
 
     function testIsNameAvailableSVNFailure()

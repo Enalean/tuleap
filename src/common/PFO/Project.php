@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface PFO_Project {
+interface PFO_Project
+{
 
     /**
      * Returns project numeric id (aka group_id)
@@ -57,5 +58,3 @@ interface PFO_Project {
      */
     public function getUsers();
 }
-
-?>

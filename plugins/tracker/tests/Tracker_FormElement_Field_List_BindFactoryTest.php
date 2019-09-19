@@ -56,8 +56,7 @@ class Tracker_FormElement_Field_List_BindFactoryTest extends TuleapTestCase
                 <default_values>
                     <value REF="F6-V0" />
                 </default_values>
-            </bind>'
-        );
+            </bind>');
 
         $mapping = array();
 
@@ -117,8 +116,7 @@ class Tracker_FormElement_Field_List_BindFactoryTest extends TuleapTestCase
                     <item label="ugroup1"/>
                     <item label="ugroup2"/>
                 </items>
-            </bind>'
-        );
+            </bind>');
 
         $mapping = array();
 
@@ -148,8 +146,7 @@ class Tracker_FormElement_Field_List_BindFactoryTest extends TuleapTestCase
                 <items>
                     <item ID="bla" label="blabla"/>
                 </items>
-            </bind>'
-        );
+            </bind>');
 
         $mapping = array();
 
@@ -177,7 +174,8 @@ class Tracker_FormElement_Field_List_BindFactoryTest extends TuleapTestCase
     }
 }
 
-class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends TuleapTestCase {
+class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -203,8 +201,7 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
                     <item ID="F1-V0" label="Integrators" is_hidden="0" />
                     <item ID="F1-V1" label="Customers" is_hidden="0" />
                 </items>
-            </bind>'
-        );
+            </bind>');
 
         stub($this->ugroup_manager)->getUGroupByName($this->project, 'Integrators')->returns(new ProjectUGroup(array('name' => 'Integrators')));
         stub($this->ugroup_manager)->getUGroupByName($this->project, 'Customers')->returns(new ProjectUGroup(array('name' => 'Customers')));
@@ -223,8 +220,7 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
                 <items>
                     <item ID="F1-V0" label="NotInProject" is_hidden="0" />
                 </items>
-            </bind>'
-        );
+            </bind>');
 
         stub($this->ugroup_manager)->getUGroupByName($this->project, 'NotInProject')->returns(false);
 
@@ -240,8 +236,7 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
                 <items>
                     <item ID="F1-V0" label="ugroup_registered_users_name_key" is_hidden="0" />
                 </items>
-            </bind>'
-        );
+            </bind>');
 
         stub($this->ugroup_manager)->getUGroupByName($this->project, 'ugroup_registered_users_name_key')->returns(new ProjectUGroup(array('name' => 'ugroup_registered_users_name_key')));
 
@@ -258,8 +253,7 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
                 <items>
                     <item ID="F1-V0" label="ugroup_registered_users_name_key" is_hidden="1" />
                 </items>
-            </bind>'
-        );
+            </bind>');
 
         stub($this->ugroup_manager)->getUGroupByName($this->project, 'ugroup_registered_users_name_key')->returns(new ProjectUGroup(array('name' => 'ugroup_registered_users_name_key')));
 

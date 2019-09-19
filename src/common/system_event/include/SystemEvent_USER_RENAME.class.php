@@ -22,7 +22,8 @@
  * Change User name
  *
  */
-class SystemEvent_USER_RENAME extends SystemEvent {
+class SystemEvent_USER_RENAME extends SystemEvent
+{
 
     /**
      * Set multiple logs
@@ -135,8 +136,4 @@ class SystemEvent_USER_RENAME extends SystemEvent {
         $um = UserManager::instance();
         return $um->renameUser($user, $new_name);
     }
-
-
-
 }
-?>

@@ -22,7 +22,8 @@ require_once 'bootstrap.php';
 
 require_once dirname(__FILE__).'/../include/MediawikiUserGroupsMapper.class.php';
 
-class MediawikiUserGroupsMapperTest extends TuleapTestCase {
+class MediawikiUserGroupsMapperTest extends TuleapTestCase
+{
 
     /** @var MediawikiDao */
     private $dao;
@@ -176,7 +177,7 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
         );
 
         expect($this->dao)->removeMediawikiUserGroupMapping()->count(2);
-        expect($this->dao)->removeMediawikiUserGroupMapping($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP,      4)->at(0);
+        expect($this->dao)->removeMediawikiUserGroupMapping($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP, 4)->at(0);
         expect($this->dao)->removeMediawikiUserGroupMapping($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT, 4)->at(1);
 
         expect($this->dao)->addMediawikiUserGroupMapping()->count(5);
@@ -303,7 +304,8 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
     }
 }
 
-class MediawikiUserGroupsMapper_DefineGroupsTest extends TuleapTestCase {
+class MediawikiUserGroupsMapper_DefineGroupsTest extends TuleapTestCase
+{
 
     public function setUp()
     {

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_RendererBoardBuilder {
+class Cardwall_RendererBoardBuilder
+{
 
     /** @var Cardwall_CardInCellPresenterBuilder */
     private $presenter_builder;
@@ -66,4 +67,3 @@ class Cardwall_RendererBoardBuilder {
         return $cards;
     }
 }
-?>

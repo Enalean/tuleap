@@ -23,7 +23,8 @@ require_once 'TreeNode.class.php';
 /**
  * To be used with @see \TreeNodeMapper
  */
-interface TreeNodeCallback {
+interface TreeNodeCallback
+{
 
     /**
      * Returns a new TreeNode based on the given one. This function should return a perfectly new node
@@ -33,4 +34,3 @@ interface TreeNodeCallback {
      */
     function apply(TreeNode $node);
 }
-?>

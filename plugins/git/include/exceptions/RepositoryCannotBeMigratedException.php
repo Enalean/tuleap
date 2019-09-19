@@ -22,7 +22,8 @@ namespace Tuleap\Git\Exceptions;
 
 use Exception;
 
-class RepositoryCannotBeMigratedException extends Exception {
+class RepositoryCannotBeMigratedException extends Exception
+{
 
     public function __construct()
     {

@@ -18,11 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_PreferencesPresenter {
+class User_PreferencesPresenter
+{
 
     /** @var PFUser */
     private $user;
-    public  $can_change_real_name;
+    public $can_change_real_name;
     private $can_change_email;
     private $can_change_password;
 
@@ -519,7 +520,7 @@ class User_PreferencesPresenter {
 
     public function tracker_mail_format_label()
     {
-        return $GLOBALS['Language']->getText('account_preferences','tracker_mail_format');
+        return $GLOBALS['Language']->getText('account_preferences', 'tracker_mail_format');
     }
 
     public function tracker_mail_format_select_name()
@@ -539,7 +540,7 @@ class User_PreferencesPresenter {
 
     public function lab_features_title()
     {
-        return $GLOBALS['Language']->getText('account_preferences', 'lab_features_title',  array($GLOBALS['sys_name']));
+        return $GLOBALS['Language']->getText('account_preferences', 'lab_features_title', array($GLOBALS['sys_name']));
     }
 
     public function lab_features_description()

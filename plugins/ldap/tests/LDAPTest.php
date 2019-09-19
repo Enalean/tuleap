@@ -27,7 +27,8 @@ require_once 'bootstrap.php';
  *
  * @see https://tuleap.net/plugins/tracker/?aid=7151
  */
-class LDAP_RetrieveAllArguementsTest extends TuleapTestCase {
+class LDAP_RetrieveAllArguementsTest extends TuleapTestCase
+{
 
     private $ldap_params = array(
         'dn'          => 'dc=tuleap,dc=local',
@@ -46,7 +47,8 @@ class LDAP_RetrieveAllArguementsTest extends TuleapTestCase {
         $this->ldap = partial_mock(
             'LDAP',
             array('search'),
-            array($this->ldap_params, mock('TruncateLevelLogger')));
+            array($this->ldap_params, mock('TruncateLevelLogger'))
+        );
     }
 
     function tearDown()

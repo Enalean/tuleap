@@ -22,7 +22,8 @@
     /**
      *  Data Access Object for GraphicReportCharts
      */
-class GraphOnTrackersV5_ChartDao extends DataAccessObject {
+class GraphOnTrackersV5_ChartDao extends DataAccessObject
+{
     /**
      * Constructs the GraphOnTrackersV5_ChartDao
      */
@@ -56,20 +57,23 @@ class GraphOnTrackersV5_ChartDao extends DataAccessObject {
 
     public function create($renderer_id, $chart_type, $rank, $title, $description, $width, $height)
     {
-        $sql = sprintf("INSERT INTO plugin_graphontrackersv5_chart(report_graphic_id, rank, chart_type, title, description, width, height) VALUES (%d, %d, %s, %s, %s, %d, %d)",
+        $sql = sprintf(
+            "INSERT INTO plugin_graphontrackersv5_chart(report_graphic_id, rank, chart_type, title, description, width, height) VALUES (%d, %d, %s, %s, %s, %d, %d)",
             (int)$renderer_id,
             (int)$rank,
             $this->da->quoteSmart($chart_type),
             $this->da->quoteSmart($title),
             $this->da->quoteSmart($description),
             (int)$width,
-            (int)$height);
+            (int)$height
+        );
         return $this->updateAndGetLastId($sql);
     }
 
     public function updatebyId($renderer_id, $id, $rank, $title, $description, $width, $height)
     {
-        $sql = sprintf("UPDATE plugin_graphontrackersv5_chart SET rank = %d, title = %s, description = %s, width = %d, height = %d WHERE id = %d",
+        $sql = sprintf(
+            "UPDATE plugin_graphontrackersv5_chart SET rank = %d, title = %s, description = %s, width = %d, height = %d WHERE id = %d",
             (int)$rank,
             $this->da->quoteSmart($title),
             $this->da->quoteSmart($description),
@@ -114,4 +118,3 @@ class GraphOnTrackersV5_ChartDao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
 }
-?>

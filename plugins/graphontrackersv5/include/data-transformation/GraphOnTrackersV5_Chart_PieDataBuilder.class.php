@@ -22,7 +22,8 @@
 
 require_once('ChartDataBuilderV5.class.php');
 
-class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5 {
+class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5
+{
     /**
      * build pie chart properties
      *
@@ -50,13 +51,13 @@ class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5 {
                           AND c.id IN (". $this->artifacts['last_changeset_id'] .") ";
             $sql = $select . $from . $where . ' GROUP BY ' . $af->getQueryGroupBy() . ' ORDER BY ' . $af->getQueryOrderby();
             $res = db_query($sql);
-            while($data = db_fetch_array($res)) {
+            while ($data = db_fetch_array($res)) {
                 $engine->data[]   = $data['nb'];
                 $engine->colors[] = $this->getColor($data);
                 if ($data[$af->name] !== null) {
                     $engine->legend[] = $af->fetchRawValue($data[$af->name]);
                 } else {
-                    $engine->legend[] = $GLOBALS['Language']->getText('global','none');
+                    $engine->legend[] = $GLOBALS['Language']->getText('global', 'none');
                 }
             }
         }

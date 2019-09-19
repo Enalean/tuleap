@@ -20,5 +20,7 @@
 
 namespace Tuleap\OpenIDConnectClient\Provider;
 
+class ProviderMalformedDataException extends \Exception
+{
 
-class ProviderMalformedDataException extends \Exception { }
+}

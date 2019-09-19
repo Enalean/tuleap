@@ -27,7 +27,8 @@ use HTTPRequest;
 /**
  * Ensure that request has the right properties before going RESTFul
  */
-class GateKeeper {
+class GateKeeper
+{
 
     public function assertAccess(PFUser $user, HTTPRequest $request)
     {
@@ -100,5 +101,4 @@ class GateKeeper {
 
         return "$scheme$host$port";
     }
-
 }

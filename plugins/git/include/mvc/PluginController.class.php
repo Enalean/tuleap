@@ -158,7 +158,7 @@ abstract class PluginController
      */
     public function addData($data)
     {
-        if ( !empty($data) && is_array($data)) {
+        if (!empty($data) && is_array($data)) {
             $this->actionResultData = array_merge($this->actionResultData, $data);
         }
     }
@@ -172,12 +172,12 @@ abstract class PluginController
         return $this->actionResultData;
     }
 
-    public function addView($viewName, $params=array())
+    public function addView($viewName, $params = array())
     {
         $this->views[$viewName] = $params;
     }
 
-    public function addAction($actionName, $params=array())
+    public function addAction($actionName, $params = array())
     {
         $this->actions[$actionName] = $params;
     }
@@ -195,8 +195,8 @@ abstract class PluginController
         if (! $this->isADownload() && $this->default_page_rendering) {
             $wv->display('header', $this->views['header']);
         }
-        foreach ($this->views as $viewName=>$viewParams) {
-            if ( $viewName != 'header' && $viewName != 'footer' ) {
+        foreach ($this->views as $viewName => $viewParams) {
+            if ($viewName != 'header' && $viewName != 'footer') {
                 $wv->display($viewName, $viewParams);
             }
         }
@@ -216,13 +216,13 @@ abstract class PluginController
      */
     function executeActions()
     {
-        if ( empty($this->actions) ) {
+        if (empty($this->actions)) {
             return false;
         }
         $results       = array();
         $className     = static::class.'Actions';
         $wa            = $this->instantiateAction($className);
-        foreach ($this->actions as $name=>$params) {
+        foreach ($this->actions as $name => $params) {
             $wa->process($name, $params);
         }
     }

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_KanbanDao extends DataAccessObject {
+class AgileDashboard_KanbanDao extends DataAccessObject
+{
 
     public function duplicateKanbans(array $tracker_mapping, array $field_mapping, array $report_mapping)
     {

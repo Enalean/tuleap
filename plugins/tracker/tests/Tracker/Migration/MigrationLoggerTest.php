@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class MigrationLoggerTest extends TuleapTestCase {
+class MigrationLoggerTest extends TuleapTestCase
+{
 
     public function setUp()
     {

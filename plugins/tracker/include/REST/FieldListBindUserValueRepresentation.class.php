@@ -25,7 +25,8 @@ use Tuleap\Project\REST\UserRepresentation;
 use Tuleap\REST\JsonCast;
 use Project;
 
-class FieldListBindUserValueRepresentation {
+class FieldListBindUserValueRepresentation
+{
     /**
      * @var int
      */

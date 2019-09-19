@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MailRegisterByUserPresenter extends MailRegisterPresenter {
+class MailRegisterByUserPresenter extends MailRegisterPresenter
+{
 
     public $redirect_url;
     public $redirect_button;
@@ -45,4 +46,3 @@ class MailRegisterByUserPresenter extends MailRegisterPresenter {
         $this->color_button         = $color_button;
     }
 }
-?>

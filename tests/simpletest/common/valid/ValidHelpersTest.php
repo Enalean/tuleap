@@ -25,7 +25,8 @@
 
 Mock::generatePartial('Valid', 'Valid_For_Inheritance', array());
 
-class ValidHelperTest extends TuleapTestCase {
+class ValidHelperTest extends TuleapTestCase
+{
 
     function UnitTestCase($name = 'ValidFactory test')
     {

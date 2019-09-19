@@ -22,7 +22,8 @@ require_once dirname(__FILE__).'/../../../bootstrap.php';
 require_once dirname(__FILE__).'/../../../../../ldap/include/LDAP_User.class.php';
 require_once dirname(__FILE__).'/../../../../../ldap/include/LDAPResult.class.php';
 
-class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
+class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase
+{
     private $user;
     private $gerrit_driver;
     private $gerrit_driver_factory;
@@ -144,7 +145,8 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
     }
 }
 
-class Git_Driver_Gerrit_UserAccountManager_PushSSHKeysTest extends TuleapTestCase {
+class Git_Driver_Gerrit_UserAccountManager_PushSSHKeysTest extends TuleapTestCase
+{
     public function setUp()
     {
         parent::setUp();
@@ -237,7 +239,8 @@ class Git_Driver_Gerrit_UserAccountManager_PushSSHKeysTest extends TuleapTestCas
     }
 }
 
-class Git_Driver_Gerrit_UserAccountManager_GetGerritUserTest extends TuleapTestCase {
+class Git_Driver_Gerrit_UserAccountManager_GetGerritUserTest extends TuleapTestCase
+{
 
     public function setUp()
     {

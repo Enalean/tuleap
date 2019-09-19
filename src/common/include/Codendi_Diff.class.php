@@ -27,7 +27,8 @@
 //
 // Copyright (C) 2000, 2001 Geoffrey T. Dairiki <dairiki@dairiki.org>
 // You may copy this code freely under the conditions of the GPL.
-class Codendi_DiffOp {
+class Codendi_DiffOp
+{
     var $type;
     var $orig;
     var $fin;
@@ -48,13 +49,15 @@ class Codendi_DiffOp {
     }
 }
 
-class Codendi_DiffOp_Copy extends Codendi_DiffOp {
+class Codendi_DiffOp_Copy extends Codendi_DiffOp
+{
     var $type = 'copy';
 
     function __construct($orig, $fin = false)
     {
-        if (!is_array($fin))
+        if (!is_array($fin)) {
             $fin = $orig;
+        }
         $this->orig = $orig;
         $this->fin = $fin;
     }
@@ -65,7 +68,8 @@ class Codendi_DiffOp_Copy extends Codendi_DiffOp {
     }
 }
 
-class Codendi_DiffOp_Delete extends Codendi_DiffOp {
+class Codendi_DiffOp_Delete extends Codendi_DiffOp
+{
     var $type = 'delete';
 
     function __construct($lines)
@@ -80,7 +84,8 @@ class Codendi_DiffOp_Delete extends Codendi_DiffOp {
     }
 }
 
-class Codendi_DiffOp_Add extends Codendi_DiffOp {
+class Codendi_DiffOp_Add extends Codendi_DiffOp
+{
     var $type = 'add';
 
     function __construct($lines)
@@ -95,7 +100,8 @@ class Codendi_DiffOp_Add extends Codendi_DiffOp {
     }
 }
 
-class Codendi_DiffOp_Change extends Codendi_DiffOp {
+class Codendi_DiffOp_Change extends Codendi_DiffOp
+{
     var $type = 'change';
 
     function __construct($orig, $fin)
@@ -145,33 +151,39 @@ class Codendi_DiffEngine
 
         // Skip leading common lines.
         for ($skip = 0; $skip < $n_from && $skip < $n_to; $skip++) {
-            if ($from_lines[$skip] != $to_lines[$skip])
+            if ($from_lines[$skip] != $to_lines[$skip]) {
                 break;
+            }
             $this->xchanged[$skip] = $this->ychanged[$skip] = false;
         }
         // Skip trailing common lines.
-        $xi = $n_from; $yi = $n_to;
+        $xi = $n_from;
+        $yi = $n_to;
         for ($endskip = 0; --$xi > $skip && --$yi > $skip; $endskip++) {
-            if ($from_lines[$xi] != $to_lines[$yi])
+            if ($from_lines[$xi] != $to_lines[$yi]) {
                 break;
+            }
             $this->xchanged[$xi] = $this->ychanged[$yi] = false;
         }
 
         // Ignore lines which do not exist in both files.
-        for ($xi = $skip; $xi < $n_from - $endskip; $xi++)
+        for ($xi = $skip; $xi < $n_from - $endskip; $xi++) {
             $xhash[$from_lines[$xi]] = 1;
+        }
         for ($yi = $skip; $yi < $n_to - $endskip; $yi++) {
             $line = $to_lines[$yi];
-            if ( ($this->ychanged[$yi] = empty($xhash[$line])) )
+            if (($this->ychanged[$yi] = empty($xhash[$line]))) {
                 continue;
+            }
             $yhash[$line] = 1;
             $this->yv[] = $line;
             $this->yind[] = $yi;
         }
         for ($xi = $skip; $xi < $n_from - $endskip; $xi++) {
             $line = $from_lines[$xi];
-            if ( ($this->xchanged[$xi] = empty($yhash[$line])) )
+            if (($this->xchanged[$xi] = empty($yhash[$line]))) {
                 continue;
+            }
             $this->xv[] = $line;
             $this->xind[] = $xi;
         }
@@ -187,32 +199,35 @@ class Codendi_DiffEngine
         $edits = array();
         $xi = $yi = 0;
         while ($xi < $n_from || $yi < $n_to) {
-
             // Skip matching "snake".
             $copy = array();
-            while ( $xi < $n_from && $yi < $n_to
+            while ($xi < $n_from && $yi < $n_to
                     && !$this->xchanged[$xi] && !$this->ychanged[$yi]) {
                 $copy[] = $from_lines[$xi++];
                 ++$yi;
             }
-            if ($copy)
+            if ($copy) {
                 $edits[] = new Codendi_DiffOp_Copy($copy);
+            }
 
             // Find deletes & adds.
             $delete = array();
-            while ($xi < $n_from && $this->xchanged[$xi])
+            while ($xi < $n_from && $this->xchanged[$xi]) {
                 $delete[] = $from_lines[$xi++];
+            }
 
             $add = array();
-            while ($yi < $n_to && $this->ychanged[$yi])
+            while ($yi < $n_to && $this->ychanged[$yi]) {
                 $add[] = $to_lines[$yi++];
+            }
 
-            if ($delete && $add)
+            if ($delete && $add) {
                 $edits[] = new Codendi_DiffOp_Change($delete, $add);
-            elseif ($delete)
+            } elseif ($delete) {
                 $edits[] = new Codendi_DiffOp_Delete($delete);
-            elseif ($add)
+            } elseif ($add) {
                 $edits[] = new Codendi_DiffOp_Add($add);
+            }
         }
         return $edits;
     }
@@ -246,30 +261,36 @@ class Codendi_DiffEngine
                 = array( $yoff, $ylim, $xoff, $xlim);
         }
 
-        if ($flip)
-            for ($i = $ylim - 1; $i >= $yoff; $i--)
+        if ($flip) {
+            for ($i = $ylim - 1; $i >= $yoff; $i--) {
                 $ymatches[$this->xv[$i]][] = $i;
-        else
-            for ($i = $ylim - 1; $i >= $yoff; $i--)
+            }
+        } else {
+            for ($i = $ylim - 1; $i >= $yoff; $i--) {
                 $ymatches[$this->yv[$i]][] = $i;
+            }
+        }
 
-        $this->lcs = 0;
-        $this->seq[0]= $yoff - 1;
-        $this->in_seq = array();
-        $ymids[0] = array();
+            $this->lcs = 0;
+            $this->seq[0]= $yoff - 1;
+            $this->in_seq = array();
+            $ymids[0] = array();
 
-        $numer = $xlim - $xoff + $nchunks - 1;
-        $x = $xoff;
+            $numer = $xlim - $xoff + $nchunks - 1;
+            $x = $xoff;
         for ($chunk = 0; $chunk < $nchunks; $chunk++) {
-            if ($chunk > 0)
-                for ($i = 0; $i <= $this->lcs; $i++)
+            if ($chunk > 0) {
+                for ($i = 0; $i <= $this->lcs; $i++) {
                     $ymids[$i][$chunk-1] = $this->seq[$i];
+                }
+            }
 
             $x1 = $xoff + (int)(($numer + ($xlim-$xoff)*$chunk) / $nchunks);
-            for ( ; $x < $x1; $x++) {
+            for (; $x < $x1; $x++) {
                 $line = $flip ? $this->yv[$x] : $this->xv[$x];
-                if (empty($ymatches[$line]))
+                if (empty($ymatches[$line])) {
                     continue;
+                }
                 $matches = $ymatches[$line];
                 foreach ($matches as $y) {
                     if (empty($this->in_seq[$y])) {
@@ -285,8 +306,7 @@ class Codendi_DiffEngine
                         $this->in_seq[$this->seq[$k]] = false;
                         $this->seq[$k] = $y;
                         $this->in_seq[$y] = 1;
-                    }
-                    else if (empty($this->in_seq[$y])) {
+                    } elseif (empty($this->in_seq[$y])) {
                         $k = $this->_lcs_pos($y);
                         $ymids[$k] = $ymids[$k-1];
                     }
@@ -294,16 +314,16 @@ class Codendi_DiffEngine
             }
         }
 
-        $seps[] = $flip ? array($yoff, $xoff) : array($xoff, $yoff);
-        $ymid = $ymids[$this->lcs];
+            $seps[] = $flip ? array($yoff, $xoff) : array($xoff, $yoff);
+            $ymid = $ymids[$this->lcs];
         for ($n = 0; $n < $nchunks - 1; $n++) {
             $x1 = $xoff + (int)(($numer + ($xlim - $xoff) * $n) / $nchunks);
             $y1 = $ymid[$n] + 1;
             $seps[] = $flip ? array($y1, $x1) : array($x1, $y1);
         }
-        $seps[] = $flip ? array($ylim, $xlim) : array($xlim, $ylim);
+            $seps[] = $flip ? array($ylim, $xlim) : array($xlim, $ylim);
 
-        return array($this->lcs, $seps);
+            return array($this->lcs, $seps);
     }
 
     function _lcs_pos($ypos)
@@ -318,10 +338,11 @@ class Codendi_DiffEngine
         $beg = 1;
         while ($beg < $end) {
             $mid = (int)(($beg + $end) / 2);
-            if ( $ypos > $this->seq[$mid] )
+            if ($ypos > $this->seq[$mid]) {
                 $beg = $mid + 1;
-            else
+            } else {
                 $end = $mid;
+            }
         }
 
         $this->in_seq[$this->seq[$end]] = false;
@@ -357,31 +378,32 @@ class Codendi_DiffEngine
             --$ylim;
         }
 
-        if ($xoff == $xlim || $yoff == $ylim)
+        if ($xoff == $xlim || $yoff == $ylim) {
             $lcs = 0;
-        else {
+        } else {
             // This is ad hoc but seems to work well.
             //$nchunks = sqrt(min($xlim - $xoff, $ylim - $yoff) / 2.5);
             //$nchunks = max(2,min(8,(int)$nchunks));
             $nchunks = min(7, $xlim - $xoff, $ylim - $yoff) + 1;
             list ($lcs, $seps)
-                = $this->_diag($xoff,$xlim,$yoff, $ylim,$nchunks);
+                = $this->_diag($xoff, $xlim, $yoff, $ylim, $nchunks);
         }
 
         if ($lcs == 0) {
             // X and Y sequences have no common subsequence:
             // mark all changed.
-            while ($yoff < $ylim)
+            while ($yoff < $ylim) {
                 $this->ychanged[$this->yind[$yoff++]] = 1;
-            while ($xoff < $xlim)
+            }
+            while ($xoff < $xlim) {
                 $this->xchanged[$this->xind[$xoff++]] = 1;
-        }
-        else {
+            }
+        } else {
             // Use the partitions to split this problem into subproblems.
             reset($seps);
             $pt1 = $seps[0];
             while ($pt2 = next($seps)) {
-                $this->_compareseq ($pt1[0], $pt2[0], $pt1[1], $pt2[1]);
+                $this->_compareseq($pt1[0], $pt2[0], $pt1[1], $pt2[1]);
                 $pt1 = $pt2;
             }
         }
@@ -419,23 +441,28 @@ class Codendi_DiffEngine
              * Furthermore, $j is always kept so that $j == $other_len or
              * $other_changed[$j] == false.
              */
-            while ($j < $other_len && $other_changed[$j])
+            while ($j < $other_len && $other_changed[$j]) {
                 $j++;
-
-            while ($i < $len && ! $changed[$i]) {
-                $i++; $j++;
-                while ($j < $other_len && $other_changed[$j])
-                    $j++;
             }
 
-            if ($i == $len)
+            while ($i < $len && ! $changed[$i]) {
+                $i++;
+                $j++;
+                while ($j < $other_len && $other_changed[$j]) {
+                    $j++;
+                }
+            }
+
+            if ($i == $len) {
                 break;
+            }
 
             $start = $i;
 
             // Find the end of this run of changes.
-            while (++$i < $len && $changed[$i])
+            while (++$i < $len && $changed[$i]) {
                 continue;
+            }
 
             do {
                 /*
@@ -452,10 +479,12 @@ class Codendi_DiffEngine
                 while ($start > 0 && $lines[$start - 1] == $lines[$i - 1]) {
                     $changed[--$start] = 1;
                     $changed[--$i] = false;
-                    while ($start > 0 && $changed[$start - 1])
+                    while ($start > 0 && $changed[$start - 1]) {
                         $start--;
-                    while ($other_changed[--$j])
+                    }
+                    while ($other_changed[--$j]) {
                         continue;
+                    }
                 }
 
                 /*
@@ -475,14 +504,16 @@ class Codendi_DiffEngine
                 while ($i < $len && $lines[$start] == $lines[$i]) {
                     $changed[$start++] = false;
                     $changed[$i++] = 1;
-                    while ($i < $len && $changed[$i])
+                    while ($i < $len && $changed[$i]) {
                         $i++;
+                    }
 
                     $j++;
                     if ($j < $other_len && $other_changed[$j]) {
                         $corresponding = $i;
-                        while ($j < $other_len && $other_changed[$j])
+                        while ($j < $other_len && $other_changed[$j]) {
                             $j++;
+                        }
                     }
                 }
             } while ($runlength != $i - $start);
@@ -494,8 +525,9 @@ class Codendi_DiffEngine
             while ($corresponding < $i) {
                 $changed[--$start] = 1;
                 $changed[--$i] = 0;
-                while ($other_changed[--$j])
+                while ($other_changed[--$j]) {
                     continue;
+                }
             }
         }
     }
@@ -551,8 +583,9 @@ class Codendi_Diff
     function isEmpty()
     {
         foreach ($this->edits as $edit) {
-            if ($edit->type != 'copy')
+            if ($edit->type != 'copy') {
                 return false;
+            }
         }
         return true;
     }
@@ -568,8 +601,9 @@ class Codendi_Diff
     {
         $lcs = 0;
         foreach ($this->edits as $edit) {
-            if ($edit->type == 'copy')
+            if ($edit->type == 'copy') {
                 $lcs += sizeof($edit->orig);
+            }
         }
         return $lcs;
     }
@@ -587,8 +621,9 @@ class Codendi_Diff
         $lines = array();
 
         foreach ($this->edits as $edit) {
-            if ($edit->orig)
+            if ($edit->orig) {
                 array_splice($lines, sizeof($lines), 0, $edit->orig);
+            }
         }
         return $lines;
     }
@@ -606,8 +641,9 @@ class Codendi_Diff
         $lines = array();
 
         foreach ($this->edits as $edit) {
-            if ($edit->fin)
+            if ($edit->fin) {
                 array_splice($lines, sizeof($lines), 0, $edit->fin);
+            }
         }
         return $lines;
     }
@@ -619,21 +655,26 @@ class Codendi_Diff
      */
     function _check($from_lines, $to_lines)
     {
-        if (serialize($from_lines) != serialize($this->orig()))
+        if (serialize($from_lines) != serialize($this->orig())) {
             trigger_error("Reconstructed original doesn't match", E_USER_ERROR);
-        if (serialize($to_lines) != serialize($this->_fin()))
+        }
+        if (serialize($to_lines) != serialize($this->_fin())) {
             trigger_error("Reconstructed fin doesn't match", E_USER_ERROR);
+        }
 
         $rev = $this->reverse();
-        if (serialize($to_lines) != serialize($rev->orig()))
+        if (serialize($to_lines) != serialize($rev->orig())) {
             trigger_error("Reversed original doesn't match", E_USER_ERROR);
-        if (serialize($from_lines) != serialize($rev->_fin()))
+        }
+        if (serialize($from_lines) != serialize($rev->_fin())) {
             trigger_error("Reversed fin doesn't match", E_USER_ERROR);
+        }
 
         $prevtype = 'none';
         foreach ($this->edits as $edit) {
-            if ( $prevtype == $edit->type )
+            if ($prevtype == $edit->type) {
                 trigger_error("Edit sequence is non-optimal", E_USER_ERROR);
+            }
             $prevtype = $edit->type;
         }
 
@@ -648,8 +689,7 @@ class Codendi_Diff
 /**
  * FIXME: bad name.
  */
-class Codendi_MappedDiff
-extends Codendi_Diff
+class Codendi_MappedDiff extends Codendi_Diff
 {
     /**
      *
@@ -754,42 +794,49 @@ class Codendi_DiffFormatter
                 if (is_array($block)) {
                     if (sizeof($edit->orig) <= $nlead + $ntrail) {
                         $block[] = $edit;
-                    }
-                    else{
+                    } else {
                         if ($ntrail) {
                             $context = array_slice($edit->orig, 0, $ntrail);
                             $block[] = new Codendi_DiffOp_Copy($context);
                         }
-                        $this->_block($x0, $ntrail + $xi - $x0,
-                                      $y0, $ntrail + $yi - $y0,
-                                      $block);
+                        $this->_block(
+                            $x0,
+                            $ntrail + $xi - $x0,
+                            $y0,
+                            $ntrail + $yi - $y0,
+                            $block
+                        );
                         $block = false;
                     }
                 }
                 $context = $edit->orig;
-            }
-            else {
+            } else {
                 if (! is_array($block)) {
                     $context = array_slice($context, max(0, sizeof($context) - $nlead));
                     $x0 = $xi - sizeof($context);
                     $y0 = $yi - sizeof($context);
                     $block = array();
-                    if ($context)
+                    if ($context) {
                         $block[] = new Codendi_DiffOp_Copy($context);
+                    }
                 }
                 $block[] = $edit;
             }
 
-            if ($edit->orig)
+            if ($edit->orig) {
                 $xi += sizeof($edit->orig);
-            if ($edit->fin)
+            }
+            if ($edit->fin) {
                 $yi += sizeof($edit->fin);
+            }
         }
 
         if (is_array($block)) {
             $this->_block(
-                $x0, $xi - $x0,
-                $y0, $yi - $y0,
+                $x0,
+                $xi - $x0,
+                $y0,
+                $yi - $y0,
                 $block
             );
         }
@@ -804,17 +851,13 @@ class Codendi_DiffFormatter
         foreach ($edits as $edit) {
             if ($edit->type == 'copy') {
                 $this->_context($edit->orig);
-            }
-            elseif ($edit->type == 'add') {
+            } elseif ($edit->type == 'add') {
                 $this->_added($edit->fin);
-            }
-            elseif ($edit->type == 'delete') {
+            } elseif ($edit->type == 'delete') {
                 $this->_deleted($edit->orig);
-            }
-            elseif ($edit->type == 'change') {
+            } elseif ($edit->type == 'change') {
                 $this->_changed($edit->orig, $edit->fin);
-            }
-            else {
+            } else {
                 trigger_error("Unknown edit type", E_USER_ERROR);
             }
         }
@@ -836,10 +879,12 @@ class Codendi_DiffFormatter
 
     function _block_header($xbeg, $xlen, $ybeg, $ylen)
     {
-        if ($xlen > 1)
+        if ($xlen > 1) {
             $xbeg .= "," . ($xbeg + $xlen - 1);
-        if ($ylen > 1)
+        }
+        if ($ylen > 1) {
             $ybeg .= "," . ($ybeg + $ylen - 1);
+        }
 
         return $xbeg . ($xlen ? ($ylen ? 'c' : 'd') : 'a') . $ybeg;
     }
@@ -897,10 +942,12 @@ class Codendi_UnifiedDiffFormatter extends Codendi_DiffFormatter
 
     function _block_header($xbeg, $xlen, $ybeg, $ylen)
     {
-        if ($xlen != 1)
+        if ($xlen != 1) {
             $xbeg .= "," . $xlen;
-        if ($ylen != 1)
+        }
+        if ($ylen != 1) {
             $ybeg .= "," . $ylen;
+        }
         return "@@ -$xbeg +$ybeg @@\n";
     }
 
@@ -939,12 +986,15 @@ class Codendi_BlockDiffFormatter extends Codendi_DiffFormatter
     }
     function _lines($lines, $prefix = '')
     {
-        if (! $prefix == '')
+        if (! $prefix == '') {
             echo "$prefix\n";
-        foreach ($lines as $line)
+        }
+        foreach ($lines as $line) {
             echo "$line\n";
-        if (! $prefix == '')
+        }
+        if (! $prefix == '') {
             echo "$prefix\n";
+        }
     }
     function _added($lines)
     {
@@ -1066,16 +1116,22 @@ class Codendi_WordLevelDiff extends Codendi_MappedDiff
         list ($orig_words, $orig_stripped) = $this->_split($orig_lines);
         list ($fin_words, $fin_stripped) = $this->_split($fin_lines);
 
-        parent::__construct($orig_words, $fin_words,
-                          $orig_stripped, $fin_stripped);
+        parent::__construct(
+            $orig_words,
+            $fin_words,
+            $orig_stripped,
+            $fin_stripped
+        );
     }
 
     function _split($lines)
     {
         // FIXME: fix POSIX char class.
-        if (!preg_match_all('/ ( [^\S\n]+ | [[:alnum:]]+ | . ) (?: (?!< \n) [^\S\n])? /xs',
-                            implode("\n", $lines),
-                            $m)) {
+        if (!preg_match_all(
+            '/ ( [^\S\n]+ | [[:alnum:]]+ | . ) (?: (?!< \n) [^\S\n])? /xs',
+            implode("\n", $lines),
+            $m
+        )) {
             return array(array(''), array(''));
         }
         return array($m[0], $m[1]);
@@ -1086,10 +1142,11 @@ class Codendi_WordLevelDiff extends Codendi_MappedDiff
         $orig = new Codendi_HWLDF_WordAccumulator();
 
         foreach ($this->edits as $edit) {
-            if ($edit->type == 'copy')
+            if ($edit->type == 'copy') {
                 $orig->addWords($edit->orig);
-            elseif ($edit->orig)
+            } elseif ($edit->orig) {
                 $orig->addWords($edit->orig, 'del');
+            }
         }
         return $orig->getLines();
     }
@@ -1099,16 +1156,18 @@ class Codendi_WordLevelDiff extends Codendi_MappedDiff
         $fin = new Codendi_HWLDF_WordAccumulator();
 
         foreach ($this->edits as $edit) {
-            if ($edit->type == 'copy')
+            if ($edit->type == 'copy') {
                 $fin->addWords($edit->fin);
-            elseif ($edit->fin)
+            } elseif ($edit->fin) {
                 $fin->addWords($edit->fin, 'ins');
+            }
         }
         return $fin->getLines();
     }
 }
 
-class Codendi_HWLDF_WordAccumulator {
+class Codendi_HWLDF_WordAccumulator
+{
     function __construct()
     {
         $this->_lines = array();
@@ -1120,8 +1179,9 @@ class Codendi_HWLDF_WordAccumulator {
     function _flushGroup($new_tag)
     {
         if ($this->_group !== false) {
-            if (!$this->_line)
+            if (!$this->_line) {
                 $this->_line = "";
+            }
             if ($this->_tag) {
                 $this->_line .= '<'. $this->_tag .'>';
             }
@@ -1137,15 +1197,17 @@ class Codendi_HWLDF_WordAccumulator {
     function _flushLine($new_tag)
     {
         $this->_flushGroup($new_tag);
-        if ($this->_line)
+        if ($this->_line) {
             $this->_lines[] = $this->_line;
+        }
         $this->_line = "";
     }
 
     function addWords($words, $tag = '')
     {
-        if ($tag != $this->_tag)
+        if ($tag != $this->_tag) {
             $this->_flushGroup($tag);
+        }
 
         foreach ($words as $word) {
             // new-line should only come as first char of word.

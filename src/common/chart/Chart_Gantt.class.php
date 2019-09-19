@@ -26,7 +26,8 @@
 *
 * @see jpgraph documentation for usage
 */
-class Chart_Gantt extends Chart{
+class Chart_Gantt extends Chart
+{
 
     /**
     * Constructor
@@ -120,6 +121,4 @@ class Chart_Gantt extends Chart{
     {
         return $this->colors_for_charts->getGanttTodayLineColor();
     }
-
 }
-?>

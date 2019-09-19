@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class UGroupManager_BaseTest extends TuleapTestCase {
+class UGroupManager_BaseTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -54,7 +55,8 @@ class UGroupManager_BaseTest extends TuleapTestCase {
     }
 }
 
-class UGroupManager_getUGroup_Test extends UGroupManager_BaseTest {
+class UGroupManager_getUGroup_Test extends UGroupManager_BaseTest
+{
     public function itReturnsNullIfNoMatch()
     {
         $ugroup = $this->ugroup_manager->getUGroup($this->project, $this->non_existent_ugroup_id);
@@ -74,7 +76,8 @@ class UGroupManager_getUGroup_Test extends UGroupManager_BaseTest {
     }
 }
 
-class UGroupManager_getUGroups_Test extends UGroupManager_BaseTest {
+class UGroupManager_getUGroups_Test extends UGroupManager_BaseTest
+{
 
     public function itReturnsAllUgroupsOfAProject()
     {
@@ -89,7 +92,8 @@ class UGroupManager_getUGroups_Test extends UGroupManager_BaseTest {
     }
 }
 
-class UGroupManager_getUGroupByName_Test extends UGroupManager_BaseTest {
+class UGroupManager_getUGroupByName_Test extends UGroupManager_BaseTest
+{
 
     public function itReturnsAStaticUGroupOfAProject()
     {
@@ -120,7 +124,8 @@ class UGroupManager_getUGroupByName_Test extends UGroupManager_BaseTest {
     }
 }
 
-class UGroupManager_getUGroupWithMembers_Test extends TuleapTestCase {
+class UGroupManager_getUGroupWithMembers_Test extends TuleapTestCase
+{
     public function setUp()
     {
         parent::setUp();
@@ -143,7 +148,8 @@ class UGroupManager_getUGroupWithMembers_Test extends TuleapTestCase {
     }
 }
 
-class UGroupManager_UpdateUgroupBindingDaoTest extends TuleapTestCase {
+class UGroupManager_UpdateUgroupBindingDaoTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -165,7 +171,8 @@ class UGroupManager_UpdateUgroupBindingDaoTest extends TuleapTestCase {
     }
 }
 
-class UGroupManager_UpdateUgroupBindingEventTest extends TuleapTestCase {
+class UGroupManager_UpdateUgroupBindingEventTest extends TuleapTestCase
+{
 
     /**
      * @var a|\Mockery\MockInterface|EventManager
@@ -205,4 +212,3 @@ class UGroupManager_UpdateUgroupBindingEventTest extends TuleapTestCase {
         $this->ugroup_manager->updateUgroupBinding(12);
     }
 }
-?>

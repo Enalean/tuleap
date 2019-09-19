@@ -88,7 +88,7 @@ $projectname = $project->getUnixName(false);
 // Automatically discard invalid field names.
 if ($order !== false) {
     if ($order=='id' || $order=='description' || $order=='date' || $order=='submitted_by') {
-        if(user_isloggedin() &&
+        if (user_isloggedin() &&
         ($order != user_get_preference('commits_browse_order')) ) {
             user_set_preference('commits_browse_order', $order);
         }
@@ -96,7 +96,7 @@ if ($order !== false) {
         $order = false;
     }
 } else {
-    if(user_isloggedin()) {
+    if (user_isloggedin()) {
         $order = user_get_preference('commits_browse_order');
     }
 }
@@ -121,7 +121,7 @@ if (! $set) {
     if (user_isloggedin()) {
         $custom_pref=user_get_preference('commits_browcust'.$group_id);
         if ($custom_pref) {
-            $pref_arr=explode('|',$custom_pref);
+            $pref_arr=explode('|', $custom_pref);
             $_commit_id=$pref_arr[0];
             $_commiter=$pref_arr[1];
             $_tag=$pref_arr[2];
@@ -142,17 +142,16 @@ if ($set == 'my') {
         My commits - backwards compat can be removed 9/10
     */
     $_commiter=user_getname();
-
-} else if ($set == 'custom') {
+} elseif ($set == 'custom') {
     /*
         if this custom set is different than the stored one, reset preference
     */
     $pref_=$_commit_id.'|'.$_commiter.'|'.$_tag.'|'.$_branch.'|'.$_srch.'|'.$chunksz;
     if ($pref_ != user_get_preference('commits_browcust'.$group_id)) {
      //echo 'setting pref';
-        user_set_preference('commits_browcust'.$group_id,$pref_);
+        user_set_preference('commits_browcust'.$group_id, $pref_);
     }
-} else if ($set == 'any') {
+} elseif ($set == 'any') {
     /*
         Closed commits - backwards compat can be removed 9/10
     */
@@ -194,7 +193,7 @@ echo '<FORM class="form-inline" name="commit_form" ACTION="?" METHOD="GET">
                       <TD><b>'.$GLOBALS['Language']->getText('cvs_browse_commit', 'keyword').'</b></TD>'.
         '</TR>'.
         '<TR><TD><INPUT TYPE="TEXT" CLASS="input-mini" SIZE=5 NAME=_commit_id VALUE='.$_commit_id.'></TD>'.
-        '<TD><FONT SIZE="-1">'. commits_branches_box($group_id,'_branch',$_branch, 'Any') .'</TD>'.
+        '<TD><FONT SIZE="-1">'. commits_branches_box($group_id, '_branch', $_branch, 'Any') .'</TD>'.
         '<TD><FONT SIZE="-1">'. $tech_box .
         '</TD><TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_srch value='.$_srch.
         '></TD>'.
@@ -207,16 +206,14 @@ echo '<FORM class="form-inline" name="commit_form" ACTION="?" METHOD="GET">
 
 
 if ($result && db_numrows($result) > 0) {
-
     //create a new $set string to be used for next/prev button
     if ($set=='custom') {
         $set .= '&_branch='.$_branch.'&_commiter='.$_commiter.'&_tag='.$_tag.'&_srch='.$_srch.'&chunksz='.$chunksz;
-    } else if ($set=='any') {
+    } elseif ($set=='any') {
         $set .= '&_branch=100&_commiter=100&_tag=100&chunksz='.$chunksz;
     }
 
-    show_commitslist($group_id, $result,$offset,$totalrows,$set,$_commiter,$_tag, $_branch, $_srch, $chunksz, $morder, $msort);
-
+    show_commitslist($group_id, $result, $offset, $totalrows, $set, $_commiter, $_tag, $_branch, $_srch, $chunksz, $morder, $msort);
 } else {
     echo '
 	       <H3>'.$GLOBALS['Language']->getText('cvs_browse_commit', 'no_commit').'</H3>';

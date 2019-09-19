@@ -38,8 +38,7 @@ require_once('lib/BlockParser.php');
  *
  * This has only been used in wikilens.org.
  */
-class WikiPlugin_CategoryPage
-extends WikiPlugin
+class WikiPlugin_CategoryPage extends WikiPlugin
 {
     function getName()
     {
@@ -53,8 +52,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.2 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.2 $"
+        );
     }
 
     function getDefaultArguments()
@@ -79,13 +81,16 @@ extends WikiPlugin
             $args['plural'] = $args['singular'] . 's';
         }
 
-        return new Template('categorypage', $request,
-                            array('EXCLUDE' => $args['exclude'],
+        return new Template(
+            'categorypage',
+            $request,
+            array('EXCLUDE' => $args['exclude'],
                                   'PAGENAME' => $args['pagename'],
                                   'PLURAL' => $args['plural'],
                                   'SHOWBUDS' => $args['showbuds'],
                                   'SELF_ON_CREATE' => $args['self_on_create'],
-                                  'SINGULAR' => $args['singular']));
+            'SINGULAR' => $args['singular'])
+        );
     }
 };
 
@@ -96,4 +101,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

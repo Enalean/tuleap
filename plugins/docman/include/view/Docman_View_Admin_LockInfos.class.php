@@ -23,7 +23,8 @@
 
 require_once 'Docman_View_Extra.class.php';
 
-class Docman_View_Admin_LockInfos extends Docman_View_Extra {
+class Docman_View_Admin_LockInfos extends Docman_View_Extra
+{
     var $defaultUrl;
 
     function _title($params)
@@ -68,7 +69,7 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra {
 
         $altRowClass = 0;
         if ($lockInfos !== false) {
-            foreach($lockInfos as $row) {
+            foreach ($lockInfos as $row) {
                 $trclass = html_get_alt_row_color($altRowClass++);
                 $item = $dIF->getItemFromDb($row['item_id']);
                 if ($item === null) {
@@ -78,7 +79,7 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra {
                 $content .= '<tr class="'.$trclass.'">';
                 $content .= '<td>'. '<a href="/plugins/docman/?group_id='. $params['group_id']. '&action=details&id='. $item->getId(). '">'. $item->getTitle() .'</a></td>';
                 $content .= '<td>';
-                if($parent === null || $dIF->isRoot($parent)){
+                if ($parent === null || $dIF->isRoot($parent)) {
                     $content .= '</td>';
                 } else {
                     $content .=  '<a href="'. $this->defaultUrl. '&action=show&id='. $parent->getId(). '">' .$parent->getTitle() .'</a></td>';

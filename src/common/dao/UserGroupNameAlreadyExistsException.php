@@ -18,5 +18,6 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class User_UserGroupNameInvalidException extends Exception {}
-?>
+class User_UserGroupNameInvalidException extends Exception
+{
+}

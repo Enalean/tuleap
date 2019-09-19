@@ -29,7 +29,8 @@ function aBindStatic()
     return new Test_Tracker_FormElement_List_Bind_Static_Builder('Tracker_FormElement_Field_List_Bind_Static');
 }
 
-class Test_Tracker_FormElement_List_Bind_Static_Builder {
+class Test_Tracker_FormElement_List_Bind_Static_Builder
+{
     private $values = null;
     private $field  = null;
 
@@ -59,5 +60,3 @@ class Test_Tracker_FormElement_List_Bind_Static_Builder {
         return $object;
     }
 }
-
-?>

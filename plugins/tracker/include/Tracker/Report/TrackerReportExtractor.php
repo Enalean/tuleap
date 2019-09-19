@@ -48,7 +48,7 @@ class TrackerReportExtractor
             $tracker = $this->tracker_factory->getTrackerById($tracker_id);
             if ($tracker && $tracker->userCanView() && ! $tracker->isDeleted() && $tracker->getProject()->isActive()) {
                 $list[] = $tracker;
-            } else if (! $tracker) {
+            } elseif (! $tracker) {
                 $invalid_tracker[] = $tracker_id;
             }
         }

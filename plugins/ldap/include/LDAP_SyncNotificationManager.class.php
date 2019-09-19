@@ -19,7 +19,8 @@
  */
 
 
-class LDAP_SyncNotificationManager {
+class LDAP_SyncNotificationManager
+{
 
     private $retentionPeriod;
     private $projectManager;
@@ -65,7 +66,7 @@ class LDAP_SyncNotificationManager {
         $project = $this->projectManager->getProjectByUnixName($unixProjectName);
         $publicProjectName = $project->getUnconvertedPublicName();
         $purifiedPublicProjectName = Codendi_HTMLPurifier::instance()->purify($publicProjectName, CODENDI_PURIFIER_LIGHT);
-        return $GLOBALS['Language']->getText('plugin_ldap','ldap_sync_mail_notification_body', array($user->getRealName(), $user->getEmail(), $project_url, $purifiedPublicProjectName, $this->retentionPeriod, ForgeConfig::get('sys_name')));
+        return $GLOBALS['Language']->getText('plugin_ldap', 'ldap_sync_mail_notification_body', array($user->getRealName(), $user->getEmail(), $project_url, $purifiedPublicProjectName, $this->retentionPeriod, ForgeConfig::get('sys_name')));
     }
 
     /**
@@ -78,7 +79,6 @@ class LDAP_SyncNotificationManager {
      */
     private function getSubject($projectName, $user)
     {
-        return  $GLOBALS['Language']->getText('plugin_ldap','ldap_sync_mail_notification_subject', array($user->getRealName(), $projectName));
+        return  $GLOBALS['Language']->getText('plugin_ldap', 'ldap_sync_mail_notification_subject', array($user->getRealName(), $projectName));
     }
 }
-?>

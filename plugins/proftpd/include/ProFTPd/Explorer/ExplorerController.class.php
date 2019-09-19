@@ -34,7 +34,8 @@ use PFUser;
 use Project;
 use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
-class ExplorerController {
+class ExplorerController
+{
     public const NAME = 'explorer';
     public const TRANSFERT_BUFFER_SIZE = 8192;
 
@@ -80,7 +81,7 @@ class ExplorerController {
     private function renderIndex(ServiceProFTPd $service, HTTPRequest $request)
     {
         $project = $request->getProject();
-        if (! $project ) {
+        if (! $project) {
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-proftpd', 'Cannot open project'));
             return;
         }
@@ -132,5 +133,4 @@ class ExplorerController {
     {
         return $this->permissions_manager->userCanBrowseSFTP($user, $project);
     }
-
 }

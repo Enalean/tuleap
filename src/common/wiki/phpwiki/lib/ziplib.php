@@ -31,8 +31,9 @@ function gzip_cleanup()
 {
     global $gzip_tmpfile;
 
-    if ($gzip_tmpfile)
+    if ($gzip_tmpfile) {
         @unlink($gzip_tmpfile);
+    }
 }
 
 function gzip_tempnam()
@@ -41,10 +42,11 @@ function gzip_tempnam()
 
     if (!$gzip_tmpfile) {
         //FIXME: does this work on non-unix machines?
-        if (is_writable("/tmp"))
+        if (is_writable("/tmp")) {
             $gzip_tmpfile = tempnam("/tmp", "wkzip");
-        else
+        } else {
             $gzip_tmpfile = tempnam(TEMP_DIR, "wkzip");
+        }
         register_shutdown_function("gzip_cleanup");
     }
     return $gzip_tmpfile;
@@ -53,21 +55,23 @@ function gzip_tempnam()
 function gzip_compress($data)
 {
     $filename = gzip_tempnam();
-    if (!($fp = gzopen($filename, "wb")))
+    if (!($fp = gzopen($filename, "wb"))) {
         trigger_error(sprintf("%s failed", 'gzopen'), E_USER_ERROR);
+    }
     gzwrite($fp, $data, strlen($data));
     if (!gzclose($fp)) {
         trigger_error(sprintf("%s failed", 'gzclose'), E_USER_ERROR);
     }
-    $z = NULL;
-    if (!($fp = fopen($filename,"rb"))) {
+    $z = null;
+    if (!($fp = fopen($filename, "rb"))) {
         trigger_error(sprintf("%s failed", 'fopen'), E_USER_ERROR);
     }
-    while(!feof($fp)) {
-        $z .= fread($fp,1024);
+    while (!feof($fp)) {
+        $z .= fread($fp, 1024);
     }
-    if (!fclose($fp))
+    if (!fclose($fp)) {
         trigger_error(sprintf("%s failed", 'fclose'), E_USER_ERROR);
+    }
     unlink($filename);
     return $z;
 }
@@ -75,19 +79,24 @@ function gzip_compress($data)
 function gzip_uncompress($data)
 {
     $filename = gzip_tempnam();
-    if (!($fp = fopen($filename, "wb")))
+    if (!($fp = fopen($filename, "wb"))) {
         trigger_error(sprintf("%s failed", 'fopen'), E_USER_ERROR);
+    }
     fwrite($fp, $data, strlen($data));
-    if (!fclose($fp))
+    if (!fclose($fp)) {
         trigger_error(sprintf("%s failed", 'fclose'), E_USER_ERROR);
+    }
 
-    if (!($fp = gzopen($filename, "rb")))
+    if (!($fp = gzopen($filename, "rb"))) {
         trigger_error(sprintf("%s failed", 'gzopen'), E_USER_ERROR);
+    }
     $unz = '';
-    while ($buf = gzread($fp, 4096))
+    while ($buf = gzread($fp, 4096)) {
         $unz .= $buf;
-    if (!gzclose($fp))
+    }
+    if (!gzclose($fp)) {
         trigger_error(sprintf("%s failed", 'gzclose'), E_USER_ERROR);
+    }
 
     unlink($filename);
     return $unz;
@@ -174,27 +183,34 @@ define('GZIP_DEFLATE', 010);
 function zip_deflate($content)
 {
     // Compress content, and suck information from gzip header.
-    if (function_exists('gzencode'))
+    if (function_exists('gzencode')) {
         $z = gzencode($content);
-    else
+    } else {
         $z = gzip_compress($content);
+    }
 
     // Suck OS type byte from gzip header. FIXME: this smells bad.
 
     extract(unpack("a2magic/Ccomp_type/Cflags/@9/Cos_type", $z));
 
-    if ($magic != GZIP_MAGIC)
+    if ($magic != GZIP_MAGIC) {
         trigger_error(sprintf("Bad %s", "gzip magic"), E_USER_ERROR);
-    if ($comp_type != GZIP_DEFLATE)
+    }
+    if ($comp_type != GZIP_DEFLATE) {
         trigger_error(sprintf("Bad %s", "gzip comp type"), E_USER_ERROR);
-    if (($flags & 0x3e) != 0)
-        trigger_error(sprintf("Bad %s", sprintf("flags (0x%02x)", $flags)),
-                      E_USER_ERROR);
+    }
+    if (($flags & 0x3e) != 0) {
+        trigger_error(
+            sprintf("Bad %s", sprintf("flags (0x%02x)", $flags)),
+            E_USER_ERROR
+        );
+    }
 
     $gz_header_len = 10;
     $gz_data_len = strlen($z) - $gz_header_len - 8;
-    if ($gz_data_len < 0)
+    if ($gz_data_len < 0) {
         trigger_error("not enough gzip output?", E_USER_ERROR);
+    }
 
     extract(unpack("Vcrc32", substr($z, $gz_header_len + $gz_data_len)));
 
@@ -208,10 +224,12 @@ function zip_inflate($data, $crc32, $uncomp_size)
 {
     if (function_exists('gzinflate')) {
         $data = gzinflate($data);
-        if (strlen($data) != $uncomp_size)
+        if (strlen($data) != $uncomp_size) {
             trigger_error("not enough output from gzinflate", E_USER_ERROR);
-        if (zip_crc32($data) != $crc32)
+        }
+        if (zip_crc32($data) != $crc32) {
             trigger_error("CRC32 mismatch", E_USER_ERROR);
+        }
         return $data;
     }
 
@@ -223,21 +241,23 @@ function zip_inflate($data, $crc32, $uncomp_size)
     // Reconstruct gzip header and ungzip the data.
     $mtime = time();        //(Bogus mtime)
 
-    return gzip_uncompress( pack("a2CxV@10", GZIP_MAGIC, GZIP_DEFLATE, $mtime)
+    return gzip_uncompress(pack("a2CxV@10", GZIP_MAGIC, GZIP_DEFLATE, $mtime)
                             . $data
-                            . pack("VV", $crc32, $uncomp_size) );
+                            . pack("VV", $crc32, $uncomp_size));
 }
 
 function unixtime2dostime($unix_time)
 {
-    if ($unix_time % 1)
+    if ($unix_time % 1) {
         $unix_time++;        // Round up to even seconds.
+    }
 
     list ($year,$month,$mday,$hour,$min,$sec)
         = explode(" ", date("Y n j G i s", $unix_time));
 
-    if ($year < 1980)
+    if ($year < 1980) {
         list ($year,$month,$mday,$hour,$min,$sec) = array(1980, 1, 1, 0, 0, 0);
+    }
 
     $dosdate = (($year - 1980) << 9) | ($month << 5) | $mday;
     $dostime = ($hour << 11) | ($min << 5) | ($sec >> 1);
@@ -263,10 +283,10 @@ function dostime2unixtime($dosdate, $dostime)
  * Class for zipfile creation.
  */
 define('ZIP_DEFLATE', GZIP_DEFLATE);
-define('ZIP_STORE',   0);
+define('ZIP_STORE', 0);
 define('ZIP_CENTHEAD_MAGIC', "PK\001\002");
-define('ZIP_LOCHEAD_MAGIC',  "PK\003\004");
-define('ZIP_ENDDIR_MAGIC',   "PK\005\006");
+define('ZIP_LOCHEAD_MAGIC', "PK\003\004");
+define('ZIP_ENDDIR_MAGIC', "PK\005\006");
 
 class ZipWriter
 {
@@ -284,8 +304,9 @@ class ZipWriter
 
     function addRegularFile($filename, $content, $attrib = false)
     {
-        if (!$attrib)
-          $attrib = array();
+        if (!$attrib) {
+            $attrib = array();
+        }
 
         $size = strlen($content);
         if (function_exists('gzopen')) {
@@ -293,11 +314,10 @@ class ZipWriter
             if (strlen($data) < $size) {
                 $content = $data;    // Use compressed data.
                 $comp_type = ZIP_DEFLATE;
+            } else {
+                unset($crc32);    // force plain store.
             }
-            else
-              unset($crc32);    // force plain store.
-        }
-        else  {
+        } else {
             // Punt:
             $os_type = 3;     // 0 = FAT --- hopefully this is good enough.
             /* (Another choice might be 3 = Unix) */
@@ -308,53 +328,64 @@ class ZipWriter
             $crc32 = zip_crc32($content);
         }
 
-        if (!empty($attrib['write_protected']))
-          $atx = (0100444 << 16) | 1; // S_IFREG + read permissions to
+        if (!empty($attrib['write_protected'])) {
+            $atx = (0100444 << 16) | 1; // S_IFREG + read permissions to
+        }
                                       // everybody.
-        else
-          $atx = (0100644 << 16); // Add owner write perms.
+        else {
+            $atx = (0100644 << 16); // Add owner write perms.
+        }
 
         $ati = $attrib['is_ascii'] ? 1 : 0;
 
-        if (empty($attrib['mtime']))
-          $attrib['mtime'] = time();
+        if (empty($attrib['mtime'])) {
+            $attrib['mtime'] = time();
+        }
         list ($mod_date, $mod_time) = unixtime2dostime($attrib['mtime']);
 
         // Construct parts common to "Local file header" and "Central
         // directory file header."
-        if (!isset($attrib['extra_field']))
-          $attrib['extra_field'] = '';
-        if (!isset($attrib['file_comment']))
-          $attrib['file_comment'] = '';
+        if (!isset($attrib['extra_field'])) {
+            $attrib['extra_field'] = '';
+        }
+        if (!isset($attrib['file_comment'])) {
+            $attrib['file_comment'] = '';
+        }
 
-        $head = pack("vvvvvVVVvv",
-                   20,    // Version needed to extract (FIXME: is this right?)
-                   0,    // Gen purp bit flag
-                   $comp_type,
-                   $mod_time,
-                   $mod_date,
-                   $crc32,
-                   strlen($content),
-                   $size,
-                   strlen($filename),
-                   strlen($attrib['extra_field']));
+        $head = pack(
+            "vvvvvVVVvv",
+            20,    // Version needed to extract (FIXME: is this right?)
+            0,    // Gen purp bit flag
+            $comp_type,
+            $mod_time,
+            $mod_date,
+            $crc32,
+            strlen($content),
+            $size,
+            strlen($filename),
+            strlen($attrib['extra_field'])
+        );
 
         // Construct the "Local file header"
         $lheader = ZIP_LOCHEAD_MAGIC . $head . $filename
           . $attrib['extra_field'];
 
         // Construct the "central directory file header"
-        $this->dir .= pack("a4CC",
-                         ZIP_CENTHEAD_MAGIC,
-                         23,    // Version made by (FIXME: is this right?)
-                         $os_type);
+        $this->dir .= pack(
+            "a4CC",
+            ZIP_CENTHEAD_MAGIC,
+            23,    // Version made by (FIXME: is this right?)
+            $os_type
+        );
         $this->dir .= $head;
-        $this->dir .= pack("vvvVV",
-                         strlen($attrib['file_comment']),
-                         0,              // Disk number start
-                         $ati,             // Internal file attributes
-                         $atx,             // External file attributes
-                         $this->offset); // Relative offset of local header
+        $this->dir .= pack(
+            "vvvVV",
+            strlen($attrib['file_comment']),
+            0,              // Disk number start
+            $ati,             // Internal file attributes
+            $atx,             // External file attributes
+            $this->offset
+        ); // Relative offset of local header
         $this->dir .= $filename . $attrib['extra_field']
           . $attrib['file_comment'];
 
@@ -373,14 +404,16 @@ class ZipWriter
 
         // Construct the "End of central directory record"
         echo ZIP_ENDDIR_MAGIC;
-        echo pack("vvvvVVv",
-                0,                  // Number of this disk.
-                0,                  // Number of disk with start of c dir
-                $this->nfiles,      // Number entries on this disk
-                $this->nfiles,        // Number entries
-                strlen($this->dir), // Size of central directory
-                $this->offset,        // Offset of central directory
-                strlen($this->comment));
+        echo pack(
+            "vvvvVVv",
+            0,                  // Number of this disk.
+            0,                  // Number of disk with start of c dir
+            $this->nfiles,      // Number entries on this disk
+            $this->nfiles,        // Number entries
+            strlen($this->dir), // Size of central directory
+            $this->offset,        // Offset of central directory
+            strlen($this->comment)
+        );
         echo $this->comment;
     }
 }
@@ -408,19 +441,21 @@ class ZipReader
     {
         if (!is_string($zipfile)) { // filepointer: File already open
             $this->fp = $zipfile;
-            $zipfile = NULL;
+            $zipfile = null;
         } elseif (((ord($zipfile[0]) * 256 + ord($zipfile[1])) % 31 == 0) // buffer
-        and (substr($zipfile,0,2) == "\037\213")
-        or (substr($zipfile,0,2) == "x\332")) {  // 120, 218
-            $this->fp = NULL;
+        and (substr($zipfile, 0, 2) == "\037\213")
+        or (substr($zipfile, 0, 2) == "x\332")) {  // 120, 218
+            $this->fp = null;
             $this->buf = $zipfile;
-            $zipfile = NULL;
+            $zipfile = null;
         }
         if ($zipfile) {
             $this->zipfile = $zipfile;
             if (!($this->fp = fopen($zipfile, "rb"))) {
-                trigger_error(sprintf(_("Can't open zip file '%s' for reading"),
-                                    $zipfile), E_USER_ERROR);
+                trigger_error(sprintf(
+                    _("Can't open zip file '%s' for reading"),
+                    $zipfile
+                ), E_USER_ERROR);
             }
         }
     }
@@ -429,12 +464,14 @@ class ZipReader
     {
         if ($this->fp) {
             $chunk = fread($this->fp, $nbytes);
-            if (strlen($chunk) != $nbytes)
+            if (strlen($chunk) != $nbytes) {
                 trigger_error(_("Unexpected EOF in zip file"), E_USER_ERROR);
+            }
             return $chunk;
-        } elseif ($this->buf)  {
-            if (strlen($this->buf) < $nbytes)
-            trigger_error(_("Unexpected EOF in zip file"), E_USER_ERROR);
+        } elseif ($this->buf) {
+            if (strlen($this->buf) < $nbytes) {
+                trigger_error(_("Unexpected EOF in zip file"), E_USER_ERROR);
+            }
             $chunk = substr($this->buf, 0, $nbytes);
             $this->buf = substr($this->buf, $nbytes);
             return $chunk;
@@ -443,10 +480,11 @@ class ZipReader
 
     function done()
     {
-        if ($this->fp)
+        if ($this->fp) {
             fclose($this->fp);
-        else
-        $this->buf = '';
+        } else {
+            $this->buf = '';
+        }
         return false;
     }
 
@@ -454,18 +492,19 @@ class ZipReader
     {
         $head = $this->_read(30); // FIXME: This is bad for gzip compressed buffers
 
-        extract(unpack("a4magic/vreq_version/vflags/vcomp_type"
+        extract(unpack(
+            "a4magic/vreq_version/vflags/vcomp_type"
                      . "/vmod_time/vmod_date"
                      . "/Vcrc32/Vcomp_size/Vuncomp_size"
                      . "/vfilename_len/vextrafld_len",
-                     $head));
+            $head
+        ));
 
         if ($magic != ZIP_LOCHEAD_MAGIC) {
             // maybe gzip?
             //$x = substr($magic,0,3);
-            if (substr($magic,0,3) == "\037\213\225")
+            if (substr($magic, 0, 3) == "\037\213\225") {
               //and (substr($magic,3,1) & 0x3e) == 0)
-            {
                 if ($this->fp) {
                     fclose($this->fp);
                     $this->fp = fopen($this->zipfile, "rb");
@@ -477,40 +516,50 @@ class ZipReader
                 $data = zip_deflate($content);
                 return array($filename, $data, $attrib);
             }
-            if ($magic != ZIP_CENTHEAD_MAGIC)
+            if ($magic != ZIP_CENTHEAD_MAGIC) {
               // FIXME: better message?
-              ExitWiki(sprintf("Unsupported ZIP header type: %s", $magic));
+                ExitWiki(sprintf("Unsupported ZIP header type: %s", $magic));
+            }
             return $this->done();
         }
-        if (($flags & 0x21) != 0)
-          ExitWiki("Encryption and/or zip patches not supported.");
-        if (($flags & 0x08) != 0)
+        if (($flags & 0x21) != 0) {
+            ExitWiki("Encryption and/or zip patches not supported.");
+        }
+        if (($flags & 0x08) != 0) {
           // FIXME: better message?
-          ExitWiki("Postponed CRC not yet supported.");
+            ExitWiki("Postponed CRC not yet supported.");
+        }
 
         $filename = $this->_read($filename_len);
         //FIXME: we should probably check $req_version.
         $attrib['mtime'] = dostime2unixtime($mod_date, $mod_time);
-        if ($extrafld_len != 0)
-          $attrib['extra_field'] = $this->_read($extrafld_len);
+        if ($extrafld_len != 0) {
+            $attrib['extra_field'] = $this->_read($extrafld_len);
+        }
 
         $data = $this->_read($comp_size);
 
         if ($comp_type == ZIP_DEFLATE) {
             $data = zip_inflate($data, $crc32, $uncomp_size);
-        }
-        else if ($comp_type == ZIP_STORE) {
+        } elseif ($comp_type == ZIP_STORE) {
             $crc = zip_crc32($data);
-            if ($crc32 != $crc)
-              ExitWiki(sprintf("CRC mismatch %x != %x", $crc, $crc32));
+            if ($crc32 != $crc) {
+                ExitWiki(sprintf("CRC mismatch %x != %x", $crc, $crc32));
+            }
+        } else {
+            ExitWiki(sprintf(
+                "Compression method %s unsupported",
+                $comp_method
+            ));
         }
-        else
-          ExitWiki(sprintf("Compression method %s unsupported",
-                           $comp_method));
 
-        if (strlen($data) != $uncomp_size)
-          ExitWiki(sprintf("Uncompressed size mismatch %d != %d",
-                           strlen($data), $uncomp_size));
+        if (strlen($data) != $uncomp_size) {
+            ExitWiki(sprintf(
+                "Uncompressed size mismatch %d != %d",
+                strlen($data),
+                $uncomp_size
+            ));
+        }
 
         return array($filename, $data, $attrib);
     }
@@ -532,16 +581,20 @@ function QuotedPrintableEncode($string)
         // The complicated regexp is to force quoting of trailing spaces.
         preg_match('/^([ !-<>-~]*)(?:([!-<>-~]$)|(.))/s', $string, $match);
         $quoted .= $match[1] . $match[2];
-        if (!empty($match[3]))
+        if (!empty($match[3])) {
             $quoted .= sprintf("=%02X", ord($match[3]));
+        }
         $string = substr($string, strlen($match[0]));
     }
     // Split line.
     // This splits the line (preferably after white-space) into lines
     // which are no longer than 76 chars (after adding trailing '=' for
     // soft line break, but before adding \r\n.)
-    return preg_replace('/(?=.{77})(.{10,74}[ \t]|.{71,73}[^=][^=])/s',
-                        "\\1=\r\n", $quoted);
+    return preg_replace(
+        '/(?=.{77})(.{10,74}[ \t]|.{71,73}[^=][^=])/s',
+        "\\1=\r\n",
+        $quoted
+    );
 }
 
 function QuotedPrintableDecode($string)
@@ -558,8 +611,9 @@ function MimeContentTypeHeader($type, $subtype, $params)
     $header = "Content-Type: $type/$subtype";
     foreach ($params as $key => $val) {
         //FIXME:  what about non-ascii printables in $val?
-        if (!preg_match('/^' . MIME_TOKEN_REGEXP . '$/', $val))
+        if (!preg_match('/^' . MIME_TOKEN_REGEXP . '$/', $val)) {
             $val = '"' . addslashes($val) . '"';
+        }
         $header .= ";\r\n  $key=$val";
     }
     return "$header\r\n";
@@ -572,8 +626,11 @@ function MimeMultipart($parts)
     // The string "=_" can not occur in quoted-printable encoded data.
     $boundary = "=_multipart_boundary_" . ++$mime_multipart_count;
 
-    $head = MimeContentTypeHeader('multipart', 'mixed',
-                                  array('boundary' => $boundary));
+    $head = MimeContentTypeHeader(
+        'multipart',
+        'mixed',
+        array('boundary' => $boundary)
+    );
 
     $sep = "\r\n--$boundary\r\n";
 
@@ -612,20 +669,27 @@ function MimeifyPageRevision(&$page, &$revision)
                     'version'      => $revision->getVersion(),
                     'lastmodified' => $revision->get('mtime'));
 
-    if ($page->get('mtime'))
+    if ($page->get('mtime')) {
         $params['created'] = $page->get('mtime');
-    if ($page->get('locked'))
+    }
+    if ($page->get('locked')) {
         $params['flags'] = 'PAGE_LOCKED';
-    if ($revision->get('author_id'))
+    }
+    if ($revision->get('author_id')) {
         $params['author_id'] = $revision->get('author_id');
-    if ($revision->get('markup')) // what is the default? we must use 1
+    }
+    if ($revision->get('markup')) { // what is the default? we must use 1
         $params['markup'] = $revision->get('markup');
-    if ($revision->get('summary'))
+    }
+    if ($revision->get('summary')) {
         $params['summary'] = $revision->get('summary');
-    if ($page->get('hits'))
+    }
+    if ($page->get('hits')) {
         $params['hits'] = $page->get('hits');
-    if ($page->get('owner'))
+    }
+    if ($page->get('owner')) {
         $params['owner'] = $page->get('owner');
+    }
     if ($page->get('perm') and class_exists('PagePermission')) {
         $acl = getPagePermissions($page);
         $params['acl'] = $acl->asAclLines();
@@ -636,24 +700,29 @@ function MimeifyPageRevision(&$page, &$revision)
 
     // Non-US-ASCII is not allowed in Mime headers (at least not without
     // special handling) --- so we urlencode all parameter values.
-    foreach ($params as $key => $val)
+    foreach ($params as $key => $val) {
         $params[$key] = rawurlencode($val);
-    if (isset($params['acl']))
+    }
+    if (isset($params['acl'])) {
         // default: "view:_EVERY; edit:_AUTHENTICATED; create:_AUTHENTICATED,_BOGOUSER; ".
         //          "list:_EVERY; remove:_ADMIN,_OWNER; change:_ADMIN,_OWNER; dump:_EVERY; "
-        $params['acl'] = str_replace(array("%3A","%3B%20","%2C"),array(":","; ",","),$params['acl']);
+        $params['acl'] = str_replace(array("%3A","%3B%20","%2C"), array(":","; ",","), $params['acl']);
+    }
 
     $out = MimeContentTypeHeader('application', 'x-phpwiki', $params);
-    $out .= sprintf("Content-Transfer-Encoding: %s\r\n",
-                    STRICT_MAILABLE_PAGEDUMPS ? 'quoted-printable' : 'binary');
+    $out .= sprintf(
+        "Content-Transfer-Encoding: %s\r\n",
+        STRICT_MAILABLE_PAGEDUMPS ? 'quoted-printable' : 'binary'
+    );
 
     $out .= "\r\n";
 
     foreach ($revision->getContent() as $line) {
         // This is a dirty hack to allow saving binary text files. See above.
         $line = rtrim($line);
-        if (STRICT_MAILABLE_PAGEDUMPS)
+        if (STRICT_MAILABLE_PAGEDUMPS) {
             $line = QuotedPrintableEncode(rtrim($line));
+        }
         $out .= "$line\r\n";
     }
     return $out;
@@ -669,20 +738,23 @@ function ParseRFC822Headers(&$string)
         $string = substr($string, strlen($match[0]));
     }
 
-    while (preg_match('/^([!-9;-~]+) [ \t]* : [ \t]* '
+    while (preg_match(
+        '/^([!-9;-~]+) [ \t]* : [ \t]* '
                       . '( .* \r?\n (?: [ \t] .* \r?\n)* )/x',
-                      $string, $match))
-    {
+        $string,
+        $match
+    )) {
         $headers[strtolower($match[1])]
             = preg_replace('/^\s+|\s+$/', '', $match[2]);
         $string = substr($string, strlen($match[0]));
     }
 
-    if (empty($headers))
+    if (empty($headers)) {
         return false;
+    }
 
     if (strlen($string) > 0) {
-        if (! preg_match("/^\r?\n/", $string, $match))  {
+        if (! preg_match("/^\r?\n/", $string, $match)) {
             // No blank line after headers.
             return false;
         }
@@ -698,25 +770,33 @@ function ParseMimeContentType($string)
     // FIXME: Remove (RFC822 style comments).
 
     // Get type/subtype
-    if (!preg_match(':^\s*(' . MIME_TOKEN_REGEXP . ')\s*'
+    if (!preg_match(
+        ':^\s*(' . MIME_TOKEN_REGEXP . ')\s*'
                     . '/'
                     . '\s*(' . MIME_TOKEN_REGEXP . ')\s*:x',
-                    $string, $match))
-        ExitWiki(sprintf("Bad %s",'MIME content-type'));
+        $string,
+        $match
+    )) {
+        ExitWiki(sprintf("Bad %s", 'MIME content-type'));
+    }
 
     $type    = strtolower($match[1]);
     $subtype = strtolower($match[2]);
     $string  = substr($string, strlen($match[0]));
 
     $param = array();
-    while (preg_match('/^;\s*(' . MIME_TOKEN_REGEXP . ')\s*=\s*'
+    while (preg_match(
+        '/^;\s*(' . MIME_TOKEN_REGEXP . ')\s*=\s*'
                       . '(?:(' . MIME_TOKEN_REGEXP . ')|"((?:[^"\\\\]|\\.)*)") \s*/sx',
-                      $string, $match)) {
+        $string,
+        $match
+    )) {
         //" <--kludge for brain-dead syntax coloring
-        if (strlen($match[2]))
+        if (strlen($match[2])) {
             $val = $match[2];
-        else
+        } else {
             $val = preg_replace('/[\\\\](.)/s', '\\1', $match[3]);
+        }
 
         $param[strtolower($match[1])] = $val;
 
@@ -728,25 +808,31 @@ function ParseMimeContentType($string)
 
 function ParseMimeMultipart($data, $boundary)
 {
-    if (!$boundary)
+    if (!$boundary) {
         ExitWiki("No boundary?");
+    }
 
     $boundary = preg_quote($boundary);
 
-    while (preg_match("/^(|.*?\n)--$boundary((?:--)?)[^\n]*\n/s",
-                      $data, $match))
-    {
+    while (preg_match(
+        "/^(|.*?\n)--$boundary((?:--)?)[^\n]*\n/s",
+        $data,
+        $match
+    )) {
         $data = substr($data, strlen($match[0]));
-        if ( ! isset($parts) )
+        if (! isset($parts)) {
             $parts = array();  // First time through: discard leading chaff
-        else {
-            if ($content = ParseMimeifiedPages($match[1]))
-                for (reset($content); $p = current($content); next($content))
+        } else {
+            if ($content = ParseMimeifiedPages($match[1])) {
+                for (reset($content); $p = current($content); next($content)) {
                     $parts[] = $p;
+                }
+            }
         }
 
-        if ($match[2])
+        if ($match[2]) {
             return $parts;    // End boundary found.
+        }
     }
     ExitWiki("No end boundary?");
 }
@@ -755,9 +841,13 @@ function GenerateFootnotesFromRefs($params)
 {
     $footnotes = array();
     foreach ($params as $p => $reference) {
-            if (preg_match('/^ref([1-9][0-9]*)$/', $p, $m))
-                $footnotes[$m[1]] = sprintf(_("[%d] See [%s]"),
-                                            $m[1], rawurldecode($reference));
+        if (preg_match('/^ref([1-9][0-9]*)$/', $p, $m)) {
+            $footnotes[$m[1]] = sprintf(
+                _("[%d] See [%s]"),
+                $m[1],
+                rawurldecode($reference)
+            );
+        }
     }
 
     if (sizeof($footnotes) > 0) {
@@ -765,8 +855,9 @@ function GenerateFootnotesFromRefs($params)
         return "-----\n"
             . "!" ._("References") . "\n"
             . join("\n%%%\n", $footnotes) . "\n";
-    } else
+    } else {
         return "";
+    }
 }
 
 // counterpart to $acl->asAclLines() and rawurl undecode
@@ -778,15 +869,16 @@ function ParseMimeifiedPerm($string)
         return '';
     }
     $hash = array();
-    foreach (preg_split("/;/D",trim($string)) as $accessgroup) {
-        list($access,$groupstring) = preg_split("/:/D",trim($accessgroup));
+    foreach (preg_split("/;/D", trim($string)) as $accessgroup) {
+        list($access,$groupstring) = preg_split("/:/D", trim($accessgroup));
         $access = trim($access);
-        $groups = preg_split("/,/D",trim($groupstring));
+        $groups = preg_split("/,/D", trim($groupstring));
         foreach ($groups as $group) {
             $group = trim($group);
-            $bool = (boolean) (substr($group,0,1) != '-');
-            if (substr($group,0,1) == '-' or substr($group,0,1) == '+')
-                $group = substr($group,1);
+            $bool = (boolean) (substr($group, 0, 1) != '-');
+            if (substr($group, 0, 1) == '-' or substr($group, 0, 1) == '+') {
+                $group = substr($group, 1);
+            }
             $hash[$access][$group] = $bool;
         }
     }
@@ -809,17 +901,23 @@ function ParseMimeifiedPages($data)
     $typeheader = $headers['content-type'];
 
     if (!(list ($type, $subtype, $params) = ParseMimeContentType($typeheader))) {
-        trigger_error( sprintf("Can't parse %s: (%s)",
-                               'content-type', $typeheader),
-                       E_USER_WARNING );
+        trigger_error(
+            sprintf(
+                "Can't parse %s: (%s)",
+                'content-type',
+                $typeheader
+            ),
+            E_USER_WARNING
+        );
         return false;
     }
     if ("$type/$subtype" == 'multipart/mixed') {
         return ParseMimeMultipart($data, $params['boundary']);
-    }
-    else if ("$type/$subtype" != 'application/x-phpwiki') {
-        trigger_error( sprintf("Bad %s","content-type: $type/$subtype"),
-                       E_USER_WARNING );
+    } elseif ("$type/$subtype" != 'application/x-phpwiki') {
+        trigger_error(
+            sprintf("Bad %s", "content-type: $type/$subtype"),
+            E_USER_WARNING
+        );
         return false;
     }
 
@@ -831,39 +929,41 @@ function ParseMimeifiedPages($data)
 
     //DONE: support owner and acl
     foreach ($params as $key => $value) {
-        if (empty($value))
+        if (empty($value)) {
             continue;
+        }
         $value = rawurldecode($value);
         switch ($key) {
             case 'pagename':
             case 'version':
                 $page[$key] = $value;
-            break;
+                break;
             case 'flags':
-                if (preg_match('/PAGE_LOCKED/', $value))
-                $pagedata['locked'] = 'yes';
-            break;
+                if (preg_match('/PAGE_LOCKED/', $value)) {
+                    $pagedata['locked'] = 'yes';
+                }
+                break;
             case 'owner':
             case 'created':
             case 'hits':
                 $pagedata[$key] = $value;
-            break;
+                break;
             case 'acl':
             case 'perm':
                 if (class_exists('PagePermission')) {
                     $pagedata['perm'] = ParseMimeifiedPerm($value);
                 }
-            break;
+                break;
             case 'lastmodified':
                 $versiondata['mtime'] = $value;
-            break;
+                break;
             case 'author':
             case 'author_id':
             case 'summary':
             case 'markup':
             case 'pagetype':
                 $versiondata[$key] = $value;
-            break;
+                break;
         }
     }
 
@@ -878,10 +978,11 @@ function ParseMimeifiedPages($data)
     }
 
     $encoding = strtolower($headers['content-transfer-encoding']);
-    if ($encoding == 'quoted-printable')
+    if ($encoding == 'quoted-printable') {
         $data = QuotedPrintableDecode($data);
-    else if ($encoding && $encoding != 'binary')
-        ExitWiki( sprintf("Unknown %s", 'encoding type: $encoding') );
+    } elseif ($encoding && $encoding != 'binary') {
+        ExitWiki(sprintf("Unknown %s", 'encoding type: $encoding'));
+    }
 
     $data .= GenerateFootnotesFromRefs($params);
 
@@ -951,4 +1052,3 @@ function ParseMimeifiedPages($data)
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

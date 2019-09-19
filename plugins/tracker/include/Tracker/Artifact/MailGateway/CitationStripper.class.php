@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_MailGateway_CitationStripper {
+class Tracker_Artifact_MailGateway_CitationStripper
+{
 
     public const TEXT_CITATION_PATTERN = '/(\n>\s+.*)+/';
     public const HTML_CITATION_PATTERN = '%<blockquote[^>]*>.*</blockquote>%';
@@ -116,8 +117,8 @@ class Tracker_Artifact_MailGateway_CitationStripper {
     private function stripOutlookAccordingToNewLine($body, $lang, $new_line)
     {
         $pos_from    = strpos($body, $new_line . $this->outlook_header[$lang]['from']);
-        $pos_sent    = strpos($body, $new_line . $this->outlook_header[$lang]['sent'],    $pos_from);
-        $pos_to      = strpos($body, $new_line . $this->outlook_header[$lang]['to'],      $pos_sent);
+        $pos_sent    = strpos($body, $new_line . $this->outlook_header[$lang]['sent'], $pos_from);
+        $pos_to      = strpos($body, $new_line . $this->outlook_header[$lang]['to'], $pos_sent);
         $pos_subject = strpos($body, $new_line . $this->outlook_header[$lang]['subject'], $pos_to);
         $pos_body    = strpos($body, $new_line . $new_line, $pos_subject);
 

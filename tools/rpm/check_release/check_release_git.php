@@ -41,7 +41,10 @@ $tagFinder  = new LastReleaseFinder($git_exec);
 $last_release_number = $tagFinder->retrieveFrom('stable');
 
 $check_release_reporter = new CheckReleaseReporter(
-                              new NonIncrementedPathFinder($git_exec, $last_release_number,
-                                  new ChangeDetector($git_exec, getCandidatePaths())));
+    new NonIncrementedPathFinder(
+        $git_exec,
+        $last_release_number,
+        new ChangeDetector($git_exec, getCandidatePaths())
+    )
+);
 $check_release_reporter->reportViolations();
-?>

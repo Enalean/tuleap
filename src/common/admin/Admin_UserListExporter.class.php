@@ -21,7 +21,8 @@
 
 require_once __DIR__ . '/../../www/project/export/project_export_utils.php';
 
-class Admin_UserListExporter {
+class Admin_UserListExporter
+{
 
     /**
      * @var array
@@ -49,8 +50,8 @@ class Admin_UserListExporter {
     public function exportUserList($group_id, $user_name_search, $current_sort_header, $sort_order, $status_values)
     {
         global $Language;
-        header ('Content-Type: text/csv');
-        header ('Content-Disposition:attachment; filename=users_list.csv');
+        header('Content-Type: text/csv');
+        header('Content-Disposition:attachment; filename=users_list.csv');
         $eol = "\n";
         $documents_title = [
             'user_id'          => $Language->getText('admin_userlist', 'id_user'),
@@ -115,25 +116,25 @@ class Admin_UserListExporter {
         global $Language;
         switch ($status_code) {
             case PFUser::STATUS_ACTIVE:
-                $status = $Language->getText('admin_userlist','active');
+                $status = $Language->getText('admin_userlist', 'active');
                 break;
             case PFUser::STATUS_RESTRICTED:
-                $status = $Language->getText('admin_userlist','restricted');
+                $status = $Language->getText('admin_userlist', 'restricted');
                 break;
             case PFUser::STATUS_DELETED:
-                $status = $Language->getText('admin_userlist','deleted');
+                $status = $Language->getText('admin_userlist', 'deleted');
                 break;
             case PFUser::STATUS_SUSPENDED:
-                $status = $Language->getText('admin_userlist','suspended');
+                $status = $Language->getText('admin_userlist', 'suspended');
                 break;
             case PFUser::STATUS_PENDING:
-                $status = $Language->getText('admin_userlist','pending');
+                $status = $Language->getText('admin_userlist', 'pending');
                 break;
             case PFUser::STATUS_VALIDATED:
-                $status = $Language->getText('admin_userlist','validated');
+                $status = $Language->getText('admin_userlist', 'validated');
                 break;
             case PFUser::STATUS_VALIDATED_RESTRICTED:
-                $status = $Language->getText('admin_userlist','validated_restricted');
+                $status = $Language->getText('admin_userlist', 'validated_restricted');
                 break;
         }
         return $status;

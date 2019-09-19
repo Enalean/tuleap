@@ -20,7 +20,8 @@
  */
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_Report_ResultJoinerTest extends TuleapTestCase {
+class Tracker_Report_ResultJoinerTest extends TuleapTestCase
+{
 
     public function itRemovesEntriesWhoseKeysAreNotPresentInOtherResult()
     {

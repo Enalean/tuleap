@@ -229,14 +229,14 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         $vContentId->required();
         if (($plugin_docman_widget_embedded = $request->get('plugin_docman_widget_embedded')) && $request->valid($vContentId)) {
             $vItem_id = new Valid_String('item_id');
-            if($request->validInArray('plugin_docman_widget_embedded', $vItem_id)) {
+            if ($request->validInArray('plugin_docman_widget_embedded', $vItem_id)) {
                 $item_id = " item_id   = ". db_ei($plugin_docman_widget_embedded['item_id']) ." ";
             } else {
                 $item_id = ' item_id = item_id ';
             }
 
             $vTitle = new Valid_String('title');
-            if($request->validInArray('plugin_docman_widget_embedded', $vTitle)) {
+            if ($request->validInArray('plugin_docman_widget_embedded', $vTitle)) {
                 $title = " title = '". db_escape_string($plugin_docman_widget_embedded['title']) ."' ";
             } else {
                 $title = ' title = title ';
@@ -372,7 +372,6 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
 
     function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_docman','widget_description_embedded');
+        return $GLOBALS['Language']->getText('plugin_docman', 'widget_description_embedded');
     }
-
 }

@@ -24,7 +24,8 @@ Mock::generate('WikiAttachmentDao');
 Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersion', array('initWithId', 'dbadd', 'getDao', 'isActive'));
 Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersionRestoreDeleted', array('initWithId', 'getDao', 'isActive', 'exist'));
 
-class WikiAttachmentTest extends TuleapTestCase {
+class WikiAttachmentTest extends TuleapTestCase
+{
 
     public function tearDown()
     {
@@ -198,8 +199,8 @@ class WikiAttachmentTest extends TuleapTestCase {
     function testRestoreDeletedAttachmentFileSystemFailure()
     {
         $wa = new WikiAttachmentTestVersionRestoreDeleted();
-        $wa->setReturnValue('isActive', False);
-        $wa->setReturnValue('exist', False);
+        $wa->setReturnValue('isActive', false);
+        $wa->setReturnValue('exist', false);
 
         $dao = new MockWikiAttachmentDao($this);
         $wa->setReturnValue('getDao', $dao);
@@ -210,19 +211,19 @@ class WikiAttachmentTest extends TuleapTestCase {
     function testRestoreDeletedAttachmentDaoFailure()
     {
         $wa = new WikiAttachmentTestVersionRestoreDeleted();
-        $wa->setReturnValue('isActive', False);
+        $wa->setReturnValue('isActive', false);
         $wa->setReturnValue('exist', true);
 
         $dao = new MockWikiAttachmentDao($this);
         $wa->setReturnValue('getDao', $dao);
-        $dao->setReturnValue('restoreAttachment', False);
+        $dao->setReturnValue('restoreAttachment', false);
         $this->assertFalse($wa->restoreDeletedAttachment(1));
     }
 
     function testRestoreDeletedAttachmentSuccess()
     {
         $wa = new WikiAttachmentTestVersionRestoreDeleted();
-        $wa->setReturnValue('isActive', False);
+        $wa->setReturnValue('isActive', false);
         $wa->setReturnValue('exist', true);
 
         $dao = new MockWikiAttachmentDao($this);

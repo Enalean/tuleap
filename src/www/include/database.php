@@ -18,13 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-if(!defined('CODENDI_DB_NULL')) define('CODENDI_DB_NULL', 0);
-if(!defined('CODENDI_DB_NOT_NULL')) define('CODENDI_DB_NOT_NULL', 1);
+if (!defined('CODENDI_DB_NULL')) {
+    define('CODENDI_DB_NULL', 0);
+}
+if (!defined('CODENDI_DB_NOT_NULL')) {
+    define('CODENDI_DB_NOT_NULL', 1);
+}
 
 /**
  * @deprecated
  */
-function db_query($sql,$print=0)
+function db_query($sql, $print = 0)
 {
     if ($print) {
         print "<br>Query is: $sql<br>";
@@ -71,7 +75,7 @@ function db_free_result($qhandle)
 /**
  * @deprecated
  */
-function db_result($qhandle,$row,$field)
+function db_result($qhandle, $row, $field)
 {
     $qhandle->seek($row);
     $row = $qhandle->current();
@@ -146,15 +150,15 @@ function db_error()
  *
  * @deprecated
  */
-function db_reset_result($qhandle,$row=0)
+function db_reset_result($qhandle, $row = 0)
 {
-    return CodendiDataAccess::instance()->dataSeek($qhandle,$row);
+    return CodendiDataAccess::instance()->dataSeek($qhandle, $row);
 }
 
 /**
  * @deprecated
  */
-function db_escape_string($string,$qhandle=false)
+function db_escape_string($string, $qhandle = false)
 {
     return substr(CodendiDataAccess::instance()->quoteSmart($string), 1, -1);
 }
@@ -163,10 +167,10 @@ function db_escape_string($string,$qhandle=false)
  * Alias for db_escape_string.
  * @deprecated
  */
-function db_es($string,$qhandle=false)
+function db_es($string, $qhandle = false)
 {
     /** @psalm-suppress DeprecatedFunction */
-    return db_escape_string($string,$qhandle);
+    return db_escape_string($string, $qhandle);
 }
 
 /**
@@ -188,10 +192,10 @@ function db_es($string,$qhandle=false)
 function db_escape_int($val, $null = CODENDI_DB_NOT_NULL)
 {
     $match = array();
-    if($null === CODENDI_DB_NULL && $val === '') {
+    if ($null === CODENDI_DB_NULL && $val === '') {
         return 'NULL';
     }
-    if(preg_match('/^([+-]?[1-9][0-9]*|[+-]?0)$/', $val, $match)) {
+    if (preg_match('/^([+-]?[1-9][0-9]*|[+-]?0)$/', $val, $match)) {
         return $match[1];
     }
     return '0';

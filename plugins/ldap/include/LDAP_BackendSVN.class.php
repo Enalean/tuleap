@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class LDAP_BackendSVN extends BackendSVN {
+class LDAP_BackendSVN extends BackendSVN
+{
     private $ldap;
     private $ldapProjectManager = null;
     private $ldapUserManager    = null;
@@ -59,7 +60,7 @@ class LDAP_BackendSVN extends BackendSVN {
 
         $dar     = $this->getLDAPUserManager()->getLdapLoginFromUserIds($user_ids);
         $members = [];
-        foreach($dar as $row) {
+        foreach ($dar as $row) {
             $members[] = strtolower($row['ldap_uid']);
         }
         if (empty($members)) {
@@ -113,7 +114,8 @@ class LDAP_BackendSVN extends BackendSVN {
             $project_members     = $project->getMembers();
             $project_members_ids = array_map(
                 function (PFUser $member) {
-                    return (int) $member->getId(); },
+                    return (int) $member->getId();
+                },
                 $project_members
             );
 

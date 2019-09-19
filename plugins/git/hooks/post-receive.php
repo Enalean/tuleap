@@ -67,13 +67,13 @@ $http_request_factory = HTTPFactoryBuilder::requestFactory();
 $mail_builder = new MailBuilder(
     TemplateRendererFactory::build(),
     new MailFilter(
-            UserManager::instance(),
-            new ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
-                new RestrictedUserCanAccessProjectVerifier(),
-                EventManager::instance()
-            ),
-            new MailLogger()
+        UserManager::instance(),
+        new ProjectAccessChecker(
+            PermissionsOverrider_PermissionsOverriderManager::instance(),
+            new RestrictedUserCanAccessProjectVerifier(),
+            EventManager::instance()
+        ),
+        new MailLogger()
     )
 );
 
@@ -109,10 +109,10 @@ $post_receive = new Git_Hook_PostReceive(
     EventManager::instance(),
     new \Tuleap\Git\Webhook\WebhookRequestSender(
         new \Tuleap\Webhook\Emitter(
-                HTTPFactoryBuilder::requestFactory(),
-                HTTPFactoryBuilder::streamFactory(),
-                HttpClientFactory::createAsyncClient(),
-                new GitWebhookStatusLogger($webhook_dao)
+            HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            HttpClientFactory::createAsyncClient(),
+            new GitWebhookStatusLogger($webhook_dao)
         ),
         new \Tuleap\Git\Webhook\WebhookFactory($webhook_dao),
         $logger

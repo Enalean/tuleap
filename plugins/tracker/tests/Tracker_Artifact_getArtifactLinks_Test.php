@@ -19,7 +19,8 @@
  */
 require_once('bootstrap.php');
 
-class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
+class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase
+{
 
     private $current_id = 100;
     private $user;
@@ -285,4 +286,3 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
         ;
     }
 }
-?>

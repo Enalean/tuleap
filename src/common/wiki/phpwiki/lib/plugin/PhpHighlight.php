@@ -53,8 +53,7 @@ rcs_id('$Id: PhpHighlight.php,v 1.9 2004/04/10 07:25:24 rurban Exp $');
  * will swallow "[somearray]"
  */
 
-class WikiPlugin_PhpHighlight
-extends WikiPlugin
+class WikiPlugin_PhpHighlight extends WikiPlugin
 {
     // Four required functions in a WikiPlugin.
 
@@ -66,13 +65,15 @@ extends WikiPlugin
     function getDescription()
     {
         return _("PHP syntax highlighting");
-
     }
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.9 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.9 $"
+        );
     }
 
     // Establish default values for each of this plugin's arguments.
@@ -103,15 +104,19 @@ extends WikiPlugin
              * highlight_string(): */
             $source = "<?php\n" . $source . "\n?>";
         } else {
-            $source = str_replace(array('< ?php', '? >'),
-                                  array('<?php', '?>'), $source);
+            $source = str_replace(
+                array('< ?php', '? >'),
+                array('<?php', '?>'),
+                $source
+            );
         }
 
         $str = highlight_string($source, true);
 
-        if ($wrap)
+        if ($wrap) {
             /* Remove "<?php\n" and "\n?>" again: */
             $str = str_replace(array('&lt;?php<br />', '?&gt;'), '', $str);
+        }
 
         /**
          * We might have made some empty font tags. (The following
@@ -158,8 +163,10 @@ extends WikiPlugin
                 //trigger_error(sprintf(_("DEBUG color '%s' appears to be an HTML 4 color."), $color), E_USER_NOTICE);
                 // stop checking, ok to go
             } else {
-                trigger_error(sprintf(_("Invalid color: %s"),
-                                      $color), E_USER_NOTICE);
+                trigger_error(sprintf(
+                    _("Invalid color: %s"),
+                    $color
+                ), E_USER_NOTICE);
                 // FIXME: also change color to something valid like "black" or ini_get("highlight.xxx")
             }
         }
@@ -184,7 +191,6 @@ extends WikiPlugin
         ini_set('highlight.default', $this->olddefault);
         ini_set('highlight.html', $this->oldhtml);
     }
-
 };
 
 // $Log: PhpHighlight.php,v $
@@ -206,4 +212,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

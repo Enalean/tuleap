@@ -21,7 +21,8 @@
 /**
  * Class for field condition DAOs.
  */
-class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject {
+class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject
+{
 
     public function __construct()
     {
@@ -117,9 +118,13 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject {
     function addPermission($permission_type, $object_id, $ugroup_id)
     {
  // WAT ???
-        $sql=sprintf("INSERT INTO permissions (object_id, permission_type, ugroup_id)".
+        $sql=sprintf(
+            "INSERT INTO permissions (object_id, permission_type, ugroup_id)".
                      " VALUES ('%s', '%s', '%s')",
-                     $object_id, $permission_type, $ugroup_id);
+            $object_id,
+            $permission_type,
+            $ugroup_id
+        );
         return $this->update($sql);
     }
 
@@ -133,4 +138,3 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject {
         return count($this->retrieve($sql)) > 0;
     }
 }
-?>

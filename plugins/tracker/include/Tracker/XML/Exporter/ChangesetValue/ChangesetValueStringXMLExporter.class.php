@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter {
+class Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter
+{
 
     protected function getFieldChangeType()
     {

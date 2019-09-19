@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric {
+class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric
+{
 
     public const BIND_STATIC  = 'static';
     public const BIND_UGROUPS = 'ugroups';
@@ -82,19 +83,18 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
 
     private function getStaticListDataValue(Tracker_FormElement_Field $field, $value)
     {
-        if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID){
+        if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID) {
             return $this->xml_fields_mapping->getNewValueId((int) $value);
         }
 
         $result = $this->static_value_dao->searchValueByLabel($field->getId(), (string) $value);
         $row    = $result->getRow();
         return (int) $row['id'];
-
     }
 
     private function getUgroupListDataValue($value)
     {
-        if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID){
+        if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID) {
             return $this->xml_fields_mapping->getNewValueId((int) $value);
         }
     }

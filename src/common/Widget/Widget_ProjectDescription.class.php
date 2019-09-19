@@ -23,7 +23,8 @@
 * Widget_ProjectDescription
 *
 */
-class Widget_ProjectDescription extends Widget {
+class Widget_ProjectDescription extends Widget
+{
 
     public function __construct()
     {
@@ -32,7 +33,7 @@ class Widget_ProjectDescription extends Widget {
 
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('include_project_home','project_description');
+        return $GLOBALS['Language']->getText('include_project_home', 'project_description');
     }
     public function getContent()
     {
@@ -45,15 +46,15 @@ class Widget_ProjectDescription extends Widget {
         $html = '';
 
         if ($project->getStatus() == 'H') {
-            $html .= '<p style="font-size:1.4em;">' . $GLOBALS['Language']->getText('include_project_home','not_official_site',$GLOBALS['sys_name']) . '</p>';
+            $html .= '<p style="font-size:1.4em;">' . $GLOBALS['Language']->getText('include_project_home', 'not_official_site', $GLOBALS['sys_name']) . '</p>';
         }
 
         if ($project->getDescription()) {
             $html .= '<p style="font-size:1.4em;">' . $hp->purify($project->getDescription(), CODENDI_PURIFIER_LIGHT, $group_id) . "</p>";
-            $details_prompt = '[' . $GLOBALS['Language']->getText('include_project_home','more_info') . '...]';
+            $details_prompt = '[' . $GLOBALS['Language']->getText('include_project_home', 'more_info') . '...]';
         } else {
-            $html .= '<p>' . $GLOBALS['Language']->getText('include_project_home','no_short_desc',"/project/admin/editgroupinfo.php?group_id=$group_id") . '</p>';
-            $details_prompt = '[' . $GLOBALS['Language']->getText('include_project_home','other_info') . '...]';
+            $html .= '<p>' . $GLOBALS['Language']->getText('include_project_home', 'no_short_desc', "/project/admin/editgroupinfo.php?group_id=$group_id") . '</p>';
+            $details_prompt = '[' . $GLOBALS['Language']->getText('include_project_home', 'other_info') . '...]';
         }
 
         $html .= '<a href="/project/showdetails.php?group_id='.$group_id.'"> ' . $details_prompt . '</a>';
@@ -63,6 +64,6 @@ class Widget_ProjectDescription extends Widget {
 
     function getDescription()
     {
-        return $GLOBALS['Language']->getText('widget_description_project_description','description');
+        return $GLOBALS['Language']->getText('widget_description_project_description', 'description');
     }
 }

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201102091302_deploy_post_receive_to_existing_repositories extends ForgeUpgrade_Bucket {
+class b201102091302_deploy_post_receive_to_existing_repositories extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -86,5 +87,3 @@ EOT;
 EOT;
     }
 }
-
-?>

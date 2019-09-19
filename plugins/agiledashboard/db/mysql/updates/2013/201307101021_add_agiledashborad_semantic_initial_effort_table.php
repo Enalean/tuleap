@@ -21,7 +21,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201307101021_add_agiledashborad_semantic_initial_effort_table extends ForgeUpgrade_Bucket {
+class b201307101021_add_agiledashborad_semantic_initial_effort_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -52,4 +53,3 @@ EOT;
         }
     }
 }
-?>

@@ -199,7 +199,7 @@ class DigitalLED74
 
         $iSuperSampling = 3, $iMarg = 1, $iRad = 4;
 
-    function __construct($aRadius = 2, $aMargin= 0.6)
+    function __construct($aRadius = 2, $aMargin = 0.6)
     {
         $this->iRad = $aRadius;
         $this->iMarg = $aMargin;
@@ -228,20 +228,18 @@ class DigitalLED74
         $simg->SetColor($this->iColorSchema[$aColor][2]);
         $simg->FilledRectangle(0, 0, $swidth-1, $sheight-1);
 
-        if( array_key_exists($aLedIdx, $this->iLEDSpec) ) {
+        if (array_key_exists($aLedIdx, $this->iLEDSpec)) {
             $d = $this->iLEDSpec[$aLedIdx];
-        }
-        else {
+        } else {
             $d = array(0,0,0,0,0,0,0);
         }
 
-        for($r = 0; $r < 7; ++$r) {
+        for ($r = 0; $r < 7; ++$r) {
             $dr = $d[$r];
-            for($c = 0; $c < 4; ++$c) {
-                if( ($dr & pow(2,3-$c)) !== 0 ) {
+            for ($c = 0; $c < 4; ++$c) {
+                if (($dr & pow(2, 3-$c)) !== 0) {
                     $color = $this->iColorSchema[$aColor][0];
-                }
-                else {
+                } else {
                     $color = $this->iColorSchema[$aColor][1];
                 }
 
@@ -249,7 +247,7 @@ class DigitalLED74
                 $y = 2*$rad*$r+$rad + ($r+1)*$marg + $rad ;
 
                 $simg->SetColor($color);
-                $simg->FilledCircle($x,$y,$rad);
+                $simg->FilledCircle($x, $y, $rad);
             }
         }
 
@@ -269,21 +267,20 @@ class DigitalLED74
 
     function StrokeNumber($aValStr, $aColor = 0, $aFileName = '')
     {
-        if( $aColor < 0 || $aColor >= sizeof($this->iColorSchema) ) {
+        if ($aColor < 0 || $aColor >= sizeof($this->iColorSchema)) {
             $aColor = 0;
         }
 
-        if(($n = mb_strlen($aValStr,'utf8')) == 0) {
+        if (($n = mb_strlen($aValStr, 'utf8')) == 0) {
             $aValStr = ' ';
             $n = 1;
         }
 
-        for($i = 0; $i < $n; ++$i) {
+        for ($i = 0; $i < $n; ++$i) {
             $d = mb_substr($aValStr, $i, 1, 'utf8');
-            if(  ctype_digit($d) ) {
+            if (ctype_digit($d)) {
                 $d = (int)$d;
-            }
-            else {
+            } else {
                 $d = strtoupper($d);
             }
             $digit_img[$i] = $this->_GetLED($d, $aColor);
@@ -294,11 +291,11 @@ class DigitalLED74
 
         $number_img = new Image($w*$n, $h, DEFAULT_GFORMAT, false);
 
-        for($i = 0; $i < $n; ++$i) {
+        for ($i = 0; $i < $n; ++$i) {
             $number_img->Copy($digit_img[$i]->img, $i*$w, 0, 0, 0, $w, $h, $w, $h);
         }
 
-        if( $aFileName != '' ) {
+        if ($aFileName != '') {
             $number_img->Stream($aFileName);
         } else {
             $number_img->Headers();
@@ -306,4 +303,3 @@ class DigitalLED74
         }
     }
 }
-?>

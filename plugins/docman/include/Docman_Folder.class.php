@@ -25,7 +25,8 @@
  * Folder is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_Folder extends Docman_Item {
+class Docman_Folder extends Docman_Item
+{
 
     function __construct($data = null)
     {
@@ -75,5 +76,3 @@ class Docman_Folder extends Docman_Item {
         return $visitor->visitFolder($this, $params);
     }
 }
-
-?>

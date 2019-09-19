@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('bootstrap.php');
-class Tracker_FormElement_Field_List_Bind_StaticValueTest extends TuleapTestCase {
+class Tracker_FormElement_Field_List_Bind_StaticValueTest extends TuleapTestCase
+{
 
     public function testGetLabel()
     {
@@ -30,6 +31,4 @@ class Tracker_FormElement_Field_List_Bind_StaticValueTest extends TuleapTestCase
         $bv = new Tracker_FormElement_Field_List_Bind_StaticValue($id, $label, $description, $rank, $is_hidden);
         $this->assertEqual($bv->getLabel(), $label);
     }
-
 }
-?>

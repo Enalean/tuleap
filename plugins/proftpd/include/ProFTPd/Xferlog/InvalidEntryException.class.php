@@ -22,7 +22,8 @@ namespace Tuleap\ProFTPd\Xferlog;
 
 use Exception;
 
-class InvalidEntryException extends Exception {
+class InvalidEntryException extends Exception
+{
 
     public function __construct($line)
     {

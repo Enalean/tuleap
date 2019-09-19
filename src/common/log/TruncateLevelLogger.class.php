@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TruncateLevelLogger implements Logger {
+class TruncateLevelLogger implements Logger
+{
 
     /**
      * @var Logger

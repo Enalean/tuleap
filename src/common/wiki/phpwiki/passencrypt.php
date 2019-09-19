@@ -59,21 +59,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 function better_srand($seed = '')
 {
-    static $wascalled = FALSE;
+    static $wascalled = false;
     if (!$wascalled) {
         if ($seed === '') {
             list($usec, $sec) = explode(" ", microtime());
-            if ($usec > 0.1)
+            if ($usec > 0.1) {
                 $seed = (double) $usec * $sec;
-            else // once in a while use the combined LCG entropy
+            } else { // once in a while use the combined LCG entropy
                 $seed = (double) 1000000 * substr(uniqid("", true), 13);
+            }
         }
         if (function_exists('mt_srand')) {
             mt_srand($seed); // mersenne twister
         } else {
             srand($seed);
         }
-        $wascalled = TRUE;
+        $wascalled = true;
     }
 }
 
@@ -83,11 +84,12 @@ function rand_ascii($length = 1)
     $s = "";
     for ($i = 1; $i <= $length; $i++) {
         // return only typeable 7 bit ascii, avoid quotes
-        if (function_exists('mt_rand'))
+        if (function_exists('mt_rand')) {
             // the usually bad glibc srand()
             $s .= chr(mt_rand(40, 126));
-        else
+        } else {
             $s .= chr(rand(40, 126));
+        }
     }
     return $s;
 }
@@ -105,17 +107,20 @@ function random_good_password($minlength = 5, $maxlength = 8)
     $start = ord($valid_chars);
     $end   = ord(substr($valid_chars, -1));
     better_srand();
-    if (function_exists('mt_rand')) // mersenne twister
+    if (function_exists('mt_rand')) { // mersenne twister
         $length = mt_rand($minlength, $maxlength);
-    else        // the usually bad glibc rand()
+    } else { // the usually bad glibc rand()
         $length = rand($minlength, $maxlength);
+    }
     while ($length > 0) {
-        if (function_exists('mt_rand'))
+        if (function_exists('mt_rand')) {
             $newchar = mt_rand($start, $end);
-        else
+        } else {
             $newchar = rand($start, $end);
-        if (! strrpos($valid_chars, $newchar) )
+        }
+        if (! strrpos($valid_chars, $newchar)) {
             continue; // skip holes
+        }
         $newpass .= sprintf("%c", $newchar);
         $length--;
     }
@@ -128,8 +133,9 @@ function random_good_password($minlength = 5, $maxlength = 8)
   * for easier coding.
   */
 foreach (array('SERVER','GET','POST','ENV') as $k) {
-    if (!isset($GLOBALS['HTTP_'.$k.'_VARS']) and isset($GLOBALS['_'.$k]))
+    if (!isset($GLOBALS['HTTP_'.$k.'_VARS']) and isset($GLOBALS['_'.$k])) {
         $GLOBALS['HTTP_'.$k.'_VARS'] = $GLOBALS['_'.$k];
+    }
 }
 unset($k);
 
@@ -149,27 +155,31 @@ if (($posted['password'] != "")
      * http://www.php.net/manual/en/function.crypt.php
      */
     // Use the maximum salt length the system can handle.
-    $salt_length = max(CRYPT_SALT_LENGTH,
-                        2 * CRYPT_STD_DES,
-                        9 * CRYPT_EXT_DES,
-                       12 * CRYPT_MD5,
-                       16 * CRYPT_BLOWFISH);
+    $salt_length = max(
+        CRYPT_SALT_LENGTH,
+        2 * CRYPT_STD_DES,
+        9 * CRYPT_EXT_DES,
+        12 * CRYPT_MD5,
+        16 * CRYPT_BLOWFISH
+    );
     // Generate the encrypted password.
     $encrypted_password = crypt($password, rand_ascii($salt_length));
     $debug = $_GET['debug'];
-    if ($debug)
+    if ($debug) {
         echo "The password was encrypted using a salt length of: $salt_length<br />\n";
+    }
     echo "<p>The encrypted password is:<br />\n<br />&nbsp;&nbsp;&nbsp;\n<tt><strong>",
          htmlentities($encrypted_password),"</strong></tt></p>\n";
     echo "<hr />\n";
-}
-else if ($posted['password'] != "") {
+} elseif ($posted['password'] != "") {
     echo "The passwords did not match. Please try again.<br />\n";
 }
-if (empty($REQUEST_URI))
+if (empty($REQUEST_URI)) {
     $REQUEST_URI = $_ENV['REQUEST_URI'];
-if (empty($REQUEST_URI))
+}
+if (empty($REQUEST_URI)) {
     $REQUEST_URI = $_SERVER['REQUEST_URI'];
+}
 ?>
 
 <form action="<?php echo $REQUEST_URI ?>" method="post">

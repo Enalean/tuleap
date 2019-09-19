@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class CardwallConfigXmlImport {
+class CardwallConfigXmlImport
+{
 
     /**
      * @var Cardwall_OnTop_ColumnMappingFieldValueDao
@@ -141,8 +142,7 @@ class CardwallConfigXmlImport {
 
     private function importMappings(SimpleXMLElement $xml_mappings, array $column_mapping, $cardwall_tracker_id)
     {
-        foreach($xml_mappings->{CardwallConfigXml::NODE_MAPPING} as $xml_mapping) {
-
+        foreach ($xml_mappings->{CardwallConfigXml::NODE_MAPPING} as $xml_mapping) {
             $new_tracker_id = $this->getNewTrackerId($xml_mapping);
             $new_field_id   = $this->getNewFieldId($xml_mapping);
 
@@ -199,8 +199,7 @@ class CardwallConfigXmlImport {
         $tracker_id,
         $field_id
     ) {
-        foreach($xml_values->{CardwallConfigXml::NODE_VALUE} as $xml_value) {
-
+        foreach ($xml_values->{CardwallConfigXml::NODE_VALUE} as $xml_value) {
             $new_value_id  = $this->getNewValueId($xml_value);
             $new_column_id = $this->getNewColumnId($xml_value, $column_mapping);
 
@@ -248,7 +247,6 @@ class CardwallConfigXmlImport {
                 $GLOBALS['Language']->getText('plugin_cardwall', 'xml_import_value_error', array($xml_value_id))
             );
         }
-
     }
 
     /**
@@ -259,8 +257,7 @@ class CardwallConfigXmlImport {
     {
         $column_mapping = array();
 
-        foreach($xml_columns->{CardwallConfigXml::NODE_COLUMN} as $xml_column) {
-
+        foreach ($xml_columns->{CardwallConfigXml::NODE_COLUMN} as $xml_column) {
             $label         = (string)$xml_column[CardwallConfigXml::ATTRIBUTE_COLUMN_LABEL];
             $xml_column_id = (string)$xml_column[CardwallConfigXml::ATTRIBUTE_COLUMN_ID];
 
@@ -286,7 +283,7 @@ class CardwallConfigXmlImport {
         $color_label = CardwallConfigXml::ATTRIBUTE_COLUMN_TLP_COLOR_NAME;
         $color_name  = $xml_column[ $color_label ];
 
-        if (! $color_name ) {
+        if (! $color_name) {
             return null;
         }
 

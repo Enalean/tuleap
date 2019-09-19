@@ -22,7 +22,8 @@
 /**
  * Delete a column for a cardwall on top of a tracker
  */
-class Cardwall_OnTop_Config_Command_DeleteColumns extends Cardwall_OnTop_Config_Command {
+class Cardwall_OnTop_Config_Command_DeleteColumns extends Cardwall_OnTop_Config_Command
+{
 
     /**
      * @var Cardwall_OnTop_ColumnDao
@@ -72,4 +73,3 @@ class Cardwall_OnTop_Config_Command_DeleteColumns extends Cardwall_OnTop_Config_
         }
     }
 }
-?>

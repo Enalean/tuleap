@@ -21,7 +21,8 @@ namespace User\XML\Import;
 
 use TuleapTestCase;
 
-class EmailDoesNotMatchUser_isActionAllowedTest extends TuleapTestCase {
+class EmailDoesNotMatchUser_isActionAllowedTest extends TuleapTestCase
+{
 
     /** @var EmailDoesNotMatchUser */
     protected $user;

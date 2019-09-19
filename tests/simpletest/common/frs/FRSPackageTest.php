@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FRSPackageTest extends TuleapTestCase {
+class FRSPackageTest extends TuleapTestCase
+{
 
     function testIsActive()
     {
@@ -77,8 +78,4 @@ class FRSPackageTest extends TuleapTestCase {
         $p->setStatusId($deleted_value);
         $this->assertFalse($p->isHidden());
     }
-
-
-
 }
-?>

@@ -91,7 +91,7 @@ class ConfigController implements DispatchableWithRequestNoAuthz, DispatchableWi
                 $this->csrf->check();
                 if ($request->exist('allow-project')) {
                     $this->nature_controller->allowProject($request, $response);
-                } else if ($request->exist('revoke-project')) {
+                } elseif ($request->exist('revoke-project')) {
                     $this->nature_controller->revokeProject($request, $response);
                 } else {
                     $this->nature_controller->index($this->csrf, $response);

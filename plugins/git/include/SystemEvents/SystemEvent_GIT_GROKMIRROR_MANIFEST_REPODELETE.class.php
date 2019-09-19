@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE extends SystemEvent {
+class SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE extends SystemEvent
+{
     public const NAME = 'GIT_GROKMIRROR_MANIFEST_REPODELETE';
 
     /** @var Git_Mirror_ManifestManager */

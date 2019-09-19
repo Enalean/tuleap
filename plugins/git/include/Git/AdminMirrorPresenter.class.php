@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Git_AdminMirrorPresenter extends Git_AdminPresenter {
+abstract class Git_AdminMirrorPresenter extends Git_AdminPresenter
+{
 
     public $manage_mirrors = true;
 
@@ -87,31 +88,31 @@ abstract class Git_AdminMirrorPresenter extends Git_AdminPresenter {
 
     public function btn_edit()
     {
-        return $GLOBALS['Language']->getText('global','btn_edit');
+        return $GLOBALS['Language']->getText('global', 'btn_edit');
     }
 
     public function btn_restrict()
     {
-        return $GLOBALS['Language']->getText('global','btn_restrict');
+        return $GLOBALS['Language']->getText('global', 'btn_restrict');
     }
 
     public function btn_delete()
     {
-        return $GLOBALS['Language']->getText('global','btn_delete');
+        return $GLOBALS['Language']->getText('global', 'btn_delete');
     }
 
     public function btn_cancel()
     {
-        return $GLOBALS['Language']->getText('global','btn_cancel');
+        return $GLOBALS['Language']->getText('global', 'btn_cancel');
     }
 
     public function btn_yes()
     {
-        return $GLOBALS['Language']->getText('global','yes');
+        return $GLOBALS['Language']->getText('global', 'yes');
     }
 
     public function warning()
     {
-        return $GLOBALS['Language']->getText('global','warning');
+        return $GLOBALS['Language']->getText('global', 'warning');
     }
 }

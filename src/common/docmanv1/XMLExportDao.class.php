@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class DocmanV1_XMLExportDao extends DataAccessObject {
+class DocmanV1_XMLExportDao extends DataAccessObject
+{
 
     public function searchAllNonEmptyGroups($group_id)
     {

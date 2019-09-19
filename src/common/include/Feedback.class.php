@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Feedback {
+class Feedback
+{
 
     /**
      * @var array
@@ -47,12 +48,12 @@ class Feedback {
         $this->formatter = $formatter;
     }
 
-    function log($level, $msg, $purify=CODENDI_PURIFIER_CONVERT_HTML)
+    function log($level, $msg, $purify = CODENDI_PURIFIER_CONVERT_HTML)
     {
-        if(!is_array($msg)) {
+        if (!is_array($msg)) {
             $msg = array($msg);
         }
-        foreach($msg as $m) {
+        foreach ($msg as $m) {
             $this->logs[] = array('level' => $level, 'msg' => $m, 'purify' => $purify);
         }
     }
@@ -73,7 +74,7 @@ class Feedback {
     function fetchAsPlainText()
     {
            $txt = '';
-        foreach($this->logs as $log) {
+        foreach ($this->logs as $log) {
             $txt .= $log['level'] .': '. $log['msg'] ."\n";
         }
         return $txt;

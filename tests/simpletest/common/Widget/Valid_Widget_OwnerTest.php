@@ -23,7 +23,8 @@
  *
  */
 
-class Valid_Widget_OwnerTest extends TuleapTestCase {
+class Valid_Widget_OwnerTest extends TuleapTestCase
+{
 
     function UnitTestCase($name = 'Valid_Widget_Owner test')
     {
@@ -71,6 +72,4 @@ class Valid_Widget_OwnerTest extends TuleapTestCase {
         $this->assertFalse($v->validate("\"><script>alert(1);</script>"));
         $this->assertFalse($v->validate("</textarea><script>alert(1);</script>"));
     }
-
 }
-?>

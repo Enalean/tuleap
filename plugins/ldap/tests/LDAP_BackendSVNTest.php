@@ -24,7 +24,8 @@ Mock::generate('ServiceDao');
 Mock::generate('LDAP');
 Mock::generate('LDAP_ProjectManager');
 
-class LDAP_BackendSVNTestEventManager extends EventManager {
+class LDAP_BackendSVNTestEventManager extends EventManager
+{
     public function processEvent($event_name, $params = [])
     {
         $ldap             = mock('LDAP');
@@ -34,7 +35,8 @@ class LDAP_BackendSVNTestEventManager extends EventManager {
     }
 }
 
-class LDAP_BackendSVNTest extends TuleapTestCase {
+class LDAP_BackendSVNTest extends TuleapTestCase
+{
 
     public function setUp()
     {

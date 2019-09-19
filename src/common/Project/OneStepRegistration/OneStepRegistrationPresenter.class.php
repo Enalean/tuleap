@@ -21,7 +21,8 @@
 /**
  * Presenter for one step registration project
  */
-class Project_OneStepRegistration_OneStepRegistrationPresenter {
+class Project_OneStepRegistration_OneStepRegistrationPresenter
+{
 
     /**
      * @var Project

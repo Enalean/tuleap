@@ -18,5 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XML_Exporter_TooManyChildrenException extends Exception {
+class Tracker_XML_Exporter_TooManyChildrenException extends Exception
+{
 }

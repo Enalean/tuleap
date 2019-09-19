@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XML_Updater_TemporaryFileCreator {
+class Tracker_XML_Updater_TemporaryFileCreator
+{
 
     /** @var string */
     private $copy_directory;
@@ -72,7 +73,7 @@ class Tracker_XML_Updater_TemporaryFileCreator {
             ),
             RecursiveIteratorIterator::CHILD_FIRST
         );
-        foreach($recursive_iterator as $path) {
+        foreach ($recursive_iterator as $path) {
             if (in_array($path->getFilename(), array('.', '..'))) {
                 continue;
             }
@@ -85,5 +86,4 @@ class Tracker_XML_Updater_TemporaryFileCreator {
         }
         rmdir($this->copy_directory);
     }
-
 }

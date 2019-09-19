@@ -23,7 +23,8 @@ namespace Tuleap\HudsonSvn\Job;
 use DataAccessObject;
 use Project;
 
-class Dao extends DataAccessObject {
+class Dao extends DataAccessObject
+{
 
     /**
      * @return bool
@@ -86,5 +87,4 @@ class Dao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
-
 }

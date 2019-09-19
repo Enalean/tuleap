@@ -20,7 +20,8 @@
 
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 
-class Tracker_ArtifactByEmailStatus {
+class Tracker_ArtifactByEmailStatus
+{
 
     /** @var MailGatewayConfig */
     private $tracker_plugin_config;

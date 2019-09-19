@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEventProcessRootDefaultQueue implements SystemEventProcess {
+class SystemEventProcessRootDefaultQueue implements SystemEventProcess
+{
 
     /**
      * @see SystemEventProcess::getLockName()

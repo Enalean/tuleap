@@ -96,7 +96,6 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
         if ($request->getInArray('remove_postaction', $this->id)) {
             $this->getDao()->deletePostAction($this->id);
         } else {
-
             $field_id = $this->getFieldId();
             $value    = $request->getInArray('workflow_postaction_field_int_value', $this->id);
 
@@ -146,4 +145,3 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
         $visitor->visitIntField($this);
     }
 }
-?>

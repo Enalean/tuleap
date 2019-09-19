@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_Trigger_FieldValue {
+class Tracker_Workflow_Trigger_FieldValue
+{
     private $field;
     private $value;
 
@@ -107,5 +108,3 @@ class Tracker_Workflow_Trigger_FieldValue {
         );
     }
 }
-
-?>

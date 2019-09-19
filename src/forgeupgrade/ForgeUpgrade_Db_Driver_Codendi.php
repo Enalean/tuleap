@@ -20,7 +20,8 @@
 
 require_once 'ForgeUpgrade_Db_Driver.php';
 
-class ForgeUpgrade_Db_Driver_Codendi extends ForgeUpgrade_Db_Driver {
+class ForgeUpgrade_Db_Driver_Codendi extends ForgeUpgrade_Db_Driver
+{
     protected $pdo;
     protected $dsn;
     protected $user;
@@ -29,5 +30,3 @@ class ForgeUpgrade_Db_Driver_Codendi extends ForgeUpgrade_Db_Driver {
     protected $platform_name = "codendi";
     protected $env_variable_name = "CODENDI_LOCAL_INC";
 }
-
-?>

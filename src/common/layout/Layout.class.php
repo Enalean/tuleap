@@ -111,7 +111,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
 
         $html = '<div class="iframe_showonly"><a href="'. $url_purified .'" title="'.$GLOBALS['Language']->getText('global', 'show_frame') .'">'.$GLOBALS['Language']->getText('global', 'show_frame').' '. $this->getImage('ic/plain-arrow-down.png') .'</a></div>';
         $args = ' src="'. $url_purified .'" ';
-        foreach($html_options as $key => $value) {
+        foreach ($html_options as $key => $value) {
             $args .= ' '. $key .'="'. $value .'" ';
         }
         $html .= '<iframe '. $args .'></iframe>';
@@ -122,7 +122,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
     {
         $html = '';
         $html .= '<select ';
-        foreach($html_options as $key => $value) {
+        foreach ($html_options as $key => $value) {
             $html .= $key .'="'. $value .'"';
         }
         $html .= '>';
@@ -139,16 +139,15 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         $html      = '';
         $optgroups = '';
         $purifier  = Codendi_HTMLPurifier::instance();
-        foreach($items as $i => $item) {
+        foreach ($items as $i => $item) {
             // don't include the item itself
             if ($item['id'] != $id) {
-
                 // need an optgroup ?
                 if (isset($item['subitems'])) {
                     $optgroups .= '<optgroup label="'. $purifier->purify($prefix . $item['name']) .'">';
 
                     $selected = '';
-                    if ( count($item['subitems']) ) {
+                    if (count($item['subitems'])) {
                         // look if our item is the first subitem
                         // if it is the case then select 'At the beginning of <parent>'
                         reset($item['subitems']);
@@ -231,7 +230,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         return UserManager::instance()->getCurrentUser();
     }
 
-    public function addUserAutocompleteOn($element_id, $multiple=false)
+    public function addUserAutocompleteOn($element_id, $multiple = false)
     {
         $jsbool = $multiple ? "true" : "false";
         $js = "new UserAutoCompleter('".$element_id."', '".util_get_dir_image_theme()."', ".$jsbool.");";
@@ -318,7 +317,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @see Widget_Static
      * @deprecated You should consider using Widget_Static instead
      */
-    function box1_top($title,$echoout=1,$bgcolor='',$cols=2)
+    function box1_top($title, $echoout = 1, $bgcolor = '', $cols = 2)
     {
             $return = '<TABLE class="boxtable" cellspacing="1" cellpadding="5" width="100%" border="0">
                         <TR class="boxtitle" align="center">
@@ -339,7 +338,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @see Widget_Static
      * @deprecated You should consider using Widget_Static instead
      */
-    function box1_middle($title,$bgcolor='',$cols=2)
+    function box1_middle($title, $bgcolor = '', $cols = 2)
     {
             return '
                                 </TD>
@@ -358,7 +357,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @see Widget_Static
      * @deprecated You should consider using Widget_Static instead
      */
-    function box1_bottom($echoout=1)
+    function box1_bottom($echoout = 1)
     {
             $return = '
                 </TD>
@@ -430,7 +429,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         codendi.imgroot = \''. $this->imgroot .'\';
         </script>'."\n";
 
-        if (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
+        if (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A'))) {
             echo '<script type="text/javascript" src="/scripts/codendi/debug_reserved_names.js"></script>'."\n";
         }
         $this->includeJavascriptPolyfills();
@@ -522,8 +521,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         $this->displayCommonStylesheetElements($params);
 
         // Stylesheet external files
-        if(isset($params['stylesheet']) && is_array($params['stylesheet'])) {
-            foreach($params['stylesheet'] as $css) {
+        if (isset($params['stylesheet']) && is_array($params['stylesheet'])) {
+            foreach ($params['stylesheet'] as $css) {
                 print '<link rel="stylesheet" type="text/css" href="'.$css.'" />';
             }
         }
@@ -570,11 +569,11 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
 
         //Basic feeds
         echo $this->getRssFeed(
-            $hp->purify($GLOBALS['sys_name']. ' - ' .$GLOBALS['Language']->getText('include_layout','latest_news_rss'), CODENDI_PURIFIER_CONVERT_HTML),
+            $hp->purify($GLOBALS['sys_name']. ' - ' .$GLOBALS['Language']->getText('include_layout', 'latest_news_rss'), CODENDI_PURIFIER_CONVERT_HTML),
             '/export/rss_sfnews.php'
         );
         echo $this->getRssFeed(
-            $hp->purify($GLOBALS['sys_name']. ' - ' .$GLOBALS['Language']->getText('include_layout','newest_projects_rss'), CODENDI_PURIFIER_CONVERT_HTML),
+            $hp->purify($GLOBALS['sys_name']. ' - ' .$GLOBALS['Language']->getText('include_layout', 'newest_projects_rss'), CODENDI_PURIFIER_CONVERT_HTML),
             '/export/rss_sfprojects.php'
         );
     }
@@ -636,9 +635,9 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         $html  = '';
         $html .= '<div class="input-prepend dropdown input-append date ' . implode(' ', $classes) . '">';
 
-        if(count($criteria_selector) > 0) {
+        if (count($criteria_selector) > 0) {
             $html .= '<select id="add-on-select" name="' . $criteria_selector['name'] . '" class="add-on add-on-select selectpicker">';
-            foreach($criteria_selector['criterias'] as $criteria_value => $criteria) {
+            foreach ($criteria_selector['criterias'] as $criteria_value => $criteria) {
                 $html .= '<option value="' . $criteria_value . '" ' . $criteria['selected'] . '>' . $criteria['html_value'] . '</option>';
             }
 
@@ -675,7 +674,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         $pm = ProjectManager::instance();
         $project=$pm->getProject($group_id);
         if ($project->isTemplate()) {
-            switch($service_top_tab) {
+            switch ($service_top_tab) {
                 case 'admin':
                 case 'forum':
                 case 'docman':
@@ -685,10 +684,10 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
                 case 'tracker':
                 case 'wiki':
                 case 'salome':
-                break;
+                    break;
                 default:
                     $this->addFeedback('warning', $GLOBALS['Language']->getText('global', 'service_conf_not_inherited'));
-                break;
+                    break;
             }
         }
     }
@@ -704,7 +703,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         include($Language->getContent('layout/footer'));
         echo '</footer>';
 
-        if ( ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
+        if (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A'))) {
             $this->showDebugInfo();
         }
 
@@ -719,9 +718,9 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         echo '
 <body class="bg_help">
 ';
-        if(isset($params['pv']) && $params['pv'] < 2) {
+        if (isset($params['pv']) && $params['pv'] < 2) {
             if (isset($params['title']) && $params['title']) {
-                echo '<h2>'.$params['title'].' - '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time()).'</h2>
+                echo '<h2>'.$params['title'].' - '.format_date($GLOBALS['Language']->getText('system', 'datefmt'), time()).'</h2>
                 <hr />';
             }
         }

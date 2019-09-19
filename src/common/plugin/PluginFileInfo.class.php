@@ -111,9 +111,11 @@ class PluginFileInfo extends PluginInfo
             }
 
             $replace = '$1'. $value;
-            $content = preg_replace('`((?:^|\n)\$'. preg_quote($desc_name, '`') .'\s*=\s*)(.*)\s*;`',
+            $content = preg_replace(
+                '`((?:^|\n)\$'. preg_quote($desc_name, '`') .'\s*=\s*)(.*)\s*;`',
                 $replace,
-                $content);
+                $content
+            );
 
             if (! preg_match('`(?:^|\n)\$'. preg_quote($desc_name, '`') .'\s*=`', $content)) {
                 $content .= '$' . $desc_name .' = '. $value . PHP_EOL;
@@ -175,7 +177,7 @@ class PluginFileInfo extends PluginInfo
             switch ($token[0]) {
                 case T_VARIABLE:
                     $variables[$current] = array('name' => substr($token[1], 1), 'value' => '');
-                break;
+                    break;
                 case T_STRING:
                 case T_CONSTANT_ENCAPSED_STRING:
                 case T_DNUMBER:
@@ -191,17 +193,17 @@ class PluginFileInfo extends PluginInfo
                             $variables[$current]['value'] .= $token[1];
                         }
                     }
-                break;
+                    break;
                 case '*':
                     if (isset($variables[$current])) {
                         $variables[$current]['value'] .= $token[0];
                     }
-                break;
+                    break;
                 case ';':
                     $current++;
-                break;
+                    break;
                 default:
-                break;
+                    break;
             }
         }
         return $variables;
@@ -216,4 +218,3 @@ class PluginFileInfo extends PluginInfo
         require $path;
     }
 }
-?>

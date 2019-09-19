@@ -27,7 +27,8 @@ require_once 'IProvideDataAccessResult.class.php';
  * in calling method
  * @deprecated See \Tuleap\DB\DataAccessObject
  */
-class DataAccessResultEmpty implements IProvideDataAccessResult {
+class DataAccessResultEmpty implements IProvideDataAccessResult
+{
 
     /**
      * @see IProvideDataAccessResult

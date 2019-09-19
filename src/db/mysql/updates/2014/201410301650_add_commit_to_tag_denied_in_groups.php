@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201410301650_add_commit_to_tag_denied_in_groups extends ForgeUpgrade_Bucket {
+class b201410301650_add_commit_to_tag_denied_in_groups extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return <<<EOT
@@ -47,5 +48,3 @@ EOT;
         }
     }
 }
-
-?>

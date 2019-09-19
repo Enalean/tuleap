@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TreeNodeTest extends TuleapTestCase {
+class TreeNodeTest extends TuleapTestCase
+{
     public function itMayWrapAnObject()
     {
         $object = mock('stdClass');
@@ -29,7 +30,8 @@ class TreeNodeTest extends TuleapTestCase {
     }
 }
 
-class TreeNode_FlattenChildrenTest extends TuleapTestCase {
+class TreeNode_FlattenChildrenTest extends TuleapTestCase
+{
 
     public function itReturnsAnEmptyArrayWhenNoChildren()
     {
@@ -63,7 +65,8 @@ class TreeNode_FlattenChildrenTest extends TuleapTestCase {
     }
 }
 
-class TreeNode_AddChildrenTest extends TuleapTestCase {
+class TreeNode_AddChildrenTest extends TuleapTestCase
+{
 
     public function itBuildsATreeInline()
     {
@@ -84,15 +87,16 @@ class TreeNode_AddChildrenTest extends TuleapTestCase {
             $node_2
         );
 
-        $this->assertEqual($node_1,     $root->getChild(0));
-        $this->assertEqual($node_1_1,   $root->getChild(0)->getChild(0));
+        $this->assertEqual($node_1, $root->getChild(0));
+        $this->assertEqual($node_1_1, $root->getChild(0)->getChild(0));
         $this->assertEqual($node_1_1_1, $root->getChild(0)->getChild(0)->getChild(0));
-        $this->assertEqual($node_1_2,   $root->getChild(0)->getChild(1));
-        $this->assertEqual($node_2,     $root->getChild(1));
+        $this->assertEqual($node_1_2, $root->getChild(0)->getChild(1));
+        $this->assertEqual($node_2, $root->getChild(1));
     }
 }
 
-class TreeNode_SetChildrenTest extends TuleapTestCase {
+class TreeNode_SetChildrenTest extends TuleapTestCase
+{
 
     public function itAddsTheGivenChildren()
     {
@@ -113,6 +117,3 @@ class TreeNode_SetChildrenTest extends TuleapTestCase {
         $this->assertEqual($root, $node_1->getParentNode());
     }
 }
-
-
-?>

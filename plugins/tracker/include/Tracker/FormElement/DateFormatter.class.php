@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_FormElement_DateFormatter {
+class Tracker_FormElement_DateFormatter
+{
     public const DATE_FORMAT           = "Y-m-d";
 
     /** @var Tracker_FormElement_Field_Date */
@@ -61,7 +62,7 @@ class Tracker_FormElement_DateFormatter {
         Tracker_Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null
     ) {
-        if ( empty($value) || ! $value->getTimestamp() ) {
+        if (empty($value) || ! $value->getTimestamp()) {
             return $this->field->getNoValueLabel();
         }
 
@@ -89,7 +90,8 @@ class Tracker_FormElement_DateFormatter {
                     'error',
                     $GLOBALS['Language']->getText(
                         'plugin_tracker_common_artifact',
-                        'error_date_value', array($this->field->getLabel())
+                        'error_date_value',
+                        array($this->field->getLabel())
                     )
                 );
             }
@@ -101,7 +103,7 @@ class Tracker_FormElement_DateFormatter {
     public function fetchSubmitValueMasschange()
     {
         return $this->getDatePicker(
-            $GLOBALS['Language']->getText('global','unchanged'),
+            $GLOBALS['Language']->getText('global', 'unchanged'),
             array()
         );
     }

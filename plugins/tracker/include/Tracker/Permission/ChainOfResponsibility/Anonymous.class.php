@@ -23,7 +23,8 @@
  * all permissions (except admin) to other groups (if anonymous has access it
  * makes no sense to remove permissions to some other authenticated users...)
  */
-class Tracker_Permission_ChainOfResponsibility_PermissionsOfAnonymous extends Tracker_Permission_Command {
+class Tracker_Permission_ChainOfResponsibility_PermissionsOfAnonymous extends Tracker_Permission_Command
+{
 
     public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter)
     {

@@ -24,7 +24,8 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueListFullRepresentation;
 /**
  * Manage values in changeset for string fields
  */
-class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetValue implements Countable, ArrayAccess, Iterator {
+class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetValue implements Countable, ArrayAccess, Iterator
+{
 
     /**
      * @var array (of ListValue) the list of list values
@@ -294,27 +295,27 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     private function getChangesSentence(array $previous, array $next, $added, $removed)
     {
         if (empty($next)) {
-            return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','cleared');
+            return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'cleared');
         }
 
         if (empty($previous)) {
-            return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$added;
+            return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to').' '.$added;
         }
 
         if (count($previous) == 1 && count($next) == 1) {
-            return ' '. $GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from'). ' '.$removed
-                . ' '. $GLOBALS['Language']->getText('plugin_tracker_artifact','to').' '.$added;
+            return ' '. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from'). ' '.$removed
+                . ' '. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to').' '.$added;
         }
 
         $changes = '';
         if ($removed) {
-            $changes = $removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','removed');
+            $changes = $removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'removed');
         }
         if ($added) {
             if ($changes) {
                 $changes .= PHP_EOL;
             }
-            $changes .= $added .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','added');
+            $changes .= $added .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'added');
         }
 
         return $changes;
@@ -327,6 +328,6 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         foreach ($next as $element) {
                 $added_arr[] = $element->getLabel();
         }
-        return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '. $this->format(implode(', ', $added_arr), $format);
+        return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to').' '. $this->format(implode(', ', $added_arr), $format);
     }
 }

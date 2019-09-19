@@ -20,7 +20,8 @@
 /**
  * trackerPluginDescriptor
  */
-class trackerPluginDescriptor extends PluginDescriptor {
+class trackerPluginDescriptor extends PluginDescriptor
+{
 
     function __construct()
     {
@@ -28,4 +29,3 @@ class trackerPluginDescriptor extends PluginDescriptor {
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
-?>

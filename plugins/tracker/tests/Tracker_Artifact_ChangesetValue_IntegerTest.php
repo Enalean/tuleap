@@ -20,7 +20,8 @@
  */
 require_once('bootstrap.php');
 
-class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase {
+class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase
+{
 
     private $field;
     private $user;
@@ -30,8 +31,8 @@ class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase {
         parent::setUp();
 
         $base_language = mock('BaseLanguage');
-        stub($base_language)->getText('plugin_tracker_artifact','changed_from')->returns('changed from');
-        stub($base_language)->getText('plugin_tracker_artifact','to')->returns('to');
+        stub($base_language)->getText('plugin_tracker_artifact', 'changed_from')->returns('changed from');
+        stub($base_language)->getText('plugin_tracker_artifact', 'to')->returns('to');
 
         $GLOBALS['Language'] = $base_language;
 
@@ -86,7 +87,8 @@ class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Artifact_ChangesetValue_Integer_RESTTest extends TuleapTestCase {
+class Tracker_Artifact_ChangesetValue_Integer_RESTTest extends TuleapTestCase
+{
 
     public function itReturnsTheRESTValue()
     {

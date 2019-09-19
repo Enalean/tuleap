@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MediawikiSiteAdminResourceRestrictor {
+class MediawikiSiteAdminResourceRestrictor
+{
 
     public const RESOURCE_ID = 1;
 

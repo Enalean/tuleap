@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class PluginsAdministration_ManageAllowedProjectsPresenter {
+class PluginsAdministration_ManageAllowedProjectsPresenter
+{
 
     public const TEMPLATE = 'manage-allowed-projects';
 

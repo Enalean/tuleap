@@ -22,7 +22,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetrie
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
-class Tracker_Action_UpdateArtifact {
+class Tracker_Action_UpdateArtifact
+{
 
     /** @var Tracker_Artifact */
     private $artifact;
@@ -145,7 +146,7 @@ class Tracker_Action_UpdateArtifact {
         if ($stay) {
             $redirect_params['aid']       = $this->artifact->getId();
             $redirect_params['from_aid']  = $from_aid;
-        } else if ($from_aid) {
+        } elseif ($from_aid) {
             $redirect_params['aid']       = $from_aid;
         } else {
             $redirect_params['tracker']   = $this->artifact->tracker_id;

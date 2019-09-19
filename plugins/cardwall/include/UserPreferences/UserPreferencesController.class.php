@@ -19,7 +19,8 @@
  */
 
 
-class Cardwall_UserPreferences_UserPreferencesController extends MVC2_PluginController {
+class Cardwall_UserPreferences_UserPreferencesController extends MVC2_PluginController
+{
 
     public function __construct($request)
     {
@@ -52,5 +53,3 @@ class Cardwall_UserPreferences_UserPreferencesController extends MVC2_PluginCont
         );
     }
 }
-
-?>

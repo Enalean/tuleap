@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUserGroupPermissionsManager {
+class User_ForgeUserGroupPermissionsManager
+{
 
     /**
      * @var User_ForgeUserGroupPermissionsDao
@@ -64,4 +65,3 @@ class User_ForgeUserGroupPermissionsManager {
         return $this->permissions_dao->doesUserHavePermission($user->getId(), $permission->getId());
     }
 }
-?>

@@ -23,7 +23,8 @@ use Tuleap\REST\JsonCast;
 use AgileDashboard_KanbanItemDao;
 use Tracker_Artifact;
 
-class TimeInfoFactory {
+class TimeInfoFactory
+{
 
     /**
      * @var AgileDashboard_KanbanItemDao

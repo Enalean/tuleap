@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201603071042_svn_repository_pre_commit_must_contain_reference extends ForgeUpgrade_Bucket {
+class b201603071042_svn_repository_pre_commit_must_contain_reference extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

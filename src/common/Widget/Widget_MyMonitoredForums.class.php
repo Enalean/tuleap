@@ -26,7 +26,8 @@ require_once __DIR__ . '/../../www/my/my_utils.php';
 *
 * Forums that are actively monitored
 */
-class Widget_MyMonitoredForums extends Widget {
+class Widget_MyMonitoredForums extends Widget
+{
 
     public function __construct()
     {
@@ -64,7 +65,7 @@ class Widget_MyMonitoredForums extends Widget {
             $request = HTTPRequest::instance();
             $html_my_monitored_forums .= '<table class="tlp-table" style="width:100%">';
             for ($j=0; $j<$rows; $j++) {
-                $group_id = db_result($result,$j,'group_id');
+                $group_id = db_result($result, $j, 'group_id');
 
                 $sql2="SELECT forum_group_list.group_forum_id,forum_group_list.forum_name ".
                     "FROM groups,forum_group_list,forum_monitored_forums ".
@@ -79,7 +80,7 @@ class Widget_MyMonitoredForums extends Widget {
 
                 $vItemId = new Valid_UInt('hide_item_id');
                 $vItemId->required();
-                if($request->valid($vItemId)) {
+                if ($request->valid($vItemId)) {
                     $hide_item_id = $request->get('hide_item_id');
                 } else {
                     $hide_item_id = null;
@@ -87,36 +88,34 @@ class Widget_MyMonitoredForums extends Widget {
 
                 $vForum = new Valid_WhiteList('hide_forum', array(0, 1));
                 $vForum->required();
-                if($request->valid($vForum)) {
+                if ($request->valid($vForum)) {
                     $hide_forum = $request->get('hide_forum');
                 } else {
                     $hide_forum = null;
                 }
 
-                list($hide_now,$count_diff,$hide_url) = my_hide_url('forum',$group_id,$hide_item_id,$rows2,$hide_forum, $request->get('dashboard_id'));
+                list($hide_now,$count_diff,$hide_url) = my_hide_url('forum', $group_id, $hide_item_id, $rows2, $hide_forum, $request->get('dashboard_id'));
 
                 $html_hdr = '<tr class="boxitem"><td colspan="2">' .
                     $hide_url.'<a href="/forum/?group_id='.$group_id.'">'.
-                    db_result($result,$j,'group_name').'</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+                    db_result($result, $j, 'group_name').'</a>&nbsp;&nbsp;&nbsp;&nbsp;';
 
                 $html = '';
                 $count_new = max(0, $count_diff);
                 for ($i=0; $i<$rows2; $i++) {
-
                     if (!$hide_now) {
-
-                        $group_forum_id = db_result($result2,$i,'group_forum_id');
+                        $group_forum_id = db_result($result2, $i, 'group_forum_id');
                         $html .= '
                     <TR class="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
                         '&nbsp;&nbsp;&nbsp;-&nbsp;<A HREF="/forum/forum.php?forum_id='.$group_forum_id.'">'.
-                        stripslashes(db_result($result2,$i,'forum_name')).'</A></TD>'.
+                        stripslashes(db_result($result2, $i, 'forum_name')).'</A></TD>'.
                         '<TD ALIGN="center"><A HREF="/my/stop_monitor.php?forum_id='.$group_forum_id.
                         '" onClick="return confirm(\''.$GLOBALS['Language']->getText('my_index', 'stop_forum').'\')">'.
                         '<i class="fa fa-trash-o" title="'.$GLOBALS['Language']->getText('my_index', 'stop_monitor').'"></i></A></TD></TR>';
                     }
                 }
 
-                $html_hdr .= my_item_count($rows2,$count_new).'</td></tr>';
+                $html_hdr .= my_item_count($rows2, $count_new).'</td></tr>';
                 $html_my_monitored_forums .= $html_hdr.$html;
             }
             $html_my_monitored_forums .= '</table>';
@@ -131,7 +130,8 @@ class Widget_MyMonitoredForums extends Widget {
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('widget_description_my_monitored_forums','description');;
+        return $GLOBALS['Language']->getText('widget_description_my_monitored_forums', 'description');
+        ;
     }
 
     public function isAjax()

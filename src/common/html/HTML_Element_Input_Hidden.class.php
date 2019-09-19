@@ -23,15 +23,16 @@ require_once('HTML_Element_Input.class.php');
 /**
  * Define a html input hidden field
  */
-class HTML_Element_Input_Hidden extends HTML_Element_Input {
+class HTML_Element_Input_Hidden extends HTML_Element_Input
+{
     public function render()
     {
-        $html = $this->renderValue(array());;
+        $html = $this->renderValue(array());
+        ;
         return $html;
     }
     protected function getInputType()
     {
-        return 'hidden'; }
+        return 'hidden';
+    }
 }
-
-?>

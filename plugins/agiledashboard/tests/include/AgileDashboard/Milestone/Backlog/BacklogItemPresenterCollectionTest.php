@@ -24,7 +24,8 @@
 
 require_once __DIR__ .'/../../../../bootstrap.php';
 
-class BacklogItemPresenterCollectionTest extends TuleapTestCase {
+class BacklogItemPresenterCollectionTest extends TuleapTestCase
+{
 
     public function itReturnsFalseWhenCollectionIsEmpty()
     {
@@ -46,5 +47,3 @@ class BacklogItemPresenterCollectionTest extends TuleapTestCase {
         $this->assertFalse($collection->containsId(2));
     }
 }
-
-?>

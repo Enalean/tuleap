@@ -24,7 +24,8 @@
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-class Git_Mirror_ManifestFileGenerator_BaseTest extends TuleapTestCase {
+class Git_Mirror_ManifestFileGenerator_BaseTest extends TuleapTestCase
+{
 
     protected $current_time;
     protected $manifest_directory;
@@ -99,7 +100,8 @@ class Git_Mirror_ManifestFileGenerator_BaseTest extends TuleapTestCase {
     }
 }
 
-class Git_Mirror_ManifestFileGenerator_removeTest extends Git_Mirror_ManifestFileGenerator_BaseTest {
+class Git_Mirror_ManifestFileGenerator_removeTest extends Git_Mirror_ManifestFileGenerator_BaseTest
+{
 
     public function itDoesNotCreateManifestFileIfItDoesNotExist()
     {
@@ -131,7 +133,8 @@ class Git_Mirror_ManifestFileGenerator_removeTest extends Git_Mirror_ManifestFil
     }
 }
 
-class Git_Mirror_ManifestFileGenerator_addTest extends Git_Mirror_ManifestFileGenerator_BaseTest {
+class Git_Mirror_ManifestFileGenerator_addTest extends Git_Mirror_ManifestFileGenerator_BaseTest
+{
 
     public function itCreatesManifestFileIfItDoesNotExist()
     {
@@ -261,7 +264,8 @@ class Git_Mirror_ManifestFileGenerator_addTest extends Git_Mirror_ManifestFileGe
     }
 }
 
-class Git_Mirror_ManifestFileGenerator_ensureManifestContainsLatestInfoOfRepositoriesTest extends Git_Mirror_ManifestFileGenerator_BaseTest {
+class Git_Mirror_ManifestFileGenerator_ensureManifestContainsLatestInfoOfRepositoriesTest extends Git_Mirror_ManifestFileGenerator_BaseTest
+{
 
     public function itAddsAMissingRepository()
     {
@@ -300,7 +304,8 @@ class Git_Mirror_ManifestFileGenerator_ensureManifestContainsLatestInfoOfReposit
     }
 }
 
-class Git_Mirror_ManifestFileGenerator_updateCurrentTimeOfRepositoryTest extends Git_Mirror_ManifestFileGenerator_BaseTest {
+class Git_Mirror_ManifestFileGenerator_updateCurrentTimeOfRepositoryTest extends Git_Mirror_ManifestFileGenerator_BaseTest
+{
 
     public function itUpdatesDateToCurrentDateIfRepoAlreadyInManifest()
     {

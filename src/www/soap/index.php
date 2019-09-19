@@ -48,8 +48,7 @@ if ($request->exist('wsdl')) {
 $event_manager = EventManager::instance();
 
 try {
-
-    $server = new TuleapSOAPServer($uri.'/soap/codendi.wsdl.php?wsdl',array('trace' => 1));
+    $server = new TuleapSOAPServer($uri.'/soap/codendi.wsdl.php?wsdl', array('trace' => 1));
 
     require_once __DIR__ .  '/../include/utils_soap.php';
     require_once __DIR__ . '/common/session.php';
@@ -78,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $xml_security->disableExternalLoadOfEntities();
 } else {
     site_header(array('title' => "SOAP API"));
-    $renderer = new MustacheRenderer(new TemplateCache(),'templates');
+    $renderer = new MustacheRenderer(new TemplateCache(), 'templates');
     $renderer->renderToPage('soap_index', array());
     site_footer(array());
 }

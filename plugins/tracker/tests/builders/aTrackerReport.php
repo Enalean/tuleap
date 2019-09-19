@@ -29,7 +29,8 @@ function aTrackerReport()
     return new Test_TrackerReport_Builder();
 }
 
-class Test_TrackerReport_Builder {
+class Test_TrackerReport_Builder
+{
     private $id;
     private $tracker;
     private $name;
@@ -84,5 +85,3 @@ class Test_TrackerReport_Builder {
         return $report;
     }
 }
-
-?>

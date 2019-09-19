@@ -262,7 +262,7 @@ class TemplatePermissionsUpdater
         if ($enable_regexp && $this->regexp_retriever->areRegexpActivatedForDefault($project) === false) {
             $this->regexp_enabler->enableForTemplate($project);
             $regexp_activation = dgettext('tuleap-git', 'enabled');
-        } else if (! $enable_regexp && $this->regexp_retriever->areRegexpActivatedForDefault($project) === true) {
+        } elseif (! $enable_regexp && $this->regexp_retriever->areRegexpActivatedForDefault($project) === true) {
             $this->regexp_disabler->disableForTemplate($project);
             $this->permission_filter->filterNonRegexpPermissionsForDefault($project);
             $regexp_activation = dgettext('tuleap-git', 'disabled');

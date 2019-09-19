@@ -25,7 +25,8 @@
  *
  * PluginsAdministrationPluginDescriptor
  */
-class PluginsAdministrationPluginDescriptor extends PluginDescriptor {
+class PluginsAdministrationPluginDescriptor extends PluginDescriptor
+{
 
     function __construct()
     {
@@ -34,6 +35,4 @@ class PluginsAdministrationPluginDescriptor extends PluginDescriptor {
         parent::__construct($name, false, $description);
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
-
 }
-?>

@@ -23,7 +23,8 @@ namespace Tuleap\LDAP;
 
 use LDAP_UserDao;
 
-class NonUniqueUidRetriever {
+class NonUniqueUidRetriever
+{
 
     /**
      * @var LDAP_UserDao
@@ -46,5 +47,4 @@ class NonUniqueUidRetriever {
 
         return $ldap_uids;
     }
-
 }

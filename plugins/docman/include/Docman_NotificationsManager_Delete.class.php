@@ -123,15 +123,15 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
         switch ($message_type) {
             case self::MESSAGE_REMOVED:
                 $msg = sprintf(
-                        dgettext('plugin-docman', "%s has been removed by %s."),
-                        $params['path']->get($params['item']),
-                        $user->getRealName()
-                    ) . "\n";
+                    dgettext('plugin-docman', "%s has been removed by %s."),
+                    $params['path']->get($params['item']),
+                    $user->getRealName()
+                ) . "\n";
 
                 $msg .= dgettext(
-                        'plugin-docman',
-                        "You are receiving this message because you are monitoring this item."
-                    );
+                    'plugin-docman',
+                    "You are receiving this message because you are monitoring this item."
+                );
                 $msg .=  "\n" . $this->getUrlProvider()->getPluginLinkUrl();
                 break;
             case self::MESSAGE_REMOVED_FROM:
@@ -172,7 +172,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
     {
         $dpm   = $this->_getPermissionsManager();
         $users = $this->notified_people_retriever->getNotifiedUsers($this->project, $id);
-        while($users->valid()) {
+        while ($users->valid()) {
             $row  = $users->current();
             if (!isset($this->_listeners[$row['user_id']])) {
                 $um   = $this->_getUserManager();

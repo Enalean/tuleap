@@ -117,7 +117,6 @@ class Git_Hook_PostReceive
                 'user'                          => $user,
                 'is_technical_reference_update' => $technical_reference_event->isATechnicalReference()
             ));
-
         }
     }
 

@@ -26,7 +26,8 @@ use Tuleap\Layout\IncludeAssets;
 *
 * PROJECT LIST
 */
-class Widget_MyProjects extends Widget {
+class Widget_MyProjects extends Widget
+{
 
     public function __construct()
     {
@@ -89,8 +90,7 @@ class Widget_MyProjects extends Widget {
             $prevIsPublic = -1;
             $token = new CSRFSynchronizerToken('massmail_to_project_members.php');
             while ($row = db_fetch_array($result)) {
-                if (
-                    $row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
+                if ($row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
                     ForgeConfig::areRestrictedUsersAllowed() &&
                     $user->isRestricted()
                 ) {
@@ -111,9 +111,9 @@ class Widget_MyProjects extends Widget {
                     if (ForgeConfig::areRestrictedUsersAllowed()) {
                         if ($row['access'] === Project::ACCESS_PUBLIC_UNRESTRICTED) {
                             $privacy = 'fa fa-tlp-unlock-plus-r';
-                        } else if ($row['access'] === Project::ACCESS_PRIVATE) {
+                        } elseif ($row['access'] === Project::ACCESS_PRIVATE) {
                             $privacy = 'fa fa-tlp-lock-plus-r';
-                        } else if ($row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
+                        } elseif ($row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
                             $privacy = 'fa fa-lock';
                         } else {
                             $privacy = 'fa fa-unlock';
@@ -142,7 +142,7 @@ class Widget_MyProjects extends Widget {
 
                 // Mailing tool
                 $html .= '<td class="'.$tdClass.'">';
-                $html .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="'.$row['group_id'].'" title="'.$GLOBALS['Language']->getText('my_index','send_mail',$row['group_name']).'" data-toggle="modal"><span class="fa fa-envelope-o fa fa-envelope-o"></span></a>';
+                $html .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="'.$row['group_id'].'" title="'.$GLOBALS['Language']->getText('my_index', 'send_mail', $row['group_name']).'" data-toggle="modal"><span class="fa fa-envelope-o fa fa-envelope-o"></span></a>';
                 $html .= '</td>';
 
                 // Remove from project
@@ -206,7 +206,7 @@ class Widget_MyProjects extends Widget {
             'link'        => $server_url,
             'language'    => 'en-us',
             'copyright'   => 'Copyright Xerox',
-            'pubDate'     => gmdate('D, d M Y G:i:s',time()).' GMT',
+            'pubDate'     => gmdate('D, d M Y G:i:s', time()).' GMT',
         ));
         $result = db_query("SELECT groups.group_name,"
             . "groups.group_id,"
@@ -227,20 +227,20 @@ class Widget_MyProjects extends Widget {
             ));
         } else {
             for ($i=0; $i<$rows; $i++) {
-                $title = db_result($result,$i,'group_name');
-                if (in_array(db_result($result,$i,'access'), [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)) {
+                $title = db_result($result, $i, 'group_name');
+                if (in_array(db_result($result, $i, 'access'), [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)) {
                     $title .= ' (*)';
                 }
 
-                $desc = 'Project: '. $server_url .'/project/admin/?group_id='.db_result($result,$i,'group_id') ."<br />\n";
-                if ( db_result($result,$i,'admin_flags') == 'A' ) {
-                    $desc .= 'Admin: '. $server_url .'/project/admin/?group_id='.db_result($result,$i,'group_id');
+                $desc = 'Project: '. $server_url .'/project/admin/?group_id='.db_result($result, $i, 'group_id') ."<br />\n";
+                if (db_result($result, $i, 'admin_flags') == 'A') {
+                    $desc .= 'Admin: '. $server_url .'/project/admin/?group_id='.db_result($result, $i, 'group_id');
                 }
 
                 $rss->addItem(array(
                     'title'       => $title,
                     'description' => $desc,
-                    'link'        => $server_url .'/projects/'. db_result($result,$i,'unix_group_name')
+                    'link'        => $server_url .'/projects/'. db_result($result, $i, 'unix_group_name')
                 ));
             }
         }
@@ -248,7 +248,7 @@ class Widget_MyProjects extends Widget {
     }
     function getDescription()
     {
-        return $GLOBALS['Language']->getText('widget_description_my_projects','description');
+        return $GLOBALS['Language']->getText('widget_description_my_projects', 'description');
     }
 
     private function fetchMassMailForm(CSRFSynchronizerToken $token)

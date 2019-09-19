@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Docman_ApprovalTable {
+abstract class Docman_ApprovalTable
+{
     var $id;
     var $date;
     var $owner;
@@ -143,14 +144,28 @@ abstract class Docman_ApprovalTable {
 
     function initFromRow($row)
     {
-        if(isset($row['table_id']))    $this->id    = $row['table_id'];
-        if(isset($row['table_owner'])) $this->owner = $row['table_owner'];
-        if(isset($row['date']))        $this->date  = $row['date'];
-        if(isset($row['description'])) $this->description = $row['description'];
-        if(isset($row['status']))      $this->status = $row['status'];
-        if(isset($row['notification'])) $this->notification = $row['notification'];
-        if(isset($row['notification_occurence'])) $this->notificationOccurence = $row['notification_occurence'];
-        if(isset($row['might_be_corrupted'])) {
+        if (isset($row['table_id'])) {
+            $this->id    = $row['table_id'];
+        }
+        if (isset($row['table_owner'])) {
+            $this->owner = $row['table_owner'];
+        }
+        if (isset($row['date'])) {
+            $this->date  = $row['date'];
+        }
+        if (isset($row['description'])) {
+            $this->description = $row['description'];
+        }
+        if (isset($row['status'])) {
+            $this->status = $row['status'];
+        }
+        if (isset($row['notification'])) {
+            $this->notification = $row['notification'];
+        }
+        if (isset($row['notification_occurence'])) {
+            $this->notificationOccurence = $row['notification_occurence'];
+        }
+        if (isset($row['might_be_corrupted'])) {
             $this->is_potentially_corrupted = $row['might_be_corrupted'];
         }
         $this->approvalState = $this->computeApprovalState($row);
@@ -159,10 +174,10 @@ abstract class Docman_ApprovalTable {
     /*static*/ function computeApprovalState($row)
     {
         $approvalState = null;
-        if(isset($row['nb_reviewers']) && isset($row['rejected']) && isset($row['nb_approved']) && isset($row['nb_declined'])) {
-            if($row['rejected'] > 0) {
+        if (isset($row['nb_reviewers']) && isset($row['rejected']) && isset($row['nb_approved']) && isset($row['nb_declined'])) {
+            if ($row['rejected'] > 0) {
                 $approvalState = PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED;
-            } elseif($row['nb_reviewers'] > 0 // There are reviewers
+            } elseif ($row['nb_reviewers'] > 0 // There are reviewers
                      && $row['nb_approved'] > 0 // Avoid case when everybody "Will not review"
                      && (($row['nb_reviewers'] == $row['nb_approved']) // Everybody approved
                          || $row['nb_reviewers'] == ($row['nb_approved'] + $row['nb_declined']))
@@ -178,7 +193,7 @@ abstract class Docman_ApprovalTable {
     // Convenient accessors
     function isDisabled()
     {
-        if($this->status == PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED) {
+        if ($this->status == PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED) {
             return true;
         }
         return false;
@@ -186,7 +201,7 @@ abstract class Docman_ApprovalTable {
 
     function isEnabled()
     {
-        if($this->status == PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED) {
+        if ($this->status == PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED) {
             return true;
         }
         return false;
@@ -194,7 +209,7 @@ abstract class Docman_ApprovalTable {
 
     function isClosed()
     {
-        if($this->status == PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED) {
+        if ($this->status == PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED) {
             return true;
         }
         return false;

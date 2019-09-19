@@ -26,7 +26,8 @@
  * There is no type hinting on constructor to avoid having to load LDAP plugin
  * when usage of Git plugin without Gerrit
  */
-class Git_Driver_Gerrit_User {
+class Git_Driver_Gerrit_User
+{
     /**
      * @var LDAP_User
      */

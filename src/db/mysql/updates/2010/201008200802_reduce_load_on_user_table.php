@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201008200802_reduce_load_on_user_table extends ForgeUpgrade_Bucket {
+class b201008200802_reduce_load_on_user_table extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return <<<EOT
@@ -95,7 +96,6 @@ EOT;
                 throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting nb_auth_failure column from user table');
             }
         }
-
     }
 
     public function postUp()
@@ -120,5 +120,3 @@ EOT;
         }
     }
 }
-
-?>

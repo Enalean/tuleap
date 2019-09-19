@@ -23,7 +23,8 @@
 *
 * Base class to create, retrieve, update or delete rules
 */
-class Tracker_Rule_List_Factory {
+class Tracker_Rule_List_Factory
+{
 
     /**
      *
@@ -78,7 +79,7 @@ class Tracker_Rule_List_Factory {
     {
         $rule = $this->dao->searchById($rule_id);
 
-        if(! $rule) {
+        if (! $rule) {
             return null;
         }
 
@@ -94,7 +95,7 @@ class Tracker_Rule_List_Factory {
     {
         $rules = $this->dao->searchByTrackerId($tracker_id);
 
-        if(! $rules) {
+        if (! $rules) {
             return array();
         }
 
@@ -224,4 +225,3 @@ class Tracker_Rule_List_Factory {
         return $list_rule;
     }
 }
-?>

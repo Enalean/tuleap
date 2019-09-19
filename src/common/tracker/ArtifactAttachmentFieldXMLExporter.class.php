@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactAttachmentFieldXMLExporter extends ArtifactFieldXMLExporter {
+class ArtifactAttachmentFieldXMLExporter extends ArtifactFieldXMLExporter
+{
     public const TV3_TYPE            = 'attachment';
     public const TV5_TYPE            = 'file';
     public const XML_FILE_PREFIX = 'File';

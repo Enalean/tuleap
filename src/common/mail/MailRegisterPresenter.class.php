@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MailRegisterPresenter extends MailOutlinePresenter {
+class MailRegisterPresenter extends MailOutlinePresenter
+{
 
     public $section_one;
     public $section_two;
@@ -46,4 +47,3 @@ class MailRegisterPresenter extends MailOutlinePresenter {
         $this->login                = $login;
     }
 }
-?>

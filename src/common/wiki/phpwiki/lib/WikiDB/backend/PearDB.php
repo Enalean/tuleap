@@ -6,8 +6,7 @@ require_once('lib/WikiDB/backend.php');
 //require_once('lib/FileFinder.php');
 //require_once('lib/ErrorManager.php');
 
-class WikiDB_backend_PearDB
-extends WikiDB_backend
+class WikiDB_backend_PearDB extends WikiDB_backend
 {
     public const DATABASE_TABLE_PREFIX = 'wiki_';
 
@@ -48,12 +47,18 @@ extends WikiDB_backend
         $this->_dbh = DB::connect();
         $dbh = &$this->_dbh;
         if (DB::isError($dbh)) {
-            trigger_error(sprintf("Can't connect to database: %s",
-                                  $this->_pear_error_message($dbh)),
-                          E_USER_ERROR);
+            trigger_error(
+                sprintf(
+                    "Can't connect to database: %s",
+                    $this->_pear_error_message($dbh)
+                ),
+                E_USER_ERROR
+            );
         }
-        $dbh->setErrorHandling(PEAR_ERROR_CALLBACK,
-                               array($this, '_pear_error_callback'));
+        $dbh->setErrorHandling(
+            PEAR_ERROR_CALLBACK,
+            array($this, '_pear_error_callback')
+        );
         $dbh->setFetchMode(DB_FETCHMODE_ASSOC);
 
         $this->_table_names
@@ -74,7 +79,6 @@ extends WikiDB_backend
                     'maxversion'   => "MAX(version)",
                     'notempty'     => "<>''",
                     'iscontent'    => "content<>''");
-
     }
 
     /**
@@ -82,11 +86,14 @@ extends WikiDB_backend
      */
     function close()
     {
-        if (!$this->_dbh)
+        if (!$this->_dbh) {
             return;
+        }
         if ($this->_lock_count) {
-            trigger_error( "WARNING: database still locked " . '(lock_count = $this->_lock_count)' . "\n<br />",
-                          E_USER_WARNING);
+            trigger_error(
+                "WARNING: database still locked " . '(lock_count = $this->_lock_count)' . "\n<br />",
+                E_USER_WARNING
+            );
         }
         $this->_dbh->setErrorHandling(PEAR_ERROR_PRINT);    // prevent recursive loops.
         $this->unlock('force');
@@ -106,13 +113,15 @@ extends WikiDB_backend
     {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
-        return $dbh->getOne(sprintf("SELECT $page_tbl.id as id"
+        return $dbh->getOne(sprintf(
+            "SELECT $page_tbl.id as id"
                                     . " FROM $nonempty_tbl, $page_tbl"
                                     . " WHERE $nonempty_tbl.id=$page_tbl.id"
                                     . "   AND pagename='%s'"
                                     . "   AND $page_tbl.group_id=%d",
-                                    $dbh->escapeSimple($pagename),
-                                    GROUP_ID));
+            $dbh->escapeSimple($pagename),
+            GROUP_ID
+        ));
     }
 
     function get_all_pagenames()
@@ -125,7 +134,7 @@ extends WikiDB_backend
                             . "   AND $page_tbl.group_id=".GROUP_ID);
     }
 
-    function numPages($filter=false, $exclude='')
+    function numPages($filter = false, $exclude = '')
     {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
@@ -142,10 +151,12 @@ extends WikiDB_backend
         // Note that this will fail silently if the page does not
         // have a record in the page table.  Since it's just the
         // hit count, who cares?
-        $dbh->query(sprintf("UPDATE %s SET hits=hits+1 WHERE pagename='%s' AND group_id=%d",
-                            $this->_table_names['page_tbl'],
-                            $dbh->escapeSimple($pagename),
-                            GROUP_ID));
+        $dbh->query(sprintf(
+            "UPDATE %s SET hits=hits+1 WHERE pagename='%s' AND group_id=%d",
+            $this->_table_names['page_tbl'],
+            $dbh->escapeSimple($pagename),
+            GROUP_ID
+        ));
         return;
     }
 
@@ -156,19 +167,25 @@ extends WikiDB_backend
     {
         $dbh = &$this->_dbh;
         //trigger_error("GET_PAGEDATA $pagename", E_USER_NOTICE);
-        $result = $dbh->getRow(sprintf("SELECT hits,pagedata FROM %s WHERE pagename='%s' AND group_id=%d",
-                                       $this->_table_names['page_tbl'],
-                                       $dbh->escapeSimple($pagename),
-                                       GROUP_ID),
-                               DB_FETCHMODE_ASSOC);
+        $result = $dbh->getRow(
+            sprintf(
+                "SELECT hits,pagedata FROM %s WHERE pagename='%s' AND group_id=%d",
+                $this->_table_names['page_tbl'],
+                $dbh->escapeSimple($pagename),
+                GROUP_ID
+            ),
+            DB_FETCHMODE_ASSOC
+        );
         return $result ? $this->_extract_page_data($result) : false;
     }
 
     function _extract_page_data($data)
     {
-        if (empty($data)) return array();
-        elseif (empty($data['pagedata'])) return $data;
-        else {
+        if (empty($data)) {
+            return array();
+        } elseif (empty($data['pagedata'])) {
+            return $data;
+        } else {
             $data = array_merge($data, $this->_unserialize($data['pagedata']));
             unset($data['pagedata']);
             return $data;
@@ -185,8 +202,12 @@ extends WikiDB_backend
             // Note that this will fail silently if the page does not
             // have a record in the page table.  Since it's just the
             // hit count, who cares?
-            $dbh->query(sprintf("UPDATE $page_tbl SET hits=%d WHERE pagename='%s' AND group_id=%d",
-                                $newdata['hits'], $dbh->escapeSimple($pagename), GROUP_ID));
+            $dbh->query(sprintf(
+                "UPDATE $page_tbl SET hits=%d WHERE pagename='%s' AND group_id=%d",
+                $newdata['hits'],
+                $dbh->escapeSimple($pagename),
+                GROUP_ID
+            ));
             return;
         }
 
@@ -201,12 +222,13 @@ extends WikiDB_backend
         unset($data['hits']);
 
         foreach ($newdata as $key => $val) {
-            if ($key == 'hits')
+            if ($key == 'hits') {
                 $hits = (int)$val;
-            else if (empty($val))
+            } elseif (empty($val)) {
                 unset($data[$key]);
-            else
+            } else {
                 $data[$key] = $val;
+            }
         }
 
         /* Portability issue -- not all DBMS supports huge strings
@@ -219,11 +241,13 @@ extends WikiDB_backend
                             $dbh->escapeSimple($this->_serialize($data)),
                             $dbh->escapeSimple($pagename)));
         */
-        $sth = $dbh->query("UPDATE $page_tbl"
+        $sth = $dbh->query(
+            "UPDATE $page_tbl"
                            . " SET hits=?, pagedata=?"
                            . " WHERE pagename=?"
                            . "   AND group_id=?",
-                           array($hits, $this->_serialize($data), $pagename, GROUP_ID));
+            array($hits, $this->_serialize($data), $pagename, GROUP_ID)
+        );
         $this->unlock(array($page_tbl));
     }
 
@@ -231,19 +255,24 @@ extends WikiDB_backend
     {
         $dbh = &$this->_dbh;
         $page_tbl = $this->_table_names['page_tbl'];
-        return $dbh->GetOne(sprintf("SELECT cached_html FROM $page_tbl WHERE pagename='%s' AND group_id=%d",
-                                    $dbh->escapeSimple($pagename), GROUP_ID));
+        return $dbh->GetOne(sprintf(
+            "SELECT cached_html FROM $page_tbl WHERE pagename='%s' AND group_id=%d",
+            $dbh->escapeSimple($pagename),
+            GROUP_ID
+        ));
     }
 
     function set_cached_html($pagename, $data)
     {
         $dbh = &$this->_dbh;
         $page_tbl = $this->_table_names['page_tbl'];
-        $sth = $dbh->query("UPDATE $page_tbl"
+        $sth = $dbh->query(
+            "UPDATE $page_tbl"
                            . " SET cached_html=?"
                            . " WHERE pagename=?"
                            . "   AND group_id=?",
-                           array($data, $pagename, GROUP_ID));
+            array($data, $pagename, GROUP_ID)
+        );
     }
 
     function _get_pageid($pagename, $create_if_missing = false)
@@ -261,21 +290,29 @@ extends WikiDB_backend
         $dbh = &$this->_dbh;
         $page_tbl = $this->_table_names['page_tbl'];
 
-        $query = sprintf("SELECT id FROM $page_tbl WHERE pagename='%s' AND group_id=%d",
-                         $dbh->escapeSimple($pagename), GROUP_ID);
+        $query = sprintf(
+            "SELECT id FROM $page_tbl WHERE pagename='%s' AND group_id=%d",
+            $dbh->escapeSimple($pagename),
+            GROUP_ID
+        );
 
-        if (!$create_if_missing)
+        if (!$create_if_missing) {
             return $dbh->getOne($query);
+        }
 
         $id = $dbh->getOne($query);
         if (empty($id)) {
             $this->lock(array($page_tbl), true); // write lock
             $max_id = $dbh->getOne("SELECT MAX(id) FROM $page_tbl");
             $id = $max_id + 1;
-            $dbh->query(sprintf("INSERT INTO $page_tbl"
+            $dbh->query(sprintf(
+                "INSERT INTO $page_tbl"
                                 . " (id,pagename,hits,group_id)"
                                 . " VALUES (%d,'%s',0,%d)",
-                                $id, $dbh->escapeSimple($pagename),GROUP_ID));
+                $id,
+                $dbh->escapeSimple($pagename),
+                GROUP_ID
+            ));
             $this->unlock(array($page_tbl));
         }
         return $id;
@@ -286,13 +323,15 @@ extends WikiDB_backend
         $dbh = &$this->_dbh;
         extract($this->_table_names);
         return
-            (int)$dbh->getOne(sprintf("SELECT latestversion"
+            (int)$dbh->getOne(sprintf(
+                "SELECT latestversion"
                                       . " FROM $page_tbl, $recent_tbl"
                                       . " WHERE $page_tbl.id=$recent_tbl.id"
                                       . "  AND pagename='%s'"
                                       . "  AND $page_tbl.group_id=%d",
-                                      $dbh->escapeSimple($pagename),
-                                      GROUP_ID));
+                $dbh->escapeSimple($pagename),
+                GROUP_ID
+            ));
     }
 
     function get_previous_version($pagename, $version)
@@ -301,19 +340,21 @@ extends WikiDB_backend
         extract($this->_table_names);
 
         return
-            (int)$dbh->getOne(sprintf("SELECT version"
+            (int)$dbh->getOne(sprintf(
+                "SELECT version"
                                       . " FROM $version_tbl, $page_tbl"
                                       . " WHERE $version_tbl.id=$page_tbl.id"
                                       . "  AND pagename='%s'"
                                       . "  AND version < %d"
                                       . "  AND $page_tbl.group_id=%d"
                                       . " ORDER BY version DESC",
-                                      /* Non portable and useless anyway with getOne
+                /* Non portable and useless anyway with getOne
                                       . " LIMIT 1",
                                       */
                                       $dbh->escapeSimple($pagename),
-                                      $version,
-                                      GROUP_ID));
+                $version,
+                GROUP_ID
+            ));
     }
 
     /**
@@ -339,41 +380,48 @@ extends WikiDB_backend
             $fields = $this->page_tbl_fields
                 . ",$page_tbl.pagedata as pagedata,"
                 . $this->version_tbl_fields;
-        }
-        else {
+        } else {
             $fields = $this->page_tbl_fields . ","
                 . "mtime, minor_edit, versiondata,"
                 . "$iscontent AS have_content";
         }
 
-        $result = $dbh->getRow(sprintf("SELECT $fields"
+        $result = $dbh->getRow(
+            sprintf(
+                "SELECT $fields"
                                        . " FROM $page_tbl, $version_tbl"
                                        . " WHERE $page_tbl.id=$version_tbl.id"
                                        . "  AND pagename='%s'"
                                        . "  AND version=%d"
                                        . "  AND group_id=%d",
-                                       $dbh->escapeSimple($pagename), $version, GROUP_ID),
-                               DB_FETCHMODE_ASSOC);
+                $dbh->escapeSimple($pagename),
+                $version,
+                GROUP_ID
+            ),
+            DB_FETCHMODE_ASSOC
+        );
 
         return $this->_extract_version_data($result);
     }
 
     function _extract_version_data($query_result)
     {
-        if (!$query_result)
+        if (!$query_result) {
             return false;
+        }
 
         $data = $this->_unserialize($query_result['versiondata']);
 
         $data['mtime'] = $query_result['mtime'];
         $data['is_minor_edit'] = !empty($query_result['minor_edit']);
 
-        if (isset($query_result['content']))
+        if (isset($query_result['content'])) {
             $data['%content'] = $query_result['content'];
-        elseif ($query_result['have_content'])
+        } elseif ($query_result['have_content']) {
             $data['%content'] = true;
-        else
+        } else {
             $data['%content'] = '';
+        }
 
         // FIXME: this is ugly.
         if (isset($query_result['pagedata'])) {
@@ -411,9 +459,12 @@ extends WikiDB_backend
         $id = $this->_get_pageid($pagename, true);
 
         // FIXME: optimize: mysql can do this with one REPLACE INTO (I think).
-        $dbh->query(sprintf("DELETE FROM $version_tbl"
+        $dbh->query(sprintf(
+            "DELETE FROM $version_tbl"
                             . " WHERE id=%d AND version=%d",
-                            $id, $version));
+            $id,
+            $version
+        ));
 
         /* mysql optimized version.
         $dbh->query(sprintf("INSERT INTO $version_tbl"
@@ -424,11 +475,13 @@ extends WikiDB_backend
                             $dbh->quoteSmart($this->_serialize($data))));
         */
         // generic slow PearDB bind eh quoting.
-        $dbh->query("INSERT INTO $version_tbl"
+        $dbh->query(
+            "INSERT INTO $version_tbl"
                     . " (id,version,mtime,minor_edit,content,versiondata)"
                     . " VALUES(?, ?, ?, ?, ?, ?)",
-                    array($id, $version, $mtime, $minor_edit, $content,
-                    $this->_serialize($data)));
+            array($id, $version, $mtime, $minor_edit, $content,
+            $this->_serialize($data))
+        );
 
         $this->_update_recent_table($id);
         $this->_update_nonempty_table($id);
@@ -445,7 +498,7 @@ extends WikiDB_backend
         extract($this->_table_names);
 
         $this->lock();
-        if ( ($id = $this->_get_pageid($pagename)) ) {
+        if (($id = $this->_get_pageid($pagename))) {
             $dbh->query("DELETE FROM $version_tbl"
                         . " WHERE id=$id AND version=$version");
             $this->_update_recent_table($id);
@@ -466,7 +519,7 @@ extends WikiDB_backend
         extract($this->_table_names);
 
         $this->lock();
-        if ( ($id = $this->_get_pageid($pagename, false)) ) {
+        if (($id = $this->_get_pageid($pagename, false))) {
             $dbh->query("DELETE FROM $version_tbl  WHERE id=$id");
             $dbh->query("DELETE FROM $recent_tbl   WHERE id=$id");
             $dbh->query("DELETE FROM $nonempty_tbl WHERE id=$id");
@@ -477,8 +530,7 @@ extends WikiDB_backend
                 // altogether.
                 $dbh->query("UPDATE $page_tbl SET hits=0, pagedata='' WHERE id=$id");
                 $result = 0;
-            }
-            else {
+            } else {
                 $dbh->query("DELETE FROM $page_tbl WHERE id=$id");
                 $result = 1;
             }
@@ -511,10 +563,11 @@ extends WikiDB_backend
         $dbh->query("DELETE FROM $link_tbl WHERE linkfrom=$pageid");
 
         if ($links) {
-            foreach($links as $link) {
+            foreach ($links as $link) {
                 // avoid duplicates
-                if (isset($linkseen[$link]))
+                if (isset($linkseen[$link])) {
                     continue;
+                }
                 $linkseen[$link] = true;
                 $linkid = $this->_get_pageid($link, true);
                 assert($linkid);
@@ -530,25 +583,29 @@ extends WikiDB_backend
      */
     function get_links(
         $pagename,
-        $reversed=true,
-        $include_empty=false,
-        $sortby=false,
-        $limit=false,
-        $exclude=''
+        $reversed = true,
+        $include_empty = false,
+        $sortby = false,
+        $limit = false,
+        $exclude = ''
     ) {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
 
-        if ($reversed)
+        if ($reversed) {
             list($have,$want) = array('linkee', 'linker');
-        else
+        } else {
             list($have,$want) = array('linker', 'linkee');
+        }
         $orderby = $this->sortby($sortby, 'db', array('pagename'));
-        if ($orderby) $orderby = ' ORDER BY $want.' . $orderby;
-        if ($exclude) // array of pagenames
+        if ($orderby) {
+            $orderby = ' ORDER BY $want.' . $orderby;
+        }
+        if ($exclude) { // array of pagenames
             $exclude = " AND $want.pagename NOT IN ".$this->_sql_set($exclude);
-        else
+        } else {
             $exclude='';
+        }
 
         $qpagename = $dbh->escapeSimple($pagename);
         $sql = "SELECT $want.id AS id, $want.pagename AS pagename "
@@ -576,39 +633,42 @@ extends WikiDB_backend
     /**
      * Find if a page links to another page
      */
-    function exists_link($pagename, $link, $reversed=false)
+    function exists_link($pagename, $link, $reversed = false)
     {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
 
-        if ($reversed)
+        if ($reversed) {
             list($have, $want) = array('linkee', 'linker');
-        else
+        } else {
             list($have, $want) = array('linker', 'linkee');
+        }
         $qpagename = $dbh->escapeSimple($pagename);
         $qlink = $dbh->escapeSimple($link);
-        $row = $dbh->GetRow
-            ("SELECT IF($want.pagename,1,0) as result"
+        $row = $dbh->GetRow("SELECT IF($want.pagename,1,0) as result"
              . " FROM $link_tbl, $page_tbl linker, $page_tbl linkee, $nonempty_tbl"
              . " WHERE linkfrom=linker.id AND linkto=linkee.id"
              . " AND $have.pagename='$qpagename'"
              . " AND $want.pagename='$qlink'"
              . " AND $want.group_id=".GROUP_ID
              . " AND $have.group_id=".GROUP_ID
-             . " LIMIT 1");
+        . " LIMIT 1");
         return $row['result'];
     }
 
-    function get_all_pages($include_empty=false, $sortby=false, $limit=false, $exclude='')
+    function get_all_pages($include_empty = false, $sortby = false, $limit = false, $exclude = '')
     {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
         $orderby = $this->sortby($sortby, 'db');
-        if ($orderby) $orderby = ' ORDER BY ' . $orderby;
-        if ($exclude) // array of pagenames
+        if ($orderby) {
+            $orderby = ' ORDER BY ' . $orderby;
+        }
+        if ($exclude) { // array of pagenames
             $exclude = " AND $page_tbl.pagename NOT IN ".$this->_sql_set($exclude);
-        else
+        } else {
             $exclude='';
+        }
 
         if (strstr($orderby, 'mtime ')) { // multiple columns possible
             if ($include_empty) {
@@ -619,8 +679,7 @@ extends WikiDB_backend
                     . " AND $page_tbl.id=$version_tbl.id AND latestversion=version AND $page_tbl.group_id=".GROUP_ID
                     . $exclude
                     . $orderby;
-            }
-            else {
+            } else {
                 $sql = "SELECT "
                     . $this->page_tbl_fields
                     . " FROM $nonempty_tbl, $page_tbl, $recent_tbl, $version_tbl"
@@ -637,8 +696,7 @@ extends WikiDB_backend
                     ." FROM $page_tbl"
                     . ($exclude ? " WHERE $exclude AND $page_tbl.group_id=".GROUP_ID : " WHERE $page_tbl.group_id=".GROUP_ID)
                     . $orderby;
-            }
-            else {
+            } else {
                 $sql = "SELECT "
                     . $this->page_tbl_fields
                     . " FROM $nonempty_tbl, $page_tbl"
@@ -661,18 +719,21 @@ extends WikiDB_backend
     /**
      * Title search.
      */
-    function text_search($search, $fulltext=false, $sortby=false, $limit=false, $exclude=false)
+    function text_search($search, $fulltext = false, $sortby = false, $limit = false, $exclude = false)
     {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
         $orderby = $this->sortby($sortby, 'db');
-        if ($orderby) $orderby = ' ORDER BY ' . $orderby;
+        if ($orderby) {
+            $orderby = ' ORDER BY ' . $orderby;
+        }
         //else " ORDER BY rank($field, to_tsquery('$searchon')) DESC";
 
         $searchclass = static::class."_search";
         // no need to define it everywhere and then fallback. memory!
-        if (!class_exists($searchclass))
+        if (!class_exists($searchclass)) {
             $searchclass = "WikiDB_backend_PearDB_search";
+        }
         $searchobj = new $searchclass($search, $dbh);
 
         $table = "$nonempty_tbl, $page_tbl";
@@ -746,11 +807,11 @@ extends WikiDB_backend
     /**
      * Find highest or lowest hit counts.
      */
-    function most_popular($limit=20, $sortby='-hits')
+    function most_popular($limit = 20, $sortby = '-hits')
     {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
-        if ($limit < 0){
+        if ($limit < 0) {
             $order = "hits ASC";
             $limit = -$limit;
             $where = "";
@@ -760,8 +821,9 @@ extends WikiDB_backend
         }
         $orderby = '';
         if ($sortby != '-hits') {
-            if ($order = $this->sortby($sortby, 'db'))
+            if ($order = $this->sortby($sortby, 'db')) {
                 $orderby = " ORDER BY " . $order;
+            }
         } else {
             $orderby = " ORDER BY $order";
         }
@@ -799,8 +861,9 @@ extends WikiDB_backend
         extract($this->_table_names);
 
         $pick = array();
-        if ($since)
+        if ($since) {
             $pick[] = "mtime >= $since";
+        }
 
         if ($include_all_revisions) {
             // Include all revisions of each page.
@@ -810,13 +873,11 @@ extends WikiDB_backend
             if ($exclude_major_revisions) {
         // Include only minor revisions
                 $pick[] = "minor_edit <> 0";
-            }
-            elseif (!$include_minor_revisions) {
+            } elseif (!$include_minor_revisions) {
         // Include only major revisions
                 $pick[] = "minor_edit = 0";
             }
-        }
-        else {
+        } else {
             $table = "$page_tbl, $recent_tbl";
             $join_clause = "$page_tbl.id=$recent_tbl.id";
             $join_clause .= " AND $page_tbl.group_id=".GROUP_ID;
@@ -826,25 +887,24 @@ extends WikiDB_backend
             if ($exclude_major_revisions) {
                 // Include only most recent minor revision
                 $pick[] = 'version=latestminor';
-            }
-            elseif (!$include_minor_revisions) {
+            } elseif (!$include_minor_revisions) {
                 // Include only most recent major revision
                 $pick[] = 'version=latestmajor';
-            }
-            else {
+            } else {
                 // Include only the latest revision (whether major or minor).
                 $pick[] ='version=latestversion';
             }
         }
         $order = "DESC";
-        if($limit < 0){
+        if ($limit < 0) {
             $order = "ASC";
             $limit = -$limit;
         }
         // $limitclause = $limit ? " LIMIT $limit" : '';
         $where_clause = $join_clause;
-        if ($pick)
+        if ($pick) {
             $where_clause .= " AND " . join(" AND ", $pick);
+        }
 
         // FIXME: use SQL_BUFFER_RESULT for mysql?
         $sql = "SELECT "
@@ -864,17 +924,20 @@ extends WikiDB_backend
     /**
      * Find referenced empty pages.
      */
-    function wanted_pages($exclude_from='', $exclude='', $sortby=false, $limit=false)
+    function wanted_pages($exclude_from = '', $exclude = '', $sortby = false, $limit = false)
     {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
-        if ($orderby = $this->sortby($sortby, 'db', array('pagename','wantedfrom')))
+        if ($orderby = $this->sortby($sortby, 'db', array('pagename','wantedfrom'))) {
             $orderby = 'ORDER BY ' . $orderby;
+        }
 
-        if ($exclude_from) // array of pagenames
+        if ($exclude_from) { // array of pagenames
             $exclude_from = " AND pp.pagename NOT IN ".$this->_sql_set($exclude_from);
-        if ($exclude) // array of pagenames
+        }
+        if ($exclude) { // array of pagenames
             $exclude = " AND p.pagename NOT IN ".$this->_sql_set($exclude);
+        }
         $sql = "SELECT p.pagename, pp.pagename as wantedfrom"
             . " FROM $page_tbl p, $link_tbl linked "
             . " LEFT JOIN $page_tbl pp ON linked.linkto = pp.id"
@@ -900,7 +963,7 @@ extends WikiDB_backend
         foreach ($pagenames as $p) {
             $s .= ("'".$this->_dbh->escapeSimple($p)."',");
         }
-        return substr($s,0,-1).")";
+        return substr($s, 0, -1).")";
     }
 
     /**
@@ -912,7 +975,7 @@ extends WikiDB_backend
         extract($this->_table_names);
 
         $this->lock();
-        if (($id = $this->_get_pageid($pagename, false)) ) {
+        if (($id = $this->_get_pageid($pagename, false))) {
             if ($new = $this->_get_pageid($to, false)) {
                 // Cludge Alert!
                 // This page does not exist (already verified before), but exists in the page table.
@@ -925,8 +988,10 @@ extends WikiDB_backend
                 $dbh->query("UPDATE $link_tbl SET linkfrom=$id WHERE linkfrom=$new");
                 $dbh->query("UPDATE $link_tbl SET linkto=$id WHERE linkto=$new");
             }
-            $dbh->query(sprintf("UPDATE $page_tbl SET pagename='%s' WHERE id=$id",
-                                $dbh->escapeSimple($to)));
+            $dbh->query(sprintf(
+                "UPDATE $page_tbl SET pagename='%s' WHERE id=$id",
+                $dbh->escapeSimple($to)
+            ));
         }
         $this->unlock();
         return $id;
@@ -943,12 +1008,12 @@ extends WikiDB_backend
         $this->lock();
         $dbh->query("DELETE FROM $recent_tbl"
                     . ( $pageid ? " WHERE id=$pageid" : ""));
-        $dbh->query( "INSERT INTO $recent_tbl"
+        $dbh->query("INSERT INTO $recent_tbl"
                      . " (id, latestversion, latestmajor, latestminor)"
                      . " SELECT id, $maxversion, $maxmajor, $maxminor"
                      . " FROM $version_tbl"
                      . ( $pageid ? " WHERE id=$pageid" : "")
-                     . " GROUP BY id" );
+                     . " GROUP BY id");
         $this->unlock();
     }
 
@@ -988,8 +1053,9 @@ extends WikiDB_backend
      */
     function lock($tables = false, $write_lock = true)
     {
-        if ($this->_lock_count++ == 0)
+        if ($this->_lock_count++ == 0) {
             $this->_lock_tables($write_lock);
+        }
     }
 
     /**
@@ -1012,8 +1078,9 @@ extends WikiDB_backend
      */
     function unlock($tables = false, $force = false)
     {
-        if ($this->_lock_count == 0)
+        if ($this->_lock_count == 0) {
             return;
+        }
         if (--$this->_lock_count <= 0 || $force) {
             $this->_unlock_tables();
             $this->_lock_count = 0;
@@ -1034,8 +1101,9 @@ extends WikiDB_backend
      */
     function _serialize($data)
     {
-        if (empty($data))
+        if (empty($data)) {
             return '';
+        }
         assert(is_array($data));
         return serialize($data);
     }
@@ -1071,8 +1139,9 @@ extends WikiDB_backend
      */
     function _pear_error_callback($error)
     {
-        if ($this->_is_false_error($error))
+        if ($this->_is_false_error($error)) {
             return;
+        }
 
         $this->_dbh->setErrorHandling(PEAR_ERROR_PRINT);    // prevent recursive loops.
         $this->close();
@@ -1092,8 +1161,9 @@ extends WikiDB_backend
      */
     function _is_false_error($error)
     {
-        if ($error->getCode() != DB_ERROR)
+        if ($error->getCode() != DB_ERROR) {
             return false;
+        }
 
         $query = $this->_dbh->last_query;
 
@@ -1127,8 +1197,11 @@ extends WikiDB_backend
              . "\t(" . $error->getDebugInfo() . ")\n";
 
         // Prevent password from being exposed during a connection error
-        $safe_dsn = preg_replace('| ( :// .*? ) : .* (?=@) |xs',
-                                 '\\1:XXXXXXXX', $this->_dsn);
+        $safe_dsn = preg_replace(
+            '| ( :// .*? ) : .* (?=@) |xs',
+            '\\1:XXXXXXXX',
+            $this->_dsn
+        );
         return str_replace($this->_dsn, $safe_dsn, $message);
     }
 
@@ -1185,13 +1258,12 @@ extends WikiDB_backend
  *
  * @author: Dan Frankowski
  */
-class WikiDB_backend_PearDB_generic_iter
-extends WikiDB_backend_iterator
+class WikiDB_backend_PearDB_generic_iter extends WikiDB_backend_iterator
 {
     function __construct(
         $backend,
         $query_result,
-        $field_list = NULL
+        $field_list = null
     ) {
         if (DB::isError($query_result)) {
             // This shouldn't happen, I thought.
@@ -1204,16 +1276,18 @@ extends WikiDB_backend_iterator
 
     function count()
     {
-        if (!$this->_result)
+        if (!$this->_result) {
             return false;
+        }
         return $this->_result->numRows();
     }
 
     function next()
     {
         $backend = &$this->_backend;
-        if (!$this->_result)
+        if (!$this->_result) {
             return false;
+        }
 
         $record = $this->_result->fetchRow(DB_FETCHMODE_ASSOC);
         if (!$record) {
@@ -1233,15 +1307,15 @@ extends WikiDB_backend_iterator
     }
 }
 
-class WikiDB_backend_PearDB_iter
-extends WikiDB_backend_PearDB_generic_iter
+class WikiDB_backend_PearDB_iter extends WikiDB_backend_PearDB_generic_iter
 {
 
     function next()
     {
         $backend = &$this->_backend;
-        if (!$this->_result)
+        if (!$this->_result) {
             return false;
+        }
 
         $record = $this->_result->fetchRow(DB_FETCHMODE_ASSOC);
         if (!$record) {
@@ -1499,4 +1573,3 @@ class WikiDB_backend_PearDB_search extends WikiDB_backend_search_sql
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

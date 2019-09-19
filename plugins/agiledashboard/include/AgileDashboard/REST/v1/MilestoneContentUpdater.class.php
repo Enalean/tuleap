@@ -28,7 +28,8 @@ use Planning_Milestone;
 use PFUser;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 
-class MilestoneContentUpdater {
+class MilestoneContentUpdater
+{
 
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;

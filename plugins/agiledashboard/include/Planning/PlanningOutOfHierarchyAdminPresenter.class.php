@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_PlanningOutOfHierarchyAdminPresenter extends Planning_PlanningAdminPresenter {
+class Planning_PlanningOutOfHierarchyAdminPresenter extends Planning_PlanningAdminPresenter
+{
     private $root_planning_name;
 
     public function __construct(Planning $planning, $root_planning_name)
@@ -39,5 +40,3 @@ class Planning_PlanningOutOfHierarchyAdminPresenter extends Planning_PlanningAdm
         ));
     }
 }
-
-?>

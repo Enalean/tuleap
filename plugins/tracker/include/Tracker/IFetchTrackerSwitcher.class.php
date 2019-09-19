@@ -24,7 +24,8 @@
  *  + Tracker_IDisplayTrackerLayout
  *  + fetchTrackerSwitcher
  */
-interface Tracker_IFetchTrackerSwitcher extends Tracker_IDisplayTrackerLayout {
+interface Tracker_IFetchTrackerSwitcher extends Tracker_IDisplayTrackerLayout
+{
 
     /**
      * Display a selectbox to switch to a tracker of:
@@ -43,4 +44,3 @@ interface Tracker_IFetchTrackerSwitcher extends Tracker_IDisplayTrackerLayout {
      */
     public function fetchTrackerSwitcher(PFUser $user, $separator, ?Project $include_project = null, ?Tracker $current_tracker = null);
 }
-?>

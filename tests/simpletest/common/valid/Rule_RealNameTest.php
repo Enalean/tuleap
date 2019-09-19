@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Rule_RealNameTest extends TuleapTestCase {
+class Rule_RealNameTest extends TuleapTestCase
+{
     private $rule;
 
     public function setUp()
@@ -63,5 +64,3 @@ tata"));
         $this->assertTrue($this->rule->isValid('いろはにほへとちりぬるを'));
     }
 }
-
-?>

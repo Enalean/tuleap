@@ -167,7 +167,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
 
     private function getControllerFromRequest(Codendi_Request $request)
     {
-        if ($request->get('pane') == 'gerrit_servers_admin'  || $request->get('view') === 'gerrit_servers_restriction' ) {
+        if ($request->get('pane') == 'gerrit_servers_admin'  || $request->get('view') === 'gerrit_servers_restriction') {
             return new Git_AdminGerritController(
                 $this->csrf,
                 $this->gerrit_server_factory,
@@ -187,7 +187,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
                 $this->include_assets,
                 $this->version_detector
             );
-        } elseif ($request->get('pane') === 'mirrors_admin' || $request->get('view') === 'mirrors_restriction'){
+        } elseif ($request->get('pane') === 'mirrors_admin' || $request->get('view') === 'mirrors_restriction') {
             return new Git_AdminMirrorController(
                 $this->csrf,
                 $this->git_mirror_mapper,

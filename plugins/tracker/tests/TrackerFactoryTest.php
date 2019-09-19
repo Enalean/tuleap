@@ -25,17 +25,19 @@ require_once('bootstrap.php');
 Mock::generate('Tracker_HierarchyFactory');
 Mock::generate('Tracker_SharedFormElementFactory');
 Mock::generate('Tracker');
-Mock::generatePartial('TrackerFactory',
-                      'TrackerFactoryTestVersion',
-                      array('getCannedResponseFactory',
+Mock::generatePartial(
+    'TrackerFactory',
+    'TrackerFactoryTestVersion',
+    array('getCannedResponseFactory',
                             'getFormElementFactory',
                             'getTooltipFactory',
                             'getReportFactory',
                       )
 );
-Mock::generatePartial('TrackerFactory',
-                      'TrackerFactoryTestVersion2',
-                      array('getDao',
+Mock::generatePartial(
+    'TrackerFactory',
+    'TrackerFactoryTestVersion2',
+    array('getDao',
                             'getProjectManager',
                             'getTrackerById',
                             'isNameExists',
@@ -54,7 +56,8 @@ Mock::generate('Tracker_ReportFactory');
 Mock::generate('response');
 Mock::generate('BaseLanguage');
 
-class TrackerFactoryTest extends TuleapTestCase {
+class TrackerFactoryTest extends TuleapTestCase
+{
 
 
     public function setUp()
@@ -98,7 +101,7 @@ class TrackerFactoryTest extends TuleapTestCase {
         $name = 'My New Tracker';
         $description = 'My New Tracker to manage my brand new artifacts';
         $itemname = 'existingreference';
-        $this->assertFalse($tracker_factory->create($project_id,$group_id_template,$id_template,$name,$description,$itemname));
+        $this->assertFalse($tracker_factory->create($project_id, $group_id_template, $id_template, $name, $description, $itemname));
     }
 
     public function testImpossibleToCreateTrackerWithAlreadyUsedName()
@@ -128,7 +131,7 @@ class TrackerFactoryTest extends TuleapTestCase {
         $name = 'My New Tracker With an existing name';
         $description = 'My New Tracker to manage my brand new artifacts';
         $itemname = 'mynewtracker';
-        $this->assertFalse($tracker_factory->create($project_id,$group_id_template,$id_template,$name,$description,$itemname));
+        $this->assertFalse($tracker_factory->create($project_id, $group_id_template, $id_template, $name, $description, $itemname));
     }
 
     public function testImpossibleToCreateTrackerWithAlreadyUsedShortName()
@@ -158,7 +161,7 @@ class TrackerFactoryTest extends TuleapTestCase {
         $name = 'My New Tracker';
         $description = 'My New Tracker to manage my brand new artifacts';
         $itemname = 'MyNewTracker';
-        $this->assertFalse($tracker_factory->create($project_id,$group_id_template,$id_template,$name,$description,$itemname));
+        $this->assertFalse($tracker_factory->create($project_id, $group_id_template, $id_template, $name, $description, $itemname));
     }
 
 
@@ -179,10 +182,10 @@ class TrackerFactoryTest extends TuleapTestCase {
 
         $this->assertEqual($possible_children, $expected_children);
     }
-
 }
 
-class TrackerFactoryDuplicationTest extends TuleapTestCase {
+class TrackerFactoryDuplicationTest extends TuleapTestCase
+{
 
     /**
      * @var TrackerFactory
@@ -192,13 +195,15 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
     public function setUp()
     {
         parent::setUp();
-        $this->tracker_factory   = TestHelper::getPartialMock('TrackerFactory',
-                      array('create',
+        $this->tracker_factory   = TestHelper::getPartialMock(
+            'TrackerFactory',
+            array('create',
                             'getTrackersByGroupId',
                             'getHierarchyFactory',
                             'getFormElementFactory',
                             'getTriggerRulesManager',
-                      ));
+            )
+        );
         $this->hierarchy_factory     = new MockTracker_HierarchyFactory();
         $this->trigger_rules_manager = mock('Tracker_Workflow_Trigger_RulesManager');
         $this->formelement_factory   = mock('Tracker_FormElementFactory');
@@ -206,7 +211,6 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         $this->tracker_factory->setReturnValue('getHierarchyFactory', $this->hierarchy_factory);
         $this->tracker_factory->setReturnValue('getFormElementFactory', $this->formelement_factory);
         $this->tracker_factory->setReturnValue('getTriggerRulesManager', $this->trigger_rules_manager);
-
     }
 
 
@@ -249,12 +253,16 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         $full_field_mapping = array_merge($t_new1_field_mapping, $t_new2_field_mapping);
         $to_project_id   = 999;
         $from_project_id = 100;
-        $this->tracker_factory->setReturnValue('create',
-                                                array('tracker' => $t_new1, 'field_mapping' => $t_new1_field_mapping, 'report_mapping' => array()),
-                                                array($to_project_id, $from_project_id, 123, '*', '*', '*', null));
-        $this->tracker_factory->setReturnValue('create',
-                                                array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping, 'report_mapping' => array()),
-                                                array($to_project_id, $from_project_id, 567, '*', '*', '*', null)) ;
+        $this->tracker_factory->setReturnValue(
+            'create',
+            array('tracker' => $t_new1, 'field_mapping' => $t_new1_field_mapping, 'report_mapping' => array()),
+            array($to_project_id, $from_project_id, 123, '*', '*', '*', null)
+        );
+        $this->tracker_factory->setReturnValue(
+            'create',
+            array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping, 'report_mapping' => array()),
+            array($to_project_id, $from_project_id, 567, '*', '*', '*', null)
+        ) ;
 
         $this->formelement_factory->expectOnce('fixOriginalFieldIdsAfterDuplication', array($to_project_id, $from_project_id, $full_field_mapping));
         $this->tracker_factory->duplicate($from_project_id, $to_project_id, null);

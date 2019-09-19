@@ -21,7 +21,8 @@
 /*
  * This represents a milestone at the bottom of a planning hierarchy
  */
-class Planning_Presenter_LastLevelMilestone {
+class Planning_Presenter_LastLevelMilestone
+{
 
      /** @var Planning_Presenter_MilestoneSummaryPresenter[] */
     public $milestone_summary_presenters;
@@ -40,4 +41,3 @@ class Planning_Presenter_LastLevelMilestone {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'no_milestone');
     }
 }
-?>

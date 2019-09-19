@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECKTest extends TuleapTestCase {
+class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECKTest extends TuleapTestCase
+{
 
     /** @var SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK */
     private $event;

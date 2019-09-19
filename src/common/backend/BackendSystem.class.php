@@ -21,7 +21,8 @@
  *
  */
 
-class BackendSystem extends Backend {
+class BackendSystem extends Backend
+{
 
 
     protected $needRefreshUserCache = false;
@@ -266,7 +267,7 @@ class BackendSystem extends Backend {
             // in there are owned by the project group and not
             // the user own group
             // Moreover, we need to chmod after mkdir because the umask may not allow the precised mode
-            if (mkdir($projdir,0775)) {
+            if (mkdir($projdir, 0775)) {
                 $this->chown($projdir, "dummy");
                 $this->chgrp($projdir, $unix_group_name);
                 $this->chmod($projdir, 02775);
@@ -293,7 +294,7 @@ class BackendSystem extends Backend {
         if ($projdir != $lcProjectDir) {
             $lcprojlnk = $lcProjectDir;
             if (!is_link($lcprojlnk)) {
-                if (!symlink($projdir,$lcprojlnk)) {
+                if (!symlink($projdir, $lcprojlnk)) {
                     $this->log("Can't create project link: $lcprojlnk", Backend::LOG_ERROR);
                 }
             }
@@ -301,7 +302,7 @@ class BackendSystem extends Backend {
 
         if (!is_dir($ht_dir)) {
             // Project web site directory
-            if (mkdir($ht_dir,0775)) {
+            if (mkdir($ht_dir, 0775)) {
                 $this->chown($ht_dir, "dummy");
                 $this->chgrp($ht_dir, $unix_group_name);
                 chmod($ht_dir, 02775);
@@ -313,16 +314,15 @@ class BackendSystem extends Backend {
                 if (is_file($custom_homepage)) {
                     $dest_homepage = $ht_dir . '/index.php';
                     copy($custom_homepage, $dest_homepage);
-                } else if (is_file($default_homepage)) {
+                } elseif (is_file($default_homepage)) {
                     $dest_homepage = $ht_dir . '/index.html';
                     copy($default_homepage, $dest_homepage);
                 }
                 if (is_file($dest_homepage)) {
                     $this->chown($dest_homepage, "dummy");
                     $this->chgrp($dest_homepage, $unix_group_name);
-                    chmod($dest_homepage,0664);
+                    chmod($dest_homepage, 0664);
                 }
-
             } else {
                 $this->log("Can't create project web root: $ht_dir", Backend::LOG_ERROR);
                 return false;
@@ -330,7 +330,7 @@ class BackendSystem extends Backend {
         }
 
         if (!is_dir($private_dir)) {
-            if (mkdir($private_dir,0770)) {
+            if (mkdir($private_dir, 0770)) {
                 $this->chmod($private_dir, 02770);
                 $this->chown($private_dir, "dummy");
                 $this->chgrp($private_dir, $unix_group_name);
@@ -349,7 +349,7 @@ class BackendSystem extends Backend {
             $stat = stat("$private_dir");
             if ($stat) {
                 $dummy_user = posix_getpwnam('dummy');
-                if ( ($stat['uid'] != $dummy_user['uid'])
+                if (($stat['uid'] != $dummy_user['uid'])
                     || ($stat['gid'] != $project->getUnixGID()) ) {
                     $this->log("Restoring privacy on private dir: $private_dir", Backend::LOG_WARNING);
                     $this->chown($private_dir, "dummy");
@@ -426,18 +426,19 @@ class BackendSystem extends Backend {
         }
 
         $user=$this->getUserManager()->getUserById($user_id);
-        if (!$user) return false;
+        if (!$user) {
+            return false;
+        }
         $homedir=ForgeConfig::get('homedir_prefix')."/".$user->getUserName();
         $backupfile=ForgeConfig::get('sys_project_backup_path')."/".$user->getUserName().".tgz";
 
         if (is_dir($homedir)) {
             system("cd ".ForgeConfig::get('homedir_prefix')."; tar cfz $backupfile ".$user->getUserName());
-            chmod($backupfile,0600);
+            chmod($backupfile, 0600);
             $this->recurseDeleteInDir($homedir);
             rmdir($homedir);
         }
         return true;
-
     }
 
 
@@ -456,13 +457,15 @@ class BackendSystem extends Backend {
         }
 
         $project=$this->getProjectManager()->getProject($group_id);
-        if (!$project) return false;
+        if (!$project) {
+            return false;
+        }
         $mydir=ForgeConfig::get('grpdir_prefix')."/".$project->getUnixName(false);
         $backupfile=ForgeConfig::get('sys_project_backup_path')."/".$project->getUnixName(false).".tgz";
 
         if (is_dir($mydir)) {
             system("cd ".ForgeConfig::get('grpdir_prefix')."; tar cfz $backupfile ".$project->getUnixName(false));
-            chmod($backupfile,0600);
+            chmod($backupfile, 0600);
             $this->recurseDeleteInDir($mydir);
             rmdir($mydir);
 
@@ -544,7 +547,7 @@ class BackendSystem extends Backend {
         if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
             $sshkey_dumper = new User_SSHKeyDumper($this);
             $user_manager  = $this->getUserManager();
-            foreach($user_manager->getUsersWithSshKey() as $user) {
+            foreach ($user_manager->getUsersWithSshKey() as $user) {
                 $sshkey_dumper->writeSSHKeys($user);
             }
         }
@@ -579,7 +582,9 @@ class BackendSystem extends Backend {
         $home_dir=ForgeConfig::get('grpdir_prefix')."/".$unix_group_name;
         if (is_dir($home_dir)) {
             return true;
-        } else return false;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -607,7 +612,7 @@ class BackendSystem extends Backend {
 
         if ($this->fileExists($dir)) {
             return false;
-        } else if ($name != strtolower ($name)) {
+        } elseif ($name != strtolower($name)) {
             $link = ForgeConfig::get('grpdir_prefix')."/".strtolower($name);
             if ($this->fileExists($link)) {
                 return false;
@@ -615,7 +620,7 @@ class BackendSystem extends Backend {
         }
         if ($this->fileExists($frs)) {
             return false;
-        } else if ($this->fileExists($ftp)) {
+        } elseif ($this->fileExists($ftp)) {
             return false;
         }
         return true;
@@ -663,7 +668,7 @@ class BackendSystem extends Backend {
                     unlink(ForgeConfig::get('grpdir_prefix').'/'.$project->getUnixName(true));
                 }
                 if (strtolower($newName) != $newName) {
-                    return symlink(ForgeConfig::get('grpdir_prefix').'/'.$newName,ForgeConfig::get('grpdir_prefix').'/'.strtolower($newName));
+                    return symlink(ForgeConfig::get('grpdir_prefix').'/'.$newName, ForgeConfig::get('grpdir_prefix').'/'.strtolower($newName));
                 } else {
                     return true;
                 }
@@ -704,7 +709,7 @@ class BackendSystem extends Backend {
             return true;
         }
 
-        if (is_dir(ForgeConfig::get('ftp_anon_dir_prefix').'/'.$project->getUnixName(false))){
+        if (is_dir(ForgeConfig::get('ftp_anon_dir_prefix').'/'.$project->getUnixName(false))) {
             return rename(ForgeConfig::get('ftp_anon_dir_prefix').'/'.$project->getUnixName(false), ForgeConfig::get('ftp_anon_dir_prefix').'/'.$newName);
         } else {
             return true;
@@ -748,6 +753,4 @@ class BackendSystem extends Backend {
     {
         return new WikiAttachment();
     }
-
-
 }

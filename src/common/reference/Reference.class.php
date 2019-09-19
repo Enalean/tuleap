@@ -23,7 +23,8 @@
  * Reference class
  * Stores a reference as stored in the DB (with keyword, link, etc.)
  */
-class Reference {
+class Reference
+{
 
     /**
      * @var int the ID as stored in the 'Reference' DB table.
@@ -81,7 +82,7 @@ class Reference {
      *
      * The constructor only builds full objects; Only the 'myid' and 'mygroup_id' params may be set to 0 if unknown.
      */
-    public function __construct($myid,$mykeyword,$mydescription,$mylink,$myscope,$myservice_short_name,$nature,$myis_active,$mygroup_id)
+    public function __construct($myid, $mykeyword, $mydescription, $mylink, $myscope, $myservice_short_name, $nature, $myis_active, $mygroup_id)
     {
         $this->id=$myid;
         $this->keyword=strtolower($mykeyword);
@@ -150,8 +151,9 @@ class Reference {
     function getNumParam()
     {
         // Compute number of parameters if not already done
-        if ($this->num_param == false)
+        if ($this->num_param == false) {
             $this->num_param=$this->computeNumParam($this->link);
+        }
         return $this->num_param;
     }
 
@@ -193,7 +195,7 @@ class Reference {
      * @param array $args array of arguments (optional)
      * @param string $projname contains the project name (optional)
     */
-    function replaceLink($args=null, $projname=null)
+    function replaceLink($args = null, $projname = null)
     {
         $this->link = str_replace('$0', $this->keyword, $this->link);
         if ($projname) {
@@ -202,7 +204,9 @@ class Reference {
         $this->link = str_replace('$group_id', $this->group_id, $this->link);
         if (is_array($args)) {
             $count=count($args);
-            if ($count>9) $count=9;
+            if ($count>9) {
+                $count=9;
+            }
             for ($i=1; $i<=$count; $i++) {
                 $this->link = str_replace('$'.$i, urlencode($args[$i-1]), $this->link);
             }
@@ -224,7 +228,9 @@ class Reference {
     function computeNumParam($link)
     {
         for ($i=9; $i>0; $i--) {
-            if (strpos($link,'$'.$i)!==false) return $i;
+            if (strpos($link, '$'.$i)!==false) {
+                return $i;
+            }
         }
         return 0;
     }
@@ -239,6 +245,4 @@ class Reference {
         }
         return $this->referenceDao;
     }
-
 }
-?>

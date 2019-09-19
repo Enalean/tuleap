@@ -86,7 +86,6 @@ class FRSValidator
                 $res1 = $frsrf->getFRSReleaseFromDb($release['release_id'], $group_id);
                 if (! $res1 || $res1 === null) {
                     $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'p_rel_not_yours'));
-
                 } else {
                     if ($release['package_id'] != $res1->getPackageID()) {
                         //changing to a different package for this release
@@ -97,7 +96,7 @@ class FRSValidator
                         }
                     }
                     //check if release name exists already
-                    if(($res1->getPackageID()!=$release['package_id']) || ($res1->getPackageID()==$release['package_id'] && $res1->getName() != $release['name'])){
+                    if (($res1->getPackageID()!=$release['package_id']) || ($res1->getPackageID()==$release['package_id'] && $res1->getName() != $release['name'])) {
                         $release_exists = $frsrf->getReleaseIdByName($release['name'], $release['package_id']);
                     }
                     if (!isset($release_exists) || count($release_exists) < 1) {

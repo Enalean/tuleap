@@ -19,7 +19,9 @@
  */
 
 if (!class_exists("FakeValue")) {
-    class FakeValue {}
+    class FakeValue
+    {
+    }
 }
 
 /**
@@ -28,7 +30,8 @@ if (!class_exists("FakeValue")) {
  *
  *
  */
-class CollectionTestCase extends TuleapTestCase {
+class CollectionTestCase extends TuleapTestCase
+{
 
     var $collection_class_name;
 
@@ -57,10 +60,14 @@ class CollectionTestCase extends TuleapTestCase {
     function testContains()
     {
         $col = new $this->collection_class_name();
-        $a = new StdClass();$a->toto = 1;
-        $b = new StdClass();$b->toto = 2;
-        $c = new StdClass();$c->toto = 3;
-        $d = new StdClass();$d->toto = 4;
+        $a = new StdClass();
+        $a->toto = 1;
+        $b = new StdClass();
+        $b->toto = 2;
+        $c = new StdClass();
+        $c->toto = 3;
+        $d = new StdClass();
+        $d->toto = 4;
         $col->add($a);
         $col->add($b);
         $col->add($c);
@@ -86,16 +93,20 @@ class CollectionTestCase extends TuleapTestCase {
     function testReference()
     {
         $col = new $this->collection_class_name();
-        $a = new StdClass();$a->toto = 1;
-        $b = new StdClass();$b->toto = 2;
+        $a = new StdClass();
+        $a->toto = 1;
+        $b = new StdClass();
+        $b->toto = 2;
         $col->add($a);
         $this->assertTrue($col->contains($a));
         $this->assertFalse($col->contains($b));
     }
     function testSize()
     {
-        $a = new StdClass();$a->toto = 1;
-        $b = new StdClass();$b->toto = 2;
+        $a = new StdClass();
+        $a->toto = 1;
+        $b = new StdClass();
+        $b->toto = 2;
         $col = new $this->collection_class_name();
         $this->assertEqual($col->size(), 0);
         $col->add($a);
@@ -131,8 +142,10 @@ class CollectionTestCase extends TuleapTestCase {
 
     function testEqualsOneElement()
     {
-        $a = new StdClass();$a->toto = 1;
-        $b = new StdClass();$b->toto = 2;
+        $a = new StdClass();
+        $a->toto = 1;
+        $b = new StdClass();
+        $b->toto = 2;
         $col1 = new $this->collection_class_name();
         $col2 = new $this->collection_class_name();
         $col1->add($a);
@@ -142,8 +155,10 @@ class CollectionTestCase extends TuleapTestCase {
 
     function testNotEqualsTwoElements()
     {
-        $a = new StdClass();$a->toto = 1;
-        $b = new StdClass();$b->toto = 2;
+        $a = new StdClass();
+        $a->toto = 1;
+        $b = new StdClass();
+        $b->toto = 2;
         $col1 = new $this->collection_class_name();
         $col2 = new $this->collection_class_name();
         $col1->add($a);
@@ -153,8 +168,10 @@ class CollectionTestCase extends TuleapTestCase {
     }
     function testEqualsTwoElements()
     {
-        $a = new StdClass();$a->toto = 1;
-        $b = new StdClass();$b->toto = 2;
+        $a = new StdClass();
+        $a->toto = 1;
+        $b = new StdClass();
+        $b->toto = 2;
         $col1 = new $this->collection_class_name();
         $col2 = new $this->collection_class_name();
         $col1->add($a);
@@ -166,8 +183,10 @@ class CollectionTestCase extends TuleapTestCase {
 
     function testEqualsDifferentOrder()
     {
-        $a = new StdClass();$a->toto = 1;
-        $b = new StdClass();$b->toto = 2;
+        $a = new StdClass();
+        $a->toto = 1;
+        $b = new StdClass();
+        $b->toto = 2;
         $col1 = new $this->collection_class_name();
         $col2 = new $this->collection_class_name();
         $col1->add($a);
@@ -190,9 +209,12 @@ class CollectionTestCase extends TuleapTestCase {
 
     function testEqualsSameAndDifferentElements()
     {
-        $a = new StdClass();$a->toto = 1;
-        $b = new StdClass();$b->toto = 2;
-        $c = new StdClass();$c->toto = 3;
+        $a = new StdClass();
+        $a->toto = 1;
+        $b = new StdClass();
+        $b->toto = 2;
+        $c = new StdClass();
+        $c->toto = 3;
         $col1 = new $this->collection_class_name();
         $col2 = new $this->collection_class_name();
         $col1->add($a);
@@ -204,8 +226,10 @@ class CollectionTestCase extends TuleapTestCase {
 
     function testEqualsUniqueAndNonUniqueElements()
     {
-        $a = new StdClass();$a->toto = 1;
-        $b = new StdClass();$b->toto = 2;
+        $a = new StdClass();
+        $a->toto = 1;
+        $b = new StdClass();
+        $b->toto = 2;
         $col1 = new $this->collection_class_name();
         $col2 = new $this->collection_class_name();
         $col1->add($a);
@@ -217,8 +241,10 @@ class CollectionTestCase extends TuleapTestCase {
 
     function testInitialArray()
     {
-        $a = new StdClass();$a->toto = 1;
-        $b = new StdClass();$b->toto = 2;
+        $a = new StdClass();
+        $a->toto = 1;
+        $b = new StdClass();
+        $b->toto = 2;
         $arr = array();
         $arr[] = $a;
         $arr[] = $b;
@@ -241,5 +267,3 @@ class CollectionTestCase extends TuleapTestCase {
 }
 //We just tells SimpleTest to always ignore this testcase
 SimpleTest::ignore('CollectionTestCase');
-
-?>

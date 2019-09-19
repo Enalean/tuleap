@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TourFactoryTest_getTour extends TuleapTestCase {
+class TourFactoryTest_getTour extends TuleapTestCase
+{
 
     protected $factory;
 

@@ -19,7 +19,8 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
+class Tracker_FormElement_View_AdminTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -100,7 +101,8 @@ class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
     }
 }
 
-class FakeFormElement extends Tracker_FormElement_Field_String {
+class FakeFormElement extends Tracker_FormElement_Field_String
+{
 
     public static function getFactoryIconUseIt()
     {
@@ -109,7 +111,6 @@ class FakeFormElement extends Tracker_FormElement_Field_String {
 
     public static function getFactoryLabel()
     {
-
     }
 
     public function setSharedCopies($fields)
@@ -117,4 +118,3 @@ class FakeFormElement extends Tracker_FormElement_Field_String {
         $this->sharedCopies = $fields;
     }
 }
-?>

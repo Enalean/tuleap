@@ -27,4 +27,3 @@ if ($p && $plugin_manager->isPluginAvailable($p)) {
 } else {
     header('Location: /');
 }
-?>

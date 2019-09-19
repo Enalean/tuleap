@@ -19,7 +19,8 @@
  */
 require_once dirname(__FILE__).'/../../../bootstrap.php';
 
-abstract class AgileDashboard_Milestone_MilestoneStatusCounterBaseTest extends TuleapTestCase {
+abstract class AgileDashboard_Milestone_MilestoneStatusCounterBaseTest extends TuleapTestCase
+{
 
     protected $backlog_dao;
     protected $counter;
@@ -42,7 +43,8 @@ abstract class AgileDashboard_Milestone_MilestoneStatusCounterBaseTest extends T
     }
 }
 
-class AgileDashboard_Milestone_MilestoneStatusCounterTest extends AgileDashboard_Milestone_MilestoneStatusCounterBaseTest {
+class AgileDashboard_Milestone_MilestoneStatusCounterTest extends AgileDashboard_Milestone_MilestoneStatusCounterBaseTest
+{
 
     public function setUp()
     {
@@ -121,7 +123,8 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends AgileDashboard
     }
 }
 
-class AgileDashboard_Milestone_MilestoneStatusCounter_PermissionsTest extends AgileDashboard_Milestone_MilestoneStatusCounterBaseTest {
+class AgileDashboard_Milestone_MilestoneStatusCounter_PermissionsTest extends AgileDashboard_Milestone_MilestoneStatusCounterBaseTest
+{
 
     public function itDoesntCountBacklogElementNotReadable()
     {

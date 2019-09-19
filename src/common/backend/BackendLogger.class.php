@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class BackendLogger implements Logger {
+class BackendLogger implements Logger
+{
     public const FILENAME = 'codendi_syslog';
 
     private $filepath;
@@ -79,7 +80,6 @@ class BackendLogger implements Logger {
     public function warn($message, ?Exception $e = null)
     {
         $this->log($this->generateLogWithException($message, $e), Feedback::WARN);
-
     }
 
     public function generateLogWithException($message, ?Exception $e = null)
@@ -91,6 +91,5 @@ class BackendLogger implements Logger {
             $log_string    .= ": $error_message:\n$stack_trace";
         }
         return $log_string;
-
     }
 }

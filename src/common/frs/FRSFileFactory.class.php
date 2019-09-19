@@ -25,7 +25,8 @@ use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
 
-class FRSFileFactory {
+class FRSFileFactory
+{
     public const COMPUTE_MD5 = 0x0001;
 
     /**
@@ -71,19 +72,19 @@ class FRSFileFactory {
     /**
      * @return FRSFile | null
      */
-    public function getFRSFileFromDb($file_id, $group_id=null)
+    public function getFRSFileFromDb($file_id, $group_id = null)
     {
         $_id = (int) $file_id;
         $dao = $this->_getFRSFileDao();
-        if($group_id){
+        if ($group_id) {
             $_group_id = (int) $group_id;
             $dar = $dao->searchInReleaseById($_id, $group_id);
-        }else{
+        } else {
             $dar = $dao->searchById($_id);
         }
 
         $file = null;
-        if(!$dar->isError() && $dar->valid()) {
+        if (!$dar->isError() && $dar->valid()) {
             $data_array = $dar->current();
             $file = FRSFileFactory::getFRSFileFromArray($data_array);
         }
@@ -102,8 +103,8 @@ class FRSFileFactory {
         $dar = $dao->searchByReleaseId($_id);
 
         $files = array();
-        if(!$dar->isError() && $dar->valid()) {
-            while ($dar->valid()){
+        if (!$dar->isError() && $dar->valid()) {
+            while ($dar->valid()) {
                 $data_array = $dar->current();
                 $files[] = FRSFileFactory::getFRSFileFromArray($data_array);
                 $dar->next();
@@ -134,7 +135,6 @@ class FRSFileFactory {
             $dar->next();
         }
         return $file_info;
-
     }
 
     function getFRSFileInfoListByReleaseFromDb($release_id)
@@ -158,7 +158,6 @@ class FRSFileFactory {
             $dar->next();
         }
         return $file_info;
-
     }
 
     function isFileNameExist($file_name, $group_id)
@@ -167,7 +166,7 @@ class FRSFileFactory {
         $dao = $this->_getFRSFileDao();
         $dar = $dao->searchFileByName($file_name, $_id);
 
-        if($dar->isError()){
+        if ($dar->isError()) {
             return;
         }
 
@@ -225,8 +224,9 @@ class FRSFileFactory {
 
         if ($dao->updateFromArray($data_array)) {
             $file = $this->getFRSFileFromDb($data_array['file_id']);
-            $this->_getEventManager()->processEvent('frs_update_file',
-            array(
+            $this->_getEventManager()->processEvent(
+                'frs_update_file',
+                array(
                 'group_id' => $file->getGroup()->getGroupId(),
                 'item_id'    => $data_array['file_id'])
             );
@@ -269,9 +269,11 @@ class FRSFileFactory {
             $file = $this->getFRSFileFromDb($id);
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
-            $this->_getEventManager()->processEvent('frs_create_file',
-            array('group_id' => $file->getGroup()->getGroupId(),
-                                                          'item_id'    => $id));
+            $this->_getEventManager()->processEvent(
+                'frs_create_file',
+                array('group_id' => $file->getGroup()->getGroupId(),
+                'item_id'    => $id)
+            );
             return $id;
         }
         return false;
@@ -291,7 +293,7 @@ class FRSFileFactory {
     {
         $this->logger->debug('createFile start');
         $rule = new Rule_FRSFileName();
-        if(!$rule->isValid($file->getFileName())){
+        if (!$rule->isValid($file->getFileName())) {
             throw new FRSFileIllegalNameException($file);
         }
         $rel = $file->getRelease();
@@ -316,9 +318,9 @@ class FRSFileFactory {
             throw new FRSFileInvalidNameException($file);
         }
 
-        if (0 != ($extraFlags & self::COMPUTE_MD5)){
+        if (0 != ($extraFlags & self::COMPUTE_MD5)) {
             $file->setComputedMd5(PHP_BigFile::getMd5Sum($filePath));
-            if(!$this->compareMd5Checksums($file->getComputedMd5(), $file->getReferenceMd5())){
+            if (!$this->compareMd5Checksums($file->getComputedMd5(), $file->getReferenceMd5())) {
                 throw new FRSFileMD5SumException($file);
             }
         }
@@ -327,19 +329,19 @@ class FRSFileFactory {
         $file->setStatus('A');
 
         $now = time();
-        if($file->getReleaseTime() === null) {
+        if ($file->getReleaseTime() === null) {
             $file->setReleaseTime($now);
         }
-        if($file->getPostDate() === null) {
+        if ($file->getPostDate() === null) {
             $file->setPostDate($now);
         }
 
         $this->logger->debug('file ready to be moved');
-        if($this->moveFileForge($file)){
+        if ($this->moveFileForge($file)) {
             $this->logger->debug('file moved, create into the DB');
             $fileId=$this->create($file->toArray());
             $this->logger->debug('file '.$fileId.' created');
-            if($fileId){
+            if ($fileId) {
                 $file->setFileID($fileId);
                 $this->logger->debug('createFile completed');
                 return $file;
@@ -368,7 +370,7 @@ class FRSFileFactory {
         // Workaround for files bigger than 2Gb:
         $src_dir  = $this->getSrcDir($project);
         $filelist = shell_exec("/usr/bin/find ". $src_dir ." -maxdepth 1 -type f -printf \"%f\\n\"");
-        $files = explode("\n",$filelist);
+        $files = explode("\n", $filelist);
         // Remove last (empty) element
         array_pop($files);
         foreach ($files as $file) {
@@ -429,7 +431,7 @@ class FRSFileFactory {
             exec($cmd, $exec_res, $ret_val);
             $this->logger->debug('fileforge done with status '.$ret_val);
             foreach ($exec_res as $line) {
-                $this->logger->debug("\t $line" );
+                $this->logger->debug("\t $line");
             }
             // Warning. Posix common value for success is 0 (zero), but in php 0 == false.
             // So "convert" the unix "success" value to the php one (basically 0 => true).
@@ -475,7 +477,7 @@ class FRSFileFactory {
      */
     function _getFRSReleaseFactory()
     {
-        if(empty($this->release_factory)) {
+        if (empty($this->release_factory)) {
             $this->release_factory = new FRSReleaseFactory();
         }
         return $this->release_factory;
@@ -487,9 +489,11 @@ class FRSFileFactory {
         $file = $this->getFRSFileFromDb($_id);
         $dao = $this->_getFRSFileDao();
         if ($dao->delete($_id)) {
-            $this->_getEventManager()->processEvent('frs_delete_file',
-            array('group_id' => $file->getGroup()->getGroupId(),
-                                                         'item_id'    => $_id));
+            $this->_getEventManager()->processEvent(
+                'frs_delete_file',
+                array('group_id' => $file->getGroup()->getGroupId(),
+                'item_id'    => $_id)
+            );
             return true;
         }
         return false;
@@ -796,7 +800,7 @@ class FRSFileFactory {
                             }
                         }
                         if ($nbFiles === 0) {
-                            if(!rmdir($rel->getPathname())) {
+                            if (!rmdir($rel->getPathname())) {
                                 $backend->log("Error while removing ".$rel->getPathname()."release folder", Backend::LOG_ERROR);
                                 return false;
                             }
@@ -806,7 +810,7 @@ class FRSFileFactory {
                     }
                 }
                 if ($nbRel === 0) {
-                    if(!rmdir($prj->getPathname())) {
+                    if (!rmdir($prj->getPathname())) {
                         $backend->log("Error while removing ".$prj->getPathname()." project folder", Backend::LOG_ERROR);
                         return false;
                     }
@@ -947,9 +951,11 @@ class FRSFileFactory {
                 }
                 if (rename($stagingPath, $file->getFileLocation())) {
                     if ($dao->restoreFile($file->getFileID())) {
-                        $this->_getEventManager()->processEvent('frs_restore_file',
-                        array('group_id' => $file->getGroup()->getGroupId(),
-                              'item_id'  => $file->getFileID()));
+                        $this->_getEventManager()->processEvent(
+                            'frs_restore_file',
+                            array('group_id' => $file->getGroup()->getGroupId(),
+                            'item_id'  => $file->getFileID())
+                        );
                         return true;
                     }
                     $backend->log("File ".$file->getFileLocation()."(".$file->getFileID().") not restored, database error", Backend::LOG_ERROR);

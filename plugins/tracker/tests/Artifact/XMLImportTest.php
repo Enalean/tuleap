@@ -23,7 +23,8 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 require_once __DIR__.'/../bootstrap.php';
 
-abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
+abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase
+{
     protected $tracker_id = 12;
 
     /** @var Tracker */
@@ -130,7 +131,8 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Artifact_XMLImport_ZipArchiveTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_ZipArchiveTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     /** @var Tracker_Artifact_XMLImport_XMLImportZipArchive */
     private $archive;
@@ -203,7 +205,8 @@ class Tracker_Artifact_XMLImport_ZipArchiveTest extends Tracker_Artifact_XMLImpo
     }
 }
 
-class Tracker_Artifact_XMLImport_HappyPathTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_HappyPathTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $xml_element;
 
@@ -321,7 +324,8 @@ class Tracker_Artifact_XMLImport_HappyPathTest extends Tracker_Artifact_XMLImpor
     }
 }
 
-class Tracker_Artifact_XMLImport_CommentsTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_CommentsTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $xml_element;
 
@@ -402,7 +406,8 @@ class Tracker_Artifact_XMLImport_CommentsTest extends Tracker_Artifact_XMLImport
     }
 }
 
-class Tracker_Artifact_XMLImport_CommentUpdatesTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_CommentUpdatesTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $xml_element;
     private $changeset;
@@ -482,7 +487,8 @@ class Tracker_Artifact_XMLImport_CommentUpdatesTest extends Tracker_Artifact_XML
     }
 }
 
-class Tracker_Artifact_XMLImport_NoFieldTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_NoFieldTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $xml_element;
 
@@ -528,7 +534,8 @@ class Tracker_Artifact_XMLImport_NoFieldTest extends Tracker_Artifact_XMLImportB
     }
 }
 
-class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
 
     public function setUp()
@@ -576,8 +583,7 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
                   </field_change>
                 </changeset>
               </artifact>
-            </artifacts>'
-        );
+            </artifacts>');
 
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(101);
@@ -705,8 +711,7 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
                   </field_change>
                 </changeset>
               </artifact>
-            </artifacts>'
-        );
+            </artifacts>');
 
         $this->user_manager->shouldReceive('getUserByIdentifier')
             ->with('email:jo@example.com')
@@ -738,7 +743,8 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
     }
 }
 
-class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $xml_element;
 
@@ -1058,7 +1064,8 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
     }
 }
 
-class Tracker_Artifact_XMLImport_SeveralArtifactsTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_SeveralArtifactsTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $xml_element;
 
@@ -1122,7 +1129,8 @@ class Tracker_Artifact_XMLImport_SeveralArtifactsTest extends Tracker_Artifact_X
     }
 }
 
-class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $file_field_id = 51;
 
@@ -1215,7 +1223,8 @@ class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_
     }
 }
 
-class Tracker_Artifact_XMLImport_AttachmentNoLongerExistsTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_AttachmentNoLongerExistsTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $file_field_id = 51;
 
@@ -1279,7 +1288,8 @@ class Tracker_Artifact_XMLImport_AttachmentNoLongerExistsTest extends Tracker_Ar
     }
 }
 
-class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $file_field_id = 51;
 
@@ -1363,7 +1373,8 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends
     }
 }
 
-class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangesetsTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangesetsTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $file_field_id = 51;
 
@@ -1469,7 +1480,8 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
     }
 }
 
-class Tracker_Artifact_XMLImport_CCListTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_CCListTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $xml_element;
 
@@ -1546,7 +1558,8 @@ class Tracker_Artifact_XMLImport_CCListTest extends Tracker_Artifact_XMLImportBa
     }
 }
 
-class Tracker_Artifact_XMLImport_PermsOnArtifactTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_PermsOnArtifactTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $xml_element;
 
@@ -1610,7 +1623,8 @@ class Tracker_Artifact_XMLImport_PermsOnArtifactTest extends Tracker_Artifact_XM
     }
 }
 
-class Tracker_Artifact_XMLImport_TextTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_TextTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $xml_element;
 
@@ -1673,7 +1687,8 @@ class Tracker_Artifact_XMLImport_TextTest extends Tracker_Artifact_XMLImportBase
     }
 }
 
-class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $xml_element;
 
@@ -1789,18 +1804,18 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
         $this->artifact_creator->shouldReceive('createFirstChangeset')
            ->once()
            ->with(
-                Mockery::any(),
-                Mockery::any(),
-                Mockery::on(function ($data) {
+               Mockery::any(),
+               Mockery::any(),
+               Mockery::on(function ($data) {
                     return $data[$this->string_field_id] === 'Import artifact in tracker v5' &&
                         $data[$this->int_field_id] === '5' &&
                         $data[$this->float_field_id] === '4.5' &&
                         $data[$this->date_field_id] === '2014-03-20 10:13';
-                }),
-                Mockery::any(),
-                Mockery::any(),
-                false,
-                Mockery::any()
+               }),
+               Mockery::any(),
+               Mockery::any(),
+               false,
+               Mockery::any()
            )
            ->andReturn($this->artifact);
 
@@ -1843,7 +1858,8 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
     }
 }
 
-class Tracker_Artifact_XMLImport_SelectboxTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_SelectboxTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $status_field;
     private $status_field_id = 234;
@@ -1922,7 +1938,8 @@ class Tracker_Artifact_XMLImport_SelectboxTest extends Tracker_Artifact_XMLImpor
     }
 }
 
-class Tracker_Artifact_XMLImport_StaticMultiSelectboxTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_StaticMultiSelectboxTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $static_multi_selectbox_field;
     private $static_multi_selectbox_field_id = 456;
@@ -1998,7 +2015,8 @@ class Tracker_Artifact_XMLImport_StaticMultiSelectboxTest extends Tracker_Artifa
     }
 }
 
-class Tracker_Artifact_XMLImport_UserMultiSelectboxTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_UserMultiSelectboxTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $user_multi_selectbox_field;
     private $user_multi_selectbox_field_id = 456;
@@ -2068,7 +2086,8 @@ class Tracker_Artifact_XMLImport_UserMultiSelectboxTest extends Tracker_Artifact
     }
 }
 
-class Tracker_Artifact_XMLImport_ChangesetsCreationFailureTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_ChangesetsCreationFailureTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $xml_element;
 
@@ -2135,7 +2154,8 @@ class Tracker_Artifact_XMLImport_ChangesetsCreationFailureTest extends Tracker_A
     }
 }
 
-class Tracker_Artifact_XMLImport_ArtifactLinkTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_ArtifactLinkTest extends Tracker_Artifact_XMLImportBaseTest
+{
     private $field_id = 369;
     private $field;
 
@@ -2212,8 +2232,7 @@ class Tracker_Artifact_XMLImport_ArtifactLinkTest extends Tracker_Artifact_XMLIm
                   </field_change>
                 </changeset>
               </artifact>
-            </artifacts>'
-        );
+            </artifacts>');
 
         $art1 = \Mockery::spy(\Tracker_Artifact::class);
         stub($art1)->getId()->returns(1);
@@ -2233,7 +2252,8 @@ class Tracker_Artifact_XMLImport_ArtifactLinkTest extends Tracker_Artifact_XMLIm
     }
 }
 
-class Tracker_Artifact_XMLImport_BadDateTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_BadDateTest extends Tracker_Artifact_XMLImportBaseTest
+{
 
     private $xml_element;
 
@@ -2276,5 +2296,4 @@ class Tracker_Artifact_XMLImport_BadDateTest extends Tracker_Artifact_XMLImportB
             $this->config
         );
     }
-
 }

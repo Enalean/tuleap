@@ -19,7 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-class Docman_ExpandAllHierarchyVisitor /* implements Visitor */ {
+class Docman_ExpandAllHierarchyVisitor /* implements Visitor */
+{
     function visitFolder(&$item, $params = array())
     {
         if ($item->getParentId()) {
@@ -29,7 +30,7 @@ class Docman_ExpandAllHierarchyVisitor /* implements Visitor */ {
         $items = $item->getAllItems();
         if ($items->size()) {
             $it = $items->iterator();
-            while($it->valid()) {
+            while ($it->valid()) {
                 $o = $it->current();
                 $o->accept($this, $params);
                 $it->next();
@@ -61,6 +62,4 @@ class Docman_ExpandAllHierarchyVisitor /* implements Visitor */ {
     {
         return $this->visitDocument($item, $params);
     }
-
 }
-?>

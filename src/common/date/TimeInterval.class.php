@@ -21,7 +21,8 @@
 /**
  * A time interval.
  */
-class TimeInterval {
+class TimeInterval
+{
 
     /**
      * Creates a new time interval from UNIX timestamps.
@@ -84,7 +85,4 @@ class TimeInterval {
             throw new Exception('Start must be strictly before end');
         }
     }
-
-
 }
-?>

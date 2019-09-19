@@ -17,7 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-class GraphOnTrackersV5_InSessionChartSorter {
+class GraphOnTrackersV5_InSessionChartSorter
+{
     public const FREEZE__DONT_MOVE = '--';
     public const BEGINNING         = 'beginning';
     public const END               = 'end';

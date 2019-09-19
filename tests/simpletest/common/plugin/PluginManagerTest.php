@@ -27,7 +27,8 @@ Mock::generate('DataAccessResult');
 
 Mock::generatePartial('ForgeUpgradeConfig', 'ForgeUpgradeConfigTestPluginManager', array('run'));
 
-class PluginManagerTest extends TuleapTestCase {
+class PluginManagerTest extends TuleapTestCase
+{
 
     public function setUp()
     {

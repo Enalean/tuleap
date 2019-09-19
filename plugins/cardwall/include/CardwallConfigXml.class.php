@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class CardwallConfigXml {
+class CardwallConfigXml
+{
     public const NODE_CARDWALL = 'cardwall';
     public const NODE_TRACKERS = 'trackers';
     public const NODE_TRACKER  = 'tracker';

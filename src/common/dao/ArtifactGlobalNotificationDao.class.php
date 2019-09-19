@@ -22,7 +22,8 @@
 /**
  *  Data Access Object for ArtifactGlobalNotification
  */
-class ArtifactGlobalNotificationDao extends DataAccessObject {
+class ArtifactGlobalNotificationDao extends DataAccessObject
+{
     /**
     * Gets all tables of the db
     * @return DataAccessResult
@@ -39,8 +40,10 @@ class ArtifactGlobalNotificationDao extends DataAccessObject {
     */
     function searchById($id)
     {
-        $sql = sprintf("SELECT tracker_id, addresses, all_updates, check_permissions FROM artifact_global_notification WHERE id = %s",
-        $this->da->quoteSmart($id));
+        $sql = sprintf(
+            "SELECT tracker_id, addresses, all_updates, check_permissions FROM artifact_global_notification WHERE id = %s",
+            $this->da->quoteSmart($id)
+        );
         return $this->retrieve($sql);
     }
 
@@ -50,8 +53,10 @@ class ArtifactGlobalNotificationDao extends DataAccessObject {
     */
     function searchByTrackerId($trackerId)
     {
-        $sql = sprintf("SELECT id, addresses, all_updates, check_permissions FROM artifact_global_notification WHERE tracker_id = %s ORDER BY id",
-        $this->da->quoteSmart($trackerId));
+        $sql = sprintf(
+            "SELECT id, addresses, all_updates, check_permissions FROM artifact_global_notification WHERE tracker_id = %s ORDER BY id",
+            $this->da->quoteSmart($trackerId)
+        );
         return $this->retrieve($sql);
     }
 
@@ -61,8 +66,10 @@ class ArtifactGlobalNotificationDao extends DataAccessObject {
     */
     function searchByAddresses($addresses)
     {
-        $sql = sprintf("SELECT id, tracker_id, all_updates, check_permissions FROM artifact_global_notification WHERE addresses = %s",
-        $this->da->quoteSmart($addresses));
+        $sql = sprintf(
+            "SELECT id, tracker_id, all_updates, check_permissions FROM artifact_global_notification WHERE addresses = %s",
+            $this->da->quoteSmart($addresses)
+        );
         return $this->retrieve($sql);
     }
 
@@ -72,8 +79,10 @@ class ArtifactGlobalNotificationDao extends DataAccessObject {
     */
     function searchByAllUpdates($allUpdates)
     {
-        $sql = sprintf("SELECT id, tracker_id, addresses, check_permissions FROM artifact_global_notification WHERE all_updates = %s",
-        $this->da->quoteSmart($allUpdates));
+        $sql = sprintf(
+            "SELECT id, tracker_id, addresses, check_permissions FROM artifact_global_notification WHERE all_updates = %s",
+            $this->da->quoteSmart($allUpdates)
+        );
         return $this->retrieve($sql);
     }
 
@@ -83,8 +92,10 @@ class ArtifactGlobalNotificationDao extends DataAccessObject {
     */
     function searchByCheckPermissions($checkPermissions)
     {
-        $sql = sprintf("SELECT id, tracker_id, addresses, all_updates FROM artifact_global_notification WHERE check_permissions = %s",
-        $this->da->quoteSmart($checkPermissions));
+        $sql = sprintf(
+            "SELECT id, tracker_id, addresses, all_updates FROM artifact_global_notification WHERE check_permissions = %s",
+            $this->da->quoteSmart($checkPermissions)
+        );
         return $this->retrieve($sql);
     }
 
@@ -95,11 +106,13 @@ class ArtifactGlobalNotificationDao extends DataAccessObject {
     */
     function create($tracker_id, $addresses, $all_updates, $check_permissions)
     {
-        $sql = sprintf("INSERT INTO artifact_global_notification (tracker_id, addresses, all_updates, check_permissions) VALUES (%s, %s, %s, %s)",
-        $this->da->quoteSmart($tracker_id),
-        $this->da->quoteSmart($addresses),
-        $this->da->quoteSmart($all_updates),
-        $this->da->quoteSmart($check_permissions));
+        $sql = sprintf(
+            "INSERT INTO artifact_global_notification (tracker_id, addresses, all_updates, check_permissions) VALUES (%s, %s, %s, %s)",
+            $this->da->quoteSmart($tracker_id),
+            $this->da->quoteSmart($addresses),
+            $this->da->quoteSmart($all_updates),
+            $this->da->quoteSmart($check_permissions)
+        );
         $inserted = $this->update($sql);
         if ($inserted) {
             $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
@@ -118,7 +131,7 @@ class ArtifactGlobalNotificationDao extends DataAccessObject {
     function modify($id, $values)
     {
         $updates = array();
-        foreach($values as $field => $value) {
+        foreach ($values as $field => $value) {
             $updates[] = $field .' = '. $this->da->quoteSmart($value);
         }
         $sql = "UPDATE artifact_global_notification SET ". implode(', ', $updates) ." WHERE id = ". $this->da->quoteSmart($id);
@@ -127,12 +140,11 @@ class ArtifactGlobalNotificationDao extends DataAccessObject {
 
     function delete($id, $tracker_id)
     {
-        $sql = sprintf("DELETE FROM artifact_global_notification WHERE id = %s AND tracker_id = %s",
-        $this->da->quoteSmart($id),
-        $this->da->quoteSmart($tracker_id));
+        $sql = sprintf(
+            "DELETE FROM artifact_global_notification WHERE id = %s AND tracker_id = %s",
+            $this->da->quoteSmart($id),
+            $this->da->quoteSmart($tracker_id)
+        );
         return $this->update($sql);
     }
 }
-
-
-?>

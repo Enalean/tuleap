@@ -23,7 +23,8 @@ Mock::generate('Tracker');
 
 Mock::generate('Tracker_FormElement_Field_List');
 
-class Tracker_Semantic_ContributorFactoryTest extends TuleapTestCase {
+class Tracker_Semantic_ContributorFactoryTest extends TuleapTestCase
+{
 
     private $xml_security;
 
@@ -65,7 +66,4 @@ class Tracker_Semantic_ContributorFactoryTest extends TuleapTestCase {
         $this->assertEqual($semantic_contributor->getShortName(), 'contributor');
         $this->assertEqual($semantic_contributor->getFieldId(), 112);
     }
-
 }
-
-?>

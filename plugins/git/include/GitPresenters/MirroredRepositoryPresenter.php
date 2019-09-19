@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class GitPresenters_MirroredRepositoryPresenter {
+class GitPresenters_MirroredRepositoryPresenter
+{
 
     /**
      * @var int

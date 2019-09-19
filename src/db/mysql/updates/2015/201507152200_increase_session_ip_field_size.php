@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201507152200_increase_session_ip_field_size extends ForgeUpgrade_Bucket {
+class b201507152200_increase_session_ip_field_size extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return "Increase session IP field size to accept IPv6";

@@ -21,6 +21,6 @@
 /**
  * Thrown when failing at retrieving an exception from some name.
  */
-class Transition_PostAction_NotFoundException extends Exception {
+class Transition_PostAction_NotFoundException extends Exception
+{
 }
-?>

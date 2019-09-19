@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class AgileDashboard_MilestonesCardwallRepresentation {
+class AgileDashboard_MilestonesCardwallRepresentation
+{
 
     public const ROUTE = 'cardwall';
 
@@ -31,7 +32,7 @@ class AgileDashboard_MilestonesCardwallRepresentation {
     {
         $this->columns = $board->getColumns()->getRestValue();
         $this->swimlanes = array();
-        foreach($board->getSwimlines() as $swimline) {
+        foreach ($board->getSwimlines() as $swimline) {
             $swimline_representation = new AgileDashboard_SwimlineRepresentation();
             $swimline_representation->build($swimline, $planning_id, $user);
             $this->swimlanes[] = $swimline_representation;

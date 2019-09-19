@@ -21,7 +21,8 @@ require_once __DIR__.'/../bootstrap.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aTreeNode.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/TreeNode/NodeDuplicatorContractTest.class.php';
 
-class Tracker_TreeNode_CardPresenterNodeTest extends NodeDuplicatorContractTest {
+class Tracker_TreeNode_CardPresenterNodeTest extends NodeDuplicatorContractTest
+{
 
     public function itHoldsTheGivenPresenter()
     {
@@ -35,5 +36,3 @@ class Tracker_TreeNode_CardPresenterNodeTest extends NodeDuplicatorContractTest 
         return new Tracker_TreeNode_CardPresenterNode($tree_node, mock('Tracker_CardPresenter'));
     }
 }
-
-?>

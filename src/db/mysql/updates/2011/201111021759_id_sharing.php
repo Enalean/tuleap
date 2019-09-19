@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201111021759_id_sharing extends ForgeUpgrade_Bucket {
+class b201111021759_id_sharing extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -98,6 +99,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_idsharing_artifact table is missing');
         }
     }
-
 }
-?>

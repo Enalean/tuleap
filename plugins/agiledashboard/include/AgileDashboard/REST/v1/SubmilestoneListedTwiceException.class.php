@@ -21,7 +21,8 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use Exception;
 
-class ItemListedTwiceException extends Exception {
+class ItemListedTwiceException extends Exception
+{
 
     public function __construct($artifact_id)
     {

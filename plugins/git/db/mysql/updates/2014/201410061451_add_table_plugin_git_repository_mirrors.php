@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class b201410061451_add_table_plugin_git_repository_mirrors extends ForgeUpgrade_Bucket {
+class b201410061451_add_table_plugin_git_repository_mirrors extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -67,5 +68,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while removing repository_is_mirrored column from plugin_git table.');
         }
     }
-
 }

@@ -20,7 +20,8 @@
 
 require_once 'bootstrap.php';
 
-class Docman_MIMETypeDetectorTest extends TuleapTestCase {
+class Docman_MIMETypeDetectorTest extends TuleapTestCase
+{
 
     public function itReturnsTheRightOfficeMimeType()
     {

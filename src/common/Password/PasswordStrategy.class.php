@@ -29,7 +29,8 @@ use Tuleap\Password\PasswordCompromiseValidator;
 /**
 * PasswordStrategy
 */
-class PasswordStrategy {
+class PasswordStrategy
+{
 
     var $validators;
     var $errors;
@@ -64,7 +65,7 @@ class PasswordStrategy {
     function validate($pwd)
     {
         $valid = true;
-        foreach($this->validators as $key => $nop) {
+        foreach ($this->validators as $key => $nop) {
             if (!$this->validators[$key]->validate($pwd)) {
                 $valid = false;
                 $this->errors[$key] = $this->validators[$key]->description();
@@ -82,5 +83,4 @@ class PasswordStrategy {
     {
         $this->validators[] = $v;
     }
-
 }

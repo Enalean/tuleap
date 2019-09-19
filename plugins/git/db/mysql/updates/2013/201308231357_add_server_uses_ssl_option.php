@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201308231357_add_server_uses_ssl_option extends ForgeUpgrade_Bucket {
+class b201308231357_add_server_uses_ssl_option extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -65,5 +66,3 @@ EOT;
         }
     }
 }
-
-?>

@@ -21,7 +21,8 @@
 /**
  * I am responsible of reading the content of a zip archive to import artifacts history
  */
-class Tracker_Artifact_XMLImport_XMLImportZipArchive {
+class Tracker_Artifact_XMLImport_XMLImportZipArchive
+{
 
     public const RESOURCE_NAME          = 'tv5';
     public const ARTIFACTS_XML_FILENAME = "artifacts.xml";

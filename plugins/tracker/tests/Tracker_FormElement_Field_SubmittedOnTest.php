@@ -36,7 +36,8 @@ Mock::generatePartial(
 Mock::generate('Tracker_Artifact_ChangesetValue_Date');
 
 
-class Tracker_FormElement_Field_SubmittedOnTest extends TuleapTestCase {
+class Tracker_FormElement_Field_SubmittedOnTest extends TuleapTestCase
+{
 
     function testhasChanges()
     {
@@ -51,7 +52,4 @@ class Tracker_FormElement_Field_SubmittedOnTest extends TuleapTestCase {
         $a = new MockTracker_Artifact();
         $this->assertTrue($f->isValid($a, null));
     }
-
 }
-
-?>

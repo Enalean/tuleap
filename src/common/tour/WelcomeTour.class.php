@@ -18,7 +18,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-class Tuleap_Tour_WelcomeTour extends Tuleap_Tour {
+class Tuleap_Tour_WelcomeTour extends Tuleap_Tour
+{
 
     public const TOUR_NAME = 'tuleap-welcome-tour';
 
@@ -70,5 +71,4 @@ class Tuleap_Tour_WelcomeTour extends Tuleap_Tour {
 
         parent::__construct(self::TOUR_NAME, $steps);
     }
-
 }

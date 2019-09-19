@@ -23,7 +23,8 @@ require_once('HTML_Element.class.php');
 /**
  * Define a multi-column component
  */
-class HTML_Element_Columns extends HTML_Element {
+class HTML_Element_Columns extends HTML_Element
+{
     protected $components;
     protected $desc;
     /**
@@ -49,12 +50,10 @@ class HTML_Element_Columns extends HTML_Element {
     function render()
     {
         $html = '<table id="'. $this->id .'" ><tr>';
-        foreach($this->components as $c) {
+        foreach ($this->components as $c) {
             $html .= '<td>'. $c->render() .'</td>';
         }
         $html .= '</tr></table>';
         return $html;
     }
 }
-
-?>

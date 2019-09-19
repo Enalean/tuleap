@@ -22,7 +22,8 @@
 /**
  * Manage values in changeset for float fields
  */
-class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetValue_Numeric {
+class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetValue_Numeric
+{
 
     /**
      * @return mixed

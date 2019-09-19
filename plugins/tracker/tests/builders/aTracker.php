@@ -32,7 +32,8 @@ function aTracker()
     return new Test_Tracker_Builder();
 }
 
-class Test_Tracker_Builder {
+class Test_Tracker_Builder
+{
     private $id;
     private $project;
     private $project_id;
@@ -127,5 +128,3 @@ class Test_Tracker_Builder {
         return $tracker;
     }
 }
-
-?>

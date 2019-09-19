@@ -69,9 +69,9 @@ function ugroup_get_parent($ugroup_id)
 {
     if ($ugroup_id == $GLOBALS['UGROUP_NONE'] || $ugroup_id == $GLOBALS['UGROUP_ANONYMOUS']) {
         $parent_id = false;
-    } else if ($ugroup_id == $GLOBALS['UGROUP_REGISTERED']) {
+    } elseif ($ugroup_id == $GLOBALS['UGROUP_REGISTERED']) {
         $parent_id = $GLOBALS['UGROUP_ANONYMOUS'];
-    } else if ($ugroup_id == $GLOBALS['UGROUP_PROJECT_MEMBERS'] || $ugroup_id > 100) {
+    } elseif ($ugroup_id == $GLOBALS['UGROUP_PROJECT_MEMBERS'] || $ugroup_id > 100) {
         $parent_id = $GLOBALS['UGROUP_REGISTERED'];
     } else {
         $parent_id = $GLOBALS['UGROUP_PROJECT_MEMBERS'];
@@ -129,10 +129,10 @@ function ugroup_db_get_members(
  *
  * @return DB result set
  */
-function ugroup_db_get_existing_ugroups($group_id, $predefined=null)
+function ugroup_db_get_existing_ugroups($group_id, $predefined = null)
 {
     $_extra = '';
-    if($predefined !== null && is_array($predefined)) {
+    if ($predefined !== null && is_array($predefined)) {
         $_extra = ' OR ugroup_id IN ('.db_ei_implode($predefined).')';
     }
     $sql="SELECT ugroup_id, name FROM ugroup WHERE group_id=".db_ei($group_id)." ".$_extra." ORDER BY name";
@@ -168,7 +168,7 @@ function ugroup_db_get_ugroup($ugroup_id)
 }
 
 
-function ugroup_db_list_all_ugroups_for_user($group_id,$user_id)
+function ugroup_db_list_all_ugroups_for_user($group_id, $user_id)
 {
     $sql="SELECT ugroup.ugroup_id AS ugroup_id,ugroup.name AS name FROM ugroup, ugroup_user
           WHERE ugroup_user.user_id=".db_ei($user_id)." AND ugroup.group_id=".db_ei($group_id)." AND ugroup_user.ugroup_id=ugroup.ugroup_id";
@@ -178,7 +178,7 @@ function ugroup_db_list_all_ugroups_for_user($group_id,$user_id)
 
 /** Return array of ugroup_id for all user-defined ugoups that user is part of
  * and having tracker-related permissions on the $group_artifact_id tracker */
-function ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$user_id)
+function ugroup_db_list_tracker_ugroups_for_user($group_id, $group_artifact_id, $user_id)
 {
     $data_access       = CodendiDataAccess::instance();
     $group_artifact_id = $data_access->quoteLikeValueSuffix($group_artifact_id);
@@ -196,26 +196,40 @@ function ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$u
 /** Return array of ugroup_id for all dynamic ugoups like
  * (anonymous_user, registered_user, project_member,
  * project_admins, tracker_admins) that user is part of */
-function ugroup_db_list_dynamic_ugroups_for_user($group_id,$instances,$user)
+function ugroup_db_list_dynamic_ugroups_for_user($group_id, $instances, $user)
 {
 
     if (!is_a($user, 'User')) {
         $user = UserManager::instance()->getUserById($user);
     }
 
-    if ($user->isAnonymous()) return array($GLOBALS['UGROUP_ANONYMOUS']);
+    if ($user->isAnonymous()) {
+        return array($GLOBALS['UGROUP_ANONYMOUS']);
+    }
 
     $res = array($GLOBALS['UGROUP_ANONYMOUS'],$GLOBALS['UGROUP_REGISTERED']);
 
-    if (ForgeConfig::areRestrictedUsersAllowed()) $res[] = $GLOBALS['UGROUP_AUTHENTICATED'];
-    if ($user->isMember($group_id))               $res[] = $GLOBALS['UGROUP_PROJECT_MEMBERS'];
-    if ($user->isMember($group_id,'A'))           $res[] = $GLOBALS['UGROUP_PROJECT_ADMIN'];
-    if ($user->isMember($group_id,'W2'))          $res[] = $GLOBALS['UGROUP_WIKI_ADMIN'];
+    if (ForgeConfig::areRestrictedUsersAllowed()) {
+        $res[] = $GLOBALS['UGROUP_AUTHENTICATED'];
+    }
+    if ($user->isMember($group_id)) {
+        $res[] = $GLOBALS['UGROUP_PROJECT_MEMBERS'];
+    }
+    if ($user->isMember($group_id, 'A')) {
+        $res[] = $GLOBALS['UGROUP_PROJECT_ADMIN'];
+    }
+    if ($user->isMember($group_id, 'W2')) {
+        $res[] = $GLOBALS['UGROUP_WIKI_ADMIN'];
+    }
     if (is_int($instances)) {
-        if ($user->isTrackerAdmin($group_id,$instances))  $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
-    } else if (is_array($instances)) {
+        if ($user->isTrackerAdmin($group_id, $instances)) {
+            $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
+        }
+    } elseif (is_array($instances)) {
         if (isset($instances['artifact_type'])) {
-            if ($user->isTrackerAdmin($group_id,$instances['artifact_type']))  $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
+            if ($user->isTrackerAdmin($group_id, $instances['artifact_type'])) {
+                $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
+            }
         }
     }
 
@@ -226,7 +240,7 @@ function ugroup_db_list_dynamic_ugroups_for_user($group_id,$instances,$user)
 function ugroup_get_name_from_id($ugroup_id)
 {
     $res=ugroup_db_get_ugroup($ugroup_id);
-    return db_result($res,0,'name');
+    return db_result($res, 0, 'name');
 }
 
 /**
@@ -235,39 +249,45 @@ function ugroup_get_name_from_id($ugroup_id)
  * $atid is necessary for trackers since the tracker admin role is different for each tracker.
  * @return bool true if user is member of the ugroup, false otherwise.
  */
-function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0)
+function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid = 0)
 {
     $user = UserManager::instance()->getUserById($user_id);
     // Special Cases
     if ($ugroup_id==$GLOBALS['UGROUP_NONE']) {
         // Empty group
         return false;
-    } else if ($ugroup_id==$GLOBALS['UGROUP_ANONYMOUS']) {
+    } elseif ($ugroup_id==$GLOBALS['UGROUP_ANONYMOUS']) {
         // Anonymous user
         return true;
-    } else if ($ugroup_id==$GLOBALS['UGROUP_AUTHENTICATED']) {
+    } elseif ($ugroup_id==$GLOBALS['UGROUP_AUTHENTICATED']) {
         // Registered user
         return $user_id != 0;
-    } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED'] && ! ForgeConfig::areRestrictedUsersAllowed()) {
+    } elseif ($ugroup_id==$GLOBALS['UGROUP_REGISTERED'] && ! ForgeConfig::areRestrictedUsersAllowed()) {
         // Registered user
         return $user_id != 0;
-    } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED'] && ForgeConfig::areRestrictedUsersAllowed()) {
+    } elseif ($ugroup_id==$GLOBALS['UGROUP_REGISTERED'] && ForgeConfig::areRestrictedUsersAllowed()) {
         $event = new RestrictedUsersAreHandledByPluginEvent($_SERVER['REQUEST_URI']);
         EventManager::instance()->processEvent($event);
         $called_script_handles_restricted = $event->getPluginHandleRestricted();
 
         // Non-restricted user or restricted member in service that doesn't yet handle restricted users independently
         return ! $user->isAnonymous() && (! $user->isRestricted() || ! $called_script_handles_restricted);
-    } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
+    } elseif ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
         // Project members
-        if ($user->isMember($group_id)) { return true; }
-    } else if ($ugroup_id==$GLOBALS['UGROUP_WIKI_ADMIN']) {
+        if ($user->isMember($group_id)) {
+            return true;
+        }
+    } elseif ($ugroup_id==$GLOBALS['UGROUP_WIKI_ADMIN']) {
         // Wiki admins
-        if ($user->isMember($group_id,'W2')) { return true; }
-    } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_ADMIN']) {
+        if ($user->isMember($group_id, 'W2')) {
+            return true;
+        }
+    } elseif ($ugroup_id==$GLOBALS['UGROUP_PROJECT_ADMIN']) {
         // Project admins
-        if ($user->isMember($group_id,'A')) { return true; }
-    } else if ($ugroup_id==$GLOBALS['UGROUP_TRACKER_ADMIN']) {
+        if ($user->isMember($group_id, 'A')) {
+            return true;
+        }
+    } elseif ($ugroup_id==$GLOBALS['UGROUP_TRACKER_ADMIN']) {
         // Tracker admins
         $pm = ProjectManager::instance();
         $group = $pm->getProject($group_id);
@@ -321,7 +341,7 @@ function ugroup_db_get_dynamic_members(
     if ($show_suspended) {
         $user_status .= "OR status='S' ";
     }
-    if($show_deleted) {
+    if ($show_deleted) {
         $user_status .= "OR status='D'";
     }
     $user_status .= ")";
@@ -332,25 +352,25 @@ function ugroup_db_get_dynamic_members(
     if ($ugroup_id==$GLOBALS['UGROUP_NONE']) {
         // Empty group
         return null;
-    } else if ($ugroup_id==$GLOBALS['UGROUP_ANONYMOUS']) {
+    } elseif ($ugroup_id==$GLOBALS['UGROUP_ANONYMOUS']) {
         // Anonymous user
         return null;
-    } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED']) {
+    } elseif ($ugroup_id==$GLOBALS['UGROUP_REGISTERED']) {
         // Registered user
         return "(SELECT user.user_id, ".$sqlname.", user.realname, user.user_name FROM user WHERE " . $user_status . " $having_keyword ORDER BY ".$sqlorder." )";
-    } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
+    } elseif ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
         // Project members
         return "(SELECT user.user_id, ".$sqlname.", user.realname, user.user_name, user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND " . $user_status . " $having_keyword ORDER BY ".$sqlorder.")";
-    } else if ($ugroup_id==$GLOBALS['UGROUP_WIKI_ADMIN']) {
+    } elseif ($ugroup_id==$GLOBALS['UGROUP_WIKI_ADMIN']) {
         // Wiki admins
         return "(SELECT user.user_id, ".$sqlname.", user.realname, user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND wiki_flags = '2' AND " . $user_status . "  $having_keyword ORDER BY ".$sqlorder.")";
-    } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_ADMIN']) {
+    } elseif ($ugroup_id==$GLOBALS['UGROUP_PROJECT_ADMIN']) {
         // Project admins
         return "(SELECT user.user_id, ".$sqlname.", user.realname, user.user_name,user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A' AND " . $user_status. "  $having_keyword ORDER BY ".$sqlorder.")";
-    } else if ($atid && $ugroup_id==$GLOBALS['UGROUP_TRACKER_ADMIN']) {
+    } elseif ($atid && $ugroup_id==$GLOBALS['UGROUP_TRACKER_ADMIN']) {
         // Tracker admins
         return "(SELECT user.user_id, ".$sqlname.", user.realname, user.user_name FROM artifact_perm ap, user WHERE (user.user_id = ap.user_id) and group_artifact_id=$atid AND perm_level in (2,3) AND " . $user_status . "  ORDER BY ".$sqlorder.")";
-    } else if ((int) $ugroup_id === ProjectUGroup::FORUM_ADMIN) {
+    } elseif ((int) $ugroup_id === ProjectUGroup::FORUM_ADMIN) {
         // Forum admins
         return "(SELECT user.user_id, $sqlname, user.realname, user.user_name
                     FROM user, user_group ug
@@ -359,7 +379,7 @@ function ugroup_db_get_dynamic_members(
                     AND forum_flags = '2'
                     AND " . $user_status . "
                     $having_keyword ORDER BY " . $sqlorder . " )";
-    } else if ((int) $ugroup_id === ProjectUGroup::NEWS_WRITER) {
+    } elseif ((int) $ugroup_id === ProjectUGroup::NEWS_WRITER) {
         // News writer
         return "(SELECT user.user_id, $sqlname, user.realname, user.user_name
                     FROM user, user_group ug
@@ -368,7 +388,7 @@ function ugroup_db_get_dynamic_members(
                     AND (ug.news_flags = '1' OR ug.news_flags = '2')
                     AND " . $user_status . "
                     $having_keyword ORDER BY " . $sqlorder . " )";
-    } else if ((int) $ugroup_id === ProjectUGroup::NEWS_ADMIN) {
+    } elseif ((int) $ugroup_id === ProjectUGroup::NEWS_ADMIN) {
         // News admin
         return "(SELECT user.user_id, $sqlname, user.realname, user.user_name
                     FROM user, user_group ug
@@ -387,18 +407,18 @@ function ugroup_db_get_dynamic_members(
  * @param int $atid
  * @return Array
  */
-function ugroup_get_all_dynamic_members($group_id, $atid=0)
+function ugroup_get_all_dynamic_members($group_id, $atid = 0)
 {
     $members = array();
     $sql     = array();
     $ugroups = array();
     //retrieve dynamic ugroups id and name
-    $rs = db_query("SELECT ugroup_id, name FROM ugroup WHERE ugroup_id IN (".implode(',',$GLOBALS['UGROUPS']).") ");
-    while( $row = db_fetch_array($rs) ) {
+    $rs = db_query("SELECT ugroup_id, name FROM ugroup WHERE ugroup_id IN (".implode(',', $GLOBALS['UGROUPS']).") ");
+    while ($row = db_fetch_array($rs)) {
         $ugroups[ $row['ugroup_id'] ] = $row['name'];
     }
-    foreach ( $GLOBALS['UGROUPS'] as $ugroup_id) {
-        if ( $ugroup_id == $GLOBALS['UGROUP_ANONYMOUS'] || $ugroup_id == $GLOBALS['UGROUP_REGISTERED'] || $ugroup_id == $GLOBALS['UGROUP_NONE'] ) {
+    foreach ($GLOBALS['UGROUPS'] as $ugroup_id) {
+        if ($ugroup_id == $GLOBALS['UGROUP_ANONYMOUS'] || $ugroup_id == $GLOBALS['UGROUP_REGISTERED'] || $ugroup_id == $GLOBALS['UGROUP_NONE']) {
             continue;
         }
         $sql = ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id);
@@ -406,7 +426,7 @@ function ugroup_get_all_dynamic_members($group_id, $atid=0)
             continue;
         }
         $rs  = db_query($sql);
-        while( $row = db_fetch_array($rs) ) {
+        while ($row = db_fetch_array($rs)) {
             $members[] = array(
                 'ugroup_id' => $ugroup_id,
                 'name'      => util_translate_name_ugroup($ugroups[ $ugroup_id ]),
@@ -431,7 +451,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
     if (!$ugroup_name) {
         throw new CannotCreateUGroupException(_('The group name is missing'));
     }
-    if (! preg_match("/^[a-zA-Z0-9_\-]+$/i",$ugroup_name)) {
+    if (! preg_match("/^[a-zA-Z0-9_\-]+$/i", $ugroup_name)) {
         throw new CannotCreateUGroupException(sprintf(_('Invalid group name: %s. Please use only alphanumerical characters.'), $ugroup_name));
     }
     // Check that there is no ugroup with the same name in this project
@@ -448,7 +468,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
     if (!$result) {
         throw new CannotCreateUGroupException(_('An error occurred when saving user group.'));
     } else {
-        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils','ug_create_success'));
+        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils', 'ug_create_success'));
     }
     // Now get the corresponding ugroup_id
     $sql="SELECT ugroup_id FROM ugroup WHERE group_id=".db_ei($group_id)." AND name='".db_es($ugroup_name)."'";
@@ -456,7 +476,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
     if (!$result) {
         throw new CannotCreateUGroupException(_('User group created but cannot get Id.'));
     }
-    $ugroup_id = db_result($result,0,0);
+    $ugroup_id = db_result($result, 0, 0);
     if (!$ugroup_id) {
         throw new CannotCreateUGroupException(_('User group created but cannot get Id.'));
     }
@@ -465,14 +485,14 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
     if ($group_templates == "cx_empty") {
         // Do nothing, the group should be empty
         $query='';
-    } else if ($group_templates == "cx_empty2") {
+    } elseif ($group_templates == "cx_empty2") {
         // The user selected '----'
         $query='';
-        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils','no_g_template'));
-    } else if ($group_templates == "cx_members") {
+        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils', 'no_g_template'));
+    } elseif ($group_templates == "cx_members") {
         // Get members from predefined groups
         $query="SELECT user_id FROM user_group WHERE group_id=".db_ei($group_id);
-    } else if ($group_templates == "cx_admins") {
+    } elseif ($group_templates == "cx_admins") {
         $query="SELECT user_id FROM user_group WHERE group_id=".db_ei($group_id)." AND admin_flags='A'";
     } else {
         // $group_templates should contain the ID of an exiting group
@@ -487,11 +507,11 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
         while ($row = db_fetch_array($res)) {
             $sql="INSERT INTO ugroup_user (ugroup_id,user_id) VALUES (".db_ei($ugroup_id).",".db_ei($row['user_id']).")";
             if (!db_query($sql)) {
-                exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','cant_insert_u_in_g',array($row['user_id'],$ugroup_id,db_error())));
+                exit_error($Language->getText('global', 'error'), $Language->getText('project_admin_ugroup_utils', 'cant_insert_u_in_g', array($row['user_id'],$ugroup_id,db_error())));
             }
             $countuser++;
         }
-        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils','u_added',$countuser));
+        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils', 'u_added', $countuser));
     }
 
     // raise an event for ugroup creation
@@ -518,7 +538,7 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
     if (!$ugroup_name) {
         throw new CannotCreateUGroupException(_('The group name is missing'));
     }
-    if (! preg_match("/^[a-zA-Z0-9_\-]+$/i",$ugroup_name)) {
+    if (! preg_match("/^[a-zA-Z0-9_\-]+$/i", $ugroup_name)) {
         throw new CannotCreateUGroupException(sprintf(_('Invalid group name: %s. Please use only alphanumerical characters.'), $ugroup_name));
     }
     if (!$ugroup_id) {
@@ -527,7 +547,7 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
     // Retrieve ugroup old name before updating
     $sql = "SELECT name FROM ugroup WHERE group_id='".db_ei($group_id)."' AND ugroup_id ='".db_ei($ugroup_id)."'";
     $result=db_query($sql);
-    if($result && !db_error($result)) {
+    if ($result && !db_error($result)) {
         $row = db_fetch_array($result);
         $ugroup_old_name = $row['name'];
     }
@@ -551,7 +571,7 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
     $pickList = array();
     $sql="SELECT user_id FROM ugroup_user WHERE ugroup_id = ". db_ei($ugroup_id);
     if ($res = db_query($sql)) {
-        while($row = db_fetch_array($res)) {
+        while ($row = db_fetch_array($res)) {
             $pickList[] = $row['user_id'];
         }
     }
@@ -568,9 +588,9 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
     ));
 
     // Now log in project history
-    (new ProjectHistoryDao())->groupAddHistory('upd_ug','',$group_id,array($ugroup_name));
+    (new ProjectHistoryDao())->groupAddHistory('upd_ug', '', $group_id, array($ugroup_name));
 
-    $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils','ug_upd_success',array($ugroup_name,count($pickList))));
+    $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils', 'ug_upd_success', array($ugroup_name,count($pickList))));
 }
 
 function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id)
@@ -580,12 +600,12 @@ function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id)
       AND user_id = ". db_ei($user_id);
     $res = db_query($sql);
     if (!$res) {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_ugroup_utils','cant_update_ug',db_error()));
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'cant_update_ug', db_error()));
     }
     if ($rows = db_affected_rows($res)) {
         // Now log in project history
         $res = ugroup_db_get_ugroup($ugroup_id);
-        (new ProjectHistoryDao())->groupAddHistory('upd_ug','',$group_id,array(db_result($res,0,'name')));
+        (new ProjectHistoryDao())->groupAddHistory('upd_ug', '', $group_id, array(db_result($res, 0, 'name')));
         // Search for all members of this ugroup
         $sql="SELECT count(user.user_id)".
              "FROM ugroup_user, user ".
@@ -593,10 +613,10 @@ function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id)
              "AND user.status IN ('A', 'R') ".
              "AND ugroup_user.ugroup_id=".db_ei($ugroup_id);
         $result = db_query($sql);
-        $usersCount = db_result($result, 0,0);
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils','ug_upd_success',array(db_result($res,0,'name'), $usersCount)));
+        $usersCount = db_result($result, 0, 0);
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'ug_upd_success', array(db_result($res, 0, 'name'), $usersCount)));
         if ($usersCount == 0) {
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('project_admin_ugroup_utils','ug_upd_empty'));
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'ug_upd_empty'));
         }
         // Raise event for ugroup modification
         EventManager::instance()->processEvent('project_admin_ugroup_remove_user', array(
@@ -611,13 +631,13 @@ function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id)
         $sql = "INSERT INTO ugroup_user (ugroup_id, user_id) VALUES(". db_ei($ugroup_id) .", ". db_ei($user_id) .")";
         $res = db_query($sql);
         if (!$res) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_ugroup_utils','cant_update_ug',db_error()));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'cant_update_ug', db_error()));
         }
         if ($rows = db_affected_rows($res)) {
             // Now log in project history
             $res = ugroup_db_get_ugroup($ugroup_id);
-            (new ProjectHistoryDao())->groupAddHistory('upd_ug','',$group_id,array(db_result($res,0,'name')));
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils','ug_upd_success',array(db_result($res,0,'name'), 1)));
+            (new ProjectHistoryDao())->groupAddHistory('upd_ug', '', $group_id, array(db_result($res, 0, 'name')));
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'ug_upd_success', array(db_result($res, 0, 'name'), 1)));
             // Raise event for ugroup modification
             EventManager::instance()->processEvent('project_admin_ugroup_add_user', array(
                 'group_id' => $group_id,
@@ -641,7 +661,7 @@ function ugroup_delete($group_id, $ugroup_id)
 {
     global $Language;
     if (!$ugroup_id) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_ugroup_utils','ug_not_given'));
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_ugroup_utils', 'ug_not_given'));
         return false;
     }
     $project        = ProjectManager::instance()->getProject($group_id);
@@ -658,19 +678,19 @@ function ugroup_delete($group_id, $ugroup_id)
     $sql = "DELETE FROM ugroup WHERE group_id=".db_ei($group_id)." AND ugroup_id=".db_ei($ugroup_id);
     $result=db_query($sql);
     if (!$result || db_affected_rows($result) < 1) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo', 'upd_fail', (db_error() ? db_error() : ' ' )));
          return false;
     }
-    $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils','g_del'));
+    $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils', 'g_del'));
     // Now remove users
     $sql = "DELETE FROM ugroup_user WHERE ugroup_id=".db_ei($ugroup_id);
 
     $result=db_query($sql);
     if (!$result) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_ugroup_utils','cant_remove_u',db_error()));
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_ugroup_utils', 'cant_remove_u', db_error()));
         return false;
     }
-    $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils','all_u_removed'));
+    $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils', 'all_u_removed'));
 
     // raise an event for ugroup deletion
     $em = EventManager::instance();
@@ -683,14 +703,14 @@ function ugroup_delete($group_id, $ugroup_id)
     // Last, remove permissions for this group
     $perm_cleared=permission_clear_ugroup($group_id, $ugroup_id);
     if (!($perm_cleared)) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_ugroup_utils','cant_remove_perm',db_error()));
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_ugroup_utils', 'cant_remove_perm', db_error()));
         return false;
-    } else if ($perm_cleared>1) {
+    } elseif ($perm_cleared>1) {
         $perm_cleared--;
-        $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_ugroup_utils','perm_warning',$perm_cleared));
+        $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_ugroup_utils', 'perm_warning', $perm_cleared));
     }
     // Now log in project history
-    (new ProjectHistoryDao())->groupAddHistory('del_ug','',$group_id,array($ugroup->getName()));
+    (new ProjectHistoryDao())->groupAddHistory('del_ug', '', $group_id, array($ugroup->getName()));
 
     return true;
 }

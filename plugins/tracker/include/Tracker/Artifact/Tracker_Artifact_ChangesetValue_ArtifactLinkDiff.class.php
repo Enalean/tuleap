@@ -89,7 +89,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
         NaturePresenterFactory $nature_factory,
         CollectionOfLinksFormatter $formatter
     ) {
-        if($artifactlinkinfo->getNature() !== "" && $artifactlinkinfo->shouldLinkBeHidden($artifactlinkinfo->getNature())) {
+        if ($artifactlinkinfo->getNature() !== "" && $artifactlinkinfo->shouldLinkBeHidden($artifactlinkinfo->getNature())) {
             return;
         }
         $nature = $nature_factory->getFromShortname($artifactlinkinfo->getNature());

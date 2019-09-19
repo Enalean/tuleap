@@ -28,7 +28,8 @@ use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 /**
  * A class to be able to work with the jenkins server
  */
-class Jenkins_Client {
+class Jenkins_Client
+{
 
     public const BUILD_WITH_PARAMETERS_REGEXP = '%(?P<job_url>.*)/buildWithParameters(/|\?).*%';
 

@@ -21,7 +21,8 @@
 /**
  *  Data Access Object for specific properties of fields
  */
-abstract class Tracker_FormElement_SpecificPropertiesDao extends DataAccessObject {
+abstract class Tracker_FormElement_SpecificPropertiesDao extends DataAccessObject
+{
 
     public function searchByFieldId($field_id)
     {
@@ -40,7 +41,7 @@ abstract class Tracker_FormElement_SpecificPropertiesDao extends DataAccessObjec
         return $this->retrieve($sql);
     }
 
-    public abstract function save($field_id, $row);
+    abstract public function save($field_id, $row);
 
     /**
      * Duplicate specific properties of field
@@ -50,8 +51,5 @@ abstract class Tracker_FormElement_SpecificPropertiesDao extends DataAccessObjec
      *
      * @return bool true if ok, false otherwise
      */
-    public abstract function duplicate($from_field_id, $to_field_id);
+    abstract public function duplicate($from_field_id, $to_field_id);
 }
-
-
-?>

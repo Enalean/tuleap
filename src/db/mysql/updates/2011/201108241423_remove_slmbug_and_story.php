@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201108241423_remove_slmbug_and_story extends ForgeUpgrade_Bucket {
+class b201108241423_remove_slmbug_and_story extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -42,5 +43,3 @@ EOT;
         }
     }
 }
-
-?>

@@ -27,7 +27,8 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Userlog\UserLogBuilder;
 use Tuleap\Userlog\UserLogPresenter;
 
-class UserLogManager {
+class UserLogManager
+{
     /**
      * @var AdminPageRenderer
      */
@@ -59,14 +60,14 @@ class UserLogManager {
 
     function displayNewOrIdem($key, $row, &$pval, $display = null)
     {
-        if($pval[$key] != $row[$key]) {
-            if($display === null) {
+        if ($pval[$key] != $row[$key]) {
+            if ($display === null) {
                 $dis = $row[$key];
             } else {
                 $dis = $display;
             }
             // Display treatment
-            if($dis == '') {
+            if ($dis == '') {
                 $dis = '&nbsp;';
             } else {
                 $hp = Codendi_HTMLPurifier::instance();

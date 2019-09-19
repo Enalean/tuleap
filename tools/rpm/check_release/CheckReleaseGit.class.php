@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class LastReleaseFinder {
+class LastReleaseFinder
+{
 
     public function __construct(GitExec $git_exec)
     {
@@ -56,7 +57,8 @@ class LastReleaseFinder {
     }
 }
 
-class ChangeDetector {
+class ChangeDetector
+{
 
     public function __construct(GitExec $git_exec, $candidate_paths)
     {
@@ -80,7 +82,8 @@ class ChangeDetector {
  * find() => given set of changed paths, removes the paths for which the VERSION file
  * was properly incremented
  */
-class NonIncrementedPathFinder {
+class NonIncrementedPathFinder
+{
 
     public function __construct(GitExec $git_exec, $old_revision, ChangeDetector $changed_paths_finder)
     {
@@ -111,7 +114,8 @@ class NonIncrementedPathFinder {
     }
 }
 
-class CheckReleaseReporter {
+class CheckReleaseReporter
+{
 
     public function __construct(NonIncrementedPathFinder $non_incremented_path_finder)
     {
@@ -136,6 +140,3 @@ class CheckReleaseReporter {
         exit(count($non_incremented_paths));
     }
 }
-
-
-?>

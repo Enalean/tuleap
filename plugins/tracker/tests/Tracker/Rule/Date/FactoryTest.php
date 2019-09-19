@@ -19,7 +19,8 @@
   */
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
+class Tracker_Rule_Date_FactoryTest extends TuleapTestCase
+{
 
     protected $source_field_id = 46345;
     protected $target_field_id = 465;
@@ -156,7 +157,6 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         $this->assertEqual($obtained_source_field, $this->source_field);
         $this->assertEqual($obtained_target_field, $this->target_field);
         $this->assertEqual($rule->getId(), 20);
-
     }
 
     public function itDelegatesDeletionToDao()
@@ -281,7 +281,6 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         $tracker = mock('Tracker');
         expect($this->element_factory)->getUsedDateFieldById($tracker, $this->source_field_id)->once()->returns($this->source_field);
         $this->assertEqual($this->source_field, $this->date_rule_factory->getUsedDateFieldById($tracker, $this->source_field_id));
-
     }
 
     function testExport()
@@ -305,10 +304,11 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
                 ->setSourceFieldId(103)
                 ->setTargetFieldId(806);
 
-        $trm = partial_mock('Tracker_Rule_Date_Factory',
-                array('searchByTrackerId'),
-                array(mock('Tracker_Rule_Date_Dao'), mock('Tracker_FormElementFactory'))
-                );
+        $trm = partial_mock(
+            'Tracker_Rule_Date_Factory',
+            array('searchByTrackerId'),
+            array(mock('Tracker_Rule_Date_Dao'), mock('Tracker_FormElementFactory'))
+        );
         $trm->setReturnValue('searchByTrackerId', array($r1, $r2));
 
         $trm->exportToXML($root, $array_xml_mapping, 666);
@@ -329,4 +329,3 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         $this->assertTrue($success);
     }
 }
-?>

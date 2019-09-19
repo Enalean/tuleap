@@ -20,7 +20,8 @@
 
 require_once 'builders/aSystemEvent.php';
 
-class SystemEventTest extends TuleapTestCase {
+class SystemEventTest extends TuleapTestCase
+{
 
     public function itRetrievesAParameterByItsIndex()
     {
@@ -48,4 +49,3 @@ class SystemEventTest extends TuleapTestCase {
         $this->assertEqual($data, SystemEvent::decode(SystemEvent::encode($data)));
     }
 }
-?>

@@ -24,7 +24,8 @@ use Service;
 use HTTPRequest;
 use TemplateRendererFactory;
 
-class ServiceProFTPd extends Service {
+class ServiceProFTPd extends Service
+{
 
     public function getIconName(): string
     {

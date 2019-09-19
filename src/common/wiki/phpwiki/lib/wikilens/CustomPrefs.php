@@ -12,21 +12,22 @@ rcs_id('$Id: CustomPrefs.php,v 1.1 2004/06/18 14:42:17 rurban Exp $');
  * This is just at alpha stage, a recommendation to the wikilens group.
  */
 
-class _UserPreference_recengine // recommendation engine method
-extends _UserPreference
+class _UserPreference_recengine extends _UserPreference // recommendation engine method
 {
     var $valid_values = array('php','mysuggest','mymovielens','mycluto');
     var $default_value = 'php';
 
     function sanify($value)
     {
-        if (!in_array($value, $this->valid_values)) return $this->default_value;
-        else return $value;
+        if (!in_array($value, $this->valid_values)) {
+            return $this->default_value;
+        } else {
+            return $value;
+        }
     }
 };
 
-class _UserPreference_recalgo // recommendation engine algorithm
-extends _UserPreference
+class _UserPreference_recalgo extends _UserPreference // recommendation engine algorithm
 {
     var $valid_values = array
         (
@@ -39,22 +40,25 @@ extends _UserPreference
 
     function sanify($value)
     {
-        if (!in_array($value, $this->valid_values)) return $this->default_value;
-        else return $value;
+        if (!in_array($value, $this->valid_values)) {
+            return $this->default_value;
+        } else {
+            return $value;
+        }
     }
 };
 
-class _UserPreference_recnnbr // recommendation engine key clustering, neighborhood size
-extends _UserPreference_numeric{};
+class _UserPreference_recnnbr extends _UserPreference_numeric
+{
+}; // recommendation engine key clustering, neighborhood size
 
-$WikiTheme->customUserPreferences
-    (array
+$WikiTheme->customUserPreferences(array
          (
           'recengine' => new _UserPreference_recengine('php'),
           'recalgo'   => new _UserPreference_recalgo('itemProb'),
           //recnnbr: typically 15-30 for item-based, 40-80 for user-based algos
-          'recnnbr'   => new _UserPreference_recnnbr(10,14,80),
-          ));
+          'recnnbr'   => new _UserPreference_recnnbr(10, 14, 80),
+));
 
 
 // $Log: CustomPrefs.php,v $
@@ -67,4 +71,3 @@ $WikiTheme->customUserPreferences
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

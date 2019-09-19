@@ -81,7 +81,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
     function visitFolder(Docman_Folder $item, $params = array())
     {
         $li_displayed = $this->_displayItem($item, $params);
-        if($this->_canDisplaySubItems($item)) {
+        if ($this->_canDisplaySubItems($item)) {
             $items = $item->getAllItems();
             if ($items) {
                 $nb = $items->size();
@@ -90,7 +90,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
                     $i = 0;
                     $iter = $items->iterator();
                     $iter->rewind();
-                    while($iter->valid()) {
+                    while ($iter->valid()) {
                         $child = $iter->current();
                         $child->accept($this, array('is_last' => (++$i == $nb)));
                         $iter->next();
@@ -101,7 +101,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
             }
         }
 
-        if($li_displayed) {
+        if ($li_displayed) {
             $this->html .= '</li>'."\n";
         }
         return '';
@@ -110,7 +110,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
     {
         $params['popup_doc'] = true;
         $li_displayed = $this->_displayItem($item, $params);
-        if($li_displayed) {
+        if ($li_displayed) {
             $this->html .= '</li>'."\n";
         }
     }
@@ -146,18 +146,17 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
     function _displayItem(&$item, $params)
     {
         $li_displayed = false;
-        if($this->stripFirstNode && !$this->firstNodeStripped) {
+        if ($this->stripFirstNode && !$this->firstNodeStripped) {
             $this->firstNodeStripped=true;
             if (isset($this->params['display_description']) && $this->params['display_description']) {
                 $this->html .= '<p>'. $item->getDescription() .'</p>';
             }
-        }
-        else {
-            if($item !== null && $this->_canDisplayItem($item)) {
+        } else {
+            if ($item !== null && $this->_canDisplayItem($item)) {
                 $this->html .= '<li id="item_'.$item->getId().'" class="'. Docman_View_Browse::getItemClasses($params) .'">';
                 $params['expanded'] = true;
                 $open = '_open';
-                if(!isset($this->params['item_to_move']) && (user_get_preference(PLUGIN_DOCMAN_EXPAND_FOLDER_PREF.'_'.$item->getGroupId().'_'.$item->getId()) === false)) {
+                if (!isset($this->params['item_to_move']) && (user_get_preference(PLUGIN_DOCMAN_EXPAND_FOLDER_PREF.'_'.$item->getGroupId().'_'.$item->getId()) === false)) {
                     $params['expanded'] = false;
                     $open   = '';
                 }
@@ -209,9 +208,9 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
                 }
                 $this->html .=  '</span>';
 
-                if($dpm->getLockFactory()->itemIsLocked($item)) {
+                if ($dpm->getLockFactory()->itemIsLocked($item)) {
                     $lockIconSrc = $this->params['docman_icons']->getIcon('lock_delete.png');
-                    $lockIcon    = '<i id="docman_item_icon_locked_'.$item->getId().'"  title="'.$GLOBALS['Language']->getText('plugin_docman','event_lock_add').'" class="fa fa-lock"></i>';
+                    $lockIcon    = '<i id="docman_item_icon_locked_'.$item->getId().'"  title="'.$GLOBALS['Language']->getText('plugin_docman', 'event_lock_add').'" class="fa fa-lock"></i>';
                     $this->html .=  $lockIcon;
                 }
                 $this->html .= $this->view->getItemMenu($item, $this->params);
@@ -228,4 +227,3 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
     }
     //}}}
 }
-?>

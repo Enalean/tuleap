@@ -23,7 +23,8 @@
  *
  * @see Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
  */
-class Cardwall_FieldProviders_CustomFieldRetriever implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact {
+class Cardwall_FieldProviders_CustomFieldRetriever implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
+{
 
     /**
      * @var Tracker_FormElement_Field_Selectbox
@@ -43,5 +44,3 @@ class Cardwall_FieldProviders_CustomFieldRetriever implements Cardwall_FieldProv
         return $this->field;
     }
 }
-
-?>

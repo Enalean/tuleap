@@ -30,7 +30,6 @@ $json = array();
 $sparkline_urls = $request->get('sparklines');
 if (is_array($sparkline_urls)) {
     foreach ($sparkline_urls as $url) {
-
         //Get sparkline parameters via the url
         $parameters = parse_url($url, PHP_URL_QUERY);
         parse_str($parameters, $sparkline);
@@ -72,21 +71,21 @@ if (is_array($sparkline_urls)) {
                     case 'svn':
                     case 'cvs':
                     case 'file':
-                    break;
+                        break;
 
                     default:
                         $res_sparkline = '';
                         //Process to display the reference sparkline (ex: Hudson jobs)
                         $event_manager = EventManager::instance();
                         $event_manager->processEvent(
-                        Event::AJAX_REFERENCE_SPARKLINE,
-                        array(
+                            Event::AJAX_REFERENCE_SPARKLINE,
+                            array(
                             'reference'=> $ref,
                             'keyword'  => $key,
                             'group_id' => $group_id,
                             'val'      => $val,
                             'sparkline'=> &$res_sparkline
-                        )
+                            )
                         );
                         if ($res_sparkline) {
                             $json[$url] = $res_sparkline;

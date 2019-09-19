@@ -19,7 +19,8 @@
 
 use Tuleap\SvnCore\Cache\Parameters;
 
-class LDAP_SVN_Apache_ModPerl extends SVN_Apache_ModPerl {
+class LDAP_SVN_Apache_ModPerl extends SVN_Apache_ModPerl
+{
     /**
      * @var LDAP
      */

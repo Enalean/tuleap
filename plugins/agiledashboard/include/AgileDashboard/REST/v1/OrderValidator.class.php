@@ -21,7 +21,8 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-class OrderValidator {
+class OrderValidator
+{
     private $index;
 
     public function __construct(array $index)

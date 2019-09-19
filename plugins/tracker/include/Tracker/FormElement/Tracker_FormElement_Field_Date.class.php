@@ -25,7 +25,8 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
-class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
+class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
+{
 
     public const DEFAULT_VALUE_TYPE_TODAY    = 0;
     public const DEFAULT_VALUE_TYPE_REALDATE = 1;
@@ -62,9 +63,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         $operator      = $rest_criteria_value[Tracker_Report_REST::OPERATOR_PROPERTY_NAME];
 
         switch ($operator) {
-            case Tracker_Report_REST::DEFAULT_OPERATOR :
-            case Tracker_Report_REST::OPERATOR_CONTAINS :
-            case Tracker_Report_REST::OPERATOR_EQUALS :
+            case Tracker_Report_REST::DEFAULT_OPERATOR:
+            case Tracker_Report_REST::OPERATOR_CONTAINS:
+            case Tracker_Report_REST::OPERATOR_EQUALS:
                 $searched_date = $this->extractStringifiedDate($searched_date);
                 if (! $searched_date) {
                     return false;
@@ -73,7 +74,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                 $from_date = null;
                 $to_date   = $searched_date;
                 break;
-            case Tracker_Report_REST::OPERATOR_GREATER_THAN :
+            case Tracker_Report_REST::OPERATOR_GREATER_THAN:
                 $searched_date = $this->extractStringifiedDate($searched_date);
                 if (! $searched_date) {
                     return false;
@@ -82,7 +83,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                 $from_date = null;
                 $to_date   = $searched_date;
                 break;
-            case Tracker_Report_REST::OPERATOR_LESS_THAN :
+            case Tracker_Report_REST::OPERATOR_LESS_THAN:
                 $searched_date = $this->extractStringifiedDate($searched_date);
                 if (! $searched_date) {
                     return false;
@@ -91,7 +92,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                 $from_date = null;
                 $to_date   = $searched_date;
                 break;
-            case Tracker_Report_REST::OPERATOR_BETWEEN :
+            case Tracker_Report_REST::OPERATOR_BETWEEN:
                 if (! $this->areBetweenDatesValid($searched_date)) {
                     return false;
                 }
@@ -190,7 +191,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         $child = $root->addChild('properties');
 
         foreach ($this->getProperties() as $name => $property) {
-            if ($name === 'default_value_type' ) {
+            if ($name === 'default_value_type') {
                 $this->exportDefaultValueToXML($child, $property);
                 continue;
             }
@@ -263,7 +264,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     public function getCriteriaFrom($criteria)
     {
         //Only filter query if field is used
-        if($this->isUsed()) {
+        if ($this->isUsed()) {
             //Only filter query if criteria is valuated
             if ($criteria_value = $this->getCriteriaValue($criteria)) {
                 $a = 'A_'. $this->id;
@@ -292,11 +293,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      */
     public function getCriteriaValue($criteria)
     {
-        if ( ! isset($this->criteria_value) ) {
+        if (! isset($this->criteria_value)) {
             $this->criteria_value = array();
         }
 
-        if ( ! isset($this->criteria_value[$criteria->report->id]) ) {
+        if (! isset($this->criteria_value[$criteria->report->id])) {
             $this->criteria_value[$criteria->report->id] = array();
             if ($row = $this->getCriteriaDao()->searchByCriteriaId($criteria->id)->getRow()) {
                 $this->criteria_value[$criteria->report->id]['op'] = $row['op'];
@@ -316,25 +317,25 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      */
     public function getFormattedCriteriaValue($value)
     {
-        if ( empty($value['to_date']) && empty($value['from_date']) ) {
+        if (empty($value['to_date']) && empty($value['from_date'])) {
             return '';
         } else {
             //from date
-            if ( empty($value['from_date']) ) {
+            if (empty($value['from_date'])) {
                 $value['from_date'] = 0;
             } else {
                  $value['from_date'] = strtotime($value['from_date']);
             }
 
             //to date
-            if ( empty($value['to_date']) ) {
+            if (empty($value['to_date'])) {
                 $value['to_date'] = 0;
             } else {
                  $value['to_date'] = strtotime($value['to_date']);
             }
 
             //Operator
-            if ( empty($value['op']) || ($value['op'] !== '<' && $value['op'] !== '=' && $value['op'] !== '>')) {
+            if (empty($value['op']) || ($value['op'] !== '<' && $value['op'] !== '=' && $value['op'] !== '>')) {
                 $value['op'] = '=';
             }
 
@@ -363,10 +364,10 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         $seconds_in_a_day = DateHelper::SECONDS_IN_A_DAY;
 
         if ($is_advanced) {
-            if ( ! $to ) {
+            if (! $to) {
                 $to = $_SERVER['REQUEST_TIME'];
             }
-            if ( empty($from) ) {
+            if (empty($from)) {
                 $to               = $this->getDao()->getDa()->escapeInt($to);
                 $and_compare_date = "$column <=  $to + $seconds_in_a_day - 1 ";
             } else {
@@ -432,7 +433,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         return new Tracker_Report_Criteria_Date_ValueDao();
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
     {
         return $this->formatDateForDisplay($value);
     }
@@ -450,7 +451,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         $html .= '<div style="text-align:right">';
         $value = isset($criteria_value['from_date']) ? $this->formatDateForReport($criteria_value['from_date']) : '';
         $html .= '<label>';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_field','start').' ';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_field', 'start').' ';
         $html .= $GLOBALS['HTML']->getBootstrapDatePicker(
             "criteria_".$this->id ."_from",
             "criteria[". $this->id ."][from_date]",
@@ -462,7 +463,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         $html .= '</label>';
         $value = isset($criteria_value['to_date']) ? $this->formatDateForReport($criteria_value['to_date']) : '';
         $html .= '<label>';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_field','end').' ';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_field', 'end').' ';
         $html .= $GLOBALS['HTML']->getBootstrapDatePicker(
             "criteria_".$this->id ."_to",
             "criteria[". $this->id ."][to_date]",
@@ -490,7 +491,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             if ($criteria_value) {
                 if ($criteria_value['op'] == '<') {
                     $lt_selected = 'selected="selected"';
-                } else if ($criteria_value['op'] == '>') {
+                } elseif ($criteria_value['op'] == '>') {
                     $gt_selected = 'selected="selected"';
                 } else {
                     $eq_selected = 'selected="selected"';
@@ -504,16 +505,16 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                 "name"      => 'criteria['. $this->id .'][op]',
                 "criterias" => array(
                     ">" => array(
-                        "html_value" => $GLOBALS['Language']->getText('plugin_tracker_include_field','after'),
+                        "html_value" => $GLOBALS['Language']->getText('plugin_tracker_include_field', 'after'),
                         "selected"   => $gt_selected
 
                     ),
                     "=" => array(
-                        "html_value" => $GLOBALS['Language']->getText('plugin_tracker_include_field','asof'),
+                        "html_value" => $GLOBALS['Language']->getText('plugin_tracker_include_field', 'asof'),
                         "selected"   => $eq_selected
                     ),
                     "<" => array(
-                        "html_value" => $GLOBALS['Language']->getText('plugin_tracker_include_field','before'),
+                        "html_value" => $GLOBALS['Language']->getText('plugin_tracker_include_field', 'before'),
                         "selected"   => $lt_selected
                     ),
                 )
@@ -542,7 +543,6 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
 
     public function fetchMasschange()
     {
-
     }
 
     /**
@@ -688,7 +688,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
-        if ( empty($value) || !$value->getTimestamp()) {
+        if (empty($value) || !$value->getTimestamp()) {
             return '-';
         }
         return $this->fetchArtifactValueReadOnly($artifact, $value);
@@ -718,7 +718,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         $html_value       = $this->getFormatter()->fetchArtifactValueReadOnly($artifact, $value);
         $user             = $this->getCurrentUser();
 
-        if ($timeframe_helper->artifactHelpShouldBeShownToUser($user,$this)) {
+        if ($timeframe_helper->artifactHelpShouldBeShownToUser($user, $this)) {
             $html_value     = $html_value
                 . '<span class="artifact-timeframe-helper"> ('
                 . $timeframe_helper->getDurationArtifactHelperForReadOnlyView($user, $artifact)
@@ -746,9 +746,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     {
         $html = '';
         if (!$from || !($from_value = $this->getValue($from['value_id']))) {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' ';
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to').' ';
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from').' '. $this->formatDate($from_value['value']) .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','to').' ';
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from').' '. $this->formatDate($from_value['value']) .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'to').' ';
         }
         $to_value = $this->getValue($to['value_id']);
         $html .= $this->formatDate($to_value['value']);
@@ -776,7 +776,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      */
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','date');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'date');
     }
 
     /**
@@ -784,7 +784,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      */
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','date_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'date_description');
     }
 
     /**
@@ -1016,7 +1016,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             } else {
                 return null;
             }
-        } elseif(intval($value) == $value) {
+        } elseif (intval($value) == $value) {
             // Assume it's a timestamp
             return $this->getFormatter()->formatDate((int) $value);
         }

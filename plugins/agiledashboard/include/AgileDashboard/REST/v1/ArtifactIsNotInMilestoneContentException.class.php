@@ -21,7 +21,8 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use Exception;
 
-class ArtifactIsNotInMilestoneContentException extends Exception {
+class ArtifactIsNotInMilestoneContentException extends Exception
+{
 
     public function __construct($milestone_id, $item_id)
     {

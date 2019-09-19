@@ -19,11 +19,13 @@
  */
 require_once __DIR__.'/../../bootstrap.php';
 
-class TestTracker_Report_REST extends Tracker_Report_REST {
+class TestTracker_Report_REST extends Tracker_Report_REST
+{
     public $rest_criteria = array();
 }
 
-class Tracker_Report_RESTTest_setRESTCriteria extends TuleapTestCase {
+class Tracker_Report_RESTTest_setRESTCriteria extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -99,7 +101,8 @@ class Tracker_Report_RESTTest_setRESTCriteria extends TuleapTestCase {
     }
 }
 
-class Tracker_Report_RESTTest_getCriteria extends TuleapTestCase {
+class Tracker_Report_RESTTest_getCriteria extends TuleapTestCase
+{
 
     /**
      * @var Tracker_FormElementFactory
@@ -204,4 +207,3 @@ class Tracker_Report_RESTTest_getCriteria extends TuleapTestCase {
         $this->assertCount($criteria, 1);
     }
 }
-?>

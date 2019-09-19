@@ -23,7 +23,8 @@ function aGerritServer()
     return new Test_GerritServer_Builder();
 }
 
-class Test_GerritServer_Builder {
+class Test_GerritServer_Builder
+{
     private $id;
 
     public function withId($id)

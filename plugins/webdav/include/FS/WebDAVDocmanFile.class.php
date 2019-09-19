@@ -22,7 +22,8 @@
 /**
  * This class Represents Docman files & embedded files in WebDAV
  */
-class WebDAVDocmanFile extends WebDAVDocmanDocument {
+class WebDAVDocmanFile extends WebDAVDocmanDocument
+{
 
     public function __construct($user, $project, $item)
     {
@@ -193,7 +194,4 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
                 break;
         }
     }
-
 }
-
-?>

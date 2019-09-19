@@ -20,7 +20,8 @@
 
 require_once 'src/db/driver/Abstract.php';
 
-class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract {
+class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract
+{
     protected $pdo;
     protected $dsn;
     protected $user;
@@ -81,8 +82,12 @@ class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract {
     {
         if (!$this->pdo) {
             $this->initOptions();
-            $this->pdo = new PDO($this->dsn, $this->user, $this->password,
-                                 array(PDO::MYSQL_ATTR_INIT_COMMAND =>  "SET NAMES 'UTF8'"));
+            $this->pdo = new PDO(
+                $this->dsn,
+                $this->user,
+                $this->password,
+                array(PDO::MYSQL_ATTR_INIT_COMMAND =>  "SET NAMES 'UTF8'")
+            );
             //$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         return $this->pdo;
@@ -111,5 +116,3 @@ class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract {
         return $logger;
     }
 }
-
-?>

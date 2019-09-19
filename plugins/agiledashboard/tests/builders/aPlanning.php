@@ -30,7 +30,8 @@ function aPlanning()
     return new Test_Planning_Builder();
 }
 
-class Test_Planning_Builder {
+class Test_Planning_Builder
+{
     private $id                 = '1';
     private $name               = 'Test Planning';
     private $backlog_title      = 'Release Backlog';
@@ -87,13 +88,15 @@ class Test_Planning_Builder {
 
     public function build()
     {
-        $planning = new Planning($this->id,
-                                 $this->name,
-                                 $this->group_id,
-                                 $this->backlog_title,
-                                 $this->plan_title,
-                                 $this->backlog_tracker_ids,
-                                 $this->planning_tracker_id);
+        $planning = new Planning(
+            $this->id,
+            $this->name,
+            $this->group_id,
+            $this->backlog_title,
+            $this->plan_title,
+            $this->backlog_tracker_ids,
+            $this->planning_tracker_id
+        );
 
         if ($this->planning_tracker) {
             $planning->setPlanningTracker($this->planning_tracker);
@@ -105,5 +108,3 @@ class Test_Planning_Builder {
         return $planning;
     }
 }
-
-?>

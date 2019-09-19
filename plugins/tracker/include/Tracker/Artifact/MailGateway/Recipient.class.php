@@ -21,7 +21,8 @@
 /**
  * Value object of a the recipient of email gateway
  */
-class Tracker_Artifact_MailGateway_Recipient {
+class Tracker_Artifact_MailGateway_Recipient
+{
 
     /** @var string */
     private $email;
@@ -56,5 +57,4 @@ class Tracker_Artifact_MailGateway_Recipient {
     {
         return $this->user;
     }
-
 }

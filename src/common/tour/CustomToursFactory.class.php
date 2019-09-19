@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tuleap_CustomToursFactory {
+class Tuleap_CustomToursFactory
+{
 
     public const CUSTOM_TOURS_LIST_FILE      = 'tour.json';
     public const PLACEHOLDER_PROJECT_ID      = '{project_id}';

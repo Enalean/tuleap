@@ -18,4 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tuleap_UnknownTourException extends Exception {}
+class Tuleap_UnknownTourException extends Exception
+{
+
+}

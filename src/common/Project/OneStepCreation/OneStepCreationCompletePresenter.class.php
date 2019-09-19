@@ -18,7 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class Project_OneStepCreation_OneStepCreationCompletePresenter {
+class Project_OneStepCreation_OneStepCreationCompletePresenter
+{
 
     public function page_title()
     {

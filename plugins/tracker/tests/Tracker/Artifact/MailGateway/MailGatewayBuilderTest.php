@@ -22,7 +22,8 @@ use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Tracker_Artifact_MailGateway_MailGatewayBuilderTest extends TuleapTestCase {
+class Tracker_Artifact_MailGateway_MailGatewayBuilderTest extends TuleapTestCase
+{
 
     /** @var Tracker_Artifact_MailGateway_MailGatewayBuilder */
     private $mailgateway_builder;

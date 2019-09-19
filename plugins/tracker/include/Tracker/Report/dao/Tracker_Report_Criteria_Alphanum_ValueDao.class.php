@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Report_Criteria_Alphanum_ValueDao extends Tracker_Report_Criteria_ValueDao {
+class Tracker_Report_Criteria_Alphanum_ValueDao extends Tracker_Report_Criteria_ValueDao
+{
     function __construct()
     {
         parent::__construct();
@@ -45,4 +46,3 @@ class Tracker_Report_Criteria_Alphanum_ValueDao extends Tracker_Report_Criteria_
         return $this->update($sql);
     }
 }
-?>

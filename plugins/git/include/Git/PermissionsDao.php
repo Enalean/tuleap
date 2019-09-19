@@ -62,7 +62,7 @@ class Git_PermissionsDao extends \Tuleap\DB\DataAccessObject
                 array(ProjectUGroup::AUTHENTICATED),
                 ProjectUGroup::REGISTERED
             );
-        }  catch (PDOException $ex) {
+        } catch (PDOException $ex) {
             $this->getDB()->rollBack();
             throw $ex;
         }

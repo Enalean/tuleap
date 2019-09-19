@@ -21,7 +21,8 @@ namespace Tuleap\Tracker\REST;
 
 use Tracker_Artifact_Changeset_Comment;
 
-class ChangesetCommentRepresentation {
+class ChangesetCommentRepresentation
+{
 
     /**
      * @var string Content of the comment {@required false}
@@ -44,5 +45,4 @@ class ChangesetCommentRepresentation {
         $this->post_processed_body = $comment->getPurifiedBodyForHTML();
         $this->format              = $comment->bodyFormat;
     }
-
 }

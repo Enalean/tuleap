@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_Field_Value_FileDao extends Tracker_FormElement_Field_ValueDao {
+class Tracker_FormElement_Field_Value_FileDao extends Tracker_FormElement_Field_ValueDao
+{
 
     public function __construct()
     {
@@ -30,7 +31,7 @@ class Tracker_FormElement_Field_Value_FileDao extends Tracker_FormElement_Field_
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $values = array();
-        foreach($value_ids as $v) {
+        foreach ($value_ids as $v) {
             $v = $this->da->escapeInt($v);
             $values[] = "($changeset_value_id, $v)";
         }
@@ -58,4 +59,3 @@ class Tracker_FormElement_Field_Value_FileDao extends Tracker_FormElement_Field_
         return $this->update($sql);
     }
 }
-?>

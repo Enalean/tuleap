@@ -22,7 +22,8 @@ use Tuleap\SOAP\SOAPRequestValidator;
 /**
  * Wrapper for subversion related SOAP methods
  */
-class SVN_SOAPServer {
+class SVN_SOAPServer
+{
     /**
      * @var SOAPRequestValidator
      */
@@ -181,7 +182,6 @@ class SVN_SOAPServer {
             $revisions = $svn_log->getRevisions($limit, $author);
 
             return $revisions;
-
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
@@ -255,7 +255,3 @@ class SVN_SOAPServer {
         }
     }
 }
-
-
-
-?>

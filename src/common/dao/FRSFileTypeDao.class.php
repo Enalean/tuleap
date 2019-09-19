@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FRSFileTypeDao extends DataAccessObject {
+class FRSFileTypeDao extends DataAccessObject
+{
 
     public function listFileTypes($group_id)
     {
@@ -31,10 +32,11 @@ class FRSFileTypeDao extends DataAccessObject {
     public function searchTypeId($name)
     {
         $sql = sprintf(
-          "SELECT type_id FROM frs_filetype WHERE name=%s ORDER BY type_id LIMIT 1",
-          $this->da->quoteSmart((string) $name));
+            "SELECT type_id FROM frs_filetype WHERE name=%s ORDER BY type_id LIMIT 1",
+            $this->da->quoteSmart((string) $name)
+        );
         $filetype = $this->retrieve($sql);
-        if(!$filetype->valid()) {
+        if (!$filetype->valid()) {
             return null;
         }
         $current = $filetype->current();

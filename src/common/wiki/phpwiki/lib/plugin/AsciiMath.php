@@ -38,8 +38,7 @@ require_once("lib/ASCIIMathPHP/ASCIIMathPHP.class.php");
     <mfrac><mi>&#960;</mi><mo>2</mo></mfrac>
       </math>
  */
-class WikiPlugin_AsciiMath
-extends WikiPlugin
+class WikiPlugin_AsciiMath extends WikiPlugin
 {
     function getName()
     {
@@ -53,8 +52,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.1 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.1 $"
+        );
     }
 
     function getDefaultArguments()
@@ -69,8 +71,9 @@ extends WikiPlugin
     function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
-        if (empty($this->source))
+        if (empty($this->source)) {
             return '';
+        }
 
         include_once("lib/ASCIIMathPHP/ASCIIMathPHP.cfg.php");
         $ascii_math = new ASCIIMathPHP($symbol_arr, $this->source);
@@ -89,4 +92,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

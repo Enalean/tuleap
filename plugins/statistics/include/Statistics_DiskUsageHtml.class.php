@@ -23,7 +23,8 @@
 
 use Tuleap\Chart\ColorsForCharts;
 
-class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
+class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput
+{
 
     protected function _displayEvolutionData($row)
     {
@@ -63,9 +64,9 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
      * @param bool $colored
      *
      */
-    public function getServiceEvolutionForPeriod($startDate , $endDate, $groupId = NULL, $colored = false)
+    public function getServiceEvolutionForPeriod($startDate, $endDate, $groupId = null, $colored = false)
     {
-        $res = $this->_dum->returnServiceEvolutionForPeriod($startDate , $endDate, $groupId);
+        $res = $this->_dum->returnServiceEvolutionForPeriod($startDate, $endDate, $groupId);
         if ($res) {
             $services = $this->_dum->getProjectServices();
 
@@ -78,7 +79,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             $totalEndSize   = 0;
             $totalEvolution = 0;
             $i = 0;
-            foreach ($res as $row){
+            foreach ($res as $row) {
                 echo '<tr class="'. util_get_alt_row_color($i++) .'">';
                 echo '<td>';
                 if ($colored) {

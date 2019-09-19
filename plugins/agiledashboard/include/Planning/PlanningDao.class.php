@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class PlanningDao extends DataAccessObject {
+class PlanningDao extends DataAccessObject
+{
 
     private function getTrackerDao()
     {
@@ -156,7 +157,7 @@ class PlanningDao extends DataAccessObject {
          *   (needs trunk merge)
          */
         $ids = array();
-        foreach($this->retrieve($sql) as $row) {
+        foreach ($this->retrieve($sql) as $row) {
             $ids[] = $row['id'];
         }
         return $ids;
@@ -220,4 +221,3 @@ class PlanningDao extends DataAccessObject {
         $this->update($sql);
     }
 }
-?>

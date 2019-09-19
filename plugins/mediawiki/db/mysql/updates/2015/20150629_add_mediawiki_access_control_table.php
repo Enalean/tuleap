@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b20150629_add_mediawiki_access_control_table extends ForgeUpgrade_Bucket {
+class b20150629_add_mediawiki_access_control_table extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket

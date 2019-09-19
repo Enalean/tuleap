@@ -22,7 +22,8 @@
 /**
  * Action that manage rules of a workflow
  */
-abstract class Tracker_Workflow_Action_Rules extends Tracker_Workflow_Action {
+abstract class Tracker_Workflow_Action_Rules extends Tracker_Workflow_Action
+{
 
     /** @see Tracker_Workflow_Action_Abstract::getIdentifier() */
     protected function getPaneIdentifier()
@@ -30,4 +31,3 @@ abstract class Tracker_Workflow_Action_Rules extends Tracker_Workflow_Action {
         return 'rules';
     }
 }
-?>

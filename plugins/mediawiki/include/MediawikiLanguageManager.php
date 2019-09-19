@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class MediawikiLanguageManager {
+class MediawikiLanguageManager
+{
 
     /** @var MediawikiLanguageDao */
     private $dao;

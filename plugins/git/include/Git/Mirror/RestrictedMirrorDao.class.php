@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_RestrictedMirrorDao extends RestrictedResourceDao {
+class Git_RestrictedMirrorDao extends RestrictedResourceDao
+{
 
     public function getResourceAllowedProjectsTableName()
     {
@@ -86,5 +87,4 @@ class Git_RestrictedMirrorDao extends RestrictedResourceDao {
 
         return $this->retrieve($sql);
     }
-
 }

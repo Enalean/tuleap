@@ -24,7 +24,8 @@
 /**
  * Tests the class Codendi_HTTPPurifier
  */
-class Codendi_HTTPPurifierTest extends TuleapTestCase {
+class Codendi_HTTPPurifierTest extends TuleapTestCase
+{
 
     function UnitTestCase($name = 'Codendi_HTTPPurifier test')
     {
@@ -45,7 +46,5 @@ class Codendi_HTTPPurifierTest extends TuleapTestCase {
         $this->assertEqual('', $p->purify("\nabc"));
         $this->assertEqual('', $p->purify("\r\nabc"));
         $this->assertEqual('', $p->purify("\0abc"));
-
     }
 }
-?>

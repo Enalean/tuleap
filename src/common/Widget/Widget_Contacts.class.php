@@ -38,7 +38,7 @@ class Widget_Contacts extends Widget
 
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('widget_project_contacts','title');
+        return $GLOBALS['Language']->getText('widget_project_contacts', 'title');
     }
 
     public function getContent()
@@ -77,6 +77,6 @@ class Widget_Contacts extends Widget
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('widget_description_project_contacts','description');
+        return $GLOBALS['Language']->getText('widget_description_project_contacts', 'description');
     }
 }

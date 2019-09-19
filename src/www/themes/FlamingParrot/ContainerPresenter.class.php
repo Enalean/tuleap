@@ -139,12 +139,12 @@ class FlamingParrot_ContainerPresenter
 
     public function has_copyright()
     {
-        return $GLOBALS['Language']->hasText('global','copyright');
+        return $GLOBALS['Language']->hasText('global', 'copyright');
     }
 
     public function copyright()
     {
-        return $GLOBALS['Language']->getOverridableText('global','copyright');
+        return $GLOBALS['Language']->getOverridableText('global', 'copyright');
     }
 
     public function projectName()

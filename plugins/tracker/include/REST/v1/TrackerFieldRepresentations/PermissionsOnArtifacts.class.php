@@ -22,7 +22,8 @@ namespace Tuleap\Tracker\REST\v1\TrackerFieldsRepresentations;
 
 use Tuleap\Project\REST\UserGroupRepresentation;
 
-class PermissionsOnArtifacts {
+class PermissionsOnArtifacts
+{
 
     public $is_used_by_default;
 

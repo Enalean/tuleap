@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class HTML_TableTest extends TuleapTestCase {
+class HTML_TableTest extends TuleapTestCase
+{
 
     /**
      * @var HTML_Table
@@ -75,5 +76,3 @@ class HTML_TableTest extends TuleapTestCase {
         $this->assertPattern('%<table.*id="bla".*>%', $this->html_table->setId('bla')->render());
     }
 }
-
-?>

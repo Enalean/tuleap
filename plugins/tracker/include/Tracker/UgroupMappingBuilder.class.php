@@ -25,7 +25,8 @@
 /**
  * I build a ugroup mapping
  */
-class Tracker_UgroupMappingBuilder {
+class Tracker_UgroupMappingBuilder
+{
 
     /** @var Tracker_UgroupPermissionsGoldenRetriever */
     private $permissions_retriever;
@@ -61,4 +62,3 @@ class Tracker_UgroupMappingBuilder {
         return $ugroups;
     }
 }
-?>

@@ -21,12 +21,13 @@
 
 use Tuleap\Tracker\FormElement\Field\Integer\ChangesChecker;
 
-class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeric {
+class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeric
+{
 
     public function getCriteriaFrom($criteria)
     {
         //Only filter query if field is used
-        if($this->isUsed()) {
+        if ($this->isUsed()) {
             //Only filter query if criteria is valuated
             $criteria_value = $this->getCriteriaValue($criteria);
 
@@ -87,7 +88,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return true;
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
     {
         return $value;
     }
@@ -106,7 +107,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
      */
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','integer');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'integer');
     }
 
     /**
@@ -114,7 +115,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
      */
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','integer_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'integer_description');
     }
 
     /**

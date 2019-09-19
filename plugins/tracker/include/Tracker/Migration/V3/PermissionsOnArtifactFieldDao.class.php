@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Migration_V3_PermissionsOnArtifactFieldDao extends DataAccessObject {
+class Tracker_Migration_V3_PermissionsOnArtifactFieldDao extends DataAccessObject
+{
 
     public function addPermissionsOnArtifactField($tv5_id)
     {
@@ -41,4 +42,3 @@ class Tracker_Migration_V3_PermissionsOnArtifactFieldDao extends DataAccessObjec
         return $this->update($sql);
     }
 }
-?>

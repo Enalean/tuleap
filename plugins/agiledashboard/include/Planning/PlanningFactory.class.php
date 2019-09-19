@@ -66,12 +66,14 @@ class PlanningFactory
      */
     public function duplicatePlannings($group_id, $tracker_mapping, array $ugroups_mapping)
     {
-        if (! $tracker_mapping) {return;}
+        if (! $tracker_mapping) {
+            return;
+        }
 
         $planning_rows = $this->dao->searchByPlanningTrackerIds(array_keys($tracker_mapping));
 
-        foreach($planning_rows as $row) {
-            if(isset($tracker_mapping[$row['planning_tracker_id']])) {
+        foreach ($planning_rows as $row) {
+            if (isset($tracker_mapping[$row['planning_tracker_id']])) {
                 $row['planning_tracker_id'] = $tracker_mapping[$row['planning_tracker_id']];
                 $row['backlog_tracker_ids'] = array();
                 foreach ($this->dao->searchBacklogTrackersById($row['id']) as $backlog_row) {
@@ -404,13 +406,15 @@ class PlanningFactory
         $planning = $this->dao->searchByPlanningTrackerId($planning_tracker->getId())->getRow();
 
         if ($planning) {
-            $p = new Planning($planning['id'],
-                              $planning['name'],
-                              $planning['group_id'],
-                              $planning['backlog_title'],
-                              $planning['plan_title'],
-                              array(),
-                              $planning['planning_tracker_id']);
+            $p = new Planning(
+                $planning['id'],
+                $planning['name'],
+                $planning['group_id'],
+                $planning['backlog_title'],
+                $planning['plan_title'],
+                array(),
+                $planning['planning_tracker_id']
+            );
             $p->setPlanningTracker($this->getPlanningTracker($p));
             $p->setBacklogTrackers($this->getBacklogTrackers($p));
             return $p;
@@ -613,7 +617,7 @@ class PlanningFactory
     {
         $potential_planning_trackers = $this->getPotentialPlanningTrackerIds($user, $group_id);
         $backlog_trackers = array();
-        foreach($this->dao->searchNonPlanningTrackersByGroupId($group_id) as $row) {
+        foreach ($this->dao->searchNonPlanningTrackersByGroupId($group_id) as $row) {
             if (! in_array($row['id'], $potential_planning_trackers)) {
                 $backlog_trackers[] = $this->tracker_factory->getInstanceFromRow($row);
             }

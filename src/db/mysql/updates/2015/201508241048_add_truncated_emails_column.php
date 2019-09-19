@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201508241048_add_truncated_emails_column extends ForgeUpgrade_Bucket {
+class b201508241048_add_truncated_emails_column extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

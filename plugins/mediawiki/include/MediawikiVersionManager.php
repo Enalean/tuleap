@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class MediawikiVersionManager {
+class MediawikiVersionManager
+{
 
     public const MEDIAWIKI_120_VERSION = "1.20";
     public const MEDIAWIKI_123_VERSION = "1.23";
@@ -66,7 +67,7 @@ class MediawikiVersionManager {
     {
         $project_ids = array();
         $dar = $this->version_dao->getAllMediawikiToMigrate(self::MEDIAWIKI_120_VERSION);
-        foreach($dar as $row) {
+        foreach ($dar as $row) {
             $project_ids[] = $row['group_id'];
         }
         return $project_ids;

@@ -20,7 +20,8 @@
 
 use Tuleap\Tracker\Workflow\Transition\Condition\CannotCreateTransitionException;
 
-class Tracker_Workflow_Action_Transitions_Details extends Tracker_Workflow_Action_Transitions {
+class Tracker_Workflow_Action_Transitions_Details extends Tracker_Workflow_Action_Transitions
+{
      /** @var TransitionFactory */
     private $transition_factory;
 
@@ -74,11 +75,11 @@ class Tracker_Workflow_Action_Transitions_Details extends Tracker_Workflow_Actio
     private function redirectToTransactionEditionPage(Transition $transition) : void
     {
         $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(
-                array(
+            array(
                     'tracker'         => $transition->getWorkflow()->getTrackerId(),
                     'func'            => Workflow::FUNC_ADMIN_TRANSITIONS,
                     'edit_transition' => $transition->getId(),
                 )
-            ));
+        ));
     }
 }

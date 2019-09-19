@@ -107,5 +107,3 @@ class MailManager
         return UserManager::instance();
     }
 }
-
-?>

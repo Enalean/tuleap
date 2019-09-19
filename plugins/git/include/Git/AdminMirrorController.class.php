@@ -21,7 +21,8 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\Mirror\MirrorPresenter;
 
-class Git_AdminMirrorController {
+class Git_AdminMirrorController
+{
 
     /** @var Git_Mirror_MirrorDataMapper */
     private $git_mirror_mapper;
@@ -139,7 +140,7 @@ class Git_AdminMirrorController {
     private function getMirrorPresenters(array $mirrors)
     {
         $mirror_presenters = array();
-        foreach($mirrors as $mirror) {
+        foreach ($mirrors as $mirror) {
             $mirror_presenters[] = new MirrorPresenter(
                 $mirror,
                 $this->git_mirror_mapper->fetchRepositoriesPerMirrorPresenters($mirror)
@@ -182,10 +183,8 @@ class Git_AdminMirrorController {
                 $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-git', 'All projects can now use this mirror.'));
                 $GLOBALS['Response']->redirect(GIT_SITE_ADMIN_BASE_URL . '?view=mirrors_restriction&action=manage-allowed-projects&mirror_id=' . $mirror->id);
             }
-
         } else {
-            if (
-                $this->git_mirror_resource_restrictor->setMirrorRestricted($mirror) &&
+            if ($this->git_mirror_resource_restrictor->setMirrorRestricted($mirror) &&
                 $this->git_mirror_mapper->deleteFromDefaultMirrors($mirror->id)
             ) {
                 $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-git', 'Now, only the allowed projects are able to use this mirror. Projects with at least one repository using this mirror have been automatically added to the list of allowed projects.'));
@@ -221,7 +220,6 @@ class Git_AdminMirrorController {
 
         if ($request->get('allow-project') && ! empty($project_to_add)) {
             $this->allowProjectOnMirror($mirror, $project_to_add);
-
         } elseif ($request->get('revoke-project') && ! empty($project_ids_to_remove)) {
             $this->revokeProjectsFromMirror($mirror, $project_ids_to_remove);
         }
@@ -305,7 +303,7 @@ class Git_AdminMirrorController {
 
             if (! $update) {
                 $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Failed to update mirror'));
-            } else  {
+            } else {
                 $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-git', 'Mirror updated!'));
             }
         } catch (Git_Mirror_MirrorNotFoundException $e) {
@@ -350,7 +348,6 @@ class Git_AdminMirrorController {
                     dgettext('tuleap-git', 'An error occured whiled deleting the mirror in the default mirrors for projects.')
                 );
             }
-
         } catch (Git_Mirror_MirrorNotFoundException $e) {
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Failed to delete mirror'));
         }

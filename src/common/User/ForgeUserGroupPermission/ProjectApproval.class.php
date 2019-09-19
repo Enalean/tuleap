@@ -39,5 +39,4 @@ class User_ForgeUserGroupPermission_ProjectApproval extends User_ForgeUserGroupP
     {
         return $GLOBALS['Language']->getText('usergroup_forge_permission', 'project_approval_description');
     }
-
 }

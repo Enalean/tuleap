@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class HTTPRequest extends Codendi_Request {
+class HTTPRequest extends Codendi_Request
+{
 
     public const HEADER_X_FORWARDED_PROTO = 'HTTP_X_FORWARDED_PROTO';
     public const HEADER_X_FORWARDED_FOR   = 'HTTP_X_FORWARDED_FOR';
@@ -61,7 +62,7 @@ class HTTPRequest extends Codendi_Request {
      */
     public function isPost()
     {
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             return true;
         } else {
             return false;
@@ -126,7 +127,7 @@ class HTTPRequest extends Codendi_Request {
      */
     public function validFile(&$validator)
     {
-        if(is_a($validator, 'Valid_File')) {
+        if (is_a($validator, 'Valid_File')) {
             $this->_validated_input[$validator->getKey()] = true;
             return $validator->validate($_FILES, $validator->getKey());
         } else {
@@ -146,8 +147,8 @@ class HTTPRequest extends Codendi_Request {
     {
         if (is_string($value)) {
             $value = stripslashes($value);
-        } else if (is_array($value)) {
-            foreach($value as $key => $val) {
+        } elseif (is_array($value)) {
+            foreach ($value as $key => $val) {
                 $value[$key] = $this->_stripslashes($val);
             }
         }
@@ -186,7 +187,7 @@ class HTTPRequest extends Codendi_Request {
      */
     public function setTrustedProxies(array $proxies)
     {
-        foreach($proxies as $proxy) {
+        foreach ($proxies as $proxy) {
             $this->trusted_proxied[$proxy] = true;
         }
     }

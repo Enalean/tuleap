@@ -20,7 +20,8 @@
  */
 
 
-class Git_PostReceiveMailManager {
+class Git_PostReceiveMailManager
+{
 
     var $dao;
 
@@ -134,7 +135,4 @@ class Git_PostReceiveMailManager {
     {
         return new GitRepository();
     }
-
 }
-
-?>

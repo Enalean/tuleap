@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/GerritTestBase.php';
 
-class Git_Driver_Gerrit_Legacy_GroupExistsTest extends TuleapTestCase implements Git_Driver_Gerrit_groupExistsTest{
+class Git_Driver_Gerrit_Legacy_GroupExistsTest extends TuleapTestCase implements Git_Driver_Gerrit_groupExistsTest
+{
 
     public function setUp()
     {

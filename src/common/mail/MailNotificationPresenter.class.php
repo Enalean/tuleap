@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MailNotificationPresenter extends MailOutlinePresenter{
+class MailNotificationPresenter extends MailOutlinePresenter
+{
 
     public $section_one;
     public $redirect_url;
@@ -43,4 +44,3 @@ class MailNotificationPresenter extends MailOutlinePresenter{
         $this->color_button         = $color_button;
     }
 }
-?>

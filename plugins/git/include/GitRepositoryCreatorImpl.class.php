@@ -19,7 +19,8 @@
  */
 
 
-abstract class GitRepositoryCreatorImpl implements GitRepositoryCreator {
+abstract class GitRepositoryCreatorImpl implements GitRepositoryCreator
+{
 
     public function isNameValid($name)
     {
@@ -44,4 +45,3 @@ abstract class GitRepositoryCreatorImpl implements GitRepositoryCreator {
         return 'a-zA-Z0-9/_.-';
     }
 }
-?>

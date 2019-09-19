@@ -22,7 +22,8 @@
 */
 
 
-class AgileDashboard_Semantic_Dao_InitialEffortDao extends DataAccessObject {
+class AgileDashboard_Semantic_Dao_InitialEffortDao extends DataAccessObject
+{
 
     public function __construct()
     {

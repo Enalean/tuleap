@@ -43,7 +43,7 @@ class AdminNewsRouter
             $token  = $this->getCSRF();
             $token->check();
             $this->update($request);
-        } else if ($request->get('publish')) {
+        } elseif ($request->get('publish')) {
             $this->displayNewsDetails($request);
         } else {
             $this->displayNewsList($request);
@@ -54,9 +54,9 @@ class AdminNewsRouter
     {
         if (! $request->get('pane') || $request->get('pane') === 'waiting_publication') {
             $this->admin_news_controller->displayWaitingPublicationNewsPresenter();
-        } else if ($request->get('pane') === 'rejected_news') {
+        } elseif ($request->get('pane') === 'rejected_news') {
             $this->admin_news_controller->displayRejectedNewsPresenter();
-        } else if ($request->get('pane') === 'published_news'){
+        } elseif ($request->get('pane') === 'published_news') {
             $this->admin_news_controller->displayPublishedNewsPresenter();
         }
     }
@@ -68,8 +68,10 @@ class AdminNewsRouter
             $current_tab = $request->get('current_tab');
             $this->admin_news_controller->displayDetailsNewsPresenter($id, $current_tab);
         } catch (AdminNewsFindException $exception) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR,
-                $GLOBALS['Language']->getText('news_admin_index', 'not_found_err'));
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('news_admin_index', 'not_found_err')
+            );
         }
     }
 
@@ -80,7 +82,7 @@ class AdminNewsRouter
 
         if ($action === 'publish') {
             $request->set('status', NewsRetriever::NEWS_STATUS_PUBLISHED);
-        } else if ($action === 'reject') {
+        } elseif ($action === 'reject') {
             $request->set('status', NewsRetriever::NEWS_STATUS_REJECTED);
         }
 
@@ -88,11 +90,15 @@ class AdminNewsRouter
             $this->admin_news_controller->update($request);
 
             if ($action === 'publish') {
-                $GLOBALS['Response']->addFeedback(Feedback::INFO,
-                    $GLOBALS['Language']->getText('news_admin_index', 'news_updated'));
-            } else if ($action === 'reject') {
-                $GLOBALS['Response']->addFeedback(Feedback::INFO,
-                    $GLOBALS['Language']->getText('news_admin_index', 'news_rejected'));
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $GLOBALS['Language']->getText('news_admin_index', 'news_updated')
+                );
+            } elseif ($action === 'reject') {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $GLOBALS['Language']->getText('news_admin_index', 'news_rejected')
+                );
             }
         } catch (AdminNewsMissingTitleException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('news_admin_index', 'missing_title'));

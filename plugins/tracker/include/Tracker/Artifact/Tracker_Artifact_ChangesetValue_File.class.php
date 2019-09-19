@@ -24,7 +24,8 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 /**
  * Manage values in changeset for files fields
  */
-class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetValue implements Countable, ArrayAccess, Iterator {
+class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetValue implements Countable, ArrayAccess, Iterator
+{
 
     /**
      * @var array of Tracker_FileInfo
@@ -238,7 +239,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
                 $removed[] = $fi->getFilename();
             }
             if ($removed = implode(', ', $removed)) {
-                $result .= $removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','removed');
+                $result .= $removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'removed');
             }
 
             $added = $this->fetchAddedFiles(array_diff($this->files, $changeset_value->getFiles()), $format, $is_for_mail);
@@ -284,7 +285,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
 
         $result   = '';
         if ($added) {
-            $result .= implode(', ', $added) .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','added');
+            $result .= implode(', ', $added) .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'added');
         }
 
         if ($previews && ! $is_for_mail) {

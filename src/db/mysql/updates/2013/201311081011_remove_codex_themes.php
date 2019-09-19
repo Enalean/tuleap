@@ -19,7 +19,8 @@
 /**
  * Add rest_authentication_token table
  */
-class b201311081011_remove_codex_themes extends ForgeUpgrade_Bucket {
+class b201311081011_remove_codex_themes extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return "Remove CodeX and CodeX themes from user preferences";
@@ -40,5 +41,3 @@ class b201311081011_remove_codex_themes extends ForgeUpgrade_Bucket {
         }
     }
 }
-
-?>

@@ -21,7 +21,8 @@
 
 require_once(dirname(__FILE__).'/../../include/system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php');
 
-class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends TuleapTestCase {
+class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -79,4 +80,3 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends TuleapTestCase {
         $this->system_event->process();
     }
 }
-?>

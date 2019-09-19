@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201403281402_add_index_for_reverse_link extends ForgeUpgrade_Bucket {
+class b201403281402_add_index_for_reverse_link extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

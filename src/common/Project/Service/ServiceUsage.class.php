@@ -21,7 +21,8 @@
 /**
  * Value Object of a Service Usage
  */
-class Project_Service_ServiceUsage {
+class Project_Service_ServiceUsage
+{
 
     private $id;
     private $short_name;
@@ -49,4 +50,3 @@ class Project_Service_ServiceUsage {
         return $this->is_used;
     }
 }
-?>

@@ -20,7 +20,8 @@
 
 use Tuleap\Tracker\FormElement\Field\File\IdForXMLImportExportConvertor;
 
-class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy {
+class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
+{
 
 
     public const FILE_INFO_COPY_OPTION = 'is_migrated';

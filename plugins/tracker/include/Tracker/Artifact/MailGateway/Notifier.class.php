@@ -20,7 +20,8 @@
 
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
-class Tracker_Artifact_MailGateway_Notifier {
+class Tracker_Artifact_MailGateway_Notifier
+{
     private function sendErrorMail($to, $subject, $message)
     {
         $mail = new Codendi_Mail();

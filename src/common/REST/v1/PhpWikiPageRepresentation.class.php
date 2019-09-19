@@ -23,7 +23,8 @@ namespace Tuleap\REST\v1;
 
 use Tuleap\PHPWiki\WikiPage;
 
-class PhpWikiPageRepresentation {
+class PhpWikiPageRepresentation
+{
 
     public const ROUTE = 'phpwiki';
 

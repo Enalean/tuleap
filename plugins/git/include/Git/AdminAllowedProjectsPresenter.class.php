@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_AdminMAllowedProjectsPresenter {
+class Git_AdminMAllowedProjectsPresenter
+{
 
     public const TEMPLATE = 'manage-allowed-projects';
 

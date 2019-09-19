@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201403191118_add_offset_column_to_fileinfo_temporary_table extends ForgeUpgrade_Bucket {
+class b201403191118_add_offset_column_to_fileinfo_temporary_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -43,4 +44,3 @@ class b201403191118_add_offset_column_to_fileinfo_temporary_table extends ForgeU
         }
     }
 }
-?>

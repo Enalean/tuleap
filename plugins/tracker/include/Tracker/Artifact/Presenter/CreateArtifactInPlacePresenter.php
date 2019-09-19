@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter {
+class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter
+{
 
     /** @var Tracker */
     private $tracker;
@@ -81,4 +82,3 @@ class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter {
         return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'cancel');
     }
 }
-?>

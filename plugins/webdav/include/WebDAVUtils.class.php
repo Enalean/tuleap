@@ -23,7 +23,8 @@ use Tuleap\FRS\FRSPermissionManager;
 /**
  * This class contains methods used in WebDAV plugin
  */
-class WebDAVUtils {
+class WebDAVUtils
+{
 
     protected static $instance;
 
@@ -64,7 +65,6 @@ class WebDAVUtils {
             self::$instance = new self();
         }
         return self::$instance;
-
     }
 
    /**
@@ -81,7 +81,6 @@ class WebDAVUtils {
         $name = str_replace('/', '%2F', $name);
         $name = str_replace('|', '&#124;', $name);
         return $name;
-
     }
 
     /**
@@ -110,7 +109,6 @@ class WebDAVUtils {
         $name = str_replace('%25', '%', $name);
         $name = str_replace('&#124;', '|', $name);
         return $name;
-
     }
 
     /**
@@ -150,7 +148,6 @@ class WebDAVUtils {
         $permission_manager = $this->getFRSPermissionManager();
         $project = $this->getProjectManager()->getProject($project_id);
         return $this->isWriteEnabled() && ($user->isSuperUser() || $permission_manager->isAdmin($project, $user));
-
     }
 
     /**
@@ -163,7 +160,6 @@ class WebDAVUtils {
 
         $pm = ProjectManager::instance();
         return $pm;
-
     }
 
     /**
@@ -175,7 +171,6 @@ class WebDAVUtils {
     {
 
         return new FRSPackageFactory();
-
     }
 
     /**
@@ -187,7 +182,6 @@ class WebDAVUtils {
     {
 
         return new FRSReleaseFactory();
-
     }
 
     /**
@@ -199,7 +193,6 @@ class WebDAVUtils {
     {
 
         return new FRSFileFactory();
-
     }
 
     /**
@@ -212,7 +205,6 @@ class WebDAVUtils {
 
         $pm = & PermissionsManager::instance();
         return $pm;
-
     }
 
     /**
@@ -327,5 +319,3 @@ class WebDAVUtils {
         }
     }
 }
-
-?>

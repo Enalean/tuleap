@@ -105,20 +105,7 @@ function account_shellselects($current)
     }
 }
 // Set user password (Unix, Web)
-function account_create($loginname=''
-                        ,$pw=''
-                        ,$ldap_id=''
-                        ,$realname=''
-                        ,$register_purpose=''
-                        ,$email=''
-                        ,$status='P'
-                        ,$confirm_hash=''
-                        ,$mail_site=0
-                        ,$mail_va=0
-                        ,$timezone='GMT'
-                        ,$lang_id='en_US'
-                        ,$unix_status='N'
-                        ,$expiry_date=0
+function account_create($loginname = '', $pw = '', $ldap_id = '', $realname = '', $register_purpose = '', $email = '', $status = 'P', $confirm_hash = '', $mail_site = 0, $mail_va = 0, $timezone = 'GMT', $lang_id = 'en_US', $unix_status = 'N', $expiry_date = 0
                         )
 {
     $um   = UserManager::instance();
@@ -158,12 +145,11 @@ function account_redirect_after_login($return_to)
     $event_manager = EventManager::instance();
     $event_manager->processEvent('account_redirect_after_login', array('return_to' => &$return_to));
 
-    if($return_to) {
+    if ($return_to) {
         $returnToToken = parse_url($return_to);
-        if(preg_match('{/my(/|/index.php|)}i', $returnToToken['path'])) {
+        if (preg_match('{/my(/|/index.php|)}i', $returnToToken['path'])) {
             $url = '/my/index.php';
-        }
-        else {
+        } else {
             $url = '/my/redirect.php';
         }
     } else {

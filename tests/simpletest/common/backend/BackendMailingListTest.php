@@ -20,16 +20,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-Mock::generatePartial('BackendMailingList',
-                      'BackendMailingList_TestVersion',
-                      array('_getMailingListDao',
-                            'deleteList'));
+Mock::generatePartial(
+    'BackendMailingList',
+    'BackendMailingList_TestVersion',
+    array('_getMailingListDao',
+    'deleteList')
+);
 
 Mock::generate('MailingListDao');
 Mock::generate('DataAccessResult');
 Mock::generate('MailingList');
 
-class BackendMailingListTest extends TuleapTestCase {
+class BackendMailingListTest extends TuleapTestCase
+{
 
     function testDeleteProjectMailingListsNothingToDelete()
     {
@@ -81,6 +84,4 @@ class BackendMailingListTest extends TuleapTestCase {
         $backend->setReturnValue('deleteList', true);
         $this->assertTrue($backend->deleteProjectMailingLists(1));
     }
-
 }
-?>

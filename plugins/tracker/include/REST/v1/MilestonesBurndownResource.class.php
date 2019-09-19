@@ -25,7 +25,8 @@ use Planning_Milestone;
 use Tuleap\REST\Header;
 use Luracast\Restler\RestException;
 
-class MilestonesBurndownResource {
+class MilestonesBurndownResource
+{
 
     public function options()
     {

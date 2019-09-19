@@ -31,8 +31,7 @@ rcs_id('$Id: WikiAdminSearchReplace.php,v 1.19 2004/11/26 18:39:02 rurban Exp $'
 require_once('lib/PageList.php');
 require_once('lib/plugin/WikiAdminSelect.php');
 
-class WikiPlugin_WikiAdminSearchReplace
-extends WikiPlugin_WikiAdminSelect
+class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
 {
     function getName()
     {
@@ -46,23 +45,26 @@ extends WikiPlugin_WikiAdminSelect
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.19 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.19 $"
+        );
     }
 
     function getDefaultArguments()
     {
-        return array_merge
-            (
-             PageList::supportedArgs(),
-             array(
+        return array_merge(
+            PageList::supportedArgs(),
+            array(
                    's'     => false,
                    /* Columns to include in listing */
                    'info'     => 'some',
-                   ));
+            )
+        );
     }
 
-    function replaceHelper(&$dbi, $pagename, $from, $to, $case_exact=true, $regex=false)
+    function replaceHelper(&$dbi, $pagename, $from, $to, $case_exact = true, $regex = false)
     {
         $page = $dbi->getPage($pagename);
         if ($page->exists()) {// don't replace default contents
@@ -81,7 +83,7 @@ extends WikiPlugin_WikiAdminSelect
             }
             if ($text != $newtext) {
                 $meta = $current->_data;
-                $meta['summary'] = sprintf(_("WikiAdminSearchReplace %s by %s"),$from,$to);
+                $meta['summary'] = sprintf(_("WikiAdminSearchReplace %s by %s"), $from, $to);
                 return $page->save($newtext, $version + 1, $meta);
             }
         }
@@ -90,38 +92,48 @@ extends WikiPlugin_WikiAdminSelect
 
     function searchReplacePages(&$dbi, &$request, $pages, $from, $to)
     {
-        if (empty($from)) return HTML::p(HTML::strong(fmt("Error: Empty search string.")));
+        if (empty($from)) {
+            return HTML::p(HTML::strong(fmt("Error: Empty search string.")));
+        }
         $ul = HTML::ul();
         $count = 0;
         $post_args = $request->getArg('admin_replace');
         $case_exact = !empty($post_args['case_exact']);
         $regex = !empty($post_args['regex']);
         foreach ($pages as $pagename) {
-            if (!mayAccessPage('edit',$pagename)) {
-                $ul->pushContent(HTML::li(fmt("Access denied to change page '%s'.",$pagename)));
+            if (!mayAccessPage('edit', $pagename)) {
+                $ul->pushContent(HTML::li(fmt("Access denied to change page '%s'.", $pagename)));
             } elseif (($result = $this->replaceHelper($dbi, $pagename, $from, $to, $case_exact, $regex))) {
                 $ul->pushContent(HTML::li(fmt("Replaced '%s' with '%s' in page '%s'.", $from, $to, WikiLink($pagename))));
                 $count++;
             } else {
-                $ul->pushContent(HTML::li(fmt("Search string '%s' not found in content of page '%s'.",
-                                              $from, WikiLink($pagename))));
+                $ul->pushContent(HTML::li(fmt(
+                    "Search string '%s' not found in content of page '%s'.",
+                    $from,
+                    WikiLink($pagename)
+                )));
             }
         }
         if ($count) {
             $dbi->touch();
-            return HTML($ul,
-                        HTML::p(fmt("%s pages changed.",$count)));
+            return HTML(
+                $ul,
+                HTML::p(fmt("%s pages changed.", $count))
+            );
         } else {
-            return HTML($ul,
-                        HTML::p(fmt("No pages changed.")));
+            return HTML(
+                $ul,
+                HTML::p(fmt("No pages changed."))
+            );
         }
     }
 
     function run($dbi, $argstr, &$request, $basepage)
     {
         // no action=replace support yet
-        if ($request->getArg('action') != 'browse')
+        if ($request->getArg('action') != 'browse') {
             return $this->disabled("(action != 'browse')");
+        }
 
         $args = $this->getArgs($argstr, $request);
         $this->_args = $args;
@@ -130,12 +142,15 @@ extends WikiPlugin_WikiAdminSelect
         $this->preSelectS($args, $request);
 
         $p = $request->getArg('p');
-        if (!$p) $p = $this->_list;
+        if (!$p) {
+            $p = $this->_list;
+        }
         $post_args = $request->getArg('admin_replace');
         $next_action = 'select';
         $pages = array();
-        if ($p && !$request->isPost())
+        if ($p && !$request->isPost()) {
             $pages = $p;
+        }
         if ($p && $request->isPost() &&
             empty($post_args['cancel'])) {
             // without individual PagePermissions:
@@ -149,8 +164,9 @@ extends WikiPlugin_WikiAdminSelect
                 return $this->searchReplacePages($dbi, $request, array_keys($p), $post_args['from'], $post_args['to']);
             }
             if ($post_args['action'] == 'select') {
-                if (!empty($post_args['from']))
+                if (!empty($post_args['from'])) {
                     $next_action = 'verify';
+                }
                 foreach ($p as $name => $c) {
                     $pages[$name] = 1;
                 }
@@ -165,56 +181,72 @@ extends WikiPlugin_WikiAdminSelect
         if ($next_action == 'verify') {
             $args['info'] = "checkbox,pagename,hi_content";
         }
-        $pagelist = new PageList_Selectable($args['info'], $args['exclude'],
-                                            array_merge
-                                            (
-                                             $args,
-                                             array('types' => array
+        $pagelist = new PageList_Selectable(
+            $args['info'],
+            $args['exclude'],
+            array_merge(
+                $args,
+                array('types' => array
                                                    (
                                                     'hi_content' // with highlighted search for SearchReplace
-                                                    => new _PageList_Column_content('rev:hi_content', _("Content"))))));
+                => new _PageList_Column_content('rev:hi_content', _("Content"))))
+            )
+        );
 
         $pagelist->addPageList($pages);
 
         $header = HTML::p();
-        if (empty($post_args['from']))
+        if (empty($post_args['from'])) {
             $header->pushContent(
-              HTML::p(HTML::em(_("Warning: The search string cannot be empty!"))));
+                HTML::p(HTML::em(_("Warning: The search string cannot be empty!")))
+            );
+        }
         if ($next_action == 'verify') {
             $button_label = _("Yes");
             $header->pushContent(
-              HTML::p(HTML::strong(
-                                   _("Are you sure you want to permanently search & replace text in the selected files?"))));
+                HTML::p(HTML::strong(
+                    _("Are you sure you want to permanently search & replace text in the selected files?")
+                ))
+            );
             $this->replaceForm($header, $post_args);
-        }
-        else {
+        } else {
             $button_label = _("Search & Replace");
             $this->replaceForm($header, $post_args);
             $header->pushContent(HTML::p(_("Select the pages to search:")));
         }
 
-        $buttons = HTML::p(Button('submit:admin_replace[rename]', $button_label, 'wikiadmin'),
-                           Button('submit:admin_replace[cancel]', _("Cancel"), 'button'));
+        $buttons = HTML::p(
+            Button('submit:admin_replace[rename]', $button_label, 'wikiadmin'),
+            Button('submit:admin_replace[cancel]', _("Cancel"), 'button')
+        );
 
-        return HTML::form(array('action' => $request->getPostURL(),
+        return HTML::form(
+            array('action' => $request->getPostURL(),
                                 'method' => 'post'),
-                          $header,
-                          $pagelist->getContent(),
-                          HiddenInputs($request->getArgs(),
-                                        false,
-                                        array('admin_replace')),
-                          HiddenInputs(array('admin_replace[action]' => $next_action)),
-                          ENABLE_PAGEPERM
+            $header,
+            $pagelist->getContent(),
+            HiddenInputs(
+                $request->getArgs(),
+                false,
+                array('admin_replace')
+            ),
+            HiddenInputs(array('admin_replace[action]' => $next_action)),
+            ENABLE_PAGEPERM
                           ? ''
                           : HiddenInputs(array('require_authority_for_post' => WIKIAUTH_ADMIN)),
-                          $buttons);
+            $buttons
+        );
     }
 
     function replaceForm(&$header, $post_args)
     {
-        $header->pushContent(HTML::div(array('class'=>'hint'),
-                                       _("Replace all occurences of the given string in the content of all pages.")),
-                             HTML::br());
+        $header->pushContent(
+            HTML::div(
+                array('class'=>'hint'),
+                _("Replace all occurences of the given string in the content of all pages.")
+            ),
+            HTML::br()
+        );
         $header->pushContent(_("Replace: "));
         $header->pushContent(HTML::input(array('name' => 'admin_replace[from]',
                                                'value' => $post_args['from'])));
@@ -224,17 +256,22 @@ extends WikiPlugin_WikiAdminSelect
         $checkbox = HTML::input(array('type' => 'checkbox',
                                       'name' => 'admin_replace[case_exact]',
                                       'value' => 1));
-        if (!empty($post_args['case_exact']))
-            $checkbox->setAttr('checked','checked');
-        $header->pushContent(HTML::br(),$checkbox," ",_("case-exact"));
+        if (!empty($post_args['case_exact'])) {
+            $checkbox->setAttr('checked', 'checked');
+        }
+        $header->pushContent(HTML::br(), $checkbox, " ", _("case-exact"));
         $checkbox_re = HTML::input(array('type' => 'checkbox',
                                          'name' => 'admin_replace[regex]',
                                          //'disabled' => 'disabled',
                                          'value' => 1));
-        if (!empty($post_args['regex']))
-            $checkbox_re->setAttr('checked','checked');
-        $header->pushContent(HTML::br(),HTML::span(//array('style'=>'color: #aaa'),
-                                                   $checkbox_re," ",_("regex")));
+        if (!empty($post_args['regex'])) {
+            $checkbox_re->setAttr('checked', 'checked');
+        }
+        $header->pushContent(HTML::br(), HTML::span(//array('style'=>'color: #aaa'),
+            $checkbox_re,
+            " ",
+            _("regex")
+        ));
         $header->pushContent(HTML::br());
         return $header;
     }
@@ -336,4 +373,3 @@ extends WikiPlugin_WikiAdminSelect
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

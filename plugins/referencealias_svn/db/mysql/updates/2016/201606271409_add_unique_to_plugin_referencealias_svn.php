@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201606271409_add_unique_to_plugin_referencealias_svn extends ForgeUpgrade_Bucket {
+class b201606271409_add_unique_to_plugin_referencealias_svn extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket

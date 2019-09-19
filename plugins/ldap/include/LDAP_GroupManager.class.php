@@ -188,14 +188,14 @@ abstract class LDAP_GroupManager
     {
         $toAdd = $this->getUsersToBeAdded($option);
         if ($toAdd) {
-            foreach($toAdd as $userId) {
+            foreach ($toAdd as $userId) {
                 $this->addUserToGroup($this->id, $userId);
             }
         }
 
         $toRemove = $this->getUsersToBeRemoved($option);
         if ($toRemove) {
-            foreach($toRemove as $userId) {
+            foreach ($toRemove as $userId) {
                 $this->removeUserFromGroup($this->id, $userId);
             }
         }
@@ -507,7 +507,7 @@ abstract class LDAP_GroupManager
      *
      * @return bool
      */
-    protected abstract function addUserToGroup($id, $userId);
+    abstract protected function addUserToGroup($id, $userId);
 
     /**
      * Remove user from a Codendi Group
@@ -517,7 +517,7 @@ abstract class LDAP_GroupManager
      *
      * @return bool
      */
-    protected abstract function removeUserFromGroup($id, $userId);
+    abstract protected function removeUserFromGroup($id, $userId);
 
     /**
      * Get the Codendi Group members ids
@@ -526,12 +526,12 @@ abstract class LDAP_GroupManager
      *
      * @return Array
      */
-    protected abstract function getDbGroupMembersIds($id);
+    abstract protected function getDbGroupMembersIds($id);
 
     /**
      * Get manager's DataAccessObject
      *
      * @return DataAccessObject
      */
-    protected abstract function getDao();
+    abstract protected function getDao();
 }

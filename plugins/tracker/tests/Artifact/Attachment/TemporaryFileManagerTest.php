@@ -22,7 +22,8 @@ use org\bovigo\vfs\vfsStream;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class TemporaryFileManager_BaseTest extends TuleapTestCase {
+class TemporaryFileManager_BaseTest extends TuleapTestCase
+{
 
     protected $file_manager;
     protected $cache_dir;
@@ -68,7 +69,8 @@ class TemporaryFileManager_BaseTest extends TuleapTestCase {
     }
 }
 
-class TemporaryFileManager_getDiskUsageTest extends TemporaryFileManager_BaseTest {
+class TemporaryFileManager_getDiskUsageTest extends TemporaryFileManager_BaseTest
+{
 
     public function itReturns0WhenNoFiles()
     {
@@ -97,11 +99,11 @@ class TemporaryFileManager_getDiskUsageTest extends TemporaryFileManager_BaseTes
         file_put_contents($this->cache_dir .'/rest_attachement_temp_102_hannibal_lecteur.png', 'Whatever');
 
         $this->assertEqual(22, $this->file_manager->getDiskUsage($this->user));
-
     }
 }
 
-class TemporaryFileManager_saveTest extends TemporaryFileManager_BaseTest {
+class TemporaryFileManager_saveTest extends TemporaryFileManager_BaseTest
+{
 
     public function setUp()
     {
@@ -137,7 +139,8 @@ class TemporaryFileManager_saveTest extends TemporaryFileManager_BaseTest {
     }
 }
 
-class TemporaryFileManager_appendChunkTest extends TemporaryFileManager_BaseTest {
+class TemporaryFileManager_appendChunkTest extends TemporaryFileManager_BaseTest
+{
 
     private $empty_file;
     private $wrong_path_file;
@@ -206,7 +209,8 @@ class TemporaryFileManager_appendChunkTest extends TemporaryFileManager_BaseTest
     }
 }
 
-class TemporaryFileManager_purgeTest extends TemporaryFileManager_BaseTest {
+class TemporaryFileManager_purgeTest extends TemporaryFileManager_BaseTest
+{
 
     private $file_to_delete;
 

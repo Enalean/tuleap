@@ -21,7 +21,8 @@
 require_once dirname(__FILE__) .'/bootstrap.php';
 require_once dirname(__FILE__) .'/../../agiledashboard/include/AgileDashboard/BacklogItemDao.class.php';
 
-class Cardwall_PaneBuilderTest extends TuleapTestCase {
+class Cardwall_PaneBuilderTest extends TuleapTestCase
+{
 
     private $card_in_cell_presenter_builder;
     private $artifact_factory;
@@ -43,7 +44,6 @@ class Cardwall_PaneBuilderTest extends TuleapTestCase {
         $this->milestone_artifact             = anArtifact()->withId(1)->build();
         $this->mapping_collection             = mock('Cardwall_MappingCollection');
         $this->columns                        = mock('Cardwall_OnTop_Config_ColumnCollection');
-
     }
 
     public function itReturnsAnEmptyBoard()
@@ -95,5 +95,3 @@ class Cardwall_PaneBuilderTest extends TuleapTestCase {
         $this->assertIsA($board->swimlines[0], 'Cardwall_Swimline');
     }
 }
-
-?>

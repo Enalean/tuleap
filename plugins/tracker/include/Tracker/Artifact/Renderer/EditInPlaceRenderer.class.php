@@ -24,7 +24,8 @@
 
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
-class Tracker_Artifact_Renderer_EditInPlaceRenderer{
+class Tracker_Artifact_Renderer_EditInPlaceRenderer
+{
 
     /** @var Tracker_Artifact */
     private $artifact;
@@ -173,4 +174,3 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
         $GLOBALS['Response']->send400JSONErrors($feedback);
     }
 }
-?>

@@ -21,7 +21,8 @@
 
 require_once('include/DataAccessObject.class.php');
 
-class CrossReferenceDao extends DataAccessObject {
+class CrossReferenceDao extends DataAccessObject
+{
 
     public function __construct($da = null)
     {
@@ -31,19 +32,23 @@ class CrossReferenceDao extends DataAccessObject {
 
     public function updateTargetKeyword($old_keyword, $keyword, $group_id)
     {
-        $sql = sprintf("UPDATE $this->table_name SET target_keyword=%s WHERE target_keyword= %s and target_gid=%s",
-                       $this->da->quoteSmart($keyword),
-                       $this->da->quoteSmart($old_keyword),
-                       $this->da->quoteSmart($group_id));
+        $sql = sprintf(
+            "UPDATE $this->table_name SET target_keyword=%s WHERE target_keyword= %s and target_gid=%s",
+            $this->da->quoteSmart($keyword),
+            $this->da->quoteSmart($old_keyword),
+            $this->da->quoteSmart($group_id)
+        );
         return $this->update($sql);
     }
 
     public function updateSourceKeyword($old_keyword, $keyword, $group_id)
     {
-        $sql = sprintf("UPDATE $this->table_name SET source_keyword=%s WHERE source_keyword= %s and source_gid=%s",
-                       $this->da->quoteSmart($keyword),
-                       $this->da->quoteSmart($old_keyword),
-                       $this->da->quoteSmart($group_id));
+        $sql = sprintf(
+            "UPDATE $this->table_name SET source_keyword=%s WHERE source_keyword= %s and source_gid=%s",
+            $this->da->quoteSmart($keyword),
+            $this->da->quoteSmart($old_keyword),
+            $this->da->quoteSmart($group_id)
+        );
         return $this->update($sql);
     }
 

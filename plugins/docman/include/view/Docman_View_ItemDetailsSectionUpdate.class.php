@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectionActions {
+class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectionActions
+{
     var $validate;
     var $force;
     var $token;
@@ -73,7 +74,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
 
         $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force, 'request' => $this->_controller->request));
         $content .= '<table>';
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             $content .= '<tr style="vertical-align:top;"><td><label>'. $field->getLabel() .'</label></td><td>'. $field->getField() .'</td></tr>';
         }
         $content .= '</table>';

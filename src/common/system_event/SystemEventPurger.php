@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEventPurger {
+class SystemEventPurger
+{
 
     public function __construct(SystemEventDao $dao)
     {

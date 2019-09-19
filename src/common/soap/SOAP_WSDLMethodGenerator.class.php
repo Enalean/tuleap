@@ -20,7 +20,8 @@
 /**
  * Parse a PHP Method and generate SOAP WSDL compatible method description.
  */
-class SOAP_WSDLMethodGenerator {
+class SOAP_WSDLMethodGenerator
+{
     /**
      * @var ReflectionMethod
      */
@@ -234,5 +235,3 @@ class SOAP_WSDLMethodGenerator {
         throw new Exception("Unknown type $docType");
     }
 }
-
-?>

@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-class ArtifactReportFieldDao extends DataAccessObject {
+class ArtifactReportFieldDao extends DataAccessObject
+{
     function __construct($da)
     {
         parent::__construct($da);
@@ -61,7 +62,7 @@ class ArtifactReportFieldDao extends DataAccessObject {
             $set = '';
             $where = '';
             $i = 0;
-            foreach($new_sizes as $field_name => $col_width) {
+            foreach ($new_sizes as $field_name => $col_width) {
                 if (!$sql) {
                     $sql .= " UPDATE ";
                 } else {
@@ -91,4 +92,3 @@ class ArtifactReportFieldDao extends DataAccessObject {
         return false;
     }
 }
-?>

@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201204051134_add_index_on_sementic_title_and_artifact extends ForgeUpgrade_Bucket {
+class b201204051134_add_index_on_sementic_title_and_artifact extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -53,6 +54,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
         }
     }
-
 }
-?>

@@ -20,7 +20,8 @@
 
 require_once('include/DataAccessObject.class.php');
 
-class ArtifactGroupListDao extends DataAccessObject {
+class ArtifactGroupListDao extends DataAccessObject
+{
     public function __construct($da)
     {
         parent::__construct($da);
@@ -49,7 +50,6 @@ class ArtifactGroupListDao extends DataAccessObject {
 			WHERE group_artifact_id=$artifact_id AND group_id=$group_id";
 
         return $this->update($sql);
-
     }
 
     public function updateItemName($group_id, $oldItemname, $itemname)
@@ -70,6 +70,4 @@ class ArtifactGroupListDao extends DataAccessObject {
         $sql = "SELECT * FROM $this->table_name WHERE group_id=$group_id";
         return $this->retrieve($sql);
     }
-
 }
-?>

@@ -21,7 +21,8 @@
 /**
  * A form presenter to let the use choose the columns on the cardwall
  */
-class Cardwall_Form {
+class Cardwall_Form
+{
 
     /**
      * @var int
@@ -73,7 +74,7 @@ class Cardwall_Form {
         $this->one_selected        = false;
 
         $current_field_id = $field ? $field->getId() : false;
-        foreach($selectboxes as $form_element) {
+        foreach ($selectboxes as $form_element) {
             if ($form_element->userCanRead() && count($form_element->getAllValues())) {
                 $selected = false;
                 if ($form_element->getId() == $current_field_id) {
@@ -91,4 +92,3 @@ class Cardwall_Form {
         $this->please_choose_dashed = $GLOBALS['Language']->getText('global', 'please_choose_dashed');
     }
 }
-?>

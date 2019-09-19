@@ -25,7 +25,8 @@
 /**
  * I'm responsible of rendering artifact to user (creation, update, view...)
  */
-abstract class Tracker_Artifact_ArtifactRenderer {
+abstract class Tracker_Artifact_ArtifactRenderer
+{
     /**
      * @var Tracker
      */

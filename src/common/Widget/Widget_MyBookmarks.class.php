@@ -26,7 +26,8 @@ require_once('Widget.class.php');
 *
 * Personal bookmarks
 */
-class Widget_MyBookmarks extends Widget {
+class Widget_MyBookmarks extends Widget
+{
 
     public function __construct()
     {
@@ -51,15 +52,15 @@ class Widget_MyBookmarks extends Widget {
             $purifier = Codendi_HTMLPurifier::instance();
             $html_my_bookmarks .= '<table class="tlp-table" style="width:100%">';
             for ($i=0; $i<$rows; $i++) {
-                $bookmark_url = $purifier->purify(db_result($result,$i,'bookmark_url'),CODENDI_PURIFIER_CONVERT_HTML);
+                $bookmark_url = $purifier->purify(db_result($result, $i, 'bookmark_url'), CODENDI_PURIFIER_CONVERT_HTML);
                 if (my_has_URL_invalid_content($bookmark_url)) {
                     $bookmark_url = '';
                 }
-                $bookmark_title = $purifier->purify(db_result($result,$i,'bookmark_title'),CODENDI_PURIFIER_CONVERT_HTML);
+                $bookmark_title = $purifier->purify(db_result($result, $i, 'bookmark_title'), CODENDI_PURIFIER_CONVERT_HTML);
                 $html_my_bookmarks .= '<TR class="'. util_get_alt_row_color($i) .'"><TD>';
                 $html_my_bookmarks .= '<A HREF="'. $bookmark_url .'">'. $bookmark_title .'</A> ';
-                $html_my_bookmarks .= '<small><A HREF="/my/bookmark_edit.php?bookmark_id='. db_result($result,$i,'bookmark_id') .'">['.$GLOBALS['Language']->getText('my_index', 'edit_link').']</A></SMALL></TD>';
-                $html_my_bookmarks .= '<td style="text-align:right"><A HREF="/my/bookmark_delete.php?bookmark_id='. db_result($result,$i,'bookmark_id').'">';
+                $html_my_bookmarks .= '<small><A HREF="/my/bookmark_edit.php?bookmark_id='. db_result($result, $i, 'bookmark_id') .'">['.$GLOBALS['Language']->getText('my_index', 'edit_link').']</A></SMALL></TD>';
+                $html_my_bookmarks .= '<td style="text-align:right"><A HREF="/my/bookmark_delete.php?bookmark_id='. db_result($result, $i, 'bookmark_id').'">';
                 $html_my_bookmarks .= '<i class=" fa fa-trash-o" title="'. _('Delete') .'"></A></td></tr>';
             }
             $html_my_bookmarks .= '</table>';
@@ -69,6 +70,6 @@ class Widget_MyBookmarks extends Widget {
     }
     function getDescription()
     {
-        return $GLOBALS['Language']->getText('widget_description_my_bookmarks','description');
+        return $GLOBALS['Language']->getText('widget_description_my_bookmarks', 'description');
     }
 }

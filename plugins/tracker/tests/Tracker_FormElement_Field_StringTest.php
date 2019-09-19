@@ -172,7 +172,8 @@ class Tracker_FormElement_Field_StringTest extends TuleapTestCase
     }
 }
 
-class Tracker_FormElement_Field_String_RESTTests extends TuleapTestCase {
+class Tracker_FormElement_Field_String_RESTTests extends TuleapTestCase
+{
 
     public function itReturnsTheValueIndexedByFieldName()
     {
@@ -186,7 +187,8 @@ class Tracker_FormElement_Field_String_RESTTests extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElement_Field_String_Changes extends TuleapTestCase {
+class Tracker_FormElement_Field_String_Changes extends TuleapTestCase
+{
 
     public function setUp()
     {

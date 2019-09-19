@@ -50,7 +50,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
     {
         if ($users) {
             $um = $this->_getUserManager();
-            while($users->valid()) {
+            while ($users->valid()) {
                 $u    = $users->current();
                 $user = $um->getUserById($u['user_id']);
                 $dpm  = $this->_getPermissionsManager();
@@ -82,9 +82,8 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
     function _getMessageForUser($user, $message_type, $params)
     {
         $msg = '';
-        switch($message_type) {
+        switch ($message_type) {
             case self::MESSAGE_MOVED:
-
                 $msg = sprintf(
                     dgettext('plugin-docman', "%s has been modified by %s."),
                     $params['item']->getTitle(),

@@ -25,7 +25,8 @@
 /**
  * Base class for a svn hook object
  */
-abstract class SVN_Hook {
+abstract class SVN_Hook
+{
 
     /** @var SVN_Hooks */
     private $svn_hooks;

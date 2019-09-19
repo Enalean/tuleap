@@ -24,7 +24,8 @@ require_once 'GetStateVisitor.class.php';
  * with expand/collapse and indentation.
  *
  */
-class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisitor {
+class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisitor
+{
 
     /**
      * @var bool
@@ -107,4 +108,3 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         }
     }
 }
-?>

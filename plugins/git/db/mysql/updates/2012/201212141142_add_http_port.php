@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201212141142_add_http_port extends ForgeUpgrade_Bucket {
+class b201212141142_add_http_port extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -63,5 +64,3 @@ EOT;
         }
     }
 }
-
-?>

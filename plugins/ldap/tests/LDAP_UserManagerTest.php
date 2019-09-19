@@ -31,7 +31,8 @@ Mock::generate('BackendSVN');
 Mock::generate('SystemEventManager');
 
 
-class LDAP_UserManagerTest extends TuleapTestCase {
+class LDAP_UserManagerTest extends TuleapTestCase
+{
 
     function testGetLoginFromString()
     {
@@ -168,7 +169,8 @@ class LDAP_UserManagerTest extends TuleapTestCase {
     }
 }
 
-class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
+class LDAP_UserManager_AuthenticatTest extends TuleapTestCase
+{
 
     private $username    = 'toto';
     private $password    = 'welcome0';

@@ -32,7 +32,8 @@ class RequestValidatorTest extends TuleapTestCase
     }
 }
 
-class RequestValidator_MissingParameterTest extends RequestValidatorTest {
+class RequestValidator_MissingParameterTest extends RequestValidatorTest
+{
 
     public function itRejectsTheRequestWhenNameIsMissing()
     {
@@ -53,7 +54,8 @@ class RequestValidator_MissingParameterTest extends RequestValidatorTest {
     }
 }
 
-class RequestValidator_NoMissingParameterTest extends RequestValidatorTest {
+class RequestValidator_NoMissingParameterTest extends RequestValidatorTest
+{
 
     public function setUp()
     {

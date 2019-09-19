@@ -22,15 +22,16 @@
 
 require_once('Docman_MetadataSqlQueryChunk.class.php');
 
-class Docman_SqlReportColumnFactory {
+class Docman_SqlReportColumnFactory
+{
 
     function &getFromColumn($c)
     {
         $obj = null;
-        switch(strtolower(get_class($c))) {
+        switch (strtolower(get_class($c))) {
             case 'docman_reportcolumnlocation':
                 // No sort on this column
-            break;
+                break;
             default:
                 $obj = new Docman_SqlReportColumn($c);
         }
@@ -38,8 +39,8 @@ class Docman_SqlReportColumnFactory {
     }
 }
 
-class Docman_SqlReportColumn
-extends Docman_MetadataSqlQueryChunk {
+class Docman_SqlReportColumn extends Docman_MetadataSqlQueryChunk
+{
     var $column;
 
     function __construct($column)
@@ -53,11 +54,10 @@ extends Docman_MetadataSqlQueryChunk {
         $sql = '';
 
         $sort = $this->column->getSort();
-        if($sort !== null) {
-            if($sort == PLUGIN_DOCMAN_SORT_ASC) {
+        if ($sort !== null) {
+            if ($sort == PLUGIN_DOCMAN_SORT_ASC) {
                 $sql = $this->field.' ASC';
-            }
-            else {
+            } else {
                 $sql = $this->field.' DESC';
             }
         }
@@ -65,5 +65,3 @@ extends Docman_MetadataSqlQueryChunk {
         return $sql;
     }
 }
-
-?>

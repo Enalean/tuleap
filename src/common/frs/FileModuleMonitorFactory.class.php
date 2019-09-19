@@ -24,7 +24,8 @@ use Tuleap\Mail\MailLogger;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
-class FileModuleMonitorFactory {
+class FileModuleMonitorFactory
+{
 
     var $dao;
 
@@ -494,15 +495,15 @@ class FileModuleMonitorFactory {
             if ($request->valid(new Valid_WhiteList('frs_monitoring', array('stop_monitoring', 'anonymous_monitoring', 'public_monitoring')))) {
                 $action = $request->get('frs_monitoring');
                 switch ($action) {
-                    case 'stop_monitoring' :
+                    case 'stop_monitoring':
                         $performAction = $this->stopMonitorActionListener($currentUser, $fileModuleId);
                         break;
-                    case 'public_monitoring' :
+                    case 'public_monitoring':
                         $anonymous = false;
-                    case 'anonymous_monitoring' :
+                    case 'anonymous_monitoring':
                         $performAction = $this->anonymousMonitoringActionListener($currentUser, $fileModuleId, $anonymous, $groupId);
                         break;
-                    default :
+                    default:
                         break;
                 }
                 if ($performAction) {
@@ -587,7 +588,7 @@ class FileModuleMonitorFactory {
             if ($request->valid(new Valid_WhiteList('action', array('add_monitoring', 'delete_monitoring')))) {
                 $action = $request->get('action');
                 switch ($action) {
-                    case 'add_monitoring' :
+                    case 'add_monitoring':
                         $users = array_map('trim', preg_split('/[,;]/', $request->get('listeners_to_add')));
                         foreach ($users as $userName) {
                             if (!empty($userName)) {
@@ -596,11 +597,11 @@ class FileModuleMonitorFactory {
                             }
                         }
                         break;
-                    case 'delete_monitoring' :
+                    case 'delete_monitoring':
                         $users = $request->get('delete_user');
                         $this->stopMonitoringForUsers($users, $groupId, $fileModuleId, $package, $um, $userHelper);
                         break;
-                    default :
+                    default:
                         break;
                 }
             }
@@ -624,5 +625,4 @@ class FileModuleMonitorFactory {
         $this->processSelfMonitoringAction($request, $currentUser, $groupId, $fileModuleId);
         $this->processEditMonitoringAction($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper);
     }
-
 }

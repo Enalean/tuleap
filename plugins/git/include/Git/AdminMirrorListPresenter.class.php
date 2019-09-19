@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
+class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter
+{
 
     public const TEMPLATE = 'admin-plugin';
 

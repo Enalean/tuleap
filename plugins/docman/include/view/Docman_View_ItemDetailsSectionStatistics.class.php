@@ -24,7 +24,8 @@
 require_once('Docman_View_ItemDetailsSection.class.php');
 require_once('Docman_View_GetFieldsVisitor.class.php');
 
-class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSection {
+class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSection
+{
     var $inheritableMetadataArray;
     var $_controller;
 
@@ -33,7 +34,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
         $this->_controller = $controller;
 
         $id = 'statistics';
-        $title = $GLOBALS['Language']->getText('plugin_docman','details_statistics');
+        $title = $GLOBALS['Language']->getText('plugin_docman', 'details_statistics');
         parent::__construct($item, $url, $id, $title);
     }
 
@@ -51,8 +52,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
     {
         $html = '';
 
-        if(is_a($this->item, 'Docman_Folder')) {
-
+        if (is_a($this->item, 'Docman_Folder')) {
             $if = Docman_ItemFactory::instance($this->_controller->getGroupId());
             $stats = $if->getFolderStats($this->item, $this->_controller->getUser());
 

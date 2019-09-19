@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_BacklogItemDao extends DataAccessObject {
+class AgileDashboard_BacklogItemDao extends DataAccessObject
+{
     public const STATUS_OPEN   = 1;
     public const STATUS_CLOSED = 0;
 

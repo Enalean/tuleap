@@ -29,7 +29,8 @@ use Tuleap\Tracker\Artifact\MyArtifactsCollection;
  *
  * Artifact assigned to or submitted by this person
  */
-class Tracker_Widget_MyArtifacts extends Widget {
+class Tracker_Widget_MyArtifacts extends Widget
+{
     public const ID        = 'plugin_tracker_myartifacts';
     public const PREF_SHOW = 'plugin_tracker_myartifacts_show';
 
@@ -39,7 +40,7 @@ class Tracker_Widget_MyArtifacts extends Widget {
     {
         parent::__construct(self::ID);
         $this->artifact_show = user_get_preference(self::PREF_SHOW);
-        if($this->artifact_show === false) {
+        if ($this->artifact_show === false) {
             $this->artifact_show = 'AS';
             user_set_preference(self::PREF_SHOW, $this->artifact_show);
         }
@@ -57,7 +58,7 @@ class Tracker_Widget_MyArtifacts extends Widget {
         $vShow->required();
         if (!$request->exist('cancel')) {
             if ($request->valid($vShow)) {
-                switch($request->get('show')) {
+                switch ($request->get('show')) {
                     case 'A':
                         $this->artifact_show = 'A';
                         break;
@@ -125,13 +126,13 @@ class Tracker_Widget_MyArtifacts extends Widget {
         switch ($this->artifact_show) {
             case 'A':
                 $my_artifacts = $taf->getUserOpenArtifactsAssignedTo($user);
-            break;
+                break;
             case 'S':
                 $my_artifacts = $taf->getUserOpenArtifactsSubmittedBy($user);
-            break;
+                break;
             default:
                 $my_artifacts = $taf->getUserOpenArtifactsSubmittedByOrAssignedTo($user);
-            break;
+                break;
         }
 
         if (count($my_artifacts) > 0) {
@@ -224,7 +225,7 @@ class Tracker_Widget_MyArtifacts extends Widget {
 
     function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts','description');
+        return $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'description');
     }
 
     public function getStylesheetDependencies()

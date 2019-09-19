@@ -26,14 +26,15 @@ Mock::generate('Docman_PermissionsManager');
 Mock::generatePartial(
     'WebDAVDocmanDocument',
     'WebDAVDocmanDocumentTestVersion',
-array('getItem', 'getUtils', 'getProject')
+    array('getItem', 'getUtils', 'getProject')
 );
 Mock::generate('Project');
 
 /**
  * This is the unit test of WebDAVDocmanDocument
  */
-class WebDAVDocmanDocumentTest extends TuleapTestCase {
+class WebDAVDocmanDocumentTest extends TuleapTestCase
+{
 
     function testDeleteNoWriteEnabled()
     {

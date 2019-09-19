@@ -24,7 +24,8 @@
  *
  * @see http://en.wikipedia.org/wiki/Chain-of-responsibility_pattern
  */
-abstract class Tracker_Permission_Command {
+abstract class Tracker_Permission_Command
+{
 
     public const PERMISSION_PREFIX = 'permissions_';
 

@@ -24,7 +24,8 @@ use UserManager;
 use Logger;
 use RuntimeException;
 
-class Mapping implements IFindUserFromXMLReference {
+class Mapping implements IFindUserFromXMLReference
+{
 
     private static $NONE_USERNAME = 'None';
 
@@ -55,7 +56,8 @@ class Mapping implements IFindUserFromXMLReference {
             $this->logger->error(
                 'It seems that the user referenced by '. (string) $xml_element
                 .' (format = '. (string) $xml_element['format'] .')'
-                .' does not match an existing user.');
+                .' does not match an existing user.'
+            );
             throw $exception;
         }
     }

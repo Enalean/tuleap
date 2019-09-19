@@ -20,7 +20,8 @@
 
 use Tuleap\Project\XML\Export\ArchiveInterface;
 
-class Tracker_XML_Exporter_ArtifactAttachmentExporter {
+class Tracker_XML_Exporter_ArtifactAttachmentExporter
+{
 
     public const FILE_PREFIX = 'Artifact';
 

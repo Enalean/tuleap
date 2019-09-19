@@ -20,7 +20,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_MetadataDao extends DataAccessObject {
+class Docman_MetadataDao extends DataAccessObject
+{
     var $deletedStmt;
     var $notDeletedStmt;
 
@@ -34,32 +35,36 @@ class Docman_MetadataDao extends DataAccessObject {
 
     function searchById($id)
     {
-        $sql = sprintf('SELECT *'
+        $sql = sprintf(
+            'SELECT *'
                        .' FROM plugin_docman_metadata'
                        .' WHERE field_id = %d'
-                       .' AND '.$this->notDeletedStmt
-                       , $id);
+                       .' AND '.$this->notDeletedStmt,
+            $id
+        );
         return $this->retrieve($sql);
     }
 
     function searchByGroupId($id, $onlyUsed, $type = array())
     {
         $where_clause = '';
-        if($onlyUsed) {
+        if ($onlyUsed) {
             $where_clause .= ' AND use_it = '.PLUGIN_DOCMAN_METADATA_USED;
         }
 
-        if(is_array($type) && count($type) > 0) {
+        if (is_array($type) && count($type) > 0) {
             $where_clause .= ' AND data_type IN ('.implode(',', $type).')';
         }
 
-        $sql = sprintf('SELECT *'
+        $sql = sprintf(
+            'SELECT *'
                        .' FROM plugin_docman_metadata'
                        .' WHERE group_id = %d'
                        .$where_clause
                        .' AND '.$this->notDeletedStmt
-                       .' ORDER BY label ASC'
-                       , $id);
+                       .' ORDER BY label ASC',
+            $id
+        );
 
         return $this->retrieve($sql);
     }
@@ -81,7 +86,7 @@ class Docman_MetadataDao extends DataAccessObject {
     {
         $updated = false;
         $id = false;
-        if(!isset($row['field_id'])) {
+        if (!isset($row['field_id'])) {
             return false;
         }
         $id = (int) $row['field_id'];
@@ -90,7 +95,7 @@ class Docman_MetadataDao extends DataAccessObject {
             if (!$dar->isError() && $dar->valid()) {
                 $current = $dar->current();
                 $set_array = array();
-                foreach($row as $key => $value) {
+                foreach ($row as $key => $value) {
                     if ($key != 'field_id' && $value != $current[$key]) {
                         $set_array[] = $key .' = '. $this->da->quoteSmart($value);
                     }
@@ -117,7 +122,8 @@ class Docman_MetadataDao extends DataAccessObject {
         $special,
         $useIt
     ) {
-        $sql = sprintf('INSERT INTO plugin_docman_metadata('.
+        $sql = sprintf(
+            'INSERT INTO plugin_docman_metadata('.
                        'group_id, name, data_type, description,'.
                        'required, empty_ok, mul_val_ok, special,'.
                        'use_it'.
@@ -126,33 +132,31 @@ class Docman_MetadataDao extends DataAccessObject {
                        '%d, %d, %d, %d,'.
                        '%d'.
                        ')',
-                       $groupId,
-                       $this->da->quoteSmart($name),
-                       $type,
-                       $this->da->quoteSmart($description),
-                       $isRequired,
-                       $isEmptyAllowed,
-                       $mulValuesAllowed,
-                       $special,
-                       $useIt);
+            $groupId,
+            $this->da->quoteSmart($name),
+            $type,
+            $this->da->quoteSmart($description),
+            $isRequired,
+            $isEmptyAllowed,
+            $mulValuesAllowed,
+            $special,
+            $useIt
+        );
 
         $mdId = $this->_createAndReturnId($sql);
-        if($mdId !== false) {
+        if ($mdId !== false) {
             //update label
             $row = array('field_id' => $mdId,
                          'label'    => 'field_'.$mdId);
             $updated = $this->updateFromRow($row);
-            if(!$updated) {
+            if (!$updated) {
                 return false;
-            }
-            else {
+            } else {
                 return $mdId;
             }
-        }
-        else {
+        } else {
             return false;
         }
-
     }
 
     function _createAndReturnId($sql)
@@ -171,35 +175,39 @@ class Docman_MetadataDao extends DataAccessObject {
 
     function delete($id)
     {
-        $sql = sprintf('UPDATE plugin_docman_metadata'.
+        $sql = sprintf(
+            'UPDATE plugin_docman_metadata'.
                        ' SET special = 100'.
                        ' WHERE field_id = %d',
-                       $id);
+            $id
+        );
         return $this->update($sql);
     }
 
     function searchByName($groupId, $name)
     {
-        $sql = sprintf('SELECT *'.
+        $sql = sprintf(
+            'SELECT *'.
                        ' FROM plugin_docman_metadata'.
                        ' WHERE group_id = %d'.
                        '  AND TRIM(name) = %s'.
                        '  AND '.$this->notDeletedStmt,
-                       $groupId,
-                       $this->da->quoteSmart($name));
+            $groupId,
+            $this->da->quoteSmart($name)
+        );
         return $this->retrieve($sql);
     }
 
     function searchValueById($fieldId, $itemId)
     {
-        $sql = sprintf('SELECT *'.
+        $sql = sprintf(
+            'SELECT *'.
                        ' FROM plugin_docman_metadata_value'.
                        ' WHERE field_id = %d'.
                        ' AND item_id = %d',
-                       $fieldId,
-                       $itemId);
+            $fieldId,
+            $itemId
+        );
         return $this->retrieve($sql);
     }
 }
-
-?>

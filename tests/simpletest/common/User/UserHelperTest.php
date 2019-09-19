@@ -25,7 +25,8 @@ Mock::generate('UserDao');
 Mock::generate('DataAccessResult');
 Mock::generatePartial('UserHelper', 'UserHelperTestVersion', array('_getUserDao', '_getCurrentUserUsernameDisplayPreference', '_getUserManager', '_isUserNameNone'));
 
-class UserHelperTest extends TuleapTestCase {
+class UserHelperTest extends TuleapTestCase
+{
 
     function testGetDisplayName()
     {
@@ -209,4 +210,3 @@ class UserHelperTest extends TuleapTestCase {
         $this->assertEqual($uh->getDisplayNameFromUserName($name), $name);
     }
 }
-?>

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Mediawiki_Migration_MediawikiMigrator {
+class Mediawiki_Migration_MediawikiMigrator
+{
     public const PATH_TO_EXECUTION_SCRIPT = "/plugins/mediawiki/bin/migrate_to_123.php";
     public const PATH_TO_LOCALSETTINGS    = "/plugins/mediawiki/www/LocalSettings.php";
 

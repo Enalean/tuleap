@@ -25,7 +25,8 @@
 /**
  * I'm responsible of helping svn hooks to find relevant data
  */
-class SVN_Hooks {
+class SVN_Hooks
+{
     /** @var ProjectManager */
     private $project_manager;
 
@@ -102,5 +103,3 @@ class SVN_Hooks {
         return implode("\n", $logmsg);
     }
 }
-
-?>

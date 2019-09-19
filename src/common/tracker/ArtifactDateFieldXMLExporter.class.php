@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactDateFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
+class ArtifactDateFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter
+{
     public const TV3_DISPLAY_TYPE = 'DF';
     public const TV3_DATA_TYPE    = '4';
     public const TV3_VALUE_INDEX  = 'valueDate';

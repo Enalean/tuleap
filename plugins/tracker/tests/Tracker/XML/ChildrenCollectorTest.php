@@ -19,7 +19,8 @@
  */
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_XML_Exporter_ChildrenCollectorTest extends TuleapTestCase {
+class Tracker_XML_Exporter_ChildrenCollectorTest extends TuleapTestCase
+{
 
     /** @var Tracker_XML_Exporter_ChildrenCollectorTest */
     private $collector;
@@ -33,7 +34,7 @@ class Tracker_XML_Exporter_ChildrenCollectorTest extends TuleapTestCase {
     public function itRaisesAnExceptionWhenTooManyChildrenAreAdded()
     {
         $this->expectException('Tracker_XML_Exporter_TooManyChildrenException');
-        for ($i = 0 ; $i <= Tracker_XML_ChildrenCollector::MAX ; ++$i) {
+        for ($i = 0; $i <= Tracker_XML_ChildrenCollector::MAX; ++$i) {
             $this->collector->addChild($i, 'whatever');
         }
     }

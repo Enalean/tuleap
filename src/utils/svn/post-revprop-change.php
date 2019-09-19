@@ -40,7 +40,7 @@ try {
     );
     $svn_commit_message->update($repository, $revision, $user, $old_commit_message);
     exit(0);
-} catch(Exception $e) {
+} catch (Exception $e) {
     fwrite(STDERR, $e->getMessage().PHP_EOL);
     exit(1);
 }

@@ -19,7 +19,8 @@
  */
 
 
-class AgileDashboard_Milestone_PaginatedMilestonesRepresentations {
+class AgileDashboard_Milestone_PaginatedMilestonesRepresentations
+{
 
     /** @var array */
     public $milestones_representations;
@@ -43,5 +44,4 @@ class AgileDashboard_Milestone_PaginatedMilestonesRepresentations {
     {
         return $this->total_size;
     }
-
 }

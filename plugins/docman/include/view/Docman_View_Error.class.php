@@ -9,8 +9,7 @@
 
 require_once('Docman_View_Header.class.php');
 
-class Docman_View_Error extends Docman_View_Header {
+class Docman_View_Error extends Docman_View_Header
+{
 
 }
-
-?>

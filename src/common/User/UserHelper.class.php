@@ -22,7 +22,8 @@
 /**
  * UserHelper
  */
-class UserHelper {
+class UserHelper
+{
 
     public const PREFERENCES_NAME_AND_LOGIN = 0;
     public const PREFERENCES_LOGIN_AND_NAME = 1;
@@ -95,19 +96,19 @@ class UserHelper {
     function getDisplayName($user_name, $realname)
     {
         $name = '';
-        switch($this->_username_display) {
+        switch ($this->_username_display) {
             case self::PREFERENCES_LOGIN_AND_NAME:
                 $name = "$user_name ($realname)";
-            break;
+                break;
             case self::PREFERENCES_LOGIN:
                 $name = $user_name;
-            break;
+                break;
             case self::PREFERENCES_REAL_NAME:
                 $name = $realname;
-            break;
+                break;
             default:
                 $name = "$realname ($user_name)";
-            break;
+                break;
         }
         return $name;
     }
@@ -123,19 +124,19 @@ class UserHelper {
     function getDisplayNameSQLQuery()
     {
         $name = '';
-        switch($this->_username_display) {
+        switch ($this->_username_display) {
             case self::PREFERENCES_LOGIN_AND_NAME:
                 $name = "CONCAT(user.user_name,' (',user.realname,')') AS full_name";
-            break;
+                break;
             case self::PREFERENCES_LOGIN:
                 $name = 'user.user_name AS full_name';
-            break;
+                break;
             case self::PREFERENCES_REAL_NAME:
                 $name = 'user.realname AS full_name';
-            break;
+                break;
             default:
                 $name = "CONCAT(user.realname,' (',user.user_name,')') AS full_name";
-            break;
+                break;
         }
         return $name;
     }
@@ -173,19 +174,19 @@ class UserHelper {
     function getDisplayNameSQLOrder()
     {
         $order = '';
-        switch($this->_username_display) {
+        switch ($this->_username_display) {
             case self::PREFERENCES_LOGIN_AND_NAME:
                 $order = "user.user_name";
-            break;
+                break;
             case self::PREFERENCES_LOGIN:
                 $order = 'user.user_name';
-            break;
+                break;
             case self::PREFERENCES_REAL_NAME:
                 $order = 'user.realname';
-            break;
+                break;
             default:
                 $order = "user.realname";
-            break;
+                break;
         }
         return $order;
     }
@@ -296,7 +297,7 @@ class UserHelper {
     public function getLinkOnUser(PFUser $user)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        if($user && !$user->isNone()) {
+        if ($user && !$user->isNone()) {
             return '<a href="'.$this->getUserUrl($user).'">'.$hp->purify($this->getDisplayNameFromUser($user), CODENDI_PURIFIER_CONVERT_HTML).'</a>';
         } else {
             $username = $user ? $user->getName() : '';
@@ -328,5 +329,3 @@ class UserHelper {
         return $dao;
     }
 }
-
-?>

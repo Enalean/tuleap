@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SVN_AccessFile_Writer {
+class SVN_AccessFile_Writer
+{
 
     private $accessfile;
     private $err;
@@ -49,7 +50,7 @@ class SVN_AccessFile_Writer {
         return $this->err == 'write';
     }
 
-    public function read_defaults($display=false)
+    public function read_defaults($display = false)
     {
         $this->err = false;
         $fd = @fopen($this->accessfile, "r");
@@ -59,13 +60,23 @@ class SVN_AccessFile_Writer {
             while (!feof($fd)) {
                 $line = fgets($fd, 4096);
                 //if for display: don't include comment lines
-                if ($display && strpos($line,'# END CODENDI DEFAULT') !== false) { $in_settings = false; break; }
-                else if (!$display && strpos($line,'# BEGIN CODENDI DEFAULT') !== false) { $in_settings = true; }
+                if ($display && strpos($line, '# END CODENDI DEFAULT') !== false) {
+                    $in_settings = false;
+                    break;
+                } elseif (!$display && strpos($line, '# BEGIN CODENDI DEFAULT') !== false) {
+                    $in_settings = true;
+                }
 
-                if ($in_settings) { $buffer .= $line; }
+                if ($in_settings) {
+                    $buffer .= $line;
+                }
 
-                if ($display && strpos($line,'# BEGIN CODENDI DEFAULT') !== false) { $in_settings = true; }
-                else if (!$display && strpos($line,'# END CODENDI DEFAULT') !== false) { $in_settings = false; break; }
+                if ($display && strpos($line, '# BEGIN CODENDI DEFAULT') !== false) {
+                    $in_settings = true;
+                } elseif (!$display && strpos($line, '# END CODENDI DEFAULT') !== false) {
+                    $in_settings = false;
+                    break;
+                }
             }
             fclose($fd);
         }
@@ -77,7 +88,7 @@ class SVN_AccessFile_Writer {
         $this->err = false;
         $fd = fopen($this->accessfile, "w+");
         if ($fd) {
-            if (fwrite($fd, str_replace("\r",'',$contents)) === false) {
+            if (fwrite($fd, str_replace("\r", '', $contents)) === false) {
                 $this->err = 'write';
                 $ret = false;
             } else {
@@ -96,5 +107,3 @@ class SVN_AccessFile_Writer {
         return $this->write($this->read_defaults() . $contents);
     }
 }
-
-?>

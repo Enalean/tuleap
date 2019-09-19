@@ -18,5 +18,6 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class User_ForgeUserGroupPermission_NotFoundException extends Exception {}
-?>
+class User_ForgeUserGroupPermission_NotFoundException extends Exception
+{
+}

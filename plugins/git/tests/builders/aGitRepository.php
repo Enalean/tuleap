@@ -23,7 +23,8 @@ function aGitRepository()
     return new Test_Git_RepositoryBuilder();
 }
 
-class Test_Git_RepositoryBuilder {
+class Test_Git_RepositoryBuilder
+{
     private $repository;
 
     public function __construct()
@@ -97,5 +98,3 @@ class Test_Git_RepositoryBuilder {
         return $this->repository;
     }
 }
-
-?>

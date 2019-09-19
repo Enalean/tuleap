@@ -21,7 +21,8 @@
 require_once dirname(__FILE__) .'/../../../bootstrap.php';
 require_once dirname(__FILE__) .'/../../../../../../tests/simpletest/common/include/builders/aRequest.php';
 
-class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -40,12 +41,10 @@ class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends TuleapTestCase {
         $request = aRequest()->with('column', array(
             12 => array('label' => 'Todo', 'bgcolor' => '#000000'),
             13 => array('label' => ''),
-            14 => array('label' => 'Done', 'bgcolor' => '#16ed9d'))
-        )->build();
+            14 => array('label' => 'Done', 'bgcolor' => '#16ed9d')))->build();
         stub($this->dao)->save($this->tracker_id, 12, 'Todo', 0, 0, 0)->at(0);
         stub($this->dao)->save($this->tracker_id, 14, 'Done', 22, 237, 157)->at(1);
         stub($this->dao)->save()->count(2);
         $this->command->execute($request);
     }
 }
-?>

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Migration_V3_CcFieldDao extends DataAccessObject {
+class Tracker_Migration_V3_CcFieldDao extends DataAccessObject
+{
 
     public function addCCField($tv5_id)
     {
@@ -72,5 +73,3 @@ class Tracker_Migration_V3_CcFieldDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-
-?>

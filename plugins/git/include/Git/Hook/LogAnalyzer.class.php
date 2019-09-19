@@ -26,7 +26,8 @@
  * Analyze a push a provide a high level object (PushDetails) that knows if push
  * is a branch creation or a tag deletion, etc.
  */
-class Git_Hook_LogAnalyzer {
+class Git_Hook_LogAnalyzer
+{
     public const FAKE_EMPTY_COMMIT = '0000000000000000000000000000000000000000';
 
     /** @var Git_Exec */
@@ -87,5 +88,3 @@ class Git_Hook_LogAnalyzer {
         );
     }
 }
-
-?>

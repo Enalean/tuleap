@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUserGroupPermissionsDao extends DataAccessObject {
+class User_ForgeUserGroupPermissionsDao extends DataAccessObject
+{
 
     public function permissionExistsForUGroup($user_group_id, $permission_id)
     {

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchPlugin {
+class Search_SearchPlugin
+{
 
     public const RESULTS_PER_QUERY = 15;
 

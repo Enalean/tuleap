@@ -19,7 +19,8 @@
 
 namespace Tuleap\REST\v1;
 
-class BacklogItemParentReferenceBase {
+class BacklogItemParentReferenceBase
+{
 
     /**
      * @var int ID of the backlog item

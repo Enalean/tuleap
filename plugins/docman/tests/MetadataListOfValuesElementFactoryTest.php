@@ -23,7 +23,8 @@
 
 require_once 'bootstrap.php';
 
-class MetadataListOfValuesElementFactoryTest extends TuleapTestCase {
+class MetadataListOfValuesElementFactoryTest extends TuleapTestCase
+{
 
     function testCloneValues()
     {

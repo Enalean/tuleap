@@ -32,7 +32,7 @@ if (!$request->valid($vGroupId)) {
 
 $hp = Codendi_HTMLPurifier::instance();
 
-svn_header($request->getProject(), array ('title'=>$Language->getText('svn_intro','info')));
+svn_header($request->getProject(), array ('title'=>$Language->getText('svn_intro', 'info')));
 
 // Table for summary info
 print '<TABLE width="100%"><TR valign="top"><TD width="65%">'."\n";
@@ -47,7 +47,7 @@ if ($svn_preamble != '') {
     $host = $GLOBALS['sys_default_domain'];
     if (ForgeConfig::get('sys_https_host')) {
         $svn_url = 'https://'. $host;
-    } else if (isset($GLOBALS['sys_disable_subdomains']) && $GLOBALS['sys_disable_subdomains']) {
+    } elseif (isset($GLOBALS['sys_disable_subdomains']) && $GLOBALS['sys_disable_subdomains']) {
         $svn_url = 'http://'.$host;
     } else {
         $svn_url = 'http://svn.'. $project->getUnixNameMixedCase() .'.'. $host;
@@ -85,15 +85,15 @@ if ($svn_preamble != '') {
 
 // Summary info
 print '</TD><TD width="25%">';
-print $HTML->box1_top($Language->getText('svn_intro','history'));
+print $HTML->box1_top($Language->getText('svn_intro', 'history'));
 
 echo svn_utils_format_svn_history($group_id);
 
 // SVN Browsing Box
-print '<HR><B>'.$Language->getText('svn_intro','browse_tree').'</B>
-<P>'.$Language->getText('svn_intro','browse_comment').'
+print '<HR><B>'.$Language->getText('svn_intro', 'browse_tree').'</B>
+<P>'.$Language->getText('svn_intro', 'browse_comment').'
 <UL>
-<LI><A HREF="/svn/viewvc.php/?roottype=svn&root='.$project->getUnixNameMixedCase().'"><B>'.$Language->getText('svn_intro','browse_tree').'</B></A></LI>';
+<LI><A HREF="/svn/viewvc.php/?roottype=svn&root='.$project->getUnixNameMixedCase().'"><B>'.$Language->getText('svn_intro', 'browse_tree').'</B></A></LI>';
 
 print $HTML->box1_bottom();
 

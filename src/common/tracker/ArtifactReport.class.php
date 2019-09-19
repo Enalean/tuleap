@@ -23,18 +23,20 @@
 // Sort by place query
 function cmp_place_query($field1, $field2)
 {
-    if ($field1->getPlaceQuery() <> NULL || $field2->getPlaceQuery() <> NULL) {
-        if ($field1->getPlaceQuery() < $field2->getPlaceQuery())
-        return -1;
-        else if ($field1->getPlaceQuery() > $field2->getPlaceQuery())
-        return 1;
+    if ($field1->getPlaceQuery() <> null || $field2->getPlaceQuery() <> null) {
+        if ($field1->getPlaceQuery() < $field2->getPlaceQuery()) {
+            return -1;
+        } elseif ($field1->getPlaceQuery() > $field2->getPlaceQuery()) {
+            return 1;
+        }
         return 0;
     } else {
         //For fields which are not search-ranked, use the field rank-on-screen
-        if ($field1->getPlace() < $field2->getPlace())
-        return -1;
-        else if ($field1->getPlace() > $field2->getPlace())
-        return 1;
+        if ($field1->getPlace() < $field2->getPlace()) {
+            return -1;
+        } elseif ($field1->getPlace() > $field2->getPlace()) {
+            return 1;
+        }
         return 0;
     }
 }
@@ -42,24 +44,27 @@ function cmp_place_query($field1, $field2)
 // Sort by place result
 function cmp_place_result($field1, $field2)
 {
-    if ($field1->getPlaceResult() <> NULL || $field2->getPlaceResult() <> NULL) {
-        if ($field1->getPlaceResult() < $field2->getPlaceResult())
-        return -1;
-        else if ($field1->getPlaceResult() > $field2->getPlaceResult())
-        return 1;
+    if ($field1->getPlaceResult() <> null || $field2->getPlaceResult() <> null) {
+        if ($field1->getPlaceResult() < $field2->getPlaceResult()) {
+            return -1;
+        } elseif ($field1->getPlaceResult() > $field2->getPlaceResult()) {
+            return 1;
+        }
         return 0;
     } else {
         //For fields which are not report-ranked, use the field rank-on-screen
-        if ($field1->getPlace() < $field2->getPlace())
-        return -1;
-        else if ($field1->getPlace() > $field2->getPlace())
-        return 1;
+        if ($field1->getPlace() < $field2->getPlace()) {
+            return -1;
+        } elseif ($field1->getPlace() > $field2->getPlace()) {
+            return 1;
+        }
         return 0;
     }
 }
 
 // Classe to manage the artifact report
-class ArtifactReport {
+class ArtifactReport
+{
 
     // The report id
     var $report_id;
@@ -98,12 +103,12 @@ class ArtifactReport {
      *
      *    @return bool success.
      */
-    function __construct($report_id,$atid)
+    function __construct($report_id, $atid)
     {
         $this->group_artifact_id = $atid;
         $this->fields = array();
 
-        if ( !$this->fetchData($report_id,$atid) ) {
+        if (!$this->fetchData($report_id, $atid)) {
             return false;
         }
 
@@ -122,7 +127,7 @@ class ArtifactReport {
      *    @param    string    The report description.
      *    @return true on success, false on failure.
      */
-    function recreate($user_id,$name,$description,$scope,$is_default)
+    function recreate($user_id, $name, $description, $scope, $is_default)
     {
         global $ath,$Language;
      /*
@@ -135,22 +140,22 @@ class ArtifactReport {
     */
 
         if (!$name || !$description ||!$scope) {
-            $this->setError('ArtifactReport: '.$Language->getText('tracker_common_report','name_requ'));
-            echo 'ArtifactReport: '.$Language->getText('tracker_common_report','name_requ');
+            $this->setError('ArtifactReport: '.$Language->getText('tracker_common_report', 'name_requ'));
+            echo 'ArtifactReport: '.$Language->getText('tracker_common_report', 'name_requ');
             return false;
         }
 
         $group_id = $ath->Group->getID();
 
      // first delete any report field entries for this report
-        $res = db_query("DELETE FROM artifact_report_field WHERE report_id=". db_ei($this->report_id) );
+        $res = db_query("DELETE FROM artifact_report_field WHERE report_id=". db_ei($this->report_id));
 
         $res = db_query("UPDATE artifact_report 
                          SET user_id='" . db_ei($user_id) . "',name='". db_es($name) ."', description='". db_es($description) ."',scope='". db_es($scope) ."',is_default='".db_es($is_default)."' 
-                         WHERE report_id=". db_ei($this->report_id) );
+                         WHERE report_id=". db_ei($this->report_id));
 
         // set other reports as not default report
-        if ($is_default ==1 ) {
+        if ($is_default ==1) {
                $res = db_query("UPDATE artifact_report SET is_default=0 WHERE report_id <>".db_ei($this->report_id)." AND group_artifact_id=".db_ei($this->group_artifact_id));
         }
         $this->user_id = $user_id;
@@ -172,10 +177,10 @@ class ArtifactReport {
         global $ath;
 
      // first delete any report field entries for this report
-        $res = db_query("DELETE FROM artifact_report_field WHERE report_id=". db_ei($this->report_id) );
+        $res = db_query("DELETE FROM artifact_report_field WHERE report_id=". db_ei($this->report_id));
 
      // then delete the report entry item
-        $res = db_query("DELETE FROM artifact_report WHERE report_id=". db_ei($this->report_id) );
+        $res = db_query("DELETE FROM artifact_report WHERE report_id=". db_ei($this->report_id));
 
         $this->name = '';
         $this->description = '';
@@ -207,7 +212,7 @@ class ArtifactReport {
      *    @param    string    The report description.
      *    @return id on success, false on failure.
      */
-    function create($user_id,$name,$description,$scope,$is_default)
+    function create($user_id, $name, $description, $scope, $is_default)
     {
         global $ath,$Language;
      /*$perm = $ath->Group->getPermissionFromId( $user_id);
@@ -218,7 +223,7 @@ class ArtifactReport {
       }
     */
         if (!$name || !$description ||!$scope) {
-            $this->setError('ArtifactReport: '.$Language->getText('tracker_common_report','name_requ'));
+            $this->setError('ArtifactReport: '.$Language->getText('tracker_common_report', 'name_requ'));
             return false;
         }
 
@@ -251,7 +256,7 @@ class ArtifactReport {
         }
     }
 
-    function add_report_field($field_name,$show_on_query,$show_on_result,$place_query,$place_result,$col_width)
+    function add_report_field($field_name, $show_on_query, $show_on_result, $place_query, $place_result, $col_width)
     {
         $sql = 'INSERT INTO artifact_report_field (report_id, field_name,'.
         'show_on_query,show_on_result,place_query,place_result,col_width) VALUES ';
@@ -299,7 +304,7 @@ class ArtifactReport {
      //echo $sql.'<br>';
         $res=db_query($sql);
         if (!$res || db_numrows($res) < 1) {
-            $this->setError('ArtifactReport: '.$Language->getText('tracker_common_report','not_found'));
+            $this->setError('ArtifactReport: '.$Language->getText('tracker_common_report', 'not_found'));
             return false;
         }
         $data_array = db_fetch_array($res);
@@ -311,7 +316,7 @@ class ArtifactReport {
 
      // Read the fields infos
         $res=db_query("SELECT * FROM artifact_report_field ".
-        "WHERE report_id=". db_ei($report_id) );
+        "WHERE report_id=". db_ei($report_id));
         if (!$res || db_numrows($res) < 1) {
             $this->setError('ArtifactReport:fetchData');
             return false;
@@ -325,7 +330,7 @@ class ArtifactReport {
       // So we need to retreive ArtifactField values
             $this->fields[$field_array['field_name']] = new ArtifactReportField();
             $obj = $this->fields[$field_array['field_name']];
-            $obj->fetchData($this->group_artifact_id,$field_array['field_name']);
+            $obj->fetchData($this->group_artifact_id, $field_array['field_name']);
             $obj->setReportFieldsFromArray($field_array);
             $this->fields[$field_array['field_name']] = $obj;
             $i++;
@@ -366,17 +371,19 @@ class ArtifactReport {
     {
         $query_fields = array();
 
-        if ( count($this->fields) == 0 ) return $query_fields;
+        if (count($this->fields) == 0) {
+            return $query_fields;
+        }
 
         foreach ($this->fields as $key => $field) {
-            if ( ($field->isShowOnQuery())&&($field->isUsed())) {
+            if (($field->isShowOnQuery())&&($field->isUsed())) {
                 if ($field->userCanRead($GLOBALS['group_id'], $this->group_artifact_id)) {
                     $query_fields[$key] = $field;
                 }
             }
         }
 
-        uasort($query_fields,'cmp_place_query');
+        uasort($query_fields, 'cmp_place_query');
         return $query_fields;
     }
 
@@ -389,17 +396,19 @@ class ArtifactReport {
     {
         $result_fields = array();
 
-        if ( count($this->fields) == 0 ) return $result_fields;
+        if (count($this->fields) == 0) {
+            return $result_fields;
+        }
 
         foreach ($this->fields as $key => $field) {
-            if ( ($field->isShowOnResult())&&($field->isUsed()) ) {
+            if (($field->isShowOnResult())&&($field->isUsed())) {
                 if ($field->userCanRead($GLOBALS['group_id'], $this->group_artifact_id)) {
                     $result_fields[$key] = $field;
                 }
             }
         }
 
-        uasort($result_fields,'cmp_place_result');
+        uasort($result_fields, 'cmp_place_result');
         return $result_fields;
     }
 
@@ -413,15 +422,17 @@ class ArtifactReport {
         global $group;
         $result_fields = array();
 
-        if ( count($this->fields) == 0 ) return $result_fields;
+        if (count($this->fields) == 0) {
+            return $result_fields;
+        }
 
         foreach ($this->fields as $key => $field) {
-            if ( $field->isUsed() ) {
+            if ($field->isUsed()) {
                 $result_fields[$key] = $field;
             }
         }
 
-        uasort($result_fields,'cmp_place_result');
+        uasort($result_fields, 'cmp_place_result');
         return $result_fields;
     }
 
@@ -434,10 +445,12 @@ class ArtifactReport {
     {
         $result_fields = array();
 
-        if ( count($this->fields) == 0 ) return $result_fields;
+        if (count($this->fields) == 0) {
+            return $result_fields;
+        }
 
         foreach ($this->fields as $key => $field) {
-            if ( ($field->isShowOnResult())&&($field->getUseIt() == 1)&&($field->isMultiSelectBox()||$field->isSelectBox()) ) {
+            if (($field->isShowOnResult())&&($field->getUseIt() == 1)&&($field->isMultiSelectBox()||$field->isSelectBox())) {
                 $result_fields[$key] = $field;
             }
         }
@@ -453,10 +466,10 @@ class ArtifactReport {
      *
      * @return int
      */
-    function selectReportItems($prefs,$morder,$advsrch,&$aids)
+    function selectReportItems($prefs, $morder, $advsrch, &$aids)
     {
             global $ath;
-            $this->getQueryElements($prefs,$advsrch,$from,$where);
+            $this->getQueryElements($prefs, $advsrch, $from, $where);
 
             $um = UserManager::instance();
             $u  = $um->getCurrentUser();
@@ -467,7 +480,7 @@ class ArtifactReport {
             $pm          = PermissionsManager::instance();
             $permissions = $pm->getPermissionsAndUgroupsByObjectid($this->group_artifact_id);
 
-        if(!$u->isSuperUser() && !$u->isTrackerAdmin($group_id,$this->group_artifact_id)) {
+        if (!$u->isSuperUser() && !$u->isTrackerAdmin($group_id, $this->group_artifact_id)) {
             //artifact permissions
             $from  .= " LEFT JOIN permissions 
                              ON (permissions.object_id = CONVERT(a.artifact_id USING utf8) 
@@ -479,20 +492,17 @@ class ArtifactReport {
                                  permissions.ugroup_id IN (". implode(',', $ugroups) .")
                              )
                        ) ";
-
         }
 
             $aids = array();
             //Does the user member of at least one group which has ACCESS_FULL ?
-        if ($u->isSuperUser() || $u->isTrackerAdmin($group_id,$this->group_artifact_id) || (isset($permissions['TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_FULL'])) > 0)) {
-
+        if ($u->isSuperUser() || $u->isTrackerAdmin($group_id, $this->group_artifact_id) || (isset($permissions['TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_FULL'])) > 0)) {
             $sql = "SELECT a.artifact_id ".
                    $from." ".
                    $where.
                    "";
             $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
         } else {
-
             $static_ugroups  = $u->getStaticUgroups($group_id);
             $dynamic_ugroups = $u->getDynamicUgroups($group_id, $instances);
             //Does the user member of at least one group which has ACCESS_SUBMITTER ?
@@ -511,8 +521,7 @@ class ArtifactReport {
 
                 // {{{ tracker_admins
                 if (in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups) &&
-                in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['TRACKER_ACCESS_SUBMITTER']))
-                {
+                in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['TRACKER_ACCESS_SUBMITTER'])) {
                     $sql = "SELECT a.artifact_id ".
                            $from." , artifact_perm p ".
                            $where.
@@ -525,8 +534,7 @@ class ArtifactReport {
                 //}}}
                 // {{{ project_members
                 if (in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups) &&
-                in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['TRACKER_ACCESS_SUBMITTER']))
-                {
+                in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['TRACKER_ACCESS_SUBMITTER'])) {
                     $sql = "SELECT a.artifact_id ".
                            $from." , user_group ug ".
                            $where.
@@ -538,8 +546,7 @@ class ArtifactReport {
                 //}}}
                 // {{{ project_admins
                 if (in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $dynamic_ugroups) &&
-                in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $permissions['TRACKER_ACCESS_SUBMITTER']))
-                {
+                in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $permissions['TRACKER_ACCESS_SUBMITTER'])) {
                     $sql = "SELECT a.artifact_id ".
                            $from." , user_group ug ".
                            $where.
@@ -554,7 +561,6 @@ class ArtifactReport {
 
             //Does the user member of at least one group which has ACCESS_ASSIGNEE ?
             if (isset($permissions['TRACKER_ACCESS_ASSIGNEE']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_ASSIGNEE'])) > 0) {
-
                 //Get only once the field_id of assigned_to/multi_assigned_to
                 $field_dao = new ArtifactFieldDao(CodendiDataAccess::instance());
                 $dar = $field_dao->searchAssignedToFieldIdByArtifactTypeId($this->group_artifact_id);
@@ -579,8 +585,7 @@ class ArtifactReport {
 
                     // {{{ tracker_admins
                     if (in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups) &&
-                    in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['TRACKER_ACCESS_ASSIGNEE']))
-                    {
+                    in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['TRACKER_ACCESS_ASSIGNEE'])) {
                         $sql = "SELECT a.artifact_id ".
                                $from." , artifact_field_value afv, artifact_perm p ".
                                $where.
@@ -595,8 +600,7 @@ class ArtifactReport {
                     //}}}
                     // {{{ project_members
                     if (in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups) &&
-                    in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['TRACKER_ACCESS_ASSIGNEE']))
-                    {
+                    in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['TRACKER_ACCESS_ASSIGNEE'])) {
                         $sql = "SELECT a.artifact_id ".
                                $from." , artifact_field_value afv, user_group ug ".
                                $where.
@@ -610,8 +614,7 @@ class ArtifactReport {
                     //}}}
                     // {{{ project_admins
                     if (in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $dynamic_ugroups) &&
-                    in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $permissions['TRACKER_ACCESS_ASSIGNEE']))
-                    {
+                    in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $permissions['TRACKER_ACCESS_ASSIGNEE'])) {
                         $sql = "SELECT a.artifact_id ".
                                $from." , artifact_field_value afv, user_group ug ".
                                $where.
@@ -646,14 +649,14 @@ class ArtifactReport {
      *
      * @return string
      */
-    public function createQueryReport($prefs,$morder,$advsrch,$offset,$chunksz,$aids)
+    public function createQueryReport($prefs, $morder, $advsrch, $offset, $chunksz, $aids)
     {
         $select   = null;
         $from     = null;
         $where    = null;
         $order_by = null;
 
-        $this->getResultQueryElements($prefs,$morder,$advsrch,$aids,$select,$from,$where,$order_by);
+        $this->getResultQueryElements($prefs, $morder, $advsrch, $aids, $select, $from, $where, $order_by);
         $limit ="";
      // Final query
         if ($offset != 0 || $chunksz != 0) {
@@ -682,13 +685,14 @@ class ArtifactReport {
 
         if (is_array($var)) {
             foreach ($var as $v) {
-                if ($v == 0) { return true; }
+                if ($v == 0) {
+                    return true;
+                }
             }
             return false;
         } else {
             return ($var == 0);
         }
-
     }
 
 
@@ -703,18 +707,16 @@ class ArtifactReport {
      *
      * @return string
      */
-    function getValuesWhereClause($field,$prefs,$field_name,$advsrch,&$notany)
+    function getValuesWhereClause($field, $prefs, $field_name, $advsrch, &$notany)
     {
         $notany=true;
          $where = '';
 
      //echo $field_name."->prefs[".$field->getName()."]=".$prefs[$field->getName()][0]."<br>";
-        if (($field->isSelectBox()||$field->isMultiSelectBox()) && (isset($prefs[$field->getName()]) && !$this->isvarany($prefs[$field->getName()])) ) {
-
+        if (($field->isSelectBox()||$field->isMultiSelectBox()) && (isset($prefs[$field->getName()]) && !$this->isvarany($prefs[$field->getName()]))) {
             // Only select box criteria to where clause if argument is not ANY
-            return " AND ".$field_name." IN (". db_es(implode(",",$prefs[$field->getName()])) .") ";
-
-        } else if ( $field->isDateField() && (
+            return " AND ".$field_name." IN (". db_es(implode(",", $prefs[$field->getName()])) .") ";
+        } elseif ($field->isDateField() && (
             ((isset($prefs[$field->getName()]) && $prefs[$field->getName()][0]) ||
             (isset($prefs[$field->getName().'_end']) && $prefs[$field->getName().'_end'][0])))) {
       // transform a date field into a unix time and use <, > or =
@@ -733,12 +735,10 @@ class ArtifactReport {
                     $time_before = mktime(23, 59, 59, $month, $day, $year);
                     $where .= " AND ". $field_name." <= ".$time_before;
                 }
-
             } else {
-
-                if(isset($prefs[$field->getName()][1])) {
+                if (isset($prefs[$field->getName()][1])) {
                     $operator = $prefs[$field->getName()][1];
-                }else {
+                } else {
                     $operator = $prefs[$field->getName().'_op'][0];
                 }
 
@@ -747,11 +747,11 @@ class ArtifactReport {
                     list($year,$month,$day) = util_date_explode($prefs[$field->getName()][0]);
                     $time_end = mktime(23, 59, 59, $month, $day, $year);
                     $where = " AND ".$field_name." >= ".$time." AND ".$field_name." <= ".$time_end;
-                } else if ($operator == '>') {
+                } elseif ($operator == '>') {
                     list($year,$month,$day) = util_date_explode($prefs[$field->getName()][0]);
                     $time_after = mktime(0, 0, 0, $month, $day+1, $year);
                     $where = " AND ".$field_name." ".$operator."=".$time_after;
-                } else if ($operator == '<') {
+                } elseif ($operator == '<') {
                     list($year,$month,$day) = util_date_explode($prefs[$field->getName()][0]);
                     $time_before = mktime(23, 59, 59, $month, $day-1, $year);
                     $where = " AND ".$field_name." ".$operator."=".$time_before;
@@ -762,12 +762,10 @@ class ArtifactReport {
             $where .= " AND ".$field_name." <> 0 ";
 
             return $where;
-
-        } else if ( ($field->isTextField() || $field->isTextArea())
+        } elseif (($field->isTextField() || $field->isTextArea())
                         && isset($prefs[$field->getName()][0]) && $prefs[$field->getName()][0]) {
-
       // It's a text field accept. Process INT or TEXT,VARCHAR fields differently
-            return " AND ".$field->buildMatchExpression($field_name,$prefs[$field->getName()][0]);
+            return " AND ".$field->buildMatchExpression($field_name, $prefs[$field->getName()][0]);
         }
         $notany = false;
     }
@@ -784,14 +782,14 @@ class ArtifactReport {
 
         $fields_order = array();
 
-        $arr = explode(',',$morder);
+        $arr = explode(',', $morder);
         foreach ($arr as $attr) {
-            $key = substr($attr,0,(strlen($attr)-1));
+            $key = substr($attr, 0, (strlen($attr)-1));
             if (isset($this->fields[$key]) && $this->fields[$key]->isUsed() && ('severity' == $key || $this->fields[$key]->isShowOnResult())) {
-                preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
+                preg_match("/\s*([^<>]*)([<>]*)/", $attr, $match);
                 list(,$mattr,$mdir) = $match;
               //echo "<br>DBG \$mattr=$mattr,\$mdir=$mdir";
-                if ( ($mdir == '>') || (!isset($mdir)) ) {
+                if (($mdir == '>') || (!isset($mdir))) {
                     $fields_order[$mattr] = "ASC";
                 } else {
                     $fields_order[$mattr] = "DESC";
@@ -800,7 +798,6 @@ class ArtifactReport {
         }
 
         return $fields_order;
-
     }
 
     /**
@@ -821,7 +818,7 @@ class ArtifactReport {
      *
      * @return void
      */
-    function getQueryElements($prefs,$advsrch,&$from,&$where)
+    function getQueryElements($prefs, $advsrch, &$from, &$where)
     {
         global $art_field_fact;
       // NOTICE
@@ -861,15 +858,16 @@ class ArtifactReport {
 
             if ($field->isShowOnQuery()) {
               // If the field is a standard field ie the value is stored directly into the artifact table (severity, artifact_id, ...)
-                if ( $field->isStandardField()) {
-                    $where .= $this->getValuesWhereClause($field,$prefs,"a.".$field->getName(),$advsrch,$notany);
+                if ($field->isStandardField()) {
+                    $where .= $this->getValuesWhereClause($field, $prefs, "a.".$field->getName(), $advsrch, $notany);
 
-                    if ($field->getName() == "status_id") $status_id_ok = 1;
+                    if ($field->getName() == "status_id") {
+                        $status_id_ok = 1;
+                    }
                 } else {
-
           // The field value is stored into the artifact_field_value table
           // So we need to add a new join
-                    $where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
+                    $where .= $this->getValuesWhereClause($field, $prefs, "v".$count.".".$field->getValueFieldName(), $advsrch, $notany);
 
                     if ($notany) {
                         $from .= " JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
@@ -880,8 +878,11 @@ class ArtifactReport {
 
           // special case for assigned_to/multi_assigned_to fields or status_id field that can also be set
           // in prefs through My or Open link but which are not necessarily in the ShowOnQuery fields of this report
-                    if ($field->getName() == "assigned_to") $assigned_to_ok = 1;
-                    else if ($field->getName() == "multi_assigned_to") $multi_assigned_to_ok = 1;
+                    if ($field->getName() == "assigned_to") {
+                        $assigned_to_ok = 1;
+                    } elseif ($field->getName() == "multi_assigned_to") {
+                        $multi_assigned_to_ok = 1;
+                    }
                 }
             }
         }
@@ -889,7 +890,7 @@ class ArtifactReport {
         if (isset($prefs['assigned_to']) && !$assigned_to_ok) {
             $field = $art_field_fact->getFieldFromName('assigned_to');
             if ($field) {
-                  $where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
+                  $where .= $this->getValuesWhereClause($field, $prefs, "v".$count.".".$field->getValueFieldName(), $advsrch, $notany);
 
                 if ($notany) {
                     $from .= " JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
@@ -898,10 +899,10 @@ class ArtifactReport {
                     $count++;
                 }
             }
-        } else if (isset($prefs['multi_assigned_to']) && !$multi_assigned_to_ok) {
+        } elseif (isset($prefs['multi_assigned_to']) && !$multi_assigned_to_ok) {
             $field = $art_field_fact->getFieldFromName('multi_assigned_to');
             if ($field) {
-                  $where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
+                  $where .= $this->getValuesWhereClause($field, $prefs, "v".$count.".".$field->getValueFieldName(), $advsrch, $notany);
 
                 if ($notany) {
                     $from .= " JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
@@ -914,7 +915,7 @@ class ArtifactReport {
         if (isset($prefs['status_id']) && !$status_id_ok) {
             $field = $art_field_fact->getFieldFromName('status_id');
             if ($field) {
-                  $where .= $this->getValuesWhereClause($field,$prefs,"a.".$field->getName(),$advsrch,$notany);
+                  $where .= $this->getValuesWhereClause($field, $prefs, "a.".$field->getName(), $advsrch, $notany);
             }
         }
     }
@@ -934,7 +935,7 @@ class ArtifactReport {
      *
      * @return void
      */
-    function getResultQueryElements($prefs,$morder,$advsrch,$aids=false,&$select,&$from,&$where,&$order_by)
+    function getResultQueryElements($prefs, $morder, $advsrch, $aids = false, &$select, &$from, &$where, &$order_by)
     {
 
       // NOTICE
@@ -972,7 +973,7 @@ class ArtifactReport {
 
       //add directly the aids concerned by the query given in prefs
         if ($aids) {
-            $where .= " AND a.artifact_id IN (". db_es(implode(",",$aids)) .")";
+            $where .= " AND a.artifact_id IN (". db_es(implode(",", $aids)) .")";
         }
 
         $order_by = "ORDER BY ";
@@ -985,23 +986,23 @@ class ArtifactReport {
 
         $select_count = 0;
 
-        if ( count($fields) == 0 )
-        return;
+        if (count($fields) == 0) {
+            return;
+        }
 
         foreach ($fields as $field) {
         //echo $field->getName()."-".$field->getID()."<br>";
 
         // If the field is a standard field ie the value is stored directly into the artifact table (severity, artifact_id, ...)
-            if ( $field->isStandardField() ) {
-
+            if ($field->isStandardField()) {
               // Build the where
               // if we now already the affected aids we do not need to integrate the query constraints into the SQL query
-                if ( $field->isShowOnQuery() && !$aids) {
-                    $where .= $this->getValuesWhereClause($field,$prefs,"a.".$field->getName(),$advsrch,$notany);
+                if ($field->isShowOnQuery() && !$aids) {
+                    $where .= $this->getValuesWhereClause($field, $prefs, "a.".$field->getName(), $advsrch, $notany);
                 }
 
-                if ( ($field->isShowOnResult()) || ($field->getName() == "severity") ) {
-                    if ( $select_count != 0 ) {
+                if (($field->isShowOnResult()) || ($field->getName() == "severity")) {
+                    if ($select_count != 0) {
                         $select .= ",";
                         $select_count ++;
                     } else {
@@ -1009,7 +1010,7 @@ class ArtifactReport {
                     }
 
           // Special case for fields which are user name
-                    if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
+                    if (($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox())) {
                         $select .= " u.user_name as ".$field->getName();
                         $from .= " JOIN user u ON (u.user_id=a.".$field->getName().")";
                     } else {
@@ -1018,23 +1019,20 @@ class ArtifactReport {
                 }
 
               // Set the fields_order_result array to    build the order_by
-                if ( isset($fields_order[$field->getName()]) && $fields_order[$field->getName()] ) {
-
-                    if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
+                if (isset($fields_order[$field->getName()]) && $fields_order[$field->getName()]) {
+                    if (($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox())) {
                           $fields_order_result[$field->getName()] = "u.user_name";
                     } else {
                           $fields_order_result[$field->getName()] = "a.".$field->getName();
                     }
                 }
-
             } else {
-
               // The field value is stored into the artifact_field_value table
               // So we need to add a new join
 
               // Build the where
-                if ( $field->isShowOnQuery() && !$aids) {
-                    $where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
+                if ($field->isShowOnQuery() && !$aids) {
+                    $where .= $this->getValuesWhereClause($field, $prefs, "v".$count.".".$field->getValueFieldName(), $advsrch, $notany);
                 }
 
                 if ($field->isShowOnResult() ||
@@ -1043,8 +1041,8 @@ class ArtifactReport {
                     " and v".$count.".field_id=". db_ei($field->getID()) .")";
                 }
 
-                if ( $field->isShowOnResult() ) {
-                    if ( $select_count != 0 ) {
+                if ($field->isShowOnResult()) {
+                    if ($select_count != 0) {
                           $select .= ",";
                           $select_count ++;
                     } else {
@@ -1055,7 +1053,7 @@ class ArtifactReport {
                     if ($field->isUsername()) {
                           $select .= " u".$count.".user_name as ".$field->getName();
                           $from .= " JOIN user u".$count." ON (v".$count.".".$field->getValueFieldName()." = u".$count.".user_id)";
-                    } else if ($field->isSelectBox() || $field->isMultiSelectBox()) {
+                    } elseif ($field->isSelectBox() || $field->isMultiSelectBox()) {
                           $select .= " v".$count.".".$field->getValueFieldName()." as ".$field->getName();
                           $from .= " LEFT JOIN artifact_field_value_list v".$count."_val"
                             ." ON (v".$count."_val.group_artifact_id=". db_ei($this->group_artifact_id)
@@ -1068,32 +1066,28 @@ class ArtifactReport {
                 }
 
           // Set the fields_order_result array to    build the order_by
-                if ( isset($fields_order[$field->getName()]) && $fields_order[$field->getName()] ) {
-
+                if (isset($fields_order[$field->getName()]) && $fields_order[$field->getName()]) {
                     //if ( ($field->isUsername())&&(!$field->isSelectBox())&&(!$field->isMultiSelectBox()) ) {
-                    if ( $field->isUsername() ) {
-
+                    if ($field->isUsername()) {
                         $fields_order_result[$field->getName()] = "u".$count.".user_name";
                     } else {
-                        if($field->isSelectBox() || $field->isMultiSelectBox()) {
+                        if ($field->isSelectBox() || $field->isMultiSelectBox()) {
                             $fields_order_result[$field->getName()] = "v".$count."_val.order_id";
-                        }
-                        else{
+                        } else {
                             $fields_order_result[$field->getName()] = "v".$count.".".$field->getValueFieldName();
                         }
                     }
                 }
 
                 $count++;
-
             }
         }
 
       // Build the order_by using the fields_order_result array
-        if ( count($fields_order) > 0 ) {
+        if (count($fields_order) > 0) {
             $i = 1;
             foreach ($fields_order as $key => $field) {
-                if ( $i > 1 ) {
+                if ($i > 1) {
                     $order_by .= ", ";
                 }
 
@@ -1128,21 +1122,20 @@ class ArtifactReport {
 
         $result = db_query($query);
         $res = array();
-        for($i=0;$i<db_numrows($result);$i++) {
+        for ($i=0; $i<db_numrows($result); $i++) {
             $res[$i] = db_fetch_array($result);
-            if ( $res[$i]['artifact_id'] ) {
+            if ($res[$i]['artifact_id']) {
                 foreach ($fields_sb as $field_name => $field) {
                     $values = array();
-                    if ( $field->isStandardField() ) {
+                    if ($field->isStandardField()) {
                         $values[] = $res[$i][$field_name];
                     } else {
                         $values = $field->getValues($res[$i]['artifact_id']);
                     }
 
-                    $label_values = $field->getLabelValues($this->group_artifact_id,$values);
-                    $res[$i][$field_name] = join(", ",$label_values);
+                    $label_values = $field->getLabelValues($this->group_artifact_id, $values);
+                    $res[$i][$field_name] = join(", ", $label_values);
                 }
-
             }
         }
 
@@ -1243,5 +1236,3 @@ class ArtifactReport {
         return $this->error_state;
     }
 }
-
-?>

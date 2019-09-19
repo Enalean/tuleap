@@ -21,11 +21,12 @@
 
 use Tuleap\User\REST\UserRepresentation;
 
-class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement_Field_List_BindValue {
+class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement_Field_List_BindValue
+{
     protected $id;
     protected $user_name;
     protected $display_name;
-    private   $hp;
+    private $hp;
 
     public function __construct($id, $user_name = null, $display_name = null)
     {
@@ -143,7 +144,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
 
     public function getJsonValue()
     {
-        if($this->id == 100) {
+        if ($this->id == 100) {
             return;
         }
         return $this->id;

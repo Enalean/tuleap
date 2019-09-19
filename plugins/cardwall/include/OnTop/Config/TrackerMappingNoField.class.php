@@ -19,7 +19,8 @@
  */
 
 
-class Cardwall_OnTop_Config_TrackerMappingNoField extends Cardwall_OnTop_Config_TrackerMapping {
+class Cardwall_OnTop_Config_TrackerMappingNoField extends Cardwall_OnTop_Config_TrackerMapping
+{
 
     /**
      * @pattern Visitor
@@ -38,6 +39,4 @@ class Cardwall_OnTop_Config_TrackerMappingNoField extends Cardwall_OnTop_Config_
     {
         return array();
     }
-
 }
-?>

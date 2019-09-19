@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Report_Criteria_List_ValueDao extends Tracker_Report_Criteria_ValueDao {
+class Tracker_Report_Criteria_List_ValueDao extends Tracker_Report_Criteria_ValueDao
+{
     function __construct()
     {
         parent::__construct();
@@ -27,7 +28,7 @@ class Tracker_Report_Criteria_List_ValueDao extends Tracker_Report_Criteria_Valu
 
     public function save($id, $values)
     {
-        if ( is_array($values) ) {
+        if (is_array($values)) {
             $id = $this->da->escapeInt($id);
             //First clear the list
             $sql = "DELETE FROM $this->table_name WHERE criteria_id = $id";
@@ -36,7 +37,7 @@ class Tracker_Report_Criteria_List_ValueDao extends Tracker_Report_Criteria_Valu
             //Then fill it with new values
             $new_values = array();
             if (is_array($values)) {
-                foreach($values as $val) {
+                foreach ($values as $val) {
                     if ($v = $this->da->escapeInt($val)) {
                         $new_values[] = "($id, $v)";
                     }
@@ -47,13 +48,11 @@ class Tracker_Report_Criteria_List_ValueDao extends Tracker_Report_Criteria_Valu
                 $sql = "INSERT INTO $this->table_name(criteria_id, value) VALUES ".implode(',', $new_values);
             }
             $r = null;
-            if ( $sql != '') {
+            if ($sql != '') {
                 $r = $this->update($sql);
             }
             return $r;
         }
         return false;
     }
-
 }
-?>

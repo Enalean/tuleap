@@ -20,13 +20,14 @@
  */
 
 
-class Docman_ValidateUpload extends Docman_Validator {
+class Docman_ValidateUpload extends Docman_Validator
+{
     public function __construct(Codendi_Request $request)
     {
         if (!$request->exist('upload_content')) {
             $ok = false;
             if (isset($_FILES['file'])) {
-                switch($_FILES['file']['error']) {
+                switch ($_FILES['file']['error']) {
                     case UPLOAD_ERR_OK:
                         // all is OK
                         $ok = true;
@@ -57,11 +58,10 @@ class Docman_ValidateUpload extends Docman_Validator {
             if ($ok && isset($_FILES['file']['size']) && (int) $_FILES['file']['size'] >= (int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
                 $ok = false;
                 $this->addError($GLOBALS['Language']->getText(
-                        'plugin_docman',
-                        'error_upload_size',
-                        $_FILES['file']['name'] ?? ''
-                    )
-                );
+                    'plugin_docman',
+                    'error_upload_size',
+                    $_FILES['file']['name'] ?? ''
+                ));
             }
             if (!isset($_FILES['file']) || ($ok && $_FILES['file']['name'] == '')) {
                 $this->addError($GLOBALS['Language']->getText('plugin_docman', 'error_upload'));

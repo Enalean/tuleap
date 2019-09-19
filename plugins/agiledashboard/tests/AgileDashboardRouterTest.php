@@ -33,12 +33,15 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase
 
         $milestone_controller_factory = mock('Planning_MilestoneControllerFactory');
         $this->planning_controller = mock('Planning_Controller');
-        $this->router = TestHelper::getPartialMock('AgileDashboardRouter',
-                                             array('renderAction',
+        $this->router = TestHelper::getPartialMock(
+            'AgileDashboardRouter',
+            array('renderAction',
                                                    'executeAction',
                                                    'buildController',
                                                    'buildPlanningController',
-                                                   'getArtifactFactory',));
+            'getArtifactFactory',
+            )
+        );
 
         $this->router->__construct(
             mock('Plugin'),

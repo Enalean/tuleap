@@ -22,7 +22,8 @@
 /**
  * First class collection of Backlog Items
  */
-interface AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
+interface AgileDashboard_Milestone_Backlog_IBacklogItemCollection
+{
 
     function getParentItemName();
 

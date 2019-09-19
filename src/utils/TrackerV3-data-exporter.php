@@ -57,7 +57,6 @@ if (! $overwrite && file_exists($archive_path)) {
 }
 
 try {
-
     $xml      = new DOMDocument("1.0", "UTF8");
     $logger   = new Log_ConsoleLogger();
     $archive  = new ZipArchive();

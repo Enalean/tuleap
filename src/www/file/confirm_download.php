@@ -24,7 +24,7 @@ $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 $vFileId = new Valid_UInt('file_id');
 $vFileId->required();
-if($request->valid($vGroupId) && $request->valid($vFileId)) {
+if ($request->valid($vGroupId) && $request->valid($vFileId)) {
     $group_id = $request->get('group_id');
     $file_id  = $request->get('file_id');
 } else {
@@ -63,7 +63,7 @@ if ($request->exist('popup')) {
 ?>
 <html>
 <head>
-   <title><?php echo $Language->getText('file_confirm_download','download_agreement'); ?></title>
+   <title><?php echo $Language->getText('file_confirm_download', 'download_agreement'); ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 
@@ -95,13 +95,15 @@ echo $Language->getText('file_confirm_download', 'download_explain', array($GLOB
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="normal">
   <tr> 
     <td> 
-      <div align="center"><a href="javascript:<?php echo "$dlscript($file_id);"; ?>"><b><?php echo $Language->getText('file_confirm_download','agree'); ?></b></a></div>
+      <div align="center"><a href="javascript:<?php echo "$dlscript($file_id);"; ?>"><b><?php echo $Language->getText('file_confirm_download', 'agree'); ?></b></a></div>
     </td>
     <td> 
-      <div align="center"><a href="javascript:<?php echo "$cancelscript"?>;"><b><?php echo $Language->getText('file_confirm_download','decline'); ?></b></a></div>
+      <div align="center"><a href="javascript:<?php echo "$cancelscript"?>;"><b><?php echo $Language->getText('file_confirm_download', 'decline'); ?></b></a></div>
     </td>
   </tr>
-<?php if (!$request->exist('popup')) echo '<p>  <tr><td colspan="2" class="small"><a href="javascript:history.back();">'.$Language->getText('file_confirm_download','back').'</a></td></tr>'; ?>
+<?php if (!$request->exist('popup')) {
+    echo '<p>  <tr><td colspan="2" class="small"><a href="javascript:history.back();">'.$Language->getText('file_confirm_download', 'back').'</a></td></tr>';
+} ?>
 </table>
 </span>
 </td></tr>

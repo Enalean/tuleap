@@ -29,7 +29,8 @@ use AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection;
 
 require_once __DIR__.'/../../../../bootstrap.php';
 
-class MilestoneResourceValidatorTest extends TuleapTestCase {
+class MilestoneResourceValidatorTest extends TuleapTestCase
+{
 
     /** @var MilestoneResourceValidator */
     private $milestone_resource_validator;
@@ -141,7 +142,8 @@ class MilestoneResourceValidatorTest extends TuleapTestCase {
     }
 }
 
-class MilestoneResourceValidator_PatchAddRemoveTest extends TuleapTestCase {
+class MilestoneResourceValidator_PatchAddRemoveTest extends TuleapTestCase
+{
 
     /** @var MilestoneResourceValidator */
     private $milestone_resource_validator;

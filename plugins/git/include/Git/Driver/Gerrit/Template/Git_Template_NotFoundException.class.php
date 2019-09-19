@@ -22,6 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_Template_NotFoundException extends Exception {
+class Git_Template_NotFoundException extends Exception
+{
 }
-?>

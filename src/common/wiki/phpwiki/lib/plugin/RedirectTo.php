@@ -41,8 +41,7 @@ rcs_id('$Id: RedirectTo.php,v 1.13 2004/02/17 12:11:36 rurban Exp $');
  * UseModWiki does) add a note to the top of the target page saying
  * something like "(Redirected from SomeRedirectingPage)".
  */
-class WikiPlugin_RedirectTo
-extends WikiPlugin
+class WikiPlugin_RedirectTo extends WikiPlugin
 {
     function getName()
     {
@@ -56,8 +55,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.13 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.13 $"
+        );
     }
 
     function getDefaultArguments()
@@ -82,35 +84,41 @@ extends WikiPlugin
              * Do we want some checking on href to avoid malicious
              * uses of the plugin? Like stripping tags or hexcode.
              */
-            $url = preg_replace('/%\d\d/','',strip_tags($href));
+            $url = preg_replace('/%\d\d/', '', strip_tags($href));
             $thispage = $request->getPage();
             if (! $thispage->get('locked')) {
-                return $this->disabled(fmt("%s is only allowed in locked pages.",
-                                           _("Redirect to an external url")));
+                return $this->disabled(fmt(
+                    "%s is only allowed in locked pages.",
+                    _("Redirect to an external url")
+                ));
             }
-        }
-        else if ($page) {
-            $url = WikiURL($page,
-                           array('redirectfrom' => $request->getArg('pagename')),
-                           'abs_path');
-        }
-        else {
-            return $this->error(fmt("%s or %s parameter missing",
-                                    "'href'", "'page'"));
+        } elseif ($page) {
+            $url = WikiURL(
+                $page,
+                array('redirectfrom' => $request->getArg('pagename')),
+                'abs_path'
+            );
+        } else {
+            return $this->error(fmt(
+                "%s or %s parameter missing",
+                "'href'",
+                "'page'"
+            ));
         }
 
         if ($page == $request->getArg('pagename')) {
             return $this->error(fmt("Recursive redirect to self: '%s'", $url));
         }
 
-        if ($request->getArg('action') != 'browse')
+        if ($request->getArg('action') != 'browse') {
             return $this->disabled("(action != 'browse')");
+        }
 
         $redirectfrom = $request->getArg('redirectfrom');
         if ($redirectfrom !== false) {
-            if ($redirectfrom)
+            if ($redirectfrom) {
                 return $this->disabled(_("Double redirect not allowed."));
-            else {
+            } else {
                 // Got here by following the "Redirected from ..." link
                 // on a browse page.
                 return $this->disabled(_("Viewing redirecting page."));
@@ -195,4 +203,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

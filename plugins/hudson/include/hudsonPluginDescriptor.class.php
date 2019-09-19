@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-class hudsonPluginDescriptor extends PluginDescriptor {
+class hudsonPluginDescriptor extends PluginDescriptor
+{
 
     function __construct()
     {
@@ -25,4 +26,3 @@ class hudsonPluginDescriptor extends PluginDescriptor {
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
-?>

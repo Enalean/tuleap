@@ -19,7 +19,8 @@
  */
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Tracker_XML_Updater_TemporaryFileXMLUpdaterTest extends TuleapTestCase {
+class Tracker_XML_Updater_TemporaryFileXMLUpdaterTest extends TuleapTestCase
+{
 
     /** @var Tracker_XML_Updater_TemporaryFileXMLUpdater */
     private $updater;

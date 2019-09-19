@@ -39,7 +39,9 @@ class WikiDB_SQL extends WikiDB
     function isWikiPage($pagename)
     {
         $pagename = (string) $pagename;
-        if ($pagename === '') return false;
+        if ($pagename === '') {
+            return false;
+        }
         //if (empty($this->_iwpcache)) {  $this->_iwpcache = array();  }
         if (empty($this->_cache->id_cache[$pagename])) {
             $this->_cache->_id_cache[$pagename] = $this->_backend->is_wiki_page($pagename);
@@ -50,27 +52,32 @@ class WikiDB_SQL extends WikiDB
     // adds surrounding quotes
     function quote($s)
     {
-        return $this->_backend->_dbh->quoteSmart($s); }
+        return $this->_backend->_dbh->quoteSmart($s);
+    }
     // no surrounding quotes because we know it's a string
     function qstr($s)
     {
-        return $this->_backend->_dbh->escapeSimple($s); }
+        return $this->_backend->_dbh->escapeSimple($s);
+    }
 
     function isOpen()
     {
         global $request;
-        if (!$request->_dbi) return false;
+        if (!$request->_dbi) {
+            return false;
+        }
         return is_resource($this->_backend->connection());
     }
 
     // SQL result: for simple select or create/update queries
     // returns the database specific resource type
-    function genericSqlQuery($sql, $args=false)
+    function genericSqlQuery($sql, $args = false)
     {
-        if ($args)
+        if ($args) {
             $result = $this->_backend->_dbh->query($sql, $args);
-        else
+        } else {
             $result = $this->_backend->_dbh->query($sql);
+        }
         if (DB::isError($result)) {
             $msg = $result->getMessage();
             trigger_error("SQL Error: ".DB::errorMessage($result), E_USER_WARNING);
@@ -82,12 +89,11 @@ class WikiDB_SQL extends WikiDB
 
     // SQL iter: for simple select or create/update queries
     // returns the generic iterator object (count,next)
-    function genericSqlIter($sql, $field_list = NULL)
+    function genericSqlIter($sql, $field_list = null)
     {
         $result = $this->genericSqlQuery($sql);
         return new WikiDB_backend_PearDB_generic_iter($this->_backend, $result);
     }
-
 };
 
 
@@ -99,5 +105,3 @@ class WikiDB_SQL extends WikiDB
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-
-?>

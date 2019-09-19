@@ -21,11 +21,10 @@
 /**
  * Provides the information necessary to connect to a distant machine using ssh.
  */
-interface Git_Driver_Gerrit_RemoteSSHConfig {
+interface Git_Driver_Gerrit_RemoteSSHConfig
+{
     function getSSHPort();
     function getHost();
     function getLogin();
     function getIdentityFile();
 }
-
-?>

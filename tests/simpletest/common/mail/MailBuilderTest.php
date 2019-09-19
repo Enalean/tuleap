@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MailBuilderTest extends TuleapTestCase {
+class MailBuilderTest extends TuleapTestCase
+{
 
     /** @var MailBuilder */
     private $builder;

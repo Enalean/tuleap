@@ -20,7 +20,8 @@
 /**
  * Represents the revison info for a given svn path
  */
-class SVN_RevisionPathInfo {
+class SVN_RevisionPathInfo
+{
 
     private $revision_id;
     private $path;
@@ -52,4 +53,3 @@ class SVN_RevisionPathInfo {
         return $this->timestamp;
     }
 }
-?>

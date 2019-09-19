@@ -53,20 +53,18 @@ function session_require($req)
         }
 
         if ((db_numrows(db_query($query)) < 1) || !$req['group']) {
-            exit_error($Language->getText('include_session','insufficient_g_access'),$Language->getText('include_session','no_perm_to_view'));
+            exit_error($Language->getText('include_session', 'insufficient_g_access'), $Language->getText('include_session', 'no_perm_to_view'));
         }
-    }
-    elseif (isset($req['user']) && $req['user']) {
+    } elseif (isset($req['user']) && $req['user']) {
         if (UserManager::instance()->getCurrentUser()->getId() != $req['user']) {
-            exit_error($Language->getText('include_session','insufficient_u_access'),$Language->getText('include_session','no_perm_to_view'));
+            exit_error($Language->getText('include_session', 'insufficient_u_access'), $Language->getText('include_session', 'no_perm_to_view'));
         }
-    }
-    elseif (isset($req['isloggedin']) && $req['isloggedin']) {
+    } elseif (isset($req['isloggedin']) && $req['isloggedin']) {
         if (!user_isloggedin()) {
-            exit_error($Language->getText('include_session','required_login'),$Language->getText('include_session','login'));
+            exit_error($Language->getText('include_session', 'required_login'), $Language->getText('include_session', 'login'));
         }
     } else {
-        exit_error($Language->getText('include_session','insufficient_access'),$Language->getText('include_session','no_access'));
+        exit_error($Language->getText('include_session', 'insufficient_access'), $Language->getText('include_session', 'no_access'));
     }
 }
 
@@ -81,5 +79,3 @@ function session_continue($sessionKey)
     $user = UserManager::instance()->getCurrentUser($sessionKey);
     return $user->isLoggedIn();
 }
-
-?>

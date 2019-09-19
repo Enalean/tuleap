@@ -32,7 +32,7 @@ $request = HTTPRequest::instance();
 
 $vUserName = new Valid_String('name');
 $vUserName->required();
-if($request->valid($vUserName)) {
+if ($request->valid($vUserName)) {
     $userName = $request->get('name');
 } else {
     // Finish script, no output
@@ -41,8 +41,8 @@ if($request->valid($vUserName)) {
 
 $codendiUserOnly = false;
 $vCodendiUserOnly = new Valid_UInt('codendi_user_only');
-if($request->valid($vCodendiUserOnly)) {
-    if($request->get('codendi_user_only') == 1) {
+if ($request->valid($vCodendiUserOnly)) {
+    if ($request->get('codendi_user_only') == 1) {
         $codendiUserOnly = true;
     }
 }
@@ -58,7 +58,7 @@ if ($requested_project_id !== '' && $requested_project_id !== false) {
         }
 
         return ! ($project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED && ForgeConfig::areRestrictedUsersAllowed());
-    }) ($requested_project_id);
+    })($requested_project_id);
 }
 
 if (! $display_restricted_user) {
@@ -95,7 +95,7 @@ if (count($userList) < $limit) {
     $sql_limit = (int) ($limit - count($userList));
 
     $dar = $userDao->searchUserNameLike($userName, $sql_limit);
-    while($dar->valid()) {
+    while ($dar->valid()) {
         $row  = $dar->current();
         $is_user_restricted = (new PFUser($row))->isRestricted();
         if (! $is_user_restricted || ($is_user_restricted && $display_restricted_user)) {

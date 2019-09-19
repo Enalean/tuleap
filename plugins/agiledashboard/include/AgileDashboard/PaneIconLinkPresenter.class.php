@@ -21,7 +21,8 @@
 /**
  * The icon + link information for a pane
  */
-class AgileDashboard_PaneIconLinkPresenter {
+class AgileDashboard_PaneIconLinkPresenter
+{
 
     /** @var string */
     public $uri;
@@ -39,4 +40,3 @@ class AgileDashboard_PaneIconLinkPresenter {
         $this->icon  = $icon;
     }
 }
-?>

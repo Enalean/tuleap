@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201603171433_add_icon_color_columns extends ForgeUpgrade_Bucket {
+class b201603171433_add_icon_color_columns extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

@@ -22,5 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Exception_Migration_GetTv3Exception extends Exception {
+class Tracker_Exception_Migration_GetTv3Exception extends Exception
+{
 }

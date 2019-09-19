@@ -58,7 +58,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         $one_item_has_not_been_deleted = false;
         if ($items->size()) {
             $it = $items->iterator();
-            while($it->valid()) {
+            while ($it->valid()) {
                 $o = $it->current();
                 $params['parent'] = $item;
                 if (!$o->accept($this, $params)) {
@@ -257,4 +257,3 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         return Docman_PermissionsManager::instance($groupId);
     }
 }
-?>

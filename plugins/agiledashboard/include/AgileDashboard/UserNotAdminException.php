@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class AgileDashboard_UserNotAdminException extends Exception {
+class AgileDashboard_UserNotAdminException extends Exception
+{
 
     public function __construct(PFUser $user)
     {

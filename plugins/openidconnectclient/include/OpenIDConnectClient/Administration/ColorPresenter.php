@@ -20,8 +20,8 @@
 
 namespace Tuleap\OpenIDConnectClient\Administration;
 
-
-class ColorPresenter {
+class ColorPresenter
+{
 
     /**
      * @var string
@@ -39,5 +39,4 @@ class ColorPresenter {
         $this->color       = $color;
         $this->is_selected = $is_selected;
     }
-
 }

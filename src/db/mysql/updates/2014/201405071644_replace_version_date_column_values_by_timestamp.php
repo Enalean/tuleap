@@ -19,7 +19,8 @@
 /**
  * Replace version date column values by timestamp
  */
-class b201405071644_replace_version_date_column_values_by_timestamp extends ForgeUpgrade_Bucket {
+class b201405071644_replace_version_date_column_values_by_timestamp extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return "Replace version date column values by timestamp";

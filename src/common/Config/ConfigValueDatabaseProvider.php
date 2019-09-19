@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ConfigValueDatabaseProvider implements ConfigValueProvider {
+class ConfigValueDatabaseProvider implements ConfigValueProvider
+{
 
     /** @var ConfigDao */
     private $dao;

@@ -22,7 +22,8 @@
 /**
  * Manager for PostActions
  */
-class Transition_PostActionManager {
+class Transition_PostActionManager
+{
 
     /**
      * Process the artifact functions
@@ -58,4 +59,3 @@ class Transition_PostActionManager {
         return new Transition_PostActionFactory();
     }
 }
-?>

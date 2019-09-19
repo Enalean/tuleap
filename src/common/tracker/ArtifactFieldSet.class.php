@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactFieldSet {
+class ArtifactFieldSet
+{
 
     /**
      * The ArtifactType Object
@@ -254,7 +255,7 @@ class ArtifactFieldSet {
     {
         $result_fields = array();
         foreach ($this->ArtifactFields as $key => $field) {
-            if ( $field->IsUsed() ) {
+            if ($field->IsUsed()) {
                 $result_fields[$key] = $field;
             }
         }
@@ -270,7 +271,7 @@ class ArtifactFieldSet {
     {
         $result_fields = array();
         foreach ($this->ArtifactFields as $key => $field) {
-            if ( ! $field->IsUsed() ) {
+            if (! $field->IsUsed()) {
                 $result_fields[$key] = $field;
             }
         }

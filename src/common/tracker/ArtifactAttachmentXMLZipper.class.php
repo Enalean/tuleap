@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactAttachmentXMLZipper implements ArtifactAttachmentXMLExporter {
+class ArtifactAttachmentXMLZipper implements ArtifactAttachmentXMLExporter
+{
 
     /** @var ArtifactXMLNodeHelper */
     private $node_helper;
@@ -46,7 +47,7 @@ class ArtifactAttachmentXMLZipper implements ArtifactAttachmentXMLExporter {
         if (count($dar)) {
             $this->archive->addEmptyDir(ArtifactXMLExporter::ARCHIVE_DATA_DIR);
         }
-        foreach($dar as $row) {
+        foreach ($dar as $row) {
             $xml_file_id     = ArtifactAttachmentFieldXMLExporter::XML_FILE_PREFIX.$row['id'];
             $path_in_archive = $this->getFilePathInArchive($xml_file_id);
             if ($this->skip_files) {

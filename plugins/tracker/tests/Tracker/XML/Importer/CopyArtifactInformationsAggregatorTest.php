@@ -19,7 +19,8 @@
  */
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends TuleapTestCase {
+class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends TuleapTestCase
+{
 
     /** @var Tracker_XML_Importer_CopyArtifactInformationsAggregator */
     private $logger;
@@ -71,6 +72,5 @@ class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends Tuleap
             "[warning] this is a warning"
         );
         $this->assertEqual($this->logger->getAllLogs(), $expected_logs);
-
     }
 }

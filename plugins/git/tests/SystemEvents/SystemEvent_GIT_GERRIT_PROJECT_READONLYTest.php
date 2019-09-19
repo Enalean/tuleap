@@ -21,7 +21,8 @@
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-class SystemEvent_GIT_GERRIT_PROJECT_READONLYTest extends TuleapTestCase {
+class SystemEvent_GIT_GERRIT_PROJECT_READONLYTest extends TuleapTestCase
+{
 
     public function itMakesGerritProjectReadOnly()
     {
@@ -58,5 +59,4 @@ class SystemEvent_GIT_GERRIT_PROJECT_READONLYTest extends TuleapTestCase {
 
         $event->process();
     }
-
 }

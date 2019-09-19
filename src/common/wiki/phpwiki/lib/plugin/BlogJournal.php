@@ -16,8 +16,7 @@ require_once('lib/plugin/WikiBlog.php');
  *
  * @author: Reini Urban
  */
-class WikiPlugin_BlogJournal
-extends WikiPlugin_WikiBlog
+class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
 {
     function getName()
     {
@@ -31,8 +30,11 @@ extends WikiPlugin_WikiBlog
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.4 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.4 $"
+        );
     }
 
     function getDefaultArguments()
@@ -49,7 +51,9 @@ extends WikiPlugin_WikiBlog
     {
         if (is_array($argstr)) { // can do with array also.
             $args = $argstr;
-            if (!isset($args['order'])) $args['order'] = 'reverse';
+            if (!isset($args['order'])) {
+                $args['order'] = 'reverse';
+            }
         } else {
             $args = $this->getArgs($argstr, $request);
         }
@@ -62,36 +66,46 @@ extends WikiPlugin_WikiBlog
             }
         }
         if (!$args['user'] or $args['user'] == ADMIN_USER) {
-            if (BLOG_EMPTY_DEFAULT_PREFIX)
+            if (BLOG_EMPTY_DEFAULT_PREFIX) {
                 $args['user'] = '';         // "Blogs/day" pages
-            else
+            } else {
                 $args['user'] = ADMIN_USER; // "Admin/Blogs/day" pages
+            }
         }
         $parent = (empty($args['user']) ? '' : $args['user'] . SUBPAGE_SEPARATOR);
 
         $sp = HTML::Raw('&middot; ');
         $prefix = $parent . $this->_blogPrefix('wikiblog');
-        if ($args['month'])
+        if ($args['month']) {
             $prefix .= (SUBPAGE_SEPARATOR . $args['month']);
+        }
         $pages = $dbi->titleSearch(new TextSearchQuery("^".$prefix, true, 'posix'));
-        $html = HTML(); $i = 0;
+        $html = HTML();
+        $i = 0;
         while (($page = $pages->next()) and $i < $args['count']) {
             $rev = $page->getCurrentRevision(false);
-            if ($rev->get('pagetype') != 'wikiblog') continue;
+            if ($rev->get('pagetype') != 'wikiblog') {
+                continue;
+            }
             $i++;
             $blog = $this->_blog($rev);
             //$html->pushContent(HTML::h3(WikiLink($page, 'known', $rev->get('summary'))));
             $html->pushContent($rev->getTransformedContent('wikiblog'));
         }
-        if ($args['user'] == $user->UserName())
+        if ($args['user'] == $user->UserName()) {
             $html->pushContent(WikiLink(_("WikiBlog"), 'known', "New entry"));
-        if (!$i)
+        }
+        if (!$i) {
             return HTML(HTML::h3(_("No Blog Entries")), $html);
-        if (!$args['noheader'])
-            return HTML(HTML::h3(sprintf(_("Blog Entries for %s:"), $this->_monthTitle($args['month']))),
-                        $html);
-        else
+        }
+        if (!$args['noheader']) {
+            return HTML(
+                HTML::h3(sprintf(_("Blog Entries for %s:"), $this->_monthTitle($args['month']))),
+                $html
+            );
+        } else {
             return $html;
+        }
     }
 };
 
@@ -118,4 +132,3 @@ extends WikiPlugin_WikiBlog
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

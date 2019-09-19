@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_SystemEventQueue extends SystemEventQueue {
+class Git_SystemEventQueue extends SystemEventQueue
+{
 
     /**
      * @var Logger

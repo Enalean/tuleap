@@ -24,7 +24,8 @@ namespace Tuleap\PhpWiki\REST\v1;
 use Tuleap\PHPWiki\WikiPage;
 use WikiPageVersion;
 
-class PhpWikiPageVersionFullRepresentation extends PhpWikiPageVersionRepresentation {
+class PhpWikiPageVersionFullRepresentation extends PhpWikiPageVersionRepresentation
+{
 
     /**
      * @var string {@type string}

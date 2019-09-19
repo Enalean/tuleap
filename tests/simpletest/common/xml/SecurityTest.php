@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class XML_SecurityTest extends TuleapTestCase {
+class XML_SecurityTest extends TuleapTestCase
+{
 
     private $bad_xml = '<!DOCTYPE root
         [
@@ -54,5 +55,4 @@ class XML_SecurityTest extends TuleapTestCase {
 
         return strpos($etc_issue[0], "CentOS release 5") === 0;
     }
-
 }

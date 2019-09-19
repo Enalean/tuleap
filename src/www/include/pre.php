@@ -68,7 +68,7 @@ if (!defined('IS_SCRIPT')) {
 }
 
 //{{{ Sanitize $_REQUEST : remove cookies
-while(count($_REQUEST)) {
+while (count($_REQUEST)) {
     array_pop($_REQUEST);
 }
 
@@ -77,12 +77,12 @@ if (!ini_get('variables_order')) {
 } else {
     $g_pos = strpos(strtolower(ini_get('variables_order')), 'g');
     $p_pos = strpos(strtolower(ini_get('variables_order')), 'p');
-    if ($g_pos === FALSE) {
-        if ($p_pos !== FALSE) {
+    if ($g_pos === false) {
+        if ($p_pos !== false) {
             $_REQUEST = $_POST;
         }
     } else {
-        if ($p_pos === FALSE) {
+        if ($p_pos === false) {
             $_REQUEST = $_GET;
         } else {
             if ($g_pos < $p_pos) {
@@ -95,7 +95,7 @@ if (!ini_get('variables_order')) {
 }
 
 //Cast group_id as int.
-foreach(array(
+foreach (array(
         'group_id',
         'atid',
         'pv',

@@ -23,7 +23,8 @@
  *
  */
 
-class Rule_Widget_OwnerTest extends TuleapTestCase {
+class Rule_Widget_OwnerTest extends TuleapTestCase
+{
 
     function UnitTestCase($name = 'Rule_Widget_Owner test')
     {
@@ -50,6 +51,4 @@ class Rule_Widget_OwnerTest extends TuleapTestCase {
         $this->assertFalse($r->isValid("\n"));
         $this->assertFalse($r->isValid("\0"));
     }
-
 }
-?>

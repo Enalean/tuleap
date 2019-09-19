@@ -24,7 +24,8 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
-abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Field_Alphanum implements Tracker_FormElement_IComputeValues {
+abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Field_Alphanum implements Tracker_FormElement_IComputeValues
+{
 
     public $default_properties = array(
         'maxchars'      => array(
@@ -162,18 +163,15 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
                 // It's < or >,  = and a number then use as is
                 $matches[2] = (string)($this->cast($matches[2]));
                 $expr = $field_name.' '.$matches[1].' '.$matches[2];
-
-            } else if (preg_match("/^($this->pattern)$/", $criteria_value, $matches)) {
+            } elseif (preg_match("/^($this->pattern)$/", $criteria_value, $matches)) {
                 // It's a number so use  equality
                 $matches[1] = $this->cast($matches[1]);
                 $expr = $field_name.' = '.$matches[1];
-
-            } else if (preg_match("/^($this->pattern)\s*-\s*($this->pattern)$/", $criteria_value, $matches)) {
+            } elseif (preg_match("/^($this->pattern)\s*-\s*($this->pattern)$/", $criteria_value, $matches)) {
                 // it's a range number1-number2
                 $matches[1] = (string)($this->cast($matches[1]));
                 $matches[2] = (string)($this->cast($matches[2]));
                 $expr = $field_name.' >= '.$matches[1].' AND '.$field_name.' <= '. $matches[2];
-
             } else {
                 // Invalid syntax - no condition
                 $expr = '1';
@@ -216,7 +214,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     protected function fetchSubmitValueMasschange()
     {
         $html = '';
-        $value = $GLOBALS['Language']->getText('global','unchanged');
+        $value = $GLOBALS['Language']->getText('global', 'unchanged');
         $hp = Codendi_HTMLPurifier::instance();
         $html .= '<input type="text"
                          size="'. $this->getProperty('size') .'"
@@ -276,11 +274,11 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
-        if ( empty($value) || !$value->getNumeric()) {
+        if (empty($value) || !$value->getNumeric()) {
             return '-';
         }
         $output = '';
-        switch($format) {
+        switch ($format) {
             case 'html':
                 $output = $this->fetchArtifactValueReadOnly($artifact, $value);
                 break;
@@ -371,9 +369,9 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     {
         $html = '';
         if (!$from || !($from_value = $from->getNumeric())) {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' ';
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to').' ';
         } else {
-            $html .= ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from').' '. $from_value .'  '.$GLOBALS['Language']->getText('plugin_tracker_artifact','to').' ';
+            $html .= ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from').' '. $from_value .'  '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'to').' ';
         }
         $html .= $to->getNumeric();
         return $html;
@@ -414,7 +412,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     /**
      * @return string the i18n error message to display if the value submitted by the user is not valid
      */
-    protected abstract function getValidatorErrorMessage();
+    abstract protected function getValidatorErrorMessage();
 
     /**
      * Verifies the consistency of the imported Tracker
@@ -423,7 +421,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      */
     public function testImport()
     {
-        if(parent::testImport()){
+        if (parent::testImport()) {
             if (!($this->default_properties['maxchars'] && $this->default_properties['size'])) {
                 var_dump($this, 'Properties must be "maxchars" and "size"');
                 return false;

@@ -18,7 +18,8 @@
 
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
-class KanbanColumnPATCHRepresentation {
+class KanbanColumnPATCHRepresentation
+{
 
     public const ROUTE = "kanban_columns";
 
@@ -31,5 +32,4 @@ class KanbanColumnPATCHRepresentation {
      * @var int {@type int} {@required false}
      */
     public $wip_limit;
-
 }

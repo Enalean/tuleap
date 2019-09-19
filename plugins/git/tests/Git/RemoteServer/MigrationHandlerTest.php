@@ -28,7 +28,8 @@ use Git_RemoteServer_NotFoundException;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class MigrationHandlerBaseTest extends TuleapTestCase {
+class MigrationHandlerBaseTest extends TuleapTestCase
+{
 
     /**
      * @var Git_SystemEventManager
@@ -65,7 +66,8 @@ class MigrationHandlerBaseTest extends TuleapTestCase {
     }
 }
 
-class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
+class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest
+{
 
     public function setUp()
     {
@@ -196,7 +198,8 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
     }
 }
 
-class MigrationHandlerDisconnectTest extends MigrationHandlerBaseTest {
+class MigrationHandlerDisconnectTest extends MigrationHandlerBaseTest
+{
 
     public function itThrowsAnExceptionIfRepositoryIsNotMigrated()
     {
@@ -302,5 +305,4 @@ class MigrationHandlerDisconnectTest extends MigrationHandlerBaseTest {
 
         $this->handler->disconnect($repository, $disconnect_option);
     }
-
 }

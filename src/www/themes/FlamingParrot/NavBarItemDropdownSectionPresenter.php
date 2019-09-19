@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FlamingParrot_NavBarItemDropdownSectionPresenter {
+class FlamingParrot_NavBarItemDropdownSectionPresenter
+{
 
     public $is_last_section = true;
 

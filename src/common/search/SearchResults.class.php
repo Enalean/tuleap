@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchResults {
+class Search_SearchResults
+{
 
     private $results_html;
     private $has_more;

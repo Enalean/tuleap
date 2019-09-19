@@ -53,7 +53,6 @@ use Tuleap\SVN\SvnAdmin;
 use Tuleap\SVN\SvnLogger;
 
 try {
-
     $repository   = $argv[1];
     $revision     = $argv[2];
     $old_revision = $revision - 1;

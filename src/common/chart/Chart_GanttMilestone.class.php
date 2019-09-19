@@ -28,7 +28,8 @@ use Tuleap\Chart\ColorsForCharts;
 *
 * @see jpgraph documentation for usage
 */
-class Chart_GanttMileStone {
+class Chart_GanttMileStone
+{
 
     protected $jpgraph_instance;
 
@@ -42,7 +43,7 @@ class Chart_GanttMileStone {
     *
     * @return void
     */
-    public function __construct($aVPos, $aLabel, $aDate, $aCaption="")
+    public function __construct($aVPos, $aLabel, $aDate, $aCaption = "")
     {
         $this->jpgraph_instance = new MileStone($aVPos, $aLabel, $aDate, $aCaption);
 
@@ -58,7 +59,6 @@ class Chart_GanttMileStone {
         $this->jpgraph_instance->title->setFont($this->getFont(), FS_NORMAL, 8);
         $this->jpgraph_instance->caption->setColor($colors_for_charts->getChartMainColor());
         $this->jpgraph_instance->caption->setFont($this->getFont(), FS_NORMAL, 7);
-
     }
 
     /**
@@ -155,4 +155,3 @@ class Chart_GanttMileStone {
         $this->jpgraph_instance->title->SetCSIMAlt($alt);
     }
 }
-?>

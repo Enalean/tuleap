@@ -19,7 +19,8 @@
  */
 require_once('bootstrap.php');
 
-class Tracker_FormElement_Field_List_BindValueTest extends TuleapTestCase {
+class Tracker_FormElement_Field_List_BindValueTest extends TuleapTestCase
+{
 
     public function testJSon()
     {
@@ -30,5 +31,4 @@ class Tracker_FormElement_Field_List_BindValueTest extends TuleapTestCase {
         $value->setId($id);
         $this->assertEqual(json_encode($value->fetchForOpenListJson()), '{"id":123,"value":"b123","caption":"Reopen","rest_value":"Reopen"}');
     }
-
 }

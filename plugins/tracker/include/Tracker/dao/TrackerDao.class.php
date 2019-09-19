@@ -21,7 +21,8 @@
 
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
-class TrackerDao extends DataAccessObject {
+class TrackerDao extends DataAccessObject
+{
     function __construct()
     {
         parent::__construct();
@@ -216,7 +217,6 @@ class TrackerDao extends DataAccessObject {
 
         $id_sharing = new TrackerIdSharingDao();
         if ($id = $id_sharing->generateTrackerId()) {
-
             $sql = "INSERT INTO $this->table_name
                     (id,
                         group_id,

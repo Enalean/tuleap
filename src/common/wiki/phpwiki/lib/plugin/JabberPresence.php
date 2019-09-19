@@ -13,11 +13,11 @@ rcs_id('$Id: JabberPresence.php,v 1.3 2004/11/21 11:59:26 rurban Exp $');
  * @author: Arnaud Fontaine
  */
 
-if (!defined('MY_JABBER_ID'))
+if (!defined('MY_JABBER_ID')) {
     define('MY_JABBER_ID', $GLOBALS['request']->_user->UserName()."@jabber.com"); // or "@netflint.net"
+}
 
-class WikiPlugin_JabberPresence
-extends WikiPlugin
+class WikiPlugin_JabberPresence extends WikiPlugin
 {
     // Five required functions in a WikiPlugin.
     function getName()
@@ -28,13 +28,15 @@ extends WikiPlugin
     function getDescription()
     {
         return _("Simple jabber presence plugin");
-
     }
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.3 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.3 $"
+        );
     }
 
     // Establish default values for each of this plugin's arguments.
@@ -51,13 +53,14 @@ extends WikiPlugin
         extract($this->getArgs($argstr, $request));
         // Any text that is returned will not be further transformed,
         // so use html where necessary.
-        if (empty($jid))
-        $html = HTML();
-        else
-        $html = HTML::img(array('src' => urlencode($scripturl).
-        '&jid='.urlencode($jid).
-        '&type='.urlencode($type).
-        '&iconset='.($iconset)));
+        if (empty($jid)) {
+            $html = HTML();
+        } else {
+            $html = HTML::img(array('src' => urlencode($scripturl).
+            '&jid='.urlencode($jid).
+            '&type='.urlencode($type).
+            '&iconset='.($iconset)));
+        }
         return $html;
     }
 };
@@ -70,4 +73,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

@@ -20,7 +20,8 @@
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
-class Search_SearchForum {
+class Search_SearchForum
+{
     public const NAME = 'forums';
 
     /**

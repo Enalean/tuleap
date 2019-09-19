@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__). '/../../constants.php';
 
-class Cardwall_OnTop_Config_ValueMappingFactory {
+class Cardwall_OnTop_Config_ValueMappingFactory
+{
 
     /**
      * @var Tracker_FormElementFactory
@@ -98,11 +99,10 @@ class Cardwall_OnTop_Config_ValueMappingFactory {
         $values = array();
         $field  = $mapping_tracker->getStatusField();
         if ($field) {
-            foreach($field->getVisibleValuesPlusNoneIfAny() as $value) {
+            foreach ($field->getVisibleValuesPlusNoneIfAny() as $value) {
                 $values[$value->getLabel()] = $value;
             }
         }
         return $values;
     }
 }
-?>

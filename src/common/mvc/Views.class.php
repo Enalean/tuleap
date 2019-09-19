@@ -26,7 +26,8 @@
  * This is a part of lite Model/View/Controler design pattern.
  *
  */
-class Views {
+class Views
+{
   /* protected array */  var $html_params;
   /* protected string */ var $view;
   /* protected Controler */ var $_controler;
@@ -55,14 +56,14 @@ class Views {
 
     function main()
     {
-
     }
 
-    function display($view='')
+    function display($view = '')
     {
         $this->header();
-        if(!empty($view)) $this->$view();
+        if (!empty($view)) {
+            $this->$view();
+        }
         $this->footer();
     }
 }
-?>

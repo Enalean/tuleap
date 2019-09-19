@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class RestrictedPluginDao extends RestrictedResourceDao {
+class RestrictedPluginDao extends RestrictedResourceDao
+{
 
     public function getResourceAllowedProjectsTableName()
     {
@@ -96,5 +97,4 @@ class RestrictedPluginDao extends RestrictedResourceDao {
 
         return false;
     }
-
 }

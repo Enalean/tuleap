@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Permission_PermissionRetrieveAssignee {
+class Tracker_Permission_PermissionRetrieveAssignee
+{
 
     /**
      * @var UserManager

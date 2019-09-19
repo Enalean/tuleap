@@ -22,7 +22,8 @@
 /**
  * Class of authentication
  */
-class WebDAVAuthentication {
+class WebDAVAuthentication
+{
 
     /**
      * Authentication method
@@ -60,7 +61,6 @@ class WebDAVAuthentication {
     {
 
         return isset($_SERVER['PHP_AUTH_USER']);
-
     }
 
     /**
@@ -83,7 +83,6 @@ class WebDAVAuthentication {
         // So the die() actually makes sure that the php script doesn't continue if the client
         // has an incorrect or no username and password.
         die();
-
     }
 
     /**
@@ -95,7 +94,6 @@ class WebDAVAuthentication {
     {
 
         return $_SERVER['PHP_AUTH_USER'];
-
     }
 
     /**
@@ -107,7 +105,6 @@ class WebDAVAuthentication {
     {
 
         return $_SERVER['PHP_AUTH_PW'];
-
     }
 
     /**
@@ -123,9 +120,5 @@ class WebDAVAuthentication {
     {
 
         return UserManager::instance()->login($username, $password);
-
     }
-
 }
-
-?>

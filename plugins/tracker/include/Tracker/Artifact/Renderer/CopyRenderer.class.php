@@ -26,7 +26,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetrie
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
-class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer {
+class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
+{
 
     public function __construct(
         EventManager $event_manager,

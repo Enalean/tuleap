@@ -20,7 +20,8 @@
 
 use Tuleap\REST\JsonCast;
 
-class AgileDashboard_CardRepresentation {
+class AgileDashboard_CardRepresentation
+{
 
     public const ROUTE = 'cards';
 
@@ -74,7 +75,7 @@ class AgileDashboard_CardRepresentation {
             $this->accent_color = ColorHelper::CssRGBToHexa($card->getCardPresenter()->getAccentColor());
         }
         $this->column_id    = JsonCast::toInt($column_id);
-        if($this->column_id) {
+        if ($this->column_id) {
             $this->allowed_column_ids = array_filter(
                 array_map(
                     static function ($value) {
@@ -145,5 +146,4 @@ class AgileDashboard_CardRepresentation {
 
         return $semantic->getNormalizedStatusLabel($card->getArtifact());
     }
-
 }

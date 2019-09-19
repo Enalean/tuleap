@@ -44,7 +44,7 @@ $login = fgets(STDIN);
 $login = substr($login, 0, strlen($login)-1);
 
 echo "Password for $login : ";
-if ( PHP_OS != 'WINNT') {
+if (PHP_OS != 'WINNT') {
     shell_exec('stty -echo');
     $password = fgets(STDIN);
     shell_exec('stty echo');
@@ -69,12 +69,14 @@ $soap = new SoapClient($soap_url);
 
 try {
     $hash = $soap->login($login, $password)->session_hash;
-} catch(Exception $e) {
+} catch (Exception $e) {
     die("Invalid Password Or User Name\n");
 }
 
-$rii = new RecursiveIteratorIterator(new RecursiveCachingIterator(new RecursiveDirectoryIterator($source_dir)),
-    RecursiveIteratorIterator::SELF_FIRST);
+$rii = new RecursiveIteratorIterator(
+    new RecursiveCachingIterator(new RecursiveDirectoryIterator($source_dir)),
+    RecursiveIteratorIterator::SELF_FIRST
+);
 
 $slashEnd = strrpos($source_dir, '/', strlen($source_dir)-1);
 
@@ -95,14 +97,13 @@ foreach ($rii as $r) {
         echo "Creating ".$r->getFilename()." folder ..... ";
         try {
             $res = $soap->createDocmanFolder($hash, $project_id, $folderhash[$folderpath], $r->getFilename(), '', "end");
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             die("This folder doesn't exist in the docman. Check out the id_destination(".$e->getMessage().")".PHP_EOL);
         }
         echo "OK".PHP_EOL;
         $folderhash[$foldername] = $res;
-
     } elseif ($r->isFile()) {
-        if(uploadAllowed($r->getFilename())) {
+        if (uploadAllowed($r->getFilename())) {
             //remove the extension to the name
             /*if (substr_count($name, '.') > 0) {
                 $name = substr($r->getFilename(), 0, strrpos($r->getFilename(), '.'));
@@ -114,15 +115,15 @@ foreach ($rii as $r) {
             $fileType = shell_exec('file -bi "'.escapeshellcmd($r->getPathname()).'"');
             try {
                 $itemId = $soap->createDocmanFile($hash, $project_id, $folderhash[$folderpath], $name, '', 'end', 100, 0, array(), array(), $fileSize, $fileName, $fileType, '', 0, $chunkSize);
-                if($itemId) {
+                if ($itemId) {
                     $offset = 0;
-                    while(($chunk = getChunk($r->getPathname(), $offset, $chunkSize))) {
+                    while (($chunk = getChunk($r->getPathname(), $offset, $chunkSize))) {
                         $soap->appendDocmanFileChunk($hash, $project_id, $itemId, $chunk, $offset, $chunkSize);
                         $offset++;
                     }
                 }
                 $uploadedMd5 = $soap->getDocmanFileMD5sum($hash, $project_id, $itemId, 1);
-                if($uploadedMd5 !== md5_file($r->getPathname())) {
+                if ($uploadedMd5 !== md5_file($r->getPathname())) {
                     echo "ERROR: md5 differs".PHP_EOL;
                 } else {
                     echo "OK".PHP_EOL;

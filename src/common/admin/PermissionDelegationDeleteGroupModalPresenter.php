@@ -67,5 +67,4 @@ class Admin_PermissionDelegationDeleteGroupModalPresenter
     {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_cancel_delete');
     }
-
 }

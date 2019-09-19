@@ -24,30 +24,24 @@
 /**
  * Description of DVCSDriverFactoryclass
  */
-class DVCSDriverFactory {
+class DVCSDriverFactory
+{
     //put your code here
 
     public static function getDriver($name)
     {
 
-        switch($name)  {
+        switch ($name) {
             case 'Git':
                 break;
             case 'Mercurial':
                 break;
-            case 'Bazaar' :
+            case 'Bazaar':
                 break;
-            case 'Darcs' :
+            case 'Darcs':
                 break;
-            case 'GitTest' :
-
+            case 'GitTest':
                 break;
         }
-
     }
-
-
-
 }
-
-?>

@@ -23,7 +23,8 @@ use Tuleap\layout\HomePage\NewsCollectionBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Layout\IncludeAssets;
 
-class Admin_Homepage_Controller {
+class Admin_Homepage_Controller
+{
 
     /**
      * @var Response

@@ -40,10 +40,12 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
     protected $start_date;
     public function getStartDate()
     {
-        return $this->start_date; }
+        return $this->start_date;
+    }
     public function setStartDate($start_date)
     {
-        return $this->start_date = $start_date; }
+        return $this->start_date = $start_date;
+    }
 
     /**
      * The duration of the sprint
@@ -51,10 +53,12 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
     protected $duration;
     public function getDuration()
     {
-        return $this->duration; }
+        return $this->duration;
+    }
     public function setDuration($duration)
     {
-        return $this->duration = $duration; }
+        return $this->duration = $duration;
+    }
 
     /**
      * The effort field id
@@ -62,10 +66,12 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
     protected $field_id;
     public function getFieldId()
     {
-        return $this->field_id; }
+        return $this->field_id;
+    }
     public function setFieldId($field_id)
     {
-        return $this->field_id = $field_id; }
+        return $this->field_id = $field_id;
+    }
 
     /**
      * class constructor: use parent one
@@ -160,7 +166,7 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
      */
     protected function getChartDataBuilder($artifacts)
     {
-        return new GraphOnTrackersV5_Burndown_DataBuilder($this,$artifacts);
+        return new GraphOnTrackersV5_Burndown_DataBuilder($this, $artifacts);
     }
 
     /**
@@ -182,7 +188,6 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
         $this->setDuration($row['duration']);
 
         return true;
-
     }
 
     /**
@@ -203,23 +208,28 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
      */
     public function getProperties()
     {
-        return array_merge(parent::getProperties(),
+        return array_merge(
+            parent::getProperties(),
             array(
                 'field_id'   => new HTML_Element_Selectbox_TrackerFields_NumericFieldsV5(
                     $this->getTracker(),
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum','burndown_property_effort'),
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum', 'burndown_property_effort'),
                     'chart[field_id]',
-                    $this->getFieldId()),
+                    $this->getFieldId()
+                ),
                 'start_date' => new HTML_Element_Input_Date(
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum','burndown_property_start_date'),
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum', 'burndown_property_start_date'),
                     'chart[start_date]',
-                    $this->getStartDate()),
+                    $this->getStartDate()
+                ),
                 'duration'   => new HTML_Element_Input_Text(
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum','burndown_property_duration'),
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum', 'burndown_property_duration'),
                     'chart[duration]',
                     $this->getDuration(),
-                    4)
-        ));
+                    4
+                )
+            )
+        );
     }
 
     public function createDb($id)

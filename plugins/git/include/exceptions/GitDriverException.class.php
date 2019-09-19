@@ -21,7 +21,8 @@
 /**
  * Description of GitDriverException
  */
-class GitDriverException extends Exception {
+class GitDriverException extends Exception
+{
     //put your code here
 
     public function __construct($msg)
@@ -29,6 +30,3 @@ class GitDriverException extends Exception {
         parent::__construct(self::class.' : '.$msg);
     }
 }
-
-
-?>

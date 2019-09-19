@@ -24,7 +24,8 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
 /**
  * Manage values in changeset for string fields
  */
-class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetValue {
+class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetValue
+{
     /**
      * @const Changeset comment format is text.
      */
@@ -70,7 +71,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     public function getFormat()
     {
-        if ($this->format == NULL) {
+        if ($this->format == null) {
             return self::TEXT_CONTENT;
         }
         return $this->format;
@@ -243,7 +244,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         $formater = new Codendi_HtmlUnifiedDiffFormatter();
         $diff     = new Codendi_Diff(
             array_map($callback, $previous, array_fill(0, count($previous), CODENDI_PURIFIER_CONVERT_HTML)),
-            array_map($callback, $next,     array_fill(0, count($next),     CODENDI_PURIFIER_CONVERT_HTML))
+            array_map($callback, $next, array_fill(0, count($next), CODENDI_PURIFIER_CONVERT_HTML))
         );
 
         return $formater->format($diff);

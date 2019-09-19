@@ -20,9 +20,10 @@
 
 use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
 
-Mock::generatePartial('SystemEvent_PROJECT_DELETE',
-                      'SystemEvent_PROJECT_DELETE_TestVersion',
-                      array('getProject',
+Mock::generatePartial(
+    'SystemEvent_PROJECT_DELETE',
+    'SystemEvent_PROJECT_DELETE_TestVersion',
+    array('getProject',
                             'getBackend',
                             'done',
                             'removeProjectMembers',
@@ -34,7 +35,8 @@ Mock::generatePartial('SystemEvent_PROJECT_DELETE',
                             'deleteMembershipRequestNotificationEntries',
                             'deleteProjectMailingLists',
                             'getEventManager',
-                            'cleanupProjectUgroupsBinding'));
+    'cleanupProjectUgroupsBinding')
+);
 
 Mock::generate('BackendSystem');
 Mock::generate('Project');
@@ -48,7 +50,8 @@ Mock::generate('WikiAttachment');
 /**
  * Test for project delete system event
  */
-class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
+class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -313,7 +316,7 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
     public function testProjectDeleteTrackersFail()
     {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
-        $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE,SystemEvent::OWNER_ROOT, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, SystemEvent::OWNER_ROOT, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->injectDependencies(\Mockery::spy(SVNAuthenticationCacheInvalidator::class));
 
         // The project
@@ -1034,5 +1037,4 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
         // Launch the event
         $this->assertTrue($evt->process());
     }
-
 }

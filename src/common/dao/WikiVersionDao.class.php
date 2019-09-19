@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class WikiVersionDao extends DataAccessObject {
+class WikiVersionDao extends DataAccessObject
+{
 
     public function getAllVersionForGivenPage($page_id)
     {
@@ -43,5 +44,4 @@ class WikiVersionDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
-
 }

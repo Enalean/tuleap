@@ -25,7 +25,8 @@ use Tuleap\Tracker\Workflow\Transition\Condition\CannotCreateTransitionException
  * Manager for Condition
  */
 
-class Transition_ConditionManager {
+class Transition_ConditionManager
+{
 
     /**
      * Process the artifact functions
@@ -68,4 +69,3 @@ class Transition_ConditionManager {
         return Workflow_Transition_ConditionFactory::build();
     }
 }
-?>

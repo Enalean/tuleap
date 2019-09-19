@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_Artifact_MailGatewayRecipientFactoryTest extends TuleapTestCase {
+class Tracker_Artifact_MailGatewayRecipientFactoryTest extends TuleapTestCase
+{
 
     private $changeset;
 
@@ -86,6 +87,5 @@ class Tracker_Artifact_MailGatewayRecipientFactoryTest extends TuleapTestCase {
         $this->assertEqual($recipient->getArtifact(), $this->artifact);
         $this->assertEqual($recipient->getUser(), $this->user);
         $this->assertEqual($recipient->getEmail(), $email);
-
     }
 }

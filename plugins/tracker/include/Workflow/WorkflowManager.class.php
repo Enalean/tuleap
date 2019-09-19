@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class WorkflowManager {
+class WorkflowManager
+{
     protected $tracker;
 
     public function __construct($tracker)
@@ -54,21 +55,21 @@ class WorkflowManager {
                 $renderer,
                 $workflow_factory->getTriggerRulesManager()
             );
-        } else if ($request->get('func') == Workflow::FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA) {
+        } elseif ($request->get('func') == Workflow::FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA) {
             $action = new Tracker_Workflow_Action_Triggers_GetTriggersRulesBuilderData($this->tracker, Tracker_FormElementFactory::instance());
-        } else if ($request->get('func') == Workflow::FUNC_ADMIN_ADD_TRIGGER) {
+        } elseif ($request->get('func') == Workflow::FUNC_ADMIN_ADD_TRIGGER) {
             $action = new Tracker_Workflow_Action_Triggers_AddTrigger($this->tracker, Tracker_FormElementFactory::instance(), $workflow_factory->getTriggerRulesManager());
-        } else if ($request->get('func') == Workflow::FUNC_ADMIN_DELETE_TRIGGER) {
+        } elseif ($request->get('func') == Workflow::FUNC_ADMIN_DELETE_TRIGGER) {
             $action = new Tracker_Workflow_Action_Triggers_DeleteTrigger($this->tracker, $workflow_factory->getTriggerRulesManager());
-        } else if ($request->get('create')) {
+        } elseif ($request->get('create')) {
             $action = new Tracker_Workflow_Action_Transitions_Create($this->tracker, $workflow_factory);
-        } else if ($request->get('edit_transition')) {
+        } elseif ($request->get('edit_transition')) {
             $action = new Tracker_Workflow_Action_Transitions_EditTransition($this->tracker, TransitionFactory::instance(), new Transition_PostActionFactory());
-        } else if ($request->get('delete')) {
+        } elseif ($request->get('delete')) {
             $action = new Tracker_Workflow_Action_Transitions_Delete($this->tracker, $workflow_factory);
-        } else if ($request->get('transitions')) {
+        } elseif ($request->get('transitions')) {
             $action = new Tracker_Workflow_Action_Transitions_CreateMatrix($this->tracker, $workflow_factory, Tracker_FormElementFactory::instance());
-        } else if ($request->get('workflow_details') && $request->isPost()) {
+        } elseif ($request->get('workflow_details') && $request->isPost()) {
             $action     = new Tracker_Workflow_Action_Transitions_Details($this->tracker, TransitionFactory::instance());
         } else {
             $action = new Tracker_Workflow_Action_Transitions_DefineWorkflow($this->tracker, WorkflowFactory::instance(), Tracker_FormElementFactory::instance());

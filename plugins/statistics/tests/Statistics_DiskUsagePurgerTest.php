@@ -24,7 +24,8 @@
 
 require_once __DIR__ . '/bootstrap.php';
 
-class Statistics_DiskDataPurgerTest extends TuleapDbTestCase {
+class Statistics_DiskDataPurgerTest extends TuleapDbTestCase
+{
 
     /** @var Statistics_DiskUsageDao */
     private $disk_usage_dao;
@@ -230,7 +231,7 @@ class Statistics_DiskDataPurgerTest extends TuleapDbTestCase {
         );
 
         $this->mysqli->begin_transaction();
-        foreach($dates as $date) {
+        foreach ($dates as $date) {
             $this->inserSiteStatistics($date);
             $this->insertProjectStatistics($date);
             $this->insertUserStatistics($date);
@@ -256,7 +257,7 @@ class Statistics_DiskDataPurgerTest extends TuleapDbTestCase {
     {
         $sql = 'INSERT INTO plugin_statistics_diskusage_group VALUES ';
 
-        for($i = 102; $i <= 200; $i++) {
+        for ($i = 102; $i <= 200; $i++) {
             $sql .= "('$i','svn','$date','167936'),";
             $sql .= "('$i','frs','$date','4096'),";
             $sql .= "('$i','ftp','$date','4096'),";
@@ -275,7 +276,7 @@ class Statistics_DiskDataPurgerTest extends TuleapDbTestCase {
     {
         $sql = 'INSERT INTO plugin_statistics_diskusage_user VALUES ';
 
-        for($i = 102; $i <= 300; $i++) {
+        for ($i = 102; $i <= 300; $i++) {
             $sql .= "('$i','usr_home','$date','4096'),";
         }
 
@@ -289,12 +290,11 @@ class Statistics_DiskDataPurgerTest extends TuleapDbTestCase {
         $dar   = $this->disk_usage_dao->retrieve("SELECT distinct date FROM $table ORDER BY date");
         $dates = array();
 
-        foreach($dar as $row) {
+        foreach ($dar as $row) {
             $date    = explode(' ', $row['date']);
             $dates[] = $date[0];
         }
 
         return $dates;
     }
-
 }

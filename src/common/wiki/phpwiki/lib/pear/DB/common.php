@@ -493,8 +493,15 @@ class DB_common extends PEAR
             $userinfo .= ' [nativecode=' . trim($nativecode) . ']';
         }
 
-        $tmp = PEAR::raiseError(null, $code, $mode, $options, $userinfo,
-                                'DB_Error', true);
+        $tmp = PEAR::raiseError(
+            null,
+            $code,
+            $mode,
+            $options,
+            $userinfo,
+            'DB_Error',
+            true
+        );
         return $tmp;
     }
 
@@ -774,8 +781,12 @@ class DB_common extends PEAR
      */
     function prepare($query)
     {
-        $tokens   = preg_split('/((?<!\\\)[&?!])/', $query, -1,
-                               PREG_SPLIT_DELIM_CAPTURE);
+        $tokens   = preg_split(
+            '/((?<!\\\)[&?!])/',
+            $query,
+            -1,
+            PREG_SPLIT_DELIM_CAPTURE
+        );
         $token     = 0;
         $types     = array();
         $newtokens = array();
@@ -847,7 +858,6 @@ class DB_common extends PEAR
         $ret = $this->execute($sth, array_values($fields_values));
         $this->freePrepared($sth);
         return $ret;
-
     }
 
     // }}}
@@ -1167,7 +1177,7 @@ class DB_common extends PEAR
     function limitQuery($query, $from, $count, $params = array())
     {
         $query = $this->modifyLimitQuery($query, $from, $count);
-        if (DB::isError($query)){
+        if (DB::isError($query)) {
             return $query;
         }
         $result = $this->query($query, $params);
@@ -1705,8 +1715,10 @@ class DB_common extends PEAR
      */
     function getSequenceName($sqn)
     {
-        return sprintf($this->getOption('seqname_format'),
-                       preg_replace('/[^a-z0-9_.]/i', '_', $sqn));
+        return sprintf(
+            $this->getOption('seqname_format'),
+            preg_replace('/[^a-z0-9_.]/i', '_', $sqn)
+        );
     }
 
     // }}}
@@ -1878,5 +1890,3 @@ class DB_common extends PEAR
  * c-basic-offset: 4
  * End:
  */
-
-?>

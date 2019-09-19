@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class UGroupLiteralizerTest extends TuleapTestCase {
+class UGroupLiteralizerTest extends TuleapTestCase
+{
 
     protected $membership;
     protected $user;
@@ -137,7 +138,5 @@ class UGroupLiteralizerTest extends TuleapTestCase {
         $result = $this->ugroup_literalizer->getUgroupIds($project, $object_id, self::PERMISSIONS_TYPE);
         $this->assertEqual($expected, $result);
         PermissionsManager::clearInstance();
-
     }
 }
-?>

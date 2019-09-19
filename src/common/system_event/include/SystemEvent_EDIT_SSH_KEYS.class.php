@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-class SystemEvent_EDIT_SSH_KEYS extends SystemEvent {
+class SystemEvent_EDIT_SSH_KEYS extends SystemEvent
+{
 
     /**
      * Verbalize the parameters so they are readable and much user friendly in
@@ -61,4 +62,3 @@ class SystemEvent_EDIT_SSH_KEYS extends SystemEvent {
         return true;
     }
 }
-?>

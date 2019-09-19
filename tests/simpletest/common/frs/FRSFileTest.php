@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FRSFileTest extends TuleapTestCase {
+class FRSFileTest extends TuleapTestCase
+{
 
     function testGetContentWholeFile()
     {
@@ -78,6 +79,3 @@ class FRSFileTest extends TuleapTestCase {
         $this->assertequal($filename, $file->getFilePath());
     }
 }
-
-
-?>

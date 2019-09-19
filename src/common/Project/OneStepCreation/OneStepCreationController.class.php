@@ -101,7 +101,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
      */
     public function index()
     {
-        $GLOBALS['HTML']->header(array('title'=> $GLOBALS['Language']->getText('register_index','project_registration')));
+        $GLOBALS['HTML']->header(array('title'=> $GLOBALS['Language']->getText('register_index', 'project_registration')));
         if ($this->project_manager->userCanCreateProject($this->request->getCurrentUser())) {
             $this->render('register', $this->presenter);
         } else {
@@ -123,7 +123,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
             $this->notifySiteAdmin($project);
             $this->postCreate($project);
         } else {
-            $GLOBALS['HTML']->header(array('title'=> $GLOBALS['Language']->getText('register_index','project_registration')));
+            $GLOBALS['HTML']->header(array('title'=> $GLOBALS['Language']->getText('register_index', 'project_registration')));
             $this->render('register-disabled', []);
             $GLOBALS['HTML']->footer(array());
         }

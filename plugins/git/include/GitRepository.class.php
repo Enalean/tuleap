@@ -135,7 +135,7 @@ class GitRepository implements DVCSRepository
     {
         try {
             $this->load();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
         return true;
@@ -152,14 +152,14 @@ class GitRepository implements DVCSRepository
      * @deprecated
      *
      */
-    public function load($force=false)
+    public function load($force = false)
     {
         //already loaded
-        if ( $force === false && $this->loaded === true ) {
+        if ($force === false && $this->loaded === true) {
             return true;
         }
         $id = $this->getId();
-        if ( empty($id) ) {
+        if (empty($id)) {
             $this->loaded = $this->getDao()->getProjectRepository($this);
         } else {
             $this->loaded = $this->getDao()->getProjectRepositoryById($this);
@@ -182,7 +182,7 @@ class GitRepository implements DVCSRepository
      */
     public function getDao()
     {
-        if ( empty($this->dao) ) {
+        if (empty($this->dao)) {
             $this->dao = new GitDao();
         }
         return $this->dao;
@@ -222,7 +222,7 @@ class GitRepository implements DVCSRepository
      */
     public function getBackend()
     {
-        if ( empty($this->backend) ) {
+        if (empty($this->backend)) {
             /** @var GitPlugin $git_plugin */
             $git_plugin  = PluginManager::instance()->getPluginByName('git');
             $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
@@ -231,7 +231,7 @@ class GitRepository implements DVCSRepository
                     $this->backend = $git_plugin->getBackendGitolite();
                     break;
                 default:
-                    $this->backend = Backend::instance('Git','GitBackend', array($url_manager));
+                    $this->backend = Backend::instance('Git', 'GitBackend', array($url_manager));
             }
         }
         return $this->backend;
@@ -291,7 +291,7 @@ class GitRepository implements DVCSRepository
      */
     public function getParent()
     {
-        if ( empty($this->parent) ) {
+        if (empty($this->parent)) {
             $factory = new GitRepositoryFactory($this->getDao(), $this->_getProjectManager());
             $this->parent = $factory->getRepositoryById($this->getParentId());
         }
@@ -317,7 +317,7 @@ class GitRepository implements DVCSRepository
     public function getProjectId()
     {
         $project = $this->getProject();
-        if ( empty($project) ) {
+        if (empty($project)) {
             return false;
         }
         return $this->getProject()->getId();
@@ -425,15 +425,13 @@ class GitRepository implements DVCSRepository
     public function isInitialized()
     {
         $this->load();
-        if ( $this->isInitialized == 1 ) {
+        if ($this->isInitialized == 1) {
             return true;
-        }
-        else {
-            if ( $this->getBackend()->isInitialized($this) === true ) {
+        } else {
+            if ($this->getBackend()->isInitialized($this) === true) {
                 $this->isInitialized = 1;
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         }
@@ -470,7 +468,7 @@ class GitRepository implements DVCSRepository
 
     public function getCreatorId()
     {
-        if ( !empty($this->creator) ) {
+        if (!empty($this->creator)) {
             return $this->creator->getId();
         }
         return 0;
@@ -483,7 +481,7 @@ class GitRepository implements DVCSRepository
 
     public function getDeletionDate()
     {
-        if ( empty($this->deletionDate) ) {
+        if (empty($this->deletionDate)) {
             $this->deletionDate = date('Y-m-d H:i:s');
         }
         return $this->deletionDate;
@@ -509,7 +507,7 @@ class GitRepository implements DVCSRepository
      */
     public function getRootPath()
     {
-        if ( !$this->exists() ) {
+        if (!$this->exists()) {
             $this->rootPath = $this->project->getUnixName();
         }
         return $this->rootPath;
@@ -549,11 +547,11 @@ class GitRepository implements DVCSRepository
      */
     public function getPath()
     {
-        if ( empty($this->path) ) {
+        if (empty($this->path)) {
             $rootPath   = $this->getRootPath();
             $name       = $this->getName();
             //can not return a bad path
-            if ( empty($rootPath) || empty($name) ) {
+            if (empty($rootPath) || empty($name)) {
                 $this->path = '';
             } else {
                 $this->path = $this->getPathFromProjectAndName($this->project, $name);
@@ -597,7 +595,7 @@ class GitRepository implements DVCSRepository
     public function getFullPath()
     {
         $root_path = $this->getGitRootPath();
-        if(is_string($root_path) && strlen($root_path) > 0) {
+        if (is_string($root_path) && strlen($root_path) > 0) {
             $root_path = ($root_path[strlen($root_path) - 1] === DIRECTORY_SEPARATOR) ? $root_path : $root_path.DIRECTORY_SEPARATOR ;
         }
 
@@ -621,7 +619,7 @@ class GitRepository implements DVCSRepository
 
     public function setAccess($access)
     {
-        if ( $access != self::PRIVATE_ACCESS && $access != self::PUBLIC_ACCESS ) {
+        if ($access != self::PRIVATE_ACCESS && $access != self::PUBLIC_ACCESS) {
             throw new GitRepositoryException('Unknown repository access value ');
         }
         $this->access = $access;
@@ -634,7 +632,7 @@ class GitRepository implements DVCSRepository
 
     public function isPublic()
     {
-        if ( $this->access == self::PUBLIC_ACCESS ) {
+        if ($this->access == self::PUBLIC_ACCESS) {
             return true;
         }
         return false;
@@ -642,7 +640,7 @@ class GitRepository implements DVCSRepository
 
     public function isPrivate()
     {
-        if ( $this->access == self::PRIVATE_ACCESS ) {
+        if ($this->access == self::PRIVATE_ACCESS) {
             return true;
         }
         return false;

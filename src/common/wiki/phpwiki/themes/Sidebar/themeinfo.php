@@ -28,9 +28,10 @@
 require_once('lib/Theme.php');
 require_once('lib/WikiPlugin.php');
 
-class Theme_Sidebar extends Theme {
+class Theme_Sidebar extends Theme
+{
 
-    function __construct($theme_name='Sidebar')
+    function __construct($theme_name = 'Sidebar')
     {
         parent::__construct($theme_name);
 
@@ -60,12 +61,14 @@ class Theme_Sidebar extends Theme {
         static $UserCalPageTitle = false;
         global $request;
 
-        if (!$UserCalPageTitle)
+        if (!$UserCalPageTitle) {
             $UserCalPageTitle = $request->_user->getId() .
                                 SUBPAGE_SEPARATOR . _("Calendar");
-        if (!$UserCalPageTitle)
+        }
+        if (!$UserCalPageTitle) {
             $UserCalPageTitle = (BLOG_EMPTY_DEFAULT_PREFIX ? ''
                                  : ($request->_user->getId() . SUBPAGE_SEPARATOR)) . "Blog";
+        }
         return $UserCalPageTitle;
     }
 
@@ -75,31 +78,38 @@ class Theme_Sidebar extends Theme {
         // display flat calender dhtml in the sidebar
         if ($force or $dbi->isWikiPage($this->calendarBase())) {
             $jslang = @$GLOBALS['LANG'];
-            $this->addMoreHeaders
-                (
-                 $this->_CSSlink(0,
-                                 $this->_findFile('jscalendar/calendar-phpwiki.css'), 'all'));
-            $this->addMoreHeaders
-                (JavaScript('',
-                            array('src' => $this->_findData('jscalendar/calendar'.(DEBUG?'':'_stripped').'.js'))));
-            if (!($langfile = $this->_findData("jscalendar/lang/calendar-$jslang.js")))
+            $this->addMoreHeaders(
+                $this->_CSSlink(
+                    0,
+                    $this->_findFile('jscalendar/calendar-phpwiki.css'),
+                    'all'
+                )
+            );
+            $this->addMoreHeaders(JavaScript(
+                '',
+                array('src' => $this->_findData('jscalendar/calendar'.(DEBUG?'':'_stripped').'.js'))
+            ));
+            if (!($langfile = $this->_findData("jscalendar/lang/calendar-$jslang.js"))) {
                 $langfile = $this->_findData("jscalendar/lang/calendar-en.js");
-            $this->addMoreHeaders(JavaScript('',array('src' => $langfile)));
-            $this->addMoreHeaders
-                (JavaScript('',
-                            array('src' =>
-                                  $this->_findData('jscalendar/calendar-setup'.(DEBUG?'':'_stripped').'.js'))));
+            }
+            $this->addMoreHeaders(JavaScript('', array('src' => $langfile)));
+            $this->addMoreHeaders(JavaScript(
+                '',
+                array('src' =>
+                $this->_findData('jscalendar/calendar-setup'.(DEBUG?'':'_stripped').'.js'))
+            ));
 
             // Get existing date entries for the current user
             require_once("lib/TextSearchQuery.php");
             $iter = $dbi->titleSearch(new TextSearchQuery("^".$this->calendarBase().SUBPAGE_SEPARATOR, true, "auto"));
             $existing = array();
             while ($page = $iter->next()) {
-                if ($page->exists())
+                if ($page->exists()) {
                     $existing[] = basename($page->_pagename);
+                }
             }
             if (!empty($existing)) {
-                $js_exist = '{"'.join('":1,"',$existing).'":1}';
+                $js_exist = '{"'.join('":1,"', $existing).'":1}';
                 //var SPECIAL_DAYS = {"2004-05-11":1,"2004-05-12":1,"2004-06-01":1}
                 $this->addMoreHeaders(JavaScript('
 // This table holds the existing calender entries for the current user
@@ -123,8 +133,7 @@ function dateStatusFunc(date, y, m, d) {
     if (dateExists(date, y, m, d)) return "existing";
     else return false;
 }'));
-            }
-            else {
+            } else {
                 $this->addMoreHeaders(JavaScript('
 function dateStatusFunc(date, y, m, d) { return false;}'));
             }
@@ -205,4 +214,3 @@ $WikiTheme->setAnonEditUnknownLinks(false);
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

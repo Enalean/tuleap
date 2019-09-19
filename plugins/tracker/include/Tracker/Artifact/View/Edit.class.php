@@ -29,7 +29,8 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 
-class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
+class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
+{
 
     public const USER_PREFERENCE_DISPLAY_CHANGES = 'tracker_artifact_comment_display_changes';
     public const USER_PREFERENCE_INVERT_ORDER    = 'tracker_comment_invertorder';
@@ -122,7 +123,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $html .= '<div id="tracker_artifact_followup_comments" class="'. $classname .'">';
         $html .= '<div id="tracker_artifact_followup_comments-content">';
         $html .= $this->fetchSettingsButton($invert_order, $display_changes);
-        $html .= '<h1 id="tracker_artifact_followups">'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h1>';
+        $html .= '<h1 id="tracker_artifact_followups">'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'follow_ups').'</h1>';
         $html .= '<ul class="tracker_artifact_followups">';
 
         $comments = $this->artifact->getFollowupsContent();

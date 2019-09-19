@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboardStatisticsAggregator {
+class AgileDashboardStatisticsAggregator
+{
     public const CARD_DRAG_AND_DROP     = 'ad_kanban_card_drag_drop';
     public const EXPAND_COLLAPSE_COLUMN = 'ad_kanban_expand_collapse_column';
     public const WIP_MODIFICATION       = 'ad_kanban_wip_modification';

@@ -28,7 +28,8 @@ use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 /**
  * A pane to be displayed in AgileDashboard
  */
-class Cardwall_Pane extends AgileDashboard_Pane {
+class Cardwall_Pane extends AgileDashboard_Pane
+{
 
     /**
      * @var CardwallPaneInfo
@@ -140,7 +141,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $redirect_parameter  = 'cardwall[agile]['. $planning->getId() .']='. $this->milestone->getArtifactId();
 
         $this->milestone = $this->milestone_factory->updateMilestoneContextualInfo($this->user, $this->milestone);
-        $board = $raw_board_builder->buildBoardUsingMappedFields($this->user, $this->artifact_factory,$this->milestone, $this->config, $columns);
+        $board = $raw_board_builder->buildBoardUsingMappedFields($this->user, $this->artifact_factory, $this->milestone, $this->config, $columns);
 
         return new Cardwall_PaneContentPresenter(
             $board,

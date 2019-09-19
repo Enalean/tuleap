@@ -26,7 +26,8 @@ use Tuleap\ProFTPd\Admin;
 use ProjectManager;
 use Project;
 
-class PROFTPD_UPDATE_ACL extends \SystemEvent {
+class PROFTPD_UPDATE_ACL extends \SystemEvent
+{
     public const NAME = 'Tuleap\ProFTPd\SystemEvent\PROFTPD_UPDATE_ACL';
 
     /** @var Admin\ACLUpdater */

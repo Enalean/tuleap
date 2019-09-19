@@ -21,7 +21,8 @@
 /**
  * Concrete TemplateRenderer subclass, for mocking purpose.
  */
-class DummyTemplateRenderer extends TemplateRenderer {
+class DummyTemplateRenderer extends TemplateRenderer
+{
 
     /**
      * @see TemplateRenderer
@@ -32,7 +33,8 @@ class DummyTemplateRenderer extends TemplateRenderer {
     }
 }
 
-class MockTemplateRendererBuilder {
+class MockTemplateRendererBuilder
+{
     public function __construct()
     {
         $this->renderer = mock('DummyTemplateRenderer');
@@ -48,4 +50,3 @@ function aMockTemplateRenderer()
 {
     return new MockTemplateRendererBuilder();
 }
-?>

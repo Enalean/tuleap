@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AdminScrumPresenter {
+class AdminScrumPresenter
+{
 
     /** @var int */
     public $group_id;
@@ -221,17 +222,17 @@ class AdminScrumPresenter {
 
     public function activate_scrum_mono_milestone_label()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','activate_scrum_mono_milestone_label');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'activate_scrum_mono_milestone_label');
     }
 
     public function warning_feature_under_construction()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','warning_feature_under_construction');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'warning_feature_under_construction');
     }
 
     public function scrum_monomilestone_title()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','scrum_monomilestone_title');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_monomilestone_title');
     }
 
     public function additional_content()

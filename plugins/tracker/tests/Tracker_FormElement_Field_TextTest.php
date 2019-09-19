@@ -41,10 +41,12 @@ class Tracker_FormElement_Field_TextTestVersion_Expose_ProtectedMethod extends T
 {
     public function buildMatchExpression($a, $b)
     {
-        return parent::buildMatchExpression($a, $b); }
+        return parent::buildMatchExpression($a, $b);
+    }
 }
 
-class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
+class Tracker_FormElement_Field_TextTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -290,7 +292,8 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElement_Field_Text_RESTTests extends TuleapTestCase {
+class Tracker_FormElement_Field_Text_RESTTests extends TuleapTestCase
+{
 
     public function itReturnsTheValueIndexedByFieldName()
     {
@@ -310,7 +313,8 @@ class Tracker_FormElement_Field_Text_RESTTests extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElement_Field_Text_Changes extends TuleapTestCase {
+class Tracker_FormElement_Field_Text_Changes extends TuleapTestCase
+{
 
     public function setUp()
     {

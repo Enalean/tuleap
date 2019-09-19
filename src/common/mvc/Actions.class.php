@@ -24,7 +24,8 @@
 /**
  * @template ActionsController of Controler
  */
-class Actions {
+class Actions
+{
 
     /**
      * @var Controler
@@ -52,7 +53,7 @@ class Actions {
 
     function process($action, $params = array())
     {
-        if($this->check()) {
+        if ($this->check()) {
             $this->$action($params);
         }
     }

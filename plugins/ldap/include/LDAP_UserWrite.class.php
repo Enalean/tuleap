@@ -36,7 +36,8 @@
  *   they cannot login.
  * - Deleted users are removed from LDAP (but they can be re-activated later)
  */
-class LDAP_UserWrite {
+class LDAP_UserWrite
+{
 
     /**
      * @var Logger
@@ -112,7 +113,7 @@ class LDAP_UserWrite {
         if ($this->entryExists($user)) {
             if ($user->isAlive()) {
                 $this->ldap->update($dn, $this->getLDAPInfo($user));
-            } elseif($user->isSuspended()) {
+            } elseif ($user->isSuspended()) {
                 $info = $this->getLDAPInfo($user);
                 $info['userPassword'] = '!'.$this->getLDAPPassword($user);
                 $this->ldap->update($dn, $info);

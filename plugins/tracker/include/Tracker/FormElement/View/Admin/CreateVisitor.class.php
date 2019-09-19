@@ -21,7 +21,8 @@
 /**
  * Visit a FormElement and provides a create view
  */
-class Tracker_FormElement_View_Admin_CreateVisitor extends Tracker_FormElement_View_Admin_Visitor {
+class Tracker_FormElement_View_Admin_CreateVisitor extends Tracker_FormElement_View_Admin_Visitor
+{
     private $type;
     private $label;
 
@@ -68,5 +69,3 @@ class Tracker_FormElement_View_Admin_CreateVisitor extends Tracker_FormElement_V
         echo $this->displayForm($tracker_manager, $request, $breadcrumbsLabel, $url, $title, $this->fetchForm());
     }
 }
-
-?>

@@ -25,7 +25,8 @@ use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionDao;
 
-class FRSPackageFactory {
+class FRSPackageFactory
+{
     // Kept for legacy
     var $STATUS_ACTIVE  = FRSPackage::STATUS_ACTIVE;
     var $STATUS_DELETED = FRSPackage::STATUS_DELETED;
@@ -34,7 +35,7 @@ class FRSPackageFactory {
 
     public static function instance()
     {
-        if(empty(self::$instance)) {
+        if (empty(self::$instance)) {
             self::$instance = new FRSPackageFactory();
         }
         return self::$instance;
@@ -60,21 +61,21 @@ class FRSPackageFactory {
     /**
      * @return FRSPackage|void
      */
-    public function getFRSPackageFromDb($package_id = null, $group_id=null, $extraFlags = 0)
+    public function getFRSPackageFromDb($package_id = null, $group_id = null, $extraFlags = 0)
     {
         $_id = (int) $package_id;
         $dao = $this->_getFRSPackageDao();
-        if($group_id){
+        if ($group_id) {
             $_group_id = (int) $group_id;
             $dar = $dao->searchInGroupById($_id, $_group_id, $extraFlags);
-        }else{
+        } else {
             $dar = $dao->searchById($_id, $extraFlags);
         }
-        if($dar->isError()){
+        if ($dar->isError()) {
             return;
         }
 
-        if(!$dar->valid()) {
+        if (!$dar->valid()) {
             return;
         }
 
@@ -89,11 +90,11 @@ class FRSPackageFactory {
         $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchByFileId($_id);
 
-        if($dar->isError()){
+        if ($dar->isError()) {
             return;
         }
 
-        if(!$dar->valid()) {
+        if (!$dar->valid()) {
             return;
         }
 
@@ -109,11 +110,11 @@ class FRSPackageFactory {
         $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchInGroupByReleaseId($_id, $_group_id);
 
-        if($dar->isError()){
+        if ($dar->isError()) {
             return;
         }
 
-        if(!$dar->valid()) {
+        if (!$dar->valid()) {
             return;
         }
 
@@ -171,11 +172,11 @@ class FRSPackageFactory {
             $frsrf = new FRSReleaseFactory();
 
             foreach ($dar as $data_array) {
-                if ($this->userCanRead($group_id, $data_array['package_id'],$user->getID())) {
+                if ($this->userCanRead($group_id, $data_array['package_id'], $user->getID())) {
                     $packages[] = $this->getFRSPackageFromArray($data_array);
                 } else {
                     $authorised_releases = $frsrf->getActiveFRSReleases($data_array['package_id'], $group_id);
-                    if ($authorised_releases && count($authorised_releases)>0){
+                    if ($authorised_releases && count($authorised_releases)>0) {
                         $packages[] = $this->getFRSPackageFromArray($data_array);
                     }
                 }
@@ -205,13 +206,13 @@ class FRSPackageFactory {
         $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchPackageByName($package_name, $_id);
 
-        if($dar->isError()){
+        if ($dar->isError()) {
             return;
         }
 
-        if(!$dar->valid()){
+        if (!$dar->valid()) {
             return;
-        }else{
+        } else {
             $res = $dar->current();
             return $res['package_id'];
         }
@@ -223,7 +224,7 @@ class FRSPackageFactory {
         $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchPackageByName($package_name, $_id);
 
-        if($dar->isError()){
+        if ($dar->isError()) {
             return;
         }
 
@@ -237,9 +238,11 @@ class FRSPackageFactory {
         }
         $dao = $this->_getFRSPackageDao();
         if ($dao->updateFromArray($data)) {
-            $this->getEventManager()->processEvent('frs_update_package',
-                                                   array('group_id' => $data['group_id'],
-                                                         'item_id'    => $data['package_id']));
+            $this->getEventManager()->processEvent(
+                'frs_update_package',
+                array('group_id' => $data['group_id'],
+                'item_id'    => $data['package_id'])
+            );
             return true;
         }
         return false;
@@ -254,9 +257,11 @@ class FRSPackageFactory {
             $data_array['package_id'] = $id;
             $package = new FRSPackage($data_array);
             $this->setDefaultPermissions($package);
-            $this->getEventManager()->processEvent('frs_create_package',
-                                                   array('group_id' => $data_array['group_id'],
-                                                         'item_id' => $id));
+            $this->getEventManager()->processEvent(
+                'frs_create_package',
+                array('group_id' => $data_array['group_id'],
+                'item_id' => $id)
+            );
         }
         return $id;
     }
@@ -267,9 +272,11 @@ class FRSPackageFactory {
         $package = $this->getFRSPackageFromDb($_id);
         $dao = $this->_getFRSPackageDao();
         if ($dao->delete($_id, $this->STATUS_DELETED)) {
-            $this->getEventManager()->processEvent('frs_delete_package',
-                                                   array('group_id' => $package->getGroupID(),
-                                                         'item_id'    => $_id));
+            $this->getEventManager()->processEvent(
+                'frs_delete_package',
+                array('group_id' => $package->getGroupID(),
+                'item_id'    => $_id)
+            );
             return true;
         }
         return false;
@@ -391,7 +398,7 @@ class FRSPackageFactory {
      *
      * @return bool true of user can update the package $package_id, false otherwise
      */
-    function userCanUpdate($group_id, $package_id, $user_id=false)
+    function userCanUpdate($group_id, $package_id, $user_id = false)
     {
         return $this->userCanCreate($group_id, $user_id);
     }

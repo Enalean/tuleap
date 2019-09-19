@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter {
+class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
+{
 
     /** @var int */
     public $user_id;

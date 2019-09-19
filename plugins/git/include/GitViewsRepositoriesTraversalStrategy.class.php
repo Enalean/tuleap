@@ -21,7 +21,8 @@
 /**
  * Base class to traverse a list of repositories
  */
-abstract class GitViewsRepositoriesTraversalStrategy {
+abstract class GitViewsRepositoriesTraversalStrategy
+{
 
     public function __construct()
     {
@@ -49,7 +50,7 @@ abstract class GitViewsRepositoriesTraversalStrategy {
     protected function _makeRepositoryList(array $repositories, PFUser $user)
     {
         $html = '';
-        foreach ( $repositories as $repository ) {
+        foreach ($repositories as $repository) {
             $repoName = $repository[GitDao::REPOSITORY_NAME];
             $delDate  = $repository[GitDao::REPOSITORY_DELETION_DATE];
             $r = $this->getRepository($repository);
@@ -58,7 +59,7 @@ abstract class GitViewsRepositoriesTraversalStrategy {
                 continue;
             }
             //we do not want to display deleted repository
-            if ( $delDate != '0000-00-00 00:00:00' ) {
+            if ($delDate != '0000-00-00 00:00:00') {
                 continue;
             }
 
@@ -89,7 +90,7 @@ abstract class GitViewsRepositoriesTraversalStrategy {
      *
      * @return string the $inner encapsuled in the wrapper
      */
-    protected abstract function getMainWrapper($inner);
+    abstract protected function getMainWrapper($inner);
 
     /**
      * Get Item wrapper
@@ -99,7 +100,5 @@ abstract class GitViewsRepositoriesTraversalStrategy {
      *
      * @return string the $inner encapsulated in its own wrapper
      */
-    protected abstract function getItemWrapper(GitRepository $repo, $inner);
-
+    abstract protected function getItemWrapper(GitRepository $repo, $inner);
 }
-?>

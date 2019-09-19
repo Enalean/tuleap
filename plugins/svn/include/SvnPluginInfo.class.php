@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class SvnPluginInfo extends PluginFileInfo {
+class SvnPluginInfo extends PluginFileInfo
+{
     public function __construct($plugin)
     {
         parent::__construct($plugin, 'svn');

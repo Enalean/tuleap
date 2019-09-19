@@ -25,7 +25,8 @@
  * It's an implementation of the abstract class Sabre_DAV_Directory methods
  *
  */
-class WebDAVFRSPackage extends Sabre_DAV_Directory {
+class WebDAVFRSPackage extends Sabre_DAV_Directory
+{
 
     private $user;
     private $project;
@@ -49,7 +50,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
         $this->project = $project;
         $this->package = $package;
         $this->maxFileSize = $maxFileSize;
-
     }
 
     /**
@@ -74,7 +74,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
             }
         }
         return $children;
-
     }
 
     /**
@@ -100,13 +99,10 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
         }
 
         if (!$release->userCanRead($this->getUser())) {
-
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_access_not_authorized'));
-
         }
 
         return $release;
-
     }
 
     /**
@@ -124,7 +120,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
          *  same for the "%" replaced by "%25"  */
         $utils = $this->getUtils();
         return $utils->unconvertHTMLSpecialChars($this->getPackage()->getName());
-
     }
 
     /**
@@ -139,7 +134,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     {
 
         return;
-
     }
 
     /**
@@ -151,7 +145,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     {
 
         return $this->package;
-
     }
 
     /**
@@ -163,7 +156,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     {
 
         return $this->getPackage()->getPackageID();
-
     }
 
     /**
@@ -175,7 +167,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     {
 
         return $this->project;
-
     }
 
     /**
@@ -187,7 +178,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     {
 
         return $this->user;
-
     }
 
     /**
@@ -199,7 +189,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     {
 
         return WebDAVUtils::getInstance();
-
     }
 
     /**
@@ -224,7 +213,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
 
         $utils = $this->getUtils();
         return $utils->getReleaseFactory()->getFRSReleaseFromDb($utils->getReleaseFactory()->getReleaseIdByName($releaseName, $this->getPackageId()), $this->getProject()->getGroupId(), $this->getPackageId());
-
     }
 
     /**
@@ -238,7 +226,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     {
 
         return new WebDAVFRSRelease($this->getUser(), $this->getProject(), $this->getPackage(), $release, $this->getMaxFileSize());
-
     }
 
     /**
@@ -253,7 +240,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
 
         $utils = $this->getUtils();
         return $utils->getReleaseFactory()->getFRSReleasesFromDb($package->getPackageId());
-
     }
 
     /**
@@ -265,7 +251,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     {
 
         return($this->getPackage() && !$this->getPackage()->isDeleted());
-
     }
 
     /**
@@ -279,7 +264,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     {
         return (($this->getPackage()->isActive() && $this->getPackage()->userCanRead($user->getId()))
             || ($this->getPackage()->isHidden() && $this->userIsAdmin()));
-
     }
 
     /**
@@ -292,7 +276,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
 
         $utils = $this->getUtils();
         return $utils->userIsAdmin($this->getUser(), $this->getProject()->getGroupId());
-
     }
 
     /**
@@ -332,7 +315,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_denied_delete'));
         }
-
     }
 
     /**
@@ -356,7 +338,6 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_denied_rename'));
         }
-
     }
 
     /**
@@ -420,7 +401,4 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'release_denied_create'));
         }
     }
-
 }
-
-?>

@@ -27,7 +27,8 @@ use Tuleap\Docman\Item\ItemVisitor;
  * Item is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_Item {
+class Docman_Item
+{
     public $id               = null;
     public $title            = null;
     public $titlekey         = null;
@@ -74,18 +75,17 @@ class Docman_Item {
 
     public function setTitle($title)
     {
-        if(strpos($title, '_lbl_key') !== FALSE) {
+        if (strpos($title, '_lbl_key') !== false) {
             $this->title = $GLOBALS['Language']->getText('plugin_docman', $title);
             $this->titlekey = $title;
-        }
-        else {
+        } else {
             $this->title = $title;
         }
     }
 
-    public function getTitle($key=false)
+    public function getTitle($key = false)
     {
-        if($key && $this->titlekey !== null) {
+        if ($key && $this->titlekey !== null) {
             return $this->titlekey;
         }
         return $this->title;
@@ -200,9 +200,9 @@ class Docman_Item {
         if ($this->isObsolete == null) {
             $this->isObsolete = false;
             $date = $this->getObsolescenceDate();
-            if($date > 0) {
+            if ($date > 0) {
                 $today = getdate();
-                $time  = mktime(0,0,1,$today['mon'], $today['mday'], $today['year']);
+                $time  = mktime(0, 0, 1, $today['mon'], $today['mday'], $today['year']);
                 $this->isObsolete = ($date < $time);
             }
         }
@@ -216,18 +216,42 @@ class Docman_Item {
 
     public function initFromRow($row)
     {
-        if (isset($row['item_id']))     $this->setId($row['item_id']);
-        if (isset($row['title']))       $this->setTitle($row['title']);
-        if (isset($row['description'])) $this->setDescription($row['description']);
-        if (isset($row['create_date'])) $this->setCreateDate($row['create_date']);
-        if (isset($row['update_date'])) $this->setUpdateDate($row['update_date']);
-        if (isset($row['delete_date'])) $this->setDeleteDate($row['delete_date']);
-        if (isset($row['rank']))        $this->setRank($row['rank']);
-        if (isset($row['parent_id']))   $this->setParentId($row['parent_id']);
-        if (isset($row['group_id']))    $this->setGroupId($row['group_id']);
-        if (isset($row['user_id']))     $this->setOwnerId($row['user_id']);
-        if (isset($row['status']))      $this->setStatus($row['status']);
-        if (isset($row['obsolescence_date'])) $this->setObsolescenceDate($row['obsolescence_date']);
+        if (isset($row['item_id'])) {
+            $this->setId($row['item_id']);
+        }
+        if (isset($row['title'])) {
+            $this->setTitle($row['title']);
+        }
+        if (isset($row['description'])) {
+            $this->setDescription($row['description']);
+        }
+        if (isset($row['create_date'])) {
+            $this->setCreateDate($row['create_date']);
+        }
+        if (isset($row['update_date'])) {
+            $this->setUpdateDate($row['update_date']);
+        }
+        if (isset($row['delete_date'])) {
+            $this->setDeleteDate($row['delete_date']);
+        }
+        if (isset($row['rank'])) {
+            $this->setRank($row['rank']);
+        }
+        if (isset($row['parent_id'])) {
+            $this->setParentId($row['parent_id']);
+        }
+        if (isset($row['group_id'])) {
+            $this->setGroupId($row['group_id']);
+        }
+        if (isset($row['user_id'])) {
+            $this->setOwnerId($row['user_id']);
+        }
+        if (isset($row['status'])) {
+            $this->setStatus($row['status']);
+        }
+        if (isset($row['obsolescence_date'])) {
+            $this->setObsolescenceDate($row['obsolescence_date']);
+        }
     }
 
     public function toRow()
@@ -285,26 +309,26 @@ class Docman_Item {
     {
         $value = null;
 
-        switch($label) {
+        switch ($label) {
             case 'title':
                 $value = $this->getTitle();
-            break;
+                break;
 
             case 'description':
                 $value = $this->getDescription();
-            break;
+                break;
 
             case 'owner':
                 $value = $this->getOwnerId();
-            break;
+                break;
 
             case 'create_date':
                 $value = $this->getCreateDate();
-            break;
+                break;
 
             case 'update_date':
                 $value = $this->getUpdateDate();
-            break;
+                break;
 
             case 'status':
                 $status      = $this->getStatus();
@@ -313,15 +337,15 @@ class Docman_Item {
                     $status_list[] = Docman_MetadataListOfValuesElementFactory::getStatusList($status);
                 }
                 $value = new ArrayIterator($status_list);
-            break;
+                break;
 
             case 'obsolescence_date':
                 $value = $this->getObsolescenceDate();
-            break;
+                break;
 
             case 'rank':
                 $value = $this->getRank();
-            break;
+                break;
         }
 
         return $value;
@@ -331,7 +355,7 @@ class Docman_Item {
     {
         $metadata_value = $this->getHardCodedMetadataValue($label);
         $metadata       = null; // can't refactor with early return as it returns value by ref :(
-        if($metadata_value !== null) {
+        if ($metadata_value !== null) {
             $metadata_factory = new Docman_MetadataFactory($this->groupId);
             $metadata = $metadata_factory->getHardCodedMetadataFromLabel($label, $metadata_value);
         } elseif (isset($this->_metadata[$label])) {
@@ -345,32 +369,32 @@ class Docman_Item {
      */
     public function updateHardCodedMetadata($metadata)
     {
-        switch($metadata->getLabel()) {
+        switch ($metadata->getLabel()) {
             case 'title':
                 $this->setTitle($metadata->getValue());
-            break;
+                break;
             case 'description':
                 $this->setDescription($metadata->getValue());
-            break;
+                break;
             case 'owner':
                 $this->setOwnerId($metadata->getValue());
-            break;
+                break;
             case 'create_date':
                 $this->setCreateDate($metadata->getValue());
-            break;
+                break;
             case 'update_date':
                 $this->setUpdateDate($metadata->getValue());
-            break;
+                break;
             case 'status':
                 // $metadata->getValue() return an array iterator
                 $this->setStatus($metadata->getValue()->current()->getId());
-            break;
+                break;
             case 'obsolescence_date':
                 $this->setObsolescenceDate($metadata->getValue());
-            break;
+                break;
             case 'rank':
                 $this->setRank($metadata->getValue());
-            break;
+                break;
         }
     }
 
@@ -394,7 +418,7 @@ class Docman_Item {
         return $this->pathTitle;
     }
 
-    public function fireEvent($event, $user, $parent=null)
+    public function fireEvent($event, $user, $parent = null)
     {
         $params = array('group_id' => $this->getGroupId(),
                         'parent'   => $parent,
@@ -408,5 +432,3 @@ class Docman_Item {
         return EventManager::instance();
     }
 }
-
-?>

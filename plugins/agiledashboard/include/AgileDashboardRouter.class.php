@@ -188,7 +188,7 @@ class AgileDashboardRouter
             $this->plugin->getThemePath()
         );
 
-        switch($request->get('action')) {
+        switch ($request->get('action')) {
             case 'show':
                 $this->routeShowPlanning($request);
                 break;
@@ -366,7 +366,8 @@ class AgileDashboardRouter
                 $GLOBALS['Language']->getText(
                     'project_service',
                     'service_not_used',
-                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'))
+                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key')
+                )
             );
         }
 
@@ -529,7 +530,8 @@ class AgileDashboardRouter
                 $GLOBALS['Language']->getText(
                     'project_service',
                     'service_not_used',
-                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'))
+                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key')
+                )
             );
         }
 

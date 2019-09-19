@@ -22,7 +22,8 @@
  * FileStorage is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_FileStorage {
+class Docman_FileStorage
+{
 
     var $root;
     function __construct($root)
@@ -78,10 +79,9 @@ class Docman_FileStorage {
     {
         $dstPath = $this->_getPath($dst_name, $dst_group_id, $dst_item_id, $dst_version_number);
 
-        if(copy($srcPath, $dstPath)) {
+        if (copy($srcPath, $dstPath)) {
             return $dstPath;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -112,7 +112,7 @@ class Docman_FileStorage {
 
         $path_elements = array($this->root, $this->_getGroupName($group_id), $hash2, $hash1, $item_id, $version_number);
         $path = '';
-        foreach($path_elements as $elem) {
+        foreach ($path_elements as $elem) {
             $path .= $elem .'/';
             if (!is_dir($path)) {
                 mkdir($path, 0700);
@@ -130,5 +130,3 @@ class Docman_FileStorage {
         return $group->getUnixName();
     }
 }
-
-?>

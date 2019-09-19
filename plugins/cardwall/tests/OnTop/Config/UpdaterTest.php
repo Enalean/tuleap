@@ -19,7 +19,8 @@
  */
 require_once dirname(__FILE__) .'/../../bootstrap.php';
 
-class Cardwall_OnTop_Config_UpdaterTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_UpdaterTest extends TuleapTestCase
+{
 
     public function itScheduleExecuteOnCommands()
     {
@@ -36,4 +37,3 @@ class Cardwall_OnTop_Config_UpdaterTest extends TuleapTestCase {
         $updater->process($request);
     }
 }
-?>

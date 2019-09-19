@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/GerritTestBase.php';
 
-class Git_Driver_GerritLegacy_DeletePluginTest extends TuleapTestCase implements Git_Driver_Gerrit_DeletePluginTest {
+class Git_Driver_GerritLegacy_DeletePluginTest extends TuleapTestCase implements Git_Driver_Gerrit_DeletePluginTest
+{
     /**
      * @var Git_Driver_Gerrit
      */

@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_Masschange_Presenter {
+class Tracker_Masschange_Presenter
+{
 
     /** @var array */
     public $masschange_aids;
@@ -73,7 +74,7 @@ class Tracker_Masschange_Presenter {
 
     public function notification_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_masschange','send_notifications');
+        return $GLOBALS['Language']->getText('plugin_tracker_masschange', 'send_notifications');
     }
 
     public function masschange_submit()
@@ -85,5 +86,4 @@ class Tracker_Masschange_Presenter {
     {
         return $GLOBALS['Language']->getText('plugin_tracker_index', 'mass_change');
     }
-
 }

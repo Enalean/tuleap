@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEventMissingParameterException extends Exception {
+class SystemEventMissingParameterException extends Exception
+{
 
     function __construct($message = 'Parameter not found')
     {
         parent::__construct($message);
     }
 }
-?>

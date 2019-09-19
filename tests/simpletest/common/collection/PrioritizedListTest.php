@@ -21,7 +21,8 @@
 
 require_once('LinkedListTestCase.class.php');
 
-class PrioritizedListTest extends LinkedListTestCase {
+class PrioritizedListTest extends LinkedListTestCase
+{
     /**
      * Constructor of the test. Can be ommitted.
      * Usefull to set the name of the test
@@ -166,4 +167,3 @@ class PrioritizedListTest extends LinkedListTestCase {
         $this->assertReference($element, $f);
     }
 }
-?>

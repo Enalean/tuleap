@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TrackerDateReminder_Logger_Prefix extends TrackerDateReminder_Logger {
+class TrackerDateReminder_Logger_Prefix extends TrackerDateReminder_Logger
+{
 
     /**
      * @var TrackerDateReminder_Logger

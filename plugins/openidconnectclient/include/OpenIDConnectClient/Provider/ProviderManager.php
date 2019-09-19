@@ -23,7 +23,8 @@ namespace Tuleap\OpenIDConnectClient\Provider;
 use Valid_HTTPSURI;
 use Valid_String;
 
-class ProviderManager {
+class ProviderManager
+{
     /**
      * @var ProviderDao
      */
@@ -248,5 +249,4 @@ class ProviderManager {
             is_bool($is_unique_authentication_endpoint) &&
             $string_validator->validate($icon) && $string_validator->validate($color);
     }
-
 }

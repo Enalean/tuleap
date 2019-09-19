@@ -25,11 +25,12 @@ use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\Git\XmlUgroupRetriever;
 
-class GitXmlImporterTest extends TuleapTestCase {
+class GitXmlImporterTest extends TuleapTestCase
+{
     /**
      * @var XMLImportHelper
      */
-    private  $user_finder;
+    private $user_finder;
     /**
      * @var ProjectManager
      */
@@ -167,7 +168,8 @@ class GitXmlImporterTest extends TuleapTestCase {
             $this->logger,
             $this->git_systemeventmanager,
             mock('Git_GitRepositoryUrlManager'),
-            $this->git_dao, $git_mirror_dao,
+            $this->git_dao,
+            $git_mirror_dao,
             $this->git_plugin,
             null,
             null,
@@ -221,7 +223,7 @@ class GitXmlImporterTest extends TuleapTestCase {
         try {
             $sys_data_dir_arg = escapeshellarg($GLOBALS['sys_data_dir']);
             $this->system_command->exec("sudo -u gitolite /usr/share/tuleap/plugins/git/bin/gl-delete-test-repository.sh $sys_data_dir_arg/gitolite/repositories/test_project");
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             //ignore errors
         }
         parent::tearDown();
@@ -329,9 +331,9 @@ XML;
         $result = mock('DataAccessResult');
         stub($result)->getRow()->returns(false);
         stub($this->ugroup_dao)->searchByGroupIdAndName()->returns($result);
-        stub($this->permission_dao)->addPermission(Git::PERM_READ,  '*',  3)->at(0);
-        stub($this->permission_dao)->addPermission(Git::PERM_WRITE, '*',  3)->at(1);
-        stub($this->permission_dao)->addPermission(Git::PERM_WPLUS, '*',  4)->at(2);
+        stub($this->permission_dao)->addPermission(Git::PERM_READ, '*', 3)->at(0);
+        stub($this->permission_dao)->addPermission(Git::PERM_WRITE, '*', 3)->at(1);
+        stub($this->permission_dao)->addPermission(Git::PERM_WPLUS, '*', 4)->at(2);
         $this->import(new SimpleXMLElement($xml));
     }
 
@@ -360,9 +362,9 @@ XML;
         $result = mock('DataAccessResult');
         stub($result)->getRow()->returns(false);
         stub($this->ugroup_dao)->searchByGroupIdAndName()->returns($result);
-        stub($this->permission_dao)->addPermission(Git::PERM_READ,  '*',  3)->at(0);
-        stub($this->permission_dao)->addPermission(Git::PERM_WRITE, '*',  3)->at(1);
-        stub($this->permission_dao)->addPermission(Git::PERM_WPLUS, '*',  4)->at(2);
+        stub($this->permission_dao)->addPermission(Git::PERM_READ, '*', 3)->at(0);
+        stub($this->permission_dao)->addPermission(Git::PERM_WRITE, '*', 3)->at(1);
+        stub($this->permission_dao)->addPermission(Git::PERM_WPLUS, '*', 4)->at(2);
         $this->import(new SimpleXMLElement($xml));
     }
 

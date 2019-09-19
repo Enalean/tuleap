@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_View_ItemDetails {
+class Docman_View_ItemDetails
+{
 
     var $sections;
     var $item;
@@ -54,7 +55,7 @@ class Docman_View_ItemDetails {
         $html .= '<br />';
         if (count($this->sections)) {
             $html .= '<ul class="docman_properties_navlist">';
-            foreach($this->sections as $section) {
+            foreach ($this->sections as $section) {
                 $html .= '<li><a href="'. $this->url .'&amp;action=details&amp;id='. $this->item->getId() .'&amp;section='. $section->getId() .'"';
                 if ($section->getId() == $this->current_section) {
                     $html .= ' class="docman_properties_navlist_current" ';

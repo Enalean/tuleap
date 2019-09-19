@@ -20,8 +20,8 @@
 
 namespace Tuleap\OpenIDConnectClient\Administration;
 
-
-class IconPresenter {
+class IconPresenter
+{
 
     /**
      * @var string
@@ -39,5 +39,4 @@ class IconPresenter {
         $this->icon        = $icon;
         $this->is_selected = $is_selected;
     }
-
 }

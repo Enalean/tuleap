@@ -189,7 +189,7 @@ class Tracker_Report_HeaderRenderer
             );
         }
 
-        if(count($reports) > 1 && $report->getTracker()->userIsAdmin($current_user)) {
+        if (count($reports) > 1 && $report->getTracker()->userIsAdmin($current_user)) {
             $states_list[] = new Templating_Presenter_ButtonDropdownsOption(
                 'tracker_report_updater_default',
                 $GLOBALS['Language']->getText('plugin_tracker_report', 'default'),
@@ -198,7 +198,7 @@ class Tracker_Report_HeaderRenderer
             );
         }
 
-        if(! $current_user->isAnonymous()) {
+        if (! $current_user->isAnonymous()) {
             $actions_list[] = new Templating_Presenter_ButtonDropdownsOptionWithModal(
                 'tracker_report_updater_duplicate',
                 $GLOBALS['Language']->getText('plugin_tracker_report', 'save_as'),
@@ -248,7 +248,7 @@ class Tracker_Report_HeaderRenderer
     {
         $params = array('tracker' => $report->tracker_id);
 
-        if($request->exist('criteria')) {
+        if ($request->exist('criteria')) {
             $params['criteria'] = $request->get('criteria');
         }
 
@@ -261,7 +261,7 @@ class Tracker_Report_HeaderRenderer
         if (count($reports) > 1) {
             $options = '<select id="tracker_select_report" name="select_report">';
             $optgroup = array('personal' => '', 'public' => '');
-            foreach($reports as $r) {
+            foreach ($reports as $r) {
                 $prefix = '<option value="'. $r->id .'"';
                 $suffix = '>'. $this->purifier->purify($r->name, CODENDI_PURIFIER_CONVERT_HTML)  .'</option>';
                 $selected = $r->id == $report->id ? 'selected="selected"' : '';

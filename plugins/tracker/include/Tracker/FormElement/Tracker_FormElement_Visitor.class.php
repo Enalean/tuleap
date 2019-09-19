@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface Tracker_FormElement_Visitor {
+interface Tracker_FormElement_Visitor
+{
     public function visit($element);
 }
-
-?>

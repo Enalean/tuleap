@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Migration_V3_ColumnsDao extends DataAccessObject {
+class Tracker_Migration_V3_ColumnsDao extends DataAccessObject
+{
 
     public function create($tv5_id)
     {
@@ -145,4 +146,3 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject {
         $this->update("DROP TABLE temp_tracker_field_$tv5_id");
     }
 }
-?>

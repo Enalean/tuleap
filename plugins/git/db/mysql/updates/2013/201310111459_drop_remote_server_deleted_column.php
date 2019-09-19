@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201310111459_drop_remote_server_deleted_column extends ForgeUpgrade_Bucket {
+class b201310111459_drop_remote_server_deleted_column extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -60,4 +61,3 @@ EOT;
         }
     }
 }
-?>

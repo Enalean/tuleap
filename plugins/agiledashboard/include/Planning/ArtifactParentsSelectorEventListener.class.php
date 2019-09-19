@@ -22,7 +22,8 @@
  * This class is responsible of processing the TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR event
  * in the agiledashboard.
  */
-class Planning_ArtifactParentsSelectorEventListener {
+class Planning_ArtifactParentsSelectorEventListener
+{
 
     /**
      * @var Tracker_ArtifactFactory
@@ -76,4 +77,3 @@ class Planning_ArtifactParentsSelectorEventListener {
         return $source_artifact;
     }
 }
-?>

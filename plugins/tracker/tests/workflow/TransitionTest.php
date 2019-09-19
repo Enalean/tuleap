@@ -22,7 +22,8 @@ Mock::generate('Tracker_FormElement_Field_List_Value');
 Mock::generate('Transition_PostAction');
 Mock::generate('PFUser');
 
-class Transition_baseTest extends TuleapTestCase {
+class Transition_baseTest extends TuleapTestCase
+{
 
     protected $id          = 1;
     protected $workflow_id = 2;
@@ -44,7 +45,8 @@ class Transition_baseTest extends TuleapTestCase {
     }
 }
 
-class Transition_equalsTest extends Transition_baseTest {
+class Transition_equalsTest extends Transition_baseTest
+{
 
     public function testEquals()
     {
@@ -93,7 +95,8 @@ class Transition_equalsTest extends Transition_baseTest {
     }
 }
 
-class Transition_beforeTest extends Transition_baseTest {
+class Transition_beforeTest extends Transition_baseTest
+{
 
     function testBeforeShouldTriggerActions()
     {
@@ -122,7 +125,8 @@ class Transition_beforeTest extends Transition_baseTest {
     }
 }
 
-class Transition_AfterTest extends Transition_baseTest {
+class Transition_AfterTest extends Transition_baseTest
+{
 
     function testAfterShouldTriggerActions()
     {
@@ -149,7 +153,8 @@ class Transition_AfterTest extends Transition_baseTest {
     }
 }
 
-class Transition_validateTest extends Transition_baseTest {
+class Transition_validateTest extends Transition_baseTest
+{
 
     public function itReturnsTrueWhenConditionsAreValid()
     {
@@ -172,7 +177,8 @@ class Transition_validateTest extends Transition_baseTest {
     }
 }
 
-class Transition_Bypass_Permissions extends Transition_baseTest {
+class Transition_Bypass_Permissions extends Transition_baseTest
+{
 
     public function setUp()
     {
@@ -199,4 +205,3 @@ class Transition_Bypass_Permissions extends Transition_baseTest {
         $this->assertTrue($this->transition->bypassPermissions($this->field));
     }
 }
-?>

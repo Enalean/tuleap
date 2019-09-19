@@ -37,11 +37,13 @@ Mock::generate('UGroupDao');
 Mock::generate('BaseLanguageFactory');
 
 // {{{ Setup stuff for "recent" things management
-abstract class FakeRecent implements Recent_Element_Interface {
+abstract class FakeRecent implements Recent_Element_Interface
+{
 }
 Mock::generate('FakeRecent');
 
-class UserTestVersion_MockPreferences extends UserTestVersion {
+class UserTestVersion_MockPreferences extends UserTestVersion
+{
     protected $UserTestVersion_MockPreferences_hash = array();
 
     public function getPreference($key)
@@ -73,7 +75,8 @@ class UserTestVersion_MockPreferences extends UserTestVersion {
  *
  * Tests the class User
  */
-class UserTest extends TuleapTestCase {
+class UserTest extends TuleapTestCase
+{
 
     function testStatus()
     {
@@ -244,7 +247,6 @@ class UserTest extends TuleapTestCase {
         $this->assertFalse($projectadmin->isMember(456, 'A'));
         $this->assertFalse($projectadmin->isMember(1));
         $this->assertFalse($projectadmin->isMember(1, 'A'));
-
     }
 
     /**
@@ -450,7 +452,8 @@ class UserTest extends TuleapTestCase {
     }
 }
 
-class UserTogglePreference_Test extends TuleapTestCase {
+class UserTogglePreference_Test extends TuleapTestCase
+{
 
     private $user_id         = 101;
     private $preference_name = 'cardwall';

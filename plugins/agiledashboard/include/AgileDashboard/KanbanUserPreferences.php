@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class AgileDashboard_KanbanUserPreferences {
+class AgileDashboard_KanbanUserPreferences
+{
 
     public const COLLAPSE_COLUMN_PREFERENCE_PREFIX  = 'kanban_collapse_column_';
     public const COLLAPSE_BACKLOG_PREFERENCE_PREFIX = 'kanban_collapse_backlog_';

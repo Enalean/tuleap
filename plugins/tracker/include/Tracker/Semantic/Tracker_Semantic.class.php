@@ -21,7 +21,8 @@
 
 use Tuleap\Tracker\REST\SemanticRepresentation;
 
-abstract class Tracker_Semantic {
+abstract class Tracker_Semantic
+{
 
     /**
      * @var Tracker
@@ -72,28 +73,28 @@ abstract class Tracker_Semantic {
      *
      * @return string
      */
-    public abstract function getShortName();
+    abstract public function getShortName();
 
     /**
      * The label of the semantic: Tooltip, ...
      *
      * @return string
      */
-    public abstract function getLabel();
+    abstract public function getLabel();
 
     /**
      * The description of the semantics. Used for breadcrumbs
      *
      * @return string
      */
-    public abstract function getDescription();
+    abstract public function getDescription();
 
     /**
      * Display the basic info about this semantic
      *
      * @return void
      */
-    public abstract function display();
+    abstract public function display();
 
     /**
      * Display the form to let the admin change the semantic
@@ -105,7 +106,7 @@ abstract class Tracker_Semantic {
      *
      * @return void
      */
-    public abstract function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user);
+    abstract public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user);
 
     /**
      * Process the form
@@ -117,7 +118,7 @@ abstract class Tracker_Semantic {
      *
      * @return void
      */
-    public abstract function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user);
+    abstract public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user);
 
     /**
      * Export semantic to XML
@@ -127,7 +128,7 @@ abstract class Tracker_Semantic {
      *
      * @return void
      */
-    public abstract function exportToXml(SimpleXMLElement $root, $xmlMapping);
+    abstract public function exportToXml(SimpleXMLElement $root, $xmlMapping);
 
     /**
      * Is the field used in semantics?
@@ -136,7 +137,7 @@ abstract class Tracker_Semantic {
      *
      * @return bool returns true if the field is used in semantics, false otherwise
      */
-    public abstract function isUsedInSemantics(Tracker_FormElement_Field $field);
+    abstract public function isUsedInSemantics(Tracker_FormElement_Field $field);
 
     /**
      * Get the url to this semantic
@@ -158,7 +159,7 @@ abstract class Tracker_Semantic {
      *
      * @return bool true if success, false otherwise
      */
-    public abstract function save();
+    abstract public function save();
 
     protected function getFieldUserCanRead(PFUser $user)
     {

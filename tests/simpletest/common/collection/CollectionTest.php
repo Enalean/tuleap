@@ -20,7 +20,8 @@
  */
 require_once('CollectionTestCase.class.php');
 
-class CollectionTest extends CollectionTestCase {
+class CollectionTest extends CollectionTestCase
+{
     /**
      * Constructor of the test. Can be ommitted.
      * Usefull to set the name of the test
@@ -31,4 +32,3 @@ class CollectionTest extends CollectionTestCase {
         $this->collection_class_name = 'Collection';
     }
 }
-?>

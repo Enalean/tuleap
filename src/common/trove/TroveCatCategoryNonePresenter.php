@@ -32,6 +32,5 @@ class TroveCatCategoryNonePresenter extends TroveCatCategoryPresenter
             $selected
         );
         $this->none = true;
-
     }
 }

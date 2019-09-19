@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_DateReminder_Role_Commenter implements Tracker_DateReminder_Role {
+class Tracker_DateReminder_Role_Commenter implements Tracker_DateReminder_Role
+{
 
     public const IDENTIFIER = "3";
     /**
@@ -36,7 +37,7 @@ class Tracker_DateReminder_Role_Commenter implements Tracker_DateReminder_Role {
      */
     function getLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_date_reminder','role_COMMENTER');
+        return $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'role_COMMENTER');
     }
 
     /**
@@ -60,4 +61,3 @@ class Tracker_DateReminder_Role_Commenter implements Tracker_DateReminder_Role {
         return $recipients;
     }
 }
-?>

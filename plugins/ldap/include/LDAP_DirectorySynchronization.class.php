@@ -29,7 +29,8 @@ require_once 'LDAP_SyncNotificationManager.class.php';
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 
-class LDAP_DirectorySynchronization {
+class LDAP_DirectorySynchronization
+{
     /**
      * @var LDAP
      */
@@ -63,7 +64,7 @@ class LDAP_DirectorySynchronization {
         if ($res && !db_error()) {
             $nbr_all_users         = db_numrows($res);
             $users_are_suspendable = $this->getLdapUserManager()->areUsersSupendable($nbr_all_users);
-            while($row = db_fetch_array($res)) {
+            while ($row = db_fetch_array($res)) {
                 $this->ldapSync($row, $users_are_suspendable);
             }
             $this->getLdapUserManager()->triggerRenameOfUsers();
@@ -132,7 +133,7 @@ class LDAP_DirectorySynchronization {
                         $this->getLdapSyncNotificationManager($projectManager, $retentionPeriod)->processNotification($user);
                         $this->getCleanUpManager()->addUserDeletionForecastDate($user);
                     }
-                } else if ($user->getStatus() != 'S'){
+                } elseif ($user->getStatus() != 'S') {
                     $this->getUserManager()->updateDb($user);
                 }
             }

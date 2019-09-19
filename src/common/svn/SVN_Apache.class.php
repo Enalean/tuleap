@@ -22,7 +22,8 @@
  * and authorization
  * It generates the content of /etc/httpd/conf.d/codendi_svnroot.conf file
  */
-abstract class SVN_Apache {
+abstract class SVN_Apache
+{
     private $project = array();
 
     /**

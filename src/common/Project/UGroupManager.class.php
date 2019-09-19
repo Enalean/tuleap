@@ -78,7 +78,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     private function getUGroupUserDao()
     {
-        if(empty($this->ugroup_user_dao)) {
+        if (empty($this->ugroup_user_dao)) {
             $this->ugroup_user_dao = new UGroupUserDao();
         }
         return $this->ugroup_user_dao;
@@ -280,7 +280,9 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     public function getDynamicUGoupByName(Project $project, $name)
     {
         $ugroup_id = $this->getDynamicUGoupIdByName($name);
-        if(empty($ugroup_id)) { return null; }
+        if (empty($ugroup_id)) {
+            return null;
+        }
         return new ProjectUGroup(array(
             'ugroup_id' => $ugroup_id,
             'name'      => $name,

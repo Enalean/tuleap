@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container {
+class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
+{
 
     /**
      * Fetch the element for the update artifact form
@@ -58,12 +59,12 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', $artifact, $submitted_values, []);
     }
 
-    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false)
+    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
         return $this->fetchWithColumnGroup('fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
     }
 
-    public function fetchMailArtifactInGroup($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false)
+    public function fetchMailArtifactInGroup($recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
         return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
     }
@@ -146,7 +147,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         $html .= '</span></label>';
         $html .= '</div>';
         $content = array();
-        foreach($this->getFormElements() as $formElement) {
+        foreach ($this->getFormElements() as $formElement) {
             $content[] = $formElement->fetchAdmin($tracker);
         }
         $html .= implode('', $content);
@@ -218,7 +219,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      */
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','column');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'column');
     }
 
     /**
@@ -226,7 +227,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      */
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','column_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'column_description');
     }
 
     /**

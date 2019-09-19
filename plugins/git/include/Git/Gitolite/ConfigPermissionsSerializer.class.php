@@ -24,7 +24,8 @@ use Tuleap\Git\Permissions\GetProtectedGitReferences;
 use Tuleap\Git\Permissions\Permission;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 
-class Git_Gitolite_ConfigPermissionsSerializer {
+class Git_Gitolite_ConfigPermissionsSerializer
+{
 
     /**
      * @var FineGrainedPermissionFactory

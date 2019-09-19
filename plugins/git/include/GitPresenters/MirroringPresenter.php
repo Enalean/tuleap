@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class GitPresenters_MirroringPresenter {
+class GitPresenters_MirroringPresenter
+{
 
     /**
      * @var GitRepository
@@ -75,5 +76,4 @@ class GitPresenters_MirroringPresenter {
     {
         return dgettext('tuleap-git', 'Update mirroring of this repository');
     }
-
 }

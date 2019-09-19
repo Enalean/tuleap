@@ -25,7 +25,8 @@ use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-class Tracker_Artifact_XMLImport {
+class Tracker_Artifact_XMLImport
+{
 
     /** @var bool */
     private $send_notifications;
@@ -134,7 +135,12 @@ class Tracker_Artifact_XMLImport {
         $url_mapping       = new CreatedFileURLMapping();
 
         $this->importFromXML(
-            $tracker, $xml, $xml_file_path, $xml_field_mapping, $url_mapping, $config
+            $tracker,
+            $xml,
+            $xml_file_path,
+            $xml_field_mapping,
+            $url_mapping,
+            $config
         );
     }
 
@@ -168,7 +174,8 @@ class Tracker_Artifact_XMLImport {
                 $extraction_path,
                 $xml_fields_mapping,
                 $artifacts_id_mapping,
-                $config);
+                $config
+            );
 
             return $this->importArtifactChangesFromXML(
                 $tracker,
@@ -178,7 +185,8 @@ class Tracker_Artifact_XMLImport {
                 $artifacts_id_mapping,
                 $url_mapping,
                 $artifacts,
-                $config);
+                $config
+            );
         } catch (Exception $exception) {
             $this->logger->error("".get_class($exception).': '.$exception->getMessage().' in '.$exception->getFile().' L'.$exception->getLine());
             echo ("".get_class($exception).': '.$exception->getMessage().' in '.$exception->getFile().' L'.$exception->getLine());
@@ -220,7 +228,6 @@ class Tracker_Artifact_XMLImport {
                 $artifacts[$i] = $artifact;
                 $artifacts_id_mapping->add((string)$artifact_xml['id'], $artifact->getId());
             }
-
         }
         return $artifacts;
     }
@@ -254,7 +261,8 @@ class Tracker_Artifact_XMLImport {
                 $artifact_xml,
                 $extraction_path,
                 $xml_fields_mapping,
-                $artifacts_id_mapping);
+                $artifacts_id_mapping
+            );
 
             if (isset($artifacts[$i])) {
                 $this->importChangesets(
@@ -265,7 +273,6 @@ class Tracker_Artifact_XMLImport {
                     $url_mapping
                 );
             }
-
         }
         return true;
     }
@@ -381,7 +388,8 @@ class Tracker_Artifact_XMLImport {
         $artifact = $this->artifact_creator->createBare(
             $tracker,
             $this->getSubmittedBy($first_changeset),
-            $this->getSubmittedOn($first_changeset));
+            $this->getSubmittedOn($first_changeset)
+        );
 
         if ($artifact === false) {
             return null;
@@ -486,9 +494,9 @@ class Tracker_Artifact_XMLImport {
 
         $count = $this->getCountChangeset($artifact, $configuration);
         $this->logger->info('art #'.$artifact->getId());
-        foreach($xml_changesets as $xml_changeset) {
+        foreach ($xml_changesets as $xml_changeset) {
             try {
-                if($count === 0) {
+                if ($count === 0) {
                     $this->logger->debug("initial changeset");
                     $res = $this->importFirstChangeset($artifact, $xml_changeset, $fields_data_builder, $url_mapping);
                     if (!$res) {

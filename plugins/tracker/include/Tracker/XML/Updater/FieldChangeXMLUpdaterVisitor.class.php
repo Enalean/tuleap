@@ -21,7 +21,8 @@
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 
-class Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor implements Tracker_FormElement_FieldVisitor {
+class Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor implements Tracker_FormElement_FieldVisitor
+{
 
     /**
      * @var Tracker_XML_Updater_FieldChange_FieldChangeOpenListXMLUpdater

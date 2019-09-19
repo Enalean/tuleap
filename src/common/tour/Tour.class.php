@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tuleap_Tour {
+class Tuleap_Tour
+{
 
     /**
      * @var string

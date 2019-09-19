@@ -25,7 +25,8 @@ use Tuleap\Git\Gitolite\SSHKey\ManagementDetector;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Layout\IncludeAssets;
 
-class Git_AdminGitoliteConfig {
+class Git_AdminGitoliteConfig
+{
 
     public const ACTION_UPDATE_CONFIG                      = 'update_config';
     public const ACTION_MIGRATE_SSH_KEY_MANAGEMENT         = 'migrate_to_tuleap_ssh_keys_management';
@@ -165,7 +166,7 @@ class Git_AdminGitoliteConfig {
             $this->revokeProjects($request);
         }
 
-        if  ($request->get('allow-project')) {
+        if ($request->get('allow-project')) {
             $this->allowProject($request);
         }
     }
@@ -174,8 +175,7 @@ class Git_AdminGitoliteConfig {
     {
         $project_ids = $request->get('project-ids-to-revoke');
 
-        if (empty($project_ids))
-        {
+        if (empty($project_ids)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 dgettext('tuleap-git', 'No project selected')

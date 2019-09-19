@@ -22,7 +22,8 @@
 /**
  * I return the name of a project on a gerrit server
  */
-class Git_RemoteServer_Gerrit_ProjectNameBuilder {
+class Git_RemoteServer_Gerrit_ProjectNameBuilder
+{
 
     public function getGerritProjectName(GitRepository $repository)
     {

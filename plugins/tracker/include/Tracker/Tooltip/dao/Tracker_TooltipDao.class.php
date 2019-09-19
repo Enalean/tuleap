@@ -21,7 +21,8 @@
 /**
  *  Data Access Object for Tracker_Tooltip
  */
-class Tracker_TooltipDao extends DataAccessObject implements Tracker_Semantic_IRetrieveSemanticDARByTracker {
+class Tracker_TooltipDao extends DataAccessObject implements Tracker_Semantic_IRetrieveSemanticDARByTracker
+{
     public function __construct()
     {
         parent::__construct();
@@ -57,6 +58,3 @@ class Tracker_TooltipDao extends DataAccessObject implements Tracker_Semantic_IR
         return $this->update($sql);
     }
 }
-
-
-?>

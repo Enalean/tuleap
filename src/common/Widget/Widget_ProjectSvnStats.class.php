@@ -68,7 +68,7 @@ class Widget_ProjectSvnStats extends Widget
         //compute the stats
         $stats = array();
         $nb_of_commits = array();
-        foreach($dao->statsByGroupId($owner_id, $duration) as $row) {
+        foreach ($dao->statsByGroupId($owner_id, $duration) as $row) {
             $stats[$row['whoid']]['by_day'][$row['day'] * $day] = $row['nb_commits'];
             $stats[$row['whoid']]['by_week'][$row['week']]      = $row['nb_commits'];
             $this->tmp_nb_of_commit[$row['whoid']] = (isset($this->tmp_nb_of_commit[$row['whoid']]) ? $this->tmp_nb_of_commit[$row['whoid']] : 0) + $row['nb_commits'];
@@ -82,9 +82,9 @@ class Widget_ProjectSvnStats extends Widget
 
             //fill-in the holes
             $tmp_stats = array();
-            foreach($stats as $whoid => $stat) {
+            foreach ($stats as $whoid => $stat) {
                 $tmp_stats = array();
-                for($i = $start_of_period ; $i <= $today ; $i += $week) {
+                for ($i = $start_of_period; $i <= $today; $i += $week) {
                     $w = (int)date('W', $i);
                     $tmp_stats[$w] = isset($stat['by_week'][$w]) ? $stat['by_week'][$w] : '0';
                 }
@@ -93,7 +93,7 @@ class Widget_ProjectSvnStats extends Widget
 
             //fill-in the labels
             $dates = array();
-            for($i = $start_of_period ; $i <= $today ; $i += $week) {
+            for ($i = $start_of_period; $i <= $today; $i += $week) {
                 $dates[] = date('M d', $i);
             }
 
@@ -112,7 +112,7 @@ class Widget_ProjectSvnStats extends Widget
             //Build the chart
             $c = new Chart($chartWidth, $chartHeigh);
             $c->SetScale('textlin');
-            $c->img->SetMargin(40,20,20,$imgBottomMargin);
+            $c->img->SetMargin(40, 20, 20, $imgBottomMargin);
             $c->xaxis->SetTickLabels($dates);
             $c->legend->Pos($legend_x_position, $legend_y_position, 'left', $legendAlign);
             if ($legendRatio >= 1) {
@@ -123,7 +123,7 @@ class Widget_ProjectSvnStats extends Widget
             $nb_colors = count($colors);
             $bars = array();
             $i = 0;
-            foreach($stats as $whoid => $stat) {
+            foreach ($stats as $whoid => $stat) {
                 $l = new BarPlot(array_values($stat['by_week']));
                 $color = $colors[$i++ % $nb_colors];
                 $l->SetColor($color.':0.7');
@@ -152,6 +152,6 @@ class Widget_ProjectSvnStats extends Widget
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('widget_description_project_svn_stats','description');
+        return $GLOBALS['Language']->getText('widget_description_project_svn_stats', 'description');
     }
 }

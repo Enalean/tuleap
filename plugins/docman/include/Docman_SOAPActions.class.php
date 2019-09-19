@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_SOAPActions extends Docman_Actions {
+class Docman_SOAPActions extends Docman_Actions
+{
 
     /**
      * Append a chunk of data to a file
@@ -36,12 +37,11 @@ class Docman_SOAPActions extends Docman_Actions {
             $item = $item_factory->getItemFromDb($item_id);
             $itemType = $item_factory->getItemTypeForItem($item);
 
-            if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
+            if ($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
                 $this->storeFileChunk($item);
             } else {
                 $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'The file cannot be found.'));
             }
-
         } else {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_append_filechunk'));
         }
@@ -75,7 +75,7 @@ class Docman_SOAPActions extends Docman_Actions {
             $item = $item_factory->getItemFromDb($item_id);
             if ($item !== null) {
                 $itemType = $item_factory->getItemTypeForItem($item);
-                if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                if ($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                     $fs = $this->_getFileStorage();
 
                     if ($request->existAndNonEmpty('all_versions')) {
@@ -94,7 +94,7 @@ class Docman_SOAPActions extends Docman_Actions {
                         }
                     } else {
                         // if the version number is specified we compute the md5sum of this version else the last one
-                        if ($request->existAndNonEmpty('version')){
+                        if ($request->existAndNonEmpty('version')) {
                             $vf = $this->_getVersionFactory();
                             $version = $vf->getSpecificVersion($item, $request->get('version'));
                             $md5sum = $fs->getFileMD5sum($version->getPath());
@@ -107,7 +107,6 @@ class Docman_SOAPActions extends Docman_Actions {
                     }
 
                     $this->_controler->_viewParams['action_result'] = $md5sum;
-
                 } else {
                     $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
                 }
@@ -146,7 +145,7 @@ class Docman_SOAPActions extends Docman_Actions {
         $md = $metadataFactory->getFromLabel($label);
 
         $res = array();
-        if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+        if ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             foreach ($metadataLovFactory->getListByFieldId($md->id, $md->label, true) as $val) {
                 $res[] = $val;
             }
@@ -222,7 +221,7 @@ class Docman_SOAPActions extends Docman_Actions {
             $item = $item_factory->getItemFromDb($item_id);
             if ($item !== null) {
                 $itemType = $item_factory->getItemTypeForItem($item);
-                if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                if ($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                     if ($request->exist('version_number')) {
                         $version_factory = $this->_getVersionFactory();
                         $version = $version_factory->getSpecificVersion($item, $request->get('version_number'));
@@ -260,7 +259,7 @@ class Docman_SOAPActions extends Docman_Actions {
             $item = $item_factory->getItemFromDb($item_id);
             if ($item !== null) {
                 $itemType = $item_factory->getItemTypeForItem($item);
-                if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                if ($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                     if ($request->exist('version_number')) {
                         $version_factory = $this->_getVersionFactory();
                         $version = $version_factory->getSpecificVersion($item, $request->get('version_number'));
@@ -270,7 +269,7 @@ class Docman_SOAPActions extends Docman_Actions {
                     if ($version) {
                         if (file_exists($version->getPath())) {
                             if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
-                                $contents = file_get_contents($version->getPath(),NULL, NULL, $request->get('chunk_offset'), $request->get('chunk_size'));
+                                $contents = file_get_contents($version->getPath(), null, null, $request->get('chunk_offset'), $request->get('chunk_size'));
                                 $this->_controler->_viewParams['action_result'] = base64_encode($contents);
                             }
                         }
@@ -287,5 +286,4 @@ class Docman_SOAPActions extends Docman_Actions {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_id_missing'));
         }
     }
-
 }

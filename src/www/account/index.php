@@ -98,7 +98,7 @@ foreach ($mail_manager->getAllMailFormats() as $format) {
 
 $languages_html = array();
 $language_factory = new BaseLanguageFactory();
-foreach($language_factory->getAvailableLanguages() as $code => $lang) {
+foreach ($language_factory->getAvailableLanguages() as $code => $lang) {
     $languages_html[] = array(
         'lang'        => $lang,
         'code'        => $code,
@@ -109,22 +109,22 @@ foreach($language_factory->getAvailableLanguages() as $code => $lang) {
 $user_helper_preferences = array(
     array(
         'preference_name'  => UserHelper::PREFERENCES_NAME_AND_LOGIN,
-        'preference_label' => $Language->getText('account_options','tuleap_name_and_login'),
+        'preference_label' => $Language->getText('account_options', 'tuleap_name_and_login'),
         'is_selected'      => (int) user_get_preference("username_display") === UserHelper::PREFERENCES_NAME_AND_LOGIN
     ),
     array(
         'preference_name'  => UserHelper::PREFERENCES_LOGIN_AND_NAME,
-        'preference_label' => $Language->getText('account_options','tuleap_login_and_name'),
+        'preference_label' => $Language->getText('account_options', 'tuleap_login_and_name'),
         'is_selected'      => (int) user_get_preference("username_display") === UserHelper::PREFERENCES_LOGIN_AND_NAME
     ),
     array(
         'preference_name'  => UserHelper::PREFERENCES_LOGIN,
-        'preference_label' => $Language->getText('account_options','tuleap_login'),
+        'preference_label' => $Language->getText('account_options', 'tuleap_login'),
         'is_selected'      => (int) user_get_preference("username_display") === UserHelper::PREFERENCES_LOGIN
     ),
     array(
         'preference_name'  => UserHelper::PREFERENCES_REAL_NAME,
-        'preference_label' => $Language->getText('account_options','real_name'),
+        'preference_label' => $Language->getText('account_options', 'real_name'),
         'is_selected'      => (int) user_get_preference("username_display") === UserHelper::PREFERENCES_REAL_NAME
     )
 );
@@ -171,7 +171,7 @@ $svn_token_handler    = new SVN_TokenHandler(
     PasswordHandlerFactory::getPasswordHandler()
 );
 $svn_token_presenters = array();
-foreach($svn_token_handler->getSVNTokensForUser($user) as $user_svn_token) {
+foreach ($svn_token_handler->getSVNTokensForUser($user) as $user_svn_token) {
     $svn_token_presenters[] = new SVN_TokenPresenter($user_svn_token);
 }
 
@@ -234,8 +234,7 @@ $presenter = new User_PreferencesPresenter(
 $HTML->header(array(
     'title'      => $Language->getText('account_options', 'title'),
     'body_class' => array('account-maintenance')
-    )
-);
+    ));
 
 $renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../templates/user');
 $renderer->renderToPage('account-maintenance', $presenter);

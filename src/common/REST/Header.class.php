@@ -23,7 +23,8 @@ use DateTime;
 use DateTimeZone;
 use ForgeConfig;
 
-class Header {
+class Header
+{
     public const GET     = 'GET';
     public const OPTIONS = 'OPTIONS';
     public const PUT     = 'PUT';

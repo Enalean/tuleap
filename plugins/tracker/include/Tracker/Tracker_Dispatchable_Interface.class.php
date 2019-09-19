@@ -24,7 +24,8 @@
  * All elements that must be dispatched from TrackerManager have to implement this
  * interface.
  */
-interface Tracker_Dispatchable_Interface {
+interface Tracker_Dispatchable_Interface
+{
 
     /**
      * Return the tracker the object belongs to
@@ -44,4 +45,3 @@ interface Tracker_Dispatchable_Interface {
      */
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user);
 }
-?>

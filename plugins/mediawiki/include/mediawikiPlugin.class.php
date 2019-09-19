@@ -52,11 +52,12 @@ use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class MediaWikiPlugin extends Plugin {
+class MediaWikiPlugin extends Plugin
+{
 
     public const SERVICE_SHORTNAME = 'plugin_mediawiki';
 
-    public function __construct($id=0)
+    public function __construct($id = 0)
     {
         parent::__construct($id);
         $this->setName("mediawiki");
@@ -376,7 +377,7 @@ class MediaWikiPlugin extends Plugin {
             if ($mediawiki_instantiater) {
                 $mediawiki_instantiater->instantiateFromTemplate($params['ugroupsMapping']);
             }
-        } else if($this->serviceIsUsedInTemplate($params['group_id'])) {
+        } elseif ($this->serviceIsUsedInTemplate($params['group_id'])) {
             $mediawiki_instantiater = $this->getInstantiater($params['group_id']);
             if ($mediawiki_instantiater) {
                 $mediawiki_instantiater->instantiate();
@@ -478,7 +479,7 @@ class MediaWikiPlugin extends Plugin {
         $number_of_page                   = array();
         $number_of_page_between_two_dates = array();
         $number_of_page_since_a_date      = array();
-        foreach($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
+        foreach ($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
             if ($project->usesService('plugin_mediawiki') && $dao->hasDatabase($project)) {
                 $number_of_page[] = $dao->getMediawikiPagesNumberOfAProject($project);
                 $number_of_page_between_two_dates[] = $dao->getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate($project, $start_date, $end_date);
@@ -639,7 +640,7 @@ class MediaWikiPlugin extends Plugin {
     {
         $url = $params['url'];
 
-        if (strpos($url,'/plugins/mediawiki/wiki/') === 0) {
+        if (strpos($url, '/plugins/mediawiki/wiki/') === 0) {
             $pieces       = explode("/", $url);
             $project_name = $pieces[4];
 
@@ -722,7 +723,7 @@ class MediaWikiPlugin extends Plugin {
 
     public function getSystemEventClass($params)
     {
-        switch($params['type']) {
+        switch ($params['type']) {
             case SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME:
                 $params['class'] = 'SystemEvent_MEDIAWIKI_SWITCH_TO_123';
                 $params['dependencies'] = array(
@@ -761,7 +762,7 @@ class MediaWikiPlugin extends Plugin {
     public function permission_get_name($params)
     {
         if (!$params['name']) {
-            switch($params['permission_type']) {
+            switch ($params['permission_type']) {
                 case MediawikiManager::READ_ACCESS:
                     $params['name'] = 'Read';
                     break;
@@ -912,6 +913,5 @@ class MediaWikiPlugin extends Plugin {
             $rank_in_project = $service->getRank();
             $event->addPane($content, $rank_in_project);
         }
-
     }
 }

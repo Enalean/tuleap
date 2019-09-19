@@ -17,11 +17,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Project_Creation_Exception extends Exception {
+class Project_Creation_Exception extends Exception
+{
     function __construct($message = 'Project creation failure')
     {
         parent::__construct($message, 3101);
     }
 }
-
-?>

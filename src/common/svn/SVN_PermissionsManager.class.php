@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class SVN_PermissionsManager {
+class SVN_PermissionsManager
+{
 
     public function userCanRead(PFUser $user, Project $project, $svnpath)
     {
@@ -25,5 +26,3 @@ class SVN_PermissionsManager {
         return svn_utils_check_access($user->getUserName(), $project->getSVNRootPath(), $svnpath);
     }
 }
-
-?>

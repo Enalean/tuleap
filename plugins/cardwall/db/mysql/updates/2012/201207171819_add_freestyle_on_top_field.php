@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201207171819_add_freestyle_on_top_field extends ForgeUpgrade_Bucket {
+class b201207171819_add_freestyle_on_top_field extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -40,7 +41,6 @@ EOT;
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column use_freestyle_columns to plugin_cardwall_on_top: '.implode(', ', $this->db->dbh->errorInfo()));
         }
-
     }
 
     public function postUp()
@@ -50,4 +50,3 @@ EOT;
         }
     }
 }
-?>

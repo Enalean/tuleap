@@ -20,7 +20,8 @@
 
 require_once __DIR__ . '/bootstrap.php';
 
-class PriorityDaoTest extends TuleapDbTestCase {
+class PriorityDaoTest extends TuleapDbTestCase
+{
 
     /** @var Tracker_Artifact_PriorityDao */
     private $dao;
@@ -64,7 +65,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
     public function test42HasAnHigherPriorityThan1()
     {
         $this->setInitialOrder(1, 42);
-        $this->dao->moveListOfArtifactsBefore(array(42),1);
+        $this->dao->moveListOfArtifactsBefore(array(42), 1);
         $this->assertOrder(42, 1);
     }
 

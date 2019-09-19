@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201704031421_create_autoincrement_key_in_notif extends ForgeUpgrade_Bucket {
+class b201704031421_create_autoincrement_key_in_notif extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class ProjectHistoryPresenter {
+class ProjectHistoryPresenter
+{
 
     /** @var int */
     public $group_id;
@@ -117,12 +118,12 @@ class ProjectHistoryPresenter {
 
     public function title()
     {
-        return $GLOBALS['Language']->getText('project_admin_utils','g_change_history');
+        return $GLOBALS['Language']->getText('project_admin_utils', 'g_change_history');
     }
 
     public function toggle_search()
     {
-        return $GLOBALS['Language']->getText('project_admin_utils','toggle_search');
+        return $GLOBALS['Language']->getText('project_admin_utils', 'toggle_search');
     }
 
     public function toggler_class_name()
@@ -132,32 +133,32 @@ class ProjectHistoryPresenter {
 
     public function history_search_title()
     {
-        return $GLOBALS['Language']->getText('project_admin_utils','history_search_title');
+        return $GLOBALS['Language']->getText('project_admin_utils', 'history_search_title');
     }
 
     public function table_head_event()
     {
-        return $GLOBALS['Language']->getText('project_admin_utils','event');
+        return $GLOBALS['Language']->getText('project_admin_utils', 'event');
     }
 
     public function table_head_val()
     {
-        return $GLOBALS['Language']->getText('project_admin_utils','val');
+        return $GLOBALS['Language']->getText('project_admin_utils', 'val');
     }
 
     public function table_head_from()
     {
-        return $GLOBALS['Language']->getText('project_admin_utils','from');
+        return $GLOBALS['Language']->getText('project_admin_utils', 'from');
     }
 
     public function table_head_to()
     {
-        return $GLOBALS['Language']->getText('project_admin_utils','to');
+        return $GLOBALS['Language']->getText('project_admin_utils', 'to');
     }
 
     public function table_head_by()
     {
-        return $GLOBALS['Language']->getText('global','by');
+        return $GLOBALS['Language']->getText('global', 'by');
     }
 
     public function choose_event_label()
@@ -212,7 +213,7 @@ class ProjectHistoryPresenter {
 
     public function no_change()
     {
-        return $GLOBALS['Language']->getText('project_admin_utils','no_g_change');
+        return $GLOBALS['Language']->getText('project_admin_utils', 'no_g_change');
     }
 
     public function current_on_total()

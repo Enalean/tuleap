@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact {
+class Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact
+{
 
     /** @var array */
     private $history;

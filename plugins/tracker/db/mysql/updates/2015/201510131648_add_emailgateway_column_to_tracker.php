@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201510131648_add_emailgateway_column_to_tracker extends ForgeUpgrade_Bucket {
+class b201510131648_add_emailgateway_column_to_tracker extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

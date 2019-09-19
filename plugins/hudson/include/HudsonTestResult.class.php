@@ -22,7 +22,8 @@
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 
-class HudsonTestResult {
+class HudsonTestResult
+{
 
     protected $hudson_test_result_url;
     protected $dom_job;
@@ -45,8 +46,8 @@ class HudsonTestResult {
     ) {
         $parsed_url = parse_url($hudson_job_url);
 
-        if ( ! $parsed_url || ! array_key_exists('scheme', $parsed_url) ) {
-            throw new HudsonJobURLMalformedException($GLOBALS['Language']->getText('plugin_hudson','wrong_job_url', array($hudson_job_url)));
+        if (! $parsed_url || ! array_key_exists('scheme', $parsed_url)) {
+            throw new HudsonJobURLMalformedException($GLOBALS['Language']->getText('plugin_hudson', 'wrong_job_url', array($hudson_job_url)));
         }
 
         $this->hudson_test_result_url = $hudson_job_url . "/lastBuild/testReport/api/xml/";
@@ -62,14 +63,14 @@ class HudsonTestResult {
             $this->request_factory->createRequest('GET', $hudson_test_result_url)
         );
         if ($response->getStatusCode() !== 200) {
-            throw new HudsonJobURLFileNotFoundException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_not_found', array($hudson_test_result_url)));
+            throw new HudsonJobURLFileNotFoundException($GLOBALS['Language']->getText('plugin_hudson', 'job_url_file_not_found', array($hudson_test_result_url)));
         }
 
         $xmlobj = simplexml_load_string($response->getBody()->getContents());
         if ($xmlobj !== false) {
             return $xmlobj;
         }
-        throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_error', array($hudson_test_result_url)));
+        throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson', 'job_url_file_error', array($hudson_test_result_url)));
     }
 
     public function getFailCount()

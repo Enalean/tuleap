@@ -17,4 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-abstract class User_LoginException extends Exception {}
+abstract class User_LoginException extends Exception
+{
+}

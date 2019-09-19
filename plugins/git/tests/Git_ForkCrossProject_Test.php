@@ -26,7 +26,8 @@ Mock::generate('Project');
 Mock::generate('ProjectManager');
 Mock::generate('GitRepositoryFactory');
 
-class Git_ForkCrossProject_Test extends TuleapTestCase {
+class Git_ForkCrossProject_Test extends TuleapTestCase
+{
 
     public function testExecutes_ForkCrossProject_ActionWithForkRepositoriesView()
     {

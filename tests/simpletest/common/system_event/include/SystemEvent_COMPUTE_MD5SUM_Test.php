@@ -25,7 +25,8 @@ Mock::generate('PFUser');
 
 Mock::generate('FRSFile');
 
-class SystemEvent_COMPUTE_MD5SUM_Test extends TuleapTestCase {
+class SystemEvent_COMPUTE_MD5SUM_Test extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -98,7 +99,6 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends TuleapTestCase {
         // Check errors
         $this->assertEqual($evt->getStatus(), SystemEvent::STATUS_ERROR);
         $this->assertPattern('/Could not send mail to inform user that computing md5sum failed/i', $evt->getLog());
-
     }
 
     public function testComputeMd5sumUpdateDBFailure()

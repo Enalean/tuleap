@@ -20,7 +20,8 @@
 
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
-class OneStepCreationValidatorTest extends TuleapTestCase {
+class OneStepCreationValidatorTest extends TuleapTestCase
+{
 
     private $template_id = 100;
 

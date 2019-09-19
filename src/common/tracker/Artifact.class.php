@@ -27,7 +27,8 @@
  *
  * Artifact.class.php - Main Artifact class
  */
-class Artifact {
+class Artifact
+{
 
     public const FORMAT_TEXT  = 0;
     public const FORMAT_HTML  = 1;
@@ -68,7 +69,7 @@ class Artifact {
      *          ONLY OPTIONAL WHEN YOU PLAN TO IMMEDIATELY CALL ->create()
      *  @return bool success.
      */
-    function __construct(&$ArtifactType, $data=false, $checkPerms = true)
+    function __construct(&$ArtifactType, $data = false, $checkPerms = true)
     {
         global $Language;
 
@@ -76,7 +77,7 @@ class Artifact {
 
         //was ArtifactType legit?
         if (!$ArtifactType || !is_object($ArtifactType)) {
-            $this->setError('Artifact: '.$Language->getText('tracker_common_canned','not_valid'));
+            $this->setError('Artifact: '.$Language->getText('tracker_common_canned', 'not_valid'));
             return false;
         }
         //did ArtifactType have an error?
@@ -87,7 +88,7 @@ class Artifact {
 
         //      make sure this person has permission to view artifacts belonging to this tracker
         if ($checkPerms && !$this->ArtifactType->userCanView()) {
-            $this->setError('Artifact: '.$Language->getText('tracker_common_artifact','view_private'));
+            $this->setError('Artifact: '.$Language->getText('tracker_common_artifact', 'view_private'));
             return false;
         }
 
@@ -104,7 +105,7 @@ class Artifact {
             //      make sure this person has permission to view this artifact
             if ($checkPerms) {
                 if (!$this->userCanView()) {
-                    $this->setError('Artifact: '.$Language->getText('tracker_common_artifact','view_private_artifact'));
+                    $this->setError('Artifact: '.$Language->getText('tracker_common_artifact', 'view_private_artifact'));
                     return false;
                 }
             }
@@ -131,7 +132,7 @@ class Artifact {
         $sql = "SELECT * FROM artifact WHERE artifact_id='". db_ei($artifact_id) ."' AND group_artifact_id='". db_ei($this->ArtifactType->getID()) ."'";
         $res=db_query($sql);
         if (!$res || db_numrows($res) < 1) {
-            $this->setError('Artifact: '.$Language->getText('tracker_common_artifact','invalid_id'));
+            $this->setError('Artifact: '.$Language->getText('tracker_common_artifact', 'invalid_id'));
             return false;
         }
         $this->data_array = db_fetch_array($res);
@@ -156,12 +157,11 @@ class Artifact {
             //echo $field->getName()."-".$field->getID()."<br>";
             // Skip! Standard field values fectched in previous query
             // and comment_type_id is not stored in artifact_field_value table
-            if ( $field->isStandardField() ||
+            if ($field->isStandardField() ||
                  $field->getName() == "comment_type_id") {
                 continue;
             }
             $this->data_array[$field->getName()] = $data_fields[$field->getID()][$field->getValueFieldName()];
-
         }
 
         return true;
@@ -185,7 +185,9 @@ class Artifact {
      */
     function getValue($name)
     {
-        if (array_key_exists($name, $this->data_array)) return $this->data_array[$name];
+        if (array_key_exists($name, $this->data_array)) {
+            return $this->data_array[$name];
+        }
     }
 
 
@@ -198,7 +200,9 @@ class Artifact {
     function getMultiAssignedTo()
     {
         $aid=$this->getID();
-        if (!$aid) return;
+        if (!$aid) {
+            return;
+        }
         $sql="SELECT afv.valueInt 
               FROM artifact_field_value afv, artifact a, artifact_field af 
               WHERE a.artifact_id=". db_ei($aid) ." 
@@ -209,7 +213,7 @@ class Artifact {
         $res=db_query($sql);
         $i=0;
         $return_val = array();
-        while($resrow = db_fetch_array($res)) {
+        while ($resrow = db_fetch_array($res)) {
             $return_val[$i++]=$resrow['valueInt'];
         }
         return $return_val;
@@ -325,7 +329,7 @@ class Artifact {
      *
      *  @return int : the artifact_history_id
      */
-    function addHistory($field,$old_value,$new_value,$type=false,$email=false,$ahid=false,$comment_format=self::FORMAT_TEXT)
+    function addHistory($field, $old_value, $new_value, $type = false, $email = false, $ahid = false, $comment_format = self::FORMAT_TEXT)
     {
         //MLS: add case where we add CC and file_attachment into history for task #240
         if (!is_object($field)) {
@@ -333,7 +337,9 @@ class Artifact {
             $name = $field;
         } else {
          // If field is not to be kept in bug change history then do nothing
-            if (!$field->getGlobalKeepHistory()) { return; }
+            if (!$field->getGlobalKeepHistory()) {
+                return;
+            }
             $name = $field->getName();
         }
 
@@ -344,7 +350,7 @@ class Artifact {
             // We use the email to identify the user
             $user=100;
         } else {
-            if ( user_isloggedin() ) {
+            if (user_isloggedin()) {
                 $user = UserManager::instance()->getCurrentUser()->getId();
             } else {
                 $user = 100;
@@ -357,11 +363,12 @@ class Artifact {
         $fld_type = '';
         $val_type = '';
         if ($type) {
-            $fld_type = ',type'; $val_type = ",'". db_ei($type) ."'";
+            $fld_type = ',type';
+            $val_type = ",'". db_ei($type) ."'";
         } else {
             // No comment type specified for a followup comment
             // so force it to None (100)
-            if ($name == 'comment' || (preg_match("/^(lbl_)/",$name) && preg_match("/(_comment)$/",$name))) {
+            if ($name == 'comment' || (preg_match("/^(lbl_)/", $name) && preg_match("/(_comment)$/", $name))) {
                 $fld_type = ',type';
                 $val_type = ",'100'";
             }
@@ -388,13 +395,13 @@ class Artifact {
      *              If $vfl is not false, the fields expected in this array are *all* the fields of this tracker that are allowed to be submited by the user.
      *  @return bool
      */
-    function create($vfl=false,$import=false,$row=0)
+    function create($vfl = false, $import = false, $row = 0)
     {
         global $ath,$art_field_fact,$Language;
 
         $group = $ath->getGroup();
         $group_artifact_id = $ath->getID();
-        $error_message = ($import ? $Language->getText('tracker_common_artifact','row',$row) : "");
+        $error_message = ($import ? $Language->getText('tracker_common_artifact', 'row', $row) : "");
 
         // Retrieve HTTP GET variables and store them in $vfl array
         if (!$vfl) {
@@ -406,22 +413,22 @@ class Artifact {
             foreach ($vfl as $key => $val) {
                 $field = $art_field_fact->getFieldFromName($key);
                 if ($field && (!$field->getName() == 'comment_type_id')) {   // SR #684 we don't check the perms for the field comment type
-                    if (! $field->userCanSubmit($group->getID(),$group_artifact_id, UserManager::instance()->getCurrentUser()->getId())) {
+                    if (! $field->userCanSubmit($group->getID(), $group_artifact_id, UserManager::instance()->getCurrentUser()->getId())) {
                         // The user does not have the permissions to update the current field,
                         // we exit the function with an error message
-                        $this->setError($Language->getText('tracker_common_artifact','bad_field_permission_submission', $field->getLabel()));
+                        $this->setError($Language->getText('tracker_common_artifact', 'bad_field_permission_submission', $field->getLabel()));
                         return false;
                     }
                     // we check if the given value is authorized for this field (for select box fields only)
                     // we don't check here the none value, we check after it with the function checkEmptyFields, to get a better error message if the field required (instead of value 100 is not a valid valid value for the field)
                     if ($field->isSelectBox() && $val != 100 && ! $field->checkValueInPredefinedValues($this->ArtifactType->getID(), $val)) {
-                        $this->setError($Language->getText('tracker_common_artifact','bad_field_value', array($field->getLabel(), $val)));
+                        $this->setError($Language->getText('tracker_common_artifact', 'bad_field_value', array($field->getLabel(), $val)));
                         return false;
                     }
                     if ($field->isMultiSelectBox()) {
                         foreach ($val as $a_value) {
                             if ($a_value != 100 && ! $field->checkValueInPredefinedValues($this->ArtifactType->getID(), $a_value)) {
-                                $this->setError($Language->getText('tracker_common_artifact','bad_field_value', array($field->getLabel(), $val)));
+                                $this->setError($Language->getText('tracker_common_artifact', 'bad_field_value', array($field->getLabel(), $val)));
                                 return false;
                             }
                         }
@@ -432,14 +439,14 @@ class Artifact {
             //we should block those artifact with mandatory fields and default value set to "None"
             $fieldsNotShown = $art_field_fact->getAllFieldsNotShownOnAdd();
             if ($art_field_fact->checkEmptyFields($fieldsNotShown, false) == false) {
-                $this->setError($Language->getText('tracker_common_artifact','mandatory_not_set'));
+                $this->setError($Language->getText('tracker_common_artifact', 'mandatory_not_set'));
                 return false;
             }
         }
 
         if (!$import) {
             // make sure  required fields are not empty
-            if ( $art_field_fact->checkEmptyFields($vfl) == false ) {
+            if ($art_field_fact->checkEmptyFields($vfl) == false) {
                 $this->setError($art_field_fact->getErrorMessage());
                 exit_missing_param();
             }
@@ -455,24 +462,27 @@ class Artifact {
         // add default values for fields that have not been shown
         $add_fields = $art_field_fact->getAllFieldsNotShownOnAdd();
         foreach ($add_fields as $key => $def_val) {
-            if (!array_key_exists($key,$vfl)) $vfl[$key] = $def_val;
+            if (!array_key_exists($key, $vfl)) {
+                $vfl[$key] = $def_val;
+            }
         }
 
         if ($import &&
             $vfl['submitted_by'] &&
-            $vfl['submitted_by'] != "")
-        $user = $vfl['submitted_by'];
+            $vfl['submitted_by'] != "") {
+            $user = $vfl['submitted_by'];
+        }
 
         // first make sure this wasn't double-submitted
         $field = $art_field_fact->getFieldFromName('summary');
-        if ( $field && $field->isUsed()) {
+        if ($field && $field->isUsed()) {
             $res=db_query("SELECT * 
                 FROM artifact 
                 WHERE group_artifact_id = ". db_ei($ath->getID()) ." 
                 AND submitted_by=".  db_ei($user) ." 
                 AND summary='". db_es(htmlspecialchars($vfl['summary'])) ."'");
             if ($res && db_numrows($res) > 0) {
-                $this->setError($Language->getText('tracker_common_artifact','double_subm',db_result($res,0,'artifact_id')));
+                $this->setError($Language->getText('tracker_common_artifact', 'double_subm', db_result($res, 0, 'artifact_id')));
                 return false;
             }
         }
@@ -485,11 +495,10 @@ class Artifact {
         $vfl_values = '';
         $text_value_list=array();
         foreach ($vfl as $field_name => $value) {
-
             //echo "<br>field_name=$field_name, value=$value";
 
             $field = $art_field_fact->getFieldFromName($field_name);
-            if ( $field && $field->isStandardField() ) {
+            if ($field && $field->isStandardField()) {
                 // skip over special fields
                 if ($field->isSpecial()) {
                     continue;
@@ -497,27 +506,27 @@ class Artifact {
 
                 $vfl_cols .= ','.$field->getName();
                 $is_text = ($field->isTextField() || $field->isTextArea());
-                if  ($is_text) {
+                if ($is_text) {
                     $value = htmlspecialchars($value);
                     //Log for Cross references
                     $text_value_list[]=$value;
-
-                } else if ($field->isDateField()) {
+                } elseif ($field->isDateField()) {
                     // if it's a date we must convert the format to unix time
                     list($value,$ok) = util_date_to_unixtime($value);
                 }
 
                 $vfl_values .= ',\''. db_es($value) .'\'';
-
             }
-
         } // while
 
         // Add all special fields that were not handled in the previous block
         $fixed_cols = 'open_date,last_update_date,group_artifact_id,submitted_by';
         if ($import) {
-            if (!isset($vfl['open_date']) || !$vfl['open_date'] || $vfl['open_date'] == "") $open_date = time();
-            else list($open_date,$ok) = util_date_to_unixtime($vfl['open_date']);
+            if (!isset($vfl['open_date']) || !$vfl['open_date'] || $vfl['open_date'] == "") {
+                $open_date = time();
+            } else {
+                list($open_date,$ok) = util_date_to_unixtime($vfl['open_date']);
+            }
             $fixed_values = "'". db_ei($open_date) ."','".time()."','". db_ei($group_artifact_id) ."','". db_ei($user) ."'";
         } else {
             $fixed_values = "'".time()."','".time()."','". db_ei($group_artifact_id) ."','". db_ei($user) ."'";
@@ -532,64 +541,57 @@ class Artifact {
 
             $was_error = false;
             if (!$result || db_affected_rows($result) == 0) {
-                $this->setError($Language->getText('tracker_common_artifact','insert_err',$sql));
+                $this->setError($Language->getText('tracker_common_artifact', 'insert_err', $sql));
                 $was_error = true;
             } else {
-
                 //  Insert the field values for no standard field
                 $fields = $art_field_fact->getAllUsedFields();
                 foreach ($fields as $field_name => $field) {
-
                     // skip over special fields
-                    if ( ($field->isSpecial())||($field->isStandardField()) ) {
+                    if (($field->isSpecial())||($field->isStandardField())) {
                         continue;
                     }
 
-                    if ( array_key_exists($field_name, $vfl) && isset($vfl[$field_name]) && $vfl[$field_name] ) {
+                    if (array_key_exists($field_name, $vfl) && isset($vfl[$field_name]) && $vfl[$field_name]) {
                         // The field has a value from the user input
 
                         $value = $vfl[$field_name];
 
                         $is_text = ($field->isTextField() || $field->isTextArea());
-                        if  ($is_text) {
+                        if ($is_text) {
                             $value = htmlspecialchars($value);
 
                             //Log for Cross references
                             $text_value_list[]=$value;
-
-                        } else if ($field->isDateField()) {
+                        } elseif ($field->isDateField()) {
                             // if it's a date we must convert the format to unix time
                             list($value,$ok) = util_date_to_unixtime($value);
                         }
 
                         // Insert the field value
-                        if ( !$field->insertValue($artifact_id,$value) ) {
-                            $error_message .= $Language->getText('tracker_common_artifact','field_err',array($field->getLabel(),$value));
+                        if (!$field->insertValue($artifact_id, $value)) {
+                            $error_message .= $Language->getText('tracker_common_artifact', 'field_err', array($field->getLabel(),$value));
                             $was_error = true;
                             $this->setError($error_message);
                         }
-
                     } else {
                         // The field hasn't a value from the user input
                         // We need to insert default value for this field
                         // because all SQL queries (from Report or Artifact read/update) don't allow
                         // empty record (we must use join and not left join for performance reasons).
 
-                        if ( !$field->insertValue($artifact_id,$field->getDefaultValue()) ) {
-                            $error_message .= $Language->getText('tracker_common_artifact','def_err',array($field->getLabel(),$field->getDefaultValue()));
+                        if (!$field->insertValue($artifact_id, $field->getDefaultValue())) {
+                            $error_message .= $Language->getText('tracker_common_artifact', 'def_err', array($field->getLabel(),$field->getDefaultValue()));
                             $was_error = true;
                             $this->setError($error_message);
                         }
-
                     }
-
                 } // while
-
             }
 
             //Add Cross Reference
-            for($i=0;$i<sizeof($text_value_list);$i++){
-                $reference_manager->extractCrossRef($text_value_list[$i],$artifact_id,ReferenceManager::REFERENCE_NATURE_ARTIFACT,$ath->getGroupID());
+            for ($i=0; $i<sizeof($text_value_list); $i++) {
+                $reference_manager->extractCrossRef($text_value_list[$i], $artifact_id, ReferenceManager::REFERENCE_NATURE_ARTIFACT, $ath->getGroupID());
             }
 
             // artifact permissions
@@ -601,7 +603,7 @@ class Artifact {
             // correctly in memory
             $this->fetchData($artifact_id);
         } else {
-            $this->setError($Language->getText('tracker_common_artifact','insert_err',$sql));
+            $this->setError($Language->getText('tracker_common_artifact', 'insert_err', $sql));
             $was_error = true;
         }
         return !$was_error;
@@ -618,29 +620,28 @@ class Artifact {
      *
      *  @return bool
      */
-    function addComment($comment,$email=false,&$changes,$comment_format=self::FORMAT_TEXT)
+    function addComment($comment, $email = false, &$changes, $comment_format = self::FORMAT_TEXT)
     {
 
         global $art_field_fact,$Language;
 
         // Add a new comment if there is one
         if ($comment != '') {
-
             // For none project members force the comment type to None (100)
-            if ( !user_isloggedin() ) {
-                if ( $email ) {
+            if (!user_isloggedin()) {
+                if ($email) {
                     $this->addHistory('comment', "", htmlspecialchars($comment), 100, $email, null, $comment_format);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','enter_email'));
+                    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact', 'enter_email'));
                     return false;
                 }
             } else {
                 $this->addHistory('comment', "", htmlspecialchars($comment), 100, null, null, $comment_format);
             }
             $changes['comment']['add'] = stripslashes($comment);
-            $changes['comment']['type'] = $Language->getText('global','none');
+            $changes['comment']['type'] = $Language->getText('global', 'none');
 
-            $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','add_comment'));
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact', 'add_comment'));
             return true;
         } else {
             return false;
@@ -658,19 +659,18 @@ class Artifact {
      * @param comment (IN) : the comment that the user typed in
      * @param canned_response (IN) : the id of the canned response
      */
-    function addFollowUpComment($comment,$comment_type_id,$canned_response,&$changes,$comment_format=self::FORMAT_TEXT)
+    function addFollowUpComment($comment, $comment_type_id, $canned_response, &$changes, $comment_format = self::FORMAT_TEXT)
     {
         global $art_field_fact,$Language;
         if ($canned_response && $canned_response != 100) {
-
             $sql="SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='". db_ei($canned_response) ."'";
             $res3=db_query($sql);
 
             if ($res3 && db_numrows($res3) > 0) {
-                     $comment = util_unconvert_htmlspecialchars(db_result($res3,0,'body'));
-                     $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','canned_used'));
+                     $comment = util_unconvert_htmlspecialchars(db_result($res3, 0, 'body'));
+                     $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact', 'canned_used'));
             } else {
-                     $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','unable_canned'));
+                     $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact', 'unable_canned'));
                      $GLOBALS['Response']->addFeedback('error', db_error());
             }
         }
@@ -681,12 +681,12 @@ class Artifact {
             $changes['comment']['format'] = $comment_format;
 
             $field = $art_field_fact->getFieldFromName("comment_type_id");
-            if ( $field && isset($comment_type_id) && $comment_type_id) {
+            if ($field && isset($comment_type_id) && $comment_type_id) {
                      $changes['comment']['type'] =
                        $field->getValue($this->ArtifactType->getID(), $comment_type_id);
             }
             $reference_manager = $this->getReferenceManager();
-            $reference_manager->extractCrossRef($comment,$this->getID(), ReferenceManager::REFERENCE_NATURE_ARTIFACT, $this->ArtifactType->getGroupID());
+            $reference_manager->extractCrossRef($comment, $this->getID(), ReferenceManager::REFERENCE_NATURE_ARTIFACT, $this->ArtifactType->getGroupID());
 
             return true;
         } else {
@@ -723,9 +723,9 @@ class Artifact {
             if ($by == "100") {
              //this case should not exist in new trackers but
                 //can appear if we parse legacy bugs or tasks
-                $email = $Language->getText('global','none');
+                $email = $Language->getText('global', 'none');
                 $user_id = 100;
-            } else if (user_getname($by)) {
+            } elseif (user_getname($by)) {
                 $user_id = $by;
                 $email = "";
             } else {
@@ -733,7 +733,7 @@ class Artifact {
                 $user_id = 100;
             }
 
-            if ( ! $artifact_import->checkCommentExist($arr, $this->getID())) {
+            if (! $artifact_import->checkCommentExist($arr, $this->getID())) {
                 if (!$artifact_import->checkCommentExistInLegacyFormat($arr, $this->getID())) {
                     $comment  = htmlspecialchars($arr['comment']);
                     $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date,type) ".
@@ -742,7 +742,6 @@ class Artifact {
                     db_query($sql);
                 }
             }
-
         }
 
         return true;
@@ -756,7 +755,7 @@ class Artifact {
     *
     * @return bool
     */
-    function updateFollowupComment($comment_id,$comment_txt,&$changes, $comment_format=self::FORMAT_TEXT)
+    function updateFollowupComment($comment_id, $comment_txt, &$changes, $comment_format = self::FORMAT_TEXT)
     {
         if ($this->userCanEditFollowupComment($comment_id)) {
             $sql = 'SELECT field_name, new_value, type FROM artifact_history'
@@ -764,38 +763,37 @@ class Artifact {
                 .' AND artifact_history_id='. db_ei($comment_id)
                 .' AND (field_name="comment" OR field_name LIKE "lbl_%_comment")';
             $qry = db_query($sql);
-            $new_value = db_result($qry,0,'new_value');
-            $comment_type_id = db_result($qry,0,'type');
+            $new_value = db_result($qry, 0, 'new_value');
+            $comment_type_id = db_result($qry, 0, 'type');
             if ($new_value == $comment_txt) {
                 //comment doesn't change
                 return false;
             }
 
             if ($qry) {
-                $fname = db_result($qry,0,'field_name');
-                if (preg_match("/^(lbl_)/",$fname) && preg_match("/(_comment)$/",$fname)) {
+                $fname = db_result($qry, 0, 'field_name');
+                if (preg_match("/^(lbl_)/", $fname) && preg_match("/(_comment)$/", $fname)) {
                     $comment_lbl = $fname;
                 } else {
                     $comment_lbl = "lbl_".$comment_id."_comment";
                 }
                 //now add new comment entry
-                $this->addHistory($comment_lbl,$new_value,htmlspecialchars($comment_txt), $comment_type_id,false,$comment_id,$comment_format);
+                $this->addHistory($comment_lbl, $new_value, htmlspecialchars($comment_txt), $comment_type_id, false, $comment_id, $comment_format);
                 $changes['comment']['del'] = $new_value;
                 $changes['comment']['add'] = $comment_txt;
                 $changes['comment']['format'] = $comment_format;
                 $reference_manager = $this->getReferenceManager();
-                $reference_manager->extractCrossRef($comment_txt,$this->getID(),ReferenceManager::REFERENCE_NATURE_ARTIFACT,$this->ArtifactType->getGroupID());
+                $reference_manager->extractCrossRef($comment_txt, $this->getID(), ReferenceManager::REFERENCE_NATURE_ARTIFACT, $this->ArtifactType->getGroupID());
 
                 return true;
             } else {
                 return false;
             }
         } else {
-            $this->setError($GLOBALS['Language']->getText('tracker_common_artifact','err_upd_comment', array($comment_id, $GLOBALS['Language']->getText('include_exit','perm_denied'))));
-            $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_common_artifact','err_upd_comment', array($comment_id, $GLOBALS['Language']->getText('include_exit','perm_denied'))));
+            $this->setError($GLOBALS['Language']->getText('tracker_common_artifact', 'err_upd_comment', array($comment_id, $GLOBALS['Language']->getText('include_exit', 'perm_denied'))));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'err_upd_comment', array($comment_id, $GLOBALS['Language']->getText('include_exit', 'perm_denied'))));
             return false;
         }
-
     }
 
     /**
@@ -808,17 +806,19 @@ class Artifact {
      *
      *  @return bool
      */
-    function handleUpdate($artifact_id_dependent,$canned_response,&$changes,$masschange=false,$vfl=false,$import=false)
+    function handleUpdate($artifact_id_dependent, $canned_response, &$changes, $masschange = false, $vfl = false, $import = false)
     {
         global $art_field_fact,$Language;
-        if ($masschange && !$this->ArtifactType->userIsAdmin()) exit_permission_denied();
+        if ($masschange && !$this->ArtifactType->userIsAdmin()) {
+            exit_permission_denied();
+        }
 
         if (!$import) {
          // Retrieve HTTP GET variables and store them in $vfl array
             $vfl = $art_field_fact->extractFieldList();
 
             // make sure  required fields are not empty
-            if ( ($art_field_fact->checkEmptyFields($vfl) == false) ) {
+            if (($art_field_fact->checkEmptyFields($vfl) == false)) {
                     exit_missing_param();
             }
         }
@@ -834,7 +834,6 @@ class Artifact {
         $changes = array();
         $upd_list = '';
         foreach ($vfl as $field_name => $value) {
-
             $field = $art_field_fact->getFieldFromName($field_name);
 
             // skip over special fields  except for details which in this
@@ -850,14 +849,14 @@ class Artifact {
             // we don't check here the none value, we have already check it before (we can't check here the none value because the function checkValueInPredefinedValues don't take the none value into account)
             // if the value did not change, we don't do the check (because of stored values that can be deleted now)
             if (! $masschange && $result[$field_name] != $value && $field->isSelectBox() && $value != 100 && ! $field->checkValueInPredefinedValues($this->ArtifactType->getID(), $value)) {
-                $this->setError($Language->getText('tracker_common_artifact','bad_field_value', array($field->getLabel(), $value)));
+                $this->setError($Language->getText('tracker_common_artifact', 'bad_field_value', array($field->getLabel(), $value)));
                 return false;
             }
             if (! $masschange && $field->isMultiSelectBox()) {
                 if (is_array($value)) {
                     foreach ($value as $a_value) {
                         if ($a_value != 100 && ! $field->checkValueInPredefinedValues($this->ArtifactType->getID(), $a_value)) {
-                            $this->setError($Language->getText('tracker_common_artifact','bad_field_value', array($field->getLabel(), $value)));
+                            $this->setError($Language->getText('tracker_common_artifact', 'bad_field_value', array($field->getLabel(), $value)));
                             return false;
                         }
                     }
@@ -865,9 +864,8 @@ class Artifact {
             }
 
             $is_text = ($field->isTextField() || $field->isTextArea());
-            if ( ($field->isMultiSelectBox())&&(is_array($value)) ) {
-
-                if ($masschange && (in_array($Language->getText('global','unchanged'),$value))) {
+            if (($field->isMultiSelectBox())&&(is_array($value))) {
+                if ($masschange && (in_array($Language->getText('global', 'unchanged'), $value))) {
                     continue;
                 }
                 // The field is a multi values field and it has multi assigned values
@@ -877,11 +875,11 @@ class Artifact {
                 if (! $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID(), UserManager::instance()->getCurrentUser()->getId())) {
                     // we only throw an error if the values has changed
                     $old_values = $field->getValues($this->getID());
-                    list($deleted_values,$added_values) = util_double_diff_array($old_values,$values);
+                    list($deleted_values,$added_values) = util_double_diff_array($old_values, $values);
                     if ((count($deleted_values) > 0) || (count($added_values) > 0)) {
                         // The user does not have the permissions to update the current field,
                         // we exit the function with an error message
-                        $this->setError($Language->getText('tracker_common_artifact','bad_field_permission_update', $field->getLabel()));
+                        $this->setError($Language->getText('tracker_common_artifact', 'bad_field_permission_update', $field->getLabel()));
                            return false;
                     }
                 }
@@ -897,26 +895,27 @@ class Artifact {
                             $temp[] = $v;
                         }
                     }
-                    if (isset($unset) && $unset) $values = $temp;
+                    if (isset($unset) && $unset) {
+                        $values = $temp;
+                    }
                 }
 
                 $old_values = $field->getValues($this->getID());
 
-                list($deleted_values,$added_values) = util_double_diff_array($old_values,$values);
+                list($deleted_values,$added_values) = util_double_diff_array($old_values, $values);
 
                 // Check if there are some differences
                 if ((count($deleted_values) > 0) || (count($added_values) > 0)) {
-
                     // Add values in the history
-                    $a = $field->getLabelValues($this->ArtifactType->getID(),$old_values);
-                    $val = join(",",$a);
-                    $b = $field->getLabelValues($this->ArtifactType->getID(),$values);
-                    $new_val = join(",",$b);
-                    $this->addHistory($field,$val,$new_val);
+                    $a = $field->getLabelValues($this->ArtifactType->getID(), $old_values);
+                    $val = join(",", $a);
+                    $b = $field->getLabelValues($this->ArtifactType->getID(), $values);
+                    $new_val = join(",", $b);
+                    $this->addHistory($field, $val, $new_val);
 
                     // Update the field value
-                    if ( !$field->updateValues($this->getID(),$values) ) {
-                        $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','field_upd_fail',$field->getLabel()));
+                    if (!$field->updateValues($this->getID(), $values)) {
+                        $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact', 'field_upd_fail', $field->getLabel()));
                     }
                     if ($is_text) {
                         //Log for Cross references
@@ -926,30 +925,31 @@ class Artifact {
                     // Keep track of the change
                     $field_html = new ArtifactFieldHtml($field);
                     if (count($deleted_values) > 0) {
-                        $val = join(",",$field->getLabelValues($this->ArtifactType->getID(),$deleted_values));
+                        $val = join(",", $field->getLabelValues($this->ArtifactType->getID(), $deleted_values));
                         $changes[$field_name]['del']=$val;
                     }
                     if (count($added_values) > 0) {
-                        $val = join(",",$field->getLabelValues($this->ArtifactType->getID(),$added_values));
+                        $val = join(",", $field->getLabelValues($this->ArtifactType->getID(), $added_values));
                         $changes[$field_name]['add']=$val;
                     }
                 }
-
             } else {
-                if ($masschange && ($value==$Language->getText('global','unchanged'))) {
+                if ($masschange && ($value==$Language->getText('global', 'unchanged'))) {
                     continue;
                 }
 
                 $old_value = $result[$field_name];
-                if  ($is_text) {
+                if ($is_text) {
                     $differ = ($old_value != htmlspecialchars((string) $value));
                     //Log for Cross references
                     $text_value_list[]=$value;
-
-                } else if ($field->isDateField()) {
+                } elseif ($field->isDateField()) {
                     // if it's a date we must convert the format to unix time
-                    if ($value != '') list($value,$ok) = util_date_to_unixtime($value);
-                    else $value = '0';
+                    if ($value != '') {
+                        list($value,$ok) = util_date_to_unixtime($value);
+                    } else {
+                        $value = '0';
+                    }
 
                     //first have a look if both dates are uninitialized
                     if (($old_value == 0 || $old_value == '') && ($value == 0 || !$ok )) {
@@ -957,7 +957,7 @@ class Artifact {
                     } else {
                         // and make also sure that the old_value has been treated as the new value
                         // i.e. old_value (unix timestamp) -> local date (with hours cut off, so change the date by x  hours) -> unixtime
-                        $old_date = format_date("Y-m-j",$old_value);
+                        $old_date = format_date("Y-m-j", $old_value);
                         list($old_val,$ok) = util_date_to_unixtime($old_date);
                                     $differ = ($old_val != $value);
                     }
@@ -966,49 +966,48 @@ class Artifact {
                 }
                 if ($differ) {
                     // The userCanUpdate test is only done on modified fields
-                    if ( $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID())) {
-
+                    if ($field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID())) {
                         if ($is_text) {
-                            if ( $field->isStandardField() ) {
+                            if ($field->isStandardField()) {
                                 $upd_list .= "$field_name='".db_es(htmlspecialchars($value))."',";
                             } else {
                                 $update_value = htmlspecialchars($value);
                             }
 
-                            $this->addHistory($field,$old_value,$value);
+                            $this->addHistory($field, $old_value, $value);
                             $value = stripslashes($value);
                         } else {
-                            if ( $field->isStandardField() ) {
+                            if ($field->isStandardField()) {
                                 $upd_list .= "$field_name='". db_es($value) ."',";
                             } else {
                                 $update_value = $value;
                             }
-                            $this->addHistory($field,$old_value,$value);
+                            $this->addHistory($field, $old_value, $value);
                         }
 
                         // Update the field value
-                        if ( !$field->isStandardField() ) {
-                            if ( !$field->updateValue($this->getID(),$update_value) ) {
-                                $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','field_upd_fail',$field->getLabel()));
+                        if (!$field->isStandardField()) {
+                            if (!$field->updateValue($this->getID(), $update_value)) {
+                                $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact', 'field_upd_fail', $field->getLabel()));
                             }
                         }
 
                         // Keep track of the change
                         $field_html = new ArtifactFieldHtml($field);
-                        $changes[$field_name]['del']=$field_html->display($this->ArtifactType->getID(),$old_value,false,false,true,true);
-                        $changes[$field_name]['add']=$field_html->display($this->ArtifactType->getID(),$value,false,false,true,true);
+                        $changes[$field_name]['del']=$field_html->display($this->ArtifactType->getID(), $old_value, false, false, true, true);
+                        $changes[$field_name]['add']=$field_html->display($this->ArtifactType->getID(), $value, false, false, true, true);
                     } else {
                         // The user does not have the permissions to update the current field,
                         // we exit the function with an error message
-                        $this->setError($Language->getText('tracker_common_artifact','bad_field_permission_update', $field->getLabel()));
+                        $this->setError($Language->getText('tracker_common_artifact', 'bad_field_permission_update', $field->getLabel()));
                         return false;
                     }
                 }
             }
         } // while
 
-        for($i=0;$i<sizeof($text_value_list);$i++){
-            $reference_manager->extractCrossRef($text_value_list[$i],$this->getID(),ReferenceManager::REFERENCE_NATURE_ARTIFACT,$this->ArtifactType->getGroupID());
+        for ($i=0; $i<sizeof($text_value_list); $i++) {
+            $reference_manager->extractCrossRef($text_value_list[$i], $this->getID(), ReferenceManager::REFERENCE_NATURE_ARTIFACT, $this->ArtifactType->getGroupID());
         }
 
         $request = HTTPRequest::instance();
@@ -1016,12 +1015,13 @@ class Artifact {
         if ($masschange) {
             foreach ($_POST as $key => $val) {
                 $val = $request->get($key); //Don't use _POST value
-                if ($key == 'submitted_by' && $val != $Language->getText('global','unchanged')) {
+                if ($key == 'submitted_by' && $val != $Language->getText('global', 'unchanged')) {
                     $sql = "UPDATE artifact SET submitted_by=". db_ei($val) ." WHERE artifact_id = ". db_ei($this->getID()) ;
                     $res = db_query($sql);
                     $field = $art_field_fact->getFieldFromName('submitted_by');
-                    if ($this->getSubmittedBy() != $val)
-                    $this->addHistory('submitted_by',$this->getSubmittedBy(),$val);
+                    if ($this->getSubmittedBy() != $val) {
+                        $this->addHistory('submitted_by', $this->getSubmittedBy(), $val);
+                    }
                 }
             }
         }
@@ -1036,15 +1036,15 @@ class Artifact {
         $vFormat = new Valid_WhiteList('comment_format', array(self::FORMAT_HTML, self::FORMAT_TEXT));
         $comment_format = $request->getValidated('comment_format', $vFormat, self::FORMAT_TEXT);
 
-        $this->addFollowUpComment($comment,$comment_type_id,$canned_response,$changes,$comment_format);
+        $this->addFollowUpComment($comment, $comment_type_id, $canned_response, $changes, $comment_format);
 
         //  Enter the timestamp if we are changing to closed or declined
         if (isset($changes['status_id']) && $this->isStatusClosed($vfl['status_id'])) {
             $now=time();
             $upd_list .= "close_date='$now',";
             $field = $art_field_fact->getFieldFromName('close_date');
-            if ( $field ) {
-                $this->addHistory ($field,$result['close_date'],'');
+            if ($field) {
+                $this->addHistory($field, $result['close_date'], '');
             }
         }
 
@@ -1052,8 +1052,8 @@ class Artifact {
         if (isset($changes['status_id']) && !$this->isStatusClosed($vfl['status_id'])) {
             $upd_list .= "close_date='',";
             $field = $art_field_fact->getFieldFromName('close_date');
-            if ( $field ) {
-                $this->addHistory ($field,$result['close_date'],'');
+            if ($field) {
+                $this->addHistory($field, $result['close_date'], '');
             }
         }
 
@@ -1062,12 +1062,12 @@ class Artifact {
             if (!$this->deleteAllDependencies()) {
                 return false;
             }
-            if ($artifact_id_dependent == $Language->getText('global','none')) {
+            if ($artifact_id_dependent == $Language->getText('global', 'none')) {
                 unset($artifact_id_dependent);
             }
         }
         if (isset($artifact_id_dependent)) {
-            if (!$this->addDependencies($artifact_id_dependent,$changes,$masschange, $import)) {
+            if (!$this->addDependencies($artifact_id_dependent, $changes, $masschange, $import)) {
                 return false;
             }
         }
@@ -1076,7 +1076,7 @@ class Artifact {
         $res_upd = true;
         if ($upd_list) {
             // strip the excess comma at the end of the update field list
-            $upd_list = substr($upd_list,0,-1);
+            $upd_list = substr($upd_list, 0, -1);
 
             $sql="UPDATE artifact SET $upd_list ".
                 " WHERE artifact_id=". db_ei($this->getID()) ;
@@ -1085,7 +1085,7 @@ class Artifact {
         }
 
         if (!$res_upd) {
-            exit_error($Language->getText('tracker_common_artifact','upd_fail').': '.$sql,$Language->getText('tracker_common_artifact','upd_fail'));
+            exit_error($Language->getText('tracker_common_artifact', 'upd_fail').': '.$sql, $Language->getText('tracker_common_artifact', 'upd_fail'));
             return false;
         } else {
             if (!$request->exist('change_permissions') || $request->get('change_permissions')) {
@@ -1093,7 +1093,6 @@ class Artifact {
             }
             return true;
         }
-
     }
 
     /**
@@ -1117,7 +1116,6 @@ class Artifact {
                     SET use_artifact_permissions = ". ($use_artifact_permissions ? 1 : 0) ."
                     WHERE artifact_id=". db_ei($this->getID());
             db_query($sql);
-
         }
     }
 
@@ -1146,13 +1144,12 @@ class Artifact {
      *
      * @return bool
      */
-    function insertCC($cc,$added_by,$comment,$date)
+    function insertCC($cc, $added_by, $comment, $date)
     {
         $sql = "INSERT INTO artifact_cc (artifact_id,email,added_by,comment,date) ".
             "VALUES (". db_ei($this->getID()) .",'". db_es($cc) ."','". db_ei($added_by) ."','". db_es($comment) ."','". db_ei($date) ."')";
         $res = db_query($sql);
         return ($res);
-
     }
 
     /**
@@ -1165,7 +1162,7 @@ class Artifact {
      *
      * @return bool
      */
-    function addCC($email,$comment,&$changes,$masschange=false)
+    function addCC($email, $comment, &$changes, $masschange = false)
     {
         global $Language;
 
@@ -1177,7 +1174,7 @@ class Artifact {
         $changed = false;
 
         if (! util_validateCCList($arr_email, $message)) {
-            exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
+            exit_error($Language->getText('tracker_index', 'cc_list_invalid'), $message);
         }
 
     //calculate old_values to put into artifact_history
@@ -1186,8 +1183,10 @@ class Artifact {
             // Add this cc only if not there already
             if (!$this->existCC($cc)) {
                 $changed = true;
-                $res = $this->insertCC($cc,$user_id,$comment,$date);
-                if (!$res) { $ok = false; }
+                $res = $this->insertCC($cc, $user_id, $comment, $date);
+                if (!$res) {
+                    $ok = false;
+                }
             }
         }
 
@@ -1198,9 +1197,9 @@ class Artifact {
         }
 
         if (!$ok) {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','cc_add_fail'));
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact', 'cc_add_fail'));
         } else {
-            $this->addHistory('cc',$old_value,$new_value);
+            $this->addHistory('cc', $old_value, $new_value);
             $changes['CC']['add'] = join(',', $arr_email);
         }
         return $ok;
@@ -1214,7 +1213,7 @@ class Artifact {
      *
      * @return bool
      */
-    function updateCC($email,$comment)
+    function updateCC($email, $comment)
     {
         global $Language;
 
@@ -1226,7 +1225,7 @@ class Artifact {
         $changed = false;
 
         if (! util_validateCCList($arr_email, $message)) {
-            exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
+            exit_error($Language->getText('tracker_index', 'cc_list_invalid'), $message);
         }
 
     //calculate old_values to put into artifact_history
@@ -1234,24 +1233,28 @@ class Artifact {
         $new_value = join(',', $arr_email);
 
     //look if there is really something to do or not
-        list($deleted_values,$added_values) = util_double_diff_array(explode(",",$old_value),$arr_email);
-        if (count($deleted_values) == 0 && count($added_values) == 0) return true;
+        list($deleted_values,$added_values) = util_double_diff_array(explode(",", $old_value), $arr_email);
+        if (count($deleted_values) == 0 && count($added_values) == 0) {
+            return true;
+        }
 
         if (!$this->deleteAllCC()) {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','prob_cc_list',$this->getID()));
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact', 'prob_cc_list', $this->getID()));
             $ok = false;
         }
 
         foreach ($arr_email as $cc) {
                 $changed = true;
-                $res = $this->insertCC($cc,$user_id,$comment,$date);
-            if (!$res) { $ok = false; }
+                $res = $this->insertCC($cc, $user_id, $comment, $date);
+            if (!$res) {
+                $ok = false;
+            }
         }
 
         if (!$ok) {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','cc_add_fail'));
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact', 'cc_add_fail'));
         } else {
-            $this->addHistory('cc',$old_value,$new_value);
+            $this->addHistory('cc', $old_value, $new_value);
         }
         return $ok;
     }
@@ -1266,7 +1269,7 @@ class Artifact {
      *
      * @return bool
      */
-    function deleteCC($artifact_cc_id=false,&$changes,$masschange=false)
+    function deleteCC($artifact_cc_id = false, &$changes, $masschange = false)
     {
         global $Language;
 
@@ -1274,8 +1277,8 @@ class Artifact {
         // to this bug (it's a bit paranoid but...)
         $sql = "SELECT artifact_id,email from artifact_cc WHERE artifact_cc_id='". db_ei($artifact_cc_id) ."'";
         $res1 = db_query($sql);
-        if ((db_numrows($res1) <= 0) || (db_result($res1,0,'artifact_id') != $this->getID()) ) {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','err_cc_id',$artifact_cc_id));
+        if ((db_numrows($res1) <= 0) || (db_result($res1, 0, 'artifact_id') != $this->getID())) {
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact', 'err_cc_id', $artifact_cc_id));
             return false;
         }
 
@@ -1285,13 +1288,15 @@ class Artifact {
     // Now delete the CC address
         $res2 = db_query("DELETE FROM artifact_cc WHERE artifact_cc_id='". db_ei($artifact_cc_id) ."'");
         if (!$res2) {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','err_del_cc',array($artifact_cc_id,db_error($res2))));
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact', 'err_del_cc', array($artifact_cc_id,db_error($res2))));
             return false;
         } else {
-            if (!$masschange) $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','cc_remove'));
+            if (!$masschange) {
+                $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact', 'cc_remove'));
+            }
             $new_value=$this->getCCEmails();
-            $this->addHistory('cc',$old_value,$new_value);
-            $changes['CC']['del'] = db_result($res1,0,'email');
+            $this->addHistory('cc', $old_value, $new_value);
+            $changes['CC']['del'] = db_result($res1, 0, 'email');
             return true;
         }
     }
@@ -1324,10 +1329,11 @@ class Artifact {
             "a.group_artifact_id = agl.group_artifact_id AND a.artifact_id=". db_ei($id) ." AND ".
             "agl.status = 'A'";
         $res = db_query($sql);
-        if ( db_numrows($res) >= 1 )
+        if (db_numrows($res) >= 1) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
 
@@ -1345,7 +1351,6 @@ class Artifact {
         //echo $sql;
         $res = db_query($sql);
         return ($res);
-
     }
 
 
@@ -1357,13 +1362,18 @@ class Artifact {
         $sql = "SELECT artifact_cc_id FROM artifact_cc WHERE artifact_id=". db_ei($this->getID()) ;
         $res = db_query($sql);
         if (db_numrows($res) > 0) {
-            for ($i=0;$i<db_numrows($res);$i++) {
-                if ($i==0) $ccNames = db_result($res,$i,'artifact_cc_id');
-                else $ccNames .= ",".db_result($res,$i,'artifact_cc_id');
+            for ($i=0; $i<db_numrows($res); $i++) {
+                if ($i==0) {
+                    $ccNames = db_result($res, $i, 'artifact_cc_id');
+                } else {
+                    $ccNames .= ",".db_result($res, $i, 'artifact_cc_id');
+                }
             }
             $sql = "DELETE FROM artifact_cc WHERE artifact_cc_id IN (". db_es($ccNames) .") AND artifact_id=". db_ei($this->getID()) ;
             $res_del = db_query($sql);
-            if (!$res_del) return false;
+            if (!$res_del) {
+                return false;
+            }
         }
         return true;
     }
@@ -1376,13 +1386,18 @@ class Artifact {
         $sql = "SELECT is_dependent_on_artifact_id FROM artifact_dependencies WHERE artifact_id=". db_ei($this->getID()) ;
         $res = db_query($sql);
         if (db_numrows($res) > 0) {
-            for ($i=0;$i<db_numrows($res);$i++) {
-                if ($i==0) $dependencies = db_result($res,$i,'is_dependent_on_artifact_id');
-                else $dependencies .= ",".db_result($res,$i,'is_dependent_on_artifact_id');
+            for ($i=0; $i<db_numrows($res); $i++) {
+                if ($i==0) {
+                    $dependencies = db_result($res, $i, 'is_dependent_on_artifact_id');
+                } else {
+                    $dependencies .= ",".db_result($res, $i, 'is_dependent_on_artifact_id');
+                }
             }
             $sql = "DELETE FROM artifact_dependencies WHERE is_dependent_on_artifact_id IN (". db_es($dependencies) .") AND artifact_id=". db_ei($this->getID()) ;
             $res_del = db_query($sql);
-            if (!$res_del) return false;
+            if (!$res_del) {
+                return false;
+            }
         }
         return true;
     }
@@ -1396,13 +1411,14 @@ class Artifact {
      *
      * @return bool
      */
-    function addDependencies($artifact_id_dependent,&$changes,$masschange, $import = false)
+    function addDependencies($artifact_id_dependent, &$changes, $masschange, $import = false)
     {
-        if ( !$artifact_id_dependent )
+        if (!$artifact_id_dependent) {
             return true;
+        }
 
         $ok = true;
-        $ids = explode(",",$artifact_id_dependent);
+        $ids = explode(",", $artifact_id_dependent);
         foreach ($ids as $id) {
             // Add this id only if not already exist
             //echo "add id=".$id."<br>";
@@ -1412,21 +1428,22 @@ class Artifact {
 
             // Check existance
             if (!$this->validArtifact($id)) {
-
                 // at import stage, $id can have value "None" or "Aucun"
-                if ( ! $import || $id != $GLOBALS['Language']->getText('global','none')) {
+                if (! $import || $id != $GLOBALS['Language']->getText('global', 'none')) {
                     $ok = false;
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact','invalid_art',$id));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'invalid_art', $id));
                 }
             }
             if ($ok && ($id != $this->getID()) && !$this->existDependency($id)) {
                 $res = $this->insertDependency($id);
-                if (!$res) { $ok = false; }
+                if (!$res) {
+                    $ok = false;
+                }
             }
         }
 
         if (!$ok) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact','depend_add_fail',$this->getID()));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'depend_add_fail', $this->getID()));
         } else {
             $changes['Dependencies']['add'] = $artifact_id_dependent;
         }
@@ -1441,7 +1458,7 @@ class Artifact {
      *
      * @return bool
      */
-    function deleteDependency($dependent_on_artifact_id,&$changes)
+    function deleteDependency($dependent_on_artifact_id, &$changes)
     {
         global $Language;
 
@@ -1452,7 +1469,7 @@ class Artifact {
             $GLOBALS['Response']->addFeedback('error', " - Error deleting dependency $dependent_on_artifact_id: ".db_error());
             return false;
         } else {
-            $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','depend_removed'));
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact', 'depend_removed'));
             $changes['Dependencies']['del'] = $dependent_on_artifact_id;
             return true;
         }
@@ -1466,7 +1483,7 @@ class Artifact {
      *
      * @return bool
      */
-    function deleteFollowupComment($aid,$comment_id)
+    function deleteFollowupComment($aid, $comment_id)
     {
         if ($this->userCanEditFollowupComment($comment_id)) {
             //Delete the followup comment
@@ -1475,28 +1492,27 @@ class Artifact {
                 .' AND artifact_history_id = '. db_ei($comment_id)
                 .' AND artifact_id = '. db_ei($aid) ;
             $res = db_query($sel);
-            $new_value = db_result($res,0,'new_value');
+            $new_value = db_result($res, 0, 'new_value');
             if ($res) {
-                $fname = db_result($res,0,'field_name');
-                if (preg_match("/^(lbl_)/",$fname) && preg_match("/(_comment)$/",$fname)) {
+                $fname = db_result($res, 0, 'field_name');
+                if (preg_match("/^(lbl_)/", $fname) && preg_match("/(_comment)$/", $fname)) {
                     $comment_lbl = $fname;
                 } else {
                     $comment_lbl = "lbl_".$comment_id."_comment";
                 }
                 //now add a new history entry
-                $this->addHistory($comment_lbl,$new_value,'',false,false,$comment_id);
-                $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','comment_removed'));
+                $this->addHistory($comment_lbl, $new_value, '', false, false, $comment_id);
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_common_artifact', 'comment_removed'));
                 return true;
             } else {
-                $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_common_artifact','err_del_comment',array($comment_id,db_error($res))));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'err_del_comment', array($comment_id,db_error($res))));
                 return false;
             }
         } else {
-            $this->setError($GLOBALS['Language']->getText('tracker_common_artifact','err_del_comment', array($comment_id, $GLOBALS['Language']->getText('include_exit','perm_denied'))));
-            $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_common_artifact','err_del_comment', array($comment_id, $GLOBALS['Language']->getText('include_exit','perm_denied'))));
+            $this->setError($GLOBALS['Language']->getText('tracker_common_artifact', 'err_del_comment', array($comment_id, $GLOBALS['Language']->getText('include_exit', 'perm_denied'))));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'err_del_comment', array($comment_id, $GLOBALS['Language']->getText('include_exit', 'perm_denied'))));
             return false;
         }
-
     }
 
     /**
@@ -1539,8 +1555,7 @@ class Artifact {
         .' AND mod_by != 100'
         .' AND artifact_history_id='. db_ei($comment_id);
         $res = db_query($sql);
-        return db_result($res,0,'mod_by');
-
+        return db_result($res, 0, 'mod_by');
     }
 
     /**
@@ -1636,10 +1651,10 @@ class Artifact {
                   '             WHERE field_name = "'. db_es($fname) .'"'.
                   '             AND artifact_id = '. db_ei($this->getID()) .')';
                 $res_latest = db_query($latest);
-                $new_value = db_result($res_latest,0,'new_value');
+                $new_value = db_result($res_latest, 0, 'new_value');
                 if ($new_value <> '') {
                     //if new_value eq '' ==> the followup comment was removed, don't display it
-                    $art_hist_id = db_result($res_latest,0,'artifact_history_id');
+                    $art_hist_id = db_result($res_latest, 0, 'artifact_history_id');
                     $flup_array[$art_hist_id] = $row['date'];
                 }
             }
@@ -1648,7 +1663,7 @@ class Artifact {
         $comment_array = array_keys($flup_array);
 
         $field = $art_field_fact->getFieldFromName('comment_type_id');
-        if ( $field ) {
+        if ($field) {
          // Look for project specific values first
             $sql="SELECT DISTINCT artifact_history.artifact_history_id, artifact_history.format, artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,artifact_field_value_list.value AS comment_type ".
             "FROM artifact_history,artifact_field_value_list,artifact_field,user ".
@@ -1656,12 +1671,12 @@ class Artifact {
             "AND (artifact_history.field_name = 'comment' OR artifact_history.field_name LIKE 'lbl_%_comment') ".
             "AND artifact_history.mod_by=user.user_id ".
             "AND artifact_history.type = artifact_field_value_list.value_id ".
-            "AND artifact_history.artifact_history_id IN (". db_es(implode(',',$comment_array)) .") ".
+            "AND artifact_history.artifact_history_id IN (". db_es(implode(',', $comment_array)) .") ".
             "AND artifact_field_value_list.field_id = artifact_field.field_id ".
             "AND artifact_field_value_list.group_artifact_id = artifact_field.group_artifact_id ".
             "AND artifact_field.group_artifact_id =". db_ei($this->ArtifactType->getID()) ." ".
             "AND artifact_field.field_name = 'comment_type_id' ".
-            "ORDER BY FIELD(artifact_history_id, ". db_es(implode(',',$comment_array)) .")";
+            "ORDER BY FIELD(artifact_history_id, ". db_es(implode(',', $comment_array)) .")";
             $res_value = db_query($sql);
             $rows=db_numrows($res_value);
 
@@ -1673,14 +1688,12 @@ class Artifact {
             "WHERE artifact_history.artifact_id=".$this->getID()." ".
             "AND (artifact_history.field_name = 'comment' OR artifact_history.field_name LIKE 'lbl_%_comment') ".
             "AND artifact_history.mod_by=user.user_id ".
-            "AND artifact_history.artifact_history_id IN (". db_es(implode(',',$comment_array)) .") ".
-            "ORDER BY FIELD(artifact_history_id, ". db_es(implode(',',$comment_array)) .")";
+            "AND artifact_history.artifact_history_id IN (". db_es(implode(',', $comment_array)) .") ".
+            "ORDER BY FIELD(artifact_history_id, ". db_es(implode(',', $comment_array)) .")";
             $res_value = db_query($sql);
             $rows=db_numrows($res_value);
-
         }
         return($res_value);
-
     }
 
     /**
@@ -1753,7 +1766,7 @@ class Artifact {
             for ($i=0; $i < $rows; $i++) {
                 $email_arr[] = db_result($result, $i, 'email');
             }
-            $old_value = join(",",$email_arr);
+            $old_value = join(",", $email_arr);
             return $old_value;
         }
     }
@@ -1841,7 +1854,7 @@ class Artifact {
             for ($i=0; $i < $rows; $i++) {
                 $name_arr[] = db_result($result, $i, 'filename');
             }
-            $old_value = join(',',$name_arr);
+            $old_value = join(',', $name_arr);
             return $old_value;
         }
     }
@@ -1879,7 +1892,7 @@ class Artifact {
         return db_fetch_array($res);
     }
 
-    function checkAssignees($field_name,$result,$art_field_fact,$changes,&$user_ids)
+    function checkAssignees($field_name, $result, $art_field_fact, $changes, &$user_ids)
     {
 
         // check assignee  notification preferences
@@ -1887,14 +1900,14 @@ class Artifact {
         // Check for field 'assigned_to' (SelectBox)
     // assigned to can also be a multi_select_box
         $field = $art_field_fact->getFieldFromName($field_name);
-        if ( $field ) {
+        if ($field) {
             if ($field->getDisplayType() == "MB") {
                         $field_value = $field->getValues($this->getID());
-                if ($field_value && (count($field_value) > 0) ) {
+                if ($field_value && (count($field_value) > 0)) {
                     $val_func = $field->getValueFunction();
-                    if ( $val_func[0] != "") {
+                    if ($val_func[0] != "") {
                         foreach ($field_value as $user_id) {
-                            if ( ($user_id) && ($user_id != 100) ) {
+                            if (($user_id) && ($user_id != 100)) {
                                 $curr_assignee = UserManager::instance()->getUserById($user_id);
                                 if ((!array_key_exists($user_id, $user_ids) || !$user_ids[$user_id]) &&
                                 $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) &&
@@ -1910,10 +1923,10 @@ class Artifact {
        // we handle now also the case that the assigned_to field is NOT BOUND to a predefined value list
        // we accept only names that correspond to codendi user names
                         foreach ($field_value as $value_id) {
-                                        $user_name = $field->getValue($this->ArtifactType->getID(),$value_id);
+                                        $user_name = $field->getValue($this->ArtifactType->getID(), $value_id);
                                         $res_u = user_get_result_set_from_unix($user_name);
-                                        $user_id = db_result($res_u,0,'user_id');
-                            if ( ($user_id) && ($user_id != 100) ) {
+                                        $user_id = db_result($res_u, 0, 'user_id');
+                            if (($user_id) && ($user_id != 100)) {
                                 $curr_assignee = UserManager::instance()->getUserById($user_id);
                                 if (!$user_ids[$user_id] &&
                                 $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) &&
@@ -1935,11 +1948,11 @@ class Artifact {
           // we handle now also the case that the assigned_to field is NOT BOUND to a predefined value list
           // we accept only names that correspond to codendi user names
           // so: this user_id is not a user_id but a value_id
-                    $user_name = $field->getValue($this->ArtifactType->getID(),$user_id);
+                    $user_name = $field->getValue($this->ArtifactType->getID(), $user_id);
                     $res = user_get_result_set_from_unix($user_name);
-                    $user_id = db_result($res,0,'user_id');
+                    $user_id = db_result($res, 0, 'user_id');
                 }
-                if ( ($user_id) && ($user_id != 100) ) {
+                if (($user_id) && ($user_id != 100)) {
                         $curr_assignee = UserManager::instance()->getUserById($user_id);
                     if ((!array_key_exists($user_id, $user_ids) || !$user_ids[$user_id]) &&
                     $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) &&
@@ -1949,7 +1962,6 @@ class Artifact {
                                $user_ids[$user_id] = true;
                     }
                 }
-
             }
         }
 
@@ -1962,11 +1974,11 @@ class Artifact {
         }
         if (isset($user_name) && $user_name) {
         //echo " verify deleted assigned_to - user_name=$user_name ";
-            $del_arr = explode(",",$user_name);
+            $del_arr = explode(",", $user_name);
             foreach ($del_arr as $uname) {
          //echo " uname=$uname ";
                     $res_oa = user_get_result_set_from_unix($uname);
-                    $user_id = db_result($res_oa,0,'user_id');
+                    $user_id = db_result($res_oa, 0, 'user_id');
                    $curr_assignee = UserManager::instance()->getUserById($user_id);
                 if ($user_id != 100 &&
                 !isset($user_ids[$user_id]) &&
@@ -1989,7 +2001,7 @@ class Artifact {
      *      @param $my_user_id    if not specified, use the current user id..
      *      @return bool user_can_view.
      */
-    function userCanView($my_user_id=0)
+    function userCanView($my_user_id = 0)
     {
 
         if (!$my_user_id) {
@@ -1999,14 +2011,14 @@ class Artifact {
             $u = UserManager::instance()->getUserById($my_user_id);
         }
         // Super-user and Tracker admin have all rights to see even artfact that are restricted to all users
-        if ($u->isSuperUser() || $u->isTrackerAdmin($this->ArtifactType->getGroupID(),$this->ArtifactType->getID())) {
+        if ($u->isSuperUser() || $u->isTrackerAdmin($this->ArtifactType->getGroupID(), $this->ArtifactType->getID())) {
             return true;
         }
 
         //Individual artifact permission
         $can_access = ! $this->useArtifactPermissions();
         if (!$can_access) {
-            $res=permission_db_authorized_ugroups('TRACKER_ARTIFACT_ACCESS',$this->getID());
+            $res=permission_db_authorized_ugroups('TRACKER_ARTIFACT_ACCESS', $this->getID());
             if (db_numrows($res) > 0) {
                 while ($row = db_fetch_array($res)) {
                     if (ugroup_user_is_member($my_user_id, $row['ugroup_id'], $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
@@ -2017,7 +2029,7 @@ class Artifact {
         }
         if ($can_access) {
             // Full access
-            $res=permission_db_authorized_ugroups('TRACKER_ACCESS_FULL',$this->ArtifactType->getID());
+            $res=permission_db_authorized_ugroups('TRACKER_ACCESS_FULL', $this->ArtifactType->getID());
             if (db_numrows($res) > 0) {
                 while ($row = db_fetch_array($res)) {
                     if (ugroup_user_is_member($my_user_id, $row['ugroup_id'], $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
@@ -2027,7 +2039,7 @@ class Artifact {
             }
 
             // 'submitter' access
-            $res=permission_db_authorized_ugroups('TRACKER_ACCESS_SUBMITTER',$this->ArtifactType->getID());
+            $res=permission_db_authorized_ugroups('TRACKER_ACCESS_SUBMITTER', $this->ArtifactType->getID());
             if (db_numrows($res) > 0) {
                 while ($row = db_fetch_array($res)) {
                     if (ugroup_user_is_member($my_user_id, $row['ugroup_id'], $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
@@ -2039,7 +2051,7 @@ class Artifact {
                 }
             }
             // 'assignee' access
-            $res=permission_db_authorized_ugroups('TRACKER_ACCESS_ASSIGNEE',$this->ArtifactType->getID());
+            $res=permission_db_authorized_ugroups('TRACKER_ACCESS_ASSIGNEE', $this->ArtifactType->getID());
             if (db_numrows($res) > 0) {
                 while ($row = db_fetch_array($res)) {
                     if (ugroup_user_is_member($my_user_id, $row['ugroup_id'], $this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
@@ -2121,7 +2133,7 @@ class Artifact {
      * @param concerned_addresses (OUT): email addresses of anonymous users (for instance in CC addresses)
      *
      */
-    function buildNotificationArrays($changes,&$concerned_ids,&$concerned_addresses)
+    function buildNotificationArrays($changes, &$concerned_ids, &$concerned_addresses)
     {
 
         global $art_field_fact,$Language;
@@ -2147,8 +2159,8 @@ class Artifact {
 
     // Retrieve field values for the assigned_to, multi_assigned_to value
         $result = $this->getFieldsValues();
-        $this->checkAssignees("assigned_to",$result,$art_field_fact,$changes,$concerned_ids);
-        $this->checkAssignees("multi_assigned_to",$result,$art_field_fact,$changes,$concerned_ids);
+        $this->checkAssignees("assigned_to", $result, $art_field_fact, $changes, $concerned_ids);
+        $this->checkAssignees("multi_assigned_to", $result, $art_field_fact, $changes, $concerned_ids);
 
     // check all CC
         // (a) check all the people in the current CC list
@@ -2163,7 +2175,7 @@ class Artifact {
                 $arr_cc[] = $row['email'];
             }
         }
-        if (isset($changes['CC']) && isset($changes['CC']['del']) && $changes['CC']['del'] ) {
+        if (isset($changes['CC']) && isset($changes['CC']['del']) && $changes['CC']['del']) {
             // Only one CC can be deleted at once so just append it to the list....
             $arr_cc[] = $changes['CC']['del'];
         }
@@ -2175,7 +2187,7 @@ class Artifact {
                 $concerned_addresses[util_normalize_email($cc)] = true;
             } else {
                 $res = user_get_result_set_from_unix($cc);
-                $user_id = db_result($res,0,'user_id');
+                $user_id = db_result($res, 0, 'user_id');
                 if (!isset($concerned_ids[$user_id]) && $this->ArtifactType->checkNotification($user_id, 'CC', $changes)) {
             //echo "DBG - CC - user=$user_id<br>";
                     $concerned_ids[$user_id] = true;
@@ -2214,7 +2226,9 @@ class Artifact {
         }
 
         foreach (array_keys($concerned_watchers) as $watcher) {
-            if (!$concerned_ids[$watcher]) $concerned_ids[$watcher] = true;
+            if (!$concerned_ids[$watcher]) {
+                $concerned_ids[$watcher] = true;
+            }
         }
     }
 
@@ -2230,7 +2244,7 @@ class Artifact {
      * $ugroup_sets[x] are the ugroups that the users in $user_sets[x]
      * belong to
      */
-    function groupNotificationList($user_ids,&$user_sets,&$ugroup_sets)
+    function groupNotificationList($user_ids, &$user_sets, &$ugroup_sets)
     {
 
         $group_id = $this->ArtifactType->getGroupID();
@@ -2243,18 +2257,18 @@ class Artifact {
       //for each user have a look at which ugroups he belongs
 
         foreach ($user_ids as $user_id) {
-            $specific_ugroups = ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$user_id);
+            $specific_ugroups = ugroup_db_list_tracker_ugroups_for_user($group_id, $group_artifact_id, $user_id);
    //echo "<br>specific_ugroups for $user_id = "; print_r($specific_ugroups);
-            $dynamic_ugroups = ugroup_db_list_dynamic_ugroups_for_user($group_id,$group_artifact_id,$user_id);
+            $dynamic_ugroups = ugroup_db_list_dynamic_ugroups_for_user($group_id, $group_artifact_id, $user_id);
    //echo "<br>dynamic_ugroups for $user_id = "; print_r($dynamic_ugroups);
             $all_ugroups = array_merge($dynamic_ugroups, $specific_ugroups);
    //echo "<br>all_ugroups for $user_id = "; print_r($all_ugroups);
 
             $found_gr = false;
             foreach ($ugroup_sets as $x => $ug) {
-                     $diff1 = array_diff($ug,$all_ugroups);
-                     $diff2 = array_diff($all_ugroups,$ug);
-                if ( empty($diff1) && empty($diff2) ) {
+                     $diff1 = array_diff($ug, $all_ugroups);
+                     $diff2 = array_diff($all_ugroups, $ug);
+                if (empty($diff1) && empty($diff2)) {
          // we found the magic users that are part of exactly the same ugroups as this user
                     $gr = $user_sets[$x];
                     $gr[] = $user_id;
@@ -2270,7 +2284,6 @@ class Artifact {
                      $ugroup_sets[] = $all_ugroups;
             }
         }
-
     }
 
     /**
@@ -2296,7 +2309,7 @@ class Artifact {
         }
 
         $com_res = $this->getOriginalCommentSubmitter($comment_id);
-        $commenter = db_result($com_res,0,'mod_by');
+        $commenter = db_result($com_res, 0, 'mod_by');
         if ($commenter == $user_id) {
             return true;
         } else {
@@ -2318,11 +2331,11 @@ class Artifact {
                 FROM artifact_history 
                 WHERE artifact_history_id = '. db_ei($comment_id) ;
         $res = db_query($sql);
-        if (db_result($res,0,'new_value') == "") {
+        if (db_result($res, 0, 'new_value') == "") {
             return true;
         }
         $lbl = "lbl_".$comment_id."_comment";
-        $aid = db_result($res,0,'artifact_id');
+        $aid = db_result($res, 0, 'artifact_id');
         $qry = 'SELECT NULL FROM artifact_history'
         .' WHERE artifact_id = '. db_ei($aid)
         .' AND field_name = "'. db_es($lbl) .'"'
@@ -2333,7 +2346,6 @@ class Artifact {
         } else {
             return false;
         }
-
     }
 
     /**
@@ -2350,12 +2362,12 @@ class Artifact {
                 FROM artifact_history
                 WHERE artifact_history_id = '. db_ei($comment_id) ;
         $res = db_query($sql);
-        $field_name = db_result($res,0,'field_name');
+        $field_name = db_result($res, 0, 'field_name');
         if ($field_name == "comment") {
             return $res;
-        } else if (preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) {
+        } elseif (preg_match("/^(lbl_)/", $field_name) && preg_match("/(_comment)$/", $field_name)) {
          // extract id of the original comment
-            $id = (int) substr($field_name,4,-8);
+            $id = (int) substr($field_name, 4, -8);
             $qry = 'SELECT mod_by, email 
                     FROM artifact_history
                     WHERE artifact_history_id = '. db_ei($id) .'
@@ -2363,7 +2375,6 @@ class Artifact {
             $result = db_query($qry);
             return $result;
         }
-
     }
 
     /**
@@ -2379,12 +2390,12 @@ class Artifact {
                 FROM artifact_history
                 WHERE artifact_history_id = '. db_ei($comment_id) ;
         $res = db_query($sql);
-        $field_name = db_result($res,0,'field_name');
+        $field_name = db_result($res, 0, 'field_name');
         if ($field_name == "comment") {
             return $res;
-        } else if (preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) {
+        } elseif (preg_match("/^(lbl_)/", $field_name) && preg_match("/(_comment)$/", $field_name)) {
          // extract id of the original comment
-            $id = (int) substr($field_name,4,-8);
+            $id = (int) substr($field_name, 4, -8);
             $qry = 'SELECT date
                     FROM artifact_history
                     WHERE artifact_history_id = '. db_ei($id) .'
@@ -2403,7 +2414,7 @@ class Artifact {
     *
     * @return void
     */
-    function mailFollowupWithPermissions($more_addresses=false,$changes=false)
+    function mailFollowupWithPermissions($more_addresses = false, $changes = false)
     {
         global $art_field_fact,$Language;
 
@@ -2422,7 +2433,7 @@ class Artifact {
                     if ($address['address'] && $address['address'] != '') {
                         $res_username = user_get_result_set_from_email($address['address'], false);
                         if ($res_username && (db_numrows($res_username) == 1)) {
-                            $u_id = db_result($res_username,0,'user_id');
+                            $u_id = db_result($res_username, 0, 'user_id');
                             if (!$address['check_permissions']) {
                                 $curr_user = UserManager::instance()->getUserById($u_id);
                                 if ($curr_user->isActive() || $curr_user->isRestricted()) {
@@ -2448,11 +2459,11 @@ class Artifact {
           //withoutpermissions_concerned_addresses contains emails for which there is no permissions check
 
           //Prepare e-mail
-            list($host,) = explode(':',$GLOBALS['sys_default_domain']);
+            list($host,) = explode(':', $GLOBALS['sys_default_domain']);
 
           //treat anonymous users
-            $text_mail = $this->createMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
-            $html_mail = $this->createHTMLMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
+            $text_mail = $this->createMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']), $changes, $group_id, $group_artifact_id, $ok, $subject);
+            $html_mail = $this->createHTMLMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']), $changes, $group_id, $group_artifact_id, $ok, $subject);
 
             if ($ok) {
                 $this->sendNotification(array_keys($concerned_addresses), $subject, $text_mail, $html_mail);
@@ -2460,20 +2471,19 @@ class Artifact {
 
           //treat 'without permissions' emails
             if (count($withoutpermissions_concerned_addresses)) {
-                $text_mail = $this->createMailForUsers(false,$changes,$group_id,$group_artifact_id,$ok,$subject);
-                $html_mail = $this->createHTMLMailForUsers(false,$changes,$group_id,$group_artifact_id,$ok,$subject);
+                $text_mail = $this->createMailForUsers(false, $changes, $group_id, $group_artifact_id, $ok, $subject);
+                $html_mail = $this->createHTMLMailForUsers(false, $changes, $group_id, $group_artifact_id, $ok, $subject);
 
                 if ($ok) {
                     $this->sendNotification(array_keys($withoutpermissions_concerned_addresses), $subject, $text_mail, $html_mail);
                 }
-
             }
 
           //now group other registered users
 
        //echo "<br>concerned_ids = ".implode(',',array_keys($concerned_ids));
 
-            $this->groupNotificationList(array_keys($concerned_ids),$user_sets,$ugroup_sets);
+            $this->groupNotificationList(array_keys($concerned_ids), $user_sets, $ugroup_sets);
 
        //echo "<br>user_sets = "; print_r($user_sets); echo ", ugroup_sets = "; print_r($ugroup_sets);
             foreach ($ugroup_sets as $x => $ugroups) {
@@ -2481,9 +2491,11 @@ class Artifact {
 
                  $user_ids = $user_sets[$x];
                  //echo "<br>--->  preparing mail $x for ";print_r($user_ids);
-                 $text_mail = $this->createMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,$ok,$subject);
-                 $html_mail = $this->createHTMLMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,$ok,$subject);
-                 if (!$ok) continue; //don't send the mail if nothing permitted for this user group
+                 $text_mail = $this->createMailForUsers($ugroups, $changes, $group_id, $group_artifact_id, $ok, $subject);
+                 $html_mail = $this->createHTMLMailForUsers($ugroups, $changes, $group_id, $group_artifact_id, $ok, $subject);
+                if (!$ok) {
+                    continue; //don't send the mail if nothing permitted for this user group
+                }
 
                 foreach ($user_ids as $user_id) {
                     $arr_addresses[] = user_getemail($user_id);
@@ -2539,8 +2551,8 @@ class Artifact {
      */
     function sendMail(Codendi_Mail_Interface $mail, $subject, array $to)
     {
-        $mail->addAdditionalHeader("X-Codendi-Project",     $this->ArtifactType->getGroup()->getUnixName());
-        $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
+        $mail->addAdditionalHeader("X-Codendi-Project", $this->ArtifactType->getGroup()->getUnixName());
+        $mail->addAdditionalHeader("X-Codendi-Artifact", $this->ArtifactType->getItemName());
         $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setTo(join(',', $to));
@@ -2551,7 +2563,7 @@ class Artifact {
     /** for a certain set of users being part of the same ugroups
      * create the mail body containing only fields that they have the permission to read
      */
-    function createHTMLMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,&$ok,&$subject)
+    function createHTMLMailForUsers($ugroups, $changes, $group_id, $group_artifact_id, &$ok, &$subject)
     {
         global $art_field_fact,$art_fieldset_fact,$Language;
 
@@ -2586,7 +2598,9 @@ class Artifact {
         $body .= '<h1>'. $summ .'</h1>';
         if ($changes) {
             $body .= $this->formatChangesHTML($changes, $field_perm, $artifact_href, $visible_change);
-            if (!$visible_change) return;
+            if (!$visible_change) {
+                return;
+            }
         }
         $ok = true;
 
@@ -2597,8 +2611,7 @@ class Artifact {
         $columns_number = ($fields_per_line * 2) + ($fields_per_line - 1);
         $max_size=40;
         $snapshot = '';
-        foreach($used_fieldsets as $fieldset_id => $result_fieldset) {
-
+        foreach ($used_fieldsets as $fieldset_id => $result_fieldset) {
             // this variable will tell us if we have to display the fieldset or not (if there is at least one field to display or not)
             $display_fieldset = false;
 
@@ -2610,11 +2623,10 @@ class Artifact {
                 if ($field->getName() != 'comment_type_id' && $field->getName() != 'artifact_id') {
                     $field_html = $this->_getFieldLabelAndValueForHTMLMail($group_id, $group_artifact_id, $field, $field_perm);
                     if ($field_html) {
-
                         // if the user can read at least one field, we can display the fieldset this field is within
                         $display_fieldset = true;
 
-                        list($sz,) = explode("/",$field->getDisplaySize());
+                        list($sz,) = explode("/", $field->getDisplaySize());
 
                         // Details field must be on one row
                         if ($sz > $max_size || $field->getName()=='details') {
@@ -2704,7 +2716,7 @@ class Artifact {
     {
         return '<p align="right" class="cta">
             <a href="'. $artifact_href .'" target="_blank" rel="noreferrer">' .
-            $GLOBALS['Language']->getText('tracker_include_artifact','mail_answer_now') .
+            $GLOBALS['Language']->getText('tracker_include_artifact', 'mail_answer_now') .
             '</a>
             </p>';
     }
@@ -2720,9 +2732,8 @@ class Artifact {
         $read_only = true;
         $field_name = $field->getName();
         if ($field_perm === false || (isset($field_perm[$field_name]) && $field_perm[$field_name] && permission_can_read_field($field_perm[$field_name]))) {
-
             // For multi select box, we need to retrieve all the values
-            if ( $field->isMultiSelectBox() ) {
+            if ($field->isMultiSelectBox()) {
                 $field_value = $field->getValues($this->getID());
             } else {
                 $field_value = $this->getValue($field->getName());
@@ -2730,14 +2741,14 @@ class Artifact {
 
             $field_html  = new ArtifactFieldHtml($field);
             $field_html->disableJavascript();
-            $label = $field_html->labelDisplay(false,false,false);
+            $label = $field_html->labelDisplay(false, false, false);
 
             if ($field->getName() == 'submitted_by') {
                 $value = util_user_link(user_getname($field_value));
-            } else if ($field->getName() == 'open_date') {
-                $value = format_date($GLOBALS['Language']->getText('system', 'datefmt'),$field_value);
-            } else if ($field->getName() == 'last_update_date') {
-                $value = format_date($GLOBALS['Language']->getText('system', 'datefmt'),$field_value);
+            } elseif ($field->getName() == 'open_date') {
+                $value = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $field_value);
+            } elseif ($field->getName() == 'last_update_date') {
+                $value = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $field_value);
             } else {
                 $value = $field_html->display($this->ArtifactType->getID(), $field_value, false, false, $read_only, false, false, 0, false, 0, false, 0, false, $this->ArtifactType->getGroupID());
             }
@@ -2749,7 +2760,7 @@ class Artifact {
     /** for a certain set of users being part of the same ugroups
      * create the mail body containing only fields that they have the permission to read
      */
-    function createMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,&$ok,&$subject)
+    function createMailForUsers($ugroups, $changes, $group_id, $group_artifact_id, &$ok, &$subject)
     {
         global $art_field_fact,$art_fieldset_fact,$Language;
 
@@ -2784,10 +2795,12 @@ class Artifact {
         // artifact fields - Changes first if there are some.
         if ($changes) {
             $body = $GLOBALS['sys_lf']."=============   ".strtoupper(SimpleSanitizer::unsanitize($this->ArtifactType->getName()))." #".$this->getID().
-            ": ".$Language->getText('tracker_include_artifact','latest_modif')."   =============". $GLOBALS['sys_lf'] . $artifact_href . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] .
-            $this->formatChanges($changes,$field_perm,$visible_change) . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."";
+            ": ".$Language->getText('tracker_include_artifact', 'latest_modif')."   =============". $GLOBALS['sys_lf'] . $artifact_href . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] .
+            $this->formatChanges($changes, $field_perm, $visible_change) . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."";
 
-            if (!$visible_change) return;
+            if (!$visible_change) {
+                return;
+            }
         }
         $ok = true;
 
@@ -2796,7 +2809,7 @@ class Artifact {
 
         // We write the name of the project
         $pm = ProjectManager::instance();
-        $full_snapshot .= sprintf($fmt_left . $GLOBALS['sys_lf'] ."",$Language->getText('tracker_include_artifact','project').' '.util_unconvert_htmlspecialchars($pm->getProject($group_id)->getPublicName() ));
+        $full_snapshot .= sprintf($fmt_left . $GLOBALS['sys_lf'] ."", $Language->getText('tracker_include_artifact', 'project').' '.util_unconvert_htmlspecialchars($pm->getProject($group_id)->getPublicName()));
 
         // Write all the fields, grouped by fieldsetset and ordered by rank.
         $left = 1;
@@ -2809,24 +2822,28 @@ class Artifact {
             // fetch list of used fields and the current field values
             // for this artifact
             foreach ($used_fields as $field) {
-
                 $field_name = $field->getName();
 
                 if ($field_perm === false || (isset($field_perm[$field_name]) && $field_perm[$field_name] && permission_can_read_field($field_perm[$field_name]))) {
-
                     $field_html = new ArtifactFieldHtml($field);
 
                     $visible_fieldset = true;
                     $visible_snapshot = true;
 
                     // For multi select box, we need to retrieve all the values
-                    if ( $field->isMultiSelectBox() ) {
+                    if ($field->isMultiSelectBox()) {
                         $field_value = $field->getValues($this->getID());
                     } else {
                         $field_value = $this->getValue($field->getName());
                     }
-                    $display = $field_html->display($group_artifact_id,
-                                  $field_value,false,true,true,true);
+                    $display = $field_html->display(
+                        $group_artifact_id,
+                        $field_value,
+                        false,
+                        true,
+                        true,
+                        true
+                    );
                     $item = sprintf(($left? $fmt_left : $fmt_right), $display);
                     if (strlen($item) > $fmt_len) {
                         if (! $left) {
@@ -2843,7 +2860,6 @@ class Artifact {
                         }
                     }
                 }
-
             } // while
 
             if ($visible_fieldset) {
@@ -2855,10 +2871,12 @@ class Artifact {
             }
         }
 
-        if ($visible_snapshot) $full_snapshot .= "". $GLOBALS['sys_lf'] ."";
+        if ($visible_snapshot) {
+            $full_snapshot .= "". $GLOBALS['sys_lf'] ."";
+        }
 
         $body .= "=============   ".strtoupper(SimpleSanitizer::unsanitize($this->ArtifactType->getName()))." #".$this->getID().
-        ": ".$Language->getText('tracker_include_artifact','full_snapshot')."   =============". $GLOBALS['sys_lf'] .
+        ": ".$Language->getText('tracker_include_artifact', 'full_snapshot')."   =============". $GLOBALS['sys_lf'] .
         ($changes ? '':$artifact_href) . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $full_snapshot;
 
         if (! $left) {
@@ -2874,16 +2892,16 @@ class Artifact {
         $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $this->showCCList($group_id, $group_artifact_id, true);
 
         // Then output the dependencies
-        $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $this->showDependencies($group_id,$group_artifact_id,true);
+        $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $this->showDependencies($group_id, $group_artifact_id, true);
 
         // Then output the history of attached files from newest to oldest
-        $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $this->showAttachedFiles($group_id,$group_artifact_id,true);
+        $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $this->showAttachedFiles($group_id, $group_artifact_id, true);
 
         // Extract references from the message
         $referenceManager = ReferenceManager::instance();
         $ref_array = $referenceManager->extractReferencesGrouped($body, $group_id);
         if (count($ref_array) > 0) {
-            $body .= $GLOBALS['sys_lf'].$GLOBALS['sys_lf'].$Language->getText('tracker_include_artifact','references').$GLOBALS['sys_lf'];
+            $body .= $GLOBALS['sys_lf'].$GLOBALS['sys_lf'].$Language->getText('tracker_include_artifact', 'references').$GLOBALS['sys_lf'];
         }
         foreach ($ref_array as $description => $match_array) {
             $body .= $GLOBALS['sys_lf'].$description.":".$GLOBALS['sys_lf'];
@@ -2893,7 +2911,7 @@ class Artifact {
         }
 
         // Finally output the message trailer
-        $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $Language->getText('tracker_include_artifact','follow_link');
+        $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $Language->getText('tracker_include_artifact', 'follow_link');
         $body .= "". $GLOBALS['sys_lf'] . $artifact_href;
 
         if ($ok) {
@@ -2939,7 +2957,7 @@ class Artifact {
     *
     * @return string
     */
-    function formatChanges($changes,$field_perm,&$visible_change)
+    function formatChanges($changes, $field_perm, &$visible_change)
     {
 
         global $art_field_fact,$Language;
@@ -2956,18 +2974,18 @@ class Artifact {
             (!isset($field_perm['assigned_to']) && !isset($field_perm['multi_assigned_to']))) {
             $user = UserManager::instance()->getCurrentUser();
             if ($user->isLoggedIn()) {
-                   $out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.$user->getRealName().' <'.$user->getEmail().">". $GLOBALS['sys_lf'] ."";
-                   $out_hdr .= $Language->getText('tracker_import_utils','date').': '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time()).' ('.user_get_timezone().')';
+                   $out_hdr = $Language->getText('tracker_include_artifact', 'changes_by').' '.$user->getRealName().' <'.$user->getEmail().">". $GLOBALS['sys_lf'] ."";
+                   $out_hdr .= $Language->getText('tracker_import_utils', 'date').': '.format_date($GLOBALS['Language']->getText('system', 'datefmt'), time()).' ('.user_get_timezone().')';
             } else {
-                   $out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.$Language->getText('tracker_include_artifact','anon_user').'        '.$Language->getText('tracker_import_utils','date').': '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time());
+                   $out_hdr = $Language->getText('tracker_include_artifact', 'changes_by').' '.$Language->getText('tracker_include_artifact', 'anon_user').'        '.$Language->getText('tracker_import_utils', 'date').': '.format_date($GLOBALS['Language']->getText('system', 'datefmt'), time());
             }
         }
         //Process special cases first: follow-up comment
         if (array_key_exists('comment', $changes) && $changes['comment']) {
             $visible_change = true;
-            $out_com = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."---------------   ".$Language->getText('tracker_include_artifact','add_flup_comment')."   ----------------". $GLOBALS['sys_lf'] ."";
+            $out_com = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."---------------   ".$Language->getText('tracker_include_artifact', 'add_flup_comment')."   ----------------". $GLOBALS['sys_lf'] ."";
 
-            if (isset($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global','none') && $changes['comment']['type'] != '') {
+            if (isset($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global', 'none') && $changes['comment']['type'] != '') {
                  $out_com .= "[".$changes['comment']['type']."]".$GLOBALS['sys_lf'];
             }
             $out_com .= $this->formatFollowUp(null, $changes['comment']['format'], $changes['comment']['add'], self::OUTPUT_MAIL_TEXT);
@@ -2977,9 +2995,12 @@ class Artifact {
            //Process special cases first: file attachment
         if (array_key_exists('attach', $changes) && $changes['attach']) {
             $visible_change = true;
-            $out_att = "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."---------------    ".$Language->getText('tracker_include_artifact','add_attachment')."     -----------------". $GLOBALS['sys_lf'] ."";
-            $out_att .= sprintf($Language->getText('tracker_include_artifact','file_name')." %-30s ".$Language->getText('tracker_include_artifact','size').":%d KB". $GLOBALS['sys_lf'] ."",$changes['attach']['name'],
-            intval($changes['attach']['size']/1024) );
+            $out_att = "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."---------------    ".$Language->getText('tracker_include_artifact', 'add_attachment')."     -----------------". $GLOBALS['sys_lf'] ."";
+            $out_att .= sprintf(
+                $Language->getText('tracker_include_artifact', 'file_name')." %-30s ".$Language->getText('tracker_include_artifact', 'size').":%d KB". $GLOBALS['sys_lf'] ."",
+                $changes['attach']['name'],
+                intval($changes['attach']['size']/1024)
+            );
             $out_att .= $changes['attach']['description'] . $GLOBALS['sys_lf'] . $changes['attach']['href'];
             unset($changes['attach']);
         }
@@ -2989,11 +3010,10 @@ class Artifact {
             // If both removed and added items are empty skip - Sanity check
             if (((isset($h['del']) && $h['del']) || (isset($h['add']) && $h['add']))
                 && $this->hasFieldPermission($field_perm, $field_name)) {
-
                 $visible_change = true;
                 $label = $field_name;
                 $field = $art_field_fact->getFieldFromName($field_name);
-                if ( $field ) {
+                if ($field) {
                     $label = $field->getLabel();
                     if (isset($h['del'])) {
                         $h['del'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['del']));
@@ -3002,12 +3022,12 @@ class Artifact {
                         $h['add'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['add']));
                     }
                 }
-                $out .= sprintf($fmt, SimpleSanitizer::unsanitize($label), isset($h['del'])?$h['del']:"",isset($h['add'])?$h['add']:"");
+                $out .= sprintf($fmt, SimpleSanitizer::unsanitize($label), isset($h['del'])?$h['del']:"", isset($h['add'])?$h['add']:"");
             }
         } // while
 
         if ($out) {
-            $out = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . sprintf($fmt,$Language->getText('tracker_include_artifact','what').'    ',$Language->getText('tracker_include_artifact','removed'),$Language->getText('tracker_include_artifact','added')).
+            $out = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . sprintf($fmt, $Language->getText('tracker_include_artifact', 'what').'    ', $Language->getText('tracker_include_artifact', 'removed'), $Language->getText('tracker_include_artifact', 'added')).
                 "------------------------------------------------------------------". $GLOBALS['sys_lf'] . $out;
         }
 
@@ -3039,7 +3059,7 @@ class Artifact {
 
         $hp = $this->getHTMLPurifier();
 
-        $out .= '<h2>'.$Language->getText('tracker_include_artifact','mail_latest_modifications').'</h2>';
+        $out .= '<h2>'.$Language->getText('tracker_include_artifact', 'mail_latest_modifications').'</h2>';
         $out .= '
             <div class="tracker_artifact_followup_header">
                 <div class="tracker_artifact_followup_title">
@@ -3053,7 +3073,7 @@ class Artifact {
             if ($user->isLoggedIn()) {
                 $out .= '<a href="mailto:'.$hp->purify($user->getEmail()).'">'.$hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()) .')</a>';
             } else {
-                $out = $Language->getText('tracker_include_artifact','anon_user');
+                $out = $Language->getText('tracker_include_artifact', 'anon_user');
             }
         }
 
@@ -3076,7 +3096,7 @@ class Artifact {
         //Process special cases first: follow-up comment
         if (!empty($changes['comment'])) {
             $visible_change = true;
-            if (!empty($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global','none')) {
+            if (!empty($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global', 'none')) {
                 $out_com .= "<strong>[". $changes['comment']['type'] ."]</strong><br />";
             }
             $out_com .= '<div class="tracker_artifact_followup_comment_body">';
@@ -3088,7 +3108,7 @@ class Artifact {
         if (!empty($changes['attach'])) {
             $visible_change = true;
             $out_ch .= '<tr>';
-            $out_ch .= '<td valign="top"><strong>'. $Language->getText('tracker_include_artifact','add_attachment') .'</strong></td>';
+            $out_ch .= '<td valign="top"><strong>'. $Language->getText('tracker_include_artifact', 'add_attachment') .'</strong></td>';
             $out_ch .= '<td valign="top"><a href="'.$changes['attach']['href'].'">'.$hp->purify($changes['attach']['name']).'</a> ('.size_readable($changes['attach']['size']).')</td>';
             $out_ch .= '</tr>';
             unset($changes['attach']);
@@ -3102,7 +3122,7 @@ class Artifact {
                 $visible_change = true;
                 $label          = $field_name;
                 $field          = $art_field_fact->getFieldFromName($field_name);
-                if ( $field ) {
+                if ($field) {
                     $label = $field->getLabel();
                     if (isset($h['del'])) {
                         $h['del'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['del']));
@@ -3120,7 +3140,7 @@ class Artifact {
                     $callback = array(Codendi_HTMLPurifier::instance(), 'purify');
                     $d = new Codendi_Diff(
                         array_map($callback, $before, array_fill(0, count($before), CODENDI_PURIFIER_CONVERT_HTML)),
-                        array_map($callback, $after,  array_fill(0, count($after),  CODENDI_PURIFIER_CONVERT_HTML))
+                        array_map($callback, $after, array_fill(0, count($after), CODENDI_PURIFIER_CONVERT_HTML))
                     );
                     $f = new Codendi_HtmlUnifiedDiffFormatter(2);
                     $diff = $f->format($d);
@@ -3152,7 +3172,7 @@ class Artifact {
         }
         if ($out_ch) {
             $out_ch = '<div class="tracker_artifact_followup_comment_changes">' .
-                $Language->getText('tracker_include_artifact','mail_changes').'<table cellpadding="0" border="0" cellspacing="0" class="artifact_changes">' .
+                $Language->getText('tracker_include_artifact', 'mail_changes').'<table cellpadding="0" border="0" cellspacing="0" class="artifact_changes">' .
                 $out_ch .
                 '</table>
                 </div>';
@@ -3190,15 +3210,16 @@ class Artifact {
             $group_artifact_id = $this->ArtifactType->getID();
             //$group_id = $group->getGroupId();
 
-        $result=$this->getFollowups ();
+        $result=$this->getFollowups();
         $rows=db_numrows($result);
 
         // No followup comment -> return now
         if ($rows <= 0) {
-                    if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL_TEXT)
-                        $out = $GLOBALS['sys_lf'].$GLOBALS['sys_lf']." ".$Language->getText('tracker_import_utils','no_followups').$GLOBALS['sys_lf'];
-            else
-                        $out = '<H4>'.$Language->getText('tracker_import_utils','no_followups').'</H4>';
+            if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL_TEXT) {
+                $out = $GLOBALS['sys_lf'].$GLOBALS['sys_lf']." ".$Language->getText('tracker_import_utils', 'no_followups').$GLOBALS['sys_lf'];
+            } else {
+                $out = '<H4>'.$Language->getText('tracker_import_utils', 'no_followups').'</H4>';
+            }
                     return $out;
         }
 
@@ -3206,7 +3227,7 @@ class Artifact {
 
         // Header first
         if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL_TEXT) {
-            $out .= $Language->getText('tracker_include_artifact','follow_ups').$GLOBALS['sys_lf'].str_repeat("*",strlen($Language->getText('tracker_include_artifact','follow_ups')));
+            $out .= $Language->getText('tracker_include_artifact', 'follow_ups').$GLOBALS['sys_lf'].str_repeat("*", strlen($Language->getText('tracker_include_artifact', 'follow_ups')));
         } else {
             if ($rows > 0) {
                 $out .= '<div style="text-align:right">';
@@ -3226,9 +3247,9 @@ class Artifact {
                     var linked_comment_id = matches ? matches[1] : null;
                     </script>';
                 $out .= '<a href="#expand_all" onclick="tracker_expand_all_comments(); return false;">'.
-                 $Language->getText('tracker_include_artifact','expand_all').
+                 $Language->getText('tracker_include_artifact', 'expand_all').
                  '</a> | <a href="#expand_all" onclick="tracker_collapse_all_comments(); return false;">'.
-                 $Language->getText('tracker_include_artifact','collapse_all').'</a></div>';
+                 $Language->getText('tracker_include_artifact', 'collapse_all').'</a></div>';
             }
         }
 
@@ -3244,7 +3265,7 @@ class Artifact {
             $value = db_result($result, $i, 'new_value');
             $isHtml = db_result($result, $i, 'format');
 
-            if ( ($comment_type_id == 100) ||($comment_type == "") ) {
+            if (($comment_type_id == 100) ||($comment_type == "")) {
                 $comment_type = '';
             } else {
                 $comment_type = '['.SimpleSanitizer::unsanitize($comment_type).']';
@@ -3252,14 +3273,15 @@ class Artifact {
 
             if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL_TEXT) {
                 $fmt = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."------------------------------------------------------------------". $GLOBALS['sys_lf'].
-                    $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s". $GLOBALS['sys_lf'] ."%s";
+                    $Language->getText('tracker_import_utils', 'date').": %-30s".$Language->getText('global', 'by').": %s". $GLOBALS['sys_lf'] ."%s";
                 //The mail body
                 $comment_txt = $this->formatFollowUp($group_id, $isHtml, $value, $output);
-                $out .= sprintf($fmt,
-                                format_date(util_get_user_preferences_export_datefmt(),db_result($orig_date, 0, 'date')),
-                                (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
-                                ($comment_type != '' ? $comment_type.$GLOBALS['sys_lf'] : '') . $comment_txt
-                                );
+                $out .= sprintf(
+                    $fmt,
+                    format_date(util_get_user_preferences_export_datefmt(), db_result($orig_date, 0, 'date')),
+                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
+                    ($comment_type != '' ? $comment_type.$GLOBALS['sys_lf'] : '') . $comment_txt
+                );
             } else {
                 $style = '';
                 $toggle = 'ic/toggle_minus.png';
@@ -3321,7 +3343,7 @@ class Artifact {
                 $out .= html_time_ago(db_result($orig_date, 0, 'date'));
                 $out .= '</span>';
                 if ($field_name != "comment") {
-                    $out .= "  (".$GLOBALS['Language']->getText('tracker_include_artifact','last_edited')." ";
+                    $out .= "  (".$GLOBALS['Language']->getText('tracker_include_artifact', 'last_edited')." ";
                     $out .= '<span class="followup_comment_title_edited_user">';
                     if (db_result($result, $i, 'mod_by')==100) {
                         $out .= db_result($result, $i, 'email');
@@ -3347,12 +3369,12 @@ class Artifact {
                     $out .= '</a>\');</script>';
                 }
                 if ($this->userCanEditFollowupComment($comment_id) && !$pv) {
-                    $out .= '<a href="/tracker/?func=editcomment&group_id='.(int)$group_id.'&aid='.(int)$this->getID().'&atid='.(int)$group_artifact_id.'&artifact_history_id='.(int)$comment_id.'" title="'. $GLOBALS['Language']->getText('tracker_fieldeditor','edit').'">';
-                    $out .= $GLOBALS['HTML']->getImage('ic/edit.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('tracker_fieldeditor','edit')));
+                    $out .= '<a href="/tracker/?func=editcomment&group_id='.(int)$group_id.'&aid='.(int)$this->getID().'&atid='.(int)$group_artifact_id.'&artifact_history_id='.(int)$comment_id.'" title="'. $GLOBALS['Language']->getText('tracker_fieldeditor', 'edit').'">';
+                    $out .= $GLOBALS['HTML']->getImage('ic/edit.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('tracker_fieldeditor', 'edit')));
                     $out .= '</a>';
                     $out .= '<a href="/tracker/?func=delete_comment&group_id='.(int)$group_id.'&aid='.(int)$this->getID().'&atid='.(int)$group_artifact_id.'&artifact_history_id='.(int)$comment_id.'" ';
-                    $out .= ' onClick="return confirm(\''. $GLOBALS['Language']->getText('tracker_include_artifact','delete_comment') .'\')" title="'. $GLOBALS['Language']->getText('tracker_include_artifact','del') .'">';
-                    $out .= $GLOBALS['HTML']->getImage('ic/close.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('tracker_include_artifact','del')));
+                    $out .= ' onClick="return confirm(\''. $GLOBALS['Language']->getText('tracker_include_artifact', 'delete_comment') .'\')" title="'. $GLOBALS['Language']->getText('tracker_include_artifact', 'del') .'">';
+                    $out .= $GLOBALS['HTML']->getImage('ic/close.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('tracker_include_artifact', 'del')));
                     $out .= '</a>';
                 }
                 $out .= "\n</div><!-- followup_comment_title_toolbar -->\n";
@@ -3376,9 +3398,9 @@ class Artifact {
             if ($rows > 0) {
                 $out .= '<div style="text-align:right">';
                 $out .= '<a href="#expand_all" onclick="tracker_expand_all_comments(); return false;">'.
-                $Language->getText('tracker_include_artifact','expand_all').
+                $Language->getText('tracker_include_artifact', 'expand_all').
                 '</a> | <a href="#expand_all" onclick="tracker_collapse_all_comments(); return false;">'.
-                $Language->getText('tracker_include_artifact','collapse_all').'</a></div>';
+                $Language->getText('tracker_include_artifact', 'collapse_all').'</a></div>';
             }
         }
 
@@ -3386,7 +3408,6 @@ class Artifact {
         $out .= (($output != self::OUTPUT_BROWSER) ? $GLOBALS['sys_lf'] : "");
 
         return($out);
-
     }
 
                 /**
@@ -3398,7 +3419,7 @@ class Artifact {
          *
          * @return void
          */
-    function showCCList($group_id, $group_artifact_id, $ascii=false, $pv = 0)
+    function showCCList($group_id, $group_artifact_id, $ascii = false, $pv = 0)
     {
         $hp = Codendi_HTMLPurifier::instance();
         global $Language;
@@ -3410,31 +3431,31 @@ class Artifact {
 
         // Nobody in the CC list -> return now
         if ($rows <= 0) {
-                    if ($ascii)
-                        $out = $Language->getText('tracker_include_artifact','cc_empty').$GLOBALS['sys_lf'];
-            else
-                        $out = '<H4>'.$Language->getText('tracker_include_artifact','cc_empty').'</H4>';
+            if ($ascii) {
+                $out = $Language->getText('tracker_include_artifact', 'cc_empty').$GLOBALS['sys_lf'];
+            } else {
+                $out = '<H4>'.$Language->getText('tracker_include_artifact', 'cc_empty').'</H4>';
+            }
                     return $out;
         }
 
         // Header first an determine what the print out format is
         // based on output type (Ascii, HTML)
         if ($ascii) {
-            $out .= $Language->getText('tracker_include_artifact','cc_list').$GLOBALS['sys_lf'].str_repeat("*",strlen($Language->getText('tracker_include_artifact','cc_list'))).$GLOBALS['sys_lf'].$GLOBALS['sys_lf'];
+            $out .= $Language->getText('tracker_include_artifact', 'cc_list').$GLOBALS['sys_lf'].str_repeat("*", strlen($Language->getText('tracker_include_artifact', 'cc_list'))).$GLOBALS['sys_lf'].$GLOBALS['sys_lf'];
                     $fmt = "%-35s | %s".$GLOBALS['sys_lf'];
-                    $out .= sprintf($fmt, $Language->getText('tracker_include_artifact','cc_address'), $Language->getText('tracker_include_artifact','fill_cc_list_cmt'));
+                    $out .= sprintf($fmt, $Language->getText('tracker_include_artifact', 'cc_address'), $Language->getText('tracker_include_artifact', 'fill_cc_list_cmt'));
                     $out .= "------------------------------------------------------------------". $GLOBALS['sys_lf'];
         } else {
-
                     $title_arr=array();
-                    $title_arr[]=$Language->getText('tracker_include_artifact','cc_address');
-                    $title_arr[]=$Language->getText('tracker_include_artifact','fill_cc_list_cmt');
-                    $title_arr[]=$Language->getText('tracker_include_artifact','added_by');
-                    $title_arr[]=$Language->getText('tracker_include_artifact','posted_on');
+                    $title_arr[]=$Language->getText('tracker_include_artifact', 'cc_address');
+                    $title_arr[]=$Language->getText('tracker_include_artifact', 'fill_cc_list_cmt');
+                    $title_arr[]=$Language->getText('tracker_include_artifact', 'added_by');
+                    $title_arr[]=$Language->getText('tracker_include_artifact', 'posted_on');
             if ($pv == 0) {
-                $title_arr[]=$Language->getText('tracker_include_canned','delete');
+                $title_arr[]=$Language->getText('tracker_include_canned', 'delete');
             }
-                    $out .= html_build_list_table_top ($title_arr);
+                    $out .= html_build_list_table_top($title_arr);
 
                     $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td>';
             if ($pv == 0) {
@@ -3445,16 +3466,16 @@ class Artifact {
 
         // Loop through the cc and format them
         for ($i=0; $i < $rows; $i++) {
-
                     $email = db_result($result, $i, 'email');
                     $artifact_cc_id = db_result($result, $i, 'artifact_cc_id');
 
                     // if the CC is a user point to its user page else build a mailto: URL
                     $res_username = user_get_result_set_from_unix($email);
-                    if ($res_username && (db_numrows($res_username) == 1))
-                        $href_cc = util_user_link($email);
-            else
-                        $href_cc = '<a href="mailto:'.util_normalize_email($email).'">'.$email.'</a>';
+            if ($res_username && (db_numrows($res_username) == 1)) {
+                $href_cc = util_user_link($email);
+            } else {
+                $href_cc = '<a href="mailto:'.util_normalize_email($email).'">'.$email.'</a>';
+            }
 
             if ($ascii) {
                 $out .= sprintf($fmt, $email, SimpleSanitizer::unsanitize(db_result($result, $i, 'comment')));
@@ -3465,25 +3486,26 @@ class Artifact {
                 // (b) the CC name is the current user
                 // (c) the CC email address matches the one of the current user
                 // (d) the current user is the person who added a gieven name in CC list
-                if ( user_ismember($this->ArtifactType->getGroupID()) ||
+                if (user_ismember($this->ArtifactType->getGroupID()) ||
                     (user_getname($user_id) == $email) ||
                     (user_getemail($user_id) == $email) ||
                     (user_getname($user_id) == db_result($result, $i, 'user_name') )) {
                             $html_delete = '<a href="?func=delete_cc&group_id='.(int)$group_id.'&aid='.(int)$this->getID().'&atid='.(int)$group_artifact_id.'&artifact_cc_id='.(int)$artifact_cc_id.'" '.
-                            ' onClick="return confirm(\''.$Language->getText('tracker_include_artifact','delete_cc').'\')">'.
-                            '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></A>';
+                            ' onClick="return confirm(\''.$Language->getText('tracker_include_artifact', 'delete_cc').'\')">'.
+                            '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global', 'btn_delete').'"></A>';
                 } else {
                             $html_delete = '-';
                 }
 
-                $out .= sprintf($fmt,
-                                util_get_alt_row_color($i),
-                                $href_cc,
-                                $hp->purify(SimpleSanitizer::unsanitize(db_result($result, $i, 'comment')), CODENDI_PURIFIER_BASIC, $this->ArtifactType->getGroupId()) ,
-                                util_user_link(db_result($result, $i, 'user_name')),
-                                format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')),
-                                $html_delete);
-
+                $out .= sprintf(
+                    $fmt,
+                    util_get_alt_row_color($i),
+                    $href_cc,
+                    $hp->purify(SimpleSanitizer::unsanitize(db_result($result, $i, 'comment')), CODENDI_PURIFIER_BASIC, $this->ArtifactType->getGroupId()),
+                    util_user_link(db_result($result, $i, 'user_name')),
+                    format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, $i, 'date')),
+                    $html_delete
+                );
             } // for
         }
 
@@ -3491,7 +3513,6 @@ class Artifact {
         $out .= ($ascii ? $GLOBALS['sys_lf'] : "</TABLE>");
 
         return($out);
-
     }
 
                 /**
@@ -3503,7 +3524,7 @@ class Artifact {
          *
          * @return void
          */
-    function showDependencies($group_id, $group_artifact_id, $ascii=false, $pv = 0)
+    function showDependencies($group_id, $group_artifact_id, $ascii = false, $pv = 0)
     {
         $hp = Codendi_HTMLPurifier::instance();
         global $Language;
@@ -3514,36 +3535,37 @@ class Artifact {
         $out = '';
         // Nobody in the dependencies list -> return now
         if ($rows <= 0) {
-                    if ($ascii)
-                        $out = $Language->getText('tracker_include_artifact','dep_list_empty').$GLOBALS['sys_lf'];
-            else
-                        $out = '<H4>'.$Language->getText('tracker_include_artifact','dep_list_empty').'</H4>';
+            if ($ascii) {
+                $out = $Language->getText('tracker_include_artifact', 'dep_list_empty').$GLOBALS['sys_lf'];
+            } else {
+                $out = '<H4>'.$Language->getText('tracker_include_artifact', 'dep_list_empty').'</H4>';
+            }
                     return $out;
         }
 
         // Header first an determine what the print out format is
         // based on output type (Ascii, HTML)
         if ($ascii) {
-            $out .= $Language->getText('tracker_include_artifact','dep_list').$GLOBALS['sys_lf'].str_repeat("*",strlen($Language->getText('tracker_include_artifact','dep_list'))). $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'];
+            $out .= $Language->getText('tracker_include_artifact', 'dep_list').$GLOBALS['sys_lf'].str_repeat("*", strlen($Language->getText('tracker_include_artifact', 'dep_list'))). $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'];
                     $fmt = "%-15s | %s (%s)". $GLOBALS['sys_lf'];
-                    $out .= sprintf($fmt,
-                                    $Language->getText('tracker_include_artifact','artifact'),
-                                    $Language->getText('tracker_include_artifact','summary'),
-                                    $Language->getText('global','status')
+                    $out .= sprintf(
+                        $fmt,
+                        $Language->getText('tracker_include_artifact', 'artifact'),
+                        $Language->getText('tracker_include_artifact', 'summary'),
+                        $Language->getText('global', 'status')
                     );
                     $out .= "------------------------------------------------------------------". $GLOBALS['sys_lf'];
         } else {
-
                     $title_arr=array();
-                    $title_arr[]=$Language->getText('tracker_include_artifact','artifact');
-                    $title_arr[]=$Language->getText('tracker_include_artifact','summary');
-                    $title_arr[]=$Language->getText('global','status');
-                    $title_arr[]=$Language->getText('tracker_import_admin','tracker');
-                    $title_arr[]=$Language->getText('tracker_include_artifact','group');
+                    $title_arr[]=$Language->getText('tracker_include_artifact', 'artifact');
+                    $title_arr[]=$Language->getText('tracker_include_artifact', 'summary');
+                    $title_arr[]=$Language->getText('global', 'status');
+                    $title_arr[]=$Language->getText('tracker_import_admin', 'tracker');
+                    $title_arr[]=$Language->getText('tracker_include_artifact', 'group');
             if ($pv == 0) {
-                $title_arr[]=$Language->getText('tracker_include_canned','delete');
+                $title_arr[]=$Language->getText('tracker_include_canned', 'delete');
             }
-                    $out .= html_build_list_table_top ($title_arr);
+                    $out .= html_build_list_table_top($title_arr);
 
                     $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>';
             if ($pv == 0) {
@@ -3554,7 +3576,6 @@ class Artifact {
 
         // Loop through the denpendencies and format them
         for ($i=0; $i < $rows; $i++) {
-
                     $dependent_on_artifact_id = db_result($result, $i, 'is_dependent_on_artifact_id');
                     $summary = db_result($result, $i, 'summary');
                     $status = db_result($result, $i, 'status');
@@ -3564,24 +3585,24 @@ class Artifact {
             if ($ascii) {
                 $out .= sprintf($fmt, $dependent_on_artifact_id, util_unconvert_htmlspecialchars($summary), $status);
             } else {
-
-                if ( user_ismember($this->ArtifactType->getGroupID()) ) {
+                if (user_ismember($this->ArtifactType->getGroupID())) {
                             $html_delete = '<a href="?func=delete_dependent&group_id='.(int)$group_id.'&aid='.(int)$this->getID().'&atid='.(int)$group_artifact_id.'&dependent_on_artifact_id='.(int)$dependent_on_artifact_id.'" '.
-                            ' onClick="return confirm(\''.$Language->getText('tracker_include_artifact','del_dep').'\')">'.
-                            '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></A>';
+                            ' onClick="return confirm(\''.$Language->getText('tracker_include_artifact', 'del_dep').'\')">'.
+                            '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global', 'btn_delete').'"></A>';
                 } else {
                             $html_delete = '-';
                 }
 
-                $out .= sprintf($fmt,
-                                util_get_alt_row_color($i),
-                                '<a href="/tracker/?func=gotoid&group_id='.(int)$group_id.'&aid='.(int)$dependent_on_artifact_id.'">'.(int)$dependent_on_artifact_id.'</a>',
-                                $hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML) ,
-                                $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML) ,
-                                $hp->purify(SimpleSanitizer::unsanitize($tracker_label), CODENDI_PURIFIER_CONVERT_HTML) ,
-                                $hp->purify(util_unconvert_htmlspecialchars($group_label), CODENDI_PURIFIER_CONVERT_HTML) ,
-                                $html_delete);
-
+                $out .= sprintf(
+                    $fmt,
+                    util_get_alt_row_color($i),
+                    '<a href="/tracker/?func=gotoid&group_id='.(int)$group_id.'&aid='.(int)$dependent_on_artifact_id.'">'.(int)$dependent_on_artifact_id.'</a>',
+                    $hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML),
+                    $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML),
+                    $hp->purify(SimpleSanitizer::unsanitize($tracker_label), CODENDI_PURIFIER_CONVERT_HTML),
+                    $hp->purify(util_unconvert_htmlspecialchars($group_label), CODENDI_PURIFIER_CONVERT_HTML),
+                    $html_delete
+                );
             } // for
         }
 
@@ -3589,7 +3610,6 @@ class Artifact {
         $out .= ($ascii ? $GLOBALS['sys_lf'] : "</TABLE>");
 
         return($out);
-
     }
 
                 /**
@@ -3601,7 +3621,7 @@ class Artifact {
          *
          * @return void
          */
-    function showAttachedFiles($group_id,$group_artifact_id,$ascii=false, $pv = 0)
+    function showAttachedFiles($group_id, $group_artifact_id, $ascii = false, $pv = 0)
     {
 
         global $Language;
@@ -3612,35 +3632,35 @@ class Artifact {
 
         // No file attached -> return now
         if ($rows <= 0) {
-                    if ($ascii)
-                        $out = $Language->getText('tracker_include_artifact','no_file_attached').$GLOBALS['sys_lf'];
-            else
-                        $out = '<H4>'.$Language->getText('tracker_include_artifact','no_file_attached').'</H4>';
+            if ($ascii) {
+                $out = $Language->getText('tracker_include_artifact', 'no_file_attached').$GLOBALS['sys_lf'];
+            } else {
+                $out = '<H4>'.$Language->getText('tracker_include_artifact', 'no_file_attached').'</H4>';
+            }
                     return $out;
         }
 
         // Header first
         if ($ascii) {
-            $out = $Language->getText('tracker_include_artifact','file_attachment').$GLOBALS['sys_lf'].str_repeat("*",strlen($Language->getText('tracker_include_artifact','file_attachment')));
+            $out = $Language->getText('tracker_include_artifact', 'file_attachment').$GLOBALS['sys_lf'].str_repeat("*", strlen($Language->getText('tracker_include_artifact', 'file_attachment')));
         } else {
-
             $title_arr=array();
-            $title_arr[]=$Language->getText('tracker_include_artifact','name');
-            $title_arr[]=$Language->getText('tracker_include_artifact','desc');
-            $title_arr[]=$Language->getText('tracker_include_artifact','size_kb');
-            $title_arr[]=$Language->getText('global','by');
-            $title_arr[]=$Language->getText('tracker_include_artifact','posted_on');
+            $title_arr[]=$Language->getText('tracker_include_artifact', 'name');
+            $title_arr[]=$Language->getText('tracker_include_artifact', 'desc');
+            $title_arr[]=$Language->getText('tracker_include_artifact', 'size_kb');
+            $title_arr[]=$Language->getText('global', 'by');
+            $title_arr[]=$Language->getText('tracker_include_artifact', 'posted_on');
             if ($pv == 0) {
-                $title_arr[]=$Language->getText('tracker_include_canned','delete');
+                $title_arr[]=$Language->getText('tracker_include_canned', 'delete');
             }
 
-            $out = html_build_list_table_top ($title_arr);
+            $out = html_build_list_table_top($title_arr);
         }
 
         // Determine what the print out format is based on output type (Ascii, HTML)
         if ($ascii) {
                     $fmt = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."------------------------------------------------------------------". $GLOBALS['sys_lf'].
-                        $Language->getText('tracker_import_utils','date').": %s  ".$Language->getText('tracker_include_artifact','name').": %s  ".$Language->getText('tracker_include_artifact','size').": %dKB   ".$Language->getText('global','by').": %s". $GLOBALS['sys_lf'] ."%s". $GLOBALS['sys_lf'] ."%s";
+                        $Language->getText('tracker_import_utils', 'date').": %s  ".$Language->getText('tracker_include_artifact', 'name').": %s  ".$Language->getText('tracker_include_artifact', 'size').": %dKB   ".$Language->getText('global', 'by').": %s". $GLOBALS['sys_lf'] ."%s". $GLOBALS['sys_lf'] ."%s";
         } else {
                     $fmt = "". $GLOBALS['sys_lf'] . '<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>';
             if ($pv == 0) {
@@ -3654,38 +3674,41 @@ class Artifact {
 
         // Loop throuh the attached files and format them
         for ($i=0; $i < $rows; $i++) {
-
                     $artifact_file_id = db_result($result, $i, 'id');
                     $href = "/tracker/download.php?artifact_id=".(int)$this->getID()."&id=".(int)$artifact_file_id;
 
             if ($ascii) {
-                $out .= sprintf($fmt,
-                            format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'adddate')),
-                             db_result($result, $i, 'filename') ,
-                            intval(db_result($result, $i, 'filesize')/1024),
-                             db_result($result, $i, 'user_name'),
-                             SimpleSanitizer::unsanitize(db_result($result, $i, 'description')),
-                            $server.$href);
+                $out .= sprintf(
+                    $fmt,
+                    format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, $i, 'adddate')),
+                    db_result($result, $i, 'filename'),
+                    intval(db_result($result, $i, 'filesize')/1024),
+                    db_result($result, $i, 'user_name'),
+                    SimpleSanitizer::unsanitize(db_result($result, $i, 'description')),
+                    $server.$href
+                );
             } else {
                 // show CC delete icon if one of the condition is met:
                 // (a) current user is group member
                 // (b) the current user is the person who added a gieven name in CC list
-                if ( user_ismember($this->ArtifactType->getGroupID()) ||
+                if (user_ismember($this->ArtifactType->getGroupID()) ||
                     (user_getname(UserManager::instance()->getCurrentUser()->getId()) == db_result($result, $i, 'user_name') )) {
                                         $html_delete = '<a href="?func=delete_file&group_id='.(int)$group_id."&atid=".(int)$group_artifact_id."&aid=".(int)$this->getID()."&id=".(int)db_result($result, $i, 'id').'" '.
-                                            ' onClick="return confirm(\''.$Language->getText('tracker_include_artifact','delete_attachment').'\')">'.
-                                            '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></A>';
+                                            ' onClick="return confirm(\''.$Language->getText('tracker_include_artifact', 'delete_attachment').'\')">'.
+                                            '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global', 'btn_delete').'"></A>';
                 } else {
                                     $html_delete = '-';
                 }
-                                $out .= sprintf($fmt,
-                                util_get_alt_row_color($i),
-                                '<a href="'.$href.'">'.  $hp->purify(db_result($result, $i, 'filename'), CODENDI_PURIFIER_CONVERT_HTML) .'</a>',
-                                 $hp->purify(SimpleSanitizer::unsanitize(db_result($result, $i, 'description')), CODENDI_PURIFIER_BASIC, $group_id) ,
-                                intval(db_result($result, $i, 'filesize')/1024),
-                                util_user_link(db_result($result, $i, 'user_name')),
-                                format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'adddate')),
-                                $html_delete);
+                                $out .= sprintf(
+                                    $fmt,
+                                    util_get_alt_row_color($i),
+                                    '<a href="'.$href.'">'.  $hp->purify(db_result($result, $i, 'filename'), CODENDI_PURIFIER_CONVERT_HTML) .'</a>',
+                                    $hp->purify(SimpleSanitizer::unsanitize(db_result($result, $i, 'description')), CODENDI_PURIFIER_BASIC, $group_id),
+                                    intval(db_result($result, $i, 'filesize')/1024),
+                                    util_user_link(db_result($result, $i, 'user_name')),
+                                    format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, $i, 'adddate')),
+                                    $html_delete
+                                );
             }
         } // for
 
@@ -3693,7 +3716,6 @@ class Artifact {
         $out .= ($ascii ? "". $GLOBALS['sys_lf'] ."" : "</TABLE>");
 
         return($out);
-
     }
 
     /** Update the last_update_date field in the Artifact table to 'now'
@@ -3734,7 +3756,7 @@ class Artifact {
         } else {
             $hp = $this->getHTMLPurifier();
             if ($output == self::OUTPUT_MAIL_TEXT) {
-                if ($commentFormat == self::FORMAT_HTML){
+                if ($commentFormat == self::FORMAT_HTML) {
                     $commentText = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_STRIP_HTML);
                 } else {
                     $commentText = $value;
@@ -3780,7 +3802,4 @@ class Artifact {
     {
         return $this->error_state;
     }
-
 }
-
-?>

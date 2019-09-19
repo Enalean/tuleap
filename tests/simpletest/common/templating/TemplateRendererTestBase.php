@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TestPresenter {
+class TestPresenter
+{
     public function title()
     {
         return 'Tuleap';
@@ -46,7 +47,8 @@ class TestPresenter {
     }
 }
 
-abstract class TemplateRendererTestBase extends TuleapTestCase {
+abstract class TemplateRendererTestBase extends TuleapTestCase
+{
     public function setUp()
     {
         parent::setUp();

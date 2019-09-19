@@ -159,7 +159,7 @@ class CardsResource
                 ProjectAuthorization::userCanAccessProject(
                     $user,
                     $single_card->getArtifact()->getTracker()->getProject(),
-                     new URLVerification()
+                    new URLVerification()
                 );
                 return $single_card;
             }

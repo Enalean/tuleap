@@ -24,7 +24,8 @@ use Tuleap\Git\AdminGerritBuilder;
 use Tuleap\Git\GerritServerResourceRestrictor;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 
-class Git_AdminGerritController {
+class Git_AdminGerritController
+{
 
     private $servers;
 
@@ -71,9 +72,9 @@ class Git_AdminGerritController {
     {
         if ($request->get('action') == 'edit-gerrit-server') {
             $this->updateGerritServer($request);
-        } else if ($request->get('action') == 'add-gerrit-server') {
+        } elseif ($request->get('action') == 'add-gerrit-server') {
             $this->addGerritServer($request);
-        } else if ($request->get('action') == 'delete-gerrit-server') {
+        } elseif ($request->get('action') == 'delete-gerrit-server') {
             $this->deleteGerritServer($request);
         } elseif ($request->get('action') == 'set-gerrit-server-restriction') {
             $this->gerrit_restrictor->setGerritServerRestriction($request);
@@ -217,7 +218,7 @@ class Git_AdminGerritController {
             $this->gerrit_server_factory->save($server);
             $this->servers[$server->getId()] = $server;
 
-            $this->updateReplicationPassword($server,  $gerrit_server['replication_password']);
+            $this->updateReplicationPassword($server, $gerrit_server['replication_password']);
         }
     }
 

@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class AgileDashboard_BacklogItem_SubBacklogItemDao extends DataAccessObject {
+class AgileDashboard_BacklogItem_SubBacklogItemDao extends DataAccessObject
+{
 
     public function getAllBacklogItemIdInMilestone($milestone_id, array $parent_backlog_tracker_ids)
     {

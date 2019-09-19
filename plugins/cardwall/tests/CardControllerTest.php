@@ -25,7 +25,8 @@
 require_once dirname(__FILE__) .'/bootstrap.php';
 require_once dirname(__FILE__) .'/../../agiledashboard/include/Planning/PlanningFactory.class.php';
 
-class Cardwall_CardControllerTest extends TuleapTestCase {
+class Cardwall_CardControllerTest extends TuleapTestCase
+{
 
     public function setUp()
     {

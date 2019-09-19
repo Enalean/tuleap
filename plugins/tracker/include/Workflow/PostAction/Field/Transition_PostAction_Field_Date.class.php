@@ -247,4 +247,3 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
         $visitor->visitDateField($this);
     }
 }
-?>

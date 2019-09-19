@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201110171036_add_docman_approval_user_index extends ForgeUpgrade_Bucket {
+class b201110171036_add_docman_approval_user_index extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -50,7 +51,6 @@ EOT;
         $sql = 'ALTER TABLE plugin_docman_approval_user'.
                ' ADD INDEX idx_reviewer (reviewer_id, table_id)';
         $this->db->addIndex('plugin_docman_approval_user', 'idx_reviewer', $sql);
-
     }
 
     public function postUp()
@@ -63,5 +63,3 @@ EOT;
             }*/
     }
 }
-
-?>

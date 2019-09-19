@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_FieldNotOnCardException extends Exception {
+class Cardwall_FieldNotOnCardException extends Exception
+{
     public function __construct($id)
     {
         parent::__construct("Field $id doesn't belong to this card definition");

@@ -19,7 +19,8 @@
  */
 
 require_once __DIR__.'/../../../bootstrap.php';
-class FieldNotEmpty_BaseTest extends TuleapTestCase {
+class FieldNotEmpty_BaseTest extends TuleapTestCase
+{
 
     protected $condition;
     protected $empty_data = '';
@@ -64,7 +65,8 @@ class FieldNotEmpty_BaseTest extends TuleapTestCase {
     }
 }
 
-class FieldNotEmpty_saveTest extends FieldNotEmpty_BaseTest {
+class FieldNotEmpty_saveTest extends FieldNotEmpty_BaseTest
+{
 
     public function itSavesUsingTheRealFieldObject()
     {
@@ -73,7 +75,8 @@ class FieldNotEmpty_saveTest extends FieldNotEmpty_BaseTest {
         $this->condition->saveObject();
     }
 }
-class FieldNotEmpty_validateTest extends FieldNotEmpty_BaseTest {
+class FieldNotEmpty_validateTest extends FieldNotEmpty_BaseTest
+{
 
     public function itReturnsTrueWhenNoField()
     {

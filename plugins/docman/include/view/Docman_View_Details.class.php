@@ -36,12 +36,13 @@ require_once('Docman_View_ItemDetailsSectionApproval.class.php');
 
 require_once(dirname(__FILE__).'/../Docman_LockFactory.class.php');
 
-class Docman_View_Details extends Docman_View_Display {
+class Docman_View_Details extends Docman_View_Display
+{
 
     /* protected */ function _getTitle($params)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        return $GLOBALS['Language']->getText('plugin_docman', 'details_title',  $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) );
+        return $GLOBALS['Language']->getText('plugin_docman', 'details_title', $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
     }
 
     function _content($params, $view = null, $section = null)
@@ -55,9 +56,9 @@ class Docman_View_Details extends Docman_View_Display {
         $user_can_read  = $user_can_write || $this->_controller->userCanRead($params['item']->getId());
 
         $user_can_read_obsolete = false;
-        if($params['item']->isObsolete()) {
+        if ($params['item']->isObsolete()) {
             // Restrict access to non docman admin.
-            if(!$this->_controller->userCanAdmin()) {
+            if (!$this->_controller->userCanAdmin()) {
                 $user_can_manage = false;
                 $user_can_write  = false;
                 // Save read value to let user (according to their rights) to see
@@ -137,13 +138,11 @@ class Docman_View_Details extends Docman_View_Display {
 
         if ($section && isset($sections[$section])) {
             $details->setCurrentSection($section);
-        } else if (isset($params['section']) &&  isset($sections[$params['section']])) {
+        } elseif (isset($params['section']) &&  isset($sections[$params['section']])) {
             $details->setCurrentSection($params['section']);
-        } else if ($this->_controller->request->get('action') == 'permissions' &&  isset($sections['permissions'])) {
+        } elseif ($this->_controller->request->get('action') == 'permissions' &&  isset($sections['permissions'])) {
             $details->setCurrentSection('permissions');
         }
         $details->display();
     }
 }
-
-?>

@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class PermissionsManager implements IPermissionsManagerNG {
+class PermissionsManager implements IPermissionsManagerNG
+{
     /**
      * @var PermissionsDao
      */
@@ -106,8 +107,8 @@ class PermissionsManager implements IPermissionsManagerNG {
         $this->retrievePermissions($object_id);
         $perms = array();
         if (isset($this->_permissions[$object_id])) {
-            foreach($this->_permissions[$object_id] as $ugroup_id => $permissions) {
-                foreach($permissions as $perm) {
+            foreach ($this->_permissions[$object_id] as $ugroup_id => $permissions) {
+                foreach ($permissions as $perm) {
                     if (!isset($perms[$perm])) {
                         $perms[$perm] = array();
                     }
@@ -300,7 +301,7 @@ class PermissionsManager implements IPermissionsManagerNG {
             if (!isset($this->_permissions[$row['object_id']])) {
                 $this->_permissions[$row['object_id']] = array();
             }
-            foreach($ugroups as $ugroup) {
+            foreach ($ugroups as $ugroup) {
                 if (!isset($this->_permissions[$row['object_id']][$ugroup])) {
                     $this->_permissions[$row['object_id']][$ugroup] = array();
                 }
@@ -333,7 +334,7 @@ class PermissionsManager implements IPermissionsManagerNG {
         $this->buildPermissionsCache($dar, $ugroups);
     }
 
-    public function clonePermissions($source, $target, $perms, $toGroupId=0)
+    public function clonePermissions($source, $target, $perms, $toGroupId = 0)
     {
         return $this->_permission_dao->clonePermissions($source, $target, $perms, $toGroupId);
     }

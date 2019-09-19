@@ -23,7 +23,8 @@
 /**
  * Define an html field
  */
-abstract class HTML_Element {
+abstract class HTML_Element
+{
 
     protected $params;
     protected $name;
@@ -33,7 +34,7 @@ abstract class HTML_Element {
     protected $id;
     protected static $last_id = 0;
 
-    public function __construct($label, $name, $value, $desc='')
+    public function __construct($label, $name, $value, $desc = '')
     {
         $this->name   = $name;
         $this->value  = $value;
@@ -56,10 +57,11 @@ abstract class HTML_Element {
         $html  = '';
         $html .= $this->renderLabel();
         $html .= '<br />';
-        if(trim($this->desc)!=''){
+        if (trim($this->desc)!='') {
             $html .=$this->desc.'<br/>';
         }
-        $html .= $this->renderValue();;
+        $html .= $this->renderValue();
+        ;
         return $html;
     }
     protected function renderValue()
@@ -80,4 +82,3 @@ abstract class HTML_Element {
         $this->params[$key] = $value;
     }
 }
-?>

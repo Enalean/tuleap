@@ -26,7 +26,8 @@ use Tuleap\Docman\Version\Version;
  * Version is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_Version implements Version {
+class Docman_Version implements Version
+{
 
     function __construct($data = null)
     {
@@ -195,17 +196,39 @@ class Docman_Version implements Version {
 
     function initFromRow($row)
     {
-        if (isset($row['id'])) $this->setId($row['id']);
-        if (isset($row['user_id']))$this->setAuthorId($row['user_id']);
-        if (isset($row['item_id']))$this->setItemId($row['item_id']);
-        if (isset($row['number']))$this->setNumber($row['number']);
-        if (isset($row['label']))$this->setLabel($row['label']);
-        if (isset($row['changelog']))$this->setChangelog($row['changelog']);
-        if (isset($row['date']))$this->setDate($row['date']);
-        if (isset($row['filename']))$this->setFilename($row['filename']);
-        if (isset($row['filesize']))$this->setFilesize($row['filesize']);
-        if (isset($row['filetype']))$this->setFiletype($row['filetype']);
-        if (isset($row['path']))$this->setPath($row['path']);
+        if (isset($row['id'])) {
+            $this->setId($row['id']);
+        }
+        if (isset($row['user_id'])) {
+            $this->setAuthorId($row['user_id']);
+        }
+        if (isset($row['item_id'])) {
+            $this->setItemId($row['item_id']);
+        }
+        if (isset($row['number'])) {
+            $this->setNumber($row['number']);
+        }
+        if (isset($row['label'])) {
+            $this->setLabel($row['label']);
+        }
+        if (isset($row['changelog'])) {
+            $this->setChangelog($row['changelog']);
+        }
+        if (isset($row['date'])) {
+            $this->setDate($row['date']);
+        }
+        if (isset($row['filename'])) {
+            $this->setFilename($row['filename']);
+        }
+        if (isset($row['filesize'])) {
+            $this->setFilesize($row['filesize']);
+        }
+        if (isset($row['filetype'])) {
+            $this->setFiletype($row['filetype']);
+        }
+        if (isset($row['path'])) {
+            $this->setPath($row['path']);
+        }
     }
 
     /**
@@ -228,8 +251,7 @@ class Docman_Version implements Version {
                     'item'     => $item,
                     'version'  => $this->getNumber(),
                     'user'     => $user
-                )
-        );
+                ));
     }
 
     /**

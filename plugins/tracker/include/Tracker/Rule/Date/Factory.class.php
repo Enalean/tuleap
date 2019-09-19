@@ -21,7 +21,8 @@
  * Factory of rules
  * Base class to create, retrieve, update or delete rules
  */
-class Tracker_Rule_Date_Factory {
+class Tracker_Rule_Date_Factory
+{
 
     /**
      *
@@ -76,11 +77,11 @@ class Tracker_Rule_Date_Factory {
         }
 
         $rule_id = $this->dao->insert(
-                $rule->getTrackerId(),
-                $rule->getSourceFieldId(),
-                $rule->getTargetFieldId(),
-                $rule->getComparator()
-                );
+            $rule->getTrackerId(),
+            $rule->getSourceFieldId(),
+            $rule->getTargetFieldId(),
+            $rule->getComparator()
+        );
 
         $rule->setId($rule_id);
     }
@@ -130,7 +131,7 @@ class Tracker_Rule_Date_Factory {
     {
         $rules = $this->dao->searchByTrackerId($tracker_id);
 
-        if(! $rules) {
+        if (! $rules) {
             return array();
         }
 
@@ -216,11 +217,10 @@ class Tracker_Rule_Date_Factory {
                 ->setTrackerId($tracker_id)
                 ->setComparator($comparator);
 
-        if($date_rule !== null) {
+        if ($date_rule !== null) {
             $date_rule->setId($id);
         }
 
         return $date_rule;
     }
 }
-?>

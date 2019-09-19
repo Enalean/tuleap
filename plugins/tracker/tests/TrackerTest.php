@@ -23,7 +23,8 @@ use Tuleap\Tracker\TrackerColor;
 
 require_once __DIR__ . '/bootstrap.php';
 
-class Tracker_FormElement_InterfaceTestVersion implements Tracker_FormElement_Interface {
+class Tracker_FormElement_InterfaceTestVersion implements Tracker_FormElement_Interface
+{
     public function exportToXml(
         SimpleXMLElement $root,
         &$xmlMapping,
@@ -54,7 +55,8 @@ class Tracker_FormElement_InterfaceTestVersion implements Tracker_FormElement_In
     }
 }
 
-class TrackerTest extends TuleapTestCase {
+class TrackerTest extends TuleapTestCase
+{
 
     private $all_trackers_admin_user;
 
@@ -1143,7 +1145,8 @@ class TrackerTest extends TuleapTestCase {
     }
 }
 
-class Tracker_ExportToXmlTest extends TuleapTestCase {
+class Tracker_ExportToXmlTest extends TuleapTestCase
+{
 
     private $tracker;
     private $formelement_factory;
@@ -1286,10 +1289,10 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
         $color = $xml->color;
         $this->assertEqual((string)$color, TrackerColor::default()->getName());
     }
-
 }
 
-class Tracker_WorkflowTest extends TuleapTestCase {
+class Tracker_WorkflowTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -1328,7 +1331,8 @@ class Tracker_WorkflowTest extends TuleapTestCase {
 }
 
 
-class Tracker_getParentTest extends TuleapTestCase {
+class Tracker_getParentTest extends TuleapTestCase
+{
 
     private $tracker;
     private $tracker_factory;

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_RendererDao extends DataAccessObject {
+class Cardwall_RendererDao extends DataAccessObject
+{
 
     function __construct()
     {
@@ -72,4 +73,3 @@ class Cardwall_RendererDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-?>

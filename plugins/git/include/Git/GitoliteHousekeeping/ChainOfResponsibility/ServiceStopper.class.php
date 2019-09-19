@@ -21,7 +21,8 @@
 /**
  * I stop teh service
  */
-class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopper extends Git_GitoliteHousekeeping_ChainOfResponsibility_Command {
+class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopper extends Git_GitoliteHousekeeping_ChainOfResponsibility_Command
+{
 
     /** @var Git_GitoliteHousekeeping_GitoliteHousekeepingResponse */
     private $response;

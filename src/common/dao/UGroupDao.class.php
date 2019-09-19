@@ -24,7 +24,8 @@ require_once('include/DataAccessObject.class.php');
 /**
  *  Data Access Object for ProjectUGroup
  */
-class UGroupDao extends DataAccessObject {
+class UGroupDao extends DataAccessObject
+{
 
     /**
      * Searches static ProjectUGroup by GroupId

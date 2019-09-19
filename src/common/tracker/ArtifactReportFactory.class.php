@@ -20,7 +20,8 @@
  */
 
 
-class ArtifactReportFactory {
+class ArtifactReportFactory
+{
     /**
      * @var string
      */
@@ -47,7 +48,7 @@ class ArtifactReportFactory {
      *
      * @return void
      */
-    function getArtifactReportHtml($report_id,$atid)
+    function getArtifactReportHtml($report_id, $atid)
     {
         $sql = "SELECT * FROM artifact_report ".
          "WHERE report_id=". db_ei($report_id) ;
@@ -56,7 +57,7 @@ class ArtifactReportFactory {
         if (!$res || db_numrows($res) < 1) {
             return false;
         }
-        return new ArtifactReportHtml($report_id,$atid);
+        return new ArtifactReportHtml($report_id, $atid);
     }
 
     /**
@@ -68,7 +69,7 @@ class ArtifactReportFactory {
      *
      *    @return bool
      */
-    function copyReports($atid_source,$atid_dest)
+    function copyReports($atid_source, $atid_dest)
     {
         global $Language;
         $report_mapping = array(100 => 100); //The system report 'Default' (sic)
@@ -89,11 +90,11 @@ class ArtifactReportFactory {
 
             $res_insert = db_query($sql_insert);
             if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-                $this->setError($Language->getText('tracker_common_reportfactory','ins_err',array($report_array["report_id"],$atid_dest,db_error())));
+                $this->setError($Language->getText('tracker_common_reportfactory', 'ins_err', array($report_array["report_id"],$atid_dest,db_error())));
                 return false;
             }
 
-            $report_id = db_insertid($res_insert,'artifact_report','report_id');
+            $report_id = db_insertid($res_insert, 'artifact_report', 'report_id');
             $report_mapping[$report_array["report_id"]] = $report_id;
       // Copy artifact_report_field records
             $sql_fields='SELECT field_name,show_on_query,show_on_result,place_query,place_result,col_width '.
@@ -118,15 +119,13 @@ class ArtifactReportFactory {
              //echo $sql_insert;
                 $res_insert = db_query($sql_insert);
                 if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-                    $this->setError($Language->getText('tracker_common_reportfactory','f_ind_err',array($report_array["report_id"],$field_array["field_name"],db_error())));
+                    $this->setError($Language->getText('tracker_common_reportfactory', 'f_ind_err', array($report_array["report_id"],$field_array["field_name"],db_error())));
                     return false;
                 }
             } // while
-
         } // while
 
         return $report_mapping;
-
     }
 
     /**
@@ -150,7 +149,6 @@ class ArtifactReportFactory {
         $res = db_query($sql);
 
         while ($report_array = db_fetch_array($res)) {
-
             $sql_fields='DELETE '.
             'FROM artifact_report_field '.
             'WHERE report_id='. db_ei($report_array["report_id"]) ;
@@ -158,7 +156,6 @@ class ArtifactReportFactory {
       //echo $sql_fields;
 
             $res_fields = db_query($sql_fields);
-
         } // while
 
      // Delete artifact_report records
@@ -171,7 +168,6 @@ class ArtifactReportFactory {
         $res = db_query($sql);
 
         return true;
-
     }
 
     /**
@@ -198,7 +194,7 @@ class ArtifactReportFactory {
         $result = db_query($sql);
         $rows = db_numrows($result);
         if (db_error()) {
-            $this->setError($Language->getText('tracker_common_factory','db_err').': '.db_error());
+            $this->setError($Language->getText('tracker_common_factory', 'db_err').': '.db_error());
             return false;
         } else {
             while ($arr = db_fetch_array($result)) {
@@ -206,7 +202,6 @@ class ArtifactReportFactory {
             }
         }
         return $artifactreports;
-
     }
 
     /**
@@ -248,5 +243,3 @@ class ArtifactReportFactory {
         }
     }
 }
-
-?>

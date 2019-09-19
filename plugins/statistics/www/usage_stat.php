@@ -51,22 +51,22 @@ $total_array = array();
 
 $sql = 'SELECT YEAR(FROM_UNIXTIME(add_date)) as year, month(FROM_UNIXTIME(add_date)) as month, count(*) as c from user where user_id > 101 group by year,month';
 $res = db_query($sql);
-while($row = db_fetch_array($res)) {
-    if($row['year'] < $min_year) {
+while ($row = db_fetch_array($res)) {
+    if ($row['year'] < $min_year) {
         $min_year = $row['year'];
     }
-    if($row['year'] > $max_year) {
+    if ($row['year'] > $max_year) {
         $max_year = $row['year'];
         $max_month = 0; // Reset max month
     }
 
-    if($row['year'] == $min_year) {
-        if($row['month'] < $min_month) {
+    if ($row['year'] == $min_year) {
+        if ($row['month'] < $min_month) {
             $min_month = $row['month'];
         }
     }
-    if($row['year'] == $max_year) {
-        if($row['month'] > $max_month) {
+    if ($row['year'] == $max_year) {
+        if ($row['month'] > $max_month) {
             $max_month = $row['month'];
         }
     }
@@ -77,21 +77,21 @@ while($row = db_fetch_array($res)) {
 
 $sql = 'SELECT YEAR(FROM_UNIXTIME(register_time)) as year, month(FROM_UNIXTIME(register_time)) as month, count(*) as c from groups where group_id > 101 group by year,month';
 $res = db_query($sql);
-while($row = db_fetch_array($res)) {
-    if($row['year'] < $min_year) {
+while ($row = db_fetch_array($res)) {
+    if ($row['year'] < $min_year) {
         $min_year = $row['year'];
     }
-    if($row['year'] > $max_year) {
+    if ($row['year'] > $max_year) {
         $max_year = $row['year'];
     }
 
-    if($row['year'] == $min_year) {
-        if($row['month'] < $min_month) {
+    if ($row['year'] == $min_year) {
+        if ($row['month'] < $min_month) {
             $min_month = $row['month'];
         }
     }
-    if($row['year'] == $max_year) {
-        if($row['month'] > $max_month) {
+    if ($row['year'] == $max_year) {
+        if ($row['month'] > $max_month) {
             $max_month = $row['month'];
         }
     }
@@ -105,22 +105,22 @@ header('Content-Disposition: filename=Tuleap_progress_data.csv');
 csv_output("Tuleap progress data$eol");
 csv_output("Date".$sep."Registered User".$sep."Registered Projects".$eol);
 
-for($year = $min_year; $year <= $max_year; $year++) {
+for ($year = $min_year; $year <= $max_year; $year++) {
     $y_min_month = 1;
-    if($year == $min_year) {
+    if ($year == $min_year) {
         $y_min_month = $min_month;
     }
     $y_max_month = 12;
-    if($year == $max_year) {
+    if ($year == $max_year) {
         $y_max_month = $max_month;
     }
-    for($month = $y_min_month; $month <= $y_max_month; $month++) {
+    for ($month = $y_min_month; $month <= $y_max_month; $month++) {
         $user = 0;
-        if(isset($total_array[$year][$month]['user'])) {
+        if (isset($total_array[$year][$month]['user'])) {
             $user = $total_array[$year][$month]['user'];
         }
         $group = 0;
-        if(isset($total_array[$year][$month]['group'])) {
+        if (isset($total_array[$year][$month]['group'])) {
             $group = $total_array[$year][$month]['group'];
         }
         csv_output('1/'.$month.'/'.$year.$sep.$user.$sep.$group.$eol);

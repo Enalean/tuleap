@@ -22,7 +22,8 @@ require_once dirname(__FILE__).'/../bootstrap.php';
 require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aRequest.php';
 
-class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
+class Planning_ArtifactCreationControllerTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -61,4 +62,3 @@ class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
         $this->controller->createArtifact();
     }
 }
-?>

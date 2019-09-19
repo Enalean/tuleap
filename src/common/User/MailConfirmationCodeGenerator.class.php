@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MailConfirmationCodeGenerator {
+class MailConfirmationCodeGenerator
+{
 
     /** @var UserManager */
     private $user_manager;

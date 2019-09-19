@@ -23,7 +23,8 @@
  *
  * @note I should be called by root user
  */
-class BackendService {
+class BackendService
+{
 
     public function start()
     {

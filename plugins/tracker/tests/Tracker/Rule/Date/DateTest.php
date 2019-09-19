@@ -18,7 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 require_once __DIR__.'/../../../bootstrap.php';
-class Tracker_Rule_Date_DateTest extends TuleapTestCase {
+class Tracker_Rule_Date_DateTest extends TuleapTestCase
+{
 
     /**
      *

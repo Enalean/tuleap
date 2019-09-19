@@ -23,7 +23,8 @@ use Tuleap\Tracker\Artifact\Attachment\PaginatedTemporaryFiles;
 /**
  * Manage temporary uploaded files
  */
-class Tracker_Artifact_Attachment_TemporaryFileManager {
+class Tracker_Artifact_Attachment_TemporaryFileManager
+{
 
     public const TEMP_FILE_PREFIX = 'rest_attachement_temp_';
 
@@ -158,7 +159,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
 
         $user = $this->user_manager->getUserById($file->getCreatorId());
         if ($this->exists($user, $temporary_name)) {
-            return base64_encode(file_get_contents($this->getPath($user, $temporary_name), false, NULL, $offset, $size));
+            return base64_encode(file_get_contents($this->getPath($user, $temporary_name), false, null, $offset, $size));
         }
 
         throw new Tracker_Artifact_Attachment_FileNotFoundException();

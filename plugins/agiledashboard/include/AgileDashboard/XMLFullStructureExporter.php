@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_XMLFullStructureExporter {
+class AgileDashboard_XMLFullStructureExporter
+{
 
     /** @var EventManager */
     private $event_manager;

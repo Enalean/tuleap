@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_ArtifactParentsSelector_SubChildrenBelongingToTrackerCommand extends Planning_ArtifactParentsSelector_Command {
+class Planning_ArtifactParentsSelector_SubChildrenBelongingToTrackerCommand extends Planning_ArtifactParentsSelector_Command
+{
 
     /**
      * @see Planning_ArtifactParentsSelector_Command
@@ -74,4 +75,3 @@ class Planning_ArtifactParentsSelector_SubChildrenBelongingToTrackerCommand exte
         }
     }
 }
-?>

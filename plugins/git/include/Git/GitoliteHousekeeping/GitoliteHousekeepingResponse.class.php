@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_GitoliteHousekeeping_GitoliteHousekeepingResponse {
+class Git_GitoliteHousekeeping_GitoliteHousekeepingResponse
+{
 
     public const ANSI_NOCOLOR = "\033[0m";
     public const ANSI_GREEN   = "\033[32m";

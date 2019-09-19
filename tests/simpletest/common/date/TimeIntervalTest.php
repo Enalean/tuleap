@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class TimeIntervalTest extends TuleapTestCase {
+class TimeIntervalTest extends TuleapTestCase
+{
 
     public function itRefusesNegativeTimeStamps()
     {
@@ -47,8 +48,7 @@ class TimeIntervalTest extends TuleapTestCase {
         try {
             TimeInterval::fromUnixTimestamps($start, $end);
             $this->fail('should have thrown exception');
-        } catch (Exception $exc) {}
+        } catch (Exception $exc) {
+        }
     }
 }
-
-?>

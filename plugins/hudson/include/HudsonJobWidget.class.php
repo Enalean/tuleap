@@ -21,7 +21,8 @@
 
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 
-abstract class HudsonJobWidget extends HudsonWidget {
+abstract class HudsonJobWidget extends HudsonWidget
+{
 
     var $widget_id;
     var $group_id;
@@ -97,9 +98,12 @@ abstract class HudsonJobWidget extends HudsonWidget {
             }
             $html .= '</select>
                 </div>';
-        } else if ($this->owner_type == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
-            $html = '<div class="tlp-alert-warning">' . $GLOBALS['Language']->getText('plugin_hudson',
-                    'widget_no_job_project', array($this->group_id)) . '</div>';
+        } elseif ($this->owner_type == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
+            $html = '<div class="tlp-alert-warning">' . $GLOBALS['Language']->getText(
+                'plugin_hudson',
+                'widget_no_job_project',
+                array($this->group_id)
+            ) . '</div>';
         } else {
             $message = $this->owner_type == ProjectDashboardController::LEGACY_DASHBOARD_TYPE ?
                 $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', array($this->group_id)) :
@@ -122,7 +126,7 @@ abstract class HudsonJobWidget extends HudsonWidget {
         return true;
     }
 
-    protected abstract function initContent();
+    abstract protected function initContent();
 
     /**
      * @return int|null

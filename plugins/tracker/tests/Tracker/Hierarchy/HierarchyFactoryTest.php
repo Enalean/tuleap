@@ -22,7 +22,8 @@ use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_HierarchyFactoryTest extends TuleapTestCase {
+class Tracker_HierarchyFactoryTest extends TuleapTestCase
+{
 
     public function itReturnsItselfWhenThereIsNoHierarchyAssociatedToTracker()
     {
@@ -129,7 +130,6 @@ class Tracker_HierarchyFactoryTest extends TuleapTestCase {
         $dao->expectCallCount('duplicate', 3, 'Method duplicate from Dao should be called 3 times.');
 
         $factory->duplicate($tracker_mapping);
-
     }
 
     private function GivenADaoThatContainsOneFullHierrachy()
@@ -179,7 +179,8 @@ class Tracker_HierarchyFactoryTest extends TuleapTestCase {
     }
 }
 
-class Tracker_HierarchyFactoryGetParentArtifactTest extends TuleapTestCase {
+class Tracker_HierarchyFactoryGetParentArtifactTest extends TuleapTestCase
+{
     private $dao;
     private $hierarchy_factory;
     private $user;
@@ -243,7 +244,8 @@ class Tracker_HierarchyFactoryGetParentArtifactTest extends TuleapTestCase {
     }
 }
 
-class Tracker_HierarchyFactoryGetAllAncestorsTest extends TuleapTestCase {
+class Tracker_HierarchyFactoryGetAllAncestorsTest extends TuleapTestCase
+{
     private $hierarchy_factory;
     private $user;
     private $sprint;
@@ -328,7 +330,8 @@ class Tracker_HierarchyFactoryGetAllAncestorsTest extends TuleapTestCase {
     }
 }
 
-class Tracker_HierarchyFactory_getParentTest extends TuleapTestCase {
+class Tracker_HierarchyFactory_getParentTest extends TuleapTestCase
+{
 
     public function setUp()
     {

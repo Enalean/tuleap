@@ -23,7 +23,8 @@ namespace Tuleap\Tracker\REST;
 use Tracker_FormElement_Field_List_Bind;
 use Tuleap\REST\JsonCast;
 
-class FieldValueRepresentation {
+class FieldValueRepresentation
+{
     /**
      * @var int
      */

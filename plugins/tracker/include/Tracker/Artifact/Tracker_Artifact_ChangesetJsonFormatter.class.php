@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_ChangesetJsonFormatter {
+class Tracker_Artifact_ChangesetJsonFormatter
+{
     private $renderer;
 
     public function __construct(TemplateRenderer $renderer)
@@ -42,5 +43,3 @@ class Tracker_Artifact_ChangesetJsonFormatter {
         return $this->renderer->renderToString('changeset-popup', new Tracker_Artifact_ChangesetJsonPresenter($changeset));
     }
 }
-
-?>

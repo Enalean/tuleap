@@ -22,7 +22,8 @@ namespace Tuleap\Tracker\Artifact\View;
 
 use Tracker_Artifact_View_View;
 
-class Nature extends Tracker_Artifact_View_View {
+class Nature extends Tracker_Artifact_View_View
+{
 
     /** @see Tracker_Artifact_View_View::getTitle() */
     public function getTitle()

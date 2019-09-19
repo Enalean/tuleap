@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Tracker_FormElement_Field_ValueDao extends DataAccessObject {
+abstract class Tracker_FormElement_Field_ValueDao extends DataAccessObject
+{
 
     function searchById($changeset_value_id)
     {
@@ -48,11 +49,9 @@ abstract class Tracker_FormElement_Field_ValueDao extends DataAccessObject {
     {
         $changesetValueDao     = new Tracker_Artifact_Changeset_ValueDao();
         $changeset_value_ids   = $changesetValueDao->createFromLastChangesetByTrackerId($tracker_id, $field_id, 1);
-        if ( empty($changeset_value_ids) ) {
+        if (empty($changeset_value_ids)) {
             return false;
         }
         return $changeset_value_ids;
     }
-
 }
-?>

@@ -21,4 +21,6 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-abstract class NatureManagementException extends \Exception {}
+abstract class NatureManagementException extends \Exception
+{
+}

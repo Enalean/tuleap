@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Dao extends DataAccessObject {
+class AgileDashboard_Dao extends DataAccessObject
+{
 
 
     public function getProjectsWithADActivated()

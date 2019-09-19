@@ -135,7 +135,7 @@ class NaturePresenterFactory
     {
         $natures = array();
 
-        foreach ( $this->dao->searchAll() as $row) {
+        foreach ($this->dao->searchAll() as $row) {
             $natures[] = $this->instantiateFromRow($row);
         }
 
@@ -147,7 +147,7 @@ class NaturePresenterFactory
     {
         $natures = array();
 
-        foreach ( $this->dao->searchAllUsedNatureByProject($project->getGroupId()) as $row) {
+        foreach ($this->dao->searchAllUsedNatureByProject($project->getGroupId()) as $row) {
             $natures[] = $row['nature'];
         }
 
@@ -157,11 +157,11 @@ class NaturePresenterFactory
     /** @return NaturePresenter | null */
     public function getFromShortname($shortname)
     {
-        if($shortname == \Tracker_FormElement_Field_ArtifactLink::NO_NATURE) {
+        if ($shortname == \Tracker_FormElement_Field_ArtifactLink::NO_NATURE) {
             return new NaturePresenter('', '', '', true);
         }
 
-        if($shortname == \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
+        if ($shortname == \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
             return new NatureIsChildPresenter();
         }
 
@@ -171,7 +171,7 @@ class NaturePresenterFactory
         }
 
         $row = $this->dao->getFromShortname($shortname);
-        if(!$row) {
+        if (!$row) {
             return null;
         }
         return $this->instantiateFromRow($row);

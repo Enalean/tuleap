@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class BackendLoggerTest extends TuleapTestCase {
+class BackendLoggerTest extends TuleapTestCase
+{
 
     private $log_file;
     /** @var BackendLogger */
@@ -84,8 +85,5 @@ class BackendLoggerTest extends TuleapTestCase {
         $error_message = $exception->getMessage();
         $start_of_trace = substr($exception->getTraceAsString(), 0, 20);
         $this->assertPattern("%$message: $error_message:\n$start_of_trace%m", file_get_contents($this->log_file));
-
     }
-
 }
-?>

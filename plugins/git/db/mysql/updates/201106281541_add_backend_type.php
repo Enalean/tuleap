@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201106281541_add_backend_type extends ForgeUpgrade_Bucket {
+class b201106281541_add_backend_type extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -51,7 +52,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column repository_backend_type in table plugin_git is missing');
         }
     }
-
 }
-
-?>

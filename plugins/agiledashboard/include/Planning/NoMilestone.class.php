@@ -55,7 +55,6 @@ class Planning_NoMilestone implements Planning_Milestone
 
     public function getArtifact()
     {
-
     }
 
     public function getArtifactId()
@@ -83,12 +82,10 @@ class Planning_NoMilestone implements Planning_Milestone
 
     public function getLinkedArtifacts(PFUser $user)
     {
-
     }
 
     public function getPlannedArtifacts()
     {
-
     }
 
     public function getPlanning()

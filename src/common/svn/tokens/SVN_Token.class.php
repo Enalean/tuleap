@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class SVN_Token {
+class SVN_Token
+{
 
     /**
      * @var PFUser
@@ -91,5 +92,4 @@ class SVN_Token {
     {
         return $this->comment;
     }
-
 }

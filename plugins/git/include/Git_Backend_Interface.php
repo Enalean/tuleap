@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-interface Git_Backend_Interface {
+interface Git_Backend_Interface
+{
     public const GIT_ROOT_PATH = '/var/lib/codendi/gitroot/';
 
     /**

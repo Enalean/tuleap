@@ -23,7 +23,8 @@ use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tracker_Artifact;
 
-class ArtifactReference {
+class ArtifactReference
+{
 
     /**
      * @var int ID of the milestone {@type int} {@required true}

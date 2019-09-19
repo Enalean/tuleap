@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_SVN_REVOKE_TOKENS extends SystemEvent {
+class SystemEvent_SVN_REVOKE_TOKENS extends SystemEvent
+{
 
     /** @var BackendSVN */
     private $backend_svn;

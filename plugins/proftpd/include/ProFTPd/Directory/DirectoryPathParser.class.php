@@ -21,7 +21,8 @@
 
 namespace Tuleap\ProFTPd\Directory;
 
-class DirectoryPathParser {
+class DirectoryPathParser
+{
 
     public const BASE_PATH = '';
 
@@ -89,4 +90,3 @@ class DirectoryPathParser {
         }
     }
 }
-?>

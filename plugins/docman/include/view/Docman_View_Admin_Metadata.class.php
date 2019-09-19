@@ -24,7 +24,8 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_Admin_Metadata extends Docman_View_Extra {
+class Docman_View_Admin_Metadata extends Docman_View_Extra
+{
 
     function _title($params)
     {
@@ -52,44 +53,46 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
         $altRowClass = 0;
 
         $mdIter->rewind();
-        while($mdIter->valid()) {
+        while ($mdIter->valid()) {
             $md = $mdIter->current();
 
             $canDelete = false;
-            if($mdFactory->isRealMetadata($md->getLabel())) {
+            if ($mdFactory->isRealMetadata($md->getLabel())) {
                 $canDelete = true;
             }
 
             $trclass = html_get_alt_row_color($altRowClass++);
             $content .= '<tr class="'.$trclass.'">';
 
-            $nameUrl  = DocmanViewURLBuilder::buildUrl($defaultUrl,
-                                        array('action' => 'admin_md_details',
-                                              'md'     => $md->getLabel()));
+            $nameUrl  = DocmanViewURLBuilder::buildUrl(
+                $defaultUrl,
+                array('action' => 'admin_md_details',
+                'md'     => $md->getLabel())
+            );
             $nameHref = '<a href="'.$nameUrl.'">'.$this->hp->purify($md->getName()).'</a>';
             $content .= '<td>'.$nameHref.'</td>';
 
             $content .= '<td>'.$this->hp->purify($md->getDescription()).'</td>';
 
             $content .= '<td>';
-            if($md->isRequired()) {
+            if ($md->isRequired()) {
                 $content .= "-";
-            }
-            else {
-                if($md->isUsed()) {
+            } else {
+                if ($md->isUsed()) {
                     $content .= "Used";
-                }
-                else {
+                } else {
                     $content .= "Unused";
                 }
             }
             $content .= '</td>';
 
             $trash = '-';
-            if($canDelete) {
-                $link = DocmanViewURLBuilder::buildUrl($defaultUrl,
-                                        array('action' => 'admin_delete_metadata',
-                                              'md' => $md->getLabel()));
+            if ($canDelete) {
+                $link = DocmanViewURLBuilder::buildUrl(
+                    $defaultUrl,
+                    array('action' => 'admin_delete_metadata',
+                    'md' => $md->getLabel())
+                );
 
                 $warn  = $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_list_delete_warn', $this->hp->purify($md->getName()));
                 $alt   = $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_list_delete_alt', $this->hp->purify($md->getName()));
@@ -182,5 +185,3 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
         echo $content;
     }
 }
-
-?>

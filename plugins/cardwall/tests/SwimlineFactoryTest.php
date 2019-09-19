@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__) .'/bootstrap.php';
 
-class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
+class Cardwall_SwimLineFactoryTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -96,5 +97,3 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         $this->assertIdentical($expected, $swimlines);
     }
 }
-
-?>

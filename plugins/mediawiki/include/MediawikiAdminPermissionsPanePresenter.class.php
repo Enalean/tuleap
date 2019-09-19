@@ -18,11 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class MediawikiAdminPermissionsPanePresenter extends MediawikiAdminPanePresenter {
+class MediawikiAdminPermissionsPanePresenter extends MediawikiAdminPanePresenter
+{
 
-    public  $groups_permissions;
-    public  $read_ugroups;
-    public  $write_ugroups;
+    public $groups_permissions;
+    public $read_ugroups;
+    public $write_ugroups;
 
     /** @var bool */
     private $is_default_mapping;

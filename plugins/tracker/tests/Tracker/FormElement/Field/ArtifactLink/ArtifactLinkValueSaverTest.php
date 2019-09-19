@@ -26,7 +26,8 @@ use Tracker_ArtifactFactory;
 
 require_once __DIR__.'/../../../../bootstrap.php';
 
-class ArtifactLinkValueSaverTest extends TuleapTestCase {
+class ArtifactLinkValueSaverTest extends TuleapTestCase
+{
 
     /** @var Tracker_FormElement_Field_ArtifactLink */
     private $field;
@@ -253,7 +254,7 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
 
         stub($this->field)->getTracker()->returns($this->tracker_child);
 
-        expect($this->dao)->create('*', NULL, '*', '*', '*')->once();
+        expect($this->dao)->create('*', null, '*', '*', '*')->once();
 
         $this->saver->saveValue(
             $this->field,
@@ -303,7 +304,7 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
 
         stub($this->field)->getTracker()->returns($this->tracker);
 
-        expect($this->dao)->create('*', NULL, '*', '*', '*')->once();
+        expect($this->dao)->create('*', null, '*', '*', '*')->once();
 
         $this->saver->saveValue(
             $this->field,
@@ -329,7 +330,7 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
         stub($this->field)->getTracker()->returns($this->tracker);
         stub($this->artifact_link_usage_dao)->isTypeDisabledInProject(101, '_is_child')->returns(true);
 
-        expect($this->dao)->create('*', NULL, '*', '*', '*')->once();
+        expect($this->dao)->create('*', null, '*', '*', '*')->once();
 
         $this->saver->saveValue(
             $this->field,

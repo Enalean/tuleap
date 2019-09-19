@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201205231210_add_notification_occurence_column extends ForgeUpgrade_Bucket {
+class b201205231210_add_notification_occurence_column extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -67,6 +68,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('The column notification_occurence in table plugin_docman_approval still not created');
         }
     }
-
 }
-?>

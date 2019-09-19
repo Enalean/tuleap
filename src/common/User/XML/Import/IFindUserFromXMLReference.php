@@ -21,7 +21,8 @@ namespace User\XML\Import;
 
 use SimpleXMLElement;
 
-interface IFindUserFromXMLReference {
+interface IFindUserFromXMLReference
+{
 
     /**
      * @return \PFUser

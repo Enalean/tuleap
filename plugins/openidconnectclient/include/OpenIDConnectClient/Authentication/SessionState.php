@@ -20,8 +20,8 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-
-class SessionState {
+class SessionState
+{
     /**
      * @var string
      */

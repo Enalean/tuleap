@@ -28,7 +28,8 @@ Mock::generate('Tracker');
 
 Mock::generate('Tracker_FormElement_Field_List');
 
-class Tracker_RuleFactoryTest extends TuleapTestCase {
+class Tracker_RuleFactoryTest extends TuleapTestCase
+{
 
     public function testImportListRules()
     {
@@ -157,11 +158,11 @@ XML;
         $rule_list_factory = mock('Tracker_Rule_List_Factory');
         $rule_date_factory = mock('Tracker_Rule_Date_Factory');
         $rule_factory = partial_mock(
-                'Tracker_RuleFactory',
-                array(
+            'Tracker_RuleFactory',
+            array(
                     'getListFactory',
                     'getDateFactory',)
-                );
+        );
 
         stub($rule_factory)->getListFactory()->returns($rule_list_factory);
         stub($rule_factory)->getDateFactory()->returns($rule_date_factory);
@@ -264,4 +265,3 @@ XML;
         $factory->saveObject($rules, $tracker);
     }
 }
-?>

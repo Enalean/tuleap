@@ -20,7 +20,8 @@
 
 namespace Tuleap\ProFTPd\Xferlog;
 
-class Entry {
+class Entry
+{
 
     /** @var int */
     public $current_time;

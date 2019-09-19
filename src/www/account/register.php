@@ -32,7 +32,7 @@ $page = $request->get('page');
 $confirmation_register = false;
 // ###### function register_valid()
 // ###### checks for valid register from form post
-if($page == "admin_creation"){
+if ($page == "admin_creation") {
     $request->checkUserIsSuperUser();
 }
 
@@ -42,8 +42,8 @@ $event_manager->processEvent('display_newaccount', array('allow' => &$is_registe
 
 if (! $request->getCurrentUser()->isSuperUser() && !$is_register_page_accessible) {
     exit_error(
-        $GLOBALS['Language']->getText('include_session','insufficient_access'),
-        $GLOBALS['Language']->getText('include_session','no_access')
+        $GLOBALS['Language']->getText('include_session', 'insufficient_access'),
+        $GLOBALS['Language']->getText('include_session', 'no_access')
     );
 }
 
@@ -97,7 +97,7 @@ function register_valid($mail_confirm_code, array &$errors)
 
     $password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();
     if (! $password_sanity_checker->check($request->get('form_pw'))) {
-        foreach($password_sanity_checker->getErrors() as $error) {
+        foreach ($password_sanity_checker->getErrors() as $error) {
             $GLOBALS['Response']->addFeedback('error', $error);
         }
         $errors['form_pw'] = 'Error';
@@ -106,7 +106,7 @@ function register_valid($mail_confirm_code, array &$errors)
 
     $expiry_date = 0;
     if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $request->get('form_expiry'))) {
-        $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('account_register', 'data_not_parsed'));
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_register', 'data_not_parsed'));
         $errors['form_expiry'] = $Language->getText('account_register', 'data_not_parsed');
         return 0;
     }
@@ -116,32 +116,34 @@ function register_valid($mail_confirm_code, array &$errors)
         $date_list = preg_split("/-/D", $request->get('form_expiry'), 3);
         $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
         $expiry_date = $unix_expiry_time;
-
     }
 
     $status = 'P';
-    if($request->get('page')== "admin_creation"){
-        if($request->get('form_restricted')){
+    if ($request->get('page')== "admin_creation") {
+        if ($request->get('form_restricted')) {
             $status = 'R';
-        } else{
+        } else {
             $status = 'A';
         }
     }
 
     //use sys_lang as default language for each user at register
-    $res = account_create($request->get('form_loginname')
-                          ,$request->get('form_pw')
-                          ,''
-                          ,$request->get('form_realname')
-                          ,$request->get('form_register_purpose')
-                          ,$request->get('form_email')
-                          ,$status
-                          ,$mail_confirm_code
-                          ,$request->get('form_mail_site')
-                          ,$request->get('form_mail_va')
-                          ,$tz
-                          ,UserManager::instance()->getCurrentUser()->getLocale()
-                          ,'A',$expiry_date);
+    $res = account_create(
+        $request->get('form_loginname'),
+        $request->get('form_pw'),
+        '',
+        $request->get('form_realname'),
+        $request->get('form_register_purpose'),
+        $request->get('form_email'),
+        $status,
+        $mail_confirm_code,
+        $request->get('form_mail_site'),
+        $request->get('form_mail_va'),
+        $tz,
+        UserManager::instance()->getCurrentUser()->getLocale(),
+        'A',
+        $expiry_date
+    );
 
     return $res;
 }
@@ -152,7 +154,7 @@ function register_valid($mail_confirm_code, array &$errors)
 **/
 function getFieldError($field_key, array $errors)
 {
-    if(isset($errors[$field_key])) {
+    if (isset($errors[$field_key])) {
         return $errors[$field_key];
     }
     return null;
@@ -190,7 +192,7 @@ function display_account_form($register_error, array $errors)
     $form_send_email        = $request->get('form_send_email') == 1;
     $form_send_email_error  = getFieldError('form_send_email', $errors);
 
-    if($request->exist('timezone') && is_valid_timezone($request->get('timezone'))) {
+    if ($request->exist('timezone') && is_valid_timezone($request->get('timezone'))) {
         $timezone = $request->get('timezone');
     } else {
         $timezone = false;
@@ -278,9 +280,9 @@ if ($request->isPost() && $request->exist('Register')) {
         $content                 = '';
         $admin_creation          = false;
 
-        if($page == 'admin_creation'){
+        if ($page == 'admin_creation') {
             $admin_creation = true;
-            if ($request->get('form_send_email')){
+            if ($request->get('form_send_email')) {
                 //send an email to the user with th login and password
                 $from      = $GLOBALS['sys_noreply'];
                 $is_sent = send_admin_new_user_email(
@@ -300,7 +302,7 @@ if ($request->isPost() && $request->exist('Register')) {
         $is_thanks = true;
 
         if ($GLOBALS['sys_user_approval'] == 0 || $admin_creation) {
-            if(!$admin_creation) {
+            if (!$admin_creation) {
                 if (!send_new_user_email($request->get('form_email'), $user_name, $mail_confirm_code)) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
@@ -313,17 +315,19 @@ if ($request->isPost() && $request->exist('Register')) {
 
             $title  = $Language->getText('account_register', 'title_confirm');
 
-            if ($admin_creation){
+            if ($admin_creation) {
                 $title  = $Language->getText('account_register', 'title_confirm_admin');
                 $content_title = 'msg_confirm_admin';
-                $content           = $Language->getText('account_register', $content_title,
-                                                            array(
+                $content           = $Language->getText(
+                    'account_register',
+                    $content_title,
+                    array(
                                                                     $hp->purify($request->get('form_realname')),
                                                                     $GLOBALS['sys_name'],
                                                                     $hp->purify($request->get('form_loginname')),
                                                                     $hp->purify($request->get('form_pw'))
                                                             )
-                                     );
+                );
                 $thanks             = '';
                 $is_thanks           = false;
                 $redirect_url       = '/admin';
@@ -334,7 +338,6 @@ if ($request->isPost() && $request->exist('Register')) {
                 $redirect_url       = '/';
                 $redirect_content   = $Language->getText('account_register', 'msg_redirect');
             }
-
         } else {
             // Registration requires approval
             // inform the user that approval is required
@@ -361,9 +364,10 @@ if ($request->isPost() && $request->exist('Register')) {
     }
 }
 
-if($page != 'admin_creation'){
+if ($page != 'admin_creation') {
     $em = EventManager::instance();
-    $em->processEvent('before_register',
+    $em->processEvent(
+        'before_register',
         array(
             'request'                      => $request,
             'is_registration_confirmation' => $confirmation_register
@@ -372,7 +376,7 @@ if($page != 'admin_creation'){
 }
 
 $body_class = array('register-page');
-if($page == 'admin_creation'){
+if ($page == 'admin_creation') {
     $body_class[] = 'admin_register';
 }
 

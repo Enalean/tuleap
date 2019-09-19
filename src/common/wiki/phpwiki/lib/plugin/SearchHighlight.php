@@ -31,8 +31,7 @@ require_once("lib/PageList.php");
  * Could be hooked from lib/display.php (but then not possible for actionpages)
  * or at request->flush or on a template. (if google referrer, search)
  */
-class WikiPlugin_SearchHighlight
-extends WikiPlugin
+class WikiPlugin_SearchHighlight extends WikiPlugin
 {
     function getName()
     {
@@ -46,8 +45,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.1 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.1 $"
+        );
     }
 
     function getDefaultArguments()
@@ -61,8 +63,9 @@ extends WikiPlugin
     function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
-        if (empty($args['s']))
+        if (empty($args['s'])) {
             return '';
+        }
 
         extract($args);
 
@@ -81,8 +84,10 @@ extends WikiPlugin
         $html = array();
         foreach ($matches as $line) {
             $line = $this->highlight_line($line, $hilight_re);
-            $html[] = HTML::dd(HTML::small(array('class' => 'search-context'),
-                                           $line));
+            $html[] = HTML::dd(HTML::small(
+                array('class' => 'search-context'),
+                $line
+            ));
         }
         return $html;
     }
@@ -109,4 +114,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

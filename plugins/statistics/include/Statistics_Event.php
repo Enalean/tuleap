@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Statistics_Event {
+class Statistics_Event
+{
 
     /**
      * Get the entries to display in statistics/frequence

@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class ChartDataBuilderV5 {
+abstract class ChartDataBuilderV5
+{
 
     protected $chart;
     protected $artifacts;

@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_Field_List_Bind_DefaultvalueDao extends DataAccessObject {
+class Tracker_FormElement_Field_List_Bind_DefaultvalueDao extends DataAccessObject
+{
     function __construct()
     {
         parent::__construct();
@@ -42,7 +43,7 @@ class Tracker_FormElement_Field_List_Bind_DefaultvalueDao extends DataAccessObje
                 WHERE field_id = $from_field_id";
         $this->update($sql);
 
-        foreach($value_mapping as $from => $to) {
+        foreach ($value_mapping as $from => $to) {
             $from  = $this->da->escapeInt($from);
             $to    = $this->da->escapeInt($to);
             $sql = "UPDATE $this->table_name 
@@ -80,6 +81,4 @@ class Tracker_FormElement_Field_List_Bind_DefaultvalueDao extends DataAccessObje
         }
         return true;
     }
-
 }
-?>

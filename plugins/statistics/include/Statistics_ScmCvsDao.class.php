@@ -22,7 +22,8 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 /**
  * DAO class for CVS statistics
  */
-class Statistics_ScmCvsDao extends DataAccessObject {
+class Statistics_ScmCvsDao extends DataAccessObject
+{
 
     var $groupFilter = '';
 
@@ -193,7 +194,4 @@ class Statistics_ScmCvsDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
-
 }
-
-?>

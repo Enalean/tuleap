@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class FileImporter_PathTest extends \PHPUnit\Framework\TestCase {
+class FileImporter_PathTest extends \PHPUnit\Framework\TestCase
+{
 
     protected function setUp() : void
     {
@@ -64,8 +65,7 @@ class FileImporter_PathTest extends \PHPUnit\Framework\TestCase {
                     return true;
                 }
                 return false;
-            })
-        );
+            }));
 
         $this->file_importer->import(__DIR__.'/_fixtures/xferlog_relative');
     }
@@ -88,8 +88,7 @@ class FileImporter_PathTest extends \PHPUnit\Framework\TestCase {
                     return true;
                 }
                 return false;
-            })
-        );
+            }));
 
         $this->file_importer->import(__DIR__.'/_fixtures/xferlog_absolute');
     }

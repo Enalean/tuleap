@@ -23,7 +23,8 @@ require_once(__DIR__ . '/../bootstrap.php');
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 
-class ProviderManagerTest extends TuleapTestCase {
+class ProviderManagerTest extends TuleapTestCase
+{
     public function itCreatesNewProvider()
     {
         $provider_dao     = mock('Tuleap\OpenIDConnectClient\Provider\ProviderDao');

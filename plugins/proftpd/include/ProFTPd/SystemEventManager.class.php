@@ -23,7 +23,8 @@ namespace Tuleap\ProFTPd;
 use Backend;
 use ProjectManager;
 
-class SystemEventManager {
+class SystemEventManager
+{
     /** @var SystemEventManager */
     private $system_event_manager;
 
@@ -85,7 +86,7 @@ class SystemEventManager {
 
     public function instanciateEvents($type, &$dependencies)
     {
-        switch($type) {
+        switch ($type) {
             case \Tuleap\ProFTPd\SystemEvent\PROFTPD_DIRECTORY_CREATE::NAME:
                 $dependencies = array(
                     $this->backend,

@@ -25,7 +25,8 @@
 * then target field will propose a value.
 *
 */
-class Tracker_Rule_List extends Tracker_Rule {
+class Tracker_Rule_List extends Tracker_Rule
+{
 
     var $target_value;
     var $source_value;
@@ -105,6 +106,4 @@ class Tracker_Rule_List extends Tracker_Rule {
         $this->target_value = $value;
         return $this;
     }
-
 }
-?>

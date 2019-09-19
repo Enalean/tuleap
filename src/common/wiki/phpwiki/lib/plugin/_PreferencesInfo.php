@@ -24,8 +24,7 @@ rcs_id('$Id: _PreferencesInfo.php,v 1.3 2004/02/17 12:11:36 rurban Exp $');
 /**
  * Plugin to display the current preferences without auth check.
  */
-class WikiPlugin__PreferencesInfo
-extends WikiPlugin
+class WikiPlugin__PreferencesInfo extends WikiPlugin
 {
     function getName()
     {
@@ -34,14 +33,19 @@ extends WikiPlugin
 
     function getDescription()
     {
-        return sprintf(_("Get preferences information for current user %s."),
-                       '[userid]');
+        return sprintf(
+            _("Get preferences information for current user %s."),
+            '[userid]'
+        );
     }
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.3 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.3 $"
+        );
     }
 
     function getDefaultArguments()
@@ -73,4 +77,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

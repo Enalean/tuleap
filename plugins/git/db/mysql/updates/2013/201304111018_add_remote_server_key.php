@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201304111018_add_remote_server_key extends ForgeUpgrade_Bucket {
+class b201304111018_add_remote_server_key extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -79,11 +80,8 @@ EOT;
                 $this->log->info("Import key for server ".$row['id']."(".$key_path.")");
                 $update_stm->execute(array(
                     ':ssh_key' => file_get_contents($key_path),
-                    ':id' => $row['id'])
-                );
+                    ':id' => $row['id']));
             }
         }
     }
 }
-
-?>

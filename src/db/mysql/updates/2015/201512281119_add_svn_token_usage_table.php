@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201512281119_add_svn_token_usage_table extends ForgeUpgrade_Bucket {
+class b201512281119_add_svn_token_usage_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

@@ -21,7 +21,8 @@
 
 use Tuleap\PHPWiki\WikiPage;
 
-class PaginatedWikiPagesFactory {
+class PaginatedWikiPagesFactory
+{
 
     /** @var WikiDao */
     private $dao;
@@ -58,7 +59,6 @@ class PaginatedWikiPagesFactory {
             if ($wiki_page->isAutorized($user->getId())) {
                 $pages[] = $wiki_page;
             }
-
         }
 
         return new PaginatedWikiPages($pages, $total_size);

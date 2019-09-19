@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Log_ConsoleLogger implements Logger {
+class Log_ConsoleLogger implements Logger
+{
     public const BLACK   = "\033[30m";
     public const RED     = "\033[31m";
     public const GREEN   = "\033[32m";
@@ -64,7 +65,6 @@ class Log_ConsoleLogger implements Logger {
             $log_string    .= ": $error_message:\n$stack_trace";
         }
         return $log_string;
-
     }
 
     /**

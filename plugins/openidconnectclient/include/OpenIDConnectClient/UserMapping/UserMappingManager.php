@@ -23,7 +23,8 @@ namespace Tuleap\OpenIDConnectClient\UserMapping;
 use PFUser;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
-class UserMappingManager {
+class UserMappingManager
+{
 
     /**
      * @var UserMappingDao
@@ -101,7 +102,7 @@ class UserMappingManager {
             return $user_mappings_usage;
         }
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $user_mappings_usage[] = $this->instantiateUserMappingUsageFromRow($row);
         }
 
@@ -162,5 +163,4 @@ class UserMappingManager {
             $row['last_used']
         );
     }
-
 }

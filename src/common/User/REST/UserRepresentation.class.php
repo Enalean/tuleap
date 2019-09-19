@@ -21,7 +21,8 @@ namespace Tuleap\User\REST;
 
 use PFUser;
 
-class UserRepresentation extends MinimalUserRepresentation {
+class UserRepresentation extends MinimalUserRepresentation
+{
 
     /**
      * @var String {@type string}

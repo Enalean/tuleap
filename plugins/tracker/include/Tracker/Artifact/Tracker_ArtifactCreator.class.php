@@ -72,7 +72,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
     {
         $artifact = $this->getBareArtifact($tracker, $submitted_on, $user->getId(), 0);
         $success = $this->insertArtifact($tracker, $user, $artifact, $submitted_on, 0);
-        if(!$success) {
+        if (!$success) {
             return false;
         }
         return $artifact;

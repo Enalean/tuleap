@@ -28,7 +28,8 @@ Mock::generate('NewsBytesDao');
 Mock::generate('ArtifactDao');
 Mock::generate('Rule_ProjectName');
 
-class URLTest extends TuleapTestCase {
+class URLTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -150,7 +151,7 @@ class URLTest extends TuleapTestCase {
         $url->setReturnValue('getProjectNameRule', $rule);
         $rule->setReturnValue('containsIllegalChars', false);
 
-        $dao->expectOnce('searchByUnixGroupName',array('test.svn'));
+        $dao->expectOnce('searchByUnixGroupName', array('test.svn'));
         $dao->setReturnReference('searchByUnixGroupName', $exists);
 
         $url->setReturnReference('getProjectDao', $dao);
@@ -199,7 +200,6 @@ class URLTest extends TuleapTestCase {
         $_REQUEST['forum_id']=1;
         $group_id = $url->setReturnReference('getForumDao', $dao);
         $this->assertNotEqual($url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'), $GLOBALS['sys_news_group']);
-
     }
 
     function testNewsBytesExist()
@@ -221,7 +221,6 @@ class URLTest extends TuleapTestCase {
         $dao2->setReturnReference('searchByForumId', $exists2);
         $url->setReturnReference('getNewsBytesDao', $dao2);
         $this->assertEqual($url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'), $GLOBALS['sys_news_group']);
-
     }
 
 

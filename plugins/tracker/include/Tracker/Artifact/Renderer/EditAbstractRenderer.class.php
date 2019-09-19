@@ -24,7 +24,8 @@
 
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
-abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_ArtifactRenderer {
+abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_ArtifactRenderer
+{
     /**
      * @var Tracker_Artifact
      */

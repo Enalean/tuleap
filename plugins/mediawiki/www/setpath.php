@@ -62,7 +62,7 @@ require_once __DIR__.'/../include/mediawikiPlugin.class.php';
 
 $dao = new MediawikiSiteAdminResourceRestrictorDao();
 
-if(isset($GLOBALS['TULEAP_MW_PROJECT'])) {
+if (isset($GLOBALS['TULEAP_MW_PROJECT'])) {
     $wiki_name = $GLOBALS['TULEAP_MW_PROJECT'];
 } else {
     $uri = explode('/', $_SERVER['REQUEST_URI']);

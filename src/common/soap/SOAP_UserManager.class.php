@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class SOAP_UserManager {
+class SOAP_UserManager
+{
     private $user_manager;
 
     public function __construct(UserManager $user_manager)
@@ -42,5 +43,3 @@ class SOAP_UserManager {
         throw new SoapFault('3001', 'Invalid session');
     }
 }
-
-?>

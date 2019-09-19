@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactXMLExporterArtifact {
+class ArtifactXMLExporterArtifact
+{
 
     /** @var ArtifactXMLExporterDao */
     private $dao;
@@ -86,7 +87,7 @@ class ArtifactXMLExporterArtifact {
 
         $previous_changeset = $this->initial_changeset;
         $history = $this->dao->searchHistory($artifact_id);
-        foreach($history as $row) {
+        foreach ($history as $row) {
             try {
                 if (! $this->comment_exporter->updateComment($row)) {
                     $node = $this->getChangeset($previous_changeset, $tracker_id, $artifact_id, $row);
@@ -322,7 +323,6 @@ class ArtifactXMLExporterArtifact {
 
             $this->last_history_recorded[$row['field_name']] = $row['new_value'];
             $this->field_factory->appendValueByType($changeset_node, $tracker_id, $artifact_id, $row);
-
         }
         return $changeset_node;
     }

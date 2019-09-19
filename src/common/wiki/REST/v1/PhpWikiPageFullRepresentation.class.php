@@ -26,7 +26,8 @@ use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use WikiVersionDao;
 use WikiPageVersionFactory;
 
-class PhpWikiPageFullRepresentation extends PhpWikiPageRepresentation {
+class PhpWikiPageFullRepresentation extends PhpWikiPageRepresentation
+{
 
     /**
      * @var int {@type int}

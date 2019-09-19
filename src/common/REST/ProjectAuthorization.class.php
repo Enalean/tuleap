@@ -30,7 +30,8 @@ use Project_AccessException;
 use Project_AccessNotAdminException;
 use Tracker_URLVerification;
 
-class ProjectAuthorization {
+class ProjectAuthorization
+{
 
     public static function userCanAccessProject(PFUser $user, Project $project, URLVerification $url_verification)
     {

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Encoding_SupportedXmlCharEncoding {
+class Encoding_SupportedXmlCharEncoding
+{
 
     private static $php_supported_encoding_types = array(
         'UTF-8',
@@ -41,7 +42,8 @@ class Encoding_SupportedXmlCharEncoding {
 
         $string = self::convertToUTF8($string);
 
-        preg_match('/[^\x20-\xD7FF\xE000-\xFFFD\x10000-x10FFFF\x9\xA\xD]/',
+        preg_match(
+            '/[^\x20-\xD7FF\xE000-\xFFFD\x10000-x10FFFF\x9\xA\xD]/',
             $string,
             $matches
         );
@@ -61,8 +63,7 @@ class Encoding_SupportedXmlCharEncoding {
                 $current == 0xD
             ) {
                 $clean .= chr($current);
-            }
-            else {
+            } else {
                 $clean .= " ";
             }
         }
@@ -84,4 +85,3 @@ class Encoding_SupportedXmlCharEncoding {
         return mb_convert_encoding($string, 'UTF-8', $encoding);
     }
 }
-?>

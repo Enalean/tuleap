@@ -20,7 +20,8 @@
 
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
-class OneStepProjectCreationRequestTest extends TuleapTestCase {
+class OneStepProjectCreationRequestTest extends TuleapTestCase
+{
 
     private $template_id        = 100;
     private $service_git_id     = 11;

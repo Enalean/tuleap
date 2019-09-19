@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_ProjectNotFoundException extends Exception {
+class Git_ProjectNotFoundException extends Exception
+{
 }
-
-?>

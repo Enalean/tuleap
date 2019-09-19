@@ -21,7 +21,8 @@
 /**
  * Continuous integration for Git
  */
-class Git_Ci {
+class Git_Ci
+{
 
     private $_dao;
 
@@ -175,5 +176,3 @@ class Git_Ci {
         return $this->getDao()->deleteTrigger($jobId);
     }
 }
-
-?>

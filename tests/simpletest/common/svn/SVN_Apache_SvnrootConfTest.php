@@ -18,7 +18,8 @@
  *
  */
 
-class SVN_Apache_SvnrootConfTestEventManager extends EventManager {
+class SVN_Apache_SvnrootConfTestEventManager extends EventManager
+{
     public function processEvent($event_name, $params = [])
     {
         $project_row = array();
@@ -27,7 +28,8 @@ class SVN_Apache_SvnrootConfTestEventManager extends EventManager {
     }
 }
 
-class SVN_Apache_SvnrootConfTest extends TuleapTestCase {
+class SVN_Apache_SvnrootConfTest extends TuleapTestCase
+{
 
     function setUp()
     {

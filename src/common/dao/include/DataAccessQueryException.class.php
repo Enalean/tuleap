@@ -20,7 +20,6 @@
 
 require_once 'DataAccessException.class.php';
 
-class DataAccessQueryException extends DataAccessException {
+class DataAccessQueryException extends DataAccessException
+{
 }
-
-?>

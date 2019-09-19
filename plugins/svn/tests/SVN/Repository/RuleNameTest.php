@@ -27,7 +27,8 @@ use Tuleap\SVN\Dao;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class RuleNameTest extends TuleapTestCase {
+class RuleNameTest extends TuleapTestCase
+{
 
     private $dao;
     private $project;
@@ -122,6 +123,4 @@ class RuleNameTest extends TuleapTestCase {
         $this->assertFalse($this->rule->isValid("1deux"));
         $this->assertTrue($this->rule->isValid("a1b"));
     }
-
-
 }

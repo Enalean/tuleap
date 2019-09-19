@@ -21,7 +21,8 @@ require_once 'SVN_PermissionsManager.class.php';
 require_once 'SVN_Svnlook.class.php';
 require_once 'SVN_RevisionPathInfo.class.php';
 
-class SVN_RepositoryListing {
+class SVN_RepositoryListing
+{
     /**
      * @var SVN_PermissionsManager
      */
@@ -50,7 +51,6 @@ class SVN_RepositoryListing {
         $content          = $this->svnlook->getDirectoryListing($project, $svn_path);
 
         foreach ($content as $line) {
-
             if ($this->svn_permissions_manager->userCanRead($user, $project, $line)) {
                 $paths[]= $this->extractDirectoryContent($line, $svn_path);
             }

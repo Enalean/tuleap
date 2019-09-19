@@ -24,7 +24,8 @@
 
 require_once 'bootstrap.php';
 
-class Tracker_FormElement_Field_CheckboxHTMLTest extends Tracker_FormElement_Field_Checkbox {
+class Tracker_FormElement_Field_CheckboxHTMLTest extends Tracker_FormElement_Field_Checkbox
+{
     public function __construct()
     {
         $id = $tracker_id = $parent_id = $name = $label = $description = $use_it = $scope = $required = $notifications = $rank = null;
@@ -37,7 +38,8 @@ class Tracker_FormElement_Field_CheckboxHTMLTest extends Tracker_FormElement_Fie
     }
 }
 
-class Tracker_FormElement_Field_CheckboxTest extends TuleapTestCase {
+class Tracker_FormElement_Field_CheckboxTest extends TuleapTestCase
+{
 
     public function itIsNoneWhenArrayIsFullOfZero()
     {

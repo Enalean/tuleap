@@ -541,5 +541,3 @@ HTTP headers have already been sent.<br>Caused by output from file <b>%s</b> at 
 30001 => array("Theme::%s() is not defined. \nPlease make %s(\$graph) function in your theme classs.",2),
 
 );
-
-?>

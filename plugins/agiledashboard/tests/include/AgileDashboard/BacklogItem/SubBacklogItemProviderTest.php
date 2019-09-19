@@ -21,7 +21,8 @@
 
 require_once __DIR__.'/../../../bootstrap.php';
 
-class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCase {
+class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCase
+{
 
     private $backlog_factory;
     private $backlog_item_collection_factory;

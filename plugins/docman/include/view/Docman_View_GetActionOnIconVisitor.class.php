@@ -8,7 +8,8 @@
 */
 
 
-class Docman_View_GetActionOnIconVisitor /* implements Visitor*/ {
+class Docman_View_GetActionOnIconVisitor /* implements Visitor*/
+{
 
     function visitFolder(&$item, $params = array())
     {
@@ -40,6 +41,4 @@ class Docman_View_GetActionOnIconVisitor /* implements Visitor*/ {
     {
         return $this->visitDocument($item, $params);
     }
-
 }
-?>

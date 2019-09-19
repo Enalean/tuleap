@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-abstract class Tracker_Permission_PermissionManager_BaseTest extends TuleapTestCase {
+abstract class Tracker_Permission_PermissionManager_BaseTest extends TuleapTestCase
+{
     protected $minimal_ugroup_list;
     protected $permission_setter;
     protected $permission_manager;
@@ -69,7 +70,8 @@ abstract class Tracker_Permission_PermissionManager_BaseTest extends TuleapTestC
     }
 }
 
-class Tracker_Permission_PermissionManager_SubmitterOnlyTest extends Tracker_Permission_PermissionManager_BaseTest {
+class Tracker_Permission_PermissionManager_SubmitterOnlyTest extends Tracker_Permission_PermissionManager_BaseTest
+{
 
     public function itDoesNothingTryingToGrantAnonymousSubmittedOnly()
     {
@@ -154,7 +156,8 @@ class Tracker_Permission_PermissionManager_SubmitterOnlyTest extends Tracker_Per
     }
 }
 
-class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends Tracker_Permission_PermissionManager_BaseTest {
+class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends Tracker_Permission_PermissionManager_BaseTest
+{
 
     public function setUp()
     {
@@ -340,7 +343,8 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
     }
 }
 
-class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends Tracker_Permission_PermissionManager_BaseTest {
+class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends Tracker_Permission_PermissionManager_BaseTest
+{
     private $some_ugroupid = 369;
 
     public function setUp()
@@ -476,7 +480,8 @@ class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends 
     }
 }
 
-class Tracker_Permission_PermissionManager_CheckRequestValidityTest extends Tracker_Permission_PermissionManager_BaseTest {
+class Tracker_Permission_PermissionManager_CheckRequestValidityTest extends Tracker_Permission_PermissionManager_BaseTest
+{
 
     public function itDisplaysAFeedbackErrorIfAssignedToSemanticIsNotDefined()
     {

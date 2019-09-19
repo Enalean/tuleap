@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ResponseTest extends TuleapTestCase {
+class ResponseTest extends TuleapTestCase
+{
 
     public function itSendsJSON()
     {
@@ -31,5 +32,3 @@ class ResponseTest extends TuleapTestCase {
         $this->assertEqual($output, '["toto"]');
     }
 }
-
-?>

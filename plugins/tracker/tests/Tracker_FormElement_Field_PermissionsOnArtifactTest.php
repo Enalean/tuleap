@@ -35,7 +35,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TuleapTestCase
     public function setUp()
     {
         $this->artifact = anArtifact()->withId(101)->build();
-        $this->field    = partial_mock('Tracker_FormElement_Field_PermissionsOnArtifact',
+        $this->field    = partial_mock(
+            'Tracker_FormElement_Field_PermissionsOnArtifact',
             array(
                 'addRequiredError',
                 'isRequired'

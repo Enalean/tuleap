@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201210300845_add_from_tv3_id_column extends ForgeUpgrade_Bucket {
+class b201210300845_add_from_tv3_id_column extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -39,4 +40,3 @@ class b201210300845_add_from_tv3_id_column extends ForgeUpgrade_Bucket {
         }
     }
 }
-?>

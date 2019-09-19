@@ -23,7 +23,8 @@ require_once('Docman_PermissionsManager.class.php');
 require_once('Docman_ItemFactory.class.php');
 
 
-class Docman_Error_PermissionDenied extends Error_PermissionDenied {
+class Docman_Error_PermissionDenied extends Error_PermissionDenied
+{
 
         /**
      * Constructor of the class
@@ -104,7 +105,6 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
     function getRedirectLink($urlData, $language)
     {
         return $this->urlTransform($urlData);
-
     }
 
     /**
@@ -118,7 +118,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
     {
         $params = array();
         $query  = explode('&', parse_url($url, PHP_URL_QUERY));
-        foreach($query as $tok) {
+        foreach ($query as $tok) {
             list($var, $val) = explode('=', $tok);
             $params[$var] = urldecode($val);
         }
@@ -154,7 +154,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
         }
 
         $pm = $this->_getPermissionManagerInstance($project->getId());
-        $adminList = $pm->getDocmanManagerUsers($query['id'],$project);
+        $adminList = $pm->getDocmanManagerUsers($query['id'], $project);
         if (empty($adminList)) {
             $adminList = $pm->getDocmanAdminUsers($project);
         }
@@ -187,6 +187,4 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
     {
         return Docman_ItemFactory::instance($groupId);
     }
-
 }
-?>

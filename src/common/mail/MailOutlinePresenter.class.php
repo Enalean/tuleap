@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MailOutlinePresenter {
+class MailOutlinePresenter
+{
 
     public $logo_url;
     public $title;
@@ -40,4 +41,3 @@ class MailOutlinePresenter {
         $this->color_logo           = $color_logo;
     }
 }
-?>

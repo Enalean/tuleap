@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XML_Exporter_ArtifactXMLExporter {
+class Tracker_XML_Exporter_ArtifactXMLExporter
+{
 
     /**
      * @var Tracker_XML_Exporter_ChangesetXMLExporter

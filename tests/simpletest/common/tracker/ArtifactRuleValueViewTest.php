@@ -20,7 +20,8 @@
  */
 Mock::generate('ArtifactRuleValue');
 
-class ArtifactRuleValueViewTest extends TuleapTestCase {
+class ArtifactRuleValueViewTest extends TuleapTestCase
+{
 
     function testFetch()
     {

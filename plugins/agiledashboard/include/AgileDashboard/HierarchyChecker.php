@@ -18,7 +18,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-class AgileDashboard_HierarchyChecker {
+class AgileDashboard_HierarchyChecker
+{
 
     /**
      * @var PlanningFactory
@@ -82,7 +83,6 @@ class AgileDashboard_HierarchyChecker {
     private function checkHierarchyContainsGivenTrackerIds(Tracker_Hierarchy $hierarchy, array $tracker_ids)
     {
         foreach ($hierarchy->flatten() as $tracker_id) {
-
             if (in_array($tracker_id, $tracker_ids)) {
                 return true;
             }

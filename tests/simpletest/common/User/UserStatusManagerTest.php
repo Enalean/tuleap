@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class User_LoginManagerStatusTest extends TuleapTestCase {
+class User_LoginManagerStatusTest extends TuleapTestCase
+{
     private $user_status_manager;
 
     public function setUp()
@@ -67,7 +68,6 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
         $this->user_status_manager->checkStatusOnVerifyPage(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_PENDING)->build()
         );
-
     }
 
     public function itRaisesAnExceptionWhenUserIsDeleted()
@@ -76,7 +76,6 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_DELETED)->build()
         );
-
     }
 
     public function itRaisesAnExceptionWhenUserIsSuspended()
@@ -85,7 +84,6 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_SUSPENDED)->build()
         );
-
     }
 
     public function itRaisesAnExceptionWhenStatusIsUnknown()
@@ -94,7 +92,6 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus('dsfd')->build()
         );
-
     }
 
     public function itRaisesAnExceptionIfAllowPendingAndStatusIsUnknown()
@@ -103,7 +100,6 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
         $this->user_status_manager->checkStatusOnVerifyPage(
             aUser()->withPassword('password')->withStatus('dfd')->build()
         );
-
     }
 
     public function itRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsPending()
@@ -113,7 +109,6 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_PENDING)->build()
         );
-
     }
 
     public function itRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsValidated()
@@ -123,7 +118,6 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_VALIDATED)->build()
         );
-
     }
 
     public function itRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsValidated()
@@ -133,7 +127,6 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_VALIDATED)->build()
         );
-
     }
 
     public function itRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsValidatedRestricted()
@@ -143,7 +136,6 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_VALIDATED_RESTRICTED)->build()
         );
-
     }
 
     public function itRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsValidatedRestricted()
@@ -153,7 +145,6 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_VALIDATED_RESTRICTED)->build()
         );
-
     }
 
     public function itRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsPending()
@@ -163,8 +154,5 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_PENDING)->build()
         );
-
     }
 }
-
-?>

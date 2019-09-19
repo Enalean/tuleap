@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201402141002_seed_mapping_table extends ForgeUpgrade_Bucket {
+class b201402141002_seed_mapping_table extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket

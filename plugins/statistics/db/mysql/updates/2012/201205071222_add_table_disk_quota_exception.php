@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201205071222_add_table_disk_quota_exception extends ForgeUpgrade_Bucket {
+class b201205071222_add_table_disk_quota_exception extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -49,6 +50,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_statistics_disk_quota_exception table is missing');
         }
     }
-
 }
-?>

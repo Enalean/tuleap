@@ -69,7 +69,6 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
         $deleteState = true;
 
         if ($project = $this->getProject($groupId)) {
-
             if (!$this->removeProjectMembers($project)) {
                 $this->error("Could not remove project users");
                 $deleteState = false;
@@ -262,5 +261,3 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
         return $uGroupBinding->removeProjectUGroupsBinding($groupId);
     }
 }
-
-?>

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchResultsIntroPresenter {
+class Search_SearchResultsIntroPresenter
+{
 
     private $results;
 

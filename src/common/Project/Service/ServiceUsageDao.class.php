@@ -19,7 +19,8 @@
  *
  */
 
-class Project_Service_ServiceUsageDao extends DataAccessObject {
+class Project_Service_ServiceUsageDao extends DataAccessObject
+{
 
     /**
      * @param int $group_id
@@ -95,4 +96,3 @@ class Project_Service_ServiceUsageDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 }
-?>

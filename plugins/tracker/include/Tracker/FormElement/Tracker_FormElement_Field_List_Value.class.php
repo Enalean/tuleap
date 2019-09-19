@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJsonFormatOfMyself {
+abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJsonFormatOfMyself
+{
     public const XML_ID_PREFIX = 'V';
 
     /**
@@ -85,11 +86,11 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
         );
     }
 
-    public abstract function getJsonId();
+    abstract public function getJsonId();
 
-    public abstract function __toString();
+    abstract public function __toString();
 
-    public abstract function getLabel();
+    abstract public function getLabel();
 
     public function fetchFormatted()
     {

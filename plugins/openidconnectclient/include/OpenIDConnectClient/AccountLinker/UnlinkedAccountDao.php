@@ -22,7 +22,8 @@ namespace Tuleap\OpenIDConnectClient\AccountLinker;
 
 use DataAccessObject;
 
-class UnlinkedAccountDao extends DataAccessObject {
+class UnlinkedAccountDao extends DataAccessObject
+{
 
     public function searchById($id)
     {
@@ -48,5 +49,4 @@ class UnlinkedAccountDao extends DataAccessObject {
         $sql = "DELETE FROM plugin_openidconnectclient_unlinked_account WHERE id = $id";
         return $this->update($sql);
     }
-
 }

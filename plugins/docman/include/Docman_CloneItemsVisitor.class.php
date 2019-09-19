@@ -57,17 +57,17 @@ class Docman_CloneItemsVisitor implements ItemVisitor
     {
         // Clone folder
         $newItemId = $this->_cloneItem($item, $params);
-        if($newItemId > 0) {
+        if ($newItemId > 0) {
             $params['parentId'] = $newItemId;
 
             // Recurse
             $items = $item->getAllItems();
-            if($items) {
+            if ($items) {
                 $nb = $items->size();
-                if($nb) {
+                if ($nb) {
                     $iter = $items->iterator();
                     $iter->rewind();
-                    while($iter->valid()) {
+                    while ($iter->valid()) {
                         $child = $iter->current();
                         $child->accept($this, $params);
                         $iter->next();
@@ -125,15 +125,20 @@ class Docman_CloneItemsVisitor implements ItemVisitor
     function _cloneFile($item, $params)
     {
         $newItemId = $this->_cloneItem($item, $params);
-        if($newItemId > 0) {
+        if ($newItemId > 0) {
             // Clone physical file of the last version in the template item
             $srcVersion = $item->getCurrentVersion();
             $srcPath = $srcVersion->getPath();
             $dstName = basename($srcPath);
             //print $srcPath.'-'.$dstName."-<br>";
             $fs = $this->_getFileStorage($params['data_root']);
-            $dstPath = $fs->copy($srcPath,
-                                      $dstName, $this->dstGroupId, $newItemId, 0);
+            $dstPath = $fs->copy(
+                $srcPath,
+                $dstName,
+                $this->dstGroupId,
+                $newItemId,
+                0
+            );
 
             // Register a new file
             $versionFactory = $this->_getVersionFactory();
@@ -150,7 +155,6 @@ class Docman_CloneItemsVisitor implements ItemVisitor
                                      'path'      => $dstPath);
 
             $versionId = $versionFactory->create($newVersionArray);
-
         }
     }
 
@@ -194,21 +198,21 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         $newItem->setGroupId($this->dstGroupId);
         $newItem->setParentId($parentId);
         // Change rank if specified
-        if($item->getId() === $params['srcRootId']) {
-            if(isset($params['newRank']) && $params['newRank'] !== null) {
+        if ($item->getId() === $params['srcRootId']) {
+            if (isset($params['newRank']) && $params['newRank'] !== null) {
                 $newItem->setRank($params['newRank']);
             }
         }
         // Check for special metadata
-        if(!$this->_metadataEnabled($item->getGroupId(), 'status')) {
+        if (!$this->_metadataEnabled($item->getGroupId(), 'status')) {
             $newItem->setStatus(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
         }
-        if(!$this->_metadataEnabled($item->getGroupId(), 'obsolescence_date')) {
+        if (!$this->_metadataEnabled($item->getGroupId(), 'obsolescence_date')) {
             $newItem->setObsolescenceDate(PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT);
         }
 
         $newItemId = $itemFactory->rawCreate($newItem);
-        if($newItemId > 0) {
+        if ($newItemId > 0) {
             // Keep track of which item id in the new tree correspond the source item id
             // This is needed for reports that applies on specific folders.
             $this->itemMapping[$item->getId()] = $newItemId;
@@ -225,12 +229,11 @@ class Docman_CloneItemsVisitor implements ItemVisitor
     function _clonePermissions($item, $newItemId, $ugroupsMapping)
     {
         $dpm = $this->_getPermissionsManager($item->getGroupId());
-        if($ugroupsMapping === false) {
+        if ($ugroupsMapping === false) {
             // ugroups mapping is not available.
             // use default values.
             $dpm->setDefaultItemPermissions($newItemId, true);
-        }
-        else {
+        } else {
             $dpm->cloneItemPermissions($item->getId(), $newItemId, $this->dstGroupId);
         }
     }
@@ -250,24 +253,24 @@ class Docman_CloneItemsVisitor implements ItemVisitor
 
         $oldMdIter = $item->getMetadataIterator();
         $oldMdIter->rewind();
-        while($oldMdIter->valid()) {
+        while ($oldMdIter->valid()) {
             $oldMd = $oldMdIter->current();
 
-            if($oldMdFactory->isRealMetadata($oldMd->getLabel())) {
+            if ($oldMdFactory->isRealMetadata($oldMd->getLabel())) {
                 $oldValue = $oldMdFactory->getMetadataValue($item, $oldMd);
 
-                if(isset($metadataMapping['md'][$oldMd->getId()])) {
+                if (isset($metadataMapping['md'][$oldMd->getId()])) {
                     $newMdv = $type_value_factory->createFromType($oldMd->getType());
                     $newMdv->setItemId($newItemId);
                     $newMdv->setFieldId($metadataMapping['md'][$oldMd->getId()]);
-                    if($oldMd->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+                    if ($oldMd->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                         $ea = array();
                         $oldValue->rewind();
-                        while($oldValue->valid()) {
+                        while ($oldValue->valid()) {
                             $e = $oldValue->current();
 
                             // no maping for value `100` (shared by all lists).
-                            if(($e->getId() != 100) && isset($metadataMapping['love'][$e->getId()])) {
+                            if (($e->getId() != 100) && isset($metadataMapping['love'][$e->getId()])) {
                                 $newE = clone $e;
                                 $newE->setId($metadataMapping['love'][$e->getId()]);
                                 $ea[] = $newE;
@@ -276,7 +279,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
                             $oldValue->next();
                         }
                         // No match found: set None value.
-                        if(count($ea) == 0) {
+                        if (count($ea) == 0) {
                             $e = new Docman_MetadataListOfValuesElement();
                             $e->setId(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
                             $ea[] = $e;
@@ -295,7 +298,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
 
     function _metadataEnabled($srcGroupId, $mdLabel)
     {
-        if(!isset($this->_cacheMetadataUsage[$mdLabel])) {
+        if (!isset($this->_cacheMetadataUsage[$mdLabel])) {
             $srcSettingsBo = $this->_getSettingsBo($srcGroupId);
             $dstSettingsBo = $this->_getSettingsBo($this->dstGroupId);
             $this->_cacheMetadataUsage[$mdLabel] = ($srcSettingsBo->getMetadataUsage($mdLabel)

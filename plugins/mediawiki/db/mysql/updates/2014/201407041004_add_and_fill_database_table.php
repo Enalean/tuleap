@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201407041004_add_and_fill_database_table extends ForgeUpgrade_Bucket {
+class b201407041004_add_and_fill_database_table extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -80,5 +81,3 @@ EOT;
         }
     }
 }
-
-?>

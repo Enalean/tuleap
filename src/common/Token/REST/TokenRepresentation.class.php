@@ -22,7 +22,8 @@ namespace Tuleap\Token\REST;
 use Rest_Token;
 use Tuleap\REST\JsonCast;
 
-class TokenRepresentation {
+class TokenRepresentation
+{
     public const ROUTE = 'tokens';
 
     /**

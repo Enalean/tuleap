@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class ProjectXMLExporterLogger  extends TruncateLevelLogger {
+class ProjectXMLExporterLogger extends TruncateLevelLogger
+{
 
     public function __construct()
     {

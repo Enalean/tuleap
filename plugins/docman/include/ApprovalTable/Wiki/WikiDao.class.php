@@ -20,9 +20,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao {
+class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
+{
 
-    function getTableById($itemId, $wikiVersionId, $fields='*')
+    function getTableById($itemId, $wikiVersionId, $fields = '*')
     {
         $sql = 'SELECT '.$fields.
             ' FROM plugin_docman_approval'.
@@ -34,12 +35,12 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao {
     /**
      * Last approval table created for the given itemId
      */
-    function getLatestTableByItemId($itemId, $fields='app.*')
+    function getLatestTableByItemId($itemId, $fields = 'app.*')
     {
         return $this->getApprovalTableItemId($itemId, $fields, ' LIMIT 1', true);
     }
 
-    function getApprovalTableItemId($itemId, $fields='app.*', $limit='', $tableStatus=false)
+    function getApprovalTableItemId($itemId, $fields = 'app.*', $limit = '', $tableStatus = false)
     {
         $where = 'app.item_id = '.$this->da->escapeInt($itemId).
             ' AND app.wiki_version_id IS NOT NULL';
@@ -60,7 +61,7 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao {
             ' ORDER BY wiki_version_id DESC'.
             ' LIMIT 1';
         $dar = $this->retrieve($sql);
-        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
             return $row['wiki_version_id'];
         } else {
@@ -82,9 +83,9 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao {
             '         AND i.group_id = wp.group_id)'.
             ' WHERE i.item_id = '.$itemId;
         $dar = $this->retrieve($sql);
-        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
-            if($row['version'] !== null) {
+            if ($row['version'] !== null) {
                 return $row['version'];
             } else {
                 return false;

@@ -24,7 +24,8 @@ namespace Tuleap\ProFTPd\Directory;
 /**
  * I represent a collection of DirectoryPathPart
  */
-class DirectoryPathCollection {
+class DirectoryPathCollection
+{
 
     private $collection = array();
 
@@ -64,5 +65,3 @@ class DirectoryPathCollection {
         return array();
     }
 }
-
-?>

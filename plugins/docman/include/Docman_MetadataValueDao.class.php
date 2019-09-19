@@ -21,45 +21,48 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_MetadataValueDao extends DataAccessObject {
+class Docman_MetadataValueDao extends DataAccessObject
+{
 
     function searchById($fieldId, $itemId)
     {
-        $sql = sprintf('SELECT *'.
+        $sql = sprintf(
+            'SELECT *'.
                        ' FROM plugin_docman_metadata_value'.
                        ' WHERE field_id = %d'.
                        ' AND item_id = %d',
-                       $fieldId,
-                       $itemId);
+            $fieldId,
+            $itemId
+        );
         return $this->retrieve($sql);
     }
 
     function _matchSqlType($type, $value, &$field, &$dataType, &$escapedValue)
     {
-        switch($type) {
+        switch ($type) {
             case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
                 $field        = 'valueText';
                 $dataType     = '%s';
                 $escapedValue = $this->da->quoteSmart($value);
-            break;
+                break;
 
             case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
                 $field        = 'valueString';
                 $dataType     = '%s';
                 $escapedValue = $this->da->quoteSmart($value);
-            break;
+                break;
 
             case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
                 $field        = 'valueDate';
                 $dataType     = '%d';
                 $escapedValue = $value;
-            break;
+                break;
 
             case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
                 $field        = 'valueInt';
                 $dataType     = '%d';
                 $escapedValue = $value;
-            break;
+                break;
 
             default:
                 $field        = false;
@@ -71,15 +74,17 @@ class Docman_MetadataValueDao extends DataAccessObject {
     // Special query to get values in rank order.
     function searchListValuesById($fieldId, $itemId)
     {
-        $sql = sprintf('SELECT valueInt'.
+        $sql = sprintf(
+            'SELECT valueInt'.
                        ' FROM plugin_docman_metadata_value as mdv,'.
                        '      plugin_docman_metadata_love as love'.
                        ' WHERE mdv.field_id = %d'.
                        ' AND mdv.item_id = %d'.
                        ' AND love.value_id = mdv.valueInt'.
                        ' ORDER BY love.rank',
-                       $fieldId,
-                       $itemId);
+            $fieldId,
+            $itemId
+        );
         return $this->retrieve($sql);
     }
 
@@ -93,20 +98,21 @@ class Docman_MetadataValueDao extends DataAccessObject {
         $field   = null;
         $this->_matchSqlType($type, $value, $field, $dtype, $val);
 
-        if($field !== false) {
+        if ($field !== false) {
             $fields[] = $field;
             $types[]  = $dtype;
 
-            $sql = sprintf('INSERT INTO plugin_docman_metadata_value'.
+            $sql = sprintf(
+                'INSERT INTO plugin_docman_metadata_value'.
                            ' ('.implode(',', $fields).')'.
                            ' VALUES ('.implode(',', $types).')',
-                           $fieldId,
-                           $itemId,
-                           $val);
+                $fieldId,
+                $itemId,
+                $val
+            );
 
             return $this->_createAndReturnId($sql);
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -132,42 +138,47 @@ class Docman_MetadataValueDao extends DataAccessObject {
         $field   = null;
         $this->_matchSqlType($type, $value, $field, $dtype, $val);
 
-        if($field !== false) {
-            $sql = sprintf('UPDATE plugin_docman_metadata_value'.
+        if ($field !== false) {
+            $sql = sprintf(
+                'UPDATE plugin_docman_metadata_value'.
                            ' SET '.$field.' = '.$dtype.
                            ' WHERE field_id = %d'.
                            ' AND item_id = %d',
-                           $val,
-                           $fieldId,
-                           $itemId);
+                $val,
+                $fieldId,
+                $itemId
+            );
 
             return $this->update($sql);
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     function exist($itemId, $fieldId)
     {
-        $sql = sprintf('SELECT count(*) AS nb'.
+        $sql = sprintf(
+            'SELECT count(*) AS nb'.
                        ' FROM plugin_docman_metadata_value'.
                        ' WHERE item_id = %d'.
                        ' AND field_id = %d',
-                       $itemId,
-                       $fieldId);
+            $itemId,
+            $fieldId
+        );
         return $this->retrieve($sql);
     }
 
     function updateToListOfValueElementDefault($fieldId, $previousValue, $newValue)
     {
-        $sql = sprintf('UPDATE plugin_docman_metadata_value'.
+        $sql = sprintf(
+            'UPDATE plugin_docman_metadata_value'.
                        ' SET valueInt = %d'.
                        ' WHERE field_id = %d'.
                        '  AND valueInt = %d',
-                       $newValue,
-                       $fieldId,
-                       $previousValue);
+            $newValue,
+            $fieldId,
+            $previousValue
+        );
         return $this->update($sql);
     }
 
@@ -181,7 +192,8 @@ class Docman_MetadataValueDao extends DataAccessObject {
      */
     function updateOrphansLoveItem($fieldId)
     {
-        $sql = sprintf('INSERT INTO plugin_docman_metadata_value'.
+        $sql = sprintf(
+            'INSERT INTO plugin_docman_metadata_value'.
                        ' (field_id, item_id, valueInt)'.
                        ' SELECT md.field_id, i.item_id, '.PLUGIN_DOCMAN_ITEM_STATUS_NONE.
                        ' FROM plugin_docman_item i'.
@@ -194,7 +206,8 @@ class Docman_MetadataValueDao extends DataAccessObject {
                        '  AND mdv.valueInt IS NULL'.
                        '  AND md.data_type = '.PLUGIN_DOCMAN_METADATA_TYPE_LIST.
                        '  AND md.field_id = %d',
-                       $fieldId);
+            $fieldId
+        );
         return $this->update($sql);
     }
 
@@ -208,14 +221,16 @@ class Docman_MetadataValueDao extends DataAccessObject {
      */
     function delete($fieldId, $itemId)
     {
-        if(!is_array($itemId)) {
+        if (!is_array($itemId)) {
             $itemId = array($itemId);
         }
-        $sql = sprintf('DELETE FROM plugin_docman_metadata_value'.
+        $sql = sprintf(
+            'DELETE FROM plugin_docman_metadata_value'.
                        ' WHERE field_id = %d'.
                        ' AND item_id IN (%s)',
-                       $fieldId,
-                       implode(',', $itemId));
+            $fieldId,
+            implode(',', $itemId)
+        );
         return $this->update($sql);
     }
 
@@ -224,9 +239,11 @@ class Docman_MetadataValueDao extends DataAccessObject {
      */
     function deleteLove($loveId)
     {
-        $sql = sprintf('DELETE FROM plugin_docman_metadata_value'.
+        $sql = sprintf(
+            'DELETE FROM plugin_docman_metadata_value'.
                        ' WHERE valueInt = %d',
-                       $loveId);
+            $loveId
+        );
         return $this->update($sql);
     }
 
@@ -258,28 +275,32 @@ class Docman_MetadataValueDao extends DataAccessObject {
         //   - the current metadata ($fieldId, const).
         //   - each item listed in $dstItemIdArray.
         //   - the metadata value_s_ of ($srcItemId, $fieldId).
-        $sql = sprintf('INSERT INTO plugin_docman_metadata_value'.
+        $sql = sprintf(
+            'INSERT INTO plugin_docman_metadata_value'.
                        ' (field_id,item_id,'.$fieldType.')'.
                        ' SELECT mdv_src.field_id, item.item_id, mdv_src.'.$fieldType.
                        ' FROM plugin_docman_item item, plugin_docman_metadata_value mdv_src'.
                        ' WHERE mdv_src.item_id = %d'.
                        ' AND mdv_src.field_id = %d'.
                        ' AND item.item_id IN (%s)',
-                       $srcItemId,
-                       $fieldId,
-                       implode(',', $dstItemIdArray));
+            $srcItemId,
+            $fieldId,
+            implode(',', $dstItemIdArray)
+        );
         return $this->update($sql);
     }
 
     public function inheritMetadataFromParent(int $item_id, int $parent_id): void
     {
-        $sql = sprintf('INSERT INTO plugin_docman_metadata_value'.
+        $sql = sprintf(
+            'INSERT INTO plugin_docman_metadata_value'.
                        ' (field_id, item_id, valueInt, valueText, valueDate, valueString)'.
                        ' SELECT field_id, %d, valueInt, valueText, valueDate, valueString '.
                        ' FROM plugin_docman_metadata_value mdv_src'.
                        ' WHERE mdv_src.item_id = %d',
-                       $this->da->escapeInt($item_id),
-                       $this->da->escapeInt($parent_id));
+            $this->da->escapeInt($item_id),
+            $this->da->escapeInt($parent_id)
+        );
         $this->update($sql);
     }
 }

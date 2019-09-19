@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_CannedResponseManager {
+class Tracker_CannedResponseManager
+{
     protected $tracker;
     public function __construct($tracker)
     {
@@ -36,21 +37,21 @@ class Tracker_CannedResponseManager {
                                                         'func'    => 'admin-canned')));
                 }
             }
-        } else if ($canned_id = (int)$request->get('delete')) {
+        } elseif ($canned_id = (int)$request->get('delete')) {
             if (Tracker_CannedResponseFactory::instance()->delete($canned_id)) {
                 $GLOBALS['Response']->addFeedback('info', 'Deleted');
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                     'tracker' => (int)$this->tracker->id,
                                                     'func'    => 'admin-canned')));
             }
-        } else if ($canned_id = (int)$request->get('update')) {
+        } elseif ($canned_id = (int)$request->get('update')) {
             if (Tracker_CannedResponseFactory::instance()->update($canned_id, $this->tracker, trim($request->get('title')), $request->get('body'))) {
                 $GLOBALS['Response']->addFeedback('info', 'Updated');
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                     'tracker' => (int)$this->tracker->id,
                                                     'func'    => 'admin-canned')));
             }
-        } else if ($canned_id = (int)$request->get('edit')) {
+        } elseif ($canned_id = (int)$request->get('edit')) {
             $this->displayAdminResponse($tracker_manager, $request, $current_user);
         }
         $this->displayAdminAllResponses($tracker_manager, $request, $current_user);
@@ -63,12 +64,12 @@ class Tracker_CannedResponseManager {
 
         //Display existing responses
         $responses = Tracker_CannedResponseFactory::instance()->getCannedResponses($this->tracker);
-        if(count($responses)) {
-            echo '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_include_canned','existing_responses') .'</h3>';
+        if (count($responses)) {
+            echo '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_include_canned', 'existing_responses') .'</h3>';
 
             echo '<table cellspacing="0" cellpadding="4" border="0">';
             $i = 0;
-            foreach($responses as $response) {
+            foreach ($responses as $response) {
                 echo '<tr class="'. util_get_alt_row_color($i++) .'" valign="top">';
                 //title
                 echo '<td><a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
@@ -88,29 +89,28 @@ class Tracker_CannedResponseManager {
                                                         'tracker' => (int)$this->tracker->id,
                                                         'func'    => 'admin-canned',
                                                         'delete'  => (int)$response->id)) .'" 
-                             onClick="return confirm(\''.addslashes($GLOBALS['Language']->getText('plugin_tracker_include_canned','delete_canned',$response->title)).'\')">';
+                             onClick="return confirm(\''.addslashes($GLOBALS['Language']->getText('plugin_tracker_include_canned', 'delete_canned', $response->title)).'\')">';
                 echo $GLOBALS['HTML']->getImage('ic/cross.png');
                 echo '</a></td></tr>';
             }
             echo '</table>';
-
         } else {
-            echo '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_include_canned','no_canned_response') .'</h3>';
+            echo '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_include_canned', 'no_canned_response') .'</h3>';
         }
 
         //Display creation form
-        echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_include_canned','create_response').'</h3>';
+        echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_include_canned', 'create_response').'</h3>';
         echo '<p>';
-        echo $GLOBALS['Language']->getText('plugin_tracker_include_canned','save_time');
+        echo $GLOBALS['Language']->getText('plugin_tracker_include_canned', 'save_time');
         echo '<p>';
         echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                         'tracker' => (int)$this->tracker->id,
                                                         'func'    => 'admin-canned')) .'" 
                     method="POST">';
-        echo '<b>'.$GLOBALS['Language']->getText('plugin_tracker_include_canned','title').':</b><br />';
+        echo '<b>'.$GLOBALS['Language']->getText('plugin_tracker_include_canned', 'title').':</b><br />';
         echo '<input type="text" name="title" value="" size="50">';
         echo '<p>';
-        echo '<b>'.$GLOBALS['Language']->getText('plugin_tracker_include_canned','message_body').'</b><br />';
+        echo '<b>'.$GLOBALS['Language']->getText('plugin_tracker_include_canned', 'message_body').'</b><br />';
         echo '<textarea name="body" rows="20" cols="65" wrap="hard"></textarea>';
         echo '<p>';
         echo '<input type="submit" name="create" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
@@ -132,19 +132,19 @@ class Tracker_CannedResponseManager {
                 'description' => ''
             )));
             //Display creation form
-            echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_admin_index','modify_cannedresponse').'</h3>';
+            echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_admin_index', 'modify_cannedresponse').'</h3>';
             echo '<p>';
-            echo $GLOBALS['Language']->getText('plugin_tracker_include_canned','save_time');
+            echo $GLOBALS['Language']->getText('plugin_tracker_include_canned', 'save_time');
             echo '<p>';
             echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                             'tracker' => (int)$this->tracker->id,
                                                             'func'    => 'admin-canned',
                                                             'update'  => (int)$response->id)) .'" 
                         method="POST">';
-            echo '<b>'.$GLOBALS['Language']->getText('plugin_tracker_include_canned','title').':</b><br />';
+            echo '<b>'.$GLOBALS['Language']->getText('plugin_tracker_include_canned', 'title').':</b><br />';
             echo '<input type="text" name="title" value="'. $hp->purify($response->title, CODENDI_PURIFIER_CONVERT_HTML) .'" size="50">';
             echo '<p>';
-            echo '<b>'.$GLOBALS['Language']->getText('plugin_tracker_include_canned','message_body').'</b><br />';
+            echo '<b>'.$GLOBALS['Language']->getText('plugin_tracker_include_canned', 'message_body').'</b><br />';
             echo '<textarea name="body" rows="20" cols="65" wrap="hard">'. $hp->purify($response->body, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>';
             echo '<p>';
             echo '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
@@ -157,4 +157,3 @@ class Tracker_CannedResponseManager {
         }
     }
 }
-?>

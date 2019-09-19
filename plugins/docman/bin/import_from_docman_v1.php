@@ -37,7 +37,7 @@ function getPasswordFromStdin($login)
 {
     echo "Password for $login: ";
 
-    if ( PHP_OS != 'WINNT') {
+    if (PHP_OS != 'WINNT') {
         shell_exec('stty -echo');
         $password = fgets(STDIN);
         shell_exec('stty echo');

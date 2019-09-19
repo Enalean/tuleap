@@ -21,7 +21,8 @@
 /**
  * Visit a target shared element and provide a creation view
  */
-class Tracker_FormElement_View_Admin_CreateSharedVisitor extends Tracker_FormElement_View_Admin_CreateVisitor {
+class Tracker_FormElement_View_Admin_CreateSharedVisitor extends Tracker_FormElement_View_Admin_CreateVisitor
+{
 
     protected function fetchForm()
     {
@@ -32,7 +33,4 @@ class Tracker_FormElement_View_Admin_CreateSharedVisitor extends Tracker_FormEle
         $html .= $this->adminElement->fetchAdminButton(self::SUBMIT_CREATE);
         return $html;
     }
-
 }
-
-?>

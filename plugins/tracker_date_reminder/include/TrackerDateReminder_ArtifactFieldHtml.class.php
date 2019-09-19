@@ -20,7 +20,8 @@
 
 require_once 'TrackerDateReminder_ArtifactField.class.php';
 
-class TrackerDateReminder_ArtifactFieldHtml {
+class TrackerDateReminder_ArtifactFieldHtml
+{
     /**
      *  Display Date Field Notification Settings form
      *
@@ -33,19 +34,19 @@ class TrackerDateReminder_ArtifactFieldHtml {
         $tdrArtifactField = new TrackerDateReminder_ArtifactField();
         $res = $tdrArtifactField->getDateFieldReminderSettings($field->getID(), $at->getID());
         $enabled = (db_numrows($res) == 1);
-        $start = db_result($res,0,'notification_start');
-        $frequency = db_result($res,0,'frequency');
-        $recurse = db_result($res,0,'recurse');
-        $notified_people = db_result($res,0,'notified_people');
+        $start = db_result($res, 0, 'notification_start');
+        $frequency = db_result($res, 0, 'frequency');
+        $recurse = db_result($res, 0, 'recurse');
+        $notified_people = db_result($res, 0, 'notified_people');
         $notified_groups = array();
         $notified_users = array();
         if (trim($notified_people) != "") {
             $notif = explode(",", $notified_people);
             foreach ($notif as $value) {
-                if (preg_match("/^g/",$value)) {
-                    array_push($notified_groups,$value);
+                if (preg_match("/^g/", $value)) {
+                    array_push($notified_groups, $value);
                 } else {
-                    array_push($notified_users,$value);
+                    array_push($notified_users, $value);
                 }
             }
         }
@@ -55,7 +56,7 @@ class TrackerDateReminder_ArtifactFieldHtml {
         if (count($notified_users) == 0) {
             $notified_users[] = '100';
         }
-        $notif_type = db_result($res,0,'notification_type');
+        $notif_type = db_result($res, 0, 'notification_type');
         if ($notif_type == 1) {
             $after = "selected";
             $before = "";
@@ -81,36 +82,38 @@ class TrackerDateReminder_ArtifactFieldHtml {
             <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$at->Group->getID().'">
             <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$at->getID().'">';
 
-        $out .= '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','notif_settings_field',array($field->getLabel())).'</h3>';
+        $out .= '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notif_settings_field', array($field->getLabel())).'</h3>';
 
         $out .= '<div class="row-fluid" id="tv3-mail-reminders">
             <div class="span12 tv3-mail-reminder">'
-                .$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_form_part1',array($field->getLabel())).
-                '<INPUT TYPE="TEXT" NAME="start" SIZE="5" VALUE="'.$start.'"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','days').'
+                .$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_form_part1', array($field->getLabel())).
+                '<INPUT TYPE="TEXT" NAME="start" SIZE="5" VALUE="'.$start.'"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'days').'
                 <SELECT NAME="notif_type">
-                    <OPTION VALUE="0" '.$before.'>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','notify_before').'
-                    <OPTION VALUE="1" '.$after.'>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','notify_after').'
-                </SELECT> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_form_part2').
+                    <OPTION VALUE="0" '.$before.'>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notify_before').'
+                    <OPTION VALUE="1" '.$after.'>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notify_after').'
+                </SELECT> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_form_part2').
             '</div>
             <div class="span12 tv3-mail-reminder">'
-                .$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_form_part3').
-                '<INPUT TYPE="TEXT" NAME="recurse" SIZE="5" VALUE="'.$recurse.'"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_form_part4')
+                .$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_form_part3').
+                '<INPUT TYPE="TEXT" NAME="recurse" SIZE="5" VALUE="'.$recurse.'"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_form_part4')
             ;
 
-        $artRoleNames = array(array('value' => '1', 'text' => $GLOBALS['Language']->getText('tracker_common_types','role_SUBMITTER_short_desc')),
-                              array('value' => '2', 'text' => $GLOBALS['Language']->getText('tracker_common_types','role_ASSIGNEE_short_desc')),
-                              array('value' => '3', 'text' => $GLOBALS['Language']->getText('tracker_common_types','role_CC_short_desc')),
-                              array('value' => '4', 'text' => $GLOBALS['Language']->getText('tracker_common_types','role_COMMENTER_short_desc')));
+        $artRoleNames = array(array('value' => '1', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_SUBMITTER_short_desc')),
+                              array('value' => '2', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_ASSIGNEE_short_desc')),
+                              array('value' => '3', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_CC_short_desc')),
+                              array('value' => '4', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_COMMENTER_short_desc')));
         $out .= html_build_multiple_select_box_from_array($artRoleNames, 'notified_users[]', $notified_users, 4, true, '', false, '', false, '', false);
 
-        $GLOBALS['Language']->getText('global','and');
+        $GLOBALS['Language']->getText('global', 'and');
 
-        $qry = sprintf('SELECT ugroup_id, name FROM ugroup'.
+        $qry = sprintf(
+            'SELECT ugroup_id, name FROM ugroup'.
                         ' WHERE (group_id = %d || group_id = 100)'.
                         ' AND ugroup_id <> 1'.
                         ' AND ugroup_id <> 2'.
                         ' AND ugroup_id <> 100',
-                       db_ei($at->Group->getID()));
+            db_ei($at->Group->getID())
+        );
         $res = db_query($qry);
         while ($rows = db_fetch_array($res)) {
             $groupNames[] = array('value' => 'g'.$rows['ugroup_id'], 'text' => util_translate_name_ugroup($rows['name']));
@@ -118,10 +121,10 @@ class TrackerDateReminder_ArtifactFieldHtml {
         $out .= html_build_multiple_select_box_from_array($groupNames, 'notified_groups[]', $notified_groups, 8, true, '', false, '', false, '', false);
 
         $out .= '</SELECT>'.
-        $GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_form_part5').
-            ' <INPUT TYPE="TEXT" NAME="frequency" SIZE="5" VALUE="'.$frequency.'"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','days').'</div>'.
-            '<INPUT TYPE="SUBMIT" NAME="submit_notif_settings" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'"></P></FORM><P>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_form_part6',array($field->getLabel())).
-            '<P>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_form_part7',array($field->getLabel())).'</P>'.
+        $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_form_part5').
+            ' <INPUT TYPE="TEXT" NAME="frequency" SIZE="5" VALUE="'.$frequency.'"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'days').'</div>'.
+            '<INPUT TYPE="SUBMIT" NAME="submit_notif_settings" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'"></P></FORM><P>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_form_part6', array($field->getLabel())).
+            '<P>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_form_part7', array($field->getLabel())).'</P>'.
             '<P>';
 
         echo $out;

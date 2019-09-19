@@ -25,7 +25,8 @@
 
 require_once('Docman_View_Browse.class.php');
 
-class Docman_View_Empty extends Docman_View_Display {
+class Docman_View_Empty extends Docman_View_Display
+{
 
     function _content($params)
     {
@@ -37,7 +38,7 @@ class Docman_View_Empty extends Docman_View_Display {
 
         $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'view_empty_emptydoc').'</h3>';
         $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'view_empty_docisempty').'</p>';
-        if($dPm->userCanWrite($params['user'], $item->getId())) {
+        if ($dPm->userCanWrite($params['user'], $item->getId())) {
             $upurl = $params['default_url'].'&amp;action=action_update&amp;id='.$item->getId();
             $html .= '<p><a href="'.$upurl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'view_empty_update').'</a></p>';
         }
@@ -47,7 +48,7 @@ class Docman_View_Empty extends Docman_View_Display {
         $html .= '<tr><td class="label">';
         $get_fields = new Docman_View_GetFieldsVisitor();
         $fields = $item->accept($get_fields, $params);
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             $html .= '<tr>';
             $html .= '<td class="label">'. $field->getLabel() .'</td>';
             $html .= '<td class="value">'. $field->getValue() .'</span></td>';
@@ -56,14 +57,11 @@ class Docman_View_Empty extends Docman_View_Display {
 
         $html .= '</table>';
 
-        if($dPm->userCanWrite($params['user'], $item->getId())) {
+        if ($dPm->userCanWrite($params['user'], $item->getId())) {
             $editurl = $params['default_url'].'&amp;action=edit&amp;id='.$item->getId();
             $html .= '<p><a href="'.$editurl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_edit').'</a></p>';
         }
 
         print $html;
     }
-
 }
-
-?>

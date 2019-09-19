@@ -19,7 +19,8 @@
 /**
  * Replace version date column values by timestamp
  */
-class b201405141602_remove_fontsize_preference extends ForgeUpgrade_Bucket {
+class b201405141602_remove_fontsize_preference extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return "Remove fontsize user preference";

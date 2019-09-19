@@ -23,7 +23,8 @@ require_once('bootstrap.php');
 /**
  * Checks that the default values are ok for all field element types that exetend list
  */
-class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends TuleapTestCase {
+class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends TuleapTestCase
+{
 
     /**
      *

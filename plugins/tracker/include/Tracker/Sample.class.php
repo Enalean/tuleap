@@ -23,7 +23,8 @@ use Tuleap\Statistics\Frequencies\GraphDataBuilder\Sample;
 /**
  * @see Statisticts plugin
  */
-class Tracker_Sample extends Sample {
+class Tracker_Sample extends Sample
+{
 
     function __construct()
     {

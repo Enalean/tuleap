@@ -20,7 +20,8 @@
 
 use Tuleap\User\UserGroup\NameTranslator;
 
-class User_ForgeUserGroupFactory {
+class User_ForgeUserGroupFactory
+{
 
     /**
      * @var UserGroupDao

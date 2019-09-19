@@ -25,7 +25,8 @@
 /**
  * I build BacklogItem{,Collection}
  */
-interface AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection {
+interface AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection
+{
 
     /**
      * @return AgileDashboard_Milestone_Backlog_IBacklogItemCollection

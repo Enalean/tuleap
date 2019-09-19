@@ -21,7 +21,8 @@
 /**
  * Value Object of a Custom Project Description Field
  */
-class Project_CustomDescription_CustomDescription {
+class Project_CustomDescription_CustomDescription
+{
 
     public const REQUIRED     = true;
     public const NOT_REQUIRED = false;
@@ -93,4 +94,3 @@ class Project_CustomDescription_CustomDescription {
         return $this->getType() == self::TYPE_TEXT;
     }
 }
-?>

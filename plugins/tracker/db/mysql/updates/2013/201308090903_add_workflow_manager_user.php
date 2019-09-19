@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201308090903_add_workflow_manager_user extends ForgeUpgrade_Bucket {
+class b201308090903_add_workflow_manager_user extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -77,4 +78,3 @@ class b201308090903_add_workflow_manager_user extends ForgeUpgrade_Bucket {
         }
     }
 }
-?>

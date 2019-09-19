@@ -24,7 +24,8 @@
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-class ProFTPd_SystemEventManagerTest extends \PHPUnit\Framework\TestCase {
+class ProFTPd_SystemEventManagerTest extends \PHPUnit\Framework\TestCase
+{
 
     public $system_event_manager;
 
@@ -40,7 +41,8 @@ class ProFTPd_SystemEventManagerTest extends \PHPUnit\Framework\TestCase {
             $this->getMockBuilder('Backend')->disableOriginalConstructor()->getMock(),
             $this->getMockBuilder('Tuleap\ProFTPd\Admin\PermissionsManager')->disableOriginalConstructor()->getMock(),
             $this->getMockBuilder('ProjectManager')->disableOriginalConstructor()->getMock(),
-            dirname(__FILE__).'/_fixtures');
+            dirname(__FILE__).'/_fixtures'
+        );
     }
 
     public function testItCreatesRepositoryCreateEvent()

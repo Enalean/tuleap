@@ -26,11 +26,12 @@
 function normalized_urlprefix()
 {
     $prefix = forge_get_config('url_prefix') ;
-    $prefix = preg_replace ("/^\//", "", $prefix) ;
-    $prefix = preg_replace ("/\/$/", "", $prefix) ;
+    $prefix = preg_replace("/^\//", "", $prefix) ;
+    $prefix = preg_replace("/\/$/", "", $prefix) ;
     $prefix = "/$prefix/" ;
-    if ($prefix == '//')
-    $prefix = '/' ;
+    if ($prefix == '//') {
+        $prefix = '/' ;
+    }
     return $prefix ;
 }
 
@@ -42,10 +43,9 @@ function normalized_urlprefix()
  */
 function util_url_prefix($prefix = '')
 {
-    if ($prefix == 'http' || $prefix == 'https' ) {
+    if ($prefix == 'http' || $prefix == 'https') {
         return $prefix . '://';
-    }
-    else {
+    } else {
         if (ForgeConfig::get('sys_https_host')) {
             return "https://";
         } else {

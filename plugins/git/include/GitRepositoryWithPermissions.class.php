@@ -26,7 +26,8 @@
 /**
  * Git Repository with its permissions
  */
-class GitRepositoryWithPermissions {
+class GitRepositoryWithPermissions
+{
     private $repository;
     private $permissions = array(
         Git::PERM_READ          => array(),
@@ -70,5 +71,3 @@ class GitRepositoryWithPermissions {
         return $this->permissions;
     }
 }
-
-?>

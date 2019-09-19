@@ -27,7 +27,8 @@ use Tuleap\Tracker\FormElement\PermissionsOnArtifactValidator;
 use Tuleap\Tracker\REST\v1\TrackerFieldsRepresentations\PermissionsOnArtifacts;
 use Tuleap\User\UserGroup\NameTranslator;
 
-class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElement_Field {
+class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElement_Field
+{
 
     public const GRANTED_GROUPS     = 'granted_groups';
     public const USE_IT             = 'use_artifact_permissions';
@@ -72,7 +73,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             $row = $dao->searchByFieldId($changeset_id, $this->id)->getRow();
             $changeset_value_id = $row['id'];
 
-            foreach($this->getValueDao()->searchByChangesetValueId($changeset_value_id) as $value) {
+            foreach ($this->getValueDao()->searchByChangesetValueId($changeset_value_id) as $value) {
                 $name = $this->getUGroupDao()->searchByUGroupId($value['ugroup_id'])->getRow();
                 $values[] = util_translate_name_ugroup($name['name']);
             }
@@ -85,7 +86,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     /**
      * @return string
      */
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
     {
         return $this->fetchChangesetRegardingPermissions($artifact_id, $changeset_id);
     }
@@ -120,12 +121,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             if (isset($v['value_id'])) {
                 $v = array($v);
             }
-            foreach($v as $val) {
+            foreach ($v as $val) {
                 $value .= $this->values[$val['value_id']]['value'];
             }
         }
         return $value;
-
     }
 
    /**
@@ -214,7 +214,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         }
 
         $ugroups  = permission_fetch_selected_ugroups(self::PERMISSION_TYPE, $artifact->getId(), $this->getTracker()->getGroupId());
-        $output .= $separator.implode(', ',$ugroups);
+        $output .= $separator.implode(', ', $ugroups);
         return $output;
     }
 
@@ -238,10 +238,10 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         array $submitted_values
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition(
-                $artifact,
-                $value,
-                $submitted_values
-            );
+            $artifact,
+            $value,
+            $submitted_values
+        );
     }
 
     protected function getHiddenArtifactValueForEdition(
@@ -335,9 +335,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     {
         $html = '';
         if (!$from || !($from_value = $this->getValue($from['value_id']))) {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' ';
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to').' ';
         } else {
-            $html .= ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from').' '. $from_value .'  '.$GLOBALS['Language']->getText('plugin_tracker_artifact','to').' ';
+            $html .= ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from').' '. $from_value .'  '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'to').' ';
         }
         $to_value = $this->getValue($to['value_id']);
         $html .= $to_value['value'];
@@ -362,7 +362,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      */
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','permissions');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'permissions');
     }
 
     /**
@@ -370,7 +370,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      */
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','permissions_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'permissions_description');
     }
 
     /**
@@ -443,16 +443,16 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     public function getCriteriaFrom($criteria)
     {
         //Only filter query if field is used
-        if($this->isUsed()) {
+        if ($this->isUsed()) {
             $criteria_value = $this->getCriteriaValue($criteria);
-            if ($criteria_value && count($criteria_value) === 1 && array_key_exists("100", $criteria_value)){
+            if ($criteria_value && count($criteria_value) === 1 && array_key_exists("100", $criteria_value)) {
                 $a = 'A_'. $this->id;
                 $b = 'B_'. $this->id;
                  $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ". $this->id .")
                           INNER JOIN tracker_artifact AS $b ON ($b.last_changeset_id = $a.changeset_id AND
                             $b.use_artifact_permissions = 0) ";
                 return $sql;
-            } else if ($criteria_value) {
+            } elseif ($criteria_value) {
                 $a = 'A_'. $this->id;
                 $b = 'B_'. $this->id;
                 $c = 'C_'. $this->id;
@@ -479,7 +479,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     public function getQueryFrom()
     {
         return '';
-
     }
 
      /**
@@ -506,7 +505,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             $values = $this->criteria_value[$criteria->report->id];
             $this->criteria_value[$criteria->report->id] = array();
 
-            foreach($values as $value) {
+            foreach ($values as $value) {
                 foreach ($value as $v) {
                     if ($v !='') {
                         $this->criteria_value[$criteria->report->id][$v] = $value;
@@ -515,10 +514,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
                     }
                 }
             }
-
-        } else if (! isset($this->criteria_value[$criteria->report->id])) {
+        } elseif (! isset($this->criteria_value[$criteria->report->id])) {
             $this->criteria_value[$criteria->report->id] = array();
-            foreach($this->getCriteriaDao()
+            foreach ($this->getCriteriaDao()
                          ->searchByCriteriaId($criteria->id) as $row) {
                 $this->criteria_value[$criteria->report->id][$row['value']] = $row;
             }
@@ -543,7 +541,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $user_groups = $this->getAllUserGroups();
 
         if (! $user_groups) {
-            $html .= "<p><b>".$GLOBALS['Language']->getText('global','error')."</b>: ".$GLOBALS['Language']->getText('project_admin_permissions','perm_type_not_def',$permission_type);
+            $html .= "<p><b>".$GLOBALS['Language']->getText('global', 'error')."</b>: ".$GLOBALS['Language']->getText('project_admin_permissions', 'perm_type_not_def', $permission_type);
             return $html;
         }
 
@@ -558,10 +556,10 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
                           $multiple .'>';
         //Any value
         $selected = count($criteria_value) ? '' : 'selected="selected"';
-        $html .= '<option value="" '. $selected .'>'. $GLOBALS['Language']->getText('global','any') .'</option>';
+        $html .= '<option value="" '. $selected .'>'. $GLOBALS['Language']->getText('global', 'any') .'</option>';
         //None value
         $selected = isset($criteria_value[100]) ? 'selected="selected"' : '';
-        $html .= '<option value="100" '. $selected .'>'. $GLOBALS['Language']->getText('global','none') .'</option>';
+        $html .= '<option value="100" '. $selected .'>'. $GLOBALS['Language']->getText('global', 'none') .'</option>';
 
         if (! is_array($criteria_value)) {
             $criteria_value = array();
@@ -575,7 +573,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     private function getOptions($user_groups, $selected_ids = array())
     {
         $options = '';
-        foreach($user_groups as $user_group) {
+        foreach ($user_groups as $user_group) {
             $id = $user_group->getId();
             $selected = (in_array($id, $selected_ids)) ? 'selected="selected"' : '';
             $options .= '<option value="'. $id .'" '.$selected.'>';
@@ -612,7 +610,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $sql = "SELECT * FROM ugroup WHERE group_id=".$this->getTracker()->getGroupId()." OR ugroup_id IN (".$predefined_ugroups.") ORDER BY ugroup_id";
         $res = db_query($sql);
 
-        while($row = db_fetch_array($res)) {
+        while ($row = db_fetch_array($res)) {
             $user_groups[] = new ProjectUGroup($row);
         }
 
@@ -740,7 +738,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $value_ids = $this->getValueDao()->searchById($value_id, $this->id);
         $ugroups = array();
 
-        foreach($value_ids as $v) {
+        foreach ($value_ids as $v) {
             $ugroups[] = $v['ugroup_id'];
         }
 
@@ -858,7 +856,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $pm = PermissionsManager::instance();
         $permission_type = self::PERMISSION_TYPE;
         foreach ($ugroups as $ugroup) {
-            if(!$pm->addPermission($permission_type, $artifact_id, $ugroup)) {
+            if (!$pm->addPermission($permission_type, $artifact_id, $ugroup)) {
                 return false;
             }
         }
@@ -925,7 +923,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
                 '/>';
         } else {
             $html .= '<input type="hidden" name="artifact[' . $this->getId(
-                ) . '][use_artifact_permissions]" value="1" />';
+            ) . '][use_artifact_permissions]" value="1" />';
         }
 
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') . '</label>';

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ConfigDao extends DataAccessObject {
+class ConfigDao extends DataAccessObject
+{
 
     public function searchAll()
     {

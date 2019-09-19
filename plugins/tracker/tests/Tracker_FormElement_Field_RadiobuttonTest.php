@@ -24,7 +24,8 @@
 
 require_once 'bootstrap.php';
 
-class Tracker_FormElement_Field_RadiobuttonHTMLTest extends Tracker_FormElement_Field_Radiobutton {
+class Tracker_FormElement_Field_RadiobuttonHTMLTest extends Tracker_FormElement_Field_Radiobutton
+{
     public function __construct()
     {
         $id = $tracker_id = $parent_id = $name = $label = $description = $use_it = $scope = $required = $notifications = $rank = null;
@@ -37,7 +38,8 @@ class Tracker_FormElement_Field_RadiobuttonHTMLTest extends Tracker_FormElement_
     }
 }
 
-class Tracker_FormElement_Field_RadiobuttonTest extends TuleapTestCase {
+class Tracker_FormElement_Field_RadiobuttonTest extends TuleapTestCase
+{
 
     public function itIsNotNoneWhenArrayContainsAValue()
     {

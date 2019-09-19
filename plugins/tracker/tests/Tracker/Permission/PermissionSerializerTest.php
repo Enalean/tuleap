@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_Permission_PermissionSerializer_ArtifactBuilder {
+class Tracker_Permission_PermissionSerializer_ArtifactBuilder
+{
     private $artifact_builder;
     private $assignee_retriever;
     private $submitter;
@@ -69,7 +70,8 @@ class Tracker_Permission_PermissionSerializer_ArtifactBuilder {
     }
 }
 
-abstract class Tracker_Permission_PermissionSerializer extends TuleapTestCase {
+abstract class Tracker_Permission_PermissionSerializer extends TuleapTestCase
+{
 
     protected $project_id = 333;
 
@@ -197,7 +199,8 @@ abstract class Tracker_Permission_PermissionSerializer extends TuleapTestCase {
     }
 }
 
-class Tracker_Permission_PermissionSerializer_ProjectAdminAccessTest extends Tracker_Permission_PermissionSerializer {
+class Tracker_Permission_PermissionSerializer_ProjectAdminAccessTest extends Tracker_Permission_PermissionSerializer
+{
 
     public function itAlwaysReturnsProjectAdminWhenAllUsersHaveAccessToAllArtifacts()
     {
@@ -215,7 +218,8 @@ class Tracker_Permission_PermissionSerializer_ProjectAdminAccessTest extends Tra
     }
 }
 
-class Tracker_Permission_PermissionSerializer_FullAccessTest extends Tracker_Permission_PermissionSerializer {
+class Tracker_Permission_PermissionSerializer_FullAccessTest extends Tracker_Permission_PermissionSerializer
+{
 
     public function itReturnsAnonymousWhenAllUsersHaveAccessToAllArtifacts()
     {
@@ -304,7 +308,8 @@ class Tracker_Permission_PermissionSerializer_FullAccessTest extends Tracker_Per
     }
 }
 
-class Tracker_Permission_PermissionSerializer_TrackerAdminTest extends Tracker_Permission_PermissionSerializer {
+class Tracker_Permission_PermissionSerializer_TrackerAdminTest extends Tracker_Permission_PermissionSerializer
+{
 
     public function itReturnsProjectMemberWhenTheyAreGranted()
     {
@@ -359,7 +364,8 @@ class Tracker_Permission_PermissionSerializer_TrackerAdminTest extends Tracker_P
     }
 }
 
-class Tracker_Permission_PermissionSerializer_SubmittedBy_OneGroupOnlyTest extends Tracker_Permission_PermissionSerializer {
+class Tracker_Permission_PermissionSerializer_SubmittedBy_OneGroupOnlyTest extends Tracker_Permission_PermissionSerializer
+{
 
     public function setUp()
     {
@@ -394,7 +400,8 @@ class Tracker_Permission_PermissionSerializer_SubmittedBy_OneGroupOnlyTest exten
     }
 }
 
-class Tracker_Permission_PermissionSerializer_SubmittedBy_TwoGroupsTest extends Tracker_Permission_PermissionSerializer {
+class Tracker_Permission_PermissionSerializer_SubmittedBy_TwoGroupsTest extends Tracker_Permission_PermissionSerializer
+{
 
     public function setUp()
     {
@@ -444,7 +451,8 @@ class Tracker_Permission_PermissionSerializer_SubmittedBy_TwoGroupsTest extends 
     }
 }
 
-class Tracker_Permission_PermissionSerializer_AssignedTo_OneGroupOnlyTest extends Tracker_Permission_PermissionSerializer {
+class Tracker_Permission_PermissionSerializer_AssignedTo_OneGroupOnlyTest extends Tracker_Permission_PermissionSerializer
+{
 
     public function setUp()
     {
@@ -492,7 +500,8 @@ class Tracker_Permission_PermissionSerializer_AssignedTo_OneGroupOnlyTest extend
     }
 }
 
-class Tracker_Permission_PermissionSerializer_AssignedTo_TwoGroupsTest extends Tracker_Permission_PermissionSerializer {
+class Tracker_Permission_PermissionSerializer_AssignedTo_TwoGroupsTest extends Tracker_Permission_PermissionSerializer
+{
 
     public function setUp()
     {
@@ -546,7 +555,8 @@ class Tracker_Permission_PermissionSerializer_AssignedTo_TwoGroupsTest extends T
     }
 }
 
-class Tracker_Permission_PermissionSerializer_AssignedTo_TwoPeopleTest extends Tracker_Permission_PermissionSerializer {
+class Tracker_Permission_PermissionSerializer_AssignedTo_TwoPeopleTest extends Tracker_Permission_PermissionSerializer
+{
 
     public function setUp()
     {
@@ -595,11 +605,11 @@ class Tracker_Permission_PermissionSerializer_AssignedTo_TwoPeopleTest extends T
                 ->build(),
             array()
         );
-
     }
 }
 
-class Tracker_Permission_PermissionSerializer_SubmittedByOrAssignedTo_OneGroupTest extends Tracker_Permission_PermissionSerializer {
+class Tracker_Permission_PermissionSerializer_SubmittedByOrAssignedTo_OneGroupTest extends Tracker_Permission_PermissionSerializer
+{
 
     public function setUp()
     {
@@ -649,7 +659,8 @@ class Tracker_Permission_PermissionSerializer_SubmittedByOrAssignedTo_OneGroupTe
     }
 }
 
-class Tracker_Permission_PermissionSerializer_SubmittedByOrAssignedTo_TwoGroupsTest extends Tracker_Permission_PermissionSerializer {
+class Tracker_Permission_PermissionSerializer_SubmittedByOrAssignedTo_TwoGroupsTest extends Tracker_Permission_PermissionSerializer
+{
 
     public function setUp()
     {
@@ -713,7 +724,8 @@ class Tracker_Permission_PermissionSerializer_SubmittedByOrAssignedTo_TwoGroupsT
     }
 }
 
-class Tracker_Permission_PermissionSerializer_SeveralPermissions_Test extends Tracker_Permission_PermissionSerializer {
+class Tracker_Permission_PermissionSerializer_SeveralPermissions_Test extends Tracker_Permission_PermissionSerializer
+{
 
     /**
      * Support team have full access
@@ -802,7 +814,8 @@ class Tracker_Permission_PermissionSerializer_SeveralPermissions_Test extends Tr
     }
 }
 
-class Tracker_Permission_PermissionSerializer_ArtifactPermissions_Test extends Tracker_Permission_PermissionSerializer {
+class Tracker_Permission_PermissionSerializer_ArtifactPermissions_Test extends Tracker_Permission_PermissionSerializer
+{
 
     public function setUp()
     {
@@ -838,7 +851,8 @@ class Tracker_Permission_PermissionSerializer_ArtifactPermissions_Test extends T
     }
 }
 
-class Tracker_Permission_PermissionSerializer_SubmitterOnlyPermission_Test extends Tracker_Permission_PermissionSerializer {
+class Tracker_Permission_PermissionSerializer_SubmitterOnlyPermission_Test extends Tracker_Permission_PermissionSerializer
+{
 
     public function setUp()
     {
@@ -865,7 +879,8 @@ class Tracker_Permission_PermissionSerializer_SubmitterOnlyPermission_Test exten
     }
 }
 
-class Tracker_Permission_PermissionSerializer_FieldPermission_Test extends Tracker_Permission_PermissionSerializer {
+class Tracker_Permission_PermissionSerializer_FieldPermission_Test extends Tracker_Permission_PermissionSerializer
+{
 
     public function setUp()
     {
@@ -894,7 +909,8 @@ class Tracker_Permission_PermissionSerializer_FieldPermission_Test extends Track
     }
 }
 
-class Tracker_Permission_PermissionSerializer_GroupsPermissions_Test extends Tracker_Permission_PermissionSerializer {
+class Tracker_Permission_PermissionSerializer_GroupsPermissions_Test extends Tracker_Permission_PermissionSerializer
+{
 
     public function setUp()
     {

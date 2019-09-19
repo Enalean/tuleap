@@ -74,26 +74,26 @@ function build_grouphistory_filter($event = null, $subEventsBox = null, $value =
         $user_helper = UserHelper::instance();
         $filter     .= $user_helper->getUserFilter($by);
     }
-    if(!empty($startDate)) {
+    if (!empty($startDate)) {
         list($timestamp,) = util_date_to_unixtime($startDate);
         $filter .= " AND group_history.date > " . $data_access->escapeInt($timestamp);
     }
-    if(!empty($endDate)) {
+    if (!empty($endDate)) {
         list($timestamp,) = util_date_to_unixtime($endDate);
         // Add 23:59:59 to timestamp
         $timestamp = $timestamp + 86399;
         $filter .= " AND group_history.date < " . $data_access->escapeInt($timestamp);
     }
-    if(!empty($value)) {
+    if (!empty($value)) {
         //all_users need specific treatement
-        if(stristr($value, $GLOBALS["Language"]->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))) {
+        if (stristr($value, $GLOBALS["Language"]->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))) {
             $value =  'ugroup_anonymous_users_name_key';
         }
         $filter .= " AND group_history.old_value LIKE " . $data_access->quoteLikeValueSurround($value);
     }
-    if(!empty($event) && strcmp($event, 'any')) {
+    if (!empty($event) && strcmp($event, 'any')) {
         $filter .= " AND ( 0 ";
-        if(!empty($subEventsBox)) {
+        if (!empty($subEventsBox)) {
             foreach ($subEventsBox as $key => $value) {
                 $filter .= " OR group_history.field_name LIKE " . $data_access->quoteLikeValueSuffix($key);
             }
@@ -200,17 +200,17 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
         // If msg_key cannot be found in the localized message
         // catalog then display the msg has is because this is very
         // likely a legacy message (pre-localization version)
-        if (strpos($field," %% ") !== false) {
-            list($msg_key, $args) = explode(" %% ",$field);
+        if (strpos($field, " %% ") !== false) {
+            list($msg_key, $args) = explode(" %% ", $field);
             if ($args) {
-                $arr_args = explode('||',$args);
+                $arr_args = explode('||', $args);
             }
         } else {
             $msg_key=$field;
             $arr_args="";
         }
         $msg = $Language->getText('project_admin_utils', $msg_key, $arr_args);
-        if (!(strpos($msg,"*** Unkown msg") === false)) {
+        if (!(strpos($msg, "*** Unkown msg") === false)) {
             $msg = $field;
         }
 
@@ -228,7 +228,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
                 }
                 $val .= util_translate_name_ugroup($ugroup);
             }
-        } else if ($msg_key == "group_type") {
+        } elseif ($msg_key == "group_type") {
             $template = TemplateSingleton::instance();
             $val = $template->getLabel($val);
         }
@@ -239,14 +239,14 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
         if ($export) {
             $documents_body = array ('event' => $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id),
                                      'val'   => $hp->purify($val),
-                                     'date'  => format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']),
+                                     'date'  => format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['date']),
                                      'by'    => UserHelper::instance()->getDisplayNameFromUserName($row['user_name']));
             require_once __DIR__ . '/../export/project_export_utils.php';
             $html .= build_csv_record(array('event', 'val', 'date', 'by'), $documents_body)."\n";
         } else {
             $html .= $hp->purify($val, CODENDI_PURIFIER_BASIC);
             $user = UserManager::instance()->getUserByUserName($row['user_name']);
-            $html .= '</TD><TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).
+            $html .= '</TD><TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['date']).
             '</TD><TD>'.UserHelper::instance()->getLinkOnUser($user).'</TD></TR>';
         }
     }
@@ -292,7 +292,7 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
 
     //Event select Box
     $events = array(
-        'any'              => $GLOBALS["Language"]->getText('global','any'),
+        'any'              => $GLOBALS["Language"]->getText('global', 'any'),
         'event_permission' => $GLOBALS["Language"]->getText("project_admin_utils", "event_permission"),
         'event_project'    => $GLOBALS["Language"]->getText("project_admin_utils", "event_project"),
         'event_user'       => $GLOBALS["Language"]->getText("project_admin_utils", "event_user"),
@@ -305,10 +305,10 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
     $select->addMultipleOptions($events, $event);
 
     $title_arr   = array();
-    $title_arr[] = $Language->getText('project_admin_utils','event');
-    $title_arr[] = $Language->getText('project_admin_utils','val');
-    $title_arr[] = $Language->getText('project_admin_utils','date');
-    $title_arr[] = $Language->getText('global','by');
+    $title_arr[] = $Language->getText('project_admin_utils', 'event');
+    $title_arr[] = $Language->getText('project_admin_utils', 'val');
+    $title_arr[] = $Language->getText('project_admin_utils', 'date');
+    $title_arr[] = $Language->getText('global', 'by');
 
     $index = 1;
 
@@ -338,7 +338,7 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
         $translated_events[$sub_event_category] = $translated_sub_events;
     }
 
-    if(isset($subEventsString)) {
+    if (isset($subEventsString)) {
         $selectedSubEvents = explode(",", $subEventsString);
         foreach ($selectedSubEvents as $element) {
             $subEventsBox[] = $element;
@@ -378,16 +378,16 @@ function export_grouphistory($group_id, $event = null, $subEventsBox = null, $va
 {
     global $Language;
 
-    header ('Content-Type: text/csv');
-    header ('Content-Disposition: filename=project_history.csv');
+    header('Content-Type: text/csv');
+    header('Content-Disposition: filename=project_history.csv');
 
     $eol = "\n";
 
     $col_list = array('event', 'val', 'date', 'by');
-    $documents_title = array ('event' => $Language->getText('project_admin_utils','event'),
-                              'val'   => $Language->getText('project_admin_utils','val'),
-                              'date'  => $Language->getText('project_admin_utils','date'),
-                              'by'    => $Language->getText('global','by'));
+    $documents_title = array ('event' => $Language->getText('project_admin_utils', 'event'),
+                              'val'   => $Language->getText('project_admin_utils', 'val'),
+                              'date'  => $Language->getText('project_admin_utils', 'date'),
+                              'by'    => $Language->getText('global', 'by'));
     echo build_csv_header($col_list, $documents_title).$eol;
 
     $dao = new ProjectHistoryDao(CodendiDataAccess::instance());
@@ -399,4 +399,3 @@ function export_grouphistory($group_id, $event = null, $subEventsBox = null, $va
     }
     echo build_csv_header($col_list, array()).$eol;
 }
-?>

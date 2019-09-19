@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_DateReminderFactory {
+class Tracker_DateReminderFactory
+{
 
     protected $tracker;
     /**
@@ -88,7 +89,7 @@ class Tracker_DateReminderFactory {
             $notified         = $this->date_reminder_renderer->scindReminderNotifiedPeople($request);
             $ugroups          = $this->date_reminder_renderer->validateReminderUgroups($notified[0]);
             $roles            = $this->date_reminder_renderer->validateReminderRoles($notified[1]);
-            if (!empty ($ugroups)) {
+            if (!empty($ugroups)) {
                 $ugroups          = join(",", $ugroups);
             } else {
                 $ugroups = "";
@@ -101,13 +102,14 @@ class Tracker_DateReminderFactory {
         }
         $reminder = $this->getDao()->addDateReminder($this->getTracker()->getId(), $fieldId, $ugroups, $roles, $notificationType, $distance);
         if ($reminder) {
-            $roles = implode("," , $roles);
+            $roles = implode(",", $roles);
             $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
             $historyDao->groupAddHistory("tracker_date_reminder_add", $this->getTracker()->getName().":".$fieldId, $this->getTracker()->getGroupId(), array($distance.' Day(s), Type: '.$notificationType.' ProjectUGroup(s): '.$ugroups. 'Tracker Role(s): '.$roles));
             return $reminder;
         } else {
             $errorMessage = $GLOBALS['Language']->getText(
-                'plugin_tracker_date_reminder','tracker_date_reminder_add_failure',
+                'plugin_tracker_date_reminder',
+                'tracker_date_reminder_add_failure',
                 [$this->getTracker()->getId(), $fieldId]
             );
             throw new Tracker_DateReminderException($errorMessage);
@@ -128,7 +130,7 @@ class Tracker_DateReminderFactory {
     {
         $dupilcatedReminders = $this->getDao()->findReminders($this->getTracker()->getId(), $fieldId, $notificationType, $distance, $reminderId);
         if ($dupilcatedReminders && !$dupilcatedReminders->isError() && $dupilcatedReminders->rowCount() > 0) {
-            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_duplicated');
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_duplicated');
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -147,7 +149,7 @@ class Tracker_DateReminderFactory {
         $trackerDateField = $tff->getFieldById($fieldId);
         $fieldType        = $tff->getType($trackerDateField);
         if ($fieldType == 'subon' && $notificationType == 0) {
-            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before_submittedOn');
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_before_submittedOn');
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -184,12 +186,12 @@ class Tracker_DateReminderFactory {
         }
         $updateReminder = $this->getDao()->updateDateReminder($reminder->getId(), $ugroups, $roles, $notificationType, $distance, $status);
         if ($updateReminder) {
-            $roles = implode("," , $roles);
+            $roles = implode(",", $roles);
             $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
             $historyDao->groupAddHistory("tracker_date_reminder_edit", $this->getTracker()->getName().":".$reminder->getId(), $this->getTracker()->getGroupId(), array("Id: ".$reminderId.", Type: ".$notificationType.", ProjectUGroup(s): ".$ugroups.", Tracker Role(s): ".$roles.", Day(s): ".$distance.", Status: ".$status));
             return $updateReminder;
         } else {
-            $errorMessage = $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_update_failure', array($reminder->getId()));
+            $errorMessage = $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_update_failure', array($reminder->getId()));
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -221,18 +223,20 @@ class Tracker_DateReminderFactory {
                         break;
 
                     default:
-                    break;
+                        break;
                 }
             }
         }
-        return new Tracker_DateReminder($row['reminder_id'],
-                                        $row['tracker_id'],
-                                        $row['field_id'],
-                                        $row['ugroups'],
-                                        $roles,
-                                        $row['notification_type'],
-                                        $row['distance'],
-                                        $row['status']);
+        return new Tracker_DateReminder(
+            $row['reminder_id'],
+            $row['tracker_id'],
+            $row['field_id'],
+            $row['ugroups'],
+            $roles,
+            $row['notification_type'],
+            $row['distance'],
+            $row['status']
+        );
     }
 
     /**
@@ -291,7 +295,4 @@ class Tracker_DateReminderFactory {
             )
         );
     }
-
 }
-
-?>

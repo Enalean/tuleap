@@ -22,4 +22,7 @@ namespace Tuleap\Git\Exceptions;
 
 use Exception;
 
-class DeletePluginNotInstalledException extends Exception {}
+class DeletePluginNotInstalledException extends Exception
+{
+
+}

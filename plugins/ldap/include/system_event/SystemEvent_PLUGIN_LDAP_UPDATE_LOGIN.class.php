@@ -28,7 +28,8 @@
  * So we need to propagate LDAP login change to SVNAccessFile only (the Tuleap
  * user name is not changed).
  */
-class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN  extends SystemEvent {
+class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN extends SystemEvent
+{
     /** @var UserManager */
     private $user_manager;
 
@@ -120,6 +121,4 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN  extends SystemEvent {
     {
         return $this->backend_svn;
     }
-
 }
-?>

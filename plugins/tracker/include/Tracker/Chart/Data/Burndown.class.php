@@ -123,7 +123,7 @@ class Tracker_Chart_Data_Burndown
         $start_effort = $this->getFirstEffort();
         $x_axis = 0;
 
-        foreach($this->time_period->getDayOffsets() as $day_offset) {
+        foreach ($this->time_period->getDayOffsets() as $day_offset) {
             $this->ideal_effort[$x_axis] = $this->getIdealEffortAtDay($x_axis, $start_effort);
             $x_axis++;
         }
@@ -202,11 +202,11 @@ class Tracker_Chart_Data_Burndown
 
     private function getFirstEffort()
     {
-        if($this->capacity !== null && $this->capacity > 0) {
+        if ($this->capacity !== null && $this->capacity > 0) {
             return $this->capacity;
         }
 
-        foreach($this->remaining_effort as $effort) {
+        foreach ($this->remaining_effort as $effort) {
             if ($effort !== null) {
                 return $effort;
             }

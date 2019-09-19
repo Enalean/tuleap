@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_Hook_ParseLog {
+class Git_Hook_ParseLog
+{
     /** @var Git_Hook_ExtractCrossReferences */
     private $extract_cross_ref;
 

@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-class ACLUpdaterTest extends PHPUnit\Framework\TestCase {
+class ACLUpdaterTest extends PHPUnit\Framework\TestCase
+{
 
     private $backend;
 
@@ -43,7 +44,7 @@ class ACLUpdaterTest extends PHPUnit\Framework\TestCase {
     {
         $root_path = $this->path;
 
-        $this->backend->expects($this->any())->method('resetacl')->will($this->returnCallback( function ($path) use ($root_path) {
+        $this->backend->expects($this->any())->method('resetacl')->will($this->returnCallback(function ($path) use ($root_path) {
             switch ($path) {
                 case $root_path:
                 case $root_path.'/SomeFile':
@@ -55,7 +56,7 @@ class ACLUpdaterTest extends PHPUnit\Framework\TestCase {
             }
         }));
 
-        $this->backend->expects($this->any())->method('modifyacl')->will($this->returnCallback( function ($acl, $path) use ($root_path) {
+        $this->backend->expects($this->any())->method('modifyacl')->will($this->returnCallback(function ($acl, $path) use ($root_path) {
             switch ($path) {
                 case $root_path:
                 case $root_path.'/SomeDirectory':

@@ -19,7 +19,8 @@
  */
 
 require_once __DIR__ . '/../../../../../../src/www/include/html.php';
-class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Rules {
+class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Rules
+{
 
     public const PARAMETER_ADD_RULE     = 'add_rule';
     public const PARAMETER_UPDATE_RULES = 'update_rules';
@@ -235,8 +236,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     {
         $this->displayHeader($layout);
         echo '<div class="workflow_rules">';
-        echo '<h3>'. $GLOBALS['Language']->getText('workflow_admin','title_define_global_date_rules') .'</h3>';
-        echo '<p class="help">'. $GLOBALS['Language']->getText('workflow_admin','hint_date_rules_definition') .'</p>';
+        echo '<h3>'. $GLOBALS['Language']->getText('workflow_admin', 'title_define_global_date_rules') .'</h3>';
+        echo '<p class="help">'. $GLOBALS['Language']->getText('workflow_admin', 'hint_date_rules_definition') .'</p>';
         echo '<form method="post" action="'. $this->url_query .'">';
         // CSRF Protection
         echo $this->token->fetchHTMLInput();
@@ -298,7 +299,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         echo '<p class="add_new_rule">';
         echo '<span class="add_new_rule_title">';
         echo '<i class="fa fa-plus"></i> ';
-        echo $GLOBALS['Language']->getText('workflow_admin','add_new_rule').' ';
+        echo $GLOBALS['Language']->getText('workflow_admin', 'add_new_rule').' ';
         echo '</span>';
         echo '<span>';
         $this->displayFieldSelector($fields, self::PARAMETER_ADD_RULE .'['. self::PARAMETER_SOURCE_FIELD .']', $selected);
@@ -328,5 +329,3 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         return $labels;
     }
 }
-
-?>

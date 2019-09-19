@@ -22,7 +22,8 @@ use Tuleap\Project\ProjectAccessChecker;
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
+class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase
+{
     private $user_manager;
 
     private $user;
@@ -645,13 +646,12 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
 
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
 
-        $this->assertTrue ($this->permission_checker->userCanView($this->assignee, $artifact_assignee));
-        $this->assertTrue ($this->permission_checker->userCanView($this->u_ass, $artifact_assignee));
+        $this->assertTrue($this->permission_checker->userCanView($this->assignee, $artifact_assignee));
+        $this->assertTrue($this->permission_checker->userCanView($this->u_ass, $artifact_assignee));
         $this->assertFalse($this->permission_checker->userCanView($this->submitter, $artifact_assignee));
         $this->assertFalse($this->permission_checker->userCanView($this->u_sub, $artifact_assignee));
         $this->assertFalse($this->permission_checker->userCanView($this->other, $artifact_assignee));
         $this->assertFalse($this->permission_checker->userCanView($this->user, $artifact_assignee));
-
     }
 
     function testUserCanViewTrackerAccessSubmitterOrAssignee()
@@ -755,7 +755,8 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
     }
 }
 
-abstract class Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest extends TuleapTestCase {
+abstract class Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest extends TuleapTestCase
+{
     protected $user_manager;
 
     protected $tracker;
@@ -810,7 +811,8 @@ abstract class Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest extend
     }
 }
 
-class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest {
+class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest
+{
 
     public function setUp()
     {
@@ -841,7 +843,8 @@ class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends Tracker_Per
     }
 }
 
-class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest {
+class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest
+{
     protected $ugroup_id_maintainers  = 111;
     protected $ugroup_id_admin        = 4;
     protected $ugroup_private_project = 114;

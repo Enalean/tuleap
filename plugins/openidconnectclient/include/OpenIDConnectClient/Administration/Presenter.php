@@ -22,7 +22,8 @@ namespace Tuleap\OpenIDConnectClient\Administration;
 
 use ForgeConfig;
 
-class Presenter {
+class Presenter
+{
     /**
      * @var ProviderPresenter[]
      */

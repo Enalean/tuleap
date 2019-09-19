@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Wiki_PermissionsManagerTest extends TuleapTestCase {
+class Wiki_PermissionsManagerTest extends TuleapTestCase
+{
 
     /** @var Wiki_PermissionsManager */
     private $wiki_permissions_manager;

@@ -30,7 +30,8 @@ require_once('data-access/GraphOnTrackersV5_ChartFactory.class.php');
 *
 * Tracker Chart
 */
-abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
+abstract class GraphOnTrackersV5_Widget_Chart extends Widget
+{
     var $chart_title;
     var $chart_id;
 
@@ -162,7 +163,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
         $vId = new Valid_UInt('chart_id');
         $vId->setErrorMessage("Can't add empty chart id");
         $vId->required();
-        if($request->validInArray('chart', $vId)) {
+        if ($request->validInArray('chart', $vId)) {
             $chart = $request->get('chart');
             $sql = 'INSERT INTO plugin_graphontrackersv5_widget_chart (owner_id, owner_type, title, chart_id) VALUES ('. $this->owner_id .", '". $this->owner_type ."', '". db_escape_string($chart['title']) ."', ". db_escape_int($chart['chart_id']) .")";
             $res = db_query($sql);
@@ -177,14 +178,14 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
         $vContentId->required();
         if (($chart = $request->get('chart')) && $request->valid($vContentId)) {
             $vId = new Valid_UInt('chart_id');
-            if($request->validInArray('chart', $vId)) {
+            if ($request->validInArray('chart', $vId)) {
                 $id = " chart_id   = ". db_escape_int($chart['chart_id']) ." ";
             } else {
                 $id = '';
             }
 
             $vTitle = new Valid_String('title');
-            if($request->validInArray('chart', $vTitle)) {
+            if ($request->validInArray('chart', $vTitle)) {
                 $title = " title = '". db_escape_string($chart['title']) ."' ";
             } else {
                 $title = '';

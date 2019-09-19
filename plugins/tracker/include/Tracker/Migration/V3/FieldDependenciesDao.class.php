@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject {
+class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject
+{
 
     public function addDependencies($tv3_id, $tv5_id)
     {
@@ -116,5 +117,3 @@ class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject {
         }
     }
 }
-
-?>

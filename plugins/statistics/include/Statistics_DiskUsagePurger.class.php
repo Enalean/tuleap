@@ -22,7 +22,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Statistics_DiskUsagePurger {
+class Statistics_DiskUsagePurger
+{
 
     /**
      * @var Logger
@@ -54,7 +55,7 @@ class Statistics_DiskUsagePurger {
         $this->disk_usage_dao->startTransaction();
         $this->logger->debug("Gathering stats to purge...");
 
-        foreach(self::$STATISTIC_TABLES as $statistic_table) {
+        foreach (self::$STATISTIC_TABLES as $statistic_table) {
             $this->logger->debug("* Opening database table '$statistic_table'");
             $this->purgeDataOlderThanTwoYears($from_date, $statistic_table);
             $this->purgeDataBetweenTwoYearsAndThreeMonths($from_date, $statistic_table);
@@ -92,7 +93,7 @@ class Statistics_DiskUsagePurger {
         }
 
         $first_day_with_data_of_each_months = array();
-        foreach($first_day_of_each_months as $day) {
+        foreach ($first_day_of_each_months as $day) {
             $first_day_with_data = $this->disk_usage_dao->findFirstDateGreaterEqualThan($day, $table);
 
             if ($first_day_with_data && ! in_array($first_day_with_data, $first_day_with_data_of_each_months)) {
@@ -131,7 +132,7 @@ class Statistics_DiskUsagePurger {
         }
 
         $first_day_with_data_of_each_weeks = array();
-        foreach($first_day_of_each_weeks as $day) {
+        foreach ($first_day_of_each_weeks as $day) {
             $first_day_with_data = $this->disk_usage_dao->findFirstDateGreaterEqualThan($day, $table);
 
             if ($first_day_with_data && ! in_array($first_day_with_data, $first_day_with_data_of_each_weeks)) {
@@ -159,8 +160,7 @@ class Statistics_DiskUsagePurger {
         do {
             $first_day_of_each_months[] = $first_day_of_month;
             $first_day_of_month         = date('Y-m-01 00:00:00', strtotime('+1 month', strtotime($first_day_of_month)));
-
-        } while(strtotime($first_day_of_month) < strtotime($date_max));
+        } while (strtotime($first_day_of_month) < strtotime($date_max));
 
         return $first_day_of_each_months;
     }
@@ -177,10 +177,8 @@ class Statistics_DiskUsagePurger {
         do {
             $first_day_of_each_weeks[] = $first_day_of_week;
             $first_day_of_week         = date('Y-m-d 00:00:00', strtotime('+1 week', strtotime($first_day_of_week)));
-
-        } while(strtotime($first_day_of_week) < strtotime($date_max));
+        } while (strtotime($first_day_of_week) < strtotime($date_max));
 
         return $first_day_of_each_weeks;
     }
-
 }

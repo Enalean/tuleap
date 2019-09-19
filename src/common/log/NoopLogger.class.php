@@ -21,7 +21,8 @@
 /**
  * Logger when you need one but don't want to collect output
  */
-class Log_NoopLogger implements Logger {
+class Log_NoopLogger implements Logger
+{
 
     public function debug($message)
     {

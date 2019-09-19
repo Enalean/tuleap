@@ -33,7 +33,7 @@ $aff = 0;
 do {
     $affectedRows += $aff;
     $res = db_query($sql);
-} while(($aff = db_affected_rows($res)) > 0);
+} while (($aff = db_affected_rows($res)) > 0);
 //echo "% Affected rows: ".$affectedRows."\n";
 
 // Step 2:
@@ -41,8 +41,7 @@ do {
 // Do it only if there is a default_value column
 $sql = 'SHOW COLUMNS FROM plugin_docman_metadata LIKE "default_value"';
 $res = db_query($sql);
-if(db_numrows($res) > 0) {
-
+if (db_numrows($res) > 0) {
     // Delete current values associated to folders
     echo "Clean metadata values already affected to a folder (old bug).\n";
     $sql = 'DELETE FROM plugin_docman_metadata_value'.
@@ -127,4 +126,3 @@ $res = db_query($sql);
 //echo "% Done\n";
 
 echo "~~ Upgrade completed ~~\n";
-?>

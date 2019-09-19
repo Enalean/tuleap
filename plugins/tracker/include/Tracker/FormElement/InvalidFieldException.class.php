@@ -18,6 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_InvalidFieldException extends Tracker_Exception {}
-
-?>
+class Tracker_FormElement_InvalidFieldException extends Tracker_Exception
+{
+}

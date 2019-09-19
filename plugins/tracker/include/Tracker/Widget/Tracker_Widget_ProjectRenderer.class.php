@@ -31,7 +31,8 @@ class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer
     public function __construct()
     {
         parent::__construct(
-            self::ID, HTTPRequest::instance()->get('group_id'),
+            self::ID,
+            HTTPRequest::instance()->get('group_id'),
             \Tuleap\Dashboard\Project\ProjectDashboardController::LEGACY_DASHBOARD_TYPE
         );
     }

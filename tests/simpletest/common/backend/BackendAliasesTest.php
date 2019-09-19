@@ -20,7 +20,8 @@
  */
 
 
-class BackendAliasesTest extends TuleapTestCase {
+class BackendAliasesTest extends TuleapTestCase
+{
 
     private $alias_file;
 
@@ -115,7 +116,8 @@ class BackendAliasesTest extends TuleapTestCase {
     }
 }
 
-class BackendAliasesTest_FakePlugin {
+class BackendAliasesTest_FakePlugin
+{
 
     public function hook($params)
     {

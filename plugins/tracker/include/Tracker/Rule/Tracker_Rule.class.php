@@ -24,7 +24,8 @@
  * For a tracker, if a source field is selected to a specific value,
  * then target field will react, depending of the implementation of the rule.
  */
-abstract class Tracker_Rule {
+abstract class Tracker_Rule
+{
     public const RULETYPE_HIDDEN       = 1;
     public const RULETYPE_DISABLED     = 2;
     public const RULETYPE_MANDATORY    = 3;
@@ -92,7 +93,7 @@ abstract class Tracker_Rule {
      */
     public function getSourceFieldId()
     {
-        if($this->source_field_obj instanceof Tracker_FormElement_Field){
+        if ($this->source_field_obj instanceof Tracker_FormElement_Field) {
             return $this->source_field_obj->getId();
         }
         return $this->source_field;
@@ -158,7 +159,7 @@ abstract class Tracker_Rule {
      */
     public function getTargetFieldId()
     {
-        if($this->target_field_obj instanceof Tracker_FormElement_Field){
+        if ($this->target_field_obj instanceof Tracker_FormElement_Field) {
             return $this->target_field_obj->getId();
         }
         return $this->target_field;

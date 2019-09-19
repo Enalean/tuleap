@@ -22,7 +22,8 @@ namespace Tuleap\OpenIDConnectClient\Provider;
 
 use DataAccessObject;
 
-class ProviderDao  extends DataAccessObject {
+class ProviderDao extends DataAccessObject
+{
 
     public function searchById($provider_id)
     {
@@ -101,7 +102,7 @@ class ProviderDao  extends DataAccessObject {
                 WHERE id = $id";
 
         $has_been_updated = $has_been_updated && $this->update($sql);
-        if(! $has_been_updated) {
+        if (! $has_been_updated) {
             $this->getDa()->rollback();
             return false;
         }

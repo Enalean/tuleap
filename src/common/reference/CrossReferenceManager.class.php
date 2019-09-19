@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class CrossReferenceManager {
+class CrossReferenceManager
+{
     private $dao;
 
     public function __construct()
@@ -42,5 +43,3 @@ class CrossReferenceManager {
         return $this->dao->deleteEntity($id, $nature, $group_id);
     }
 }
-
-?>

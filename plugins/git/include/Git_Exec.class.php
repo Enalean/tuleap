@@ -39,7 +39,7 @@ class Git_Exec
      */
     public function __construct($work_tree, $git_dir = null)
     {
-        if ( ! $git_dir) {
+        if (! $git_dir) {
             $this->setWorkTree($work_tree);
         } else {
             $this->setWorkTreeAndGitDir($work_tree, $git_dir);
@@ -223,7 +223,7 @@ class Git_Exec
     private function getOtherBranches($refname)
     {
         $branches = $this->getAllBranches();
-        foreach($branches as $key => $branch) {
+        foreach ($branches as $key => $branch) {
             if ($branch == $refname) {
                 unset($branches[$key]);
             }
@@ -322,7 +322,7 @@ class Git_Exec
      * @return bool
      * @throw Git_Command_Exception
      */
-    public function push($origin='origin master')
+    public function push($origin = 'origin master')
     {
         $cmd = 'push --porcelain '.$origin;
         return $this->gitCmd($cmd);

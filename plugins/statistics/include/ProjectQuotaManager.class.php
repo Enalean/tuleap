@@ -30,7 +30,8 @@ require_once 'Statistics_ProjectQuotaDao.class.php';
 /**
  * Management of custom quota by project
  */
-class ProjectQuotaManager {
+class ProjectQuotaManager
+{
 
     /**
      * The Projects dao used to fetch data
@@ -110,9 +111,9 @@ class ProjectQuotaManager {
     private function isProjectOverQuota($current_size, $allowed_size)
     {
         if (!empty($current_size) && ($current_size > $allowed_size)) {
-            return True;
+            return true;
         }
-        return False;
+        return false;
     }
 
     /**
@@ -274,5 +275,3 @@ class ProjectQuotaManager {
         return $this->dao;
     }
 }
-
-?>

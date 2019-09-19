@@ -22,7 +22,8 @@ use Tuleap\Mail\MailLogger;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
-class Tracker_DateReminderManager {
+class Tracker_DateReminderManager
+{
 
     protected $tracker;
 
@@ -71,8 +72,7 @@ class Tracker_DateReminderManager {
                     $this->sendReminderNotification($reminder, $artifact);
                 }
             }
-        }
-        else {
+        } else {
             $logger->info("[TDR] Notifications are suspended");
         }
     }
@@ -126,7 +126,7 @@ class Tracker_DateReminderManager {
         if ($reminder === null || $reminder->getTrackerId() !== $this->getTracker()->getId()) {
             $reminder_id  = $reminder === null ? '' : $reminder->getId();
             throw new Tracker_DateReminderException(
-                $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_reminder', [$reminder_id])
+                $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_invalid_reminder', [$reminder_id])
             );
         }
     }
@@ -240,10 +240,10 @@ class Tracker_DateReminderManager {
 
         $mail_enhancer->addPropertiesToLookAndFeel('breadcrumbs', $breadcrumbs);
         $mail_enhancer->addPropertiesToLookAndFeel('title', $hp->purify($subject));
-        $mail_enhancer->addHeader("X-Codendi-Project",     $this->getTracker()->getProject()->getUnixName());
-        $mail_enhancer->addHeader("X-Codendi-Tracker",     $this->getTracker()->getItemName());
+        $mail_enhancer->addHeader("X-Codendi-Project", $this->getTracker()->getProject()->getUnixName());
+        $mail_enhancer->addHeader("X-Codendi-Tracker", $this->getTracker()->getItemName());
         $mail_enhancer->addHeader("X-Codendi-Artifact-ID", $artifact->getId());
-        foreach($headers as $header) {
+        foreach ($headers as $header) {
             $mail_enhancer->addHeader($header['name'], $header['value']);
         }
 
@@ -282,7 +282,7 @@ class Tracker_DateReminderManager {
      */
     public function getSubject($reminder, $artifact, $recipient)
     {
-        $s = "[" . $this->tracker->getName()."] ".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','subject', array($reminder->getField()->getLabel(), $reminder->getFieldValue($artifact), $artifact->getTitle()));
+        $s = "[" . $this->tracker->getName()."] ".$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'subject', array($reminder->getField()->getLabel(), $reminder->getFieldValue($artifact), $artifact->getTitle()));
         return $s;
     }
 
@@ -304,9 +304,9 @@ class Tracker_DateReminderManager {
         $output   = '+============== '.'['.$this->getTracker()->getItemName() .' #'. $artifact->getId().'] '.$artifact->fetchMailTitle($recipient).' ==============+';
         $output   .= PHP_EOL;
 
-        $output   .= $language->getText('plugin_tracker_date_reminder','body_header',array($GLOBALS['sys_name'], $reminder->getField()->getLabel(), $reminder->getFieldValue($artifact)));
+        $output   .= $language->getText('plugin_tracker_date_reminder', 'body_header', array($GLOBALS['sys_name'], $reminder->getField()->getLabel(), $reminder->getFieldValue($artifact)));
         $output   .= PHP_EOL;
-        $output   .= $language->getText('plugin_tracker_date_reminder','body_art_link', array($link));
+        $output   .= $language->getText('plugin_tracker_date_reminder', 'body_art_link', array($link));
         $output   .= PHP_EOL;
         return $output;
     }
@@ -339,7 +339,7 @@ class Tracker_DateReminderManager {
             )
         );
         $output   .= '<br>';
-        $output   .= $language->getText('plugin_tracker_date_reminder','body_art_html_link', array($link));
+        $output   .= $language->getText('plugin_tracker_date_reminder', 'body_art_html_link', array($link));
         $output   .= '<br>';
         return $output;
     }
@@ -363,5 +363,3 @@ class Tracker_DateReminderManager {
         return $field->getArtifactsByCriterias($date, $this->getTracker()->getId());
     }
 }
-
-?>

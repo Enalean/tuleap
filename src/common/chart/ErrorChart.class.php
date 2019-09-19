@@ -21,7 +21,8 @@
 /**
  * This class is responsible of displaying an error message as an image
  */
-class ErrorChart extends Chart {
+class ErrorChart extends Chart
+{
 
     /**
      * @var int the width of the chart
@@ -77,4 +78,3 @@ class ErrorChart extends Chart {
         return 'CanvasGraph';
     }
 }
-?>

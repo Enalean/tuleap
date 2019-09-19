@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class AgileDashboard_KanbanColumnFactory {
+class AgileDashboard_KanbanColumnFactory
+{
 
     /**
      * @var AgileDashboard_KanbanUserPreferences

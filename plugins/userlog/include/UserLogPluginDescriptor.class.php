@@ -22,7 +22,8 @@
  *
  */
 
-class UserLogPluginDescriptor extends PluginDescriptor {
+class UserLogPluginDescriptor extends PluginDescriptor
+{
 
     function __construct()
     {
@@ -30,4 +31,3 @@ class UserLogPluginDescriptor extends PluginDescriptor {
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
-?>

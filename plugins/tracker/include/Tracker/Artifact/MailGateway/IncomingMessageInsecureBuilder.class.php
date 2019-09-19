@@ -20,7 +20,8 @@
 
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
-class Tracker_Artifact_IncomingMessageInsecureBuilder {
+class Tracker_Artifact_IncomingMessageInsecureBuilder
+{
     /**
      * @var UserManager
      */
@@ -159,11 +160,15 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
     {
         $mail_address = '';
         foreach ($address_array as $id => $value) {
-            if ((strpos($value,
-                trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE) === 0) ||
-                (strpos($value,
-                trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION) === 0)
-                ){
+            if ((strpos(
+                $value,
+                trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE
+            ) === 0) ||
+                (strpos(
+                    $value,
+                    trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION
+                ) === 0)
+                ) {
                 $mail_address = $value;
                 break;
             }
@@ -174,5 +179,4 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
 
         return $mail_address;
     }
-
 }

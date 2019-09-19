@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tuleap_TourFactory {
+class Tuleap_TourFactory
+{
 
     /** @var ProjectManager */
     private $project_manager;

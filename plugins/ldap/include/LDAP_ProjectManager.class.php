@@ -23,7 +23,8 @@
 
 require_once 'LDAP_ProjectDao.class.php';
 
-class LDAP_ProjectManager {
+class LDAP_ProjectManager
+{
     private $cacheSVNLDAPById = array();
 
     /**
@@ -75,4 +76,3 @@ class LDAP_ProjectManager {
         return new LDAP_ProjectDao(CodendiDataAccess::instance());
     }
 }
-?>

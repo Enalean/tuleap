@@ -19,7 +19,8 @@
 /**
  * Add generic_user table
  */
-class b201306171145_add_generic_user_table extends ForgeUpgrade_Bucket {
+class b201306171145_add_generic_user_table extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return <<<EOT
@@ -53,5 +54,3 @@ EOT;
         }
     }
 }
-
-?>

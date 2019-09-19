@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201601271554_add_nature_in_artifactlink extends ForgeUpgrade_Bucket {
+class b201601271554_add_nature_in_artifactlink extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -43,5 +44,4 @@ class b201601271554_add_nature_in_artifactlink extends ForgeUpgrade_Bucket {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding nature column in artifact link');
         }
     }
-
 }

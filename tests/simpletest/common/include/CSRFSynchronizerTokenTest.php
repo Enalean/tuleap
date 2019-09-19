@@ -19,7 +19,8 @@
  */
 
 
-class CSRFSynchronizerTokenTest extends TuleapTestCase {
+class CSRFSynchronizerTokenTest extends TuleapTestCase
+{
     /**
      * @var array
      */

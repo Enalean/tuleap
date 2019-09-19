@@ -71,14 +71,14 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
     public function registerInSession()
     {
         parent::registerInSession();
-        $this->report_session->set("$this->id.field_start",      $this->field_start);
-        $this->report_session->set("$this->id.field_due",        $this->field_due);
-        $this->report_session->set("$this->id.field_finish",     $this->field_finish);
+        $this->report_session->set("$this->id.field_start", $this->field_start);
+        $this->report_session->set("$this->id.field_due", $this->field_due);
+        $this->report_session->set("$this->id.field_finish", $this->field_finish);
         $this->report_session->set("$this->id.field_percentage", $this->field_percentage);
-        $this->report_session->set("$this->id.field_righttext",  $this->field_righttext);
-        $this->report_session->set("$this->id.scale",            $this->scale);
-        $this->report_session->set("$this->id.as_of_date",       $this->as_of_date);
-        $this->report_session->set("$this->id.summary",          $this->summary);
+        $this->report_session->set("$this->id.field_righttext", $this->field_righttext);
+        $this->report_session->set("$this->id.scale", $this->scale);
+        $this->report_session->set("$this->id.as_of_date", $this->as_of_date);
+        $this->report_session->set("$this->id.summary", $this->summary);
     }
 
     protected function getDao()
@@ -90,14 +90,14 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
     {
         $session = self::getSession($graphic_report->report->id, $graphic_report->id);
 
-        $session->set("$id.field_start",      '');
-        $session->set("$id.field_due",        '');
-        $session->set("$id.field_finish",     '');
+        $session->set("$id.field_start", '');
+        $session->set("$id.field_due", '');
+        $session->set("$id.field_finish", '');
         $session->set("$id.field_percentage", '');
-        $session->set("$id.field_righttext",  '');
-        $session->set("$id.scale",            '');
-        $session->set("$id.as_of_date",       '');
-        $session->set("$id.summary",          '');
+        $session->set("$id.field_righttext", '');
+        $session->set("$id.scale", '');
+        $session->set("$id.as_of_date", '');
+        $session->set("$id.summary", '');
 
         $c = new GraphOnTrackersV5_Chart_Gantt($graphic_report, $id, $rank, $title, $description, $width, $height);
         $c->registerInSession();
@@ -111,58 +111,76 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
 
     public function getField_start()
     {
-        return $this->field_start; }
+        return $this->field_start;
+    }
     public function setField_start($field_start)
     {
-        return $this->field_start = $field_start; }
+        return $this->field_start = $field_start;
+    }
     public function getField_due()
     {
-        return $this->field_due; }
+        return $this->field_due;
+    }
     public function setField_due($field_due)
     {
-        return $this->field_due = $field_due; }
+        return $this->field_due = $field_due;
+    }
     public function getField_finish()
     {
-        return $this->field_finish; }
+        return $this->field_finish;
+    }
     public function setField_finish($field_finish)
     {
-        return $this->field_finish = $field_finish; }
+        return $this->field_finish = $field_finish;
+    }
     public function getField_percentage()
     {
-        return $this->field_percentage; }
+        return $this->field_percentage;
+    }
     public function setField_percentage($field_percentage)
     {
-        return $this->field_percentage = $field_percentage; }
+        return $this->field_percentage = $field_percentage;
+    }
     public function getField_righttext()
     {
-        return $this->field_righttext; }
+        return $this->field_righttext;
+    }
     public function setField_righttext($field_righttext)
     {
-        return $this->field_righttext = $field_righttext; }
+        return $this->field_righttext = $field_righttext;
+    }
     public function getScale()
     {
-        return $this->scale; }
+        return $this->scale;
+    }
     public function setScale($scale)
     {
-        return $this->scale = $scale; }
+        return $this->scale = $scale;
+    }
     public function getAs_of_date()
     {
-        return $this->as_of_date; }
+        return $this->as_of_date;
+    }
     public function setAs_of_date($as_of_date)
     {
-        return $this->as_of_date = $as_of_date; }
+        return $this->as_of_date = $as_of_date;
+    }
     public function getSummary()
     {
-        return $this->summary; }
+        return $this->summary;
+    }
     public function setSummary($summary)
     {
-        return $this->summary = $summary; }
+        return $this->summary = $summary;
+    }
     public static function getDefaultHeight()
     {
-        return 0; }
+        return 0;
+    }
     public static function getDefaultWidth()
     {
-        return 0;  }
+        return 0;
+    }
 
     protected function getEngine()
     {
@@ -170,34 +188,33 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
     }
     protected function getChartDataBuilder($artifacts)
     {
-        return new GraphOnTrackersV5_Chart_GanttDataBuilder($this,$artifacts);
+        return new GraphOnTrackersV5_Chart_GanttDataBuilder($this, $artifacts);
     }
 
     public function getProperties()
     {
         $parent_properties=parent::getProperties();
         unset($parent_properties['dimensions']);
-        return array_merge($parent_properties,
+        return array_merge(
+            $parent_properties,
             array(
                 new HTML_Element_Columns(
-                    new HTML_Element_Selectbox_TrackerFields_DatesV5($this->getTracker(),$GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_field_start'), 'chart[field_start]', $this->getField_start()),
-                    new HTML_Element_Selectbox_TrackerFields_DatesV5($this->getTracker(),$GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_field_due'), 'chart[field_due]', $this->getField_due(), true),
-                    new HTML_Element_Selectbox_TrackerFields_DatesV5($this->getTracker(),$GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_field_finish'), 'chart[field_finish]', $this->getField_finish())
+                    new HTML_Element_Selectbox_TrackerFields_DatesV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_field_start'), 'chart[field_start]', $this->getField_start()),
+                    new HTML_Element_Selectbox_TrackerFields_DatesV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_field_due'), 'chart[field_due]', $this->getField_due(), true),
+                    new HTML_Element_Selectbox_TrackerFields_DatesV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_field_finish'), 'chart[field_finish]', $this->getField_finish())
                 ),
                 new HTML_Element_Columns(
-                    new HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5($this->getTracker(),$GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_summary'), 'chart[summary]', $this->getSummary()),
-
-                    new HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5($this->getTracker(),$GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_field_percentage'), 'chart[field_percentage]', $this->getField_percentage(), true),
-                    new HTML_Element_Selectbox_Scale($GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_scale'), 'chart[scale]', $this->getScale())
-
+                    new HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_summary'), 'chart[summary]', $this->getSummary()),
+                    new HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_field_percentage'), 'chart[field_percentage]', $this->getField_percentage(), true),
+                    new HTML_Element_Selectbox_Scale($GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_scale'), 'chart[scale]', $this->getScale())
                 ),
 
                 new HTML_Element_Columns(
-                    new HTML_Element_Input_Date($GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_as_of_date'), 'chart[as_of_date]', strtotime($this->getAs_of_date())),
-                    new HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5($this->getTracker(),$GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_field_righttext'), 'chart[field_righttext]', $this->getField_righttext(), true)
-
+                    new HTML_Element_Input_Date($GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_as_of_date'), 'chart[as_of_date]', strtotime($this->getAs_of_date())),
+                    new HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property', 'gantt_field_righttext'), 'chart[field_righttext]', $this->getField_righttext(), true)
                 ),
-        ));
+            )
+        );
     }
 
     public function createDb($id)

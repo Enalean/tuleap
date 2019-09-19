@@ -27,7 +27,8 @@
  * This is a part of lite Model/View/Controler design pattern.
  *
  */
-class Controler {
+class Controler
+{
   /* protected */ var $gid;
   /* protected */ var $view;
   /* protected */ var $action;
@@ -62,8 +63,9 @@ class Controler {
     {
         $this->request();
 
-        if($this->action)
-        $this->actionsManagement();
+        if ($this->action) {
+            $this->actionsManagement();
+        }
 
         return $this->viewsManagement();
     }

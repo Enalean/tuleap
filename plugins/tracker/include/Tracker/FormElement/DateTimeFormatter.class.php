@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateFormatter {
+class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateFormatter
+{
     public const DATE_TIME_FORMAT = 'Y-m-d H:i';
 
     public function __construct(Tracker_FormElement_Field_Date $field)
@@ -38,7 +39,8 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
                     'error',
                     $GLOBALS['Language']->getText(
                         'plugin_tracker_common_artifact',
-                        'error_datetime_value', array($this->field->getLabel(), $this->getUserDateFormatPreference())
+                        'error_datetime_value',
+                        array($this->field->getLabel(), $this->getUserDateFormatPreference())
                     )
                 );
             }

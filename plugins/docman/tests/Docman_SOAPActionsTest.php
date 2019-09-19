@@ -35,7 +35,9 @@ Mock::generate('PermissionsManager');
 Mock::generate('Docman_PermissionsManager');
 Mock::generate('SOAPRequest');
 Mock::generate('Docman_LockFactory');
-Mock::generatePartial('Docman_SOAPActions', 'Docman_SOAPActions_Test',
+Mock::generatePartial(
+    'Docman_SOAPActions',
+    'Docman_SOAPActions_Test',
     array(
         '_getItemFactory',
         '_checkOwnerChange',
@@ -46,12 +48,14 @@ Mock::generatePartial('Docman_SOAPActions', 'Docman_SOAPActions_Test',
         '_getDocmanPermissionsManagerInstance',
         '_getEventManager',
         '_getFileStorage',
-    ));
+    )
+);
 
 /**
  * Unit tests for Docman_SOAPActions
  */
-class Docman_SOAPActionsTest extends TuleapTestCase {
+class Docman_SOAPActionsTest extends TuleapTestCase
+{
     private $MD5Map;
     private $itemFactory;
     private $action;
@@ -118,14 +122,16 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
 
     public function tearDown()
     {
-        unset($GLOBALS['Language'],
-              $this->itemFactory,
-              $this->fileStorage,
-              $this->MD5Map,
-              $this->permissionManager,
-              $this->docmanPermissionsManager,
-              $this->action,
-              $this->lockFactory);
+        unset(
+            $GLOBALS['Language'],
+            $this->itemFactory,
+            $this->fileStorage,
+            $this->MD5Map,
+            $this->permissionManager,
+            $this->docmanPermissionsManager,
+            $this->action,
+            $this->lockFactory
+        );
 
         parent::tearDown();
     }
@@ -280,8 +286,8 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
 
         $this->fileStorage->expectOnce('store');
         $this->itemFactory->shouldReceive('update');
-        $action->event_manager->expectAt('1','processEvent', array('send_notifications', '*'));
-        $action->event_manager->expectCallCount('processEvent','1');
+        $action->event_manager->expectAt('1', 'processEvent', array('send_notifications', '*'));
+        $action->event_manager->expectCallCount('processEvent', '1');
         $action->new_version();
     }
 
@@ -307,8 +313,8 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
 
         $this->fileStorage->expectOnce('store');
         $this->itemFactory->shouldNotReceive('update');
-        $action->event_manager->expectAt('1','processEvent', array('send_notifications', '*'));
-        $action->event_manager->expectCallCount('processEvent','1');
+        $action->event_manager->expectAt('1', 'processEvent', array('send_notifications', '*'));
+        $action->event_manager->expectCallCount('processEvent', '1');
 
         $action->new_version();
     }
@@ -449,5 +455,4 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
 
         $action->getFileChunk();
     }
-
 }

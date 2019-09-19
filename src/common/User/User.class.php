@@ -27,7 +27,8 @@ use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermission;
  *
  * Sets up database results and preferences for a user and abstracts this info
  */
-class PFUser implements PFO_User, IHaveAnSSHKey {
+class PFUser implements PFO_User, IHaveAnSSHKey
+{
 
     /**
      * The user is active
@@ -340,7 +341,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * is this user member of group $group_id ??
      */
-    public function isMember($group_id,$type = 0)
+    public function isMember($group_id, $type = 0)
     {
         $group_data = $this->getUserGroupData();
 
@@ -348,7 +349,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
         if ($this->isSuperUser()) {
             $is_member = true;
-        } else if (isset($group_data[$group_id])) {
+        } elseif (isset($group_data[$group_id])) {
             if ($type === 0) { // Note: yes, this is '==='
                 //We just want to know if the user is member of the group regardless the role
                 $is_member = true;
@@ -358,10 +359,10 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
                 $type       = strtoupper($type);
 
                 switch ($type) {
-                    case 'A' : //admin for this group
+                    case 'A': //admin for this group
                         $is_member = ($group_perm['admin_flags'] && $group_perm['admin_flags'] === 'A');
                         break;
-                    case 'F2' : //forum admin
+                    case 'F2': //forum admin
                         $is_member = ($group_perm['forum_flags'] == 2);
                         break;
                     case 'W2': //wiki release admin
@@ -376,7 +377,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
                     case 'N2': //news admin
                         $is_member = ($group_perm['news_flags'] == 2);
                         break;
-                    default : //fubar request
+                    default: //fubar request
                         $is_member = false;
                 }
             }
@@ -435,9 +436,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * is this user admin of the tracker group_artifact_id
      * @return bool
      */
-    public function isTrackerAdmin($group_id,$group_artifact_id)
+    public function isTrackerAdmin($group_id, $group_artifact_id)
     {
-        return ($this->getTrackerPerm($group_artifact_id) >= 2 || $this->isMember($group_id,'A'));
+        return ($this->getTrackerPerm($group_artifact_id) >= 2 || $this->isMember($group_id, 'A'));
     }
 
     /**
@@ -778,7 +779,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return string authorized keys of the user
      */
-    function getAuthorizedKeys($split=false)
+    function getAuthorizedKeys($split = false)
     {
         if ($split) {
             return array_filter(explode(self::SSH_KEY_SEPARATOR, $this->authorized_keys));
@@ -975,9 +976,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     public function getProjects($return_all_data = false)
     {
         $projects = array();
-        foreach($this->getUserGroupDao()->searchActiveGroupsByUserId($this->user_id) as $data) {
-            if (
-                $data['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
+        foreach ($this->getUserGroupDao()->searchActiveGroupsByUserId($this->user_id) as $data) {
+            if ($data['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
                 ForgeConfig::areRestrictedUsersAllowed() &&
                 $this->isRestricted()
             ) {
@@ -1373,7 +1373,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         $this->_preferences[$preference_name] = false;
         if (!$this->isAnonymous()) {
             $dao = $this->getPreferencesDao();
-            if ( ! $dao->delete($this->getId(), $preference_name)) {
+            if (! $dao->delete($this->getId(), $preference_name)) {
                 return false;
             }
         }

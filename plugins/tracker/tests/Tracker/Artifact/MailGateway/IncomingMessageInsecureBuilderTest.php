@@ -22,7 +22,8 @@ use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase {
+class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
+{
     public const USER_MAIL     = 'user@example.com';
     public const TRACKER_ID    = 1;
     public const TRACKER_MAIL  = 'forge__tracker+1@example.com';
@@ -81,7 +82,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         try {
             $incoming_message_builder->build($incoming_mail);
             $this->fail();
-        } catch (Tracker_Artifact_MailGateway_TrackerIdMissingException $e) {}
+        } catch (Tracker_Artifact_MailGateway_TrackerIdMissingException $e) {
+        }
     }
 
     public function itFindsUserAndTrackerToHeader()
@@ -317,5 +319,4 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $this->expectException('Tracker_Artifact_MailGateway_ArtifactDoesNotExistException');
         $incoming_message_builder->build($incoming_mail);
     }
-
 }

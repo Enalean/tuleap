@@ -10,7 +10,8 @@ rcs_id('$Id: HttpClient.php,v 1.6 2004/11/01 10:43:55 rurban Exp $');
    License: http://www.opensource.org/licenses/artistic-license.php
 */
 
-class HttpClient {
+class HttpClient
+{
     // Request vars
     var $host;
     var $port;
@@ -46,7 +47,7 @@ class HttpClient {
     var $redirect_count = 0;
     var $cookie_host = '';
 
-    function __construct($host, $port=80)
+    function __construct($host, $port = 80)
     {
         $this->host = $host;
         $this->port = $port;
@@ -94,7 +95,7 @@ class HttpClient {
         longer_timeout($this->timeout);
         if (!$fp = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout)) {
             // Set error message
-            switch($errno) {
+            switch ($errno) {
                 case -3:
                     $this->errormsg = 'Socket creation failed (-3)';
                 case -4:
@@ -391,4 +392,3 @@ class HttpClient {
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

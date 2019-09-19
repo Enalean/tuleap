@@ -29,7 +29,8 @@ use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 /**
  * Basic representation of a planning
  */
-class PlanningRepresentation extends PlanningRepresentationBase {
+class PlanningRepresentation extends PlanningRepresentationBase
+{
 
     public function build(Planning $planning)
     {

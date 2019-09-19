@@ -37,6 +37,4 @@ class LdapPluginInfo extends PluginFileInfo
         parent::__construct($plugin, 'ldap');
         $this->setPluginDescriptor(new LdapPluginDescriptor());
     }
-
 }
-?>

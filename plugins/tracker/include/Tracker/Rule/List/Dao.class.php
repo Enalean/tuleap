@@ -21,7 +21,8 @@
 /**
  *  Data Access Object for Tracker_Rule
  */
-class Tracker_Rule_List_Dao extends DataAccessObject {
+class Tracker_Rule_List_Dao extends DataAccessObject
+{
 
     public function __construct()
     {
@@ -70,14 +71,14 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
         $rule_type       = $this->da->quoteSmart(Tracker_Rule::RULETYPE_VALUE);
 
         $source_field_id = $this->da->escapeInt($rule->getSourceFieldId());
-        if($rule->getSourceValue() instanceof Tracker_FormElement_Field_List_Value) {
+        if ($rule->getSourceValue() instanceof Tracker_FormElement_Field_List_Value) {
             $source_value_id = $this->da->quoteSmart($rule->getSourceValue()->getId());
         } else {
             $source_value_id = $this->da->quoteSmart($rule->getSourceValue());
         }
 
         $target_field_id = $this->da->escapeInt($rule->getTargetFieldId());
-        if($rule->getTargetValue() instanceof Tracker_FormElement_Field_List_Value) {
+        if ($rule->getTargetValue() instanceof Tracker_FormElement_Field_List_Value) {
             $target_value_id = $this->da->quoteSmart($rule->getTargetValue()->getId());
         } else {
             $target_value_id = $this->da->quoteSmart($rule->getTargetValue());
@@ -88,7 +89,7 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
 
         $this->startTransaction();
 
-        try{
+        try {
             $tracker_rule_id = $this->updateAndGetLastId($sql_insert_rule);
 
             $sql = "INSERT INTO tracker_rule_list (
@@ -131,7 +132,7 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
         $sql_insert_rule = "INSERT INTO tracker_rule (tracker_id, rule_type)
                             VALUES ($tracker_id, $rule_type)";
 
-        try{
+        try {
             $tracker_rule_id = $this->updateAndGetLastId($sql_insert_rule);
 
             $sql = "INSERT INTO tracker_rule_list (
@@ -157,4 +158,3 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
         return $retrieve;
     }
 }
-?>

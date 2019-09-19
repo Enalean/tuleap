@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Transition_PostAction_CIBuildTest extends TuleapTestCase {
+class Transition_PostAction_CIBuildTest extends TuleapTestCase
+{
 
     public function itCallsDeleteMethodInDaoWhenDeleteIsRequested()
     {
@@ -160,7 +161,8 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
 }
 
 
-class Transition_PostAction_CIBuildAfterTest extends TuleapTestCase {
+class Transition_PostAction_CIBuildAfterTest extends TuleapTestCase
+{
 
     protected $parameters;
     protected $tracker;
@@ -256,4 +258,3 @@ class Transition_PostAction_CIBuildAfterTest extends TuleapTestCase {
         $post_action_ci_build->after($this->changeset);
     }
 }
-?>

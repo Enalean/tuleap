@@ -38,5 +38,4 @@ class AdminDelegation_UserServiceLogDao extends DataAccessObject
                            ')';
         return $this->update($sql);
     }
-
 }

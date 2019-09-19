@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201306031352_add_branch_and_type_to_log extends ForgeUpgrade_Bucket {
+class b201306031352_add_branch_and_type_to_log extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -68,5 +69,3 @@ EOT;
         }
     }
 }
-
-?>

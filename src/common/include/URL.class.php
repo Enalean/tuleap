@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class URL {
+class URL
+{
 
     /**
     * @see http://www.ietf.org/rfc/rfc2396.txt Annex B
@@ -27,7 +28,7 @@ class URL {
     /* static */ function parse($url)
     {
         $components = array();
-        preg_match('`^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?`i',$url, $components);
+        preg_match('`^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?`i', $url, $components);
         return $components;
     }
     /* static */ function getHost($url)
@@ -51,8 +52,8 @@ class URL {
     function getGroupNameFromSVNUrl($uri)
     {
         $pieces = explode('&', $uri);
-        foreach($pieces as $piece) {
-            if(strpos($piece, 'root=') !== false) {
+        foreach ($pieces as $piece) {
+            if (strpos($piece, 'root=') !== false) {
                 $parts = $piece;
                 break;
             }
@@ -77,10 +78,10 @@ class URL {
         $request = HTTPRequest::instance();
         $req_uri = '/'.trim($url, "/");
         // /projects/ and /viewvc/
-        if ((strpos($req_uri,'/projects/') === 0) || (strpos($req_uri,'/viewvc.php/') !== false)) {
-            if (strpos($req_uri,'/viewvc.php/') !== false) {
+        if ((strpos($req_uri, '/projects/') === 0) || (strpos($req_uri, '/viewvc.php/') !== false)) {
+            if (strpos($req_uri, '/viewvc.php/') !== false) {
                 $this_proj_name = $this->getGroupNameFromSVNUrl($req_uri);
-            } else if (strpos($req_uri,'/projects/') !== false) {
+            } elseif (strpos($req_uri, '/projects/') !== false) {
                 $pieces = explode("/", $url);
                 $this_proj_name=$pieces[2];
             }
@@ -98,7 +99,7 @@ class URL {
             $group_id=$group_id['group_id'];
         }
         // Forum and news. Each published news is a special forum of project 'news'
-        if (strpos($req_uri,'/forum/') === 0) {
+        if (strpos($req_uri, '/forum/') === 0) {
             if (array_key_exists('forum_id', $_REQUEST) && $_REQUEST['forum_id']) {
                 // Get corresponding project
                 $dao = $this->getForumDao();
@@ -128,7 +129,7 @@ class URL {
         }
 
         // Artifact attachment download...
-        if (strpos($req_uri,'/tracker/download.php') === 0) {
+        if (strpos($req_uri, '/tracker/download.php') === 0) {
             if (isset($_REQUEST['artifact_id'])) {
                 $dao = $this->getArtifactDao();
                 $result = $dao->searchArtifactId($_REQUEST['artifact_id']);
@@ -184,4 +185,3 @@ class URL {
         return new ArtifactDao(CodendiDataAccess::instance());
     }
 }
-?>

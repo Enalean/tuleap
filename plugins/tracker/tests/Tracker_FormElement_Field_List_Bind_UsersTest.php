@@ -39,7 +39,8 @@ Mock::generate('Tracker_Artifact_ChangesetValue_List');
 Mock::generate('Tracker_FormElement_Field_List_Bind_UsersValue');
 
 
-class Tracker_FormElement_Field_List_Bind_UsersTest extends TuleapTestCase {
+class Tracker_FormElement_Field_List_Bind_UsersTest extends TuleapTestCase
+{
 
     public function tearDown()
     {

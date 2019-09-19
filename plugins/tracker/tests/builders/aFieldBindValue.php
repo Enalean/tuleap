@@ -29,7 +29,8 @@ function aFieldListStaticValue()
     return new Test_Tracker_FormElement_Field_List_BindValue_Builder('Tracker_FormElement_Field_List_Bind_StaticValue');
 }
 
-class Test_Tracker_FormElement_Field_List_BindValue_Builder {
+class Test_Tracker_FormElement_Field_List_BindValue_Builder
+{
     private $name;
     private $id;
     private $label;
@@ -64,5 +65,3 @@ class Test_Tracker_FormElement_Field_List_BindValue_Builder {
         return $object;
     }
 }
-
-?>

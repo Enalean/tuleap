@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* abstract */class Docman_View_ItemDetailsSection {
+/* abstract */class Docman_View_ItemDetailsSection
+{
 
     var $id;
     var $title;

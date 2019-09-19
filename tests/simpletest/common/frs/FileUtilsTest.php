@@ -20,7 +20,8 @@
 
 require_once __DIR__ . '/../../../../src/www/file/file_utils.php';
 
-class FileUtils extends TuleapTestCase {
+class FileUtils extends TuleapTestCase
+{
 
     function testFileUtilsGetSize_1_Mo_File()
     {

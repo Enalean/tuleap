@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/../../../bootstrap.php';
 
-class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
+class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase
+{
 
     /** @var Git_Driver_Gerrit_UserFinder */
     protected $user_finder;
@@ -47,7 +48,8 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
     }
 }
 
-class Git_Driver_Gerrit_UserFinder_areRegisteredUsersAllowedToTest extends Git_Driver_Gerrit_UserFinderTest {
+class Git_Driver_Gerrit_UserFinder_areRegisteredUsersAllowedToTest extends Git_Driver_Gerrit_UserFinderTest
+{
 
     public function itReturnsFalseForSpecialAdminPerms()
     {
@@ -85,7 +87,8 @@ class Git_Driver_Gerrit_UserFinder_areRegisteredUsersAllowedToTest extends Git_D
     }
 }
 
-class Git_Driver_Gerrit_UserFinder_getUGroupsTest extends TuleapTestCase {
+class Git_Driver_Gerrit_UserFinder_getUGroupsTest extends TuleapTestCase
+{
 
     private $permissions_manager;
     private $ugroup_manager;
@@ -97,7 +100,6 @@ class Git_Driver_Gerrit_UserFinder_getUGroupsTest extends TuleapTestCase {
         $this->permissions_manager = mock('PermissionsManager');
         $this->ugroup_manager      = mock('UGroupManager');
         $this->user_finder         = new Git_Driver_Gerrit_UserFinder($this->permissions_manager, $this->ugroup_manager);
-
     }
 
     public function itAsksPermissionsToPermissionsManager()
@@ -146,6 +148,3 @@ class Git_Driver_Gerrit_UserFinder_getUGroupsTest extends TuleapTestCase {
         $this->user_finder->getUgroups('whatever', 'whatever');
     }
 }
-
-
-?>

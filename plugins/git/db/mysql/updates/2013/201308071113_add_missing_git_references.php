@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201308071113_add_missing_git_references extends ForgeUpgrade_Bucket {
+class b201308071113_add_missing_git_references extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -66,4 +67,3 @@ EOT;
         }
     }
 }
-?>

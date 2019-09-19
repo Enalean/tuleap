@@ -114,7 +114,8 @@ use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 use XMLImportHelper;
 
-class ArtifactsResource extends AuthenticatedResource {
+class ArtifactsResource extends AuthenticatedResource
+{
     public const MAX_LIMIT          = 50;
     public const DEFAULT_LIMIT      = 10;
     public const DEFAULT_OFFSET     = 0;
@@ -281,7 +282,7 @@ class ArtifactsResource extends AuthenticatedResource {
      *
      * @throws RestException 403
      */
-    public function getArtifacts($query, $limit = self::MAX_ARTIFACT_BATCH,  $offset = self::DEFAULT_OFFSET)
+    public function getArtifacts($query, $limit = self::MAX_ARTIFACT_BATCH, $offset = self::DEFAULT_OFFSET)
     {
         $this->checkAccess();
 
@@ -493,7 +494,7 @@ class ArtifactsResource extends AuthenticatedResource {
         $id,
         $direction,
         $nature = self::EMPTY_TYPE,
-        $limit  = 10,
+        $limit = 10,
         $offset = self::DEFAULT_OFFSET
     ) {
         $this->checkAccess();
@@ -575,9 +576,9 @@ class ArtifactsResource extends AuthenticatedResource {
     public function getArtifactChangesets(
         $id,
         $fields = Changeset::FIELDS_ALL,
-        $limit  = 10,
+        $limit = 10,
         $offset = self::DEFAULT_OFFSET,
-        $order  = self::ORDER_ASC
+        $order = self::ORDER_ASC
     ) {
         $this->checkAccess();
         $user     = $this->user_manager->getCurrentUser();

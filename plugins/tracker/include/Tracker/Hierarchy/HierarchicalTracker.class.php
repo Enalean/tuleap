@@ -26,7 +26,8 @@
  *
  * We should probably remove it, and use TreeNode Instead.
  */
-class Tracker_Hierarchy_HierarchicalTracker {
+class Tracker_Hierarchy_HierarchicalTracker
+{
 
     /**
      * @var Tracker
@@ -69,4 +70,3 @@ class Tracker_Hierarchy_HierarchicalTracker {
         return in_array($tracker, $this->children);
     }
 }
-?>

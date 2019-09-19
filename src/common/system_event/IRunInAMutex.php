@@ -25,7 +25,8 @@
 /**
  * Control process to be run by SystemEventProcessorMutex
  */
-interface IRunInAMutex {
+interface IRunInAMutex
+{
 
     /**
      * The method to be executed by the mutex

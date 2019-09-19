@@ -23,12 +23,13 @@
  *
  */
 
-class UserLogDao extends DataAccessObject {
+class UserLogDao extends DataAccessObject
+{
     function getFoundRows()
     {
         $sql = 'SELECT FOUND_ROWS() as nb';
         $dar = $this->retrieve($sql);
-        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
             return $row['nb'];
         } else {
@@ -81,5 +82,4 @@ class UserLogDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
-
 }

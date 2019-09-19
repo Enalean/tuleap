@@ -106,11 +106,10 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE extends SystemEvent
     ) {
         try {
             $this->driver_factory->getDriver($server)->deleteProject(
-                    $server,
-                    $project->getUnixName().'/'.$repository->getName()
+                $server,
+                $project->getUnixName().'/'.$repository->getName()
             );
             $backend->setGerritProjectAsDeleted($repository);
-
         } catch (Exception $e) {
             $this->error($e->getMessage().$e->getTraceAsString());
             return false;

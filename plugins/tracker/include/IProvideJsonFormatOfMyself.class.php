@@ -38,7 +38,8 @@
  * The global idea is to ensure consistency across implementation (JS, PHP, etc)
  * with same terms and behaviours.
  */
-interface Tracker_IProvideJsonFormatOfMyself {
+interface Tracker_IProvideJsonFormatOfMyself
+{
 
     /**
      * Return a JSon representation of self meant to be passed as is to json_encode
@@ -47,5 +48,3 @@ interface Tracker_IProvideJsonFormatOfMyself {
      */
     public function fetchFormattedForJson();
 }
-
-?>

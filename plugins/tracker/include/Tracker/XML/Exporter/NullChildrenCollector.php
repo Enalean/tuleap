@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XML_Exporter_NullChildrenCollector extends Tracker_XML_ChildrenCollector {
+class Tracker_XML_Exporter_NullChildrenCollector extends Tracker_XML_ChildrenCollector
+{
 
     public const MAX = 50;
 

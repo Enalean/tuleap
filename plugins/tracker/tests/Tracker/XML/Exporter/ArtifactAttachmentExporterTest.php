@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../../bootstrap.php';
 
-class ArtifactAttachmentExporterTest extends TuleapTestCase {
+class ArtifactAttachmentExporterTest extends TuleapTestCase
+{
 
     /** @var ZipArchive */
     private $archive;

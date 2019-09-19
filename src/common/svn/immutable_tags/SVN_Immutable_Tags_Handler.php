@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SVN_Immutable_Tags_Handler {
+class SVN_Immutable_Tags_Handler
+{
 
     /** @var SVN_Immutable_Tags_DAO */
     private $dao;
@@ -76,5 +77,4 @@ class SVN_Immutable_Tags_Handler {
     {
         return $this->getImmutableTagsPathForProject($project->getID()) != '';
     }
-
 }

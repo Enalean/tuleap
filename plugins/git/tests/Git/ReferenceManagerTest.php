@@ -24,7 +24,8 @@
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-class Git_ReferenceManagerTest extends TuleapTestCase {
+class Git_ReferenceManagerTest extends TuleapTestCase
+{
     private $project;
     private $repository_factory;
     private $reference_manager;
@@ -75,5 +76,3 @@ class Git_ReferenceManagerTest extends TuleapTestCase {
         $this->assertEqual($ref, $reference);
     }
 }
-
-?>

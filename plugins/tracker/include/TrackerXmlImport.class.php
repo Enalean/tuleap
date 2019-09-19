@@ -279,7 +279,8 @@ class TrackerXmlImport
             $extraction_path,
             $xml_mapping,
             $artifacts_id_mapping,
-            $configuration);
+            $configuration
+        );
 
         $this->importChangesets(
             $xml_trackers,
@@ -407,7 +408,6 @@ class TrackerXmlImport
         $errors = '';
 
         if (! empty($trackers_name_error)) {
-
             $list_trackers_name = implode(', ', $trackers_name_error);
             $errors = $GLOBALS['Language']->getText(
                 'plugin_tracker_common_type',
@@ -422,19 +422,18 @@ class TrackerXmlImport
     private function activateArtlinkV2(Project $project, SimpleXMLElement $xml_element)
     {
         $use_natures = $xml_element{'use-natures'};
-        if($use_natures == 'true') {
+        if ($use_natures == 'true') {
             if ($this->artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($project)) {
                 $this->logger->info("This project already uses artifact links nature feature.");
             } else {
                 $this->artifact_links_usage_updater->forceUsageOfArtifactLinkTypes($project);
                 $this->logger->info("Artifact links nature feature is now active.");
             }
-
-        } else if($use_natures == 'false') {
+        } elseif ($use_natures == 'false') {
             if ($this->artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($project)) {
                 $this->artifact_links_usage_updater->forceDeactivationOfArtifactLinkTypes($project);
                 $this->logger->warn("This project used artifact links nature. It is now deactivated!!!");
-            } else{
+            } else {
                 $this->logger->warn("This project will not be able to use artifact links nature feature.");
             }
         } else {
@@ -470,7 +469,8 @@ class TrackerXmlImport
                     $extraction_path,
                     $xml_mapping,
                     $artifacts_id_mapping,
-                    $configuration);
+                    $configuration
+                );
             }
         }
         return $created_artifacts;
@@ -812,13 +812,13 @@ class TrackerXmlImport
         if (isset($xml->dependencies)) {
             $list_rules = null;
 
-            if(! isset($xml->rules)) {
+            if (! isset($xml->rules)) {
                 $list_rules = $xml->addChild('rules')->addChild('list_rules');
             } elseif (! isset($xml->rules->list_rules)) {
                 $list_rules = $xml->rules->addChild('list_rules', $xml->dependencies);
             }
 
-            if($list_rules !== null) {
+            if ($list_rules !== null) {
                 foreach ($xml->dependencies->rule as $old_rule) {
                     $source_field_attributes = $old_rule->source_field->attributes();
                     $target_field_attributes = $old_rule->target_field->attributes();
@@ -876,7 +876,7 @@ class TrackerXmlImport
             foreach ($xml->permissions->permission as $permission) {
                 $ugroup_name = (string) $permission['ugroup'];
                 $ugroup_id = $this->getUGroupId($project, $ugroup_name);
-                if(is_null($ugroup_id)) {
+                if (is_null($ugroup_id)) {
                     $this->logger->error("Custom ugroup '$ugroup_name' does not seem to exist for '{$project->getPublicName()}' project.");
                     continue;
                 }
@@ -885,29 +885,29 @@ class TrackerXmlImport
                 switch ((string) $permission['scope']) {
                     case 'tracker':
                         //tracker permissions
-                        if(!in_array($type, $allowed_tracker_perms)) {
+                        if (!in_array($type, $allowed_tracker_perms)) {
                             $this->logger->error("Can not import permission of type $type for tracker.");
                             break;
                         }
                         $this->logger->debug("Adding '$type' permission to '$ugroup_name' on tracker '{$tracker->getName()}'.");
                         $tracker->setCachePermission($ugroup_id, $type);
-                    break;
+                        break;
                     case 'field':
                         //field permissions
                         $REF    = (string) $permission['REF'];
-                        if(!in_array($type, $allowed_field_perms)) {
+                        if (!in_array($type, $allowed_field_perms)) {
                             $this->logger->error("Can not import permission of type $type for field.");
                             break;
                         }
-                        if(!isset($this->xml_fields_mapping[$REF])) {
+                        if (!isset($this->xml_fields_mapping[$REF])) {
                             $this->logger->error("Unknow ref to field $REF.");
                             break;
                         }
                         $this->logger->debug("Adding '$type' permission to '$ugroup_name' on field '$REF'.");
                         $this->xml_fields_mapping[$REF]->setCachePermission($ugroup_id, $type);
-                    break;
+                        break;
                     default:
-                    break;
+                        break;
                 }
             }
         }
@@ -917,11 +917,11 @@ class TrackerXmlImport
 
     private function getUGroupId(Project $project, $ugroup_name)
     {
-        if(isset($GLOBALS['UGROUPS'][$ugroup_name])) {
+        if (isset($GLOBALS['UGROUPS'][$ugroup_name])) {
             $ugroup_id = $GLOBALS['UGROUPS'][$ugroup_name];
         } else {
             $ugroup = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
-            if(is_null($ugroup)) {
+            if (is_null($ugroup)) {
                 $ugroup_id = null;
             } else {
                 $ugroup_id = $ugroup->getId();

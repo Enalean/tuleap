@@ -19,13 +19,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class FRSException extends Exception {
+class FRSException extends Exception
+{
 };
 
-class FRSFileException extends FRSException {
+class FRSFileException extends FRSException
+{
 };
 
-class FRSFileMD5SumException extends FRSFileException {
+class FRSFileMD5SumException extends FRSFileException
+{
     /**
      * Constructor
      *
@@ -38,7 +41,8 @@ class FRSFileMD5SumException extends FRSFileException {
     }
 }
 
-class FRSFileInvalidNameException extends FRSFileException {
+class FRSFileInvalidNameException extends FRSFileException
+{
     /**
      * Constructor
      *
@@ -51,7 +55,8 @@ class FRSFileInvalidNameException extends FRSFileException {
     }
 }
 
-class FRSFileExistsException extends FRSFileException {
+class FRSFileExistsException extends FRSFileException
+{
     /**
      * Constructor
      *
@@ -64,7 +69,8 @@ class FRSFileExistsException extends FRSFileException {
     }
 }
 
-class FRSFileToBeRestoredException extends FRSFileException {
+class FRSFileToBeRestoredException extends FRSFileException
+{
     /**
      * Constructor
      *
@@ -77,7 +83,8 @@ class FRSFileToBeRestoredException extends FRSFileException {
     }
 }
 
-class FRSFileForgeException extends FRSFileException {
+class FRSFileForgeException extends FRSFileException
+{
     /**
      * Constructor
      *
@@ -90,7 +97,8 @@ class FRSFileForgeException extends FRSFileException {
     }
 }
 
-class FRSFileDbException extends FRSFileException {
+class FRSFileDbException extends FRSFileException
+{
     /**
      * Constructor
      *
@@ -103,7 +111,8 @@ class FRSFileDbException extends FRSFileException {
     }
 }
 
-class FRSFileIllegalNameException extends FRSFileException {
+class FRSFileIllegalNameException extends FRSFileException
+{
     /**
      * Constructor
      *
@@ -115,5 +124,3 @@ class FRSFileIllegalNameException extends FRSFileException {
         parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'illegal_file_name').': '.$file->getFileName(), $code);
     }
 }
-
-?>

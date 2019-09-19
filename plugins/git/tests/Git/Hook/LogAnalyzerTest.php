@@ -24,7 +24,8 @@
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
+class Git_Hook_LogAnalyzerTest extends TuleapTestCase
+{
 
     private $git_exec;
     private $user;
@@ -152,5 +153,3 @@ class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
         $this->assertEqual($push_details->getRevisionList(), array());
     }
 }
-
-?>

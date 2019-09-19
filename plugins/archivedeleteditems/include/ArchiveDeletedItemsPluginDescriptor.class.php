@@ -19,7 +19,8 @@
 /**
  * ArchiveDeletedItemsPluginDescriptor
  */
-class ArchiveDeletedItemsPluginDescriptor extends PluginDescriptor {
+class ArchiveDeletedItemsPluginDescriptor extends PluginDescriptor
+{
 
     /**
      * Constructor
@@ -31,7 +32,4 @@ class ArchiveDeletedItemsPluginDescriptor extends PluginDescriptor {
         parent::__construct(dgettext('tuleap-archivedeleteditems', 'Archive deleted items'), false, dgettext('tuleap-archivedeleteditems', 'This plugin will move files that should be purged (permanently deleted) in a dedicated filesystem for an external archiving (archiving process itself is not managed by this plugin).'));
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
-
 }
-
-?>

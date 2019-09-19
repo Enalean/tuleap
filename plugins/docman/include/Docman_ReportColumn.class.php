@@ -23,7 +23,8 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_ReportColumn {
+class Docman_ReportColumn
+{
     var $md;
     var $sort;
 
@@ -45,7 +46,7 @@ class Docman_ReportColumn {
     function getSortParameter()
     {
         $sortParam = null;
-        if($this->md !== null) {
+        if ($this->md !== null) {
             $sortParam = 'sort_'.$this->md->getLabel();
         }
         return $sortParam;
@@ -55,7 +56,7 @@ class Docman_ReportColumn {
     {
         $html = '';
         $sort = $this->getSort();
-        if($sort !== null) {
+        if ($sort !== null) {
             $html .= '<input type="hidden" name="'.$this->getSortParameter().'" value="'.$sort.'" />';
             $html .= "\n";
         }
@@ -66,11 +67,10 @@ class Docman_ReportColumn {
     function getTitle($view, $viewParams)
     {
         $sort = $this->getSort();
-        if($sort == 1) {
+        if ($sort == 1) {
             $toggleValue = '0';
             $toogleIcon = '<img src="'.util_get_image_theme("up_arrow.png").'" border="0" >';
-        }
-        else {
+        } else {
             $toggleValue = '1';
             $toogleIcon = '<img src="'.util_get_image_theme("dn_arrow.png").'" border="0" >';
         }
@@ -78,7 +78,7 @@ class Docman_ReportColumn {
         // URL
         $toggleParam = array();
         $sortParam = $this->getSortParameter();
-        if($sortParam !== null) {
+        if ($sortParam !== null) {
             $toggleParam[$sortParam] = $toggleValue;
         }
 
@@ -88,7 +88,7 @@ class Docman_ReportColumn {
         $purifier = Codendi_HTMLPurifier::instance();
         $link = $purifier->purify($this->md->getName());
 
-        if($sort !== null) {
+        if ($sort !== null) {
             $link .= '&nbsp;'.$toogleIcon;
         }
 
@@ -100,7 +100,7 @@ class Docman_ReportColumn {
     function initFromRequest($request)
     {
         $sortparam = $this->getSortParameter();
-        if($request->exist($sortparam)) {
+        if ($request->exist($sortparam)) {
             $this->setSort((int) $request->get($sortparam));
         }
     }
@@ -109,7 +109,7 @@ class Docman_ReportColumn {
     {
         $mdHtml = null;
         $md = $item->getMetadataFromLabel($this->md->getLabel());
-        if($md !== null) {
+        if ($md !== null) {
             $mdHtml = Docman_MetadataHtmlFactory::getFromMetadata($md, array());
         }
         return $mdHtml;
@@ -118,7 +118,7 @@ class Docman_ReportColumn {
     function getTableBox($item, $view, $params)
     {
         $mdHtml = $this->_getMdHtml($item);
-        if($mdHtml !== null) {
+        if ($mdHtml !== null) {
             return $mdHtml->getValue();
         }
         return '';
@@ -130,8 +130,8 @@ class Docman_ReportColumn {
     }
 }
 
-class Docman_ReportColumnLocation
-extends Docman_ReportColumn {
+class Docman_ReportColumnLocation extends Docman_ReportColumn
+{
     function __construct()
     {
         $this->sort = null;
@@ -163,7 +163,7 @@ extends Docman_ReportColumn {
         $pathTitle = $item->getPathTitle();
         $pathId    = $item->getPathId();
         $pathUrl   = array();
-        foreach($pathTitle as $key => $title) {
+        foreach ($pathTitle as $key => $title) {
             $id  = $pathId[$key];
 
             // Replace in the current url the id of the root item.
@@ -179,8 +179,8 @@ extends Docman_ReportColumn {
     }
 }
 
-class Docman_ReportColumnTitle
-extends Docman_ReportColumn {
+class Docman_ReportColumnTitle extends Docman_ReportColumn
+{
     function __construct($md)
     {
         parent::__construct($md);
@@ -215,8 +215,8 @@ extends Docman_ReportColumn {
     }
 }
 
-class Docman_ReportColumnList
-extends Docman_ReportColumn {
+class Docman_ReportColumnList extends Docman_ReportColumn
+{
     function __construct($md)
     {
         parent::__construct($md);
@@ -225,10 +225,9 @@ extends Docman_ReportColumn {
     function getTableBox($item, $view, $params)
     {
         $mdHtml = $this->_getMdHtml($item);
-        if($mdHtml !== null) {
+        if ($mdHtml !== null) {
             return $mdHtml->getValue(true);
         }
         return '';
     }
 }
-?>

@@ -26,7 +26,8 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
 require_once('Docman_Controller.class.php');
 require_once('Docman_Actions.class.php');
-class Docman_HTTPController extends Docman_Controller {
+class Docman_HTTPController extends Docman_Controller
+{
 
     function __construct(&$plugin, $pluginPath, $themePath, $request = null)
     {
@@ -40,7 +41,7 @@ class Docman_HTTPController extends Docman_Controller {
     /* protected */ function _includeView()
     {
         $className = 'Docman_View_'. $this->view;
-        if(file_exists(dirname(__FILE__).'/view/'. $className .'.class.php')) {
+        if (file_exists(dirname(__FILE__).'/view/'. $className .'.class.php')) {
             require_once('view/'. $className .'.class.php');
             return $className;
         }
@@ -104,7 +105,7 @@ class Docman_HTTPController extends Docman_Controller {
 
         $itemIter = $itemFactory->findFuturObsoleteItems();
         $itemIter->rewind();
-        while($itemIter->valid()) {
+        while ($itemIter->valid()) {
             $item = $itemIter->current();
 
             // Users
@@ -160,5 +161,3 @@ class Docman_HTTPController extends Docman_Controller {
         }
     }
 }
-
-?>

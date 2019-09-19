@@ -7,8 +7,9 @@ $RCS_IDS = '';
 function rcs_id($id)
 {
     // Save memory
-    if (defined('DEBUG') and DEBUG)
+    if (defined('DEBUG') and DEBUG) {
         $GLOBALS['RCS_IDS'] .= "$id\n";
+    }
 }
 rcs_id('$Id: prepend.php,v 1.43 2005/09/14 06:06:43 rurban Exp $');
 
@@ -21,8 +22,9 @@ define('PHPWIKI_VERSION', '1.3.12p2');
   * for easier coding.
   */
 foreach (array('SERVER','REQUEST','GET','POST','SESSION','ENV','COOKIE') as $k) {
-    if (!isset($GLOBALS['HTTP_'.$k.'_VARS']) and isset($GLOBALS['_'.$k]))
+    if (!isset($GLOBALS['HTTP_'.$k.'_VARS']) and isset($GLOBALS['_'.$k])) {
         $GLOBALS['HTTP_'.$k.'_VARS'] = $GLOBALS['_'.$k];
+    }
 }
 unset($k);
 
@@ -43,25 +45,30 @@ if (defined('DEBUG') and (DEBUG & 8) and extension_loaded("xdebug")) {
 }
 
 // Used for debugging purposes
-class DebugTimer {
+class DebugTimer
+{
     function __construct()
     {
         $this->_start = $this->microtime();
-        if (function_exists('posix_times'))
+        if (function_exists('posix_times')) {
             $this->_times = posix_times();
+        }
     }
 
     /**
      * @param string $which  One of 'real', 'utime', 'stime', 'cutime', 'sutime'
      * @return float Seconds.
      */
-    function getTime($which='real', $now=false)
+    function getTime($which = 'real', $now = false)
     {
-        if ($which == 'real')
+        if ($which == 'real') {
             return $this->microtime() - $this->_start;
+        }
 
         if (isset($this->_times)) {
-            if (!$now) $now = posix_times();
+            if (!$now) {
+                $now = posix_times();
+            }
             $ticks = $now[$which] - $this->_times[$which];
             return $ticks / $this->_CLK_TCK();
         }
@@ -76,10 +83,12 @@ class DebugTimer {
             return sprintf("real: %.3f", $this->getTime('real'));
         }
         $now = posix_times();
-        return sprintf("real: %.3f, user: %.3f, sys: %.3f",
-                       $this->getTime('real'),
-                       $this->getTime('utime', $now),
-                       $this->getTime('stime', $now));
+        return sprintf(
+            "real: %.3f, user: %.3f, sys: %.3f",
+            $this->getTime('real'),
+            $this->getTime('utime', $now),
+            $this->getTime('stime', $now)
+        );
     }
 
     function _CLK_TCK()
@@ -114,18 +123,20 @@ function ExitWiki($errormsg = false)
     global $request;
     static $in_exit = 0;
 
-    if (is_object($request) and method_exists($request,"finish"))
+    if (is_object($request) and method_exists($request, "finish")) {
         $request->finish($errormsg); // NORETURN
+    }
 
-    if ($in_exit)
+    if ($in_exit) {
         exit;
+    }
 
     $in_exit = true;
 
     global $ErrorManager;
     $ErrorManager->flushPostponedErrors();
 
-    if(!empty($errormsg)) {
+    if (!empty($errormsg)) {
         PrintXML(HTML::br(), $errormsg);
         print "\n</body></html>";
     }
@@ -147,4 +158,3 @@ if (!defined('DEBUG') or (defined('DEBUG') and DEBUG > 2)) {
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

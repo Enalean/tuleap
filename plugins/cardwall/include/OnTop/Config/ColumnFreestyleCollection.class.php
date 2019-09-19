@@ -22,12 +22,11 @@
 /**
  * Wrapper of array of columns defined freely by the user
  */
-class Cardwall_OnTop_Config_ColumnFreestyleCollection extends Cardwall_OnTop_Config_ColumnCollection
-                                                      implements Cardwall_OnTop_Config_ColumnsVisitor {
+class Cardwall_OnTop_Config_ColumnFreestyleCollection extends Cardwall_OnTop_Config_ColumnCollection implements Cardwall_OnTop_Config_ColumnsVisitor
+{
 
     public function accept($visitor, $parameter = '')
     {
         return $visitor->visitColumnFreestyleCollection($this, $parameter);
     }
 }
-?>

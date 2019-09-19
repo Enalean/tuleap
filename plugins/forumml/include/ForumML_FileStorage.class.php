@@ -27,7 +27,8 @@
  * A class to handle mails attachments storage
  *
  */
-class ForumML_FileStorage {
+class ForumML_FileStorage
+{
 
     // Root directory to host mails attachments
     var $root;
@@ -53,7 +54,7 @@ class ForumML_FileStorage {
      *
      * @return int size of attached file
      */
-    function store($filename, $content, $list, $date, $encod="")
+    function store($filename, $content, $list, $date, $encod = "")
     {
         $path = $this->_getPath($filename, $list, $date, "store");
         $ret = file_put_contents($path, $content);
@@ -115,12 +116,12 @@ class ForumML_FileStorage {
 
         if ($type == "upload") {
             $path_elements = array($this->root, $type);
-        } else if ($type == "store") {
+        } elseif ($type == "store") {
             $path_elements = array($this->root, $list, $date);
         }
 
         $path = '';
-        foreach($path_elements as $elem) {
+        foreach ($path_elements as $elem) {
             $path .= $elem .'/';
             if (!is_dir($path)) {
                 mkdir($path, 0755);
@@ -130,7 +131,7 @@ class ForumML_FileStorage {
         // Ensure that same file doesn't exists yet
         $ext = '';
         $i   = 1;
-        while($this->fileExists($path.$name.$ext)) {
+        while ($this->fileExists($path.$name.$ext)) {
             $ext = '_'.$i;
             $i++;
         }
@@ -142,7 +143,4 @@ class ForumML_FileStorage {
     {
         return is_file($path);
     }
-
 }
-
-?>

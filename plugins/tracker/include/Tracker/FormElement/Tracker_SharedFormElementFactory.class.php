@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_SharedFormElementFactory {
+class Tracker_SharedFormElementFactory
+{
     /**
      * @var Tracker_FormElementFactory
      */
@@ -76,7 +77,7 @@ class Tracker_SharedFormElementFactory {
 
     private function assertFieldIsReadable(Tracker_FormElement $field, PFUser $user)
     {
-        if ( ! ($field->userCanRead($user)
+        if (! ($field->userCanRead($user)
               && $field->getTracker()->userCanView($user))) {
             $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'permission_denied');
             throw new Exception($exception_message);
@@ -85,7 +86,7 @@ class Tracker_SharedFormElementFactory {
 
     private function assertFieldIsStaticSelectbox(Tracker_FormElement $field)
     {
-        if ( ! ($field instanceof Tracker_FormElement_Field_Selectbox
+        if (! ($field instanceof Tracker_FormElement_Field_Selectbox
                 && $field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static)) {
             $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'field_must_be_static');
             throw new Exception($exception_message);
@@ -114,7 +115,7 @@ class Tracker_SharedFormElementFactory {
      */
     private function assertProjectIsActive(Project $project)
     {
-        if ( ! $project->isActive()) {
+        if (! $project->isActive()) {
             $exception_message = dgettext('tuleap-tracker', "The provided field can't be shared with this tracker because the project it comes from is not active.");
             throw new Exception($exception_message);
         }

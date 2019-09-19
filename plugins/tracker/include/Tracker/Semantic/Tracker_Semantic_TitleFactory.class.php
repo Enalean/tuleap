@@ -90,6 +90,4 @@ class Tracker_Semantic_TitleFactory implements IBuildSemanticFromXML, IDuplicate
             }
         }
     }
-
 }
-?>

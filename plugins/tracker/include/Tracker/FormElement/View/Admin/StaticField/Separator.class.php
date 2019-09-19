@@ -18,7 +18,8 @@
  */
 
 
-class Tracker_FormElement_View_Admin_StaticField_Separator extends Tracker_FormElement_View_Admin_StaticField {
+class Tracker_FormElement_View_Admin_StaticField_Separator extends Tracker_FormElement_View_Admin_StaticField
+{
 
     /**
      * html form for the description
@@ -49,5 +50,3 @@ class Tracker_FormElement_View_Admin_StaticField_Separator extends Tracker_FormE
         return $html;
     }
 }
-
-?>

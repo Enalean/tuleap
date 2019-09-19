@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface Tracker_DateReminder_Role {
+interface Tracker_DateReminder_Role
+{
 
     /**
      * Get the Role Label as Text
@@ -41,4 +42,3 @@ interface Tracker_DateReminder_Role {
      */
     public function getRecipientsFromArtifact(Tracker_Artifact $artifact);
 }
-?>

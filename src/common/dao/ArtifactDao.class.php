@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactDao extends DataAccessObject {
+class ArtifactDao extends DataAccessObject
+{
     public function __construct($da = null)
     {
         parent::__construct($da);

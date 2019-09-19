@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b20150408_add_site_restricted_features_table extends ForgeUpgrade_Bucket {
+class b20150408_add_site_restricted_features_table extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket

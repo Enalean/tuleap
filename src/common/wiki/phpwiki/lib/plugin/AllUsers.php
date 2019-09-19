@@ -31,8 +31,7 @@ require_once('lib/PageList.php');
  * users with db prefs and
  * externally authenticated users with a db users table, if auth_user_exists is defined.
  */
-class WikiPlugin_AllUsers
-extends WikiPlugin
+class WikiPlugin_AllUsers extends WikiPlugin
 {
     function getName()
     {
@@ -46,19 +45,22 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.18 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.18 $"
+        );
     }
 
     function getDefaultArguments()
     {
-        return array_merge
-            (
-             PageList::supportedArgs(),
-             array('noheader'      => false,
+        return array_merge(
+            PageList::supportedArgs(),
+            array('noheader'      => false,
                    'include_empty' => true,
                    'debug'         => false
-                   ));
+            )
+        );
     }
     // info arg allows multiple columns
     // info=mtime,hits,summary,version,author,locked,minor,markup or all
@@ -73,11 +75,12 @@ extends WikiPlugin
     {
         $args = $this->getArgs($argstr, $request);
         extract($args);
-        if ($debug)
+        if ($debug) {
             $timer = new DebugTimer;
+        }
 
         $group = $request->getGroup();
-        if (method_exists($group,'_allUsers')) {
+        if (method_exists($group, '_allUsers')) {
             $allusers = $group->_allUsers();
         } else {
             $allusers = array();
@@ -85,16 +88,20 @@ extends WikiPlugin
         $args['count'] = count($allusers);
         // deleted pages show up as version 0.
         $pagelist = new PageList($info, $exclude, $args);
-        if (!$noheader)
+        if (!$noheader) {
             $pagelist->setCaption(_("Authenticated users on this wiki (%d total):"));
-        if ($include_empty and empty($info))
+        }
+        if ($include_empty and empty($info)) {
             $pagelist->_addColumn('version');
+        }
         list($offset, $pagesize) = $pagelist->limit($args['limit']);
         if (!$pagesize) {
             $pagelist->addPageList($allusers);
         } else {
             for ($i=$offset; $i < $offset + $pagesize - 1; $i++) {
-                if ($i >= $args['count']) break;
+                if ($i >= $args['count']) {
+                    break;
+                }
                 $pagelist->addPage($allusers[$i]);
             }
         }
@@ -107,8 +114,10 @@ extends WikiPlugin
         */
 
         if ($debug) {
-            return HTML($pagelist,
-                        HTML::p(fmt("Elapsed time: %s s", $timer->getStats())));
+            return HTML(
+                $pagelist,
+                HTML::p(fmt("Elapsed time: %s s", $timer->getStats()))
+            );
         } else {
             return $pagelist;
         }
@@ -196,4 +205,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

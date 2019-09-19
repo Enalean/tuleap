@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_Trigger_TriggerRuleCollection implements Iterator, Countable, Tracker_IProvideJsonFormatOfMyself {
+class Tracker_Workflow_Trigger_TriggerRuleCollection implements Iterator, Countable, Tracker_IProvideJsonFormatOfMyself
+{
     /**
      * @var Tracker_Workflow_Trigger_TriggerRule[]
      */
@@ -71,5 +72,3 @@ class Tracker_Workflow_Trigger_TriggerRuleCollection implements Iterator, Counta
         return count($this->trigger_rules);
     }
 }
-
-?>

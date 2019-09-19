@@ -20,7 +20,8 @@
 
 namespace Tuleap\Project\XML\Export;
 
-interface ArchiveInterface extends \Tuleap\Project\XML\ArchiveInterface {
+interface ArchiveInterface extends \Tuleap\Project\XML\ArchiveInterface
+{
 
     /**
      * Finalize archive

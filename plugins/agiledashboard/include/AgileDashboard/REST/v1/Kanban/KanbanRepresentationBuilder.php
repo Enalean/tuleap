@@ -26,7 +26,8 @@ use AgileDashboard_KanbanActionsChecker;
 use AgileDashboard_KanbanUserPreferences;
 use Exception;
 
-class KanbanRepresentationBuilder {
+class KanbanRepresentationBuilder
+{
 
     /**
      * @var AgileDashboard_KanbanUserPreferences

@@ -197,7 +197,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase
 
     private function assertContainsAll($expected_strings, $actual_text)
     {
-        foreach($expected_strings as $string) {
+        foreach ($expected_strings as $string) {
             $this->assertPattern('/'.$string.'/', $actual_text);
         }
     }

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201603251450_add_index_on_nature_column extends ForgeUpgrade_Bucket {
+class b201603251450_add_index_on_nature_column extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_MailGateway_InsecureMailGateway extends Tracker_Artifact_MailGateway_MailGateway {
+class Tracker_Artifact_MailGateway_InsecureMailGateway extends Tracker_Artifact_MailGateway_MailGateway
+{
 
     protected function canCreateArtifact(Tracker $tracker)
     {

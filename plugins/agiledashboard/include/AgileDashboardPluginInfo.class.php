@@ -21,7 +21,8 @@
 /**
  * AgileDashboardPluginInfo
  */
-class AgileDashboardPluginInfo extends PluginInfo {
+class AgileDashboardPluginInfo extends PluginInfo
+{
 
     function __construct($plugin)
     {
@@ -29,4 +30,3 @@ class AgileDashboardPluginInfo extends PluginInfo {
         $this->setPluginDescriptor(new AgileDashboardPluginDescriptor());
     }
 }
-?>

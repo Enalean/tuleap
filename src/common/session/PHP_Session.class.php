@@ -50,5 +50,4 @@ class PHP_Session
     {
         return $_SESSION;
     }
-
 }

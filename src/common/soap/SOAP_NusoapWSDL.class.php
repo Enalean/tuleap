@@ -22,7 +22,8 @@ require_once __DIR__ . '/../../www/include/nusoap.php';
 /**
  * Generate a WSDL for all public methods of a given class name
  */
-class SOAP_NusoapWSDL {
+class SOAP_NusoapWSDL
+{
     private $className;
     private $serviceName;
     private $uri;
@@ -79,5 +80,3 @@ class SOAP_NusoapWSDL {
         include __DIR__ . '/../../www/soap/common/types.php';
     }
 }
-
-?>

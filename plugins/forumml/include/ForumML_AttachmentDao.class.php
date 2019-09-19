@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ForumML_AttachmentDao extends DataAccessObject {
+class ForumML_AttachmentDao extends DataAccessObject
+{
 
     function __construct($da)
     {
@@ -30,7 +31,4 @@ class ForumML_AttachmentDao extends DataAccessObject {
         $sql = 'SELECT * FROM plugin_forumml_attachment WHERE id_attachment = '.$this->da->quoteSmart($id);
         return $this->retrieve($sql);
     }
-
 }
-
-?>

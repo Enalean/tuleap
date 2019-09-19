@@ -41,22 +41,22 @@ $_rVar = array();
 $request = HTTPRequest::instance();
 
 $_rVar['form_loginname'] = null;
-if($request->valid(new Valid_String('form_loginname'))) {
+if ($request->valid(new Valid_String('form_loginname'))) {
     $_rVar['form_loginname'] = $request->get('form_loginname');
 }
 
 $_rVar['form_pw'] = null;
-if($request->valid(new Valid_String('form_pw'))) {
+if ($request->valid(new Valid_String('form_pw'))) {
     $_rVar['form_pw'] = $request->get('form_pw');
 }
 
 $_cVar['pv'] = null;
-if($request->valid(new Valid_Pv())) {
+if ($request->valid(new Valid_Pv())) {
     $_cVar['pv'] = (int) $request->get('pv');
 }
 
 $_rVar['return_to'] = null;
-if($request->valid(new Valid_String('return_to'))) {
+if ($request->valid(new Valid_String('return_to'))) {
     $_rVar['return_to'] = $request->get('return_to');
 }
 
@@ -71,7 +71,7 @@ $user    = null;
 if ($request->isPost()) {
     $login_csrf->check();
     if (!$_rVar['form_loginname'] || !$_rVar['form_pw']) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session','missing_pwd'));
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session', 'missing_pwd'));
     } else {
         $user = $um->login($_rVar['form_loginname'], $_rVar['form_pw']);
         $status = $user->getStatus();
@@ -95,7 +95,7 @@ if ($user->isLoggedIn()) {
 // Display login page
 // Display mode
 $pvMode = false;
-if($_cVar['pv'] == 2) {
+if ($_cVar['pv'] == 2) {
     $pvMode = true;
 }
 
@@ -108,7 +108,7 @@ $presenter = $presenter_builder->build(
     $login_csrf
 );
 
-if($pvMode) {
+if ($pvMode) {
     $GLOBALS['HTML']->pv_header(array('title'=>$presenter->account_login_page_title()));
 } else {
     $GLOBALS['HTML']->header(array('title'=>$presenter->account_login_page_title(), 'body_class' => array('login-page')));

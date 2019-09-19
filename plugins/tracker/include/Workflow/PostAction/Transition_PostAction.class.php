@@ -139,28 +139,28 @@ abstract class Transition_PostAction
      *
      * @return string
      */
-    public abstract function getShortName();
+    abstract public function getShortName();
 
     /**
      * Get the label of the post action
      *
      * @return string
      */
-    public static abstract function getLabel();
+    abstract public static function getLabel();
 
     /**
      * Get the html code needed to display the post action in workflow admin
      *
      * @return string html
      */
-    public abstract function fetch();
+    abstract public function fetch();
 
     /**
      * Say if the action is well defined
      *
      * @return bool
      */
-    public abstract function isDefined();
+    abstract public function isDefined();
 
     /**
      * Update/Delete action
@@ -169,7 +169,7 @@ abstract class Transition_PostAction
      *
      * @return void
      */
-    public abstract function process(Codendi_Request $request);
+    abstract public function process(Codendi_Request $request);
 
     /**
      * Export postactions to XML
@@ -179,7 +179,7 @@ abstract class Transition_PostAction
      *
      * @return void
      */
-    public abstract function exportToXml(SimpleXMLElement $root, $xmlMapping);
+    abstract public function exportToXml(SimpleXMLElement $root, $xmlMapping);
 
     /**
      * Get the value of bypass_permissions
@@ -188,8 +188,7 @@ abstract class Transition_PostAction
      *
      * @return bool
      */
-    public abstract function bypassPermissions(Tracker_FormElement_Field $field);
+    abstract public function bypassPermissions(Tracker_FormElement_Field $field);
 
-    public abstract function accept(Visitor $visitor);
+    abstract public function accept(Visitor $visitor);
 }
-?>

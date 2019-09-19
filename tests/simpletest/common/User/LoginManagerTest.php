@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class User_LoginManagerTest extends TuleapTestCase {
+class User_LoginManagerTest extends TuleapTestCase
+{
     private $event_manager;
     private $user_manager;
     private $password_verifier;
@@ -45,7 +46,8 @@ class User_LoginManagerTest extends TuleapTestCase {
         );
         stub($this->password_verifier)->verifyPassword()->returns(true);
 
-        $this->event_manager->shouldReceive('processEvent')->with(Event::SESSION_BEFORE_LOGIN,
+        $this->event_manager->shouldReceive('processEvent')->with(
+            Event::SESSION_BEFORE_LOGIN,
             [
                 'loginname' => 'john',
                 'passwd'  => 'password',
@@ -98,7 +100,7 @@ class User_LoginManagerTest extends TuleapTestCase {
         stub($this->user_manager)->getUserByUserName()->returns($user);
         try {
             $this->login_manager->authenticate('john', 'password');
-        } catch(User_InvalidPasswordWithUserException $exception) {
+        } catch (User_InvalidPasswordWithUserException $exception) {
             $this->assertEqual($exception->getUser(), $user);
             $exception_catched = true;
         }
@@ -119,7 +121,7 @@ class User_LoginManagerTest extends TuleapTestCase {
                 'user' => $user,
                 'allow_codendi_login'  => true
             ]
-            )->once();
+        )->once();
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function ($hook) {
             return $hook instanceof \Tuleap\User\UserAuthenticationSucceeded;
         }))->once();
@@ -140,7 +142,8 @@ class User_LoginManagerTest extends TuleapTestCase {
     }
 }
 
-class User_LoginManager_validateAndSetCurrentUserTest extends TuleapTestCase {
+class User_LoginManager_validateAndSetCurrentUserTest extends TuleapTestCase
+{
     private $event_manager;
     private $user_manager;
     private $login_manager;
@@ -194,7 +197,8 @@ class User_LoginManager_validateAndSetCurrentUserTest extends TuleapTestCase {
     }
 }
 
-class User_LoginManagerPluginsTest extends TuleapTestCase {
+class User_LoginManagerPluginsTest extends TuleapTestCase
+{
     /** @var EventManager */
     private $event_manager;
     private $user_manager;
@@ -260,11 +264,11 @@ class User_LoginManagerPluginsTest extends TuleapTestCase {
         stub($this->user_manager)->getUserByUserName()->returns($user);
 
          $this->event_manager->addListener(
-            Event::SESSION_AFTER_LOGIN,
-            $this,
-            'refuseLogin',
-            false
-        );
+             Event::SESSION_AFTER_LOGIN,
+             $this,
+             'refuseLogin',
+             false
+         );
 
         $this->login_manager->authenticate('john', 'password');
     }
@@ -274,5 +278,3 @@ class User_LoginManagerPluginsTest extends TuleapTestCase {
         $params['allow_codendi_login'] = false;
     }
 }
-
-?>

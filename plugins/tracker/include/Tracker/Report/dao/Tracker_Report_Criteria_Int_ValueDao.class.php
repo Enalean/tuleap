@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Report_Criteria_Int_ValueDao extends Tracker_Report_Criteria_Alphanum_ValueDao {
+class Tracker_Report_Criteria_Int_ValueDao extends Tracker_Report_Criteria_Alphanum_ValueDao
+{
 
     public function save($id, $value)
     {
@@ -34,6 +35,4 @@ class Tracker_Report_Criteria_Int_ValueDao extends Tracker_Report_Criteria_Alpha
 
         return $this->update($sql);
     }
-
 }
-?>

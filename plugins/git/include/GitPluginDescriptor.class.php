@@ -24,7 +24,8 @@
 /**
  * GitPluginDescriptor
  */
-class GitPluginDescriptor extends PluginDescriptor {
+class GitPluginDescriptor extends PluginDescriptor
+{
 
     function __construct()
     {
@@ -32,4 +33,3 @@ class GitPluginDescriptor extends PluginDescriptor {
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
-?>

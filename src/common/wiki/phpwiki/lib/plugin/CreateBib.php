@@ -30,8 +30,7 @@ rcs_id('$Id: CreateToc.php,v 1.20 2004/05/11 13:57:46 rurban Exp $');
  * @author:  Lea Viljanen
  */
 
-class WikiPlugin_CreateBib
-extends WikiPlugin
+class WikiPlugin_CreateBib extends WikiPlugin
 {
     function getName()
     {
@@ -45,8 +44,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 0.01 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 0.01 $"
+        );
     }
 
     function getDefaultArguments()
@@ -57,8 +59,11 @@ extends WikiPlugin
 
     function preg_quote($heading)
     {
-        return str_replace(array("/",".","?","*"),
-                       array('\/','\.','\?','\*'), $heading);
+        return str_replace(
+            array("/",".","?","*"),
+            array('\/','\.','\?','\*'),
+            $heading
+        );
     }
 
 
@@ -69,19 +74,20 @@ extends WikiPlugin
 
         $start = false;
         $stop = false;
-        for ($i=0; $i<count($content); $i++)
-        {
+        for ($i=0; $i<count($content); $i++) {
             // $starttag shows when to start
-            if (preg_match('/^@/',$content[$i],$match)) {
+            if (preg_match('/^@/', $content[$i], $match)) {
                 $start = true;
             }
             // $endtag shows when to stop
-            else if (preg_match('/^\}/',$content[$i],$match)) {
+            elseif (preg_match('/^\}/', $content[$i], $match)) {
                 $stop = true;
             }
             if ($start) {
                 $bib[] = $content[$i];
-                if ($stop) $start = false;
+                if ($stop) {
+                    $start = false;
+                }
             }
         }
         return $bib;
@@ -95,8 +101,7 @@ extends WikiPlugin
         for ($i=0; $i<count($content); $i++) {
             // Should match "* [WikiPageName] whatever"
             //if (preg_match('/^\s*\*\s+(\[.+\])/',$content[$i],$match))
-            if (preg_match('/^\s*\*\s+\[(.+)\]/',$content[$i],$match))
-            {
+            if (preg_match('/^\s*\*\s+\[(.+)\]/', $content[$i], $match)) {
                 $articles[] = $match[1];
             }
         }
@@ -112,10 +117,12 @@ extends WikiPlugin
         $attrib = array('mtime' => $thispage->get('mtime'), 'is_ascii' => 1);
 
         $zip = new ZipWriter("Created by PhpWiki " . PHPWIKI_VERSION, $filename);
-        $zip->addRegularFile( FilenameForPage($thispage->getName()),
-                            $mailified, $attrib);
+        $zip->addRegularFile(
+            FilenameForPage($thispage->getName()),
+            $mailified,
+            $attrib
+        );
         $zip->finish();
-
     }
 
     function run($dbi, $argstr, $request, $basepage)
@@ -138,8 +145,11 @@ extends WikiPlugin
     // Prepare the button to trigger dumping
         $dump_url = $request->getURLtoSelf(array("file" => "tube.bib"));
         global $WikiTheme;
-        $dump_button = $WikiTheme->makeButton("To File",
-        $dump_url , 'foo');
+        $dump_button = $WikiTheme->makeButton(
+            "To File",
+            $dump_url,
+            'foo'
+        );
 
         $html = HTML::div(array('class' => 'bib','align' => 'left'));
         $html->pushContent($dump_button, ' ');
@@ -149,7 +159,6 @@ extends WikiPlugin
         // Let's find the subpages
         if ($articles = $this->extractArticles($content)) {
             foreach ($articles as $h) {
-
                 // Now let's get the bibtex information from that subpage
                 $subpage = $dbi->getPage($h);
                 $subversion = $subpage->getCurrentRevision();
@@ -189,4 +198,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

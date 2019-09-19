@@ -24,8 +24,12 @@ define('WIKIAUTH_USER', 2);     // real auth from a database/file/server.
 define('WIKIAUTH_ADMIN', 10);  // Wiki Admin
 define('WIKIAUTH_UNOBTAINABLE', 100);  // Permissions that no user can achieve
 
-if (!defined('COOKIE_EXPIRATION_DAYS')) define('COOKIE_EXPIRATION_DAYS', 365);
-if (!defined('COOKIE_DOMAIN'))          define('COOKIE_DOMAIN', '/');
+if (!defined('COOKIE_EXPIRATION_DAYS')) {
+    define('COOKIE_EXPIRATION_DAYS', 365);
+}
+if (!defined('COOKIE_DOMAIN')) {
+    define('COOKIE_DOMAIN', '/');
+}
 
 $UserPreferences = array(
                          'userid'        => new _UserPreference(''), // really store this also?
@@ -51,7 +55,7 @@ function WikiUserClassname()
 
 function UpgradeUser($olduser, $user)
 {
-    if (isa($user,'WikiUser') and isa($olduser,'WikiUser')) {
+    if (isa($user, 'WikiUser') and isa($olduser, 'WikiUser')) {
         // populate the upgraded class with the values from the old object
         foreach (get_object_vars($olduser) as $k => $v) {
             $user->$k = $v;
@@ -63,7 +67,8 @@ function UpgradeUser($olduser, $user)
     }
 }
 
-class WikiUser {
+class WikiUser
+{
     var $_userid = false;
     var $_level  = false;
     var $_request, $_dbi, $_authdbi, $_homepage;
@@ -85,8 +90,7 @@ class WikiUser {
         if (isa($userid, 'WikiUser')) {
             $this->_userid   = $userid->_userid;
             $this->_level    = $userid->_level;
-        }
-        else {
+        } else {
             $this->_userid = $userid;
             $this->_level = $authlevel;
         }
@@ -174,9 +178,10 @@ class WikiUser {
 
     function isValidName($userid = false)
     {
-        if (!$userid)
+        if (!$userid) {
             $userid = $this->_userid;
-        return preg_match("/^[\w\.@\-]+$/",$userid) and strlen($userid) < 32;
+        }
+        return preg_match("/^[\w\.@\-]+$/", $userid) and strlen($userid) < 32;
     }
 
     function AuthCheck($postargs)
@@ -184,26 +189,30 @@ class WikiUser {
         // Normalize args, and extract.
         $keys = array('userid', 'passwd', 'require_level', 'login', 'logout',
                       'cancel');
-        foreach ($keys as $key)
+        foreach ($keys as $key) {
             $args[$key] = isset($postargs[$key]) ? $postargs[$key] : false;
+        }
         extract($args);
         $require_level = max(0, min(WIKIAUTH_ADMIN, (int)$require_level));
 
-        if ($logout)
+        if ($logout) {
             return new WikiUser($this->_request); // Log out
-        elseif ($cancel)
+        } elseif ($cancel) {
             return false;        // User hit cancel button.
-        elseif (!$login && !$userid)
+        } elseif (!$login && !$userid) {
             return false;       // Nothing to do?
+        }
 
-        if (!$this->isValidName($userid))
+        if (!$this->isValidName($userid)) {
             return _("Invalid username.");
+        }
 
         $authlevel = $this->_pwcheck($userid, $passwd);
-        if (!$authlevel)
+        if (!$authlevel) {
             return _("Invalid password or userid.");
-        elseif ($authlevel < $require_level)
+        } elseif ($authlevel < $require_level) {
             return _("Insufficient permissions.");
+        }
 
         // Successful login.
         $user = new WikiUser($this->_request, $userid, $authlevel);
@@ -227,14 +236,22 @@ class WikiUser {
         $require_level = max(0, min(WIKIAUTH_ADMIN, (int)$require_level));
 
         $pagename = $request->getArg('pagename');
-        $login = new Template('login', $request,
-                              compact('pagename', 'userid', 'require_level',
-                                      'fail_message', 'pass_required'));
+        $login = new Template(
+            'login',
+            $request,
+            compact(
+                'pagename',
+                'userid',
+                'require_level',
+                'fail_message',
+                'pass_required'
+            )
+        );
         if ($seperate_page) {
             $request->discardOutput();
             $page = $request->getPage($pagename);
             $revision = $page->getCurrentRevision();
-            return GeneratePage($login,_("Sign In"),$revision);
+            return GeneratePage($login, _("Sign In"), $revision);
         } else {
             return $login;
         }
@@ -278,28 +295,31 @@ class WikiUser {
         // update the session and id
         $this->_request->setSessionVar('wiki_prefs', $prefs);
         // simple unpacked cookie
-        if ($this->_userid) setcookie('WIKI_ID', $this->_userid, 365, '/');
+        if ($this->_userid) {
+            setcookie('WIKI_ID', $this->_userid, 365, '/');
+        }
 
         // We must ensure that any password is encrypted.
         // We don't need any plaintext password.
-        if (! $id_only ) {
+        if (! $id_only) {
             if ($this->isSignedIn()) {
-                if ($this->isAdmin())
+                if ($this->isAdmin()) {
                     $prefs->set('passwd', '');
+                }
                 // already stored in config/config.ini, and it might be
                 // plaintext! well oh well
                 if ($homepage = $this->homePage()) {
                     // check for page revision 0
                     if (! $this->_dbi->isWikiPage($this->_userid)) {
-                        trigger_error(_("Your home page has not been created yet so your preferences cannot not be saved."),
-                                      E_USER_WARNING);
-                    }
-                    else {
+                        trigger_error(
+                            _("Your home page has not been created yet so your preferences cannot not be saved."),
+                            E_USER_WARNING
+                        );
+                    } else {
                         if ($this->isAdmin() || !$homepage->get('locked')) {
                             $homepage->set('pref', serialize($prefs->_prefs));
                             return sizeof($prefs->_prefs);
-                        }
-                        else {
+                        } else {
                             // An "empty" page could still be
                             // intentionally locked by admin to
                             // prevent its creation.
@@ -308,14 +328,18 @@ class WikiUser {
                             // probably be handled by the DB backend,
                             // once the new WikiUser code has been
                             // implemented.
-                            trigger_error(_("Your home page is locked so your preferences cannot not be saved.")
+                            trigger_error(
+                                _("Your home page is locked so your preferences cannot not be saved.")
                                           . " " . _("Please contact your PhpWiki administrator for assistance."),
-                                          E_USER_WARNING);
+                                E_USER_WARNING
+                            );
                         }
                     }
                 } else {
-                    trigger_error("No homepage for user found. Creating one...",
-                                  E_USER_WARNING);
+                    trigger_error(
+                        "No homepage for user found. Creating one...",
+                        E_USER_WARNING
+                    );
                     $this->createHomepage($prefs);
                     //$homepage->set('pref', serialize($prefs->_prefs));
                     return sizeof($prefs->_prefs);
@@ -339,8 +363,9 @@ class WikiUser {
     // how to store metadata in not existing pages? how about versions?
     function homePage()
     {
-        if (!$this->_userid)
+        if (!$this->_userid) {
             return false;
+        }
         if (!empty($this->_homepage)) {
             return $this->_homepage;
         } else {
@@ -357,8 +382,9 @@ class WikiUser {
     // create user by checking his homepage
     function createUser($pref, $createDefaultHomepage = true)
     {
-        if ($this->exists())
+        if ($this->exists()) {
             return;
+        }
         if ($createDefaultHomepage) {
             $this->createHomepage($pref);
         } else {
@@ -368,7 +394,7 @@ class WikiUser {
                               'versiondata' => array('author' => $this->_userid),
                               'pagename' => $this->_userid,
                               'content' => _('CategoryHomepage'));
-            SavePage ($this->_request, $pageinfo, false, false);
+            SavePage($this->_request, $pageinfo, false, false);
         }
         $this->setPreferences($pref);
     }
@@ -387,7 +413,7 @@ class WikiUser {
                           'versiondata' => array('author' => $this->_userid),
                           'pagename' => $pagename,
                           'content' => $text);
-        SavePage ($this->_request, $pageinfo, false, false);
+        SavePage($this->_request, $pageinfo, false, false);
 
         // create Calender
         $pagename = $this->_userid . SUBPAGE_SEPARATOR . _('Preferences');
@@ -396,7 +422,7 @@ class WikiUser {
                               'versiondata' => array('author' => $this->_userid),
                               'pagename' => $pagename,
                               'content' => "<?plugin Calender ?>\n");
-            SavePage ($this->_request, $pageinfo, false, false);
+            SavePage($this->_request, $pageinfo, false, false);
         }
 
         // create Preferences
@@ -406,7 +432,7 @@ class WikiUser {
                               'versiondata' => array('author' => $this->_userid),
                               'pagename' => $pagename,
                               'content' => "<?plugin UserPreferences ?>\n");
-            SavePage ($this->_request, $pageinfo, false, false);
+            SavePage($this->_request, $pageinfo, false, false);
         }
     }
 
@@ -421,29 +447,36 @@ class WikiUser {
     {
         $prefs = $this->getPreferences();
         $stored_passwd = $prefs->get('passwd'); // crypted
-        if (empty($prefs->_prefs['passwd']))    // not stored in the page
+        if (empty($prefs->_prefs['passwd'])) {    // not stored in the page
             // allow empty passwords? At least store a '*' then.
             // try other backend. hmm.
             $stored_passwd = $this->tryAuthBackends($this->_userid);
+        }
         if (empty($stored_passwd)) {
-            trigger_error(sprintf(_("Old UserPage %s without stored password updated with empty password. Set a password in your UserPreferences."),
-                                  $this->_userid), E_USER_NOTICE);
-            $prefs->set('passwd','*');
+            trigger_error(sprintf(
+                _("Old UserPage %s without stored password updated with empty password. Set a password in your UserPreferences."),
+                $this->_userid
+            ), E_USER_NOTICE);
+            $prefs->set('passwd', '*');
             return true;
         }
-        if ($stored_passwd == '*')
+        if ($stored_passwd == '*') {
             return true;
-        if ( !empty($passwd)
-             && crypt($passwd, $stored_passwd) == $stored_passwd )
+        }
+        if (!empty($passwd)
+             && crypt($passwd, $stored_passwd) == $stored_passwd ) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     function changePassword($newpasswd, $passwd2 = false)
     {
-        trigger_error(sprintf("Attempt to change an external password for '%s'. Not allowed!",
-            $this->_userid), E_USER_ERROR);
+        trigger_error(sprintf(
+            "Attempt to change an external password for '%s'. Not allowed!",
+            $this->_userid
+        ), E_USER_ERROR);
         return false;
     }
 
@@ -451,14 +484,18 @@ class WikiUser {
     {
         // on external DBAuth maybe. on IMAP or LDAP not
         // on internal DBAuth yes
-        if (in_array($this->_authmethod, array('IMAP', 'LDAP')))
+        if (in_array($this->_authmethod, array('IMAP', 'LDAP'))) {
             return false;
-        if ($this->isAdmin())
+        }
+        if ($this->isAdmin()) {
             return false;
-        if ($this->_authmethod == 'pagedata')
+        }
+        if ($this->_authmethod == 'pagedata') {
             return true;
-        if ($this->_authmethod == 'authdb')
+        }
+        if ($this->_authmethod == 'authdb') {
             return true;
+        }
     }
 }
 
@@ -489,8 +526,7 @@ class _UserPreference
     }
 }
 
-class _UserPreference_numeric
-extends _UserPreference
+class _UserPreference_numeric extends _UserPreference
 {
     function __construct(
         $default,
@@ -505,21 +541,25 @@ extends _UserPreference
     function sanify($value)
     {
         $value = (double)$value;
-        if ($this->_minval !== false && $value < $this->_minval)
+        if ($this->_minval !== false && $value < $this->_minval) {
             $value = $this->_minval;
-        if ($this->_maxval !== false && $value > $this->_maxval)
+        }
+        if ($this->_maxval !== false && $value > $this->_maxval) {
             $value = $this->_maxval;
+        }
         return $value;
     }
 }
 
-class _UserPreference_int
-extends _UserPreference_numeric
+class _UserPreference_int extends _UserPreference_numeric
 {
     function __construct($default, $minval = false, $maxval = false)
     {
-        parent::__construct((int)$default, (int)$minval,
-                                       (int)$maxval);
+        parent::__construct(
+            (int)$default,
+            (int)$minval,
+            (int)$maxval
+        );
     }
 
     function sanify($value)
@@ -528,8 +568,7 @@ extends _UserPreference_numeric
     }
 }
 
-class _UserPreference_bool
-extends _UserPreference
+class _UserPreference_bool extends _UserPreference
 {
     function __construct($default = false)
     {
@@ -549,8 +588,9 @@ extends _UserPreference
              * sent.)
              */
             foreach ($value as $val) {
-                if ($val)
+                if ($val) {
                     return true;
+                }
             }
             return false;
         }
@@ -558,8 +598,7 @@ extends _UserPreference
     }
 }
 
-class _UserPreference_language
-extends _UserPreference
+class _UserPreference_language extends _UserPreference
 {
     function __construct($default = DEFAULT_LANGUAGE)
     {
@@ -571,15 +610,15 @@ extends _UserPreference
     {
         // Revert to DEFAULT_LANGUAGE if user does not specify
         // language in UserPreferences or chooses <system language>.
-        if ($value == '' or empty($value))
+        if ($value == '' or empty($value)) {
             $value = DEFAULT_LANGUAGE;
+        }
 
         return (string) $value;
     }
 }
 
-class _UserPreference_theme
-extends _UserPreference
+class _UserPreference_theme extends _UserPreference
 {
     function __construct($default = THEME)
     {
@@ -588,8 +627,9 @@ extends _UserPreference
 
     function sanify($value)
     {
-        if (findFile($this->_themefile($value), true))
+        if (findFile($this->_themefile($value), true)) {
             return $value;
+        }
         return $this->default_value;
     }
 
@@ -597,8 +637,9 @@ extends _UserPreference
     {
         global $WikiTheme;
         include_once($this->_themefile($newvalue));
-        if (empty($WikiTheme))
+        if (empty($WikiTheme)) {
             include_once($this->_themefile(THEME));
+        }
     }
 
     function _themefile($theme)
@@ -608,17 +649,20 @@ extends _UserPreference
 }
 
 // don't save default preferences for efficiency.
-class UserPreferences {
+class UserPreferences
+{
     function __construct($saved_prefs = false)
     {
         $this->_prefs = array();
 
         if (isa($saved_prefs, 'UserPreferences') && $saved_prefs->_prefs) {
-            foreach ($saved_prefs->_prefs as $name => $value)
+            foreach ($saved_prefs->_prefs as $name => $value) {
                 $this->set($name, $value);
+            }
         } elseif (is_array($saved_prefs)) {
-            foreach ($saved_prefs as $name => $value)
+            foreach ($saved_prefs as $name => $value) {
                 $this->set($name, $value);
+            }
         }
     }
 
@@ -626,7 +670,9 @@ class UserPreferences {
     {
         global $UserPreferences;
         if (!isset($UserPreferences[$name])) {
-            if ($name == 'passwd2') return false;
+            if ($name == 'passwd2') {
+                return false;
+            }
             trigger_error("$name: unknown preference", E_USER_NOTICE);
             return false;
         }
@@ -635,31 +681,36 @@ class UserPreferences {
 
     function get($name)
     {
-        if (isset($this->_prefs[$name]))
+        if (isset($this->_prefs[$name])) {
             return $this->_prefs[$name];
-        if (!($pref = $this->_getPref($name)))
+        }
+        if (!($pref = $this->_getPref($name))) {
             return false;
+        }
         return $pref->default_value;
     }
 
     function set($name, $value)
     {
-        if (!($pref = $this->_getPref($name)))
+        if (!($pref = $this->_getPref($name))) {
             return false;
+        }
 
         $newvalue = $pref->sanify($value);
         $oldvalue = $this->get($name);
 
         // update on changes
-        if ($newvalue != $oldvalue)
+        if ($newvalue != $oldvalue) {
             $pref->update($newvalue);
+        }
 
         // don't set default values to save space (in cookies, db and
         // sesssion)
-        if ($value == $pref->default_value)
+        if ($value == $pref->default_value) {
             unset($this->_prefs[$name]);
-        else
+        } else {
             $this->_prefs[$name] = $newvalue;
+        }
     }
 
     function pack($nonpacked)
@@ -668,9 +719,10 @@ class UserPreferences {
     }
     function unpack($packed)
     {
-        if (!$packed)
+        if (!$packed) {
             return false;
-        if (substr($packed,0,2) == "O:") {
+        }
+        if (substr($packed, 0, 2) == "O:") {
             // Looks like a serialized object
             return unserialize($packed);
         }
@@ -917,4 +969,3 @@ class UserPreferences {
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

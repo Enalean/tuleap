@@ -70,7 +70,7 @@ $folderId = getParameter($argv, 'folder-id', true);
 
 if (($archive = getParameter($argv, 'archive', true)) === null) {
     $console->error("Missing parameter: --archive");
-} else if (is_dir($archive)) {
+} elseif (is_dir($archive)) {
     if (!is_file("$archive/".basename($archive).".xml")) {
         $console->error("The archive folder must contain an XML file with the same name");
         $archive = null;
@@ -121,7 +121,7 @@ if (!isset($login)) {
 if (!isset($password)) {
     echo "Password for $login: ";
 
-    if ( PHP_OS != 'WINNT') {
+    if (PHP_OS != 'WINNT') {
         shell_exec('stty -echo');
         $password = fgets(STDIN);
         shell_exec('stty echo');
@@ -151,7 +151,7 @@ if ($update || $continue) {
             $console->error($e->getMessage());
             exit(1);
         }
-    } else if ($continue) {
+    } elseif ($continue) {
         try {
             $xmlUpdate->continuePath($archive, $folderId, $path);
         } catch (Exception $e) {
@@ -174,4 +174,3 @@ if ($update || $continue) {
 
 $end = microtime(true);
 $console->info("Time elapsed: ".round($end-$start, 1)."s");
-?>

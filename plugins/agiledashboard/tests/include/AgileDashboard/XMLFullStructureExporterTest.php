@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-class XMLFullStructureExporterTest extends TuleapTestCase {
+class XMLFullStructureExporterTest extends TuleapTestCase
+{
 
     private $event_manager;
     private $router_builder;

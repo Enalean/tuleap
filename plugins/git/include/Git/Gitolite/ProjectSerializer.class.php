@@ -22,7 +22,8 @@ use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\PathJoinUtil;
 
-class Git_Gitolite_ProjectSerializer {
+class Git_Gitolite_ProjectSerializer
+{
 
     public const OBJECT_SIZE_LIMIT = 52428800;
 
@@ -81,7 +82,6 @@ class Git_Gitolite_ProjectSerializer {
 
         $project_config = '';
         foreach ($this->repository_factory->getAllRepositoriesOfProject($project) as $repository) {
-
             $this->logger->debug("Fetching Repo Configuration: " . $repository->getName() . "...");
             $project_config .= $this->fetchReposConfig($project, $repository);
             $this->logger->debug("Fetching Repo Configuration: " . $repository->getName() . ": done");
@@ -95,7 +95,6 @@ class Git_Gitolite_ProjectSerializer {
         $this->logger->debug("Dumping partial project repo conf for: " . $project->getUnixName());
         $project_config = '';
         foreach ($repositories as $repository) {
-
             $this->logger->debug("Fetching Repo Configuration: " . $repository->getName() . "...");
             $project_config .= $this->fetchReposConfig($project, $repository);
             $this->logger->debug("Fetching Repo Configuration: " . $repository->getName() . ": done");
@@ -109,7 +108,6 @@ class Git_Gitolite_ProjectSerializer {
         $this->logger->debug("Dumping partial suspended project repo conf for: " . $project->getUnixName());
         $project_config = '';
         foreach ($repositories as $repository) {
-
             $this->logger->debug("Fetching disabled repo configuration: " . $repository->getName() . "...");
             $project_config .= $this->fetchSuspendedRepositoryConfiguration($project, $repository);
             $this->logger->debug("Fetching disabled repo configuration: " . $repository->getName() . ": done");
@@ -124,7 +122,6 @@ class Git_Gitolite_ProjectSerializer {
 
         $project_config = '';
         foreach ($this->repository_factory->getAllRepositoriesOfProject($project) as $repository) {
-
             $this->logger->debug("Fetching disabled repo configuration: " . $repository->getName() . "...");
             $project_config .= $this->fetchSuspendedRepositoryConfiguration($project, $repository);
             $this->logger->debug("Fetching disabled repo configuration: " . $repository->getName() . ": done");

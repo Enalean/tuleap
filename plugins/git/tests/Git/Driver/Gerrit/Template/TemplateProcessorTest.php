@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/../../../../bootstrap.php';
 
-class Git_Driver_Gerrit_Template_TemplateProcessorTest extends TuleapTestCase {
+class Git_Driver_Gerrit_Template_TemplateProcessorTest extends TuleapTestCase
+{
 
     /** @var Git_Driver_Gerrit_Template_TemplateProcessor */
     private $template_processor;
@@ -38,7 +39,7 @@ class Git_Driver_Gerrit_Template_TemplateProcessorTest extends TuleapTestCase {
     {
 
         $this->template_processor = new Git_Driver_Gerrit_Template_TemplateProcessor();
-        $this->template           = new Git_Driver_Gerrit_Template_Template(1,2,'wathevername','whateverecontent');
+        $this->template           = new Git_Driver_Gerrit_Template_Template(1, 2, 'wathevername', 'whateverecontent');
         $this->project            = stub('Project')->getUnixName()->returns($this->project_name);
     }
 
@@ -81,6 +82,5 @@ class Git_Driver_Gerrit_Template_TemplateProcessorTest extends TuleapTestCase {
         $processed = $this->template_processor->processTemplate($this->template, $this->project);
 
         $this->assertEqual($template_content, $processed);
-
     }
 }

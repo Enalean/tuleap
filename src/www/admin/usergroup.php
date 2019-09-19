@@ -93,7 +93,7 @@ if ($request->isPost()) {
         $vDate->addRule(new Rule_Date());
         //$vDate->required();
         if (!$request->valid($vDate)) {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_usergroup','data_not_parsed'));
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_usergroup', 'data_not_parsed'));
         } else {
             if ($request->existAndNonEmpty('expiry_date')) {
                 $date_list = explode('-', $request->get('expiry_date'), 3);
@@ -151,7 +151,7 @@ if ($request->isPost()) {
                         if (! $user_status_checker->doesPlatformAllowRestricted()) {
                             $GLOBALS['Response']->addFeedback(Feedback::WARN, _('Your platform does not allow restricted users.'));
                             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
-                        } else if (ForgeConfig::areRestrictedUsersAllowed()) {
+                        } elseif (ForgeConfig::areRestrictedUsersAllowed()) {
                             $user->setStatus($request->get('form_status'));
                             // If the user had a shell, set it to restricted shell
                             if ($user->getShell()
@@ -193,10 +193,9 @@ if ($request->isPost()) {
                                 $em->processEvent(Event::USER_RENAME, array(
                                     'user_id'  => $user->getId(),
                                     'new_name' => $request->get('form_user_login_name'),
-                                    'old_user' => $user)
-                                );
-                                $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_usergroup','rename_user_msg', array($user->getUserName(), $request->get('form_user_login_name'))));
-                                $GLOBALS['Response']->addFeedback('warning', $Language->getText('admin_usergroup','rename_user_warn'));
+                                    'old_user' => $user));
+                                $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_usergroup', 'rename_user_msg', array($user->getUserName(), $request->get('form_user_login_name'))));
+                                $GLOBALS['Response']->addFeedback('warning', $Language->getText('admin_usergroup', 'rename_user_warn'));
                         }
                     }
                 } else {
@@ -216,7 +215,7 @@ if ($request->isPost()) {
 
             // Run the update
             if ($um->updateDb($user)) {
-                $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_usergroup','success_upd_u'));
+                $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_usergroup', 'success_upd_u'));
                 if ($accountActivationEvent) {
                     $em->processEvent($accountActivationEvent, array('user_id' => $user->getId()));
                 }
@@ -227,24 +226,23 @@ if ($request->isPost()) {
             }
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
         }
-
     } elseif ($action == 'update_password') {
         if (! $request->existAndNonEmpty('user_id')) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw','error_userid'));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw', 'error_userid'));
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
         }
         if (! $request->existAndNonEmpty('form_pw')) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw','error_nopasswd'));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw', 'error_nopasswd'));
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
         }
         if ($request->get('form_pw') !== $request->get('form_pw2')) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw','error_passwd'));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw', 'error_passwd'));
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
         }
 
         $password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();
         if (! $password_sanity_checker->check($request->get('form_pw'))) {
-            foreach($password_sanity_checker->getErrors() as $error) {
+            foreach ($password_sanity_checker->getErrors() as $error) {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $error);
             }
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
@@ -253,7 +251,7 @@ if ($request->isPost()) {
         $user = $user_manager->getUserById($request->get('user_id'));
 
         if ($user === null) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw','error_userid'));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw', 'error_userid'));
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
         }
 

@@ -56,7 +56,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
 
     public function exists($id)
     {
-        if ( empty($id) ) {
+        if (empty($id)) {
             return false;
         }
         $sql = 'SELECT repository_id
@@ -73,7 +73,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         try {
             $this->getDB()->run($sql, $repositoryId);
         } catch (PDOException $ex) {
-            throw new GitDaoException( dgettext('tuleap-git', 'Unable to update Repository data'));
+            throw new GitDaoException(dgettext('tuleap-git', 'Unable to update Repository data'));
         }
         return true;
     }
@@ -90,7 +90,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
 
         try {
             $parent   = $repository->getParent();
-            if ( !empty($parent) ) {
+            if (!empty($parent)) {
                 $parentId = $parent->getId();
             }
         } catch (GitDaoException $e) {
@@ -117,7 +117,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
                     ['repository_id' => $id]
                 );
             } catch (PDOException $ex) {
-                throw new GitDaoException( dgettext('tuleap-git', 'Unable to update Repository data'));
+                throw new GitDaoException(dgettext('tuleap-git', 'Unable to update Repository data'));
             }
             return true;
         }
@@ -147,7 +147,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
                 ]
             );
         } catch (PDOException $ex) {
-            throw new GitDaoException( dgettext('tuleap-git', 'Unable to update Repository data'));
+            throw new GitDaoException(dgettext('tuleap-git', 'Unable to update Repository data'));
         }
 
         return $this->getDB()->lastInsertId();
@@ -157,8 +157,8 @@ class GitDao extends \Tuleap\DB\DataAccessObject
     {
         $id        = $repository->getId();
         $projectId = $repository->getProjectId();
-        if ( empty($id) || empty($projectId) ) {
-            throw new GitDaoException( dgettext('tuleap-git', 'Missing repository id or project id') );
+        if (empty($id) || empty($projectId)) {
+            throw new GitDaoException(dgettext('tuleap-git', 'Missing repository id or project id'));
         }
         $deletionDate = $repository->getDeletionDate();
         $projectName  = $repository->getProject()->getUnixName();
@@ -195,7 +195,9 @@ class GitDao extends \Tuleap\DB\DataAccessObject
                 'UPDATE plugin_git
                 SET repository_path = REPLACE(repository_path, ?, ?)
                 WHERE project_id = ?',
-                $oldPath, $newPath, $project->getID()
+                $oldPath,
+                $newPath,
+                $project->getID()
             );
         } catch (PDOException $ex) {
             return false;
@@ -311,8 +313,8 @@ class GitDao extends \Tuleap\DB\DataAccessObject
     {
         $projectId      = $repository->getProjectId();
         $repositoryPath = $repository->getPathWithoutLazyLoading();
-        if ( empty($projectId) || empty($repositoryPath)  )  {
-            throw new GitDaoException( dgettext('tuleap-git', 'Repository not found : missing repository name or project id') );
+        if (empty($projectId) || empty($repositoryPath)) {
+            throw new GitDaoException(dgettext('tuleap-git', 'Repository not found : missing repository name or project id'));
         }
         $row = $this->searchProjectRepositoryByPath($projectId, $repositoryPath);
         if (empty($row)) {
@@ -338,8 +340,8 @@ class GitDao extends \Tuleap\DB\DataAccessObject
     public function hasChild($repository)
     {
         $repoId = $repository->getId();
-        if ( empty($repoId) ) {
-            throw new GitDaoException( dgettext('tuleap-git', 'Repository child search failed : missing repository id') );
+        if (empty($repoId)) {
+            throw new GitDaoException(dgettext('tuleap-git', 'Repository child search failed : missing repository id'));
         }
         $query = 'SELECT repository_id'.
                  ' FROM plugin_git'.
@@ -387,7 +389,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
     public function getProjectRepositoryById($repository)
     {
         $id = (int)$repository->getId();
-        if ( empty($id) ) {
+        if (empty($id)) {
             return false;
         }
         $row = $this->searchProjectRepositoryById($id);
@@ -773,7 +775,6 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         } finally {
             $this->getDB()->run('SET time_zone = ?', $current_mysql_timezone);
         }
-
     }
 
     public function getUGroupsByRepositoryPermissions($repository_id, $permission_type)

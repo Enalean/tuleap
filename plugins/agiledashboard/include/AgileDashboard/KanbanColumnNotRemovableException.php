@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_KanbanColumnNotRemovableException extends Exception {
+class AgileDashboard_KanbanColumnNotRemovableException extends Exception
+{
     public function __construct()
     {
         parent::__construct("This column can't be removed from this kanban");

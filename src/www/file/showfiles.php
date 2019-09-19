@@ -40,7 +40,7 @@ $authorized_user = false;
 $request  = HTTPRequest::instance();
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
-if($request->valid($vGroupId)) {
+if ($request->valid($vGroupId)) {
     $group_id = $request->get('group_id');
 } else {
     exit_no_group();
@@ -81,9 +81,8 @@ $res = $frspf->getFRSPackagesFromDb($group_id);
 foreach ($res as $package) {
     if ($frspf->userCanRead($group_id, $package->getPackageID(), $user->getId())
          && $permission_manager->userCanRead($project, $user)) {
-
         if ($request->existAndNonEmpty('release_id')) {
-            if($request->valid(new Valid_UInt('release_id'))) {
+            if ($request->valid(new Valid_UInt('release_id'))) {
                 $release_id = $request->get('release_id');
                 $row3 = $frsrf->getFRSReleaseFromDb($release_id);
             }
@@ -110,9 +109,10 @@ $hp = Codendi_HTMLPurifier::instance();
 
 
 $params = array (
-    'title' => $Language->getText('file_showfiles',
-    'file_p_for',
-    $hp->purify($project_manager->getProject($group_id)->getPublicName())
+    'title' => $Language->getText(
+        'file_showfiles',
+        'file_p_for',
+        $hp->purify($project_manager->getProject($group_id)->getPublicName())
 ), 'pv' => $pv);
 $project->getService(Service::FILE)->displayFRSHeader($project, $params['title']);
 
@@ -137,7 +137,6 @@ if ($pv) {
     $html .= "</TR></TABLE>";
 
     $html .= '<p>' . $Language->getText('file_showfiles', 'select_release') . '</p>';
-
 }
 // get unix group name for path
 $group_unix_name = $project->getUnixName();
@@ -184,7 +183,7 @@ foreach ($packages as $package_id => $package_for_display) {
                 $html .= '     <a href="admin/package.php?func=edit&amp;group_id='. $group_id .'&amp;id=' .
                     $package_id . '" data-test="update-package" title="'.
                     $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML)  .'">';
-                $html .= '       '. $GLOBALS['HTML']->getImage('ic/edit.png',array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) ));
+                $html .= '       '. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) ));
                 $html .= '</a>';
             }
             $html .= ' &nbsp; ';
@@ -212,8 +211,9 @@ foreach ($packages as $package_id => $package_for_display) {
         $res_release  = $package->getReleases();
         $num_releases = count($res_release);
 
-        if (!isset ($proj_stats['releases']))
+        if (!isset($proj_stats['releases'])) {
             $proj_stats['releases'] = 0;
+        }
         $proj_stats['releases'] += $num_releases;
 
         $javascript_releases_array = array();
@@ -249,7 +249,7 @@ foreach ($packages as $package_id => $package_for_display) {
                     // Highlight the release if one was chosen
                     $bgcolor = 'boxitem';
                     if ($request->existAndNonEmpty('release_id')) {
-                        if($request->valid(new Valid_UInt('release_id'))) {
+                        if ($request->valid(new Valid_UInt('release_id'))) {
                             $release_id = $request->get('release_id');
                             if ($release_id == $package_release->getReleaseID()) {
                                 $bgcolor = 'boxitemalt';
@@ -275,7 +275,7 @@ foreach ($packages as $package_id => $package_for_display) {
                             title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML)  .'"
                             data-test="edit-release"
                             >'
-                            . $GLOBALS['HTML']->getImage('ic/edit.png',array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) )) .'</a>';
+                            . $GLOBALS['HTML']->getImage('ic/edit.png', array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) )) .'</a>';
                         }
                         $html .= '&nbsp;';
                         $html .= '     <a href="shownotes.php?release_id=' . $package_release->getReleaseID() . '"><img src="'.util_get_image_theme("ic/text.png").'" alt="'.$Language->getText('file_showfiles', 'read_notes').'" title="'.$Language->getText('file_showfiles', 'read_notes').'" /></a>';
@@ -307,8 +307,9 @@ foreach ($packages as $package_id => $package_for_display) {
                     }
                     $uploaded_links  = $uploaded_links_retriever->getLinksForRelease($package_release);
 
-                    if (!isset ($proj_stats['files']))
+                    if (!isset($proj_stats['files'])) {
                         $proj_stats['files'] = 0;
+                    }
                     $proj_stats['files'] += $num_files;
 
                     $javascript_files_array  = array();
@@ -344,8 +345,13 @@ foreach ($packages as $package_id => $package_for_display) {
                             $title_arr[] = $Language->getText('file_showfiles', 'md5sum');
                             $title_arr[] = $Language->getText('file_showfiles', 'user');
                             $html .= html_build_list_table_top(
-                                    $title_arr, false, false, true, null, "files_table"
-                                ) . "\n";
+                                $title_arr,
+                                false,
+                                false,
+                                true,
+                                null,
+                                "files_table"
+                            ) . "\n";
 
                             // colgroup is used here in order to avoid table resizing when expand or collapse files, with CSS properties.
                             $html .= '<colgroup>';
@@ -366,12 +372,12 @@ foreach ($packages as $package_id => $package_for_display) {
                                 $fname    = $list[sizeof($list) - 1];
                                 $class    = $bgcolor . ' ' . $release_class_collapsed;
                                 $html     .= "\t\t" . '<TR id="p_' . $package_id . 'r_' . $package_release->getReleaseID(
-                                    ) . 'f_' . $file_release['file_id'] . '" class="' . $class . '"><TD><B>';
+                                ) . 'f_' . $file_release['file_id'] . '" class="' . $class . '"><TD><B>';
 
                                 $javascript_files_array[] = "'f_" . $file_release['file_id'] . "'";
 
                                 if (($package->getApproveLicense(
-                                        ) == 0) && (isset ($GLOBALS['sys_frs_license_mandatory']) && ! $GLOBALS['sys_frs_license_mandatory'])) {
+                                ) == 0) && (isset($GLOBALS['sys_frs_license_mandatory']) && ! $GLOBALS['sys_frs_license_mandatory'])) {
                                     // Allow direct download
                                     $html .= '<A HREF="/file/download/' . urlencode($file_release['file_id']) .
                                         '" title="' . $hp->purify($file_release['file_id']) . " - " . $hp->purify(
@@ -380,8 +386,8 @@ foreach ($packages as $package_id => $package_for_display) {
                                 } else {
                                     // Display popup
                                     $html .= '<A HREF="javascript:showConfirmDownload(' . $group_id . ',' . $file_release['file_id'] . ')" title="' . $file_release['file_id'] . " - " . $hp->purify(
-                                            $fname
-                                        ) . '">' . $hp->purify($fname) . '</A>';
+                                        $fname
+                                    ) . '">' . $hp->purify($fname) . '</A>';
                                 }
                                 $size_precision = 0;
                                 if ($file_release['file_size'] < 1024) {
@@ -389,20 +395,23 @@ foreach ($packages as $package_id => $package_for_display) {
                                 }
                                 $owner = UserManager::instance()->getUserById($file_release['user_id']);
                                 $html  .= '</B></TD>' . '<TD>' . FRSFile::convertBytesToKbytes(
-                                        $file_release['file_size'], $size_precision
-                                    ) . '</TD>' . '<TD>' . ($file_release['downloads'] ? $file_release['downloads'] : '0') . '</TD>';
-                                $html  .= '<TD>' . (isset ($processor[$file_release['processor']]) ? $hp->purify(
-                                        $processor[$file_release['processor']], CODENDI_PURIFIER_CONVERT_HTML
-                                    ) : "") . '</TD>';
-                                $html  .= '<TD>' . (isset ($file_type[$file_release['type']]) ? $hp->purify(
-                                        $file_type[$file_release['type']]
-                                    ) : "") . '</TD>' . '<TD>' . format_date(
-                                        "Y-m-d", $file_release['release_time']
-                                    ) . '</TD>' .
-                                    '<TD>' . (isset ($file_release['computed_md5']) ? $hp->purify(
+                                    $file_release['file_size'],
+                                    $size_precision
+                                ) . '</TD>' . '<TD>' . ($file_release['downloads'] ? $file_release['downloads'] : '0') . '</TD>';
+                                $html  .= '<TD>' . (isset($processor[$file_release['processor']]) ? $hp->purify(
+                                    $processor[$file_release['processor']],
+                                    CODENDI_PURIFIER_CONVERT_HTML
+                                ) : "") . '</TD>';
+                                $html  .= '<TD>' . (isset($file_type[$file_release['type']]) ? $hp->purify(
+                                    $file_type[$file_release['type']]
+                                ) : "") . '</TD>' . '<TD>' . format_date(
+                                    "Y-m-d",
+                                    $file_release['release_time']
+                                ) . '</TD>' .
+                                    '<TD>' . (isset($file_release['computed_md5']) ? $hp->purify(
                                         $file_release['computed_md5']
                                     ) : "") . '</TD>' .
-                                    '<TD>' . (isset ($file_release['user_id']) ? $hp->purify(
+                                    '<TD>' . (isset($file_release['user_id']) ? $hp->purify(
                                         $owner->getRealName()
                                     ) : "") . '</TD>'
                                     . '</TR>
@@ -413,11 +422,11 @@ foreach ($packages as $package_id => $package_for_display) {
                                     </p>
                                 </TD>
                             </TR>';
-                                if (! isset ($proj_stats['size'])) {
+                                if (! isset($proj_stats['size'])) {
                                     $proj_stats['size'] = 0;
                                 }
                                 $proj_stats['size'] += $file_release['file_size'];
-                                if (! isset ($proj_stats['downloads'])) {
+                                if (! isset($proj_stats['downloads'])) {
                                     $proj_stats['downloads'] = 0;
                                 }
                                 $proj_stats['downloads'] += $file_release['downloads'];
@@ -508,8 +517,7 @@ if (!$pv) {
     print '<script language="javascript">'.$javascript_array.'</script>';
 }
 // project totals (statistics)
-if (isset ($proj_stats['size'])) {
-
+if (isset($proj_stats['size'])) {
     $total_size = FRSFile::convertBytesToKbytes($proj_stats['size']);
 
     print '<p>';

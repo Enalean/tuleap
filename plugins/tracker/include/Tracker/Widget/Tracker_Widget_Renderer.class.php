@@ -172,7 +172,7 @@ abstract class Tracker_Widget_Renderer extends Widget
         $vId = new Valid_UInt('renderer_id');
         $vId->setErrorMessage("Can't add empty renderer id");
         $vId->required();
-        if($request->validInArray('renderer', $vId)) {
+        if ($request->validInArray('renderer', $vId)) {
             $renderer = $request->get('renderer');
             $sql = 'INSERT INTO tracker_widget_renderer (owner_id, owner_type, title, renderer_id) VALUES ('. $this->owner_id .", '". $this->owner_type ."', '". db_escape_string($renderer['title']) ."', ". db_escape_int($renderer['renderer_id']) .")";
             $res = db_query($sql);
@@ -188,14 +188,14 @@ abstract class Tracker_Widget_Renderer extends Widget
         $vContentId->required();
         if (($renderer = $request->get('renderer')) && $request->valid($vContentId)) {
             $vId = new Valid_UInt('renderer_id');
-            if($request->validInArray('renderer', $vId)) {
+            if ($request->validInArray('renderer', $vId)) {
                 $id = " renderer_id   = ". db_escape_int($renderer['renderer_id']) ." ";
             } else {
                 $id = '';
             }
 
             $vTitle = new Valid_String('title');
-            if($request->validInArray('renderer', $vTitle)) {
+            if ($request->validInArray('renderer', $vTitle)) {
                 $title = " title = '". db_escape_string($renderer['title']) ."' ";
             } else {
                 $title = '';

@@ -77,7 +77,7 @@ if (!($dh = opendir($src_path))) {
             mysymlink($from, $to);
         }
     }
-    closedir ($dh);
+    closedir($dh);
 }
 
 // link LocalSettings.php from forge_get_config('source_path')/plugins/mediawiki/etc/plugins/mediawiki/LocalSettings.php
@@ -99,8 +99,9 @@ mysymlink($from, $to);
 
 // create skin subdir
 $todir = "$todir/fusionforge";
-if (!is_dir($todir))
+if (!is_dir($todir)) {
     mkdir($todir);
+}
 
 // link fusionforge.css files
 $fromdir = "$fromdir/fusionforge";

@@ -18,14 +18,13 @@ if ($request->exist('export')) {
 }
 
 project_admin_header(
-    array('title'=>$Language->getText('project_admin_history','proj_history'),'group'=>$group_id),
+    array('title'=>$Language->getText('project_admin_history', 'proj_history'),'group'=>$group_id),
     \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME
 );
 
-echo $Language->getText('project_admin_history','proj_change_log_msg');
+echo $Language->getText('project_admin_history', 'proj_change_log_msg');
 
 //for pagination
 echo show_grouphistory($group_id, $offset, $limit, $event, $subEvents, $value, $startDate, $endDate, $by);
 
 project_admin_footer(array());
-?>

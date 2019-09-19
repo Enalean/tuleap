@@ -92,4 +92,3 @@ class Tracker_TooltipFactory implements IBuildSemanticFromXML
         $duplicator->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
 }
-?>

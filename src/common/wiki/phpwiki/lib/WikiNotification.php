@@ -23,7 +23,8 @@ use Tuleap\Mail\MailLogger;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
-class WikiNotification {
+class WikiNotification
+{
     /** @var Notification */
     private $notification;
     /** @var Project */

@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__) .'/../../bootstrap.php';
 
-class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TuleapTestCase
+{
 
     public function setUp()
     {

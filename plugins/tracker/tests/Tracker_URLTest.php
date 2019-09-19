@@ -27,9 +27,10 @@ Mock::generate('TrackerFactory');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_ReportFactory');
-Mock::generatePartial('Tracker_URL',
-                      'Tracker_URLTestVersion',
-                      array(
+Mock::generatePartial(
+    'Tracker_URL',
+    'Tracker_URLTestVersion',
+    array(
                           'getTrackerFactory',
                           'getTracker_FormElementFactory',
                           'getArtifactFactory',
@@ -40,7 +41,8 @@ Mock::generatePartial('Tracker_URL',
 Mock::generate('Codendi_Request');
 Mock::generate('PFUser');
 
-class Tracker_URLTest extends TuleapTestCase {
+class Tracker_URLTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -148,4 +150,3 @@ class Tracker_URLTest extends TuleapTestCase {
         $this->assertTrue($exeptionThrown, "Exception not thrown");
     }
 }
-?>

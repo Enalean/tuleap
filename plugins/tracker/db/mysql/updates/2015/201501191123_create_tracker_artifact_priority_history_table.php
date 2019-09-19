@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201501191123_create_tracker_artifact_priority_history_table extends ForgeUpgrade_Bucket {
+class b201501191123_create_tracker_artifact_priority_history_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

@@ -20,12 +20,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_View_ItemDetailsSectionReferences extends Docman_View_ItemDetailsSection {
+class Docman_View_ItemDetailsSectionReferences extends Docman_View_ItemDetailsSection
+{
 
 
     function __construct($item, $url)
     {
-        parent::__construct($item, $url, 'references', $GLOBALS['Language']->getText('plugin_docman','details_references'));
+        parent::__construct($item, $url, 'references', $GLOBALS['Language']->getText('plugin_docman', 'details_references'));
     }
 
     function getContent($params = [])

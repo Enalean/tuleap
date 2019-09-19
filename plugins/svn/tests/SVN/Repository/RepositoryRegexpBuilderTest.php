@@ -24,7 +24,8 @@ use TuleapTestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class RepositoryRegexpBuilderTest extends TuleapTestCase {
+class RepositoryRegexpBuilderTest extends TuleapTestCase
+{
 
     private $regexp;
 

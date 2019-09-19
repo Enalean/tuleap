@@ -23,7 +23,8 @@ require_once('Collection.class.php');
 /**
  * LinkedList
  */
-class LinkedList extends Collection{
+class LinkedList extends Collection
+{
 
     function __construct($initial_array = '')
     {
@@ -72,4 +73,3 @@ class LinkedList extends Collection{
         return false;
     }
 }
-?>

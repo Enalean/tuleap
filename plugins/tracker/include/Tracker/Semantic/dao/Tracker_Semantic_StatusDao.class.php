@@ -20,7 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_Semantic_StatusDao extends DataAccessObject {
+class Tracker_Semantic_StatusDao extends DataAccessObject
+{
 
     public function __construct()
     {
@@ -49,7 +50,7 @@ class Tracker_Semantic_StatusDao extends DataAccessObject {
 
         // Now save the new values
         $values = array();
-        foreach($open_value_ids as $vid) {
+        foreach ($open_value_ids as $vid) {
             $vid = $this->da->escapeInt($vid);
             $values[] = "($tracker_id, $field_id, $vid)";
         }

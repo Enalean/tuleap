@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201508271443_add_index_on_system_event_table extends ForgeUpgrade_Bucket {
+class b201508271443_add_index_on_system_event_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -39,5 +40,3 @@ EOT;
         $this->db->addIndex('system_event', 'type_idx', $sql);
     }
 }
-
-?>

@@ -22,7 +22,8 @@
 /**
  * Display links from and to a project on the summary page.
  */
-class AdminDelegation_ShowProjectWidget extends Widget {
+class AdminDelegation_ShowProjectWidget extends Widget
+{
     protected $_plugin;
 
     /**
@@ -66,11 +67,11 @@ class AdminDelegation_ShowProjectWidget extends Widget {
 
     function getAllProject($offset, $limit, $condition, $pattern)
     {
-        if (count($condition)> 0){
+        if (count($condition)> 0) {
             $statements   = '(';
             $i            = 0;
             $nbConditions = count($condition) - 1;
-            for($i; $i < $nbConditions; $i++){
+            for ($i; $i < $nbConditions; $i++) {
                 $statements .= db_es($condition[$i]).' LIKE "%'.db_es($pattern).'%" OR ';
             }
             $statements .= db_es($condition[$i]).' LIKE "%'.db_es($pattern).'%") AND ';
@@ -127,7 +128,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
         }
 
         $offset = $request->getValidated('offset', 'uint', 0);
-        if ( !$offset || $offset < 0 ) {
+        if (!$offset || $offset < 0) {
             $offset = 0;
         }
         $limit  = 10;
@@ -163,7 +164,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
 
         $html .= '</form>';
 
-        if ($func == 'show_projects'){
+        if ($func == 'show_projects') {
             $res = $this->getAllProject($offset, $limit, $condition, $pattern);
 
             if ($res['numrows'] > 0) {

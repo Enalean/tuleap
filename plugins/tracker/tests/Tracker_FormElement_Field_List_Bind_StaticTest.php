@@ -24,7 +24,8 @@ Mock::generate('Tracker_FormElement_Field_List_Bind_StaticValue');
 Mock::generate('Tracker_FormElement_Field_List');
 Mock::generate('Tracker_FormElement_Field_List_Bind_Static_ValueDao');
 
-class Tracker_FormElement_Field_List_Bind_StaticTest extends TuleapTestCase {
+class Tracker_FormElement_Field_List_Bind_StaticTest extends TuleapTestCase
+{
 
     public function testGetBindValues()
     {
@@ -62,7 +63,8 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElement_Field_List_Bind_Static_AddBindValue extends TuleapTestCase {
+class Tracker_FormElement_Field_List_Bind_Static_AddBindValue extends TuleapTestCase
+{
 
     public function itAddsANewValue()
     {
@@ -91,7 +93,8 @@ class Tracker_FormElement_Field_List_Bind_Static_AddBindValue extends TuleapTest
     }
 }
 
-class Tracker_FormElement_Field_List_Bind_Static_ImportInvalidValue extends TuleapTestCase {
+class Tracker_FormElement_Field_List_Bind_Static_ImportInvalidValue extends TuleapTestCase
+{
 
     public function itDoesntCrashWhenInvalidValueShouldBePrinted()
     {

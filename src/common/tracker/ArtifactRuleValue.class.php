@@ -27,7 +27,8 @@
 * then target field will propose a value.
 *
 */
-class ArtifactRuleValue extends ArtifactRule {
+class ArtifactRuleValue extends ArtifactRule
+{
 
     var $target_value;
 
@@ -68,4 +69,3 @@ class ArtifactRuleValue extends ArtifactRule {
         return $this->target_value;
     }
 }
-?>

@@ -19,7 +19,8 @@
  */
 require_once('bootstrap.php');
 
-class Tracker_ArtifactByEmailStatusTest extends TuleapTestCase {
+class Tracker_ArtifactByEmailStatusTest extends TuleapTestCase
+{
     private $tracker;
     private $tracker_plugin_conf;
 

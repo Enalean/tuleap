@@ -345,12 +345,12 @@ class TrackersResource extends AuthenticatedResource
      */
     public function getArtifacts(
         $id,
-        $values       = self::DEFAULT_VALUES,
-        $limit        = self::DEFAULT_LIMIT,
-        $offset       = self::DEFAULT_OFFSET,
-        $query        = self::DEFAULT_CRITERIA,
+        $values = self::DEFAULT_VALUES,
+        $limit = self::DEFAULT_LIMIT,
+        $offset = self::DEFAULT_OFFSET,
+        $query = self::DEFAULT_CRITERIA,
         $expert_query = self::DEFAULT_EXPERT_QUERY,
-        $order        = self::ORDER_ASC
+        $order = self::ORDER_ASC
     ) {
         $this->checkAccess();
         $this->checkLimitValue($limit);
@@ -525,7 +525,7 @@ class TrackersResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getParentArtifacts($id, $limit  = self::DEFAULT_LIMIT, $offset = self::DEFAULT_OFFSET)
+    public function getParentArtifacts($id, $limit = self::DEFAULT_LIMIT, $offset = self::DEFAULT_OFFSET)
     {
         $this->checkAccess();
         $this->checkLimitValue($limit);
@@ -777,7 +777,6 @@ class TrackersResource extends AuthenticatedResource
                         $workflow_mode_updater->switchWorkflowToAdvancedMode($tracker);
                     } else {
                         $workflow_mode_updater->switchWorkflowToSimpleMode($tracker);
-
                     }
                 }
             );
@@ -860,7 +859,6 @@ class TrackersResource extends AuthenticatedResource
         if (!$workflow_factory->deleteWorkflow($workflow->getId())) {
             throw new I18NRestException(500, dgettext('tuleap-tracker', "An error has occurred, the workflow couldn't be reset."));
         }
-
     }
 
     /**

@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_View_ParentsTree /* implements Visitor*/ {
+class Docman_View_ParentsTree /* implements Visitor*/
+{
     var $docman;
     function __construct(&$docman)
     {
@@ -77,7 +78,7 @@ class Docman_View_ParentsTree /* implements Visitor*/ {
         $params['is_last'] = false;
         $nb = count($folder['items']);
         $i = 0;
-        foreach($folder['items'] as $item) {
+        foreach ($folder['items'] as $item) {
             $i++;
             if ($i == $nb) {
                 $params['is_last'] = true;
@@ -107,7 +108,7 @@ class Docman_View_ParentsTree /* implements Visitor*/ {
 
             $items = $item->getAllItems();
             $it = $items->iterator();
-            while($it->valid()) {
+            while ($it->valid()) {
                 $o = $it->current();
                 if ($this->_itemCanBeFetched($o, $params)) {
                     $r = $o->accept($this, $params);

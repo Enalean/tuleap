@@ -9,7 +9,8 @@
 
 require_once('Docman_View_ProjectHeader.class.php');
 
-class Docman_View_Installed extends Docman_View_ProjectHeader {
+class Docman_View_Installed extends Docman_View_ProjectHeader
+{
     /* protected */ function _content($params)
     {
         echo '<h2>Congratulations!</h2>';
@@ -17,5 +18,3 @@ class Docman_View_Installed extends Docman_View_ProjectHeader {
         echo 'Do not permissions to set permissions!</p>';
     }
 }
-
-?>

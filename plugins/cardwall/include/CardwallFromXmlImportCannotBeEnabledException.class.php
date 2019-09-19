@@ -19,12 +19,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class CardwallFromXmlImportCannotBeEnabledException extends Exception {
+class CardwallFromXmlImportCannotBeEnabledException extends Exception
+{
     public function __construct($tracker_id)
     {
         $message = 'The cardwall on top of the tracker' .$tracker_id.' cannot be enabled.';
         parent::__construct($message);
     }
 }
-
-?>

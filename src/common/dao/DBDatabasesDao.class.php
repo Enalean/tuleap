@@ -23,7 +23,8 @@ require_once('include/DataAccessObject.class.php');
 /**
  *  Data Access Object for DB Databases
  */
-class DBDatabasesDao extends DataAccessObject {
+class DBDatabasesDao extends DataAccessObject
+{
     function searchAll()
     {
         $sql="SHOW DATABASES";
@@ -36,4 +37,3 @@ class DBDatabasesDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-?>

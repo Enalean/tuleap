@@ -11,7 +11,9 @@ if (!function_exists('isExternalReferrer')) { // better define that in stdlib.ph
     {
         if ($referrer = $request->get('HTTP_REFERER')) {
             $home = SCRIPT_NAME; // was SERVER_URL, check sister wiki's: same host but other other script url
-            if (substr(strtolower($referrer),0,strlen($home)) == strtolower($home)) return false;
+            if (substr(strtolower($referrer), 0, strlen($home)) == strtolower($home)) {
+                return false;
+            }
             require_once("lib/ExternalReferrer.php");
             $se = new SearchEngines();
             return $se->parseSearchQuery($referrer);
@@ -20,7 +22,8 @@ if (!function_exists('isExternalReferrer')) { // better define that in stdlib.ph
     }
 }
 
-class SearchEngines {
+class SearchEngines
+{
 
     var $searchEngines =
     array(
@@ -96,12 +99,12 @@ class SearchEngines {
             return false;
         }
         $url = @parse_url(strtolower($url));
-        if (!empty($url["query"]))
+        if (!empty($url["query"])) {
             $url = $url["query"];
+        }
         if ($query1 and @stristr($url, $query1)) {
              $query = @explode($query1, $url);
-        }
-        else if ($query2 and @stristr($url, $query2)) {
+        } elseif ($query2 and @stristr($url, $query2)) {
             $query = explode($query2, $url);
         }
         if (!empty($query)) {
@@ -129,4 +132,3 @@ class SearchEngines {
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

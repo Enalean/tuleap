@@ -28,7 +28,8 @@ use TemplateRendererFactory;
 require_once __DIR__ . '/../../www/forum/forum_utils.php';
 require_once __DIR__ . '/../../www/project/admin/ugroup_utils.php';
 
-class ChooseNewsItemController {
+class ChooseNewsItemController
+{
 
     /**
      * @var HTTPRequest
@@ -53,7 +54,7 @@ class ChooseNewsItemController {
         switch ($action) {
             case 'update':
                 $this->updatePromotedItems();
-            default :
+            default:
                 $this->display();
         }
     }
@@ -62,7 +63,7 @@ class ChooseNewsItemController {
     {
         $promoted_ids = $this->request->get('promoted');
 
-        return $this->data_mapper->updatePromotedItems($this->getProjectFromRequest(),$promoted_ids);
+        return $this->data_mapper->updatePromotedItems($this->getProjectFromRequest(), $promoted_ids);
     }
 
     public function display()
@@ -79,12 +80,12 @@ class ChooseNewsItemController {
         try {
             $project = $this->getProjectFromRequest();
         } catch (\Exception $e) {
-            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('include_html','g_not_exist'));
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('include_html', 'g_not_exist'));
         }
 
         // admin pages can be reached by news admin (N2) or project admin (A)
-        if (! user_ismember($project->getID(), 'A') &&  ! user_ismember($project->getID(),'N2')) {
-            exit_error($GLOBALS['Language']->getText('news_admin_index','permission_denied'),$GLOBALS['Language']->getText('news_admin_index','need_to_be_admin'));
+        if (! user_ismember($project->getID(), 'A') &&  ! user_ismember($project->getID(), 'N2')) {
+            exit_error($GLOBALS['Language']->getText('news_admin_index', 'permission_denied'), $GLOBALS['Language']->getText('news_admin_index', 'need_to_be_admin'));
         }
     }
 
@@ -103,7 +104,7 @@ class ChooseNewsItemController {
     {
         news_header(
             array(
-                'title'      => $GLOBALS['Language']->getText('news_admin_index','title'),
+                'title'      => $GLOBALS['Language']->getText('news_admin_index', 'title'),
                 'help'       => 'communication.html#news-service',
                 'project_id' => $this->request->get('project_id')
             )

@@ -24,7 +24,8 @@
  * These additional criteria are not linked to a tracker field, but are datas from
  * other plugins for example
  */
-class Tracker_Report_AdditionalCriterion {
+class Tracker_Report_AdditionalCriterion
+{
 
     private $key;
     private $value;
@@ -45,5 +46,3 @@ class Tracker_Report_AdditionalCriterion {
         return $this->key;
     }
 }
-
-?>

@@ -706,7 +706,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     protected function fetchSubmitValueMasschange()
     {
-        $unchanged = $GLOBALS['Language']->getText('global','unchanged');
+        $unchanged = $GLOBALS['Language']->getText('global', 'unchanged');
         $html      = $this->fetchComputedInputs($unchanged, false);
         $html     .= $this->fetchBackToAutocomputedButton(false);
         return $html;
@@ -1007,7 +1007,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
             return false;
-        } else if ($hasPermission) {
+        } elseif ($hasPermission) {
             if (! isset($submitted_value[self::FIELD_VALUE_IS_AUTOCOMPUTED])
                 && ! isset($submitted_value[self::FIELD_VALUE_MANUAL])
             ) {

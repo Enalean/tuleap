@@ -21,7 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
+class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
+{
 
     public const MAX_STEPS = 75;
     protected $timeFiller;
@@ -67,7 +68,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
     protected function getCumulativeFlowData($engine)
     {
-        if($this->nbSteps > GraphOnTrackersV5_CumulativeFlow_DataBuilder::MAX_STEPS) {
+        if ($this->nbSteps > GraphOnTrackersV5_CumulativeFlow_DataBuilder::MAX_STEPS) {
             $engine->setError(
                 dgettext('tuleap-graphontrackersv5', 'Please choose a smaller period, or increase the scale.')
             );
@@ -77,7 +78,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
         $empty_columns = $this->initEmptyColumns($engine);
 
-        for ($i = 0 ; $i <= $this->nbSteps; $i++ ) {
+        for ($i = 0; $i <= $this->nbSteps; $i++) {
             $timestamp = $this->startDate + ($i * $this->timeFiller[$this->scale]) ;
             $changesets = $this->getLastChangesetsBefore($timestamp);
 
@@ -92,7 +93,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
                     GROUP BY l.bindvalue_id";
 
             $res = db_query($sql);
-            while($data = db_fetch_array($res)) {
+            while ($data = db_fetch_array($res)) {
                 if (array_key_exists((int) $data['bindvalue_id'], $empty_columns)) {
                     $empty_columns[$data['bindvalue_id']]['values'][$timestamp]['count'] = (int) $data['count'];
                 }
@@ -107,7 +108,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
         $report_filter = $this->getReportFilter();
 
         $columns = [];
-        foreach($data as $column_id => $column) {
+        foreach ($data as $column_id => $column) {
             if (count($report_filter) > 0 && ! in_array($column_id, $report_filter)) {
                 continue;
             }
@@ -191,12 +192,12 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
             $resultArray[100] = [
                 'id' => 100,
-                'label' => $GLOBALS['Language']->getText('global','none'),
+                'label' => $GLOBALS['Language']->getText('global', 'none'),
                 'color' => null,
                 'values' => $this->generateEmptyValues()
             ];
 
-            while($data = db_fetch_array($res)) {
+            while ($data = db_fetch_array($res)) {
                 $column = [
                     'id' => (int) $data['id'],
                     'label' => $data['label'],
@@ -230,7 +231,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
         $res = db_query($sql);
         $changesets = array();
-        while($data = db_fetch_array($res)) {
+        while ($data = db_fetch_array($res)) {
             $changesets[] = $data['id'];
         }
         return $changesets;

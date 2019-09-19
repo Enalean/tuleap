@@ -21,7 +21,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201310041431_update_existing_cardwall_configurations extends ForgeUpgrade_Bucket {
+class b201310041431_update_existing_cardwall_configurations extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -82,7 +83,5 @@ EOT;
         $sql = "UPDATE plugin_cardwall_on_top
                 SET plugin_cardwall_on_top.use_freestyle_columns = 1";
         $res = $this->db->dbh->exec($sql);
-
     }
 }
-?>

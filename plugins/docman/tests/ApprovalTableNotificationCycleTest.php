@@ -25,7 +25,8 @@
 require_once 'bootstrap.php';
 
 
-class ApprovalTableNotificationCycleTest extends TuleapTestCase {
+class ApprovalTableNotificationCycleTest extends TuleapTestCase
+{
 
     /**
      * first:  approve
@@ -119,5 +120,4 @@ class ApprovalTableNotificationCycleTest extends TuleapTestCase {
         $withComments = "";
         $cycle->reviewerApprove($reviewer, $isLastReviewer, $withComments);
     }
-
 }

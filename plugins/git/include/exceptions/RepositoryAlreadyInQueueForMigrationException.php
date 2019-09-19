@@ -22,7 +22,8 @@ namespace Tuleap\Git\Exceptions;
 
 use Exception;
 
-class RepositoryAlreadyInQueueForMigrationException extends Exception {
+class RepositoryAlreadyInQueueForMigrationException extends Exception
+{
 
     public function __construct()
     {

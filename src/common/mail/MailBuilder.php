@@ -20,7 +20,8 @@
 
 use Tuleap\Mail\MailFilter;
 
-class MailBuilder {
+class MailBuilder
+{
 
     public const TRUNCATED_SUBJECT_TEMPLATE = 'subject';
     public const TRUNCATED_BODY_TEMPLATE    = 'body';

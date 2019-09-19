@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_ValueDao {
+class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_ValueDao
+{
 
     public function __construct()
     {
@@ -48,7 +49,7 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
     public function createNoneValue($tracker_id, $field_id)
     {
         $changeset_value_ids = $this->createNoneChangesetValue($tracker_id, $field_id);
-        if ( $changeset_value_ids === false)  {
+        if ($changeset_value_ids === false) {
             return false;
         }
         $sql = " INSERT INTO $this->table_name(changeset_value_id, value)
@@ -91,7 +92,4 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
                        AND v.field_id = ".$fieldId;
         return $this->retrieve($sql);
     }
-
 }
-
-?>

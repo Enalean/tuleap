@@ -77,7 +77,6 @@ if ($startDate > $endDate) {
 }
 
 if ($request->exist('export') && $startDate && $endDate) {
-
     header('Content-Type: text/csv');
     header('Content-Disposition: filename=services_usage_'.$startDate.'_'.$endDate.'.csv');
     echo "Start date : $startDate \n";

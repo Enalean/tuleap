@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class GitAuthorizedKeysFileException  extends Exception {
+class GitAuthorizedKeysFileException extends Exception
+{
 
     public function __construct($authorized_keys_file)
     {
@@ -28,5 +29,3 @@ class GitAuthorizedKeysFileException  extends Exception {
             .ForgeConfig::get('codendi_dir').'/plugins/git/bin/recreate_authorized_keys.sh');
     }
 }
-
-?>

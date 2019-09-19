@@ -25,7 +25,8 @@ use Tuleap\REST\v1\PlanningReferenceBase;
 /**
  * Basic reference of a planning
  */
-class PlanningReference extends PlanningReferenceBase {
+class PlanningReference extends PlanningReferenceBase
+{
 
     public function build(Planning $planning)
     {

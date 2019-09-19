@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201401240954_add_git_perms_admin_values extends ForgeUpgrade_Bucket {
+class b201401240954_add_git_perms_admin_values extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -77,4 +78,3 @@ EOT;
         }
     }
 }
-?>

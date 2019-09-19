@@ -21,7 +21,7 @@
 /**
  * Base interface for all read only fields in trackers
  */
-interface Tracker_FormElement_Field_ReadOnly {
+interface Tracker_FormElement_Field_ReadOnly
+{
 
 }
-?>

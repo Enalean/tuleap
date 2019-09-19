@@ -23,7 +23,8 @@
  */
 require_once 'SystemEventProcessor.class.php';
 
-class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor {
+class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor
+{
 
     public function getOwner()
     {
@@ -47,7 +48,7 @@ class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor {
     private function ensureWorkersAreRunning()
     {
         $this->logger->debug("Check if backend workers are running");
-        for($i = 0; $i < $this->getBackendWorkerCount(); $i++) {
+        for ($i = 0; $i < $this->getBackendWorkerCount(); $i++) {
             \Tuleap\Queue\Worker::run($this->logger, $i);
         }
     }

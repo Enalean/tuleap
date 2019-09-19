@@ -20,7 +20,8 @@
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field_List implements Tracker_FormElement_Field_ReadOnly {
+class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field_List implements Tracker_FormElement_Field_ReadOnly
+{
 
     public $default_properties = array();
 
@@ -54,11 +55,12 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
             $a = 'A_'. $this->id;
             $b = 'B_'. $this->id;
             $ids_to_search = array_intersect(
-                               array_values($criteria_value),
-                               array_merge(array(100),array_keys($this->getBind()->getAllValues())));
+                array_values($criteria_value),
+                array_merge(array(100), array_keys($this->getBind()->getAllValues()))
+            );
             if (count($ids_to_search) > 1) {
                 return " c.submitted_by IN(". $this->getCriteriaDao()->getDa()->escapeIntImplode($ids_to_search) .") ";
-            } else if (count($ids_to_search)) {
+            } elseif (count($ids_to_search)) {
                 return " c.submitted_by = ". $this->getCriteriaDao()->getDa()->escapeInt($ids_to_search[0]) ." ";
             }
         }
@@ -230,7 +232,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
     ) {
         $value = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getLastModifiedBy());
 
-        switch($format) {
+        switch ($format) {
             case 'html':
                 $output = $this->fetchArtifactValueReadOnly($artifact);
                 break;
@@ -281,7 +283,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
      *
      * @return string
      */
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
     {
         if (! $value) {
             $artifact_factory  = Tracker_ArtifactFactory::instance();

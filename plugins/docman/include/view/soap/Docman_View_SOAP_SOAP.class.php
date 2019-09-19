@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_View_SOAP_SOAP {
+class Docman_View_SOAP_SOAP
+{
 
     var $_controller;
 
@@ -31,5 +32,3 @@ class Docman_View_SOAP_SOAP {
         return isset($params['action_result']) ? $params['action_result'] : true;
     }
 }
-
-?>

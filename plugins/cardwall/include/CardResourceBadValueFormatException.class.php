@@ -19,11 +19,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class CardResourceBadValueFormatException extends Exception {
+class CardResourceBadValueFormatException extends Exception
+{
     public function __construct($field)
     {
         $message = "field '$field' not found in value object";
         parent::__construct($message);
     }
 }
-?>

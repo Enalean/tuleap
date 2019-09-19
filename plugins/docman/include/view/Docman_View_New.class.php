@@ -68,7 +68,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
     {
         $html = '';
         $html .= '<table>';
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             $html .= '<tr>';
             $html .= '<td>'.$field->getLabel().'</td>';
             $html .= '<td>'.$field->getField().'</td>';
@@ -95,7 +95,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
     {
         $mdFactory = new Docman_MetadataFactory($params['group_id']);
 
-        if(isset($params['force_item'])) {
+        if (isset($params['force_item'])) {
             $this->newItem = $params['force_item'];
         } else {
             $this->newItem = $this->_getNewItem();
@@ -205,20 +205,20 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
             $html .= '<p>'. $GLOBALS['Language']->getText('plugin_docman', 'new_news_letblank') .'</p>';
 
             $html .= '<div>';
-            $html .= '<b><label for="news_summary">'. $GLOBALS['Language']->getText('news_admin_index','subject') .':</label></b><br />';
+            $html .= '<b><label for="news_summary">'. $GLOBALS['Language']->getText('news_admin_index', 'subject') .':</label></b><br />';
             $html .= '<input type="text" name="news[summary]" id="news_summary" value="'.  $hp->purify($default_news_summary, CODENDI_PURIFIER_CONVERT_HTML)  .'" size="44" maxlength="60" /><br />';
             $html .= '</div>';
 
             $html .= '<div>';
-            $html .= '<b><label for="news_details">'. $GLOBALS['Language']->getText('news_admin_index','details') .':</label></b><br />';
+            $html .= '<b><label for="news_details">'. $GLOBALS['Language']->getText('news_admin_index', 'details') .':</label></b><br />';
             $html .= '<textarea name="news[details]" rows="8" cols="50" wrap="soft">'.  $hp->purify($default_news_details, CODENDI_PURIFIER_CONVERT_HTML)  .'</textarea><br />';
             $html .= '</div>';
 
-            $html .= '<table><tr style="vertical-align:top"><td><b>'. $GLOBALS['Language']->getText('news_submit','news_privacy') .'</b></td><td>';
+            $html .= '<table><tr style="vertical-align:top"><td><b>'. $GLOBALS['Language']->getText('news_submit', 'news_privacy') .'</b></td><td>';
             $html .= '<input type="radio" name="news[is_private]" id="news_is_private_no" value="0" '. $default_news_public_check .' />';
-            $html .= '<label class="docman-create-news-option" for="news_is_private_no">'. $GLOBALS['Language']->getText('news_submit','public_news') .'</label><br />';
+            $html .= '<label class="docman-create-news-option" for="news_is_private_no">'. $GLOBALS['Language']->getText('news_submit', 'public_news') .'</label><br />';
             $html .= '<input type="radio" name="news[is_private]" id="news_is_private_yes" value="1" '. $default_news_private_check .' />';
-            $html .= '<label class="docman-create-news-option" for="news_is_private_yes">'. $GLOBALS['Language']->getText('news_submit','private_news') .'</label>';
+            $html .= '<label class="docman-create-news-option" for="news_is_private_yes">'. $GLOBALS['Language']->getText('news_submit', 'private_news') .'</label>';
             $html .= '</td></tr></table>';
 
             $html .= '</div>';

@@ -22,7 +22,8 @@
 /**
  * Activate or deactivate the cardwall on top of a tracker
  */
-class Cardwall_OnTop_Config_Command_EnableFreestyleColumns extends Cardwall_OnTop_Config_Command {
+class Cardwall_OnTop_Config_Command_EnableFreestyleColumns extends Cardwall_OnTop_Config_Command
+{
 
     /**
      * @var Cardwall_OnTop_Dao
@@ -44,7 +45,7 @@ class Cardwall_OnTop_Config_Command_EnableFreestyleColumns extends Cardwall_OnTo
         $tracker_id    = $this->tracker->getId();
         $is_enabled    = $this->dao->isFreestyleEnabled($tracker_id);
         if ($please_enable) {
-            if ( ! $is_enabled) {
+            if (! $is_enabled) {
                 $this->dao->enableFreestyleColumns($tracker_id);
             }
         } else {
@@ -54,4 +55,3 @@ class Cardwall_OnTop_Config_Command_EnableFreestyleColumns extends Cardwall_OnTo
         }
     }
 }
-?>

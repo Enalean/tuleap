@@ -18,4 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_RESTValueByField_NotImplementedException extends Exception {}
+class Tracker_FormElement_RESTValueByField_NotImplementedException extends Exception
+{
+
+}

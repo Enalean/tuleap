@@ -19,7 +19,8 @@
 /**
  * Add rest_authentication_token table
  */
-class b201310171433_add_rest_authentication_token_table extends ForgeUpgrade_Bucket {
+class b201310171433_add_rest_authentication_token_table extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return <<<EOT
@@ -57,5 +58,3 @@ EOT;
         }
     }
 }
-
-?>

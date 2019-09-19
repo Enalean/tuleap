@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>
  */
 
-class Git_Gitolite_GitModifications {
+class Git_Gitolite_GitModifications
+{
 
     private $files_to_add;
 

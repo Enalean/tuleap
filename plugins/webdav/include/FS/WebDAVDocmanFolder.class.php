@@ -23,7 +23,8 @@
  *
  * It's an implementation of the abstract class Sabre_DAV_Directory methods
  */
-class WebDAVDocmanFolder extends Sabre_DAV_Directory {
+class WebDAVDocmanFolder extends Sabre_DAV_Directory
+{
 
     private $user;
     private $project;
@@ -377,5 +378,3 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
         }
     }
 }
-
-?>

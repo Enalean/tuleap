@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/GerritTestBase.php';
 
-class Git_Driver_GerritLegacy_manageProjectsTest extends Git_Driver_GerritLegacy_baseTest implements Git_Driver_Gerrit_manageProjectsTest {
+class Git_Driver_GerritLegacy_manageProjectsTest extends Git_Driver_GerritLegacy_baseTest implements Git_Driver_Gerrit_manageProjectsTest
+{
     /**
      * @var GitRepository
      */
@@ -58,7 +59,7 @@ class Git_Driver_GerritLegacy_manageProjectsTest extends Git_Driver_GerritLegacy
         $r->setName('dusse');
         $r->setNamespace('jean_claude');
         //$p = new Project(array('unix_group_name' => 'LesBronzes', 'group_id' => 50));
-        $p = stub('Project' )->getUnixName()->returns('LesBronzes');
+        $p = stub('Project')->getUnixName()->returns('LesBronzes');
         $r->setProject($p);
 
         $driver = new Git_Driver_Gerrit(new Git_Driver_Gerrit_RemoteSSHCommand(new BackendLogger()), new BackendLogger());
@@ -74,7 +75,7 @@ class Git_Driver_GerritLegacy_manageProjectsTest extends Git_Driver_GerritLegacy
             $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
             $this->fail('An exception was expected');
         } catch (Git_Driver_Gerrit_Exception $e) {
-            $this->assertEqual($e->getMessage(),"Command: $command".PHP_EOL."Error: $std_err");
+            $this->assertEqual($e->getMessage(), "Command: $command".PHP_EOL."Error: $std_err");
         }
     }
 
@@ -82,7 +83,7 @@ class Git_Driver_GerritLegacy_manageProjectsTest extends Git_Driver_GerritLegacy
     {
         $std_err = 'some gerrit exception';
         $this->expectException('Git_Driver_Gerrit_RemoteSSHCommandFailure');
-        stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(255,'',$std_err));
+        stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(255, '', $std_err));
         $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
     }
 
@@ -91,6 +92,5 @@ class Git_Driver_GerritLegacy_manageProjectsTest extends Git_Driver_GerritLegacy
         $remote_project = "firefox/jean-claude/dusse";
         expect($this->logger)->info("Gerrit: Project $remote_project successfully initialized")->once();
         $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
-
     }
 }

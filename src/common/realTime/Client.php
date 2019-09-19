@@ -19,7 +19,8 @@
 
 namespace Tuleap\RealTime;
 
-interface Client {
+interface Client
+{
 
     /**
      * Method to send an Https request when

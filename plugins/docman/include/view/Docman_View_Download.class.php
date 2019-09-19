@@ -21,7 +21,8 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_Download extends Docman_View_View {
+class Docman_View_Download extends Docman_View_View
+{
 
     /* protected */ function _content($params)
     {

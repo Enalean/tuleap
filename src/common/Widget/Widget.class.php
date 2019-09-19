@@ -25,7 +25,8 @@ use Tuleap\Layout\CssAssetCollection;
 /**
 * Widget
 */
-/* abstract */ class Widget {
+/* abstract */ class Widget
+{
 
     var $content_id;
     var $id;

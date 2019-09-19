@@ -24,7 +24,8 @@ require_once(__DIR__.'/../../../bin/DocmanImport/Trees.class.php');
 /**
  * Unit tests for the Trees utility class
  */
-class TreesTest extends TuleapTestCase {
+class TreesTest extends TuleapTestCase
+{
 
     public function testNodeListToTree()
     {

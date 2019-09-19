@@ -27,7 +27,8 @@ function aMilestone()
     return new Test_Planning_MilestoneBuilder();
 }
 
-class Test_Planning_MilestoneBuilder {
+class Test_Planning_MilestoneBuilder
+{
     /**
      * @var \Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker
      */

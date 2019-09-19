@@ -138,7 +138,7 @@ class Docman_NotificationsManager
             $this->_getListeningUsersItemId($params)
         );
         if ($users) {
-            while($users->valid()) {
+            while ($users->valid()) {
                 $u    = $users->current();
                 $user = $um->getUserById($u['user_id']);
                 if ($user->isActive() || $user->isRestricted()) {
@@ -159,7 +159,7 @@ class Docman_NotificationsManager
     function sendNotifications($event, $params)
     {
         $success = true;
-        foreach($this->notifications as $notification) {
+        foreach ($this->notifications as $notification) {
             $success &= $this->mail_builder->buildAndSendEmail($this->project, $notification, new MailEnhancer());
         }
         if (!$success) {
@@ -201,7 +201,7 @@ class Docman_NotificationsManager
     function _buildMessage($event, $params, $user)
     {
         $type = '';
-        switch($event) {
+        switch ($event) {
             case 'plugin_docman_event_edit':
             case 'plugin_docman_event_metadata_update':
                 $type = self::MESSAGE_MODIFIED;
@@ -246,11 +246,11 @@ class Docman_NotificationsManager
 
     protected function getMessageLink($type, $params)
     {
-        if($this->project->getTruncatedEmailsUsage()) {
+        if ($this->project->getTruncatedEmailsUsage()) {
             return  $this->url_provider->getHistoryUrl($params['item']);
         }
 
-        switch($type) {
+        switch ($type) {
             case self::MESSAGE_MODIFIED:
             case self::MESSAGE_NEWVERSION:
                 $link = $this->url_provider->getDetailsLinkUrl($params['item']);
@@ -288,7 +288,7 @@ class Docman_NotificationsManager
     function _getMessageForUser($user, $message_type, $params)
     {
         $msg = '';
-        switch($message_type) {
+        switch ($message_type) {
             case self::MESSAGE_MODIFIED:
             case self::MESSAGE_NEWVERSION:
                 $msg .=
@@ -301,10 +301,10 @@ class Docman_NotificationsManager
                 break;
             case self::MESSAGE_WIKI_NEWVERSION:
                 $msg .= sprintf(
-                    dgettext('plugin-docman',"New version of %s wiki page was created by %s."),
+                    dgettext('plugin-docman', "New version of %s wiki page was created by %s."),
                     $params['wiki_page'],
                     $user->getRealName()
-                    ) ."\n";
+                ) ."\n";
                 $msg .= $this->getMessageLink($message_type, $params) . "\n";
                 break;
             default:

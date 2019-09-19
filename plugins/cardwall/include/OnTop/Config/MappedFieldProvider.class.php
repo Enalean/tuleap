@@ -24,7 +24,8 @@ require_once dirname(__FILE__) .'/../../constants.php';
  * Provides the Cardwall_OnTop configured field for an artifact, and fallbacks on the status field if
  * there is no mapping
  */
-class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact {
+class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
+{
 
     /**
      * @var Cardwall_FieldProviders_SemanticStatusFieldRetriever
@@ -54,6 +55,4 @@ class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProvide
         }
         return $this->semantic_status_provider->getField($tracker);
     }
-
 }
-?>

@@ -27,7 +27,8 @@ use HTTPRequest;
 use Project;
 use Feedback;
 
-class AdminController {
+class AdminController
+{
     public const NAME = 'admin';
 
     /** @var PermissionsManager */

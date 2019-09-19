@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201211221712_create_tracker_rule_date_table extends ForgeUpgrade_Bucket {
+class b201211221712_create_tracker_rule_date_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -53,4 +54,3 @@ class b201211221712_create_tracker_rule_date_table extends ForgeUpgrade_Bucket {
         }
     }
 }
-?>

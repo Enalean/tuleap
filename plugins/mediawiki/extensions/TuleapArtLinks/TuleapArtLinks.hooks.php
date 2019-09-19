@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TuleapArtLinksHooks {
+class TuleapArtLinksHooks
+{
 
-    public static function onOutputPageBeforeHTML(OutputPage $out, &$text )
+    public static function onOutputPageBeforeHTML(OutputPage $out, &$text)
     {
         global $wgTuleapArtLinksGroupId;
 
@@ -29,5 +30,4 @@ class TuleapArtLinksHooks {
 
         return true;
     }
-
 }

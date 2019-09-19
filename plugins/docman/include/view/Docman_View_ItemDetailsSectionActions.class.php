@@ -23,7 +23,8 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSection {
+class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSection
+{
     var $is_moveable;
     var $is_deleteable;
     var $_controller;
@@ -32,7 +33,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         $this->is_moveable   = $is_moveable;
         $this->is_deleteable = $is_deleteable;
         $this->_controller   = $controller;
-        parent::__construct($item, $url, 'actions', $GLOBALS['Language']->getText('plugin_docman','details_actions'));
+        parent::__construct($item, $url, 'actions', $GLOBALS['Language']->getText('plugin_docman', 'details_actions'));
     }
     function getContent($params = [])
     {
@@ -51,7 +52,8 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         if (!$this->is_moveable || !($this->_controller->userCanWrite($this->item->getId()) && $this->_controller->userCanWrite($this->item->getParentId()))) {
             $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_move_cannotmove_'.$folder_or_document);
         } else {
-            $content .= $GLOBALS['Language']->getText('plugin_docman',
+            $content .= $GLOBALS['Language']->getText(
+                'plugin_docman',
                 'details_actions_move_canmove_'.$folder_or_document,
                 DocmanViewURLBuilder::buildActionUrl(
                     $this->item,
@@ -95,7 +97,8 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         if (! $this->is_deleteable || $this->_controller->userCannotDelete($user, $this->item)) {
             $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_delete_cannotdelete_'.$folder_or_document);
         } else {
-            $content .= $GLOBALS['Language']->getText('plugin_docman',
+            $content .= $GLOBALS['Language']->getText(
+                'plugin_docman',
                 'details_actions_delete_candelete_'.$folder_or_document,
                 DocmanViewURLBuilder::buildActionUrl(
                     $this->item,
@@ -116,13 +119,15 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         $content = '';
         if ($this->_controller->userCanWrite($this->item->getid())) {
             $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newdocument') .'</dt><dd>';
-            $content .= $GLOBALS['Language']->getText('plugin_docman',
+            $content .= $GLOBALS['Language']->getText(
+                'plugin_docman',
                 'details_actions_newdocument_cancreate',
                 DocmanViewURLBuilder::buildActionUrl($item, ['default_url' => $this->url], ['action' => 'newDocument', 'id' => $item->getId()])
             );
             $content .= '</dd>';
             $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newfolder') .'</dt><dd>';
-            $content .= $GLOBALS['Language']->getText('plugin_docman',
+            $content .= $GLOBALS['Language']->getText(
+                'plugin_docman',
                 'details_actions_newfolder_cancreate',
                 DocmanViewURLBuilder::buildActionUrl($item, ['default_url' => $this->url], ['action' => 'newFolder', 'id' => $item->getId()])
             );
@@ -133,11 +138,10 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
             $srcItem = null;
             if ($copiedItemId !== false && $cutItemId === false) {
                 $srcItem = $itemFactory->getItemFromDb($copiedItemId);
-            }
-            elseif ($copiedItemId === false && $cutItemId !== false && $item->getId() != $cutItemId) {
+            } elseif ($copiedItemId === false && $cutItemId !== false && $item->getId() != $cutItemId) {
                 $srcItem = $itemFactory->getItemFromDb($cutItemId);
             }
-            if($srcItem && !$itemFactory->isInSubTree($this->item->getId(), $srcItem->getId())) {
+            if ($srcItem && !$itemFactory->isInSubTree($this->item->getId(), $srcItem->getId())) {
                 $content .= '</dd>';
                 $content .= '<dt>'.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste').'</dt><dd>';
                 $copyurl = DocmanViewURLBuilder::buildActionUrl($item, ['default_url' => $this->url], ['action' => 'action_paste', 'id' => $this->item->getId()]);
@@ -156,7 +160,8 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         if (!$this->_controller->userCanWrite($this->item->getid())) {
             $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update_cannot');
         } else {
-            $content .= $GLOBALS['Language']->getText('plugin_docman',
+            $content .= $GLOBALS['Language']->getText(
+                'plugin_docman',
                 'details_actions_update_can',
                 DocmanViewURLBuilder::buildActionUrl($item, ['default_url' => $this->url], ['action' => 'action_update', 'id' => $this->item->getId()])
             );
@@ -184,7 +189,8 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         if (!$this->_controller->userCanWrite($this->item->getid())) {
             $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_cannotcreate');
         } else {
-            $content .= $GLOBALS['Language']->getText('plugin_docman',
+            $content .= $GLOBALS['Language']->getText(
+                'plugin_docman',
                 'details_actions_newversion_cancreate',
                 DocmanViewURLBuilder::buildActionUrl($this->item, ['default_url' => $this->url], ['action' => 'action_new_version', 'id' => $this->item->getId()])
             );

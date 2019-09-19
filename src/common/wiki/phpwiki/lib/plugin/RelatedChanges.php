@@ -11,19 +11,20 @@ rcs_id('$Id: RelatedChanges.php,v 1.5 2005/01/25 03:50:54 uckelman Exp $');
 
 require_once("lib/plugin/RecentChanges.php");
 
-class _RelatedChanges_HtmlFormatter
-extends _RecentChanges_HtmlFormatter
+class _RelatedChanges_HtmlFormatter extends _RecentChanges_HtmlFormatter
 {
     function description()
     {
-        return HTML::p(false, $this->pre_description(),
-         fmt(" (to pages linked from \"%s\")",$this->_args['page']));
+        return HTML::p(
+            false,
+            $this->pre_description(),
+            fmt(" (to pages linked from \"%s\")", $this->_args['page'])
+        );
     }
 }
 
 
-class WikiPlugin_RelatedChanges
-extends WikiPlugin_RecentChanges
+class WikiPlugin_RelatedChanges extends WikiPlugin_RecentChanges
 {
     function getName()
     {
@@ -32,8 +33,11 @@ extends WikiPlugin_RecentChanges
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.5 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.5 $"
+        );
     }
 
     function getDefaultArguments()
@@ -51,10 +55,12 @@ extends WikiPlugin_RecentChanges
         $changes = $dbi->mostRecent($this->getMostRecentParams($args));
 
         $show_deleted = $args['show_deleted'];
-        if ($show_deleted == 'sometimes')
+        if ($show_deleted == 'sometimes') {
             $show_deleted = $args['show_minor'];
-        if (!$show_deleted)
+        }
+        if (!$show_deleted) {
             $changes = new NonDeletedRevisionIterator($changes, !$args['show_all']);
+        }
 
         // sort out pages not linked from our page
         $changes = new RelatedChangesRevisionIterator($changes, $dbi, $args['page']);
@@ -65,16 +71,22 @@ extends WikiPlugin_RecentChanges
     // just a numbered list of limit pagenames, without date.
     function box($args = false, $request = false, $basepage = false)
     {
-        if (!$request) $request = $GLOBALS['request'];
-        if (!isset($args['limit'])) $args['limit'] = 15;
+        if (!$request) {
+            $request = $GLOBALS['request'];
+        }
+        if (!isset($args['limit'])) {
+            $args['limit'] = 15;
+        }
         $args['format'] = 'box';
         $args['show_minor'] = false;
         $args['show_major'] = true;
         $args['show_deleted'] = false;
         $args['show_all'] = false;
         $args['days'] = 90;
-        return $this->makeBox(WikiLink(_("RelatedChanges"),'',_("Related Changes")),
-                              $this->format($this->getChanges($request->_dbi, $args), $args));
+        return $this->makeBox(
+            WikiLink(_("RelatedChanges"), '', _("Related Changes")),
+            $this->format($this->getChanges($request->_dbi, $args), $args)
+        );
     }
 
     function format($changes, $args)
@@ -84,20 +96,20 @@ extends WikiPlugin_RecentChanges
 
         $fmt_class = $WikiTheme->getFormatter('RelatedChanges', $format);
         if (!$fmt_class) {
-            if ($format == 'rss')
+            if ($format == 'rss') {
                 $fmt_class = '_RecentChanges_RssFormatter';
-            elseif ($format == 'rss2')
+            } elseif ($format == 'rss2') {
                 $fmt_class = '_RecentChanges_Rss2Formatter';
-            elseif ($format == 'rss091') {
+            } elseif ($format == 'rss091') {
                 include_once "lib/RSSWriter091.php";
                 $fmt_class = '_RecentChanges_RssFormatter091';
-            }
-            elseif ($format == 'sidebar')
+            } elseif ($format == 'sidebar') {
                 $fmt_class = '_RecentChanges_SideBarFormatter';
-            elseif ($format == 'box')
+            } elseif ($format == 'box') {
                 $fmt_class = '_RecentChanges_BoxFormatter';
-            else
+            } else {
                 $fmt_class = '_RelatedChanges_HtmlFormatter';
+            }
         }
 
         $fmt = new $fmt_class($args);
@@ -127,8 +139,9 @@ class RelatedChangesRevisionIterator extends WikiDB_PageRevisionIterator
     function next()
     {
         while (($rev = $this->_revisions->next())) {
-            if (isset($this->_links[$rev->_pagename]))
+            if (isset($this->_links[$rev->_pagename])) {
                 return $rev;
+            }
         }
         $this->free();
         return false;
@@ -162,4 +175,3 @@ class RelatedChangesRevisionIterator extends WikiDB_PageRevisionIterator
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

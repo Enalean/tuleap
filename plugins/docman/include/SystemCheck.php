@@ -23,7 +23,8 @@
  *
  * @see Event::PROCCESS_SYSTEM_CHECK
  */
-class Docman_SystemCheck {
+class Docman_SystemCheck
+{
 
     /** @var Plugin */
     private $docman_plugin;

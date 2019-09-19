@@ -41,7 +41,8 @@ use URLVerification;
 use PlanningPermissionsManager;
 use AgileDashboard_Milestone_MilestoneDao;
 
-class PlanningResource extends AuthenticatedResource {
+class PlanningResource extends AuthenticatedResource
+{
 
     public const MAX_LIMIT = 100;
 

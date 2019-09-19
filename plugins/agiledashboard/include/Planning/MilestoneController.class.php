@@ -141,7 +141,7 @@ class Planning_MilestoneController extends BaseController
         $artifact_ids       = $this->request->get('inconsistent-artifacts-ids');
         $extractor          = new AgileDashboard_PaneRedirectionExtractor();
 
-        if (! ($this->inconsistentArtifactsIdsAreValid($artifact_ids) && $milestone->solveInconsistencies($this->getCurrentUser(), $artifact_ids)) ) {
+        if (! ($this->inconsistentArtifactsIdsAreValid($artifact_ids) && $milestone->solveInconsistencies($this->getCurrentUser(), $artifact_ids))) {
             $this->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_agiledashboard', 'error_on_inconsistencies_solving'));
         }
 
@@ -163,7 +163,7 @@ class Planning_MilestoneController extends BaseController
         $artifact_factory = Tracker_ArtifactFactory::instance();
 
         foreach ($artifact_ids as $artifact_id) {
-            if (! ($validator->validate($artifact_id) && $artifact_factory->getArtifactById($artifact_id)) ) {
+            if (! ($validator->validate($artifact_id) && $artifact_factory->getArtifactById($artifact_id))) {
                 return false;
             }
         }

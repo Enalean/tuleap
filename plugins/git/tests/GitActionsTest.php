@@ -25,7 +25,8 @@ use Tuleap\Git\Notifications\UsersToNotifyDao;
 require_once 'bootstrap.php';
 require_once 'builders/aGitRepository.php';
 
-class GitActionsTest extends TuleapTestCase {
+class GitActionsTest extends TuleapTestCase
+{
 
     function setUp()
     {
@@ -245,7 +246,7 @@ class GitActionsTest extends TuleapTestCase {
         $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
-        $gitRepository->shouldReceive('notificationRemoveMail')->andReturns(True);
+        $gitRepository->shouldReceive('notificationRemoveMail')->andReturns(true);
         $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
         $git->shouldReceive('addError')->never();
@@ -434,10 +435,10 @@ class GitActionsTest extends TuleapTestCase {
         $action->getProjectRepositoryList($projectId);
         $action->getProjectRepositoryList($projectId, $userId);
     }
-
 }
 
-class GitActions_Delete_Tests extends TuleapTestCase {
+class GitActions_Delete_Tests extends TuleapTestCase
+{
     protected $git_actions;
     protected $project_id;
     protected $repository_id;
@@ -529,7 +530,8 @@ class GitActions_Delete_Tests extends TuleapTestCase {
     }
 }
 
-class GitActions_ForkTests extends TuleapTestCase {
+class GitActions_ForkTests extends TuleapTestCase
+{
     private $actions;
 
     public function setUp()
@@ -593,7 +595,8 @@ class GitActions_ForkTests extends TuleapTestCase {
 }
 
 
-class GitActions_ProjectPrivacyTest extends TuleapTestCase {
+class GitActions_ProjectPrivacyTest extends TuleapTestCase
+{
     public function setUp()
     {
         parent::setUp();
@@ -630,7 +633,6 @@ class GitActions_ProjectPrivacyTest extends TuleapTestCase {
         stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id => null));
         stub($this->factory)->getRepositoryById($repo_id)->returns($repo);
         $this->changeProjectRepositoriesAccess($project_id, $is_private);
-
     }
 
     public function itDoesNothingIfThePermissionsAreAlreadyCorrect()
@@ -666,7 +668,8 @@ class GitActions_ProjectPrivacyTest extends TuleapTestCase {
     }
 }
 
-class GitActions_fetchGitConfig extends TuleapTestCase {
+class GitActions_fetchGitConfig extends TuleapTestCase
+{
 
     /**
      * @var GitActions
@@ -710,38 +713,37 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
         $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
         $this->actions = new GitActions(
-           $this->controller,
-           $this->system_event_manager,
-           $this->factory,
-           \Mockery::spy(\GitRepositoryManager::class),
-           $this->gerrit_server_factory,
-           mockery_stub(\Git_Driver_Gerrit_GerritDriverFactory::class)->getDriver()->returns($this->driver),
-           \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class),
-           $this->project_creator,
-           \Mockery::spy(\Git_Driver_Gerrit_Template_TemplateFactory::class),
-           \Mockery::spy(\ProjectManager::class),
-           $this->git_permissions_manager,
-           $url_manager,
-           \Mockery::spy(\Logger::class),
-           \Mockery::spy(\Git_Mirror_MirrorDataMapper::class),
-           \Mockery::spy(\ProjectHistoryDao::class),
-           \Mockery::spy(\GitRepositoryMirrorUpdater::class),
-           \Mockery::spy(\Tuleap\Git\RemoteServer\Gerrit\MigrationHandler::class),
-           \Mockery::spy(\Tuleap\Git\GerritCanMigrateChecker::class),
-           \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedUpdater::class),
-           \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionSaver::class),
-           \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
-           \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),
-           \Mockery::spy(\Tuleap\Git\Permissions\PermissionChangesDetector::class),
-           \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedEnabler::class),
-           \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedDisabler::class),
-           \Mockery::spy(\Tuleap\Git\Permissions\RegexpPermissionFilter::class),
-           \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
-           \Mockery::spy(\Tuleap\Git\Notifications\UsersToNotifyDao::class),
-           \Mockery::spy(\Tuleap\Git\Notifications\UgroupsToNotifyDao::class),
-           \Mockery::spy(\UGroupManager::class)
+            $this->controller,
+            $this->system_event_manager,
+            $this->factory,
+            \Mockery::spy(\GitRepositoryManager::class),
+            $this->gerrit_server_factory,
+            mockery_stub(\Git_Driver_Gerrit_GerritDriverFactory::class)->getDriver()->returns($this->driver),
+            \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class),
+            $this->project_creator,
+            \Mockery::spy(\Git_Driver_Gerrit_Template_TemplateFactory::class),
+            \Mockery::spy(\ProjectManager::class),
+            $this->git_permissions_manager,
+            $url_manager,
+            \Mockery::spy(\Logger::class),
+            \Mockery::spy(\Git_Mirror_MirrorDataMapper::class),
+            \Mockery::spy(\ProjectHistoryDao::class),
+            \Mockery::spy(\GitRepositoryMirrorUpdater::class),
+            \Mockery::spy(\Tuleap\Git\RemoteServer\Gerrit\MigrationHandler::class),
+            \Mockery::spy(\Tuleap\Git\GerritCanMigrateChecker::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedUpdater::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionSaver::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\PermissionChangesDetector::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedEnabler::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedDisabler::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\RegexpPermissionFilter::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
+            \Mockery::spy(\Tuleap\Git\Notifications\UsersToNotifyDao::class),
+            \Mockery::spy(\Tuleap\Git\Notifications\UgroupsToNotifyDao::class),
+            \Mockery::spy(\UGroupManager::class)
         );
-
     }
 
     public function itReturnsAnErrorIfRepoDoesNotExist()

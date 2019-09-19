@@ -24,7 +24,8 @@
 
 require_once 'Docman_View_ProjectHeader.class.php';
 
-class Docman_View_PasteInProgress extends Docman_View_ProjectHeader {
+class Docman_View_PasteInProgress extends Docman_View_ProjectHeader
+{
 
     function _getTitle($params)
     {

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class AgileDashboard_XMLExporter {
+class AgileDashboard_XMLExporter
+{
 
     /**  @var XML_RNGValidator */
     private $xml_validator;
@@ -144,4 +145,3 @@ class AgileDashboard_XMLExporter {
         }
     }
 }
-?>

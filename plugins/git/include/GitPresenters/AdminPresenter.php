@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-abstract class GitPresenters_AdminPresenter {
+abstract class GitPresenters_AdminPresenter
+{
 
     public $project_id;
 

@@ -66,7 +66,7 @@ class FileUniDiffBuilderTest extends TuleapTestCase
 
         $line = $diff->getLineFromNewOffset(1);
         $this->assertEqual(UniDiffLine::ADDED, $line->getType());
-        $this->assertEqual(NULL, $line->getOldOffset());
+        $this->assertEqual(null, $line->getOldOffset());
 
         $line = $diff->getLineFromNewOffset(2);
         $this->assertEqual(UniDiffLine::KEPT, $line->getType());
@@ -82,15 +82,15 @@ class FileUniDiffBuilderTest extends TuleapTestCase
 
         $line = $diff->getLineFromNewOffset(5);
         $this->assertEqual(UniDiffLine::ADDED, $line->getType());
-        $this->assertEqual(NULL, $line->getOldOffset());
+        $this->assertEqual(null, $line->getOldOffset());
 
         $line = $diff->getLineFromNewOffset(6);
         $this->assertEqual(UniDiffLine::ADDED, $line->getType());
-        $this->assertEqual(NULL, $line->getOldOffset());
+        $this->assertEqual(null, $line->getOldOffset());
 
         $line = $diff->getLineFromOldOffset(4);
         $this->assertEqual(UniDiffLine::REMOVED, $line->getType());
-        $this->assertEqual(NULL, $line->getNewOffset());
+        $this->assertEqual(null, $line->getNewOffset());
     }
 
     public function itHandlesDeletedFile()
@@ -111,12 +111,11 @@ class FileUniDiffBuilderTest extends TuleapTestCase
 
         $this->assertEqual(UniDiffLine::REMOVED, $lines[1]->getType());
         $this->assertEqual(1, $lines[1]->getOldOffset());
-        $this->assertEqual(NULL, $lines[1]->getNewOffset());
+        $this->assertEqual(null, $lines[1]->getNewOffset());
 
         $this->assertEqual(UniDiffLine::REMOVED, $lines[2]->getType());
         $this->assertEqual(2, $lines[2]->getOldOffset());
-        $this->assertEqual(NULL, $lines[2]->getNewOffset());
-
+        $this->assertEqual(null, $lines[2]->getNewOffset());
     }
 
     public function itHandlesAddedFile()
@@ -139,10 +138,10 @@ class FileUniDiffBuilderTest extends TuleapTestCase
 
         $this->assertEqual(UniDiffLine::ADDED, $lines[1]->getType());
         $this->assertEqual(1, $lines[1]->getNewOffset());
-        $this->assertEqual(NULL, $lines[1]->getOldOffset());
+        $this->assertEqual(null, $lines[1]->getOldOffset());
 
         $this->assertEqual(UniDiffLine::ADDED, $lines[2]->getType());
         $this->assertEqual(2, $lines[2]->getNewOffset());
-        $this->assertEqual(NULL, $lines[2]->getOldOffset());
+        $this->assertEqual(null, $lines[2]->getOldOffset());
     }
 }

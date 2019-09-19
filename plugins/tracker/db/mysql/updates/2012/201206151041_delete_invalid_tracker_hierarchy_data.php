@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201206151041_delete_invalid_tracker_hierarchy_data extends ForgeUpgrade_Bucket {
+class b201206151041_delete_invalid_tracker_hierarchy_data extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -51,6 +52,4 @@ SQL;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
         }
     }
-
 }
-?>

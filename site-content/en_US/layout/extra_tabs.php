@@ -29,5 +29,3 @@ $additional_tabs = array(
     //     'title'    => 'Guinea Pig',
     // ),
 );
-
-?>

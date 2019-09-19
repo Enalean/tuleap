@@ -24,7 +24,8 @@ use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 /**
  * I build panes info for a Planning_Milestone
  */
-class AgileDashboard_PaneInfoFactory {
+class AgileDashboard_PaneInfoFactory
+{
 
     /** @var PFUser */
     private $user;

@@ -27,7 +27,7 @@ use Tuleap\Project\XML\Export;
 
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
-if ( $sys_user !== 'root' && $sys_user !== 'codendiadm' ) {
+if ($sys_user !== 'root' && $sys_user !== 'codendiadm') {
     fwrite(STDERR, 'Unsufficient privileges for user '.$sys_user.PHP_EOL);
     exit(1);
 }
@@ -124,7 +124,7 @@ try {
         new ProjectXMLExporterLogger()
     );
 
-    if (isset ($arguments['dir'])) {
+    if (isset($arguments['dir'])) {
         $archive = new Export\DirectoryArchive($output);
     } else {
         $archive = new Export\ZipArchive($output);
@@ -174,7 +174,8 @@ try {
     exit(1);
 }
 
-class ProjectXMLExport_Archive extends ZipArchive {
+class ProjectXMLExport_Archive extends ZipArchive
+{
 
     private $archive_path;
 

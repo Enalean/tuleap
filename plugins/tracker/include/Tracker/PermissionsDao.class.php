@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_PermissionsDao extends DataAccessObject {
+class Tracker_PermissionsDao extends DataAccessObject
+{
 
     /**
      * @return int[]

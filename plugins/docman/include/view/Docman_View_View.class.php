@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* abstract */ class Docman_View_View {
+/* abstract */ class Docman_View_View
+{
     var $dfltSortParams = array();
     var $dfltSearchParams = array();
 
@@ -84,7 +85,7 @@
     }
     /* protected */ function _javascript($params)
     {
-        if($this->javascript != "") {
+        if ($this->javascript != "") {
             echo "<script type=\"text/javascript\">\n".
             "//<!--\n".
             $this->javascript.
@@ -119,24 +120,26 @@
      */
     function _initSearchAndSortParams($params)
     {
-        if(!count($this->dfltSortParams)) {
+        if (!count($this->dfltSortParams)) {
             $this->dfltSortParams = array();
             $this->dfltSearchParams = array();
 
-            if(isset($params['filter']) && $params['filter'] !== null) {
+            if (isset($params['filter']) && $params['filter'] !== null) {
                 // Report paramters
                 $this->dfltSearchParams = $params['filter']->getUrlParameters();
 
                 // Filters paramters
                 $fi = $params['filter']->getFilterIterator();
-                if($fi !== null) {
+                if ($fi !== null) {
                     $fi->rewind();
-                    while($fi->valid()) {
+                    while ($fi->valid()) {
                         $f = $fi->current();
 
-                        if($f !== null) {
-                            $this->dfltSearchParams = array_merge($this->dfltSearchParams,
-                                                                  $f->getUrlParameters());
+                        if ($f !== null) {
+                            $this->dfltSearchParams = array_merge(
+                                $this->dfltSearchParams,
+                                $f->getUrlParameters()
+                            );
                         }
 
                         $fi->next();
@@ -145,16 +148,16 @@
 
                 // Columns (sort) paramters
                 $ci = $params['filter']->getColumnIterator();
-                if($ci !== null) {
+                if ($ci !== null) {
                     $ci->rewind();
-                    while($ci->valid()) {
+                    while ($ci->valid()) {
                         $c = $ci->current();
                         // The second part of the test aims to avoid to add
                         // sort_update_date=0 in the URL as it's the default
                         // sort (no need to define it)
-                        if($c !== null && !($c->md !== null && $c->md->getLabel() == 'update_date' && $c->sort == PLUGIN_DOCMAN_SORT_DESC)) {
+                        if ($c !== null && !($c->md !== null && $c->md->getLabel() == 'update_date' && $c->sort == PLUGIN_DOCMAN_SORT_DESC)) {
                             $sort = $c->getSort();
-                            if($sort !== null) {
+                            if ($sort !== null) {
                                 $this->dfltSortParams[$c->getSortParameter()] = $sort;
                             }
                         }

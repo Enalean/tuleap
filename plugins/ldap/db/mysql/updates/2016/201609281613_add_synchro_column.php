@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201609281613_add_synchro_column extends ForgeUpgrade_Bucket {
+class b201609281613_add_synchro_column extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return 'Add synchronization option for project members';

@@ -22,13 +22,11 @@
 /**
  * Wrapper of array of columns based on the status field
  */
-class Cardwall_OnTop_Config_ColumnStatusCollection extends Cardwall_OnTop_Config_ColumnCollection
-                                                   implements Cardwall_OnTop_Config_ColumnsVisitor {
+class Cardwall_OnTop_Config_ColumnStatusCollection extends Cardwall_OnTop_Config_ColumnCollection implements Cardwall_OnTop_Config_ColumnsVisitor
+{
 
     public function accept($visitor, $parameter = '')
     {
         return $visitor->visitColumnStatusCollection($this, $parameter);
     }
 }
-
-?>

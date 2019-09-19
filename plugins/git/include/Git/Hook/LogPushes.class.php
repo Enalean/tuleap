@@ -25,7 +25,8 @@
 /**
  * Store push information in the database
  */
-class Git_Hook_LogPushes {
+class Git_Hook_LogPushes
+{
     /** @var GitDao */
     private $dao;
 
@@ -45,8 +46,5 @@ class Git_Hook_LogPushes {
             $push_details->getType(),
             $push_details->getRefnameType()
         );
-
     }
 }
-
-?>

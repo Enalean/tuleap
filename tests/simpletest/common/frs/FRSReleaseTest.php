@@ -24,7 +24,8 @@ Mock::generate('ProjectManager');
 Mock::generate('FRSPackageFactory');
 Mock::generatePartial('FRSRelease', 'FRSReleaseTestVersion', array('_getFRSPackageFactory', '_getProjectManager'));
 
-class FRSReleaseTest extends TuleapTestCase {
+class FRSReleaseTest extends TuleapTestCase
+{
 
     function testIsActive()
     {
@@ -149,6 +150,4 @@ class FRSReleaseTest extends TuleapTestCase {
 
         $this->assertEqual($r->getGroupID(), 123);
     }
-
 }
-?>

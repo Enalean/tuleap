@@ -44,9 +44,9 @@ function user_is_super_user()
 }
 
 //Deprecated. Use User->isMember() instead
-function user_ismember($group_id,$type=0)
+function user_ismember($group_id, $type = 0)
 {
-    return UserManager::instance()->getCurrentUser()->isMember($group_id,$type);
+    return UserManager::instance()->getCurrentUser()->isMember($group_id, $type);
 }
 
 //Deprecated. Use User->getName() instead
@@ -67,11 +67,11 @@ function user_getname($user_id = 0)
             $result = db_query("SELECT user_id,user_name FROM user WHERE user_id='".db_es($user_id)."'");
             if ($result && db_numrows($result) > 0) {
                 //valid user - store and return
-                $USER_NAMES["user_$user_id"]=db_result($result,0,"user_name");
+                $USER_NAMES["user_$user_id"]=db_result($result, 0, "user_name");
                 return $USER_NAMES["user_$user_id"];
             } else {
                 //invalid user - store and return
-                $USER_NAMES["user_$user_id"]="<B>".$Language->getText('include_user','invalid_u_id')."</B>";
+                $USER_NAMES["user_$user_id"]="<B>".$Language->getText('include_user', 'invalid_u_id')."</B>";
                 return $USER_NAMES["user_$user_id"];
             }
         }
@@ -85,9 +85,9 @@ function user_getrealname($user_id)
     global $Language;
         $result = user_get_result_set($user_id);
     if ($result && db_numrows($result) > 0) {
-        return db_result($result,0,"realname");
+        return db_result($result, 0, "realname");
     } else {
-        return $Language->getText('include_user','not_found');
+        return $Language->getText('include_user', 'not_found');
     }
 }
 
@@ -99,9 +99,9 @@ function user_getemail($user_id)
     global $Language;
         $result = user_get_result_set($user_id);
     if ($result && db_numrows($result) > 0) {
-        return db_result($result,0,"email");
+        return db_result($result, 0, "email");
     } else {
-        return $Language->getText('include_user','email_not_found');
+        return $Language->getText('include_user', 'email_not_found');
     }
 }
 
@@ -110,9 +110,9 @@ function user_getid_from_email($email)
     global $Language;
     $result = db_query("SELECT user_id FROM user WHERE email='".db_es($email)."'");
     if ($result && db_numrows($result) > 0) {
-        return db_result($result,0,"user_id");
+        return db_result($result, 0, "user_id");
     } else {
-        return $Language->getText('include_user','not_found');
+        return $Language->getText('include_user', 'not_found');
     }
 }
 
@@ -122,9 +122,9 @@ function user_getemail_from_unix($user_name)
     global $Language;
         $result = user_get_result_set_from_unix($user_name);
     if ($result && db_numrows($result) > 0) {
-        return db_result($result,0,"email");
+        return db_result($result, 0, "email");
     } else {
-        return $Language->getText('include_user','email_not_found');
+        return $Language->getText('include_user', 'email_not_found');
     }
 }
 
@@ -151,7 +151,7 @@ function user_get_result_set_from_unix($user_name)
 
     global $USER_RES;
     $res = db_query("SELECT * FROM user WHERE user_name='".db_es($user_name)."'");
-    $user_id = db_result($res,0,'user_id');
+    $user_id = db_result($res, 0, 'user_id');
     $USER_RES["_".$user_id."_"] = $res;
     return $USER_RES["_".$user_id."_"];
 }
@@ -163,7 +163,7 @@ function user_get_result_set_from_email($email)
     global $USER_RES;
     $sql = "SELECT * FROM user WHERE (user_name='".db_es($email)."' or email='".db_es($email)."')";
     $res = db_query($sql);
-    $user_id = db_result($res,0,'user_id');
+    $user_id = db_result($res, 0, 'user_id');
     $USER_RES["_".$user_id."_"] = $res;
     return $USER_RES["_".$user_id."_"];
 }
@@ -180,9 +180,9 @@ function user_get_timezone()
 }
 
 //Deprecated. Use User->setPreference() instead.
-function user_set_preference($preference_name,$value)
+function user_set_preference($preference_name, $value)
 {
-    GLOBAL $user_pref;
+    global $user_pref;
     if (user_isloggedin()) {
         $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
         $preference_name=strtolower(trim($preference_name));
@@ -195,10 +195,11 @@ function user_set_preference($preference_name,$value)
         }
 
      // Update the Preference cache if it was setup by a user_get_preference
-        if (isset($user_pref)) { $user_pref[$preference_name] = $value; }
+        if (isset($user_pref)) {
+            $user_pref[$preference_name] = $value;
+        }
 
         return true;
-
     } else {
         return false;
     }
@@ -207,7 +208,7 @@ function user_set_preference($preference_name,$value)
 //Deprecated. Use User->getPreference() instead.
 function user_get_preference($preference_name)
 {
-    GLOBAL $user_pref;
+    global $user_pref;
     if (user_isloggedin()) {
         $preference_name=strtolower(trim($preference_name));
      /*
@@ -231,7 +232,7 @@ function user_get_preference($preference_name)
                 return false;
             } else {
                 //iterate and put the results into an array
-                while($row = db_fetch_array($result)) {
+                while ($row = db_fetch_array($result)) {
                     $user_pref[$row['preference_name']]=$row['preference_value'];
                 }
                 if (isset($user_pref["$preference_name"])) {
@@ -251,7 +252,7 @@ function user_get_preference($preference_name)
 //Deprecated. Use User->delPreference() instead.
 function user_del_preference($preference_name)
 {
-    GLOBAL $user_pref;
+    global $user_pref;
     if (user_isloggedin()) {
         if ($user_pref && array_key_exists($preference_name, $user_pref)) {
             unset($user_pref[$preference_name]);
@@ -261,19 +262,17 @@ function user_del_preference($preference_name)
             .' WHERE preference_name="'.db_es($preference_name).'"'
             .' AND user_id='.$db_escaped_user_id;
         $res = db_query($sql);
-        if(db_affected_rows($res) != 1) {
+        if (db_affected_rows($res) != 1) {
             return false;
-        }
-        else {
+        } else {
             return true;
         }
-    }
-    else {
+    } else {
         return false;
     }
 }
 
-function user_display_choose_password($page,$user_id = false)
+function user_display_choose_password($page, $user_id = false)
 {
     $purifier = Codendi_HTMLPurifier::instance();
     ?>
@@ -287,7 +286,8 @@ function user_display_choose_password($page,$user_id = false)
      <script type="text/javascript" src="/scripts/user.js"></script>
 
 
-    <?php } else { echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password')); ?>:
+    <?php } else {
+        echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password')); ?>:
     <br><input type="password" value="" id="form_pw" name="form_pw" autocomplete="new-password">
     <p><?php echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password2')); ?>:
     <br><input type="password" value="" name="form_pw2" autocomplete="new-password">
@@ -304,7 +304,7 @@ function user_display_choose_password($page,$user_id = false)
         $password_configuration           = $password_configuration_retriever->getPasswordConfiguration();
         $password_strategy                = new PasswordStrategy($password_configuration);
         include($GLOBALS['Language']->getContent('account/password_strategy'));
-        foreach($password_strategy->validators as $key => $v) {
+        foreach ($password_strategy->validators as $key => $v) {
             echo '<p class="password_validator_msg_'. $purifier->purify($key) .'"><i class="fa fa-times password_strategy_bad"></i> '. $purifier->purify($v->description()) .'</p>';
         }
         ?>

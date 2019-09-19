@@ -27,7 +27,7 @@
 *                                      if false then it is a static HTML page
 * @param        prompt what to display to point to the  help
 */
-function help_button($type,$helpid=false,$prompt='[?]')
+function help_button($type, $helpid = false, $prompt = '[?]')
 {
     $purifier = Codendi_HTMLPurifier::instance();
     // Generic processing derives the script name from the help type
@@ -51,7 +51,7 @@ function help_button($type,$helpid=false,$prompt='[?]')
 *
 * @param        string    Header title
 */
-function help_header($title, $help_banner=true)
+function help_header($title, $help_banner = true)
 {
     global $Language;
     ?>
@@ -61,7 +61,7 @@ function help_header($title, $help_banner=true)
 <LINK rel="stylesheet" href="<?php echo util_get_css_theme(); ?>" type="text/css">
 </HEAD>
 <BODY class="bg_help">
-    <?php print ($help_banner ? '<H4>'.$GLOBALS['sys_name'].' '.$Language->getText('include_help','site_help_sys').'</H4>' : ''); ?>
+    <?php print ($help_banner ? '<H4>'.$GLOBALS['sys_name'].' '.$Language->getText('include_help', 'site_help_sys').'</H4>' : ''); ?>
 <H2><?php print $title; ?></H2>
 <HR>
     <?php

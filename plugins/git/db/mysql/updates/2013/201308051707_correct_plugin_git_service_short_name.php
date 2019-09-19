@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201308051707_correct_plugin_git_service_short_name extends ForgeUpgrade_Bucket {
+class b201308051707_correct_plugin_git_service_short_name extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -63,4 +64,3 @@ EOT;
         }
     }
 }
-?>

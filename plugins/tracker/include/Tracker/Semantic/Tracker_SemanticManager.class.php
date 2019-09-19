@@ -52,10 +52,10 @@ class Tracker_SemanticManager
         $this->tracker->displayAdminItemHeader($tracker_manager, 'editsemantic');
 
         echo '<p>';
-        echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','semantic_intro');
+        echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'semantic_intro');
         echo '</p>';
 
-        foreach($this->getSemantics() as $semantic) {
+        foreach ($this->getSemantics() as $semantic) {
             echo '<h3>'. $semantic->getLabel() .' <a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                 'tracker'  => $this->tracker->getId(),
                 'func'     => 'admin-semantic',
@@ -148,12 +148,12 @@ class Tracker_SemanticManager
     private function addOtherSemantics(Tracker_SemanticCollection $semantics)
     {
          EventManager::instance()->processEvent(
-            TRACKER_EVENT_MANAGE_SEMANTICS,
-            array(
+             TRACKER_EVENT_MANAGE_SEMANTICS,
+             array(
                 'semantics'   => $semantics,
                 'tracker'     => $this->tracker,
-            )
-        );
+             )
+         );
     }
 
     /**
@@ -179,7 +179,7 @@ class Tracker_SemanticManager
         $semantics      = $this->getSemantics();
 
         foreach ($semantic_order as $semantic_key) {
-            if (isset($semantics[$semantic_key])){
+            if (isset($semantics[$semantic_key])) {
                 $results[$semantic_key] = $semantics[$semantic_key]->exportToREST($user);
             }
         }

@@ -24,7 +24,8 @@ use Tuleap\ProFTPd\Directory\DirectoryPathCollection;
 use Tuleap\ProFTPd\Directory\DirectoryItemCollection;
 use Project;
 
-class ExplorerPresenter {
+class ExplorerPresenter
+{
 
     /**
      * @var DirectoryPathCollection
@@ -116,4 +117,3 @@ class ExplorerPresenter {
         return $this->directory_items->getFiles();
     }
 }
-?>

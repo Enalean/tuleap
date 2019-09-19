@@ -23,7 +23,8 @@
 /**
 * ArtifactGlobalNotificationFactory
 */
-class ArtifactGlobalNotificationFactory {
+class ArtifactGlobalNotificationFactory
+{
 
     function getGlobalNotificationsForTracker($tracker_id)
     {
@@ -32,7 +33,7 @@ class ArtifactGlobalNotificationFactory {
         $dar = $dao->searchByTrackerId($tracker_id);
         if ($dar) {
             $notifs = array();
-            while($dar->valid()) {
+            while ($dar->valid()) {
                 $row = $dar->current();
                 $notifs[$row['id']] = new ArtifactGlobalNotification($row);
                 $dar->next();
@@ -71,9 +72,9 @@ class ArtifactGlobalNotificationFactory {
     {
         $addresses = array();
         $notifs = $this->getGlobalNotificationsForTracker($tracker_id);
-        foreach($notifs as $key => $nop) {
+        foreach ($notifs as $key => $nop) {
             if (!$update || $notifs[$key]->isAllUpdates()) {
-                foreach(preg_split('/[,;]/D', $notifs[$key]->getAddresses()) as $address) {
+                foreach (preg_split('/[,;]/D', $notifs[$key]->getAddresses()) as $address) {
                     $addresses[] = array('address' => $address, 'check_permissions' => $notifs[$key]->isCheckPermissions());
                 }
             }
@@ -81,4 +82,3 @@ class ArtifactGlobalNotificationFactory {
         return $addresses;
     }
 }
-?>

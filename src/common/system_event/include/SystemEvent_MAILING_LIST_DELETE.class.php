@@ -25,7 +25,8 @@
 * System Event classes
 *
 */
-class SystemEvent_MAILING_LIST_DELETE extends SystemEvent {
+class SystemEvent_MAILING_LIST_DELETE extends SystemEvent
+{
 
     /**
      * Verbalize the parameters so they are readable and much user friendly in
@@ -66,7 +67,4 @@ class SystemEvent_MAILING_LIST_DELETE extends SystemEvent {
         $this->done();
         return true;
     }
-
 }
-
-?>

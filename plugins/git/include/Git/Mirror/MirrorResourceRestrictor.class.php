@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_MirrorResourceRestrictor {
+class Git_MirrorResourceRestrictor
+{
 
     /**
      * @var Git_RestrictedMirrorDao
@@ -79,7 +80,7 @@ class Git_MirrorResourceRestrictor {
 
         $repositories = $this->mirror_data_mapper->fetchAllProjectRepositoriesForMirror($mirror, $project_ids);
 
-        foreach($repositories as $repository) {
+        foreach ($repositories as $repository) {
             $this->mirror_data_mapper->unmirrorRepository($repository->getId());
             $this->git_system_event_manager->queueRepositoryUpdate($repository);
             $this->history_dao->groupAddHistory(
@@ -97,11 +98,10 @@ class Git_MirrorResourceRestrictor {
         $rows     = $this->restricted_mirror_dao->searchAllowedProjectsOnResource($mirror->id);
         $projects = array();
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $projects[] = new Project($row);
         }
 
         return $projects;
     }
-
 }

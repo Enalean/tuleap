@@ -32,7 +32,8 @@ Mock::generate('TransitionFactory');
 
 Mock::generate('Tracker_FormElement_Field_List');
 
-class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase {
+class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase
+{
 
     /** @var Tracker_FormElement */
     private $field_status;
@@ -112,7 +113,8 @@ class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase {
     }
 }
 
-class WorkflowFactory_CacheTest extends TuleapTestCase {
+class WorkflowFactory_CacheTest extends TuleapTestCase
+{
 
     /** @var WorkflowFactory */
     private $workflow_factory;

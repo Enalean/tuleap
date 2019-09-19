@@ -24,7 +24,8 @@
  *
  * This allows to compute the level of a tracker in a given hierarchy.
  */
-class Tracker_Hierarchy {
+class Tracker_Hierarchy
+{
 
     private $parents = array();
 
@@ -190,4 +191,3 @@ class Tracker_Hierarchy {
         return ($level1 < $level2) ? -1 : 1;
     }
 }
-?>

@@ -8,5 +8,3 @@ $HTML->header(array('title' => "Privacy Policy"));
 include($Language->getContent('tos/privacy'));
 
 $HTML->footer(array());
-
-?>

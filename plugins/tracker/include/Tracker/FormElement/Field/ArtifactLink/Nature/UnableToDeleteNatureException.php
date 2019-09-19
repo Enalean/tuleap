@@ -21,4 +21,6 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-class UnableToDeleteNatureException extends NatureManagementException {}
+class UnableToDeleteNatureException extends NatureManagementException
+{
+}

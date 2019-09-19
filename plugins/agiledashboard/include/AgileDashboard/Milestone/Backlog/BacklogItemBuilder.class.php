@@ -25,7 +25,8 @@
 /**
  * I build BacklogItem{,Collection}
  */
-class AgileDashboard_Milestone_Backlog_BacklogItemBuilder implements AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection {
+class AgileDashboard_Milestone_Backlog_BacklogItemBuilder implements AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection
+{
 
     public function getCollection()
     {

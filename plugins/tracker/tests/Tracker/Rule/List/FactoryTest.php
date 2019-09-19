@@ -19,7 +19,8 @@
   */
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
+class Tracker_Rule_List_FactoryTest extends TuleapTestCase
+{
 
     /**
      * @var Tracker_Rule_List_Dao
@@ -275,4 +276,3 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
         $this->assertNull($root->dependencies->rule);
     }
 }
-?>

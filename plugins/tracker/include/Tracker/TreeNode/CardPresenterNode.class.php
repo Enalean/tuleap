@@ -21,7 +21,8 @@
 /**
  * TreeNode containing a Tracker_CardPresenter
  */
-class Tracker_TreeNode_CardPresenterNode extends NodeDuplicator {
+class Tracker_TreeNode_CardPresenterNode extends NodeDuplicator
+{
 
     /**
      * @var Tracker_CardPresenter
@@ -42,4 +43,3 @@ class Tracker_TreeNode_CardPresenterNode extends NodeDuplicator {
         return $this->presenter;
     }
 }
-?>

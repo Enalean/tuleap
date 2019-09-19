@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FRSReleaseDao extends DataAccessObject {
+class FRSReleaseDao extends DataAccessObject
+{
     public const INCLUDE_DELETED = 0x0001;
 
     var $STATUS_DELETED;
@@ -328,7 +329,7 @@ class FRSReleaseDao extends DataAccessObject {
     {
         $updated = false;
         $id = false;
-        if (isset ($data_array['release_id'])) {
+        if (isset($data_array['release_id'])) {
             $release_id = $data_array['release_id'];
         }
         if ($release_id) {
@@ -368,6 +369,4 @@ class FRSReleaseDao extends DataAccessObject {
         $deleted = $this->update($sql);
         return $deleted;
     }
-
 }
-?>

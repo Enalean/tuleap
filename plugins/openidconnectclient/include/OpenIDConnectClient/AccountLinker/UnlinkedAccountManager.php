@@ -22,7 +22,8 @@ namespace Tuleap\OpenIDConnectClient\AccountLinker;
 
 use RandomNumberGenerator;
 
-class UnlinkedAccountManager {
+class UnlinkedAccountManager
+{
 
     /**
      * @var UnlinkedAccountDao
@@ -88,5 +89,4 @@ class UnlinkedAccountManager {
             $row['openidconnect_identifier']
         );
     }
-
 }

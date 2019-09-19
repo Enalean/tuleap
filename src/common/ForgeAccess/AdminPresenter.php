@@ -149,5 +149,4 @@ class ForgeAccess_AdminPresenter
         return isset($variables_in_local_inc['sys_allow_anon'])
             || isset($variables_in_local_inc['sys_allow_restricted_users']);
     }
-
 }

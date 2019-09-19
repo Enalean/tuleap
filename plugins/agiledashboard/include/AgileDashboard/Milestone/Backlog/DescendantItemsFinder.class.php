@@ -325,9 +325,9 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
     private function getIdsOfLinkedParentItemsOfOneTrackerType($tracker_id)
     {
         $search = $this->artifact_dao->getLinkedArtifactsOfTrackerTypeAsString(
-                $this->milestone_id,
-                $tracker_id
-            );
+            $this->milestone_id,
+            $tracker_id
+        );
 
         return (string) $search['artifact_ids'];
     }

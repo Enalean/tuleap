@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ForumML_MessageDao extends DataAccessObject {
+class ForumML_MessageDao extends DataAccessObject
+{
 
     function __construct($da)
     {
@@ -37,7 +38,4 @@ class ForumML_MessageDao extends DataAccessObject {
             '  AND h.id_header = '.$this->da->quoteSmart($headerId);
         return $this->retrieve($sql);
     }
-
 }
-
-?>

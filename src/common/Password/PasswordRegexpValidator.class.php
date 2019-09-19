@@ -25,7 +25,8 @@
  * Validate a password with a regexp
  *
  */
-/* abstract */ class PasswordRegexpValidator extends PasswordValidator {
+/* abstract */ class PasswordRegexpValidator extends PasswordValidator
+{
 
     var $regexp;
 
@@ -43,4 +44,3 @@
         return preg_match($this->regexp, $password);
     }
 }
-?>

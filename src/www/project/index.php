@@ -7,12 +7,12 @@ require_once __DIR__ . '/../include/pre.php';
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
-if($request->valid($vGroupId)) {
+if ($request->valid($vGroupId)) {
     $group_id = $request->get('group_id');
 } else {
     $vFormGrp = new Valid_UInt('form_grp');
     $vFormGrp->required();
-    if($request->valid($vFormGrp)) {
+    if ($request->valid($vFormGrp)) {
         $group_id = $request->get('form_grp');
     } else {
         exit_no_group();
@@ -21,5 +21,3 @@ if($request->valid($vGroupId)) {
 
 $pm = ProjectManager::instance();
 $GLOBALS['Response']->redirect('/projects/'.$pm->getProject($group_id)->getUnixName());
-
-?>

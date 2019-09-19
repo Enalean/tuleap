@@ -19,7 +19,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ProjectDao extends DataAccessObject {
+class ProjectDao extends DataAccessObject
+{
 
     public const TABLE_NAME       = 'groups';
     public const GROUP_ID         = 'group_id';
@@ -129,7 +130,7 @@ class ProjectDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function searchProjectsNameLike($name, $limit, $userId=null, $isMember=false, $isAdmin=false, $isPrivate = false, $offset = 0)
+    public function searchProjectsNameLike($name, $limit, $userId = null, $isMember = false, $isAdmin = false, $isPrivate = false, $offset = 0)
     {
         $join    = '';
         $where   = '';
@@ -256,7 +257,7 @@ class ProjectDao extends DataAccessObject {
      * @param String  $new_name
      * @return bool
      */
-    public function renameProject($project,$new_name)
+    public function renameProject($project, $new_name)
     {
         //Update 'groups' table
         $sql = ' UPDATE groups SET unix_group_name= '.$this->da->quoteSmart($new_name).' ,
@@ -265,12 +266,12 @@ class ProjectDao extends DataAccessObject {
         $res_groups = $this->update($sql);
 
         //Update 'service' table
-        if ($res_groups){
+        if ($res_groups) {
             $sql_summary  = ' UPDATE service SET link= REPLACE (link,'.$this->da->quoteSmart($project->getUnixName()).','.$this->da->quoteSmart(strtolower($new_name)).')
                               WHERE short_name="summary"
                               AND group_id= '.$this->da->quoteSmart($project->getID());
             $res_summary = $this->update($sql_summary);
-            if ($res_summary){
+            if ($res_summary) {
                 $sql_homePage = ' UPDATE service SET link= REPLACE (link,'.$this->da->quoteSmart($project->getUnixName()).','.$this->da->quoteSmart(strtolower($new_name)).')
                                   WHERE short_name="homepage"
                                   AND group_id= '.$this->da->quoteSmart($project->getID());
@@ -299,7 +300,7 @@ class ProjectDao extends DataAccessObject {
      *
      * @return Array ('projects' => DataAccessResult, 'numrows' => int)
      */
-    public function returnAllProjects($offset, $limit, $status=false, $groupName=false)
+    public function returnAllProjects($offset, $limit, $status = false, $groupName = false)
     {
         $cond = array();
         $project_limit = "";
@@ -349,7 +350,7 @@ class ProjectDao extends DataAccessObject {
             if (! empty($status)) {
                 $conditions[] = 'status IN ('.$this->da->quoteSmartImplode(',', $status).')';
             }
-        } else if ($status != false) {
+        } elseif ($status != false) {
             $conditions[] = 'status = '.$this->da->quoteSmart($status);
         }
 
@@ -733,7 +734,8 @@ class ProjectDao extends DataAccessObject {
                         AND groups.access <> $private_without_restricted
                     )
                  )
-             ");
+             "
+        );
     }
 
     public function getProjectsWithStatusForREST($project_status, $offset, $limit)

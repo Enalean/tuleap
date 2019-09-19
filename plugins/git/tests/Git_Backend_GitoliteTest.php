@@ -31,7 +31,8 @@ Mock::generate('DataAccessResult');
 Mock::generate('Project');
 Mock::generate('PermissionsManager');
 
-abstract class Git_Backend_GitoliteCommonTest extends TuleapTestCase {
+abstract class Git_Backend_GitoliteCommonTest extends TuleapTestCase
+{
 
     protected function _GivenAGitRepoWithNameAndNamespace($name, $namespace)
     {
@@ -61,11 +62,12 @@ abstract class Git_Backend_GitoliteCommonTest extends TuleapTestCase {
     }
 }
 
-class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
+class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest
+{
 
     protected $fixturesPath;
 
-    private   $forkPermissions;
+    private $forkPermissions;
 
     public function setUp()
     {
@@ -282,7 +284,8 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
     }
 }
 
-class Git_Backend_Gitolite_disconnectFromGerrit extends TuleapTestCase {
+class Git_Backend_Gitolite_disconnectFromGerrit extends TuleapTestCase
+{
 
     private $repo_id = 123;
 

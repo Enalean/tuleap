@@ -23,7 +23,8 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
 use DataAccessObject;
 
-class NatureDao extends DataAccessObject {
+class NatureDao extends DataAccessObject
+{
 
     public function create($shortname, $forward_label, $reverse_label)
     {

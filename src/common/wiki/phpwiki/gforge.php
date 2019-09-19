@@ -20,9 +20,8 @@
 
 require_once __DIR__ . '/../../../www/include/pre.php';
 if (!$group_id || !$project) {
-    exit_error("Invalid Project","Invalid Project");
+    exit_error("Invalid Project", "Invalid Project");
 } else {
-
     define('VIRTUAL_PATH', $_SERVER['SCRIPT_NAME'] . '/' . $project->getUnixName());
     define('PATH_INFO_PREFIX', '/' . $project->getUnixName() . '/');
 
@@ -43,7 +42,7 @@ if (!$group_id || !$project) {
     // Load the default configuration.
     include "index.php";
 
-    error_log ("PATH_INFO_PREFIX " . PATH_INFO_PREFIX);
+    error_log("PATH_INFO_PREFIX " . PATH_INFO_PREFIX);
 
     // Override the default configuration for VARIABLES after index.php:
     // E.g. Use another DB:
@@ -54,17 +53,14 @@ if (!$group_id || !$project) {
     $DBParams['prefix'] = $project->getUnixName() ."_";
 
     // If the user is logged in, let the Wiki know
-    if (session_loggedin()){
+    if (session_loggedin()) {
             // let php do it's session stuff too!
             //ini_set('session.save_handler', 'files');
             session_start();
             $_SESSION['user_id'] = user_getname();
-
     } else {
             // clear out the globals, just in case...
-
     }
     // Start the wiki
     include "lib/main.php";
 }
-?>

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MailRegisterByAdminNotificationPresenter extends MailNotificationPresenter {
+class MailRegisterByAdminNotificationPresenter extends MailNotificationPresenter
+{
 
     public $section_two;
     public $login;
@@ -44,4 +45,3 @@ class MailRegisterByAdminNotificationPresenter extends MailNotificationPresenter
         $this->section_after_login  = $section_after_login;
     }
 }
-?>

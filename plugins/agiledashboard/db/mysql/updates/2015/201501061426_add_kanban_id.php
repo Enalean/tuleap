@@ -22,7 +22,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201501061426_add_kanban_id extends ForgeUpgrade_Bucket {
+class b201501061426_add_kanban_id extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

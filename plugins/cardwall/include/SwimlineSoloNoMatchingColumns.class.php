@@ -21,7 +21,8 @@
 /**
  * A swimline in the dashboard
  */
-class Cardwall_SwimlineSoloNoMatchingColumns extends Cardwall_Swimline {
+class Cardwall_SwimlineSoloNoMatchingColumns extends Cardwall_Swimline
+{
 
     /**
      * @var Tracker_Artifact
@@ -55,4 +56,3 @@ class Cardwall_SwimlineSoloNoMatchingColumns extends Cardwall_Swimline {
         return $GLOBALS['Language']->getText('plugin_cardwall', 'cells_not_displayed', array($backlog_item_name, $tracker_name, $uri));
     }
 }
-?>

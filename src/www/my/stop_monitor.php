@@ -48,14 +48,12 @@ if (user_isloggedin()) {
             // Not yet monitored so add it
             $forum_monitor_error = !forum_add_monitor($forum_id, $user_id);
         }
-
     } else {
-        forum_header(array('title'=>$Language->getText('forum_monitor','choose_forum_first')));
+        forum_header(array('title'=>$Language->getText('forum_monitor', 'choose_forum_first')));
         echo '
-			<H1>'.$Language->getText('forum_forum','choose_forum_first').'</H1>';
+			<H1>'.$Language->getText('forum_forum', 'choose_forum_first').'</H1>';
         forum_footer(array());
     }
-
 } else {
     exit_not_logged_in();
 }

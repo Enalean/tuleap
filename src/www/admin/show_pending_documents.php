@@ -41,7 +41,7 @@ if ($request->valid($vFunc)) {
 // Check if group_id is valid
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
-if($request->valid($vGroupId)) {
+if ($request->valid($vGroupId)) {
     $group_id = $request->get('group_id');
 } else {
     exit_no_group();
@@ -115,14 +115,14 @@ $renderer->header($GLOBALS['Language']->getText('admin_groupedit', 'title'), fal
     </nav>
     <main role="main" class="tlp-framed">
     <?php
-        $project = $pm->getProject($group_id,false,true);
-        echo '<div class="tlp-alert-info">'.$GLOBALS['Language']->getText('admin_show_pending_documents','delay_info', array($GLOBALS['sys_file_deletion_delay'])).'</div>';
-        echo '<div class="tlp-alert-info"><p>'.$GLOBALS['Language']->getText('admin_show_pending_documents','note_intro').'<br />';
-        echo $GLOBALS['Language']->getText('admin_show_pending_documents','note_intro_system').' <a href="/admin/system_events/">system event</a> ';
-        echo $GLOBALS['Language']->getText('admin_show_pending_documents','note_intro_system_end') . '</p>';
-        echo '<p>'.$GLOBALS['Language']->getText('admin_show_pending_documents','note_intro_restaure').'</p></div>';
+        $project = $pm->getProject($group_id, false, true);
+        echo '<div class="tlp-alert-info">'.$GLOBALS['Language']->getText('admin_show_pending_documents', 'delay_info', array($GLOBALS['sys_file_deletion_delay'])).'</div>';
+        echo '<div class="tlp-alert-info"><p>'.$GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro').'<br />';
+        echo $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro_system').' <a href="/admin/system_events/">system event</a> ';
+        echo $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro_system_end') . '</p>';
+        echo '<p>'.$GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro_restaure').'</p></div>';
 
-    foreach($params['html'] as $html) {
+    foreach ($params['html'] as $html) {
         echo $html;
     }
     ?>
@@ -168,19 +168,20 @@ function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, &$i
             $html .= '<tr>';
             $html .= '<td>' . $purifier->purify($file['filename']) . '</td>';
             $url = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode(
-                    $file['package_id']
-                ) . 'r_' . urlencode($file['release_id']);
+                $file['package_id']
+            ) . 'r_' . urlencode($file['release_id']);
             $html .= '<td><a href="' . $url . '">' . $purifier->purify($file['release_name']) . '</a></td>';
             $url = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode($file['package_id']);
             $html .= '<td><a href="' . $url . '">' . $purifier->purify(
-                    html_entity_decode($file['package_name'])
-                ) . '</a></td>';
+                html_entity_decode($file['package_name'])
+            ) . '</a></td>';
             $html .= '<td>' . html_time_ago($file['delete_date']) . '</td>';
             $html .= '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate) . '</td>';
             $html .= '<td class="tlp-table-cell-actions">';
             $html .= '<form method="post" onsubmit="return confirm(\'' . $GLOBALS['Language']->getText(
-                            'admin_show_pending_documents', 'frs_confirm_message'
-                        ) . '\')">';
+                'admin_show_pending_documents',
+                'frs_confirm_message'
+            ) . '\')">';
             $html .= $csrf_token->fetchHTMLInput();
             $html .= '<input type="hidden" name="func" value="confirm_restore_frs_file">';
             $html .= '<input type="hidden" name="id" value="' . $purifier->purify($file['file_id']) . '">';
@@ -216,8 +217,8 @@ function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, &$i
             $html .= '<tr>';
             $html .= '<td>' . $purifier->purify($file['filename']) . '</td>';
             $url = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode(
-                    $file['package_id']
-                ) . 'r_' . urlencode($file['release_id']);
+                $file['package_id']
+            ) . 'r_' . urlencode($file['release_id']);
             $html .= '<td><a href="' . $url . '">' . $purifier->purify($file['release_name']) . '</a></td>';
             $url = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode($file['package_id']);
             $html .= '<td><a href="' . $url . '">' . $purifier->purify($file['package_name']) . '</a></td>';
@@ -225,12 +226,14 @@ function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, &$i
                 && $file['package_status'] != FRSPackage::STATUS_DELETED
             ) {
                 $html .= '<td>' . $GLOBALS['Language']->getText(
-                        'admin_show_pending_documents', 'frs_restore_info'
-                    ) . '</td>';
+                    'admin_show_pending_documents',
+                    'frs_restore_info'
+                ) . '</td>';
             } else {
                 $html .= '<td>' . $GLOBALS['Language']->getText(
-                        'admin_show_pending_documents', 'frs_restore_file_info'
-                    ) . '</td>';
+                    'admin_show_pending_documents',
+                    'frs_restore_file_info'
+                ) . '</td>';
             }
             $html .= '</tr>';
         }
@@ -255,8 +258,8 @@ function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, &$i
             $html .= '<tr>';
             $html .= '<td>' . $purifier->purify($file['filename']) . '</td>';
             $url = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode(
-                    $file['package_id']
-                ) . 'r_' . urlencode($file['release_id']);
+                $file['package_id']
+            ) . 'r_' . urlencode($file['release_id']);
             $html .= '<td><a href="' . $url . '">' . $purifier->purify($file['release_name']) . '</a></td>';
             $url = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode($file['package_id']);
             $html .= '<td><a href="' . $url . '">' . $purifier->purify($file['package_name']) . '</a></td>';

@@ -48,14 +48,14 @@ class StatisticsPlugin extends Plugin
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->addHook('cssfile',                  'cssFile',                false);
-        $this->addHook('site_admin_option_hook',   'site_admin_option_hook', false);
+        $this->addHook('cssfile', 'cssFile', false);
+        $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
         $this->addHook(RootDailyStartEvent::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
-        $this->addHook('usergroup_data',           'usergroup_data',         false);
-        $this->addHook('groupedit_data',           'groupedit_data',         false);
-        $this->addHook(Event::WSDL_DOC2SOAP_TYPES, 'wsdl_doc2soap_types',    false);
+        $this->addHook('usergroup_data', 'usergroup_data', false);
+        $this->addHook('groupedit_data', 'groupedit_data', false);
+        $this->addHook(Event::WSDL_DOC2SOAP_TYPES, 'wsdl_doc2soap_types', false);
 
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
@@ -80,7 +80,7 @@ class StatisticsPlugin extends Plugin
     /** @see Event::GET_SYSTEM_EVENT_CLASS */
     public function get_system_event_class($params)
     {
-        switch($params['type']) {
+        switch ($params['type']) {
             case SystemEvent_STATISTICS_DAILY::NAME:
                 $queue = new SystemEventQueueStatistics();
                 $params['class'] = 'SystemEvent_STATISTICS_DAILY';

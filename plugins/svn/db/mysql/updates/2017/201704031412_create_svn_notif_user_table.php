@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201704031412_create_svn_notif_user_table extends ForgeUpgrade_Bucket {
+class b201704031412_create_svn_notif_user_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

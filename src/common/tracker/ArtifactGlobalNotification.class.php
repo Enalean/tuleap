@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-class ArtifactGlobalNotification {
+class ArtifactGlobalNotification
+{
 
     var $data;
 
@@ -49,4 +50,3 @@ class ArtifactGlobalNotification {
         return $this->data['check_permissions'];
     }
 }
-?>

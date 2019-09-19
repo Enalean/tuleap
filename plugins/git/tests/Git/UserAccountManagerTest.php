@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-class Git_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
+class Git_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase
+{
     private $user;
     private $gerrit_driver_factory;
     private $remote_gerrit_factory;
@@ -80,7 +81,8 @@ class Git_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
     }
 }
 
-class Git_UserAccountManager_PushSSHKeysTest extends TuleapTestCase {
+class Git_UserAccountManager_PushSSHKeysTest extends TuleapTestCase
+{
     /** @var PFUser */
     private $user;
     private $gerrit_driver_factory;

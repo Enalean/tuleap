@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_CardDisplayPreferences implements Tracker_CardDisplayPreferences {
+class Planning_CardDisplayPreferences implements Tracker_CardDisplayPreferences
+{
 
     public function shouldDisplayAvatars()
     {
@@ -28,4 +29,3 @@ class Planning_CardDisplayPreferences implements Tracker_CardDisplayPreferences 
         return true;
     }
 }
-?>

@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class MilestoneReportCriterionDao extends DataAccessObject {
+class MilestoneReportCriterionDao extends DataAccessObject
+{
 
     public function save($report_id, $milestone_id)
     {
@@ -53,5 +54,3 @@ class MilestoneReportCriterionDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 }
-
-?>

@@ -24,7 +24,8 @@ if ($argc != 2) {
     echo "Usage: tv3_to_json.php artifact_id\n";
 }
 
-class ArtifactDebug {
+class ArtifactDebug
+{
     // Hardcoded value for tests
     public const TRACKER_ID = 1;
 
@@ -132,7 +133,8 @@ class ArtifactDebug {
 }
 
 
-class ArtifactXMLDebugExporterDao extends DataAccessObject {
+class ArtifactXMLDebugExporterDao extends DataAccessObject
+{
 
     public function searchArtifact($artifact_id)
     {

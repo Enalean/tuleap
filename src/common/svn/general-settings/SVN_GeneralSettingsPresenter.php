@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class SVN_GeneralSettingsPresenter {
+class SVN_GeneralSettingsPresenter
+{
 
     /** @var Project */
     private $project;
@@ -51,27 +52,27 @@ class SVN_GeneralSettingsPresenter {
 
     public function title()
     {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings','gen_settings');
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'gen_settings');
     }
 
     public function tracking_title()
     {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings','tracking');
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'tracking');
     }
 
     public function tracking_comment()
     {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings','tracking_comment',$GLOBALS['sys_name']);
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'tracking_comment', $GLOBALS['sys_name']);
     }
 
     public function on()
     {
-        return $GLOBALS['Language']->getText('global','on');
+        return $GLOBALS['Language']->getText('global', 'on');
     }
 
     public function off()
     {
-        return $GLOBALS['Language']->getText('global','off');
+        return $GLOBALS['Language']->getText('global', 'off');
     }
 
     public function mandatory_ref_title()
@@ -97,14 +98,15 @@ class SVN_GeneralSettingsPresenter {
     public function preamble_title()
     {
         return $GLOBALS['Language']->getText(
-            'svn_admin_general_settings','preamble',
+            'svn_admin_general_settings',
+            'preamble',
             array('/svn/?func=info&group_id='.$this->project->getID(), $GLOBALS['sys_name'])
         );
     }
 
     public function btn_submit()
     {
-        return $GLOBALS['Language']->getText('global','btn_submit');
+        return $GLOBALS['Language']->getText('global', 'btn_submit');
     }
 
     public function project_id()

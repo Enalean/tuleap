@@ -21,7 +21,8 @@
 /**
  * This interface defines compatiblity layer between FusionForge and Tuleap
  */
-interface PFO_User {
+interface PFO_User
+{
 
     /**
      * User login on underlying unix system
@@ -37,5 +38,3 @@ interface PFO_User {
      */
     public function getGroups();
 }
-
-?>

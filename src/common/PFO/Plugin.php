@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface PFO_Plugin {
+interface PFO_Plugin
+{
 
     /**
      * Listen to an event and associate a callback
@@ -30,7 +31,4 @@ interface PFO_Plugin {
      * @return void
      */
     public function addHook($hook, $callback = null, $recallHook = false);
-
 }
-
-?>

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201102081526_add_table_plugin_git_post_receive_mail extends ForgeUpgrade_Bucket {
+class b201102081526_add_table_plugin_git_post_receive_mail extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -48,7 +49,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_git_post_receive_mail table is missing');
         }
     }
-
 }
-
-?>

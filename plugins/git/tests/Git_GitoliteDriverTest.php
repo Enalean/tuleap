@@ -20,7 +20,8 @@
  */
 require_once 'Git_GitoliteTestCase.class.php';
 
-class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
+class Git_GitoliteDriverTest extends Git_GitoliteTestCase
+{
 
     /** @var Git_Gitolite_GitoliteRCReader */
     private $gitoliterc_reader;
@@ -223,7 +224,8 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
     }
 }
 
-class Git_GitoliteDriver_ForkTest extends Git_GitoliteTestCase {
+class Git_GitoliteDriver_ForkTest extends Git_GitoliteTestCase
+{
 
     protected function _getFileGroupName($filePath)
     {
@@ -239,7 +241,6 @@ class Git_GitoliteDriver_ForkTest extends Git_GitoliteTestCase {
         $this->assertTrue(file_exists($namespaceInfoFile), 'the file (' . $namespaceInfoFile . ') does not exists');
         $this->assertEqual(file_get_contents($namespaceInfoFile), $namespace);
         $this->assertEqual($group, $this->_getFileGroupName($namespaceInfoFile));
-
     }
 
     protected function assertWritableByGroup($new_root_dir, $group)

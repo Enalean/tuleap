@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class ArtifactAlphaNumFieldXMLExporter extends ArtifactFieldXMLExporter {
+abstract class ArtifactAlphaNumFieldXMLExporter extends ArtifactFieldXMLExporter
+{
 
     protected function appendStringNode(DOMElement $changeset_node, $type, array $row)
     {

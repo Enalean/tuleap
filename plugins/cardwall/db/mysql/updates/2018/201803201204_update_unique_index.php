@@ -37,17 +37,14 @@ class b201803201204_update_unique_index extends ForgeUpgrade_Bucket
                 (cardwall_tracker_id, tracker_id, field_id, value_id)";
         $res = $this->db->primaryKeyExists('plugin_cardwall_on_top_column_mapping_field_value');
 
-        if ($res === true)
-        {
+        if ($res === true) {
             $this->db->dbh->exec($sql);
         }
-
     }
 
     public function postUp()
     {
-        if (! $this->db->tableNameExists('plugin_cardwall_on_top_column_mapping_field_value'))
-        {
+        if (! $this->db->tableNameExists('plugin_cardwall_on_top_column_mapping_field_value')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_cardwall_on_top_column_mapping_field_value is missing');
         }
     }

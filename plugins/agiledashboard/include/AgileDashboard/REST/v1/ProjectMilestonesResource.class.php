@@ -56,7 +56,8 @@ use Tuleap\AgileDashboard\REST\QueryToPeriodMilestoneRepresentationBuilderConver
 /**
  * Wrapper for milestone related REST methods
  */
-class ProjectMilestonesResource {
+class ProjectMilestonesResource
+{
     public const MAX_LIMIT = 50;
 
     /** @var Tracker_FormElementFactory */
@@ -170,8 +171,7 @@ class ProjectMilestonesResource {
 
         try {
             $builder = $this->query_to_milestone_representation_builder_converter->convert($query);
-        } catch (MalformedQueryParameterException $exception)
-        {
+        } catch (MalformedQueryParameterException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
         $this->sendAllowHeaders();

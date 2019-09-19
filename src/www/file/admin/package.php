@@ -32,7 +32,7 @@ $project_manager = ProjectManager::instance();
 
 $valid_group_id = new Valid_GroupId();
 $valid_group_id->required();
-if(! $request->valid($valid_group_id)) {
+if (! $request->valid($valid_group_id)) {
     exit_no_group();
 }
 

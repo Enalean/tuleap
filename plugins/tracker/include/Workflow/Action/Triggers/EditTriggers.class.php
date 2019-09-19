@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Action_Triggers {
+class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Action_Triggers
+{
 
     private $template_renderer;
     private $token;

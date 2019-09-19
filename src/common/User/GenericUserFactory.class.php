@@ -19,7 +19,8 @@
  */
 
 
-class GenericUserFactory {
+class GenericUserFactory
+{
     public const CONFIG_KEY_SUFFIX = 'sys_generic_user_suffix';
 
     /**
@@ -62,7 +63,7 @@ class GenericUserFactory {
      */
     public function fetch($group_id)
     {
-        if ($row = $this->dao->fetch($group_id)->getRow()){
+        if ($row = $this->dao->fetch($group_id)->getRow()) {
             $pfuser = $this->user_manager->getUserById($row['user_id']);
 
             $generic_user = $this->generateGenericUser($group_id, $pfuser);
@@ -105,4 +106,3 @@ class GenericUserFactory {
         return new GenericUser($project, $user, ForgeConfig::get(self::CONFIG_KEY_SUFFIX));
     }
 }
-?>

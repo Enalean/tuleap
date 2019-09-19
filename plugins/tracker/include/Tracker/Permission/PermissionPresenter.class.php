@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Permission_PermissionPresenter {
+class Tracker_Permission_PermissionPresenter
+{
     private $tracker;
     private $ugroup_permissions;
 

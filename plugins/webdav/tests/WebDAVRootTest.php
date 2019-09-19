@@ -27,13 +27,14 @@ Mock::generate('WebDAVProject');
 Mock::generatePartial(
     'WebDAVRoot',
     'WebDAVRootTestVersion',
-array('getWebDAVProject', 'getUser', 'getProjectIdByName', 'getPublicProjectList', 'getUserProjectList', 'isWebDAVAllowedForProject')
+    array('getWebDAVProject', 'getUser', 'getProjectIdByName', 'getPublicProjectList', 'getUserProjectList', 'isWebDAVAllowedForProject')
 );
 
 /**
  * This is the unit test of WebDAVRoot
  */
-class WebDAVRootTest extends TuleapTestCase {
+class WebDAVRootTest extends TuleapTestCase
+{
 
     /**
      * Testing when There is no public projects
@@ -47,7 +48,6 @@ class WebDAVRootTest extends TuleapTestCase {
         $webDAVRoot->setReturnValue('getUser', $user);
         $webDAVRoot->setReturnValue('getPublicProjectList', array());
         $this->assertEqual($webDAVRoot->getChildren(), array());
-
     }
 
     /**
@@ -66,7 +66,6 @@ class WebDAVRootTest extends TuleapTestCase {
         $webDAVRoot->setReturnValue('getWebDAVProject', $webDAVProject);
         $webDAVRoot->setReturnValue('isWebDAVAllowedForProject', false);
         $this->assertEqual($webDAVRoot->getChildren(), array());
-
     }
 
     /**
@@ -86,7 +85,6 @@ class WebDAVRootTest extends TuleapTestCase {
         $webDAVRoot->setReturnValue('getPublicProjectList', array($webDAVProject));
 
         $this->assertEqual($webDAVRoot->getChildren(), array($webDAVProject));
-
     }
 
     /**
@@ -102,7 +100,6 @@ class WebDAVRootTest extends TuleapTestCase {
         $webDAVRoot->setReturnValue('getUser', $user);
         $webDAVRoot->setReturnValue('getUserProjectList', null);
         $this->assertEqual($webDAVRoot->getChildren(), array());
-
     }
 
     /**
@@ -122,7 +119,6 @@ class WebDAVRootTest extends TuleapTestCase {
         $webDAVRoot->setReturnValue('isWebDAVAllowedForProject', false);
 
         $this->assertEqual($webDAVRoot->getChildren(), array());
-
     }
 
     /**
@@ -142,7 +138,6 @@ class WebDAVRootTest extends TuleapTestCase {
         $webDAVRoot->setReturnValue('getUserProjectList', array($webDAVProject));
 
         $this->assertEqual($webDAVRoot->getChildren(), array($webDAVProject));
-
     }
 
     /**
@@ -158,7 +153,6 @@ class WebDAVRootTest extends TuleapTestCase {
 
         $project = new MockWebDAVProject();
         $webDAVRoot->getChild($project->getName());
-
     }
 
     /**
@@ -178,7 +172,6 @@ class WebDAVRootTest extends TuleapTestCase {
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
 
         $webDAVRoot->getChild($project->getName());
-
     }
 
     /**
@@ -199,7 +192,6 @@ class WebDAVRootTest extends TuleapTestCase {
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVRoot->getChild($project->getName());
-
     }
 
     /**
@@ -221,7 +213,6 @@ class WebDAVRootTest extends TuleapTestCase {
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVRoot->getChild($project->getName());
-
     }
 
     /**
@@ -245,6 +236,5 @@ class WebDAVRootTest extends TuleapTestCase {
         $webDAVRoot->setReturnValue('getWebDAVProject', $project);
 
         $this->assertEqual($webDAVRoot->getChild($project->getName()), $project);
-
     }
 }

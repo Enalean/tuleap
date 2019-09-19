@@ -21,7 +21,8 @@
 /**
  * I run git gc on gitolite admin working copy
  */
-class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc {
+class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc
+{
 
     /** @var Git_GitoliteHousekeeping_GitoliteHousekeepingDao */
     private $dao;

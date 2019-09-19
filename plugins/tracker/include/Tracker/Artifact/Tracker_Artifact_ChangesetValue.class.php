@@ -96,9 +96,9 @@ abstract class Tracker_Artifact_ChangesetValue
      *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public abstract function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false);
+    abstract public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false);
 
-    public abstract function nodiff($format = 'html');
+    abstract public function nodiff($format = 'html');
 
     /**
      * Returns a mail format diff between current changeset value and changeset value in param
@@ -137,7 +137,7 @@ abstract class Tracker_Artifact_ChangesetValue
      *
      * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
      */
-    public abstract function getRESTValue(PFUser $user);
+    abstract public function getRESTValue(PFUser $user);
 
     /**
      * Return the full REST value of this changeset value
@@ -146,12 +146,12 @@ abstract class Tracker_Artifact_ChangesetValue
      *
      * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
      */
-    public abstract function getFullRESTValue(PFUser $user);
+    abstract public function getFullRESTValue(PFUser $user);
 
     /**
      * @return mixed
      */
-    public abstract function accept(Tracker_Artifact_ChangesetValueVisitor $visitor);
+    abstract public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor);
 
     /**
      * Returns the Json value of this changeset value
@@ -168,7 +168,7 @@ abstract class Tracker_Artifact_ChangesetValue
      *
      * @return mixed The value of this artifact changeset value
      */
-    public abstract function getValue();
+    abstract public function getValue();
 
     /**
      * @return Tracker_Artifact_Changeset

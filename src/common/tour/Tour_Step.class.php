@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tuleap_Tour_Step {
+class Tuleap_Tour_Step
+{
 
     /**
      * @var string
@@ -69,5 +70,4 @@ class Tuleap_Tour_Step {
     {
         $this->backdrop = $backdrop;
     }
-
 }

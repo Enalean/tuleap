@@ -24,7 +24,8 @@
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-class Git_Mirror_ManifestManagerTest extends TuleapTestCase {
+class Git_Mirror_ManifestManagerTest extends TuleapTestCase
+{
 
     private $manifest_directory;
     /** @var Git_Mirror_ManifestManager */

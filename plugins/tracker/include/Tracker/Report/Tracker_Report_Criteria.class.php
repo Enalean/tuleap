@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Report_Criteria {
+class Tracker_Report_Criteria
+{
 
     public $id;
     public $report;

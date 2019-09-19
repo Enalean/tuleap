@@ -24,7 +24,8 @@
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-class Git_Hook_ParseLogTest extends TuleapTestCase {
+class Git_Hook_ParseLogTest extends TuleapTestCase
+{
 
     private $extract_cross_ref;
     private $log_pushes;
@@ -75,7 +76,8 @@ class Git_Hook_ParseLogTest extends TuleapTestCase {
     }
 }
 
-class Git_Hook_ParseLog_CountPushesTest extends TuleapTestCase {
+class Git_Hook_ParseLog_CountPushesTest extends TuleapTestCase
+{
 
     private $extract_cross_ref;
     private $log_pushes;
@@ -98,5 +100,4 @@ class Git_Hook_ParseLog_CountPushesTest extends TuleapTestCase {
         expect($this->log_pushes)->executeForRepository($push_details)->once();
         $this->parse_log->execute($push_details);
     }
-
 }

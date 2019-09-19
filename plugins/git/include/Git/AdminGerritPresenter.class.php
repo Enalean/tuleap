@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_AdminGerritPresenter extends Git_AdminPresenter {
+class Git_AdminGerritPresenter extends Git_AdminPresenter
+{
     public $manage_gerrit = true;
 
     public $gerrit_active = 'tlp-tab-active';
@@ -114,7 +115,7 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
         $this->no             = dgettext('tuleap-git', 'No');
         $this->basic          = dgettext('tuleap-git', 'Basic');
         $this->digest         = dgettext('tuleap-git', 'Digest');
-        $this->btn_restrict   = $GLOBALS['Language']->getText('global','btn_restrict');
+        $this->btn_restrict   = $GLOBALS['Language']->getText('global', 'btn_restrict');
     }
 
     public function list_of_servers_is_empty()

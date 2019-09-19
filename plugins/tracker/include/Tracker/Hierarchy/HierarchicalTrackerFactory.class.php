@@ -20,7 +20,8 @@
 
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
-class Tracker_Hierarchy_HierarchicalTrackerFactory {
+class Tracker_Hierarchy_HierarchicalTrackerFactory
+{
 
     public function __construct(TrackerFactory $tracker_factory, HierarchyDAO $dao)
     {
@@ -81,7 +82,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
         $children_ids = $this->dao->getChildren($tracker->getId());
         $children     = [];
 
-        foreach($children_ids as $child_id) {
+        foreach ($children_ids as $child_id) {
             $children[] = $this->tracker_factory->getTrackerById($child_id);
         }
 
@@ -134,7 +135,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
     {
         $children_ids = $children_map[$parent_node->getId()];
 
-        foreach($children_ids as $child_id) {
+        foreach ($children_ids as $child_id) {
             $tracker = $project_trackers[$child_id];
             $node    = $this->makeNodeFor($tracker, $current_tracker);
 
@@ -147,7 +148,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
     {
         $children  = array();
         $hierarchy_map = array();
-        foreach($hierarchy_rows as $relationship) {
+        foreach ($hierarchy_rows as $relationship) {
             $parent_id = $relationship['parent_id'];
             $child_id  = $relationship['child_id'];
             $children[]= $child_id;
@@ -165,7 +166,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
         $hierarchy_map['root'] = array_values(array_diff(array_keys($hierarchy_map), $children));
 
         $unhierarchized_root_tracker_ids = array_diff(array_keys($project_trackers), array_keys($hierarchy_map));
-        foreach($unhierarchized_root_tracker_ids as $tracker_id) {
+        foreach ($unhierarchized_root_tracker_ids as $tracker_id) {
             $hierarchy_map[$tracker_id] = array();
             $hierarchy_map['root'][]    = $tracker_id;
         }
@@ -177,7 +178,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
     {
         $current_class = '';
 
-        if($tracker->getId() == $current_tracker->getId()) {
+        if ($tracker->getId() == $current_tracker->getId()) {
             $current_class = 'tracker-hierarchy-current';
         }
 
@@ -191,7 +192,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
 
     public function getRootTrackerId($hierarchy_dar, $current_tracker_id)
     {
-        foreach($hierarchy_dar as $child) {
+        foreach ($hierarchy_dar as $child) {
             if ($child['child_id'] == $current_tracker_id) {
                 return $this->getRootTrackerId($hierarchy_dar, $child['parent_id']);
             }
@@ -199,5 +200,3 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
         return $current_tracker_id;
     }
 }
-
-?>

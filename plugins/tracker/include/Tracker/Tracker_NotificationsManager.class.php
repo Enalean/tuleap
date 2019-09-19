@@ -34,7 +34,8 @@ use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
 
-class Tracker_NotificationsManager {
+class Tracker_NotificationsManager
+{
 
     /** @var Tracker */
     protected $tracker;
@@ -153,9 +154,9 @@ class Tracker_NotificationsManager {
 
         if ($remove_global) {
             $this->deleteGlobalNotification($remove_global);
-        } else if ($new_global_notification && $new_global_notification['addresses']) {
+        } elseif ($new_global_notification && $new_global_notification['addresses']) {
             $this->createNewGlobalNotification($new_global_notification);
-        } else if ($global_notification && $notification_id) {
+        } elseif ($global_notification && $notification_id) {
             $this->updateGlobalNotification($notification_id, $global_notification[$notification_id]);
         }
 
@@ -313,7 +314,7 @@ class Tracker_NotificationsManager {
 
     private function displayAdminNotifications_Global()
     {
-        echo '<h3><a name="GlobalEmailNotification"></a>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','global_mail_notif').' '.
+        echo '<h3><a name="GlobalEmailNotification"></a>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'global_mail_notif').' '.
         help_button('tracker.html#e-mail-notification').'</h3>';
 
         $notifs   = $this->getGlobalNotifications();
@@ -350,7 +351,7 @@ class Tracker_NotificationsManager {
     public function getGlobalNotifications()
     {
         $notifs = array();
-        foreach($this->getGlobalDao()->searchByTrackerId($this->tracker->id) as $row) {
+        foreach ($this->getGlobalDao()->searchByTrackerId($this->tracker->id) as $row) {
             $notifs[$row['id']] = new Tracker_GlobalNotification(
                 $row['id'],
                 $this->tracker->id,
@@ -458,9 +459,9 @@ class Tracker_NotificationsManager {
     {
         $addresses = array();
         $notifs = $this->getGlobalNotifications();
-        foreach($notifs as $key => $nop) {
+        foreach ($notifs as $key => $nop) {
             if (!$update || $notifs[$key]->isAllUpdates()) {
-                foreach(preg_split('/[,;]/', $notifs[$key]->getAddresses()) as $address) {
+                foreach (preg_split('/[,;]/', $notifs[$key]->getAddresses()) as $address) {
                     $addresses[] = array('address' => $address, 'check_permissions' => $notifs[$key]->isCheckPermissions());
                 }
             }
@@ -478,7 +479,7 @@ class Tracker_NotificationsManager {
         $dao               = $this->getGlobalDao();
         $addresses_builder = $this->getGlobalNotificationsAddressesBuilder();
 
-        foreach($dao->searchByTrackerId($tracker_id) as $row) {
+        foreach ($dao->searchByTrackerId($tracker_id) as $row) {
             $notification_id   = $row['id'];
             $addresses         = $row['addresses'];
             $updated_addresses = $addresses_builder->removeAddressFromString($addresses, $user);
@@ -490,7 +491,7 @@ class Tracker_NotificationsManager {
                 if ($users_to_notify_exist->count() === 0 && $ugroups_to_notify_exist->count() === 0) {
                     $dao->delete($notification_id, $tracker_id);
                 }
-            } else if ($addresses !== $updated_addresses) {
+            } elseif ($addresses !== $updated_addresses) {
                 $dao->updateAddressById($notification_id, $updated_addresses);
             }
         }
@@ -514,7 +515,7 @@ class Tracker_NotificationsManager {
     public static function isMailingList($email_address)
     {
         $r = preg_match_all('/\S+\@lists\.\S+/', $subject, $matches);
-        if ( !empty($r)  ) {
+        if (!empty($r)) {
             return true;
         }
         return false;

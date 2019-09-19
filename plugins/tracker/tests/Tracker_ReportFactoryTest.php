@@ -20,13 +20,16 @@
  */
 
 require_once('bootstrap.php');
-Mock::generatePartial('Tracker_ReportFactory',
-                      'Tracker_ReportFactoryTestVersion',
-                      array('getCriteriaFactory', 'getRendererFactory'));
+Mock::generatePartial(
+    'Tracker_ReportFactory',
+    'Tracker_ReportFactoryTestVersion',
+    array('getCriteriaFactory', 'getRendererFactory')
+);
 Mock::generate('Tracker_Report_CriteriaFactory');
 Mock::generate('Tracker_Report_RendererFactory');
 
-class Tracker_ReportFactoryTest extends TuleapTestCase {
+class Tracker_ReportFactoryTest extends TuleapTestCase
+{
 
     /** @var XML_Security */
     protected $xml_security;

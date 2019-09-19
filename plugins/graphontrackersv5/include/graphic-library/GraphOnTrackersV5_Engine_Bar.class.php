@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
+class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
+{
 
     var $title;
     var $description;
@@ -47,7 +48,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
 
         $right_margin = 50;
 
-        $this->graph = new Chart($this->width,$this->height);
+        $this->graph = new Chart($this->width, $this->height);
         $this->graph->SetScale("textlint");
         $this->graph->title->Set($this->title);
         if (is_null($this->description)) {
@@ -58,7 +59,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
         // x axis formating
         $this->graph->xaxis->SetTickSide(SIDE_DOWN);
 
-        $this->graph->xaxis->title->setMargin(60,20,20,20);
+        $this->graph->xaxis->title->setMargin(60, 20, 20, 20);
 
         if (!is_null($this->xaxis)) {
             ksort($this->xaxis);
@@ -75,15 +76,15 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
             }
         } else {
             $this->keys = array();
-            foreach($this->data as $group => $data) {
-                foreach($data as $key => $nb) {
+            foreach ($this->data as $group => $data) {
+                foreach ($data as $key => $nb) {
                     $this->keys[$key] = 1;
                 }
             }
             $this->keys = array_keys($this->keys);
             sort($this->keys);
-            foreach($this->data as $group => $data) {
-                foreach($this->keys as $key) {
+            foreach ($this->data as $group => $data) {
+                foreach ($this->keys as $key) {
                     if (!isset($data[$key])) {
                         $this->data[$group][$key] = 0;
                     }
@@ -92,7 +93,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
             }
             $l = 0;
             $b = [];
-            foreach($this->data as $base => $group) {
+            foreach ($this->data as $base => $group) {
                 $b[$l] = $this->getBarPlot(array_values($group), $colors[$base]);
                 $b[$l]->SetLegend($this->legend[$base]);
                 $l++;
@@ -101,7 +102,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
             $this->graph->add($gbplot);
             $right_margin = 150;
         }
-        $this->graph->SetMargin(50,$right_margin,$this->graph->getTopMargin() + 40,100);
+        $this->graph->SetMargin(50, $right_margin, $this->graph->getTopMargin() + 40, 100);
         return $this->graph;
     }
     function sort($a, $b)
@@ -128,10 +129,9 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
         $b->value->SetFont($this->graph->getFont(), FS_NORMAL, 7);
 
         $b->SetWidth(0.4);
-        if(is_array($color)) {
+        if (is_array($color)) {
             $b->SetColor('#FFFFFF:0.7');
-        }
-        else {
+        } else {
             $b->SetColor($color.':0.7');
         }
         $b->SetFillColor($color);

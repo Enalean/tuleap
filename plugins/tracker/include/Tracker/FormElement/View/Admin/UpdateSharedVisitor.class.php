@@ -21,7 +21,8 @@
 /**
  * Visit a target shared FormElement and provides an update view
  */
-class Tracker_FormElement_View_Admin_UpdateSharedVisitor extends Tracker_FormElement_View_Admin_UpdateVisitor {
+class Tracker_FormElement_View_Admin_UpdateSharedVisitor extends Tracker_FormElement_View_Admin_UpdateVisitor
+{
 
     /**
      * Return html corresponding to FormElement update
@@ -46,5 +47,3 @@ class Tracker_FormElement_View_Admin_UpdateSharedVisitor extends Tracker_FormEle
         return $html;
     }
 }
-
-?>

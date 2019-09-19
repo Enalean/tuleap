@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class GenericUserFactoryTest extends TuleapTestCase {
+class GenericUserFactoryTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -71,4 +72,3 @@ class GenericUserFactoryTest extends TuleapTestCase {
         $this->assertEqual(substr($generic_user->getUnixName(), -strlen($suffix)), $suffix);
     }
 }
-?>

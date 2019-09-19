@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201506301700_convert_possible_old_text_format_tracker extends ForgeUpgrade_Bucket {
+class b201506301700_convert_possible_old_text_format_tracker extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -51,5 +52,4 @@ class b201506301700_convert_possible_old_text_format_tracker extends ForgeUpgrad
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while converting data in the tracker_field table');
         }
     }
-
 }

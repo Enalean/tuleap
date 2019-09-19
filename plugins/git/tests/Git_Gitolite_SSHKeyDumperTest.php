@@ -20,7 +20,8 @@
  */
 require_once 'Git_GitoliteTestCase.class.php';
 
-class Git_Gitolite_SshKeyTestCase extends Git_GitoliteTestCase {
+class Git_Gitolite_SshKeyTestCase extends Git_GitoliteTestCase
+{
     protected $key1;
     protected $key2;
 
@@ -33,7 +34,8 @@ class Git_Gitolite_SshKeyTestCase extends Git_GitoliteTestCase {
     }
 }
 
-class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase {
+class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase
+{
 
     public function testAddUserKey()
     {

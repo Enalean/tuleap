@@ -67,7 +67,8 @@
  * user preferences. In that case, it is up to the service to handle
  * the save.
  */
-class Toggler {
+class Toggler
+{
 
     /**
      *
@@ -150,4 +151,3 @@ class Toggler {
         $current_user->setPreference('toggle_'. $id, 1 - (int)$current_user->getPreference('toggle_'. $id));
     }
 }
-?>

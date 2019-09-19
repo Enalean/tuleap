@@ -23,7 +23,8 @@
  *
  */
 
-class PluginViews {
+class PluginViews
+{
 
     protected $request;
 
@@ -51,19 +52,17 @@ class PluginViews {
         return $this->controller->getData();
     }
 
-    public function display($name, $params=array())
+    public function display($name, $params = array())
     {
-        if ( empty($name) ) {
+        if (empty($name)) {
             return false;
         }
         call_user_func_array(array($this,$name), $params);
     }
 
-    public static function linkTo($link, $href, $options='' )
+    public static function linkTo($link, $href, $options = '')
     {
         $linkTo = '<a href="'.$href.'" '.$options.' >'.$link.'</a>';
         return $linkTo;
     }
-
 }
-?>

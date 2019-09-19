@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_Action_CreateArtifact_ProtectedToPublic extends Tracker_Action_CreateArtifact {
+class Tracker_Action_CreateArtifact_ProtectedToPublic extends Tracker_Action_CreateArtifact
+{
 
     public function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect, Codendi_Request $request)
     {
@@ -33,7 +34,8 @@ class Tracker_Action_CreateArtifact_ProtectedToPublic extends Tracker_Action_Cre
     }
 }
 
-abstract class Tracker_Action_CreateArtifactTest extends TuleapTestCase {
+abstract class Tracker_Action_CreateArtifactTest extends TuleapTestCase
+{
     protected $tracker;
     protected $artifact_factory;
     protected $tracker_factory;
@@ -70,7 +72,8 @@ abstract class Tracker_Action_CreateArtifactTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Action_CreateArtifact_RedirectUrlTest extends Tracker_Action_CreateArtifactTest {
+class Tracker_Action_CreateArtifact_RedirectUrlTest extends Tracker_Action_CreateArtifactTest
+{
     public function itRedirectsToTheTrackerHomePageByDefault()
     {
         $request_data = array();
@@ -114,7 +117,8 @@ class Tracker_Action_CreateArtifact_RedirectUrlTest extends Tracker_Action_Creat
     }
 }
 
-class Tracker_Action_CreateArtifact_RedirectToParentCreationTest extends Tracker_Action_CreateArtifactTest {
+class Tracker_Action_CreateArtifact_RedirectToParentCreationTest extends Tracker_Action_CreateArtifactTest
+{
     private $tracker_id;
     private $current_user;
     private $new_artifact;

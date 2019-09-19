@@ -24,24 +24,24 @@
  */
 
 if (!defined("LC_ALL")) {
-    define("LC_ALL",   0);
+    define("LC_ALL", 0);
     define("LC_CTYPE", 2);
 }
 // debug flags:
-define ('_DEBUG_VERBOSE',   1); // verbose msgs and add validator links on footer
-define ('_DEBUG_PAGELINKS', 2); // list the extraced pagelinks at the top of each pages
-define ('_DEBUG_PARSER',    4); // verbose parsing steps
-define ('_DEBUG_TRACE',     8); // test php memory usage, prints php debug backtraces
-define ('_DEBUG_INFO',     16);
-define ('_DEBUG_APD',      32);
-define ('_DEBUG_LOGIN',    64); // verbose login debug-msg (settings and reason for failure)
-define ('_DEBUG_SQL',     128);
+define('_DEBUG_VERBOSE', 1); // verbose msgs and add validator links on footer
+define('_DEBUG_PAGELINKS', 2); // list the extraced pagelinks at the top of each pages
+define('_DEBUG_PARSER', 4); // verbose parsing steps
+define('_DEBUG_TRACE', 8); // test php memory usage, prints php debug backtraces
+define('_DEBUG_INFO', 16);
+define('_DEBUG_APD', 32);
+define('_DEBUG_LOGIN', 64); // verbose login debug-msg (settings and reason for failure)
+define('_DEBUG_SQL', 128);
 
 function isCGI()
 {
-    return (substr(php_sapi_name(),0,3) == 'cgi' and
+    return (substr(php_sapi_name(), 0, 3) == 'cgi' and
             isset($_ENV['GATEWAY_INTERFACE']) and
-            @preg_match('/CGI/',$_ENV['GATEWAY_INTERFACE']));
+            @preg_match('/CGI/', $_ENV['GATEWAY_INTERFACE']));
 }
 
 /**
@@ -58,13 +58,18 @@ function isCGI()
 function browserAgent()
 {
     static $HTTP_USER_AGENT = false;
-    if ($HTTP_USER_AGENT !== false) return $HTTP_USER_AGENT;
-    if (!$HTTP_USER_AGENT)
+    if ($HTTP_USER_AGENT !== false) {
+        return $HTTP_USER_AGENT;
+    }
+    if (!$HTTP_USER_AGENT) {
         $HTTP_USER_AGENT = @$_SERVER['HTTP_USER_AGENT'];
-    if (!$HTTP_USER_AGENT) // CGI
+    }
+    if (!$HTTP_USER_AGENT) { // CGI
         $HTTP_USER_AGENT = @$_ENV['HTTP_USER_AGENT'];
-    if (!$HTTP_USER_AGENT) // local CGI testing
+    }
+    if (!$HTTP_USER_AGENT) { // local CGI testing
         $HTTP_USER_AGENT = 'none';
+    }
     return $HTTP_USER_AGENT;
 }
 function browserDetect($match)
@@ -74,12 +79,13 @@ function browserDetect($match)
 // returns a similar number for Netscape/Mozilla (gecko=5.0)/IE/Opera features.
 function browserVersion()
 {
-    if (strstr(browserAgent(),    "Mozilla/4.0 (compatible; MSIE"))
-        return (float) substr(browserAgent(),30);
-    elseif (strstr(browserAgent(),"Mozilla/5.0 (compatible; Konqueror/"))
-        return (float) substr(browserAgent(),36);
-    else
-        return (float) substr(browserAgent(),8);
+    if (strstr(browserAgent(), "Mozilla/4.0 (compatible; MSIE")) {
+        return (float) substr(browserAgent(), 30);
+    } elseif (strstr(browserAgent(), "Mozilla/5.0 (compatible; Konqueror/")) {
+        return (float) substr(browserAgent(), 36);
+    } else {
+        return (float) substr(browserAgent(), 8);
+    }
 }
 function isBrowserIE()
 {
@@ -91,14 +97,18 @@ function isBrowserIE()
 // http://sourceforge.net/tracker/index.php?func=detail&aid=945154&group_id=6121&atid=106121
 function isBrowserKonqueror($version = false)
 {
-    if ($version) return browserDetect('Konqueror/') and browserVersion() >= $version;
+    if ($version) {
+        return browserDetect('Konqueror/') and browserVersion() >= $version;
+    }
     return browserDetect('Konqueror/');
 }
 // MacOSX Safari has certain limitations. Need detection and patches.
 // * no <object>, only <embed>
 function isBrowserSafari($version = false)
 {
-    if ($version) return browserDetect('Safari/') and browserVersion() >= $version;
+    if ($version) {
+        return browserDetect('Safari/') and browserVersion() >= $version;
+    }
     return browserDetect('Safari/');
 }
 
@@ -111,7 +121,7 @@ function isBrowserSafari($version = false)
  * We should really check additionally if the i18n HomePage version is defined.
  * So must defer this to the request loop.
  */
-function guessing_lang($languages=false)
+function guessing_lang($languages = false)
 {
     if (!$languages) {
         // make this faster
@@ -135,10 +145,11 @@ function guessing_lang($languages=false)
         */
     }
 
-    if (isset($GLOBALS['request'])) // in fixup-dynamic-config there's no request yet
+    if (isset($GLOBALS['request'])) { // in fixup-dynamic-config there's no request yet
         $accept = $GLOBALS['request']->get('HTTP_ACCEPT_LANGUAGE');
-    elseif (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+    } elseif (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
         $accept = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    }
 
     if ($accept) {
         $lang_list = array();
@@ -150,9 +161,9 @@ function guessing_lang($languages=false)
                 $lang_list[$list[$i]] = 100;
             } else {
                 // Has a Q rating
-                $q = explode(";",$list[$i]) ;
+                $q = explode(";", $list[$i]) ;
                 $loc = $q[0] ;
-                $q = explode("=",$q[1]) ;
+                $q = explode("=", $q[1]) ;
                 $lang_list[$loc] = $q[1]*100 ;
             }
         }
@@ -162,19 +173,22 @@ function guessing_lang($languages=false)
 
         // compare with languages, ignoring sublang and charset
         foreach ($lang_list as $lang => $q) {
-            if (in_array($lang, $languages))
+            if (in_array($lang, $languages)) {
                 return $lang;
+            }
             // de_DE.iso8859-1@euro => de_DE.iso8859-1, de_DE, de
             // de-DE => de-DE, de
             foreach (array('@', '.', '_') as $sep) {
-                if ( ($tail = strchr($lang, $sep)) ) {
+                if (($tail = strchr($lang, $sep))) {
                     $lang_short = substr($lang, 0, -strlen($tail));
-                    if (in_array($lang_short, $languages))
+                    if (in_array($lang_short, $languages)) {
                         return $lang_short;
+                    }
                 }
             }
-            if ($pos = strchr($lang, "-") and in_array(substr($lang, 0, $pos), $languages))
+            if ($pos = strchr($lang, "-") and in_array(substr($lang, 0, $pos), $languages)) {
                 return substr($lang, 0, $pos);
+            }
         }
     }
     return $languages[0];
@@ -212,8 +226,11 @@ function guessing_setlocale($category, $locale)
         // do the reverse: return the detected locale collapsed to our LANG
         $locale = setlocale($category, '');
         if ($locale) {
-            if (strstr($locale, '_')) list ($lang) = preg_split('/_/D', $locale);
-            else $lang = $locale;
+            if (strstr($locale, '_')) {
+                list ($lang) = preg_split('/_/D', $locale);
+            } else {
+                $lang = $locale;
+            }
             if (strlen($lang) > 2) {
                 foreach ($alt as $try => $locs) {
                     if (in_array($locale, $locs) or in_array($lang, $locs)) {
@@ -224,23 +241,28 @@ function guessing_setlocale($category, $locale)
             }
         }
     }
-    if (strlen($locale) == 2)
+    if (strlen($locale) == 2) {
         $lang = $locale;
-    else
+    } else {
         list ($lang) = preg_split('/_/D', $locale);
-    if (!isset($alt[$lang]))
+    }
+    if (!isset($alt[$lang])) {
         return false;
+    }
 
     foreach ($alt[$lang] as $try) {
-        if ($res = setlocale($category, $try. '.' . $GLOBALS['charset']))
+        if ($res = setlocale($category, $try. '.' . $GLOBALS['charset'])) {
             return $res;
-        if ($res = setlocale($category, $try))
+        }
+        if ($res = setlocale($category, $try)) {
             return $res;
+        }
         foreach (array(".", '@', '_') as $sep) {
             if ($i = strpos($try, $sep)) {
                 $try = substr($try, 0, $i);
-                if (($res = setlocale($category, $try)))
+                if (($res = setlocale($category, $try))) {
                     return $res;
+                }
             }
         }
     }
@@ -262,7 +284,9 @@ function update_locale($loc)
         $setlocale = FileFinder::_get_lang();
         list ($setlocale,) = preg_split('/_/D', $setlocale, 2);
         $setlocale = guessing_setlocale(LC_ALL, $setlocale); // try again
-        if (!$setlocale) $setlocale = $loc;
+        if (!$setlocale) {
+            $setlocale = $loc;
+        }
     }
     // If PHP is in safe mode, this is not allowed,
     // so hide errors...
@@ -304,8 +328,9 @@ function deduce_script_name()
     if (empty($script) or $script[0] != '/') {
         // Some places (e.g. Lycos) only supply a relative name in
         // SCRIPT_NAME, but give what we really want in SCRIPT_URL.
-        if (!empty($s['SCRIPT_URL']))
+        if (!empty($s['SCRIPT_URL'])) {
             $script = $s['SCRIPT_URL'];
+        }
     }
     return $script;
 }
@@ -320,7 +345,7 @@ function IsProbablyRedirectToIndex()
     // $SCRIPT_NAME, since pages appear at
     // e.g. /dir/index.php/HomePage.
 
-    $requri = preg_replace('/\?.*$/','',$_SERVER['REQUEST_URI']);
+    $requri = preg_replace('/\?.*$/', '', $_SERVER['REQUEST_URI']);
     $requri = preg_quote($requri, '%');
     return preg_match("%^${requri}[^/]*$%", $_SERVER['SCRIPT_NAME']);
 }
@@ -331,7 +356,7 @@ function IsProbablyRedirectToIndex()
  * http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2002-1396
  * Improved version of wordwrap2() in the comments at http://www.php.net/wordwrap
  */
-function safe_wordwrap($str, $width=80, $break="\n", $cut=false)
+function safe_wordwrap($str, $width = 80, $break = "\n", $cut = false)
 {
     return wordwrap($str, $width, $break, $cut);
 }
@@ -344,7 +369,7 @@ function getUploadFilePath()
 }
 function getUploadDataPath()
 {
-    return SERVER_URL . ((substr(DATA_PATH,0,1)=='/') ? '' : "/") . DATA_PATH . '/uploads/'.GROUP_ID.'/';
+    return SERVER_URL . ((substr(DATA_PATH, 0, 1)=='/') ? '' : "/") . DATA_PATH . '/uploads/'.GROUP_ID.'/';
 }
 
 // $Log: config.php,v $
@@ -528,4 +553,3 @@ function getUploadDataPath()
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

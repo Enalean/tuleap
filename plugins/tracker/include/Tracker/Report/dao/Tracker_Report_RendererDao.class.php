@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Report_RendererDao extends DataAccessObject {
+class Tracker_Report_RendererDao extends DataAccessObject
+{
     function __construct()
     {
         parent::__construct();
@@ -123,7 +124,7 @@ class Tracker_Report_RendererDao extends DataAccessObject {
     {
         $report_id = $this->da->escapeInt($report_id);
         $case = array();
-        foreach($renderers_order as $rank => $id) {
+        foreach ($renderers_order as $rank => $id) {
             $rank = $this->da->escapeInt($rank);
             $id   = $this->da->escapeInt($id);
 
@@ -138,4 +139,3 @@ class Tracker_Report_RendererDao extends DataAccessObject {
         }
     }
 }
-?>

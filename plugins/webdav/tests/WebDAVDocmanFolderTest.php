@@ -30,7 +30,7 @@ Mock::generate('Docman_PermissionsManager');
 Mock::generatePartial(
     'WebDAVDocmanFolder',
     'WebDAVDocmanFolderTestVersion',
-array('getDocmanItemFactory',
+    array('getDocmanItemFactory',
       'getDocmanPermissionsManager',
       'cloneItemPermissions',
       'deleteDirectoryContent',
@@ -44,18 +44,19 @@ array('getDocmanItemFactory',
 Mock::generatePartial(
     'WebDAVDocmanFolder',
     'WebDAVDocmanFolderTestVersion2',
-array('getChildList')
+    array('getChildList')
 );
 Mock::generatePartial(
     'WebDAVDocmanFolder',
     'WebDAVDocmanFolderTestVersion3',
-array('getItem', 'getDocmanItemFactory', 'getDocmanPermissionsManager', 'getWebDAVDocmanFolder', 'getUtils')
+    array('getItem', 'getDocmanItemFactory', 'getDocmanPermissionsManager', 'getWebDAVDocmanFolder', 'getUtils')
 );
 
 /**
  * This is the unit test of WebDAVDocmanFolder
  */
-class WebDAVDocmanFolderTest extends TuleapTestCase {
+class WebDAVDocmanFolderTest extends TuleapTestCase
+{
 
     /**
      * Testing when the folder have no childrens

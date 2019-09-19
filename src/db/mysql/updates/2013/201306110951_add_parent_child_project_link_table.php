@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201306110951_add_parent_child_project_link_table extends ForgeUpgrade_Bucket {
+class b201306110951_add_parent_child_project_link_table extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return <<<EOT
@@ -50,5 +51,3 @@ EOT;
         }
     }
 }
-
-?>

@@ -5,5 +5,3 @@
 
 require_once __DIR__ . '/../include/pre.php';
 include($Language->getContent('project/tos'));
-
-?>

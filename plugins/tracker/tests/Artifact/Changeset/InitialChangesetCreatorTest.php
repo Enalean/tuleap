@@ -22,7 +22,8 @@ use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest extends TuleapTestCase {
+class Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest extends TuleapTestCase
+{
     protected $changeset_dao;
 
     /** @var Tracker_Artifact_Changeset_InitialChangesetCreator */
@@ -78,7 +79,8 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest extends Tuleap
     }
 }
 
-class Tracker_Artifact_Changeset_InitialChangesetCreator_WorkflowTest extends Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest {
+class Tracker_Artifact_Changeset_InitialChangesetCreator_WorkflowTest extends Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest
+{
 
     public function itCallsTheAfterMethodOnWorkflowWhenCreateInitialChangeset()
     {
@@ -130,7 +132,8 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_WorkflowTest extends Tr
     }
 }
 
-class Tracker_Artifact_Changeset_InitialChangesetCreator_DefaultValueTest extends Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest {
+class Tracker_Artifact_Changeset_InitialChangesetCreator_DefaultValueTest extends Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest
+{
 
     private $field;
 

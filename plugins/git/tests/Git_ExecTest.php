@@ -21,7 +21,8 @@
 
 require_once 'bootstrap.php';
 
-class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase {
+class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase
+{
     private $fixture_dir;
     private $git_exec;
     private $symlink_repo;
@@ -121,7 +122,8 @@ class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase {
     }
 }
 
-class Git_Exec_ObjectExists extends TuleapTestCase {
+class Git_Exec_ObjectExists extends TuleapTestCase
+{
     private $fixture_dir;
     private $git_exec;
     private $symlink_repo;

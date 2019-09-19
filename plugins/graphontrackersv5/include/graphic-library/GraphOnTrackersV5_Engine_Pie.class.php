@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
+class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine
+{
 
     var $title;
     var $field_base;
@@ -33,12 +34,12 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
 
     public function validData()
     {
-        if ((is_array($this->data)) && (array_sum($this->data) > 0)){
+        if ((is_array($this->data)) && (array_sum($this->data) > 0)) {
             return true;
         } else {
             $GLOBALS['Response']->addFeedback(
                 'error',
-                $GLOBALS['Language']->getText('plugin_graphontrackersv5_engine','no_datas',array($this->title))
+                $GLOBALS['Language']->getText('plugin_graphontrackersv5_engine', 'no_datas', array($this->title))
             );
 
             return false;
@@ -50,7 +51,7 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
      */
     function buildGraph()
     {
-        $this->graph = new Chart_Pie($this->width,$this->height);
+        $this->graph = new Chart_Pie($this->width, $this->height);
 
         // title setup
         $this->graph->title->Set($this->title);
@@ -67,7 +68,7 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
 
             $p->setSliceColors($colors);
 
-            $p->SetCenter(0.4,0.6);
+            $p->SetCenter(0.4, 0.6);
             $p->SetLegends($this->legend);
 
             $p->value->HideZero();
@@ -92,4 +93,3 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
         );
     }
 }
-?>

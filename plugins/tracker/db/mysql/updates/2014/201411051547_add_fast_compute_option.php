@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201411051547_add_fast_compute_option extends ForgeUpgrade_Bucket {
+class b201411051547_add_fast_compute_option extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

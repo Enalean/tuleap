@@ -25,7 +25,8 @@
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
 
-class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSectionActions {
+class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSectionActions
+{
 
     var $force;
     var $token;
@@ -45,7 +46,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         $html = '';
 
         $atf = Docman_ApprovalTableFactoriesFactory::getFromItem($this->item);
-        if($atf->tableExistsForItem()) {
+        if ($atf->tableExistsForItem()) {
             $html .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update_apptable') .'</dt><dd>';
             $html .= '<dd>';
             $html .= Docman_View_ItemDetailsSectionApprovalCreate::displayImportLastTable(false);
@@ -59,7 +60,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
     {
         $content = '';
         $dPm = Docman_PermissionsManager::instance($this->item->getGroupId());
-        if($dPm->getLockFactory()->itemIsLocked($this->item)) {
+        if ($dPm->getLockFactory()->itemIsLocked($this->item)) {
             $content .= '<tr style="vertical-align:top;">';
             $content .= '<td><label>'.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_update_lock').'</label></td>';
             $content .= '<td><input type="checkbox" name="lock_document" value="lock" /></td>';
@@ -121,7 +122,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_changelog') .'</td><td><textarea name="version[changelog]" rows="7" cols="80" data-test="docman_changelog">'.$changelog.'</textarea></td></tr>';
         $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force, 'request' => $this->_controller->request));
         if ($fields !== null) {
-            foreach($fields as $field) {
+            foreach ($fields as $field) {
                 $content .= '<tr style="vertical-align:top;">';
                 $content .= '<td><label>'. $field->getLabel().'</label></td>';
                 $content .= '<td>'. $field->getField() .'</td></tr>';

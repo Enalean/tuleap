@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Tracker_Artifact_MailGateway_CitationStripperTest extends TuleapTestCase {
+class Tracker_Artifact_MailGateway_CitationStripperTest extends TuleapTestCase
+{
 
     private $fixtures_dir;
     /** @var Tracker_Artifact_MailGateway_CitationStripper */

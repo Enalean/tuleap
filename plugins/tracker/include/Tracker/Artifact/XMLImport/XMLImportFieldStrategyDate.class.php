@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate extends Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric {
+class Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate extends Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric
+{
 
     /**
      * Extract Field data from XML input

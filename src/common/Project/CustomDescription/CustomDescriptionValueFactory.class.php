@@ -24,7 +24,8 @@ require_once 'CustomDescriptionDao.class.php';
 /**
  * Factory to instanciate Project_CustomDescription_CustomDescription value
  */
-class Project_CustomDescription_CustomDescriptionValueFactory {
+class Project_CustomDescription_CustomDescriptionValueFactory
+{
 
     /** @var Project_CustomDescription_CustomDescriptionValueDao */
     private $dao;
@@ -49,4 +50,3 @@ class Project_CustomDescription_CustomDescriptionValueFactory {
         return $description_fields_values;
     }
 }
-?>

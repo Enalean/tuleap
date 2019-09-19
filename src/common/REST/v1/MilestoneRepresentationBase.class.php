@@ -22,7 +22,8 @@ namespace Tuleap\REST\v1;
 /**
  * Representation of a milestone
  */
-class MilestoneRepresentationBase {
+class MilestoneRepresentationBase
+{
 
     public const ROUTE      = 'milestones';
     public const ALL_FIELDS = 'all';

@@ -25,7 +25,7 @@ require_once __DIR__ . '/../../src/www/include/pre.php';
 
 $option = isset($argv[1]) ? $argv[1] : '';
 
-switch($option) {
+switch ($option) {
     case "dump":
         $attachments = get_all_attachment_ids();
         dump_attachments($attachments);

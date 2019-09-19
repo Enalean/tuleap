@@ -21,7 +21,8 @@
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_List implements Tracker_FormElement_Field_ReadOnly {
+class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_List implements Tracker_FormElement_Field_ReadOnly
+{
 
     public $default_properties = array();
 
@@ -50,11 +51,12 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
             $a = 'A_'. $this->id;
             $b = 'B_'. $this->id;
             $ids_to_search = array_intersect(
-                               array_values($criteria_value),
-                               array_merge(array(100),array_keys($this->getBind()->getAllValues())));
+                array_values($criteria_value),
+                array_merge(array(100), array_keys($this->getBind()->getAllValues()))
+            );
             if (count($ids_to_search) > 1) {
                 return " artifact.submitted_by IN(". $this->getCriteriaDao()->getDa()->escapeIntImplode($ids_to_search) .") ";
-            } else if (count($ids_to_search)) {
+            } elseif (count($ids_to_search)) {
                 return " artifact.submitted_by = ". $this->getCriteriaDao()->getDa()->escapeInt($ids_to_search[0]) ." ";
             }
         }
@@ -269,7 +271,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
 
         $value = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getSubmittedBy());
 
-        switch($format) {
+        switch ($format) {
             case 'html':
                 $output .= $this->fetchArtifactValueReadOnly($artifact);
                 break;
@@ -314,7 +316,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
             $is_valid = false;
             $this->setHasErrors(true);
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
-        } else if ($submitted_value !== null &&  ! $this->userCanUpdate()) {
+        } elseif ($submitted_value !== null &&  ! $this->userCanUpdate()) {
             $is_valid = true;
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', array($this->getName())));
         }
@@ -348,7 +350,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @return string
      */
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
     {
         return $this->getBind()->formatChangesetValue(new Tracker_FormElement_Field_List_Bind_UsersValue($value));
     }

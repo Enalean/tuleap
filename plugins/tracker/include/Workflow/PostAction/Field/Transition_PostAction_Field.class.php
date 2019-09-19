@@ -21,7 +21,8 @@
 /**
  * Base class for field post actions.
  */
-abstract class Transition_PostAction_Field extends Transition_PostAction {
+abstract class Transition_PostAction_Field extends Transition_PostAction
+{
 
     /**
      * @var Tracker_FormElement_Field The field the post action should modify
@@ -123,4 +124,3 @@ abstract class Transition_PostAction_Field extends Transition_PostAction {
         return Tracker_FormElementFactory::instance();
     }
 }
-?>

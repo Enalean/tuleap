@@ -151,7 +151,7 @@ if ($project && !$project->isError()) {
 
     $title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period_'.$period, array($statDuration));
     //Display tooltip for start and end date.
-    echo '<h2><span class="plugin_statistics_period" title="'.$GLOBALS['Language']->getText('plugin_statistics_admin_page','disk_usage_period', array($startDate, $endDate)).'">'.$title.'</span></h2>';
+    echo '<h2><span class="plugin_statistics_period" title="'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period', array($startDate, $endDate)).'">'.$title.'</span></h2>';
     echo '<div class="stat_help">'.dgettext('tuleap-statistics', "Differences may exist between actual size of a project/service and statistics which are computed daily").'</div>';
     echo '<p><a href="'.$link.'">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', $period, $statPeriod).'</a></p>';
     echo '<form name="progress_by_service" method="get" action="?">';
@@ -185,5 +185,3 @@ if ($project && !$project->isError()) {
 } else {
     $GLOBALS['Response']->redirect('/');
 }
-
-?>

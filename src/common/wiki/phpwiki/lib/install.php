@@ -32,8 +32,9 @@ function init_install()
     // prevent from recursion
     static $already = 0;
     // setup default settings
-    if (!$already)
+    if (!$already) {
         IniConfig(dirname(__FILE__)."/../config/config-dist.ini");
+    }
     $already = 1;
 }
 
@@ -91,4 +92,3 @@ init_install();
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

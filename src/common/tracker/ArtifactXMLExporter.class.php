@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactXMLExporter {
+class ArtifactXMLExporter
+{
 
     public const ARCHIVE_DATA_DIR = 'data';
 

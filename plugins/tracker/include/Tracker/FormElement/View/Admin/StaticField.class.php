@@ -18,7 +18,8 @@
  */
 
 
-class Tracker_FormElement_View_Admin_StaticField extends Tracker_FormElement_View_Admin {
+class Tracker_FormElement_View_Admin_StaticField extends Tracker_FormElement_View_Admin
+{
 
     /**
      * fetch permission link on admin form
@@ -30,5 +31,3 @@ class Tracker_FormElement_View_Admin_StaticField extends Tracker_FormElement_Vie
         return '';
     }
 }
-
-?>

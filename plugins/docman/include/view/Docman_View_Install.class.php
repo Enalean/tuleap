@@ -9,7 +9,8 @@
 
 require_once('Docman_View_ProjectHeader.class.php');
 
-class Docman_View_Install extends Docman_View_ProjectHeader {
+class Docman_View_Install extends Docman_View_ProjectHeader
+{
     /* protected */ function _content($params)
     {
         echo '<form action="'. $params['default_url'] .'" method="POST">';
@@ -20,5 +21,3 @@ class Docman_View_Install extends Docman_View_ProjectHeader {
         echo '</form>';
     }
 }
-
-?>

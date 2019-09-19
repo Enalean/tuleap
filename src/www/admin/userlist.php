@@ -54,19 +54,16 @@ function get_sort_values($previous_sort_header, $current_sort_header, $sort_orde
             if ($sort_order === "ASC") {
                 $sort_order_hash[$current_sort_header."_icon"] = "fa fa-caret-down";
                 $sort_order_hash["order"] = "DESC";
-            }
-            else {
+            } else {
                 $sort_order_hash[$current_sort_header."_icon"] = "fa fa-caret-up";
                 $sort_order_hash["order"] = "ASC";
             }
         }
-    }
-    else {
+    } else {
         if ($sort_order === "ASC") {
             $sort_order_hash[$current_sort_header."_icon"] = "fa fa-caret-down";
             $sort_order_hash["order"] = "DESC";
-        }
-        else {
+        } else {
             $sort_order_hash[$current_sort_header."_icon"] = "fa fa-caret-up";
             $sort_order_hash["order"] = "ASC";
         }
@@ -78,7 +75,7 @@ if ($request->exist('export')) {
     //Validate user_name_search
     $vUserNameSearch  = new Valid_String('user_name_search');
     $user_name_search = '';
-    if($request->valid($vUserNameSearch)) {
+    if ($request->valid($vUserNameSearch)) {
         if ($request->exist('user_name_search')) {
             $user_name_search = $request->get('user_name_search');
         }
@@ -87,16 +84,14 @@ if ($request->exist('export')) {
     $header_whitelist = array('user_name', 'realname', 'status');
     if (in_array($request->get('current_sort_header'), $header_whitelist)) {
         $current_sort_header=$request->get('current_sort_header');
-    }
-    else {
+    } else {
         $current_sort_header = 'user_name';
     }
     //Get current sort order
     $sort_order_whitelist = array('ASC','DESC');
     if (in_array($request->get('sort_order'), $sort_order_whitelist)) {
         $sort_order=$request->get('sort_order');
-    }
-    else {
+    } else {
         $sort_order = 'ASC';
     }
     //Get status values
@@ -112,7 +107,7 @@ if ($request->exist('export')) {
 
     $vGroupId = new Valid_GroupId();
     $group_id = 0;
-    if($request->valid($vGroupId)) {
+    if ($request->valid($vGroupId)) {
         if ($request->exist('group_id')) {
             $group_id = $request->get('group_id');
         }
@@ -126,14 +121,14 @@ if ($request->exist('export')) {
 
 $dao = new UserDao(CodendiDataAccess::instance());
 $offset = $request->getValidated('offset', 'uint', 0);
-if ( !$offset || $offset < 0 ) {
+if (!$offset || $offset < 0) {
     $offset = 0;
 }
 $limit = 25;
 
 $vUserNameSearch  = new Valid_String('user_name_search');
 $user_name_search = '';
-if($request->valid($vUserNameSearch)) {
+if ($request->valid($vUserNameSearch)) {
     if ($request->exist('user_name_search')) {
         $user_name_search = $request->get('user_name_search');
     }
@@ -142,29 +137,26 @@ if($request->valid($vUserNameSearch)) {
 $header_whitelist = array('user_name', 'realname', 'status');
 if (in_array($request->get('previous_sort_header'), $header_whitelist)) {
     $previous_sort_header=$request->get('previous_sort_header');
-}
-else {
+} else {
     $previous_sort_header = '';
 }
 if (in_array($request->get('current_sort_header'), $header_whitelist)) {
     $current_sort_header=$request->get('current_sort_header');
-}
-else {
+} else {
     $current_sort_header = 'user_name';
 }
 
 $sort_order_whitelist = array('ASC','DESC');
 if (in_array($request->get('sort_order'), $sort_order_whitelist)) {
     $sort_order=$request->get('sort_order');
-}
-else {
+} else {
     $sort_order = 'ASC';
 }
 
 // Check if group_id is valid
 $vGroupId = new Valid_GroupId();
 $group_id = false;
-if($request->valid($vGroupId)) {
+if ($request->valid($vGroupId)) {
     if ($request->exist('group_id')) {
         $group_id = $request->get('group_id');
     }
@@ -175,10 +167,10 @@ $status_values = array();
 $anySelect     = "selected";
 if ($request->exist('status_values')) {
     $status_values = $request->get('status_values');
-    if(! is_array($status_values)) {
+    if (! is_array($status_values)) {
         $status_values = explode(",", $status_values);
     }
-    if(in_array('ANY', $status_values)) {
+    if (in_array('ANY', $status_values)) {
         $status_values = array();
     } else {
         $anySelect = "";
@@ -189,8 +181,15 @@ if (! $group_id) {
     $group_id = 0;
 }
 if (isset($user_name_search) && $user_name_search) {
-    $result = $dao->listAllUsers($group_id, $user_name_search, $offset, $limit, $current_sort_header,
-        $sort_order, $status_values);
+    $result = $dao->listAllUsers(
+        $group_id,
+        $user_name_search,
+        $offset,
+        $limit,
+        $current_sort_header,
+        $sort_order,
+        $status_values
+    );
     if ($result['numrows'] == 1) {
         $row = $result['users']->getRow();
         $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id=' . $row['user_id']);

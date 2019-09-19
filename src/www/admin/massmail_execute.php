@@ -27,9 +27,10 @@ $csrf->check();
 
 $request = HTTPRequest::instance();
 if ($request->isPost() && $request->existAndNonEmpty('destination')) {
-
-    $validDestination = new Valid_WhiteList('destination',
-        array('preview', 'comm', 'sf', 'all', 'admin', 'sfadmin', 'devel'));
+    $validDestination = new Valid_WhiteList(
+        'destination',
+        array('preview', 'comm', 'sf', 'all', 'admin', 'sfadmin', 'devel')
+    );
     $destination      = $request->getValidated('destination', $validDestination);
 
     $validFormat = new Valid_WhiteList('comment_format', array('html', 'text'));

@@ -20,8 +20,8 @@
 
 namespace Tuleap\OpenIDConnectClient\AccountLinker;
 
-
-class RegisterPresenter {
+class RegisterPresenter
+{
 
     private $link_id;
 

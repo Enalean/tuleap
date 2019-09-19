@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class WikiServiceAdmin extends Controler {
+class WikiServiceAdmin extends Controler
+{
   /* private Wiki*/ var $wiki;
 
     function __construct($id)
@@ -33,17 +34,18 @@ class WikiServiceAdmin extends Controler {
 
         $this->gid = (int) $id;
 
-        if(empty($this->gid))
-        exit_no_group();
+        if (empty($this->gid)) {
+            exit_no_group();
+        }
 
-        if(! user_ismember($this->gid, 'W2') && ! user_ismember($this->gid, 'A')) {
+        if (! user_ismember($this->gid, 'W2') && ! user_ismember($this->gid, 'A')) {
             exit_permission_denied();
         }
 
         $this->wiki = new Wiki($this->gid);
 
       // If Wiki for project doesn't exist, propose creation...
-        if(!$this->wiki->exist()) {
+        if (!$this->wiki->exist()) {
             header('Location: /wiki/index.php?group_id='.$this->gid.'&view=install');
         }
 
@@ -52,7 +54,6 @@ class WikiServiceAdmin extends Controler {
             define('DEFAULT_LANGUAGE', $this->wiki->getLanguage_id());
             $LANG = $this->wiki->getLanguage_id();
         }
-
     }
 
     function request()
@@ -60,14 +61,12 @@ class WikiServiceAdmin extends Controler {
       // Default behaviour: display default view:
         $this->view = 'main';
 
-        if(!empty($_REQUEST['view']))
-        $this->view = $_REQUEST['view'];
+        if (!empty($_REQUEST['view'])) {
+            $this->view = $_REQUEST['view'];
+        }
 
-        if(!empty($_REQUEST['action'])) {
+        if (!empty($_REQUEST['action'])) {
             $this->action = $_REQUEST['action'];
         }
     }
-
 }
-
-?>

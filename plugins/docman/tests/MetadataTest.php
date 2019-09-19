@@ -25,7 +25,8 @@
 
 require_once 'bootstrap.php';
 
-class MetadataTest extends TuleapTestCase {
+class MetadataTest extends TuleapTestCase
+{
 
     function testCloneOneMetadata()
     {

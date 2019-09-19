@@ -27,7 +27,8 @@ require_once TRACKER_BASE_DIR .'/Workflow/PostAction/PostActionSubFactory.class.
 /**
  * Loads and saves CIBuild post actions
  */
-class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFactory {
+class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFactory
+{
 
     /**
      * @var Array of available post actions classes run after fields validation
@@ -60,7 +61,7 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     {
         $post_actions = array();
 
-        foreach($this->loadPostActionRows($transition) as $row) {
+        foreach ($this->loadPostActionRows($transition) as $row) {
             $post_actions[] = $this->buildPostAction($transition, $row);
         }
 

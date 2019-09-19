@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ForumDao extends DataAccessObject {
+class ForumDao extends DataAccessObject
+{
     public function __construct($da = null)
     {
         parent::__construct($da);

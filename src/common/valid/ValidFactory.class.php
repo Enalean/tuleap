@@ -24,8 +24,8 @@
 /**
  * Check that value is a decimal integer.
  */
-class Valid_Int
-extends Valid {
+class Valid_Int extends Valid
+{
     function validate($value)
     {
         $this->addRule(new Rule_Int());
@@ -36,7 +36,8 @@ extends Valid {
 /**
  * Check that value is a decimal integer greater or equal to zero.
  */
-class Valid_UInt extends Valid_Int {
+class Valid_UInt extends Valid_Int
+{
     function validate($value)
     {
         $this->addRule(new Rule_GreaterOrEqual(0));
@@ -47,7 +48,8 @@ class Valid_UInt extends Valid_Int {
 /**
  * Check that value is a numeric greater than 0.
  */
-class Valid_Numeric extends Valid {
+class Valid_Numeric extends Valid
+{
 
     function validate($value)
     {
@@ -59,8 +61,8 @@ class Valid_Numeric extends Valid {
 /**
  * Check that group_id variable is valid
  */
-class Valid_GroupId
-extends Valid {
+class Valid_GroupId extends Valid
+{
     function __construct()
     {
         parent::__construct('group_id');
@@ -78,8 +80,8 @@ extends Valid {
 /**
  * Check that 'pv' parameter is set to an acceptable value.
  */
-class Valid_Pv
-extends Valid {
+class Valid_Pv extends Valid
+{
     function __construct()
     {
         parent::__construct('pv');
@@ -95,8 +97,8 @@ extends Valid {
 /**
  * Check that value is a string (should always be true).
  */
-class Valid_Text
-extends Valid {
+class Valid_Text extends Valid
+{
     function validate($value)
     {
         $this->addRule(new Rule_String());
@@ -107,8 +109,8 @@ extends Valid {
 /**
  * Check that value is a string with neither carrige return nor null char.
  */
-class Valid_String
-extends Valid_Text {
+class Valid_String extends Valid_Text
+{
     function validate($value)
     {
         $this->addRule(new Rule_NoCr());
@@ -119,7 +121,8 @@ extends Valid_Text {
 /**
  * Check that value is a possible HTTP(S) URI
  */
-class Valid_HTTPURI extends Valid_String {
+class Valid_HTTPURI extends Valid_String
+{
     public function validate($value)
     {
         $this->addRule(new Rule_Regexp('/^(http:\/\/|https:\/\/)/i'));
@@ -130,7 +133,8 @@ class Valid_HTTPURI extends Valid_String {
 /**
  * Check that value is a possible HTTPS URI
  */
-class Valid_HTTPSURI extends Valid_String {
+class Valid_HTTPSURI extends Valid_String
+{
     public function validate($value)
     {
         $this->addRule(new Rule_Regexp('/^https:\/\//i'));
@@ -171,7 +175,8 @@ class Valid_FTPURI extends Valid_String
 /**
  * Check that value is a possible mail URI
  */
-class Valid_MailtoURI extends Valid_String {
+class Valid_MailtoURI extends Valid_String
+{
     public function validate($value)
     {
         $this->addRule(new Rule_Regexp('/^mailto:[^[:space:]].*/i'));
@@ -182,8 +187,8 @@ class Valid_MailtoURI extends Valid_String {
 /**
  * Check that value is an array.
  */
-class Valid_Array
-extends Valid {
+class Valid_Array extends Valid
+{
     function validate($value)
     {
         $this->addRule(new Rule_Array());
@@ -195,8 +200,8 @@ extends Valid {
 /**
  * Wrapper for 'WhiteList' rule
  */
-class Valid_WhiteList
-extends Valid {
+class Valid_WhiteList extends Valid
+{
     function __construct($key, $whitelist)
     {
         parent::__construct($key);
@@ -209,8 +214,8 @@ extends Valid {
  *
  * This rule doesn't check that user actually exists.
  */
-class Valid_UserNameFormat
-extends Valid_String {
+class Valid_UserNameFormat extends Valid_String
+{
     function validate($value)
     {
         $this->addRule(new Rule_String());
@@ -219,7 +224,8 @@ extends Valid_String {
     }
 }
 
-class Valid_GenericUserNameSuffix extends Valid_UserNameFormat {
+class Valid_GenericUserNameSuffix extends Valid_UserNameFormat
+{
     /**
      * Append a fake prefix to leverage on username format checking.
      *
@@ -240,7 +246,8 @@ class Valid_GenericUserNameSuffix extends Valid_UserNameFormat {
 /**
  * Check that value match user real name format.
  */
-class Valid_RealNameFormat extends Valid_String {
+class Valid_RealNameFormat extends Valid_String
+{
     public function validate($value)
     {
         $this->addRule(new Rule_String());
@@ -253,13 +260,13 @@ class Valid_RealNameFormat extends Valid_String {
 /**
  * Check that submitted value is a simple string and a valid email.
  */
-class Valid_Email
-extends Valid_String {
+class Valid_Email extends Valid_String
+{
     var $separator;
 
-    function __construct($key=null, $separator=null)
+    function __construct($key = null, $separator = null)
     {
-        if(is_string($separator)) {
+        if (is_string($separator)) {
             $this->separator = $separator;
         } else {
             $this->separator = null;
@@ -277,8 +284,8 @@ extends Valid_String {
 /**
  * Check uploaded file validity.
  */
-class Valid_File
-extends Valid {
+class Valid_File extends Valid
+{
 
     /**
      * Is uploaded file empty or not.
@@ -287,9 +294,9 @@ extends Valid {
      */
     function isEmptyValue($file)
     {
-        if(!is_array($file)) {
+        if (!is_array($file)) {
             return false;
-        } elseif(parent::isEmptyValue($file['name'])) {
+        } elseif (parent::isEmptyValue($file['name'])) {
             return false;
         } else {
             return true;
@@ -305,10 +312,10 @@ extends Valid {
      */
     function validate($files, $index = '')
     {
-        if(is_array($files) && isset($files[$index])) {
+        if (is_array($files) && isset($files[$index])) {
             $this->addRule(new Rule_File());
             return parent::validate($files[$index]);
-        } elseif($this->isRequired) {
+        } elseif ($this->isRequired) {
             return false;
         } else {
             return true;
@@ -317,7 +324,8 @@ extends Valid {
 }
 
 
-class ValidFactory {
+class ValidFactory
+{
     /**
      * If $validator is an instance of a Validator, do nothing and returns it
      * If $validator is a string and a validator exists (Valid_String for 'string', Valid_UInt for 'uint', ...) then creates an instance and returns it
@@ -327,7 +335,7 @@ class ValidFactory {
     {
         if (is_a($validator, 'Valid')) {
             return $validator;
-        } else if(is_string($validator) && class_exists('Valid_'.$validator)) {
+        } elseif (is_string($validator) && class_exists('Valid_'.$validator)) {
             $validator_classname = 'Valid_'.$validator;
             $v = new $validator_classname($key);
             return $v;
@@ -336,4 +344,3 @@ class ValidFactory {
         }
     }
 }
-?>

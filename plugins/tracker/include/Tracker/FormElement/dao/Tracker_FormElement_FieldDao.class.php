@@ -22,7 +22,8 @@
 /**
  *  Data Access Object for Tracker_FormElement_Field
  */
-class Tracker_FormElement_FieldDao extends DataAccessObject {
+class Tracker_FormElement_FieldDao extends DataAccessObject
+{
 
     function __construct()
     {
@@ -228,11 +229,13 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
     */
     function searchAssignedToFieldIdByArtifactTrackerId($TrackerId)
     {
-        $sql = sprintf(" SELECT field_id ".
+        $sql = sprintf(
+            " SELECT field_id ".
                        " FROM tracker_field ".
                        " WHERE group_artifact_id = %s ".
                        "   AND (field_name = 'assigned_to' OR field_name = 'multi_assigned_to') ",
-               $TrackerId);
+            $TrackerId
+        );
         return $this->retrieve($sql);
     }
 
@@ -297,7 +300,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $cases = '';
-        foreach($mapping as $map) {
+        foreach ($mapping as $map) {
             $cases .= ' WHEN '. $map['from'] .' THEN '. $map['to'] . PHP_EOL;
         }
         if ($cases) {
@@ -334,7 +337,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         return false;
     }
 
-    public function setType($field,$type)
+    public function setType($field, $type)
     {
         $sql = "UPDATE $this->table_name
                 SET formElement_type = ". $this->da->quoteSmart($type) ."

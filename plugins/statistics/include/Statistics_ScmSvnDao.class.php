@@ -20,7 +20,8 @@
 /**
  * DAO class for SVN statistics
  */
-class Statistics_ScmSvnDao extends DataAccessObject {
+class Statistics_ScmSvnDao extends DataAccessObject
+{
 
     var $groupFilter = '';
 
@@ -190,7 +191,4 @@ class Statistics_ScmSvnDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
-
 }
-
-?>

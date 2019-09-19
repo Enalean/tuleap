@@ -21,7 +21,8 @@
 Mock::generate('PFUser');
 Mock::generate('UserManager');
 
-class MailManagerTest extends TuleapTestCase {
+class MailManagerTest extends TuleapTestCase
+{
 
     public function setUp()
     {

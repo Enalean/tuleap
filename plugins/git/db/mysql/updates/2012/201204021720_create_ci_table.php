@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201204021720_create_ci_table extends ForgeUpgrade_Bucket {
+class b201204021720_create_ci_table extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -65,7 +66,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_git_ci table is missing');
         }
     }
-
 }
-
-?>

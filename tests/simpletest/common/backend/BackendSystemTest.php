@@ -38,7 +38,8 @@ Mock::generatePartial('BackendSystem', 'BackendTestVersion', array('getUserManag
                                                              ));
 
 
-class BackendSystemTest extends TuleapTestCase {
+class BackendSystemTest extends TuleapTestCase
+{
 
     function setUp()
     {
@@ -86,15 +87,14 @@ class BackendSystemTest extends TuleapTestCase {
 
         $backend = new BackendTestVersion();
 
-        $this->assertEqual($backend->createUserHome($user),True);
-        $this->assertTrue(is_dir(ForgeConfig::get('homedir_prefix')."/codendiadm"),"Home dir should be created");
+        $this->assertEqual($backend->createUserHome($user), true);
+        $this->assertTrue(is_dir(ForgeConfig::get('homedir_prefix')."/codendiadm"), "Home dir should be created");
 
-        $this->assertTrue(is_file(ForgeConfig::get('homedir_prefix')."/codendiadm/.profile"),"User files from /etc/codendi_skel should be created");
+        $this->assertTrue(is_file(ForgeConfig::get('homedir_prefix')."/codendiadm/.profile"), "User files from /etc/codendi_skel should be created");
 
         // Cleanup
         $backend->recurseDeleteInDir(ForgeConfig::get('homedir_prefix')."/codendiadm");
         rmdir(ForgeConfig::get('homedir_prefix')."/codendiadm");
-
     }
 
     function testCreateProjectHome()
@@ -102,7 +102,7 @@ class BackendSystemTest extends TuleapTestCase {
 
         $project = new MockProject($this);
         $project->setReturnValue('getUnixNameMixedCase', 'TestPrj');
-        $project->setReturnValue('getUnixName', 'testprj',array(true));
+        $project->setReturnValue('getUnixName', 'testprj', array(true));
 
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
@@ -114,13 +114,13 @@ class BackendSystemTest extends TuleapTestCase {
         $ftpdir = ForgeConfig::get('ftp_anon_dir_prefix')."/TestPrj";
         $frsdir = $GLOBALS['ftp_frs_dir_prefix']."/TestPrj";
 
-        $this->assertEqual($backend->createProjectHome(142),True);
-        $this->assertTrue(is_dir($projdir),"Project Home should be created");
-        $this->assertTrue(is_dir($ftpdir),"Ftp dir should be created");
-        $this->assertTrue(is_dir($frsdir),"Frs dir should be created");
+        $this->assertEqual($backend->createProjectHome(142), true);
+        $this->assertTrue(is_dir($projdir), "Project Home should be created");
+        $this->assertTrue(is_dir($ftpdir), "Ftp dir should be created");
+        $this->assertTrue(is_dir($frsdir), "Frs dir should be created");
 
         // Check that a wrong project id does not raise an error
-        $this->assertEqual($backend->createProjectHome(99999),False);
+        $this->assertEqual($backend->createProjectHome(99999), false);
 
         // Cleanup
         $backend->recurseDeleteInDir($projdir);
@@ -142,7 +142,7 @@ class BackendSystemTest extends TuleapTestCase {
         $backend = new BackendTestVersion();
 
         $backend->createUserHome($user);
-        $this->assertTrue(is_dir(ForgeConfig::get('homedir_prefix')."/codendiadm"),"Home dir should be created");
+        $this->assertTrue(is_dir(ForgeConfig::get('homedir_prefix')."/codendiadm"), "Home dir should be created");
 
         // Run test
         $um = new MockUserManager();
@@ -150,9 +150,9 @@ class BackendSystemTest extends TuleapTestCase {
 
         $backend->setReturnValue('getUserManager', $um);
 
-        $this->assertEqual($backend->archiveUserHome(104),True);
-        $this->assertFalse(is_dir(ForgeConfig::get('homedir_prefix')."/codendiadm"),"Home dir should be deleted");
-        $this->assertTrue(is_file(ForgeConfig::get('sys_project_backup_path')."/codendiadm.tgz"),"Archive should be created");
+        $this->assertEqual($backend->archiveUserHome(104), true);
+        $this->assertFalse(is_dir(ForgeConfig::get('homedir_prefix')."/codendiadm"), "Home dir should be deleted");
+        $this->assertTrue(is_file(ForgeConfig::get('sys_project_backup_path')."/codendiadm.tgz"), "Archive should be created");
 
         // Cleanup
         unlink(ForgeConfig::get('sys_project_backup_path')."/codendiadm.tgz");
@@ -161,8 +161,8 @@ class BackendSystemTest extends TuleapTestCase {
     function testArchiveProjectHome()
     {
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'TestProj',array(false));
-        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        $project->setReturnValue('getUnixName', 'TestProj', array(false));
+        $project->setReturnValue('getUnixName', 'testproj', array(true));
 
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
@@ -177,17 +177,17 @@ class BackendSystemTest extends TuleapTestCase {
         // Setup test data
         mkdir($projdir);
         touch($projdir."/testfile.txt");
-        symlink($projdir,$lcprojlnk);
+        symlink($projdir, $lcprojlnk);
 
         //$this->assertTrue(is_dir($projdir),"Project dir should be created");
 
-        $this->assertEqual($backend->archiveProjectHome(142),True);
-        $this->assertFalse(is_dir($projdir),"Project dir should be deleted");
-        $this->assertFalse(is_link($lcprojlnk),"Project link should be deleted");
-        $this->assertTrue(is_file(ForgeConfig::get('sys_project_backup_path')."/TestProj.tgz"),"Archive should be created");
+        $this->assertEqual($backend->archiveProjectHome(142), true);
+        $this->assertFalse(is_dir($projdir), "Project dir should be deleted");
+        $this->assertFalse(is_link($lcprojlnk), "Project link should be deleted");
+        $this->assertTrue(is_file(ForgeConfig::get('sys_project_backup_path')."/TestProj.tgz"), "Archive should be created");
 
         // Check that a wrong project id does not raise an error
-        $this->assertEqual($backend->archiveProjectHome(99999),False);
+        $this->assertEqual($backend->archiveProjectHome(99999), false);
 
         // Cleanup
         unlink(ForgeConfig::get('sys_project_backup_path')."/TestProj.tgz");
@@ -196,9 +196,9 @@ class BackendSystemTest extends TuleapTestCase {
     public function testRenameProjectHomeDirectory()
     {
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'TestProject',array(false));
+        $project->setReturnValue('getUnixName', 'TestProject', array(false));
         $project->setReturnValue('getUnixNameMixedCase', 'TestProject');
-        $project->setReturnValue('getUnixName', 'testproject',array(true));
+        $project->setReturnValue('getUnixName', 'testproject', array(true));
 
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
@@ -233,9 +233,9 @@ class BackendSystemTest extends TuleapTestCase {
     public function testRenameProjectHomeDirectoryToLowerCase()
     {
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'TestProject',array(false));
+        $project->setReturnValue('getUnixName', 'TestProject', array(false));
         $project->setReturnValue('getUnixNameMixedCase', 'TestProject');
-        $project->setReturnValue('getUnixName', 'testproject',array(true));
+        $project->setReturnValue('getUnixName', 'testproject', array(true));
 
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
@@ -265,9 +265,9 @@ class BackendSystemTest extends TuleapTestCase {
     public function testRenameProjectHomeDirectoryToUpperCase()
     {
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'testproject',array(false));
+        $project->setReturnValue('getUnixName', 'testproject', array(false));
         $project->setReturnValue('getUnixNameMixedCase', 'testproject');
-        $project->setReturnValue('getUnixName', 'testproject',array(true));
+        $project->setReturnValue('getUnixName', 'testproject', array(true));
 
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
@@ -283,7 +283,7 @@ class BackendSystemTest extends TuleapTestCase {
         // Testing lower case as a link is enough (see below).
         //$this->assertFalse(is_dir(ForgeConfig::get('grpdir_prefix')."/testproject"), "Old project home should no longer exists as directory (it's a link now)");
         $this->assertTrue(is_dir(ForgeConfig::get('grpdir_prefix')."/TestProject"), "Project home should be renamed");
-        $this->assertEqual(readlink(ForgeConfig::get('grpdir_prefix').'/testproject'),ForgeConfig::get('grpdir_prefix').'/TestProject',"The lower case of project should be a link");
+        $this->assertEqual(readlink(ForgeConfig::get('grpdir_prefix').'/testproject'), ForgeConfig::get('grpdir_prefix').'/TestProject', "The lower case of project should be a link");
 
         // Cleanup
         $backend->recurseDeleteInDir(ForgeConfig::get('grpdir_prefix')."/TestProject");
@@ -300,9 +300,9 @@ class BackendSystemTest extends TuleapTestCase {
     public function testRenameProjectHomeDirectoryLowerCase()
     {
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'testproject',array(false));
+        $project->setReturnValue('getUnixName', 'testproject', array(false));
         $project->setReturnValue('getUnixNameMixedCase', 'testproject');
-        $project->setReturnValue('getUnixName', 'testproject',array(true));
+        $project->setReturnValue('getUnixName', 'testproject', array(true));
 
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
@@ -365,15 +365,14 @@ class BackendSystemTest extends TuleapTestCase {
         $backend = new BackendTestVersion($this);
 
         $backend->createUserHome($user);
-        $this->assertEqual($backend->renameUserHomeDirectory($user, 'toto'),True);
-        $this->assertTrue(is_dir(ForgeConfig::get('homedir_prefix')."/toto"),"Home dir should be created");
+        $this->assertEqual($backend->renameUserHomeDirectory($user, 'toto'), true);
+        $this->assertTrue(is_dir(ForgeConfig::get('homedir_prefix')."/toto"), "Home dir should be created");
 
-        $this->assertFalse(is_dir(ForgeConfig::get('homedir_prefix')."/codendiadm"),"Home dir should no more exists");
+        $this->assertFalse(is_dir(ForgeConfig::get('homedir_prefix')."/codendiadm"), "Home dir should no more exists");
 
         // Cleanup
         $backend->recurseDeleteInDir(ForgeConfig::get('homedir_prefix')."/toto");
         rmdir(ForgeConfig::get('homedir_prefix')."/toto");
-
     }
 
     public function testCleanupFrs()
@@ -395,5 +394,3 @@ class BackendSystemTest extends TuleapTestCase {
         $this->assertTrue($backend->cleanupFRS());
     }
 }
-
-?>

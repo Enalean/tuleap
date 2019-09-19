@@ -20,7 +20,8 @@
 
 require_once('bootstrap.php');
 
-class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
+class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase
+{
 
     public function setUp()
     {

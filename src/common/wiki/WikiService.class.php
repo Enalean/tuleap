@@ -33,7 +33,8 @@ require_once __DIR__ . '/views/WikiViews.class.php';
  * This class receive HTTP requests for Wiki Service.
  *
  */
-class WikiService extends Controler {
+class WikiService extends Controler
+{
   /* private Wiki*/ var $wiki;
 
   /**
@@ -51,13 +52,15 @@ class WikiService extends Controler {
        */
         $this->gid = (int) $id;
 
-        if(empty($this->gid))
-        exit_no_group();
+        if (empty($this->gid)) {
+            exit_no_group();
+        }
 
         $pm = ProjectManager::instance();
         $go = $pm->getProject($this->gid);
-        if(!$go)
-        exit_no_group();
+        if (!$go) {
+            exit_no_group();
+        }
 
         $this->wiki = new Wiki($this->gid);
 
@@ -65,8 +68,8 @@ class WikiService extends Controler {
         $this->checkPermissions();
 
       // If Wiki for project doesn't exist, propose creation ... if user is project admin or wiki admin
-        if(!$this->wiki->exist()) {
-            if((!user_ismember($this->gid, 'W2'))&&(!user_ismember($this->gid, 'A'))) {
+        if (!$this->wiki->exist()) {
+            if ((!user_ismember($this->gid, 'W2'))&&(!user_ismember($this->gid, 'A'))) {
                 exit_wiki_empty();
             }
         }
@@ -89,32 +92,32 @@ class WikiService extends Controler {
     function checkPermissions()
     {
       // Check if user can access to whole wiki
-        if(!$this->wiki->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
+        if (!$this->wiki->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
             $GLOBALS['Response']->addFeedback(
-                                'error',
-                                $GLOBALS['Language']->getText(
-                                                        'wiki_wikiservice',
-                                                        'acces_denied_whole',
-                                                        session_make_url("/project/memberlist.php?group_id=".$this->gid)
-                                ),
-                                CODENDI_PURIFIER_DISABLED
-                            );
+                'error',
+                $GLOBALS['Language']->getText(
+                    'wiki_wikiservice',
+                    'acces_denied_whole',
+                    session_make_url("/project/memberlist.php?group_id=".$this->gid)
+                ),
+                CODENDI_PURIFIER_DISABLED
+            );
             exit_permission_denied();
         }
 
       // Check if user can access to selected page
-        if(!empty($_REQUEST['pagename'])) {
+        if (!empty($_REQUEST['pagename'])) {
             $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
-            if(!$wp->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
+            if (!$wp->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
                 $GLOBALS['Response']->addFeedback(
-                                'error',
-                                $GLOBALS['Language']->getText(
-                                                        'wiki_wikiservice',
-                                                        'acces_denied_page',
-                                                        session_make_url("/project/memberlist.php?group_id=".$this->gid)
-                                ),
-                                CODENDI_PURIFIER_DISABLED
-                            );
+                    'error',
+                    $GLOBALS['Language']->getText(
+                        'wiki_wikiservice',
+                        'acces_denied_page',
+                        session_make_url("/project/memberlist.php?group_id=".$this->gid)
+                    ),
+                    CODENDI_PURIFIER_DISABLED
+                );
                 exit_permission_denied();
             }
         }
@@ -125,45 +128,53 @@ class WikiService extends Controler {
    */
     function request()
     {
-        if (!isset($this->view))
-        $this->view = 'browse';
-
-        if(!empty($_REQUEST['pagename']))
-        $this->view = 'empty';
-
-        if(isset($_REQUEST['format']) &&
-         ($_REQUEST['format'] == 'rss') )
-          $this->view = 'empty';
-
-        if(isset($_REQUEST['pv']) && ($_REQUEST['pv'] == 1 || $_REQUEST['pv'] == 2))
-          $this->view = 'empty';
-
-        if(isset($_REQUEST['action'])) {
-            if($_REQUEST['action'] == 'ziphtml')
-                $this->view = 'empty';
-
-            if($_REQUEST['action'] == 'zip')
-                $this->view = 'empty';
-
-            if($_REQUEST['action'] == 'add_temp_page')
-                $this->action = 'add_temp_page';
-
-            if($_REQUEST['action'] == 'setWikiPagePerms')
-                $this->action = 'setWikiPagePerms';
+        if (!isset($this->view)) {
+            $this->view = 'browse';
         }
 
-        if(isset($_REQUEST['view']) &&
-         ($_REQUEST['view'] == 'browsePages'))
-          $this->view = 'browsePages';
+        if (!empty($_REQUEST['pagename'])) {
+            $this->view = 'empty';
+        }
+
+        if (isset($_REQUEST['format']) &&
+         ($_REQUEST['format'] == 'rss') ) {
+            $this->view = 'empty';
+        }
+
+        if (isset($_REQUEST['pv']) && ($_REQUEST['pv'] == 1 || $_REQUEST['pv'] == 2)) {
+            $this->view = 'empty';
+        }
+
+        if (isset($_REQUEST['action'])) {
+            if ($_REQUEST['action'] == 'ziphtml') {
+                $this->view = 'empty';
+            }
+
+            if ($_REQUEST['action'] == 'zip') {
+                $this->view = 'empty';
+            }
+
+            if ($_REQUEST['action'] == 'add_temp_page') {
+                $this->action = 'add_temp_page';
+            }
+
+            if ($_REQUEST['action'] == 'setWikiPagePerms') {
+                $this->action = 'setWikiPagePerms';
+            }
+        }
+
+        if (isset($_REQUEST['view']) &&
+         ($_REQUEST['view'] == 'browsePages')) {
+            $this->view = 'browsePages';
+        }
 
       // If Wiki for project doesn't exist, propose creation...
-        if(!$this->wiki->exist()) {
-            if (! isset($_REQUEST['view']) || $_REQUEST['view'] != 'doinstall')
+        if (!$this->wiki->exist()) {
+            if (! isset($_REQUEST['view']) || $_REQUEST['view'] != 'doinstall') {
                 $this->view='install';
-            else $this->view='doinstall';
+            } else {
+                $this->view='doinstall';
+            }
         }
-
     }
-
 }
-?>

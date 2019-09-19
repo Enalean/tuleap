@@ -23,7 +23,8 @@
  *
  * @see Event::PROCCESS_SYSTEM_CHECK
  */
-class Git_SystemCheck {
+class Git_SystemCheck
+{
 
     /**
      * @var Plugin
@@ -88,5 +89,4 @@ class Git_SystemCheck {
     {
         return $this->git_plugin->getPluginEtcRoot() . '/config.inc';
     }
-
 }

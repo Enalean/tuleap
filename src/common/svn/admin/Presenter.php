@@ -20,7 +20,6 @@
 
 namespace Tuleap\SvnCore\Admin;
 
-
 abstract class Presenter
 {
     public $is_cache_pane_active = false;

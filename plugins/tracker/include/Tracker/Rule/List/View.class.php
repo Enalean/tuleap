@@ -21,7 +21,8 @@
 * Basic view for a rule
 *
 */
-class Tracker_Rule_List_View {
+class Tracker_Rule_List_View
+{
 
     /**
      *
@@ -71,5 +72,3 @@ class Tracker_Rule_List_View {
         return $output;
     }
 }
-
-?>

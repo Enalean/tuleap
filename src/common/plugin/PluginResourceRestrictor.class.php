@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class PluginResourceRestrictor {
+class PluginResourceRestrictor
+{
 
     /**
      * @var RestrictedPluginDao
@@ -71,11 +72,10 @@ class PluginResourceRestrictor {
         $rows     = $this->restricted_plugin_dao->searchAllowedProjectsOnResource($plugin->getId());
         $projects = array();
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $projects[] = new Project($row);
         }
 
         return $projects;
     }
-
 }

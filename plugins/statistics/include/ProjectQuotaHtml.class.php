@@ -28,7 +28,8 @@ require_once('ProjectQuotaManager.class.php');
 /**
  * Management of custom quota by project
  */
-class ProjectQuotaHtml {
+class ProjectQuotaHtml
+{
 
     /**
      * ProjectManager instance
@@ -222,7 +223,7 @@ class ProjectQuotaHtml {
         if ($request->valid($validAction)) {
             $action = $request->get('action');
             switch ($action) {
-                case 'add' :
+                case 'add':
                     $this->csrf->check();
                     $validProject = new Valid_String('project');
                     $validProject->required();
@@ -251,7 +252,7 @@ class ProjectQuotaHtml {
                     $this->projectQuotaManager->addQuota($project, $requester, $quota, $motivation);
                     $GLOBALS['Response']->redirect('/plugins/statistics/project_quota.php');
                     break;
-                case 'delete' :
+                case 'delete':
                     $this->csrf->check();
                     $project_id       = $request->get('delete_quota');
                     $valid_project_id = new Valid_UInt();
@@ -263,7 +264,7 @@ class ProjectQuotaHtml {
                     }
                     $GLOBALS['Response']->redirect('/plugins/statistics/project_quota.php');
                     break;
-                default :
+                default:
                     break;
             }
         } else {

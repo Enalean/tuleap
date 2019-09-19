@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject {
+class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject
+{
 
     public function searchForTargetByRuleId($rule_id)
     {
@@ -159,5 +160,3 @@ class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 }
-
-?>

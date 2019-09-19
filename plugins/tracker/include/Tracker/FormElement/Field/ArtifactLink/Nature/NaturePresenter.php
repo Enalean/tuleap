@@ -21,7 +21,8 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-class NaturePresenter {
+class NaturePresenter
+{
 
     public const FORWARD_LABEL = 'forward';
     public const REVERSE_LABEL = 'reverse';

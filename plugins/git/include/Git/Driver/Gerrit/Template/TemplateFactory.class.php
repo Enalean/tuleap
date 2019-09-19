@@ -25,7 +25,8 @@
 /**
  * I'm responsible for instanciating Gerrit's Templates
  */
-class Git_Driver_Gerrit_Template_TemplateFactory {
+class Git_Driver_Gerrit_Template_TemplateFactory
+{
 
     /** @var Git_Driver_Gerrit_Template_TemplateDao */
     private $dao;
@@ -176,4 +177,3 @@ class Git_Driver_Gerrit_Template_TemplateFactory {
         return $this->dao->deleteTemplate($template_id);
     }
 }
-?>

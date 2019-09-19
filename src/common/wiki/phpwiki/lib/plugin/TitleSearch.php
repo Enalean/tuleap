@@ -37,8 +37,7 @@ require_once('lib/PageList.php');
  * regex=auto tries to detect simple glob-style wildcards and expressions,
  * like xx*, *xx, ^xx, xx$, ^word$.
  */
-class WikiPlugin_TitleSearch
-extends WikiPlugin
+class WikiPlugin_TitleSearch extends WikiPlugin
 {
     function getName()
     {
@@ -52,16 +51,18 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.28 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.28 $"
+        );
     }
 
     function getDefaultArguments()
     {
-        return array_merge
-            (
-             PageList::supportedArgs(), // paging and more.
-             array('s'             => false,
+        return array_merge(
+            PageList::supportedArgs(), // paging and more.
+            array('s'             => false,
                    'auto_redirect' => false,
                    'noheader'      => false,
                    'exclude'       => false,
@@ -69,7 +70,8 @@ extends WikiPlugin
                    'case_exact'    => false,
                    'regex'            => 'auto',
                    'format'           => false,
-                   ));
+            )
+        );
     }
     // info arg allows multiple columns
     // info=mtime,hits,summary,version,author,locked,minor
@@ -78,11 +80,12 @@ extends WikiPlugin
     function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
-        if (empty($args['s']))
+        if (empty($args['s'])) {
             return '';
+        }
 
         $query = new TextSearchQuery($args['s'], $args['case_exact'], $args['regex']);
-        $pages = $dbi->titleSearch($query,$args['sortby'],$args['limit'],$args['exclude']);
+        $pages = $dbi->titleSearch($query, $args['sortby'], $args['limit'], $args['exclude']);
 
         $pagelist = new PageList($args['info'], $args['exclude'], $args);
         while ($page = $pages->next()) {
@@ -104,14 +107,17 @@ extends WikiPlugin
         // when a search returns no results
         if (!$args['noheader']) {
             $s = $args['s'];
-            if (!$pagelist->getTotal() and !$query->_regex)
+            if (!$pagelist->getTotal() and !$query->_regex) {
                 $s = WikiLink($args['s'], 'auto');
+            }
             $pagelist->setCaption(fmt("Title search results for '%s'", $s));
         }
 
         if ($args['auto_redirect'] && ($pagelist->getTotal() == 1)) {
-            return HTML($request->redirect(WikiURL($last_name, false, 'absurl'), false),
-                        $pagelist);
+            return HTML(
+                $request->redirect(WikiURL($last_name, false, 'absurl'), false),
+                $pagelist
+            );
         }
 
         return $pagelist;
@@ -178,4 +184,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

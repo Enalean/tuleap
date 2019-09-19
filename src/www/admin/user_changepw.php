@@ -20,21 +20,21 @@ function register_valid(Codendi_Request $request, CSRFSynchronizerToken $csrf_to
         return false;
     }
     if (! $request->existAndNonEmpty('user_id')) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_user_changepw','error_userid'));
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_user_changepw', 'error_userid'));
         return false;
     }
     if (! $request->existAndNonEmpty('form_pw')) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_user_changepw','error_nopasswd'));
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_user_changepw', 'error_nopasswd'));
         return false;
     }
     if ($request->get('form_pw') != $request->get('form_pw2')) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_user_changepw','error_passwd'));
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_user_changepw', 'error_passwd'));
         return false;
     }
 
     $password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();
     if (! $password_sanity_checker->check($request->get('form_pw'))) {
-        foreach($password_sanity_checker->getErrors() as $error) {
+        foreach ($password_sanity_checker->getErrors() as $error) {
             $GLOBALS['Response']->addFeedback('error', $error);
         }
         return false;
@@ -45,12 +45,12 @@ function register_valid(Codendi_Request $request, CSRFSynchronizerToken $csrf_to
     $user_manager = UserManager::instance();
     $user         = $user_manager->getUserById($request->get('user_id'));
     if ($user === null) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_user_changepw','error_userid'));
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_user_changepw', 'error_userid'));
         return false;
     }
     $user->setPassword($request->get('form_pw'));
     if (!$user_manager->updateDb($user)) {
-        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw','error_update'));
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw', 'error_update'));
         return false;
     }
     return true;
@@ -62,24 +62,24 @@ $purifier   = Codendi_HTMLPurifier::instance();
 $user_id    = $request->get('user_id');
 $csrf_token = new CSRFSynchronizerToken('/admin/user_changepw.php?user_id=' . urlencode($user_id));
 if (register_valid($request, $csrf_token)) {
-    $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title_changed'), 'main_classes' => array('tlp-framed')));
+    $HTML->header(array('title'=>$Language->getText('admin_user_changepw', 'title_changed'), 'main_classes' => array('tlp-framed')));
     ?>
-<h3><?php echo $purifier->purify($Language->getText('admin_user_changepw','header_changed')); ?></h3>
-<p><?php echo $purifier->purify($Language->getText('admin_user_changepw','msg_changed')); ?></p>
+<h3><?php echo $purifier->purify($Language->getText('admin_user_changepw', 'header_changed')); ?></h3>
+<p><?php echo $purifier->purify($Language->getText('admin_user_changepw', 'msg_changed')); ?></p>
 
-<p><a href="/admin"><?php echo $Language->getText('global','back'); ?></a>.
+<p><a href="/admin"><?php echo $Language->getText('global', 'back'); ?></a>.
     <?php
 } else { // not valid registration, or first time to page
-    $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title'), 'main_classes' => array('tlp-framed')));
+    $HTML->header(array('title'=>$Language->getText('admin_user_changepw', 'title'), 'main_classes' => array('tlp-framed')));
 
     $em =& EventManager::instance();
     $em->processEvent('before_admin_change_pw', array());
 
     ?>
-<h3><?php echo $purifier->purify($Language->getText('admin_user_changepw','header')); ?></h3>
+<h3><?php echo $purifier->purify($Language->getText('admin_user_changepw', 'header')); ?></h3>
 <form action="user_changepw.php" method="post">
-    <?php user_display_choose_password('',$user_id); ?>
-<p><input type="submit" class="tlp-button-primary" name="Update" value="<?php echo $purifier->purify($Language->getText('global','btn_update')); ?>">
+    <?php user_display_choose_password('', $user_id); ?>
+<p><input type="submit" class="tlp-button-primary" name="Update" value="<?php echo $purifier->purify($Language->getText('global', 'btn_update')); ?>">
     <?php
     echo $csrf_token->fetchHTMLInput();
     ?>

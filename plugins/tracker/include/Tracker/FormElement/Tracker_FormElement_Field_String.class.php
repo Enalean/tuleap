@@ -21,7 +21,8 @@
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
+class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
+{
 
     public $default_properties = array(
         'maxchars'      => array(
@@ -113,7 +114,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
     protected function fetchSubmitValueMasschange()
     {
         $html = '';
-        $value = $GLOBALS['Language']->getText('global','unchanged');
+        $value = $GLOBALS['Language']->getText('global', 'unchanged');
 
         if ($this->isSemanticTitle()) {
             $html .= '<input type="text" readonly="readonly" value="'.$value.'" title="'.$GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'cannot_masschange_title').'" />';
@@ -166,7 +167,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
         if (isset($submitted_values[$this->getId()])) {
             $value = $submitted_values[$this->getId()];
         } else {
-            if($value != null) {
+            if ($value != null) {
                 $value = $value->getText();
             }
         }
@@ -204,7 +205,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      */
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','string');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'string');
     }
 
     /**
@@ -212,7 +213,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      */
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','string_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'string_description');
     }
 
     /**
@@ -359,4 +360,3 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
         return $visitor->visitString($this);
     }
 }
-

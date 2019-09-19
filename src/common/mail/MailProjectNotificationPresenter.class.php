@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MailProjectNotificationPresenter extends MailOutlinePresenter {
+class MailProjectNotificationPresenter extends MailOutlinePresenter
+{
 
     /**
      * @var string

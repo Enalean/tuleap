@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchPeople {
+class Search_SearchPeople
+{
     public const NAME = 'people';
 
     /**

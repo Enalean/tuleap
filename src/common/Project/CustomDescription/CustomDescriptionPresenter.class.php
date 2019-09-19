@@ -21,7 +21,8 @@
 /**
  * Presenter of a Custom Project Description Field
  */
-class Project_CustomDescription_CustomDescriptionPresenter {
+class Project_CustomDescription_CustomDescriptionPresenter
+{
 
     /** @var Project_CustomDescription_CustomDescription */
     private $custom_description;
@@ -85,4 +86,3 @@ class Project_CustomDescription_CustomDescriptionPresenter {
         return $text;
     }
 }
-?>

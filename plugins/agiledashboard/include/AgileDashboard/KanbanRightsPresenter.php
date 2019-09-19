@@ -22,7 +22,8 @@ use Tracker;
 use Tuleap\RealTime\MessageRightsPresenter;
 use Tracker_Permission_PermissionsSerializer;
 
-class KanbanRightsPresenter implements MessageRightsPresenter {
+class KanbanRightsPresenter implements MessageRightsPresenter
+{
 
     public $submitter_id;
     public $submitter_can_view;

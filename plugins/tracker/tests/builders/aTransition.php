@@ -29,7 +29,8 @@ function aTransition()
     return new Test_Transition_Builder();
 }
 
-class Test_Transition_Builder {
+class Test_Transition_Builder
+{
 
     /**
      * @var int
@@ -73,11 +74,11 @@ class Test_Transition_Builder {
 
     public function build()
     {
-        return new Transition($this->transition_id,
-                              $this->workflow_id,
-                              $this->from_field_value,
-                              $this->to_field_value);
+        return new Transition(
+            $this->transition_id,
+            $this->workflow_id,
+            $this->from_field_value,
+            $this->to_field_value
+        );
     }
 }
-
-?>

@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class PermissionsNormalizerOverrideCollection {
+class PermissionsNormalizerOverrideCollection
+{
     private $override_by = array();
 
     public function addOverrideBy($override_id, $catch_all_id)
@@ -46,7 +47,7 @@ class PermissionsNormalizerOverrideCollection {
 
     public function emitFeedback($permission_type)
     {
-        foreach($this->override_by as $catch_all_ugroup_id => $override_ids) {
+        foreach ($this->override_by as $catch_all_ugroup_id => $override_ids) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
                 $GLOBALS['Language']->getText(

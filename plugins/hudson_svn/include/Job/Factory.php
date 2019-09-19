@@ -22,7 +22,8 @@ namespace Tuleap\HudsonSvn\Job;
 
 use Tuleap\SVN\Repository\Repository;
 
-class Factory {
+class Factory
+{
 
     /**
      * @var Dao
@@ -74,5 +75,4 @@ class Factory {
 
         return $jobs;
     }
-
 }

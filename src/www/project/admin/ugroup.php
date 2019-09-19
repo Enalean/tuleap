@@ -43,7 +43,7 @@ session_require(array('group' => $group_id, 'admin_flags' => 'A'));
 if ($request->existAndNonEmpty('func')) {
     $ugroup_id   = $request->getValidated('ugroup_id', 'UInt', 0);
 
-    switch($request->get('func')) {
+    switch ($request->get('func')) {
         case 'delete':
             $ugroup_delete_token->check();
             if ($group_id > 100) {
@@ -61,7 +61,7 @@ if ($request->existAndNonEmpty('func')) {
                 $ugroup_id = ugroup_create($group_id, $name, $desc, $template);
                 $GLOBALS['Response']->redirect(
                     '/project/admin/editugroup.php?group_id=' . urlencode($group_id) .
-                    '&ugroup_id=' . urlencode( $ugroup_id)
+                    '&ugroup_id=' . urlencode($ugroup_id)
                 );
             } catch (CannotCreateUGroupException $exception) {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());

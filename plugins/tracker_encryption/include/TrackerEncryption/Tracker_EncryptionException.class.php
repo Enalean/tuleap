@@ -21,4 +21,3 @@
 class Tracker_EncryptionException extends Exception
 {
 }
-?>

@@ -22,7 +22,8 @@ use UserManager;
 use Firebase\JWT\JWT;
 use UGroupLiteralizer;
 
-class JWTGenerator {
+class JWTGenerator
+{
 
     /** @var UserManager */
     private $user_manager;

@@ -22,7 +22,8 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSection {
+class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSection
+{
     var $user_can_write;
     var $force;
     var $theme_path;
@@ -37,7 +38,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $this->formName = '';
         $this->inheritableMetadataArray = null;
         $id = 'properties';
-        $title = $GLOBALS['Language']->getText('plugin_docman','details_properties');
+        $title = $GLOBALS['Language']->getText('plugin_docman', 'details_properties');
         parent::__construct($item, $url, $id, $title);
     }
 
@@ -53,42 +54,50 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
 
     function _getPropertyField($field)
     {
-        return $this->_getPropertyRow($this->_getFieldLabel($field),
-                                      $this->_showField($field));
+        return $this->_getPropertyRow(
+            $this->_getFieldLabel($field),
+            $this->_showField($field)
+        );
     }
 
     function _getDefaultValuePropertyField($field)
     {
-        return $this->_getPropertyRow($this->_getFieldLabel($field),
-                                      $this->_showField($field));
+        return $this->_getPropertyRow(
+            $this->_getFieldLabel($field),
+            $this->_showField($field)
+        );
     }
 
     function _getItemIdField()
     {
         return "<input type='hidden' value='".$this->item->getId()."' data-test='docman_root_id'>" .
-            $this->_getPropertyRow('Id:',
-                                      $this->item->getId());
+            $this->_getPropertyRow(
+                'Id:',
+                $this->item->getId()
+            );
     }
 
     function _getDirectLinkField()
     {
         $html = '';
         $itemFactory = new Docman_ItemFactory();
-        if($itemFactory->getItemTypeForItem($this->item) != PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
+        if ($itemFactory->getItemTypeForItem($this->item) != PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
             $dpm = Docman_PermissionsManager::instance($this->item->getGroupId());
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
             $href = '';
-            if(!$this->item->isObsolete() || ($this->item->isObsolete() && $dpm->userCanAdmin($user))) {
+            if (!$this->item->isObsolete() || ($this->item->isObsolete() && $dpm->userCanAdmin($user))) {
                 $url = DocmanViewURLBuilder::buildActionUrl(
                     $this->item,
                     ['default_url' => $this->url],
                     ['action' => 'show', 'id' => $this->item->getId()]
                 );
-                $href = '<a href="'.$url.'">'.$GLOBALS['Language']->getText('plugin_docman','details_properties_view_doc_val').'</a>';
+                $href = '<a href="'.$url.'">'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_view_doc_val').'</a>';
             }
-            $html = $this->_getPropertyRow($GLOBALS['Language']->getText('plugin_docman','details_properties_view_doc_lbl'),
-                                              $href);
+            $html = $this->_getPropertyRow(
+                $GLOBALS['Language']->getText('plugin_docman', 'details_properties_view_doc_lbl'),
+                $href
+            );
         }
         return $html;
     }
@@ -110,7 +119,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $html .= $this->_getItemIdField();
 
         // Item properties
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             $html .= $this->_getPropertyField($field);
         }
 
@@ -126,15 +135,15 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $html  = '';
 
         $defaultValuesToManage = false;
-        if(is_a($this->item, 'Docman_Folder') && count($this->_getInheritableMetadata()) > 0) {
+        if (is_a($this->item, 'Docman_Folder') && count($this->_getInheritableMetadata()) > 0) {
             $defaultValuesToManage = true;
         }
 
-        if($defaultValuesToManage) {
+        if ($defaultValuesToManage) {
             $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_folder').'</h3>';
         }
         $html .= $this->_getPropertiesFields($params);
-        if($defaultValuesToManage) {
+        if ($defaultValuesToManage) {
             $html .= $this->_getDefaultValuesFields();
         }
 
@@ -157,14 +166,14 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $html = '';
 
         if ($this->user_can_write) {
-            $html .= '<p><a href="'. $this->url .'&amp;action=edit&amp;id='. $this->item->getid() .'">'. $GLOBALS['Language']->getText('plugin_docman','details_properties_edit') .'</a></p>';
+            $html .= '<p><a href="'. $this->url .'&amp;action=edit&amp;id='. $this->item->getid() .'">'. $GLOBALS['Language']->getText('plugin_docman', 'details_properties_edit') .'</a></p>';
         }
         return $html;
     }
 
     function _getInheritableMetadata()
     {
-        if($this->inheritableMetadataArray === null) {
+        if ($this->inheritableMetadataArray === null) {
             $mdFactory = new Docman_MetadataFactory($this->item->getGroupId());
             $inheritableMda = $mdFactory->getInheritableMdLabelArray(true);
 
@@ -187,7 +196,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $fields = $this->_getInheritableMetadata();
         $html .= '<table class="docman_item_details_properties">';
         $html .= $this->_getDefaultValuesTableHeader();
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             $html .= $this->_getDefaultValuePropertyField($field);
         }
         $html .= '</table>';
@@ -207,7 +216,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
     {
         $html = '';
         $dpm = Docman_PermissionsManager::instance($this->item->getGroupId());
-        if($dpm->getLockFactory()->itemIsLocked($this->item)) {
+        if ($dpm->getLockFactory()->itemIsLocked($this->item)) {
             $lockInfos = $dpm->getLockFactory()->getLockInfoForItem($this->item);
             $locker = UserHelper::instance()->getLinkOnUserFromUserId($lockInfos['user_id']);
             $lockDate = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $lockInfos['lock_date']);

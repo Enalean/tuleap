@@ -47,7 +47,7 @@ class PackagePermissionManager
     {
         if ($package->isActive() && $this->frs_service_permission_manager->userCanRead($project, $user)) {
             return true;
-        } else if ($package->isHidden() && $this->package_factory->userCanAdmin($user, $project->getID())) {
+        } elseif ($package->isHidden() && $this->package_factory->userCanAdmin($user, $project->getID())) {
             return true;
         }
 

@@ -21,7 +21,8 @@
 /**
  * Interface to define the factory for a dedicated type of PostAction.
  */
-interface Transition_PostActionSubFactory {
+interface Transition_PostActionSubFactory
+{
 
     /**
      * Get html code to let someone choose a post action for a transition

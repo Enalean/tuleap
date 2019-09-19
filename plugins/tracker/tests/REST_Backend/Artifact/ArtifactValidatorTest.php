@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_REST_Artifact_ArtifactValidator_Test extends TuleapTestCase {
+class Tracker_REST_Artifact_ArtifactValidator_Test extends TuleapTestCase
+{
 
     private $field_int;
     private $field_float;

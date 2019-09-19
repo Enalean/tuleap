@@ -20,7 +20,8 @@
 
 require_once __DIR__ .'/../bootstrap.php';
 
-class Cardwall_OnTop_ConfigTest extends TuleapTestCase {
+class Cardwall_OnTop_ConfigTest extends TuleapTestCase
+{
 
     public function itAsksForMappingByGivenListOfColumns()
     {
@@ -38,7 +39,8 @@ class Cardwall_OnTop_ConfigTest extends TuleapTestCase {
     }
 }
 
-class Cardwall_OnTop_Config_getMappingForTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_getMappingForTest extends TuleapTestCase
+{
 
     public function itReturnsNullIfThereIsNoMapping()
     {
@@ -68,7 +70,8 @@ class Cardwall_OnTop_Config_getMappingForTest extends TuleapTestCase {
     }
 }
 
-class Cardwall_OnTop_Config_IsInColumnTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_IsInColumnTest extends TuleapTestCase
+{
     private $artifact;
     private $config;
 

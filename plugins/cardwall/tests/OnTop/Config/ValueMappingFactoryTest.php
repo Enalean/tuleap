@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__) .'/../../bootstrap.php';
 
-class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -99,7 +100,8 @@ class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TuleapTestCase {
     }
 }
 
-class Cardwall_OnTop_Config_ValueMappingFactory2Test extends TuleapTestCase {
+class Cardwall_OnTop_Config_ValueMappingFactory2Test extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -138,4 +140,3 @@ class Cardwall_OnTop_Config_ValueMappingFactory2Test extends TuleapTestCase {
         $this->assertEqual(array(), $mappings);
     }
 }
-?>

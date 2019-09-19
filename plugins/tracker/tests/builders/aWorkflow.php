@@ -27,7 +27,8 @@ function aWorkflow()
     return new Test_Workflow_Builder();
 }
 
-class Test_Workflow_Builder {
+class Test_Workflow_Builder
+{
     private $id          = 1;
     private $tracker_id  = 2;
     private $field_id    = 3;

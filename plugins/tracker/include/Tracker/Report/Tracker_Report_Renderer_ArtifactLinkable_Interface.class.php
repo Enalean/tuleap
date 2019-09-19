@@ -21,7 +21,7 @@
 /**
  * Base interface for all renderers which let users select an artifact in the ArtifactLink interface
  */
-interface Tracker_Report_Renderer_ArtifactLinkable {
+interface Tracker_Report_Renderer_ArtifactLinkable
+{
 
 }
-?>

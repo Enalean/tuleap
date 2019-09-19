@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_Reference extends Reference {
+class Docman_Reference extends Reference
+{
 
     /**
      * @return Reference
@@ -47,5 +48,4 @@ class Docman_Reference extends Reference {
             $project_id
         );
     }
-
 }

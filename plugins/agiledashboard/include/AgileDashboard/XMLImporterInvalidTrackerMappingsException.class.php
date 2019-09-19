@@ -18,6 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class AgileDashboard_XMLImporterInvalidTrackerMappingsException extends Exception {
+class AgileDashboard_XMLImporterInvalidTrackerMappingsException extends Exception
+{
 }
-?>

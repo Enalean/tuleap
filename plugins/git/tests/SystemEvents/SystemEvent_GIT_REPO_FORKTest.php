@@ -23,7 +23,8 @@
  */
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-class SystemEvent_GIT_REPO_FORKTest extends TuleapTestCase {
+class SystemEvent_GIT_REPO_FORKTest extends TuleapTestCase
+{
     private $old_repository;
     private $new_repository;
     private $old_repository_id = 115;
@@ -79,5 +80,3 @@ class SystemEvent_GIT_REPO_FORKTest extends TuleapTestCase {
         $this->event->process();
     }
 }
-
-?>

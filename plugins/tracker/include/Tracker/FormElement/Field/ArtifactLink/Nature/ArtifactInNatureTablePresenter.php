@@ -22,7 +22,8 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
 use Tracker_FormElement_Field_ArtifactLink;
 
-class ArtifactInNatureTablePresenter {
+class ArtifactInNatureTablePresenter
+{
 
     public $direct_link_to_artifact;
     public $project_public_name;
@@ -55,12 +56,12 @@ class ArtifactInNatureTablePresenter {
 
         $assignees      = $artifact->getAssignedTo($current_user);
         $assignee_links = array();
-        foreach($assignees as $assignee) {
+        foreach ($assignees as $assignee) {
             $assignee_links[] = $user_helper->getLinkOnUser($assignee);
         }
         $this->artifact_assignees = implode(', ', $assignee_links);
 
-        if($this->userCanReadSubmitter($tracker, $current_user)) {
+        if ($this->userCanReadSubmitter($tracker, $current_user)) {
             $this->artifact_submitter = $user_helper->getLinkOnUser($artifact->getSubmittedByUser());
         } else {
             $this->artifact_submitter = '';
@@ -71,8 +72,8 @@ class ArtifactInNatureTablePresenter {
     {
         $formelement_factory = \Tracker_FormElementFactory::instance();
         $fields              = $formelement_factory->getUsedSubmittedByFields($tracker);
-        foreach($fields as $field) {
-            if($field->userCanRead($current_user)) {
+        foreach ($fields as $field) {
+            if ($field->userCanRead($current_user)) {
                 return true;
             }
         }
@@ -81,7 +82,7 @@ class ArtifactInNatureTablePresenter {
 
     private function emptyStringIfNull($value)
     {
-        if($value === null) {
+        if ($value === null) {
             return '';
         }
         return $value;

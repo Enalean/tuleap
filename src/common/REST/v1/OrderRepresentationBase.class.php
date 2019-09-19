@@ -21,7 +21,8 @@ namespace Tuleap\REST\v1;
 
 use Luracast\Restler\RestException;
 
-class OrderRepresentationBase {
+class OrderRepresentationBase
+{
 
     public const AFTER  = 'after';
     public const BEFORE = 'before';

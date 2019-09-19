@@ -24,21 +24,21 @@ require_once __DIR__ . '/../include/pre.php';
 $hp = Codendi_HTMLPurifier::instance();
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
-if($request->valid($vGroupId)) {
+if ($request->valid($vGroupId)) {
     $group_id = $request->get('group_id');
 } else {
     $vFormGrp = new Valid_UInt('form_grp');
     $vFormGrp->required();
-    if($request->valid($vFormGrp)) {
+    if ($request->valid($vFormGrp)) {
         $group_id = $request->get('form_grp');
     } else {
         exit_no_group();
     }
 }
 
-site_project_header(array('title'=>$Language->getText('project_memberlist','proj_member_list'),'group'=>$group_id,'toptab'=>'memberlist'));
+site_project_header(array('title'=>$Language->getText('project_memberlist', 'proj_member_list'),'group'=>$group_id,'toptab'=>'memberlist'));
 
-print $Language->getText('project_memberlist','contact_to_become_member');
+print $Language->getText('project_memberlist', 'contact_to_become_member');
 
 // list members
 // LJ email column added
@@ -52,20 +52,20 @@ $query =  "SELECT user.user_name AS user_name,user.user_id AS user_id,"
 
 
 $title_arr=array();
-$title_arr[]=$Language->getText('project_memberlist','developer');
-$title_arr[]=$Language->getText('project_export_artifact_history_export','email');
+$title_arr[]=$Language->getText('project_memberlist', 'developer');
+$title_arr[]=$Language->getText('project_export_artifact_history_export', 'email');
 
 $user_helper = new UserHelper();
 $hp = Codendi_HTMLPurifier::instance();
 
-echo html_build_list_table_top ($title_arr);
+echo html_build_list_table_top($title_arr);
 
 $res_memb = db_query($query);
-while ( $row_memb=db_fetch_array($res_memb) ) {
+while ($row_memb=db_fetch_array($res_memb)) {
     $display_name = $hp->purify($user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']));
     print "\t<tr>\n";
     print "\t\t";
-    if ( $row_memb['admin_flags']=='A' ) {
+    if ($row_memb['admin_flags']=='A') {
         print '<td><b><A href="/users/'. $row_memb['user_name'] .'/">'. $display_name ."</A></b></td>\n";
     } else {
         print "\t\t<td>".  $display_name ."</td>\n";
@@ -78,5 +78,3 @@ while ( $row_memb=db_fetch_array($res_memb) ) {
 print "\t</table>";
 
 site_project_footer(array());
-
-?>

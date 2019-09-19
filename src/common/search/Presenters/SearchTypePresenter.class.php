@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchTypePresenter {
+class Search_SearchTypePresenter
+{
     public $search_type;
     public $title;
     public $facets;

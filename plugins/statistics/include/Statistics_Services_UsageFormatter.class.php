@@ -20,7 +20,8 @@
  */
 require_once 'Statistics_Formatter.class.php';
 
-class Statistics_Services_UsageFormatter {
+class Statistics_Services_UsageFormatter
+{
 
     /** @const number of bytes in a MegaByte */
     public const BYTES_NUMBER_IN_MB = 1000;
@@ -122,5 +123,3 @@ class Statistics_Services_UsageFormatter {
         return array_key_exists($data[self::GROUP_ID], $this->datas) && isset($data[self::VALUES]);
     }
 }
-
-?>

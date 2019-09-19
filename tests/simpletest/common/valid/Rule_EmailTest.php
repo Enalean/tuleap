@@ -23,7 +23,8 @@
  */
 
 
-class Rule_EmailTest extends TuleapTestCase {
+class Rule_EmailTest extends TuleapTestCase
+{
 
     function UnitTestCase($name = 'Rule_Email test')
     {

@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Kanban_SemanticStatusAllColumnIdsNotProvidedException extends Exception {
+class Kanban_SemanticStatusAllColumnIdsNotProvidedException extends Exception
+{
     public function __construct()
     {
         parent::__construct("All columns ids are not provided");

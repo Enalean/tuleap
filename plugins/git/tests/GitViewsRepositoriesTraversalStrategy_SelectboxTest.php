@@ -24,7 +24,8 @@ require_once 'GitViewsRepositoriesTraversalStrategyTest.class.php';
 Mock::generate('GitViews');
 Mock::generate('PFUser');
 
-class GitViewsRepositoriesTraversalStrategy_SelectboxTest extends GitViewsRepositoriesTraversalStrategyTest {
+class GitViewsRepositoriesTraversalStrategy_SelectboxTest extends GitViewsRepositoriesTraversalStrategyTest
+{
 
     public function __construct()
     {
@@ -59,4 +60,3 @@ class GitViewsRepositoriesTraversalStrategy_SelectboxTest extends GitViewsReposi
         $this->assertPattern('`value="'. $a_repository_id .'"`', $strategy->fetch($repositories, $user));
     }
 }
-?>

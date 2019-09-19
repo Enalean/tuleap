@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201407040902_old_user_do_not_see_welcome_tour extends ForgeUpgrade_Bucket {
+class b201407040902_old_user_do_not_see_welcome_tour extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return "Adding user preference in database so old users don't see welcome tour";
@@ -40,5 +41,4 @@ class b201407040902_old_user_do_not_see_welcome_tour extends ForgeUpgrade_Bucket
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding user preference.');
         }
     }
-
 }

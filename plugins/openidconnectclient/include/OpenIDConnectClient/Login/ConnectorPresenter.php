@@ -20,8 +20,8 @@
 
 namespace Tuleap\OpenIDConnectClient\Login;
 
-
-class ConnectorPresenter {
+class ConnectorPresenter
+{
 
     private $providers_authorization_request_uri;
 

@@ -5,4 +5,3 @@
 require_once __DIR__ . '/../include/pre.php';
 
 session_redirect('/softwaremap/trove_list.php');
-?>

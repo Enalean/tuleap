@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class SOAP_RequestLimitatorDao extends DataAccessObject {
+class SOAP_RequestLimitatorDao extends DataAccessObject
+{
 
     public function searchFirstCallToMethod($name, $delay)
     {
@@ -40,5 +41,3 @@ class SOAP_RequestLimitatorDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-
-?>

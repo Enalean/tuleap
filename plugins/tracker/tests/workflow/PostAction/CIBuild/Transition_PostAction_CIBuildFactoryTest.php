@@ -21,7 +21,8 @@
 
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Transition_PostAction_CIBuildFactory_BaseTest extends TuleapTestCase {
+class Transition_PostAction_CIBuildFactory_BaseTest extends TuleapTestCase
+{
 
     protected $factory;
     protected $dao;
@@ -39,7 +40,8 @@ class Transition_PostAction_CIBuildFactory_BaseTest extends TuleapTestCase {
     }
 }
 
-class Transition_PostAction_CIBuildFactory_LoadPostActionsTest extends Transition_PostAction_CIBuildFactory_BaseTest {
+class Transition_PostAction_CIBuildFactory_LoadPostActionsTest extends Transition_PostAction_CIBuildFactory_BaseTest
+{
 
     public function itLoadsCIBuildPostActions()
     {
@@ -62,7 +64,8 @@ class Transition_PostAction_CIBuildFactory_LoadPostActionsTest extends Transitio
     }
 }
 
-class Transition_PostAction_CIBuildFactory_DuplicateTest extends Transition_PostAction_CIBuildFactory_BaseTest {
+class Transition_PostAction_CIBuildFactory_DuplicateTest extends Transition_PostAction_CIBuildFactory_BaseTest
+{
 
     public function itDelegatesTheDuplicationToTheDao()
     {
@@ -74,7 +77,8 @@ class Transition_PostAction_CIBuildFactory_DuplicateTest extends Transition_Post
     }
 }
 
-class Transition_CIBuildFactory_GetInstanceFromXmlTest extends Transition_PostAction_CIBuildFactory_BaseTest {
+class Transition_CIBuildFactory_GetInstanceFromXmlTest extends Transition_PostAction_CIBuildFactory_BaseTest
+{
 
     public function itReconstitutesCIBuildPostActionsFromXML()
     {
@@ -85,16 +89,16 @@ class Transition_CIBuildFactory_GetInstanceFromXmlTest extends Transition_PostAc
         $post_action = $this->factory->getInstanceFromXML($xml, $this->mapping, $this->transition);
 
         $this->assertIsA($post_action, 'Transition_PostAction_CIBuild');
-        $this->assertEqual($post_action->getJobUrl(),"http://www" );
+        $this->assertEqual($post_action->getJobUrl(), "http://www");
         $this->assertTrue($post_action->isDefined());
     }
 }
 
-class Transition_CIBuildFactory_isFieldUsedInPostActionsTest extends Transition_PostAction_CIBuildFactory_BaseTest {
+class Transition_CIBuildFactory_isFieldUsedInPostActionsTest extends Transition_PostAction_CIBuildFactory_BaseTest
+{
 
     public function itReturnsAlwaysFalseSinceThereIsNoFieldUsedInThisPostAction()
     {
         $this->assertFalse($this->factory->isFieldUsedInPostActions(mock('Tracker_FormElement_Field_Selectbox')));
     }
 }
-?>

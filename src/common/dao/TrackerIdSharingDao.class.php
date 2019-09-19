@@ -34,7 +34,8 @@
  *                 VALUES ($id, ........
  * </pre>
  */
-class TrackerIdSharingDao extends DataAccessObject {
+class TrackerIdSharingDao extends DataAccessObject
+{
 
     /**
      * Get a good tracker id.
@@ -58,4 +59,3 @@ class TrackerIdSharingDao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
 }
-?>

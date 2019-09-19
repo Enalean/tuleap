@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class AgileDashboard_KanbanItemManager {
+class AgileDashboard_KanbanItemManager
+{
 
     /**
      * @var AgileDashboard_KanbanItemDao
@@ -91,9 +92,9 @@ class AgileDashboard_KanbanItemManager {
 
     public function getIndexOfKanbanItem(Tracker_Artifact $artifact, $column)
     {
-        if($column === 'backlog') {
+        if ($column === 'backlog') {
             return $this->getKanbanItemIndexInBacklog($artifact);
-        } else if($column === 'archive') {
+        } elseif ($column === 'archive') {
             return $this->getKanbanItemIndexInArchive($artifact);
         } else {
             return $this->getKanbanItemIndexInColumn($artifact, $column);

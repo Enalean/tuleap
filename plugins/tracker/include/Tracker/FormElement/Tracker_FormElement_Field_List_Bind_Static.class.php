@@ -257,7 +257,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $values_array = array();
         if ($v = $changeset->getValue($this->field)) {
             $values = $v->getListValues();
-            foreach($values as $val) {
+            foreach ($values as $val) {
                 $values_array[] = $val->getLabel();
             }
         }
@@ -270,7 +270,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function getChangesetValues($changeset_id)
     {
         $values = array();
-        foreach($this->getValueDao()->searchChangesetValues($changeset_id, $this->field->id, $this->is_rank_alpha) as $row) {
+        foreach ($this->getValueDao()->searchChangesetValues($changeset_id, $this->field->id, $this->is_rank_alpha) as $row) {
             $values[] = $row;
         }
         return $values;
@@ -450,12 +450,12 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public static function fetchAdminCreateForm($field)
     {
         $html = '';
-        $h = new HTML_Element_Input_Checkbox( $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','alphabetically_sort'), 'bind[is_rank_alpha]', 0);
+        $h = new HTML_Element_Input_Checkbox($GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'alphabetically_sort'), 'bind[is_rank_alpha]', 0);
         $h->setId('is_rank_alpha');
         $html .= '<p>'. $h->render() .'</p>';
         $html .= '<p>';
         $html .= '<textarea name="formElement_data[bind][add]" rows="5" cols="30"></textarea><br />';
-        $html .= '<span style="color:#999; font-size:0.8em;">'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_row') .'</span>';
+        $html .= '<span style="color:#999; font-size:0.8em;">'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_row') .'</span>';
         $html .= '</p>';
         return $html;
     }
@@ -471,16 +471,15 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             return $this->fetchAdminEditFormNotModifiable();
         } else {
             return $this->fetchAdminEditFormModifiable();
-
         }
     }
 
     private function fetchAdminEditFormModifiable()
     {
         $html = '';
-        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','static_values') .'</h3>';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'static_values') .'</h3>';
 
-        $h = new HTML_Element_Input_Checkbox( $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','alphabetically_sort'), 'bind[is_rank_alpha]', $this->is_rank_alpha);
+        $h = new HTML_Element_Input_Checkbox($GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'alphabetically_sort'), 'bind[is_rank_alpha]', $this->is_rank_alpha);
         $h->setId('is_rank_alpha');
         $h->addParam('class', 'is_rank_alpha');
         $html .= '<p>'. $h->render() .'</p>';
@@ -593,7 +592,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     {
         $html = '';
 
-        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','static_values') .'</h3>';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'static_values') .'</h3>';
         $html .= '<table cellpadding="2" cellspacing="0" border="0">';
         foreach ($this->getAllValues() as $v) {
             $html .= $this->fetchAdminEditRowNotModifiable($v);
@@ -668,7 +667,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     $is_rank_alpha = $value ? 1 : 0;
                     if ($this->is_rank_alpha != $is_rank_alpha) {
                         $this->getDao()->save($this->field->id, $is_rank_alpha);
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','alpha_ranking_updated'));
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'alpha_ranking_updated'));
                     }
                     break;
                 case 'delete':
@@ -731,7 +730,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                             $valueMapping[] = $id;
                         }
                     }
-                    if(isset($params['decorators'])) {
+                    if (isset($params['decorators'])) {
                         $params['decorator'] = array();
                         foreach ($params['decorators'] as $key => $deco) {
                             $params['decorator'][$valueMapping[$key]] =
@@ -852,7 +851,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     private function extractBindValuesByIds(array $bindvalue_ids)
     {
         $list_of_bindvalues = array();
-        foreach($bindvalue_ids as $i) {
+        foreach ($bindvalue_ids as $i) {
             if (isset($this->values[$i])) {
                 $list_of_bindvalues[$i] = $this->values[$i];
             }
@@ -871,7 +870,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $dao = new Tracker_FormElement_Field_List_Bind_StaticDao();
         if ($dao->save($this->field->getId(), $this->is_rank_alpha)) {
             $value_dao = $this->getValueDao();
-            foreach($this->getAllValues() as $v) {
+            foreach ($this->getAllValues() as $v) {
                 if ($id = $value_dao->create($this->field->getId(), $v->getLabel(), $v->getDescription(), 'end', $v->isHidden())) {
                     $v->setId($id);
                 }
@@ -893,7 +892,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $value_dao = $this->getValueDao();
         $field_id  = $this->getField()->getId();
 
-        foreach($value_mapping as $old_original_value_id => $new_original_value_id) {
+        foreach ($value_mapping as $old_original_value_id => $new_original_value_id) {
             $value_dao->updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id);
         }
     }
@@ -957,12 +956,12 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function getRESTAvailableValues()
     {
         $rest_values = array();
-        foreach($this->getAllValues() as $value) {
+        foreach ($this->getAllValues() as $value) {
             $rest_values[] = $this->getRESTBindValue($value);
         }
 
         $new_values = $this->getOpenValueDao()->searchByFieldId($this->getField()->getId());
-        foreach($new_values as $row_value) {
+        foreach ($new_values as $row_value) {
             $bind_value    = new Tracker_FormElement_Field_List_Bind_StaticValue(
                 $row_value['id'],
                 $row_value['label'],

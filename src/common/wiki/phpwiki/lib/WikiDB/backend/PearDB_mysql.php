@@ -6,8 +6,7 @@ require_once('lib/WikiDB/backend/PearDB.php');
 
 // The slowest function overall is mysql_connect with [680ms]
 // 2nd is db_mysql::simpleQuery with [257ms]
-class WikiDB_backend_PearDB_mysql
-extends WikiDB_backend_PearDB
+class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
 {
     /**
      * Create a new revision of a page.
@@ -32,13 +31,17 @@ extends WikiDB_backend_PearDB
         $id = $this->_get_pageid($pagename, true);
         // requires PRIMARY KEY (id,version)!
         // VALUES supported since mysql-3.22.5
-        $dbh->query(sprintf("REPLACE INTO $version_tbl"
+        $dbh->query(sprintf(
+            "REPLACE INTO $version_tbl"
                             . " (id,version,mtime,minor_edit,content,versiondata)"
                             . " VALUES(%d,%d,%d,%d,'%s','%s')",
-                            $id, $version, $mtime, $minor_edit,
-                            $dbh->escapeSimple($content),
-                            $dbh->escapeSimple($this->_serialize($data))
-                            ));
+            $id,
+            $version,
+            $mtime,
+            $minor_edit,
+            $dbh->escapeSimple($content),
+            $dbh->escapeSimple($this->_serialize($data))
+        ));
         // real binding (prepare,execute) only since mysqli + PHP5
         $this->_update_recent_table($id);
         $this->_update_nonempty_table($id);
@@ -66,21 +69,24 @@ extends WikiDB_backend_PearDB
                     . " SELECT id, $maxversion, $maxmajor, $maxminor"
                     . " FROM $version_tbl"
                     . $stmt
-                    . " GROUP BY id" );
+                    . " GROUP BY id");
     }
 
     /* ISNULL is mysql specific */
-    function wanted_pages($exclude_from='', $exclude='', $sortby=false, $limit=false)
+    function wanted_pages($exclude_from = '', $exclude = '', $sortby = false, $limit = false)
     {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
-        if ($orderby = $this->sortby($sortby, 'db', array('pagename','wantedfrom')))
+        if ($orderby = $this->sortby($sortby, 'db', array('pagename','wantedfrom'))) {
             $orderby = 'ORDER BY ' . $orderby;
+        }
 
-        if ($exclude_from) // array of pagenames
+        if ($exclude_from) { // array of pagenames
             $exclude_from = " AND linked.pagename NOT IN ".$this->_sql_set($exclude_from);
-        if ($exclude) // array of pagenames
+        }
+        if ($exclude) { // array of pagenames
             $exclude = " AND $page_tbl.pagename NOT IN ".$this->_sql_set($exclude);
+        }
 
         $sql = "SELECT $page_tbl.pagename,linked.pagename as wantedfrom"
             . " FROM $page_tbl as linked, $link_tbl "
@@ -147,18 +153,18 @@ extends WikiDB_backend_PearDB
         // have a record in the page table.  Since it's just the
         // hit count, who cares?
         // LIMIT since 3.23
-        $dbh->query(sprintf("UPDATE LOW_PRIORITY %s SET hits=hits+1 WHERE pagename='%s' AND group_id=%d %s",
-                            $this->_table_names['page_tbl'],
-                            $dbh->escapeSimple($pagename),
-                            GROUP_ID,
-                            ($this->_serverinfo['version'] >= 323.0) ? "LIMIT 1": ""));
+        $dbh->query(sprintf(
+            "UPDATE LOW_PRIORITY %s SET hits=hits+1 WHERE pagename='%s' AND group_id=%d %s",
+            $this->_table_names['page_tbl'],
+            $dbh->escapeSimple($pagename),
+            GROUP_ID,
+            ($this->_serverinfo['version'] >= 323.0) ? "LIMIT 1": ""
+        ));
         return;
     }
-
 };
 
-class WikiDB_backend_PearDB_mysql_search
-extends WikiDB_backend_PearDB_search
+class WikiDB_backend_PearDB_mysql_search extends WikiDB_backend_PearDB_search
 {
     function _pagename_match_clause($node)
     {
@@ -181,4 +187,3 @@ extends WikiDB_backend_PearDB_search
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

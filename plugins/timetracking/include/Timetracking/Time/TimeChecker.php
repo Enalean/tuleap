@@ -44,7 +44,7 @@ class TimeChecker
         $pattern = "/" . self::TIME_PATTERN . "/";
         if (! $time_value) {
             throw new TimeTrackingMissingTimeException();
-        } else if (! preg_match($pattern, $time_value)) {
+        } elseif (! preg_match($pattern, $time_value)) {
             throw new TimeTrackingBadTimeFormatException();
         }
     }

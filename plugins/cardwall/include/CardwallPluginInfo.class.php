@@ -21,13 +21,12 @@
 /**
  * CardwallPluginInfo
  */
-class CardwallPluginInfo extends PluginFileInfo {
+class CardwallPluginInfo extends PluginFileInfo
+{
 
     function __construct($plugin)
     {
         parent::__construct($plugin, 'config');
         $this->setPluginDescriptor(new CardwallPluginDescriptor());
     }
-
 }
-?>

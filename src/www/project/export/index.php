@@ -33,11 +33,14 @@ $em       = EventManager::instance();
 $request  = HTTPRequest::instance();
 $export   = $request->get('export');
 $group_id = $request->get('group_id');
-if (!isset($export)) $export="";
+if (!isset($export)) {
+    $export="";
+}
 
 // Group ID must be defined and must be a project admin
-if ( !$group_id ) {
-    exit_error($Language->getText('project_admin_userperms','invalid_g'),$Language->getText('project_admin_userperms','group_not_exist')); }
+if (!$group_id) {
+    exit_error($Language->getText('project_admin_userperms', 'invalid_g'), $Language->getText('project_admin_userperms', 'group_not_exist'));
+}
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
@@ -49,75 +52,74 @@ if (!$group || !is_object($group) || $group->isError()) {
 }
 $atf = new ArtifactTypeFactory($group);
 if (!$group || !is_object($group) || $group->isError()) {
-    exit_error($Language->getText('global','error'),$Language->getText('project_admin_index','not_get_atf'));
+    exit_error($Language->getText('global', 'error'), $Language->getText('project_admin_index', 'not_get_atf'));
 }
 
 $project=$pm->getProject($group_id);
 $groupname = $project->getUnixName();
-$pg_title = $Language->getText('project_admin_utils','project_data_export').' '.$groupname;
+$pg_title = $Language->getText('project_admin_utils', 'project_data_export').' '.$groupname;
 
 $em->processEvent('project_export', array('export' => $export, 'project' => $project));
 
 switch ($export) {
-
     case 'artifact':
         require('./artifact_export.php');
-     break;
+        break;
 
     case 'artifact_format':
         project_admin_header(array('title'=>$pg_title), NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
         require('./artifact_export.php');
-        site_project_footer( array() );
-     break;
+        site_project_footer(array());
+        break;
 
     case 'artifact_history':
         require('./artifact_history_export.php');
-     break;
+        break;
 
     case 'artifact_history_format':
         project_admin_header(array('title'=>$pg_title), NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
         require('./artifact_history_export.php');
-        site_project_footer( array() );
-     break;
+        site_project_footer(array());
+        break;
 
     case 'artifact_deps':
         require('./artifact_deps_export.php');
-     break;
+        break;
 
     case 'artifact_deps_format':
         project_admin_header(array('title'=>$pg_title), NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
         require('./artifact_deps_export.php');
-        site_project_footer( array() );
-     break;
+        site_project_footer(array());
+        break;
 
     case 'access_logs':
         require('./access_logs_export.php');
-     break;
+        break;
 
     case 'access_logs_format':
         project_admin_header(array('title'=>$pg_title), NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
         require('./access_logs_export.php');
-        site_project_footer( array() );
-     break;
+        site_project_footer(array());
+        break;
 
     case 'user_groups':
         require('./user_groups_export.php');
-     break;
+        break;
 
     case 'user_groups_format':
         project_admin_header(array('title'=>$pg_title), NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
         require('./user_groups_export.php');
-        site_project_footer( array() );
-     break;
+        site_project_footer(array());
+        break;
 
     default:
         project_admin_header(array('title'=>$pg_title, 'help' => 'project-admin.html#project-data-export'), NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
      // Display the welcome screen
         echo '
-<h3> '.$Language->getText('project_export_index','export_to_csv_hdr',array(help_button('project-admin.html#text-file-export'))).'</h3>';
+<h3> '.$Language->getText('project_export_index', 'export_to_csv_hdr', array(help_button('project-admin.html#text-file-export'))).'</h3>';
 
         echo '
-<p> '.$Language->getText('project_export_index','export_to_csv_msg').'</p>';
+<p> '.$Language->getText('project_export_index', 'export_to_csv_msg').'</p>';
 
      // Show all the fields currently available in the system
         $entry_label                           = array();
@@ -130,18 +132,18 @@ switch ($export) {
         $iu = 0;
 
         $titles = array('',
-                     $Language->getText('project_export_index','art_data'),
-                     $Language->getText('project_export_index','history'),
-                     $Language->getText('project_export_index','dependencies'));
+                     $Language->getText('project_export_index', 'art_data'),
+                     $Language->getText('project_export_index', 'history'),
+                     $Language->getText('project_export_index', 'dependencies'));
         echo html_build_list_table_top($titles);
 
         if ($project->usesTracker()) {
             // Get the artfact type list
             $at_arr = $atf->getArtifactTypes();
             if ($at_arr && count($at_arr) >= 1) {
-                foreach($at_arr as $at) {
+                foreach ($at_arr as $at) {
                     $idx = 'tracker_'.$at->getID();
-                    $entry_label[$idx]                           = $Language->getText('project_export_index','tracker').': '.$at->getName();
+                    $entry_label[$idx]                           = $Language->getText('project_export_index', 'tracker').': '.$at->getName();
                     $entry_data_export_links[$idx]               = '?group_id='.$group_id.'&atid='.$at->getID().'&export=artifact';
                     $entry_data_export_format_links[$idx]        = '?group_id='.$group_id.'&atid='.$at->getID().'&export=artifact_format';
                     $history_data_export_links[$idx]             = '?group_id='.$group_id.'&atid='.$at->getID().'&export=artifact_history';
@@ -153,7 +155,7 @@ switch ($export) {
         }
 
     // Access log
-        $entry_label['access_log']                           = $Language->getText('project_export_index','access_logs');
+        $entry_label['access_log']                           = $Language->getText('project_export_index', 'access_logs');
         $entry_data_export_links['access_log']               = '?group_id='.$group_id.'&export=access_logs';
         $entry_data_export_format_links['access_log']        = null;
         $history_data_export_links['access_log']             = null;
@@ -162,7 +164,7 @@ switch ($export) {
         $dependencies_data_export_format_links['access_log'] = null;
 
     // User groups definitions
-        $entry_label['user_groups']                           = $Language->getText('project_export_index','user_groups');
+        $entry_label['user_groups']                           = $Language->getText('project_export_index', 'user_groups');
         $entry_data_export_links['user_groups']               = '?group_id='.$group_id.'&export=user_groups';
         $entry_data_export_format_links['user_groups']        = '?group_id='.$group_id.'&export=user_groups_format';
         $history_data_export_links['user_groups']             = null;
@@ -192,39 +194,39 @@ switch ($export) {
             echo ' <td><b>'.$label.'</b></td>';
             echo ' <td align="center">';
             if (key_exists_and_value_not_null($key, $entry_data_export_links)) {
-                echo '  <a href="'.$entry_data_export_links[$key].'">'.$Language->getText('project_export_index','export').'</a>';
+                echo '  <a href="'.$entry_data_export_links[$key].'">'.$Language->getText('project_export_index', 'export').'</a>';
             } else {
                 echo '-';
             }
             echo '  <br>';
             if (key_exists_and_value_not_null($key, $entry_data_export_format_links)) {
-                echo '  <a href="'.$entry_data_export_format_links[$key].'">'.$Language->getText('project_export_index','show_format').'</a>';
+                echo '  <a href="'.$entry_data_export_format_links[$key].'">'.$Language->getText('project_export_index', 'show_format').'</a>';
             } else {
                 echo '-';
             }
             echo ' </td>';
             echo ' <td align="center">';
             if (key_exists_and_value_not_null($key, $history_data_export_links)) {
-                echo '  <a href="'.$history_data_export_links[$key].'">'.$Language->getText('project_export_index','export').'</a>';
+                echo '  <a href="'.$history_data_export_links[$key].'">'.$Language->getText('project_export_index', 'export').'</a>';
             } else {
                 echo '-';
             }
             echo '  <br>';
             if (key_exists_and_value_not_null($key, $history_data_export_format_links)) {
-                echo '  <a href="'.$history_data_export_format_links[$key].'">'.$Language->getText('project_export_index','show_format').'</a>';
+                echo '  <a href="'.$history_data_export_format_links[$key].'">'.$Language->getText('project_export_index', 'show_format').'</a>';
             } else {
                 echo '-';
             }
             echo ' </td>';
             echo ' <td align="center">';
             if (key_exists_and_value_not_null($key, $dependencies_data_export_links)) {
-                echo '  <a href="'.$dependencies_data_export_links[$key].'">'.$Language->getText('project_export_index','export').'</a>';
+                echo '  <a href="'.$dependencies_data_export_links[$key].'">'.$Language->getText('project_export_index', 'export').'</a>';
             } else {
                 echo '-';
             }
             echo '  <br>';
             if (key_exists_and_value_not_null($key, $dependencies_data_export_format_links)) {
-                echo '  <a href="'.$dependencies_data_export_format_links[$key].'">'.$Language->getText('project_export_index','show_format').'</a>';
+                echo '  <a href="'.$dependencies_data_export_format_links[$key].'">'.$Language->getText('project_export_index', 'show_format').'</a>';
             } else {
                 echo '-';
             }
@@ -236,7 +238,6 @@ switch ($export) {
 
         echo '</TABLE>';
 
-        site_project_footer( array() );
-    break;
+        site_project_footer(array());
+        break;
 }
-?>

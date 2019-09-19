@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_ChangesetJsonPresenter {
+class Tracker_Artifact_ChangesetJsonPresenter
+{
     /** @var Tracker_Artifact_Changeset */
     private $changeset;
 
@@ -61,5 +62,3 @@ class Tracker_Artifact_ChangesetJsonPresenter {
         return $GLOBALS['Language']->getText('plugin_tracker', 'artifact_update_popup_got_it');
     }
 }
-
-?>

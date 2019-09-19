@@ -38,7 +38,8 @@
 
 require_once __DIR__.'/../constants.php';
 
-class Codendi_HTMLPurifier {
+class Codendi_HTMLPurifier
+{
     private static $allowed_schemes = array(
         'http'   => true,
         'https'  => true,
@@ -153,18 +154,18 @@ class Codendi_HTMLPurifier {
         if (isset($this->config[$level])) {
             return $this->config[$level];
         }
-        switch($level) {
+        switch ($level) {
             case CODENDI_PURIFIER_LIGHT:
                 $this->config[CODENDI_PURIFIER_LIGHT] = $this->getLightConfig();
-            break;
+                break;
 
             case CODENDI_PURIFIER_FULL:
                 $this->config[CODENDI_PURIFIER_FULL] = $this->getCodendiConfig();
-            break;
+                break;
 
             case CODENDI_PURIFIER_STRIP_HTML:
                 $this->config[CODENDI_PURIFIER_STRIP_HTML] = $this->getStripConfig();
-            break;
+                break;
         }
         return $this->config[$level];
     }
@@ -196,8 +197,8 @@ class Codendi_HTMLPurifier {
         $matching    = '\1://\2\3';
 
         $data = preg_replace("`$url_pattern&quot;`i", "$matching\"", $data);
-        $data = preg_replace("`$url_pattern&#039;`i", "$matching'",  $data);
-        return preg_replace("`$url_pattern&gt;`i",   "$matching>",  $data);
+        $data = preg_replace("`$url_pattern&#039;`i", "$matching'", $data);
+        return preg_replace("`$url_pattern&gt;`i", "$matching>", $data);
     }
 
     /**
@@ -232,13 +233,13 @@ class Codendi_HTMLPurifier {
      * - CODENDI_PURIFIER_DISABLED
      *   No filter at all.
      */
-    function purify($html, $level=0, $groupId=0)
+    function purify($html, $level = 0, $groupId = 0)
     {
         $clean = '';
-        switch($level) {
+        switch ($level) {
             case CODENDI_PURIFIER_DISABLED:
                 $clean = $html;
-            break;
+                break;
 
             case CODENDI_PURIFIER_LIGHT:
                 if (empty($html)) {
@@ -252,28 +253,28 @@ class Codendi_HTMLPurifier {
 
                 $config = $this->getHPConfig($level);
                 $clean = $hp->purify($html, $config);
-            break;
+                break;
 
             case CODENDI_PURIFIER_BASIC:
                 $data  = $this->linkifyMails(htmlentities($html, ENT_QUOTES, 'UTF-8'));
                 $data  = $this->dealWithSpecialCasesWithFramingURLCharacters($data);
                 $clean = $this->purify(nl2br($data), CODENDI_PURIFIER_LIGHT, $groupId);
-            break;
+                break;
             case CODENDI_PURIFIER_BASIC_NOBR:
                 $data  = $this->linkifyMails(htmlentities($html, ENT_QUOTES, 'UTF-8'));
                 $data  = $this->dealWithSpecialCasesWithFramingURLCharacters($data);
                 $clean = $this->purify($data, CODENDI_PURIFIER_LIGHT, $groupId);
-            break;
+                break;
             case CODENDI_PURIFIER_JS_QUOTE:
                 $clean = $this->js_string_purifier($html, JSON_HEX_APOS);
-            break;
+                break;
             case CODENDI_PURIFIER_JS_DQUOTE:
                 $clean = $this->js_string_purifier($html, JSON_HEX_QUOT);
-            break;
+                break;
             case CODENDI_PURIFIER_CONVERT_HTML:
             default:
                 $clean = htmlentities($html, ENT_QUOTES, 'UTF-8');
-            break;
+                break;
         }
         return $clean;
     }
@@ -311,7 +312,7 @@ class Codendi_HTMLPurifier {
         return $this->purify($html, CODENDI_PURIFIER_BASIC, $group_id);
     }
 
-    function purifyMap($array, $level=0, $groupId=0)
+    function purifyMap($array, $level = 0, $groupId = 0)
     {
         return array_map(array(&$this, "purify"), $array, array($level), array($groupId));
     }

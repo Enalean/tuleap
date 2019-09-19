@@ -36,8 +36,7 @@ require_once("lib/PageList.php");
 require_once("lib/TextSearchQuery.php");
 require_once("lib/plugin/IncludePage.php");
 
-class WikiPlugin_UnfoldSubpages
-extends WikiPlugin_IncludePage
+class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
 {
     function getName()
     {
@@ -51,16 +50,18 @@ extends WikiPlugin_IncludePage
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.22 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.22 $"
+        );
     }
 
     function getDefaultArguments()
     {
-        return array_merge
-            (
-             PageList::supportedArgs(),
-             array(
+        return array_merge(
+            PageList::supportedArgs(),
+            array(
                    'pagename' => '[pagename]', // default: current page
                    //'header'  => '',  // expandable string
                    'quiet'   => false, // print no header
@@ -79,13 +80,16 @@ extends WikiPlugin_IncludePage
                    'section' => false,     // this named section per page only
                    'sectionhead' => false // when including a named
                                //  section show the heading
-                   ));
+            )
+        );
     }
 
     function run($dbi, $argstr, &$request, $basepage)
     {
         static $included_pages = false;
-        if (!$included_pages) $included_pages = array($basepage);
+        if (!$included_pages) {
+            $included_pages = array($basepage);
+        }
 
         $args = $this->getArgs($argstr, $request);
         extract($args);
@@ -95,8 +99,9 @@ extends WikiPlugin_IncludePage
         //    $subpages = $subpages->applyFilters(array('sortby' => $sortby, 'limit' => $limit, 'exclude' => $exclude));
         //$subpages = explodePageList($pagename . SUBPAGE_SEPARATOR . '*', false,
         //                            $sortby, $limit, $exclude);
-        if (is_string($exclude) and !is_array($exclude))
+        if (is_string($exclude) and !is_array($exclude)) {
             $exclude = PageList::explodePageList($exclude, false, false, $limit);
+        }
         $content = HTML();
 
         include_once('lib/BlockParser.php');
@@ -106,12 +111,15 @@ extends WikiPlugin_IncludePage
             if ($maxpages and ($i++ > $maxpages)) {
                 return $content;
             }
-            if (in_array($cpagename, $exclude))
+            if (in_array($cpagename, $exclude)) {
                 continue;
+            }
             // A page cannot include itself. Avoid doublettes.
             if (in_array($cpagename, $included_pages)) {
-                $content->pushContent(HTML::p(sprintf(_("recursive inclusion of page %s ignored"),
-                                                      $cpagename)));
+                $content->pushContent(HTML::p(sprintf(
+                    _("recursive inclusion of page %s ignored"),
+                    $cpagename
+                )));
                 continue;
             }
             // trap any remaining nonexistant subpages
@@ -119,15 +127,21 @@ extends WikiPlugin_IncludePage
                 $r = $page->getCurrentRevision();
                 $c = $r->getContent();   // array of lines
                 // follow redirects
-                if (preg_match('/<'.'\?plugin\s+RedirectTo\s+page=(\w+)\s+\?'.'>/',
-                               implode("\n", $c), $m))
-                {
+                if (preg_match(
+                    '/<'.'\?plugin\s+RedirectTo\s+page=(\w+)\s+\?'.'>/',
+                    implode("\n", $c),
+                    $m
+                )) {
                     // trap recursive redirects
                     if (in_array($m[1], $included_pages)) {
-                        if (!$quiet)
+                        if (!$quiet) {
                             $content->pushContent(
-                                HTML::p(sprintf(_("recursive inclusion of page %s ignored"),
-                                                $cpagename.' => '.$m[1])));
+                                HTML::p(sprintf(
+                                    _("recursive inclusion of page %s ignored"),
+                                    $cpagename.' => '.$m[1]
+                                ))
+                            );
+                        }
                         continue;
                     }
                     $cpagename = $m[1];
@@ -137,32 +151,44 @@ extends WikiPlugin_IncludePage
                 }
 
                 // moved to IncludePage
-                $ct = $this->extractParts ($c, $cpagename, $args);
+                $ct = $this->extractParts($c, $cpagename, $args);
 
                 array_push($included_pages, $cpagename);
                 if ($smalltitle) {
                     $pname = array_pop(explode(SUBPAGE_SEPARATOR, $cpagename)); // get last subpage name
                     // Use _("%s: %s") instead of .": ". for French punctuation
-                    $ct = TransformText(sprintf(_("%s: %s"), "[$pname|$cpagename]",
-                                                $ct),
-                                        $r->get('markup'), $cpagename);
-                }
-                else {
+                    $ct = TransformText(
+                        sprintf(
+                            _("%s: %s"),
+                            "[$pname|$cpagename]",
+                            $ct
+                        ),
+                        $r->get('markup'),
+                        $cpagename
+                    );
+                } else {
                     $ct = TransformText($ct, $r->get('markup'), $cpagename);
                 }
                 array_pop($included_pages);
                 if (! $smalltitle) {
-                    $content->pushContent(HTML::p(array('class' => $quiet ?
+                    $content->pushContent(HTML::p(
+                        array('class' => $quiet ?
                                                         '' : 'transclusion-title'),
-                                                  fmt("Included from %s:",
-                                                      WikiLink($cpagename))));
+                        fmt(
+                            "Included from %s:",
+                            WikiLink($cpagename)
+                        )
+                    ));
                 }
-                $content->pushContent(HTML(HTML::div(array('class' => $quiet ?
+                $content->pushContent(HTML(HTML::div(
+                    array('class' => $quiet ?
                                                            '' : 'transclusion'),
-                                                     false, $ct)));
+                    false,
+                    $ct
+                )));
             }
         }
-        if (! $cpagename ) {
+        if (! $cpagename) {
             return $this->error(sprintf(_("%s has no subpages defined."), $pagename));
         }
         return $content;
@@ -285,4 +311,3 @@ extends WikiPlugin_IncludePage
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

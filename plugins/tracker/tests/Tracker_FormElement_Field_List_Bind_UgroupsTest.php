@@ -18,7 +18,8 @@
  */
 require_once('bootstrap.php');
 
-class Tracker_FormElement_Field_List_Bind_BaseTest extends TuleapTestCase {
+class Tracker_FormElement_Field_List_Bind_BaseTest extends TuleapTestCase
+{
     public function setUp()
     {
         parent::setUp();
@@ -58,7 +59,8 @@ class Tracker_FormElement_Field_List_Bind_BaseTest extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends Tracker_FormElement_Field_List_Bind_BaseTest {
+class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends Tracker_FormElement_Field_List_Bind_BaseTest
+{
 
     public function itExportsEmptyUgroupList()
     {
@@ -135,7 +137,8 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends Tracker
     }
 }
 
-class Tracker_FormElement_Field_List_Bind_Ugroups_SaveObjectTest extends Tracker_FormElement_Field_List_Bind_BaseTest {
+class Tracker_FormElement_Field_List_Bind_Ugroups_SaveObjectTest extends Tracker_FormElement_Field_List_Bind_BaseTest
+{
 
     public function itSavesNothingWhenNoValue()
     {
@@ -190,7 +193,8 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_SaveObjectTest extends Tracker
     }
 }
 
-class Tracker_FormElement_Field_List_Bind_Ugroups_CreateUpdateValuesTest extends Tracker_FormElement_Field_List_Bind_BaseTest {
+class Tracker_FormElement_Field_List_Bind_Ugroups_CreateUpdateValuesTest extends Tracker_FormElement_Field_List_Bind_BaseTest
+{
 
     public function setUp()
     {
@@ -262,4 +266,3 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_CreateUpdateValuesTest extends
         $this->assertEqual($res, $f->getFieldData('john.smith,tom.brown', true));
     }
 }*/
-?>

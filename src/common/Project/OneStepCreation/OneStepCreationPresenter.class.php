@@ -21,7 +21,8 @@
 /**
  * Presenter for one step creation project
  */
-class Project_OneStepCreation_OneStepCreationPresenter {
+class Project_OneStepCreation_OneStepCreationPresenter
+{
 
     public const DEFAULT_TEMPLATE_ID = 100;
 

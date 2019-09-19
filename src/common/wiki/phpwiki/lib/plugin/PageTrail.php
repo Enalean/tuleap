@@ -33,11 +33,11 @@ rcs_id('$Id: PageTrail.php,v 1.8 2005/08/06 13:23:14 rurban Exp $');
  * <?plugin PageTrail invisible=1?>
  */
 
-if (!defined('PAGETRAIL_ARROW'))
+if (!defined('PAGETRAIL_ARROW')) {
     define('PAGETRAIL_ARROW', " => ");
+}
 
-class WikiPlugin_PageTrail
-extends WikiPlugin
+class WikiPlugin_PageTrail extends WikiPlugin
 {
     // Four required functions in a WikiPlugin.
     var $def_numberlinks = 5;
@@ -50,13 +50,15 @@ extends WikiPlugin
     function getDescription()
     {
         return _("PageTrail Plugin");
-
     }
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.8 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.8 $"
+        );
     }
 
     // default values
@@ -79,7 +81,9 @@ extends WikiPlugin
         // Get name of the current page we are on
         $thispage = $request->getArg('pagename');
         $Pages = $request->session->get("PageTrail");
-        if (!is_array($Pages)) $Pages = array();
+        if (!is_array($Pages)) {
+            $Pages = array();
+        }
 
         if ($duplicates || ($thispage != $Pages[0])) {
             array_unshift($Pages, $thispage);
@@ -90,13 +94,17 @@ extends WikiPlugin
         if (! $invisible and $numberlinks) {
             $html = HTML::tt(WikiLink($Pages[$numberlinks-1], 'auto'));
             for ($i = $numberlinks - 2; $i >= 0; $i--) {
-                if (!empty($Pages[$i]))
-                    $html->pushContent(PAGETRAIL_ARROW,
-                                       WikiLink($Pages[$i], 'auto'));
+                if (!empty($Pages[$i])) {
+                    $html->pushContent(
+                        PAGETRAIL_ARROW,
+                        WikiLink($Pages[$i], 'auto')
+                    );
+                }
             }
             return $html;
-        } else
+        } else {
             return HTML();
+        }
     }
 };
 
@@ -129,4 +137,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

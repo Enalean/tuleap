@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class MediawikiDao extends DataAccessObject {
+class MediawikiDao extends DataAccessObject
+{
 
     public const DEDICATED_DATABASE_PREFIX = 'plugin_mediawiki_';
     public const DEDICATED_DATABASE_TABLE_PREFIX = 'mw';
@@ -405,7 +406,7 @@ class MediawikiDao extends DataAccessObject {
     {
         $user_name_with_first_char_uppercase = ucfirst($user_name);
 
-        return str_replace ('_', ' ', $user_name_with_first_char_uppercase);
+        return str_replace('_', ' ', $user_name_with_first_char_uppercase);
     }
 
     public function getTableName(Project $project, $table_name)
@@ -442,7 +443,7 @@ class MediawikiDao extends DataAccessObject {
                 $this->database_name[$project->getID()] = $name['database_name'];
             } elseif ($return_default) {
                 //old behaviour
-                $this->database_name[$project->getID()] = str_replace ('-', '_', self::DEDICATED_DATABASE_PREFIX . $project->getUnixName());
+                $this->database_name[$project->getID()] = str_replace('-', '_', self::DEDICATED_DATABASE_PREFIX . $project->getUnixName());
             } else {
                 $this->database_name[$project->getID()] = false;
             }
@@ -511,8 +512,8 @@ class MediawikiDao extends DataAccessObject {
             return $this->central_database;
         }
 
-        $dbname_with_id   = str_replace ('-', '_', self::DEDICATED_DATABASE_PREFIX . $project->getID());
-        $dbname_with_name = str_replace ('-', '_', self::DEDICATED_DATABASE_PREFIX . $project->getUnixName());
+        $dbname_with_id   = str_replace('-', '_', self::DEDICATED_DATABASE_PREFIX . $project->getID());
+        $dbname_with_name = str_replace('-', '_', self::DEDICATED_DATABASE_PREFIX . $project->getUnixName());
 
         $dbname_with_id   = $this->da->quoteSmart($dbname_with_id);
         $dbname_with_name = $this->da->quoteSmart($dbname_with_name);

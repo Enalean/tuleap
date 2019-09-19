@@ -22,7 +22,8 @@
 /**
  * @group TokenTests
  */
-class TokenTest extends RestBase {
+class TokenTest extends RestBase
+{
 
     public function testPostThrowExceptionIfUsernameDoesNotExist()
     {

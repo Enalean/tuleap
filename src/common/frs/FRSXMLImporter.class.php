@@ -23,7 +23,8 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\XML\Import\ImportConfig;
 
-class FRSXMLImporter {
+class FRSXMLImporter
+{
 
     public const MAPPING_KEY = 'frs_release_mapping';
 
@@ -96,7 +97,7 @@ class FRSXMLImporter {
 
     private function getFileTypeDao()
     {
-        if(empty($this->filetype_dao)) {
+        if (empty($this->filetype_dao)) {
             $this->filetype_dao = new FRSFileTypeDao();
         }
         return $this->filetype_dao;
@@ -104,7 +105,7 @@ class FRSXMLImporter {
 
     private function getProcessorDao()
     {
-        if(empty($this->processor_dao)) {
+        if (empty($this->processor_dao)) {
             $this->processor_dao = new FRSProcessorDao();
         }
         return $this->processor_dao;
@@ -112,7 +113,7 @@ class FRSXMLImporter {
 
     private function getUGroupManager()
     {
-        if(empty($this->ugroup_manager)) {
+        if (empty($this->ugroup_manager)) {
             $this->ugroup_manager = UGroupManager::instance();
         }
         return $this->ugroup_manager;
@@ -120,7 +121,7 @@ class FRSXMLImporter {
 
     private function getPermissionsManager()
     {
-        if(empty($this->permission_manager)) {
+        if (empty($this->permission_manager)) {
             $this->permission_manager = PermissionsManager::instance();
         }
         return $this->permission_manager;
@@ -131,14 +132,14 @@ class FRSXMLImporter {
         $this->logger->debug("Start import");
 
         $xml_frs = $xml->frs;
-        if(!$xml_frs) {
+        if (!$xml_frs) {
             return true;
         }
 
         $this->importRights($project, $xml_frs);
 
         $created_id_map = array( 'package' => array() );
-        foreach($xml_frs->package as $xml_pkg) {
+        foreach ($xml_frs->package as $xml_pkg) {
             $this->importPackage($project, $xml_pkg, $extraction_path, $created_id_map, $frs_release_mapping);
         }
 
@@ -166,7 +167,7 @@ class FRSXMLImporter {
         if ($xml_frs->{'read-access'}) {
             $this->logger->info("Importing read access rights for {$project->getUnixName()}");
             $ugroups_ids = $this->getUgroupIdsForPermissions($project, $xml_frs->{'read-access'});
-            if(count($ugroups_ids) > 0) {
+            if (count($ugroups_ids) > 0) {
                 $this->permission_creator->savePermissions($project, $ugroups_ids, FRSPermission::FRS_READER);
             }
         }
@@ -174,7 +175,7 @@ class FRSXMLImporter {
         if ($xml_frs->{'admin-access'}) {
             $this->logger->info("Importing admin access rights for {$project->getUnixName()}");
             $ugroups_ids = $this->getUgroupIdsForPermissions($project, $xml_frs->{'admin-access'});
-            if(count($ugroups_ids) > 0) {
+            if (count($ugroups_ids) > 0) {
                 $this->permission_creator->savePermissions($project, $ugroups_ids, FRSPermission::FRS_ADMIN);
             }
         }
@@ -184,10 +185,10 @@ class FRSXMLImporter {
     private function getUgroupIdsForPermissions(Project $project, SimpleXMLElement $permission_xmlnode)
     {
         $ugroup_ids = array();
-        foreach($permission_xmlnode->ugroup as $ugroup) {
+        foreach ($permission_xmlnode->ugroup as $ugroup) {
             $ugroup_name = (string)$ugroup;
             $ugroup = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
-            if($ugroup === null) {
+            if ($ugroup === null) {
                 $this->logger->warn("Could not find any ugroup named $ugroup_name, skip it.");
                 continue;
             }
@@ -218,19 +219,21 @@ class FRSXMLImporter {
 
         $this->logger->debug('Start import of package '.$package->getName());
         $read_perms = array();
-        foreach($xml_pkg->{'read-access'} as $perm) {
+        foreach ($xml_pkg->{'read-access'} as $perm) {
             $ugroup_name = (string) $perm->ugroup;
             $ugroup = $this->getUGroupManager()->getUGroupByName($project, $ugroup_name);
             $read_perms[] = $ugroup->getId();
         }
         $this->getPermissionsManager()->savePermissions($project, $package->getPackageID(), FRSPackage::PERM_READ, $read_perms);
 
-        foreach($xml_pkg->children() as $xml_rel) {
-            if($xml_rel->getName() != "release") continue;
+        foreach ($xml_pkg->children() as $xml_rel) {
+            if ($xml_rel->getName() != "release") {
+                continue;
+            }
             $this->importRelease($project, $package, $xml_rel, $extraction_path, $frs_release_mapping, $created_id_map);
         }
-        if($id != null) {
-            if(isset($created_id_map[$id])) {
+        if ($id != null) {
+            if (isset($created_id_map[$id])) {
                 $this->logger->error("You already referenced a package with the id $id.");
             } else {
                 $created_id_map['package'][$id] = $package->getPackageID();
@@ -273,14 +276,14 @@ class FRSXMLImporter {
         }
 
         $read_perms = array();
-        foreach($xml_rel->{'read-access'} as $perm) {
+        foreach ($xml_rel->{'read-access'} as $perm) {
             $ugroup_name = (string) $perm->ugroup;
             $ugroup = $this->getUGroupManager()->getUGroupByName($project, $ugroup_name);
             $read_perms[] = $ugroup->getId();
         }
         $this->getPermissionsManager()->savePermissions($project, $release->getReleaseID(), FRSRelease::PERM_READ, $read_perms);
 
-        foreach($xml_rel->xpath('file') as $xml_file) {
+        foreach ($xml_rel->xpath('file') as $xml_file) {
             $this->importFile($project, $release, $user, $xml_file, $extraction_path);
         }
 
@@ -288,8 +291,8 @@ class FRSXMLImporter {
             $this->importLink($release, $user, $xml_link);
         }
 
-        if($id != null) {
-            if(isset($created_id_map['release'][$id])) {
+        if ($id != null) {
+            if (isset($created_id_map['release'][$id])) {
                 $this->logger->error("You already referenced a release with the id $id.");
             } else {
                 $created_id_map['release'][$id] = $release->getReleaseID();
@@ -315,37 +318,42 @@ class FRSXMLImporter {
         $this->logger->debug('metadata gathered for file '.$name);
 
         $type_id = null;
-        if(isset($attrs['filetype']) && !empty($attrs['filetype'])) {
+        if (isset($attrs['filetype']) && !empty($attrs['filetype'])) {
             $type_id = $this->getFileTypeDao()->searchTypeId($attrs['filetype']);
-            if(is_null($type_id)) {
+            if (is_null($type_id)) {
                 throw new Exception("Invalid filetype '{$attrs['filetype']}'");
             }
         }
 
         $proc_id = null;
-        if(isset($attrs['arch']) && !empty($attrs['arch'])) {
+        if (isset($attrs['arch']) && !empty($attrs['arch'])) {
             $proc_id = $this->getProcessorDao()->searchProcessorId($project->getID(), $attrs['arch']);
-            if(is_null($proc_id)) {
+            if (is_null($proc_id)) {
                 throw new Exception("Invalid architecture '{$attrs['arch']}'");
             }
         }
 
-        foreach($xml_file->children() as $elem) {
-            if($elem->getName() != "description") continue;
+        foreach ($xml_file->children() as $elem) {
+            if ($elem->getName() != "description") {
+                continue;
+            }
             $desc .= (string) $elem;
         }
 
-        if(isset($attrs['md5sum'])) {
+        if (isset($attrs['md5sum'])) {
             $expected_md5 = strtolower($attrs['md5sum']);
-            if($expected_md5 != $md5) throw new Exception(
-                "Import of file $src failed because the file is corrupted ".
-                "(expected MD5 $expected_md5, got $md5)");
+            if ($expected_md5 != $md5) {
+                throw new Exception(
+                    "Import of file $src failed because the file is corrupted ".
+                    "(expected MD5 $expected_md5, got $md5)"
+                );
+            }
         }
 
         $this->logger->debug('Copy file to incoming dir');
         $dirPath = $this->file_factory->getSrcDir($project);
         $dest = "$dirPath/$name";
-        if(!copy($src, $dest)) {
+        if (!copy($src, $dest)) {
             throw new Exception("Could not copy $src to $dest");
         }
         $this->logger->debug('Copy done');

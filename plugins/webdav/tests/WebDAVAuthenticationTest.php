@@ -25,13 +25,14 @@ Mock::generate('PFUser');
 Mock::generatePartial(
     'WebDAVAuthentication',
     'WebDAVAuthenticationTestVersion',
-array('issetUsername', 'setHeader', 'getUsername', 'getPassword', 'getUser', 'errorWrongInput')
+    array('issetUsername', 'setHeader', 'getUsername', 'getPassword', 'getUser', 'errorWrongInput')
 );
 
 /**
  * This is the unit test of WebDAVAuthentication
  */
-class WebDAVAuthenticationTest extends TuleapTestCase {
+class WebDAVAuthenticationTest extends TuleapTestCase
+{
 
 
     public function setUp()
@@ -60,7 +61,6 @@ class WebDAVAuthenticationTest extends TuleapTestCase {
         $user->setReturnValue('isAnonymous', true);
         $webDAVAuthentication->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVAuthentication->authenticate(), null);
-
     }
 
     /**
@@ -77,7 +77,6 @@ class WebDAVAuthenticationTest extends TuleapTestCase {
         $user->setReturnValue('isAnonymous', true);
         $webDAVAuthentication->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVAuthentication->authenticate(), null);
-
     }
 
     /**
@@ -94,7 +93,6 @@ class WebDAVAuthenticationTest extends TuleapTestCase {
         $user->setReturnValue('isAnonymous', true);
         $webDAVAuthentication->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVAuthentication->authenticate(), null);
-
     }
 
     /**
@@ -112,7 +110,6 @@ class WebDAVAuthenticationTest extends TuleapTestCase {
         $user->setReturnValue('isAnonymous', true);
         $webDAVAuthentication->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVAuthentication->authenticate(), null);
-
     }
 
     /**
@@ -130,7 +127,6 @@ class WebDAVAuthenticationTest extends TuleapTestCase {
         $user->setReturnValue('isAnonymous', true);
         $webDAVAuthentication->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVAuthentication->authenticate(), $user);
-
     }
 
     /**
@@ -147,6 +143,5 @@ class WebDAVAuthenticationTest extends TuleapTestCase {
         $user->setReturnValue('isAnonymous', false);
         $webDAVAuthentication->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVAuthentication->authenticate(), $user);
-
     }
 }

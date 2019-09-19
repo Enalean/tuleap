@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class GitRepoNotInProjectException  extends Exception {
+class GitRepoNotInProjectException extends Exception
+{
 
 }
-?>

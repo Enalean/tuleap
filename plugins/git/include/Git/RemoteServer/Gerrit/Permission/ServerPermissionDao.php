@@ -71,5 +71,4 @@ class ServerPermissionDao extends DataAccessObject
             $user_id
         );
     }
-
 }

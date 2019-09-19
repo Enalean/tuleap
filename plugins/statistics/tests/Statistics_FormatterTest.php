@@ -20,7 +20,8 @@
 
 require_once __DIR__ . '/bootstrap.php';
 
-class Statistics_FormatterTest extends TuleapTestCase {
+class Statistics_FormatterTest extends TuleapTestCase
+{
 
     public function itExportsCsv()
     {

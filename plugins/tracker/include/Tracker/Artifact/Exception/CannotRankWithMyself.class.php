@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_Exception_CannotRankWithMyself extends Exception {
+class Tracker_Artifact_Exception_CannotRankWithMyself extends Exception
+{
     public function __construct($artifact_id)
     {
         parent::__construct('Artifact '.$artifact_id.' cannot be ranked with itself.');

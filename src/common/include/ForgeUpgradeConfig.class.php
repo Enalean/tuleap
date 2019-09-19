@@ -22,7 +22,8 @@
 /**
  * Manage interactions with ForgeUpgrade configuration
  */
-class ForgeUpgradeConfig {
+class ForgeUpgradeConfig
+{
     public const FORGEUPGRADE_PATH = '/usr/lib/forgeupgrade/bin/forgeupgrade';
 
     public const COMMAND_CHECK_UPDATE = 'check-update';
@@ -39,7 +40,7 @@ class ForgeUpgradeConfig {
      *
      * @param String $filePath Path to a .ini config file
      */
-    public function __construct(System_Command $command, $filePath=null)
+    public function __construct(System_Command $command, $filePath = null)
     {
         $this->command = $command;
         if (is_file($filePath)) {
@@ -144,16 +145,18 @@ class ForgeUpgradeConfig {
     {
         $content = '';
 
-        foreach ($this->config as $key=>$elem) {
+        foreach ($this->config as $key => $elem) {
             $content .= '['.$key.']'.PHP_EOL;
-            foreach ($elem as $key2=>$elem2) {
-                if(is_array($elem2)) {
-                    foreach($elem2 as $value) {
+            foreach ($elem as $key2 => $elem2) {
+                if (is_array($elem2)) {
+                    foreach ($elem2 as $value) {
                         $content .= $key2.'[] = "'.$value.'"'.PHP_EOL;
                     }
+                } elseif ($elem2=="") {
+                    $content .= $key2.' = '.PHP_EOL;
+                } else {
+                    $content .= $key2.' = "'.$elem2.'"'.PHP_EOL;
                 }
-                else if($elem2=="") $content .= $key2.' = '.PHP_EOL;
-                else $content .= $key2.' = "'.$elem2.'"'.PHP_EOL;
             }
         }
 

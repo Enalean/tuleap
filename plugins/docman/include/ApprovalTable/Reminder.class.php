@@ -27,7 +27,8 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 /**
  * Remind users that didn't review documents yet
  */
-class Docman_ApprovalTableReminder {
+class Docman_ApprovalTableReminder
+{
 
     /**
      * Remind approval table approvers
@@ -66,16 +67,16 @@ class Docman_ApprovalTableReminder {
      */
     private function sendNotificationToPendingApprovers(Docman_ApprovalTable $table)
     {
-        if($table->isEnabled()) {
+        if ($table->isEnabled()) {
             switch ($table->getNotification()) {
                 case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
                     $this->notifyAllAtOnce($table);
-                break;
+                    break;
                 case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
                     $this->notifyNextReviewer($table);
-                break;
+                    break;
                 default:
-                break;
+                    break;
             }
         }
     }
@@ -95,7 +96,7 @@ class Docman_ApprovalTableReminder {
         foreach ($reviewers as $reviewer) {
             if ($reviewer->getState() == PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET || $reviewer->getState() == PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED) {
                 $sent = $this->notifyIndividual($table, $reviewer->getId());
-                if($sent) {
+                if ($sent) {
                     $nbNotif++;
                 }
             }
@@ -115,11 +116,11 @@ class Docman_ApprovalTableReminder {
     {
         $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
         $dar = $dao->getFirstReviewerByStatus($table->getId(), PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
-        if($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             return false;
         } else {
             $dar = $dao->getFirstReviewerByStatus($table->getId(), array(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET, PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED));
-            if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->current();
                 return $this->notifyIndividual($table, $row['reviewer_id']);
             }
@@ -176,7 +177,6 @@ class Docman_ApprovalTableReminder {
         $html_body = '';
         if ($mailPrefs == Codendi_Mail_Interface::FORMAT_HTML) {
                 $html_body = $this->getBodyHtml($table, $docmanItem);
-
         }
         $text_body = $this->getBodyText($table, $docmanItem);
 
@@ -245,13 +245,13 @@ class Docman_ApprovalTableReminder {
     private function getNotificationStyle(Docman_ApprovalTable $table)
     {
         $notifStyle = '';
-        switch($table->getNotification()) {
+        switch ($table->getNotification()) {
             case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
                 $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_seq', array($GLOBALS['sys_name']));
-            break;
+                break;
             case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
                 $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_all');
-            break;
+                break;
         }
         return $notifStyle;
     }
@@ -268,18 +268,18 @@ class Docman_ApprovalTableReminder {
     {
         $comment     = '';
         $userComment = $table->getDescription();
-        if($userComment != '') {
+        if ($userComment != '') {
             switch ($format) {
-                case Codendi_Mail_Interface::FORMAT_HTML :
+                case Codendi_Mail_Interface::FORMAT_HTML:
                     $comment  = '<b>'.$GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_notif_owner_comment').'</b><br>';
                     $comment .= '<hr align="center" width="50%" color="midnightblue" size="3"><br>'.$userComment.'<br><hr align="center" width="50%" color="midnightblue" size="3"><br><br>';
                     $comment .= '<br>';
                     break;
-                case Codendi_Mail_Interface::FORMAT_TEXT :
+                case Codendi_Mail_Interface::FORMAT_TEXT:
                     $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_owner_comment', array($userComment));
                     $comment .= "\n\n";
                     break;
-                default :
+                default:
                     $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_notif_owner_comment', array($userComment));
                     break;
             }

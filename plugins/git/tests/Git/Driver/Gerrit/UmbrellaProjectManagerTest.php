@@ -24,7 +24,8 @@
 
 require_once dirname(__FILE__).'/../../../bootstrap.php';
 
-class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends TuleapTestCase {
+class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends TuleapTestCase
+{
     /** @var Git_RemoteServer_GerritServer */
     protected $server;
 
@@ -144,5 +145,3 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
         $this->umbrella_manager->recursivelyCreateUmbrellaProjects(array($this->server), $this->project);
     }
 }
-
-?>

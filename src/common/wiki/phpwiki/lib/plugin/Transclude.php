@@ -43,8 +43,7 @@ rcs_id('$Id: Transclude.php,v 1.9 2004/06/14 11:31:39 rurban Exp $');
  *  Sometimes the auto-vertical resize code doesn't seem to make the iframe
  *  quite big enough --- the scroll bars remain.  Not sure why.
  */
-class WikiPlugin_Transclude
-extends WikiPlugin
+class WikiPlugin_Transclude extends WikiPlugin
 {
     function getName()
     {
@@ -58,8 +57,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.9 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.9 $"
+        );
     }
 
     function getDefaultArguments()
@@ -81,7 +83,7 @@ extends WikiPlugin
         }
         // FIXME: Better recursion detection.
         // FIXME: Currently this doesnt work at all.
-        if ($src == $request->getURLtoSelf() ) {
+        if ($src == $request->getURLtoSelf()) {
             return $this->error(fmt("recursive inclusion of url %s", $src));
         }
 
@@ -103,8 +105,10 @@ extends WikiPlugin
 
         $noframe_msg[] = fmt("See: %s", HTML::a(array('href' => $sanitized_src), $src));
 
-        $noframe_msg = HTML::div(array('class' => 'transclusion'),
-                                 HTML::p(array(), $noframe_msg));
+        $noframe_msg = HTML::div(
+            array('class' => 'transclusion'),
+            HTML::p(array(), $noframe_msg)
+        );
 
         $iframe = HTML::div(HTML::iframe($params, $noframe_msg));
 
@@ -112,9 +116,14 @@ extends WikiPlugin
         $iframe = new HtmlElement('ilayer', array('src' => $src), $iframe);
         */
 
-        return HTML(HTML::p(array('class' => 'transclusion-title'),
-                            fmt("Transcluded from %s", LinkURL($sanitized_src))),
-                    $this->_js(), $iframe);
+        return HTML(
+            HTML::p(
+                array('class' => 'transclusion-title'),
+                fmt("Transcluded from %s", LinkURL($sanitized_src))
+            ),
+            $this->_js(),
+            $iframe
+        );
     }
 
     /**
@@ -130,8 +139,9 @@ extends WikiPlugin
     {
         static $seen = false;
 
-        if ($seen)
+        if ($seen) {
             return '';
+        }
         $seen = true;
 
         return JavaScript('
@@ -202,4 +212,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

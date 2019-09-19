@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class GitPresenters_GerritAsThirdPartyPresenter {
+class GitPresenters_GerritAsThirdPartyPresenter
+{
 
     public $form_action = 'add_missing_gerrit_access';
 
@@ -37,4 +38,3 @@ class GitPresenters_GerritAsThirdPartyPresenter {
         return dgettext('tuleap-git', 'You may need to log into Gerrit first');
     }
 }
-?>

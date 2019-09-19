@@ -9,19 +9,19 @@ Main methods to use:
  Written by Henrik Aasted Sorensen, henrik@aasted.org
  Read more at http://www.aasted.org/quote
 */
-class Fortune {
+class Fortune
+{
 
     function quoteFromDir($dir)
     {
         $amount = 0;
         $index = 0;
 
-        if ( $handle = opendir($dir) ) {
+        if ($handle = opendir($dir)) {
             while (false !== ($file = readdir($handle))) {
-
-                if ( strpos($file, ".dat") != false) {
+                if (strpos($file, ".dat") != false) {
                     $len = strlen($file);
-                    if (substr($file, $len - 4) == ".dat"){
+                    if (substr($file, $len - 4) == ".dat") {
                         $number = $this->getNumberOfQuotes($dir . "/" . $file);
                         $amount += $number;
                         $quotes[$index] = $amount;
@@ -29,14 +29,13 @@ class Fortune {
                         $index++;
                     }
                 }
-
             }
 
             srand((double)microtime()*1000000);
             $index = rand(0, $amount);
             $i = 0;
 
-            while ($quotes[$i] < $index)  {
+            while ($quotes[$i] < $index) {
                 $i++;
             }
 
@@ -66,7 +65,7 @@ class Fortune {
             return;
         }
 
-        if ( ($fd = fopen($file, "rb")) == false ) {
+        if (($fd = fopen($file, "rb")) == false) {
             echo "Cannot open $file<br/>";
             return;
         }
@@ -78,7 +77,7 @@ class Fortune {
 
         $quotefile = substr($file, 0, strlen($file) - 4);
 
-        if ( ($fd = fopen($quotefile, "rb")) == false ) {
+        if (($fd = fopen($quotefile, "rb")) == false) {
             echo "Cannot find file $quotefile!<br/>";
         }
 
@@ -106,11 +105,12 @@ class Fortune {
     function getQuote($fd, $index)
     {
         fseek($fd, $index);
-        $line=""; $res = "";
+        $line="";
+        $res = "";
         do {
             $res = $res . $line;
             $line = fgets($fd, 1024) . "<br>";
-        } while ( ($line[0] != "%") && (!feof($fd)) );
+        } while (($line[0] != "%") && (!feof($fd)));
 
         return $res;
     }
@@ -123,7 +123,7 @@ class Fortune {
         fseek($fd, 24, SEEK_SET);
         $i = 0;
 
-        while ( feof($fd) == FALSE ) {
+        while (feof($fd) == false) {
             $res[$i] = readLong($fd);
             $i++;
         }
@@ -159,11 +159,13 @@ class Fortune {
             if ($line == "%\n") {
                 $indices[$i] = ftell($fd);
                 $i++;
-                if ($length > $longest)
+                if ($length > $longest) {
                     $longest = $length;
+                }
 
-                if ($length < $shortest)
+                if ($length < $shortest) {
                     $shortest = $length;
+                }
 
                 $length = 0;
             } else {
@@ -188,7 +190,7 @@ class Fortune {
         $this->writeLong($fd, 0);
         $this->writeLong($fd, 37 << 24);
 
-        for ($i = 0 ; $i < count($indices) ; $i++) {
+        for ($i = 0; $i < count($indices); $i++) {
             $this->writeLong($fd, $indices[$i]);
         }
 
@@ -197,10 +199,9 @@ class Fortune {
 
     function writeLong($fd, $l)
     {
-        fwrite($fd, chr ( ($l >> 24) & 255));
-        fwrite($fd, chr ( ($l >> 16) & 255));
-        fwrite($fd, chr ( ($l >> 8) & 255));
-        fwrite($fd, chr ( $l & 255));
+        fwrite($fd, chr(($l >> 24) & 255));
+        fwrite($fd, chr(($l >> 16) & 255));
+        fwrite($fd, chr(($l >> 8) & 255));
+        fwrite($fd, chr($l & 255));
     }
 } // End of class
-?>

@@ -21,7 +21,8 @@ namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use Luracast\Restler\RestException;
 
-class KanbanAddRepresentation {
+class KanbanAddRepresentation
+{
     /**
      * @var {@type array}
      */

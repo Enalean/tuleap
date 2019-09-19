@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class b20150421_add_hostname_info_to_mirror extends ForgeUpgrade_Bucket {
+class b20150421_add_hostname_info_to_mirror extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

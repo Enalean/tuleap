@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201407231643_fill_database_table_with_dash_named_projects extends ForgeUpgrade_Bucket {
+class b201407231643_fill_database_table_with_dash_named_projects extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -74,5 +75,3 @@ EOT;
         }
     }
 }
-
-?>

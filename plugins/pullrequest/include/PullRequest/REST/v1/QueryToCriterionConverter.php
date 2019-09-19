@@ -51,7 +51,7 @@ class QueryToCriterionConverter
         if (isset($query_object->status)) {
             if ($query_object->status === 'open') {
                 return new StatusOpen();
-            } else if ($query_object->status === 'closed') {
+            } elseif ($query_object->status === 'closed') {
                 return new StatusClosed();
             } else {
                 throw new MalformedQueryParameterException();

@@ -22,7 +22,8 @@
 /**
  * Base class for all fields in trackers, from fieldsets to selectboxes
  */
-abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tracker_FormElement_IProvideFactoryButtonInformation, Tracker_IProvideJsonFormatOfMyself {
+abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tracker_FormElement_IProvideFactoryButtonInformation, Tracker_IProvideJsonFormatOfMyself
+{
     public const PERMISSION_READ   = 'PLUGIN_TRACKER_FIELD_READ';
     public const PERMISSION_UPDATE = 'PLUGIN_TRACKER_FIELD_UPDATE';
     public const PERMISSION_SUBMIT = 'PLUGIN_TRACKER_FIELD_SUBMIT';
@@ -155,13 +156,16 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
     public function getScope()
     {
-        return $this->scope; }
+        return $this->scope;
+    }
     public function getParentId()
     {
-        return $this->parent_id; }
+        return $this->parent_id;
+    }
     public function getRank()
     {
-        return $this->rank; }
+        return $this->rank;
+    }
 
     /**
      *  Return true if the field is used
@@ -226,7 +230,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             case 'admin-formElement-update':
                 $this->processUpdate($layout, $request, $current_user);
                 $this->displayAdminFormElement($layout, $request, $current_user);
-            break;
+                break;
             case 'admin-formElement-remove':
                 if ($this->isUsedInTrigger()) {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'used_in_triggers'));
@@ -238,16 +242,16 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
                 }
                 $this->getTracker()->displayAdminFormElements($layout, $request, $current_user);
-            break;
+                break;
             case 'admin-formElement-delete':
                 if ($this->delete() && Tracker_FormElementFactory::instance()->deleteFormElement($this->id)) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_deleted'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
                 }
                 $this->getTracker()->displayAdminFormElements($layout, $request, $current_user);
-            break;
+                break;
             default:
-            break;
+                break;
         }
     }
 
@@ -284,7 +288,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
                     }
                 }
             }
-        } else if ($request->get('change-type')) {
+        } elseif ($request->get('change-type')) {
             if (Tracker_FormElementFactory::instance()->changeFormElementType($this, $request->get('change-type'))) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_type_changed'));
             } else {
@@ -335,7 +339,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return string
      */
 
-    public abstract function fetchAddCriteria($used, $prefix = '');
+    abstract public function fetchAddCriteria($used, $prefix = '');
 
     /**
      * Fetch the "add column" box in table renderer
@@ -345,7 +349,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string
      */
-    public abstract function fetchAddColumn($used, $prefix = '');
+    abstract public function fetchAddColumn($used, $prefix = '');
 
     /**
      * Fetch the "add tooltip" box in admin
@@ -355,7 +359,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string
      */
-    public abstract function fetchAddTooltip($used, $prefix = '');
+    abstract public function fetchAddTooltip($used, $prefix = '');
 
     /**
      *
@@ -363,10 +367,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @param <type> $format
      * @return <type>
      */
-    public function fetchMailFormElements($artifact, $format='text', $ignore_perms=false)
+    public function fetchMailFormElements($artifact, $format = 'text', $ignore_perms = false)
     {
         $text = '';
-        foreach( $this->getFormElements() as $formElement ) {
+        foreach ($this->getFormElements() as $formElement) {
             $text .= $formElement->getLabel();
             $text .= ' : ';
             $text .= $formElement->fetchMailArtifact($artifact, $format, $ignore_perms);
@@ -471,8 +475,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $html .= '<tr><td>';
         $html .= Tracker_FormElementFactory::instance()->getFactoryButton(self::class, 'add-formElement['. $this->id .']', $this->getTracker(), $this->label, $this->description, $this->getFactoryIconUseIt());
         $html .= '</td><td>';
-        $html .= '<a href="'. $this->getAdminEditUrl() .'" title="'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','edit_field').'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
-        $confirm = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','delete_field') .' '. $this->getLabel() .'?';
+        $html .= '<a href="'. $this->getAdminEditUrl() .'" title="'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'edit_field').'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
+        $confirm = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'delete_field') .' '. $this->getLabel() .'?';
         $query = http_build_query(
             array(
                 'tracker'  => $this->getTracker()->id,
@@ -572,9 +576,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     protected function getFlattenProperties($p)
     {
         $properties = array();
-        foreach($p as $key => $property) {
+        foreach ($p as $key => $property) {
             $properties[$key] = $property;
-            if ( !empty($property['type'] ) ) {
+            if (!empty($property['type'])) {
                 switch ($property['type']) {
                     case 'radio':
                         $properties = array_merge($properties, $this->getFlattenProperties($property['choices']));
@@ -595,7 +599,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function getFlattenPropertiesValues()
     {
         $properties = array();
-        foreach($this->getFlattenProperties($this->getProperties()) as $key => $prop){
+        foreach ($this->getFlattenProperties($this->getProperties()) as $key => $prop) {
             if (is_array($prop)) {
                 $properties[$key] = $prop['value'];
             } else {
@@ -653,29 +657,29 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string html
      */
-    public abstract function fetchSubmit(array $submitted_values);
+    abstract public function fetchSubmit(array $submitted_values);
 
-    public abstract function fetchSubmitForOverlay(array $submitted_values);
+    abstract public function fetchSubmitForOverlay(array $submitted_values);
 
     /**
      * Fetch the element for the submit new artifact form
      *
      * @return string html
      */
-    public abstract function fetchSubmitMasschange();
+    abstract public function fetchSubmitMasschange();
 
     /**
      * Fetch the element for the update artifact form
      *
      * @return string html
      */
-    public abstract function fetchArtifact(
+    abstract public function fetchArtifact(
         Tracker_Artifact $artifact,
         array $submitted_values,
         array $additional_classes
     );
 
-    public abstract function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values);
+    abstract public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values);
 
     /**
      * Fetch the element for the artifact in read only
@@ -684,20 +688,20 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string html
      */
-    public abstract function fetchArtifactReadOnly(Tracker_Artifact $artifact, array $submitted_values);
+    abstract public function fetchArtifactReadOnly(Tracker_Artifact $artifact, array $submitted_values);
 
     /**
      * @param Tracker_Artifact $artifact
      * @return mixed
      */
-    public abstract function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values);
+    abstract public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values);
 
     /**
      * Fetch mail rendering in a given format
      * @param string $format
      * @return string formatted output
      */
-    public function fetchMail($format='text')
+    public function fetchMail($format = 'text')
     {
         return '';
     }
@@ -707,7 +711,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @param Tracker_Artifact $artifact
      * @return <type>
      */
-    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false)
+    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
         return '';
     }
@@ -809,7 +813,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string html
      */
-    protected abstract function fetchAdminFormElement();
+    abstract protected function fetchAdminFormElement();
 
     /**
      * Compute the url to edit the element
@@ -926,7 +930,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     ) {
         // add properties to specific fields
         if (isset($xml->properties)) {
-            foreach($xml->properties->attributes() as $name => $prop){
+            foreach ($xml->properties->attributes() as $name => $prop) {
                 $this->default_properties[(string)$name] = (string)$prop;
             }
         }
@@ -1288,7 +1292,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string returns a message
      */
-    public abstract function getCannotRemoveMessage();
+    abstract public function getCannotRemoveMessage();
 
     /**
      * Is the form element can be removed from usage?
@@ -1296,7 +1300,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return bool
      */
-    public abstract function canBeRemovedFromUsage();
+    abstract public function canBeRemovedFromUsage();
 
     protected $cache_permissions;
     /**

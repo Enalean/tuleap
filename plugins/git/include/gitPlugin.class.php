@@ -188,28 +188,28 @@ class GitPlugin extends Plugin
 
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
-        $this->addHook('cssfile',                                         'cssFile',                                      false);
-        $this->addHook('javascript_file',                                 'jsFile',                                       false);
-        $this->addHook(Event::JAVASCRIPT,                                 'javascript',                                   false);
-        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS,                     'getSystemEventClass',                          false);
-        $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES,  'getReferenceKeywords',                         false);
-        $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE,             'getReferenceNatures',                          false);
+        $this->addHook('cssfile', 'cssFile', false);
+        $this->addHook('javascript_file', 'jsFile', false);
+        $this->addHook(Event::JAVASCRIPT, 'javascript', false);
+        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass', false);
+        $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, 'getReferenceKeywords', false);
+        $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'getReferenceNatures', false);
         $this->addHook(Event::GET_REFERENCE);
-        $this->addHook('SystemEvent_PROJECT_IS_PRIVATE',                  'changeProjectRepositoriesAccess',              false);
-        $this->addHook('SystemEvent_PROJECT_RENAME',                      'systemEventProjectRename',                     false);
+        $this->addHook('SystemEvent_PROJECT_IS_PRIVATE', 'changeProjectRepositoriesAccess', false);
+        $this->addHook('SystemEvent_PROJECT_RENAME', 'systemEventProjectRename', false);
         $this->addHook('project_is_deleted');
         $this->addHook('project_is_suspended');
         $this->addHook('project_is_active');
-        $this->addHook('file_exists_in_data_dir',                         'file_exists_in_data_dir',                      false);
+        $this->addHook('file_exists_in_data_dir', 'file_exists_in_data_dir', false);
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
         // Stats plugin
-        $this->addHook('plugin_statistics_disk_usage_collect_project',    'plugin_statistics_disk_usage_collect_project', false);
-        $this->addHook('plugin_statistics_disk_usage_service_label',      'plugin_statistics_disk_usage_service_label',   false);
-        $this->addHook('plugin_statistics_color',                         'plugin_statistics_color',                      false);
+        $this->addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
+        $this->addHook('plugin_statistics_disk_usage_service_label', 'plugin_statistics_disk_usage_service_label', false);
+        $this->addHook('plugin_statistics_color', 'plugin_statistics_color', false);
 
-        $this->addHook(Event::LIST_SSH_KEYS,                              'getRemoteServersForUser',                      false);
+        $this->addHook(Event::LIST_SSH_KEYS, 'getRemoteServersForUser', false);
         $this->addHook(Event::DUMP_SSH_KEYS);
         $this->addHook(Event::EDIT_SSH_KEYS);
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
@@ -217,24 +217,24 @@ class GitPlugin extends Plugin
         $this->addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
 
-        $this->addHook('permission_get_name',                             'permission_get_name',                          false);
-        $this->addHook('permission_get_object_type',                      'permission_get_object_type',                   false);
-        $this->addHook('permission_get_object_name',                      'permission_get_object_name',                   false);
-        $this->addHook('permission_get_object_fullname',                  'permission_get_object_fullname',               false);
-        $this->addHook('permission_user_allowed_to_change',               'permission_user_allowed_to_change',            false);
+        $this->addHook('permission_get_name', 'permission_get_name', false);
+        $this->addHook('permission_get_object_type', 'permission_get_object_type', false);
+        $this->addHook('permission_get_object_name', 'permission_get_object_name', false);
+        $this->addHook('permission_get_object_fullname', 'permission_get_object_fullname', false);
+        $this->addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
 
-        $this->addHook('statistics_collector',                            'statistics_collector',                         false);
+        $this->addHook('statistics_collector', 'statistics_collector', false);
 
-        $this->addHook('collect_ci_triggers',                             'collect_ci_triggers',                          false);
-        $this->addHook('save_ci_triggers',                                'save_ci_triggers',                             false);
-        $this->addHook('update_ci_triggers',                              'update_ci_triggers',                           false);
-        $this->addHook('delete_ci_triggers',                              'delete_ci_triggers',                           false);
+        $this->addHook('collect_ci_triggers', 'collect_ci_triggers', false);
+        $this->addHook('save_ci_triggers', 'save_ci_triggers', false);
+        $this->addHook('update_ci_triggers', 'update_ci_triggers', false);
+        $this->addHook('delete_ci_triggers', 'delete_ci_triggers', false);
 
-        $this->addHook('logs_daily',                                       'logsDaily',                                   false);
+        $this->addHook('logs_daily', 'logsDaily', false);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
-        $this->addHook('show_pending_documents',                           'showArchivedRepositories',                    false);
+        $this->addHook('show_pending_documents', 'showArchivedRepositories', false);
 
         $this->addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
 
@@ -466,7 +466,7 @@ class GitPlugin extends Plugin
      */
     public function getSystemEventClass($params)
     {
-        switch($params['type']) {
+        switch ($params['type']) {
             case SystemEvent_GIT_REPO_UPDATE::NAME:
                 $params['class'] = 'SystemEvent_GIT_REPO_UPDATE';
                 $params['dependencies'] = array(
@@ -737,7 +737,7 @@ class GitPlugin extends Plugin
     private function isNameAvailable($newName, &$error)
     {
         $backend_gitolite = $this->getBackendGitolite();
-        $backend_gitshell = Backend::instance('Git','GitBackend', array($this->getGitRepositoryUrlManager()));
+        $backend_gitshell = Backend::instance('Git', 'GitBackend', array($this->getGitRepositoryUrlManager()));
 
         if (! $backend_gitolite->isNameAvailable($newName) && ! $backend_gitshell->isNameAvailable($newName)) {
             $error = dgettext('tuleap-git', 'A file already exists with this name under gitroot');
@@ -986,7 +986,6 @@ class GitPlugin extends Plugin
             $this->getUsersToNotifyDao()
         );
         $cleaner->cleanNotificationsAfterUserRemoval($project, $user);
-
     }
 
     /**
@@ -1127,7 +1126,7 @@ class GitPlugin extends Plugin
     function permission_get_name($params)
     {
         if (!$params['name']) {
-            switch($params['permission_type']) {
+            switch ($params['permission_type']) {
                 case 'PLUGIN_GIT_READ':
                     $params['name'] = dgettext('tuleap-git', 'Read');
                     break;
@@ -1294,7 +1293,7 @@ class GitPlugin extends Plugin
         if (!empty($params['formatter'])) {
             include_once('GitBackend.class.php');
             $formatter  = $params['formatter'];
-            $gitBackend = Backend::instance('Git','GitBackend', array($this->getGitRepositoryUrlManager()));
+            $gitBackend = Backend::instance('Git', 'GitBackend', array($this->getGitRepositoryUrlManager()));
             echo $gitBackend->getBackendStatistics($formatter);
         }
     }
@@ -1330,7 +1329,7 @@ class GitPlugin extends Plugin
                 if ($repositoryId) {
                     $vRepoId = new Valid_UInt('hudson_use_plugin_git_trigger');
                     $vRepoId->required();
-                    if($params['request']->valid($vRepoId)) {
+                    if ($params['request']->valid($vRepoId)) {
                         $ci = new Git_Ci();
                         if (!$ci->saveTrigger($params['job_id'], $repositoryId)) {
                             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Git trigger not saved'));
@@ -1358,7 +1357,7 @@ class GitPlugin extends Plugin
             if ($jobId) {
                 $vJobId = new Valid_UInt('job_id');
                 $vJobId->required();
-                if($params['request']->valid($vJobId)) {
+                if ($params['request']->valid($vJobId)) {
                     $ci = new Git_Ci();
                     $vRepoId = new Valid_UInt('hudson_use_plugin_git_trigger');
                     $vRepoId->required();
@@ -2076,10 +2075,10 @@ class GitPlugin extends Plugin
     public function register_project_creation($params)
     {
         $this->getPermissionsManager()->duplicateWithStaticMapping(
-                $params['template_id'],
-                $params['group_id'],
-                array(Git::PERM_ADMIN, Git::DEFAULT_PERM_READ, Git::DEFAULT_PERM_WRITE, Git::DEFAULT_PERM_WPLUS),
-                $params['ugroupsMapping']
+            $params['template_id'],
+            $params['group_id'],
+            array(Git::PERM_ADMIN, Git::DEFAULT_PERM_READ, Git::DEFAULT_PERM_WRITE, Git::DEFAULT_PERM_WPLUS),
+            $params['ugroupsMapping']
         );
 
         $this->getDefaultFineGrainedPermissionReplicator()->replicate(
@@ -2329,7 +2328,7 @@ class GitPlugin extends Plugin
                     <tbody>';
         if (count($archived_repositories)) {
             $html_purifier = Codendi_HTMLPurifier::instance();
-            foreach($archived_repositories as $archived_repository) {
+            foreach ($archived_repositories as $archived_repository) {
                 $tab_content .= '<tr>';
                 $tab_content .= '<td>'.$html_purifier->purify($archived_repository->getName()).'</td>';
                 $tab_content .= '<td>'.$html_purifier->purify($archived_repository->getCreationDate()).'</td>';
@@ -2417,8 +2416,8 @@ class GitPlugin extends Plugin
         if ($user->getStatus() == PFUser::STATUS_SUSPENDED) {
             $factory = $this->getGerritServerFactory();
             $gerrit_servers = $factory->getServers();
-            $gerritDriverFactory = new Git_Driver_Gerrit_GerritDriverFactory ($this->getLogger());
-            foreach($gerrit_servers as $server) {
+            $gerritDriverFactory = new Git_Driver_Gerrit_GerritDriverFactory($this->getLogger());
+            foreach ($gerrit_servers as $server) {
                 $gerritDriver = $gerritDriverFactory->getDriver($server);
                 $gerritDriver->setUserAccountInactive($server, $user);
             }
@@ -2615,7 +2614,8 @@ class GitPlugin extends Plugin
         $ugroup_manager = $this->getUGroupManager();
         $ugroup_representation_builder = new PermissionPerGroupUGroupRepresentationBuilder($this->getUGroupManager());
         $ugroup_builder = new CollectionOfUGroupRepresentationBuilder(
-            $ugroup_manager, $ugroup_representation_builder
+            $ugroup_manager,
+            $ugroup_representation_builder
         );
         $admin_url_builder = new AdminUrlBuilder();
         $simple_builder = new RepositorySimpleRepresentationBuilder(

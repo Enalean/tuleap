@@ -24,7 +24,8 @@
 
 require_once __DIR__ .'/../bootstrap.php';
 
-class Tracker_UgroupMappingBuilderTest extends TuleapTestCase {
+class Tracker_UgroupMappingBuilderTest extends TuleapTestCase
+{
 
     protected $template_tracker;
     protected $target_project;
@@ -69,4 +70,3 @@ class Tracker_UgroupMappingBuilderTest extends TuleapTestCase {
         $this->assertEqual($mapping, array(1001 => 1002));
     }
 }
-?>

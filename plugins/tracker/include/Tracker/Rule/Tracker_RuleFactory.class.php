@@ -24,7 +24,8 @@
 *
 * Base class to create, retrieve, update or delete rules
 */
-class Tracker_RuleFactory {
+class Tracker_RuleFactory
+{
 
     /**
      *
@@ -86,7 +87,7 @@ class Tracker_RuleFactory {
     {
         $dar = $this->rules_dao->searchByTrackerIdWithOrder($tracker_id);
         $rules = array();
-        while($rule_row = $dar->getRow()) {
+        while ($rule_row = $dar->getRow()) {
             if (!isset($this->rules[$rule_row['id']])) {
                 $rule_row['tracker_id'] = $tracker_id;
                 $this->rules[$rule_row['id']] =& $this->_buildRuleInstance($rule_row);
@@ -125,7 +126,7 @@ class Tracker_RuleFactory {
     public function saveObject(array $rules, Tracker $trackerDB)
     {
 
-        if(isset($rules['list_rules'])) {
+        if (isset($rules['list_rules'])) {
             foreach ($rules['list_rules'] as $list_rule) {
                 /** @var Tracker_Rule_List $list_rule */
                 $list_rule->setTrackerId($trackerDB->getId());
@@ -133,7 +134,7 @@ class Tracker_RuleFactory {
             }
         }
 
-        if(isset($rules['date_rules'])) {
+        if (isset($rules['date_rules'])) {
             foreach ($rules['date_rules'] as $date_rule) {
                 /** @var Tracker_Rule_Date $list_rule */
                 $date_rule->setTrackerId($trackerDB->getId());
@@ -187,12 +188,12 @@ class Tracker_RuleFactory {
     {
         $rules = array();
         //test this better
-        if(property_exists($xml, 'list_rules')) {
+        if (property_exists($xml, 'list_rules')) {
             $list_rules = $xml->list_rules;
             $rules['list_rules'] = $this->generateListRulesArrayFromXml($list_rules, $xmlMapping, $tracker);
         }
 
-        if(property_exists($xml, 'date_rules')) {
+        if (property_exists($xml, 'date_rules')) {
             $date_rules = $xml->date_rules;
             $rules['date_rules'] = $this->generateDateRulesArrayFromXml($date_rules, $xmlMapping, $tracker);
         }
@@ -212,7 +213,7 @@ class Tracker_RuleFactory {
     public function getDependenciesBySourceTarget($tracker_id, $field_source_id, $field_target_id)
     {
         $dependencies = array();
-        foreach($this->rules_dao->searchBySourceTarget($tracker_id, $field_source_id, $field_target_id) as $row) {
+        foreach ($this->rules_dao->searchBySourceTarget($tracker_id, $field_source_id, $field_target_id) as $row) {
             $dependencies[$row['id']] = $this->getInstanceFromRow($row);
         }
         return $dependencies;
@@ -242,7 +243,7 @@ class Tracker_RuleFactory {
      */
     public function getListFactory()
     {
-        if(! $this->list_factory){
+        if (! $this->list_factory) {
             $listDao = $this->getListDao();
             $this->list_factory =  new Tracker_Rule_List_Factory($listDao);
         }
@@ -267,7 +268,7 @@ class Tracker_RuleFactory {
      */
     public function getDateFactory()
     {
-        if(! $this->date_factory){
+        if (! $this->date_factory) {
             $dateDao = $this->getDateDao();
             $form_element_factory = Tracker_FormElementFactory::instance();
             $this->date_factory =  new Tracker_Rule_Date_Factory($dateDao, $form_element_factory);
@@ -293,7 +294,7 @@ class Tracker_RuleFactory {
      */
     public function getListDao()
     {
-        if(! $this->list_dao){
+        if (! $this->list_dao) {
             $this->list_dao =  new Tracker_Rule_List_Dao();
         }
 
@@ -317,7 +318,7 @@ class Tracker_RuleFactory {
      */
     public function getDateDao()
     {
-        if(! $this->date_dao){
+        if (! $this->date_dao) {
             $this->date_dao =  new Tracker_Rule_Date_Dao();
         }
 
@@ -380,7 +381,6 @@ class Tracker_RuleFactory {
         $rules = array();
 
         foreach ($list_rules->rule as $xml_rule) {
-
             $xml_source_field_attributes = $xml_rule->source_field->attributes();
             $source_field = $xmlMapping[(string)$xml_source_field_attributes['REF']];
 
@@ -413,4 +413,3 @@ class Tracker_RuleFactory {
         return $rules;
     }
 }
-?>

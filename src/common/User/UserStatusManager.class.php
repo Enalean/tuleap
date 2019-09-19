@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class User_UserStatusManager {
+class User_UserStatusManager
+{
 
     /**
      * Ensure user can use the platform
@@ -98,5 +99,3 @@ class User_UserStatusManager {
         }
     }
 }
-
-

@@ -22,7 +22,8 @@
 /**
  * Response
  */
-class Response {
+class Response
+{
 
     /**
      *
@@ -73,7 +74,7 @@ class Response {
         return $this->tours;
     }
 
-    function addFeedback($level, $message,  $purify=CODENDI_PURIFIER_CONVERT_HTML)
+    function addFeedback($level, $message, $purify = CODENDI_PURIFIER_CONVERT_HTML)
     {
         $this->_feedback->log($level, $message, $purify);
     }
@@ -81,9 +82,9 @@ class Response {
     /**
      * Only adds to the feedback if the messge doesn't already exist.
      */
-    function addUniqueFeedback($level, $message,  $purify=CODENDI_PURIFIER_CONVERT_HTML)
+    function addUniqueFeedback($level, $message, $purify = CODENDI_PURIFIER_CONVERT_HTML)
     {
-        if(! strstr($this->getRawFeedback(), $message)) {
+        if (! strstr($this->getRawFeedback(), $message)) {
             $this->_feedback->log($level, $message, $purify);
         }
     }
@@ -162,10 +163,10 @@ class Response {
 
     public function sendXMLAttachementFile($xml, $output_filename)
     {
-        header ('Content-Description: File Transfer');
-        header ('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header ('Content-Disposition: attachment; filename="'.$output_filename.'"');
-        header ('Content-Type: application/xml');
+        header('Content-Description: File Transfer');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Content-Disposition: attachment; filename="'.$output_filename.'"');
+        header('Content-Type: application/xml');
 
         echo $xml;
     }

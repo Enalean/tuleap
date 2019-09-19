@@ -20,7 +20,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class DocmanOneFolderIsWriteable /* implements Visitor */ {
+class DocmanOneFolderIsWriteable /* implements Visitor */
+{
 
     var $docman;
     function __construct(&$docman)
@@ -36,7 +37,7 @@ class DocmanOneFolderIsWriteable /* implements Visitor */ {
         } else {
             $items = $item->getAllItems();
             $it = $items->iterator();
-            while(!$b && $it->valid()) {
+            while (!$b && $it->valid()) {
                 $o = $it->current();
                 $b = $o->accept($this);
                 $it->next();
@@ -62,4 +63,3 @@ class DocmanOneFolderIsWriteable /* implements Visitor */ {
         return false;
     }
 }
-?>

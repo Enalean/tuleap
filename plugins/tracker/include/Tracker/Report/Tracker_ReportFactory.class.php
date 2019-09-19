@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_ReportFactory {
+class Tracker_ReportFactory
+{
     /**
      * A protected constructor; prevents direct creation of object
      */
@@ -144,7 +145,7 @@ class Tracker_ReportFactory {
     public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping)
     {
         $report_mapping = array();
-        foreach($this->getReportsByTrackerId($from_tracker_id, null) as $from_report) {
+        foreach ($this->getReportsByTrackerId($from_tracker_id, null) as $from_report) {
             $new_report = $this->duplicateReport($from_report, $to_tracker_id, $field_mapping, null);
             $report_mapping[$from_report->getId()] = $new_report->getId();
         }
@@ -316,7 +317,7 @@ class Tracker_ReportFactory {
         //create criterias
         $reportDB = Tracker_ReportFactory::instance()->getReportById($reportId, null);
         if ($report->criterias) {
-            foreach ($report->criterias as $criteria){
+            foreach ($report->criterias as $criteria) {
                 $reportDB->addCriteria($criteria);
             }
         }

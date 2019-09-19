@@ -27,7 +27,8 @@ use Tuleap\HudsonSvn\Job\Factory;
 use TemplateRenderer;
 use Project;
 
-class ContinuousIntegrationCollector {
+class ContinuousIntegrationCollector
+{
 
     /**
      * @var Factory

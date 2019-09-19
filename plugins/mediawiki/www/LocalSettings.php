@@ -107,19 +107,19 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     if (! is_dir($project_dir)) {
         $project_dir = forge_get_config('projects_path', 'mediawiki') . "/" . $group->getUnixName();
         if (! is_dir($project_dir)) {
-            exit_error (sprintf(_('Mediawiki for project %s not created yet, please wait for a few minutes.'), $group->getPublicName().' : '.$project_dir)) ;
+            exit_error(sprintf(_('Mediawiki for project %s not created yet, please wait for a few minutes.'), $group->getPublicName().' : '.$project_dir)) ;
         }
     }
     $path = array( $IP, "$IP/includes", "$IP/languages" );
-    set_include_path( implode( PATH_SEPARATOR, $path ) . PATH_SEPARATOR . get_include_path() );
+    set_include_path(implode(PATH_SEPARATOR, $path) . PATH_SEPARATOR . get_include_path());
 
-    require_once( "$IP/includes/AutoLoader.php" );
-    require_once( "$IP/includes/Defines.php" );
-    require_once( "$IP/includes/DefaultSettings.php" );
+    require_once("$IP/includes/AutoLoader.php");
+    require_once("$IP/includes/Defines.php");
+    require_once("$IP/includes/DefaultSettings.php");
 
-    if ( $wgCommandLineMode ) {
-        if ( isset( $_SERVER ) && array_key_exists( 'REQUEST_METHOD', $_SERVER ) ) {
-            die( "This script must be run from the command line\n" );
+    if ($wgCommandLineMode) {
+        if (isset($_SERVER) && array_key_exists('REQUEST_METHOD', $_SERVER)) {
+            die("This script must be run from the command line\n");
         }
     }
 
@@ -134,13 +134,13 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         // At the time writing schema in mysql is synonym for database
         $wgDBname = $manager->getWgDBname($group);
         if (! $wgDBname) {
-            exit_error (sprintf(_('Mediawiki for project %s cannot be found, please contact your system admininistrators.'), $fusionforgeproject.':'.$project_dir)) ;
+            exit_error(sprintf(_('Mediawiki for project %s cannot be found, please contact your system admininistrators.'), $fusionforgeproject.':'.$project_dir)) ;
         }
         $wgDBprefix = $manager->getWgDBprefix($group);
     } else {
         $wgDBname      = forge_get_config('database_name');
-        $wgDBmwschema  = str_replace ('-', '_', "plugin_mediawiki_$fusionforgeproject") ;
-        $wgDBts2schema = str_replace ('-', '_', "plugin_mediawiki_$fusionforgeproject") ;
+        $wgDBmwschema  = str_replace('-', '_', "plugin_mediawiki_$fusionforgeproject") ;
+        $wgDBts2schema = str_replace('-', '_', "plugin_mediawiki_$fusionforgeproject") ;
     }
 
     $wgDBuser           = forge_get_config('database_user') ;
@@ -156,10 +156,10 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $debug_project_id = forge_get_config('mw_debug_project_id', 'mediawiki');
     if ($debug_project_id !== false) {
         $debug_project_ids = array_map(
-        function ($arg) {
-            return (int) trim($arg);
-        },
-        explode(',', $debug_project_id)
+            function ($arg) {
+                return (int) trim($arg);
+            },
+            explode(',', $debug_project_id)
         );
 
         if (in_array($group->getID(), $debug_project_ids)) {
@@ -188,7 +188,7 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $used_language = $language_manager->getUsedLanguageForProject($group);
     if ($used_language) {
         $wgLanguageCode  = substr($used_language, 0, 2);
-    } else if ($mw_service && $mw_service->userIsAdmin($user)) {
+    } elseif ($mw_service && $mw_service->userIsAdmin($user)) {
         header('Location: /plugins/mediawiki/forge_admin.php?group_id='. $group->getID() .'&pane=language&nolang=1');
         die();
     } else {
@@ -248,7 +248,7 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
             $user->saveSettings();
             wfSetupSession();
         } else {
-            $user->logout ();
+            $user->logout();
         }
 
         $result = true;
@@ -289,11 +289,11 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         $wgGroupPermissions = removeUnwantedRights($wgGroupPermissions, $forbidden_permissions);
         $wgGroupPermissions = removeAllGroupsReadWriteRights($wgGroupPermissions, $read_permissions, $write_permissions);
         $wgGroupPermissions = addReadPermissionForUser(
-        $tuleap_user,
-        $manager,
-        $fusionforgeproject,
-        $wgGroupPermissions,
-        $read_permissions
+            $tuleap_user,
+            $manager,
+            $fusionforgeproject,
+            $wgGroupPermissions,
+            $read_permissions
         );
         $wgGroupPermissions = addWritePermissionForUser(
             $tuleap_user,
@@ -379,15 +379,16 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $wgHooks['PersonalUrls'][]='NoLinkOnMainPage';
 
     if (isset($_SERVER['SERVER_SOFTWARE'])) {
-        class SpecialForgeRedir extends SpecialPage {
+        class SpecialForgeRedir extends SpecialPage
+        {
             var $dstappendself = false;
 
-            function getTitle($subpage="")
+            function getTitle($subpage = "")
             {
                   return 'SpecialForgeRedir';
             }
 
-            function getRedirect($subpage="")
+            function getRedirect($subpage = "")
             {
                   return $this;
             }
@@ -407,16 +408,19 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
             }
         }
 
-        class SpecialForgeRedirLogin extends SpecialForgeRedir {
+        class SpecialForgeRedirLogin extends SpecialForgeRedir
+        {
             var $dstappendself = true;
             var $dst = '/account/login.php?return_to=';
         }
 
-        class SpecialForgeRedirCreateAccount extends SpecialForgeRedir {
+        class SpecialForgeRedirCreateAccount extends SpecialForgeRedir
+        {
             var $dst = '/account/register.php';
         }
 
-        class SpecialForgeRedirResetPass extends SpecialForgeRedir {
+        class SpecialForgeRedirResetPass extends SpecialForgeRedir
+        {
             var $dst = '/account/lostpw.php';
         }
 
@@ -434,12 +438,12 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $GLOBALS['wgHooks']['UserLoadFromSession'][] = 'TuleapMediawikiAuthentication';
 
     $wgGroupPermissions = customizeMediawikiGroupsRights(
-    $wgGroupPermissions,
-    $manager,
-    $fusionforgeproject,
-    $forbidden_permissions,
-    $read_permissions,
-    $write_permissions
+        $wgGroupPermissions,
+        $manager,
+        $fusionforgeproject,
+        $forbidden_permissions,
+        $read_permissions,
+        $write_permissions
     );
 
     $wgFavicon     = '/images/icon.png' ;
@@ -449,7 +453,7 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         $wgEditPageFrameOptions = false;
     }
 
-    ini_set ('memory_limit', '100M') ;
+    ini_set('memory_limit', '100M') ;
 
 // LOAD THE SITE-WIDE AND PROJECT-SPECIFIC EXTRA-SETTINGS
     if (is_file(forge_get_config('config_path')."/plugins/mediawiki/LocalSettings.php")) {
@@ -467,11 +471,11 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 
 // forge global settings
     if (is_file("$gconfig_dir/ForgeSettings.php")) {
-        include ("$gconfig_dir/ForgeSettings.php") ;
+        include("$gconfig_dir/ForgeSettings.php") ;
     }
 // project specific settings
     if (is_file("$project_dir/ProjectSettings.php")) {
-        include ("$project_dir/ProjectSettings.php") ;
+        include("$project_dir/ProjectSettings.php") ;
     }
 }
 
@@ -482,7 +486,7 @@ $wgValidSkinNames['tuleap123'] = 'Tuleap123';
 require_once $wgAutoloadClasses['Tuleap123'];
 
 // ParserFunctions Extension inclusion
-require_once( "$IP/extensions/ParserFunctions/ParserFunctions.php" );
+require_once("$IP/extensions/ParserFunctions/ParserFunctions.php");
 $wgPFEnableStringFunctions = true;
 
 // SyntaxHighlight_GeSHi Extension inclusion
@@ -560,9 +564,8 @@ $wgTuleapArtLinksGroupId = $group->getGroupId();
 
 $mleb_manager_loader = new MediawikiMLEBExtensionManagerLoader();
 $mleb_manager        = $mleb_manager_loader->getMediawikiMLEBExtensionManager();
-if ($mleb_manager->isMLEBExtensionInstalled()){
+if ($mleb_manager->isMLEBExtensionInstalled()) {
     if ($mleb_manager->isMLEBExtensionAvailableForProject($group) || (isset($IS_RUNNING_UPDATE) && $IS_RUNNING_UPDATE)) {
-
         $mleb_path = forge_get_config('extension_mleb_path', 'mediawiki');
 
         // Babelww

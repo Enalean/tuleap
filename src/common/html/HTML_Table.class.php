@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class HTML_Table {
+class HTML_Table
+{
     private $id            = '';
     private $titles        = array();
     private $table_classes = array();
@@ -111,5 +112,3 @@ class HTML_Table {
         return $this;
     }
 }
-
-?>

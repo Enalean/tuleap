@@ -21,7 +21,8 @@
  *
  * This exception is thrown when a problem occurs on the server
  */
-class WebDAVExceptionServerError extends Sabre_DAV_Exception {
+class WebDAVExceptionServerError extends Sabre_DAV_Exception
+{
 
     /**
      * getHTTPCode
@@ -32,7 +33,4 @@ class WebDAVExceptionServerError extends Sabre_DAV_Exception {
     {
         return 500;
     }
-
 }
-
-?>

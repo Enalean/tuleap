@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201504081720_allow_restricted_project_access extends ForgeUpgrade_Bucket {
+class b201504081720_allow_restricted_project_access extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return "Add column access";
@@ -61,6 +62,5 @@ class b201504081720_allow_restricted_project_access extends ForgeUpgrade_Bucket 
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while droping column is_public in table groups');
         }
-
     }
 }

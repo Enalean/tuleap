@@ -19,7 +19,8 @@
 
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
-class KanbanCollapseColumnRepresentation {
+class KanbanCollapseColumnRepresentation
+{
 
     /**
      * @var int

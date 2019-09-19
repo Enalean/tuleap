@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class DateHelper {
+class DateHelper
+{
 
     public const INCLUDE_SECONDS = 1;
     public const WITH_TITLE      = 1;
@@ -72,33 +73,33 @@ class DateHelper {
                     return $GLOBALS['Language']->getText('include_utils', 'less_than_one_second', 1);
                 } elseif ($distance_in_seconds < 4) {
                     return $GLOBALS['Language']->getText('include_utils', 'less_than_X_seconds', 5);
-                } else if ($distance_in_seconds < 9) {
+                } elseif ($distance_in_seconds < 9) {
                     return $GLOBALS['Language']->getText('include_utils', 'less_than_X_seconds', 10);
-                } else if ($distance_in_seconds < 19) {
+                } elseif ($distance_in_seconds < 19) {
                     return $GLOBALS['Language']->getText('include_utils', 'less_than_X_seconds', 20);
-                } else if ($distance_in_seconds < 39) {
+                } elseif ($distance_in_seconds < 39) {
                     return $GLOBALS['Language']->getText('include_utils', 'half_a_minute');
-                } else if ($distance_in_seconds < 59) {
+                } elseif ($distance_in_seconds < 59) {
                     return $GLOBALS['Language']->getText('include_utils', 'less_1_minute');
                 } else {
                     return $GLOBALS['Language']->getText('include_utils', '1_minute');
                 }
             }
-        } else if ($distance_in_minutes <= 44) {
+        } elseif ($distance_in_minutes <= 44) {
             return $GLOBALS['Language']->getText('include_utils', 'X_minutes', $distance_in_minutes);
-        } else if ($distance_in_minutes <= 89) {
+        } elseif ($distance_in_minutes <= 89) {
             return $GLOBALS['Language']->getText('include_utils', 'about_1_hour');
-        } else if ($distance_in_minutes <= 1439) {
+        } elseif ($distance_in_minutes <= 1439) {
             return $GLOBALS['Language']->getText('include_utils', 'about_X_hours', round($distance_in_minutes / 60));
-        } else if ($distance_in_minutes <= 2879) {
+        } elseif ($distance_in_minutes <= 2879) {
             return $GLOBALS['Language']->getText('include_utils', 'about_1_day');
-        } else if ($distance_in_minutes <= 43199) {
+        } elseif ($distance_in_minutes <= 43199) {
             return $GLOBALS['Language']->getText('include_utils', 'X_days', round($distance_in_minutes / 1440));
-        } else if ($distance_in_minutes <= 86399) {
+        } elseif ($distance_in_minutes <= 86399) {
             return $GLOBALS['Language']->getText('include_utils', 'about_1_month');
-        } else if ($distance_in_minutes <= 525959) {
+        } elseif ($distance_in_minutes <= 525959) {
             return $GLOBALS['Language']->getText('include_utils', 'X_months', round($distance_in_minutes / 43200));
-        } else if ($distance_in_minutes <= 1051919) {
+        } elseif ($distance_in_minutes <= 1051919) {
             return $GLOBALS['Language']->getText('include_utils', 'about_1_year');
         } else {
             return $GLOBALS['Language']->getText('include_utils', 'over_X_years', round($distance_in_minutes / 525960));
@@ -166,7 +167,4 @@ class DateHelper {
     {
         return ($distance % $period == 0);
     }
-
 }
-
-?>

@@ -810,7 +810,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         }
     }
 
-    private function addOtherWarnings(array &$warning_list,Tracker $planning_tracker)
+    private function addOtherWarnings(array &$warning_list, Tracker $planning_tracker)
     {
         $event = new AdditionalPlanningConfigurationWarningsRetriever($planning_tracker);
         EventManager::instance()->processEvent($event);

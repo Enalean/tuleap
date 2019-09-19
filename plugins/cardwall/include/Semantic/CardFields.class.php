@@ -134,12 +134,12 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
 
         try {
             $html .= "</p><p>" . sprintf(
-                    dgettext(
-                        'tuleap-cardwall',
-                        '<b>%s</b> field will determine background color.'
-                    ),
-                    $this->getBackgroundColorField()->getLabel()
-                );
+                dgettext(
+                    'tuleap-cardwall',
+                    '<b>%s</b> field will determine background color.'
+                ),
+                $this->getBackgroundColorField()->getLabel()
+            );
         } catch (BackgroundColorSemanticFieldNotFoundException $exception) {
             $html .= "</p><p>" . dgettext('tuleap-cardwall', 'No field is chosen to determine backgorund color');
         }
@@ -219,12 +219,12 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_cardwall','semantic_cardFields_description');
+        return $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_cardFields_description');
     }
 
     public function getLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_cardwall','semantic_cardFields_label');
+        return $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_cardFields_label');
     }
 
     public function getShortName()
@@ -239,16 +239,16 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
 
     public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
-        if ( $request->get('add') && (int) $request->get('field')) {
+        if ($request->get('add') && (int) $request->get('field')) {
             $this->getCSRFToken()->check();
             $this->addField($request->get('field'));
-        } else if ( (int) $request->get('remove') ) {
+        } elseif ((int) $request->get('remove')) {
             $this->getCSRFToken()->check();
             $this->removeField($request->get('remove'));
-        } else if ($request->get('unset-background-color-semantic')) {
+        } elseif ($request->get('unset-background-color-semantic')) {
             $this->getCSRFToken()->check();
             $this->background_field_saver->unsetBackgroundColorSemantic($this->tracker);
-        } else if ($request->get('choose-color-field')) {
+        } elseif ($request->get('choose-color-field')) {
             $this->getCSRFToken()->check();
             $this->background_field_saver->chooseBackgroundColorField($this->tracker, $request->get('choose-color-field'));
         }

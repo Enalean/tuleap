@@ -21,17 +21,18 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine {
+class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine
+{
 
     public $duration;
     public $start_date;
 
     function validData()
     {
-        if ($this->duration && $this->duration > 1){
+        if ($this->duration && $this->duration > 1) {
             return true;
         } else {
-            echo " <p class='feedback_info'>".$GLOBALS['Language']->getText('plugin_graphontrackersv5_engine','no_datas',array($this->title))."</p>";
+            echo " <p class='feedback_info'>".$GLOBALS['Language']->getText('plugin_graphontrackersv5_engine', 'no_datas', array($this->title))."</p>";
             return false;
         }
     }

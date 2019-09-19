@@ -23,7 +23,8 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-abstract class Planning_MilestoneBaseTest extends TuleapTestCase {
+abstract class Planning_MilestoneBaseTest extends TuleapTestCase
+{
 
     public function anArtifactWithId($id)
     {
@@ -39,10 +40,10 @@ abstract class Planning_MilestoneBaseTest extends TuleapTestCase {
                               ->build();
         stub($artifact)->getAllAncestors()->returns(array());
         return $artifact;
-
     }
 }
-abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_MilestoneBaseTest {
+abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_MilestoneBaseTest
+{
     protected $project;
     protected $planning_factory;
     protected $artifact_factory;
@@ -242,10 +243,10 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
         $this->assertEqual(9999, $child_node->getId());
         $this->assertEqual($depth1_artifact, $child_node_data);
     }
-
 }
 
-class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
+class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase
+{
     private $project;
 
     public function setUp()
@@ -371,7 +372,8 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
     }
 }
 
-class MilestoneFactory_PlannedArtifactsTest extends Planning_MilestoneBaseTest {
+class MilestoneFactory_PlannedArtifactsTest extends Planning_MilestoneBaseTest
+{
 
     public function itReturnsATreeOfPlanningItems()
     {
@@ -397,13 +399,14 @@ class MilestoneFactory_PlannedArtifactsTest extends Planning_MilestoneBaseTest {
         $children = $planning_items_tree->flattenChildren();
 
         $this->assertFalse(empty($children));
-        foreach($children as $tree_node) {
+        foreach ($children as $tree_node) {
             $this->assertIsA($tree_node->getObject(), 'Tracker_Artifact');
         }
     }
 }
 
-class MilestoneFactory_GetMilestoneFromArtifactTest extends TuleapTestCase {
+class MilestoneFactory_GetMilestoneFromArtifactTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -457,7 +460,8 @@ class MilestoneFactory_GetMilestoneFromArtifactTest extends TuleapTestCase {
     }
 }
 
-class MilestoneFactory_getMilestoneFromArtifactWithPlannedArtifactsTest extends TuleapTestCase {
+class MilestoneFactory_getMilestoneFromArtifactWithPlannedArtifactsTest extends TuleapTestCase
+{
 
     public function itCreateMilestoneFromArtifactAndLoadsItsPlannedArtifacts()
     {
@@ -499,7 +503,8 @@ class MilestoneFactory_getMilestoneFromArtifactWithPlannedArtifactsTest extends 
     }
 }
 
-class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase {
+class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -567,7 +572,8 @@ class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase {
     }
 }
 
-class MilestoneFactory_getLastMilestoneCreatedsTest extends TuleapTestCase {
+class MilestoneFactory_getLastMilestoneCreatedsTest extends TuleapTestCase
+{
     private $current_user;
     private $milestone_factory;
     private $sprint_1_artifact;

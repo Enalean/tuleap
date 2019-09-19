@@ -20,7 +20,8 @@
  */
 
 
-class Tracker_ArtifactDao extends DataAccessObject {
+class Tracker_ArtifactDao extends DataAccessObject
+{
     public const MAX_RETRY_CREATION = 10;
     public const STATUS_OPEN        = 'open';
     public const STATUS_CLOSED      = 'closed';
@@ -1354,5 +1355,4 @@ class Tracker_ArtifactDao extends DataAccessObject {
 
         return (int) $row['nb'];
     }
-
 }

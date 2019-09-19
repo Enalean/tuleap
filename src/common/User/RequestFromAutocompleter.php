@@ -105,7 +105,7 @@ class RequestFromAutocompleter
             $listener = trim($listener);
             if ($this->isLookingLikeAnEmail($listener)) {
                 $this->addEmailFromListener($listener);
-            } else if ($this->isLookingLikeAnUgroup($listener)) {
+            } elseif ($this->isLookingLikeAnUgroup($listener)) {
                 $this->addUgroupFromListener($listener);
             } else {
                 $this->addUserFromListener($listener);

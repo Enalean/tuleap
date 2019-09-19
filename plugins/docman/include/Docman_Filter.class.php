@@ -20,7 +20,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_Filter {
+class Docman_Filter
+{
     var $value;
     var $md;
 
@@ -54,7 +55,7 @@ class Docman_Filter {
 
     function _urlMatchDelete($request)
     {
-        if($request->exist('del_filter')
+        if ($request->exist('del_filter')
            && $this->md->getLabel() == $request->get('del_filter')) {
             return true;
         }
@@ -63,7 +64,7 @@ class Docman_Filter {
 
     function _urlValueIsValid($request)
     {
-        if($request->exist($this->md->getLabel())) {
+        if ($request->exist($this->md->getLabel())) {
             return true;
         }
         return false;
@@ -71,7 +72,7 @@ class Docman_Filter {
 
     function _urlMatchUpdate($request)
     {
-        if($this->_urlValueIsValid($request)) {
+        if ($this->_urlValueIsValid($request)) {
             $this->setValue($request->get($this->md->getLabel()));
             return true;
         }
@@ -81,7 +82,7 @@ class Docman_Filter {
     // Add new fields
     function _urlMatchAdd($request)
     {
-        if($request->exist('add_filter')
+        if ($request->exist('add_filter')
            && $this->md->getLabel() == $request->get('add_filter')) {
             return true;
         }
@@ -90,9 +91,9 @@ class Docman_Filter {
 
     function initOnUrlMatch($request)
     {
-        if($this->md !== null) {
-            if(!$this->_urlMatchDelete($request)) {
-                if($this->_urlMatchUpdate($request)) {
+        if ($this->md !== null) {
+            if (!$this->_urlMatchDelete($request)) {
+                if ($this->_urlMatchUpdate($request)) {
                     return true;
                 } else {
                     return $this->_urlMatchAdd($request);
@@ -106,7 +107,8 @@ class Docman_Filter {
 /**
  * Filter on date metadata
  */
-class Docman_FilterDate extends Docman_Filter {
+class Docman_FilterDate extends Docman_Filter
+{
     var $operator;
     var $field_operator_name;
     var $field_value_name;
@@ -115,7 +117,7 @@ class Docman_FilterDate extends Docman_Filter {
     {
         parent::__construct($md);
         $this->operator = null;
-        if($md !== null) {
+        if ($md !== null) {
             $this->field_operator_name  = $md->getLabel().'_operator';
             $this->field_value_name     = $md->getLabel().'_value';
         }
@@ -149,7 +151,7 @@ class Docman_FilterDate extends Docman_Filter {
 
     function isValidDateFormat($value)
     {
-        if(preg_match('/^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})$/', $value, $d)) {
+        if (preg_match('/^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})$/', $value, $d)) {
             return true;
         }
         return false;
@@ -157,7 +159,7 @@ class Docman_FilterDate extends Docman_Filter {
 
     function isValidOperator($op)
     {
-        if($op == 0 ||
+        if ($op == 0 ||
            $op == -1 ||
            $op == 1) {
             return true;
@@ -180,13 +182,13 @@ class Docman_FilterDate extends Docman_Filter {
     function _urlMatchUpdate($request)
     {
         // Simple date
-        if($request->exist($this->getFieldValueName())) {
+        if ($request->exist($this->getFieldValueName())) {
             $val = $request->get($this->getFieldValueName());
-            if($this->isValidDateFormat($val)) {
+            if ($this->isValidDateFormat($val)) {
                 $this->setValue($val);
             }
             $op = $request->get($this->getFieldOperatorName());
-            if($this->isValidOperator($op)) {
+            if ($this->isValidOperator($op)) {
                 $this->setOperator($op);
             }
             return true;
@@ -194,25 +196,25 @@ class Docman_FilterDate extends Docman_Filter {
 
         // If no values found, try to get fields from advanced search
         $advSearch = new Docman_FilterDateAdvanced($this->md);
-        if($request->exist($advSearch->getFieldStartValueName()) &&
+        if ($request->exist($advSearch->getFieldStartValueName()) &&
            $this->isValidDateFormat($request->get($advSearch->getFieldStartValueName()))) {
             $startValue = $request->get($advSearch->getFieldStartValueName());
             $endValue = '';
-            if($request->exist($advSearch->getFieldEndValueName()) &&
+            if ($request->exist($advSearch->getFieldEndValueName()) &&
                $this->isValidDateFormat($request->get($advSearch->getFieldEndValueName()))) {
                 $endValue = $request->get($advSearch->getFieldEndValueName());
             }
-            if($startValue != '') {
-                if($endValue == $startValue) {
+            if ($startValue != '') {
+                if ($endValue == $startValue) {
                     // Both dates are equal -> = operator
                     $this->setValue($startValue);
                     $this->setOperator(0);
-                } elseif($endValue == '') {
+                } elseif ($endValue == '') {
                     // No end date -> > operator
                     $this->setValue($startValue);
                     $this->setOperator(1);
                 }
-            } elseif($endValue != '') {
+            } elseif ($endValue != '') {
                 // No start date -> < operator
                 $this->setValue($endValue);
                 $this->setOperator(-1);
@@ -223,8 +225,8 @@ class Docman_FilterDate extends Docman_Filter {
     }
 }
 
-class Docman_FilterDateAdvanced
-extends Docman_FilterDate {
+class Docman_FilterDateAdvanced extends Docman_FilterDate
+{
     var $fieldNameStart;
     var $fieldNameEnd;
     var $valueStart;
@@ -287,34 +289,34 @@ extends Docman_FilterDate {
         $fieldExist = false;
 
         $startValue = false;
-        if($request->exist($this->fieldNameStart)) {
+        if ($request->exist($this->fieldNameStart)) {
             $fieldExist = true;
-            if($this->isValidDateFormat($request->get($this->fieldNameStart))) {
+            if ($this->isValidDateFormat($request->get($this->fieldNameStart))) {
                 $this->setValueStart($request->get($this->fieldNameStart));
                 $startValue = true;
             }
         }
         $endValue = false;
-        if($request->exist($this->fieldNameEnd)) {
+        if ($request->exist($this->fieldNameEnd)) {
             $fieldExist = true;
-            if($this->isValidDateFormat($request->get($this->fieldNameEnd))) {
+            if ($this->isValidDateFormat($request->get($this->fieldNameEnd))) {
                 $this->setValueEnd($request->get($this->fieldNameEnd));
                 $endValue = true;
             }
         }
 
         // If no values found, try to get values from simple search
-        if(!$startValue && !$endValue) {
-            if($request->exist($this->getFieldOperatorName())
+        if (!$startValue && !$endValue) {
+            if ($request->exist($this->getFieldOperatorName())
                && $request->exist($this->getFieldValueName())) {
-                switch($request->get($this->getFieldOperatorName())) {
+                switch ($request->get($this->getFieldOperatorName())) {
                     case '-1': // '<'
                         $this->setValueEnd($request->get($this->getFieldValueName()));
-                    break;
+                        break;
                     case '0': // '='
                         $this->setValueEnd($request->get($this->getFieldValueName()));
                         $this->setValueStart($request->get($this->getFieldValueName()));
-                    break;
+                        break;
                     case '1': // '>'
                     default:
                         $this->setValueStart($request->get($this->getFieldValueName()));
@@ -329,7 +331,8 @@ extends Docman_FilterDate {
 /**
  * Filter on ListOfValues
  */
-class Docman_FilterList extends Docman_Filter {
+class Docman_FilterList extends Docman_Filter
+{
 
     function __construct($md)
     {
@@ -349,7 +352,7 @@ class Docman_FilterList extends Docman_Filter {
      */
     function isValidListValue($val)
     {
-        if(is_numeric($val)) {
+        if (is_numeric($val)) {
             return true;
         }
         return false;
@@ -357,8 +360,8 @@ class Docman_FilterList extends Docman_Filter {
 
     function _urlValueIsValid($request)
     {
-        if(parent::_urlValueIsValid($request)) {
-            if($this->isValidListValue($request->get($this->md->getLabel()))) {
+        if (parent::_urlValueIsValid($request)) {
+            if ($this->isValidListValue($request->get($this->md->getLabel()))) {
                 return true;
             }
         }
@@ -367,12 +370,12 @@ class Docman_FilterList extends Docman_Filter {
 
     function _urlMatchUpdate($request)
     {
-        if(parent::_urlMatchUpdate($request)) {
+        if (parent::_urlMatchUpdate($request)) {
             $v = $this->getValue();
 
-            if(is_array($v)) {
+            if (is_array($v)) {
                 // Convert advanced filter value to simple
-                if(count($v) == 1 && $this->isValidListValue($v[0])) {
+                if (count($v) == 1 && $this->isValidListValue($v[0])) {
                     $this->setValue($v[0]);
                 } else {
                     $this->setValue(0);
@@ -387,8 +390,8 @@ class Docman_FilterList extends Docman_Filter {
 /**
  * Advanced filter on ListOfValues: can select several values
  */
-class Docman_FilterListAdvanced
-extends Docman_FilterList {
+class Docman_FilterListAdvanced extends Docman_FilterList
+{
 
     function __construct($md)
     {
@@ -398,16 +401,16 @@ extends Docman_FilterList {
 
     function _urlValueIsValid($request)
     {
-        if($request->exist($this->md->getLabel())) {
+        if ($request->exist($this->md->getLabel())) {
             $val = $request->get($this->md->getLabel());
-            if(is_array($val)) {
+            if (is_array($val)) {
                 $allInt = true;
-                foreach($val as $v) {
+                foreach ($val as $v) {
                     $allInt = ($allInt && $this->isValidListValue($v));
                 }
                 return $allInt;
             } else {
-                if($this->isValidListValue($val)) {
+                if ($this->isValidListValue($val)) {
                     return true;
                 }
             }
@@ -417,18 +420,18 @@ extends Docman_FilterList {
 
     function _urlMatchUpdate($request)
     {
-        if(Docman_Filter::_urlMatchUpdate($request)) {
-            if(!is_array($this->getValue())) {
-                if($this->getValue() !== null && $this->getValue() != '') {
+        if (Docman_Filter::_urlMatchUpdate($request)) {
+            if (!is_array($this->getValue())) {
+                if ($this->getValue() !== null && $this->getValue() != '') {
                     // Convert simple value to advanced
                     $this->setValue(array($this->getValue()));
                 } else {
                     $this->setValue(array());
                 }
-            } elseif(count($this->getValue()) == 1) {
+            } elseif (count($this->getValue()) == 1) {
                 // If empty value, clean-up
                 $v = $this->getValue();
-                if($v[0] == '') {
+                if ($v[0] == '') {
                     $this->setValue(array(0));
                 }
             }
@@ -439,7 +442,7 @@ extends Docman_FilterList {
 
     function _urlMatchAdd($request)
     {
-        if(parent::_urlMatchAdd($request)) {
+        if (parent::_urlMatchAdd($request)) {
             $this->setValue(array(0));
             return true;
         }
@@ -460,7 +463,8 @@ extends Docman_FilterList {
 /**
 * Item type filters
 */
-class Docman_FilterItemTypeAdvanced extends Docman_FilterListAdvanced {
+class Docman_FilterItemTypeAdvanced extends Docman_FilterListAdvanced
+{
     function __construct($md)
     {
         Docman_Filter::__construct($md);
@@ -468,7 +472,8 @@ class Docman_FilterItemTypeAdvanced extends Docman_FilterListAdvanced {
     }
 }
 
-class Docman_FilterItemType extends Docman_FilterList {
+class Docman_FilterItemType extends Docman_FilterList
+{
     function __construct($md)
     {
         Docman_Filter::__construct($md);
@@ -479,7 +484,8 @@ class Docman_FilterItemType extends Docman_FilterList {
 /**
  * Filter on any textual values
  */
-class Docman_FilterText extends Docman_Filter {
+class Docman_FilterText extends Docman_Filter
+{
 
     function __construct($md)
     {
@@ -502,7 +508,8 @@ class Docman_FilterText extends Docman_Filter {
 /**
  * Filter on all the text fields
  */
-class Docman_FilterGlobalText extends Docman_FilterText {
+class Docman_FilterGlobalText extends Docman_FilterText
+{
     var $dynTextFields;
 
     function __construct($md, $dynTextFields)
@@ -517,7 +524,8 @@ class Docman_FilterGlobalText extends Docman_FilterText {
     }
 }
 
-class Docman_FilterOwner extends Docman_Filter {
+class Docman_FilterOwner extends Docman_Filter
+{
 
     function __construct($md)
     {
@@ -531,9 +539,9 @@ class Docman_FilterOwner extends Docman_Filter {
 
     function _urlMatchUpdate($request)
     {
-        if(parent::_urlMatchUpdate($request)) {
+        if (parent::_urlMatchUpdate($request)) {
             $user = UserManager::instance()->findUser($this->getValue());
-            if($user) {
+            if ($user) {
                 $this->setValue($user->getUserName());
             }
             return true;
@@ -541,5 +549,3 @@ class Docman_FilterOwner extends Docman_Filter {
         return false;
     }
 }
-
-?>

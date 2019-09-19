@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b20131204_remove_special_fields_from_changesets extends ForgeUpgrade_Bucket {
+class b20131204_remove_special_fields_from_changesets extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -48,4 +49,3 @@ class b20131204_remove_special_fields_from_changesets extends ForgeUpgrade_Bucke
         }
     }
 }
-?>

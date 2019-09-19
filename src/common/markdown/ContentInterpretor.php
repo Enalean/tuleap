@@ -23,7 +23,8 @@ namespace Tuleap\Markdown;
 use Michelf\MarkdownExtra;
 use Codendi_HTMLPurifier;
 
-class ContentInterpretor {
+class ContentInterpretor
+{
 
     public function getInterpretedContent($markdown_content)
     {
@@ -33,5 +34,4 @@ class ContentInterpretor {
             CODENDI_PURIFIER_FULL
         );
     }
-
 }

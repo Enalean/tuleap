@@ -122,5 +122,4 @@ class DefaultProjectMirrorDao extends DataAccessObject
 
         return true;
     }
-
 }

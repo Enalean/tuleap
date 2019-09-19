@@ -33,8 +33,7 @@ rcs_id('$Id: AddComment.php,v 1.8 2004/06/13 09:45:23 rurban Exp $');
 
 include_once("lib/plugin/WikiBlog.php");
 
-class WikiPlugin_AddComment
-extends WikiPlugin_WikiBlog
+class WikiPlugin_AddComment extends WikiPlugin_WikiBlog
 {
     function getName()
     {
@@ -43,13 +42,16 @@ extends WikiPlugin_WikiBlog
 
     function getDescription()
     {
-        return sprintf(_("Show and add comments for %s"),'[pagename]');
+        return sprintf(_("Show and add comments for %s"), '[pagename]');
     }
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.8 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.8 $"
+        );
     }
 
     // Arguments:
@@ -80,8 +82,9 @@ extends WikiPlugin_WikiBlog
     function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
-        if (!$args['pagename'])
+        if (!$args['pagename']) {
             return $this->error(_("No pagename specified"));
+        }
 
         // Get our form args.
         $comment = $request->getArg("comment");
@@ -112,37 +115,39 @@ function togglecomments(a) {
     a.title='"._("Click to display all comments")."';
   }
 }"));
-            $html->pushContent(HTML::h4(HTML::a(array('name'=>'comment-header',
+            $html->pushContent(HTML::h4(HTML::a(
+                array('name'=>'comment-header',
                                                       'class'=>'wikiaction',
                                                       'title'=>_("Click to display"),
                                                       'onclick'=>"togglecomments(this)"),
-                                                _("Comments"))));
+                _("Comments")
+            )));
         } else {
             $div = HTML::div(array('id'=>'comments'));
         }
         foreach (explode(',', $args['mode']) as $show) {
-            if (!empty($seen[$show]))
+            if (!empty($seen[$show])) {
                 continue;
+            }
             $seen[$show] = 1;
             switch ($show) {
                 case 'show':
                     $show = $this->showAll($request, $args, 'comment');
                     //if ($args['jshide']) $show->setAttr('style','display:none;');
                     $div->pushContent($show);
-                break;
+                    break;
                 case 'add':
                     $add = $this->showForm($request, $args, 'addcomment');
                     //if ($args['jshide']) $add->setAttr('style','display:none;');
                     $div->pushContent($add);
-                break;
+                    break;
                 default:
-                return $this->error(sprintf("Bad mode ('%s')", $show));
+                    return $this->error(sprintf("Bad mode ('%s')", $show));
             }
         }
         $html->pushContent($div);
         return $html;
     }
-
 };
 
 // $Log: AddComment.php,v $
@@ -182,4 +187,3 @@ function togglecomments(a) {
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

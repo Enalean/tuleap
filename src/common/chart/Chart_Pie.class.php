@@ -26,7 +26,8 @@
 *
 * @see jpgraph documentation for usage
 */
-class Chart_Pie extends Chart{
+class Chart_Pie extends Chart
+{
 
     /**
      * Get the name of the jpgraph class to instantiate
@@ -37,5 +38,4 @@ class Chart_Pie extends Chart{
     {
         return 'PieGraph';
     }
-
 }

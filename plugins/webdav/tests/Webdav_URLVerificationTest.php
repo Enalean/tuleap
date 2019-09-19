@@ -21,7 +21,8 @@
 
 require_once 'bootstrap.php';
 
-class Webdav_URLVerificationTest extends TuleapTestCase {
+class Webdav_URLVerificationTest extends TuleapTestCase
+{
 
     private $request;
     private $webdavURLVerification;

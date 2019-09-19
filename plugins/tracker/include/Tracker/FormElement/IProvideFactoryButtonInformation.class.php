@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface Tracker_FormElement_IProvideFactoryButtonInformation {
+interface Tracker_FormElement_IProvideFactoryButtonInformation
+{
 
     /**
      * @return the label of the formElement (mainly used in admin part)
@@ -44,6 +45,4 @@ interface Tracker_FormElement_IProvideFactoryButtonInformation {
      * @return bool say if the element is a unique one
      */
     public static function getFactoryUniqueField();
-
 }
-?>

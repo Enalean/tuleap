@@ -39,5 +39,4 @@ class User_ForgeUserGroupPermission_RetrieveUserMembershipInformation extends Us
     {
         return $GLOBALS['Language']->getText('usergroup_forge_permission', 'user_membership_description');
     }
-
 }

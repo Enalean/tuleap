@@ -21,7 +21,8 @@
 
 require_once('bootstrap.php');
 
-class Tracker_Semantic_StatusTest extends TuleapTestCase {
+class Tracker_Semantic_StatusTest extends TuleapTestCase
+{
     private $xml_security;
 
     public function setUp()
@@ -35,8 +36,8 @@ class Tracker_Semantic_StatusTest extends TuleapTestCase {
         $this->field   = stub('Tracker_FormElement_Field_List')->getId()->returns(103);
 
         $GLOBALS['Language'] = mock('BaseLanguage');
-        $GLOBALS['Language']->setReturnValue('getText','Status', array('plugin_tracker_admin_semantic','status_label'));
-        $GLOBALS['Language']->setReturnValue('getText','Define the status of an artifact', array('plugin_tracker_admin_semantic','status_description'));
+        $GLOBALS['Language']->setReturnValue('getText', 'Status', array('plugin_tracker_admin_semantic','status_label'));
+        $GLOBALS['Language']->setReturnValue('getText', 'Define the status of an artifact', array('plugin_tracker_admin_semantic','status_description'));
     }
 
     public function tearDown()

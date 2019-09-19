@@ -20,7 +20,8 @@
 
 use Tuleap\User\UserGroup\NameTranslator;
 
-class User_ForgeUGroup implements User_UGroup {
+class User_ForgeUGroup implements User_UGroup
+{
 
     private $id;
 
@@ -49,5 +50,4 @@ class User_ForgeUGroup implements User_UGroup {
     {
         return $this->name;
     }
-
 }

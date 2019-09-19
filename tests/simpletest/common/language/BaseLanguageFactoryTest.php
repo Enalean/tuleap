@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class BaseLanguageFactoryTest extends TuleapTestCase {
+class BaseLanguageFactoryTest extends TuleapTestCase
+{
 
     public function setUp()
     {

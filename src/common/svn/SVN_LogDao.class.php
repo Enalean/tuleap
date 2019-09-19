@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SVN_LogDao extends DataAccessObject {
+class SVN_LogDao extends DataAccessObject
+{
 
     public function searchCommiters($group_id, TimeInterval $interval)
     {

@@ -32,7 +32,7 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
            //do not change from SB to MSB if the field is used to define the workflow
         $wf = WorkflowFactory::instance();
         if (!$wf->isWorkflowField($this->formElement)) {
-            $html .= ' ('.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_to') .' ';
+            $html .= ' ('.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'switch_to') .' ';
 
             $change_links = array();
 
@@ -42,8 +42,8 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
                         'func'               => 'admin-formElement-update',
                         'formElement'        => $this->formElement->id,
                         'change-type'        => $type
-                    )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_type_confirm').'\');">'
-                       .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_'. $type ).'</a> ';
+                    )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'switch_type_confirm').'\');">'
+                       .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'switch_'. $type).'</a> ';
             }
             $html .= implode(', ', $change_links);
             $html .= ')';

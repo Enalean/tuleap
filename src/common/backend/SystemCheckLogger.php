@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemCheckLogger extends WrapperLogger {
+class SystemCheckLogger extends WrapperLogger
+{
 
     private $warning_messages = array();
 

@@ -31,7 +31,8 @@
  * In other words: do not modify this part if you are not a trained warrior and
  * for reviewers: review carfully and test to destroy the code.
  */
-class User_SSHKeyDumper {
+class User_SSHKeyDumper
+{
     /**
      * @var Backend
      */
@@ -126,5 +127,3 @@ class User_SSHKeyDumper {
         }
     }
 }
-
-?>

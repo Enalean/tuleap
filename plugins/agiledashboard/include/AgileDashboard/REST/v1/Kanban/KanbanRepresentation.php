@@ -29,7 +29,8 @@ use Exception;
 use AgileDashboard_KanbanUserPreferences;
 use AgileDashboard_KanbanActionsChecker;
 
-class KanbanRepresentation {
+class KanbanRepresentation
+{
 
     public const ROUTE         = 'kanban';
     public const BACKLOG_ROUTE = 'backlog';

@@ -21,7 +21,8 @@ require_once __DIR__.'/../bootstrap.php';
 
 Mock::generate('Project');
 
-class Tracker_HomeNavPresenterTest extends TuleapTestCase {
+class Tracker_HomeNavPresenterTest extends TuleapTestCase
+{
     public function setUp()
     {
         parent::setUp();
@@ -58,8 +59,8 @@ class Tracker_HomeNavPresenterTest extends TuleapTestCase {
 
     private function assertRowsIncludeKeys($array, $expected_keys)
     {
-        foreach($array as $row) {
-            foreach($expected_keys as $expected_key) {
+        foreach ($array as $row) {
+            foreach ($expected_keys as $expected_key) {
                 $this->assertTrue(array_key_exists($expected_key, $row));
             }
         }
@@ -67,10 +68,10 @@ class Tracker_HomeNavPresenterTest extends TuleapTestCase {
 
     private function assertCurrentItem($nav_items, $expected_current_index)
     {
-        for($index=0; $index < count($nav_items); $index++) {
+        for ($index=0; $index < count($nav_items); $index++) {
             $current = $nav_items[$index]['current'];
 
-            if($index == $expected_current_index) {
+            if ($index == $expected_current_index) {
                 $this->assertEqual($current, 'current');
             } else {
                 $this->assertNull($current);
@@ -78,4 +79,3 @@ class Tracker_HomeNavPresenterTest extends TuleapTestCase {
         }
     }
 }
-?>

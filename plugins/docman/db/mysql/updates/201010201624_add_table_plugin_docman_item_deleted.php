@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201010201624_add_table_plugin_docman_item_deleted extends ForgeUpgrade_Bucket {
+class b201010201624_add_table_plugin_docman_item_deleted extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -80,7 +81,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_docman_item_deleted table is missing');
         }
     }
-
 }
-
-?>

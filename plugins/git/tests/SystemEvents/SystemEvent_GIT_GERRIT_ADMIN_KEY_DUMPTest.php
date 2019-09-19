@@ -26,7 +26,8 @@ use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
+class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase
+{
     /** @var SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP */
     private $event;
     /** @var Git_RemoteServer_GerritServerFactory */

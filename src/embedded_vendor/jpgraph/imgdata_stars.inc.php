@@ -9,7 +9,8 @@
 //========================================================================
 
 
-class ImgData_Stars extends ImgData {
+class ImgData_Stars extends ImgData
+{
     protected $name = 'Stars';
     protected $an = array(MARK_IMG_STAR => 'imgdata');
 
@@ -141,5 +142,3 @@ class ImgData_Stars extends ImgData {
         'on/PuS9CdQNC7yBXEQAAAABJRU5ErkJggg==' ;
     }
 }
-
-?>

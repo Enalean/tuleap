@@ -21,7 +21,8 @@
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 
-class Tracker_Artifact_MailGateway_IncomingMessageFactory {
+class Tracker_Artifact_MailGateway_IncomingMessageFactory
+{
     /** @var MailGatewayConfig */
     private $tracker_config;
 
