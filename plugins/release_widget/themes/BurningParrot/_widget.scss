@@ -50,7 +50,6 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     &::before {
         content: '';
         position: absolute;
-        z-index: 1;
         top: 0;
         left: 10px;
         width: 4px;

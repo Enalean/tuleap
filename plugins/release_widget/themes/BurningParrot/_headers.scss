@@ -23,7 +23,22 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     background: none;
 }
 
+.project-release-header.disabled {
+    border-bottom-color: transparent;
+    opacity: .5;
+    color: $tlp-ui-dimmed;
+    cursor: not-allowed;
+
+    .project-release-whats-hot-icon {
+        background: $tlp-ui-dimmed;
+    }
+}
+
 .project-release-whats-hot-icon::before {
+    content: '\f141'; // fa-ellipsis-h
+}
+
+.project-release-toggle-closed > .project-release-header.disabled:hover > .project-release-whats-hot-icon::before {
     content: '\f141'; // fa-ellipsis-h
 }
 
@@ -40,7 +55,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     align-items: baseline;
     padding: $tlp-half-spacing $tlp-spacing $tlp-half-spacing 0;
     overflow: hidden;
-    background: linear-gradient(to right, #ffffff 0%, #fafafa 50%);
+    background: linear-gradient(to right, transparent 0%, transparentize($tlp-swatch-firemist-silver-secondary, .6) 50%);
     cursor: pointer;
 }
 
@@ -155,4 +170,8 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .release-remaining-progress-value-success {
     background: $tlp-ui-success;
+}
+
+.release-remaining-disabled {
+    width: 220px + $tlp-spacing;
 }

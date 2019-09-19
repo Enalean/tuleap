@@ -93,3 +93,45 @@ exports[`ReleaseHeader Display arrow between dates When there isn't a start date
   </div>
 </div>
 `;
+
+exports[`ReleaseHeader When the widget is loading, Then there is a skeleton instead of points 1`] = `
+<div
+  class="project-release-header"
+  disabled="disabled"
+>
+  <i
+    class="project-release-whats-hot-icon fa"
+  />
+   
+  <h1
+    class="project-release-title"
+  >
+    <translate-stub
+      tag="span"
+      translateparams="[object Object]"
+    >
+      
+            Release %{release_label}
+        
+    </translate-stub>
+  </h1>
+   
+  <!---->
+   
+  <div
+    class="release-spacer"
+  />
+   
+  <div
+    class="release-remaining-effort-badges"
+  >
+    <release-header-remaining-days-stub
+      releasedata="[object Object]"
+    />
+     
+    <release-header-remaining-points-stub
+      releasedata="[object Object]"
+    />
+  </div>
+</div>
+`;

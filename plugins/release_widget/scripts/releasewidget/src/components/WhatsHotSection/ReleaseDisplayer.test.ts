@@ -64,19 +64,79 @@ describe("ReleaseDisplayer", () => {
             },
             data(): DefaultData<ReleaseDisplayer> {
                 return {
-                    is_open: false
+                    is_open: false,
+                    is_loading: false,
+                    error_message: null
                 };
             }
         };
     });
 
-    it("When the user toggle twice a release, the content widget is displayed first and hidden after", async () => {
+    it("When there is a rest error, Then it displays", async () => {
+        component_options.data = (): DefaultData<ReleaseDisplayer> => {
+            return {
+                is_open: true,
+                is_loading: false,
+                error_message: "404"
+            };
+        };
         const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("When the widget is rendered, Then toggle is closed", async () => {
+        component_options.data = (): DefaultData<ReleaseDisplayer> => {
+            return {
+                is_open: false,
+                is_loading: false,
+                error_message: null
+            };
+        };
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("When the toggle is opened and the user want close it, Then an event is emit", async () => {
+        component_options.data = (): DefaultData<ReleaseDisplayer> => {
+            return {
+                is_open: true,
+                is_loading: false,
+                error_message: null
+            };
+        };
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.contains("[data-test=toggle-open]")).toBeTruthy();
 
         wrapper.find(ReleaseHeader).vm.$emit("toggleReleaseDetails");
-        expect(wrapper.contains("[data-test=toggle_open]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=toggle-open]")).toBeFalsy();
+    });
 
-        wrapper.find(ReleaseHeader).vm.$emit("toggleReleaseDetails");
-        expect(wrapper.contains("[data-test=toggle_open]")).toBeFalsy();
+    it("When the milestone is loading, Then the class is disabled and a tooltip say why", async () => {
+        component_options.data = (): DefaultData<ReleaseDisplayer> => {
+            return {
+                is_open: false,
+                is_loading: true,
+                error_message: null
+            };
+        };
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        wrapper.setData({ is_loading: true });
+        expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("When the widget is rendered and the toggle opened, Then there are no errors and components called", async () => {
+        component_options.data = (): DefaultData<ReleaseDisplayer> => {
+            return {
+                is_open: true,
+                is_loading: false,
+                error_message: null
+            };
+        };
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.element).toMatchSnapshot();
     });
 });

@@ -118,51 +118,114 @@ describe("Store actions", () => {
                 jest.spyOn(rest_querier, "getCurrentMilestones").mockReturnValue(
                     Promise.resolve(milestones)
                 );
-                jest.spyOn(rest_querier, "getMilestonesContent").mockReturnValue(
-                    Promise.resolve([])
-                );
-                jest.spyOn(rest_querier, "getNbOfSprints").mockReturnValue(Promise.resolve(15));
-
-                const milestones_state = [
-                    {
-                        id: 1,
-                        resources: {
-                            content: {
-                                accept: {
-                                    trackers: [
-                                        {
-                                            id: 1,
-                                            label: "one",
-                                            color_name: "red_fiesta"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        number_of_artifact_by_trackers: [
-                            {
-                                id: 1,
-                                label: "one",
-                                total_artifact: 0,
-                                color_name: "red_fiesta"
-                            }
-                        ],
-                        initial_effort: 0,
-                        total_sprint: 15
-                    }
-                ];
 
                 await actions.getMilestones(context);
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
                 expect(context.commit).toHaveBeenCalledWith("setTrackers", trackers);
                 expect(context.commit).toHaveBeenCalledWith("setNbUpcomingReleases", 1);
                 expect(context.commit).toHaveBeenCalledWith("setNbBacklogItem", 2);
-                expect(context.commit).toHaveBeenCalledWith(
-                    "setCurrentMilestones",
-                    milestones_state
-                );
+                expect(context.commit).toHaveBeenCalledWith("setCurrentMilestones", milestones);
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
             });
+        });
+    });
+
+    describe("getEnhancedMilestones()", () => {
+        it("When there is no error in API, Then enriched milestone returned", async () => {
+            const trackers: TrackerProject[] = [
+                {
+                    id: 1,
+                    label: "one",
+                    color_name: "red_fiesta"
+                },
+                {
+                    id: 2,
+                    label: "two",
+                    color_name: "lake_placid_blue"
+                }
+            ];
+
+            context.state = {
+                project_id: 102,
+                nb_backlog_items: 0,
+                nb_upcoming_releases: 0,
+                error_message: null,
+                is_loading: false,
+                current_milestones: [],
+                offset: 0,
+                limit: 50,
+                trackers
+            };
+
+            const milestone = {
+                id: 1,
+                resources: {
+                    content: {
+                        accept: {
+                            trackers: [
+                                {
+                                    id: 1,
+                                    label: "one",
+                                    color_name: "red_fiesta"
+                                }
+                            ]
+                        }
+                    }
+                },
+                number_of_artifact_by_trackers: []
+            };
+
+            const enriched_milestones = {
+                ...milestone,
+                number_of_artifact_by_trackers: [
+                    {
+                        id: 1,
+                        label: "one",
+                        total_artifact: 3,
+                        color_name: "red_fiesta"
+                    }
+                ],
+                initial_effort: 15,
+                total_sprint: 5
+            };
+
+            const milestone_content = [
+                {
+                    initial_effort: 5,
+                    artifact: {
+                        tracker: {
+                            id: 1
+                        }
+                    }
+                },
+                {
+                    initial_effort: 10,
+                    artifact: {
+                        tracker: {
+                            id: 1
+                        }
+                    }
+                },
+                {
+                    initial_effort: 0,
+                    artifact: {
+                        tracker: {
+                            id: 1
+                        }
+                    }
+                }
+            ];
+
+            jest.spyOn(rest_querier, "getMilestonesContent").mockReturnValue(
+                Promise.resolve(milestone_content)
+            );
+            jest.spyOn(rest_querier, "getNbOfSprints").mockReturnValue(Promise.resolve(5));
+
+            const enriched_milestones_received = await actions.getEnhancedMilestones(
+                context,
+                milestone
+            );
+            expect(enriched_milestones_received).toEqual(enriched_milestones);
         });
     });
 

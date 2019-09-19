@@ -21,7 +21,7 @@ import {
     getCurrentMilestones as getAllCurrentMilestones,
     getMilestonesContent as getContent,
     getNbOfBacklogItems as getBacklogs,
-    getNbOfSprints as getSprints,
+    getNbOfSprints,
     getNbOfUpcomingReleases as getReleases,
     getTrackersProject as getTrackers
 } from "../api/rest-querier";
@@ -74,20 +74,21 @@ async function getCurrentMilestones(context: Context): Promise<void> {
             offset: context.state.offset
         });
     }
+    return context.commit("setCurrentMilestones", milestones);
+}
 
-    const promises = milestones.map(
-        async (milestone: MilestoneData): Promise<MilestoneData> => {
-            await getInitialEffortAndNumberArtifactsInTrackers(context, milestone);
-            return {
-                ...milestone,
-                total_sprint: await getNumberOfSprints(context, milestone)
-            };
-        }
-    );
-
-    const enriched_milestones = await Promise.all<MilestoneData>(promises);
-
-    return context.commit("setCurrentMilestones", enriched_milestones);
+export function getEnhancedMilestones(
+    context: Context,
+    milestone: MilestoneData
+): Promise<MilestoneData> {
+    const milestone_data = async (): Promise<MilestoneData> => {
+        await getInitialEffortAndNumberArtifactsInTrackers(context, milestone);
+        return {
+            ...milestone,
+            total_sprint: await getNbOfSprints(milestone.id, context.state)
+        };
+    };
+    return milestone_data();
 }
 
 export async function getMilestones(context: Context): Promise<void> {
@@ -119,11 +120,6 @@ async function getTrackersProject(context: Context): Promise<void> {
     return context.commit("setTrackers", trackers);
 }
 
-function getNumberOfSprints(context: Context, milestone: MilestoneData): Promise<number> {
-    context.commit("resetErrorMessage");
-    return getSprints(milestone.id, context.state);
-}
-
 async function getInitialEffortAndNumberArtifactsInTrackers(
     context: Context,
     milestone: MilestoneData
@@ -138,8 +134,6 @@ function getInitialEffortOfRelease(
     milestone: MilestoneData,
     milestone_contents: MilestoneContent[]
 ): void {
-    context.commit("resetErrorMessage");
-
     milestone.initial_effort = milestone_contents.reduce(
         (nb_users_stories: number, milestone_content: MilestoneContent) => {
             if (milestone_content.initial_effort !== null) {

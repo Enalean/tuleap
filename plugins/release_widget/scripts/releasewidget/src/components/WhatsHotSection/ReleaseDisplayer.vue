@@ -19,20 +19,23 @@
 
 <template>
     <div class="project-release"
-         v-bind:class="{ 'project-release-toggle-closed': !is_open }"
+         v-bind:class="{ 'project-release-toggle-closed': !is_open, 'tlp-tooltip tlp-tooltip-top': is_loading }"
+         v-bind:data-tlp-tooltip="$gettext('Loading data...')"
     >
         <release-header
             v-on:toggleReleaseDetails="toggleReleaseDetails()"
-            v-bind:release-data="releaseData"
-            data-test="project-release-toggle"
+            v-bind:release-data="displayed_release"
+            v-bind:is-loading="is_loading"
+            v-bind:class="{ 'project-release-toggle-closed': !is_open, 'disabled': is_loading}"
         />
-
-        <div v-if="is_open" data-test="toggle_open" class="release-toggle">
-            <release-badges
-                v-bind:release-data="releaseData"
-                data-test="display-releases-badges"
-            />
-            <release-description v-bind:release-data="releaseData"/>
+        <div v-if="is_open" data-test="toggle-open" class="release-toggle">
+            <div v-if="has_error" class="tlp-alert-danger">
+                {{ error }}
+            </div>
+            <div v-else>
+                <release-badges v-bind:release-data="displayed_release"/>
+                <release-description v-bind:release-data="displayed_release"/>
+            </div>
         </div>
     </div>
 </template>
@@ -44,6 +47,7 @@ import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
 import Vue from "vue";
 import { MilestoneData } from "../../type";
 import { Component, Prop } from "vue-property-decorator";
+import { Action } from "vuex-class";
 
 @Component({
     components: {
@@ -54,12 +58,44 @@ import { Component, Prop } from "vue-property-decorator";
 })
 export default class ReleaseDisplayer extends Vue {
     @Prop()
-    readonly releaseData!: MilestoneData;
+    releaseData!: MilestoneData;
+    @Action
+    getEnhancedMilestones!: (releaseData: MilestoneData) => Promise<MilestoneData>;
 
     is_open = false;
+    is_loading = true;
+    error_message: string | null = null;
+    release_data_enhanced: MilestoneData | null = null;
+
+    get has_error(): boolean {
+        return this.error_message !== null;
+    }
+
+    get displayed_release(): MilestoneData {
+        return this.release_data_enhanced ? this.release_data_enhanced : this.releaseData;
+    }
+
+    get error(): string {
+        return this.error_message === "" || this.error_message === null
+            ? this.$gettext("Oops, an error occurred!")
+            : this.error_message;
+    }
+
+    async created(): Promise<void> {
+        try {
+            this.release_data_enhanced = await this.getEnhancedMilestones(this.releaseData);
+        } catch (rest_error) {
+            const { error } = await rest_error.response.json();
+            this.error_message = error.code + " " + error.message;
+        } finally {
+            this.is_loading = false;
+        }
+    }
 
     toggleReleaseDetails(): void {
-        this.is_open = !this.is_open;
+        if (!this.is_loading || this.is_open) {
+            this.is_open = !this.is_open;
+        }
     }
 }
 </script>
