@@ -42,7 +42,7 @@ class RedisPersistentQueue implements PersistentQueue
     private $logger;
 
     /**
-     * @var \Redis
+     * @var \Redis|null
      */
     private $redis;
     private $event_queue_name;
@@ -73,11 +73,12 @@ class RedisPersistentQueue implements PersistentQueue
                     throw new QueueServerConnectionException("Unable to echo with redis server");
                 }
                 $this->logger->debug('Echoed to redis');
-                $this->queuePastEvents($processing_queue);
-                $this->waitForEvents($processing_queue, $callback);
+                $this->queuePastEvents($this->redis, $processing_queue);
+                $this->waitForEvents($this->redis, $processing_queue, $callback);
             } catch (RedisException $e) {
                 // we get that due to default_socket_timeout
                 if (strtolower($e->getMessage()) === 'read error on connection') {
+                    $this->redis = null;
                     $reconnect = true;
                 } else {
                     throw $e;
@@ -90,25 +91,23 @@ class RedisPersistentQueue implements PersistentQueue
      * In case of crash of the worker, the processing queue might contain events not processed yet.
      *
      * This ensure events are re-queued on main event queue before going further
-     *
-     * @param $processing_queue
      */
-    private function queuePastEvents($processing_queue)
+    private function queuePastEvents(\Redis $redis, string $processing_queue) : void
     {
         $this->logger->debug('queuePastEvents');
         do {
-            $value = $this->redis->rpoplpush($processing_queue, $this->event_queue_name);
+            $value = $redis->rpoplpush($processing_queue, $this->event_queue_name);
         } while ($value !== false);
     }
 
-    private function waitForEvents($processing_queue, callable $callback)
+    private function waitForEvents(\Redis $redis, string $processing_queue, callable $callback) : void
     {
         $this->logger->debug('Wait for events');
         $message_counter = 0;
         while ($message_counter < self::MAX_MESSAGES) {
-            $value = $this->redis->brpoplpush($this->event_queue_name, $processing_queue, 0);
+            $value = $redis->brpoplpush($this->event_queue_name, $processing_queue, 0);
             $callback($value);
-            $this->redis->lRem($processing_queue, $value, 1);
+            $redis->lRem($processing_queue, $value, 1);
             $message_counter++;
             $this->logger->info("Message processed [{$message_counter}/".self::MAX_MESSAGES."]");
         }
@@ -117,8 +116,9 @@ class RedisPersistentQueue implements PersistentQueue
 
     /**
      * @throws QueueServerConnectionException
+     * @psalm-assert !null $this->redis
      */
-    private function connect()
+    private function connect(): void
     {
         if ($this->redis === null || ! $this->redis->isConnected()) {
             try {
