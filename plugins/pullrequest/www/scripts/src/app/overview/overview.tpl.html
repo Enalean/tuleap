@@ -85,7 +85,6 @@
             </div>
 
             <div ng-if="overview.isNonFastForwardMerge() && ! overview.is_merge_commit_allowed" class="tlp-alert-danger">
-                <i class="fa fa-times-circle"></i>
                 {{ "Merge commits are forbidden in the repository configuration (fast-forward only). Please rebase the commit and update the pull request." | translate }}
                 <div>
                     <button class="tlp-button-warning" disabled="true">
@@ -98,7 +97,6 @@
             </div>
 
             <div ng-if="overview.isConflictingMerge()" class="tlp-alert-danger">
-                <i class="fa fa-times-circle"></i>
                 {{ 'Pull request can not be merged automatically due to conflicts with destination. Resolve conflicts on the command line and update the pull request.' | translate }}
                 <div>
                     <button ng-if="overview.hasMergeRight()" class="tlp-button-warning" disabled="true">
@@ -111,7 +109,6 @@
             </div>
 
             <div ng-if="overview.isUnknownMerge()" class="tlp-alert-warning">
-                <i class="fa fa-warning"></i>
                 {{ 'Pull request mergeability with destination is not determined. You can merge on the command line and push to destination.' | translate }}
                 <div>
                     <button ng-if="overview.hasMergeRight()" class="tlp-button-warning" disabled="true">
