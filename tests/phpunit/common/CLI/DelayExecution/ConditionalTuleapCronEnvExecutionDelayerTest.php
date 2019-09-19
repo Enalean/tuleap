@@ -31,12 +31,12 @@ final class ConditionalTuleapCronEnvExecutionDelayerTest extends TestCase
 
     protected function tearDown() : void
     {
-        putenv('TLP_DELAY_CRON_CMD');
+        putenv(ConditionalTuleapCronEnvExecutionDelayer::DELAY_ENV_VAR_NAME);
     }
 
     public function testExecutionIsDelayedWhenTuleapCronEnvVariableIsPresent() : void
     {
-        putenv('TLP_DELAY_CRON_CMD=1');
+        putenv(sprintf('%s=1', ConditionalTuleapCronEnvExecutionDelayer::DELAY_ENV_VAR_NAME));
 
         $delayer = Mockery::mock(ExecutionDelayer::class);
 

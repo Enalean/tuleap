@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Queue\TaskWorker;
 
 use Symfony\Component\Process\Process;
+use Tuleap\CLI\DelayExecution\ConditionalTuleapCronEnvExecutionDelayer;
 
 final class TaskWorkerProcess implements TaskWorker
 {
@@ -34,7 +35,10 @@ final class TaskWorkerProcess implements TaskWorker
         $process = new Process(
             ['tuleap', TaskWorkerProcessCommand::NAME],
             self::TULEAP_SOURCE_ROOT,
-            ['SHELL_VERBOSITY' => '1']
+            [
+                'SHELL_VERBOSITY' => '1',
+                ConditionalTuleapCronEnvExecutionDelayer::DELAY_ENV_VAR_NAME => '0',
+            ]
         );
         $process->setTimeout(self::PROCESS_TIMEOUT_SECONDS);
         $process->setInput($event);
