@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Queue;
 
+use Tuleap\Instrument\Prometheus\Prometheus;
+
 class QueueInstrumentation
 {
     private const METRIC_NAME = 'queue_events_total';
@@ -39,11 +41,26 @@ class QueueInstrumentation
         self::STATUS_DONE,
     ];
 
+    private const DURATION_NAME = 'queue_events_duration';
+    private const DURATION_HELP = 'Duration of background worker events (from enqueue to done) in seconds';
+    private const DURATION_BUCKETS = [0.1, 0.5, 1, 2, 5, 10, 20, 60, 120];
+
     /**
      * @psalm-param value-of<self::STATUS_VALUES> $status
      */
     public static function increment(string $queue, string $topic, string $status): void
     {
-        \Tuleap\Instrument\Prometheus\Prometheus::instance()->increment(self::METRIC_NAME, 'Total number of queue events', ['queue' => $queue, 'topic' => $topic, 'status' => $status]);
+        Prometheus::instance()->increment(self::METRIC_NAME, 'Total number of queue events', ['queue' => $queue, 'topic' => $topic, 'status' => $status]);
+    }
+
+    public static function durationHistogram(float $elapsed_time): void
+    {
+        Prometheus::instance()->histogram(
+            self::DURATION_NAME,
+            self::DURATION_HELP,
+            $elapsed_time,
+            [],
+            self::DURATION_BUCKETS
+        );
     }
 }

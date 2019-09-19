@@ -111,6 +111,7 @@ abstract class SystemEventProcessor implements IRunInAMutex
         }
         SystemEventInstrumentation::increment($sysevent->getStatus());
         $this->dao->close($sysevent);
+        SystemEventInstrumentation::durationHistogram($this->dao->getElapsedTime($sysevent));
         $sysevent->notify();
         $this->logger->info("Processing event #".$sysevent->getId().": done.");
     }

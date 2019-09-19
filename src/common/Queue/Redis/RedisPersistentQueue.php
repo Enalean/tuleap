@@ -35,9 +35,10 @@ use Tuleap\Queue\QueueServerConnectionException;
  */
 class RedisPersistentQueue implements PersistentQueue
 {
-    private const MAX_MESSAGES             = 1000;
-    private const MESSAGE_FIELD_EVENT_NAME = 'event_name';
-    private const MESSAGE_FIELD_PAYLOAD    = 'payload';
+    private const MAX_MESSAGES                    = 1000;
+    private const MESSAGE_FIELD_EVENT_NAME        = 'event_name';
+    private const MESSAGE_FIELD_PAYLOAD           = 'payload';
+    private const MESSAGE_FIELD_ENQUEUE_TIMESTAMP = '_enqueue_ts';
 
     /**
      * @var Logger
@@ -101,7 +102,7 @@ class RedisPersistentQueue implements PersistentQueue
         do {
             $value = $redis->rpoplpush($processing_queue, $this->event_queue_name);
             if ($value !== false) {
-                $topic = $this->getTopic($value);
+                [$topic,] = $this->getTopicAndEnqueueTimestamp($value);
                 QueueInstrumentation::increment($this->event_queue_name, $topic, QueueInstrumentation::STATUS_REQUEUED);
             }
         } while ($value !== false);
@@ -113,13 +114,19 @@ class RedisPersistentQueue implements PersistentQueue
         $message_counter = 0;
         while ($message_counter < self::MAX_MESSAGES) {
             $value = $redis->brpoplpush($this->event_queue_name, $processing_queue, 0);
-            $topic = $this->getTopic($value);
+            [$topic, $enqueue_time] = $this->getTopicAndEnqueueTimestamp($value);
             QueueInstrumentation::increment($this->event_queue_name, $topic, QueueInstrumentation::STATUS_DEQUEUED);
             $callback($value);
             $redis->lRem($processing_queue, $value, 1);
             QueueInstrumentation::increment($this->event_queue_name, $topic, QueueInstrumentation::STATUS_DONE);
+            if ($enqueue_time > 0) {
+                $elapsed_time = microtime(true) - $enqueue_time;
+                QueueInstrumentation::durationHistogram($elapsed_time);
+                $this->logger->info(sprintf('Message processed in %.3f seconds [%d/%d]', $elapsed_time, $message_counter, self::MAX_MESSAGES));
+            } else {
+                $this->logger->info(sprintf('Message processed [%d/%d]', $message_counter, self::MAX_MESSAGES));
+            }
             $message_counter++;
-            $this->logger->info("Message processed [{$message_counter}/".self::MAX_MESSAGES."]");
         }
         $this->logger->info('Max messages reached');
     }
@@ -152,22 +159,23 @@ class RedisPersistentQueue implements PersistentQueue
             $this->event_queue_name,
             json_encode(
                 [
-                    self::MESSAGE_FIELD_EVENT_NAME => $topic,
-                    self::MESSAGE_FIELD_PAYLOAD    => $content,
+                    self::MESSAGE_FIELD_EVENT_NAME        => $topic,
+                    self::MESSAGE_FIELD_PAYLOAD           => $content,
+                    self::MESSAGE_FIELD_ENQUEUE_TIMESTAMP => microtime(true),
                 ]
             )
         );
     }
 
-    private function getTopic(string $value): string
+    private function getTopicAndEnqueueTimestamp(string $value): array
     {
         try {
             $value_json = json_decode($value, true, JSON_THROW_ON_ERROR);
-            if (isset($value_json[self::MESSAGE_FIELD_EVENT_NAME])) {
-                return $value_json[self::MESSAGE_FIELD_EVENT_NAME];
-            }
         } catch (\Exception $exception) {
+            $value_json = [];
         }
-        return 'notopic';
+        $topic = $value_json[self::MESSAGE_FIELD_EVENT_NAME] ?? 'notopic';
+        $enqueue_time = $value_json[self::MESSAGE_FIELD_ENQUEUE_TIMESTAMP] ?? 0;
+        return [$topic, $enqueue_time];
     }
 }

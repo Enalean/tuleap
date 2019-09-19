@@ -34,6 +34,7 @@ use ReferenceManager;
 use SystemEventManager;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
@@ -45,27 +46,7 @@ use UserManager;
  */
 final class ProjectCreatorTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var bool
-     */
-    private $globals_svnaccess_set_initially;
-    /**
-     * @var bool
-     */
-    private $globals_svngroups_set_initially;
-    /**
-     * @var bool
-     */
-    private $globals_trove_browselimit_set_initially;
-
-    protected function setUp() : void
-    {
-        $this->globals_svnaccess_set_initially = isset($GLOBALS['SVNACCESS']);
-        $this->globals_svngroups_set_initially = isset($GLOBALS['SVNGROUPS']);
-        $this->globals_trove_browselimit_set_initially = isset($GLOBALS['TROVE_BROWSELIMIT']);
-    }
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalSVNPollution;
 
     protected function tearDown() : void
     {
@@ -73,15 +54,6 @@ final class ProjectCreatorTest extends TestCase
         UserManager::clearInstance();
         SystemEventManager::clearInstance();
         Backend::clearInstances();
-        if (! $this->globals_svnaccess_set_initially) {
-            unset($GLOBALS['SVNACCESS']);
-        }
-        if (! $this->globals_svngroups_set_initially) {
-            unset($GLOBALS['SVNGROUPS']);
-        }
-        if (! $this->globals_trove_browselimit_set_initially) {
-            unset($GLOBALS['TROVE_BROWSELIMIT']);
-        }
     }
 
     public function testInvalidTemplateIDRaisesAnException() : void
