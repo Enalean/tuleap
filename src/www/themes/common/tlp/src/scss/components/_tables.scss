@@ -93,7 +93,7 @@ $tlp-table-cell-padding: 10px;
         }
 
         > tr:hover > td {
-            background: transparentize($tlp-theme-color, .93);
+            background: mix($tlp-theme-color, $tlp-ui-white, 7%);
         }
 
         > tr > td {
