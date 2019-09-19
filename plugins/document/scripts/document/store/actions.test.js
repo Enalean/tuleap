@@ -433,7 +433,6 @@ describe("Store actions", () => {
 
             const item = { id: 66, title: "whatever", type: "empty", obsolescence_date: "" };
             const correct_item = {
-                created: true,
                 id: 66,
                 title: "whatever",
                 type: "empty",
