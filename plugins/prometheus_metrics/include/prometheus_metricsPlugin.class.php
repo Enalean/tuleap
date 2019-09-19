@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,14 @@
  *
  */
 
+use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
+use Tuleap\Admin\Homepage\UserCounterDao;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\PrometheusMetrics\MetricsAuthentication;
+use Tuleap\PrometheusMetrics\MetricsCollectorDao;
+use Tuleap\PrometheusMetrics\MetricsController;
 use Tuleap\Request\CollectRoutesEvent;
+use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -51,9 +58,21 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
         return parent::getHooksAndCallbacks();
     }
 
-    public function routeGetMetrics(): \Tuleap\PrometheusMetrics\MetricsController
+    public function routeGetMetrics(): MetricsController
     {
-        return new \Tuleap\PrometheusMetrics\MetricsController($this->getPluginEtcRoot());
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        return new MetricsController(
+            $response_factory,
+            HTTPFactoryBuilder::streamFactory(),
+            new SapiEmitter(),
+            new MetricsCollectorDao(),
+            new NbUsersByStatusBuilder(new UserCounterDao()),
+            EventManager::instance(),
+            new MetricsAuthentication(
+                $response_factory,
+                $this->getPluginEtcRoot()
+            )
+        );
     }
 
     public function collectRoutesEvent(CollectRoutesEvent $event)
