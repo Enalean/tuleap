@@ -1073,4 +1073,26 @@ class Docman_ItemDao extends DataAccessObject
         }
         return true;
     }
+
+    public function countDocument(): int
+    {
+        $sql = 'SELECT count(*) as nb
+                FROM plugin_docman_item
+                WHERE item_type != ' . $this->da->escapeInt(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+
+        $res = $this->retrieveFirstRow($sql);
+
+        return (!$res)? 0 : (int)$res['nb'];
+    }
+    public function countDocumentAfter(int $timestamp): int
+    {
+        $sql = 'SELECT count(*) as nb
+                FROM plugin_docman_item
+                WHERE item_type != ' . $this->da->escapeInt(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) . '
+                AND create_date > '.$this->da->escapeInt($timestamp);
+
+        $res = $this->retrieveFirstRow($sql);
+
+        return (!$res)? 0 : (int)$res['nb'];
+    }
 }

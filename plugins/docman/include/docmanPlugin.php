@@ -72,6 +72,7 @@ use Tuleap\Docman\Upload\Version\VersionUploadFinisher;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
+use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Layout\ServiceUrlCollector;
@@ -198,6 +199,8 @@ class DocmanPlugin extends Plugin
         $this->addHook(ServiceUrlCollector::NAME);
 
         $this->addHook(GetItemsReferencingWikiPageCollectionEvent::NAME);
+
+        $this->addHook(StatisticsCollectionCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1343,7 +1346,7 @@ class DocmanPlugin extends Plugin
                     new Docman_VersionFactory(),
                     EventManager::instance(),
                     $document_ongoing_upload_dao,
-                    new Docman_ItemDao(),
+                    $this->getItemDao(),
                     new Docman_FileStorage($root_path),
                     new Docman_MIMETypeDetector(),
                     $user_manager,
@@ -1549,5 +1552,19 @@ class DocmanPlugin extends Plugin
         EventManager::instance()->processEvent($link_provider);
 
         return $link_provider->getProvider();
+    }
+
+    public function statisticsCollectionCollector(StatisticsCollectionCollector $collector): void
+    {
+        $collector->addStatistics(
+            dgettext('tuleap-document', 'Documents'),
+            $this->getItemDao()->countDocument(),
+            $this->getItemDao()->countDocumentAfter($collector->getTimestamp())
+        );
+    }
+
+    private function getItemDao(): Docman_ItemDao
+    {
+        return new Docman_ItemDao();
     }
 }
