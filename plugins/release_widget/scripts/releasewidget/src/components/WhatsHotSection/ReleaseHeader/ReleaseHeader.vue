@@ -27,13 +27,13 @@
         </h1>
         <span class="project-release-date" v-if="startDateExist()">
             {{ formatDate(releaseData.start_date) }}
-            <i class="release-date-icon fa fa-long-arrow-right" data-test="display-arrow"></i>
+            <i class="release-date-icon fa fa-long-arrow-right"></i>
             {{ formatDate(releaseData.end_date) }}
         </span>
         <div class="release-spacer"></div>
         <div class="release-remaining-effort-badges">
-            <release-header-remaining-days data-test="display-remaining-days" v-bind:release-data="releaseData"/>
-            <release-header-remaining-points data-test="display-remaining-points" v-bind:release-data="releaseData"/>
+            <release-header-remaining-days v-bind:release-data="releaseData"/>
+            <release-header-remaining-points v-bind:release-data="releaseData"/>
         </div>
     </div>
 </template>

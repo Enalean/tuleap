@@ -54,7 +54,7 @@ describe("ReleaseDisplayer", () => {
         releaseData = {
             label: "mile",
             id: 2,
-            start_date: new Date("2017-01-22T13:42:08+02:00"),
+            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
             capacity: 10,
             total_sprint: 20,
             initial_effort: 10,

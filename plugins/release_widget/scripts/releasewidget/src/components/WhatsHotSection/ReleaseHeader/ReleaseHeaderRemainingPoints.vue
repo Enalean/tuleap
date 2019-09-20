@@ -20,13 +20,11 @@
 <template>
     <div class="release-remaining tlp-tooltip tlp-tooltip-left"
          v-bind:data-tlp-tooltip="get_tooltip_effort_points"
-         data-test="display-remaining-points-tooltip"
     >
         <div class="release-remaining-header">
             <i class="release-remaining-icon fa fa-flag-checkered"></i>
             <span class="release-remaining-value"
                   v-bind:class="{ 'release-remaining-value-disabled': disabled_points, 'release-remaining-value-success': are_all_effort_defined}"
-                  data-test="display-remaining-points-text"
             >
                 {{ formatPoints(releaseData.remaining_effort) }}
             </span>
@@ -40,7 +38,6 @@
             <div class="release-remaining-progress-value"
                  v-bind:class="{ 'release-remaining-progress-value-success': are_all_effort_defined, 'release-remaining-progress-value-disabled': disabled_points }"
                  v-bind:style="{ width: get_tooltip_effort_points }"
-                 data-test="display-remaining-points-value"
             >
             </div>
         </div>

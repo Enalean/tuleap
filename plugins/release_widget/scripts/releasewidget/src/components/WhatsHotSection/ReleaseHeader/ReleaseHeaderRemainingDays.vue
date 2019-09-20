@@ -20,13 +20,11 @@
 <template>
     <div class="release-remaining tlp-tooltip tlp-tooltip-left"
          v-bind:data-tlp-tooltip="get_tooltip_effort_date"
-         data-test="display-remaining-days-tooltip"
     >
         <div class="release-remaining-header">
             <i class="release-remaining-icon fa fa-calendar"></i>
             <span class="release-remaining-value"
                   v-bind:class="{ 'release-remaining-value-danger': are_dates_correctly_set, 'release-remaining-value-disabled': disabled_date }"
-                  data-test="display-remaining-day-text"
             >
                 {{ formatDate(releaseData.number_days_until_end) }}
             </span>
@@ -40,7 +38,6 @@
             <div class="release-remaining-progress-value"
                  v-bind:class="{ 'release-remaining-progress-value-danger': are_dates_correctly_set, 'release-remaining-progress-value-disabled': disabled_date }"
                  v-bind:style="{ width: get_tooltip_effort_date }"
-                 data-test="display-remaining-day-value"
             >
             </div>
         </div>
