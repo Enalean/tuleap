@@ -35,7 +35,7 @@ use Tuleap\GitLFS\SSHAuthenticate\SSHAuthenticate;
 use Tuleap\GitLFS\SSHAuthenticate\SSHAuthenticateResponseBuilder;
 
 require_once __DIR__.'/../../../src/www/include/pre.php';
-require_once __DIR__.'/../include/gitlfsPlugin.class.php';
+require_once __DIR__ . '/../include/gitlfsPlugin.php';
 
 try {
     $project_manager = ProjectManager::instance();

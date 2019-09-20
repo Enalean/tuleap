@@ -29,7 +29,7 @@ use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Request\CollectRoutesEvent;
 
-require_once __DIR__ . '/../../docman/include/docmanPlugin.class.php';
+require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class documentPlugin extends Plugin // phpcs:ignore

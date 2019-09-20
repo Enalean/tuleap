@@ -25,7 +25,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 
-require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ .  '/../vendor/autoload.php';
 
 class GraphOnTrackersV5Plugin extends Plugin

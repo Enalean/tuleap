@@ -18,4 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../include/hudson_gitPlugin.class.php';
+require_once __DIR__ . '/../include/hudson_gitPlugin.php';

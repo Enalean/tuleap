@@ -23,7 +23,7 @@
  */
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__.'/../include/svnPlugin.class.php';
+require_once __DIR__ . '/../include/svnPlugin.php';
 
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;

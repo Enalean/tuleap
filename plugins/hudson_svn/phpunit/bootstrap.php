@@ -18,5 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once __DIR__ . '/../include/hudson_svnPlugin.class.php';
+require_once __DIR__ . '/../include/hudson_svnPlugin.php';
 require_once __DIR__ . '/../../svn/tests/bootstrap.php';

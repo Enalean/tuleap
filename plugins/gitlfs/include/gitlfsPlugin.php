@@ -52,7 +52,7 @@ use Tuleap\Project\Quota\ProjectQuotaChecker;
 use Tuleap\PullRequest\Events\PullRequestDiffRepresentationBuild;
 use Tuleap\Request\CollectRoutesEvent;
 
-require_once __DIR__ . '/../../git/include/gitPlugin.class.php';
+require_once __DIR__ . '/../../git/include/gitPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class gitlfsPlugin extends \Plugin // phpcs:ignore
@@ -98,12 +98,12 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $this->addHook('plugin_statistics_color');
         $this->addHook(DisplayFileContentInGitView::NAME);
         $this->addHook(GetWhitelistedKeys::NAME);
-        if (file_exists(__DIR__ . '/../../pullrequest/include/pullrequestPlugin.class.php')) {
-            require_once __DIR__ . '/../../pullrequest/include/pullrequestPlugin.class.php';
+        if (file_exists(__DIR__ . '/../../pullrequest/include/pullrequestPlugin.php')) {
+            require_once __DIR__ . '/../../pullrequest/include/pullrequestPlugin.php';
             $this->addHook(PullRequestDiffRepresentationBuild::NAME);
         }
-        if (file_exists(__DIR__ . '/../../statistics/include/statisticsPlugin.class.php')) {
-            require_once __DIR__ . '/../../statistics/include/statisticsPlugin.class.php';
+        if (file_exists(__DIR__ . '/../../statistics/include/statisticsPlugin.php')) {
+            require_once __DIR__ . '/../../statistics/include/statisticsPlugin.php';
             $this->addHook(\Tuleap\Statistics\Events\StatisticsRefreshDiskUsage::NAME);
         }
 

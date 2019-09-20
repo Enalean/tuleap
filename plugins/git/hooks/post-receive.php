@@ -33,7 +33,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__ . '/../include/gitPlugin.class.php';
+require_once __DIR__ . '/../include/gitPlugin.php';
 
 const COUNT_THRESHOLD = 100;
 $exit_status_code     = 0;

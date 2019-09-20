@@ -17,5 +17,5 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__ . '/../include/cardwallPlugin.class.php';
+require_once __DIR__ . '/../include/cardwallPlugin.php';
 require_once __DIR__ . '/../../tracker/tests/bootstrap.php';

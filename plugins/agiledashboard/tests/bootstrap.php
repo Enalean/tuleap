@@ -19,6 +19,6 @@
  */
 
 require_once __DIR__ . '/../../../src/common/constants.php';
-require_once __DIR__ . '/../include/agiledashboardPlugin.class.php';
+require_once __DIR__ . '/../include/agiledashboardPlugin.php';
 require_once __DIR__ . '/builders/all.php';
 require_once __DIR__ . '/../../tracker/tests/bootstrap.php';

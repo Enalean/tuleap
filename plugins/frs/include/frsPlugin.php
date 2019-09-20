@@ -19,7 +19,7 @@
  */
 
 
-require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 

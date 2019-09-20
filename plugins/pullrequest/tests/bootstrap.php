@@ -18,5 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../include/pullrequestPlugin.class.php';
+require_once __DIR__ . '/../include/pullrequestPlugin.php';
 require_once __DIR__ . '/../../git/tests/bootstrap.php';

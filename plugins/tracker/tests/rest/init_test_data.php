@@ -24,7 +24,7 @@
 
 use Tuleap\Tracker\REST\DataBuilder;
 
-require_once __DIR__ . '/../../include/trackerPlugin.class.php';
+require_once __DIR__ . '/../../include/trackerPlugin.php';
 require_once __DIR__ .'/DataBuilder.php';
 
 $data_builder = new DataBuilder();

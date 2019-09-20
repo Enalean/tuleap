@@ -19,5 +19,5 @@
  *
  */
 
-require_once __DIR__ . '/../include/agiledashboardPlugin.class.php';
-require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
+require_once __DIR__ . '/../include/agiledashboardPlugin.php';
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';

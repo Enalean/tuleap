@@ -19,4 +19,4 @@
  *
  *
  */
-require_once __DIR__ . '/../include/docmanPlugin.class.php';
+require_once __DIR__ . '/../include/docmanPlugin.php';

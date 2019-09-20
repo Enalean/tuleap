@@ -852,7 +852,7 @@
       <code>$this-&gt;active_pane</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/agiledashboard/include/agiledashboardPlugin.class.php">
+  <file src="plugins/agiledashboard/include/agiledashboardPlugin.php">
     <InvalidNullableReturnType occurrences="1">
       <code>\Tuleap\AgileDashboard\JavascriptDependenciesProvider</code>
     </InvalidNullableReturnType>
@@ -1212,7 +1212,7 @@
       <code>self::FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER</code>
     </InvalidPropertyAssignmentValue>
   </file>
-  <file src="plugins/cardwall/include/cardwallPlugin.class.php">
+  <file src="plugins/cardwall/include/cardwallPlugin.php">
     <ArgumentTypeCoercion occurrences="1">
       <code>$event_retriever-&gt;getField()</code>
     </ArgumentTypeCoercion>
@@ -1231,7 +1231,7 @@
   </file>
   <file src="plugins/create_test_env/include/CreateTestEnv/MattermostNotifier.php">
     <MissingFile occurrences="1">
-      <code>require_once __DIR__ . '/../../../botmattermost/include/botmattermostPlugin.class.php'</code>
+      <code>require_once __DIR__ . '/../../../botmattermost/include/botmattermostPlugin.php'</code>
     </MissingFile>
     <UndefinedClass occurrences="1">
       <code>Message</code>
@@ -1255,10 +1255,10 @@
       <code>$bot</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/create_test_env/include/create_test_envPlugin.class.php">
+  <file src="plugins/create_test_env/include/create_test_envPlugin.php">
     <MissingFile occurrences="2">
-      <code>require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.class.php'</code>
-      <code>require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.class.php'</code>
+      <code>require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.php'</code>
+      <code>require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.php'</code>
     </MissingFile>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/REST/v1/CrossTrackerArtifactReportRepresentation.php">
@@ -2218,7 +2218,7 @@
       <code>\docmanPlugin</code>
     </InvalidClass>
   </file>
-  <file src="plugins/dynamic_credentials/include/dynamic_credentialsPlugin.class.php">
+  <file src="plugins/dynamic_credentials/include/dynamic_credentialsPlugin.php">
     <NullReference occurrences="2">
       <code>$_SESSION</code>
       <code>$_SESSION</code>
@@ -2270,7 +2270,7 @@
       <code>$list_id</code>
     </PossiblyUndefinedGlobalVariable>
   </file>
-  <file src="plugins/forumml/include/forummlPlugin.class.php">
+  <file src="plugins/forumml/include/forummlPlugin.php">
     <PossiblyNullOperand occurrences="1">
       <code>$params['time_to_collect']['plugin_forumml']</code>
     </PossiblyNullOperand>
@@ -3486,7 +3486,7 @@
       <code>$ssh_key_dumper</code>
     </PropertyTypeCoercion>
   </file>
-  <file src="plugins/git/include/gitPlugin.class.php">
+  <file src="plugins/git/include/gitPlugin.php">
     <PossiblyNullArgument occurrences="1">
       <code>$user</code>
     </PossiblyNullArgument>
@@ -3961,7 +3961,7 @@
       <code>$this-&gt;svn_paths_updater</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/hudson/include/hudsonPlugin.class.php">
+  <file src="plugins/hudson/include/hudsonPlugin.php">
     <TooManyArguments occurrences="4">
       <code>searchByJobName</code>
       <code>searchByJobName</code>
@@ -4035,7 +4035,7 @@
       <code>$this-&gt;repository_manager</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/hudson_svn/include/hudson_svnPlugin.class.php">
+  <file src="plugins/hudson_svn/include/hudson_svnPlugin.php">
     <ArgumentTypeCoercion occurrences="1">
       <code>Backend::instance(Backend::SVN)</code>
     </ArgumentTypeCoercion>
@@ -4216,7 +4216,7 @@
       <code>$new_user-&gt;getLdapId()</code>
     </InvalidScalarArgument>
   </file>
-  <file src="plugins/ldap/include/ldapPlugin.class.php">
+  <file src="plugins/ldap/include/ldapPlugin.php">
     <InvalidArgument occurrences="1"/>
     <InvalidReturnStatement occurrences="2">
       <code>true</code>
@@ -4310,7 +4310,7 @@
       <code>global $gfplugins;</code>
     </InvalidGlobal>
   </file>
-  <file src="plugins/mediawiki/include/mediawikiPlugin.class.php">
+  <file src="plugins/mediawiki/include/mediawikiPlugin.php">
     <PossiblyNullReference occurrences="1">
       <code>getID</code>
     </PossiblyNullReference>
@@ -4362,7 +4362,7 @@
       <code>$user</code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/openidconnectclient/include/openidconnectclientPlugin.class.php">
+  <file src="plugins/openidconnectclient/include/openidconnectclientPlugin.php">
     <NullReference occurrences="2">
       <code>$_SESSION</code>
       <code>$_SESSION</code>
@@ -4500,7 +4500,7 @@
       <code>selectCriteria</code>
     </UndefinedConstant>
   </file>
-  <file src="plugins/projectlinks/include/projectlinksPlugin.class.php">
+  <file src="plugins/projectlinks/include/projectlinksPlugin.php">
     <PossiblyUndefinedVariable occurrences="2">
       <code>$src</code>
       <code>$formRefs</code>
@@ -4741,7 +4741,7 @@
       <code>null</code>
     </NullableReturnStatement>
   </file>
-  <file src="plugins/referencealias_mediawiki/include/referencealias_mediawikiPlugin.class.php">
+  <file src="plugins/referencealias_mediawiki/include/referencealias_mediawikiPlugin.php">
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;dao</code>
     </UndefinedThisPropertyAssignment>
@@ -4767,7 +4767,7 @@
       <code>$this-&gt;repository_manager</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/referencealias_svn/include/referencealias_svnPlugin.class.php">
+  <file src="plugins/referencealias_svn/include/referencealias_svnPlugin.php">
     <ArgumentTypeCoercion occurrences="1">
       <code>Backend::instance(Backend::SVN)</code>
     </ArgumentTypeCoercion>
@@ -5336,7 +5336,7 @@
       <code>new AccessFileReader($repository)</code>
     </TooManyArguments>
   </file>
-  <file src="plugins/svn/include/svnPlugin.class.php">
+  <file src="plugins/svn/include/svnPlugin.php">
     <ArgumentTypeCoercion occurrences="3">
       <code>Backend::instance(Backend::SVN)</code>
       <code>Backend::instance(Backend::SVN)</code>
@@ -10586,7 +10586,7 @@
       <code>$this-&gt;table_name</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/tracker/include/trackerPlugin.class.php">
+  <file src="plugins/tracker/include/trackerPlugin.php">
     <InvalidArgument occurrences="2">
       <code>$report</code>
       <code>$project_with_tracker_administration</code>
@@ -10653,7 +10653,7 @@
       <code>nothing</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/tracker_date_reminder/include/tracker_date_reminderPlugin.class.php">
+  <file src="plugins/tracker_date_reminder/include/tracker_date_reminderPlugin.php">
     <InvalidScalarArgument occurrences="1">
       <code>!isset($_REQUEST['notified_groups']) || (isset($_REQUEST['notified_groups']) &amp;&amp; $_REQUEST['notified_groups'] == null)</code>
     </InvalidScalarArgument>
@@ -11051,7 +11051,7 @@
       <code>$destination-&gt;getProject()</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/webdav/include/webdavPlugin.class.php">
+  <file src="plugins/webdav/include/webdavPlugin.php">
     <InvalidMethodCall occurrences="5">
       <code>getPropertyValueForName</code>
       <code>getPropertyValueForName</code>

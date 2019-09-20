@@ -21,7 +21,7 @@
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 
 require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__.'/../../tracker/include/trackerPlugin.class.php';
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase
 {

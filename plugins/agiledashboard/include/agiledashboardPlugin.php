@@ -103,8 +103,8 @@ use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryQuickLink;
 use Tuleap\User\History\HistoryRetriever;
 
-require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
-require_once __DIR__ . '/../../cardwall/include/cardwallPlugin.class.php';
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
+require_once __DIR__ . '/../../cardwall/include/cardwallPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 

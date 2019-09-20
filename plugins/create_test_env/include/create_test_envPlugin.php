@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Tuleap\CreateTestEnv\ActivityLogger\ActivityLoggerDao;
@@ -113,7 +113,7 @@ class create_test_envPlugin extends Plugin
 
     public function routeGetNotificationBot(): NotificationBotIndexController
     {
-        require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.class.php';
+        require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.php';
 
         return new NotificationBotIndexController(
             new BotFactory(new BotDao()),
@@ -124,7 +124,7 @@ class create_test_envPlugin extends Plugin
 
     public function routePostNotificationBot(): NotificationBotSaveController
     {
-        require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.class.php';
+        require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.php';
 
         return new NotificationBotSaveController(
             new NotificationBotDao(),

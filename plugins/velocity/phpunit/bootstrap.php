@@ -18,6 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../include/velocityPlugin.class.php';
-require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.class.php';
-require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
+require_once __DIR__ . '/../include/velocityPlugin.php';
+require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';

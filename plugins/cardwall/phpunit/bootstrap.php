@@ -18,5 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../include/cardwallPlugin.class.php';
-require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
+require_once __DIR__ . '/../include/cardwallPlugin.php';
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
