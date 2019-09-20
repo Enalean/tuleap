@@ -93,9 +93,6 @@ class StreamFilterTest extends TestCase
 
     public function testFilterThrowingAnExceptionDuringProcessingIsReplacedByFilterFatalError() : void
     {
-        if (PHP_VERSION_ID >= 70400) {
-            $this->markTestSkipped('Skip until PHP 7.4 RC2 is released, see https://bugs.php.net/bug.php?id=78506');
-        }
         $source_resource = fopen('php://memory', 'rb+');
         fwrite($source_resource, 'Test data');
         rewind($source_resource);
