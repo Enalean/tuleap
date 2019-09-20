@@ -18,4 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__.'/../include/testmanagementPlugin.class.php';
+require_once __DIR__ . '/../include/testmanagementPlugin.php';
+
