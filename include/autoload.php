@@ -6,7 +6,7 @@ function autoload70f86c0ab93663c469ec55f1b0dcdb8f($class) {
     static $classes = null;
     if ($classes === null) {
         $classes = array(
-            'botmattermostplugin' => '/botmattermostPlugin.class.php',
+            'botmattermostplugin' => '/botmattermostPlugin.php',
             'router' => '/BotMattermost/Router.php',
             'tuleap\\botmattermost\\bot\\bot' => '/BotMattermost/Bot/Bot.php',
             'tuleap\\botmattermost\\bot\\botdao' => '/BotMattermost/Bot/BotDao.php',
