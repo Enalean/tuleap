@@ -81,6 +81,17 @@ pipeline {
                         }
                     } }
                 }
+                stage('PHP coding standards') {
+                    steps {
+                        script {
+                            actions.runPHPCodingStandards(
+                                './src/vendor/bin/phpcs',
+                                './tests/phpcs/tuleap-ruleset.xml',
+                                'plugins/mytuleap_contact_support/'
+                            )
+                        }
+                    }
+                }
             }
             post {
                 always {

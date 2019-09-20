@@ -28,7 +28,6 @@ use HTTPRequest;
 use PFUser;
 use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\MyTuleapContactSupport\EmailSendException;
 use Tuleap\MyTuleapContactSupport\Presenter\ConfirmationEmailToUserPresenter;
 use Tuleap\MyTuleapContactSupport\Presenter\EmailToSupportPresenter;
 use Tuleap\Request\DispatchableWithRequest;
