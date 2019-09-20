@@ -135,18 +135,20 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
     try {
         let should_display_item = true;
         let item_reference;
-        if (item.obsolescence_date === "") {
-            item.obsolescence_date = null;
+
+        const item_to_create = JSON.parse(JSON.stringify(item));
+        if (item_to_create.obsolescence_date === "") {
+            item_to_create.obsolescence_date = null;
         }
-        switch (item.type) {
+        switch (item_to_create.type) {
             case TYPE_FILE:
                 if (!parent.is_expanded && parent.id !== current_folder.id) {
                     should_display_item = false;
                 }
-                await createNewFile(context, item, parent, should_display_item);
+                await createNewFile(context, item_to_create, parent, should_display_item);
                 break;
             case TYPE_FOLDER:
-                item_reference = await addNewFolder(item, parent.id);
+                item_reference = await addNewFolder(item_to_create, parent.id);
 
                 return adjustItemToContentAfterItemCreationInAFolder(
                     context,
@@ -155,7 +157,7 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
                     item_reference.id
                 );
             case TYPE_EMPTY:
-                item_reference = await addNewEmpty(item, parent.id);
+                item_reference = await addNewEmpty(item_to_create, parent.id);
 
                 return adjustItemToContentAfterItemCreationInAFolder(
                     context,
@@ -164,7 +166,7 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
                     item_reference.id
                 );
             case TYPE_WIKI:
-                item_reference = await addNewWiki(item, parent.id);
+                item_reference = await addNewWiki(item_to_create, parent.id);
 
                 return adjustItemToContentAfterItemCreationInAFolder(
                     context,
@@ -173,7 +175,7 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
                     item_reference.id
                 );
             case TYPE_EMBEDDED:
-                item_reference = await addNewEmbedded(item, parent.id);
+                item_reference = await addNewEmbedded(item_to_create, parent.id);
 
                 return adjustItemToContentAfterItemCreationInAFolder(
                     context,
@@ -182,7 +184,7 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
                     item_reference.id
                 );
             case TYPE_LINK:
-                item_reference = await addNewLink(item, parent.id);
+                item_reference = await addNewLink(item_to_create, parent.id);
 
                 return adjustItemToContentAfterItemCreationInAFolder(
                     context,
@@ -191,7 +193,9 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
                     item_reference.id
                 );
             default:
-                throw new Error("Item type " + item.type + " is not supported for creation");
+                throw new Error(
+                    "Item type " + item_to_create.type + " is not supported for creation"
+                );
         }
     } catch (exception) {
         return handleErrorsForModal(context, exception);
