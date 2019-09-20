@@ -762,7 +762,8 @@ CREATE TABLE IF NOT EXISTS tracker_rule_date(
 DROP TABLE IF EXISTS tracker_hierarchy;
 CREATE TABLE IF NOT EXISTS tracker_hierarchy (
   parent_id int(11) NOT NULL,
-  child_id int(11) NOT NULL PRIMARY KEY
+  child_id int(11) NOT NULL PRIMARY KEY,
+  INDEX idx_tracker_hierarchy_parent_id(parent_id)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_reminder;

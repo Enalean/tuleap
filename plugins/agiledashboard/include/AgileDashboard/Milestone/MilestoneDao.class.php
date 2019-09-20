@@ -348,4 +348,33 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
     {
         return "INNER JOIN tracker AS mt{$tracker_id} ON (mt{$tracker_id}.id = m{$tracker_id}.tracker_id AND m{$tracker_id}.tracker_id = {$tracker_id})";
     }
+
+    public function countMilestones()
+    {
+        $sql = 'SELECT count(*) AS nb
+                FROM plugin_agiledashboard_planning AS planning
+                INNER JOIN tracker_hierarchy AS hierarchy
+                    ON planning.planning_tracker_id = hierarchy.parent_id
+                INNER JOIN tracker_artifact AS artifact
+                    ON hierarchy.parent_id = artifact.tracker_id';
+
+        $res = $this->retrieveFirstRow($sql);
+
+        return (!$res)? 0 : (int)$res['nb'];
+    }
+
+    public function countMilestonesAfter(int $timestamp)
+    {
+        $sql = 'SELECT count(*) AS nb
+                FROM plugin_agiledashboard_planning AS planning
+                INNER JOIN tracker_hierarchy AS hierarchy
+                    ON planning.planning_tracker_id = hierarchy.parent_id
+                INNER JOIN tracker_artifact AS artifact
+                    ON hierarchy.parent_id = artifact.tracker_id
+                    AND artifact.submitted_on > '.$this->da->escapeInt($timestamp);
+
+        $res = $this->retrieveFirstRow($sql);
+
+        return (!$res)? 0 : (int)$res['nb'];
+    }
 }
