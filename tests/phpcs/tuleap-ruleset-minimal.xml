@@ -6,17 +6,6 @@
 >
     <description>Tuleap minimal coding standard.</description>
 
-    <!-- Autofix fails on those files, ignore them for now -->
-    <exclude-pattern>src/common/wiki/phpwiki/lib/plugin/CalendarList.php</exclude-pattern>
-    <exclude-pattern>src/common/wiki/phpwiki/lib/plugin/Calendar.php</exclude-pattern>
-    <exclude-pattern>src/common/wiki/phpwiki/lib/BlockParser.php</exclude-pattern>
-    <exclude-pattern>src/common/wiki/phpwiki/lib/WikiDB.php</exclude-pattern>
-    <exclude-pattern>src/common/wiki/phpwiki/lib/XmlElement.php</exclude-pattern>
-    <exclude-pattern>src/common/wiki/phpwiki/lib/HtmlElement.php</exclude-pattern>
-    <exclude-pattern>plugins/mediawiki/fusionforge/FusionForge.php</exclude-pattern>
-    <exclude-pattern>plugins/projectlinks/include/projectlinksPlugin.class.php</exclude-pattern>
-    <exclude-pattern>plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php</exclude-pattern>
-
     <rule ref="PSR2">
         <exclude name="Generic.Files.LineLength.TooLong"/>
         <exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>

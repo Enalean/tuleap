@@ -48,7 +48,8 @@ require_once('lib/InlineParser.php');
  *
  * @see RegexpSet
  */
-class AnchoredRegexpSet_match {
+class AnchoredRegexpSet_match
+{
     /**
      * The matched text.
      */
@@ -94,7 +95,9 @@ class AnchoredRegexpSet
      */
     function match($text)
     {
-        if (!is_string($text)) return false;
+        if (!is_string($text)) {
+            return false;
+        }
         if (! preg_match($this->_re, $text, $m)) {
             return false;
         }
@@ -142,15 +145,15 @@ class AnchoredRegexpSet
         $match = new AnchoredRegexpSet_match;
         $match->postmatch = substr($text, strlen($m[0]));
         $match->match = $m[1];
-        $match->regexp_ind = count($m) - 3 + $prevMatch->regexp_ind + 1;;
+        $match->regexp_ind = count($m) - 3 + $prevMatch->regexp_ind + 1;
         return $match;
     }
 }
 
 
 
-class BlockParser_Input {
-
+class BlockParser_Input
+{
     function __construct($text)
     {
 
@@ -165,8 +168,9 @@ class BlockParser_Input {
         $this->_pos = 0;
 
         // Strip leading blank lines.
-        while ($this->_lines and ! $this->_lines[0])
+        while ($this->_lines and ! $this->_lines[0]) {
             array_shift($this->_lines);
+        }
         $this->_atSpace = false;
     }
 
@@ -178,8 +182,9 @@ class BlockParser_Input {
                 $this->_atSpace = false;
                 break;
             }
-            if ($this->_lines[$this->_pos] != '')
+            if ($this->_lines[$this->_pos] != '') {
                 break;
+            }
             $this->_pos++;
             $this->_atSpace = true;
         }
@@ -231,20 +236,19 @@ class BlockParser_Input {
 
     function where()
     {
-        if ($this->_pos < count($this->_lines))
+        if ($this->_pos < count($this->_lines)) {
             return $this->_lines[$this->_pos];
-        else
+        } else {
             return "<EOF>";
+        }
     }
 
     function _debug($tab, $msg)
     {
         //return ;
         $where = $this->where();
-        $tab = str_repeat('____', $this->getDepth() ) . $tab;
-        printXML(HTML::div("$tab $msg: at: '",
-                           HTML::tt($where),
-                           "'"));
+        $tab = str_repeat('____', $this->getDepth()) . $tab;
+        printXML(HTML::div("$tab $msg: at: '", HTML::tt($where), "'"));
         flush();
     }
 }
@@ -257,8 +261,9 @@ class BlockParser_InputSubBlock extends BlockParser_Input
         $this->_prefix_pat = "/$prefix_re|\\s*\$/Ax";
         $this->_atSpace = false;
 
-        if (($line = $input->currentLine()) === false)
+        if (($line = $input->currentLine()) === false) {
             $this->_line = false;
+        }
         elseif ($initial_prefix) {
             assert(substr($line, 0, strlen($initial_prefix)) == $initial_prefix);
             $this->_line = (string) substr($line, strlen($initial_prefix));
@@ -268,8 +273,9 @@ class BlockParser_InputSubBlock extends BlockParser_Input
             $this->_line = (string) substr($line, strlen($m[0]));
             $this->_atBlank = ! ltrim($line);
         }
-        else
+        else {
             $this->_line = false;
+        }
     }
 
     function skipSpace()
@@ -277,13 +283,15 @@ class BlockParser_InputSubBlock extends BlockParser_Input
         // In contrast to the case for top-level blocks,
         // for sub-blocks, there never appears to be any trailing space.
         // (The last block in the sub-block should always be of class tight-bottom.)
-        while ($this->_line === '')
+        while ($this->_line === '') {
             $this->advance();
+        }
 
-        if ($this->_line === false)
+        if ($this->_line === false) {
             return $this->_atSpace == 'strong_space';
-        else
+        } else {
             return $this->_atSpace;
+        }
     }
 
     function currentLine()
@@ -293,18 +301,20 @@ class BlockParser_InputSubBlock extends BlockParser_Input
 
     function nextLine()
     {
-        if ($this->_line === '')
+        if ($this->_line === '') {
             $this->_atSpace = $this->_atBlank ? 'weak_space' : 'strong_space';
-        else
+        }
+        else {
             $this->_atSpace = false;
+        }
 
         $line = $this->_input->nextLine();
         if ($line !== false && preg_match($this->_prefix_pat, $line, $m)) {
             $this->_line = (string) substr($line, strlen($m[0]));
             $this->_atBlank = ! ltrim($line);
-        }
-        else
+        } else {
             $this->_line = false;
+        }
 
         return $this->_line;
     }
@@ -328,9 +338,9 @@ class BlockParser_InputSubBlock extends BlockParser_Input
 
     function getPrefix()
     {
-        assert ($this->_line !== false);
+        assert($this->_line !== false);
         $line = $this->_input->currentLine();
-        assert ($line !== false && strlen($line) >= strlen($this->_line));
+        assert($line !== false && strlen($line) >= strlen($this->_line));
         return substr($line, 0, strlen($line) - strlen($this->_line));
     }
 
@@ -361,8 +371,8 @@ class Block_HtmlElement extends HtmlElement
     }
 }
 
-class ParsedBlock extends Block_HtmlElement {
-
+class ParsedBlock extends Block_HtmlElement
+{
     function __construct(&$input, $tag = 'div', $attr = false)
     {
         parent::__construct($tag, $attr);
@@ -374,13 +384,10 @@ class ParsedBlock extends Block_HtmlElement {
     {
         // php5 failed to advance the block. php5 copies objects by ref.
         // nextBlock == block, both are the same objects. So we have to clone it.
-        for ($block = $this->_getBlock($input);
-             $block;
-             $block = (is_object($nextBlock) ? clone $nextBlock : $nextBlock))
-        {
+        for ($block = $this->_getBlock($input); $block; $block = (is_object($nextBlock) ? clone $nextBlock : $nextBlock)) {
             while ($nextBlock = $this->_getBlock($input)) {
                 // Attempt to merge current with following block.
-                if (! ($merged = $block->merge($nextBlock)) ) {
+                if (! ($merged = $block->merge($nextBlock))) {
                     break;      // can't merge
                 }
                 $block = $merged;
@@ -398,8 +405,7 @@ class ParsedBlock extends Block_HtmlElement {
         if (!is_object($_regexpset)) {
             foreach (array('oldlists', 'list', 'dl', 'table_dl',
                            'blockquote', 'heading', 'hr', 'pre', 'email_blockquote',
-                           'plugin', 'p')
-                     as $type) {
+                           'plugin', 'p') as $type) {
                    $class = "Block_$type";
                    $proto = new $class;
                    $this->_block_types[] = $proto;
@@ -427,29 +433,34 @@ class ParsedBlock extends Block_HtmlElement {
         //FIXME: php5 fails to advance here!
         for ($m = $re_set->match($line); $m; $m = $re_set->nextMatch($line, $m)) {
             $block = clone $this->_block_types[$m->regexp_ind];
-            if (DEBUG & _DEBUG_PARSER)
+            if (DEBUG & _DEBUG_PARSER) {
                 $input->_debug('>', get_class($block));
+            }
 
             if ($block->_match($input, $m)) {
                 //$block->_text = $line;
-                if (DEBUG & _DEBUG_PARSER)
+                if (DEBUG & _DEBUG_PARSER) {
                     $input->_debug('<', get_class($block));
+                }
                 $tight_bottom = ! $input->skipSpace();
                 $block->_setTightness($tight_top, $tight_bottom);
                 return $block;
             }
-            if (DEBUG & _DEBUG_PARSER)
+            if (DEBUG & _DEBUG_PARSER) {
                 $input->_debug('[', "_match failed");
+            }
         }
-        if ($line === false or $line === '') // allow $line === '0'
+        if ($line === false or $line === '') {// allow $line === '0'
             return false;
+        }
 
         trigger_error("Couldn't match block: '$line'", E_USER_NOTICE);
         return false;
     }
 }
 
-class WikiText extends ParsedBlock {
+class WikiText extends ParsedBlock
+{
     function __construct($text)
     {
         $input = new BlockParser_Input($text);
@@ -457,7 +468,8 @@ class WikiText extends ParsedBlock {
     }
 }
 
-class SubBlock extends ParsedBlock {
+class SubBlock extends ParsedBlock
+{
     function __construct(
         &$input,
         $indent_re,
@@ -480,7 +492,8 @@ class SubBlock extends ParsedBlock {
  * in older (non-CSS) browsers.  (If you don't do this, then, without
  * CSS, you only get "loose" lists.
  */
-class TightSubBlock extends SubBlock {
+class TightSubBlock extends SubBlock
+{
     function __construct(
         &$input,
         $indent_re,
@@ -501,7 +514,8 @@ class TightSubBlock extends SubBlock {
     }
 }
 
-class BlockMarkup {
+class BlockMarkup
+{
     var $_re;
 
     function _match(&$input, $match)
@@ -534,15 +548,14 @@ class Block_blockquote extends BlockMarkup
     {
         $this->_depth = strlen($m->match);
         $indent = sprintf("\\ {%d}", $this->_depth);
-        $this->_element = new SubBlock($input, $indent, $m->match,
-                                       'blockquote');
+        $this->_element = new SubBlock($input, $indent, $m->match, 'blockquote');
         return true;
     }
 
     function merge($nextBlock)
     {
         if (get_class($nextBlock) == static::class) {
-            assert ($nextBlock->_depth < $this->_depth);
+            assert($nextBlock->_depth < $this->_depth);
             $nextBlock->_element->unshiftContent($this->_element);
             $nextBlock->_tight_top = $this->_tight_top;
             return $nextBlock;
@@ -596,8 +609,7 @@ class Block_list extends BlockMarkup
                 trigger_error("Internal Error: no block advance", E_USER_NOTICE);
                 return false;
             }
-            array_splice($this->_content, count($this->_content), 0,
-                         $nextBlock->_content);
+            array_splice($this->_content, count($this->_content), 0, $nextBlock->_content);
             return $this;
         }
         return false;
@@ -620,8 +632,9 @@ class Block_dl extends Block_list
 
     function _match(&$input, $m)
     {
-        if (!($p = $this->_do_match($input, $m)))
+        if (!($p = $this->_do_match($input, $m))) {
             return false;
+        }
         list ($term, $defn, $loose) = $p;
 
         $this->_content[] = new Block_HtmlElement('dt', false, $term);
@@ -656,7 +669,7 @@ class Block_dl extends Block_list
         }
 
         $indent = strlen($mm[0]);
-        $term = TransformInline(rtrim(substr(trim($m->match),0,-1)));
+        $term = TransformInline(rtrim(substr(trim($m->match), 0, -1)));
         $defn = new TightSubBlock($input, sprintf("\\ {%d}", $indent), false, 'dd');
         return array($term, $defn, $loose);
     }
@@ -672,24 +685,27 @@ class Block_table_dl_defn extends XmlContent
     function __construct($term, $defn)
     {
         parent::__construct();
-        if (!is_array($defn))
+        if (!is_array($defn)) {
             $defn = $defn->getContent();
+        }
 
         $this->_next_tight_top = false; // value irrelevant - gets fixed later
         $this->_ncols = $this->_ComputeNcols($defn);
         $this->_nrows = 0;
 
         foreach ($defn as $item) {
-            if ($this->_IsASubtable($item))
+            if ($this->_IsASubtable($item)) {
                 $this->_addSubtable($item);
-            else
+            } else {
                 $this->_addToRow($item);
+            }
         }
         $this->_flushRow();
 
         $th = HTML::th($term);
-        if ($this->_nrows > 1)
+        if ($this->_nrows > 1) {
             $th->setAttr('rowspan', $this->_nrows);
+        }
         $this->_setTerm($th);
     }
 
@@ -703,7 +719,7 @@ class Block_table_dl_defn extends XmlContent
         if (!empty($last)) {
             $last->setInClass('bottom', $tight_bot);
         } else {
-            trigger_error(sprintf("no lastTR: %s",AsXML($this->_content[0])), E_USER_WARNING);
+            trigger_error(sprintf("no lastTR: %s", AsXML($this->_content[0])), E_USER_WARNING);
         }
     }
 
@@ -711,13 +727,14 @@ class Block_table_dl_defn extends XmlContent
     {
         if (empty($this->_accum)) {
             $this->_accum = HTML::td();
-            if ($this->_ncols > 2)
+            if ($this->_ncols > 2) {
                 $this->_accum->setAttr('colspan', $this->_ncols - 1);
+            }
         }
         $this->_accum->pushContent($item);
     }
 
-    function _flushRow($tight_bottom=false)
+    function _flushRow($tight_bottom = false)
     {
         if (!empty($this->_accum)) {
             $row = new Block_HtmlElement('tr', false, $this->_accum);
@@ -733,8 +750,9 @@ class Block_table_dl_defn extends XmlContent
 
     function _addSubtable($table)
     {
-        if (!($table_rows = $table->getContent()))
+        if (!($table_rows = $table->getContent())) {
             return;
+        }
 
         $this->_flushRow($table_rows[0]->_tight_top);
 
@@ -748,10 +766,11 @@ class Block_table_dl_defn extends XmlContent
     function _setTerm($th)
     {
         $first_row = &$this->_content[0];
-        if (isa($first_row, 'Block_table_dl_defn'))
+        if (isa($first_row, 'Block_table_dl_defn')) {
             $first_row->_setTerm($th);
-        else
+        } else {
             $first_row->unshiftContent($th);
+        }
     }
 
     function _ComputeNcols($defn)
@@ -792,34 +811,38 @@ class Block_table_dl_defn extends XmlContent
     function & firstTR()
     {
         $first = &$this->_content[0];
-        if (isa($first, 'Block_table_dl_defn'))
-        return $first->firstTR();
+        if (isa($first, 'Block_table_dl_defn')) {
+            return $first->firstTR();
+        }
         return $first;
     }
 
     function & lastTR()
     {
         $last = &$this->_content[$this->_nrows - 1];
-        if (isa($last, 'Block_table_dl_defn'))
-        return $last->lastTR();
+        if (isa($last, 'Block_table_dl_defn')) {
+            return $last->lastTR();
+        }
         return $last;
     }
 
     function setWidth($ncols)
     {
         assert($ncols >= $this->_ncols);
-        if ($ncols <= $this->_ncols)
+        if ($ncols <= $this->_ncols) {
             return;
+        }
         $rows = &$this->_content;
         for ($i = 0; $i < count($rows); $i++) {
             $row = &$rows[$i];
-            if (isa($row, 'Block_table_dl_defn'))
+            if (isa($row, 'Block_table_dl_defn')) {
                 $row->setWidth($ncols - 1);
-            else {
+            } else {
                 $n = count($row->_content);
                 $lastcol = &$row->_content[$n - 1];
-                if (!empty($lastcol))
-                  $lastcol->setAttr('colspan', $ncols - 1);
+                if (!empty($lastcol)) {
+                    $lastcol->setAttr('colspan', $ncols - 1);
+                }
             }
         }
     }
@@ -836,8 +859,9 @@ class Block_table_dl extends Block_dl
 
     function _match(&$input, $m)
     {
-        if (!($p = $this->_do_match($input, $m)))
+        if (!($p = $this->_do_match($input, $m))) {
             return false;
+        }
         list ($term, $defn, $loose) = $p;
 
         $this->_content[] = new Block_table_dl_defn($term, $defn);
@@ -851,21 +875,21 @@ class Block_table_dl extends Block_dl
 
     function finish()
     {
-
         $defs = &$this->_content;
 
         $ncols = 0;
-        foreach ($defs as $defn)
+        foreach ($defs as $defn) {
             $ncols = max($ncols, $defn->ncols());
+        }
 
-        foreach ($defs as $key => $defn)
+        foreach ($defs as $key => $defn) {
             $defs[$key]->setWidth($ncols);
+        }
 
-        return HTML::table(array('class' => 'wiki-dl-table',
-                                 'border' => 1,
-                                 'cellspacing' => 0,
-                                 'cellpadding' => 6),
-                           $defs);
+        return HTML::table(
+            array('class' => 'wiki-dl-table', 'border' => 1, 'cellspacing' => 0, 'cellpadding' => 6),
+            $defs
+        );
     }
 }
 
@@ -902,9 +926,9 @@ class Block_oldlists extends Block_list
             $this->_tag = 'dl';
             list ($term,) = explode(':', substr($prefix, 1), 2);
             $term = trim($term);
-            if ($term)
-                $this->_content[] = new Block_HtmlElement('dt', false,
-                                                          TransformInline($term));
+            if ($term) {
+                $this->_content[] = new Block_HtmlElement('dt', false, TransformInline($term));
+            }
             $itemtag = 'dd';
         }
 
@@ -948,14 +972,18 @@ class Block_oldlists extends Block_list
                     printf("---> Properties: %s\n", var_export($class->getProperties(), 1));
                     */
                     echo 'count($this->_content): ', count($this->_content),"\n";
-                    echo "\$this->_content[0]: "; var_dump ($this->_content[0]);
+                    echo "\$this->_content[0]: ";
+                    var_dump($this->_content[0]);
 
                     for ($i=1; $i < min(5, count($this->_content)); $i++) {
                         $c = $this->_content[$i];
                         echo '$this->_content[',$i,"]: \n";
-                        echo "_tag: "; var_dump ($c->_tag);
-                        echo "_content: "; var_dump ($c->_content);
-                        echo "_properties: "; var_dump ($c->_properties);
+                        echo "_tag: ";
+                        var_dump($c->_tag);
+                        echo "_content: ";
+                        var_dump($c->_content);
+                        echo "_properties: ";
+                        var_dump($c->_properties);
                     }
                     echo "</pre>";
                 }
@@ -992,8 +1020,9 @@ class Block_pre extends BlockMarkup
 
         // FIXME: no <img>, <big>, <small>, <sup>, or <sub>'s allowed
         // in a <pre>.
-        if ($m->match == '<pre>')
+        if ($m->match == '<pre>') {
             $text = TransformInline($text);
+        }
 
         $this->_element = new Block_HtmlElement('pre', false, $text);
         return true;
@@ -1039,8 +1068,7 @@ class Block_email_blockquote extends BlockMarkup
     {
         //$indent = str_replace(' ', '\\ ', $m->match) . '|>$';
         $indent = $this->_re;
-        $this->_element = new SubBlock($input, $indent, $m->match,
-                                       'blockquote', $this->_attr);
+        $this->_element = new SubBlock($input, $indent, $m->match, 'blockquote', $this->_attr);
         return true;
     }
 }
@@ -1126,7 +1154,7 @@ class Block_p extends BlockMarkup
 /**
  * Transform the text of a page, and return a parse tree.
  */
-function TransformTextPre($text, $markup = 2.0, $basepage=false)
+function TransformTextPre($text, $markup = 2.0, $basepage = false)
 {
     if (isa($text, 'WikiDB_PageRevision')) {
         $rev = $text;
@@ -1150,7 +1178,7 @@ function TransformTextPre($text, $markup = 2.0, $basepage=false)
  * Transform the text of a page, and return an XmlContent,
  * suitable for printXml()-ing.
  */
-function TransformText($text, $markup = 2.0, $basepage=false)
+function TransformText($text, $markup = 2.0, $basepage = false)
 {
     $output = TransformTextPre($text, $markup, $basepage);
     if ($basepage) {
@@ -1161,7 +1189,6 @@ function TransformText($text, $markup = 2.0, $basepage=false)
     }
     return new XmlContent($output->getContent());
 }
-
 // $Log: BlockParser.php,v $
 // Revision 1.55  2005/01/29 21:08:41  rurban
 // update (C)
@@ -1202,4 +1229,3 @@ function TransformText($text, $markup = 2.0, $basepage=false)
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

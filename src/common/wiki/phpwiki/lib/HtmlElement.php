@@ -5,10 +5,12 @@
  *
  * This code is now php5 compatible. --2004-04-19 23:51:43 rurban
  */
-if (!class_exists("XmlElement"))
+if (!class_exists("XmlElement")) {
     require_once(dirname(__FILE__)."/XmlElement.php");
-if (class_exists("HtmlElement"))
+}
+if (class_exists("HtmlElement")) {
     return;
+}
 
 /**
  * An XML element.
@@ -25,19 +27,22 @@ class HtmlElement extends XmlElement
 
     function _init($args)
     {
-        if (!is_array($args))
-            $args = func_get_args();
+        $initial_args = func_get_args();
+        if (!is_array($args)) {
+            $args = $initial_args;
+        }
 
         assert(count($args) >= 1);
         assert(is_string($args[0]));
         $this->_tag = array_shift($args);
 
-        if ($args && is_array($args[0]))
+        if ($args && is_array($args[0])) {
             $this->_attr = array_shift($args);
-        else {
+        } else {
             $this->_attr = array();
-            if ($args && $args[0] === false)
+            if ($args && $args[0] === false) {
                 array_shift($args);
+            }
         }
         $this->setContent($args);
         $this->_properties = HTML::getTagProperties($this->_tag);
@@ -50,14 +55,16 @@ class HtmlElement extends XmlElement
     function _init2($args)
     {
         if ($args) {
-            if (is_array($args[0]))
+            if (is_array($args[0])) {
                 $this->_attr = array_shift($args);
-            elseif ($args[0] === false)
+            } elseif ($args[0] === false) {
                 array_shift($args);
+            }
         }
 
-        if (count($args) == 1 && is_array($args[0]))
+        if (count($args) == 1 && is_array($args[0])) {
             $args = $args[0];
+        }
         $this->_content = $args;
         return $this;
     }
@@ -73,16 +80,21 @@ class HtmlElement extends XmlElement
         // FIXME: this should be initialized from title by an onLoad() function.
         //        (though, that may not be possible.)
         $qtooltip = str_replace("'", "\\'", $tooltip_text);
-        $this->setAttr('onmouseover',
-                       sprintf('window.status="%s"; return true;',
-                               addslashes($tooltip_text)));
+        $this->setAttr(
+            'onmouseover',
+            sprintf(
+                'window.status="%s"; return true;',
+                addslashes($tooltip_text)
+            )
+        );
         $this->setAttr('onmouseout', "window.status='';return true;");
     }
 
     function emptyTag()
     {
-        if (($this->_properties & HTMLTAG_EMPTY) == 0)
+        if (($this->_properties & HTMLTAG_EMPTY) == 0) {
             return $this->startTag() . "</$this->_tag>";
+        }
 
         return substr($this->startTag(), 0, -1) . " />";
     }
@@ -103,7 +115,8 @@ function HTML(/* $content, ... */)
     return new XmlContent(func_get_args());
 }
 
-class HTML extends HtmlElement {
+class HTML extends HtmlElement
+{
     function raw($html_text)
     {
         return new RawXml($html_text);
@@ -118,15 +131,18 @@ class HTML extends HtmlElement {
     function _setTagProperty($prop_flag, $tags)
     {
         $props = &$GLOBALS['HTML_TagProperties'];
-        if (is_string($tags))
+        if (is_string($tags)) {
             $tags = preg_split('/\s+/', $tags);
+        }
         foreach ($tags as $tag) {
             $tag = trim($tag);
-            if ($tag)
-                if (isset($props[$tag]))
+            if ($tag) {
+                if (isset($props[$tag])) {
                     $props[$tag] |= $prop_flag;
-            else
+                } else {
                     $props[$tag] = $prop_flag;
+                }
+            }
         }
     }
 
@@ -480,35 +496,40 @@ define('HTMLTAG_INLINE', 2);
 define('HTMLTAG_ACCEPTS_INLINE', 4);
 
 
-HTML::_setTagProperty(HTMLTAG_EMPTY,
-                      'area base basefont br col frame hr img input isindex link meta param');
-HTML::_setTagProperty(HTMLTAG_ACCEPTS_INLINE,
-                      // %inline elements:
-                      'b big i small tt ' // %fontstyle
-                      . 's strike u ' // (deprecated)
-                      . 'abbr acronym cite code dfn em kbd samp strong var ' //%phrase
-                      . 'a img object embed br script map q sub sup span bdo '//%special
-                      . 'button input label option select textarea label ' //%formctl
+HTML::_setTagProperty(
+    HTMLTAG_EMPTY,
+    'area base basefont br col frame hr img input isindex link meta param'
+);
+HTML::_setTagProperty(
+    HTMLTAG_ACCEPTS_INLINE,
+    // %inline elements:
+    'b big i small tt ' // %fontstyle
+    . 's strike u ' // (deprecated)
+    . 'abbr acronym cite code dfn em kbd samp strong var ' //%phrase
+    . 'a img object embed br script map q sub sup span bdo '//%special
+    . 'button input label option select textarea label ' //%formctl
 
-                      // %block elements which contain inline content
-                      . 'address h1 h2 h3 h4 h5 h6 p pre '
-                      // %block elements which contain either block or inline content
-                      . 'div fieldset frameset'
+    // %block elements which contain inline content
+    . 'address h1 h2 h3 h4 h5 h6 p pre '
+    // %block elements which contain either block or inline content
+    . 'div fieldset frameset'
 
-                      // other with inline content
-                      . 'caption dt label legend '
-                      // other with either inline or block
-                      . 'dd del ins li td th colgroup');
+    // other with inline content
+    . 'caption dt label legend '
+    // other with either inline or block
+    . 'dd del ins li td th colgroup'
+);
 
-HTML::_setTagProperty(HTMLTAG_INLINE,
-                      // %inline elements:
-                      'b big i small tt ' // %fontstyle
-                      . 's strike u ' // (deprecated)
-                      . 'abbr acronym cite code dfn em kbd samp strong var ' //%phrase
-                      . 'a img object br script map q sub sup span bdo '//%special
-                      . 'button input label option select textarea ' //%formctl
-                      . 'nobody iframe'
-                      );
+HTML::_setTagProperty(
+    HTMLTAG_INLINE,
+    // %inline elements:
+    'b big i small tt ' // %fontstyle
+    . 's strike u ' // (deprecated)
+    . 'abbr acronym cite code dfn em kbd samp strong var ' //%phrase
+    . 'a img object br script map q sub sup span bdo '//%special
+    . 'button input label option select textarea ' //%formctl
+    . 'nobody iframe'
+);
 
 /**
  * Generate hidden form input fields.
@@ -537,14 +558,17 @@ function HiddenInputs($query_args, $pfx = false, $exclude = array())
     $inputs = HTML();
 
     foreach ($query_args as $key => $val) {
-        if (in_array($key, $exclude)) continue;
+        if (in_array($key, $exclude)) {
+            continue;
+        }
         $name = $pfx ? $pfx . "[$key]" : $key;
-        if (is_array($val))
+        if (is_array($val)) {
             $inputs->pushContent(HiddenInputs($val, $name));
-        else
+        } else {
             $inputs->pushContent(HTML::input(array('type' => 'hidden',
                                                    'name' => $name,
                                                    'value' => $val)));
+        }
     }
     return $inputs;
 }
@@ -563,14 +587,16 @@ function JavaScript($js, $script_args = false)
                                  'type' => 'text/javascript');
     $script_args = $script_args ? array_merge($default_script_args, $script_args)
                                 : $default_script_args;
-    if (empty($js))
-        return HTML(HTML::script($script_args),"\n");
-    else
-        // see http://devedge.netscape.com/viewsource/2003/xhtml-style-script/
-        return HTML(HTML::script($script_args,
-                            new RawXml((ENABLE_XHTML_XML ? "\n//<![CDATA[" : "\n<!--//")
+    if (empty($js)) {
+        return HTML(HTML::script($script_args), "\n");
+    } else { // see http://devedge.netscape.com/viewsource/2003/xhtml-style-script/
+        return HTML(HTML::script(
+            $script_args,
+            new RawXml((ENABLE_XHTML_XML ? "\n//<![CDATA[" : "\n<!--//")
                                        . "\n".trim($js)."\n"
-                                       . (ENABLE_XHTML_XML ? "//]]>\n" : "// -->"))),"\n");
+            . (ENABLE_XHTML_XML ? "//]]>\n" : "// -->"))
+        ), "\n");
+    }
 }
 
 /** Conditionally display content based of whether javascript is supported.
@@ -595,8 +621,10 @@ function IfJavaScript($if_content = false, $else_content = false)
     $html = array();
     if ($if_content) {
         $xml = AsXML($if_content);
-        $js = sprintf('document.write("%s");',
-                      addcslashes($xml, "\0..\37!@\\\177..\377"));
+        $js = sprintf(
+            'document.write("%s");',
+            addcslashes($xml, "\0..\37!@\\\177..\377")
+        );
         $html[] = JavaScript($js);
     }
     if ($else_content) {
@@ -723,4 +751,3 @@ function IfJavaScript($if_content = false, $else_content = false)
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>
