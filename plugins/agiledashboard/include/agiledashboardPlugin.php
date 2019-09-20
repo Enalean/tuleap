@@ -38,7 +38,6 @@ use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSender;
 use Tuleap\AgileDashboard\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\AgileDashboard\Kanban\RecentlyVisited\VisitRetriever;
-use Tuleap\AgileDashboard\Kanban\TrackerCrumbBuilder;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
@@ -73,6 +72,7 @@ use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
@@ -80,6 +80,9 @@ use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
+use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryQuickLinkCollection;
+use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
@@ -87,9 +90,6 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
-use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryQuickLinkCollection;
-use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
-use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
@@ -209,6 +209,7 @@ class AgileDashboardPlugin extends Plugin
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
             $this->addHook(TrackerCrumbInContext::NAME);
             $this->addHook(HistoryQuickLinkCollection::NAME);
+            $this->addHook(StatisticsCollectionCollector::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1990,5 +1991,19 @@ class AgileDashboardPlugin extends Plugin
             AGILEDASHBOARD_BASE_DIR . '/../www/assets',
             $this->getPluginPath() . '/assets'
         );
+    }
+
+    public function statisticsCollectionCollector(StatisticsCollectionCollector $collector): void
+    {
+        $collector->addStatistics(
+            dgettext('tuleap-agiledashboard', 'Kanban cards'),
+            $this->getKanbanDao()->countKanbanCards(),
+            $this->getKanbanDao()->countKanbanCardsAfter($collector->getTimestamp())
+        );
+    }
+
+    private function getKanbanDao(): AgileDashboard_KanbanDao
+    {
+        return new AgileDashboard_KanbanDao();
     }
 }

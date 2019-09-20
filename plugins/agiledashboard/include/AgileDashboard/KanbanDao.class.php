@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -207,5 +207,30 @@ class AgileDashboard_KanbanDao extends DataAccessObject
                 ORDER BY kanban_config.name ASC";
 
         return $this->retrieve($sql);
+    }
+
+    public function countKanbanCards(): int
+    {
+        $sql = 'SELECT count(*) as nb
+                FROM plugin_agiledashboard_kanban_configuration AS kanban
+                INNER JOIN tracker_artifact
+                  ON kanban.tracker_id = tracker_artifact.tracker_id';
+
+        $res = $this->retrieveFirstRow($sql);
+
+        return (!$res)? 0 : (int)$res['nb'];
+    }
+
+    public function countKanbanCardsAfter(int $timestamp): int
+    {
+        $sql = 'SELECT count(*) as nb
+                FROM plugin_agiledashboard_kanban_configuration AS kanban
+                INNER JOIN tracker_artifact
+                  ON kanban.tracker_id = tracker_artifact.tracker_id
+                AND tracker_artifact.submitted_on > '.$this->da->escapeInt($timestamp);
+
+        $res = $this->retrieveFirstRow($sql);
+
+        return (!$res)? 0 : (int)$res['nb'];
     }
 }
