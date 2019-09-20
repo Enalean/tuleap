@@ -70,7 +70,7 @@ class BaselineArtifactsResource extends AuthenticatedResource
      * @throws RestException 404
      * @throws RestException 520
      */
-    public function getBaselines(int $id, string $query = null): BaselineArtifactCollectionRepresentation
+    public function getBaselines(int $id, ?string $query = null): BaselineArtifactCollectionRepresentation
     {
         $this->checkAccess();
 

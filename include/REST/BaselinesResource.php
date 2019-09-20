@@ -75,7 +75,7 @@ class BaselinesResource extends AuthenticatedResource
      * @throws \User_StatusSuspendedException
      * @throws \Luracast\Restler\RestException
      */
-    protected function post(string $name, int $artifact_id, string $snapshot_date = null): BaselineRepresentation
+    protected function post(string $name, int $artifact_id, ?string $snapshot_date = null): BaselineRepresentation
     {
         $this->checkAccess();
         return $this->container

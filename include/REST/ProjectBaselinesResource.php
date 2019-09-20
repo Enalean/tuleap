@@ -32,7 +32,7 @@ use Tuleap\REST\Header;
 
 class ProjectBaselinesResource extends AuthenticatedResource
 {
-    const MAX_PAGINATION_LIMIT = 50;
+    public const MAX_PAGINATION_LIMIT = 50;
 
     /** @var Container */
     private $container;
