@@ -25,6 +25,7 @@ use Docman_VersionFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Upload\FileAlreadyUploadedInformation;
 use Tuleap\Upload\FileBeingUploadedInformation;
@@ -34,6 +35,14 @@ final class DocumentUploadFinisherTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|DocmanItemsEventAdder
+     */
+    private $event_adder;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    private $project_manager;
     private $metadata_to_upload_finisher;
     private $logger;
     private $item_factory;
@@ -55,6 +64,8 @@ final class DocumentUploadFinisherTest extends TestCase
         $this->file_storage                = \Mockery::mock(\Docman_FileStorage::class);
         $this->user_manager                = \Mockery::mock(\UserManager::class);
         $this->metadata_to_upload_finisher = \Mockery::mock(DocumentMetadataCreator::class);
+        $this->event_adder                 = \Mockery::mock(DocmanItemsEventAdder::class);
+        $this->project_manager             = \Mockery::mock(\ProjectManager::instance());
     }
 
     public function testDocumentIsAddedToTheDocumentManagerWhenTheUploadIsComplete() : void
@@ -74,7 +85,9 @@ final class DocumentUploadFinisherTest extends TestCase
             $this->file_storage,
             new \Docman_MIMETypeDetector(),
             $this->user_manager,
-            new DBTransactionExecutorPassthrough()
+            new DBTransactionExecutorPassthrough(),
+            $this->event_adder,
+            $this->project_manager
         );
 
         $item_id_being_created = 12;
@@ -108,6 +121,9 @@ final class DocumentUploadFinisherTest extends TestCase
         $this->event_manager->shouldReceive('processEvent');
         $this->user_manager->shouldReceive('getUserByID')->andReturns(\Mockery::mock(\PFUser::class));
         $this->logger->shouldReceive('debug');
+        $project = \Mockery::mock(\Project::class);
+        $this->project_manager->shouldReceive('getProject')->andReturn($project);
+        $this->event_adder->shouldReceive('addNotificationEvents')->withArgs([$project])->once();
 
         $file_information = new FileAlreadyUploadedInformation($item_id_being_created, 'Filename', 123);
 

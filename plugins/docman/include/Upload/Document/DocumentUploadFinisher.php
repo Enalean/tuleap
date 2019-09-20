@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Upload\Document;
 
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFinisherDataStore;
 use Tuleap\Upload\UploadPathAllocator;
@@ -73,6 +74,14 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
+    /**
+     * @var DocmanItemsEventAdder
+     */
+    private $event_adder;
+    /**
+     * @var \ProjectManager
+     */
+    private $project_manager;
 
     public function __construct(
         \Logger $logger,
@@ -85,7 +94,9 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         \Docman_FileStorage $docman_file_storage,
         \Docman_MIMETypeDetector $docman_mime_type_detector,
         \UserManager $user_manager,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
+        DocmanItemsEventAdder $event_adder,
+        \ProjectManager $project_manager
     ) {
         $this->logger                         = $logger;
         $this->document_upload_path_allocator = $document_upload_path_allocator;
@@ -98,6 +109,8 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         $this->docman_mime_type_detector      = $docman_mime_type_detector;
         $this->user_manager                   = $user_manager;
         $this->transaction_executor           = $transaction_executor;
+        $this->event_adder                    = $event_adder;
+        $this->project_manager                = $project_manager;
     }
 
     public function finishUpload(TusFileInformation $file_information) : void
@@ -211,6 +224,9 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         }
 
         $user = $this->user_manager->getUserById($item->getOwnerId());
+
+        $project = $this->project_manager->getProject($item->getGroupId());
+        $this->event_adder->addNotificationEvents($project);
 
         $this->event_manager->processEvent(
             'plugin_docman_event_add',
